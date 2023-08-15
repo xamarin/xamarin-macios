@@ -368,3 +368,12 @@
 !missing-type! NWTLSParameters not bound
 !missing-type! NWUDPSession not bound
 !wrong-enum-size! NWPathStatus managed 4 vs native 8
+!missing-selector! +NERelayManager::loadAllManagersFromPreferencesWithCompletionHandler: not bound
+!missing-selector! NERelay::dnsOverHTTPSURL not bound
+!missing-selector! NERelay::setDnsOverHTTPSURL: not bound
+!missing-selector! NERelay::setSyntheticDNSAnswerIPv4Prefix: not bound
+!missing-selector! NERelay::setSyntheticDNSAnswerIPv6Prefix: not bound
+!missing-selector! NERelay::syntheticDNSAnswerIPv4Prefix not bound
+!missing-selector! NERelay::syntheticDNSAnswerIPv6Prefix not bound
+!missing-selector! NERelayManager::onDemandRules not bound
+!missing-selector! NERelayManager::setOnDemandRules: not bound

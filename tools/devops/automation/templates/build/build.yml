@@ -15,10 +15,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: isPR
   type: boolean
   default: false
@@ -128,8 +124,6 @@ steps:
       IsPR: 'True'
     ${{ else }}:
       IsPR: 'False'
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOT_NET: 'True'
   displayName: "Configure build"
   workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
   timeoutInMinutes: 5

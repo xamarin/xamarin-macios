@@ -1121,3 +1121,4 @@
 !missing-type! AVMetadataHumanFullBodyObject not bound
 !missing-type! AVMetadataSalientObject not bound
 !missing-type! AVSampleBufferVideoRenderer not bound
+!missing-selector! AVCaptureDevice::displayVideoZoomFactorMultiplier not bound

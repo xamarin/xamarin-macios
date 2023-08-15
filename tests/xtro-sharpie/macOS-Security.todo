@@ -18,3 +18,4 @@
 !missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA256 not bound
 !missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA384 not bound
 !missing-field! kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA512 not bound
+!missing-enum-value! AuthorizationFlags native value kAuthorizationFlagSkipInternalAuth = 512 not bound

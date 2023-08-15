@@ -32,3 +32,4 @@
 !missing-type! NSManagedObjectModelReference not bound
 !missing-type! NSMigrationStage not bound
 !missing-type! NSStagedMigrationManager not bound
+!missing-selector! +NSManagedObjectModel::checksumsForVersionedModelAtURL:error: not bound

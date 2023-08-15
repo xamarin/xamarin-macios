@@ -27,4 +27,3 @@
 !missing-enum! PKAddressField not bound
 
 ## all members are decorated but not the type themselves
-!missing-type! PKDisbursementRequest not bound

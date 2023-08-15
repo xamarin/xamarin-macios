@@ -20,7 +20,6 @@
 !missing-field! HKQuantityTypeIdentifierPhysicalEffort not bound
 !missing-field! HKQuantityTypeIdentifierTimeInDaylight not bound
 !missing-protocol-member! HKWorkoutSessionDelegate::workoutSession:didDisconnectFromRemoteDeviceWithError: not found
-!missing-protocol-member! HKWorkoutSessionDelegate::workoutSession:didReceiveDataFromRemoteDevice: not found
 !missing-protocol-member! HKWorkoutSessionDelegate::workoutSession:didReceiveDataFromRemoteWorkoutSession: not found
 !missing-selector! +HKUnit::luxUnit not bound
 !missing-selector! +HKUnit::luxUnitWithMetricPrefix: not bound
@@ -31,3 +30,4 @@
 !missing-selector! HKWorkoutSession::startMirroringToCompanionDeviceWithCompletion: not bound
 !missing-selector! HKWorkoutSession::stopMirroringToCompanionDeviceWithCompletion: not bound
 !missing-selector! HKWorkoutSession::type not bound
+!missing-enum-value! HKErrorCode native value HKErrorBackgroundWorkoutSessionNotAllowed = 14 not bound

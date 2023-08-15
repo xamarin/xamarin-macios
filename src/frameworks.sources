@@ -2008,6 +2008,7 @@ COMMON_FRAMEWORKS =         \
 	OSLog                   \
 	SceneKit                \
 	ShazamKit               \
+	Symbols                 \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
