@@ -146,7 +146,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Cecil-based tests",
 				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil) || !TestSelection.IsEnabled (PlatformLabel.Dotnet),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet),
 			};
 			yield return runCecilTests;
 
