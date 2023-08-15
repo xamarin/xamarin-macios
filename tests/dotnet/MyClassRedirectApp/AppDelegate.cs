@@ -9,9 +9,7 @@ namespace MySimpleApp {
 		{
 			var someObj = new SomeObj ();
 			var handle = someObj.ClassHandle;
-			if (handle == NativeHandle.Zero)
-				return 1;
-			return 0;
+			return handle == NativeHandle.Zero ? 1 : 0;
 		}
 	}
 
