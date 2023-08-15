@@ -3307,12 +3307,7 @@ namespace Registrar {
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
-		bool HasIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions)
-		{
-			return HasIntPtrBoolCtor (type, exceptions, out var _);
-		}
-
-		bool HasIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions, [NotNullWhen (true)] out MethodDefinition? ctor)
+		bool TryGetIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions, [NotNullWhen (true)] out MethodDefinition? ctor)
 		{
 			ctor = null;
 			if (!type.HasMethods)
@@ -4552,7 +4547,7 @@ namespace Registrar {
 			}
 
 			// verify that the type has a ctor with two parameters
-			if (!HasIntPtrBoolCtor (nativeObjType, exceptions, out ctor))
+			if (!TryGetIntPtrBoolCtor (nativeObjType, exceptions, out ctor))
 				throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 			return nativeObjType;
