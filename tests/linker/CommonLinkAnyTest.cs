@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET
+using System.Text.Json;
+#endif
 
 using Foundation;
 using ObjCRuntime;
