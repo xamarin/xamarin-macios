@@ -8,8 +8,15 @@
 
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
 	
-	<!-- Imports the .user.env file if exists and the build is from VS -->
-	<Import Project="$(MSBuildProjectFullPath).user.env" Condition="Exists('$(MSBuildProjectFullPath).user.env') And '$(BuildingInsideVisualStudio)' == 'true'" />
+	<PropertyGroup>
+		<!-- e.g: C:\Users\user1\app1\app1\obj\ -->
+		<_MobilePropsDir>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), $(BaseIntermediateOutputPath)))</_MobilePropsDir>
+		<!-- e.g: C:\Users\user1\app1\app1\obj\app1.mobile.props -->
+		<_MobilePropsPath>$(_MobilePropsDir)$(MSBuildProjectName).mobile.props</_MobilePropsPath>
+	</PropertyGroup>
+
+	<!-- Imports the .mobile.props file if exists and the build is from VS -->
+	<Import Project="$(_MobilePropsPath)" Condition="Exists('$(_MobilePropsPath)') And '$(BuildingInsideVisualStudio)' == 'true'" />
 	
 	<PropertyGroup>
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
