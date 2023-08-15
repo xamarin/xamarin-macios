@@ -180,6 +180,8 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework BackgroundAssets \
 	-weak_framework SharedWithYou \
 	-weak_framework SharedWithYouCore \
+						\
+	-weak_framework Symbols \
 
 SIMLAUNCHER64_FRAMEWORKS =  \
 	-framework GameKit				\
