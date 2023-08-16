@@ -1232,15 +1232,6 @@ namespace Xamarin.Tests {
 			var signedDylibs = new List<string> {
 				Path.Combine (sharedSupportDir, "app2.app", dylibDir, "lib2.dylib"),
 			};
-			if (platform == ApplePlatform.MacCatalyst) {
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Globalization.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.IO.Compression.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Net.Security.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Security.Cryptography.Native.Apple.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libmonosgen-2.0.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libxamarin-dotnet-debug.dylib"));
-			}
 
 			foreach (var dylib in signedDylibs) {
 				var path = Path.Combine (appPath, dylib);
@@ -1353,6 +1344,23 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"WinExe is not a valid output type for macOS", errors [0].Message, "Error message");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void PublishAotDuringBuild (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["PublishAot"] = "true";
+			DotNet.AssertBuild (project_path, properties);
 		}
 
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
