@@ -153,7 +153,7 @@ namespace Xamarin.Linker {
 
 			// process only assemblies where the linker is enabled (e.g. --linksdk, --linkskip) 
 			AssemblyAction action = Annotations.GetAction (assembly);
-			if (action != AssemblyAction.Link) {
+			if (action != AssemblyAction.Link && action != AssemblyAction.Save) {
 #if DEBUG
 				Console.WriteLine ("Assembly {0} : skipped ({1})", assembly, action);
 #endif
