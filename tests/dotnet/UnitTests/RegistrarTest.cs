@@ -82,7 +82,7 @@ namespace Xamarin.Tests {
 			var asmDir = Path.Combine (appDir, GetRelativeAssemblyDirectory (platform));
 
 			var appExecutable = Path.Combine (asmDir, project + ".dll");
-			var platformDll = Path.Combine (asmDir, GetPlatformDll (platform));
+			var platformDll = Path.Combine (asmDir, Configuration.GetBaseLibraryName (platform, true));
 			Assert.That (File.Exists (platformDll), "No platform dll.");
 			var module = ModuleDefinition.ReadModule (platformDll);
 			var classHandlesMaybe = AllTypes (module).FirstOrDefault (t => t.FullName == "ObjCRuntime.Runtime/ClassHandles");
@@ -115,18 +115,6 @@ namespace Xamarin.Tests {
 						yield return nt;
 				}
 			}
-		}
-
-		static string GetPlatformDll (ApplePlatform platform)
-		{
-			return platform switch {
-				ApplePlatform.iOS => "Microsoft.iOS.dll",
-				ApplePlatform.TVOS => "Microsoft.tvOS.dll",
-				ApplePlatform.WatchOS => "Microsoft.WatchOS.dll",
-				ApplePlatform.MacOSX => "Microsoft.macOS.dll",
-				ApplePlatform.MacCatalyst => "Microsoft.MacCatalyst.dll",
-				_ => throw new NotImplementedException ($"Unknown platform: {platform}"),
-			};
 		}
 #endif
 	}

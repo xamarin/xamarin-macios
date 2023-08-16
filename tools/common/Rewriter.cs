@@ -372,7 +372,7 @@ namespace ClassRedirector {
 			} else {
 				var action = annotations.GetAction (assembly);
 				if (action != AssemblyAction.Link) {
-					annotations.SetAction (assembly, AssemblyAction.Link);
+					annotations.SetAction (assembly, AssemblyAction.Save);
 				}
 			}
 		}
