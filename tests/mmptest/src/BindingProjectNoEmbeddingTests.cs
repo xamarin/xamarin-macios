@@ -45,6 +45,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase (BindingProjectType.Full, false)]
 		public void FrameworksEmbeddedProperly (BindingProjectType type, bool useProjectReference)
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				string frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 
