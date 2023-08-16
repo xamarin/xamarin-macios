@@ -207,6 +207,7 @@ namespace Xharness {
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
 		public string SYSTEM_MONO { get; set; }
 		public string DOTNET_DIR { get; set; }
+		public string DotNetTfm { get; set; }
 
 		// Run
 
@@ -284,6 +285,7 @@ namespace Xharness {
 			SYSTEM_MONO = config ["SYSTEM_MONO"];
 			DOTNET_DIR = config ["DOTNET_DIR"];
 			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
+			DotNetTfm = config ["DOTNET_TFM"];
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
@@ -615,6 +617,7 @@ namespace Xharness {
 		IEnumerable<string> GetConfigFiles ()
 		{
 			return FindConfigFiles (useSystemXamarinIOSMac ? "test-system.config" : "test.config")
+				.Concat (FindConfigFiles ("configure.inc"))
 				.Concat (FindConfigFiles ("Make.config"))
 				.Concat (FindConfigFiles ("Make.config.local"));
 		}

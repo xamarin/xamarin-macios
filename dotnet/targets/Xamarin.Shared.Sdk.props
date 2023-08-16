@@ -65,6 +65,9 @@
 		-->
 		<!-- AutoreleasePoolSupport needs to be set earlier than other switches, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set here, instead of in Xamarin.Shared.Sdk.targets -->
 		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
+
+		<!-- Enable the reflection-based json serializer by default. Ref: https://github.com/xamarin/xamarin-macios/issues/18057 -->
+		<JsonSerializerIsReflectionEnabledByDefault Condition="'$(JsonSerializerIsReflectionEnabledByDefault)' == ''">true</JsonSerializerIsReflectionEnabledByDefault>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
@@ -142,6 +145,10 @@
 	</PropertyGroup>
 
 	<!-- Various options when using NativeAOT -->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+		<!-- This turns off some NativeAOT logic we don't want nor need -->
+		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
 		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
 		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
@@ -151,8 +158,5 @@
 
 		<!-- We must find the BCL libraries using the runtime pack instead of using the built-in NativeAOT BCL -->
 		<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
-
-		<!-- This turns off some NativeAOT logic we don't want nor need -->
-		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
 	</PropertyGroup>
 </Project>

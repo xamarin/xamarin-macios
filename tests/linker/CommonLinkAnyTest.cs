@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET
+using System.Text.Json;
+#endif
 
 using Foundation;
 using ObjCRuntime;
@@ -66,5 +69,27 @@ namespace LinkAnyTest {
 			GC.KeepAlive (view.HeightAnchor);
 		}
 #endif // !__WATCHOS__
+
+#if NET
+		[Test]
+		public void JsonSerializer_Serialize ()
+		{
+			var a = JsonSerializer.Serialize (42);
+			Assert.AreEqual ("42", a, "serialized 42");
+
+			var b = JsonSerializer.Serialize (new int [] { 42, 3, 14, 15 });
+			Assert.AreEqual ("[42,3,14,15]", b, "serialized array");
+		}
+
+		[Test]
+		public void JsonSerializer_Deserialize ()
+		{
+			var a = JsonSerializer.Deserialize<int> ("42");
+			Assert.AreEqual (42, a, "deserialized 42");
+
+			var b = JsonSerializer.Deserialize<int []> ("[42,3,14,15]");
+			CollectionAssert.AreEqual (new int [] { 42, 3, 14, 15 }, b, "deserialized array");
+		}
+#endif
 	}
 }
