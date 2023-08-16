@@ -3812,6 +3812,24 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not extract the native framework &apos;{0}&apos; from the assembly &apos;{1}&apos;, because it doesn&apos;t contain the resource &apos;{2}&apos;..
+        /// </summary>
+        public static string MX1307 {
+            get {
+                return ResourceManager.GetString("MX1307", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not extract the native library &apos;{0}&apos; from the assembly &apos;{1}&apos;, because it doesn&apos;t contain the resource &apos;{2}&apos;..
+        /// </summary>
+        public static string MX1308 {
+            get {
+                return ResourceManager.GetString("MX1308", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more reference(s) to type &apos;{0}&apos; already exists inside &apos;{1}&apos; before linking
         ///		.
         /// </summary>
@@ -4299,6 +4317,15 @@ namespace Xamarin.Bundler {
         public static string MX8055 {
             get {
                 return ResourceManager.GetString("MX8055", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}..
+        /// </summary>
+        public static string MX8056 {
+            get {
+                return ResourceManager.GetString("MX8056", resourceCulture);
             }
         }
     }
