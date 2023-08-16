@@ -22,7 +22,6 @@ namespace Xamarin.BindingTests {
 						return false;
 				}
 
-
 				return true;
 			}
 		}

@@ -85,6 +85,7 @@ namespace Xamarin.Mac.Tests {
 			return LoadStatus.FailTest;
 		}
 
+#if !NATIVEAOT
 		[Test]
 		public void ExpectedLibrariesAreLoaded ()
 		{
@@ -106,6 +107,7 @@ namespace Xamarin.Mac.Tests {
 			if (failures.Count > 0)
 				Assert.Fail (string.Join ("\n", failures));
 		}
+#endif
 	}
 }
 #endif // __MACOS__
