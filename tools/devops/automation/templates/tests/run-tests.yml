@@ -175,7 +175,9 @@ steps:
 
     rm -Rf $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
     mkdir -p $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
-    printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+    if ! printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output; then
+      echo "simctl diagnose failed with exit code $?"
+    fi
 
   displayName: 'Collect diagnostic info from simulators'
   condition: eq(variables['system.debug'], true)
