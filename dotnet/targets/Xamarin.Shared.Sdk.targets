@@ -1229,6 +1229,9 @@
 		<PropertyGroup>
 			<!-- Ask ILC to produce a static library -->
 			<NativeLib>static</NativeLib>
+
+			<!-- Always enable trim warnings by default with NativeAOT -->
+			<SuppressTrimAnalysisWarnings Condition="'$(_OriginalSuppressTrimAnalysisWarnings)' != 'true'">false</SuppressTrimAnalysisWarnings>
 		</PropertyGroup>
 
 		<ItemGroup>
