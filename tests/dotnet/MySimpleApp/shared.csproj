@@ -6,6 +6,8 @@
 		<ApplicationTitle>MySimpleApp</ApplicationTitle>
 		<ApplicationId>com.xamarin.mysimpleapp</ApplicationId>
 		<ApplicationVersion>3.14</ApplicationVersion>
+		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+		<TrimmerSingleWarn>false</TrimmerSingleWarn>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />
