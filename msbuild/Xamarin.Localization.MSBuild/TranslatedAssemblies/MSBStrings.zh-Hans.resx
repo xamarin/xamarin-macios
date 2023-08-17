@@ -1206,7 +1206,7 @@
         <value>"{0}"任务未给参数 "{1}" 提供值，在此平台上生成时需要该值。</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>illink 程序集不存在:“{0}”。</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>

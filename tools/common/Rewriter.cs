@@ -30,7 +30,6 @@ namespace ClassRedirector {
 		const string classPtrName = "class_ptr";
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
-		string? outputDirectory = null;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 		IEnumerable<AssemblyDefinition> assemblies;
 		AssemblyDefinition xamarinAssembly;

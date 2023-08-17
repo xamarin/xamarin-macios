@@ -179,6 +179,7 @@ namespace Xamarin.Tests {
 			}
 			if (test_config.Any ())
 				ParseConfigFiles (test_config);
+			ParseConfigFiles (FindConfigFiles ("configure.inc"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -194,7 +195,7 @@ namespace Xamarin.Tests {
 			if (string.IsNullOrEmpty (file))
 				return;
 
-			foreach (var line in File.ReadAllLines (file)) {
+			foreach (var line in File.ReadAllLines (file).Reverse ()) {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
@@ -223,11 +224,15 @@ namespace Xamarin.Tests {
 
 		public static string EvaluateVariable (string variable)
 		{
+			var result = Environment.GetEnvironmentVariable (variable);
+			if (!string.IsNullOrEmpty (result))
+				return result;
+
 			var output = new StringBuilder ();
 			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "tools", "devops"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
 			if (rv != 0)
 				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
-			var result = output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
+			result = output.ToString ().Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
 			if (result is null)
 				throw new Exception ($"Could not find the variable '{variable}' to evaluate.");
 			return result.Substring (variable.Length + 1);
@@ -541,7 +546,9 @@ namespace Xamarin.Tests {
 
 		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
 		{
-			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+			var workloadVersion = Environment.GetEnvironmentVariable ($"{platform.AsString ().ToUpper ()}_WORKLOAD_VERSION");
+			return string.IsNullOrEmpty (workloadVersion) ?
+				GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty) : workloadVersion;
 		}
 
 		// This is only applicable for .NET
@@ -916,6 +923,9 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
 		{
+			if (dotnet && !include_dotnet)
+				yield break;
+
 			if (include_ios)
 				yield return ApplePlatform.iOS;
 			if (include_tvos)

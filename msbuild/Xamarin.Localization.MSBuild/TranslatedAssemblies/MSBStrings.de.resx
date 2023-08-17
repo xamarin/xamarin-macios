@@ -1206,7 +1206,7 @@
         <value>Der "{0}"-Aufgabe wurde kein Wert für den Parameter "{1}" übergeben, der beim Erstellen auf dieser Plattform erforderlich ist.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>Die illink-Assembly ist nicht vorhanden: „{0}“.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Xamarin.Localization.MSBuild;
 using Threading = System.Threading.Tasks;
 
@@ -35,12 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 ";
 			File.WriteAllText (projectPath, csproj);
 
-			var dotnetPath = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-
-			if (string.IsNullOrEmpty (dotnetPath)) {
-				dotnetPath = "dotnet";
-			}
-
+			var dotnetPath = this.GetDotNetPath ();
 			var environment = default (Dictionary<string, string>);
 			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
@@ -50,6 +46,10 @@ namespace Xamarin.MacDev.Tasks {
 
 			try {
 				ExecuteRestoreAsync (dotnetPath, projectPath, targetName, environment).Wait ();
+
+				// Don't try to run 'dotnet build' if restore failed.
+				if (Log.HasLoggedErrors)
+					return string.Empty;
 
 				return ExecuteBuildAsync (dotnetPath, projectPath, targetName, environment).Result;
 			} finally {

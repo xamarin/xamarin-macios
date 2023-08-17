@@ -839,6 +839,9 @@ namespace Registrar {
 		}
 
 		protected override IEnumerable<TypeReference> CollectTypes (AssemblyDefinition assembly)
+			=> GetAllTypes (assembly);
+
+		internal static IEnumerable<TypeReference> GetAllTypes (AssemblyDefinition assembly)
 		{
 			var queue = new Queue<TypeDefinition> ();
 
@@ -3346,8 +3349,9 @@ namespace Registrar {
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
-		bool HasIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions)
+		bool TryGetIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions, [NotNullWhen (true)] out MethodDefinition? ctor)
 		{
+			ctor = null;
 			if (!type.HasMethods)
 				return false;
 			foreach (var method in type.Methods) {
@@ -3369,6 +3373,7 @@ namespace Registrar {
 					if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
 						continue;
 				}
+				ctor = method;
 				return true;
 			}
 			return false;
@@ -4568,6 +4573,11 @@ namespace Registrar {
 
 		public TypeDefinition GetInstantiableType (TypeDefinition td, List<Exception> exceptions, string descriptiveMethodName)
 		{
+			return GetInstantiableType (td, exceptions, descriptiveMethodName, out var _);
+		}
+
+		public TypeDefinition GetInstantiableType (TypeDefinition td, List<Exception> exceptions, string descriptiveMethodName, out MethodDefinition ctor)
+		{
 			TypeDefinition nativeObjType = td;
 
 			if (td.IsInterface) {
@@ -4579,7 +4589,7 @@ namespace Registrar {
 			}
 
 			// verify that the type has a ctor with two parameters
-			if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
+			if (!TryGetIntPtrBoolCtor (nativeObjType, exceptions, out ctor))
 				throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 			return nativeObjType;

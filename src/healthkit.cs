@@ -1914,7 +1914,7 @@ namespace HealthKit {
 		bool HasUndeterminedDuration { get; }
 	}
 
-	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, HKSample [] results, NSError error);
+	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, [NullAllowed] HKSample [] results, [NullAllowed] NSError error);
 
 	[iOS (8, 0)]
 	[Mac (13, 0)]

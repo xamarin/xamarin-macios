@@ -2529,7 +2529,11 @@ namespace SpriteKit {
 		SKAction FollowPath (CGPath path, double sec);
 
 		[Static, Export ("followPath:asOffset:orientToPath:duration:")]
+#if XAMCORE_5_0
 		SKAction FollowPath (CGPath path, bool offset, bool orientToPath, double sec);
+#else
+		SKAction FollowPath (CGPath path, bool offset, bool orient, double sec);
+#endif
 
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[MacCatalyst (13, 1)]
@@ -2539,7 +2543,11 @@ namespace SpriteKit {
 		[iOS (8, 0), Mac (10, 10)] // this method is missing the NS_AVAILABLE macro, but it shows up in the 10.10 sdk, but not the 10.9 sdk.
 		[MacCatalyst (13, 1)]
 		[Static, Export ("followPath:asOffset:orientToPath:speed:")]
+#if XAMCORE_5_0
 		SKAction FollowPath (CGPath path, bool offset, bool orientToPath, nfloat speed);
+#else
+		SKAction FollowPath (CGPath path, bool offset, bool orient, nfloat speed);
+#endif
 
 		[Static, Export ("speedBy:duration:")]
 		SKAction SpeedBy (nfloat speed, double sec);
