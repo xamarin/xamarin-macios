@@ -25,6 +25,7 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/data/UnixFilePermissions.xml \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Sdk/AutoImport.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Sdk/Sdk-error.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.ImplicitNamespaceImports.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.DefaultItems.props \
