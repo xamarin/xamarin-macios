@@ -68,7 +68,8 @@ stages:
     condition: eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     steps:
     - pwsh: |
-        Set-Content -Path "${{ parameters.uploadPrefix }}nuget-signed/SignList.xml" -Value "<Project />""
+        Set-Content -Path "${{ parameters.uploadPrefix }}nuget-signed/SignList.xml"       -Value "<Project />""
+        Set-Content -Path "${{ parameters.uploadPrefix }}not-signed-package/SignList.xml" -Value "<Project />""
       displayName: "Configure empty set to sign"
 
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
