@@ -47,9 +47,12 @@ using AVKit;
 using CoreAnimation;
 using CoreImage;
 using MediaToolbox;
+using Cinematic;
 #else
 // hack: ease compilation without extra defines
 using CIBarcodeDescriptor = Foundation.NSObject;
+using CNAssetInfo = Foundation.NSObject;
+using CNCompositionInfo = Foundation.NSObject;
 #endif
 using AudioToolbox;
 using CoreMedia;
@@ -8335,6 +8338,7 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
+
 	}
 
 	[Watch (6, 0)]
@@ -8490,6 +8494,11 @@ namespace AVFoundation {
 		[Export ("naturalSize")]
 		[Override]
 		CGSize NaturalSize { get; set; }
+
+		// from @interface CNComposition (AVMutableComposition)
+		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("addTracksForCinematicAssetInfo:preferredStartingTrackID:")]
+		CNCompositionInfo AddTracks (CNAssetInfo assetInfo, int preferredStartingTrackID);
 	}
 
 	[Watch (6, 0)]
