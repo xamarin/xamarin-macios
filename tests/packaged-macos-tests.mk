@@ -228,6 +228,7 @@ exec-$(1):
 ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 endif
+ifdef ENABLE_DOTNET
 ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
@@ -235,6 +236,7 @@ endif
 ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
 endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
@@ -311,6 +313,7 @@ exec-$(1):
 ifdef INCLUDE_XAMARIN_LEGACY
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-legacy-$(1)                   || echo "exec-legacy-$(1) failed"                   >> ".$$@-failure.stamp"
 endif
+ifdef ENABLE_DOTNET
 ifdef INCLUDE_MAC
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-x64-$(1)           || echo "exec-mac-dotnet-x64-$(1) failed"           >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-mac-dotnet-arm64-$(1)         || echo "exec-mac-dotnet-arm64-$(1) failed"         >> ".$$@-failure.stamp"
@@ -318,6 +321,7 @@ endif
 ifdef INCLUDE_MACCATALYST
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-x64-$(1)   || echo "exec-maccatalyst-dotnet-x64-$(1) failed"   >> ".$$@-failure.stamp"
 	$$(Q) $$(MAKE) -f packaged-macos-tests.mk exec-maccatalyst-dotnet-arm64-$(1) || echo "exec-maccatalyst-dotnet-arm64-$(1) failed" >> ".$$@-failure.stamp"
+endif
 endif
 	$$(Q) if test -e ".$$@-failure.stamp"; then cat ".$$@-failure.stamp"; rm ".$$@-failure.stamp"; exit 1; fi
 endef
