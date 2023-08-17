@@ -209,10 +209,10 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 	$(Q_GEN) ./generate-vs-workload.csharp \
 		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(platform)_MSI_VERSION)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
-		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(platform)_MSI_VERSION)) \
-		--shorten Microsoft.MacCatalyst.Runtime.maccatalyst=Microsoft.MacCatalyst.Runtime \
-		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
-		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten Microsoft.NET.Sdk.$(platform).Manifest=Microsoft.$(platform).Manifest) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(platform)_NUGET_REF_NAME)=Microsoft.$(platform).Ref) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(platform)_NUGET_SDK_NAME)=Microsoft.$(platform).Sdk) \
+		$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),--shorten $($(rid)_NUGET_RUNTIME_NAME)=Microsoft.Runtime.$(rid))) \
 		--tfm $(DOTNET_TFM) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
