@@ -4,7 +4,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests {
 	public class BindingProjectNoEmbeddingTests {
