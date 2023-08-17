@@ -18,7 +18,7 @@ namespace Xamarin {
 
 		static Cache ()
 		{
-#if NET
+#if NATIVEAOT
 			root = Path.Combine (Path.GetDirectoryName (Environment.ProcessPath)!, "tmp-test-dir");
 #else
 			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location)!, "tmp-test-dir");
