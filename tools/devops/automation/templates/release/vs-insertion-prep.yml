@@ -42,6 +42,35 @@ stages:
     condition: eq(${{ parameters.isPR }}, false)
 
   jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+    steps:
+    - template: ../common/configure.yml
+      parameters:
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: false
+
+  # We skip signing .NET stuff if the build disables ENABLE_DOTNET.
+  # We need the previous job ('Configure build') to figure out whether .NET is enabled or not,
+  # and unfortunately we can't condition the templates below on a runtime condition, so instead
+  # set things up so that nothing is signed instead.
+  - job: prepare
+    dependsOn: configure
+    displayName: 'Configure signing when .NET is not enabled'
+    condition: eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    steps:
+      - pwsh: |
+          Set-Content -Path "${{ parameters.uploadPrefix }}nuget-signed/SignList.xml" -Value "<Project />""
+        displayName: "Configure empty set to sign"
+
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
