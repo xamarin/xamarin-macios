@@ -482,7 +482,7 @@ namespace Cinematic {
 
 		[Export ("continueTrackingAt:sourceImage:sourceDisparity:")]
 		[return: NullAllowed]
-		CNBoundsPrediction ContinueTrackingAt (CMTime time, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity);
+		CNBoundsPrediction ContinueTracking (CMTime atTime, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity);
 
 		[Export ("finishDetectionTrack")]
 		CNDetectionTrack FinishDetectionTrack { get; }

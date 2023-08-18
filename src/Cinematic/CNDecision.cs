@@ -10,7 +10,6 @@ using ObjCRuntime;
 namespace Cinematic {
 
 #if NET
-	[UnsupportedOSPlatform ("watchos")]
 	[SupportedOSPlatform ("tvos17.0")]
 	[SupportedOSPlatform ("macos14.0")]
 	[SupportedOSPlatform ("ios17.0")]
@@ -25,7 +24,7 @@ namespace Cinematic {
 
 	public partial class CNDecision {
 
-		public CNDecision (CMTime time, long detectionID, bool isStrong, CNDecisionIdentifierType identifierType)
+		public CNDecision (CMTime time, long detectionId, bool isStrong, CNDecisionIdentifierType identifierType)
 		{
 
 			switch (identifierType) {
