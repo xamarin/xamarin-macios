@@ -2020,7 +2020,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"      Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
 
 	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'MacCatalystExecutableProject' Or '$(_ProjectType)' == 'MacCatalystClassLibrary' " />
-	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'MacCatalystSAppExtensionProject' " />
+	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'MacCatalystAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'MacCatalystBindingProject' " />
 	
 </Project>
