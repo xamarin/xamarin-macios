@@ -245,8 +245,6 @@ namespace PencilKit {
 		nfloat GetMaximumWidth (PKEraserType eraserType);
 	}
 
-
-
 	[iOS (13, 0), Mac (11, 0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (PKTool))]
