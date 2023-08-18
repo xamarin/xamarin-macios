@@ -478,7 +478,7 @@ namespace Cinematic {
 		CNBoundsPrediction FindObject (CGPoint point, CVPixelBuffer sourceImage);
 
 		[Export ("startTrackingAt:within:sourceImage:sourceDisparity:")]
-		bool StartTrackingAt (CMTime time, CGRect normalizedBounds, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity);
+		bool StartTracking (CMTime atTime, CGRect normalizedBounds, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity);
 
 		[Export ("continueTrackingAt:sourceImage:sourceDisparity:")]
 		[return: NullAllowed]
