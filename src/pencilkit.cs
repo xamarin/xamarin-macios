@@ -86,11 +86,13 @@ namespace PencilKit {
 		PencilOnly,
 	}
 
+	[iOS (17, 0), Mac (14, 0)]
+	[Introduced (PlatformName.MacCatalyst, 17, 0)]
 	[Native]
 	public enum PKContentVersion : long {
 		PKContentVersion1 = 1,
 		PKContentVersion2 = 2,
-		Latest = PKContentVersion2
+		Latest = PKContentVersion2,
 	}
 
 	[iOS (13, 0), NoMac]
