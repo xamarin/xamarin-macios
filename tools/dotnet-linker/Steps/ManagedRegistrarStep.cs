@@ -292,7 +292,7 @@ namespace Xamarin.Linker {
 			infos.Add (new TrampolineInfo (callback, method, name));
 
 			// If the target method is marked, then we must mark the trampoline as well.
-			method.CustomAttributes.Add (CreateDynamicDependencyAttribute (callbackType, callback.Name));
+			method.CustomAttributes.Add (abr.CreateDynamicDependencyAttribute (callback.Name, callbackType));
 
 			callback.AddParameter ("pobj", abr.System_IntPtr);
 
@@ -1119,14 +1119,6 @@ namespace Xamarin.Linker {
 			var entryPointPrefix = Driver.TargetFramework.Version.Major < 8 ? "_" : string.Empty;
 			unmanagedCallersAttribute.Fields.Add (new CustomAttributeNamedArgument ("EntryPoint", new CustomAttributeArgument (abr.System_String, entryPointPrefix + entryPoint)));
 			return unmanagedCallersAttribute;
-		}
-
-		CustomAttribute CreateDynamicDependencyAttribute (TypeDefinition type, string member)
-		{
-			var attribute = new CustomAttribute (abr.DynamicDependencyAttribute_ctor__String_Type);
-			attribute.ConstructorArguments.Add (new CustomAttributeArgument (abr.System_String, member));
-			attribute.ConstructorArguments.Add (new CustomAttributeArgument (abr.System_Type, type));
-			return attribute;
 		}
 
 		void GenerateConversionToManaged (MethodDefinition method, ILProcessor il, TypeReference inputType, TypeReference outputType, string descriptiveMethodName, int parameter, out TypeReference nativeCallerType)

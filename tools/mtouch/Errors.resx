@@ -1338,6 +1338,11 @@
 		</value>
 	</data>
 
+	<data name="MX2112" xml:space="preserve">
+		<!-- This is a warning -->
+		<value>Unable to apply the conditional [Preserve] attribute on the member {0}.</value>
+	</data>
+
 	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
 	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
 	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
@@ -1371,6 +1376,15 @@
 	<!-- 234x: ExtractBindingLibrariesStep -->
 	<!-- 235x: LoadNonSkippedAssembliesStep -->
 	<!-- 236x: RegistrarStep -->
+	<!-- 237x: ComputeAOTArguments -->
+	<!-- 238x: RegistrarRemovalTrackingStep -->
+	<!-- 239x: CoreTypeMapStep -->
+	<!-- 240x: BackingFieldDelayHandler -->
+	<!-- 241x: BackingFieldReintroductionSubStep -->
+	<!-- 242x: MarkIProtocolHandler -->
+	<!-- 243x: ManagedRegistrarStep -->
+	<!-- 244x: ManagedRegistrarLookupTablesStep -->
+	<!-- 245x: ApplyPreserveAttribute -->
 
 	<data name="MX3001" xml:space="preserve">
 		<value>Could not {0} the assembly '{1}'
