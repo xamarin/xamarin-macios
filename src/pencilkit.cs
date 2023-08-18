@@ -60,20 +60,20 @@ namespace PencilKit {
 		[Field ("PKInkTypeMarker")]
 		Marker,
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Field("PKInkTypeMonoline")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("PKInkTypeMonoline")]
 		Monoline,
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Field("PKInkTypeFountainPen")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("PKInkTypeFountainPen")]
 		FountainPen,
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Field("PKInkTypeWatercolor")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("PKInkTypeWatercolor")]
 		Watercolor,
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Field("PKInkTypeCrayon")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("PKInkTypeCrayon")]
 		Crayon,
 	}
 
@@ -87,8 +87,7 @@ namespace PencilKit {
 	}
 
 	[Native]
-	public enum PKContentVersion : long
-	{
+	public enum PKContentVersion : long {
 		PKContentVersion1 = 1,
 		PKContentVersion2 = 2,
 		Latest = PKContentVersion2
@@ -155,8 +154,8 @@ namespace PencilKit {
 		[Export ("drawingPolicy", ArgumentSemantic.Assign)]
 		PKCanvasViewDrawingPolicy DrawingPolicy { get; set; }
 
-		[iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("maximumSupportedContentVersion", ArgumentSemantic.Assign)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("maximumSupportedContentVersion", ArgumentSemantic.Assign)]
 		PKContentVersion MaximumSupportedContentVersion { get; set; }
 	}
 
@@ -203,8 +202,8 @@ namespace PencilKit {
 		[Export ("drawingByAppendingStrokes:")]
 		PKDrawing GetDrawing (PKStroke [] strokes);
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("requiredContentVersion")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requiredContentVersion")]
 		PKContentVersion RequiredContentVersion { get; }
 	}
 
@@ -299,8 +298,8 @@ namespace PencilKit {
 		[Export ("ink")]
 		PKInk Ink { get; }
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("requiredContentVersion")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requiredContentVersion")]
 		PKContentVersion RequiredContentVersion { get; }
 	}
 
@@ -392,8 +391,8 @@ namespace PencilKit {
 		[Export ("stateAutosaveName")]
 		string StateAutosaveName { get; set; }
 
-		[iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("maximumSupportedContentVersion", ArgumentSemantic.Assign)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("maximumSupportedContentVersion", ArgumentSemantic.Assign)]
 		PKContentVersion MaximumSupportedContentVersion { get; set; }
 	}
 
@@ -420,8 +419,8 @@ namespace PencilKit {
 		[Export ("color")]
 		UIColor Color { get; }
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("requiredContentVersion")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requiredContentVersion")]
 		PKContentVersion RequiredContentVersion { get; }
 	}
 
@@ -474,8 +473,8 @@ namespace PencilKit {
 		[Export ("randomSeed")]
 		uint RandomSeed { get; }
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("requiredContentVersion")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requiredContentVersion")]
 		PKContentVersion RequiredContentVersion { get; }
 	}
 
@@ -533,10 +532,10 @@ namespace PencilKit {
 		[DesignatedInitializer]
 		NativeHandle Constructor (CGPoint location, double timeOffset, CGSize size, nfloat opacity, nfloat force, nfloat azimuth, nfloat altitude);
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("initWithLocation:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithLocation:timeOffset:size:opacity:force:azimuth:altitude:secondaryScale:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor(CGPoint location, double timeOffset, CGSize size, nfloat opacity, nfloat force, nfloat azimuth, nfloat altitude, nfloat secondaryScale);
+		NativeHandle Constructor (CGPoint location, double timeOffset, CGSize size, nfloat opacity, nfloat force, nfloat azimuth, nfloat altitude, nfloat secondaryScale);
 
 		[Export ("location")]
 		CGPoint Location { get; }
@@ -559,8 +558,8 @@ namespace PencilKit {
 		[Export ("altitude")]
 		nfloat Altitude { get; }
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("secondaryScale")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("secondaryScale")]
 		nfloat SecondaryScale { get; }
 	}
 }
