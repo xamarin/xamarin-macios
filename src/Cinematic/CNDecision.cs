@@ -29,10 +29,10 @@ namespace Cinematic {
 
 			switch (identifierType) {
 			case CNDecisionIdentifierType.Single:
-				InitializeHandle (_InitWithSingleIdentifier (time, detectionID, isStrong), "initWithTime:detectionID:strong:");
+				InitializeHandle (_InitWithSingleIdentifier (time, detectionId, isStrong), "initWithTime:detectionID:strong:");
 				break;
 			case CNDecisionIdentifierType.Group:
-				InitializeHandle (_InitWithGroupIdentifier (time, detectionID, isStrong), "initWithTime:detectionGroupID:strong:");
+				InitializeHandle (_InitWithGroupIdentifier (time, detectionId, isStrong), "initWithTime:detectionGroupID:strong:");
 				break;
 			default:
 				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (identifierType), $"Unknown identifier type: {identifierType}");
