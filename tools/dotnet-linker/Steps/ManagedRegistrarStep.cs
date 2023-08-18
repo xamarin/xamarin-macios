@@ -292,7 +292,7 @@ namespace Xamarin.Linker {
 			infos.Add (new TrampolineInfo (callback, method, name));
 
 			// If the target method is marked, then we must mark the trampoline as well.
-			method.CustomAttributes.Add (CreateDynamicDependencyAttribute (callbackType, callback.Name));
+			method.CustomAttributes.Add (abr.CreateDynamicDependencyAttribute (callback.Name, callbackType));
 
 			callback.AddParameter ("pobj", abr.System_IntPtr);
 
@@ -921,14 +921,42 @@ namespace Xamarin.Linker {
 						// cast to the generic type to verify that the item is actually of the correct type
 						il.Emit (OpCodes.Unbox_Any, type);
 					} else {
-						var nativeObjType = StaticRegistrar.GetInstantiableType (type.Resolve (), exceptions, GetMethodSignature (method));
+						StaticRegistrar.GetInstantiableType (type.Resolve (), exceptions, GetMethodSignature (method), out var ctor);
+						EnsureVisible (method, ctor);
+						var targetType = method.Module.ImportReference (type);
+						var handleVariable = il.Body.AddVariable (abr.System_IntPtr);
+						var objectVariable = il.Body.AddVariable (targetType);
+						var loadHandle = il.Create (OpCodes.Ldloc, handleVariable);
+						var loadObjectVariable = il.Create (OpCodes.Ldloc, objectVariable);
+						il.Emit (OpCodes.Stloc, handleVariable);
+						// objectVariable = null
+						il.Emit (OpCodes.Ldnull);
+						il.Emit (OpCodes.Stloc, objectVariable);
+						// if (handle == IntPtr.Zero)
+						//     goto done;
+						il.Emit (OpCodes.Ldloc, handleVariable); // handle
+						il.Emit (OpCodes.Ldsfld, abr.System_IntPtr_Zero);
+						il.Emit (OpCodes.Beq, loadObjectVariable);
+						// objectVariable = TryGetNSObject (handle, false) as TargetType
+						il.Emit (OpCodes.Ldloc, handleVariable); // handle
 						il.Emit (OpCodes.Ldc_I4_0); // false
-						il.Emit (OpCodes.Ldtoken, method.Module.ImportReference (type)); // target type
-						il.Emit (OpCodes.Call, abr.Type_GetTypeFromHandle);
-						il.Emit (OpCodes.Ldtoken, method.Module.ImportReference (nativeObjType)); // implementation type
-						il.Emit (OpCodes.Call, abr.Type_GetTypeFromHandle);
-						il.Emit (OpCodes.Call, abr.Runtime_GetINativeObject__IntPtr_Boolean_Type_Type);
-						il.Emit (OpCodes.Castclass, type);
+						il.Emit (OpCodes.Call, abr.Runtime_TryGetNSObject);
+						il.Emit (OpCodes.Castclass, targetType);
+						il.Emit (OpCodes.Stloc, objectVariable);
+						// if (objectVariable is null)
+						//     objectVariable = new TargetType (handle, false)
+						il.Emit (OpCodes.Ldloc, objectVariable);
+						il.Emit (OpCodes.Brfalse, loadHandle);
+						il.Emit (OpCodes.Br, loadObjectVariable);
+						il.Append (loadHandle);
+						if (ctor.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+							il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_NativeHandle);
+						il.Emit (OpCodes.Ldc_I4_0); // false
+						il.Emit (OpCodes.Newobj, method.Module.ImportReference (ctor));
+						il.Emit (OpCodes.Stloc, objectVariable);
+						// done:
+						// (load objectVariable on the stack)
+						il.Append (loadObjectVariable);
 					}
 					nativeType = abr.System_IntPtr;
 				} else {
@@ -1091,14 +1119,6 @@ namespace Xamarin.Linker {
 			var entryPointPrefix = Driver.TargetFramework.Version.Major < 8 ? "_" : string.Empty;
 			unmanagedCallersAttribute.Fields.Add (new CustomAttributeNamedArgument ("EntryPoint", new CustomAttributeArgument (abr.System_String, entryPointPrefix + entryPoint)));
 			return unmanagedCallersAttribute;
-		}
-
-		CustomAttribute CreateDynamicDependencyAttribute (TypeDefinition type, string member)
-		{
-			var attribute = new CustomAttribute (abr.DynamicDependencyAttribute_ctor__String_Type);
-			attribute.ConstructorArguments.Add (new CustomAttributeArgument (abr.System_String, member));
-			attribute.ConstructorArguments.Add (new CustomAttributeArgument (abr.System_Type, type));
-			return attribute;
 		}
 
 		void GenerateConversionToManaged (MethodDefinition method, ILProcessor il, TypeReference inputType, TypeReference outputType, string descriptiveMethodName, int parameter, out TypeReference nativeCallerType)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Mono.Cecil;
@@ -231,6 +232,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public FieldReference System_IntPtr_Zero {
+			get {
+				return GetFieldReference (CorlibAssembly, System_IntPtr, "Zero", "System.IntPtr::Zero", out var _);
+			}
+		}
+
 		public TypeReference System_Nullable_1 {
 			get {
 				return GetTypeReference (CorlibAssembly, "System.Nullable`1", out var _);
@@ -300,6 +307,12 @@ namespace Xamarin.Linker {
 		public TypeReference System_Diagnostics_CodeAnalysis_DynamicDependencyAttribute {
 			get {
 				return GetTypeReference (CorlibAssembly, "System.Diagnostics.CodeAnalysis.DynamicDependencyAttribute", out var _);
+			}
+		}
+
+		public TypeReference System_Diagnostics_CodeAnalysis_DynamicallyAccessedMemberTypes {
+			get {
+				return GetTypeReference (CorlibAssembly, "System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes", out var _);
 			}
 		}
 
@@ -460,8 +473,21 @@ namespace Xamarin.Linker {
 				return GetMethodReference (CorlibAssembly,
 						System_Diagnostics_CodeAnalysis_DynamicDependencyAttribute,
 						".ctor",
+						".ctor(String,Type)",
 						isStatic: false,
 						System_String,
+						System_Type);
+			}
+		}
+
+		public MethodReference DynamicDependencyAttribute_ctor__DynamicallyAccessedMemberTypes_Type {
+			get {
+				return GetMethodReference (CorlibAssembly,
+						System_Diagnostics_CodeAnalysis_DynamicDependencyAttribute,
+						".ctor",
+						".ctor(DynamicallyAccessedMemberTypes,Type)",
+						isStatic: false,
+						System_Diagnostics_CodeAnalysis_DynamicallyAccessedMemberTypes,
 						System_Type);
 			}
 		}
@@ -779,6 +805,16 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference Runtime_TryGetNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryGetNSObject",
+						nameof (Runtime_TryGetNSObject),
+						isStatic: true,
+						System_IntPtr,
+						System_Boolean);
+			}
+		}
 		public MethodReference Runtime_GetNSObject__System_IntPtr {
 			get {
 				return GetMethodReference (PlatformAssembly,
@@ -811,19 +847,6 @@ namespace Xamarin.Linker {
 						isStatic: true,
 						genericParameterCount: 1,
 						System_IntPtr);
-			}
-		}
-
-		public MethodReference Runtime_GetINativeObject__IntPtr_Boolean_Type_Type {
-			get {
-				return GetMethodReference (PlatformAssembly,
-						ObjCRuntime_Runtime, "GetINativeObject",
-						nameof (Runtime_GetINativeObject__IntPtr_Boolean_Type_Type),
-						isStatic: true,
-						System_IntPtr,
-						System_Boolean,
-						System_Type,
-						System_Type);
 			}
 		}
 
@@ -1142,6 +1165,24 @@ namespace Xamarin.Linker {
 			current_assembly = null;
 			type_map.Clear ();
 			method_map.Clear ();
+			field_map.Clear ();
+		}
+
+		public CustomAttribute CreateDynamicDependencyAttribute (string memberSignature, TypeDefinition type)
+		{
+			var attribute = new CustomAttribute (DynamicDependencyAttribute_ctor__String_Type);
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_String, memberSignature));
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Type, type));
+			return attribute;
+		}
+
+		public CustomAttribute CreateDynamicDependencyAttribute (DynamicallyAccessedMemberTypes memberTypes, TypeDefinition type)
+		{
+			var attribute = new CustomAttribute (DynamicDependencyAttribute_ctor__DynamicallyAccessedMemberTypes_Type);
+			// typed as 'int' because that's how the linker expects it: https://github.com/dotnet/runtime/blob/3c5ad6c677b4a3d12bc6a776d654558cca2c36a9/src/tools/illink/src/linker/Linker/DynamicDependency.cs#L97
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Diagnostics_CodeAnalysis_DynamicallyAccessedMemberTypes, (int) memberTypes));
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Type, type));
+			return attribute;
 		}
 	}
 }
