@@ -212,7 +212,9 @@ Describe 'New-BuildConfiguration' {
   ""BuildId"": ""BUILD_BUILDID"",
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
   ""INCLUDE_DOTNET_IOS"": null,
+  ""IOS_NUGET_VERSION_NO_METADATA"": null,
   ""INCLUDE_DOTNET_TVOS"": ""true"",
+  ""TVOS_NUGET_VERSION_NO_METADATA"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild"",
@@ -238,7 +240,9 @@ Describe 'New-BuildConfiguration' {
   ""BuildId"": ""BUILD_BUILDID"",
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
   ""INCLUDE_DOTNET_IOS"": null,
+  ""IOS_NUGET_VERSION_NO_METADATA"": null,
   ""INCLUDE_DOTNET_TVOS"": ""true"",
+  ""TVOS_NUGET_VERSION_NO_METADATA"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild"",

@@ -34,7 +34,10 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var result = new List<ITaskItem> ();
 			foreach (var file in File) {
-				var document = XDocument.Load (file.ItemSpec);
+				// XDocument.Load(string) takes a string to a URI, not a file path, so with certain characters that becomes a problem.
+				// Just File.OpenRead instead and use the XDocument.Load(Stream) overload instead.
+				using var stream = global::System.IO.File.OpenRead (file.ItemSpec);
+				var document = XDocument.Load (stream);
 
 				var items = document.Root
 					.Elements (ItemGroupElementName)

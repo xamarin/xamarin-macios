@@ -52,9 +52,12 @@ try {
 	for (int i = 0; i < names.Length; i++) {
 		var name = names [i];
 		var frameworks = allframeworks [i];
-		sb.Append ($"\tinternal readonly HashSet<string> {name} = new HashSet<string> {{\"");
-		sb.Append (string.Join ("\", \"", frameworks));
-		sb.AppendLine ("\"};");
+		sb.AppendLine ($"\t// GENERATED FILE - DO NOT EDIT");
+		sb.AppendLine ($"\tinternal readonly HashSet<string> {name} = new HashSet<string> {{");
+		foreach (var fw in frameworks.OrderBy (v => v)) {
+			sb.AppendLine ($"\t\t\"{fw}\",");
+		}
+		sb.AppendLine ("\t};");
 	}
 
 	var allArray = all.ToArray ();
