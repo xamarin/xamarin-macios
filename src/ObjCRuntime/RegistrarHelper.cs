@@ -208,6 +208,22 @@ namespace ObjCRuntime {
 			return entry.Registrar.LookupTypeId (type.TypeHandle);
 		}
 
+		internal static T? ConstructNSObject<T> (Type type, NativeHandle nativeHandle)
+			where T : class, INativeObject
+		{
+			if (!TryGetMapEntry (type.Assembly.GetName ().Name!, out var entry))
+				return null;
+			return (T?) entry.Registrar.ConstructNSObject (type.TypeHandle, nativeHandle);
+		}
+
+		internal static T? ConstructINativeObject<T> (Type type, NativeHandle nativeHandle, bool owns)
+			where T : class, INativeObject
+		{
+			if (!TryGetMapEntry (type.Assembly.GetName ().Name!, out var entry))
+				return null;
+			return (T?) entry.Registrar.ConstructINativeObject (type.TypeHandle, nativeHandle, owns);
+		}
+
 		// helper functions for converting between native and managed objects
 		static NativeHandle ManagedArrayToNSArray (object array, bool retain)
 		{
