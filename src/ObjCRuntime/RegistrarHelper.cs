@@ -195,7 +195,7 @@ namespace ObjCRuntime {
 		}
 
 		[MethodImpl(MethodImplOptions.NoInlining)]
-		internal static bool RuntimeTypeHandleEquals (ref RuntimeTypeHandle typeHandle, RuntimeTypeHandle otherTypeHandle)
+		static bool RuntimeTypeHandleEquals (ref RuntimeTypeHandle typeHandle, RuntimeTypeHandle otherTypeHandle)
 		{
 			return typeHandle.Equals (otherTypeHandle);
 		}

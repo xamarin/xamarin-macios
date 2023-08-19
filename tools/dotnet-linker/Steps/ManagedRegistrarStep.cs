@@ -162,6 +162,12 @@ namespace Xamarin.Linker {
 			if (modified)
 				abr.SaveCurrentAssembly ();
 
+			if (App.XamarinRuntime == XamarinRuntime.MonoVM) {
+				var md = abr.RegistrarHelper_RuntimeTypeHandleEquals.Resolve ();
+				md.IsPublic = true;
+				Annotations.Mark (md);
+			}
+
 			abr.ClearCurrentAssembly ();
 		}
 
