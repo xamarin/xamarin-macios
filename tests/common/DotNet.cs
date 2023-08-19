@@ -28,14 +28,14 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			return Execute ("pack", project, properties, true);
+			return Execute ("pack", project, properties, true, msbuildParallelism: msbuildParallelism);
 		}
 
-		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			var rv = Execute ("pack", project, properties, false);
+			var rv = Execute ("pack", project, properties, false, msbuildParallelism: msbuildParallelism);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
@@ -113,7 +113,7 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -172,6 +172,15 @@ namespace Xamarin.Tests {
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project)!, $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
 				Console.WriteLine ($"Binlog: {binlogPath}");
+
+				if (msbuildParallelism.HasValue) {
+					if (msbuildParallelism.Value) {
+						args.Add ("-maxcpucount"); // this means "use as many processes as there are cpus"
+					} else {
+						args.Add ("-maxcpucount:1");
+					}
+				}
+
 				var env = new Dictionary<string, string?> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
@@ -181,6 +190,21 @@ namespace Xamarin.Tests {
 					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
 					Console.WriteLine (outputStr);
+					if (rv.ExitCode != 0) {
+						var msg = new StringBuilder ();
+						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
+						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
+#if !MSBUILD_TASKS
+						var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
+						if (errors.Any ()) {
+							var errorsToList = errors.Take (10).ToArray ();
+							msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
+							foreach (var error in errorsToList)
+								msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+						}
+#endif
+						Assert.Fail (msg.ToString ());
+					}
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult (output, output, rv.ExitCode) {
