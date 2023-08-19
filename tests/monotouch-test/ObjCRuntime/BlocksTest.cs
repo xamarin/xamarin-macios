@@ -72,7 +72,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !DEVICE && !MONOMAC && !AOT // some of these tests cause the AOT compiler to assert
+#if !DEVICE && !MONOMAC && !AOT && !__MACCATALYST__ // some of these tests cause the AOT compiler to assert
 		// No MonoPInvokeCallback
 		static void InvalidTrampoline1 () { }
 
