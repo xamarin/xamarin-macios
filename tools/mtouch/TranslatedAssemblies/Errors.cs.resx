@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>Nepovedlo se dekomprimovat soubor {0}. Zkontrolujte prosím v protokolu o sestavení další informace z nativního příkazu unzip.</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>V referencích chybí požadované sestavení Xamarin.Mac.dll.
 		</value>
@@ -1812,5 +1818,8 @@
 	</data>
   <data name="MX8055" xml:space="preserve">
 		<value>V sestavení „{0}“ nelze najít typ „ObjCRuntime.__Registrar__“.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
 	</data>
 </root>
