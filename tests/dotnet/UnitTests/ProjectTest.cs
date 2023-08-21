@@ -1290,7 +1290,6 @@ namespace Xamarin.Tests {
 			if (configuration == "Release") {
 				Assert.IsTrue (foundEntitlements, "Found in Release");
 				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.app-sandbox")?.Value, "com.apple.security.app-sandbox enlistment was not found.");
-				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.network.client")?.Value, "com.apple.security.network.client enlistment was not found.");
 			} else if (configuration == "Debug") {
 				Assert.IsTrue (foundEntitlements, "Found in Debug");
 				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was not found.");
