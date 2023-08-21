@@ -508,18 +508,12 @@
 			<!-- Set NativeAOT value -->
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
-
-			<!-- Set the features for ILLink -->
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator $(_IsSimulatorFeature)</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar $(_IsManagedStaticRegistrarFeature)</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsNativeAOT $(_IsNativeAOTFeature)</_ExtraTrimmerArgs>
 		</PropertyGroup>
 
 		<ItemGroup>
-			<!-- Set the features for ILC -->
-			<IlcArg Include="--feature:ObjCRuntime.Runtime.Arch.IsSimulator=$(_IsSimulatorFeature)" />
-			<IlcArg Include="--feature:ObjCRuntime.Runtime.IsManagedStaticRegistrar=$(_IsManagedStaticRegistrarFeature)" />
-			<IlcArg Include="--feature:ObjCRuntime.Runtime.IsNativeAOT=$(_IsNativeAOTFeature)" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
 		</ItemGroup>
 	</Target>
 
