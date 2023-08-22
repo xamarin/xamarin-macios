@@ -6,7 +6,6 @@
 //
 // Copyright 2023 Microsoft Corp
 
-
 #if NET
 
 #nullable enable
@@ -34,6 +33,10 @@ namespace ObjCRuntime {
 		// This method will be called once per assembly, and the implementation has to
 		// add all the interface -> wrapper type mappings to the dictionary.
 		void RegisterWrapperTypes (Dictionary<RuntimeTypeHandle, RuntimeTypeHandle> type);
+		// Create an instance of a managed NSObject subclass for an existing Objective-C object.
+		INativeObject? ConstructNSObject (RuntimeTypeHandle typeHandle, NativeHandle nativeHandle);
+		// Create an instance of a managed NSObject subclass for an existing Objective-C object.
+		INativeObject? ConstructINativeObject (RuntimeTypeHandle typeHandle, NativeHandle nativeHandle, bool owns);
 	}
 }
 

@@ -158,9 +158,14 @@ namespace Xamarin.Linker {
 				assembly.MainModule.Types.Add (additionalType);
 
 			// Make sure the linker saves any changes in the assembly.
-			if (modified) {
-				DerivedLinkContext.Annotations.SetCustomAnnotation ("ManagedRegistrarStep", assembly, current_trampoline_lists);
+			DerivedLinkContext.Annotations.SetCustomAnnotation ("ManagedRegistrarStep", assembly, current_trampoline_lists);
+			if (modified)
 				abr.SaveCurrentAssembly ();
+
+			if (App.XamarinRuntime == XamarinRuntime.MonoVM) {
+				var md = abr.RegistrarHelper_RuntimeTypeHandleEquals.Resolve ();
+				md.IsPublic = true;
+				Annotations.Mark (md);
 			}
 
 			abr.ClearCurrentAssembly ();
@@ -1058,7 +1063,7 @@ namespace Xamarin.Linker {
 			return false;
 		}
 
-		bool IsOpenType (TypeReference tr)
+		internal static bool IsOpenType (TypeReference tr)
 		{
 			if (tr is GenericParameter)
 				return true;
@@ -1080,13 +1085,13 @@ namespace Xamarin.Linker {
 			return IsOpenType (tr.Resolve ());
 		}
 
-		void EnsureVisible (MethodDefinition caller, FieldDefinition field)
+		static void EnsureVisible (MethodDefinition caller, FieldDefinition field)
 		{
 			field.IsPublic = true;
 			EnsureVisible (caller, field.DeclaringType);
 		}
 
-		void EnsureVisible (MethodDefinition caller, TypeDefinition type)
+		static void EnsureVisible (MethodDefinition caller, TypeDefinition type)
 		{
 			if (type.IsNested) {
 				type.IsNestedPublic = true;
@@ -1096,7 +1101,7 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		void EnsureVisible (MethodDefinition caller, MethodReference method)
+		static void EnsureVisible (MethodDefinition caller, MethodReference method)
 		{
 			var md = method.Resolve ();
 			md.IsPublic = true;

@@ -396,6 +396,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public TypeReference Foundation_INSObjectFactory {
+			get {
+				return GetTypeReference (PlatformAssembly, "Foundation.INSObjectFactory", out var _);
+			}
+		}
+
 		public TypeReference ObjCRuntime_INativeObject {
 			get {
 				return GetTypeReference (PlatformAssembly, "ObjCRuntime.INativeObject", out var _);
@@ -494,9 +500,13 @@ namespace Xamarin.Linker {
 
 		public MethodReference RuntimeTypeHandle_Equals {
 			get {
+				if (configuration.Application.XamarinRuntime == XamarinRuntime.MonoVM) {
+					return RegistrarHelper_RuntimeTypeHandleEquals;
+				}
 				return GetMethodReference (CorlibAssembly, System_RuntimeTypeHandle, "Equals", isStatic: false, System_RuntimeTypeHandle);
 			}
 		}
+
 		public MethodReference MethodBase_Invoke {
 			get {
 				return GetMethodReference (CorlibAssembly, System_Reflection_MethodBase, "Invoke", (v) =>
@@ -747,6 +757,20 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference RegistrarHelper_RuntimeTypeHandleEquals {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_RegistrarHelper,
+						"RuntimeTypeHandleEquals",
+						(v) => v.IsStatic
+						&& v.HasParameters
+						&& v.Parameters.Count == 2
+						&& v.Parameters [0].ParameterType is ByReferenceType brt1 && brt1.ElementType.Is ("System", "RuntimeTypeHandle")
+						&& v.Parameters [1].ParameterType.Is ("System", "RuntimeTypeHandle")
+						&& !v.HasGenericParameters);
+			}
+		}
+
 		public MethodReference IManagedRegistrar_LookupUnmanagedFunction {
 			get {
 				return GetMethodReference (PlatformAssembly,
@@ -772,6 +796,49 @@ namespace Xamarin.Linker {
 						ObjCRuntime_IManagedRegistrar, "LookupTypeId",
 						isStatic: false,
 						System_RuntimeTypeHandle);
+			}
+		}
+
+		public MethodReference IManagedRegistrar_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructNSObject",
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference INSObjectFactory__Xamarin_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						Foundation_INSObjectFactory, "_Xamarin_ConstructNSObject",
+						nameof (INSObjectFactory__Xamarin_ConstructNSObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference IManagedRegistrar_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructINativeObject",
+						nameof (IManagedRegistrar_ConstructINativeObject),
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
+			}
+		}
+
+		public MethodReference INativeObject__Xamarin_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_INativeObject, "_Xamarin_ConstructINativeObject",
+						nameof (INativeObject__Xamarin_ConstructINativeObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
 			}
 		}
 
@@ -1109,6 +1176,15 @@ namespace Xamarin.Linker {
 			get {
 				return GetMethodReference (PlatformAssembly,
 						ObjCRuntime_Runtime, "RetainAndAutoreleaseNativeObject",
+						isStatic: true,
+						ObjCRuntime_INativeObject);
+			}
+		}
+
+		public MethodReference Runtime_TryReleaseINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryReleaseINativeObject",
 						isStatic: true,
 						ObjCRuntime_INativeObject);
 			}
