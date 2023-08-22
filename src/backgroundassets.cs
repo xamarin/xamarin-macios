@@ -36,7 +36,7 @@ namespace BackgroundAssets {
 		Periodic,
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[ErrorDomain ("BAErrorDomain")]
 	[Native]
 	public enum BAErrorCode : long {
