@@ -104,10 +104,10 @@ namespace Cinematic {
 		AVAssetTrack [] VideoCompositionTracks { get; }
 
 		[Export ("videoCompositionTrackIDs", ArgumentSemantic.Strong)]
-		NSNumber [] VideoCompositionTrackIDs { get; }
+		NSNumber [] VideoCompositionTrackIds { get; }
 
 		[Export ("sampleDataTrackIDs", ArgumentSemantic.Strong)]
-		NSNumber [] SampleDataTrackIDs { get; }
+		NSNumber [] SampleDataTrackIds { get; }
 	}
 
 	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -204,18 +204,18 @@ namespace Cinematic {
 		float FocusDisparity { get; }
 
 		[Export ("detectionID")]
-		long DetectionID { get; }
+		long DetectionId { get; }
 
 		[Export ("detectionGroupID")]
-		long DetectionGroupID { get; }
+		long DetectionGroupId { get; }
 
 		[Static]
 		[Export ("isValidDetectionID:")]
-		bool IsValidDetectionID (long detectionID);
+		bool IsValidDetectionId (long detectionId);
 
 		[Static]
 		[Export ("isValidDetectionGroupID:")]
-		bool IsValidDetectionGroupID (long detectionGroupID);
+		bool IsValidDetectionGroupId (long detectionGroupId);
 
 		[Static]
 		[Export ("accessibilityLabelForDetectionType:")]
@@ -232,20 +232,20 @@ namespace Cinematic {
 	interface CNDecision : NSCopying {
 		[Internal]
 		[Export ("initWithTime:detectionID:strong:")]
-		NativeHandle _InitWithSingleIdentifier (CMTime time, long detectionID, bool isStrong);
+		NativeHandle _InitWithSingleIdentifier (CMTime time, long detectionId, bool isStrong);
 
 		[Internal]
 		[Export ("initWithTime:detectionGroupID:strong:")]
-		NativeHandle _InitWithGroupIdentifier (CMTime time, long detectionGroupID, bool isStrong);
+		NativeHandle _InitWithGroupIdentifier (CMTime time, long detectionGroupId, bool isStrong);
 
 		[Export ("time")]
 		CMTime Time { get; }
 
 		[Export ("detectionID")]
-		long DetectionID { get; }
+		long DetectionId { get; }
 
 		[Export ("detectionGroupID")]
-		long DetectionGroupID { get; }
+		long DetectionGroupId { get; }
 
 		[Export ("userDecision")]
 		bool UserDecision { [Bind ("isUserDecision")] get; }
@@ -265,10 +265,10 @@ namespace Cinematic {
 		CNDetectionType DetectionType { get; }
 
 		[Export ("detectionID")]
-		long DetectionID { get; }
+		long DetectionId { get; }
 
 		[Export ("detectionGroupID")]
-		long DetectionGroupID { get; }
+		long DetectionGroupId { get; }
 
 		[Export ("userCreated")]
 		bool UserCreated { [Bind ("isUserCreated")] get; }
@@ -379,7 +379,7 @@ namespace Cinematic {
 
 		[Export ("detectionTrackForID:")]
 		[return: NullAllowed]
-		CNDetectionTrack GetDetectionTrackForID (long detectionID);
+		CNDetectionTrack GetDetectionTrackForId (long detectionId);
 
 		[Export ("detectionTrackForDecision:")]
 		[return: NullAllowed]
@@ -445,11 +445,11 @@ namespace Cinematic {
 
 		[Export ("detectionForID:")]
 		[return: NullAllowed]
-		CNDetection GetDetectionForID (long detectionID);
+		CNDetection GetDetectionForId (long detectionId);
 
 		[Export ("bestDetectionForGroupID:")]
 		[return: NullAllowed]
-		CNDetection GetBestDetectionForGroupID (long detectionGroupID);
+		CNDetection GetBestDetectionForGroupId (long detectionGroupId);
 	}
 
 	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
