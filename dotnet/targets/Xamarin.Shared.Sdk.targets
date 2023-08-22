@@ -1641,8 +1641,7 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(TrimMode)' == ''">
 			<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' == 'macOS'">Full</_DefaultLinkMode>
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' != 'macOS'">SdkOnly</_DefaultLinkMode>
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
 
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
