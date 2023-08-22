@@ -92,7 +92,6 @@ namespace PencilKit {
 	public enum PKContentVersion : long {
 		Version1 = 1,
 		Version2 = 2,
-		Latest = Version2,
 	}
 
 	[iOS (13, 0), NoMac]
