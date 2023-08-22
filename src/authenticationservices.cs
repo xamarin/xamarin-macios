@@ -130,7 +130,7 @@ namespace AuthenticationServices {
 		[Mac (14, 0)]
 		CurrentDeviceEncryption = 11,
 		[Mac (14, 0)]
-		UserSmartCard = 20
+		UserSmartCard = 20,
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 0)]
