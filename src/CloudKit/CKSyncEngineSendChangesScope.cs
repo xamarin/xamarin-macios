@@ -9,13 +9,14 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace CloudKit {
-		public partial class CKSyncEngineSendChangesScope  {
-			public CKSyncEngineSendChangesScope  (NSSet<CKRecordZoneID>? zoneIds, bool excluded) {
-				if (excluded) {
-					InitializeHandle (_InitWithExcludedZoneIds (zoneIds!), "initWithZoneIDs:");
-				} else {
-					InitializeHandle (_InitWithZoneIds (zoneIds!), "initWithExcludedZoneIDs:");
-				}
+	public partial class CKSyncEngineSendChangesScope {
+		public CKSyncEngineSendChangesScope (NSSet<CKRecordZoneID>? zoneIds, bool excluded)
+		{
+			if (excluded) {
+				InitializeHandle (_InitWithExcludedZoneIds (zoneIds!), "initWithZoneIDs:");
+			} else {
+				InitializeHandle (_InitWithZoneIds (zoneIds!), "initWithExcludedZoneIDs:");
 			}
 		}
+	}
 }
