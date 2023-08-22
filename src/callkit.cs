@@ -48,7 +48,7 @@ namespace CallKit {
 		CallUuidAlreadyExists = 2,
 		FilteredByDoNotDisturb = 3,
 		FilteredByBlockList = 4,
-		[iOS (17,0), Watch (10,0), MacCatalyst (17,0)]
+		[iOS (17, 0), Watch (10, 0), MacCatalyst (17, 0)]
 		FilteredDuringRestrictedSharingMode = 5,
 	}
 
