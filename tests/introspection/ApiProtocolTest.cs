@@ -35,12 +35,12 @@ namespace Introspection {
 		protected virtual bool Skip (Type type)
 		{
 			switch (type.Namespace) {
-				// Xcode 15:
-				case "Cinematic":
-					// only present on device :/
-					if (TestRuntime.IsSimulatorOrDesktop)
-						return true;
-					break;
+			// Xcode 15:
+			case "Cinematic":
+				// only present on device :/
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {
