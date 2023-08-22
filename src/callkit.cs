@@ -47,7 +47,9 @@ namespace CallKit {
 		Unentitled = 1,
 		CallUuidAlreadyExists = 2,
 		FilteredByDoNotDisturb = 3,
-		FilteredByBlockList = 4
+		FilteredByBlockList = 4,
+		[iOS (17,0), Watch (10,0), MacCatalyst (17,0)]
+		FilteredDuringRestrictedSharingMode = 5,
 	}
 
 	[NoMac]
@@ -617,7 +619,6 @@ namespace CallKit {
 	interface CXSetMutedCallAction {
 
 		[Export ("initWithCallUUID:muted:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (NSUuid callUuid, bool muted);
 
 		[Export ("muted")]
