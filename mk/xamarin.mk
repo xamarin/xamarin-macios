@@ -18,7 +18,7 @@ endif
 
 # Available versions can be seen here:
 # https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.Mlaunch/versions
-MLAUNCH_NUGET_VERSION=1.0.58
+MLAUNCH_NUGET_VERSION=1.0.85-ci.pr.gh2695.85
 
 define CheckVersionTemplate
 check-$(1)::
