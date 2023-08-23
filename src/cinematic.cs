@@ -170,7 +170,7 @@ namespace Cinematic {
 		bool EncodeRender (IMTLCommandBuffer commandBuffer, CNRenderingSessionFrameAttributes frameAttributes, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity, CVPixelBuffer destinationImage);
 
 		[Export ("encodeRenderToCommandBuffer:frameAttributes:sourceImage:sourceDisparity:destinationRGBA:")]
-		bool EncodeRender (IMTLCommandBuffer commandBuffer, CNRenderingSessionFrameAttributes frameAttributes, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity, IMTLTexture destinationRGBA);
+		bool EncodeRender (IMTLCommandBuffer commandBuffer, CNRenderingSessionFrameAttributes frameAttributes, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity, IMTLTexture destinationRgba);
 
 		[Export ("encodeRenderToCommandBuffer:frameAttributes:sourceImage:sourceDisparity:destinationLuma:destinationChroma:")]
 		bool EncodeRender (IMTLCommandBuffer commandBuffer, CNRenderingSessionFrameAttributes frameAttributes, CVPixelBuffer sourceImage, CVPixelBuffer sourceDisparity, IMTLTexture destinationLuma, IMTLTexture destinationChroma);
