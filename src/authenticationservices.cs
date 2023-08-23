@@ -2173,6 +2173,7 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface ASPasskeyAssertionCredential : ASAuthorizationCredential {
 		[Export ("initWithUserHandle:relyingParty:signature:clientDataHash:authenticatorData:credentialID:")]
@@ -2309,7 +2310,7 @@ namespace AuthenticationServices {
 	interface ASAuthorizationWebBrowserPlatformPublicKeyCredentialProvider {
 		[Abstract]
 		[Export ("createCredentialRegistrationRequestWithClientData:name:userID:")]
-		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequest (ASPublicKeyCredentialClientData clientData, string name, NSData userID);
+		ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest CreateCredentialRegistrationRequest (ASPublicKeyCredentialClientData clientData, string name, NSData userId);
 
 		[Abstract]
 		[Export ("createCredentialAssertionRequestWithClientData:")]
@@ -2339,7 +2340,6 @@ namespace AuthenticationServices {
 		[Export ("clientData")]
 		ASPublicKeyCredentialClientData ClientData { get; }
 
-		// @required @property (nonatomic) BOOL shouldShowHybridTransport;
 		[Abstract]
 		[Export ("shouldShowHybridTransport")]
 		bool ShouldShowHybridTransport { get; set; }
