@@ -8,8 +8,15 @@
 
 	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
 	
-	<!-- Imports the .user.env file if exists and the build is from VS -->
-	<Import Project="$(MSBuildProjectFullPath).user.env" Condition="Exists('$(MSBuildProjectFullPath).user.env') And '$(BuildingInsideVisualStudio)' == 'true'" />
+	<PropertyGroup>
+		<!-- e.g: C:\Users\user1\app1\app1\obj\ -->
+		<_MobilePropsDir>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), $(BaseIntermediateOutputPath)))</_MobilePropsDir>
+		<!-- e.g: C:\Users\user1\app1\app1\obj\app1.mobile.props -->
+		<_MobilePropsPath>$(_MobilePropsDir)$(MSBuildProjectName).mobile.props</_MobilePropsPath>
+	</PropertyGroup>
+
+	<!-- Imports the .mobile.props file if exists and the build is from VS -->
+	<Import Project="$(_MobilePropsPath)" Condition="Exists('$(_MobilePropsPath)') And '$(BuildingInsideVisualStudio)' == 'true'" />
 	
 	<PropertyGroup>
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
@@ -20,7 +27,27 @@
 		<_XamarinSdkRootDirectoryOnMac>$(_XamarinSdkRootDirectory)</_XamarinSdkRootDirectoryOnMac>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
-		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
+
+		<!--
+			PublishAot should only take effect when doing 'dotnet publish', not when doing 'dotnet build'. We distinguish these cases using the '_IsPublishing' property,
+			but it's rather annoying to always have to check both PublishAot and _IsPublishing to see if we're using NativeAOT, so introduce a third property that's
+			only set to true if both PublishAot=true and _IsPublishing=true
+		-->
+		<_UseNativeAot Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">true</_UseNativeAot>
+
+		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
+		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_UseNativeAot)' == 'true'">false</UseMonoRuntime>
+		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == ''">true</UseMonoRuntime>
+
+		<!--
+			With NativeAOT we want to suppress trim warnings coming from ILLink and enable them only for ILC.
+			For this reason, in case of NativeAOT, we set SuppressTrimAnalysisWarnings to true by default and store the overwriten default in
+			_OriginalSuppressTrimAnalysisWarnings property, which is later used to properly configure warning suppression for ILC.
+		-->
+		<_OriginalSuppressTrimAnalysisWarnings>$(SuppressTrimAnalysisWarnings)</_OriginalSuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(_UseNativeAot)' == 'true'">true</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
+
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
 
 		<!-- _XamarinSdkRoot is used by the existing MSBuild targets files -->
