@@ -216,7 +216,7 @@ namespace Xamarin.Tests {
 			return result;
 		}
 
-		static IList<string> GetVariableArray (string variable, string @default = "")
+		public static IList<string> GetVariableArray (string variable, string @default = "")
 		{
 			// variables with more than one value are wrapped in ', get the var remove the '' and split
 			var value = GetVariable (variable, @default).Trim ('\'');
