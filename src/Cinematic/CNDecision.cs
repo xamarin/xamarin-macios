@@ -25,6 +25,7 @@ namespace Cinematic {
 	public partial class CNDecision {
 
 		public CNDecision (CMTime time, long detectionId, bool isStrong, CNDecisionIdentifierType identifierType)
+			: base (NSObjectFlag.Empty)
 		{
 
 			switch (identifierType) {
