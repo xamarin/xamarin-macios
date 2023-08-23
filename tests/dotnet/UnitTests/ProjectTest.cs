@@ -1364,5 +1364,29 @@ namespace Xamarin.Tests {
 			Assert.That (shared_libraries, Does.Contain ($"@executable_path/../../Contents/MonoBundle/{dylibRelPath}"),
 				"The dependent bundled shared library install name is relative to @executable_path");
 		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void MultiTargetLibrary (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// Get all the supported API versions
+			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			var targetFrameworks = string.Join (";", supportedApiVersion.Select (v => v.Replace ("-", "-" + platform.AsString ().ToLowerInvariant ())));
+
+			Console.WriteLine ($"Target frameworks: {targetFrameworks}");
+
+			var project = "MultiTargettingLibrary";
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			properties ["AllTheTargetFrameworks"] = targetFrameworks;
+			var rv = DotNet.AssertBuild (project_path, properties);
+			rv.AssertNoWarnings ();
+		}
 	}
 }
