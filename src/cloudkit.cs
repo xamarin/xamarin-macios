@@ -2227,14 +2227,14 @@ namespace CloudKit {
 
 		[Internal]
 		[Export ("initWithZoneIDs:")]
-		NativeHandle _InitWithZoneIds ([NullAllowed] NSSet<CKRecordZoneID> zoneIDs);
+		NativeHandle _InitWithZoneIds ([NullAllowed] NSSet<CKRecordZoneID> zoneIds);
 
 		[Internal]
 		[Export ("initWithExcludedZoneIDs:")]
-		NativeHandle _InitWithExcludedZoneIds (NSSet<CKRecordZoneID> excludedZoneIDs);
+		NativeHandle _InitWithExcludedZoneIds (NSSet<CKRecordZoneID> excludedZoneIds);
 
 		[Export ("initWithRecordIDs:")]
-		NativeHandle Constructor ([NullAllowed] NSSet<CKRecordID> recordIDs);
+		NativeHandle Constructor ([NullAllowed] NSSet<CKRecordID> recordIds);
 
 		[Export ("containsRecordID:")]
 		bool ContainsRecordId (CKRecordID recordId);

@@ -263,7 +263,7 @@ namespace CloudKit {
 	[Native]
 	public enum CKSyncEngineSyncReason : long {
 		Scheduled,
-		Manual
+		Manual,
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
