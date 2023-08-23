@@ -36,6 +36,28 @@ namespace BackgroundAssets {
 		Periodic,
 	}
 
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[ErrorDomain ("BAErrorDomain")]
+	[Native]
+	public enum BAErrorCode : long {
+		DownloadInvalid = 0,
+		CallFromExtensionNotAllowed = 50,
+		CallFromInactiveProcessNotAllowed = 51,
+		CallerConnectionNotAccepted = 55,
+		CallerConnectionInvalid = 56,
+		DownloadAlreadyScheduled = 100,
+		DownloadNotScheduled = 101,
+		DownloadFailedToStart = 102,
+		DownloadAlreadyFailed = 103,
+		DownloadEssentialDownloadNotPermitted = 109,
+		DownloadBackgroundActivityProhibited = 111,
+		DownloadWouldExceedAllowance = 112,
+		SessionDownloadDisallowedByDomain = 202,
+		SessionDownloadDisallowedByAllowance = 203,
+		SessionDownloadAllowanceExceeded = 204,
+		SessionDownloadNotPermittedBeforeAppLaunch = 206,
+	}
+
 	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
