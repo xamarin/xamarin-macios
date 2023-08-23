@@ -74,7 +74,7 @@ namespace AudioToolbox {
 			if (size == 0)
 				return Array.Empty<T> ();
 
-			var data = new T [size / Marshal.SizeOf (typeof (T))];
+			var data = new T [size / Marshal.SizeOf<T> ()];
 			fixed (T* ptr = data) {
 				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, (IntPtr) ptr);
 				if (res != 0)
