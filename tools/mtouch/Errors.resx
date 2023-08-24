@@ -1346,11 +1346,6 @@
 		</value>
 	</data>
 
-	<data name="MX2112" xml:space="preserve">
-		<!-- This is a warning -->
-		<value>Unable to apply the conditional [Preserve] attribute on the member {0}.</value>
-	</data>
-
 	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
 	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
 	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
