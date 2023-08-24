@@ -1891,7 +1891,7 @@
 	</data>
 
 	<data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
+		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
 		</value>
 	</data>
 	
@@ -1912,6 +1912,11 @@
 
 	<data name="MT4186" xml:space="preserve">
 		<value>The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
+
+	<data name="MX4189" xml:space="preserve">
+		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.
+		</value>
 	</data>
 
 	<data name="MT5101" xml:space="preserve">
