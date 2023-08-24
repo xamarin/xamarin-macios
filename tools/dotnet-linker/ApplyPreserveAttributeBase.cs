@@ -143,12 +143,6 @@ namespace Mono.Tuner {
 		{
 			Annotations.Mark (provider);
 			AddDynamicDependencyAttribute (provider);
-
-			var member = provider as IMemberDefinition;
-			if (member is null || member.DeclaringType is null)
-				return;
-
-			Mark (member.DeclaringType, null);
 		}
 
 		void TryApplyPreserveAttribute (TypeDefinition type)
