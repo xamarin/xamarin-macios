@@ -82,10 +82,9 @@ namespace Mono.Tuner {
 
 		void ProcessDeferredActions ()
 		{
-			while (deferredActions.Count > 0)
-			{
-				var action = deferredActions.Dequeue();
-				action.Invoke();
+			while (deferredActions.Count > 0) {
+				var action = deferredActions.Dequeue ();
+				action.Invoke ();
 			}
 		}
 
@@ -266,7 +265,7 @@ namespace Mono.Tuner {
 			if (abr is null)
 				return;
 
-			deferredActions.Enqueue(() => AddDynamicDependencyAttributeToStaticConstructor (onType, forMethod));
+			deferredActions.Enqueue (() => AddDynamicDependencyAttributeToStaticConstructor (onType, forMethod));
 		}
 
 		void AddDynamicDependencyAttribute (IMetadataTokenProvider provider)
