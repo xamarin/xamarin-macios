@@ -26,7 +26,7 @@ namespace Xamarin.Tests {
 			properties ["OutputPath"] = outputPath + Path.DirectorySeparatorChar;
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 
-			var rv = DotNet.AssertPackFailure (project_path, properties);
+			var rv = DotNet.AssertPackFailure (project_path, properties, msbuildParallelism: false);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead.", errors [0].Message, "Error message");
@@ -57,7 +57,7 @@ namespace Xamarin.Tests {
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 			properties ["NoBindingEmbedding"] = noBindingEmbedding ? "true" : "false";
 
-			DotNet.AssertPack (project_path, properties);
+			DotNet.AssertPack (project_path, properties, msbuildParallelism: false);
 
 			var nupkg = Path.Combine (outputPath, project + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");
@@ -121,7 +121,7 @@ namespace Xamarin.Tests {
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 			properties ["NoBindingEmbedding"] = noBindingEmbedding ? "true" : "false";
 
-			DotNet.AssertPack (project_path, properties);
+			DotNet.AssertPack (project_path, properties, msbuildParallelism: false);
 
 			var nupkg = Path.Combine (outputPath, assemblyName + ".1.0.0.nupkg");
 			Assert.That (nupkg, Does.Exist, "nupkg existence");

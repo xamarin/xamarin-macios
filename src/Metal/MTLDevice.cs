@@ -200,7 +200,7 @@ namespace Metal {
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			try {
 				IntPtr ptr = handle.AddrOfPinnedObject ();
-				return This.CreateBuffer (ptr, (nuint) (data.Length * Marshal.SizeOf (typeof (T))), options);
+				return This.CreateBuffer (ptr, (nuint) (data.Length * Marshal.SizeOf<T> ()), options);
 			} finally {
 				handle.Free ();
 			}
@@ -215,7 +215,7 @@ namespace Metal {
 
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			IntPtr ptr = handle.AddrOfPinnedObject ();
-			return This.CreateBufferNoCopy (ptr, (nuint) (data.Length * Marshal.SizeOf (typeof (T))), options, (pointer, length) => {
+			return This.CreateBufferNoCopy (ptr, (nuint) (data.Length * Marshal.SizeOf<T> ()), options, (pointer, length) => {
 				handle.Free ();
 				deallocator (pointer, length);
 			});
