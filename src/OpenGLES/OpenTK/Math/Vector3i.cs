@@ -132,7 +132,7 @@ namespace OpenTK {
 		/// <summary>
 		/// Defines the size of the Vector3i struct in bytes.
 		/// </summary>
-		public static readonly int SizeInBytes = Marshal.SizeOf (new Vector3i ());
+		public static readonly int SizeInBytes = Marshal.SizeOf<Vector3i> ();
 
 		#endregion
 
