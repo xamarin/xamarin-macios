@@ -188,7 +188,7 @@ namespace Xamarin.Bundler {
 				// This means it won't be listed in --help, and it won't be enabled if all optimizations
 				// are enabled. Yet we still might want to enable it manually, and this condition
 				// allows us to manually pass --optimize=remove-dynamic-registrar and enable it that way.
-				if (app.Platform == ApplePlatform.MacOSX && (Opt) i == Opt.RemoveDynamicRegistrar)
+				if (app.Platform == ApplePlatform.MacOSX && app.XamarinRuntime != XamarinRuntime.NativeAOT && (Opt) i == Opt.RemoveDynamicRegistrar)
 					continue;
 
 				// check if the optimization is valid for the current platform
