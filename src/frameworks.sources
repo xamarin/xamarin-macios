@@ -2348,7 +2348,6 @@ MACCATALYST_FRAMEWORKS = \
 	BusinessChat \
 	CallKit \
 	CFNetwork \
-	Cinematic \
 	ClassKit \
 	CloudKit \
 	Contacts \

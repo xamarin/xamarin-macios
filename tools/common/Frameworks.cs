@@ -695,6 +695,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
+				case "Cinematic":
 #if !NET
 				case "iAd":
 				case "CHIP":

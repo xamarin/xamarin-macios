@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 #nullable enable
 
-#if !WATCH
+#if !WATCH && !__MACCATALYST__
 
 namespace Cinematic {
 

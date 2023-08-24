@@ -47,13 +47,19 @@ using AVKit;
 using CoreAnimation;
 using CoreImage;
 using MediaToolbox;
-using Cinematic;
 #else
 // hack: ease compilation without extra defines
 using CIBarcodeDescriptor = Foundation.NSObject;
+#endif
+
+// cinematic is not present in certain platforms
+#if WATCH || __MACCATALYST__
 using CNAssetInfo = Foundation.NSObject;
 using CNCompositionInfo = Foundation.NSObject;
+#else
+using Cinematic;
 #endif
+
 using AudioToolbox;
 using CoreMedia;
 using ObjCRuntime;
