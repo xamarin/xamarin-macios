@@ -189,9 +189,9 @@ namespace AuthenticationServices {
 		void GetCredentialIdentityStoreState (Action<ASCredentialIdentityStoreState> completion);
 
 		[Async]
-		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'PrepareInterfaceToProvideCredential (ASPasswordCredentialIdentity)' instead.")]
-		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'PrepareInterfaceToProvideCredential (ASPasswordCredentialIdentity)' instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'PrepareInterfaceToProvideCredential (ASPasswordCredentialIdentity)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'SaveCredentialIdentityEntries  (ASCredentialIdentity [])' instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'SaveCredentialIdentityEntries  (ASCredentialIdentity [])' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'SaveCredentialIdentityEntries  (ASCredentialIdentity [])' instead.")]
 		[Export ("saveCredentialIdentities:completion:")]
 		void SaveCredentialIdentities (ASPasswordCredentialIdentity [] credentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 
