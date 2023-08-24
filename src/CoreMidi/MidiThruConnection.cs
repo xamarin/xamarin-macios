@@ -159,7 +159,7 @@ namespace CoreMidi {
 			using (var data = Runtime.GetNSObject<NSData> (ret)) {
 				if (data is null)
 					return null;
-				var typeSize = Marshal.SizeOf (typeof (MidiThruConnectionRef));
+				var typeSize = Marshal.SizeOf<MidiThruConnectionRef> ();
 				var totalObjs = (int) data.Length / typeSize;
 				if (totalObjs == 0)
 					return null;
