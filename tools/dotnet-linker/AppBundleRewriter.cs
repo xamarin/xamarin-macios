@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Mono.Cecil;
@@ -309,6 +310,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public TypeReference System_Diagnostics_CodeAnalysis_DynamicallyAccessedMemberTypes {
+			get {
+				return GetTypeReference (CorlibAssembly, "System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes", out var _);
+			}
+		}
+
 		public TypeReference System_Reflection_MethodBase {
 			get {
 				return GetTypeReference (CorlibAssembly, "System.Reflection.MethodBase", out var _);
@@ -389,6 +396,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public TypeReference Foundation_INSObjectFactory {
+			get {
+				return GetTypeReference (PlatformAssembly, "Foundation.INSObjectFactory", out var _);
+			}
+		}
+
 		public TypeReference ObjCRuntime_INativeObject {
 			get {
 				return GetTypeReference (PlatformAssembly, "ObjCRuntime.INativeObject", out var _);
@@ -466,17 +479,34 @@ namespace Xamarin.Linker {
 				return GetMethodReference (CorlibAssembly,
 						System_Diagnostics_CodeAnalysis_DynamicDependencyAttribute,
 						".ctor",
+						".ctor(String,Type)",
 						isStatic: false,
 						System_String,
 						System_Type);
 			}
 		}
 
+		public MethodReference DynamicDependencyAttribute_ctor__DynamicallyAccessedMemberTypes_Type {
+			get {
+				return GetMethodReference (CorlibAssembly,
+						System_Diagnostics_CodeAnalysis_DynamicDependencyAttribute,
+						".ctor",
+						".ctor(DynamicallyAccessedMemberTypes,Type)",
+						isStatic: false,
+						System_Diagnostics_CodeAnalysis_DynamicallyAccessedMemberTypes,
+						System_Type);
+			}
+		}
+
 		public MethodReference RuntimeTypeHandle_Equals {
 			get {
+				if (configuration.Application.XamarinRuntime == XamarinRuntime.MonoVM) {
+					return RegistrarHelper_RuntimeTypeHandleEquals;
+				}
 				return GetMethodReference (CorlibAssembly, System_RuntimeTypeHandle, "Equals", isStatic: false, System_RuntimeTypeHandle);
 			}
 		}
+
 		public MethodReference MethodBase_Invoke {
 			get {
 				return GetMethodReference (CorlibAssembly, System_Reflection_MethodBase, "Invoke", (v) =>
@@ -727,6 +757,20 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference RegistrarHelper_RuntimeTypeHandleEquals {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_RegistrarHelper,
+						"RuntimeTypeHandleEquals",
+						(v) => v.IsStatic
+						&& v.HasParameters
+						&& v.Parameters.Count == 2
+						&& v.Parameters [0].ParameterType is ByReferenceType brt1 && brt1.ElementType.Is ("System", "RuntimeTypeHandle")
+						&& v.Parameters [1].ParameterType.Is ("System", "RuntimeTypeHandle")
+						&& !v.HasGenericParameters);
+			}
+		}
+
 		public MethodReference IManagedRegistrar_LookupUnmanagedFunction {
 			get {
 				return GetMethodReference (PlatformAssembly,
@@ -752,6 +796,49 @@ namespace Xamarin.Linker {
 						ObjCRuntime_IManagedRegistrar, "LookupTypeId",
 						isStatic: false,
 						System_RuntimeTypeHandle);
+			}
+		}
+
+		public MethodReference IManagedRegistrar_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructNSObject",
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference INSObjectFactory__Xamarin_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						Foundation_INSObjectFactory, "_Xamarin_ConstructNSObject",
+						nameof (INSObjectFactory__Xamarin_ConstructNSObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference IManagedRegistrar_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructINativeObject",
+						nameof (IManagedRegistrar_ConstructINativeObject),
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
+			}
+		}
+
+		public MethodReference INativeObject__Xamarin_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_INativeObject, "_Xamarin_ConstructINativeObject",
+						nameof (INativeObject__Xamarin_ConstructINativeObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
 			}
 		}
 
@@ -1094,6 +1181,15 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference Runtime_TryReleaseINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryReleaseINativeObject",
+						isStatic: true,
+						ObjCRuntime_INativeObject);
+			}
+		}
+
 		public MethodReference UnmanagedCallersOnlyAttribute_Constructor {
 			get {
 				return GetMethodReference (CorlibAssembly, "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute", ".ctor", (v) => v.IsDefaultConstructor ());
@@ -1146,6 +1242,23 @@ namespace Xamarin.Linker {
 			type_map.Clear ();
 			method_map.Clear ();
 			field_map.Clear ();
+		}
+
+		public CustomAttribute CreateDynamicDependencyAttribute (string memberSignature, TypeDefinition type)
+		{
+			var attribute = new CustomAttribute (DynamicDependencyAttribute_ctor__String_Type);
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_String, memberSignature));
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Type, type));
+			return attribute;
+		}
+
+		public CustomAttribute CreateDynamicDependencyAttribute (DynamicallyAccessedMemberTypes memberTypes, TypeDefinition type)
+		{
+			var attribute = new CustomAttribute (DynamicDependencyAttribute_ctor__DynamicallyAccessedMemberTypes_Type);
+			// typed as 'int' because that's how the linker expects it: https://github.com/dotnet/runtime/blob/3c5ad6c677b4a3d12bc6a776d654558cca2c36a9/src/tools/illink/src/linker/Linker/DynamicDependency.cs#L97
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Diagnostics_CodeAnalysis_DynamicallyAccessedMemberTypes, (int) memberTypes));
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Type, type));
+			return attribute;
 		}
 	}
 }

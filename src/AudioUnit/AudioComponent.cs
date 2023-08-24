@@ -215,7 +215,7 @@ namespace AudioUnit {
 
 		public ResourceUsageInfo? ResourceUsage {
 			get {
-				return GetStrongDictionary<ResourceUsageInfo> (resourceUsageK);
+				return GetStrongDictionary<ResourceUsageInfo> (resourceUsageK, (dict) => new ResourceUsageInfo (dict));
 			}
 			set {
 				SetNativeValue (resourceUsageK, value?.Dictionary, true);
