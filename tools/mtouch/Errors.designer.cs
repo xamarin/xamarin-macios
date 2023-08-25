@@ -4004,15 +4004,6 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to apply the conditional [Preserve] attribute on the member {0}..
-        /// </summary>
-        public static string MX2112 {
-            get {
-                return ResourceManager.GetString("MX2112", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not {0} the assembly &apos;{1}&apos;
         ///		.
         /// </summary>
