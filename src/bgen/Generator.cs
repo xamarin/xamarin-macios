@@ -2016,7 +2016,7 @@ public partial class Generator : IMemberGatherer {
 							setter = "SetNativeValue ({0}, value)";
 						} else if (IsDictionaryContainerType (pi.PropertyType) || AttributeManager.HasAttribute<StrongDictionaryAttribute> (pi)) {
 							var strType = pi.PropertyType.Name;
-							getter = "GetStrongDictionary<" + strType + ">({0})";
+							getter = $"GetStrongDictionary<{strType}>({{0}}, (dict) => new {strType} (dict))";
 							setter = "SetNativeValue ({0}, value.GetDictionary ())";
 						} else if (IsWrappedType (pi.PropertyType)) {
 							getter = "Dictionary [{0}] as " + pi.PropertyType;
