@@ -8502,7 +8502,7 @@ namespace AVFoundation {
 		CGSize NaturalSize { get; set; }
 
 		// from @interface CNComposition (AVMutableComposition)
-		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), NoMacCatalyst]
 		[Export ("addTracksForCinematicAssetInfo:preferredStartingTrackID:")]
 		CNCompositionInfo AddTracks (CNAssetInfo assetInfo, int preferredStartingTrackID);
 	}
