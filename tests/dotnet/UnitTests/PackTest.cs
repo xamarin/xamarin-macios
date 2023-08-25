@@ -11,6 +11,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("AllPlatforms")]
 		public void BindingOldStyle (ApplePlatform platform)
 		{
 			var project = "BindingOldStyle";
@@ -97,6 +98,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.MacOSX, false)]
+		[Category ("AllPlatforms")]
 		public void BindingXcFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-xcframework-test";
@@ -248,6 +250,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("AllPlatforms")]
 		public void LibraryProject (ApplePlatform platform)
 		{
 			var project = "MyClassLibrary";
