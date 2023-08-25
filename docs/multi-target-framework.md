@@ -13,6 +13,7 @@ References:
     * Example: a customer could be producing a NuGet targeting .NET 7, and
       want to support the initial release of .NET 7. Said customer must then
       be able to build against the bindings we shipped at the time.
+* Helpful error message when trying to use a target framework we don't support.
 
 ## Developer viewpoint
 
@@ -65,6 +66,19 @@ following property in their project file to make their intention clear:
 ```
 
 This mirrors how it's done for the Android SDK.
+
+### TargetFramework=net6.0-ios
+
+We don't support .NET 6 anymore, so this will produce the following error:
+
+> error NETSDK1202: The workload 'net6.0-ios' is out of support and will not receive security updates in the future.
+
+### TargetFramework=net7.0-ios16.3
+
+We don't support the iOS 16.3 bindings in the current version of the workload,
+so this produces the following error:
+
+> 16.3 is not a valid TargetPlatformVersion for iOS. Valid versions include: 16.0 16.4
 
 ### Implementation details
 
