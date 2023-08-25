@@ -441,7 +441,10 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["RuntimeIdentifier"] = "maccatalyst-x64";
+			// Be specific that we want "RuntimeIdentifier" specified on the command line, and "RuntimeIdentifiers" in a file
+			properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+			properties.Remove ("RuntimeIdentifiers");
+			properties ["cmdline:RuntimeIdentifier"] = "maccatalyst-x64";
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
