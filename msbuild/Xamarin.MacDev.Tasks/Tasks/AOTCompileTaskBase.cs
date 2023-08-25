@@ -110,7 +110,7 @@ namespace Xamarin.MacDev.Tasks {
 				ExecuteAsync (AOTCompilerPath, arg.Arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
 						if (v.Result.ExitCode != 0)
-							Log.LogError ("Failed to AOT compile {0}, the AOT compiler exited with code {1}", Path.GetFileName (input), v.Result.ExitCode);
+							Log.LogError ("Failed to AOT compile {0}, the AOT compiler exited with code {1}", Path.GetFileName (arg.Input), v.Result.ExitCode);
 
 						return System.Threading.Tasks.Task.FromResult<Execution> (v.Result);
 					})
