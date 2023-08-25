@@ -182,7 +182,7 @@ steps:
     & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         test `
         "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
-        --filter Category=Windows `
+        --filter "Category=Windows|Category=AllPlatforms" `
         --verbosity quiet `
         --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
         "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
