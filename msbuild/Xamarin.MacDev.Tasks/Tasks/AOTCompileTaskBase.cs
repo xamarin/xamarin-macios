@@ -186,10 +186,6 @@ namespace Xamarin.MacDev.Tasks {
 			var aotAssemblyFiles = new List<ITaskItem> ();
 			var processes = new Task<Execution> [assembliesToAOT.Count];
 
-			var environment = new Dictionary<string, string?> {
-				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
-			};
-
 			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
 			for (var i = 0; i < assembliesToAOT.Count; i++) {
 				var asm = assembliesToAOT [i];
@@ -215,6 +211,7 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ processArguments, ex2!.Message);
 					return false;
 				}
+				arguments.Add ($"--path={Path.GetFullPath (InputDirectory)}");
 				arguments.Add ($"{string.Join (",", parsedArguments)}");
 				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
@@ -224,7 +221,7 @@ namespace Xamarin.MacDev.Tasks {
 				else
 					arguments.Add (input);
 
-				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
+				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
 						if (v.Result.ExitCode != 0)
 							Log.LogError (MSBStrings.E7118 /* Failed to AOT compile {0}, the AOT compiler exited with code {1} */, Path.GetFileName (input), v.Result.ExitCode);
