@@ -182,8 +182,7 @@ namespace Mono.Tuner {
 
 			// We want to add a dynamic dependency attribute to preserve methods and fields
 			// but not to preserve types while we're marking the chain of declaring types.
-			if (provider is not TypeDefinition)
-			{
+			if (provider is not TypeDefinition) {
 				AddDynamicDependencyAttribute (provider);
 			}
 
