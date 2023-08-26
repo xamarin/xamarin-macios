@@ -5,3 +5,4 @@
 !missing-field! kCFURLFileProtectionKey not bound
 !missing-field! kCFURLFileProtectionNone not bound
 !missing-pinvoke! CFCopyHomeDirectoryURL is not bound
+!missing-field! kCFURLFileProtectionCompleteWhenUserInactive not bound
