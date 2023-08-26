@@ -1,2 +1,0 @@
-!missing-field! CBConnectPeripheralOptionEnableAutoReconnect not bound
-!missing-protocol-member! CBCentralManagerDelegate::centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error: not found

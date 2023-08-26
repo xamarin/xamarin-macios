@@ -1329,6 +1329,8 @@ namespace Cecil.Tests {
 			"System.Void UIKit.UIAccessibility::UIAccessibilityRequestGuidedAccessSession(System.Boolean,ObjCRuntime.BlockLiteral*)",
 			"System.Void UIKit.UIGraphics::BeginImageContextWithOptions(CoreGraphics.CGSize,System.Boolean,System.Runtime.InteropServices.NFloat)",
 			"System.Void UIKit.UIGuidedAccessRestriction::UIGuidedAccessConfigureAccessibilityFeatures(System.UIntPtr,System.Boolean,ObjCRuntime.BlockLiteral*)",
+			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_NativeHandle_NativeHandle_Double_bool_NativeHandle(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,System.Double,System.Boolean,ObjCRuntime.NativeHandle)",
+			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_NativeHandle_NativeHandle_Double_bool_NativeHandle(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,System.Double,System.Boolean,ObjCRuntime.NativeHandle)",
 		};
 	}
 }
