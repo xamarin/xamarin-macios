@@ -754,6 +754,9 @@ namespace Introspection {
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
 					return true;
+				// Xcode 15
+				case "NSCompositeAttributeDescription":
+					return true;
 				}
 				break;
 			case "NSCopying":
