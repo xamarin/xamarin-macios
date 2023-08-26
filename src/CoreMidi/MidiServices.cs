@@ -667,7 +667,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.ObjectAdded:
 				var eoa = client?.ObjectAdded;
 				if (eoa is not null) {
-					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
+					var data = Marshal.PtrToStructure<MidiObjectAddRemoveNotification> (message)!;
 					eoa (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
 				}
@@ -675,7 +675,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.ObjectRemoved:
 				var eor = client?.ObjectRemoved;
 				if (eor is not null) {
-					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
+					var data = Marshal.PtrToStructure<MidiObjectAddRemoveNotification> (message)!;
 					eor (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
 				}
@@ -683,7 +683,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.PropertyChanged:
 				var epc = client?.PropertyChanged;
 				if (epc is not null) {
-					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification))!;
+					var data = Marshal.PtrToStructure<MidiObjectPropertyChangeNotification> (message)!;
 					epc (client, new ObjectPropertyChangedEventArgs (
 							 MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
 				}
@@ -701,7 +701,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.IOError:
 				var eio = client?.IOError;
 				if (eio is not null) {
-					var data = (MidiIOErrorNotification) Marshal.PtrToStructure (message, typeof (MidiIOErrorNotification))!;
+					var data = Marshal.PtrToStructure<MidiIOErrorNotification> (message)!;
 					eio (client, new IOErrorEventArgs (new MidiDevice (data.DeviceRef), data.ErrorCode));
 				}
 				break;
