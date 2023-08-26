@@ -123,7 +123,7 @@ namespace SceneKit {
 		/// <summary>
 		/// Defines the size of the SCNVector4 struct in bytes.
 		/// </summary>
-		public static readonly int SizeInBytes = Marshal.SizeOf (new SCNVector4 ());
+		public static readonly int SizeInBytes = Marshal.SizeOf<SCNVector4> ();
 
 		#endregion
 

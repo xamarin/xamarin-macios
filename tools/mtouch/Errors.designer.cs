@@ -3066,7 +3066,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because the WatchKit framework has been removed from the iOS SDK.
+        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because the {1} framework has been removed from the {2} SDK.
         ///		.
         /// </summary>
         public static string MT4178 {
@@ -4029,6 +4029,15 @@ namespace Xamarin.Bundler {
         public static string MX4188 {
             get {
                 return ResourceManager.GetString("MX4188", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The class &apos;{0}&apos; will not be registered because it has been removed from the {1} SDK..
+        /// </summary>
+        public static string MX4189 {
+            get {
+                return ResourceManager.GetString("MX4189", resourceCulture);
             }
         }
         

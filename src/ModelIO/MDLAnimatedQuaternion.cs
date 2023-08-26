@@ -47,7 +47,7 @@ namespace ModelIO {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new ArgumentOutOfRangeException ($"The '{nameof (values)}' and '{nameof (times)}' arrays must have the same length");
-			int typeSize = Marshal.SizeOf (typeof (Quaternion));
+			int typeSize = Marshal.SizeOf<Quaternion> ();
 
 			unsafe {
 				fixed (Quaternion* valuesPtr = values)
@@ -64,7 +64,7 @@ namespace ModelIO {
 			if (values.Length != times.Length)
 				throw new ArgumentOutOfRangeException ($"The '{nameof (values)}' and '{nameof (times)}' arrays must have the same length");
 
-			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
+			int typeSize = Marshal.SizeOf<Quaterniond> ();
 
 			unsafe {
 				fixed (Quaterniond* valuesPtr = values)
