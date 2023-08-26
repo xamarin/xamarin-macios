@@ -2016,7 +2016,7 @@ public partial class Generator : IMemberGatherer {
 							setter = "SetNativeValue ({0}, value)";
 						} else if (IsDictionaryContainerType (pi.PropertyType) || AttributeManager.HasAttribute<StrongDictionaryAttribute> (pi)) {
 							var strType = pi.PropertyType.Name;
-							getter = "GetStrongDictionary<" + strType + ">({0})";
+							getter = $"GetStrongDictionary<{strType}>({{0}}, (dict) => new {strType} (dict))";
 							setter = "SetNativeValue ({0}, value.GetDictionary ())";
 						} else if (IsWrappedType (pi.PropertyType)) {
 							getter = "Dictionary [{0}] as " + pi.PropertyType;
@@ -3753,7 +3753,7 @@ public partial class Generator : IMemberGatherer {
 				trampoline_info = MakeTrampoline (mi.ReturnType);
 			} else if (align is not null) {
 				print ("{0} ret = default({0});", FormatType (mi.DeclaringType, mi.ReturnType));
-				print ("IntPtr ret_alloced = Marshal.AllocHGlobal (Marshal.SizeOf (typeof ({0})) + {1});", FormatType (mi.DeclaringType, mi.ReturnType), align.Align);
+				print ("IntPtr ret_alloced = Marshal.AllocHGlobal (Marshal.SizeOf<{0}> () + {1});", FormatType (mi.DeclaringType, mi.ReturnType), align.Align);
 				print ("IntPtr aligned_ret = new IntPtr (((nint) (ret_alloced + {0}) >> {1}) << {1});", align.Align - 1, align.Bits);
 				print ("bool aligned_assigned = false;");
 			} else if (minfo.protocolize) {
