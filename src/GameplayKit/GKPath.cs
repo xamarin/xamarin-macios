@@ -114,12 +114,12 @@ namespace GameplayKit {
 		{
 			var type = typeof (T);
 			// Vector3 is 12 bytes but vector_float3 is 16
-			var size = type == typeof (Vector3) ? 16 : Marshal.SizeOf (type);
+			var size = type == typeof (Vector3) ? 16 : Marshal.SizeOf<T> ();
 			var length = points.Length * size;
 			buffer = Marshal.AllocHGlobal (length);
 
 			for (int i = 0; i < points.Length; i++)
-				Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
+				Marshal.StructureToPtr<T> (points [i], IntPtr.Add (buffer, i * size), false);
 		}
 	}
 }
