@@ -709,7 +709,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void ExtractResource (ModuleDefinition module, string name, string path, bool remove)
+		public static bool ExtractResource (ModuleDefinition module, string name, string path, bool remove)
 		{
 			for (int i = 0; i < module.Resources.Count; i++) {
 				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
@@ -728,8 +728,10 @@ namespace Xamarin.Bundler {
 				if (remove)
 					module.Resources.RemoveAt (i);
 
-				break;
+				return true;
 			}
+
+			return false;
 		}
 
 		// Returns true if the source file was copied to the target or false if it was already up to date.

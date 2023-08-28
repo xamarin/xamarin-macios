@@ -259,6 +259,10 @@ class BuildConfiguration {
             $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
             $variableValue = $config.$variableName
             Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
         }
 
         return $config
@@ -279,6 +283,10 @@ class BuildConfiguration {
         $dotnetPlatforms = $configuration.DOTNET_PLATFORMS.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
         foreach ($platform in $dotnetPlatforms) {
             $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
             $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
             $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
         }

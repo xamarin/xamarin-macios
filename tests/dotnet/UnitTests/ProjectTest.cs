@@ -917,6 +917,11 @@ namespace Xamarin.Tests {
 		[OneTimeSetUp]
 		public void KillEverything ()
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				Console.WriteLine ($"Skipped killing everything, because there's nothing to kill on Windows.");
+				return;
+			}
+
 			ExecutionHelper.Execute ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, timeout: TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
@@ -1209,14 +1214,6 @@ namespace Xamarin.Tests {
 			var signedDylibs = new List<string> {
 				Path.Combine (sharedSupportDir, "app2.app", dylibDir, "lib2.dylib"),
 			};
-			if (platform == ApplePlatform.MacCatalyst) {
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.IO.Compression.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Net.Security.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Security.Cryptography.Native.Apple.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libmonosgen-2.0.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libxamarin-dotnet-debug.dylib"));
-			}
 
 			foreach (var dylib in signedDylibs) {
 				var path = Path.Combine (appPath, dylib);

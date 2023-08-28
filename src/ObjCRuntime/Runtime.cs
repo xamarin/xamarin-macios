@@ -256,7 +256,7 @@ namespace ObjCRuntime {
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
-			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
+			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
 #if MONOMAC
@@ -1260,38 +1260,65 @@ namespace ObjCRuntime {
 			}
 
 			msg.Append (").");
+
 			if (sel != IntPtr.Zero || method_handle.Value != IntPtr.Zero) {
-				msg.AppendLine ();
-				msg.AppendLine ("Additional information:");
-				if (sel != IntPtr.Zero)
-					msg.Append ("\tSelector: ").Append (Selector.GetName (sel)).AppendLine ();
-				if (method_handle.Value != IntPtr.Zero) {
-					try {
-						var method = MethodBase.GetMethodFromHandle (method_handle);
-						msg.Append ($"\tMethod: ");
-						if (method is not null) {
-							// there's no good built-in function to format a MethodInfo :/
-							msg.Append (method.DeclaringType?.FullName ?? string.Empty);
-							msg.Append (".");
-							msg.Append (method.Name);
-							msg.Append ("(");
-							var parameters = method.GetParameters ();
-							for (var i = 0; i < parameters.Length; i++) {
-								if (i > 0)
-									msg.Append (", ");
-								msg.Append (parameters [i].ParameterType.FullName);
-							}
-							msg.Append (")");
-						} else {
-							msg.Append ($"Unable to resolve RuntimeMethodHandle 0x{method_handle.Value.ToString ("x")}");
+				AppendAdditionalInformation (msg, sel, method_handle);
+			}
+
+			throw ErrorHelper.CreateError (8027, msg.ToString ());
+		}
+
+#if NET
+		static void CannotCreateManagedInstanceOfGenericType (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution, IntPtr sel, RuntimeMethodHandle method_handle)
+		{
+			if (resolution == MissingCtorResolution.Ignore)
+				return;
+
+			if (klass == IntPtr.Zero)
+				klass = Class.GetClassForObject (ptr);
+
+			var msg = new StringBuilder ();
+			msg.AppendFormat (Xamarin.Bundler.Errors.MX8056 /* Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}. */, ptr.ToString ("x"), new Class (klass).Name, type.FullName);
+
+			if (sel != IntPtr.Zero || method_handle.Value != IntPtr.Zero) {
+				AppendAdditionalInformation (msg, sel, method_handle);
+			}
+
+			throw ErrorHelper.CreateError (8056, msg.ToString ());
+		}
+#endif
+
+		static void AppendAdditionalInformation (StringBuilder msg, IntPtr sel, RuntimeMethodHandle method_handle)
+		{
+			msg.AppendLine ();
+			msg.AppendLine ("Additional information:");
+			if (sel != IntPtr.Zero)
+				msg.Append ("\tSelector: ").Append (Selector.GetName (sel)).AppendLine ();
+			if (method_handle.Value != IntPtr.Zero) {
+				try {
+					var method = MethodBase.GetMethodFromHandle (method_handle);
+					msg.Append ($"\tMethod: ");
+					if (method is not null) {
+						// there's no good built-in function to format a MethodInfo :/
+						msg.Append (method.DeclaringType?.FullName ?? string.Empty);
+						msg.Append (".");
+						msg.Append (method.Name);
+						msg.Append ("(");
+						var parameters = method.GetParameters ();
+						for (var i = 0; i < parameters.Length; i++) {
+							if (i > 0)
+								msg.Append (", ");
+							msg.Append (parameters [i].ParameterType.FullName);
 						}
-						msg.AppendLine ();
-					} catch (Exception ex) {
-						msg.Append ($"\tMethod: Unable to resolve RuntimeMethodHandle 0x{method_handle.Value.ToString ("x")}: {ex.Message}");
+						msg.Append (")");
+					} else {
+						msg.Append ($"Unable to resolve RuntimeMethodHandle 0x{method_handle.Value.ToString ("x")}");
 					}
+					msg.AppendLine ();
+				} catch (Exception ex) {
+					msg.Append ($"\tMethod: Unable to resolve RuntimeMethodHandle 0x{method_handle.Value.ToString ("x")}: {ex.Message}");
 				}
 			}
-			throw ErrorHelper.CreateError (8027, msg.ToString ());
 		}
 
 		static NSObject? ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
@@ -1310,19 +1337,61 @@ namespace ObjCRuntime {
 			return ConstructNSObject<T> (ptr, typeof (T), MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
-		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T : class, INativeObject
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution) where T : NSObject
 		{
 			return ConstructNSObject<T> (ptr, type, missingCtorResolution, IntPtr.Zero, default (RuntimeMethodHandle));
 		}
 
-		// The generic argument T is only used to cast the return value.
 		// The 'selector' and 'method' arguments are only used in error messages.
+#if NET
+		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T : NSObject, INSObjectFactory
+#else
 		static T? ConstructNSObject<T> (IntPtr ptr, Type type, MissingCtorResolution missingCtorResolution, IntPtr sel, RuntimeMethodHandle method_handle) where T : class, INativeObject
+#endif
 		{
 			if (type is null)
 				throw new ArgumentNullException (nameof (type));
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				T? instance = default;
+				var nativeHandle = new NativeHandle (ptr);
+
+				// We want to create an instance of `type` and if we have the chance to use the factory method
+				// on the generic type, we will prefer it to using the lookup table.
+				if (typeof (T) == type
+					&& typeof (T) != typeof (NSObject)
+					&& !(typeof (T).IsInterface || typeof (T).IsAbstract)) {
+					instance = ConstructNSObjectViaFactoryMethod (nativeHandle);
+				}
+
+				// Generic types can only be instantiated through the factory method and if that failed, we can't
+				// fall back to the lookup tables and we need to stop here.
+				if (type.IsGenericType && instance is null) {
+					CannotCreateManagedInstanceOfGenericType (ptr, IntPtr.Zero, type, missingCtorResolution, sel, method_handle);
+					return null;
+				}
+
+				// If we couldn't create an instance of T through the factory method, we'll use the lookup table
+				// based on the RuntimeTypeHandle.
+				//
+				// This isn't possible for generic types - we don't know the type arguments at compile time
+				// (otherwise we would be able to create an instance of T through the factory method).
+				// For non-generic types, we can call the NativeHandle constructor based on the RuntimeTypeHandle.
+
+				if (instance is null) {
+					instance = RegistrarHelper.ConstructNSObject<T> (type, nativeHandle);
+				}
+
+				if (instance is null) {
+					// If we couldn't create an instance using the lookup table either, it means `type` doesn't contain
+					// a suitable constructor.
+					MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, sel, method_handle);
+				}
+
+				return instance;
+			}
+#endif
 
 			var ctor = GetIntPtrConstructor (type);
 
@@ -1343,6 +1412,17 @@ namespace ObjCRuntime {
 #endif
 
 			return (T) ctor.Invoke (ctorArguments);
+
+#if NET
+			// It isn't possible to call T._Xamarin_ConstructNSObject (...) directly from the parent function. For some
+			// types, the app crashes with a SIGSEGV:
+			//
+			//   error: * Assertion at /Users/runner/work/1/s/src/mono/mono/mini/mini-generic-sharing.c:2283, condition `m_class_get_vtable (info->klass)' not met
+			//
+			// When the same call is made from a separate function, it works fine.
+			static T? ConstructNSObjectViaFactoryMethod (NativeHandle handle)
+				=> T._Xamarin_ConstructNSObject (handle) as T;
+#endif
 		}
 
 		// The generic argument T is only used to cast the return value.
@@ -1353,6 +1433,56 @@ namespace ObjCRuntime {
 
 			if (type.IsByRef)
 				type = type.GetElementType ()!;
+
+#if NET
+			if (Runtime.IsManagedStaticRegistrar) {
+				var nativeHandle = new NativeHandle (ptr);
+				T? instance = null;
+
+				// We want to create an instance of `type` and if we have the chance to use the factory method
+				// on the generic type, we will prefer it to using the lookup table.
+				if (typeof (T) == type
+					&& typeof (T) != typeof (INativeObject)
+					&& typeof (T) != typeof (NSObject)
+					&& !(typeof (T).IsInterface || typeof (T).IsAbstract)) {
+					instance = ConstructINativeObjectViaFactoryMethod (nativeHandle, owns);
+				}
+
+				// Generic types can only be instantiated through the factory method and if that failed, we can't
+				// fall back to the lookup tables and we need to stop here.
+				if (type.IsGenericType && instance is null) {
+					CannotCreateManagedInstanceOfGenericType (ptr, IntPtr.Zero, type, missingCtorResolution, sel, method_handle);
+					return null;
+				}
+
+				// If we couldn't create an instance of T through the factory method, we'll use the lookup table
+				// based on the RuntimeTypeHandle.
+				//
+				// This isn't possible for generic types - we don't know the type arguments at compile time
+				// (otherwise we would be able to create an instance of T through the factory method).
+				// For non-generic types, we can call the NativeHandle constructor based on the RuntimeTypeHandle.
+
+				// If type is an NSObject, we prefer the NSObject lookup table
+				if (instance is null && type != typeof (NSObject) && type.IsSubclassOf (typeof (NSObject))) {
+					instance = (T?)(INativeObject?) RegistrarHelper.ConstructNSObject<T> (type, nativeHandle);
+					if (instance is not null && owns) {
+						Runtime.TryReleaseINativeObject (instance);
+					}
+				}
+
+				if (instance is null && type != typeof (INativeObject)) {
+					instance = RegistrarHelper.ConstructINativeObject<T> (type, nativeHandle, owns);
+				}
+
+				if (instance is null) {
+					// If we couldn't create an instance using the lookup table either, it means `type` doesn't contain
+					// a suitable constructor.
+					MissingCtor (ptr, IntPtr.Zero, type, missingCtorResolution, sel, method_handle);
+				}
+
+				return instance;
+			}
+#endif
 
 			var ctor = GetIntPtr_BoolConstructor (type);
 
@@ -1374,6 +1504,17 @@ namespace ObjCRuntime {
 			ctorArguments [1] = owns;
 
 			return (T?) ctor.Invoke (ctorArguments);
+
+#if NET
+			// It isn't possible to call T._Xamarin_ConstructINativeObject (...) directly from the parent function. For some
+			// types, the app crashes with a SIGSEGV:
+			//
+			//   error: * Assertion at /Users/runner/work/1/s/src/mono/mono/mini/mini-generic-sharing.c:2283, condition `m_class_get_vtable (info->klass)' not met
+			//
+			// When the same call is made from a separate function, it works fine.
+			static T? ConstructINativeObjectViaFactoryMethod (NativeHandle nativeHandle, bool owns)
+				=> T._Xamarin_ConstructINativeObject (nativeHandle, owns) as T;
+#endif
 		}
 
 		static IntPtr CreateNSObject (IntPtr type_gchandle, IntPtr handle, NSObject.Flags flags)
@@ -1753,7 +1894,7 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
-				return ConstructNSObject<INativeObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+				return ConstructNSObject<NSObject> (ptr, implementation!, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
 			}
 
 			return ConstructINativeObject<INativeObject> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound, sel, method_handle);
@@ -1810,10 +1951,22 @@ namespace ObjCRuntime {
 					// native objects and NSObject instances.
 					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
-				var rv = (T?) ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound);
+#if NET
+				if (!Runtime.IsManagedStaticRegistrar) {
+					// For other registrars other than managed-static the generic parameter of ConstructNSObject is used
+					// only to cast the return value so we can safely pass NSObject here to satisfy the constraints of the
+					// generic parameter.
+					var rv = (T?)(INativeObject?) ConstructNSObject<NSObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
+					if (owns)
+						TryReleaseINativeObject (rv);
+					return rv;
+				}
+#else
+				var rv = ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound, sel, method_handle);
 				if (owns)
 					TryReleaseINativeObject (rv);
 				return rv;
+#endif
 			}
 
 			return ConstructINativeObject<T> (ptr, owns, implementation, MissingCtorResolution.ThrowConstructor2NotFound, sel, method_handle);

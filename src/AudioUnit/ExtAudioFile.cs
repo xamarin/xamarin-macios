@@ -104,7 +104,7 @@ namespace AudioUnit {
 
 		public IntPtr? AudioFile {
 			get {
-				uint size = (uint) Marshal.SizeOf (typeof (IntPtr));
+				uint size = (uint) IntPtr.Size;
 				IntPtr value;
 				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.AudioFile, ref size, out value) != ExtAudioFileError.OK)
 					return null;
@@ -142,7 +142,7 @@ namespace AudioUnit {
 		public AudioStreamBasicDescription FileDataFormat {
 			get {
 				AudioStreamBasicDescription dc = new AudioStreamBasicDescription ();
-				uint size = (uint) Marshal.SizeOf (typeof (AudioStreamBasicDescription));
+				uint size = (uint) Marshal.SizeOf<AudioStreamBasicDescription> ();
 				int err = ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.FileDataFormat, ref size, ref dc);
 				if (err != 0) {
 					throw new InvalidOperationException (String.Format ("Error code:{0}", err));
@@ -154,7 +154,7 @@ namespace AudioUnit {
 
 		public AudioStreamBasicDescription ClientDataFormat {
 			get {
-				uint size = (uint) Marshal.SizeOf (typeof (AudioStreamBasicDescription));
+				uint size = (uint) Marshal.SizeOf<AudioStreamBasicDescription> ();
 				AudioStreamBasicDescription value = new AudioStreamBasicDescription ();
 				if (ExtAudioFileGetProperty (_extAudioFile, PropertyIDType.ClientDataFormat, ref size, ref value) != (int) ExtAudioFileError.OK)
 					return default (AudioStreamBasicDescription);
@@ -164,7 +164,7 @@ namespace AudioUnit {
 
 			set {
 				int err = ExtAudioFileSetProperty (_extAudioFile, PropertyIDType.ClientDataFormat,
-					(uint) Marshal.SizeOf (value), ref value);
+					(uint) Marshal.SizeOf<AudioStreamBasicDescription> (), ref value);
 				if (err != 0) {
 					throw new InvalidOperationException (String.Format ("Error code:{0}", err));
 				}
@@ -343,7 +343,7 @@ namespace AudioUnit {
 		{
 			IntPtr value = IntPtr.Zero;
 			return ExtAudioFileSetProperty (_extAudioFile, PropertyIDType.ConverterConfig,
-				Marshal.SizeOf (value), value);
+				IntPtr.Size, value);
 		}
 
 		public void Dispose ()

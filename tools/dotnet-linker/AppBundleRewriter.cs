@@ -231,6 +231,12 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public FieldReference System_IntPtr_Zero {
+			get {
+				return GetFieldReference (CorlibAssembly, System_IntPtr, "Zero", "System.IntPtr::Zero", out var _);
+			}
+		}
+
 		public TypeReference System_Nullable_1 {
 			get {
 				return GetTypeReference (CorlibAssembly, "System.Nullable`1", out var _);
@@ -380,6 +386,12 @@ namespace Xamarin.Linker {
 		public TypeReference ObjCRuntime_IManagedRegistrar {
 			get {
 				return GetTypeReference (PlatformAssembly, "ObjCRuntime.IManagedRegistrar", out var _);
+			}
+		}
+
+		public TypeReference Foundation_INSObjectFactory {
+			get {
+				return GetTypeReference (PlatformAssembly, "Foundation.INSObjectFactory", out var _);
 			}
 		}
 
@@ -749,6 +761,49 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference IManagedRegistrar_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructNSObject",
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference INSObjectFactory__Xamarin_ConstructNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						Foundation_INSObjectFactory, "_Xamarin_ConstructNSObject",
+						nameof (INSObjectFactory__Xamarin_ConstructNSObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle);
+			}
+		}
+
+		public MethodReference IManagedRegistrar_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_IManagedRegistrar, "ConstructINativeObject",
+						nameof (IManagedRegistrar_ConstructINativeObject),
+						isStatic: false,
+						System_RuntimeTypeHandle,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
+			}
+		}
+
+		public MethodReference INativeObject__Xamarin_ConstructINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_INativeObject, "_Xamarin_ConstructINativeObject",
+						nameof (INativeObject__Xamarin_ConstructINativeObject),
+						isStatic: true,
+						ObjCRuntime_NativeHandle,
+						System_Boolean);
+			}
+		}
+
 		public MethodReference IManagedRegistrar_RegisterWrapperTypes {
 			get {
 				return GetMethodReference (PlatformAssembly, ObjCRuntime_IManagedRegistrar, "RegisterWrapperTypes", (v) =>
@@ -779,6 +834,16 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference Runtime_TryGetNSObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryGetNSObject",
+						nameof (Runtime_TryGetNSObject),
+						isStatic: true,
+						System_IntPtr,
+						System_Boolean);
+			}
+		}
 		public MethodReference Runtime_GetNSObject__System_IntPtr {
 			get {
 				return GetMethodReference (PlatformAssembly,
@@ -811,19 +876,6 @@ namespace Xamarin.Linker {
 						isStatic: true,
 						genericParameterCount: 1,
 						System_IntPtr);
-			}
-		}
-
-		public MethodReference Runtime_GetINativeObject__IntPtr_Boolean_Type_Type {
-			get {
-				return GetMethodReference (PlatformAssembly,
-						ObjCRuntime_Runtime, "GetINativeObject",
-						nameof (Runtime_GetINativeObject__IntPtr_Boolean_Type_Type),
-						isStatic: true,
-						System_IntPtr,
-						System_Boolean,
-						System_Type,
-						System_Type);
 			}
 		}
 
@@ -1091,6 +1143,15 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference Runtime_TryReleaseINativeObject {
+			get {
+				return GetMethodReference (PlatformAssembly,
+						ObjCRuntime_Runtime, "TryReleaseINativeObject",
+						isStatic: true,
+						ObjCRuntime_INativeObject);
+			}
+		}
+
 		public MethodReference UnmanagedCallersOnlyAttribute_Constructor {
 			get {
 				return GetMethodReference (CorlibAssembly, "System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute", ".ctor", (v) => v.IsDefaultConstructor ());
@@ -1142,6 +1203,7 @@ namespace Xamarin.Linker {
 			current_assembly = null;
 			type_map.Clear ();
 			method_map.Clear ();
+			field_map.Clear ();
 		}
 	}
 }

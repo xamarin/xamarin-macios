@@ -1023,6 +1023,14 @@
 		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
 	</data>
 
+	<data name="MX1307" xml:space="preserve">
+		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+
+	<data name="MX1308" xml:space="preserve">
+		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+
 	<data name="MM1401" xml:space="preserve">
 		<value>The required 'Xamarin.Mac.dll' assembly is missing from the references
 		</value>
@@ -1886,7 +1894,7 @@
 	</data>
 
 	<data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
+		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
 		</value>
 	</data>
 	
@@ -1915,6 +1923,10 @@
 
 	<data name="MX4188" xml:space="preserve">
 		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
+
+	<data name="MX4189" xml:space="preserve">
+		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
 	</data>
 
 	<data name="MT5101" xml:space="preserve">
@@ -2253,5 +2265,9 @@
 
 	<data name="MX8055" xml:space="preserve">
 		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+	</data>
+
+	<data name="MX8056" xml:space="preserve">
+		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
 	</data>
 </root>
