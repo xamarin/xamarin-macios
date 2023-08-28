@@ -124,6 +124,7 @@ partial class Frameworks {
 		"Speech",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"ThreadNetwork",
 		"Twitter",
@@ -260,6 +261,7 @@ partial class Frameworks {
 		"Speech",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"ThreadNetwork",
 		"UniformTypeIdentifiers",
@@ -317,6 +319,7 @@ partial class Frameworks {
 		"SoundAnalysis",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"UIKit",
 		"UniformTypeIdentifiers",
 		"UserNotifications",
@@ -393,6 +396,7 @@ partial class Frameworks {
 		"SoundAnalysis",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"TVMLKit",
 		"TVServices",
@@ -519,6 +523,7 @@ partial class Frameworks {
 		"Speech",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"ThreadNetwork",
 		"UIKit",
@@ -675,6 +680,7 @@ partial class Frameworks {
 	bool? _Speech;
 	bool? _SpriteKit;
 	bool? _StoreKit;
+	bool? _Symbols;
 	bool? _SystemConfiguration;
 	bool? _ThreadNetwork;
 	bool? _TVMLKit;
@@ -837,6 +843,7 @@ partial class Frameworks {
 	public bool HaveSpeech { get { if (!_Speech.HasValue) _Speech = GetValue ("Speech"); return _Speech.Value; } }
 	public bool HaveSpriteKit { get { if (!_SpriteKit.HasValue) _SpriteKit = GetValue ("SpriteKit"); return _SpriteKit.Value; } }
 	public bool HaveStoreKit { get { if (!_StoreKit.HasValue) _StoreKit = GetValue ("StoreKit"); return _StoreKit.Value; } }
+	public bool HaveSymbols { get { if (!_Symbols.HasValue) _Symbols = GetValue ("Symbols"); return _Symbols.Value; } }
 	public bool HaveSystemConfiguration { get { if (!_SystemConfiguration.HasValue) _SystemConfiguration = GetValue ("SystemConfiguration"); return _SystemConfiguration.Value; } }
 	public bool HaveThreadNetwork { get { if (!_ThreadNetwork.HasValue) _ThreadNetwork = GetValue ("ThreadNetwork"); return _ThreadNetwork.Value; } }
 	public bool HaveTVMLKit { get { if (!_TVMLKit.HasValue) _TVMLKit = GetValue ("TVMLKit"); return _TVMLKit.Value; } }
