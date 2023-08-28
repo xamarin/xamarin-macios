@@ -1432,7 +1432,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern void CGContextDrawConicGradient (/* CGContext */ IntPtr context, /*[NullAllowed] CGGradient*/ IntPtr gradient, CGPoint center, nfloat angle);
 
-		public void DrawConicGradient (CGGradient gradient, CGPoint point, nfloat angle) =>
+		public void DrawConicGradient (CGGradient? gradient, CGPoint point, nfloat angle) =>
 			CGContextDrawConicGradient (Handle, gradient.GetHandle (), point, angle);
 
 #endif // !COREBUILD
