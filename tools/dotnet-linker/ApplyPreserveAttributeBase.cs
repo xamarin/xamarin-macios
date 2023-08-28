@@ -179,7 +179,12 @@ namespace Mono.Tuner {
 		void PreserveUnconditional (IMetadataTokenProvider provider)
 		{
 			Annotations.Mark (provider);
-			AddDynamicDependencyAttribute (provider);
+
+			// We want to add a dynamic dependency attribute to preserve methods and fields
+			// but not to preserve types while we're marking the chain of declaring types.
+			if (provider is not TypeDefinition) {
+				AddDynamicDependencyAttribute (provider);
+			}
 
 			var member = provider as IMemberDefinition;
 			if (member is null || member.DeclaringType is null)
