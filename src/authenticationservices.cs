@@ -214,17 +214,17 @@ namespace AuthenticationServices {
 		void ReplaceCredentialIdentities (ASPasswordCredentialIdentity [] newCredentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 
 		[Async]
-		[iOS (17,0), TV (17,0), Mac (14, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("saveCredentialIdentityEntries:completion:")]
 		void SaveCredentialIdentityEntries (ASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 
 		[Async]
-		[iOS (17,0), TV (17,0), Mac (14, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("replaceCredentialIdentityEntries:completion:")]
 		void ReplaceCredentialIdentityEntries (ASCredentialIdentity [] newCredentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 
 		[Async]
-		[iOS (17,0), TV (17,0), Mac (14, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("removeCredentialIdentityEntries:completion:")]
 		void RemoveCredentialIdentityEntries (ASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 	}
