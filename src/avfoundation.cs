@@ -51,6 +51,15 @@ using MediaToolbox;
 // hack: ease compilation without extra defines
 using CIBarcodeDescriptor = Foundation.NSObject;
 #endif
+
+// cinematic is not present in certain platforms
+#if WATCH || __MACCATALYST__
+using CNAssetInfo = Foundation.NSObject;
+using CNCompositionInfo = Foundation.NSObject;
+#else
+using Cinematic;
+#endif
+
 using AudioToolbox;
 using CoreMedia;
 using ObjCRuntime;
@@ -8335,6 +8344,7 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
+
 	}
 
 	[Watch (6, 0)]
@@ -8490,6 +8500,11 @@ namespace AVFoundation {
 		[Export ("naturalSize")]
 		[Override]
 		CGSize NaturalSize { get; set; }
+
+		// from @interface CNComposition (AVMutableComposition)
+		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), NoMacCatalyst]
+		[Export ("addTracksForCinematicAssetInfo:preferredStartingTrackID:")]
+		CNCompositionInfo AddTracks (CNAssetInfo assetInfo, int preferredStartingTrackID);
 	}
 
 	[Watch (6, 0)]
