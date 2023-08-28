@@ -197,7 +197,9 @@ ZIPPED_TARGETS += .libs/$(1).xcframework.zip
 all-local:: .libs/$(1).xcframework.stamp
 endef
 
+ifdef ENABLE_DOTNET
 $(foreach name,$(NAMES),$(eval $(call XCFrameworkTemplate,$(name))))
+endif
 
 zip: $(ZIPPED_TARGETS)
 all-local:: $(ZIPPED_TARGETS)
