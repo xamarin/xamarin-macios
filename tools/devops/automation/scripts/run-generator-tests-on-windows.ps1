@@ -17,24 +17,24 @@ foreach ($platform in $dotnetPlatforms) {
   Write-Host "$variableName = $productVersion"
 
   $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
-  $variableValue = [Environment]::GetEnvironmentVariable ("CONFIGURATION_" + $variableName)
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
   [Environment]::SetEnvironmentVariable($variableName, $variableValue)
   Write-Host "$variableName = $variableValue"
 
   $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
-  $variableValue = [Environment]::GetEnvironmentVariable ("CONFIGURATION_" + $variableName)
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
   [Environment]::SetEnvironmentVariable($variableName, $variableValue)
   Write-Host "$variableName = $variableValue"
 
   $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
-  $variableValue = [Environment]::GetEnvironmentVariable ("CONFIGURATION_" + $variableName)
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
   [Environment]::SetEnvironmentVariable($variableName, $variableValue)
   Write-Host "$variableName = $variableValue"
 
   $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
   foreach ($rid in $rids) {
       $variableName = "$($rid)_NUGET_RUNTIME_NAME"
-      $variableValue = [Environment]::GetEnvironmentVariable ("CONFIGURATION_" + $variableName)
+      $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
       [Environment]::SetEnvironmentVariable($variableName, $variableValue)
       Write-Host "$variableName = $variableValue"
   }
