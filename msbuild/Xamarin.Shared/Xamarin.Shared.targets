@@ -183,7 +183,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<CompressBindingResourcePackage Condition="'$(UsingAppleNETSdk)' != 'true'">false</CompressBindingResourcePackage>
 		</PropertyGroup>
 
-		<CreateBindingResourcePackage Condition="'$(IsMacEnabled)' == 'true'"
+		<CreateBindingResourcePackage
 			SessionId="$(BuildSessionId)"
 			NativeReferences="@(NativeReference)"
 			BindingResourcePath="$(BindingResourcePath)"
@@ -194,13 +194,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<MakeDir
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
 			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
 		/>
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
 			AlwaysCreate="true"
 			Files="$(BindingResourcePath).stamp"
 			>
@@ -238,7 +236,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeBindingResourcesInNuGetPackage</TargetsForTfmSpecificContentInPackage>
 	</PropertyGroup>
 	<Target Name="_IncludeBindingResourcesInNuGetPackage"
-		Condition="'$(IsMacEnabled)' == 'true' And '$(IncludeBuildOutput)' != 'false'"
+		Condition="'$(IncludeBuildOutput)' != 'false'"
 	>
 		<PropertyGroup>
 			<_HasOldStyleBindingItems Condition="@(ObjcBindingNativeLibrary->Count()) > 0">true</_HasOldStyleBindingItems>
