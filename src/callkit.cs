@@ -618,7 +618,6 @@ namespace CallKit {
 	interface CXSetMutedCallAction {
 
 		[Export ("initWithCallUUID:muted:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (NSUuid callUuid, bool muted);
 
 		[Export ("muted")]
