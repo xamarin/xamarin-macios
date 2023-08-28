@@ -158,10 +158,10 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
-			var assemblies = FilterToAssembly (lines, assemblyName);
+			var assemblies = FilterToAssembly (lines, assemblyName).Distinct ();
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
-			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			Assert.That (assemblies.Count (), Is.EqualTo (1), $"Unique assemblies:\n\t{string.Join ("\n\t", assemblies)}");
 			var asm = assemblies.First ();
 			Assert.That (asm, Does.Exist, "Assembly existence");
 			// Verify that there's no resources in the assembly
@@ -258,12 +258,14 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (3), "3 resources");
 			// Sort the resources before we assert, since we don't care about the order, and sorted order makes the asserts simpler.
-			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).ToArray ();
-			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08__with__loc.png"), $"__{prefix}_content_basn3p08__with__loc.png");
-			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
-			Assert.That (resources [2].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
+			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).Select (v => v.Name).ToArray ();
+			var expectedResources = new string [] {
+				$"__{prefix}_content_basn3p08__with__loc.png",
+				$"__{prefix}_content_basn3p08.png",
+				$"__{prefix}_content_xamvideotest.mp4",
+			};
+			Assert.That (resources, Is.EqualTo (expectedResources), "Resources");
 		}
 
 		[TestCase ("iOS")]
@@ -288,8 +290,15 @@ namespace Xamarin.Tests {
 				Where (v => {
 					if (v.Length < 10)
 						return false;
-					if (v [0] != '/')
-						return false;
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+						if (v [1] != ':') {
+							return false;
+						}
+					} else {
+						if (v [0] != '/') {
+							return false;
+						}
+					}
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
 					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
@@ -847,6 +856,7 @@ namespace Xamarin.Tests {
 				break;
 			}
 
+			DumpFiles (bindir);
 			foreach (var brp in bindingResourcePackages) {
 				var file = Path.Combine (bindir, brp);
 				Assert.That (file, Does.Exist, "Existence");
@@ -862,6 +872,14 @@ namespace Xamarin.Tests {
 			var hasDirectoryResources = Directory.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources"));
 			if (!hasDirectoryResources && !hasCompressedResources)
 				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
+		}
+
+		void DumpFiles (string dir)
+		{
+			var files = Directory.GetFileSystemEntries (dir, "*", SearchOption.AllDirectories).ToArray ();
+			Console.WriteLine ($"DumpFiles ({dir}): {files.Length} files:");
+			foreach (var file in files)
+				Console.WriteLine ($"    {file}");
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)
@@ -892,19 +910,59 @@ namespace Xamarin.Tests {
 
 		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)
 		{
+			var rv = FilterToAssembly2 (lines, assemblyName, false);
+			if (!rv.Any ()) {
+				Console.WriteLine ($"Could not find any matching lines of {lines.Count ()} lines matching {assemblyName}");
+				rv = FilterToAssembly2 (lines, assemblyName, true);
+			}
+			return rv;
+		}
+
+		IEnumerable<string> FilterToAssembly2 (IEnumerable<string> lines, string assemblyName, bool log)
+		{
 			return lines.
 				Select (v => v.Trim ()).
 				Where (v => {
-					if (v.Length < 10)
+					if (v.Length < 10) {
+						if (log)
+							Console.WriteLine ($"    1: {v}");
 						return false;
-					if (v [0] != '/')
+					}
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+						if (v [1] != ':') {
+							if (log)
+								Console.WriteLine ($"    2a: {v}");
+							return false;
+						}
+					} else {
+						if (v [0] != '/') {
+							if (log)
+								Console.WriteLine ($"    2b: {v}");
+							return false;
+						}
+					}
+					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    3: {v}");
 						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+					}
+					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    4: {v}");
 						return false;
-					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
-						return false;
-					if (v.Contains (Path.DirectorySeparatorChar + "ref" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
+					}
+					if (v.Contains (Path.DirectorySeparatorChar + "ref" + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    5: {v}");
 						return false; // Skip reference assemblies
+					}
+					if (!File.Exists (v)) {
+						if (log)
+							Console.WriteLine ($"    6: {v}");
+						return false;
+					}
+
+					Console.WriteLine ($"    YAY 7: {v}");
 					return true;
 				});
 		}
