@@ -269,10 +269,20 @@ namespace CloudKit {
 		[Async]
 		void GetAccountStatus (Action<CKAccountStatus, NSError> completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.WatchOS, 10, 0)]
 		[Export ("statusForApplicationPermission:completionHandler:")]
 		[Async]
 		void StatusForApplicationPermission (CKApplicationPermissions applicationPermission, Action<CKApplicationPermissionStatus, NSError> completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.WatchOS, 10, 0)]
 		[Export ("requestApplicationPermission:completionHandler:")]
 		[Async]
 		void RequestApplicationPermission (CKApplicationPermissions applicationPermission, Action<CKApplicationPermissionStatus, NSError> completionHandler);
@@ -281,22 +291,41 @@ namespace CloudKit {
 		[Async]
 		void FetchUserRecordId (Action<CKRecordID, NSError> completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.WatchOS, 10, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("discoverAllIdentitiesWithCompletionHandler:")]
 		[Async]
 		void DiscoverAllIdentities (Action<CKUserIdentity [], NSError> completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.WatchOS, 10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("discoverUserIdentityWithEmailAddress:completionHandler:")]
 		[Async]
 		void DiscoverUserIdentityWithEmailAddress (string email, Action<CKUserIdentity, NSError> completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.WatchOS, 10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("discoverUserIdentityWithPhoneNumber:completionHandler:")]
 		[Async]
 		void DiscoverUserIdentityWithPhoneNumber (string phoneNumber, Action<CKUserIdentity, NSError> completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.WatchOS, 10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("discoverUserIdentityWithUserRecordID:completionHandler:")]
 		[Async]
@@ -1118,35 +1147,64 @@ namespace CloudKit {
 		[Export ("isPruned", ArgumentSemantic.UnsafeUnretained)]
 		bool IsPruned { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertBody")]
 		string AlertBody { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertLocalizationKey")]
 		string AlertLocalizationKey { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] AlertLocalizationArgs { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertActionLocalizationKey")]
 		string AlertActionLocalizationKey { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("alertLaunchImage")]
 		string AlertLaunchImage { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("badge", ArgumentSemantic.Copy)]
 		NSNumber Badge { get; }
 
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the UserNotifications framework instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use the UserNotifications framework instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("soundName")]
@@ -1485,6 +1543,26 @@ namespace CloudKit {
 		[Field ("CKRecordShareKey")]
 		NSString ShareKey { get; }
 
+		[TV (17, 0)]
+		[Field ("CKRecordRecordIDKey")]
+		NSString RecordIdKey { get; }
+
+		[TV (17, 0)]
+		[Field ("CKRecordModificationDateKey")]
+		NSString ModificationDateKey { get; }
+
+		[TV (17, 0)]
+		[Field ("CKRecordLastModifiedUserRecordIDKey")]
+		NSString LastModifiedUserRecordIdKey { get; }
+
+		[TV (17, 0)]
+		[Field ("CKRecordCreatorUserRecordIDKey")]
+		NSString CreatorUserRecordIdKey { get; }
+
+		[TV (17, 0)]
+		[Field ("CKRecordCreationDateKey")]
+		NSString CreationDateKey { get; }
+
 		[MacCatalyst (13, 1)]
 		[Field ("CKRecordTypeShare")]
 		NSString TypeShare { get; }
@@ -1658,6 +1736,11 @@ namespace CloudKit {
 	[DisableDefaultCtor]
 	[BaseType (typeof (CKSubscription))]
 	interface CKQuerySubscription : NSSecureCoding, NSCopying {
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 10, 0)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
 		[Export ("initWithRecordType:predicate:options:")]
 		NativeHandle Constructor (string recordType, NSPredicate predicate, CKQuerySubscriptionOptions querySubscriptionOptions);
 
@@ -1683,6 +1766,12 @@ namespace CloudKit {
 	[DisableDefaultCtor]
 	[BaseType (typeof (CKSubscription))]
 	interface CKRecordZoneSubscription : NSSecureCoding, NSCopying {
+
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 10, 0)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
 		[Export ("initWithZoneID:")]
 		NativeHandle Constructor (CKRecordZoneID zoneID);
 
@@ -1700,8 +1789,18 @@ namespace CloudKit {
 
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKSubscription))]
 	interface CKDatabaseSubscription : NSSecureCoding, NSCopying {
+
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
+		[Deprecated (PlatformName.WatchOS, 6, 0)]
+		[Export ("init")]
+		NativeHandle Constructor ();
+
 		[Export ("initWithSubscriptionID:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string subscriptionID);
@@ -1899,6 +1998,11 @@ namespace CloudKit {
 		CKFetchWebAuthTokenOperationHandler Completed { get; set; }
 	}
 
+	[Obsoleted (PlatformName.MacOSX, 14, 0)]
+	[Obsoleted (PlatformName.iOS, 17, 0)]
+	[Obsoleted (PlatformName.TvOS, 17, 0)]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 0)]
+	[Obsoleted (PlatformName.WatchOS, 10, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // designated
@@ -1920,6 +2024,10 @@ namespace CloudKit {
 		Action<NSError> Completed { get; set; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 14, 0)]
+	[Deprecated (PlatformName.iOS, 17, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+	[Deprecated (PlatformName.WatchOS, 10, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CKOperation))]
@@ -2103,5 +2211,484 @@ namespace CloudKit {
 
 		[NullAllowed, Export ("systemSharingUIDidStopSharingBlock", ArgumentSemantic.Copy)]
 		Action<CKRecordID, NSError> SystemSharingUIDidStopSharingHandler { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CKSyncEngineSendChangesScope : NSCopying {
+		[NullAllowed, Export ("zoneIDs", ArgumentSemantic.Copy)]
+		NSSet<CKRecordZoneID> ZoneIds { get; }
+
+		[Export ("excludedZoneIDs", ArgumentSemantic.Copy)]
+		NSSet<CKRecordZoneID> ExcludedZoneIds { get; }
+
+		[NullAllowed, Export ("recordIDs", ArgumentSemantic.Copy)]
+		NSSet<CKRecordID> RecordIds { get; }
+
+		[Internal]
+		[Export ("initWithZoneIDs:")]
+		NativeHandle _InitWithZoneIds ([NullAllowed] NSSet<CKRecordZoneID> zoneIds);
+
+		[Internal]
+		[Export ("initWithExcludedZoneIDs:")]
+		NativeHandle _InitWithExcludedZoneIds (NSSet<CKRecordZoneID> excludedZoneIds);
+
+		[Export ("initWithRecordIDs:")]
+		NativeHandle Constructor ([NullAllowed] NSSet<CKRecordID> recordIds);
+
+		[Export ("containsRecordID:")]
+		bool ContainsRecordId (CKRecordID recordId);
+
+		[Export ("containsPendingRecordZoneChange:")]
+		bool ContainsPendingRecordZoneChange (CKSyncEnginePendingRecordZoneChange pendingRecordZoneChange);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CKSyncEngineFetchChangesScope : NSCopying {
+		[NullAllowed, Export ("zoneIDs", ArgumentSemantic.Copy)]
+		NSSet<CKRecordZoneID> ZoneIds { get; }
+
+		[Export ("excludedZoneIDs", ArgumentSemantic.Copy)]
+		NSSet<CKRecordZoneID> ExcludedZoneIds { get; }
+
+		[Internal]
+		[Export ("initWithZoneIDs:")]
+		NativeHandle _InitWithZoneIds ([NullAllowed] NSSet<CKRecordZoneID> zoneIds);
+
+		[Internal]
+		[Export ("initWithExcludedZoneIDs:")]
+		NativeHandle _InitWithExcludedZoneIds (NSSet<CKRecordZoneID> zoneIds);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineFetchChangesContext {
+		[Export ("reason", ArgumentSemantic.Assign)]
+		CKSyncEngineSyncReason Reason { get; }
+
+		[Export ("options", ArgumentSemantic.Copy)]
+		CKSyncEngineFetchChangesOptions Options { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineEvent {
+		[Export ("type", ArgumentSemantic.Assign)]
+		CKSyncEngineEventType Type { get; }
+
+		[Export ("stateUpdateEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineStateUpdateEvent StateUpdateEvent { get; }
+
+		[Export ("accountChangeEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineAccountChangeEvent AccountChangeEvent { get; }
+
+		[Export ("fetchedDatabaseChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineFetchedDatabaseChangesEvent FetchedDatabaseChangesEvent { get; }
+
+		[Export ("fetchedRecordZoneChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineFetchedRecordZoneChangesEvent FetchedRecordZoneChangesEvent { get; }
+
+		[Export ("sentDatabaseChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineSentDatabaseChangesEvent SentDatabaseChangesEvent { get; }
+
+		[Export ("sentRecordZoneChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineSentRecordZoneChangesEvent SentRecordZoneChangesEvent { get; }
+
+		[Export ("willFetchChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineWillFetchChangesEvent WillFetchChangesEvent { get; }
+
+		[Export ("willFetchRecordZoneChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineWillFetchRecordZoneChangesEvent WillFetchRecordZoneChangesEvent { get; }
+
+		[Export ("didFetchRecordZoneChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineDidFetchRecordZoneChangesEvent DidFetchRecordZoneChangesEvent { get; }
+
+		[Export ("didFetchChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineDidFetchChangesEvent DidFetchChangesEvent { get; }
+
+		[Export ("willSendChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineWillSendChangesEvent WillSendChangesEvent { get; }
+
+		[Export ("didSendChangesEvent", ArgumentSemantic.Strong)]
+		CKSyncEngineDidSendChangesEvent DidSendChangesEvent { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineAccountChangeEvent {
+		[Export ("changeType", ArgumentSemantic.Assign)]
+		CKSyncEngineAccountChangeType ChangeType { get; }
+
+		[NullAllowed, Export ("previousUser", ArgumentSemantic.Copy)]
+		CKRecordID PreviousUser { get; }
+
+		[NullAllowed, Export ("currentUser", ArgumentSemantic.Copy)]
+		CKRecordID CurrentUser { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineStateSerialization : NSSecureCoding { }
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineConfiguration {
+		[Export ("initWithDatabase:stateSerialization:delegate:")]
+		NativeHandle Constructor (CKDatabase database, [NullAllowed] CKSyncEngineStateSerialization stateSerialization, ICKSyncEngineDelegate @delegate);
+
+		[Export ("database", ArgumentSemantic.Strong)]
+		CKDatabase Database { get; set; }
+
+		[NullAllowed, Export ("stateSerialization", ArgumentSemantic.Copy)]
+		CKSyncEngineStateSerialization StateSerialization { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ICKSyncEngineDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("automaticallySync")]
+		bool AutomaticallySync { get; set; }
+
+		[NullAllowed, Export ("subscriptionID")]
+		string SubscriptionId { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineWillSendChangesEvent {
+		[Export ("context", ArgumentSemantic.Strong)]
+		CKSyncEngineSendChangesContext Context { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineWillFetchRecordZoneChangesEvent {
+		[Export ("zoneID", ArgumentSemantic.Copy)]
+		CKRecordZoneID ZoneId { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineSendChangesContext {
+		[Export ("reason", ArgumentSemantic.Assign)]
+		CKSyncEngineSyncReason Reason { get; }
+
+		[Export ("options", ArgumentSemantic.Copy)]
+		CKSyncEngineSendChangesOptions Options { get; }
+	}
+
+	interface ICKSyncEngineDelegate { }
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface CKSyncEngineDelegate {
+		[Abstract]
+		[Export ("syncEngine:handleEvent:")]
+		void SyncEngine (CKSyncEngine syncEngine, CKSyncEngineEvent @event);
+
+		[Abstract]
+		[Export ("syncEngine:nextRecordZoneChangeBatchForContext:")]
+		[return: NullAllowed]
+		CKSyncEngineRecordZoneChangeBatch SyncEngine (CKSyncEngine syncEngine, CKSyncEngineSendChangesContext context);
+
+		[Export ("syncEngine:nextFetchChangesOptionsForContext:")]
+		CKSyncEngineFetchChangesOptions SyncEngine (CKSyncEngine syncEngine, CKSyncEngineFetchChangesContext context);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineDidSendChangesEvent {
+		[Export ("context", ArgumentSemantic.Strong)]
+		CKSyncEngineSendChangesContext Context { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEnginePendingRecordZoneChange {
+		[Export ("initWithRecordID:type:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CKRecordID recordId, CKSyncEnginePendingRecordZoneChangeType type);
+
+		[Export ("recordID", ArgumentSemantic.Copy)]
+		CKRecordID RecordId { get; }
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		CKSyncEnginePendingRecordZoneChangeType Type { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CKSyncEngineFetchChangesOptions : NSCopying {
+		[Export ("scope", ArgumentSemantic.Copy)]
+		CKSyncEngineFetchChangesScope Scope { get; set; }
+
+		[Export ("operationGroup", ArgumentSemantic.Strong)]
+		CKOperationGroup OperationGroup { get; set; }
+
+		[Export ("prioritizedZoneIDs", ArgumentSemantic.Copy)]
+		CKRecordZoneID [] PrioritizedZoneIds { get; set; }
+
+		[Export ("initWithScope:")]
+		NativeHandle Constructor ([NullAllowed] CKSyncEngineFetchChangesScope scope);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineStateUpdateEvent {
+		[Export ("stateSerialization", ArgumentSemantic.Copy)]
+		CKSyncEngineStateSerialization StateSerialization { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineFetchedDatabaseChangesEvent {
+		[Export ("modifications", ArgumentSemantic.Copy)]
+		CKRecordZone [] Modifications { get; }
+
+		[Export ("deletions", ArgumentSemantic.Copy)]
+		CKSyncEngineFetchedZoneDeletion [] Deletions { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineFetchedRecordZoneChangesEvent {
+		[Export ("modifications", ArgumentSemantic.Copy)]
+		CKRecord [] Modifications { get; }
+
+		[Export ("deletions", ArgumentSemantic.Copy)]
+		CKSyncEngineFetchedRecordDeletion [] Deletions { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineSentDatabaseChangesEvent {
+		[Export ("savedZones", ArgumentSemantic.Copy)]
+		CKRecordZone [] SavedZones { get; }
+
+		[Export ("failedZoneSaves", ArgumentSemantic.Copy)]
+		CKSyncEngineFailedZoneSave [] FailedZoneSaves { get; }
+
+		[Export ("deletedZoneIDs", ArgumentSemantic.Copy)]
+		CKRecordZoneID [] DeletedZoneIds { get; }
+
+		[Export ("failedZoneDeletes", ArgumentSemantic.Copy)]
+		NSDictionary<CKRecordZoneID, NSError> FailedZoneDeletes { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineWillFetchChangesEvent { }
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineSentRecordZoneChangesEvent {
+		[Export ("savedRecords", ArgumentSemantic.Copy)]
+		CKRecord [] SavedRecords { get; }
+
+		[Export ("failedRecordSaves", ArgumentSemantic.Copy)]
+		CKSyncEngineFailedRecordSave [] FailedRecordSaves { get; }
+
+		[Export ("deletedRecordIDs", ArgumentSemantic.Copy)]
+		CKRecordID [] DeletedRecordIds { get; }
+
+		[Export ("failedRecordDeletes", ArgumentSemantic.Copy)]
+		NSDictionary<CKRecordID, NSError> FailedRecordDeletes { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CKSyncEngineSendChangesOptions : NSCopying {
+		[Export ("scope", ArgumentSemantic.Copy)]
+		CKSyncEngineSendChangesScope Scope { get; set; }
+
+		[Export ("operationGroup", ArgumentSemantic.Strong)]
+		CKOperationGroup OperationGroup { get; set; }
+
+		[Export ("initWithScope:")]
+		NativeHandle Constructor ([NullAllowed] CKSyncEngineSendChangesScope scope);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineFailedRecordSave {
+		[Export ("record", ArgumentSemantic.Strong)]
+		CKRecord Record { get; }
+
+		[Export ("error", ArgumentSemantic.Strong)]
+		NSError Error { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngine {
+		[Export ("initWithConfiguration:")]
+		NativeHandle Constructor (CKSyncEngineConfiguration configuration);
+
+		[Export ("database", ArgumentSemantic.Strong)]
+		CKDatabase Database { get; }
+
+		[Export ("state", ArgumentSemantic.Strong)]
+		CKSyncEngineState State { get; }
+
+		[Async]
+		[Export ("fetchChangesWithCompletionHandler:")]
+		void FetchChanges ([NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("fetchChangesWithOptions:completionHandler:")]
+		void FetchChanges (CKSyncEngineFetchChangesOptions options, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("sendChangesWithCompletionHandler:")]
+		void SendChanges ([NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("sendChangesWithOptions:completionHandler:")]
+		void SendChanges (CKSyncEngineSendChangesOptions options, [NullAllowed] Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("cancelOperationsWithCompletionHandler:")]
+		void CancelOperations ([NullAllowed] Action completionHandler);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineDidFetchChangesEvent { }
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEngineEvent))]
+	interface CKSyncEngineDidFetchRecordZoneChangesEvent {
+		[Export ("zoneID", ArgumentSemantic.Copy)]
+		CKRecordZoneID ZoneId { get; }
+
+		[NullAllowed, Export ("error", ArgumentSemantic.Copy)]
+		NSError Error { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineRecordZoneChangeBatch {
+		[Export ("initWithPendingChanges:recordProvider:")]
+		NativeHandle Constructor (CKSyncEnginePendingRecordZoneChange [] pendingChanges, Func<CKRecordID, CKRecord> recordProvider);
+
+		[Export ("initWithRecordsToSave:recordIDsToDelete:atomicByZone:")]
+		NativeHandle Constructor ([NullAllowed] CKRecord [] recordsToSave, [NullAllowed] CKRecordID [] recordIdsToDelete, bool atomicByZone);
+
+		[Export ("recordsToSave", ArgumentSemantic.Copy)]
+		CKRecord [] RecordsToSave { get; }
+
+		[Export ("recordIDsToDelete", ArgumentSemantic.Copy)]
+		CKRecordID [] RecordIdsToDelete { get; }
+
+		[Export ("atomicByZone")]
+		bool AtomicByZone { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineFetchedZoneDeletion {
+		[Export ("zoneID", ArgumentSemantic.Copy)]
+		CKRecordZoneID ZoneId { get; }
+
+		[Export ("reason", ArgumentSemantic.Assign)]
+		CKSyncEngineZoneDeletionReason Reason { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineFetchedRecordDeletion {
+		[Export ("recordID", ArgumentSemantic.Copy)]
+		CKRecordID RecordId { get; }
+
+		[Export ("recordType")]
+		string RecordType { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineFailedZoneSave {
+		[Export ("recordZone", ArgumentSemantic.Strong)]
+		CKRecordZone RecordZone { get; }
+
+		[Export ("error", ArgumentSemantic.Strong)]
+		NSError Error { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEngineState {
+		[Export ("pendingRecordZoneChanges", ArgumentSemantic.Copy)]
+		CKSyncEnginePendingRecordZoneChange [] PendingRecordZoneChanges { get; }
+
+		[Export ("pendingDatabaseChanges", ArgumentSemantic.Copy)]
+		CKSyncEnginePendingDatabaseChange [] PendingDatabaseChanges { get; }
+
+		[Export ("hasPendingUntrackedChanges")]
+		bool HasPendingUntrackedChanges { get; set; }
+
+		[Export ("zoneIDsWithUnfetchedServerChanges", ArgumentSemantic.Copy)]
+		CKRecordZoneID [] ZoneIdsWithUnfetchedServerChanges { get; }
+
+		[Export ("addPendingRecordZoneChanges:")]
+		void AddPendingRecordZoneChanges (CKSyncEnginePendingRecordZoneChange [] changes);
+
+		[Export ("removePendingRecordZoneChanges:")]
+		void RemovePendingRecordZoneChanges (CKSyncEnginePendingRecordZoneChange [] changes);
+
+		[Export ("addPendingDatabaseChanges:")]
+		void AddPendingDatabaseChanges (CKSyncEnginePendingDatabaseChange [] changes);
+
+		[Export ("removePendingDatabaseChanges:")]
+		void RemovePendingDatabaseChanges (CKSyncEnginePendingDatabaseChange [] changes);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSyncEnginePendingDatabaseChange {
+		[Export ("zoneID", ArgumentSemantic.Copy)]
+		CKRecordZoneID ZoneId { get; }
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		CKSyncEnginePendingDatabaseChangeType Type { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEnginePendingDatabaseChange))]
+	interface CKSyncEnginePendingZoneSave {
+		[Export ("initWithZone:")]
+		NativeHandle Constructor (CKRecordZone zone);
+
+		[Export ("zone", ArgumentSemantic.Copy)]
+		CKRecordZone Zone { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CKSyncEnginePendingDatabaseChange))]
+	interface CKSyncEnginePendingZoneDelete {
+		[Export ("initWithZoneID:")]
+		NativeHandle Constructor (CKRecordZoneID zoneId);
 	}
 }
