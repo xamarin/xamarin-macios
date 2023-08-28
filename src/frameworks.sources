@@ -382,6 +382,10 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
 
+# Cinematic
+CINEMATIC_SOURCES = \
+	Cinematic/CNDecision.cs \
+
 # Compression
 
 COMPRESSION_API_SOURCES = \
@@ -2033,6 +2037,7 @@ MACOS_FRAMEWORKS =          \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2146,6 +2151,7 @@ IOS_FRAMEWORKS =         \
 	CarPlay \
 	CFNetwork \
 	Chip \
+	Cinematic \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2277,6 +2283,7 @@ TVOS_FRAMEWORKS =           \
 	BackgroundTasks         \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
