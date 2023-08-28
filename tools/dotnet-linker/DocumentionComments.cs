@@ -81,12 +81,12 @@ namespace Xamarin.Utils {
 
 			if (type is GenericParameter gp) {
 				if (gp.Type == GenericParameterType.Type) {
-					sb.Append('`');
+					sb.Append ('`');
 				} else {
-					sb.Append("``");
+					sb.Append ("``");
 				}
 
-				sb.Append(gp.Position.ToString());
+				sb.Append (gp.Position.ToString ());
 				return;
 			}
 
