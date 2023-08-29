@@ -234,6 +234,10 @@ namespace Xamarin.Utils {
 
 		public static bool IsSymlink (string file)
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				var attr = File.GetAttributes (file);
+				return attr.HasFlag (FileAttributes.ReparsePoint);
+			}
 			Stat buf;
 			var rv = lstat (file, out buf);
 			if (rv != 0)

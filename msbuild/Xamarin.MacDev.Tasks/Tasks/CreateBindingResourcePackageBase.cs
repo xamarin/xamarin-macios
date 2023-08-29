@@ -114,11 +114,14 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		static bool ContainsSymlinks (ITaskItem [] items)
+		bool ContainsSymlinks (ITaskItem [] items)
 		{
 			foreach (var item in items) {
-				if (PathUtils.IsSymlinkOrContainsSymlinks (item.ItemSpec))
+				if (PathUtils.IsSymlinkOrContainsSymlinks (item.ItemSpec)) {
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+						Log.LogError (MSBStrings.E7120 /* Can't process the native reference '{0}' on this platform because it is or contains a symlink. */, item.ItemSpec);
 					return true;
+				}
 			}
 
 			return false;
