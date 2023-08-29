@@ -54,3 +54,4 @@
 !missing-type! PKInstantFundsOutFeeSummaryItem not bound
 !missing-type! PKPayLaterView not bound
 !unknown-native-enum! PKDisbursementRequestSchedule bound
+!missing-field! PKPaymentNetworkPagoBancomat not bound

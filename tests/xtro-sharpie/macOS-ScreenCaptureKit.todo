@@ -62,3 +62,4 @@
 !missing-field! SCStreamFrameInfoBoundingRect not bound
 !missing-selector! SCStreamConfiguration::presenterOverlayPrivacyAlertSetting not bound
 !missing-selector! SCStreamConfiguration::setPresenterOverlayPrivacyAlertSetting: not bound
+!missing-selector! SCContentSharingPicker::presentPickerUsingContentStyle: not bound

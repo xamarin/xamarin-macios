@@ -491,3 +491,7 @@
 !missing-enum-value! UIMenuElementSize native value UIMenuElementSizeAutomatic = -1 not bound
 !missing-enum-value! UIUserInterfaceIdiom native value UIUserInterfaceIdiomVision = 6 not bound
 !missing-field! NSDefaultFontExcludedDocumentAttribute not bound
+!missing-enum! UISceneCaptureState not bound
+!missing-selector! +UITraitCollection::traitCollectionWithSceneCaptureState: not bound
+!missing-selector! UITraitCollection::sceneCaptureState not bound
+!missing-type! UITraitSceneCaptureState not bound

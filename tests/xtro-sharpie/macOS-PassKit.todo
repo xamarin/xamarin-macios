@@ -3,3 +3,4 @@
 !missing-field! PKPaymentNetworkTmoney not bound
 !missing-selector! PKPaymentRequest::applePayLaterAvailability not bound
 !missing-selector! PKPaymentRequest::setApplePayLaterAvailability: not bound
+!missing-field! PKPaymentNetworkPagoBancomat not bound
