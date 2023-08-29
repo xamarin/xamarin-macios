@@ -12,7 +12,7 @@ $dotnetPlatforms = $configurationDotNetPlatforms.Split(' ', [StringSplitOptions]
 foreach ($platform in $dotnetPlatforms) {
   $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
   $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
-  [Environment]::SetEnvironmentVariable($variableName, $variableName)
+  [Environment]::SetEnvironmentVariable($variableName, $variableValue)
   Write-Host "$variableName = $variableName"
 
   $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
