@@ -134,8 +134,12 @@ namespace MonoTouchFixtures.CoreServices {
 				Task.Run (CreateFilesAndWaitForFSEventsThread)
 					.ContinueWith (task => {
 						isWorking = false;
-						if (task.Exception is not null)
-							_exceptions.Add (task.Exception);
+						if (task.Exception is not null) {
+							if (task.Exception is AggregateException ae)
+								_exceptions.AddRange (ae.InnerExceptions);
+							else
+								_exceptions.Add (task.Exception);
+						}
 					});
 
 				while (isWorking)
@@ -144,6 +148,10 @@ namespace MonoTouchFixtures.CoreServices {
 				Invalidate ();
 
 				if (_exceptions.Count > 0) {
+					Console.WriteLine ($"Got {_exceptions.Count} exceptions:");
+					for (var e = 0; e < _exceptions.Count; e++) {
+						Console.WriteLine ($"    #{e + 1}: {_exceptions [e].ToString ().Replace ("\n", "\n        ")}");
+					}
 					if (_exceptions.Count > 1)
 						throw new AggregateException (_exceptions);
 					else
@@ -199,11 +207,8 @@ namespace MonoTouchFixtures.CoreServices {
 						createdThenRemovedFileCount = _createdThenRemovedFiles.Count;
 
 					}
-					if (!_monitor.WaitOne (s_testTimeout))
-						throw new TimeoutException (
-							$"test has timed out at {s_testTimeout.TotalSeconds}s; " +
-							"increase the timeout or reduce the number of files created. " +
-							$"Created directories: {createdDirCount} Created files: {createdFileCount} Removed files: {removedFileCount} Created then removed files: {createdThenRemovedFileCount}");
+
+					var timedOut = !_monitor.WaitOne (s_testTimeout);
 
 					lock (_monitor) {
 						if (_createdDirectories.Count == 0 &&
@@ -211,15 +216,22 @@ namespace MonoTouchFixtures.CoreServices {
 							_removedFiles.Count == _createdThenRemovedFiles.Count)
 							break;
 					}
+
+					if (timedOut)
+						throw new TimeoutException (
+							$"test has timed out at {s_testTimeout.TotalSeconds}s; " +
+							"increase the timeout or reduce the number of files created. " +
+							$"Created directories: {createdDirCount} Created files: {createdFileCount} Removed files: {removedFileCount} Created then removed files: {createdThenRemovedFileCount}");
 				}
 			}
 
 			protected override void OnEvents (FSEvent [] events)
 			{
 				try {
-					lock (_monitor) {
-						foreach (var evnt in events)
+					foreach (var evnt in events) {
+						lock (_monitor) {
 							HandleEvent (evnt);
+						}
 					}
 				} catch (Exception e) {
 					_exceptions.Add (e);

@@ -1424,6 +1424,9 @@
 			<_MainLinkerFlags Include="-liconv" />
 			<_MainLinkerFlags Include="-lcompression" />
 
+			<!-- In some cases ld may crash if -lobjc isn't passed -->
+			<_MainLinkerFlags Include="-lobjc" />
+
 			<_MainLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' == 'true'" Include="-exported_symbols_list" />
 			<_MainLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' == 'true'" Include="$(_ExportedSymbolsFile)" />
 
