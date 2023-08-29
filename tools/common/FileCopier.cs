@@ -136,6 +136,38 @@ namespace Xamarin.Bundler {
 
 		static bool TryUpdateDirectory (string source, string target, out int errno)
 		{
+			var windows = Environment.OSVersion.Platform == PlatformID.Win32NT;
+			if (windows)
+				return TryUpdateDirectoryWindows (source, target, out errno);
+			return TryUpdateDirectoryMacOS (source, target, out errno);
+		}
+
+		static bool TryUpdateDirectoryWindows (string source, string target, out int errno)
+		{
+			errno = 0;
+			Directory.CreateDirectory (target);
+
+			var rv = true;
+			var attr = File.GetAttributes (source);
+			var dir = new DirectoryInfo (source);
+			foreach (var sourceFile in dir.GetFiles ()) {
+				var sourcePath = Path.Combine (source, sourceFile.Name);
+				var targetPath = Path.Combine (target, sourceFile.Name);
+				if (!IsUptodate (sourcePath, targetPath)) {
+					sourceFile.CopyTo (targetPath, true);
+					Log (1, "Copied {0} to {1}", sourcePath, targetPath);
+				} else {
+					Log (3, "Target '{0}' is up-to-date", targetPath);
+				}
+			}
+			foreach (var subdir in dir.GetDirectories ()) {
+				rv &= TryUpdateDirectoryWindows (Path.Combine (source, subdir.Name), Path.Combine (target, subdir.Name), out errno);
+			}
+			return rv;
+		}
+
+		static bool TryUpdateDirectoryMacOS (string source, string target, out int errno)
+		{
 			Directory.CreateDirectory (target);
 
 			// Mono's File.Copy can't handle symlinks (the symlinks are followed instead of copied),
