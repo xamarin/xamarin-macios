@@ -27,8 +27,9 @@ namespace Xamarin.Linker.Steps {
 		}
 
 #if NET
-		public override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void Process (AssemblyDefinition assembly)
 		{
+			base.Process (assembly);
 			ProcessAssemblyAttributes (assembly);
 		}
 #else
@@ -62,6 +63,10 @@ namespace Xamarin.Linker.Steps {
 				// (a) we're potentially processing a different assembly and `is_active` represent the current one
 				// (b) it will try to fetch the [Preserve] attribute on the type (and it's not there) as `base` would
 				var type = tr.Resolve ();
+
+#if NET
+				PreserveType (type, attribute);
+#else
 				Annotations.Mark (type);
 				if (attribute.HasFields) {
 					foreach (var named_argument in attribute.Fields) {
@@ -69,6 +74,7 @@ namespace Xamarin.Linker.Steps {
 							Annotations.SetPreserve (type, TypePreserve.All);
 					}
 				}
+#endif
 
 				// In .NET6, ApplyPreserveAttribute no longer runs on all assemblies.
 				// [assembly: Preserve (typeof (SomeAttribute))] no longer gives SomeAttribute "Preserve" semantics.

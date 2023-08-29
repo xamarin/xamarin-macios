@@ -529,10 +529,10 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "win10-x86", null)]
-		[TestCase (ApplePlatform.TVOS, "win10-x64", null)]
-		[TestCase (ApplePlatform.MacOSX, "win10-arm64", null)]
-		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Unable to find package Microsoft.NETCore.App.Runtime.Mono.win-arm64. No packages exist with this id in source[(]s[)]:.*")]
+		[TestCase (ApplePlatform.iOS, "win10-x86", "The specified RuntimeIdentifier 'win10-x86' is not recognized.")]
+		[TestCase (ApplePlatform.TVOS, "win10-x64", "The specified RuntimeIdentifier 'win10-x64' is not recognized.")]
+		[TestCase (ApplePlatform.MacOSX, "win10-arm64", "The specified RuntimeIdentifier 'win10-arm64' is not recognized.")]
+		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "The specified RuntimeIdentifier 'win10-arm64' is not recognized.")]
 		public void InvalidRuntimeIdentifier_Restore (ApplePlatform platform, string runtimeIdentifier, string? failureMessagePattern)
 		{
 			var project = "MySimpleApp";
@@ -914,6 +914,11 @@ namespace Xamarin.Tests {
 		[OneTimeSetUp]
 		public void KillEverything ()
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				Console.WriteLine ($"Skipped killing everything, because there's nothing to kill on Windows.");
+				return;
+			}
+
 			ExecutionHelper.Execute ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, timeout: TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };

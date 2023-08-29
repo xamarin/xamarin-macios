@@ -28,14 +28,14 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			return Execute ("pack", project, properties, true);
+			return Execute ("pack", project, properties, true, msbuildParallelism: msbuildParallelism);
 		}
 
-		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			var rv = Execute ("pack", project, properties, false);
+			var rv = Execute ("pack", project, properties, false, msbuildParallelism: msbuildParallelism);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
@@ -113,7 +113,7 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -180,6 +180,14 @@ namespace Xamarin.Tests {
 				if (project.EndsWith (".vbproj", StringComparison.OrdinalIgnoreCase))
 					args.Add ("/p:LangVersion=latest");
 				// End workaround
+
+				if (msbuildParallelism.HasValue) {
+					if (msbuildParallelism.Value) {
+						args.Add ("-maxcpucount"); // this means "use as many processes as there are cpus"
+					} else {
+						args.Add ("-maxcpucount:1");
+					}
+				}
 
 				var env = new Dictionary<string, string?> ();
 				env ["MSBuildSDKsPath"] = null;

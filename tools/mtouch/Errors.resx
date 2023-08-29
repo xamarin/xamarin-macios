@@ -1023,6 +1023,14 @@
 		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
 	</data>
 
+	<data name="MX1307" xml:space="preserve">
+		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+
+	<data name="MX1308" xml:space="preserve">
+		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+
 	<data name="MM1401" xml:space="preserve">
 		<value>The required 'Xamarin.Mac.dll' assembly is missing from the references
 		</value>
@@ -1338,6 +1346,11 @@
 		</value>
 	</data>
 
+	<data name="MX2112" xml:space="preserve">
+		<!-- This is a warning -->
+		<value>Unable to apply the conditional [Preserve] attribute on the member {0}.</value>
+	</data>
+
 	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
 	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
 	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
@@ -1371,6 +1384,15 @@
 	<!-- 234x: ExtractBindingLibrariesStep -->
 	<!-- 235x: LoadNonSkippedAssembliesStep -->
 	<!-- 236x: RegistrarStep -->
+	<!-- 237x: ComputeAOTArguments -->
+	<!-- 238x: RegistrarRemovalTrackingStep -->
+	<!-- 239x: CoreTypeMapStep -->
+	<!-- 240x: BackingFieldDelayHandler -->
+	<!-- 241x: BackingFieldReintroductionSubStep -->
+	<!-- 242x: MarkIProtocolHandler -->
+	<!-- 243x: ManagedRegistrarStep -->
+	<!-- 244x: ManagedRegistrarLookupTablesStep -->
+	<!-- 245x: ApplyPreserveAttribute -->
 
 	<data name="MX3001" xml:space="preserve">
 		<value>Could not {0} the assembly '{1}'
@@ -2257,5 +2279,9 @@
 
 	<data name="MX8055" xml:space="preserve">
 		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+	</data>
+
+	<data name="MX8056" xml:space="preserve">
+		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
 	</data>
 </root>

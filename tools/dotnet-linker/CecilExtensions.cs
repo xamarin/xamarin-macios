@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
+using Xamarin.Bundler;
 
 #nullable enable
 
@@ -127,5 +130,25 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Ret);
 			return defaultCtor;
 		}
+
+		public static ModuleDefinition GetModule (this IMetadataTokenProvider provider)
+		{
+			if (provider is TypeDefinition td)
+				return td.Module;
+
+			if (provider is IMemberDefinition md)
+				return md.DeclaringType.Module;
+
+			throw ErrorHelper.CreateError (99, $"Unable to get the module of {provider.GetType ().FullName}");
+		}
+
+		public static TypeDefinition GetModuleType (this ModuleDefinition @module)
+		{
+			var moduleType = @module.Types.SingleOrDefault (v => v.Name == "<Module>");
+			if (moduleType is null)
+				throw ErrorHelper.CreateError (99, $"No <Module> type found in {@module.Name}");
+			return moduleType;
+		}
+
 	}
 }
