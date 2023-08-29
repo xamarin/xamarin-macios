@@ -47,8 +47,14 @@ stages:
       inputs:
         artifactName: nuget-signed
         downloadPath: $(Build.SourcesDirectory)/package
+        # We don't want:
+        # * Workload manifests (Microsoft.NET.Sdk.<platform>.Manifest-*.*)
+        # * Template packs (Microsoft.<platform>.Templates.*)
         patterns: |
-          *.nupkg
+          Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Sdk.*.nupkg
+          Microsoft.@(iOS|tvOS|MacCatalyst|macOS).iOS.Windows.Sdk.*.nupkg
+          Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Ref.*.nupkg
+          Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Runtime.*.nupkg
 
     - task: NuGetCommand@2
       displayName: Publish Nugets to dotnet7
