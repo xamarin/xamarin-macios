@@ -292,7 +292,7 @@ namespace Xamarin.Tests {
 						return false;
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
 						return false;
 					if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
 						return false;
@@ -901,9 +901,9 @@ namespace Xamarin.Tests {
 						return false;
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
 						return false;
-					if (v.Contains ("/ref/", StringComparison.Ordinal))
+					if (v.Contains (Path.DirectorySeparatorChar + "ref" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
 						return false; // Skip reference assemblies
 					return true;
 				});
