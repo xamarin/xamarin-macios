@@ -1,21 +1,21 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.111-servicing.23414.12">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.100-rtm.22531.3">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>18de2eb04b938f6f7ad259fc33d5b1e8a472a823</Sha>
+      <Sha>3079e52002f185db88b0c6a8e8c4c623a5287d19</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.23062.2" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.22471.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>19fa656d35252ccf926e6a6d783b16a2f094aaef</Sha>
+      <Sha>219e84c88def8276179f66282b2f7cb5f1d0d126</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.1">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>8d4ac19c705b17df07c5803fb72a0990d37e4e59</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.10" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
-      <Sha>5a4c82ec57fadddef9ce841d608de5c7c8c74446</Sha>
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.0-rtm.22512.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://github.com/dotnet/aspnetcore</Uri>
+      <Sha>c6865355c01e1fb170b65427846d939559ab3789</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
@@ -27,9 +27,9 @@
       <Uri>https://github.com/dotnet/arcade</Uri>
       <Sha>db49d790a4bfa977a9ed7436bf2aa242cefae45e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.TemplateEngine.Tasks" Version="7.0.111">
+    <Dependency Name="Microsoft.TemplateEngine.Tasks" Version="7.0.100-alpha.1.21601.1">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>9730d855fccb4c600dee1845322a056c3bf53c02</Sha>
+      <Sha />
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
