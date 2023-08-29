@@ -20,7 +20,7 @@ namespace Xharness.Jenkins {
 		public IEnumerator<RunTestTask> GetEnumerator ()
 		{
 			var netstandard2Project = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj"))) {
-				IsDotNetProject = true,
+				IsDotNetProject = false,
 			};
 			var env = new Dictionary<string, string>
 			{
@@ -50,7 +50,7 @@ namespace Xharness.Jenkins {
 			yield return nunitExecutioniOSMSBuild;
 
 			var msbuildIntegrationTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj"))) {
-				IsDotNetProject = true,
+				IsDotNetProject = false,
 			};
 			var buildiOSMSBuildIntegration = new MSBuildTask (jenkins: jenkins, testProject: msbuildIntegrationTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
@@ -146,7 +146,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Cecil-based tests",
 				Timeout = TimeSpan.FromMinutes (5),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Cecil) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet),
 			};
 			yield return runCecilTests;
 

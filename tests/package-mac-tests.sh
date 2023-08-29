@@ -17,6 +17,7 @@ mkdir -p "$DIR"
 make test.config
 cat test.config
 INCLUDE_XAMARIN_LEGACY=$(grep ^INCLUDE_XAMARIN_LEGACY= test.config | sed 's/.*=//')
+ENABLE_DOTNET=$(grep ^ENABLE_DOTNET= test.config | sed 's/.*=//')
 INCLUDE_MAC=$(grep ^INCLUDE_MAC= test.config | sed 's/.*=//')
 INCLUDE_MACCATALYST=$(grep ^INCLUDE_MACCATALYST= test.config | sed 's/.*=//')
 XCODE_DEVELOPER_ROOT=$(grep ^XCODE_DEVELOPER_ROOT= test.config | sed 's/.*=//')
@@ -41,14 +42,16 @@ TEST_SUITE_DEPENDENCIES+=(EmbeddedResources)
 TEST_SUITE_DEPENDENCIES+=(fsharplibrary)
 TEST_SUITE_DEPENDENCIES+=(BundledResources)
 
-for dep in "${TEST_SUITE_DEPENDENCIES[@]}"; do
-	if test -n "$INCLUDE_MAC"; then
-		make -C "$dep"/dotnet/macOS build
-	fi
-	if test -n "$INCLUDE_MACCATALYST"; then
-		make -C "$dep"/dotnet/MacCatalyst build
-	fi
-done
+if test -n "$ENABLE_DOTNET"; then
+	for dep in "${TEST_SUITE_DEPENDENCIES[@]}"; do
+		if test -n "$INCLUDE_MAC"; then
+			make -C "$dep"/dotnet/macOS build
+		fi
+		if test -n "$INCLUDE_MACCATALYST"; then
+			make -C "$dep"/dotnet/MacCatalyst build
+		fi
+	done
+fi
 
 TEST_SUITES+=(build-dontlink)
 TEST_SUITES+=(build-linksdk)
@@ -72,10 +75,12 @@ if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 	done
 fi
 
-for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
-	mkdir -p "$DIR/tests/$app"
-	$CP -R "$app" "$DIR/tests/$app/.."
-done
+if test -n "$ENABLE_DOTNET"; then
+	for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
+		mkdir -p "$DIR/tests/$app"
+		$CP -R "$app" "$DIR/tests/$app/.."
+	done
+fi
 
 $CP -p packaged-macos-tests.mk "$DIR/tests"
 $CP -p run-with-timeout.* "$DIR/tests"

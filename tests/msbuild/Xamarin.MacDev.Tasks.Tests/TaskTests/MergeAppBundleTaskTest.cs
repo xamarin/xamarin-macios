@@ -24,7 +24,8 @@ namespace Xamarin.MacDev.Tasks {
 			};
 
 			RunMake (Path.Combine (Configuration.RootPath, "tests", "test-libraries"), environment: env);
-			RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
+			if (Configuration.include_dotnet)
+				RunMake (Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly"), environment: env);
 		}
 
 		static void RunMake (string directory, Dictionary<string, string> environment = null)
@@ -115,6 +116,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestPEAssembly ()
 		{
+			Configuration.AssertDotNetAvailable ();
 			var complexAssemblyPath = Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly", "bin", "Debug", Configuration.DotNetTfm);
 			var complexFiles = new string [] {
 				"ComplexAssembly.dll",
