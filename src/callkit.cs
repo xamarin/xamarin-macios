@@ -617,6 +617,11 @@ namespace CallKit {
 	[DisableDefaultCtor]
 	interface CXSetMutedCallAction {
 
+		// needs to be reexposed
+		[Export ("initWithCallUUID:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSUuid callUuid);
+
 		[Export ("initWithCallUUID:muted:")]
 		NativeHandle Constructor (NSUuid callUuid, bool muted);
 
