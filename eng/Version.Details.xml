@@ -39,9 +39,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>a788176bea0e7974510f93600a1461d2fa08e2d6</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk.net7.0_16.0" Version="16.0.1498-ci.release-test-multi-targetting-7-0-1xx-xcode14">
+    <Dependency Name="Microsoft.tvOS.Sdk.net7.0_16.0" Version="16.0.1493-ci.release-test-multi-targetting-7-0-1xx-xcode14">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>eae484c42d18f8054991b9ec87b5cd11a2ba2a31</Sha>
+      <Sha>a788176bea0e7974510f93600a1461d2fa08e2d6</Sha>
     </Dependency>
     <!-- This is a subscription to the Xcode 14.3 version of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_16.4" Version="16.4.7383-ci.release-test-multi-targetting-main">

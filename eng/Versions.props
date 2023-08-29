@@ -18,7 +18,7 @@
     <MicrosoftiOSSdknet70_160PackageVersion>16.0.1493-ci.release-test-multi-targetting-7-0-1xx-xcode14</MicrosoftiOSSdknet70_160PackageVersion>
     <MicrosoftmacOSSdknet70_123PackageVersion>12.3.2389-ci.release-test-multi-targetting-7-0-1xx-xcode13-3</MicrosoftmacOSSdknet70_123PackageVersion>
     <MicrosoftMacCatalystSdknet70_154PackageVersion>15.4.2389-ci.release-test-multi-targetting-7-0-1xx-xcode13-3</MicrosoftMacCatalystSdknet70_154PackageVersion>
-    <MicrosofttvOSSdknet70_160PackageVersion>16.0.1498-ci.release-test-multi-targetting-7-0-1xx-xcode14</MicrosofttvOSSdknet70_160PackageVersion>
+    <MicrosofttvOSSdknet70_160PackageVersion>16.0.1493-ci.release-test-multi-targetting-7-0-1xx-xcode14</MicrosofttvOSSdknet70_160PackageVersion>
     <!-- This is a subscription to the Xcode 14.3 version of our packages -->
     <MicrosoftiOSSdknet70_164PackageVersion>16.4.7383-ci.release-test-multi-targetting-main</MicrosoftiOSSdknet70_164PackageVersion>
     <MicrosoftmacOSSdknet70_133PackageVersion>13.3.7383-ci.release-test-multi-targetting-main</MicrosoftmacOSSdknet70_133PackageVersion>
