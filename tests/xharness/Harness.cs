@@ -14,6 +14,8 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xharness.Targets;
 
+using Xamarin.Utils;
+
 namespace Xharness {
 	public enum HarnessAction {
 		None,
@@ -106,18 +108,22 @@ namespace Xharness {
 		string MlaunchPath {
 			get {
 				if (ENABLE_DOTNET) {
-					string platform;
+					ApplePlatform platform;
 					if (INCLUDE_IOS) {
-						platform = "iOS";
+						platform = ApplePlatform.iOS;
 					} else if (INCLUDE_TVOS) {
-						platform = "tvOS";
+						platform = ApplePlatform.TVOS;
 					} else {
 						return $"Not building any mobile platform, so can't provide a location to mlaunch.";
 					}
-					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
-					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk", config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"]);
-					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");
-					return mlaunchPath;
+					var sdkPlatform = platform.AsString ().ToUpperInvariant ();
+					var sdkName = GetVariable ($"{sdkPlatform}_NUGET_SDK_NAME");
+					// there is a diff between getting the path for the current platform when running on CI or off CI. The config files in the CI do not 
+					// contain the correct workload version, the reason for this is that the workload is built in a different machine which means that
+					// the Make.config will use the wrong version. The CI set the version in the environment variable {platform}_WORKLOAD_VERSION via a script.
+					var workloadVersion = GetVariable ($"{sdkPlatform}_WORKLOAD_VERSION");
+					var sdkVersion = GetVariable ($"{sdkPlatform}_NUGET_VERSION_NO_METADATA");
+					return Path.Combine (DOTNET_DIR, "packs", sdkName, string.IsNullOrEmpty (workloadVersion) ? sdkVersion : workloadVersion, "tools", "bin", "mlaunch");
 				} else if (INCLUDE_XAMARIN_LEGACY && INCLUDE_IOS) {
 					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 				}

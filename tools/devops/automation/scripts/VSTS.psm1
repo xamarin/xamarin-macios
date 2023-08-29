@@ -259,6 +259,29 @@ class BuildConfiguration {
             $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
             $variableValue = $config.$variableName
             Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            foreach ($rid in $rids) {
+                $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+                $variableValue = $config.$variableName
+                Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+            }
         }
 
         return $config
@@ -281,6 +304,29 @@ class BuildConfiguration {
             $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
             $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
             $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            foreach ($rid in $rids) {
+                $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+                $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+            }
         }
 
         # calculate the commit to later share it with the cascade pipelines
