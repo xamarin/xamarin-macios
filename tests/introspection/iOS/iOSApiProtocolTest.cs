@@ -502,6 +502,13 @@ namespace Introspection {
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
 					return true;
+				// XCode1 5
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "CKSyncEnginePendingDatabaseChange":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -754,6 +761,13 @@ namespace Introspection {
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
 					return true;
+				// Xcode1 5
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+					return true;
 				}
 				break;
 			case "NSCopying":
@@ -839,6 +853,12 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
 				case "UIWindowSceneActivationConfiguration":
+					return true;
+				// Xcode 15
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
 					return true;
 				}
 				break;

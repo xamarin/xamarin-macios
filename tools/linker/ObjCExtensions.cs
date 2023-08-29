@@ -18,6 +18,7 @@ namespace Xamarin.Linker {
 #if !NET
 		public const string Chip = nameof (Chip);
 #endif
+		public const string Cinematic = nameof (Cinematic);
 		public const string CloudKit = nameof (CloudKit);
 		public const string Contacts = nameof (Contacts);
 		public const string ContactsUI = nameof (ContactsUI);

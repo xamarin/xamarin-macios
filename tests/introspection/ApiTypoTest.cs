@@ -1083,6 +1083,7 @@ namespace Introspection {
 							Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #if !__MACOS__
+				case "CinematicLibrary":
 				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":

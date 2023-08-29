@@ -47,6 +47,7 @@ namespace Xharness {
 		bool INCLUDE_XAMARIN_LEGACY { get; }
 		string SYSTEM_MONO { get; set; }
 		string DOTNET_DIR { get; set; }
+		string DOTNET_TFM { get; }
 		string XcodeRoot { get; }
 		string LogDirectory { get; }
 		double Timeout { get; }
@@ -64,7 +65,6 @@ namespace Xharness {
 		bool UseGroupedApps { get; }
 		string VSDropsUri { get; }
 		bool DisableWatchOSOnWrench { get; }
-		string DotNetTfm { get; }
 
 		#endregion
 

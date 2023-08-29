@@ -283,6 +283,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
 					{ "ThreadNetwork", "ThreadNetwork", 13,0 },
 
+					{ "Cinematic", "Cinematic", 14,0 },
 					{ "Symbols", "Symbols", 14, 0 },
 				};
 			}
@@ -460,6 +461,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
+				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 				{ "Symbols", "Symbols", 17, 0 },
 
 				// the above MUST be kept in sync with simlauncher
@@ -639,6 +641,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "SharedWithYou", "SharedWithYou", 16,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },
 
+					{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 					{ "Symbols", "Symbols", 17, 0 },
 				};
 			}
@@ -692,6 +695,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
+				case "Cinematic":
 #if !NET
 				case "iAd":
 				case "CHIP":

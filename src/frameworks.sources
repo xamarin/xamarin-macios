@@ -371,6 +371,8 @@ CLOUDKIT_SOURCES = \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
 	CloudKit/CKUserIdentityLookupInfo.cs \
+	CloudKit/CKSyncEngineFetchChangesScope.cs \
+	CloudKit/CKSyncEngineSendChangesScope.cs \
 
 # CFNetwork
 
@@ -379,6 +381,10 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPMessage.cs \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
+
+# Cinematic
+CINEMATIC_SOURCES = \
+	Cinematic/CNDecision.cs \
 
 # Compression
 
@@ -2031,6 +2037,7 @@ MACOS_FRAMEWORKS =          \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2144,6 +2151,7 @@ IOS_FRAMEWORKS =         \
 	CarPlay \
 	CFNetwork \
 	Chip \
+	Cinematic \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2275,6 +2283,7 @@ TVOS_FRAMEWORKS =           \
 	BackgroundTasks         \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \

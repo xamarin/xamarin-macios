@@ -10,6 +10,7 @@ namespace Xamarin.Tests {
 		public void NativeLink (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var project_path = GenerateProject (platform, name: nameof (NativeLink), runtimeIdentifiers: runtimeIdentifiers, out var appPath);
 			var properties = new Dictionary<string, string> (verbosity);
