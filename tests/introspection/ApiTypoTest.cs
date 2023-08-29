@@ -1064,6 +1064,10 @@ namespace Introspection {
 				case "SdkVersion":
 					Assert.True (Version.TryParse (s, out _), fi.Name);
 					break;
+#if !XAMCORE_5_0
+				case "NewsstandKitLibrary": // Removed from iOS, but we have to keep the constant around for binary compatibility.
+					break;
+#endif
 #if !NET
 #if __TVOS__
 				case "PassKitLibrary": // not part of tvOS
