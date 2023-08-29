@@ -1230,6 +1230,10 @@ namespace Introspection {
 			case "initWithLocalIdentifier:":
 			case "initWithCollaborationIdentifier:":
 				return true;
+			// CloudKit
+			case "initWithExcludedZoneIDs:":
+			case "initWithZoneIDs:":
+				return true;
 			default:
 				return false;
 			}

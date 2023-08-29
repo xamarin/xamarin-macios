@@ -93,6 +93,7 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "Cinematic":
 			case "PushToTalk":
 			case "ShazamKit":
 				// ShazamKit is not fully supported in the simulator
@@ -865,6 +866,12 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
+			case "addTracksForCinematicAssetInfo:preferredStartingTrackID:": // cinematic method only supported on devices
+				switch (declaredType.Name) {
+				case "AVMutableComposition":
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			}

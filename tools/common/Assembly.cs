@@ -280,17 +280,23 @@ namespace Xamarin.Bundler {
 
 				if (!string.IsNullOrEmpty (linkWith.LibraryName)) {
 					switch (Path.GetExtension (linkWith.LibraryName).ToLowerInvariant ()) {
-					case ".framework":
+					case ".framework": {
 						AssertiOSVersionSupportsUserFrameworks (linkWith.LibraryName);
-						Frameworks.Add (ExtractFramework (assembly, metadata));
+						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
+						if (TryExtractFramework (assembly, metadata, out var framework))
+							Frameworks.Add (framework);
 						break;
+					}
 					case ".xcframework":
 						// this is resolved, at msbuild time, into a framework
 						// but we must ignore it here (can't be the `default` case)
 						break;
-					default:
-						LinkWith.Add (ExtractNativeLibrary (assembly, metadata));
+					default: {
+						// TryExtractFramework prints a error/warning if something goes wrong, so no need for us to have an error handling path.
+						if (TryExtractNativeLibrary (assembly, metadata, out var framework))
+							LinkWith.Add (framework);
 						break;
+					}
 					}
 				}
 			}
@@ -352,12 +358,17 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		string ExtractNativeLibrary (AssemblyDefinition assembly, NativeReferenceMetadata metadata)
+		bool TryExtractNativeLibrary (AssemblyDefinition assembly, NativeReferenceMetadata metadata, out string library)
 		{
 			string path = Path.Combine (App.Cache.Location, metadata.LibraryName);
 
+			library = null;
+
 			if (!Application.IsUptodate (FullPath, path)) {
-				Application.ExtractResource (assembly.MainModule, metadata.LibraryName, path, false);
+				if (!Application.ExtractResource (assembly.MainModule, metadata.LibraryName, path, false)) {
+					ErrorHelper.Warning (1308, Errors.MX1308 /* Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'. */, metadata.LibraryName, FullPath, metadata.LibraryName);
+					return false;
+				}
 				Driver.Log (3, "Extracted third-party binding '{0}' from '{1}' to '{2}'", metadata.LibraryName, FullPath, path);
 				LogNativeReference (metadata);
 			} else {
@@ -367,16 +378,24 @@ namespace Xamarin.Bundler {
 			if (!File.Exists (path))
 				ErrorHelper.Warning (1302, Errors.MT1302, metadata.LibraryName, path);
 
-			return path;
+			library = path;
+			return true;
 		}
 
-		string ExtractFramework (AssemblyDefinition assembly, NativeReferenceMetadata metadata)
+		bool TryExtractFramework (AssemblyDefinition assembly, NativeReferenceMetadata metadata, out string framework)
 		{
 			string path = Path.Combine (App.Cache.Location, metadata.LibraryName);
 
 			var zipPath = path + ".zip";
+
+			framework = null;
+
 			if (!Application.IsUptodate (FullPath, zipPath)) {
-				Application.ExtractResource (assembly.MainModule, metadata.LibraryName, zipPath, false);
+				if (!Application.ExtractResource (assembly.MainModule, metadata.LibraryName, zipPath, false)) {
+					ErrorHelper.Warning (1307, Errors.MX1307 /* Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'. */, metadata.LibraryName, FullPath, metadata.LibraryName);
+					return false;
+				}
+
 				Driver.Log (3, "Extracted third-party framework '{0}' from '{1}' to '{2}'", metadata.LibraryName, FullPath, zipPath);
 				LogNativeReference (metadata);
 			} else {
@@ -401,7 +420,8 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (1303, Errors.MT1303, metadata.LibraryName, zipPath);
 			}
 
-			return path;
+			framework = path;
+			return true;
 		}
 
 		static void LogNativeReference (NativeReferenceMetadata metadata)

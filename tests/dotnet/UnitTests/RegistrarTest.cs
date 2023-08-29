@@ -11,6 +11,7 @@ namespace Xamarin.Tests {
 			var configuration = "Debug";
 			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var projectPath = GetProjectPath (project, platform: platform);
 			Clean (projectPath);

@@ -34,6 +34,15 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			switch (type.Namespace) {
+			// Xcode 15:
+			case "Cinematic":
+				// only present on device :/
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+			}
+
 			switch (type.Name) {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement methodSignatureForSelector: -- trouble ahead
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort

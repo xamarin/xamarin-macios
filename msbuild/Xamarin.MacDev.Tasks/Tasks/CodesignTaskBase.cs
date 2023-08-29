@@ -97,7 +97,7 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		// 'sortedItems' is sorted by length of path, longest first.
-		bool NeedsCodesign (ITaskItem [] sortedItems, int index)
+		bool NeedsCodesign (ITaskItem [] sortedItems, int index, string stampFileContents)
 		{
 			var item = sortedItems [index];
 			var stampFile = GetCodesignStampFile (item);
@@ -138,6 +138,11 @@ namespace Xamarin.MacDev.Tasks {
 						return true;
 					}
 				}
+			}
+
+			if (File.ReadAllText (stampFile) != stampFileContents) {
+				Log.LogMessage (MessageImportance.Low, "The expected content in the stamp file '{0}' for the item '{1}' is not up-to-date, so the item must be codesigned.", stampFile, item.ItemSpec);
+				return true;
 			}
 
 			Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' for the item '{1}' is up-to-date, so the item does not need to be codesigned.", stampFile, item.ItemSpec);
@@ -258,10 +263,11 @@ namespace Xamarin.MacDev.Tasks {
 			return args;
 		}
 
-		void Codesign (ITaskItem item)
+		void Codesign (SignInfo info)
 		{
+			var item = info.Item;
 			var fileName = GetFullPathToTool ();
-			var arguments = GenerateCommandLineArguments (item);
+			var arguments = info.GetCommandLineArguments (this);
 			var environment = new Dictionary<string, string> () {
 				{ "CODESIGN_ALLOCATE", GetCodesignAllocate (item) },
 			};
@@ -283,14 +289,15 @@ namespace Xamarin.MacDev.Tasks {
 				if (string.IsNullOrEmpty (stampFile)) {
 					Log.LogMessage (MessageImportance.Low, "No stamp file '{0}' available for the item '{1}'", stampFile, item.ItemSpec);
 				} else if (IsUpToDate (item.ItemSpec, stampFile)) {
-					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is already up-to-date for the item '{1}'", stampFile, item.ItemSpec);
+					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is already up-to-date for the item '{1}', updating it anyway", stampFile, item.ItemSpec);
+					File.WriteAllText (stampFile, info.GetStampFileContents (this));
 				} else if (File.Exists (stampFile)) {
-					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is not up-to-date for the item '{1}', and it will be touched", stampFile, item.ItemSpec);
-					File.SetLastWriteTimeUtc (stampFile, DateTime.UtcNow);
+					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is not up-to-date for the item '{1}', and it will be updated", stampFile, item.ItemSpec);
+					File.WriteAllText (stampFile, info.GetStampFileContents (this));
 				} else {
-					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' is not up-to-date for the item '{1}', and it will be created", stampFile, item.ItemSpec);
+					Log.LogMessage (MessageImportance.Low, "The stamp file '{0}' does not exit for the item '{1}', and it will be created", stampFile, item.ItemSpec);
 					Directory.CreateDirectory (Path.GetDirectoryName (stampFile));
-					File.WriteAllText (stampFile, string.Empty);
+					File.WriteAllText (stampFile, info.GetStampFileContents (this));
 				}
 
 				var additionalFilesToTouch = item.GetMetadata ("CodesignAdditionalFilesToTouch").Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -379,13 +386,13 @@ namespace Xamarin.MacDev.Tasks {
 			resourcesToSign = resourcesToSign.OrderBy (v => v.ItemSpec.Length).Reverse ().ToArray ();
 
 			// remove items that are up-to-date
+			var itemsToSign = new List<SignInfo> ();
 			for (var i = 0; i < resourcesToSign.Length; i++) {
 				var item = resourcesToSign [i];
-				if (!NeedsCodesign (resourcesToSign, i)) {
-					resourcesToSign [i] = null;
-				}
+				var info = new SignInfo { Item = item };
+				if (NeedsCodesign (resourcesToSign, i, info.GetStampFileContents (this)))
+					itemsToSign.Add (info);
 			}
-			resourcesToSign = resourcesToSign.Where (v => v is not null).ToArray ();
 
 			// Then we need to split the input into buckets, where everything in a bucket can be signed in parallel
 			// (i.e. no item in a bucket depends on any other item in the bucket being signed first).
@@ -393,15 +400,16 @@ namespace Xamarin.MacDev.Tasks {
 			// we have to sign the first bucket first, and so on.
 			// Since we've sorted by path length, we know that if we find a directory, we won't find any containing
 			// files from that directory later.
-			var buckets = new List<List<ITaskItem>> ();
-			for (var i = 0; i < resourcesToSign.Length; i++) {
-				var res = resourcesToSign [i];
+			var buckets = new List<List<SignInfo>> ();
+			for (var i = 0; i < itemsToSign.Count; i++) {
+				var info = itemsToSign [i];
+				var res = info.Item;
 				// All files can go into the first bucket.
 				if (File.Exists (res.ItemSpec)) {
 					if (buckets.Count == 0)
-						buckets.Add (new List<ITaskItem> ());
+						buckets.Add (new List<SignInfo> ());
 					var bucket = buckets [0];
-					bucket.Add (res);
+					bucket.Add (info);
 					continue;
 				}
 
@@ -417,11 +425,11 @@ namespace Xamarin.MacDev.Tasks {
 					var added = false;
 					for (var b = buckets.Count - 1; b >= 0; b--) {
 						var bucket = buckets [b];
-						var anyContainingFile = bucket.Any (v => v.ItemSpec.StartsWith (dir, StringComparison.OrdinalIgnoreCase));
+						var anyContainingFile = bucket.Any (v => v.Item.ItemSpec.StartsWith (dir, StringComparison.OrdinalIgnoreCase));
 						if (anyContainingFile) {
 							if (b + 1 >= buckets.Count)
-								buckets.Add (new List<ITaskItem> ());
-							buckets [b + 1].Add (res);
+								buckets.Add (new List<SignInfo> ());
+							buckets [b + 1].Add (info);
 							added = true;
 							break;
 						}
@@ -429,9 +437,9 @@ namespace Xamarin.MacDev.Tasks {
 					if (!added) {
 						// This directory doesn't contain any other signed files, so we can add it to the first bucket.
 						if (buckets.Count == 0)
-							buckets.Add (new List<ITaskItem> ());
+							buckets.Add (new List<SignInfo> ());
 						var bucket = buckets [0];
-						bucket.Add (res);
+						bucket.Add (info);
 					}
 					continue;
 				}
@@ -445,7 +453,7 @@ namespace Xamarin.MacDev.Tasks {
 				var bucket = buckets [b];
 				Log.LogWarning ($"    Bucket #{b + 1} contains {bucket.Count} items:");
 				foreach (var item in bucket) {
-					Log.LogWarning ($"        {item.ItemSpec}");
+					Log.LogWarning ($"        {item.Item.ItemSpec}");
 				}
 			}
 #endif
@@ -455,7 +463,7 @@ namespace Xamarin.MacDev.Tasks {
 				Parallel.ForEach (bucket, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 					Codesign (item);
 
-					var files = GetCodesignedFiles (item);
+					var files = GetCodesignedFiles (item.Item);
 					lock (codesignedFiles)
 						codesignedFiles.AddRange (files);
 				});
@@ -528,6 +536,23 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return codesignedFiles;
+		}
+
+		class SignInfo {
+			public ITaskItem Item;
+
+			IList<string> arguments;
+			public IList<string> GetCommandLineArguments (CodesignTaskBase task)
+			{
+				if (arguments is null)
+					arguments = task.GenerateCommandLineArguments (Item);
+				return arguments;
+			}
+
+			public string GetStampFileContents (CodesignTaskBase task)
+			{
+				return string.Join (" ", GetCommandLineArguments (task));
+			}
 		}
 	}
 }
