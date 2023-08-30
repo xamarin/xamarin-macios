@@ -29,6 +29,8 @@ steps:
 - bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
+  env:
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
