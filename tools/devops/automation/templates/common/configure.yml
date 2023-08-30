@@ -30,7 +30,7 @@ steps:
   name: configure_platforms
   displayName: 'Configure platforms'
   env:
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    BRANCH_NAME1: $(BRANCH_NAME)
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
@@ -39,7 +39,7 @@ steps:
   env:
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    BRANCH_NAME1: $(BRANCH_NAME)
   name: labels
   displayName: 'Configure build'
 
