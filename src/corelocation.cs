@@ -68,19 +68,17 @@ namespace CoreLocation {
 		UnsupportedPlatform = 4,
 	}
 
-	[Watch (10,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum CLMonitoringState : ulong
-	{
+	public enum CLMonitoringState : ulong {
 		Unknown,
 		Satisfied,
 		Unsatisfied,
 	}
 
-	[Watch (10,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum CLLiveUpdateConfiguration : long
-	{
+	public enum CLLiveUpdateConfiguration : long {
 		Default = 0,
 		AutomotiveNavigation,
 		OtherNavigation,
@@ -1128,10 +1126,9 @@ namespace CoreLocation {
 		bool IsProducedByAccessory { get; }
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
-	interface CLUpdate
-	{
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLUpdate {
 		[Export ("isStationary")]
 		bool IsStationary { get; }
 
@@ -1139,11 +1136,10 @@ namespace CoreLocation {
 		CLLocation Location { get; }
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CLMonitoringRecord : NSSecureCoding
-	{
+	interface CLMonitoringRecord : NSSecureCoding {
 		[Export ("condition", ArgumentSemantic.Strong)]
 		CLCondition Condition { get; }
 
@@ -1151,11 +1147,10 @@ namespace CoreLocation {
 		CLMonitoringEvent LastEvent { get; }
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CLMonitoringEvent : NSSecureCoding
-	{
+	interface CLMonitoringEvent : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Strong)]
 		string Identifier { get; }
 
@@ -1169,10 +1164,9 @@ namespace CoreLocation {
 		NSDate Date { get; }
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
-	interface CLMonitorConfiguration
-	{
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLMonitorConfiguration {
 		[Export ("name")]
 		string Name { get; }
 
@@ -1187,11 +1181,10 @@ namespace CoreLocation {
 		CLMonitorConfiguration Create (string name, DispatchQueue queue, Action<CLMonitor, CLMonitoringEvent> eventHandler);
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CLMonitor
-	{
+	interface CLMonitor {
 		[Async]
 		[Static]
 		[Export ("requestMonitorWithConfiguration:completion:")]
@@ -1201,7 +1194,7 @@ namespace CoreLocation {
 		string Name { get; }
 
 		[Export ("monitoredIdentifiers")]
-		string[] MonitoredIdentifiers { get; }
+		string [] MonitoredIdentifiers { get; }
 
 		[Export ("addConditionForMonitoring:identifier:")]
 		void AddCondition (CLCondition condition, string identifier);
@@ -1217,11 +1210,10 @@ namespace CoreLocation {
 		CLMonitoringRecord GetMonitoringRecord (string identifier);
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CLLocationUpdater
-	{
+	interface CLLocationUpdater {
 		[Static]
 		[Export ("liveUpdaterWithQueue:handler:")]
 		[return: NullAllowed]
@@ -1242,14 +1234,13 @@ namespace CoreLocation {
 		void Invalidate ();
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
-	interface CLCondition : NSSecureCoding, NSCopying {} 
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLCondition : NSSecureCoding, NSCopying { }
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(CLCondition))]
-	interface CLCircularGeographicCondition : NSSecureCoding
-	{
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CLCondition))]
+	interface CLCircularGeographicCondition : NSSecureCoding {
 		[Export ("center")]
 		CLLocationCoordinate2D Center { get; }
 
@@ -1260,11 +1251,10 @@ namespace CoreLocation {
 		NativeHandle Constructor (CLLocationCoordinate2D center, double radius);
 	}
 
-	[NoWatch, NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(CLCondition))]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CLCondition))]
 	[DisableDefaultCtor]
-	interface CLBeaconIdentityCondition : NSCopying, NSSecureCoding
-	{
+	interface CLBeaconIdentityCondition : NSCopying, NSSecureCoding {
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }
 
@@ -1286,16 +1276,15 @@ namespace CoreLocation {
 		NativeHandle Constructor (NSUuid uuid, ushort major, ushort minor);
 	}
 
-	[Watch (10,0), NoMac, iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CLBackgroundActivitySession
-	{
-		[Watch (10,0), NoMac, iOS (17,0)]
+	interface CLBackgroundActivitySession {
+		[Watch (10, 0), NoMac, iOS (17, 0)]
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		[Watch (10,0), NoMac, iOS (17,0)]
+		[Watch (10, 0), NoMac, iOS (17, 0)]
 		[Static]
 		[Export ("backgroundActivitySession")]
 		CLBackgroundActivitySession Create ();
