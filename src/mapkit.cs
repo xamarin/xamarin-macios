@@ -1697,10 +1697,10 @@ namespace MapKit {
 		[Export ("region", ArgumentSemantic.Assign)]
 		MKCoordinateRegion Region { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use preferredConfiguration.")]
-		[Deprecated (PlatformName.iOS, 17, 0, message: "Use preferredConfiguration.")]
-		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use preferredConfiguration.")]
-		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use preferredConfiguration.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'PreferredConfiguration' instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'PreferredConfiguration' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'PreferredConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use 'PreferredConfiguration' instead.")]
 		[Export ("mapType", ArgumentSemantic.Assign)]
 		MKMapType MapType { get; set; }
 
