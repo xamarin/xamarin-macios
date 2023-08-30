@@ -15,7 +15,7 @@
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</EmscriptenWorkloadVersion>
     <!-- This is a subscription to the Xcode 13.3/14.0 version of our packages released with the initial release of .NET 7 -->
-    <MicrosoftiOSSdknet70_160PackageVersion>16.0.1498-ci.release-test-multi-targetting-7-0-1xx-xcode14</MicrosoftiOSSdknet70_160PackageVersion>
+    <MicrosoftiOSSdknet70_160PackageVersion>16.0.1494-ci.release-test-multi-targetting-7-0-1xx-xcode14</MicrosoftiOSSdknet70_160PackageVersion>
     <MicrosoftmacOSSdknet70_123PackageVersion>12.3.2389-ci.release-test-multi-targetting-7-0-1xx-xcode13-3</MicrosoftmacOSSdknet70_123PackageVersion>
     <MicrosoftMacCatalystSdknet70_154PackageVersion>15.4.2389-ci.release-test-multi-targetting-7-0-1xx-xcode13-3</MicrosoftMacCatalystSdknet70_154PackageVersion>
     <MicrosofttvOSSdknet70_160PackageVersion>16.0.1498-ci.release-test-multi-targetting-7-0-1xx-xcode14</MicrosofttvOSSdknet70_160PackageVersion>
