@@ -143,8 +143,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_FileNativeReference Include="@(NativeReference)" Condition="'%(Extension)' != '.framework' And '%(Extension)' != '.xcframework'" />
 		</ItemGroup>
 		<ResolveNativeReferences
-			SessionId="$(BuildSessionId)"
-			Condition="('$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true') And '$(IsBindingProject)' != 'true'"
+			Condition="'$(IsBindingProject)' != 'true'"
 			Architectures="$(TargetArchitectures)"
 			FrameworksDirectory="$(_AppFrameworksRelativePath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -184,7 +183,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 
 		<CreateBindingResourcePackage
-			SessionId="$(BuildSessionId)"
 			NativeReferences="@(NativeReference)"
 			BindingResourcePath="$(BindingResourcePath)"
 			Compress="$(CompressBindingResourcePackage)"
@@ -193,12 +191,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CreateBindingResourcePackage>
 
 		<MakeDir
-			SessionId="$(BuildSessionId)"
 			Directories="$([System.IO.Path]::GetDirectoryName($(BindingResourcePath)))"
 		/>
 
 		<Touch
-			SessionId="$(BuildSessionId)"
 			AlwaysCreate="true"
 			Files="$(BindingResourcePath).stamp"
 			>
