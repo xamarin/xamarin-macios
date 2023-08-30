@@ -1217,12 +1217,12 @@ namespace CoreLocation {
 		[Static]
 		[Export ("liveUpdaterWithQueue:handler:")]
 		[return: NullAllowed]
-		CLLocationUpdater Create (DispatchQueue queue, Action<CLUpdate> handler);
+		CLLocationUpdater CreateLiveUpdates (DispatchQueue queue, Action<CLUpdate> handler);
 
 		[Static]
 		[Export ("liveUpdaterWithConfiguration:queue:handler:")]
 		[return: NullAllowed]
-		CLLocationUpdater Create (CLLiveUpdateConfiguration configuration, DispatchQueue queue, Action<CLUpdate> handler);
+		CLLocationUpdater CreateLiveUpdates (CLLiveUpdateConfiguration configuration, DispatchQueue queue, Action<CLUpdate> handler);
 
 		[Export ("resume")]
 		void Resume ();
