@@ -47,7 +47,8 @@ namespace CallKit {
 		Unentitled = 1,
 		CallUuidAlreadyExists = 2,
 		FilteredByDoNotDisturb = 3,
-		FilteredByBlockList = 4
+		FilteredByBlockList = 4,
+		FilteredDuringRestrictedSharingMode = 5,
 	}
 
 	[NoMac]
@@ -616,8 +617,12 @@ namespace CallKit {
 	[DisableDefaultCtor]
 	interface CXSetMutedCallAction {
 
-		[Export ("initWithCallUUID:muted:")]
+		// needs to be reexposed
+		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
+		NativeHandle Constructor (NSUuid callUuid);
+
+		[Export ("initWithCallUUID:muted:")]
 		NativeHandle Constructor (NSUuid callUuid, bool muted);
 
 		[Export ("muted")]
