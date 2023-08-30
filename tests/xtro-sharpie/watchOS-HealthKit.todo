@@ -25,7 +25,6 @@
 !missing-selector! +HKUnit::luxUnitWithMetricPrefix: not bound
 !missing-selector! HKHealthStore::setWorkoutSessionMirroringStartHandler: not bound
 !missing-selector! HKHealthStore::workoutSessionMirroringStartHandler not bound
-!missing-selector! HKLiveWorkoutBuilder::initWithHealthStore:configuration:device: not bound
 !missing-selector! HKWorkoutSession::sendDataToRemoteWorkoutSession:completion: not bound
 !missing-selector! HKWorkoutSession::startMirroringToCompanionDeviceWithCompletion: not bound
 !missing-selector! HKWorkoutSession::stopMirroringToCompanionDeviceWithCompletion: not bound
