@@ -89,6 +89,8 @@ stages:
           # git checkout Localization
           git checkout Localization-NewBranchAutomatedPR
           git checkout -b Localization-$(Build.BuildNumber)
+          git push origin Localization-$(Build.BuildNumber)
+          
           git checkout main
 
           gh pr create `
@@ -98,7 +100,7 @@ stages:
           --head Localization-$(Build.BuildNumber) `
           --label not-notes-worthy `
           --milestone Future `
-          --draft=false
+          --draft=true
 
         name: BringLocChanges
         displayName: "BringLocChanges"
