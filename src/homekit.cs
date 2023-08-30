@@ -1120,6 +1120,11 @@ namespace HomeKit {
 		[Export ("actionSets", ArgumentSemantic.Copy)]
 		HMActionSet [] ActionSets { get; }
 
+		[Deprecated(PlatformName.MacOSX, 14, 0, message: "No longer supported.")]
+		[Deprecated(PlatformName.iOS, 17, 0, message: "No longer supported.")]
+		[Deprecated(PlatformName.WatchOS, 10, 0, message: "No longer supported.")]
+		[Deprecated(PlatformName.TvOS, 17, 0, message: "No longer supported.")]
+		[Deprecated(PlatformName.MacCatalyst, 17, 0, message: "No longer supported.")]
 		[NullAllowed, Export ("lastFireDate", ArgumentSemantic.Copy)]
 		NSDate LastFireDate { get; }
 
