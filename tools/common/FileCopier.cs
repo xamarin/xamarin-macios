@@ -149,21 +149,31 @@ namespace Xamarin.Bundler {
 
 			var rv = true;
 			var attr = File.GetAttributes (source);
-			var dir = new DirectoryInfo (source);
-			foreach (var sourceFile in dir.GetFiles ()) {
-				var sourcePath = Path.Combine (source, sourceFile.Name);
-				var targetPath = Path.Combine (target, sourceFile.Name);
-				if (!IsUptodate (sourcePath, targetPath)) {
-					sourceFile.CopyTo (targetPath, true);
-					Log (1, "Copied {0} to {1}", sourcePath, targetPath);
-				} else {
-					Log (3, "Target '{0}' is up-to-date", targetPath);
+			if (attr.HasFlag (FileAttributes.Directory)) {
+				var dir = new DirectoryInfo (source);
+				foreach (var sourceFile in dir.GetFiles ()) {
+					var sourcePath = Path.Combine (source, sourceFile.Name);
+					var targetPath = Path.Combine (target, sourceFile.Name);
+					CopyIfNeeded (sourcePath, targetPath);
 				}
-			}
-			foreach (var subdir in dir.GetDirectories ()) {
-				rv &= TryUpdateDirectoryWindows (Path.Combine (source, subdir.Name), Path.Combine (target, subdir.Name), out errno);
+				foreach (var subdir in dir.GetDirectories ()) {
+					rv &= TryUpdateDirectoryWindows (Path.Combine (source, subdir.Name), Path.Combine (target, subdir.Name), out errno);
+				}
+			} else {
+				var targetPath = Path.Combine (target, Path.GetFileName (source));
+				CopyIfNeeded (source, targetPath);
 			}
 			return rv;
+		}
+
+		static void CopyIfNeeded (string source, string target)
+		{
+			if (IsUptodate (source, target)) {
+				Log (3, "Target '{0}' is up-to-date", target);
+			} else {
+				File.Copy (source, target, true);
+				Log (1, "Copied {0} to {1}", source, target);
+			}
 		}
 
 		static bool TryUpdateDirectoryMacOS (string source, string target, out int errno)
