@@ -741,12 +741,12 @@ namespace MapKit {
 		[Export ("showsPitchControl")]
 		bool ShowsPitchControl { get; set; }
 
-		[TV(17, 0), NoWatch, MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Export("pitchButtonVisibility", ArgumentSemantic.Assign)]
+		[TV (17, 0), NoWatch, MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Export ("pitchButtonVisibility", ArgumentSemantic.Assign)]
 		MKFeatureVisibility PitchButtonVisibility { get; set; }
 
-		[TV(17, 0), NoWatch, MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Export("showsUserTrackingButton")]
+		[TV (17, 0), NoWatch, MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Export ("showsUserTrackingButton")]
 		bool ShowsUserTrackingButton { get; set; }
 	}
 
@@ -1697,10 +1697,10 @@ namespace MapKit {
 		[Export ("region", ArgumentSemantic.Assign)]
 		MKCoordinateRegion Region { get; set; }
 
-		[Deprecated(PlatformName.MacOSX, 14, 0, message: "Use preferredConfiguration.")]
-		[Deprecated(PlatformName.iOS, 17, 0, message: "Use preferredConfiguration.")]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0, message: "Use preferredConfiguration.")]
-		[Deprecated(PlatformName.TvOS, 17, 0, message: "Use preferredConfiguration.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use preferredConfiguration.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use preferredConfiguration.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use preferredConfiguration.")]
+		[Deprecated (PlatformName.TvOS, 17, 0, message: "Use preferredConfiguration.")]
 		[Export ("mapType", ArgumentSemantic.Assign)]
 		MKMapType MapType { get; set; }
 
@@ -1722,10 +1722,10 @@ namespace MapKit {
 		[Export ("showsPointsOfInterest")]
 		bool ShowsPointsOfInterest { get; set; }
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Export ("showsBuildings")]
 		bool ShowsBuildings { get; set; }
 
@@ -1736,10 +1736,10 @@ namespace MapKit {
 		[NullAllowed, Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[TV (13, 0), NoWatch, iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
@@ -1750,8 +1750,8 @@ namespace MapKit {
 		[Export ("traitCollection", ArgumentSemantic.Copy)]
 		UITraitCollection TraitCollection { get; set; }
 
-		[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst (17, 0)]
-		[Export("preferredConfiguration", ArgumentSemantic.Copy)]
+		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("preferredConfiguration", ArgumentSemantic.Copy)]
 		MKMapConfiguration PreferredConfiguration { get; set; }
 	}
 
