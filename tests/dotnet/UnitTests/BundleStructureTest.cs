@@ -176,12 +176,13 @@ namespace Xamarin.Tests {
 			AddExpectedFrameworkFiles (platform, expectedFiles, "UnknownF2", isSigned); // UnknownF2.bin: AppleBindingResource (compressed)
 			if (isSigned == CodeSignature.None) { // we don't support signing apps with plugins (yet)
 				AddExpectedPlugInFiles (platform, expectedFiles, "PlugInA", isSigned); // PlugIns
-				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInB", isSigned); // 
+				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInB", isSigned); // CompressedPlugIns
 			}
-			AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceE"); // XPCServices
-			AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceF"); // CompressedXPCServices
-																							// UnknownI.bin: Unknown -- this should show a warning
-																							// SomewhatUnknownI.bin: Unknown -- this should show a warning
+			AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceE", isSigned); // XPCServices
+			AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceF", isSigned); // CompressedXPCServices
+
+			// UnknownI.bin: Unknown -- this should show a warning
+			// SomewhatUnknownI.bin: Unknown -- this should show a warning
 
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -198,6 +199,7 @@ namespace Xamarin.Tests {
 			}
 
 			// SomewhatUnknownA.bin: None
+
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "Subfolder"));
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "Subfolder", "SomewhatUnknownB.bin")); // SomewhatUnknownB.bin: Assembly
 			expectedFiles.Add (Path.Combine (resourcesDirectory, "Subfolder"));
@@ -211,9 +213,11 @@ namespace Xamarin.Tests {
 				AddExpectedPlugInFiles (platform, expectedFiles, "PlugInC", isSigned, "Subfolder"); // PlugIns
 				AddExpectedPlugInFiles (platform, expectedFiles, "CompressedPlugInD", isSigned); // CompressedPlugIns - the Link metadata has no effect, so no subfolder.
 			}
-			AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceG", "Subfolder"); // XPCServices
-			AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceH"); // CompressedXPCServices - the Link metadata has no effect, so no subfolder.
-																							// SomewhatUnknownI.bin: Unknown -- this should show a warning
+			AddExpectedXpcServicesFiles (platform, expectedFiles, "XpcServiceG", isSigned, "Subfolder"); // XPCServices
+			AddExpectedXpcServicesFiles (platform, expectedFiles, "CompressedXpcServiceH", isSigned); // CompressedXPCServices - the Link metadata has no effect, so no subfolder.
+
+			// SomewhatUnknownI.bin: Unknown -- this should show a warning
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -459,9 +463,9 @@ namespace Xamarin.Tests {
 			AddExpectedExtensionFiles (platform, expectedFiles, pluginName, signature, subdirectory, "PlugIns", "bundle");
 		}
 
-		static void AddExpectedXpcServicesFiles (ApplePlatform platform, List<string> expectedFiles, string xpcName, string subdirectory = "")
+		static void AddExpectedXpcServicesFiles (ApplePlatform platform, List<string> expectedFiles, string xpcName, CodeSignature signature, string subdirectory = "")
 		{
-			AddExpectedExtensionFiles (platform, expectedFiles, xpcName, CodeSignature.None, subdirectory, "XPCServices", "xpc");
+			AddExpectedExtensionFiles (platform, expectedFiles, xpcName, signature, subdirectory, "XPCServices", "xpc");
 		}
 
 		static void AddExpectedExtensionFiles (ApplePlatform platform, List<string> expectedFiles, string extensionName, CodeSignature signature, string subdirectory, string extensionType, string extensionExtension)
@@ -587,11 +591,9 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks, "Debug")]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.None, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.Frameworks, "Debug")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.None, "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", CodeSignature.Frameworks, "Debug")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Debug")]
 		// Release

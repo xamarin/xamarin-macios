@@ -21,6 +21,7 @@ namespace Xamarin.MacDev.Tasks {
 	//
 	// * All *.dylib and *.metallib files
 	// * All *.framework directories
+	// * All *.xpc directories
 	//
 	// In both cases we iterate over what we find in the app bundle instead of
 	// relying on what the msbuild tasks built and copied in the app bundle,
@@ -102,10 +103,13 @@ namespace Xamarin.MacDev.Tasks {
 			// Find all:
 			//	- *.dylib and *.metallib files
 			//	- *.framework directories
+			//  - *.xpc directories
 			foreach (var bundle in CodesignBundle) {
 				var bundlePath = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (appBundlePath)), bundle.ItemSpec);
 				var filesToSign = FindFilesToSign (bundlePath);
 				foreach (var lib in filesToSign) {
+					if (Array.Find (CodesignItems, (v) => string.Equals (v.ItemSpec, lib, StringComparison.OrdinalIgnoreCase)) is not null)
+						continue;
 					var relativeLib = Path.Combine (AppBundleDir, lib.Substring (appBundlePath.Length));
 					var item = new TaskItem (relativeLib);
 					bundle.CopyMetadataTo (item);
@@ -246,6 +250,7 @@ namespace Xamarin.MacDev.Tasks {
 			string dylibDirectory;
 			string metallibDirectory;
 			string frameworksDirectory;
+			string xpcDirectory;
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -253,12 +258,14 @@ namespace Xamarin.MacDev.Tasks {
 				dylibDirectory = appPath;
 				metallibDirectory = appPath;
 				frameworksDirectory = Path.Combine (appPath, "Frameworks");
+				xpcDirectory = Path.Combine (appPath, "XPCServices");
 				break;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				dylibDirectory = Path.Combine (appPath, "Contents");
 				metallibDirectory = Path.Combine (appPath, "Contents", "Resources");
 				frameworksDirectory = Path.Combine (appPath, "Contents", "Frameworks");
+				xpcDirectory = Path.Combine (appPath, "Contents", "XPCServices");
 				break;
 			default:
 				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
@@ -271,9 +278,6 @@ namespace Xamarin.MacDev.Tasks {
 				var relativePath = entry.Substring (appPath.Length);
 				// Don't recurse into the PlugIns directory, that's already handled for any app bundle inside the PlugIns directory
 				if (relativePath.StartsWith ("PlugIns" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-					continue;
-				// Don't recurse into the XPCServices directory, for the same reason
-				if (relativePath.StartsWith ("XPCServices" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
 					continue;
 				// Don't recurse into the Watch directory, for the same reason
 				if (relativePath.StartsWith ("Watch" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
@@ -291,6 +295,10 @@ namespace Xamarin.MacDev.Tasks {
 				} else if (entry.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && string.Equals (Path.GetDirectoryName (entry), frameworksDirectory, StringComparison.OrdinalIgnoreCase)) {
 					// We only find *.frameworks inside the Frameworks subdirectory, not recursively
 					// (not quite sure if this is the right thing to do, but it's what we've been doing so far).
+					rv.Add (entry);
+				} else if (entry.EndsWith (".xpc", StringComparison.OrdinalIgnoreCase)) {
+					// We find *.xpc inside the XPCServices subdirectory recursively (as opposed to for *.framework just above),
+					// because 'codesign' fails if there are any *.xpc bundles in a subdirectory.
 					rv.Add (entry);
 				}
 			}
