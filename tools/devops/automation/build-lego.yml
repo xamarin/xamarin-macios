@@ -87,6 +87,7 @@ stages:
 
           # create a new branch from the Localization branch for our PR in case the Localization branch gets overwritten
           # git checkout Localization
+          git checkout Localization-NewBranchAutomatedPR
           git checkout -b Localization-$(Build.BuildNumber)
           git checkout main
 
