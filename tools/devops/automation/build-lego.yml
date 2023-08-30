@@ -50,7 +50,6 @@ trigger:
   branches:
     include:
     - Localization
-    - Localization-NewBranchAutomatedPR
 
 stages:
 
@@ -86,21 +85,20 @@ stages:
           git fetch origin
 
           # create a new branch from the Localization branch for our PR in case the Localization branch gets overwritten
-          # git checkout Localization
-          git checkout Localization-NewBranchAutomatedPR
-          git checkout -b Localization-$(Build.BuildNumber)
-          git push origin Localization-$(Build.BuildNumber)
-          
+          git checkout Localization
+          git checkout -b Localization-Automated-$(Build.BuildNumber)
+          git push origin Localization-Automated-$(Build.BuildNumber)
+
           git checkout main
 
           gh pr create `
-          --title "[Do not merge] TJ testing Localization Pipeline Auto PR" `
+          --title "Bring changes from Localization branch #$(Build.BuildNumber)" `
           --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." `
           --base main `
-          --head Localization-$(Build.BuildNumber) `
+          --head Localization-Automated-$(Build.BuildNumber) `
           --label not-notes-worthy `
           --milestone Future `
-          --draft=true
+          --draft=false
 
         name: BringLocChanges
         displayName: "BringLocChanges"
