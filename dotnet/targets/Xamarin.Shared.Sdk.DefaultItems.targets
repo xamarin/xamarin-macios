@@ -26,6 +26,7 @@
   <PropertyGroup Condition="'$(_PlatformName)' == 'MacCatalyst'">
     <EnableDefaultMacCatalystReleaseEntitlements Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == ''">True</EnableDefaultMacCatalystReleaseEntitlements>
     <EnableDefaultMacCatalystDebugEntitlements Condition="'$(EnableDefaultMacCatalystDebugEntitlements)' == ''">True</EnableDefaultMacCatalystDebugEntitlements>
+    <UseHardenedRuntime>true</UseHardenedRuntime>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(EnableDefaultMacCatalystDebugEntitlements)' == 'True' and '$(Configuration)' == 'Debug'">
