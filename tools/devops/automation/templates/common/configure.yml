@@ -37,6 +37,7 @@ steps:
   env:
     GITHUB_TOKEN: $(GitHub.Token)
     ACCESSTOKEN: $(AzDoBuildAccess.Token)
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
   name: labels
   displayName: 'Configure build'
 
