@@ -91,7 +91,6 @@ stages:
           git checkout main
 
           gh pr create `
-          # --title "Bring changes from Localization branch #$(Build.BuildNumber)" `
           --title "[Do not merge] TJ testing Localization Pipeline Auto PR" `
           --body "The OneLoc team creates these translations to be consumed later on in the second step of the Localization process. We need to bring these into the main branch in order to continue the process." `
           --base main `
