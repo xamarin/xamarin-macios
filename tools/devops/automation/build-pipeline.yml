@@ -34,7 +34,7 @@ parameters:
 - name: runOldMacOSTests
   displayName: Run Tests on older macOS versions 
   type: boolean
-  default: true
+  default: false
 
 - name: runWindowsIntegration
   displayName: Run Windows integration tests
