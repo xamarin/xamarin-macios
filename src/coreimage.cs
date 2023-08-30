@@ -424,11 +424,11 @@ namespace CoreImage {
 		[Export ("contextWithMTLCommandQueue:options:")]
 		CIContext Create (IMTLCommandQueue commandQueue, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
-		[iOS (17,0), TV (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("writeOpenEXRRepresentationOfImage:toURL:options:error:")]
 		bool WriteOpenExrRepresentation (CIImage image, NSUrl url, NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError errorPtr);
 
-		[iOS (17,0), TV (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("OpenEXRRepresentationOfImage:options:error:")]
 		[return: NullAllowed]
 		NSData GetOpenEXRRepresentation (CIImage image, NSDictionary<NSString, NSObject> options, [NullAllowed] out NSError errorPtr);
@@ -1505,8 +1505,8 @@ namespace CoreImage {
 		NSString OptionColorSpace { get; }
 	}
 
-	[iOS (17,0)]
-	[MacCatalyst (17,0)]
+	[iOS (17, 0)]
+	[MacCatalyst (17, 0)]
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -3253,10 +3253,10 @@ namespace CoreImage {
 		[Export ("outputIsOpaque")]
 		bool OutputIsOpaque { get; }
 
-		[iOS (17,0), MacCatalyst (17,0), TV (17,0), Mac (14,0)]
+		[iOS (17, 0), MacCatalyst (17, 0), TV (17, 0), Mac (14, 0)]
 		[Static]
 		[Export ("roiTileArrayForInput:arguments:outputRect:")]
-		CIVector[] GetRoiTileArray (int input, [NullAllowed] NSDictionary<NSString, NSObject> arguments, CGRect outputRect);
+		CIVector [] GetRoiTileArray (int input, [NullAllowed] NSDictionary<NSString, NSObject> arguments, CGRect outputRect);
 	}
 
 	[CoreImageFilter]
