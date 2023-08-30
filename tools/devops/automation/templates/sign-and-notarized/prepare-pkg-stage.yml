@@ -3,10 +3,6 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: skipESRP
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg

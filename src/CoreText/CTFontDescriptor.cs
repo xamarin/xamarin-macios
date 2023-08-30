@@ -226,9 +226,9 @@ namespace CoreText {
 				if (!value.HasValue)
 					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix!, (NSObject?) null);
 				else {
-					byte [] data = new byte [sizeof (CGAffineTransform)];
+					byte [] data = new byte [Marshal.SizeOf<CGAffineTransform> ()];
 					fixed (byte* p = data) {
-						Marshal.StructureToPtr (value.Value, (IntPtr) p, false);
+						Marshal.StructureToPtr<CGAffineTransform> (value.Value, (IntPtr) p, false);
 					}
 					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix!, NSData.FromArray (data));
 				}

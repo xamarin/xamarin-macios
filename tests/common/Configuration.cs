@@ -179,6 +179,7 @@ namespace Xamarin.Tests {
 			}
 			if (test_config.Any ())
 				ParseConfigFiles (test_config);
+			ParseConfigFiles (FindConfigFiles ("configure.inc"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
@@ -194,7 +195,7 @@ namespace Xamarin.Tests {
 			if (string.IsNullOrEmpty (file))
 				return;
 
-			foreach (var line in File.ReadAllLines (file)) {
+			foreach (var line in File.ReadAllLines (file).Reverse ()) {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
@@ -223,11 +224,15 @@ namespace Xamarin.Tests {
 
 		public static string EvaluateVariable (string variable)
 		{
+			var result = Environment.GetEnvironmentVariable (variable);
+			if (!string.IsNullOrEmpty (result))
+				return result;
+
 			var output = new StringBuilder ();
 			var rv = ExecutionHelper.Execute ("/usr/bin/make", new string [] { "-C", Path.Combine (SourceRoot, "tools", "devops"), "print-abspath-variable", $"VARIABLE={variable}" }, environmentVariables: null, stdout: output, stderr: output, timeout: TimeSpan.FromSeconds (5));
 			if (rv != 0)
 				throw new Exception ($"Failed to evaluate variable '{variable}'. Exit code: {rv}. Output:\n{output}");
-			var result = output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
+			result = output.ToString ().Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Where (v => v.StartsWith (variable + "=", StringComparison.Ordinal)).SingleOrDefault ();
 			if (result is null)
 				throw new Exception ($"Could not find the variable '{variable}' to evaluate.");
 			return result.Substring (variable.Length + 1);
@@ -452,36 +457,14 @@ namespace Xamarin.Tests {
 
 		static string GetRefNuGetName (ApplePlatform platform)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Ref";
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Ref";
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Ref";
-			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Ref";
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Ref";
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_REF_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		static string GetRuntimeNuGetName (ApplePlatform platform, string runtimeIdentifier)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Runtime." + runtimeIdentifier;
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Runtime." + runtimeIdentifier;
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Runtime." + runtimeIdentifier;
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Runtime." + runtimeIdentifier;
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = runtimeIdentifier + "_NUGET_RUNTIME_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		static string GetSdkNuGetName (TargetFramework targetFramework)
@@ -489,22 +472,10 @@ namespace Xamarin.Tests {
 			return GetSdkNuGetName (targetFramework.Platform);
 		}
 
-		static string GetSdkNuGetName (ApplePlatform platform)
+		public static string GetSdkNuGetName (ApplePlatform platform)
 		{
-			switch (platform) {
-			case ApplePlatform.iOS:
-				return "Microsoft.iOS.Sdk";
-			case ApplePlatform.TVOS:
-				return "Microsoft.tvOS.Sdk";
-			case ApplePlatform.WatchOS:
-				return "Microsoft.watchOS.Sdk";
-			case ApplePlatform.MacOSX:
-				return "Microsoft.macOS.Sdk";
-			case ApplePlatform.MacCatalyst:
-				return "Microsoft.MacCatalyst.Sdk";
-			default:
-				throw new InvalidOperationException (platform.ToString ());
-			}
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_SDK_NAME";
+			return GetVariable (variableName, variableName + " not found");
 		}
 
 		public static string GetDotNetRoot ()
@@ -918,6 +889,9 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
 		{
+			if (dotnet && !include_dotnet)
+				yield break;
+
 			if (include_ios)
 				yield return ApplePlatform.iOS;
 			if (include_tvos)

@@ -447,7 +447,7 @@ namespace ObjCRuntime {
 
 		static IntPtr MarshalStructure<T> (T value) where T: struct
 		{
-			var rv = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (T)));
+			var rv = Marshal.AllocHGlobal (Marshal.SizeOf<T> ());
 			StructureToPtr (value, rv);
 			return rv;
 		}

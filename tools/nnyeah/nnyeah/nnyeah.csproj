@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <RootNamespace>Microsoft.MaciOS.Nnyeah</RootNamespace>
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>

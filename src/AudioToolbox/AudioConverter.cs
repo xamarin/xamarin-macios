@@ -602,7 +602,7 @@ namespace AudioToolbox {
 						// write at some unknown pointer location, similar situation happens when initialization
 						// size does not match data size
 						//
-						int size = Marshal.SizeOf (data [0]);
+						int size = Marshal.SizeOf<AudioStreamPacketDescription> ();
 						// Clear our buffer if it's not big enough
 						if (inst.packetDescriptionSize < data.Length && inst.packetDescriptions != IntPtr.Zero) {
 							Marshal.FreeHGlobal (inst.packetDescriptions);

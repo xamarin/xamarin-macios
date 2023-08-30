@@ -76,7 +76,7 @@ namespace Xamarin.MacDev.Tasks {
 				bundle.CopyMetadataTo (item);
 
 				// Compute the stamp file to use
-				item.SetMetadataIfNotSet ("CodesignStampFile", Path.Combine (bundlePath, CodeSignatureRelativePath, "_CodeSignature", "CodeResources"));
+				item.SetMetadataIfNotSet ("CodesignStampFile", Path.Combine (CodesignStampPath, Path.GetFileName (bundle.ItemSpec), ".stampfile"));
 
 				// Get any additional stamp files we must touch when the item is signed.
 				var additionalStampFiles = new List<string> ();

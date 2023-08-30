@@ -402,7 +402,7 @@ namespace Foundation {
 		public IntPtr LowlevelObjectForKey (IntPtr key)
 		{
 #if MONOMAC
-			return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selObjectForKey_Handle, key);
+			return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selObjectForKey_XHandle, key);
 #else
 			return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("objectForKey:"), key);
 #endif

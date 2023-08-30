@@ -953,7 +953,7 @@ namespace AudioToolbox {
 			try {
 				r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
 				if (r == 0) {
-					T result = (T) Marshal.PtrToStructure (buffer, typeof (T))!;
+					T result = Marshal.PtrToStructure<T> (buffer)!;
 					return result;
 				}
 
@@ -977,7 +977,7 @@ namespace AudioToolbox {
 			try {
 				r = AudioQueueGetProperty (handle, (uint) property, buffer, ref size);
 				if (r == 0) {
-					T result = (T) Marshal.PtrToStructure (buffer, typeof (T))!;
+					T result = Marshal.PtrToStructure<T> (buffer)!;
 					return result;
 				}
 

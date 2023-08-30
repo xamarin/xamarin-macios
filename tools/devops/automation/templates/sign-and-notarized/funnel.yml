@@ -3,10 +3,6 @@ parameters:
 - name: packages
   type: object
 
-- name: enableDotnet
-  type: boolean
-  default: true
-
 - name: isPR
   type: boolean
 
@@ -165,7 +161,6 @@ jobs:
     parameters:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
-      enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
       azureStorage: ${{ parameters.azureStorage }}
       azureContainer: ${{ parameters.azureContainer }}

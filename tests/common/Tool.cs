@@ -196,7 +196,7 @@ namespace Xamarin.Tests {
 		public void ParseMessages ()
 		{
 			messages.Clear ();
-			ParseMessages (messages, output.ToString ().Split ('\n'), MessageToolName);
+			ParseMessages (messages, output.ToString ().Split ('\n', '\r'), MessageToolName);
 		}
 
 		static bool TrySplitCode (string code, out string prefix, out int number)

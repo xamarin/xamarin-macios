@@ -95,19 +95,19 @@ namespace CoreMedia {
 		{
 			var lib = Libraries.CoreMedia.Handle;
 			var retZero = Dlfcn.dlsym (lib, "kCMTimeRangeZero");
-			Zero = (CMTimeRange) Marshal.PtrToStructure (retZero, typeof (CMTimeRange))!;
+			Zero = Marshal.PtrToStructure<CMTimeRange> (retZero)!;
 
 			var retInvalid = Dlfcn.dlsym (lib, "kCMTimeRangeInvalid");
 #if !XAMCORE_3_0
 #pragma warning disable CS0618 // Type or member is obsolete
-			Invalid = (CMTimeRange) Marshal.PtrToStructure (retInvalid, typeof (CMTimeRange))!;
+			Invalid = Marshal.PtrToStructure<CMTimeRange> (retInvalid)!;
 #pragma warning restore CS0618 // Type or member is obsolete
 #endif
-			InvalidRange = (CMTimeRange) Marshal.PtrToStructure (retInvalid, typeof (CMTimeRange))!;
+			InvalidRange = Marshal.PtrToStructure<CMTimeRange> (retInvalid)!;
 
 			var retMappingInvalid = Dlfcn.dlsym (lib, "kCMTimeMappingInvalid");
 			if (retMappingInvalid != IntPtr.Zero)
-				InvalidMapping = (CMTimeRange) Marshal.PtrToStructure (retMappingInvalid, typeof (CMTimeRange))!;
+				InvalidMapping = Marshal.PtrToStructure<CMTimeRange> (retMappingInvalid)!;
 
 			TimeMappingSourceKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingSourceKey");
 			TimeMappingTargetKey = Dlfcn.GetStringConstant (lib, "kCMTimeMappingTargetKey");

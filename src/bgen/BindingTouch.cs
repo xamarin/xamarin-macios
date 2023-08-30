@@ -582,7 +582,7 @@ public class BindingTouch : IDisposable {
 
 			AddNFloatUsing (cargs, tmpdir);
 
-			Compile (cargs, 1000);
+			Compile (cargs, 1000, tmpdir);
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);
@@ -627,7 +627,7 @@ public class BindingTouch : IDisposable {
 
 		AddNFloatUsing (cargs, tmpdir);
 
-		Compile (cargs, 2);
+		Compile (cargs, 2, tmpdir);
 
 		return tmpass;
 	}
@@ -643,8 +643,18 @@ public class BindingTouch : IDisposable {
 #endif
 	}
 
-	void Compile (List<string> arguments, int errorCode)
+	void Compile (List<string> arguments, int errorCode, string tmpdir)
 	{
+		var responseFile = Path.Combine (tmpdir, $"compile-{errorCode}.rsp");
+		// The /noconfig argument is not allowed in a response file, so don't put it there.
+		var responseFileArguments = arguments
+			.Where (arg => !string.Equals (arg, "/noconfig", StringComparison.OrdinalIgnoreCase) && !string.Equals (arg, "-noconfig", StringComparison.OrdinalIgnoreCase))
+			.ToArray (); // StringUtils.QuoteForProcess only accepts IList, not IEnumerable
+		File.WriteAllLines (responseFile, StringUtils.QuoteForProcess (responseFileArguments));
+		// We create a new list here on purpose to not modify the input argument.
+		arguments = arguments.Where (arg => !responseFileArguments.Contains (arg)).ToList ();
+		arguments.Add ($"@{responseFile}");
+
 		if (compile_command is null || compile_command.Length == 0) {
 #if !NET
 			if (string.IsNullOrEmpty (compiler))

@@ -47,6 +47,10 @@ namespace Xamarin.MacDev.Tasks {
 			try {
 				ExecuteRestoreAsync (dotnetPath, projectPath, targetName, environment).Wait ();
 
+				// Don't try to run 'dotnet build' if restore failed.
+				if (Log.HasLoggedErrors)
+					return string.Empty;
+
 				return ExecuteBuildAsync (dotnetPath, projectPath, targetName, environment).Result;
 			} finally {
 				if (KeepTemporaryOutput) {

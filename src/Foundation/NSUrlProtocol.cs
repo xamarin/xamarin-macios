@@ -47,9 +47,9 @@ namespace Foundation {
 			if (client is null)
 				throw new ArgumentNullException ("client");
 			if (IsDirectBinding) {
-				InitializeHandle (IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_XHandle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			} else {
-				InitializeHandle (IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_XHandle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			}
 		}
 

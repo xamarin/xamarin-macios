@@ -114,7 +114,7 @@ namespace CoreServices
 				return Guid.Empty;
 			}
 
-			return (Guid)Marshal.PtrToStructure (uuidRef, typeof (Guid))!;
+			return Marshal.PtrToStructure<Guid> (uuidRef)!;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]

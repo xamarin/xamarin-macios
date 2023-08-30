@@ -37,6 +37,10 @@ namespace Xamarin.MacDev.Tasks {
 				AotCompiler = ComputeValueUsingTarget (target, targetName);
 			}
 
+			// Don't check if the aot compiler exists if an error was already reported.
+			if (Log.HasLoggedErrors)
+				return false;
+
 			if (!File.Exists (AotCompiler))
 				Log.LogError (MSBStrings.E7081 /*"The AOT compiler '{0}' does not exist." */, AotCompiler);
 
