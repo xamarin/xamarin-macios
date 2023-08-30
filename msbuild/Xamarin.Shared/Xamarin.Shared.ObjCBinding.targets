@@ -103,7 +103,6 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
 		<CreateEmbeddedResources 
-			SessionId="$(BuildSessionId)" 
 			BundleResources="@(_BundleResourceWithLogicalName)" 
 			Prefix="$(_EmbeddedResourcePrefix)">
 			
@@ -112,11 +111,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="%(_NativeFrameworkResource.ZipFile)" DependsOnTargets="_CollectNativeFrameworkResources">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="%(_NativeFrameworkResource.ZipFile)" />
+		<Delete Files="%(_NativeFrameworkResource.ZipFile)" />
 
 		<Zip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
 			Recursive="true"
@@ -136,8 +133,6 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
 		<PrepareNativeReferences
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			NativeReferences="@(NativeReference)"
 		>
