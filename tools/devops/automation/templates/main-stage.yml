@@ -22,7 +22,7 @@ parameters:
 
 - name: runOldMacOSTests
   type: boolean
-  default: true
+  default: false
 
 - name: runWindowsIntegration
   type: boolean
