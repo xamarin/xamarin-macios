@@ -254,7 +254,7 @@
 !missing-selector! +CIFilter::areaLogarithmicHistogramFilter not bound
 !missing-selector! +CIFilter::convertLabToRGBFilter not bound
 !missing-selector! +CIFilter::convertRGBtoLabFilter not bound
-# xcode1 5
+# xcode 15
 !incorrect-protocol-member! CIPhotoEffect::setExtrapolate: is REQUIRED and should be abstract
 !incorrect-protocol-member! CIPhotoEffect::extrapolate is REQUIRED and should be abstract
 !incorrect-protocol-member! CIImageProcessorInput::roiTileCount is REQUIRED and should be abstract
