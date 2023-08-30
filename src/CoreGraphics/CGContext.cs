@@ -1420,6 +1420,21 @@ namespace CoreGraphics {
 		{
 			return new CGBitmapContext (Handle, false);
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+#else
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern void CGContextDrawConicGradient (/* CGContext */ IntPtr context, /*[NullAllowed] CGGradient*/ IntPtr gradient, CGPoint center, nfloat angle);
+
+		public void DrawConicGradient (CGGradient? gradient, CGPoint point, nfloat angle) =>
+			CGContextDrawConicGradient (Handle, gradient.GetHandle (), point, angle);
+
 #endif // !COREBUILD
 	}
 }

@@ -767,6 +767,7 @@ namespace Introspection {
 				case "PKInk":
 					return true;
 				// Xcode1 5
+				case "NSCompositeAttributeDescription":
 				case "CKSyncEnginePendingDatabaseChange":
 				case "CKSyncEnginePendingRecordZoneChange":
 				case "CKSyncEnginePendingZoneDelete":
