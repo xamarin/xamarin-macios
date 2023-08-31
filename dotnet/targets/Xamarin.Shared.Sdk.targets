@@ -165,11 +165,6 @@
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(_GlobalizationDataFileLocation)' == ''">
-		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' == 'true'">Resource</_GlobalizationDataFileLocation>
-		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' != 'true'">Assembly</_GlobalizationDataFileLocation>
-	</PropertyGroup>
-
 	<!-- dotnet publish -->
 	<Import Project="Xamarin.Shared.Sdk.Publish.targets" />
 
@@ -1091,7 +1086,6 @@
 			<!-- List all the properties passed to xamarin_bridge_vm_initialize in xamarin_vm_initialize (in runtime.m) -->
 			<_RuntimeConfigReservedProperties Include="APP_PATHS" />
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
-			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
 			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />
 			<_RuntimeConfigReservedProperties Include="RUNTIME_IDENTIFIER" />
@@ -1753,7 +1747,7 @@
 				            '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == '$(_GlobalizationDataFile)' And
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 				            "
-				PublishFolderType="$(_GlobalizationDataFileLocation)"
+				PublishFolderType="Assembly"
 			/>
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->

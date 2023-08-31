@@ -31,8 +31,6 @@ namespace Xamarin {
 
 				contents.AppendLine ("#include <stdlib.h>");
 				contents.AppendLine ();
-				contents.AppendLine ("extern \"C\" const char *xamarin_icu_dat_file_name;");
-				contents.AppendLine ();
 				contents.AppendLine ("static void xamarin_initialize_dotnet ()");
 				contents.AppendLine ("{");
 				if (Configuration.InvariantGlobalization) {
@@ -40,7 +38,6 @@ namespace Xamarin {
 				} else {
 					if (Configuration.HybridGlobalization)
 						contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_HYBRID\", \"1\", 1);");
-					contents.AppendLine ($"\txamarin_icu_dat_file_name = \"{Configuration.GlobalizationDataFile}\";");
 				}
 				if (Configuration.Application.PackageManagedDebugSymbols && Configuration.Application.UseInterpreter)
 					contents.AppendLine ($"\tsetenv (\"DOTNET_MODIFIABLE_ASSEMBLIES\", \"debug\", 1);");
