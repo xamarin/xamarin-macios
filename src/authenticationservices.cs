@@ -214,19 +214,19 @@ namespace AuthenticationServices {
 		void ReplaceCredentialIdentities (ASPasswordCredentialIdentity [] newCredentialIdentities, [NullAllowed] ASCredentialIdentityStoreCompletionHandler completion);
 
 		[Async]
-		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("saveCredentialIdentityEntries:completion:")]
-		void SaveCredentialIdentityEntries (ASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
+		void SaveCredentialIdentityEntries (IASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 
 		[Async]
-		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("replaceCredentialIdentityEntries:completion:")]
-		void ReplaceCredentialIdentityEntries (ASCredentialIdentity [] newCredentialIdentities, [NullAllowed] Action<bool, NSError> completion);
+		void ReplaceCredentialIdentityEntries (IASCredentialIdentity [] newCredentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 
 		[Async]
-		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Export ("removeCredentialIdentityEntries:completion:")]
-		void RemoveCredentialIdentityEntries (ASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
+		void RemoveCredentialIdentityEntries (IASCredentialIdentity [] credentialIdentities, [NullAllowed] Action<bool, NSError> completion);
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -2057,7 +2057,7 @@ namespace AuthenticationServices {
 
 		[Abstract]
 		[Export ("credentialIdentity")]
-		ASCredentialIdentity CredentialIdentity { get; }
+		IASCredentialIdentity CredentialIdentity { get; }
 	}
 
 	[NoWatch, NoTV, MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
@@ -2118,9 +2118,10 @@ namespace AuthenticationServices {
 
 	}
 
+	interface IASCredentialIdentity {} 
+
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Protocol]
-	[BaseType (typeof (NSObject))]
 	interface ASCredentialIdentity {
 
 		[Abstract]
@@ -2139,8 +2140,6 @@ namespace AuthenticationServices {
 		[Export ("rank")]
 		nint Rank { get; set; }
 	}
-
-	interface IASCredentialIdentity { }
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
