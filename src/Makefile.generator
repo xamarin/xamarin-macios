@@ -52,6 +52,7 @@ DOTNET_TARGETS_DIRS += \
 $(BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
 	@mkdir -p $(dir $@)
 	$(Q) ./generate-frameworks.csharp $@.tmp '$(IOS_FRAMEWORKS)' '$(MACOS_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' '$(MACCATALYST_FRAMEWORKS)'
+	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; git diff "$@"; echo "The file $@ has been automatically re-generated; please commit the changes."; exit 1; fi
 	$(Q) mv $@.tmp $@
 
 # This rule means: generate a <platform>-defines.rsp for the frameworks in the variable <PLATFORM>_FRAMEWORKS

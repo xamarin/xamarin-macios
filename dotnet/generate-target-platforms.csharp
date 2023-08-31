@@ -24,15 +24,9 @@ var doc = new XmlDocument ();
 doc.Load (plistPath);
 var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
 
-var allLines = File.ReadAllLines ("../Make.config");
-
 var minSdkVersionName = $"DOTNET_MIN_{platform.ToUpper ()}_SDK_VERSION";
-var minSdkVersionString = allLines.Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
+var minSdkVersionString = File.ReadAllLines ("../Make.config").Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
 var minSdkVersion = Version.Parse (minSdkVersionString);
-
-var minNativeAotSdkVersionName = $"DOTNET_MIN_NATIVEAOT_{platform.ToUpper ()}_SDK_VERSION";
-var minNativeAotSdkVersionString = allLines.Single (v => v.StartsWith (minNativeAotSdkVersionName + "=", StringComparison.Ordinal)).Substring (minNativeAotSdkVersionName.Length + 1);
-var minNativeAotSdkVersion = Version.Parse (minNativeAotSdkVersionString);
 
 using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<!-- This file contains a generated list of the {platform} platform versions that are supported for this SDK -->");
@@ -42,14 +36,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 
 	foreach (XmlNode n in nodes) {
 		var version = n.InnerText;
-		var parsedVersion = Version.Parse (version);
-		if (parsedVersion < minSdkVersion)
+		if (Version.Parse (version) < minSdkVersion)
 			continue;
-		if (parsedVersion < minNativeAotSdkVersion) {
-			writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" Condition=\"!('$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true')\" />");
-		} else {
-			writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
-		}
+		writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
 	}
 
 	writer.WriteLine ("\t</ItemGroup>");
@@ -57,8 +46,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"\t\t<SdkSupportedTargetPlatformVersion Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@({platform}SdkSupportedTargetPlatformVersion)\" />");
 	writer.WriteLine ("\t</ItemGroup>");
 	writer.WriteLine ("\t<PropertyGroup>");
-	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion Condition=\"!('$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true')\">{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
-	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion Condition=\"'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'\">{minNativeAotSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
+	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion>{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
 	writer.WriteLine ("\t</PropertyGroup>");
 	writer.WriteLine ("</Project>");
 }

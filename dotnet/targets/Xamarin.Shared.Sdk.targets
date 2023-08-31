@@ -508,18 +508,12 @@
 			<!-- Set NativeAOT value -->
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
-
-			<!-- Set the features for ILLink -->
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator $(_IsSimulatorFeature)</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsManagedStaticRegistrar $(_IsManagedStaticRegistrarFeature)</_ExtraTrimmerArgs>
-			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.IsNativeAOT $(_IsNativeAOTFeature)</_ExtraTrimmerArgs>
 		</PropertyGroup>
 
 		<ItemGroup>
-			<!-- Set the features for ILC -->
-			<IlcArg Include="--feature:ObjCRuntime.Runtime.Arch.IsSimulator=$(_IsSimulatorFeature)" />
-			<IlcArg Include="--feature:ObjCRuntime.Runtime.IsManagedStaticRegistrar=$(_IsManagedStaticRegistrarFeature)" />
-			<IlcArg Include="--feature:ObjCRuntime.Runtime.IsNativeAOT=$(_IsNativeAOTFeature)" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.Arch.IsSimulator" Value="$(_IsSimulatorFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsManagedStaticRegistrar" Value="$(_IsManagedStaticRegistrarFeature)" Trim="true" />
+			<RuntimeHostConfigurationOption Include="ObjCRuntime.Runtime.IsNativeAOT" Value="$(_IsNativeAOTFeature)" Trim="true" />
 		</ItemGroup>
 	</Target>
 
@@ -654,6 +648,9 @@
 
 			<!-- Enable serialization discovery. Ref: https://github.com/xamarin/xamarin-macios/issues/15676 -->
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --enable-serialization-discovery</_ExtraTrimmerArgs>
+
+			<!-- If we're using NativeAOT, tell ILLink to not remove dependency attributes (DynamicDependencyAttribute), because NativeAOT's trimmer also needs to see them. -->
+			<_ExtraTrimmerArgs Condition="'$(_UseNativeAot)' == 'true'">$(_ExtraTrimmerArgs) --keep-dep-attributes</_ExtraTrimmerArgs>
 
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
@@ -847,9 +844,8 @@
 			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
 		</PropertyGroup>
 		<ItemGroup>
-			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
-				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' != ''">$(_StrippedAssemblyDirectory)\%(ResolvedFileToPublish.DestinationSubPath)</OutputPath>
-				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' == ''">$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
+			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' And '%(ResolvedFileToPublish.Culture)' == ''">
+				<OutputPath>$(_StrippedAssemblyDirectory)\%(ResolvedFileToPublish.OriginalRelativePath)</OutputPath>
 			</_AssembliesToBeStripped>
 
 			<!-- Use forward slashes in OutputPath, otherwise ILStrip will create filenames that resemble the part of
@@ -1229,6 +1225,9 @@
 		<PropertyGroup>
 			<!-- Ask ILC to produce a static library -->
 			<NativeLib>static</NativeLib>
+
+			<!-- Always enable trim warnings by default with NativeAOT -->
+			<SuppressTrimAnalysisWarnings Condition="'$(_OriginalSuppressTrimAnalysisWarnings)' != 'true'">false</SuppressTrimAnalysisWarnings>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -1645,8 +1644,7 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(TrimMode)' == ''">
 			<!-- Linking is always on for all assemblies when using NativeAOT - this is because we need to modify all assemblies in the linker for them to be compatible with NativeAOT -->
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' == 'macOS'">Full</_DefaultLinkMode>
-			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true' And '$(_PlatformName)' != 'macOS'">SdkOnly</_DefaultLinkMode>
+			<_DefaultLinkMode Condition="'$(_UseNativeAot)' == 'true'">Full</_DefaultLinkMode>
 
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
 			<_DefaultLinkMode Condition="'$(_UseNativeAot)' != 'true' And '$(_PlatformName)' == 'MacCatalyst' And '$(Configuration)' == 'Release'">SdkOnly</_DefaultLinkMode> <!-- Default linking is on for release builds for Mac Catalyst apps -->
@@ -1898,7 +1896,7 @@
 			<ResolvedFileToPublish Remove="@(_CompressedAppleBindingResourcePackage)" />
 
 			<!-- Rewrite the relative path so that everything ends up in the app bundle -->
-			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" />
+			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" OriginalRelativePath="%(RelativePath)" />
 		</ItemGroup>
 
 		<!-- This task is executed on Windows as well, for hotrestart builds -->
@@ -2313,7 +2311,7 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 	<Import Project="$(_TargetsDirectory)Xamarin.Mac.ObjCBinding.$(_ProjectLanguage).targets"      Condition="'$(_ProjectType)' == 'macOSBindingProject' " />
 
 	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.$(_ProjectLanguage).targets"              Condition="'$(_ProjectType)' == 'MacCatalystExecutableProject' Or '$(_ProjectType)' == 'MacCatalystClassLibrary' " />
-	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'MacCatalystSAppExtensionProject' " />
+	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.AppExtension.$(_ProjectLanguage).targets" Condition="'$(_ProjectType)' == 'MacCatalystAppExtensionProject' " />
 	<Import Project="$(_TargetsDirectory)Xamarin.MacCatalyst.ObjCBinding.$(_ProjectLanguage).targets"  Condition="'$(_ProjectType)' == 'MacCatalystBindingProject' " />
 	
 </Project>
