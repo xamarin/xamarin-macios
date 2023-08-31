@@ -370,6 +370,12 @@ namespace Xamarin.Linker {
 				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "set_flags", "Foundation.NSObject::set_flags", predicate: null, out var _);
 			}
 		}
+
+		public MethodReference Foundation_NSObject_RegisterToggleRef {
+			get {
+				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "RegisterToggleRef", "Foundation.NSObject::RegisterToggleRef", predicate: null, out var _);
+			}
+		}
 #else
 		public FieldReference Foundation_NSObject_FlagsField {
 			get {
