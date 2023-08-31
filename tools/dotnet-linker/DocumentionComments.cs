@@ -28,7 +28,7 @@ namespace Xamarin.Utils {
 		public static string GetSignature (TypeDefinition type)
 		{
 			if (type.IsNested)
-				return type.Name;
+				return type.FullName.Replace ('/', '.');
 			return type.FullName;
 		}
 
@@ -41,6 +41,11 @@ namespace Xamarin.Utils {
 		{
 			var sb = new StringBuilder ();
 			sb.Append (method.Name.Replace ('.', '#'));
+
+			if (method.HasGenericParameters) {
+				sb.Append ($"``{method.GenericParameters.Count}");
+			}
+
 			sb.Append ('(');
 			for (var i = 0; i < method.Parameters.Count; i++) {
 				if (i > 0)
@@ -71,6 +76,17 @@ namespace Xamarin.Utils {
 			if (type is PointerType pt) {
 				WriteTypeSignature (sb, pt.GetElementType ());
 				sb.Append ('*');
+				return;
+			}
+
+			if (type is GenericParameter gp) {
+				if (gp.Type == GenericParameterType.Type) {
+					sb.Append ('`');
+				} else {
+					sb.Append ("``");
+				}
+
+				sb.Append (gp.Position.ToString ());
 				return;
 			}
 

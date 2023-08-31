@@ -24,4 +24,6 @@ $(INSTALLED_PACKAGE): .libs/DynamicLibrariesInRuntimesNativeDirectory.nupkg
 	mkdir -p $(abspath $(NUGET_TEST_FEED))
 	nuget add "$<" -source $(abspath $(NUGET_TEST_FEED)) -NonInteractive
 
+ifdef ENABLE_DOTNET
 all-local:: $(INSTALLED_PACKAGE)
+endif
