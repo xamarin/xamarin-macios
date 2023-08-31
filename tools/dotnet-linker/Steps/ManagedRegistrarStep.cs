@@ -1391,7 +1391,7 @@ namespace Xamarin.Linker {
 			registerToggleRef.IsPublic = false;
 			registerToggleRef.IsInternalCall = false;
 
-			registerToggleRef.CreateBody(out var il);
+			registerToggleRef.CreateBody (out var il);
 			il.Emit (OpCodes.Ret);
 		}
 	}
