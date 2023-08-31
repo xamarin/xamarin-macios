@@ -305,6 +305,8 @@ namespace Xamarin.Tests {
 						return false;
 					if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
 						return false;
+					if (!File.Exists (v))
+						return false;
 					return true;
 				});
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
