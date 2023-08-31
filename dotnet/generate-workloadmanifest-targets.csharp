@@ -29,12 +29,12 @@ var tfm = currentApiVersion;
 
 using (var writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
-	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' \">");
+	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true' \">");
 	{
 		var tfv = tfm.Replace ("net", "");
 		tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
 		var tpv = tfm.Substring (tfm.IndexOfAny (new char [] { '-', '_' }) + 1);
-		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And ('$(TargetPlatformVersion)' == '' Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{defaultApiVersion}')) Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{tpv}')))\" />");
+		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{tfm}\" Condition=\"'$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\" />");
 	}
 	writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.net6\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) \" />");
 	if (hasWindows) {
@@ -43,7 +43,7 @@ using (var writer = new StreamWriter (outputPath)) {
 			var tfv = tfm.Replace ("net", "");
 			tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
 			var tpv = tfm.Substring (tfm.IndexOfAny (new char [] { '-', '_' }) + 1);
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And ('$(TargetPlatformVersion)' == '' Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{defaultApiVersion}')) Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{tpv}'))) And $([MSBuild]::IsOSPlatform('windows'))\" />");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
 		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.net6\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 	}
