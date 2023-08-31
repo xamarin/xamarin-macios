@@ -48,8 +48,10 @@
 
       <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Collections.Immutable.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Memory.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Numerics.Vectors.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Reflection.Metadata.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Text.Json.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
