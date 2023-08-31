@@ -413,6 +413,16 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<Exec SessionId="$(BuildSessionId)" Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)"/>
 	</Target>
 
+	<Target Name="_VerifyNoAbsoluteOutputPath" Condition="'$(AllowAbsoluteOutputPath)' != 'true'" AfterTargets="_SayHello">
+		<!--
+			Remote builds won't work if either OutputPath or IntermediateOutputPath are is an absolute path, so just show an error in that case that tells people what the actual problem is (instead of a random and unintelligible build error).
+				Ref: https://dev.azure.com/devdiv/DevDiv/_workitems/edit/1847166
+				Ref: https://dev.azure.com/devdiv/DevDiv/_workitems/edit/1847166
+		-->
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(OutputPath)'))" Text="An absolute OutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(IntermediateOutputPath)'))" Text="An absolute IntermediateOutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
+	</Target>
+
 	<PropertyGroup>
 		<_PrepareRunDependsOn>
 			_SetShouldDisconnect;
