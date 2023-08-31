@@ -82,6 +82,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase (false, false, false)]
 		public void ShouldStripUserFramework (bool? strip, bool debugStrips, bool releaseStrips)
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $"--native-reference={frameworkPath}");
@@ -138,6 +139,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase (true)]
 		public void ThirdPartyLibrary_WithIncorrectBitness_ShouldWarnOnRelease (bool sixtyFourBits)
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 
@@ -160,6 +162,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase]
 		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn ()
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 

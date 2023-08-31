@@ -2,7 +2,7 @@ TOP=../..
 include $(TOP)/Make.config
 
 ifdef INCLUDE_IOS
-all-local:: nnyeah/bin/Debug/net6.0/nnyeah.dll
+all-local:: nnyeah/bin/Debug/$(DOTNET_TFM)/nnyeah.dll
 install-local:: all-local
 endif
 
@@ -20,14 +20,14 @@ $(IOS_DLL):
 run-tests:: ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg
 	$(DOTNET) test tests/nnyeah-tests.csproj $(TEST_FILTER)
 
-nnyeah/bin/Debug/net6.0/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln)
+nnyeah/bin/Debug/$(DOTNET_TFM)/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln)
 	$(Q_BUILD) $(DOTNET) build "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY) $(wildcard *.sln)
 
 clean:
 	$(Q_BUILD) $(DOTNET) build "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY) /t:Clean $(wildcard *.sln)
 
 
-./nupkg/nnyeah.$(NUPKG_VERSION).nupkg: nnyeah/bin/Debug/net6.0/nnyeah.dll
+./nupkg/nnyeah.$(NUPKG_VERSION).nupkg: nnyeah/bin/Debug/$(DOTNET_TFM)/nnyeah.dll
 	$(Q) $(DOTNET) pack nnyeah/nnyeah.csproj
 	$(Q) mkdir -p nupkg
 	$(Q) cp nnyeah/bin/Debug/nnyeah.$(NUPKG_VERSION).nupkg ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg

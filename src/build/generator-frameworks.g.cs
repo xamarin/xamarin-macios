@@ -28,6 +28,7 @@ partial class Frameworks {
 		"CarPlay",
 		"CFNetwork",
 		"Chip",
+		"Cinematic",
 		"ClassKit",
 		"CloudKit",
 		"Compression",
@@ -162,6 +163,7 @@ partial class Frameworks {
 		"CallKit",
 		"CFNetwork",
 		"Chip",
+		"Cinematic",
 		"ClassKit",
 		"CloudKit",
 		"Compression",
@@ -341,6 +343,7 @@ partial class Frameworks {
 		"BackgroundTasks",
 		"CFNetwork",
 		"Chip",
+		"Cinematic",
 		"CloudKit",
 		"Compression",
 		"CoreAnimation",
@@ -562,6 +565,7 @@ partial class Frameworks {
 	bool? _CarPlay;
 	bool? _CFNetwork;
 	bool? _Chip;
+	bool? _Cinematic;
 	bool? _ClassKit;
 	bool? _ClockKit;
 	bool? _CloudKit;
@@ -725,6 +729,7 @@ partial class Frameworks {
 	public bool HaveCarPlay { get { if (!_CarPlay.HasValue) _CarPlay = GetValue ("CarPlay"); return _CarPlay.Value; } }
 	public bool HaveCFNetwork { get { if (!_CFNetwork.HasValue) _CFNetwork = GetValue ("CFNetwork"); return _CFNetwork.Value; } }
 	public bool HaveChip { get { if (!_Chip.HasValue) _Chip = GetValue ("Chip"); return _Chip.Value; } }
+	public bool HaveCinematic { get { if (!_Cinematic.HasValue) _Cinematic = GetValue ("Cinematic"); return _Cinematic.Value; } }
 	public bool HaveClassKit { get { if (!_ClassKit.HasValue) _ClassKit = GetValue ("ClassKit"); return _ClassKit.Value; } }
 	public bool HaveClockKit { get { if (!_ClockKit.HasValue) _ClockKit = GetValue ("ClockKit"); return _ClockKit.Value; } }
 	public bool HaveCloudKit { get { if (!_CloudKit.HasValue) _CloudKit = GetValue ("CloudKit"); return _CloudKit.Value; } }

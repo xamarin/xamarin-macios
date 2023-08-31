@@ -427,7 +427,7 @@ namespace AudioToolbox {
 			try {
 				LastError = AudioFileStreamGetProperty (handle, property, ref size, buffer);
 				if (LastError == 0) {
-					return (T) Marshal.PtrToStructure (buffer, typeof (T))!;
+					return Marshal.PtrToStructure<T> (buffer)!;
 				}
 
 				return null;
