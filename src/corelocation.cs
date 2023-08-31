@@ -68,7 +68,7 @@ namespace CoreLocation {
 		UnsupportedPlatform = 4,
 	}
 
-	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[Native]
 	public enum CLMonitoringState : ulong {
 		Unknown,
@@ -76,7 +76,7 @@ namespace CoreLocation {
 		Unsatisfied,
 	}
 
-	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[Native]
 	public enum CLLiveUpdateConfiguration : long {
 		Default = 0,
@@ -1126,7 +1126,7 @@ namespace CoreLocation {
 		bool IsProducedByAccessory { get; }
 	}
 
-	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CLUpdate {
 		[Export ("isStationary")]
