@@ -1276,7 +1276,7 @@ namespace CoreLocation {
 		NativeHandle Constructor (NSUuid uuid, ushort major, ushort minor);
 	}
 
-	[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLBackgroundActivitySession {
