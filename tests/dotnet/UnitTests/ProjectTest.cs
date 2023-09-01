@@ -1396,6 +1396,49 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["PublishAot"] = "true";
+			properties ["_IsPublishing"] = "true"; // quack like "dotnet publish"
+			properties ["ExcludeNUnitLiteReference"] = "true"; // we're asserting no warnings, and NUnitLite produces a lot of them, so ignore NUnitLite
+			properties ["ExcludeTouchUnitReference"] = "true"; // we're asserting no warnings, and Touch.Unit produces a lot of them, so ignore Touch.Unit
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
+			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
+			var foundIL2049 = false;
+			var foundIL3050 = false;
+			rv.AssertNoWarnings ((evt) => {
+				// https://github.com/dotnet/runtime/issues/88994
+				if (evt.Code == "IL2049" && evt.Message == "System.Private.CoreLib: The internal attribute name 'RemoveAttributeInstances' being used in the xml is not supported by ILLink, check the spelling and the supported internal attributes.") {
+					foundIL2049 = true;
+					return false;
+				}
+
+				if (evt.Code == "IL3050" && evt.Message == "<Module>..cctor(): Using member 'System.Enum.GetValues(Type)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. It might not be possible to create an array of the enum type at runtime. Use the GetValues<TEnum> overload or the GetValuesAsUnderlyingType method instead.") {
+					foundIL3050 = true;
+					return false;
+				}
+
+				return true;
+			});
+
+			Assert.IsTrue (foundIL2049, "IL2049 not found - update test code to remove the code to ignore the IL2049");
+			Assert.IsTrue (foundIL3050, "IL3050 not found - update test code to remove the code to ignore the IL3050");
+		}
+
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
 		{
 			var dylibPath = Path.Join (appPath, "Contents", "MonoBundle", dylibRelPath);
