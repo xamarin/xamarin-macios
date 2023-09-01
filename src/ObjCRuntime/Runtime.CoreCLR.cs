@@ -84,6 +84,11 @@ namespace ObjCRuntime {
 		static bool? track_monoobject_with_stacktraces;
 #endif
 
+		static internal Exception CreateNativeAOTNotSupportedException ()
+		{
+			return new System.Diagnostics.UnreachableException ("This API is not supported when using NativeAOT.");
+		}
+
 		// Define VERBOSE_LOG at the top of this file to get all printfs
 		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
 		static void log_coreclr (string message)
@@ -144,7 +149,8 @@ namespace ObjCRuntime {
 			delegate* unmanaged<IntPtr, void> trackedObjectEnteredFinalization = (delegate* unmanaged<IntPtr, void>) options->reference_tracking_tracked_object_entered_finalization;
 			ObjectiveCMarshal.Initialize (beginEndCallback, isReferencedCallback, trackedObjectEnteredFinalization, UnhandledExceptionPropagationHandler);
 
-			AssemblyLoadContext.Default.Resolving += ResolvingEventHandler;
+			if (!IsNativeAOT)
+				AssemblyLoadContext.Default.Resolving += ResolvingEventHandler;
 		}
 
 		[DllImport ("__Internal")]
@@ -246,6 +252,9 @@ namespace ObjCRuntime {
 		// Returns a retained MonoObject. Caller must release.
 		static IntPtr FindAssembly (IntPtr assembly_name)
 		{
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+
 			var path = Marshal.PtrToStringAuto (assembly_name);
 			var name = Path.GetFileNameWithoutExtension (path);
 
@@ -457,6 +466,9 @@ namespace ObjCRuntime {
 			if (obj is null)
 				return;
 
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+
 			var structType = obj.GetType ();
 			// Unwrap enums, Marshal.StructureToPtr complains they're not blittable (https://github.com/xamarin/xamarin-macios/issues/15744)
 			if (structType.IsEnum) {
@@ -479,6 +491,9 @@ namespace ObjCRuntime {
 
 			if (!obj.GetType ().IsValueType)
 				return IntPtr.Zero;
+
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
 
 			var structType = obj.GetType ();
 			// Unwrap enums
@@ -635,6 +650,9 @@ namespace ObjCRuntime {
 
 		static int SizeOf (Type type)
 		{
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+
 			if (type.IsEnum) // https://github.com/dotnet/runtime/issues/12258
 				type = Enum.GetUnderlyingType (type);
 			return Marshal.SizeOf (type);
@@ -823,6 +841,9 @@ namespace ObjCRuntime {
 
 		static unsafe MonoObject* CreateArray (MonoObject* typeobj, ulong elements)
 		{
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+
 			var type = (Type) GetMonoObjectTarget (typeobj)!;
 			var obj = Array.CreateInstance (type, (int) elements);
 			return (MonoObject*) GetMonoObject (obj);
@@ -942,6 +963,9 @@ namespace ObjCRuntime {
 
 		static object? PtrToStructure (IntPtr ptr, Type type)
 		{
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+
 			if (ptr == IntPtr.Zero)
 				return null;
 
