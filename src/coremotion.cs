@@ -483,10 +483,9 @@ namespace CoreMotion {
 		Authorized,
 	}
 
-	[Watch (8,4), iOS (15,4), MacCatalyst (15,4), TV (15,4)]
+	[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4), TV (15, 4)]
 	[Native]
-	public enum CMOdometerOriginDevice : long
-	{
+	public enum CMOdometerOriginDevice : long {
 		Unknown = 0,
 		Local,
 		Remote,
@@ -701,10 +700,9 @@ namespace CoreMotion {
 		HeadphoneRight,
 	}
 
-	[Watch (10,0), NoTV, NoMac, iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum CMHighFrequencyHeartRateDataConfidence : long
-	{
+	public enum CMHighFrequencyHeartRateDataConfidence : long {
 		Low = 0,
 		Medium,
 		High,
@@ -720,7 +718,7 @@ namespace CoreMotion {
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
-	[Mac (13,0)]
+	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CMHeadphoneMotionManager {
 
@@ -759,7 +757,7 @@ namespace CoreMotion {
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
-	[Mac (13,0)]
+	[Mac (13, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -903,7 +901,7 @@ namespace CoreMotion {
 		NSDate StartDate { get; }
 	}
 
-	[Mac (13,0), iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[Native]
 	public enum CMWaterSubmersionState : long {
 		Unknown = 0,
@@ -911,7 +909,7 @@ namespace CoreMotion {
 		Submerged,
 	}
 
-	[Mac (13,0), iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[Native]
 	public enum CMWaterSubmersionDepthState : long {
 		Unknown = 0,
@@ -923,7 +921,7 @@ namespace CoreMotion {
 		SensorDepthError = 600,
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterSubmersionEvent : NSSecureCoding, NSCopying {
 		[Export ("date")]
@@ -933,7 +931,7 @@ namespace CoreMotion {
 		CMWaterSubmersionState State { get; }
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterSubmersionMeasurement : NSSecureCoding, NSCopying {
 		[Export ("date")]
@@ -952,7 +950,7 @@ namespace CoreMotion {
 		CMWaterSubmersionDepthState SubmersionState { get; }
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterTemperature : NSSecureCoding, NSCopying {
 		[Export ("date")]
@@ -967,7 +965,7 @@ namespace CoreMotion {
 
 	interface ICMWaterSubmersionManagerDelegate { }
 
-	[NoMac, iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 #if NET
 	[Protocol, Model]
 #else
@@ -992,7 +990,7 @@ namespace CoreMotion {
 		void ErrorOccurred (CMWaterSubmersionManager manager, NSError error);
 	}
 
-	[NoMac, iOS (16,0), NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterSubmersionManager {
 		[Wrap ("WeakDelegate")]
@@ -1014,10 +1012,9 @@ namespace CoreMotion {
 		NSMeasurement<NSUnitLength> MaximumDepth { get; }
 	}
 
-	[Watch (10,0), NoMac, iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
-	interface CMBatchedSensorManager
-	{
+	[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CMBatchedSensorManager {
 		[Static]
 		[Export ("authorizationStatus")]
 		CMAuthorizationStatus AuthorizationStatus { get; }
@@ -1033,7 +1030,7 @@ namespace CoreMotion {
 		nint AccelerometerDataFrequency { get; }
 
 		[NullAllowed, Export ("accelerometerBatch")]
-		CMAccelerometerData[] AccelerometerBatch { get; }
+		CMAccelerometerData [] AccelerometerBatch { get; }
 
 		[Export ("startAccelerometerUpdates")]
 		void StartAccelerometerUpdates ();
@@ -1055,7 +1052,7 @@ namespace CoreMotion {
 		bool DeviceMotionActive { [Bind ("isDeviceMotionActive")] get; }
 
 		[NullAllowed, Export ("deviceMotionBatch")]
-		CMDeviceMotion[] DeviceMotionBatch { get; }
+		CMDeviceMotion [] DeviceMotionBatch { get; }
 
 		[Export ("startDeviceMotionUpdates")]
 		void StartDeviceMotionUpdates ();
@@ -1067,63 +1064,61 @@ namespace CoreMotion {
 		void StopDeviceMotionUpdates ();
 	}
 
-	[Mac (14,0), MacCatalyst (13, 1)]
-	[BaseType (typeof(NSObject))]
-	interface CMOdometerData : NSSecureCoding, NSCopying
-	{
+	[Mac (14, 0), MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface CMOdometerData : NSSecureCoding, NSCopying {
 		[Export ("startDate", ArgumentSemantic.Strong)]
 		NSDate StartDate { get; }
 
 		[Export ("endDate", ArgumentSemantic.Strong)]
 		NSDate EndDate { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("deltaDistance")]
 		double DeltaDistance { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("deltaDistanceAccuracy")]
 		double DeltaDistanceAccuracy { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("speed")]
 		double Speed { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("speedAccuracy")]
 		double SpeedAccuracy { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("gpsDate", ArgumentSemantic.Strong)]
 		NSDate GpsDate { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("deltaAltitude")]
 		double DeltaAltitude { get; }
 
-		[Watch (10, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("verticalAccuracy")]
 		double VerticalAccuracy { get; }
 
-		[Watch (8, 4), iOS (15, 4), MacCatalyst (15,4)]
+		[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("originDevice", ArgumentSemantic.Assign)]
 		CMOdometerOriginDevice OriginDevice { get; }
 
-		[Watch (8, 4), iOS (15, 4), MacCatalyst (15,4)]
+		[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4)]
 		[NullAllowed]
 		[Export ("slope", ArgumentSemantic.Strong)]
 		NSNumber Slope { get; }
 
-		[Watch (8, 4), iOS (15, 4), MacCatalyst (15,4)]
+		[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4)]
 		[NullAllowed]
 		[Export ("maxAbsSlope", ArgumentSemantic.Strong)]
 		NSNumber MaxAbsSlope { get; }
 	}
 
-	[Watch (10,0), NoTV, NoMac, iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(CMLogItem))]
-	interface CMHighFrequencyHeartRateData
-	{
+	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CMLogItem))]
+	interface CMHighFrequencyHeartRateData {
 		[Export ("heartRate")]
 		double HeartRate { get; }
 
