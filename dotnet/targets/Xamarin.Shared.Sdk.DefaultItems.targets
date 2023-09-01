@@ -20,6 +20,19 @@
     <None Include="@(ObjcBindingCoreSource)" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(_PlatformName)' == 'MacCatalyst'">
+    <EnableDefaultMacCatalystReleaseEntitlements Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == ''">True</EnableDefaultMacCatalystReleaseEntitlements>
+    <EnableDefaultMacCatalystDebugEntitlements Condition="'$(EnableDefaultMacCatalystDebugEntitlements)' == ''">True</EnableDefaultMacCatalystDebugEntitlements>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(EnableDefaultMacCatalystDebugEntitlements)' == 'True' and '$(Configuration)' == 'Debug'">
+    <CustomEntitlements Include="com.apple.security.get-task-allow" Type="boolean" Value="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == 'True' and '$(Configuration)' == 'Release'">
+    <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" />
+  </ItemGroup>
+
   <!-- Architecture -->
   <!-- If the old-style variables are set, use those -->
   <PropertyGroup Condition=" '$(TargetArchitectures)' == '' ">

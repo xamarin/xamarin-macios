@@ -1346,11 +1346,6 @@
 		</value>
 	</data>
 
-	<data name="MX2112" xml:space="preserve">
-		<!-- This is a warning -->
-		<value>Unable to apply the conditional [Preserve] attribute on the member {0}.</value>
-	</data>
-
 	<!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
 	<!-- 220x: PreserveSmartEnumConversionsSubStep -->
 	<!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
@@ -1912,7 +1907,7 @@
 	</data>
 
 	<data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.
+		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
 		</value>
 	</data>
 	
@@ -1941,6 +1936,10 @@
 
 	<data name="MX4188" xml:space="preserve">
 		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+	</data>
+
+	<data name="MX4189" xml:space="preserve">
+		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
 	</data>
 
 	<data name="MT5101" xml:space="preserve">

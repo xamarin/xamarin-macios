@@ -708,9 +708,9 @@ namespace CoreFoundation {
 				CFStreamEventType.CanAcceptBytes | CFStreamEventType.ErrorOccurred |
 				CFStreamEventType.EndEncountered;
 
-			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (CFStreamClientContext)));
+			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf<CFStreamClientContext> ());
 			try {
-				Marshal.StructureToPtr (ctx, ptr, false);
+				Marshal.StructureToPtr<CFStreamClientContext> (ctx, ptr, false);
 				bool clientSet;
 #if NET8_0_OR_GREATER
 				unsafe {

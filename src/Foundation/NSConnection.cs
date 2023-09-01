@@ -29,6 +29,7 @@
 #if MONOMAC
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using ObjCRuntime;
 
@@ -52,7 +53,11 @@ namespace Foundation
 			return GetRootProxy<TProxy> (_GetRootProxy (name, hostName, server));
 		}
 
+#if NET
+		static TProxy GetRootProxy<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] TProxy> (IntPtr handle) where TProxy : NSObject
+#else
 		static TProxy GetRootProxy<TProxy> (IntPtr handle) where TProxy : NSObject
+#endif
 		{
 			var result = Runtime.TryGetNSObject (handle) as TProxy;
 

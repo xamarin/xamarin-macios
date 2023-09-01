@@ -1,5 +1,0 @@
-!missing-enum-value! EKErrorCode native value EKErrorLast = 37 not bound
-!missing-enum-value! EKAuthorizationStatus native value EKAuthorizationStatusWriteOnly = 4 not bound
-!missing-selector! EKEventStore::requestFullAccessToEventsWithCompletion: not bound
-!missing-selector! EKEventStore::requestFullAccessToRemindersWithCompletion: not bound
-!missing-selector! EKEventStore::requestWriteOnlyAccessToEventsWithCompletion: not bound
