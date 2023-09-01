@@ -487,7 +487,7 @@ namespace CoreML {
 		void GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, Action<IMLFeatureProvider, NSError> completionHandler);
 
 		// from the category MLComputeDevice (MLModel)
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("availableComputeDevices", ArgumentSemantic.Copy)]
 		IMLComputeDeviceProtocol [] AvailableComputeDevices { get; }
