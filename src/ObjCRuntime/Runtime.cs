@@ -1065,7 +1065,7 @@ namespace ObjCRuntime {
 			return del;
 		}
 
-		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T: System.MulticastDelegate
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : System.MulticastDelegate
 		{
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
