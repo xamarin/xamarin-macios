@@ -1291,6 +1291,7 @@
 			<_CustomLinkFlags Include="@(NativeSystemLibrary->'-l%(Identity)')" />
 			<_CustomLinkFlags Include="@(NativeFramework->'-Wl,-framework,%(Identity)')" />
 			<_CustomLinkFlags Include="@(ExtraLinkerArg->'-Wl,%(Identity)')" />
+			<_CustomLinkFlags Include="-L/usr/lib/swift" Condition="'$(_PlatformName)' == 'macOS'" />
 		</ItemGroup>
 
 		<ItemGroup>
