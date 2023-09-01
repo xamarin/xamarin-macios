@@ -524,11 +524,6 @@ namespace Foundation {
 
 		bool DynamicConformsToProtocol (NativeHandle protocol)
 		{
-#if NET
-			if (Runtime.IsNativeAOT)
-				throw Runtime.CreateNativeAOTNotSupportedException ();
-#endif
-
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
 			foreach (AdoptsAttribute adopts in adoptedProtocols) {
 				if (adopts.ProtocolHandle == protocol)

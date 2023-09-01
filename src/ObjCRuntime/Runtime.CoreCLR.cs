@@ -84,11 +84,6 @@ namespace ObjCRuntime {
 		static bool? track_monoobject_with_stacktraces;
 #endif
 
-		static internal Exception CreateNativeAOTNotSupportedException ()
-		{
-			return new System.Diagnostics.UnreachableException ("This API is not supported when using NativeAOT.");
-		}
-
 		// Define VERBOSE_LOG at the top of this file to get all printfs
 		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
 		static void log_coreclr (string message)
@@ -149,8 +144,7 @@ namespace ObjCRuntime {
 			delegate* unmanaged<IntPtr, void> trackedObjectEnteredFinalization = (delegate* unmanaged<IntPtr, void>) options->reference_tracking_tracked_object_entered_finalization;
 			ObjectiveCMarshal.Initialize (beginEndCallback, isReferencedCallback, trackedObjectEnteredFinalization, UnhandledExceptionPropagationHandler);
 
-			if (!IsNativeAOT)
-				AssemblyLoadContext.Default.Resolving += ResolvingEventHandler;
+			AssemblyLoadContext.Default.Resolving += ResolvingEventHandler;
 		}
 
 		[DllImport ("__Internal")]
@@ -252,9 +246,6 @@ namespace ObjCRuntime {
 		// Returns a retained MonoObject. Caller must release.
 		static IntPtr FindAssembly (IntPtr assembly_name)
 		{
-			if (IsNativeAOT)
-				throw CreateNativeAOTNotSupportedException ();
-
 			var path = Marshal.PtrToStringAuto (assembly_name);
 			var name = Path.GetFileNameWithoutExtension (path);
 
@@ -419,7 +410,7 @@ namespace ObjCRuntime {
 			mobj.ReferenceCount = 1;
 			mobj.StructValue = WriteStructure (obj);
 
-			IntPtr rv = MarshalStructure<MonoObject> (mobj);
+			IntPtr rv = MarshalStructure (mobj);
 
 			log_coreclr ($"GetMonoObjectImpl ({obj.GetType ()}) => 0x{rv.ToString ("x")} => GCHandle=0x{handle.ToString ("x")}");
 
@@ -454,26 +445,17 @@ namespace ObjCRuntime {
 		static extern void xamarin_bridge_log_monoobject (IntPtr mono_object, string stack_trace);
 #endif
 
-		static IntPtr MarshalStructure<T> (T value) where T: unmanaged
+		static IntPtr MarshalStructure<T> (T value) where T: struct
 		{
-			var size = Marshal.SizeOf<T> ();
-			var destination = Marshal.AllocHGlobal (size);
-
-			unsafe {
-				T* source = &value;
-				Buffer.MemoryCopy ((void*) source, (void*) destination, size, size);
-			}
-
-			return destination;
+			var rv = Marshal.AllocHGlobal (Marshal.SizeOf<T> ());
+			StructureToPtr (value, rv);
+			return rv;
 		}
 
 		static void StructureToPtr (object? obj, IntPtr ptr)
 		{
 			if (obj is null)
 				return;
-
-			if (IsNativeAOT)
-				throw CreateNativeAOTNotSupportedException ();
 
 			var structType = obj.GetType ();
 			// Unwrap enums, Marshal.StructureToPtr complains they're not blittable (https://github.com/xamarin/xamarin-macios/issues/15744)
@@ -497,9 +479,6 @@ namespace ObjCRuntime {
 
 			if (!obj.GetType ().IsValueType)
 				return IntPtr.Zero;
-
-			if (IsNativeAOT)
-				throw CreateNativeAOTNotSupportedException ();
 
 			var structType = obj.GetType ();
 			// Unwrap enums
@@ -656,9 +635,6 @@ namespace ObjCRuntime {
 
 		static int SizeOf (Type type)
 		{
-			if (IsNativeAOT)
-				throw CreateNativeAOTNotSupportedException ();
-
 			if (type.IsEnum) // https://github.com/dotnet/runtime/issues/12258
 				type = Enum.GetUnderlyingType (type);
 			return Marshal.SizeOf (type);
@@ -847,9 +823,6 @@ namespace ObjCRuntime {
 
 		static unsafe MonoObject* CreateArray (MonoObject* typeobj, ulong elements)
 		{
-			if (IsNativeAOT)
-				throw CreateNativeAOTNotSupportedException ();
-
 			var type = (Type) GetMonoObjectTarget (typeobj)!;
 			var obj = Array.CreateInstance (type, (int) elements);
 			return (MonoObject*) GetMonoObject (obj);
@@ -969,9 +942,6 @@ namespace ObjCRuntime {
 
 		static object? PtrToStructure (IntPtr ptr, Type type)
 		{
-			if (IsNativeAOT)
-				throw CreateNativeAOTNotSupportedException ();
-
 			if (ptr == IntPtr.Zero)
 				return null;
 

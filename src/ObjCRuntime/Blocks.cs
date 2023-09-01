@@ -143,11 +143,6 @@ namespace ObjCRuntime {
 
 		static MethodInfo FindTrampoline (Type trampolineType, string trampolineMethod)
 		{
-#if NET
-			if (Runtime.IsNativeAOT)
-				throw Runtime.CreateNativeAOTNotSupportedException ();
-#endif
-
 			var rv = trampolineType.GetMethod (trampolineMethod, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 
 			if (rv is null)
@@ -496,11 +491,6 @@ namespace ObjCRuntime {
 
 			if (!(@delegate is Delegate))
 				throw ErrorHelper.CreateError (8016, $"Unable to convert delegate to block for the return value for the method {minfo.DeclaringType.FullName}.{minfo.Name}, because the input isn't a delegate, it's a {@delegate.GetType ().FullName}. {Constants.PleaseFileBugReport}");
-
-#if NET
-			if (Runtime.IsNativeAOT)
-				throw Runtime.CreateNativeAOTNotSupportedException ();
-#endif
 
 			Type delegateProxyType = GetDelegateProxyType (minfo, token_ref, out var baseMethod);
 			if (baseMethod is null)

@@ -1215,7 +1215,7 @@ namespace AudioToolbox {
 			return IntPtr.Zero;
 		}
 
-		unsafe T? GetProperty<T> (AudioFileProperty property) where T : unmanaged
+		unsafe T? GetProperty<T> (AudioFileProperty property) where T : struct
 		{
 			int size, writable;
 
@@ -1236,7 +1236,7 @@ namespace AudioToolbox {
 					break;
 				}
 				if (r == 0) {
-					return Runtime.PtrToStructureMemoryCopy<T> (buffer)!;
+					return Marshal.PtrToStructure<T> (buffer)!;
 				}
 
 				return null;

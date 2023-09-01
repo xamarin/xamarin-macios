@@ -413,7 +413,7 @@ namespace AudioToolbox {
 			}
 		}
 
-		unsafe T? GetProperty<T> (AudioFileStreamProperty property) where T : unmanaged
+		unsafe T? GetProperty<T> (AudioFileStreamProperty property) where T : struct
 		{
 			int size;
 			bool writable;
@@ -427,7 +427,7 @@ namespace AudioToolbox {
 			try {
 				LastError = AudioFileStreamGetProperty (handle, property, ref size, buffer);
 				if (LastError == 0) {
-					return Runtime.PtrToStructureMemoryCopy<T> (buffer)!;
+					return Marshal.PtrToStructure<T> (buffer)!;
 				}
 
 				return null;
