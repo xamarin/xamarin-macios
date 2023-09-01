@@ -13,12 +13,12 @@ using Xamarin.Messaging.Build.Client;
 namespace Xamarin.MacDev.Tasks {
 	public class GetFullPaths : XamarinTask, ICancelableTask {
 		[Required]
-		public ITaskItem[] Items { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] Items { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string[] Metadata { get; set; } = Array.Empty<string> ();
+		public string [] Metadata { get; set; } = Array.Empty<string> ();
 
 		[Output]
-		public ITaskItem[] Output { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] Output { get; set; } = Array.Empty<ITaskItem> ();
 
 		public override bool Execute ()
 		{
