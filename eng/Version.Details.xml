@@ -1,30 +1,30 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-rc.2.23430.4">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-rc.2.23451.1">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>af6c6d643d00e3a269d0d6a2635c1e38e9469551</Sha>
+      <Sha>dabc29073ddc9181f86f125ec53b027e089a3bb2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0-rc.2.23426.4" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0-rc.2.23431.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>4122c63a13cfe40e97ac1f9ef01d8110a66943f4</Sha>
+      <Sha>3c48925a6c1ab31865b4438a6cb88242d1a8fe4d</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-rc.2.23426.4" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-rc.2.23431.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>4122c63a13cfe40e97ac1f9ef01d8110a66943f4</Sha>
+      <Sha>3c48925a6c1ab31865b4438a6cb88242d1a8fe4d</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-rc.2.23428.15" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-rc.2.23431.20" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>314396efe8b7c02856a0cd112149a80a163566ed</Sha>
+      <Sha>37a7008591e5139c4d810872b81830aa763cc608</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100.Transport" Version="8.0.0-rc.1.23415.5" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>66dbaefff04250dc72849f0172e0c53bcfb3ab38</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23421.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23428.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>
-      <Sha>d412306c1514a26737574838900052d8758da5be</Sha>
+      <Sha>fa5acbd2ccba88c9d46ce0dd8f5310f9d3c5c46d</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
     <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7099">
