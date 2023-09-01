@@ -1065,7 +1065,11 @@ namespace ObjCRuntime {
 			return del;
 		}
 
+#if NET
 		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : System.MulticastDelegate
+#else
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : class
+#endif
 		{
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
@@ -1076,13 +1080,21 @@ namespace ObjCRuntime {
 					block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
 
 				if (block_to_delegate_cache.TryGetValue (pair, out var cachedValue))
+#if NET
 					return (T) cachedValue;
+#else
+					return (T) (object) cachedValue;
+#endif
 			}
 
 			var val = Marshal.GetDelegateForFunctionPointer<T> (methodPtr);
 
 			lock (lock_obj) {
+#if NET
 				block_to_delegate_cache [pair] = val;
+#else
+				block_to_delegate_cache [pair] = (Delegate) (object) val;
+#endif
 			}
 			return val;
 		}
