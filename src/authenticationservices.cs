@@ -355,15 +355,15 @@ namespace AuthenticationServices {
 
 		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("provideCredentialWithoutUserInteractionForRequest:")]
-		void ProvideCredentialWithoutUserInteraction (ASCredentialRequest credentialRequest);
+		void ProvideCredentialWithoutUserInteraction (IASCredentialRequest credentialRequest);
 
 		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("prepareInterfaceToProvideCredentialForRequest:")]
-		void PrepareInterfaceToProvideCredential (ASCredentialRequest credentialRequest);
+		void PrepareInterfaceToProvideCredential (IASCredentialRequest credentialRequest);
 
 		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("prepareInterfaceForPasskeyRegistration:")]
-		void PrepareInterfaceForPasskeyRegistration (ASCredentialRequest registrationRequest);
+		void PrepareInterfaceForPasskeyRegistration (IASCredentialRequest registrationRequest);
 
 	}
 
