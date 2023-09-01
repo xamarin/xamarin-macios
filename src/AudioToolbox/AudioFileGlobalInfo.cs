@@ -217,7 +217,7 @@ namespace AudioToolbox {
 					using (var cfs = new CFString (extension)) {
 						uint value;
 						uint size = sizeof (AudioFileType);
-						if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.TypesForExtension, (uint) Marshal.SizeOf (typeof (IntPtr)), cfs.Handle, ref size, out value) != 0)
+						if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.TypesForExtension, (uint) IntPtr.Size, cfs.Handle, ref size, out value) != 0)
 							return null;
 
 						return (AudioFileType) value;

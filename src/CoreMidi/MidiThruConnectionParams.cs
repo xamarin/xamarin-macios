@@ -292,11 +292,11 @@ namespace CoreMidi {
 		internal void ReadStruct (NSData data)
 		{
 			IntPtr buffer = data.Bytes;
-			connectionParams = (MidiThruConnectionParamsStruct) Marshal.PtrToStructure (buffer, typeof (MidiThruConnectionParamsStruct))!;
+			connectionParams = Marshal.PtrToStructure<MidiThruConnectionParamsStruct> (buffer)!;
 
 			// Put ourselves at the end of the static struct in case we need to fetch the dynamic part of the struct
-			IntPtr bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct)));
-			var controlsSize = Marshal.SizeOf (typeof (MidiControlTransform));
+			IntPtr bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf<MidiThruConnectionParamsStruct> ());
+			var controlsSize = Marshal.SizeOf<MidiControlTransform> ();
 
 			if (connectionParams.NumControlTransforms == 0)
 				Controls = null;
@@ -345,18 +345,18 @@ namespace CoreMidi {
 			connectionParams.NumControlTransforms = Controls is not null ? (ushort) Controls.Length : (ushort) 0;
 			connectionParams.NumMaps = Maps is not null ? (ushort) Maps.Length : (ushort) 0;
 
-			var paramsSize = Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct));
-			var controlsSize = Marshal.SizeOf (typeof (MidiControlTransform));
+			var paramsSize = Marshal.SizeOf<MidiThruConnectionParamsStruct> ();
+			var controlsSize = Marshal.SizeOf<MidiControlTransform> ();
 			// Get the full size of the struct, static + dynamic parts
 			var fullSize = paramsSize +
 				(Controls is null ? 0 : controlsSize * Controls.Length) +
 				(Maps is null ? 0 : 128 * Maps.Length);
 			var buffer = Marshal.AllocHGlobal (fullSize);
-			var bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct)));
+			var bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf<MidiThruConnectionParamsStruct> ());
 
 			try {
 				// Copy static sized struct
-				Marshal.StructureToPtr (connectionParams, buffer, false);
+				Marshal.StructureToPtr<MidiThruConnectionParamsStruct> (connectionParams, buffer, false);
 
 				if (connectionParams.NumControlTransforms > 0) {
 					unsafe {
