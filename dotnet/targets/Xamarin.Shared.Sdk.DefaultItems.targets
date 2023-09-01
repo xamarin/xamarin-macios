@@ -34,7 +34,6 @@
 
   <ItemGroup Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == 'true' and '$(Configuration)' == 'Release'">
     <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" />
-    <CustomEntitlements Include="com.apple.security.cs.allow-jit" Type="boolean" Value="true" Condition="'$(UseHardenedRuntime)' == 'true'" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(EnableDefaultMacCatalystItems)' == 'true' and '$(Configuration)' == 'Release'">
