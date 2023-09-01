@@ -498,7 +498,7 @@ namespace CoreGraphics {
 				return;
 
 			IntPtr ptr = Marshal.ReadIntPtr (element_ptr, IntPtr.Size);
-			int ptsize = Marshal.SizeOf (typeof (CGPoint));
+			int ptsize = Marshal.SizeOf<CGPoint> ();
 
 			switch (element.Type) {
 			case CGPathElementType.CloseSubpath:

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+
 using Xamarin.Utils;
+using Xamarin.Tests;
 
 namespace Xamarin.MMP.Tests {
 	public class BindingProjectNoEmbeddingTests {
@@ -45,6 +47,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase (BindingProjectType.Full, false)]
 		public void FrameworksEmbeddedProperly (BindingProjectType type, bool useProjectReference)
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				string frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 
