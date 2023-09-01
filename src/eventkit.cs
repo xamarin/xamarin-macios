@@ -672,9 +672,28 @@ namespace EventKit {
 		EKSource [] DelegateSources { get; }
 
 		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use RequestFullAccessToEvents, RequestWriteOnlyAccessToEvents, or RequestFullAccessToReminders.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use RequestFullAccessToEvents, RequestWriteOnlyAccessToEvents, or RequestFullAccessToReminders.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use RequestFullAccessToEvents, RequestWriteOnlyAccessToEvents, or RequestFullAccessToReminders.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use RequestFullAccessToEvents, RequestWriteOnlyAccessToEvents, or RequestFullAccessToReminders.")]
 		[Export ("requestAccessToEntityType:completion:")]
 		[Async]
 		void RequestAccess (EKEntityType entityType, Action<bool, NSError> completionHandler);
+
+		[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requestFullAccessToEventsWithCompletion:")]
+		[Async]
+		void RequestFullAccessToEvents (EKEventStoreRequestAccessCompletionHandler completion);
+
+		[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requestWriteOnlyAccessToEventsWithCompletion:")]
+		[Async]
+		void RequestWriteOnlyAccessToEvents (EKEventStoreRequestAccessCompletionHandler completion);
+
+		[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("requestFullAccessToRemindersWithCompletion:")]
+		[Async]
+		void RequestFullAccessToReminders (EKEventStoreRequestAccessCompletionHandler completion);
 
 		[MacCatalyst (13, 1)]
 		[Static]
@@ -682,6 +701,7 @@ namespace EventKit {
 		EKAuthorizationStatus GetAuthorizationStatus (EKEntityType entityType);
 	}
 
+	delegate void EKEventStoreRequestAccessCompletionHandler (bool didRequestAccess, NSError error);
 	delegate void EKEventSearchCallback (EKEvent theEvent, ref bool stop);
 
 	[BaseType (typeof (EKCalendarItem))]
