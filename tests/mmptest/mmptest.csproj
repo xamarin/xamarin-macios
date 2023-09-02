@@ -42,7 +42,7 @@
       <HintPath Condition="$(TESTS_USE_SYSTEM) != ''">\Library\Frameworks\Xamarin.Mac.framework\Versions\Current\lib\mmp\mmp.exe</HintPath>
     </Reference>
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.758" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
