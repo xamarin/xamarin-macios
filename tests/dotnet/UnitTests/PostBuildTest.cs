@@ -32,7 +32,7 @@ namespace Xamarin.Tests {
 			var findString = "Output Property: ArchiveDir";
 			var archiveDirRecord = records.Where (v => v?.Args?.Message?.Contains (findString) == true).ToList ();
 			Assert.That (archiveDirRecord.Count, Is.GreaterThan (0), "ArchiveDir");
-			var archiveDir = archiveDirRecord [0].Args.Message.Substring (findString.Length + 1).Trim ();
+			var archiveDir = archiveDirRecord [0].Args.Message?.Substring (findString.Length + 1)?.Trim ();
 			Assert.That (archiveDir, Does.Exist, "Archive directory existence");
 			AssertDSymDirectory (appPath);
 		}
