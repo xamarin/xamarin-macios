@@ -980,6 +980,7 @@ public struct FooF { public NSObject Obj; }
 		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
 		public void MT4162_dotnet (Profile profile, string name, MTouchLinker linker)
 		{
+			Configuration.AssertDotNetAvailable ();
 			var code = @"
 	[SupportedOSPlatform (""ios77.0"")]
 	[SupportedOSPlatform (""tvos77.0"")]
