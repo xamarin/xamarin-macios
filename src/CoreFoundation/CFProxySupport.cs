@@ -678,7 +678,7 @@ namespace CoreFoundation {
 			// CFNetworkExecuteProxyAutoConfigurationScript or CFNetworkExecuteProxyAutoConfigurationURL call
 			// that triggered this callback.
 			// Well, that is NOT TRUE, the client passed is the client.Info pointer not the client.
-			var pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyCallbackData))!;
+			var pacCbData = Marshal.PtrToStructure<PACProxyCallbackData> (client)!;
 			// make sure is not released, will be released by the parsing method.
 			if (proxyList != IntPtr.Zero) {
 				CFObject.CFRetain (proxyList);
@@ -690,7 +690,7 @@ namespace CoreFoundation {
 			}
 			// stop the CFRunLoop
 			var runLoop = new CFRunLoop (pacCbData.CFRunLoopPtr, false);
-			Marshal.StructureToPtr (pacCbData, client, false);
+			Marshal.StructureToPtr<PACProxyCallbackData> (pacCbData, client, false);
 			runLoop.Stop ();
 		}
 
@@ -708,9 +708,9 @@ namespace CoreFoundation {
 				// build a struct that will have all the needed info for the callback
 				var pacCbData = new PACProxyCallbackData ();
 				pacCbData.CFRunLoopPtr = runLoop.Handle;
-				var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf (pacCbData));
+				var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf<PACProxyCallbackData> ());
 				try {
-					Marshal.StructureToPtr (pacCbData, pacDataPtr, false);
+					Marshal.StructureToPtr<PACProxyCallbackData> (pacCbData, pacDataPtr, false);
 
 					var clientContext = new CFStreamClientContext ();
 					clientContext.Info = pacDataPtr;
@@ -745,7 +745,7 @@ namespace CoreFoundation {
 					if (cancellationToken.IsCancellationRequested)
 						throw new OperationCanceledException ("Operation was cancelled.");
 
-					pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData))!;
+					pacCbData = Marshal.PtrToStructure<PACProxyCallbackData> (pacDataPtr)!;
 					// get data from the struct
 					proxies = pacCbData.ProxyList;
 					outError = pacCbData.Error;
@@ -772,9 +772,9 @@ namespace CoreFoundation {
 			// build a struct that will have all the needed info for the callback
 			var pacCbData = new PACProxyCallbackData ();
 			pacCbData.CFRunLoopPtr = runLoop.Handle;
-			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf (pacCbData));
+			var pacDataPtr = Marshal.AllocHGlobal (Marshal.SizeOf<PACProxyCallbackData> ());
 			try {
-				Marshal.StructureToPtr (pacCbData, pacDataPtr, false);
+				Marshal.StructureToPtr<PACProxyCallbackData> (pacCbData, pacDataPtr, false);
 
 				var clientContext = new CFStreamClientContext ();
 				clientContext.Info = pacDataPtr;
@@ -790,7 +790,7 @@ namespace CoreFoundation {
 					runLoop.RunInMode (mode, double.MaxValue, false);
 					runLoop.RemoveSource (loopSource, mode);
 				}
-				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData))!;
+				pacCbData = Marshal.PtrToStructure<PACProxyCallbackData> (pacDataPtr)!;
 				// get data from the struct
 				outError = pacCbData.Error;
 #if NET

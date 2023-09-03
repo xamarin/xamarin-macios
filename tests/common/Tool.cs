@@ -29,6 +29,36 @@ namespace Xamarin.Tests {
 		}
 	}
 
+	static class Extensions {
+		public static IEnumerable<ToolMessage> FilterUnrelatedWarnings (this IEnumerable<ToolMessage> messages)
+		{
+			return messages.Where (msg => {
+				if (!msg.IsWarning)
+					return true;
+
+				switch (msg.Number) {
+				case 4189:
+					switch (msg.Message) {
+					case "The class 'PassKit.PKDisbursementAuthorizationController' will not be registered it has been removed from the iOS SDK.":
+					case "The class 'PassKit.PKDisbursementAuthorizationControllerDelegate' will not be registered it has been removed from the iOS SDK.":
+						return false;
+					}
+					break;
+				case 4178:
+					switch (msg.Message) {
+					case "The class 'NewsstandKit.NKAssetDownload' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+					case "The class 'NewsstandKit.NKLibrary' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+					case "The class 'NewsstandKit.NKIssue' will not be registered because the NewsstandKit framework has been removed from the iOS SDK.":
+						return false;
+					}
+					break;
+				}
+
+				return true;
+			});
+		}
+	}
+
 	abstract class Tool {
 		StringBuilder output = new StringBuilder ();
 
@@ -265,7 +295,9 @@ namespace Xamarin.Tests {
 
 		public static int GetWarningCount (IEnumerable<ToolMessage> messages)
 		{
-			return messages.Count ((v) => v.IsWarning);
+			return messages
+				.FilterUnrelatedWarnings ()
+				.Count ((v) => v.IsWarning);
 		}
 
 		public bool HasError (string prefix, int number, string message)
@@ -414,7 +446,9 @@ namespace Xamarin.Tests {
 
 		public void AssertNoWarnings ()
 		{
-			var warnings = messages.Where ((v) => v.IsWarning);
+			var warnings = messages
+				.FilterUnrelatedWarnings ()
+				.Where ((v) => v.IsWarning);
 			if (!warnings.Any ())
 				return;
 
