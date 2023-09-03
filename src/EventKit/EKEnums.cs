@@ -190,6 +190,7 @@ namespace EventKit {
 		Restricted,
 		Denied,
 		Authorized,
+		WriteOnly,
 	}
 
 	[Native]
