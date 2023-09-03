@@ -1036,7 +1036,7 @@ namespace CoreMotion {
 		void StartAccelerometerUpdates ();
 
 		[Export ("startAccelerometerUpdatesWithHandler:")]
-		void StartAccelerometerUpdates (Action<NSArray<CMAccelerometerData>, NSError> handler);
+		void StartAccelerometerUpdates (Action<CMAccelerometerData [], NSError> handler);
 
 		[Export ("stopAccelerometerUpdates")]
 		void StopAccelerometerUpdates ();
@@ -1058,7 +1058,7 @@ namespace CoreMotion {
 		void StartDeviceMotionUpdates ();
 
 		[Export ("startDeviceMotionUpdatesWithHandler:")]
-		void StartDeviceMotionUpdates (Action<NSArray<CMDeviceMotion>, NSError> handler);
+		void StartDeviceMotionUpdates (Action<CMDeviceMotion [], NSError> handler);
 
 		[Export ("stopDeviceMotionUpdates")]
 		void StopDeviceMotionUpdates ();
