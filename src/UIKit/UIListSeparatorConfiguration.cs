@@ -22,7 +22,7 @@ namespace UIKit {
 				if (automaticInsets is null) {
 					var lib = Libraries.UIKit.Handle;
 					var ret = Dlfcn.dlsym (lib, "UIListSeparatorAutomaticInsets");
-					automaticInsets = (NSDirectionalEdgeInsets) Marshal.PtrToStructure (ret, typeof (NSDirectionalEdgeInsets));
+					automaticInsets = Marshal.PtrToStructure<NSDirectionalEdgeInsets> (ret)!;
 				}
 
 				return automaticInsets.Value;

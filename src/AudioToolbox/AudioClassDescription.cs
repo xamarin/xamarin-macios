@@ -74,7 +74,7 @@ namespace AudioToolbox {
 					fixed (AudioClassDescription* item = &descriptions[0]) {
 						uint successfulCodecs;
 						int size = sizeof (uint);
-						var ptr_size = Marshal.SizeOf (typeof (AudioClassDescription)) * descriptions.Length;
+						var ptr_size = Marshal.SizeOf<AudioClassDescription> () * descriptions.Length;
 						var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.HardwareCodecCapabilities, ptr_size, item, ref size, out successfulCodecs);
 						if (res != 0)
 							return null;

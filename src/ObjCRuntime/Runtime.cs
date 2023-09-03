@@ -279,7 +279,7 @@ namespace ObjCRuntime {
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
-			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
+			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
 #if MONOMAC
