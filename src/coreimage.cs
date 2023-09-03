@@ -1512,11 +1512,9 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIFilterGenerator : CIFilterConstructor, NSSecureCoding, NSCopying {
-		[NoiOS, NoMacCatalyst]
 		[Static, Export ("filterGenerator")]
 		CIFilterGenerator Create ();
 
-		[NoiOS, NoMacCatalyst]
 		[Static]
 		[Export ("filterGeneratorWithContentsOfURL:")]
 		[return: NullAllowed]
