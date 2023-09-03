@@ -112,8 +112,8 @@ namespace CoreTelephony {
 
 		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
-		[Deprecated (PlatformName.iOS, 16, 0)] 
-		[Deprecated (PlatformName.MacCatalyst, 16, 0)] 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NullAllowed]
 		[Export ("serviceSubscriberCellularProviders", ArgumentSemantic.Retain)]
 		NSDictionary<NSString, CTCarrier> ServiceSubscriberCellularProviders { get; }
@@ -126,8 +126,8 @@ namespace CoreTelephony {
 
 		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
-		[Deprecated (PlatformName.iOS, 16, 0)] 
-		[Deprecated (PlatformName.MacCatalyst, 16, 0)] 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NullAllowed]
 		[Export ("serviceSubscriberCellularProvidersDidUpdateNotifier", ArgumentSemantic.Copy)]
 		Action<NSString> ServiceSubscriberCellularProvidersDidUpdateNotifier { get; set; }
