@@ -370,12 +370,6 @@ namespace Xamarin.Linker {
 				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "set_flags", "Foundation.NSObject::set_flags", predicate: null, out var _);
 			}
 		}
-
-		public MethodReference Foundation_NSObject_RegisterToggleRef {
-			get {
-				return GetMethodReference (PlatformAssembly, Foundation_NSObject, "RegisterToggleRef", "Foundation.NSObject::RegisterToggleRef", predicate: null, out var _);
-			}
-		}
 #else
 		public FieldReference Foundation_NSObject_FlagsField {
 			get {
@@ -1225,6 +1219,19 @@ namespace Xamarin.Linker {
 						&& v.HasGenericParameters);
 			}
 		}
+
+#if NET
+		public bool TryGet_NSObject_RegisterToggleRef(out MethodDefinition? md) {
+			// the NSObject.RegisterToggleRef method isn't present on all platforms (for example on Mac)
+			try {
+				_ = GetMethodReference (PlatformAssembly, Foundation_NSObject, "RegisterToggleRef", "Foundation.NSObject::RegisterToggleRef", predicate: null, out md);
+				return true;
+			} catch (InvalidOperationException) {
+				md = null;
+				return false;
+			}
+		}
+#endif
 
 		public void SetCurrentAssembly (AssemblyDefinition value)
 		{
