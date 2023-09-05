@@ -1391,11 +1391,11 @@ namespace Xamarin.Linker {
 			//    ILC: Method '[Microsoft.iOS]Foundation.NSObject.RegisterToggleRef(NSObject,native int,bool)' will always throw because:
 			//         Invalid IL or CLR metadata in 'Void Foundation.NSObject.RegisterToggleRef(Foundation.NSObject, IntPtr, Boolean)'
 			//
-			if (abr.TryGet_NSObject_RegisterToggleRef(out var registerToggleRef)) {
+			if (abr.TryGet_NSObject_RegisterToggleRef (out var registerToggleRef)) {
 				registerToggleRef!.IsPublic = false;
 				registerToggleRef!.IsInternalCall = false;
 
-				registerToggleRef!.CreateBody(out var il);
+				registerToggleRef!.CreateBody (out var il);
 				il.Emit (OpCodes.Ret);
 			}
 		}
