@@ -1,4 +1,0 @@
-!deprecated-attribute-missing! CTTelephonyNetworkInfo::serviceSubscriberCellularProviders missing a [Deprecated] attribute
-!deprecated-attribute-missing! CTTelephonyNetworkInfo::serviceSubscriberCellularProvidersDidUpdateNotifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! CTTelephonyNetworkInfo::setServiceSubscriberCellularProvidersDidUpdateNotifier: missing a [Deprecated] attribute
-!missing-enum-value! CTCellularPlanProvisioningAddPlanResult native value CTCellularPlanProvisioningAddPlanResultCancel = 3 not bound
