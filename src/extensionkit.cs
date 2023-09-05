@@ -45,7 +45,7 @@ namespace ExtensionKit {
 		void WillDeactivate (EXHostViewController viewController, [NullAllowed] NSError error);
 
 #if !XAMCORE_5_0
-		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Not longer required as of iOS 14.0")]
+		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Not longer required as of macOS 14.0")]
 		[Export ("shouldAcceptXPCConnection:")]
 		bool ShouldAcceptXpcConnection (NSXpcConnection connection);
 #endif
