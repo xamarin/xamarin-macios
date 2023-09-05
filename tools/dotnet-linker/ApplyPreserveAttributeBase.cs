@@ -24,6 +24,7 @@ namespace Mono.Tuner {
 	public abstract class ApplyPreserveAttributeBase : ConfigurationAwareSubStep {
 
 		AppBundleRewriter? abr;
+		Queue<Action> deferredActions = new ();
 
 		protected override string Name { get => "Apply Preserve Attribute"; }
 
@@ -32,16 +33,7 @@ namespace Mono.Tuner {
 		// set 'removeAttribute' to true if you want the preserved attribute to be removed from the final assembly
 		protected abstract bool IsPreservedAttribute (ICustomAttributeProvider provider, CustomAttribute attribute, out bool removeAttribute);
 
-		public override SubStepTargets Targets {
-			get {
-				return SubStepTargets.Type
-					| SubStepTargets.Field
-					| SubStepTargets.Method
-					| SubStepTargets.Property
-					| SubStepTargets.Event
-					| SubStepTargets.Assembly;
-			}
-		}
+		public override SubStepTargets Targets => SubStepTargets.Assembly;
 
 		public override void Initialize (LinkContext context)
 		{
@@ -49,6 +41,51 @@ namespace Mono.Tuner {
 
 			if (Configuration.Application.XamarinRuntime == XamarinRuntime.NativeAOT)
 				abr = Configuration.AppBundleRewriter;
+		}
+
+		protected override void Process (AssemblyDefinition assembly)
+		{
+			BrowseTypes (assembly.MainModule.Types);
+			ProcessDeferredActions ();
+		}
+
+		void BrowseTypes (IEnumerable<TypeDefinition> types)
+		{
+			foreach (TypeDefinition type in types) {
+				ProcessType (type);
+
+				if (type.HasFields) {
+					foreach (FieldDefinition field in type.Fields)
+						ProcessField (field);
+				}
+
+				if (type.HasMethods) {
+					foreach (MethodDefinition method in type.Methods)
+						ProcessMethod (method);
+				}
+
+				if (type.HasProperties) {
+					foreach (PropertyDefinition property in type.Properties)
+						ProcessProperty (property);
+				}
+
+				if (type.HasEvents) {
+					foreach (EventDefinition @event in type.Events)
+						ProcessEvent (@event);
+				}
+
+				if (type.HasNestedTypes) {
+					BrowseTypes (type.NestedTypes);
+				}
+			}
+		}
+
+		void ProcessDeferredActions ()
+		{
+			while (deferredActions.Count > 0) {
+				var action = deferredActions.Dequeue ();
+				action.Invoke ();
+			}
 		}
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
@@ -142,7 +179,12 @@ namespace Mono.Tuner {
 		void PreserveUnconditional (IMetadataTokenProvider provider)
 		{
 			Annotations.Mark (provider);
-			AddDynamicDependencyAttribute (provider);
+
+			// We want to add a dynamic dependency attribute to preserve methods and fields
+			// but not to preserve types while we're marking the chain of declaring types.
+			if (provider is not TypeDefinition) {
+				AddDynamicDependencyAttribute (provider);
+			}
 
 			var member = provider as IMemberDefinition;
 			if (member is null || member.DeclaringType is null)
@@ -205,13 +247,7 @@ namespace Mono.Tuner {
 		MethodDefinition GetOrCreateModuleConstructor (ModuleDefinition @module)
 		{
 			var moduleType = @module.GetModuleType ();
-			var moduleConstructor = moduleType.GetTypeConstructor ();
-			if (moduleConstructor is null) {
-				moduleConstructor = moduleType.AddMethod (".cctor", MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.Static, abr!.System_Void);
-				moduleConstructor.CreateBody (out var il);
-				il.Emit (OpCodes.Ret);
-			}
-			return moduleConstructor;
+			return GetOrCreateStaticConstructor (moduleType);
 		}
 
 		void AddDynamicDependencyAttribute (TypeDefinition type, bool allMembers)
@@ -223,7 +259,10 @@ namespace Mono.Tuner {
 			abr.SetCurrentAssembly (type.Module.Assembly);
 
 			var moduleConstructor = GetOrCreateModuleConstructor (type.GetModule ());
-			var attrib = abr.CreateDynamicDependencyAttribute (allMembers ? DynamicallyAccessedMemberTypes.All : DynamicallyAccessedMemberTypes.None, type);
+			var members = allMembers
+				? DynamicallyAccessedMemberTypes.All
+				: DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors;
+			var attrib = abr.CreateDynamicDependencyAttribute (members, type);
 			moduleConstructor.CustomAttributes.Add (attrib);
 
 			abr.ClearCurrentAssembly ();
@@ -234,8 +273,7 @@ namespace Mono.Tuner {
 			if (abr is null)
 				return;
 
-			// I haven't found a way to express a conditional Preserve attribute using DynamicDependencyAttribute :/
-			ErrorHelper.Warning (2112, Errors.MX2112 /* Unable to apply the conditional [Preserve] attribute on the member {0} */, forMethod.FullName);
+			deferredActions.Enqueue (() => AddDynamicDependencyAttributeToStaticConstructor (onType, forMethod));
 		}
 
 		void AddDynamicDependencyAttribute (IMetadataTokenProvider provider)
@@ -257,6 +295,35 @@ namespace Mono.Tuner {
 			moduleConstructor.CustomAttributes.Add (attrib);
 
 			abr.ClearCurrentAssembly ();
+		}
+
+		void AddDynamicDependencyAttributeToStaticConstructor (TypeDefinition onType, MethodDefinition forMethod)
+		{
+			if (abr is null)
+				return;
+
+			abr.ClearCurrentAssembly ();
+			abr.SetCurrentAssembly (onType.Module.Assembly);
+
+			var cctor = GetOrCreateStaticConstructor (onType);
+			var signature = DocumentationComments.GetSignature (forMethod);
+			var attrib = abr.CreateDynamicDependencyAttribute (signature, onType);
+			cctor.CustomAttributes.Add (attrib);
+			Annotations.AddPreservedMethod (onType, cctor);
+
+			abr.ClearCurrentAssembly ();
+		}
+
+		MethodDefinition GetOrCreateStaticConstructor (TypeDefinition type)
+		{
+			var staticCtor = type.GetTypeConstructor ();
+			if (staticCtor is null) {
+				staticCtor = type.AddMethod (".cctor", MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.Static, abr!.System_Void);
+				staticCtor.CreateBody (out var il);
+				il.Emit (OpCodes.Ret);
+			}
+
+			return staticCtor;
 		}
 	}
 }

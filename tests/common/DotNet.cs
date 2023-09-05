@@ -28,14 +28,14 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			return Execute ("pack", project, properties, true);
+			return Execute ("pack", project, properties, true, msbuildParallelism: msbuildParallelism);
 		}
 
-		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string>? properties = null, bool? msbuildParallelism = null)
 		{
-			var rv = Execute ("pack", project, properties, false);
+			var rv = Execute ("pack", project, properties, false, msbuildParallelism: msbuildParallelism);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
 		}
@@ -113,7 +113,7 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -131,24 +131,37 @@ namespace Xamarin.Tests {
 				if (properties is not null) {
 					Dictionary<string, string>? generatedProps = null;
 					foreach (var prop in properties) {
-						if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
-							// https://github.com/dotnet/msbuild/issues/471
-							// Escaping the semi colon like the issue suggests at one point doesn't work, because in
-							// that case MSBuild won't split the string into its parts for tasks that take a string[].
-							// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
-							// a single element, where that single element is the whole RuntimeIdentifiers string.
-							// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
-							// args.Add ($"/p:{prop.Key}=\"{prop.Value}\"");
-
-							// Setting a property with a semicolon from the command line doesn't work anymore.
-							// Ref: https://github.com/dotnet/sdk/issues/27059#issuecomment-1219319513
-							// So write these properties in a file instead. This is a behavioural difference, because
-							// they'll be project-specific instead of global, but I don't see a better workaround.
+						// Some properties must be specified on the command line to work properly ("TargetFrameworks").
+						// Some tests require certain properties to be specified in a file.
+						// So we support both, where prefixing a property name with "cmdline:" forces it to be passed on the command line,
+						// while prefixing it with "file:" forces it to be specified in a file.
+						// No prefix means the default (which can change): currently on the command line.
+						var cmdline = true; // default
+						var key = prop.Key;
+						var value = prop.Value;
+						if (key.StartsWith ("file:", StringComparison.Ordinal)) {
+							key = key.Substring ("file:".Length);
+							cmdline = false;
+						} else if (key.StartsWith ("cmdline:", StringComparison.Ordinal)) {
+							key = key.Substring ("cmdline:".Length);
+							cmdline = true;
+						}
+						if (cmdline) {
+							if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
+								// https://github.com/dotnet/msbuild/issues/471
+								// Escaping the semi colon like the issue suggests at one point doesn't work, because in
+								// that case MSBuild won't split the string into its parts for tasks that take a string[].
+								// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
+								// a single element, where that single element is the whole RuntimeIdentifiers string.
+								// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
+								args.Add ($"/p:{key}=\"{value}\"");
+							} else {
+								args.Add ($"/p:{key}={value}");
+							}
+						} else {
 							if (generatedProps is null)
 								generatedProps = new Dictionary<string, string> ();
-							generatedProps.Add (prop.Key, prop.Value);
-						} else {
-							args.Add ($"/p:{prop.Key}={prop.Value}");
+							generatedProps.Add (key, value);
 						}
 					}
 					if (generatedProps is not null) {
@@ -177,6 +190,14 @@ namespace Xamarin.Tests {
 				args.Add ("/v:diag");
 				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
 				// End workaround
+
+				if (msbuildParallelism.HasValue) {
+					if (msbuildParallelism.Value) {
+						args.Add ("-maxcpucount"); // this means "use as many processes as there are cpus"
+					} else {
+						args.Add ("-maxcpucount:1");
+					}
+				}
 
 				var env = new Dictionary<string, string?> ();
 				env ["MSBuildSDKsPath"] = null;

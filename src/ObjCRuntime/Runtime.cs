@@ -279,7 +279,7 @@ namespace ObjCRuntime {
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
-			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
+			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
 #if MONOMAC
@@ -621,6 +621,12 @@ namespace ObjCRuntime {
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		internal static void RegisterAssemblies ()
 		{
+#if NET
+			if (IsNativeAOT) {
+				return;
+			}
+#endif
+
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
