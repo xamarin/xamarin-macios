@@ -21,30 +21,30 @@ DOTNET_macOS_GLOBAL_USINGS=AppKit CoreGraphics Foundation
 
 define DefineTargets
 $(1)_NUGET_TARGETS = \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/data/UnixFilePermissions.xml \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/AutoImport.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/Sdk/Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.ImplicitNamespaceImports.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.DefaultItems.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.Versions.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.Publish.targets \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/data/UnixFilePermissions.xml \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Sdk/AutoImport.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.ImplicitNamespaceImports.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.DefaultItems.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.Versions.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.MultiTarget.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.Publish.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.targets \
 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefineTargets,$(platform))))
 
 define DefineWindowsTargets
 $(1)_WINDOWS_NUGET_TARGETS = \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/Sdk/Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Microsoft.$(1).Windows.Sdk.props \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Windows.Sdk/targets/Microsoft.$(1).Windows.Sdk.targets \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME)/Sdk/Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME)/targets/Microsoft.$(1).Windows.Sdk.props \
+	$(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME)/targets/Microsoft.$(1).Windows.Sdk.targets \
 
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
@@ -52,28 +52,29 @@ $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTarget
 ifdef INCLUDE_HOTRESTART
 
 iOS_WINDOWS_NUGET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
+	$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
 
 endif
 
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
 	$(DOTNET_PKG_DIR) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/data) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/data) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/Sdk) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/targets) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.NET.Sdk.$(platform)) \
 	$(DOTNET_MANIFESTS_PATH) \
 	$(DOTNET_PACKS_PATH) \
 	$(DOTNET_TEMPLATE_PACKS_PATH) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Sdk) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Ref) \
-	$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_PACKS_PATH)/Microsoft.$(platform).Runtime.$(rid))) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/$($(platform)_NUGET_SDK_NAME)) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_PACKS_PATH)/$($(platform)_NUGET_REF_NAME)) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(DOTNET_PACKS_PATH)/$($(rid)_NUGET_RUNTIME_NAME))) \
 	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$(platform).Templates) \
 	$(TMP_PKG_DIR) \
-	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk) \
-	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets) \
+	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_WINDOWS_SDK_NAME)/Sdk) \
+	$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_WINDOWS_SDK_NAME)/targets) \
+	$(foreach platform,$(DOTNET_PLATFORMS),Workloads/Microsoft.NET.Sdk.$(platform)) \
 
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -88,15 +89,31 @@ endif
 
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
-$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/data $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
-		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Windows.Sdk/targets)
+
+$(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | \
+		$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/data $(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/Sdk $(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
+		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_WINDOWS_SDK_NAME)/Sdk $(DOTNET_DESTDIR)/$($(platform)_NUGET_WINDOWS_SDK_NAME)/targets)
 	$(Q) $(CP) $< $@
 
 define CopyTargets
-$$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets/%: targets/% | $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/targets
+$$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/%: targets/% | $$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets
 	$$(Q) $$(CP) $$< $$@
+
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/%: Microsoft.$(1).Sdk/% | \
+		$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/data \
+		$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Sdk \
+		$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets
+	$(Q) $(CP) $$< $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CopyTargets,$(platform))))
+
+define CopyTargetsWindows
+$(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME)/%: Microsoft.$(1).Windows.Sdk/% | \
+		$(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME)/Sdk \
+		$(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME)/targets
+	$(Q) $(CP) $$< $$@
+endef
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyTargetsWindows,$(platform))))
 
 define VersionsTemplate
 targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
@@ -110,6 +127,7 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
 		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
 		-e 's/@RUNTIME_PACK_RUNTIME_IDENTIFIERS@/$(4)/g' \
+		-e 's/@NUGET_OS_VERSION@/$$($(2)_NUGET_OS_VERSION)/g' \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -135,6 +153,7 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$1/g" \
 		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
+		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		$$< > $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefaultItems,$(platform))))
@@ -170,13 +189,12 @@ define WorkloadTargets
 Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp
 	$$(Q) mkdir -p Workloads/Microsoft.NET.Sdk.$(1)/
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(4)" "$$(DOTNET_$(5)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
+	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(4)" "$$(DOTNET_$(5)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(5)_NUGET_OS_VERSION)"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Workloads/WorkloadManifest.$(1).template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
-	$$(Q_GEN) sed \
-		-e "s/@NUGET_VERSION_NO_METADATA@/$3/g" \
-		$$< > $$@.tmp
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+	$$(Q) rm -f $$@.tmp
+	$$(Q_GEN) ./generate-workloadmanifest-targets.csharp "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)_$$($(5)_NUGET_OS_VERSION)" "$(DEFAULT_TARGET_PLATFORM_VERSION_$(5))"
 	$$(Q) mv $$@.tmp $$@
 
 Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE
@@ -197,10 +215,12 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 	$(Q_GEN) ./generate-vs-workload.csharp \
 		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
-		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
-		--shorten Microsoft.MacCatalyst.Runtime.maccatalyst=Microsoft.MacCatalyst.Runtime \
-		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
-		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten Microsoft.NET.Sdk.$(platform).Manifest=Microsoft.$(platform).Manifest) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(platform)_NUGET_REF_NAME)=Microsoft.$(platform).Ref) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(platform)_NUGET_SDK_NAME)=Microsoft.$(platform).Sdk) \
+		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--shorten $($(platform)_NUGET_WINDOWS_SDK_NAME)=Microsoft.$(platform).Win.Sdk) \
+		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--shorten Microsoft.$(platform).Windows.Sdk.Aliased.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)=Microsoft.$(platform).Aliased.Sdk) \
+		$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),--shorten $($(rid)_NUGET_RUNTIME_NAME)=Microsoft.Runtime.$(rid))) \
 		--tfm $(DOTNET_TFM) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
@@ -216,8 +236,11 @@ TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets) \
 
-nupkgs/$(IOS_WINDOWS_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA)
-nupkgs/$(IOS_WINDOWS_NUGET).%.nupkg: CURRENT_VERSION_FULL=$(IOS_WINDOWS_NUGET_VERSION_FULL)
+ifdef NupkgWindowsDefinition
+nupkgs/$($(1)_NUGET_WINDOWS_SDK_NAME).%.nupkg: CURRENT_VERSION_NO_METADATA=$($(2)_WINDOWS_NUGET_VERSION_NO_METADATA)
+nupkgs/$($(1)_NUGET_WINDOWS_SDK_NAME).%.nupkg: CURRENT_VERSION_FULL=$($(2)_WINDOWS_NUGET_VERSION_FULL)
+endif
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call NupkgWindowsDefinition,$(platform),$(shell echo $(platform) | tr '[:lower:]' '[:upper:]'))))
 
 define NupkgDefinition
 nupkgs/$($(1)_NUGET).%.nupkg: CURRENT_VERSION_NO_METADATA=$($(1)_NUGET_VERSION_NO_METADATA)
@@ -227,6 +250,13 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call NupkgDefinition,$(platform)
 
 # Create the nuget in a temporary directory (nupkgs/)
 define CreateNuGetTemplate
+nupkgs/$(1)$(4).$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
+	@# Delete any versions of the nuget we're building
+	$$(Q) rm -f nupkgs/$(1).*.nupkg
+	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj -p:VersionBand=$(5) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog" /p:PackageOSTargetVersion=$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION)
+endef
+
+define CreateNuGetTemplateNoTargetFramework
 nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
@@ -234,37 +264,37 @@ nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/
 endef
 
 define CreateWindowsNuGetTemplate
-nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
+nupkgs/$$($(6)_NUGET_WINDOWS_SDK_NAME).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
-	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
+	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog" /p:PackageOSTargetVersion=$(DOTNET_TFM)_$($(6)_NUGET_OS_VERSION)
 endef
 
 # Create the NuGet packaging targets. It's amazing what make allows you to do...
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS),,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS),,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.NET.Sdk.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),,.Manifest-$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT),$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS),,$(DOTNET_VERSION_BAND),$(platform))))
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS),,$(DOTNET_VERSION_BAND),$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND),$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplateNoTargetFramework,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND),$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplateNoTargetFramework,Microsoft.NET.Sdk.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),,.Manifest-$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT),$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT),$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND),$(platform)))))
 
 # Copy the nuget from the temporary directory into the final directory
 $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
-SDK_PACKS_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
+SDK_PACKS_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_NUGET_WINDOWS_SDK_NAME).$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
 SDK_PACKS_WINDOWS += $(SDK_PACKS_IOS_WINDOWS)
 endif
 
 pack-ios-windows: $(SDK_PACKS_IOS_WINDOWS)
 
 define PacksDefinitions
-RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_NO_METADATA).nupkg)
+RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$$($$(rid)_NUGET_RUNTIME_NAME).$($(1)_NUGET_VERSION_NO_METADATA).nupkg)
 RUNTIME_PACKS += $$(RUNTIME_PACKS_$(1))
-REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Ref.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
+REF_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET_REF_NAME).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 REF_PACKS += $$(REF_PACKS_$(1))
-SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Sdk.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
+SDK_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET_SDK_NAME).$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 SDK_PACKS += $$(SDK_PACKS_$(1))
 TEMPLATE_PACKS_$(1) = $(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Templates.$($(1)_NUGET_VERSION_NO_METADATA).nupkg
 TEMPLATE_PACKS += $$(TEMPLATE_PACKS_$(1))
@@ -286,11 +316,11 @@ define InstallWorkload
 $(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3: .stamp-workload-replace-$1-$(DOTNET_VERSION) | $(DOTNET_MANIFESTS_PATH)
 	$$(Q_LN) ln -Fhs $$(abspath Workloads/Microsoft.NET.Sdk.$1) $$(abspath $$@)
 
-$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk
-	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Sdk) $$(abspath $$@)
+$(DOTNET_PACKS_PATH)/$($(1)_NUGET_SDK_NAME)/$2: | $(DOTNET_PACKS_PATH)/$($(1)_NUGET_SDK_NAME)
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)) $$(abspath $$@)
 
-$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Ref
-	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Ref) $$(abspath $$@)
+$(DOTNET_PACKS_PATH)/$($(1)_NUGET_REF_NAME)/$2: | $(DOTNET_PACKS_PATH)/$($(1)_NUGET_REF_NAME)
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME)) $$(abspath $$@)
 
 $(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg: $(TEMPLATE_PACKS_$(shell echo $(1) | tr a-z A-Z)) | $(DOTNET_TEMPLATE_PACKS_PATH)
 	$$(Q) $$(CP) $$< $$@
@@ -298,17 +328,17 @@ $(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg: $(TEMPLATE_PACK
 WORKLOAD_TARGETS += \
 	$(DOTNET_TEMPLATE_PACKS_PATH)/Microsoft.$1.Templates.$(2).nupkg \
 	$(DOTNET_MANIFESTS_PATH)/microsoft.net.sdk.$3 \
-	$(DOTNET_PACKS_PATH)/Microsoft.$1.Sdk/$2 \
-	$(DOTNET_PACKS_PATH)/Microsoft.$1.Ref/$2
+	$(DOTNET_PACKS_PATH)/$($(1)_NUGET_SDK_NAME)/$2 \
+	$(DOTNET_PACKS_PATH)/$($(1)_NUGET_REF_NAME)/$2
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallWorkload,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z))))
 
 define InstallRuntimeWorkload
-$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3: | $(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2
-	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/Microsoft.$1.Runtime.$2) $$(abspath $$@)
+$(DOTNET_PACKS_PATH)/$$($(2)_NUGET_RUNTIME_NAME)/$3: | $(DOTNET_PACKS_PATH)/$$($(2)_NUGET_RUNTIME_NAME)
+	$$(Q_LN) ln -Fhs $$(abspath $(DOTNET_DESTDIR)/$$($(2)_NUGET_RUNTIME_NAME)) $$(abspath $$@)
 
 WORKLOAD_TARGETS += \
-	$(DOTNET_PACKS_PATH)/Microsoft.$1.Runtime.$2/$3
+	$(DOTNET_PACKS_PATH)/$$($(2)_NUGET_RUNTIME_NAME)/$3
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call InstallRuntimeWorkload,$(platform),$(rid),$($(platform)_NUGET_VERSION_NO_METADATA)))))
 
@@ -326,21 +356,21 @@ $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TA
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
-$(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(SDK_PACKS_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/$($(1)_NUGET_SDK_NAME).$2.pkg: $(SDK_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Sdk.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
-	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk/ tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Sdk.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.sdk.pkg $$@.tmp
+	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/ tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Sdk.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.sdk.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION).pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The ref package
-$(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(REF_PACKS_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/$($(1)_NUGET_REF_NAME).$2.pkg: $(REF_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Ref.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
-	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref/ tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
-	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Ref.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.ref.pkg $$@.tmp
+	$$(Q) $$(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME)/ tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
+	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.$1.Ref.$2 --component-plist PackageInfo.plist --install-location / --identifier com.microsoft.net.$3.ref.$(DOTNET_TFM)_$$($(1)_NUGET_OS_VERSION).pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The templates package
@@ -353,15 +383,15 @@ $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg: $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG
 	$$(Q) mv $$@.tmp $$@
 
 # The final bundle package for distribution
-$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg: $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg $(TMP_PKG_DIR)/$($(1)_NUGET_SDK_NAME).$2.pkg $(TMP_PKG_DIR)/$($(1)_NUGET_REF_NAME).$2.pkg $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg
 	$$(Q) rm -f $$@
 	$$(Q_GEN) productbuild \
 		--quiet \
 		--identifier com.microsoft.net.$3.pkg \
 		--version '$2' \
 		--package $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg \
-		--package $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg \
-		--package $(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg \
+		--package $(TMP_PKG_DIR)/$($(1)_NUGET_SDK_NAME).$2.pkg \
+		--package $(TMP_PKG_DIR)/$($(1)_NUGET_REF_NAME).$2.pkg \
 		--package $(TMP_PKG_DIR)/Microsoft.$1.Templates.$2.pkg \
 		$$@.tmp
 	$$(Q) mv $$@.tmp $$@
@@ -375,12 +405,12 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKs_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
 	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
@@ -403,14 +433,14 @@ define CreateWindowsBundle
 $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKS_$(4)) $(SDK_PACKS_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_WINDOWS_SDK_NAME)
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
 	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk/$2
-	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_SDK_NAME)/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_WINDOWS_SDK_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_WINDOWS_SDK_NAME)/$2
+	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME) $$@.tmpdir/dotnet/packs/$($(1)_NUGET_REF_NAME)/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
 	$$(Q_GEN) cd $$@.tmpdir && zip -9rq $$(abspath $$@.tmp) .
 	$$(Q) mv $$@.tmp $$@
@@ -517,7 +547,7 @@ clean-local::
 	$(Q) $(DOTNET) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
-$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
+$(DOTNET_DESTDIR)/$(IOS_NUGET_WINDOWS_SDK_NAME)/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
 
