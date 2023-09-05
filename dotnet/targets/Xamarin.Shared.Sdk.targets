@@ -1728,7 +1728,7 @@
 			/>
 
 			<!-- There's no need to ship any *.o files shipped by NativeAOT -->
-			<!-- We need to remove these from ResolvedFileToPublish before calling ComputeBundleLocation, because otherwise we get warnings about no knowing what to do with these files -->
+			<!-- We need to remove these from ResolvedFileToPublish before calling ComputeBundleLocation, because otherwise we get warnings about not knowing what to do with these files -->
 			<ResolvedFileToPublish
 				Remove="@(ResolvedFileToPublish)"
 				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
