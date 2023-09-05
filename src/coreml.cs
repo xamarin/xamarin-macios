@@ -61,6 +61,7 @@ namespace CoreML {
 		ModelDecryptionKeyFetch = 8,
 		ModelDecryption = 9,
 		ModelCollection = 10,
+		PredictionCancelled = 11,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -474,6 +475,22 @@ namespace CoreML {
 		[Static]
 		[Export ("compileModelAtURL:completionHandler:")]
 		void CompileModel (NSUrl modelUrl, Action<NSUrl, NSError> handler);
+
+		[Async]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("predictionFromFeatures:completionHandler:")]
+		void GetPrediction (IMLFeatureProvider input, Action<IMLFeatureProvider, NSError> completionHandler);
+
+		[Async]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("predictionFromFeatures:options:completionHandler:")]
+		void GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, Action<IMLFeatureProvider, NSError> completionHandler);
+
+		// from the category MLComputeDevice (MLModel)
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("availableComputeDevices", ArgumentSemantic.Copy)]
+		IMLComputeDeviceProtocol [] AvailableComputeDevices { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1217,4 +1234,34 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLModelAsset Create (NSData specificationData, [NullAllowed] out NSError error);
 	}
+
+	interface IMLComputeDeviceProtocol { }
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Protocol]
+	interface MLComputeDeviceProtocol {
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLNeuralEngineComputeDevice : MLComputeDeviceProtocol {
+		[Export ("totalCoreCount")]
+		nint TotalCoreCount { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject), Name = "MLCPUComputeDevice")]
+	[DisableDefaultCtor]
+	interface MLCpuComputeDevice : MLComputeDeviceProtocol {
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject), Name = "MLGPUComputeDevice")]
+	[DisableDefaultCtor]
+	interface MLGpuComputeDevice : MLComputeDeviceProtocol {
+		[Export ("metalDevice", ArgumentSemantic.Strong)]
+		IMTLDevice MetalDevice { get; }
+	}
+
 }

@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! NFCISO15693ReaderSession missing a [Deprecated] attribute
-!deprecated-attribute-missing! NFCISO15693ReaderSession::initWithDelegate:queue: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NFCISO15693ReaderSession::restartPolling missing a [Deprecated] attribute
