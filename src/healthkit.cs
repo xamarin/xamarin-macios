@@ -63,9 +63,9 @@ namespace HealthKit {
 		Outdoor
 	}
 
-	[iOS(17, 0)]
+	[iOS (17, 0)]
 	[Mac (13, 0)]
-	[MacCatalyst(17,0)]
+	[MacCatalyst (17, 0)]
 	[Native]
 	public enum HKWorkoutSessionState : long {
 		NotStarted = 1,
@@ -720,10 +720,10 @@ namespace HealthKit {
 
 		// HKWorkout category
 
-		[Deprecated(PlatformName.iOS, 17, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
-		[Deprecated(PlatformName.WatchOS, 10, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
-		[Deprecated(PlatformName.MacCatalyst, 16, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
-		[Deprecated(PlatformName.MacOSX, 14, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
 		[Export ("addSamples:toWorkout:completion:")]
 		void AddSamples (HKSample [] samples, HKWorkout workout, HKStoreSampleAddedCallback callback);
 
@@ -793,8 +793,8 @@ namespace HealthKit {
 		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, HKHealthStoreCompletionHandler completion);
 
 		[NullAllowed]
-		[iOS(17, 0), Mac (14,0), Watch (10,0), NoTV, MacCatalyst (17,0)]
-		[Export("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
+		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[Export ("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
 		Action<HKWorkoutSession> WorkoutSessionMirroringStartHandler { get; set; }
 	}
 
@@ -1246,28 +1246,28 @@ namespace HealthKit {
 		[Field ("HKMetadataKeyUserMotionContext")]
 		NSString UserMotionContext { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKMetadataKeyActivityType")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyActivityType")]
 		NSString KeyActivityType { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKMetadataKeyPhysicalEffortEstimationType")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyPhysicalEffortEstimationType")]
 		NSString PhysicalEffortEstimationType { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKMetadataKeyAppleFitnessPlusSession")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyAppleFitnessPlusSession")]
 		NSString AppleFitnessPlusSession { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKMetadataKeyCyclingFunctionalThresholdPowerTestType")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyCyclingFunctionalThresholdPowerTestType")]
 		NSString CyclingFunctionalThresholdPowerTestType { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKMetadataKeyMaximumLightIntensity")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyMaximumLightIntensity")]
 		NSString MaximumLightIntensity { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKMetadataKeyWaterSalinity")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyWaterSalinity")]
 		NSString WaterSalinity { get; }
 	}
 
@@ -2427,32 +2427,32 @@ namespace HealthKit {
 		[Field ("HKQuantityTypeIdentifierWaterTemperature")]
 		WaterTemperature,
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKQuantityTypeIdentifierCyclingCadence")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingCadence")]
 		CyclingCadence,
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKQuantityTypeIdentifierCyclingFunctionalThresholdPower")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingFunctionalThresholdPower")]
 		CyclingFunctionalThresholdPower,
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKQuantityTypeIdentifierCyclingPower")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingPower")]
 		CyclingPower,
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKQuantityTypeIdentifierCyclingSpeed")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingSpeed")]
 		CyclingSpeed,
 
-		[Watch(9, 0), MacCatalyst(16, 0), Mac(13, 0), iOS(16, 0)]
-		[Field("HKQuantityTypeIdentifierEnvironmentalSoundReduction")]
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKQuantityTypeIdentifierEnvironmentalSoundReduction")]
 		EnvironmentalSoundReduction,
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKQuantityTypeIdentifierPhysicalEffort")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierPhysicalEffort")]
 		PhysicalEffort,
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("HKQuantityTypeIdentifierTimeInDaylight")]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierTimeInDaylight")]
 		TimeInDaylight,
 	}
 
@@ -3164,15 +3164,15 @@ namespace HealthKit {
 		[Export ("degreeAngleUnit")]
 		HKUnit DegreeAngle { get; }
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0), NoTV]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
 		[Static]
-		[Export("luxUnitWithMetricPrefix:")]
-		HKUnit LuxUnitWithMetricPrefix(HKMetricPrefix prefix);
+		[Export ("luxUnitWithMetricPrefix:")]
+		HKUnit LuxUnitWithMetricPrefix (HKMetricPrefix prefix);
 
-		[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0), NoTV]
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
 		[Static]
-		[Export("luxUnit")]
-		HKUnit LuxUnit();
+		[Export ("luxUnit")]
+		HKUnit LuxUnit ();
 	}
 
 	[Mac (13, 0)]
@@ -3645,27 +3645,27 @@ namespace HealthKit {
 		[Export ("currentActivity", ArgumentSemantic.Copy)]
 		HKWorkoutActivity CurrentActivity { get; }
 
-		[Watch(10, 0), NoTV, Mac(14, 0)]
-		[Export("type")]
+		[Watch (10, 0), NoTV, Mac (14, 0)]
+		[Export ("type")]
 		HKWorkoutSessionType Type { get; }
 
-		[Watch(10, 0), NoTV, NoMacCatalyst, NoMac, iOS(17, 0)]
-		[Export("sendDataToRemoteWorkoutSession:completion:")]
+		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, iOS (17, 0)]
+		[Export ("sendDataToRemoteWorkoutSession:completion:")]
 		[Async]
-		void SendDataToRemoteWorkoutSession(NSData data, Action<bool, NSError> completion);
+		void SendDataToRemoteWorkoutSession (NSData data, Action<bool, NSError> completion);
 
-		[Watch(10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
-		[Export("startMirroringToCompanionDeviceWithCompletion:")]
-		void StartMirroringToCompanionDeviceWithCompletion(Action<bool, NSError> completion);
+		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
+		[Export ("startMirroringToCompanionDeviceWithCompletion:")]
+		void StartMirroringToCompanionDeviceWithCompletion (Action<bool, NSError> completion);
 
-		[Watch(10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
-		[Export("stopMirroringToCompanionDeviceWithCompletion:")]
-		void StopMirroringToCompanionDeviceWithCompletion(Action<bool, NSError> completion);
+		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
+		[Export ("stopMirroringToCompanionDeviceWithCompletion:")]
+		void StopMirroringToCompanionDeviceWithCompletion (Action<bool, NSError> completion);
 	}
 
 	[Mac (13, 0)]
-	[iOS(17, 0)]
-	[MacCatalyst(17, 0)]
+	[iOS (17, 0)]
+	[MacCatalyst (17, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface HKWorkoutSessionDelegate {
@@ -3689,14 +3689,14 @@ namespace HealthKit {
 		[Export ("workoutSession:didEndActivityWithConfiguration:date:")]
 		void DidEndActivity (HKWorkoutSession workoutSession, HKWorkoutConfiguration workoutConfiguration, NSDate date);
 
-		[Watch(10, 0), iOS(17, 0), MacCatalyst(17, 0), NoTV, Mac(14, 0)]
-		[Export("workoutSession:didReceiveDataFromRemoteWorkoutSession:")]
-		void DidReceiveDataFromRemoteWorkoutSession(HKWorkoutSession workoutSession, NSData[] data);
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, Mac (14, 0)]
+		[Export ("workoutSession:didReceiveDataFromRemoteWorkoutSession:")]
+		void DidReceiveDataFromRemoteWorkoutSession (HKWorkoutSession workoutSession, NSData [] data);
 
-		[Watch(10, 0), iOS(17, 0), MacCatalyst(17, 0), NoTV, Mac(14, 0)]
-		[Export("workoutSession:didDisconnectFromRemoteDeviceWithError:")]
-		void DidDisconnectFromRemoteDeviceWithError(HKWorkoutSession workoutSession, [NullAllowed] NSError error);
-}
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, Mac (14, 0)]
+		[Export ("workoutSession:didDisconnectFromRemoteDeviceWithError:")]
+		void DidDisconnectFromRemoteDeviceWithError (HKWorkoutSession workoutSession, [NullAllowed] NSError error);
+	}
 
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]

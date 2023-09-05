@@ -724,36 +724,32 @@ namespace HealthKit {
 		Contacts,
 	}
 
-	[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
+	[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 	[Native]
-	public enum HKCyclingFunctionalThresholdPowerTestType : long
-	{
+	public enum HKCyclingFunctionalThresholdPowerTestType : long {
 		MaxExercise60Minute = 1,
 		MaxExercise20Minute,
 		RampTest,
 		PredictionExercise
 	}
 
-	[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
+	[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 	[Native]
-	public enum HKPhysicalEffortEstimationType : long
-	{
+	public enum HKPhysicalEffortEstimationType : long {
 		ActivityLookup = 1,
 		DeviceSensed
 	}
 
-	[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
+	[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 	[Native]
-	public enum HKWaterSalinity : long
-	{
+	public enum HKWaterSalinity : long {
 		FreshWater = 1,
 		SaltWater
 	}
 
-	[Watch(10, 0), iOS(17, 0)]
+	[Watch (10, 0), iOS (17, 0)]
 	[Native]
-	public enum HKWorkoutSessionType : long
-	{
+	public enum HKWorkoutSessionType : long {
 		Primary = 0,
 		Mirrored
 	}
