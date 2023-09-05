@@ -1206,7 +1206,7 @@
         <value>A la tarea "{0}" no se le asignó un valor para el parámetro "{1}", que es necesario para compilar en esta plataforma.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>El ensamblado illink no existe: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>

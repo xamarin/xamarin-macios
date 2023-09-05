@@ -13,7 +13,11 @@ namespace ObjCRuntime {
 			get { return handle; }
 		}
 
+#if XAMCORE_5_0
+		public readonly static NativeHandle Zero = default (NativeHandle);
+#else
 		public static NativeHandle Zero = default (NativeHandle);
+#endif
 
 		public NativeHandle (IntPtr handle)
 		{

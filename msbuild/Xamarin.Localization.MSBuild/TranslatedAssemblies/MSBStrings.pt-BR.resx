@@ -1206,7 +1206,7 @@
         <value>A tarefa "{0}" não recebeu um valor para o parâmetro "{1}", que é necessário ao compilar nesta plataforma.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>O assembly illink não existe: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>

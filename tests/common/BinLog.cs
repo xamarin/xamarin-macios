@@ -91,12 +91,12 @@ namespace Xamarin.Tests {
 			var buildEvents = ReadBuildEvents (path).ToArray ();
 			var targetsStarted = buildEvents.OfType<TargetStartedEventArgs> ();
 			foreach (var target in targetsStarted) {
-				var id = target.BuildEventContext.TargetId;
+				var id = target.BuildEventContext?.TargetId;
 				if (id == -1)
 					throw new InvalidOperationException ($"Target '{target.TargetName}' started but no id?");
 				var eventsForTarget = buildEvents.Where (v => v.BuildEventContext?.TargetId == id);
 				var skippedEvent = eventsForTarget.OfType<TargetSkippedEventArgs> ().FirstOrDefault ();
-				var skipReason = (skippedEvent as TargetSkippedEventArgs2)?.SkipReason ?? TargetSkipReason.None;
+				var skipReason = (skippedEvent as TargetSkippedEventArgs)?.SkipReason ?? TargetSkipReason.None;
 				yield return new TargetExecutionResult (target.TargetName, skippedEvent is not null, skipReason);
 			}
 		}
@@ -176,7 +176,12 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<BuildLogEvent> GetBuildLogWarnings (string path)
 		{
-			return GetBuildMessages (path).Where (v => v.Type == BuildLogEventType.Warning);
+			return GetBuildMessages (path)
+				// Filter to warnings
+				.Where (v => v.Type == BuildLogEventType.Warning)
+				// We're often referencing earlier .NET projects (Touch.Unit/MonoTouch.Dialog), so ignore any out-of-support warnings.
+				.Where (v => v.Message?.Contains ("is out of support and will not receive security updates in the future") != true)
+				;
 		}
 
 		public static IEnumerable<BuildLogEvent> GetBuildLogErrors (string path)
@@ -261,7 +266,7 @@ namespace Xamarin.Tests {
 					if (dict is not null && dict.TryGetValue (property, out var pvalue))
 						value = pvalue;
 				} else if (args is BuildMessageEventArgs bmea) {
-					if (bmea.Message.StartsWith ("Output Property: ", StringComparison.Ordinal)) {
+					if (bmea.Message?.StartsWith ("Output Property: ", StringComparison.Ordinal) == true) {
 						var kvp = bmea.Message.Substring ("Output Property: ".Length);
 						var eq = kvp.IndexOf ('=');
 						if (eq > 0) {

@@ -23,6 +23,10 @@ namespace Xamarin.MacDev.Tasks {
 
 			var illinkTaskPath = ComputeValueUsingTarget (target, targetName);
 
+			// Don't do anything else if something already went wrong (in particular don't check if illink.dll exists).
+			if (Log.HasLoggedErrors)
+				return false;
+
 			if (!string.IsNullOrEmpty (illinkTaskPath))
 				ILLinkPath = Path.Combine (Path.GetDirectoryName (illinkTaskPath), "illink.dll");
 

@@ -222,7 +222,23 @@ namespace Introspection {
 						path = null;
 						break;
 					case "libSystem.Native":
-						path += ".dylib";
+						var staticallyLinked = false;
+#if __MACCATALYST__
+						// always statically linked
+						staticallyLinked = true;
+#elif __IOS__ || __TVOS__
+						// statically linked on device
+						staticallyLinked = Runtime.Arch == Arch.DEVICE;
+#elif __MACOS__
+						// never statically linked (by default)
+#else
+#error Unknown platform
+#endif
+						if (staticallyLinked) {
+							path = null;
+						} else {
+							path += ".dylib";
+						}
 						break;
 #endif
 					case "libc":

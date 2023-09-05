@@ -1537,10 +1537,10 @@
 		<value>注册机构找到了非最佳类型 `{0}`: 该类型不具有采用两个(ObjCRuntime.NativeHandle, bool)参数的构造函数。但是，找到了一个采用两个(System.IntPtr, bool)参数的构造函数(并将改用此函数)。强烈建议将(System.IntPtr, bool)构造函数的签名更改为(ObjCRuntime.NativeHandle, bool)。</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>在类型“{0}”上找不到 [UserDelegateType] 属性。</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>无法计算类型“{0}”的块签名: {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 "{0}" 编译器。请安装 Xcode“命令行工具”组件
@@ -1805,12 +1805,12 @@
 		<value>签名必须是非空字符串。</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>无法解析程序集 {0} 中的模块。</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>使用托管静态注册机构时，无法解析方法的元数据令牌(令牌: 0x{0})。</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>在程序集“{0}”中找不到类型“ObjCRuntime.__Registrar__”。</value>
 	</data>
 </root>

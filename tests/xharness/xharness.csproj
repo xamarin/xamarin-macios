@@ -64,8 +64,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <Import Project="../../eng/Versions.props" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared" Version="1.0.0-prerelease.22578.1" />
+    <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared" Version="$(MicrosoftDotNetXHarnessiOSSharedPackageVersion)" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>

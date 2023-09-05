@@ -1537,10 +1537,10 @@
 		<value>Kaydedici uygun olmayan '{0}' türü buldu: Türün iki (ObjCRuntime.NativeHandle, bool) bağımsız değişkeni alan bir oluşturucusu yok. Ancak, iki (System.IntPtr, bool) bağımsız değişkeni alan bir oluşturucu bulundu (ve bunun yerine kullanılacak). (System.IntPtr, bool) oluşturucusunun imzasını (ObjCRuntime.NativeHandle, bool) olarak değiştirmeniz kesinlikle önerilir.</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>'{0}' türünde [UserDelegateType] özniteliği bulunamadı.</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>'{0}' türü için blok imzası işleme alınamıyor: {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' derleyicisi eksik. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
@@ -1781,7 +1781,7 @@
 		<value>Derleme {0}, uygulama oluşturulduktan sonra değiştirildi ve bunun sonucunda, oluşturulan statik kaydedici kodu geçersiz kılındı. Yüklenen derlemenin MVID'si {1} iken oluşturulan statik kaydedici kodunun karşılık geldiği derlemenin MVID'si {2}.</value>
 	</data>
   <data name="MX8045" xml:space="preserve">
-		<value>Yayın türündeki bir örnek üzerinde yayın çağrılamaz{0}</value>
+		<value>{0} yayın türündeki bir örnek üzerinde sürüm çağrılamaz</value>
 	</data>
   <data name="MX8046" xml:space="preserve">
 		<value>'{1}' türünde '{0}' metodu bulunamadı</value>
@@ -1805,12 +1805,12 @@
 		<value>İmza, boş olmayan bir dize olmalıdır.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>{0} derlemesinde modül çözümlenemedi.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>Yönetilen statik kaydedici kullanılırken metotlara ait meta veri belirteçleri çözümlenemedi (belirteç: 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>'{0}' derlemesinde 'ObjCRuntime.__Registrar__' türü bulunamadı..</value>
 	</data>
 </root>

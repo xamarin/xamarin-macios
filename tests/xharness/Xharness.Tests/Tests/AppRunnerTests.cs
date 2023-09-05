@@ -229,7 +229,7 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 1, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
-			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices [0]);
+			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false, CancellationToken.None)).ReturnsAsync (mockDevices [0]);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -274,7 +274,7 @@ namespace Xharness.Tests {
 			var processResult = new ProcessExecutionResult () { ExitCode = 3, TimedOut = false };
 			processManager.SetReturnsDefault (Task.FromResult (processResult));
 
-			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices [1]);
+			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false, CancellationToken.None)).ReturnsAsync (mockDevices [1]);
 
 			// Act
 			var appRunner = new AppRunner (processManager.Object,
@@ -323,13 +323,13 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false, true))
+				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false, true, CancellationToken.None))
 				.Returns (Task.FromResult (true));
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
 
 			simulators
-				.Setup (x => x.FindSimulators (TestTarget.Simulator_tvOS, mainLog.Object, true, false))
+				.Setup (x => x.FindSimulators (TestTarget.Simulator_tvOS, mainLog.Object, true, false, CancellationToken.None))
 				.ReturnsAsync ((null, null));
 
 			var listenerLogFile = new Mock<IFileBackedLog> ();
@@ -406,7 +406,7 @@ namespace Xharness.Tests {
 
 			// Mock finding simulators
 			simulators
-				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false, true))
+				.Setup (x => x.LoadDevices (It.IsAny<ILog> (), false, false, false, true, CancellationToken.None))
 				.Returns (Task.FromResult (true));
 
 			string simulatorLogPath = Path.Combine (Path.GetTempPath (), "simulator-logs");
@@ -418,7 +418,7 @@ namespace Xharness.Tests {
 			simulator.SetupGet (x => x.SystemLog).Returns (Path.Combine (simulatorLogPath, "system.log"));
 
 			simulators
-				.Setup (x => x.FindSimulators (TestTarget.Simulator_iOS64, mainLog.Object, true, false))
+				.Setup (x => x.FindSimulators (TestTarget.Simulator_iOS64, mainLog.Object, true, false, CancellationToken.None))
 				.ReturnsAsync ((simulator.Object, null));
 
 			var testResultFilePath = Path.GetTempFileName ();
@@ -519,9 +519,9 @@ namespace Xharness.Tests {
 		[Test]
 		public void RunOnDeviceWithNoAvailableSimulatorTest ()
 		{
-			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync ((IHardwareDevice) null);
+			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false, CancellationToken.None)).ReturnsAsync ((IHardwareDevice) null);
 			simulators
-				.Setup (s => s.FindSimulators (It.IsAny<TestTarget> (), It.IsAny<ILog> (), true, false))
+				.Setup (s => s.FindSimulators (It.IsAny<TestTarget> (), It.IsAny<ILog> (), true, false, CancellationToken.None))
 				.ReturnsAsync ((null, null));
 
 			// Crash reporter
@@ -574,7 +574,7 @@ namespace Xharness.Tests {
 		{
 			var harness = GetMockedHarness ();
 
-			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices [1]);
+			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false, CancellationToken.None)).ReturnsAsync (mockDevices [1]);
 
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();
@@ -683,7 +683,7 @@ namespace Xharness.Tests {
 		{
 			var harness = GetMockedHarness ();
 
-			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false)).ReturnsAsync (mockDevices [1]);
+			devices.Setup (d => d.FindDevice (It.IsAny<RunMode> (), It.IsAny<ILog> (), false, false, CancellationToken.None)).ReturnsAsync (mockDevices [1]);
 
 			// Crash reporter
 			var crashReporterFactory = new Mock<ICrashSnapshotReporterFactory> ();

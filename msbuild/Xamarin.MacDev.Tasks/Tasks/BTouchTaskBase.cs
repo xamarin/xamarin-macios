@@ -8,6 +8,7 @@ using System.Text;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.Build.Tasks;
 
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
@@ -75,26 +76,10 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string ResponseFilePath { get; set; }
 
-		string DotNetPath {
-			get {
-				// Return the dotnet executable we're executing with.
-				var dotnet_path = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-				if (!string.IsNullOrEmpty (dotnet_path))
-					return dotnet_path;
-
-				if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
-					// This might happen when building from inside VS (design-time builds, etc.)
-					return "dotnet.exe";
-				}
-
-				throw new InvalidOperationException ($"DOTNET_HOST_PATH is not set");
-			}
-		}
-
 		protected override string ToolName {
 			get {
 				if (IsDotNet)
-					return Path.GetFileName (DotNetPath);
+					return Path.GetFileName (this.GetDotNetPath ());
 
 				return Path.GetFileNameWithoutExtension (ToolExe);
 			}
@@ -108,7 +93,7 @@ namespace Xamarin.MacDev.Tasks {
 			// system dotnet, which might not exist or not have the version we
 			// need.
 			if (IsDotNet)
-				return DotNetPath;
+				return this.GetDotNetPath ();
 
 			return Path.Combine (ToolPath, ToolExe);
 		}

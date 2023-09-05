@@ -441,7 +441,10 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["RuntimeIdentifier"] = "maccatalyst-x64";
+			// Be specific that we want "RuntimeIdentifier" specified on the command line, and "RuntimeIdentifiers" in a file
+			properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+			properties.Remove ("RuntimeIdentifiers");
+			properties ["cmdline:RuntimeIdentifier"] = "maccatalyst-x64";
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
@@ -917,6 +920,11 @@ namespace Xamarin.Tests {
 		[OneTimeSetUp]
 		public void KillEverything ()
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				Console.WriteLine ($"Skipped killing everything, because there's nothing to kill on Windows.");
+				return;
+			}
+
 			ExecutionHelper.Execute ("launchctl", new [] { "remove", "com.apple.CoreSimulator.CoreSimulatorService" }, timeout: TimeSpan.FromSeconds (10));
 
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService", "ibtoold" };
@@ -1209,14 +1217,6 @@ namespace Xamarin.Tests {
 			var signedDylibs = new List<string> {
 				Path.Combine (sharedSupportDir, "app2.app", dylibDir, "lib2.dylib"),
 			};
-			if (platform == ApplePlatform.MacCatalyst) {
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.IO.Compression.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Net.Security.Native.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Security.Cryptography.Native.Apple.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libmonosgen-2.0.dylib"));
-				signedDylibs.Add (Path.Combine (dylibDir, "libxamarin-dotnet-debug.dylib"));
-			}
 
 			foreach (var dylib in signedDylibs) {
 				var path = Path.Combine (appPath, dylib);
@@ -1270,6 +1270,32 @@ namespace Xamarin.Tests {
 			} else {
 				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
 				Assert.True (jitNotAllowed, "Jit Not Allowed");
+			}
+		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Debug")]
+		public void CheckForMacCatalystDefaultEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			DotNet.AssertBuild (project_path, properties);
+
+			var executable = GetNativeExecutable (platform, appPath);
+			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
+			Assert.IsTrue (foundEntitlements, "Issues found with Entitlements.");
+			if (configuration == "Release") {
+				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.app-sandbox")?.Value, "com.apple.security.app-sandbox enlistment was not found in Release configuration.");
+				Assert.IsNull (entitlements.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was found in Release configuration.");
+			} else if (configuration == "Debug") {
+				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was not found in Debug configuration.");
 			}
 		}
 

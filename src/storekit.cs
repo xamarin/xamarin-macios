@@ -952,9 +952,6 @@ namespace StoreKit {
 	[Mac (11, 0), Watch (7, 0), iOS (9, 3), TV (9, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
-#if XAMCORE_3_0 // Avoid breaking change in iOS
-	[DisableDefaultCtor]
-#endif
 	interface SKCloudServiceController {
 		[Static]
 		[Export ("authorizationStatus")]

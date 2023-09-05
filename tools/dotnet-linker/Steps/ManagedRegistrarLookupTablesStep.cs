@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -123,6 +124,8 @@ namespace Xamarin.Linker {
 			GenerateLookupType (info, registrarType, types);
 			GenerateLookupTypeId (info, registrarType, types);
 			GenerateRegisterWrapperTypes (registrarType);
+			GenerateConstructNSObject (registrarType);
+			GenerateConstructINativeObject (registrarType);
 
 			// Make sure the linker doesn't sweep away anything we just generated.
 			Annotations.Mark (registrarType);
@@ -200,6 +203,13 @@ namespace Xamarin.Linker {
 
 			return types;
 		}
+
+		IEnumerable<TypeDefinition> GetRelevantTypes (Func<TypeDefinition, bool> isRelevant)
+			=> StaticRegistrar.GetAllTypes (abr.CurrentAssembly)
+				.Cast<TypeDefinition> ()
+				.Where (type => !IsTrimmed (type))
+				.Where (type => type.Module.Assembly == abr.CurrentAssembly)
+				.Where (isRelevant);
 
 		bool IsTrimmed (MemberReference type)
 		{
@@ -279,6 +289,245 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Initobj, abr.System_RuntimeTypeHandle);
 			il.Emit (OpCodes.Ldloc, temporary);
 			il.Emit (OpCodes.Ret);
+		}
+
+		void GenerateConstructNSObject (TypeDefinition registrarType)
+		{
+			var createInstanceMethod = registrarType.AddMethod ("ConstructNSObject", MethodAttributes.Private | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
+			var typeHandleParameter = createInstanceMethod.AddParameter ("typeHandle", abr.System_RuntimeTypeHandle);
+			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
+			createInstanceMethod.Overrides.Add (abr.IManagedRegistrar_ConstructNSObject);
+			var body = createInstanceMethod.CreateBody (out var il);
+
+			// We generate something like this:
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeA).TypeHandle))
+			//     return new TypeA (nativeHandle);
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeB).TypeHandle))
+			//     return new TypeB (nativeHandle);
+			// return null;
+
+			var types = GetRelevantTypes (type => type.IsNSObject (DerivedLinkContext) && !type.IsAbstract && !type.IsInterface);
+
+			foreach (var type in types) {
+				var ctorRef = FindNSObjectConstructor (type);
+				if (ctorRef is null) {
+					Driver.Log (9, $"Cannot include {type.FullName} in ConstructNSObject because it doesn't have a suitable constructor");
+					continue;
+				}
+
+				var ctor = abr.CurrentAssembly.MainModule.ImportReference (ctorRef);
+				if (IsTrimmed (ctor))
+					Annotations.Mark (ctor.Resolve ());
+
+				// We can only add a type to the table if it's not an open type.
+				if (!ManagedRegistrarStep.IsOpenType (type)) {
+					EnsureVisible (createInstanceMethod, ctor);
+
+					il.Emit (OpCodes.Ldarga_S, typeHandleParameter);
+					il.Emit (OpCodes.Ldtoken, type);
+					il.Emit (OpCodes.Call, abr.RuntimeTypeHandle_Equals);
+					var falseTarget = il.Create (OpCodes.Nop);
+					il.Emit (OpCodes.Brfalse_S, falseTarget);
+
+					il.Emit (OpCodes.Ldarg, nativeHandleParameter);
+					if (ctor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+						il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
+					il.Emit (OpCodes.Newobj, ctor);
+					il.Emit (OpCodes.Ret);
+
+					il.Append (falseTarget);
+				}
+
+				// In addition to the big lookup method, implement the static factory method on the type:
+				ImplementConstructNSObjectFactoryMethod (type, ctor);
+			}
+
+			// return default (NSObject);
+			il.Emit (OpCodes.Ldnull);
+			il.Emit (OpCodes.Ret);
+		}
+
+		void GenerateConstructINativeObject (TypeDefinition registrarType)
+		{
+			var createInstanceMethod = registrarType.AddMethod ("ConstructINativeObject", MethodAttributes.Private | MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
+			var typeHandleParameter = createInstanceMethod.AddParameter ("typeHandle", abr.System_RuntimeTypeHandle);
+			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
+			var ownsParameter = createInstanceMethod.AddParameter ("owns", abr.System_Boolean);
+			createInstanceMethod.Overrides.Add (abr.IManagedRegistrar_ConstructINativeObject);
+			var body = createInstanceMethod.CreateBody (out var il);
+
+			// We generate something like this:
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeA).TypeHandle))
+			//     return new TypeA (nativeHandle, owns);
+			// if (RuntimeTypeHandle.Equals (typeHandle, typeof (TypeB).TypeHandle))
+			//     return new TypeB (nativeHandle, owns);
+			// return null;
+
+			var types = GetRelevantTypes (type => type.IsNativeObject () && !type.IsAbstract && !type.IsInterface);
+
+			foreach (var type in types) {
+				var ctorRef = FindINativeObjectConstructor (type);
+
+				if (ctorRef is not null) {
+					var ctor = abr.CurrentAssembly.MainModule.ImportReference (ctorRef);
+
+					// we need to preserve the constructor because it might not be used anywhere else
+					if (IsTrimmed (ctor))
+						Annotations.Mark (ctor.Resolve ());
+
+					if (!ManagedRegistrarStep.IsOpenType (type)) {
+						EnsureVisible (createInstanceMethod, ctor);
+
+						il.Emit (OpCodes.Ldarga_S, typeHandleParameter);
+						il.Emit (OpCodes.Ldtoken, type);
+						il.Emit (OpCodes.Call, abr.RuntimeTypeHandle_Equals);
+						var falseTarget = il.Create (OpCodes.Nop);
+						il.Emit (OpCodes.Brfalse_S, falseTarget);
+
+						il.Emit (OpCodes.Ldarg, nativeHandleParameter);
+						if (ctor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+							il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
+						il.Emit (OpCodes.Ldarg, ownsParameter);
+						il.Emit (OpCodes.Newobj, ctor);
+						il.Emit (OpCodes.Ret);
+
+						il.Append (falseTarget);
+					}
+				}
+
+				// In addition to the big lookup method, implement the static factory method on the type:
+				ImplementConstructINativeObjectFactoryMethod (type, ctorRef);
+			}
+
+			// return default (NSObject)
+			il.Emit (OpCodes.Ldnull);
+			il.Emit (OpCodes.Ret);
+		}
+
+		void ImplementConstructNSObjectFactoryMethod (TypeDefinition type, MethodReference ctor)
+		{
+			// skip creating the factory for NSObject itself
+			if (type.Is ("Foundation", "NSObject"))
+				return;
+
+			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructNSObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.Foundation_NSObject);
+			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
+			abr.Foundation_INSObjectFactory.Resolve ().IsPublic = true;
+			createInstanceMethod.Overrides.Add (abr.INSObjectFactory__Xamarin_ConstructNSObject);
+			var body = createInstanceMethod.CreateBody (out var il);
+
+			if (type.HasGenericParameters) {
+				ctor = type.CreateMethodReferenceOnGenericType (ctor, type.GenericParameters.ToArray ());
+			}
+
+			// return new TypeA (nativeHandle); // for NativeHandle ctor
+			// return new TypeA ((IntPtr) nativeHandle); // for IntPtr ctor
+			il.Emit (OpCodes.Ldarg, nativeHandleParameter);
+			if (ctor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+				il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
+			il.Emit (OpCodes.Newobj, ctor);
+			il.Emit (OpCodes.Ret);
+
+			Annotations.Mark (createInstanceMethod);
+		}
+
+		void ImplementConstructINativeObjectFactoryMethod (TypeDefinition type, MethodReference? ctor)
+		{
+			// skip creating the factory for NSObject itself
+			if (type.Is ("Foundation", "NSObject"))
+				return;
+
+			// If the type is a subclass of NSObject, we prefer the NSObject "IntPtr" constructor
+			var nsobjectConstructor = type.IsNSObject (DerivedLinkContext) ? FindNSObjectConstructor (type) : null;
+			if (nsobjectConstructor is null && ctor is null)
+				return;
+
+			var createInstanceMethod = type.AddMethod ("_Xamarin_ConstructINativeObject", MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.NewSlot | MethodAttributes.HideBySig, abr.ObjCRuntime_INativeObject);
+			var nativeHandleParameter = createInstanceMethod.AddParameter ("nativeHandle", abr.ObjCRuntime_NativeHandle);
+			var ownsParameter = createInstanceMethod.AddParameter ("owns", abr.System_Boolean);
+			abr.INativeObject__Xamarin_ConstructINativeObject.Resolve ().IsPublic = true;
+			createInstanceMethod.Overrides.Add (abr.INativeObject__Xamarin_ConstructINativeObject);
+			var body = createInstanceMethod.CreateBody (out var il);
+
+			if (nsobjectConstructor is not null) {
+				// var instance = new TypeA (nativeHandle);
+				// // alternatively with a cast: new TypeA ((IntPtr) nativeHandle);
+				// if (instance is not null && owns)
+				//     Runtime.TryReleaseINativeObject (instance);
+				// return instance;
+
+				if (type.HasGenericParameters) {
+					nsobjectConstructor = type.CreateMethodReferenceOnGenericType (nsobjectConstructor, type.GenericParameters.ToArray ());
+				}
+
+				il.Emit (OpCodes.Ldarg, nativeHandleParameter);
+				if (nsobjectConstructor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+					il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
+				il.Emit (OpCodes.Newobj, nsobjectConstructor);
+
+				var falseTarget = il.Create (OpCodes.Nop);
+				il.Emit (OpCodes.Dup);
+				il.Emit (OpCodes.Ldnull);
+				il.Emit (OpCodes.Cgt_Un);
+				il.Emit (OpCodes.Ldarg, ownsParameter);
+				il.Emit (OpCodes.And);
+				il.Emit (OpCodes.Brfalse_S, falseTarget);
+
+				il.Emit (OpCodes.Dup);
+				il.Emit (OpCodes.Call, abr.Runtime_TryReleaseINativeObject);
+
+				il.Append (falseTarget);
+
+				il.Emit (OpCodes.Ret);
+			} else if (ctor is not null) {
+				// return new TypeA (nativeHandle, owns); // for NativeHandle ctor
+				// return new TypeA ((IntPtr) nativeHandle, owns); // IntPtr ctor
+
+				if (type.HasGenericParameters) {
+					ctor = type.CreateMethodReferenceOnGenericType (ctor, type.GenericParameters.ToArray ());
+				}
+
+				il.Emit (OpCodes.Ldarg, nativeHandleParameter);
+				if (ctor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+					il.Emit (OpCodes.Call, abr.NativeObject_op_Implicit_IntPtr);
+				il.Emit (OpCodes.Ldarg, ownsParameter);
+				il.Emit (OpCodes.Newobj, ctor);
+				il.Emit (OpCodes.Ret);
+			} else {
+				throw new UnreachableException ();
+			}
+
+			Annotations.Mark (createInstanceMethod);
+		}
+
+		static MethodReference? FindNSObjectConstructor (TypeDefinition type)
+		{
+			return FindConstructorWithOneParameter ("ObjCRuntime", "NativeHandle")
+				?? FindConstructorWithOneParameter ("System", "IntPtr");
+
+			MethodReference? FindConstructorWithOneParameter (string ns, string cls)
+				=> type.Methods.SingleOrDefault (method =>
+					method.IsConstructor
+						&& !method.IsStatic
+						&& method.HasParameters
+						&& method.Parameters.Count == 1
+						&& method.Parameters [0].ParameterType.Is (ns, cls));
+		}
+
+
+		static MethodReference? FindINativeObjectConstructor (TypeDefinition type)
+		{
+			return FindConstructorWithTwoParameters ("ObjCRuntime", "NativeHandle", "System", "Boolean")
+				?? FindConstructorWithTwoParameters ("System", "IntPtr", "System", "Boolean");
+
+			MethodReference? FindConstructorWithTwoParameters (string ns1, string cls1, string ns2, string cls2)
+				=> type.Methods.SingleOrDefault (method =>
+					method.IsConstructor
+						&& !method.IsStatic
+						&& method.HasParameters
+						&& method.Parameters.Count == 2
+						&& method.Parameters [0].ParameterType.Is (ns1, cls1)
+						&& method.Parameters [1].ParameterType.Is (ns2, cls2));
 		}
 
 		void GenerateRegisterWrapperTypes (TypeDefinition type)
@@ -473,13 +722,32 @@ namespace Xamarin.Linker {
 			return $"{method?.ReturnType?.FullName ?? "(null)"} {method?.DeclaringType?.FullName ?? "(null)"}::{method?.Name ?? "(null)"} ({string.Join (", ", method?.Parameters?.Select (v => v?.ParameterType?.FullName + " " + v?.Name) ?? Array.Empty<string> ())})";
 		}
 
-		void EnsureVisible (MethodDefinition caller, TypeDefinition type)
+		static void EnsureVisible (MethodDefinition caller, MethodReference methodRef)
 		{
+			var method = methodRef.Resolve ();
+			var type = method.DeclaringType.Resolve ();
 			if (type.IsNested) {
-				type.IsNestedPublic = true;
+				if (!method.IsPublic) {
+					method.IsFamilyOrAssembly = true;
+				}
+
+				EnsureVisible (caller, type);
+			} else if (!method.IsPublic) {
+				method.IsFamilyOrAssembly = true;
+			}
+		}
+
+		static void EnsureVisible (MethodDefinition caller, TypeReference typeRef)
+		{
+			var type = typeRef.Resolve ();
+			if (type.IsNested) {
+				if (!type.IsNestedPublic) {
+					type.IsNestedAssembly = true;
+				}
+
 				EnsureVisible (caller, type.DeclaringType);
-			} else {
-				type.IsPublic = true;
+			} else if (!type.IsPublic) {
+				type.IsNotPublic = true;
 			}
 		}
 

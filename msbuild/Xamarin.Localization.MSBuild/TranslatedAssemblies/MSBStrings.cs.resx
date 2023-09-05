@@ -1206,7 +1206,7 @@
         <value>Úloze “{0}“ nebyla určena hodnota parametru „{1}“, která se při sestavování na této platformě vyžaduje.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <value>Sestavení illink neexistuje: „{0}“</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>

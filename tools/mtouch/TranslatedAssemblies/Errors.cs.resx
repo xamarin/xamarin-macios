@@ -1537,10 +1537,10 @@
 		<value>Registrátor našel neoptimální typ {0}: tento typ postrádá konstruktor, který přijímá dva argumenty (ObjCRuntime.NativeHandle, bool). Našel (a použil se) se však konstruktor, který přijímá dva argumenty (System.IntPtr, bool). Důrazně doporučujeme změnit podpis na konstruktoru (System.IntPtr, bool) na (ObjCRuntime.NativeHandle, bool).</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>Nelze najít atribut [UserDelegateType] u typu „{0}“.</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>Nepovedlo se vypočítat signaturu bloku pro typ „{0}“: {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Chybí kompilátor {0}. Nainstalujte prosím nástroje příkazového řádku Xcode.
@@ -1805,12 +1805,12 @@
 		<value>Argument musí být neprázdný řetězec.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>Modul v sestavení {0} nelze přeložit.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>Nelze přeložit tokeny metadat pro metody při použití spravovaného statického registrátora (token: 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>V sestavení „{0}“ nelze najít typ „ObjCRuntime.__Registrar__“.</value>
 	</data>
 </root>

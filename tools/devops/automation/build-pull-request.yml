@@ -51,11 +51,6 @@ parameters:
   type: boolean
   default: false
   
-- name: enableDotnet
-  displayName: Build Dotnet 
-  type: boolean
-  default: true
-
 - name: enableAPIDiff
   displayName: Enable API diff generation
   type: boolean
@@ -204,7 +199,6 @@ stages:
     runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
     runGovernanceTests: ${{ parameters.runGovernanceTests }}
     runSamples: ${{ parameters.runSamples }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: false
     skipESRP: true

@@ -26,7 +26,7 @@ namespace Xharness.Tests.TestImporter.Tests {
 		[Test]
 		public void GetTypeForAssembliesNullMonoPath ()
 		{
-			var projectDefinition = new ProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object, new List<ITestAssemblyDefinition> (), "");
+			var projectDefinition = new ProjectDefinition ("MyProject", assemblyLocator.Object, factory.Object, new List<ITestAssemblyDefinition> ());
 			Assert.Throws<ArgumentNullException> (() => projectDefinition.GetTypeForAssemblies (null, Platform.iOS));
 		}
 	}

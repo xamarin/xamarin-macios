@@ -170,8 +170,8 @@ namespace Introspection {
 
 			// FIXME: In the future we could cache this to reduce memory requirements
 			var property = m.DeclaringType
-							.GetProperties ()
-							.SingleOrDefault (p => p.GetGetMethod () == m || p.GetSetMethod () == m);
+							.GetProperties (BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+							.SingleOrDefault (p => p.GetGetMethod (true) == m || p.GetSetMethod (true) == m);
 			return property is not null && SkipDueToAttribute (property);
 		}
 

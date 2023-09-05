@@ -1,8 +1,4 @@
 parameters:
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: sbomFilter
   type: string
   default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
@@ -246,8 +242,6 @@ steps:
     ACCESSTOKEN: $(System.AccessToken)
     AZURE_CONTAINER: ${{ parameters.azureContainer }}
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
 
 # Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator

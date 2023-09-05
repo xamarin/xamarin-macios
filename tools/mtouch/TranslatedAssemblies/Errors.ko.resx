@@ -1537,10 +1537,10 @@
 		<value>등록자가 최적 형식이 아닌 형식 `{0}`을(를) 찾았습니다. 형식에는 두 개의 인수(ObjCRuntime.NativeHandle, bool)을 사용하는 생성자가 없습니다. 그러나 두 개의 (System.IntPtr, bool) 인수를 사용하는 생성자를 발견해 대신 사용됩니다.(System.IntPtr, bool) 생성자의 서명을 (ObjCRuntime.NativeHandle, bool)로 변경하는 것이 좋습니다.</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>'{0}' 형식에서 [UserDelegateType] 특성을 찾을 수 없습니다.</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>'{0}' 형식에 대한 블록 서명을 계산할 수 없습니다. {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' 컴파일러가 없습니다. Xcode '명령줄 도구' 구성 요소를 설치하세요.
@@ -1805,12 +1805,12 @@
 		<value>서명은 비어 있지 않은 문자열이어야 합니다.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>어셈블리 {0}에서 모듈을 확인할 수 없습니다.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>관리되는 정적 등록 기관을 사용하는 경우 메서드에 대한 메타데이터 토큰을 확인할 수 없습니다(토큰: 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>어셈블리 '{0}'에서 'ObjCRuntime.__Registrar__' 형식을 찾을 수 없습니다.</value>
 	</data>
 </root>

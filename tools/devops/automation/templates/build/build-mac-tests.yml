@@ -11,10 +11,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: uploadBinlogs
   type: boolean
   default: true
@@ -44,7 +40,6 @@ steps:
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     buildSteps:
 
     # funny enough we need these profiles to build the mac tests

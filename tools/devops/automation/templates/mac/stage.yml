@@ -20,10 +20,6 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: demands
   type: object
   default: []
@@ -57,6 +53,7 @@ stages:
     variables:
       isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
       isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
     steps:
     - template: ../common/configure.yml
@@ -64,7 +61,6 @@ stages:
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
         uploadArtifacts: false
-        enableDotnet: ${{ parameters.enableDotnet }}
 
   - job: run_tests
     dependsOn:

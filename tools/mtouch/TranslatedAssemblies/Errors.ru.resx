@@ -1537,10 +1537,10 @@
 		<value>Регистратор обнаружил неоптимальный тип "{0}": тип не содержит конструктор, который принимает два аргумента (ObjCRuntime.NativeHandle, логический). Однако найден конструктор, принимающий два аргумента (System.IntPtr, логический), который и будет использоваться. Настоятельно рекомендуется изменить подпись конструктора (System.IntPtr, логический) на (ObjCRuntime.NativeHandle, логический).</value>
 	</data>
   <data name="MX4187" xml:space="preserve">
-		<value>Could not find a [UserDelegateType] attribute on the type '{0}'.</value>
+		<value>Не удалось найти атрибут [UserDelegateType] для типа "{0}".</value>
 	</data>
   <data name="MX4188" xml:space="preserve">
-		<value>Unable to compute the block signature for the type '{0}': {1}</value>
+		<value>Не удалось вычислить подпись блока для типа "{0}": {1}</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Отсутствует компилятор "{0}". Установите компонент программ командной строки для Xcode.
@@ -1781,7 +1781,7 @@
 		<value>Сборка {0} была изменена с момента сборки приложения, что аннулирует созданный код статического регистратора. MVID для загруженной сборки — {1}, в то время как MVID для сборки, которой соответствует созданный код статического регистратора — {2}.</value>
 	</data>
   <data name="MX8045" xml:space="preserve">
-		<value>Не удалось вызвать выпуск для экземпляра типа {0}</value>
+		<value>Не удалось вызвать освобождение для экземпляра типа {0}</value>
 	</data>
   <data name="MX8046" xml:space="preserve">
 		<value>Не удается найти метод "{0}" в типе "{1}"</value>
@@ -1805,12 +1805,12 @@
 		<value>Подпись должна быть непустой строкой.</value>
 	</data>
   <data name="MX8053" xml:space="preserve">
-		<value>Could not resolve the module in the assembly {0}.</value>
+		<value>Не удалось разрешить модуль в сборке {0}.</value>
 	</data>
   <data name="MX8054" xml:space="preserve">
-		<value>Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).</value>
+		<value>Не удается разрешить токены метаданных для методов при использовании управляемого статического регистратора (токен: 0x{0}).</value>
 	</data>
   <data name="MX8055" xml:space="preserve">
-		<value>Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.</value>
+		<value>Не удалось найти тип "ObjCRuntime.__Registrar__" в сборке "{0}".</value>
 	</data>
 </root>

@@ -70,12 +70,12 @@ while test "x$1" != x; do
         echo "Disabled all platforms"
         shift
         ;;
-    --disable-mac)
+    --disable-mac | --disable-macos)
         echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
         echo "Mac Build disabled"
         shift
         ;;
-    --enable-mac)
+    --enable-mac | --enable-macos)
         echo "INCLUDE_MAC=1" >> $CONFIGURED_FILE
         echo "Mac Build enabled"
         shift

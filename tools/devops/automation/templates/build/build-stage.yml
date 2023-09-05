@@ -21,10 +21,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: skipESRP
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
@@ -59,6 +55,7 @@ jobs:
   variables:
     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
   steps:
   - template: ../common/configure.yml
@@ -66,7 +63,6 @@ jobs:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
       uploadArtifacts: true
-      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -153,5 +149,4 @@ jobs:
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
-      enableDotnet: ${{ parameters.enableDotnet }}
       skipESRP: ${{ parameters.skipESRP }}
