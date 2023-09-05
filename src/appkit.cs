@@ -16142,6 +16142,9 @@ namespace AppKit {
 		[Export ("setNeedsDisplayInRect:")]
 		void SetNeedsDisplayInRect (CGRect invalidRect);
 
+		[Export ("clipsToBounds")]
+		bool ClipsToBounds { get; set; }
+
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Subclass NSView and implement 'DrawRect'.")]
 		[Export ("lockFocus")]
 		void LockFocus ();
