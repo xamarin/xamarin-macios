@@ -166,7 +166,10 @@ namespace Xamarin.Linker {
 				var md = abr.RegistrarHelper_RuntimeTypeHandleEquals.Resolve ();
 				md.IsPublic = true;
 				Annotations.Mark (md);
-			} else if (App.XamarinRuntime == XamarinRuntime.NativeAOT && Configuration.Profile.IsProductAssembly (assembly)) {
+			}
+
+			// TODO: Move this to a separate "MakeEverythingWorkWithNativeAOTStep" linker step
+			if (App.XamarinRuntime == XamarinRuntime.NativeAOT && Configuration.Profile.IsProductAssembly (assembly)) {
 				ImplementNSObjectRegisterToggleRefMethodStub ();
 			}
 
