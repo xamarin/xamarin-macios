@@ -720,10 +720,10 @@ namespace HealthKit {
 
 		// HKWorkout category
 
-		[Deprecated (PlatformName.iOS, 17, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
-		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
-		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler) instead.")]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
 		[Export ("addSamples:toWorkout:completion:")]
 		void AddSamples (HKSample [] samples, HKWorkout workout, HKStoreSampleAddedCallback callback);
 
@@ -3691,11 +3691,11 @@ namespace HealthKit {
 
 		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, Mac (14, 0)]
 		[Export ("workoutSession:didReceiveDataFromRemoteWorkoutSession:")]
-		void DidReceiveDataFromRemoteWorkoutSession (HKWorkoutSession workoutSession, NSData [] data);
+		void DidReceiveData (HKWorkoutSession workoutSession, NSData [] data);
 
 		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, Mac (14, 0)]
 		[Export ("workoutSession:didDisconnectFromRemoteDeviceWithError:")]
-		void DidDisconnectFromRemoteDeviceWithError (HKWorkoutSession workoutSession, [NullAllowed] NSError error);
+		void DidDisconnect (HKWorkoutSession workoutSession, [NullAllowed] NSError error);
 	}
 
 	[Mac (13, 0)]

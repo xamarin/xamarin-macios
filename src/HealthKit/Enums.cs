@@ -730,27 +730,27 @@ namespace HealthKit {
 		MaxExercise60Minute = 1,
 		MaxExercise20Minute,
 		RampTest,
-		PredictionExercise
+		PredictionExercise,
 	}
 
 	[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 	[Native]
 	public enum HKPhysicalEffortEstimationType : long {
 		ActivityLookup = 1,
-		DeviceSensed
+		DeviceSensed,
 	}
 
 	[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
 	[Native]
 	public enum HKWaterSalinity : long {
 		FreshWater = 1,
-		SaltWater
+		SaltWater,
 	}
 
 	[Watch (10, 0), iOS (17, 0)]
 	[Native]
 	public enum HKWorkoutSessionType : long {
 		Primary = 0,
-		Mirrored
+		Mirrored,
 	}
 }
