@@ -305,6 +305,8 @@ namespace HealthKit {
 		SwimBikeRun = 82,
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 		Transition = 83,
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
+		UnderwaterDiving,
 		[MacCatalyst (13, 1)]
 		Other = 3000
 	}
@@ -720,5 +722,39 @@ namespace HealthKit {
 	public enum HKVisionPrescriptionType : ulong {
 		Glasses = 1,
 		Contacts,
+	}
+
+	[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
+	[Native]
+	public enum HKCyclingFunctionalThresholdPowerTestType : long
+	{
+		MaxExercise60Minute = 1,
+		MaxExercise20Minute,
+		RampTest,
+		PredictionExercise
+	}
+
+	[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
+	[Native]
+	public enum HKPhysicalEffortEstimationType : long
+	{
+		ActivityLookup = 1,
+		DeviceSensed
+	}
+
+	[Watch(10, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
+	[Native]
+	public enum HKWaterSalinity : long
+	{
+		FreshWater = 1,
+		SaltWater
+	}
+
+	[Watch(10, 0), iOS(17, 0)]
+	[Native]
+	public enum HKWorkoutSessionType : long
+	{
+		Primary = 0,
+		Mirrored
 	}
 }
