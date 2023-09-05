@@ -983,7 +983,8 @@ namespace Xamarin.Tests {
 		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: "", platform: platform, out var appPath);
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			var extensionProjectDir = GetProjectPath ("ExtensionProjectWithFrameworks", platform: platform);
 
 			Clean (extensionProjectDir);
