@@ -808,7 +808,7 @@ namespace Photos {
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("renderedContentURLForType:error:")]
 		[return: NullAllowed]
-		NSUrl RenderedContentURLForType (UTType type, [NullAllowed] out NSError error);
+		NSUrl GetRenderedContentUrl (UTType type, [NullAllowed] out NSError error);
 	}
 
 	[MacCatalyst (13, 1)]
