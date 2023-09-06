@@ -512,8 +512,8 @@ namespace SafariServices {
 		[Field ("SFExtensionMessageKey")]
 		NSString MessageKey { get; }
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
-		[Field("SFExtensionProfileKey")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Field ("SFExtensionProfileKey")]
 		NSString ProfileKey { get; }
 	}
 
