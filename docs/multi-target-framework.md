@@ -6,6 +6,9 @@ References:
 * https://github.com/dotnet/sdk/issues/30103
 * https://github.com/xamarin/xamarin-macios/issues/18790
 
+General documentation about workloads can be found here:
+https://github.com/dotnet/designs/blob/main/accepted/2020/workloads/workload-manifest.md.
+
 ## Developer scenarios / needs
 
 * Consume preview packages for a preview version of Xcode.
