@@ -394,6 +394,7 @@ namespace CoreServices
 		// so we cannot use Dlfcn.GetStringConstant against CoreServices. -abock, 2022-03-04
 		static readonly NSString kFSEventStreamEventExtendedDataPathKey = new ("path");
 		static readonly NSString kFSEventStreamEventExtendedFileIDKey = new ("fileID");
+		static readonly NSString kFSEventStreamEventExtendedDocIDKey = new ("docID");
 
 #if NET
 		[UnmanagedCallersOnly]
