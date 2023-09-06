@@ -939,7 +939,7 @@
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'NativeAOT'">NativeAOT.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
-			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
+			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier).$(_XamarinPackSuffix)</_XamarinNugetPackageId>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
@@ -1288,6 +1288,7 @@
 			<_CustomLinkFlags Include="@(NativeSystemLibrary->'-l%(Identity)')" />
 			<_CustomLinkFlags Include="@(NativeFramework->'-Wl,-framework,%(Identity)')" />
 			<_CustomLinkFlags Include="@(ExtraLinkerArg->'-Wl,%(Identity)')" />
+			<_CustomLinkFlags Include="-L/usr/lib/swift" Condition="'$(_PlatformName)' == 'macOS'" />
 		</ItemGroup>
 
 		<ItemGroup>
@@ -1720,6 +1721,18 @@
 				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
 				            '%(ResolvedFileToPublish.Extension)' == '.a' And
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_XamarinNugetPackageId)'
+				            "
+			/>
+
+			<!-- There's no need to ship any *.o files shipped by NativeAOT -->
+			<!-- We need to remove these from ResolvedFileToPublish before calling ComputeBundleLocation, because otherwise we get warnings about not knowing what to do with these files -->
+			<ResolvedFileToPublish
+				Remove="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+				            '%(ResolvedFileToPublish.Extension)' == '.o' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)' And
+				            '$(_UseNativeAot)' == 'true'
 				            "
 			/>
 
