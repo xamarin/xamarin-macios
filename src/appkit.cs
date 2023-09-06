@@ -20179,11 +20179,13 @@ namespace AppKit {
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
 
-		[MacCatalyst (14,0)][NoMac]
+		[MacCatalyst (14, 0)]
+		[NoMac]
 		[Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier", "UIKit")]
 		NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
 
-		[MacCatalyst (14,0)][NoMac]
+		[MacCatalyst (14, 0)]
+		[NoMac]
 		[Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier", "UIKit")]
 		NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 
