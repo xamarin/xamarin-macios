@@ -52,9 +52,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>63a764bfb56b1ef839206c22898e5dee2d6dbe71</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk.net7.0_16.4" Version="16.4.7383-ci.release-test-multi-targetting-main">
+    <Dependency Name="Microsoft.iOS.Sdk.net7.0_16.4" Version="16.4.7106-ci.release-7-0-3xx-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>63792d9cc12c7f2e3bf9479b8eeeecc86cae41b8</Sha>
+      <Sha>63a764bfb56b1ef839206c22898e5dee2d6dbe71</Sha>
     </Dependency>
     <Dependency Name="Microsoft.tvOS.Sdk.net7.0_16.4" Version="16.4.7106-ci.release-7-0-3xx-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
