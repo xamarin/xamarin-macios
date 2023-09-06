@@ -8,6 +8,7 @@ using CoreImage;
 using CoreMedia;
 using ImageIO;
 using System;
+using UniformTypeIdentifiers;
 #if !MONOMAC
 using UIKit;
 using NSImage = Foundation.NSObject; // help [NoiOS] and [NoTV]
@@ -795,6 +796,19 @@ namespace Photos {
 
 		[Export ("renderedContentURL", ArgumentSemantic.Copy)]
 		NSUrl RenderedContentUrl { get; }
+
+		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[NullAllowed, Export("defaultRenderedContentType", ArgumentSemantic.Copy)]
+		UTType DefaultRenderedContentType { get; }
+
+		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("supportedRenderedContentTypes", ArgumentSemantic.Copy)]
+		UTType[] SupportedRenderedContentTypes { get; }
+
+		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("renderedContentURLForType:error:")]
+		[return: NullAllowed]
+		NSUrl RenderedContentURLForType(UTType type, [NullAllowed] out NSError error);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -912,6 +926,10 @@ namespace Photos {
 		[Export ("progressHandler", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		PHAssetImageProgressHandler ProgressHandler { get; set; }
+
+		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("allowSecondaryDegradedImage")]
+		bool AllowSecondaryDegradedImage { get; set; }
 	}
 
 	delegate void PHAssetVideoProgressHandler (double progress, NSError error, out bool stop, NSDictionary info);
