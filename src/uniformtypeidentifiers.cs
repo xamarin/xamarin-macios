@@ -543,8 +543,8 @@ namespace UniformTypeIdentifiers {
 		[Field ("UTTypeLog")]
 		UTType Log { get; }
 
-		[Watch(10, 0), TV(17, 0), MacCatalyst(17, 0), Mac(14, 0), iOS(17, 0)]
-		[Field("UTTypeAHAP")]
+		[Watch (10, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("UTTypeAHAP")]
 		UTType UTTypeAHAP { get; }
 	}
 
