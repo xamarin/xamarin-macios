@@ -49,10 +49,10 @@ namespace Xamarin {
 		public const string MaxWatchDeploymentTarget = "9.4";
 		public const string MaxTVOSDeploymentTarget = "16.4";
 
-		public const string DefaultTargetPlatformVersioniOS = "16.1";
-		public const string DefaultTargetPlatformVersiontvOS = "16.1";
-		public const string DefaultTargetPlatformVersionmacOS = "13.0";
-		public const string DefaultTargetPlatformVersionMacCatalyst = "16.1";
+		public const string DefaultTargetPlatformVersioniOS = "16.4";
+		public const string DefaultTargetPlatformVersiontvOS = "16.4";
+		public const string DefaultTargetPlatformVersionmacOS = "13.3";
+		public const string DefaultTargetPlatformVersionMacCatalyst = "16.4";
 
 		public static Version OSXVersion { get { return new Version (OSX); } }
 		public static Version iOSVersion { get { return new Version (iOS); } }
