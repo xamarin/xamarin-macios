@@ -34,9 +34,10 @@
 
   <ItemGroup Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == 'true' and '$(Configuration)' == 'Release'">
     <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" />
+    <CustomEntitlements Include="com.apple.security.cs.disable-library-validation" Type="boolean" Value="true" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(EnableDefaultMacCatalystItems)' == 'true' and '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == 'true' and '$(Configuration)' == 'Release'">
     <UseHardenedRuntime Condition="'$(UseHardenedRuntime)' == ''">true</UseHardenedRuntime>
   </PropertyGroup>
 
