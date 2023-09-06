@@ -797,18 +797,18 @@ namespace Photos {
 		[Export ("renderedContentURL", ArgumentSemantic.Copy)]
 		NSUrl RenderedContentUrl { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[NullAllowed, Export("defaultRenderedContentType", ArgumentSemantic.Copy)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("defaultRenderedContentType", ArgumentSemantic.Copy)]
 		UTType DefaultRenderedContentType { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("supportedRenderedContentTypes", ArgumentSemantic.Copy)]
-		UTType[] SupportedRenderedContentTypes { get; }
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedRenderedContentTypes", ArgumentSemantic.Copy)]
+		UTType [] SupportedRenderedContentTypes { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("renderedContentURLForType:error:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("renderedContentURLForType:error:")]
 		[return: NullAllowed]
-		NSUrl RenderedContentURLForType(UTType type, [NullAllowed] out NSError error);
+		NSUrl RenderedContentURLForType (UTType type, [NullAllowed] out NSError error);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -927,8 +927,8 @@ namespace Photos {
 		[NullAllowed]
 		PHAssetImageProgressHandler ProgressHandler { get; set; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("allowSecondaryDegradedImage")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("allowSecondaryDegradedImage")]
 		bool AllowSecondaryDegradedImage { get; set; }
 	}
 
