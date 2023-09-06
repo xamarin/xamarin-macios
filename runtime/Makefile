@@ -167,7 +167,7 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-ifdef WATCHOS_SUPPORTS_32BIT_ARCHITECTURES
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call FrameworkTemplate,watchos,WATCHOS,armv7k arm64_32))
 else
 $(eval $(call FrameworkTemplate,watchos,WATCHOS,arm64_32))
@@ -242,7 +242,7 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-ifdef WATCHOS_SUPPORTS_32BIT_ARCHITECTURES
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
 else
 $(eval $(call PlatformTemplate,watchos,WATCHOS,arm64_32))
