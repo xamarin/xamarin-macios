@@ -22,7 +22,7 @@ parameters:
 steps:
 - template: checkout.yml
   parameters:
-    isPR: false # always use the latests set of scripts merged with main
+    isPR: true
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 

@@ -419,7 +419,7 @@ namespace ObjCRuntime {
 			mobj.ReferenceCount = 1;
 			mobj.StructValue = WriteStructure (obj);
 
-			IntPtr rv = MarshalStructure (mobj);
+			IntPtr rv = MarshalStructure<MonoObject> (mobj);
 
 			log_coreclr ($"GetMonoObjectImpl ({obj.GetType ()}) => 0x{rv.ToString ("x")} => GCHandle=0x{handle.ToString ("x")}");
 
@@ -454,11 +454,15 @@ namespace ObjCRuntime {
 		static extern void xamarin_bridge_log_monoobject (IntPtr mono_object, string stack_trace);
 #endif
 
-		static IntPtr MarshalStructure<T> (T value) where T: struct
+		static IntPtr MarshalStructure<T> (T value) where T: unmanaged
 		{
-			var rv = Marshal.AllocHGlobal (Marshal.SizeOf<T> ());
-			StructureToPtr (value, rv);
-			return rv;
+			var destination = Marshal.AllocHGlobal (Marshal.SizeOf<T> ());
+
+			unsafe {
+				*((T*) destination) = value;
+			}
+
+			return destination;
 		}
 
 		static void StructureToPtr (object? obj, IntPtr ptr)
