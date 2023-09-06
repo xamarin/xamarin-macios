@@ -33,12 +33,6 @@ namespace Xamarin {
 				contents.AppendLine ();
 				contents.AppendLine ("static void xamarin_initialize_dotnet ()");
 				contents.AppendLine ("{");
-				if (Configuration.InvariantGlobalization) {
-					contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_INVARIANT\", \"1\", 1);");
-				} else {
-					if (Configuration.HybridGlobalization)
-						contents.AppendLine ("\tsetenv (\"DOTNET_SYSTEM_GLOBALIZATION_HYBRID\", \"1\", 1);");
-				}
 				if (Configuration.Application.PackageManagedDebugSymbols && Configuration.Application.UseInterpreter)
 					contents.AppendLine ($"\tsetenv (\"DOTNET_MODIFIABLE_ASSEMBLIES\", \"debug\", 1);");
 				contents.AppendLine ("}");
