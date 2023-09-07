@@ -556,6 +556,11 @@ namespace ObjCRuntime {
 
 		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			return AllocGCHandle (GetBlockWrapperCreator ((MethodInfo) GetGCHandleTarget (method)!, parameter));
 		}
 
@@ -1005,6 +1010,11 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static MethodInfo? GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
 			// If this method is changed, that method will probably have to be updated too (tests!!!)
 			MethodInfo first = method;
@@ -1230,6 +1240,11 @@ namespace ObjCRuntime {
 
 		internal static PropertyInfo? FindPropertyInfo (MethodInfo accessor)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			if (!accessor.IsSpecialName)
 				return null;
 
@@ -1564,6 +1579,11 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo? GetIntPtrConstructor (Type type)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+#endif
+
 			lock (intptr_ctor_cache) {
 				if (intptr_ctor_cache.TryGetValue (type, out var rv))
 					return rv;
@@ -1609,6 +1629,11 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo? GetIntPtr_BoolConstructor (Type type)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+#endif
+
 			lock (intptr_bool_ctor_cache) {
 				if (intptr_bool_ctor_cache.TryGetValue (type, out var rv))
 					return rv;
@@ -2354,6 +2379,11 @@ namespace ObjCRuntime {
 
 		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			// FIXME: I think it should be handled before getting here (but it's safer here for now)
 			if (!open_method.ContainsGenericParameters)
 				return (MethodInfo) open_method;
