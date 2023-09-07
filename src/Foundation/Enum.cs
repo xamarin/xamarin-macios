@@ -185,6 +185,9 @@ namespace Foundation {
 		MissingRequiredConfigurationError = -72008,
 	}
 
+#if XAMCORE_5_0
+	[NoWatch]
+#endif
 	[Flags]
 	[Native]
 	public enum NSNetServiceOptions : ulong {
@@ -279,6 +282,8 @@ namespace Foundation {
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
+		[iOS (17,0), NoMac, MacCatalyst (17,0), TV (17,0), Watch (10,0)]
+		FileProtectionCompleteWhenUserInactive = 0x50000000,
 	}
 
 	public delegate void NSSetEnumerator (NSObject obj, ref bool stop);

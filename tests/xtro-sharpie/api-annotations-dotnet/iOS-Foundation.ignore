@@ -5,3 +5,6 @@
 
 ## does not exists in iOS as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
+
+# we provide a static method since we already have a constructor with the same params
+!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound

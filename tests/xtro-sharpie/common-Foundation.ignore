@@ -1350,6 +1350,10 @@
 !missing-selector! +NSAttributedString::localizedAttributedStringWithFormat: not bound
 !missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options: not bound
 !missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context:arguments: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:context: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options:context: not bound
 
 # ignore because we did not add nullallowed but are using ref
 # https://github.com/xamarin/xamarin-macios/issues/15577
@@ -1397,3 +1401,10 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
+
+# we provide a static method instead of the constructor since there are two of them
+!missing-selector! NSURL::initWithString:encodingInvalidCharacters: not bound
+!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
+
+# it is used in the selectors that support vargs and thefore cannot be used with out bindings
+!missing-field! NSInflectionConceptsKey not bound

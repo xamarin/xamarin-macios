@@ -875,7 +875,80 @@ namespace Foundation {
 
 		[Field ("NSReplacementIndexAttributeName")]
 		ReplacementIndex,
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSInflectionAgreementArgumentAttributeName")]
+		InflectionAgreementArgument,
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSInflectionAgreementConceptAttributeName")]
+		InflectionConcept,
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSInflectionReferentConceptAttributeName")]
+		InflectionReferentConceptAttributeName,
+
 	}
+
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Native]
+	public enum NSGrammaticalCase : long
+	{
+		NotSet = 0,
+		Nominative,
+		Accusative,
+		Dative,
+		Genitive,
+		Prepositional,
+		Ablative,
+		Adessive,
+		Allative,
+		Elative,
+		Illative,
+		Essive,
+		Inessive,
+		Locative,
+		Translative,
+	}
+
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Native]
+	public enum NSGrammaticalPronounType : long
+	{
+		NotSet = 0,
+		Personal,
+		Reflexive,
+		Possessive,
+	}
+
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Native]
+	public enum NSGrammaticalDefiniteness : long
+	{
+		NotSet = 0,
+		Indefinite,
+		Definite,
+	}
+
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Native]
+	public enum NSGrammaticalDetermination : long
+	{
+		NotSet = 0,
+		Independent,
+		Dependent,
+	}
+
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Native]
+	public enum NSGrammaticalPerson : long
+	{
+		NotSet = 0,
+		First,
+		Second,
+		Third,
+	}
+
 
 	[NoWatch]
 	[NoTV] // really inside WebKit
@@ -4460,6 +4533,10 @@ namespace Foundation {
 		[Field ("NSNetServicesErrorDomain")]
 		NSString NSNetServicesErrorDomain { get; }
 
+		[NoWatch]
+		[Field ("NSNetServicesErrorCode")]
+		NSString NSNetServicesErrorCode { get; }
+
 		[Field ("NSStreamSocketSSLErrorDomain")]
 		NSString NSStreamSocketSSLErrorDomain { get; }
 
@@ -5233,6 +5310,14 @@ namespace Foundation {
 		[Export ("localizedStringForCalendarIdentifier:")]
 		[return: NullAllowed]
 		string GetLocalizedCalendarIdentifier (string calendarIdentifier);
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Export ("languageIdentifier")]
+		string LanguageIdentifier { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[NullAllowed, Export ("regionCode")]
+		string RegionCode { get; }
 	}
 
 	delegate void NSMatchEnumerator (NSTextCheckingResult result, NSMatchingFlags flags, ref bool stop);
@@ -6183,6 +6268,12 @@ namespace Foundation {
 		[Static]
 		NSUrl _FromStringRelative (string url, NSUrl relative);
 
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Static]
+		[Export ("URLWithString:encodingInvalidCharacters:")]
+		[return: NullAllowed]
+		NSUrl FromStringEncoded (string url, bool encodingInvalidCharacters);
+
 		[Export ("absoluteString")]
 		[NullAllowed]
 		string AbsoluteString { get; }
@@ -6897,6 +6988,14 @@ namespace Foundation {
 		[Field ("NSURLFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 
+		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSURLFileProtectionCompleteWhenUserInactive")]
+		NSString FileProtectionCompleteWhenUserInactive { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSURLDirectoryEntryCountKey")]
+		NSString NSURLDirectoryEntryCountKey { get; }
+
 		[Watch (7, 0)]
 		[TV (14, 0)]
 		[Mac (11, 0)]
@@ -7095,6 +7194,12 @@ namespace Foundation {
 
 		[Static, Export ("componentsWithString:")]
 		NSUrlComponents FromString (string urlString);
+
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Static]
+		[Export ("componentsWithString:encodingInvalidCharacters:")]
+		[return: NullAllowed]
+		NSUrlComponents FromStringEncoded (string url, bool encodingInvalidCharacters);
 
 		[Export ("URL")]
 		NSUrl Url { get; }
@@ -7743,6 +7848,15 @@ namespace Foundation {
 		[MacCatalyst (13, 1)]
 		[Export ("webSocketTaskWithRequest:")]
 		NSUrlSessionWebSocketTask CreateWebSocketTask (NSUrlRequest request);
+
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Export ("uploadTaskWithResumeData:")]
+		NSUrlSessionUploadTask UploadTask (NSData resumeData);
+
+		[Async (ResultTypeName = "NSUrlSessionUploadTaskResumeRequest")] 
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Export ("uploadTaskWithResumeData:completionHandler:")]
+		NSUrlSessionUploadTask UploadTask (NSData resumeData, Action<NSData, NSUrlResponse, NSError> completionHandler);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -7930,6 +8044,15 @@ namespace Foundation {
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSURLSession.CreateUploadTask' instead.")]
 		[Export ("init")]
 		NativeHandle Constructor ();
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSURLSessionUploadTaskResumeData")]
+		NSString TaskResumeDataKey { get; }
+
+		[Async]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("cancelByProducingResumeData:")]
+		void CancelByProducingResumeData (Action<NSData> completionHandler);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -8196,6 +8319,14 @@ namespace Foundation {
 		[MacCatalyst (16, 0)]
 		[Export ("URLSession:didCreateTask:")]
 		void DidCreateTask (NSUrlSession session, NSUrlSessionTask task);
+
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Export ("URLSession:task:didReceiveInformationalResponse:")]
+		void DidReceiveInformationalResponse (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response);
+
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Export ("URLSession:task:needNewBodyStreamFromOffset:completionHandler:")]
+		void NeedNewBodyStreamFromOffset (NSUrlSession session, NSUrlSessionTask task, long offset, Action<NSInputStream> completionHandler);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -13468,6 +13599,10 @@ namespace Foundation {
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 
+		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17,0)]
+		[Field ("NSFileProtectionCompleteWhenUserInactive")]
+		NSString FileProtectionCompleteWhenUserInactive { get; }
+
 		[Field ("NSFileSystemSize")]
 		NSString SystemSize { get; }
 
@@ -17874,10 +18009,18 @@ namespace Foundation {
 		[Export ("number", ArgumentSemantic.Assign)]
 		NSGrammaticalNumber Number { get; set; }
 
+		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Export ("customPronounForLanguage:")]
 		[return: NullAllowed]
 		NSMorphologyCustomPronoun GetCustomPronoun (string language);
 
+		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Export ("setCustomPronoun:forLanguage:error:")]
 		bool SetCustomPronoun ([NullAllowed] NSMorphologyCustomPronoun features, string language, [NullAllowed] out NSError error);
 
@@ -17887,8 +18030,32 @@ namespace Foundation {
 		[Static]
 		[Export ("userMorphology")]
 		NSMorphology UserMorphology { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("grammaticalCase", ArgumentSemantic.Assign)]
+		NSGrammaticalCase GrammaticalCase { get; set; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("determination", ArgumentSemantic.Assign)]
+		NSGrammaticalDetermination Determination { get; set; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("grammaticalPerson", ArgumentSemantic.Assign)]
+		NSGrammaticalPerson GrammaticalPerson { get; set; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("pronounType", ArgumentSemantic.Assign)]
+		NSGrammaticalPronounType PronounType { get; set; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("definiteness", ArgumentSemantic.Assign)]
+		NSGrammaticalDefiniteness Definiteness { get; set; }
 	}
 
+	[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'NSTermOfAddress' instead.")]
+	[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+	[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+	[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'NSTermOfAddress' instead.")]
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSMorphologyCustomPronoun : NSCopying, NSSecureCoding {
@@ -18033,4 +18200,49 @@ namespace Foundation {
 		NSRange RangeInString (string @string);
 	}
 
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSTermOfAddress : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("neutral")]
+		NSTermOfAddress Neutral { get; }
+
+		[Static]
+		[Export ("feminine")]
+		NSTermOfAddress Feminine { get; }
+
+		[Static]
+		[Export ("masculine")]
+		NSTermOfAddress Masculine { get; }
+
+		[Static]
+		[Export ("localizedForLanguageIdentifier:withPronouns:")]
+		NSTermOfAddress GetLocalized (string language, NSMorphologyPronoun[] pronouns);
+
+		[NullAllowed, Export ("languageIdentifier")]
+		string LanguageIdentifier { get; }
+
+		[NullAllowed, Export ("pronouns", ArgumentSemantic.Copy)]
+		NSMorphologyPronoun[] Pronouns { get; }
+	}
+
+	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSMorphologyPronoun : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithPronoun:morphology:dependentMorphology:")]
+		NativeHandle Constructor (string pronoun, NSMorphology morphology, [NullAllowed] NSMorphology dependentMorphology);
+
+		[Export ("pronoun")]
+		string Pronoun { get; }
+
+		[Export ("morphology", ArgumentSemantic.Copy)]
+		NSMorphology Morphology { get; }
+
+		[NullAllowed, Export ("dependentMorphology", ArgumentSemantic.Copy)]
+		NSMorphology DependentMorphology { get; }
+	}
 }
