@@ -12,7 +12,7 @@
 		<PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
 		<PackageReference Include="Mono.Cecil" Version="0.11.4" />
-		<PackageReference Include="MSBuild.StructuredLogger" Version="2.1.787" />
+		<PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
 		<PackageReference Include="System.Text.Json" Version="5.0.2" />
 	</ItemGroup>
 
