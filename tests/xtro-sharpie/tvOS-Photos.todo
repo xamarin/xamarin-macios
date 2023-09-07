@@ -1,6 +1,0 @@
-!missing-enum-value! PHAssetResourceType native value PHAssetResourceTypePhotoProxy = 19 not bound
-!missing-selector! PHContentEditingOutput::defaultRenderedContentType not bound
-!missing-selector! PHContentEditingOutput::renderedContentURLForType:error: not bound
-!missing-selector! PHContentEditingOutput::supportedRenderedContentTypes not bound
-!missing-selector! PHImageRequestOptions::allowSecondaryDegradedImage not bound
-!missing-selector! PHImageRequestOptions::setAllowSecondaryDegradedImage: not bound
