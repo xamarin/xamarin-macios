@@ -27,9 +27,9 @@
       <Sha>fa5acbd2ccba88c9d46ce0dd8f5310f9d3c5c46d</Sha>
     </Dependency>
     <!-- This is a subscription to the Xcode 13.3/14.0 version of our packages released with the initial release of .NET 7 -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_15.4" Version="15.4.2390-ci.release-7-0-1xx-xcode13-3-multi-targeting">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_15.4" Version="15.4.2391-ci.release-7-0-1xx-xcode13-3-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>633a580beef52fe7165fc3a5c81077dec1b2e819</Sha>
+      <Sha>8d8aef87d5de1969068f5433482e25aaf0a5b44c</Sha>
     </Dependency>
     <Dependency Name="Microsoft.macOS.Sdk.net7.0_12.3" Version="12.3.2391-ci.release-7-0-1xx-xcode13-3-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
