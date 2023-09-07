@@ -173,6 +173,18 @@ namespace MetricKit {
 		[MacCatalyst (14, 0)]
 		[Export ("platformArchitecture", ArgumentSemantic.Strong)]
 		string PlatformArchitecture { get; }
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("lowPowerModeEnabled")]
+		bool LowPowerModeEnabled { get; }
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("isTestFlightApp")]
+		bool IsTestFlightApp { get; }
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("pid")]
+		int Pid { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13, 0)]
@@ -632,6 +644,10 @@ namespace MetricKit {
 		[BindAs (typeof (int?))]
 		[NullAllowed, Export ("signal", ArgumentSemantic.Strong)]
 		NSNumber Signal { get; }
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[NullAllowed, Export("exceptionReason", ArgumentSemantic.Strong)]
+		MXCrashDiagnosticObjectiveCExceptionReason ExceptionReason { get; }
 	}
 
 	[NoWatch, NoTV, Mac (12, 0)]
@@ -652,6 +668,10 @@ namespace MetricKit {
 
 		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[NullAllowed, Export("signpostData", ArgumentSemantic.Strong)]
+		MXSignpostRecord[] SignpostData { get; }
 	}
 
 	// @interface MXAppLaunchDiagnostic : MXDiagnostic
@@ -729,5 +749,66 @@ namespace MetricKit {
 
 		[Export ("hangDuration", ArgumentSemantic.Strong)]
 		NSMeasurement<NSUnitDuration> HangDuration { get; }
+	}
+
+	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[BaseType(typeof(NSObject))]
+	interface MXSignpostRecord : NSSecureCoding
+	{
+		[Export("subsystem")]
+		string Subsystem { get; }
+
+		[Export("category")]
+		string Category { get; }
+
+		[Export("name")]
+		string Name { get; }
+
+		[Export("beginTimeStamp", ArgumentSemantic.Copy)]
+		NSDate BeginTimeStamp { get; }
+
+		[NullAllowed, Export("endTimeStamp", ArgumentSemantic.Copy)]
+		NSDate EndTimeStamp { get; }
+
+		[NullAllowed, Export("duration", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitDuration> Duration { get; }
+
+		[Export("isInterval")]
+		bool IsInterval { get; }
+
+		[Export("JSONRepresentation")]
+		NSData JsonRepresentation { get; }
+
+		[Export("dictionaryRepresentation")]
+		NSDictionary DictionaryRepresentation { get; }
+	}
+
+	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[BaseType(typeof(NSObject))]
+	interface MXCrashDiagnosticObjectiveCExceptionReason : NSSecureCoding
+	{
+		[Export("composedMessage")]
+		string ComposedMessage { get; }
+
+		[Export("formatString")]
+		string FormatString { get; }
+
+		[Export("arguments", ArgumentSemantic.Copy)]
+		string[] Arguments { get; }
+
+		[Export("exceptionType")]
+		string ExceptionType { get; }
+
+		[Export("className")]
+		string ClassName { get; }
+
+		[Export("exceptionName")]
+		string ExceptionName { get; }
+
+		[Export("JSONRepresentation")]
+		NSData JsonRepresentation { get; }
+
+		[Export("dictionaryRepresentation")]
+		NSDictionary DictionaryRepresentation { get; }
 	}
 }
