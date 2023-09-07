@@ -3167,12 +3167,12 @@ namespace HealthKit {
 		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
 		[Static]
 		[Export ("luxUnitWithMetricPrefix:")]
-		HKUnit GetLuxUnit (HKMetricPrefix prefix);
+		HKUnit CreateLuxUnit (HKMetricPrefix prefix);
 
 		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
 		[Static]
 		[Export ("luxUnit")]
-		HKUnit GetLuxUnit ();
+		HKUnit Lux { get; }
 	}
 
 	[Mac (13, 0)]
@@ -3656,10 +3656,12 @@ namespace HealthKit {
 
 		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
 		[Export ("startMirroringToCompanionDeviceWithCompletion:")]
+		[Async]
 		void StartMirroringToCompanionDevice (Action<bool, NSError> completion);
 
 		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
 		[Export ("stopMirroringToCompanionDeviceWithCompletion:")]
+		[Async]
 		void StopMirroringToCompanionDevice (Action<bool, NSError> completion);
 	}
 
