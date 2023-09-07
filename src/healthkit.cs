@@ -3167,7 +3167,7 @@ namespace HealthKit {
 		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
 		[Static]
 		[Export ("luxUnitWithMetricPrefix:")]
-		HKUnit CreateLuxUnit (HKMetricPrefix prefix);
+		HKUnit CreateLux (HKMetricPrefix prefix);
 
 		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
 		[Static]
