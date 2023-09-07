@@ -26,7 +26,7 @@ parameters:
 
 - name: runWindowsIntegration
   type: boolean
-  default: true
+  default: false
 
 - name: runGovernanceTests
   type: boolean
