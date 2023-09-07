@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -11,7 +12,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class GetFullPaths : XamarinTask, ICancelableTask {
+	public class GetFullPaths : XamarinTask, ICancelableTask, ITaskCallback {
 		[Required]
 		public ITaskItem [] Items { get; set; } = Array.Empty<ITaskItem> ();
 
@@ -58,5 +59,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
