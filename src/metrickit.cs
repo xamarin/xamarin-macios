@@ -174,16 +174,16 @@ namespace MetricKit {
 		[Export ("platformArchitecture", ArgumentSemantic.Strong)]
 		string PlatformArchitecture { get; }
 
-		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("lowPowerModeEnabled")]
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("lowPowerModeEnabled")]
 		bool LowPowerModeEnabled { get; }
 
-		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("isTestFlightApp")]
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("isTestFlightApp")]
 		bool IsTestFlightApp { get; }
 
-		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("pid")]
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("pid")]
 		int Pid { get; }
 	}
 
@@ -645,8 +645,8 @@ namespace MetricKit {
 		[NullAllowed, Export ("signal", ArgumentSemantic.Strong)]
 		NSNumber Signal { get; }
 
-		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[NullAllowed, Export("exceptionReason", ArgumentSemantic.Strong)]
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("exceptionReason", ArgumentSemantic.Strong)]
 		MXCrashDiagnosticObjectiveCExceptionReason ExceptionReason { get; }
 	}
 
@@ -669,9 +669,9 @@ namespace MetricKit {
 		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
 
-		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[NullAllowed, Export("signpostData", ArgumentSemantic.Strong)]
-		MXSignpostRecord[] SignpostData { get; }
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("signpostData", ArgumentSemantic.Strong)]
+		MXSignpostRecord [] SignpostData { get; }
 	}
 
 	// @interface MXAppLaunchDiagnostic : MXDiagnostic
@@ -751,64 +751,62 @@ namespace MetricKit {
 		NSMeasurement<NSUnitDuration> HangDuration { get; }
 	}
 
-	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(NSObject))]
-	interface MXSignpostRecord : NSSecureCoding
-	{
-		[Export("subsystem")]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MXSignpostRecord : NSSecureCoding {
+		[Export ("subsystem")]
 		string Subsystem { get; }
 
-		[Export("category")]
+		[Export ("category")]
 		string Category { get; }
 
-		[Export("name")]
+		[Export ("name")]
 		string Name { get; }
 
-		[Export("beginTimeStamp", ArgumentSemantic.Copy)]
+		[Export ("beginTimeStamp", ArgumentSemantic.Copy)]
 		NSDate BeginTimeStamp { get; }
 
-		[NullAllowed, Export("endTimeStamp", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("endTimeStamp", ArgumentSemantic.Copy)]
 		NSDate EndTimeStamp { get; }
 
-		[NullAllowed, Export("duration", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("duration", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitDuration> Duration { get; }
 
-		[Export("isInterval")]
+		[Export ("isInterval")]
 		bool IsInterval { get; }
 
-		[Export("JSONRepresentation")]
+		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-		[Export("dictionaryRepresentation")]
+		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
 	}
 
-	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(NSObject))]
-	interface MXCrashDiagnosticObjectiveCExceptionReason : NSSecureCoding
-	{
-		[Export("composedMessage")]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MXCrashDiagnosticObjectiveCExceptionReason : NSSecureCoding {
+		[Export ("composedMessage")]
 		string ComposedMessage { get; }
 
-		[Export("formatString")]
+		[Export ("formatString")]
 		string FormatString { get; }
 
-		[Export("arguments", ArgumentSemantic.Copy)]
-		string[] Arguments { get; }
+		[Export ("arguments", ArgumentSemantic.Copy)]
+		string [] Arguments { get; }
 
-		[Export("exceptionType")]
+		[Export ("exceptionType")]
 		string ExceptionType { get; }
 
-		[Export("className")]
+		[Export ("className")]
 		string ClassName { get; }
 
-		[Export("exceptionName")]
+		[Export ("exceptionName")]
 		string ExceptionName { get; }
 
-		[Export("JSONRepresentation")]
+		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-		[Export("dictionaryRepresentation")]
+		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
 	}
 }
