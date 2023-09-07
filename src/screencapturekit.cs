@@ -65,6 +65,53 @@ namespace ScreenCaptureKit {
 		Audio,
 	}
 
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[Native]
+	public enum SCStreamType : long
+	{
+		Window,
+		Display,
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[Native]
+	public enum SCPresenterOverlayAlertSetting : long
+	{
+		System,
+		Never,
+		Always,
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[Native]
+	public enum SCCaptureResolutionType : long
+	{
+		Automatic,
+		Best,
+		Nominal,
+	}
+
+	[Flags, NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[Native]
+	public enum SCContentSharingPickerMode : ulong
+	{
+		SingleWindow = 1 << 0,
+		MultipleWindows = 1 << 1,
+		SingleApplication = 1 << 2,
+		MultipleApplications = 1 << 3,
+		SingleDisplay = 1 << 4,
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[Native]
+	public enum SCShareableContentStyle : long
+	{
+		None,
+		Window,
+		Display,
+		Application,
+	}
+
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
 	[Static]
 	interface SCStreamFrameInfoKeys {
@@ -90,6 +137,10 @@ namespace ScreenCaptureKit {
 		[Mac (13, 1)]
 		[Field ("SCStreamFrameInfoScreenRect")]
 		NSString ScreenRect { get; }
+
+		[Mac(14, 0)]
+		[Field("SCStreamFrameInfoBoundingRect")]
+		NSString BoundingRect { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -187,6 +238,11 @@ namespace ScreenCaptureKit {
 
 		[Export ("applications")]
 		SCRunningApplication [] Applications { get; }
+
+		[Mac(14, 0)]
+		[Static]
+		[Export("infoForFilter:")]
+		SCShareableContentInfo Info(SCContentFilter filter);
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -212,6 +268,24 @@ namespace ScreenCaptureKit {
 		[Internal]
 		[Export ("initWithDisplay:excludingApplications:exceptingWindows:")]
 		NativeHandle InitWithDisplayExcludingApplications (SCDisplay display, SCRunningApplication [] excludingApplications, SCWindow [] exceptingWindows);
+
+		// per docs, the following selectors are available for 12.3+
+		// but return types are SCStreamType and SCShareableContentStyle are 14.0+
+		[Mac (14,0)]
+		[Export("streamType")]
+		SCStreamType StreamType { get; }
+
+		[Mac (14,0)]
+		[Export("style")]
+		SCShareableContentStyle Style { get; }
+
+		[Mac (14,0)]
+		[Export("pointPixelScale")]
+		float PointPixelScale { get; }
+
+		[Mac (14,0)]
+		[Export("contentRect")]
+		CGRect ContentRect { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -273,6 +347,47 @@ namespace ScreenCaptureKit {
 		[Mac (13, 0)]
 		[Export ("excludesCurrentProcessAudio")]
 		bool ExcludesCurrentProcessAudio { get; set; }
+
+		[Mac(14, 0)]
+		[Export("preservesAspectRatio")]
+		bool PreservesAspectRatio { get; set; }
+
+		[Mac(14, 0)]
+		[NullAllowed]
+		[Export("streamName", ArgumentSemantic.Strong)]
+		string StreamName { get; set; }
+
+		[Mac(14, 0)]
+		[Export("ignoreShadowsDisplay")]
+		bool IgnoreShadowsDisplay { get; set; }
+
+		[Mac(14, 0)]
+		[Export("ignoreShadowsSingleWindow")]
+		bool IgnoreShadowsSingleWindow { get; set; }
+
+		[Mac(14, 0)]
+		[Export("captureResolution", ArgumentSemantic.Assign)]
+		SCCaptureResolutionType CaptureResolution { get; set; }
+
+		[Mac(14, 0)]
+		[Export("capturesShadowsOnly")]
+		bool CapturesShadowsOnly { get; set; }
+
+		[Mac(14, 0)]
+		[Export("shouldBeOpaque")]
+		bool ShouldBeOpaque { get; set; }
+
+		[Mac(14, 0)]
+		[Export("ignoreGlobalClipDisplay")]
+		bool IgnoreGlobalClipDisplay { get; set; }
+
+		[Mac(14, 0)]
+		[Export("ignoreGlobalClipSingleWindow")]
+		bool IgnoreGlobalClipSingleWindow { get; set; }
+
+		[Mac(14, 0)]
+		[Export("presenterOverlayPrivacyAlertSetting", ArgumentSemantic.Assign)]
+		SCPresenterOverlayAlertSetting PresenterOverlayPrivacyAlertSetting { get; set; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -324,6 +439,14 @@ namespace ScreenCaptureKit {
 
 		[Export ("stream:didStopWithError:")]
 		void DidStop (SCStream stream, NSError error);
+
+		[Mac(14, 0)]
+		[Export("outputVideoEffectDidStartForStream:")]
+		void OutputVideoEffectDidStart(SCStream stream);
+
+		[Mac(14, 0)]
+		[Export("outputVideoEffectDidStopForStream:")]
+		void OutputVideoEffectDidStop(SCStream stream);
 	}
 
 	interface ISCStreamOutput { }
@@ -334,5 +457,111 @@ namespace ScreenCaptureKit {
 
 		[Export ("stream:didOutputSampleBuffer:ofType:")]
 		void DidOutputSampleBuffer (SCStream stream, CMSampleBuffer sampleBuffer, SCStreamOutputType type);
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[BaseType(typeof(NSObject))]
+	interface SCContentSharingPickerConfiguration
+	{
+		[Export("allowedPickerModes", ArgumentSemantic.Assign)]
+		SCContentSharingPickerMode AllowedPickerModes { get; set; }
+
+		[Export("excludedWindowIDs", ArgumentSemantic.Strong)]
+		NSNumber[] ExcludedWindowIDs { get; set; }
+
+		[Export("excludedBundleIDs", ArgumentSemantic.Strong)]
+		string[] ExcludedBundleIDs { get; set; }
+
+		[Export("allowsChangingSelectedContent")]
+		bool AllowsChangingSelectedContent { get; set; }
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[BaseType(typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SCContentSharingPicker
+	{
+		[Static]
+		[Export("sharedPicker")]
+		SCContentSharingPicker SharedPicker { get; }
+
+		[Export("defaultConfiguration", ArgumentSemantic.Copy)]
+		SCContentSharingPickerConfiguration DefaultConfiguration { get; set; }
+
+		[NullAllowed]
+		[Export("maximumStreamCount", ArgumentSemantic.Strong)]
+		NSNumber MaximumStreamCount { get; set; }
+
+		[Export("active")]
+		bool Active { [Bind("isActive")] get; set; }
+
+		[Export("addObserver:")]
+		void AddObserver(SCContentSharingPickerObserver observer);
+
+		[Export("removeObserver:")]
+		void RemoveObserver(SCContentSharingPickerObserver observer);
+
+		[Export("setConfiguration:forStream:")]
+		void SetConfiguration([NullAllowed] SCContentSharingPickerConfiguration pickerConfig, SCStream stream);
+
+		[Export("present")]
+		void Present();
+
+		[Export("presentPickerUsingContentStyle:")]
+		void PresentPickerUsingContentStyle(SCShareableContentStyle contentStyle);
+
+		[Export("presentPickerForStream:")]
+		void PresentPickerForStream(SCStream stream);
+
+		[Export("presentPickerForStream:usingContentStyle:")]
+		void PresentPickerForStream(SCStream stream, SCShareableContentStyle contentStyle);
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[Protocol]
+	[BaseType(typeof(NSObject))]
+	interface SCContentSharingPickerObserver
+	{
+		[Abstract]
+		[Export("contentSharingPicker:didCancelForStream:")]
+		void DidCancel(SCContentSharingPicker picker, [NullAllowed] SCStream stream);
+
+		[Abstract]
+		[Export("contentSharingPicker:didUpdateWithFilter:forStream:")]
+		void DidUpdate(SCContentSharingPicker picker, SCContentFilter filter, [NullAllowed] SCStream stream);
+
+		[Abstract]
+		[Export("contentSharingPickerStartDidFailWithError:")]
+		void DidFail(NSError error);
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[BaseType(typeof(NSObject))]
+	interface SCShareableContentInfo
+	{
+		[Export("style")]
+		SCShareableContentStyle Style { get; }
+
+		[Export("pointPixelScale")]
+		float PointPixelScale { get; }
+
+		[Export("contentRect")]
+		CGRect ContentRect { get; }
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac(14, 0), NoMacCatalyst]
+	[BaseType(typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SCScreenshotManager
+	{
+		[Static]
+		[Export("captureSampleBufferWithFilter:configuration:completionHandler:")]
+		[Async]
+		void CaptureSampleBuffer(SCContentFilter contentFilter, SCStreamConfiguration config, [NullAllowed] Action<CMSampleBuffer, NSError> completionHandler);
+
+		[Static]
+		[Export("captureImageWithFilter:configuration:completionHandler:")]
+		[Async]
+		void CaptureImage(SCContentFilter contentFilter, SCStreamConfiguration config, [NullAllowed] Action<CGImage, NSError> completionHandler);
 	}
 }
