@@ -122,6 +122,10 @@ namespace PhotosUI {
 		[NoMacCatalyst]
 		[NullAllowed, Export ("livePhotoBadgeView", ArgumentSemantic.Strong)]
 		NSView LivePhotoBadgeView { get; }
+
+		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("contentsRect", ArgumentSemantic.Assign)]
+		CGRect ContentsRect { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -552,6 +556,22 @@ namespace PhotosUI {
 		[MacCatalyst (16, 0)]
 		[Export ("moveAssetWithIdentifier:afterAssetWithIdentifier:")]
 		void MoveAsset (string identifier, [NullAllowed] string afterIdentifier);
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("updatePickerUsingConfiguration:")]
+		void UpdatePickerUsingConfiguration(PHPickerUpdateConfiguration configuration);
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("scrollToInitialPosition")]
+		void ScrollToInitialPosition();
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("zoomIn")]
+		void ZoomIn();
+
+		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("zoomOut")]
+		void ZoomOut();
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (14, 0)]
@@ -578,6 +598,18 @@ namespace PhotosUI {
 		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("preselectedAssetIdentifiers", ArgumentSemantic.Copy)]
 		string [] PreselectedAssetIdentifiers { get; set; }
+
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("mode", ArgumentSemantic.Assign)]
+		PHPickerMode Mode { get; set; }
+
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("edgesWithoutContentMargins", ArgumentSemantic.Assign)]
+		NSDirectionalRectEdge EdgesWithoutContentMargins { get; set; }
+
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Export("disabledCapabilities", ArgumentSemantic.Assign)]
+		PHPickerCapabilities DisabledCapabilities { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (14, 0)]
@@ -701,5 +733,20 @@ namespace PhotosUI {
 	public enum PHPickerConfigurationSelection : long {
 		Default = 0,
 		Ordered = 1,
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		Continuous = 2,
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		ContinuousAndOrdered = 3,
+	}
+
+	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[BaseType(typeof(NSObject))]
+	interface PHPickerUpdateConfiguration : NSCopying
+	{
+		[Export("selectionLimit")]
+		nint SelectionLimit { get; set; }
+
+		[Export("edgesWithoutContentMargins", ArgumentSemantic.Assign)]
+		NSDirectionalRectEdge EdgesWithoutContentMargins { get; set; }
 	}
 }
