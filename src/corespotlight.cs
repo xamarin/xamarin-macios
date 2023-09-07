@@ -77,7 +77,7 @@ namespace CoreSpotlight {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[iOS (9, 0), Mac (10, 11), MacCatalyst (13, 1), NoTV, NoWatch]
 		[Export ("initWithName:protectionClass:bundleIdentifier:options:")]
-		NativeHandle Constructor (string name, [NullAllowed] string protectionClass, string bundleIdentifier, nint options);
+		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass, string bundleIdentifier, nint options);
 
 		[Wrap ("this (name, protectionClass.GetConstant (), bundleIdentifier, options)")]
 		[iOS (9, 0), Mac (10, 11), MacCatalyst (13, 1), NoTV, NoWatch]
