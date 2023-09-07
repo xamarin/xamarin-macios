@@ -52,7 +52,7 @@ stages:
         # * Template packs (Microsoft.<platform>.Templates.*)
         patterns: |
           Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Sdk.*.nupkg
-          Microsoft.@(iOS|tvOS|MacCatalyst|macOS).iOS.Windows.Sdk.*.nupkg
+          Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Windows.Sdk.*.nupkg
           Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Ref.*.nupkg
           Microsoft.@(iOS|tvOS|MacCatalyst|macOS).Runtime.*.nupkg
 
