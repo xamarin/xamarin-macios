@@ -559,7 +559,7 @@ namespace PhotosUI {
 
 		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("updatePickerUsingConfiguration:")]
-		void UpdatePickerUsingConfiguration (PHPickerUpdateConfiguration configuration);
+		void UpdatePicker (PHPickerUpdateConfiguration configuration);
 
 		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("scrollToInitialPosition")]
