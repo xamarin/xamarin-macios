@@ -65,18 +65,16 @@ namespace PhotosUI {
 		Compatible = 2,
 	}
 
-	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum PHPickerMode : long
-	{
+	public enum PHPickerMode : long {
 		Default = 0,
 		Compact = 1,
 	}
 
-	[Flags, NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Flags, NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum PHPickerCapabilities : ulong
-	{
+	public enum PHPickerCapabilities : ulong {
 		None = 0,
 		Search = 1 << 0,
 		StagingArea = 1 << 1,
