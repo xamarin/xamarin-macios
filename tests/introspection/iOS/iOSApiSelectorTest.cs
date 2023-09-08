@@ -456,8 +456,16 @@ namespace Introspection {
 					break;
 				}
 				break;
-#endif
+			case "HKHealthStore":
+				switch (name) {
+				case "workoutSessionMirroringStartHandler":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
 				break;
+#endif
+					break;
 			}
 
 			switch (name) {
