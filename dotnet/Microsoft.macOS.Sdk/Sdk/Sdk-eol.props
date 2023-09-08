@@ -1,0 +1,48 @@
+<!--
+	Sdk-eol.props
+
+	Imported only by .NET projects whose .NET version we don't support anymore (currently .NET 6), contains settings to force the error:
+
+	error NETSDK1202: The workload 'net6.0-macos' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.
+
+	Things to note:
+
+	* $(WarningsAsErrors) includes NETSDK1202
+	* Force $(TargetPlatformVersion) to just be 1.0, to make it past early error messages
+	* _ClearMissingWorkloads prevents undesired extra error messages
+
+-->
+
+<Project InitialTargets="_ClearMissingWorkloads">
+  <PropertyGroup>
+    <!-- Force NETSDK1202 to be an error -->
+    <WarningsAsErrors>$(WarningsAsErrors);NETSDK1202</WarningsAsErrors>
+    <!--
+      Setting TargetPlatformSupported avoids this error:
+          error NETSDK1139: The target platform identifier macos was not recognized.
+    -->
+    <TargetPlatformSupported>true</TargetPlatformSupported>
+    <!--
+      Setting TargetPlatformVersion avoids this error:
+        error NU1012: Platform version is not present for one or more target frameworks, even though they have specified a platform: net6.0-macos
+      it doesn't seem to matter which version it's set to
+    -->
+    <TargetPlatformVersion>1.0</TargetPlatformVersion>
+    <!-- This simplifies the logic to figure out which SDK to load in WorkloadManifest.targets -->
+    <_AppleSdkLoaded>true</_AppleSdkLoaded>
+  </PropertyGroup>
+  <ItemGroup>
+    <EolWorkload Include="net$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)'))-$(TargetPlatformIdentifier)" Url="https://aka.ms/maui-support-policy" />
+  </ItemGroup>
+  <Target Name="_ClearMissingWorkloads">
+    <!--
+      Prevents the error:
+      Microsoft.NET.Sdk.ImportWorkloads.targets(38,5): error NETSDK1147:
+      To build this project, the following workloads must be installed: wasm-tools-net6
+      To install these workloads, run the following command: dotnet workload restore
+    -->
+    <ItemGroup>
+      <MissingWorkloadPack Remove="@(MissingWorkloadPack)" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -259,7 +259,10 @@ namespace Mono.Tuner {
 			abr.SetCurrentAssembly (type.Module.Assembly);
 
 			var moduleConstructor = GetOrCreateModuleConstructor (type.GetModule ());
-			var attrib = abr.CreateDynamicDependencyAttribute (allMembers ? DynamicallyAccessedMemberTypes.All : DynamicallyAccessedMemberTypes.None, type);
+			var members = allMembers
+				? DynamicallyAccessedMemberTypes.All
+				: DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors;
+			var attrib = abr.CreateDynamicDependencyAttribute (members, type);
 			moduleConstructor.CustomAttributes.Add (attrib);
 
 			abr.ClearCurrentAssembly ();
