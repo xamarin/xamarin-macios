@@ -1509,7 +1509,6 @@
 			<_CreateDumpExecutable
 				Include="@(ResolvedFileToPublish)"
 				Condition=" '$(UseMonoRuntime)' == 'false' And
-				            '$(BundleCreateDump)' == 'true' And
 				            '%(ResolvedFileToPublish.Filename)' == 'createdump' And
 				            '%(ResolvedFileToPublish.Extension)' == '' And
 				            '%(ResolvedFileToPublish.AssetType)' == 'native' And
@@ -1519,7 +1518,7 @@
 				PublishFolderType="Assembly"
 			/>
 			<ResolvedFileToPublish Remove="@(_CreateDumpExecutable)" />
-			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" />
+			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" Condition="'$(BundleCreateDump)' == 'true'" />
 
 			<!-- Remove any dylibs Mono told us not to link with -->
 			<ResolvedFileToPublish
