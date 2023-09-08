@@ -11,3 +11,10 @@
 !missing-type! CMAmbientPressureData not bound
 !missing-type! CMRecordedRotationRateData not bound
 !missing-type! CMRotationRateData not bound
+
+# added in 13 and deprecated in 14 so we will just ignore them
+!missing-selector! +CMStepCounter::isStepCountingAvailable not bound
+!missing-selector! CMStepCounter::queryStepCountStartingFrom:to:toQueue:withHandler: not bound
+!missing-selector! CMStepCounter::startStepCountingUpdatesToQueue:updateOn:withHandler: not bound
+!missing-selector! CMStepCounter::stopStepCountingUpdates not bound
+!missing-type! CMStepCounter not bound

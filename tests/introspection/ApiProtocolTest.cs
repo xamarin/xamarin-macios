@@ -68,6 +68,9 @@ namespace Introspection {
 			// was removed by apple and is a compat class.
 			case "HMMatterRequestHandler":
 				return true;
+			case "CIFilterGenerator":
+				// only present on device :/
+				return TestRuntime.IsSimulatorOrDesktop;
 			default:
 				return SkipDueToAttribute (type);
 			}
