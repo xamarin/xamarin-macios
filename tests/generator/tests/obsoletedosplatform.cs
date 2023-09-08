@@ -4,8 +4,7 @@ using UIKit;
 
 namespace iosbindinglib {
 	[Protocol, Model]
-	[BaseType(typeof(UIApplicationDelegate))]
-	public interface TestDelegate
-	{
+	[BaseType (typeof (UIApplicationDelegate))]
+	public interface TestDelegate {
 	}
 }
