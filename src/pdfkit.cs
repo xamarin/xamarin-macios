@@ -921,9 +921,9 @@ namespace PdfKit {
 		[NullAllowed, Export ("stampName")]
 		string StampName { get; set; }
 
-		[iOS(17, 0), Mac (14, 0), MacCatalyst (17, 0)]
-		[Export("activatableTextField")]
-		bool ActivatableTextField { [Bind("isActivatableTextField")] get; }
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("activatableTextField")]
+		bool ActivatableTextField { [Bind ("isActivatableTextField")] get; }
 	}
 
 	[NoiOS]
