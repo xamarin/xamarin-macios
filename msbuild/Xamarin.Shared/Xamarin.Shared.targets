@@ -2870,12 +2870,20 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
 			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
 		</PropertyGroup>
+		<PropertyGroup>
+			<_GlobalizationDataFileAppBundleRelativePath Condition="'$(_AppContentsRelativePath)' == ''">$(_GlobalizationDataFile)</_GlobalizationDataFileAppBundleRelativePath>
+			<_GlobalizationDataFileAppBundleRelativePath Condition="'$(_AppContentsRelativePath)' != ''">$(_AppContentsRelativePath)\$(_GlobalizationDataFile)</_GlobalizationDataFileAppBundleRelativePath>
+		</PropertyGroup>
 		<ItemGroup Condition="'$(IsAppExtension)' == 'true'">
 			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
 				<!-- We need this metadata to fix the source in VS -->
 				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
 				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
 			</_AppExtensionBundlePath>
+		</ItemGroup>
+		<ItemGroup>
+			<!-- Replacing backslashes with slashes is required since MSBuild has some issue with resolving backslashes next to a property value: https://github.com/dotnet/msbuild/issues/9200 -->
+			<RuntimeHostConfigurationOption Include="ICU_DAT_FILE_PATH" Value="$(_GlobalizationDataFileAppBundleRelativePath.Replace('\','/'))" />
 		</ItemGroup>
 	</Target>
 
