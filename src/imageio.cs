@@ -80,6 +80,10 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyTGADictionary")]
 		NSString TgaDictionary { get; }
 
+		[Mac(14, 0), iOS(17, 0), TV(17, 0), Watch(10, 0)]
+		[Field("kCGImagePropertyAVISDictionary")]
+		NSString AvisDictionary { get; }
+
 		// Camera-Maker Dictionaries
 		[Field ("kCGImagePropertyMakerCanonDictionary")]
 		NSString MakerCanonDictionary { get; }
@@ -2871,6 +2875,27 @@ namespace ImageIO {
 	}
 
 	[Partial]
+	[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+	interface CGImageDecodeOptions
+	{
+		[Internal]
+		[Field("kCGImageSourceDecodeRequest")]
+		IntPtr kDecodeRequest { get; }
+
+		[Internal]
+		[Field("kCGImageSourceDecodeToHDR")]
+		IntPtr kDecodeToHDR { get; }
+
+		[Internal]
+		[Field("kCGImageSourceDecodeToSDR")]
+		IntPtr kDecodeToSDR { get; }
+
+		[Internal]
+		[Field("kCGImageSourceDecodeRequestOptions")]
+		IntPtr kDecodeRequestOptions { get; }
+	}
+
+	[Partial]
 	interface CGImageMetadataEnumerateOptions {
 		[Internal]
 		[Field ("kCGImageMetadataEnumerateRecursively")]
@@ -2954,6 +2979,10 @@ namespace ImageIO {
 		[MacCatalyst (14, 1)]
 		[Export ("TgaDictionary")]
 		NSDictionary TgaDictionary { get; set; }
+
+		[Mac(14, 0), iOS(17, 0), TV(17, 0), Watch(10, 0)]
+		[Export("AvisDictionary")]
+		NSDictionary AvisDictionary { get; set; }
 
 		[iOS (14, 1)]
 		[TV (14, 2)]
@@ -3055,6 +3084,12 @@ namespace ImageIO {
 		[Static]
 		[Wrap ("CGImageProperties.TgaDictionary")]
 		NSString TgaDictionary { get; }
+
+		[Mac(14, 0), iOS(17, 0), TV(17, 0), Watch(10, 0)]
+		[MacCatalyst(17, 0)]
+		[Static]
+		[Wrap("CGImageProperties.AvisDictionary")]
+		NSString AvisDictionary { get; }
 
 		[iOS (14, 1)]
 		[TV (14, 2)]
