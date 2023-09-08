@@ -465,7 +465,7 @@ namespace Introspection {
 				}
 				break;
 #endif
-					break;
+				break;
 			}
 
 			switch (name) {
