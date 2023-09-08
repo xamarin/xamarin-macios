@@ -3015,7 +3015,10 @@ namespace Registrar {
 						get_class = string.Format ("[{0} class]", EncodeNonAsciiCharacters (@class.ExportedName));
 					}
 
-					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, i++);
+					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, @class.ClassMapIndex);
+					if (App.Optimizations.RedirectClassHandles == true)
+						map_init.AppendLine ("__xamarin_class_handles [{0}] = __xamarin_class_map [{0}].handle;", @class.ClassMapIndex);
+					i++;
 				}
 
 
@@ -3247,6 +3250,8 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
+			if (App.Optimizations.RedirectClassHandles == true)
+				map.AppendLine ("static void *__xamarin_class_handles [{0}];", i);
 			if (skipped_types.Count > 0) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
 				foreach (var skipped in skipped_types) {
@@ -3337,7 +3342,11 @@ namespace Registrar {
 			map.AppendLine ("{0},", full_token_reference_count);
 			map.AppendLine ("{0},", skipped_types.Count);
 			map.AppendLine ("{0},", protocol_wrapper_map.Count);
-			map.AppendLine ("{0}", needs_protocol_map ? protocols.Count : 0);
+			map.AppendLine ("{0},", needs_protocol_map ? protocols.Count : 0);
+			if (App.Optimizations.RedirectClassHandles == true)
+				map.AppendLine ("&__xamarin_class_handles [0]");
+			else
+				map.AppendLine ("(void **)0");
 			map.AppendLine ("};");
 
 

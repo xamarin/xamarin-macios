@@ -24,9 +24,9 @@ namespace ClassRedirector {
 		//    possible, remove the static initializer itself.
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
-		const string mtClassMapName = "ObjCRuntime.Runtime/MTClassMap";
 		const string nativeHandleName = "ObjCRuntime.NativeHandle";
 		const string initClassHandlesName = "InitializeClassHandles";
+		const string setHandleName = "SetHandle";
 		const string classPtrName = "class_ptr";
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
@@ -91,13 +91,11 @@ namespace ClassRedirector {
 			var initMethod = classHandles.Methods.FirstOrDefault (m => m.Name == initClassHandlesName);
 			if (initMethod is null)
 				throw new Exception ($"Unable to find {initClassHandlesName} method in {classHandles.Name}");
+			var setHandleMethod = classHandles.Methods.FirstOrDefault (m => m.Name == setHandleName);
+			if (setHandleMethod is null)
+				throw new Exception ($"Unable to find {setHandleName} method in {classHandles.Name}");
 
 			var processor = initMethod.Body.GetILProcessor ();
-
-			var mtClassMapDef = LocateMTClassMap (module);
-			if (mtClassMapDef is null) {
-				throw new Exception ($"Unable to find {mtClassMapName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
-			}
 
 			var nativeHandle = LocateNativeHandle (module);
 			if (nativeHandle is null) {
@@ -113,13 +111,16 @@ namespace ClassRedirector {
 			if (map.Count () == 0)
 				return classMap;
 
+			processor.Clear ();
+			processor.Append (Instruction.Create (OpCodes.Nop));
 			foreach (var nameIndexPair in map) {
 				var csName = TrimClassName (nameIndexPair.Key);
 				var nameIndex = nameIndexPair.Value;
 				var fieldDef = AddPublicStaticField (classHandles, nameIndex.ObjCName, nativeHandle);
-				AddInitializer (nativeHandleOpImplicit, processor, mtClassMapDef, nameIndex.MapIndex, fieldDef);
+				AddInitializer (processor, nameIndex.MapIndex, fieldDef, setHandleMethod);
 				classMap [csName] = fieldDef;
 			}
+			processor.Append (Instruction.Create (OpCodes.Ret));
 
 			MarkForSave (xamarinAssembly);
 			return classMap;
@@ -137,43 +138,18 @@ namespace ClassRedirector {
 				m.Parameters.Count == 1 && m.Parameters [0].ParameterType == nativeHandle.Module.TypeSystem.IntPtr);
 		}
 
-		void AddInitializer (MethodReference nativeHandleOpImplicit, ILProcessor il, TypeDefinition mtClassMapDef, int index, FieldDefinition fieldDef)
+		void AddInitializer (ILProcessor il, int index, FieldDefinition staticFieldTarget, MethodDefinition setHandleMethod)
 		{
-			// Assuming that we have a method that looks like this:
-			// internal static unsafe void InitializeClassHandles (MTClassMap* map)
-			// {
-			// }
-			// We should have a compiled method that looks like this:
-			// nop
-			// ret
-			//
-			// For each handle that we define, we should add the following instructions:
-			// ldarg.0
-			// ldc.i4 index
-			// conv.i
-			// sizeof ObjCRuntime.Runtime.MTClassMap
-			// mul
-			// add
-			// ldfld ObjCRuntime.Runtime.MTClassMap.handle
-			// call ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)
-			// stsfld fieldDef
-
-			// what does this do? It takes an index into the array
-			// of MTClassMap and scales it to the correct byte
-			// offset from the pointer to and adds it to the base
-			// pointer. Then it does a load field to get the handle
-			// then converts the return value (IntPtr) to NativeHandle
-			var handleRef = mtClassMapDef.Fields.First (f => f.Name == "handle");
-			var last = il.Body.Instructions.Last ();
-			il.InsertBefore (last, Instruction.Create (OpCodes.Ldarg_0));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Ldc_I4, index));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Conv_I));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Sizeof, mtClassMapDef));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Mul));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Add));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Ldfld, handleRef));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Call, nativeHandleOpImplicit));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Stsfld, fieldDef));
+			il.Append (Instruction.Create (OpCodes.Ldsflda, staticFieldTarget));
+			il.Append (Instruction.Create (OpCodes.Stloc_1));
+			il.Append (Instruction.Create (OpCodes.Ldc_I4, index));
+			il.Append (Instruction.Create (OpCodes.Ldloc_1));
+			il.Append (Instruction.Create (OpCodes.Conv_U));
+			il.Append (Instruction.Create (OpCodes.Ldarg_0));
+			il.Append (Instruction.Create (OpCodes.Call, setHandleMethod));
+			il.Append (Instruction.Create (OpCodes.Ldc_I4, 0));
+			il.Append (Instruction.Create (OpCodes.Conv_U));
+			il.Append (Instruction.Create (OpCodes.Stloc_1));
 		}
 
 		FieldDefinition AddPublicStaticField (TypeDefinition inType, string fieldName, TypeReference fieldType)
@@ -198,11 +174,6 @@ namespace ClassRedirector {
 			return AllTypes (module).FirstOrDefault (t => t.FullName == classHandleName);
 		}
 
-		TypeDefinition? LocateMTClassMap (ModuleDefinition module)
-		{
-			return AllTypes (module).FirstOrDefault (t => t.FullName == mtClassMapName);
-		}
-
 		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap)
 		{
 			foreach (var assem in assemblies) {
@@ -219,7 +190,8 @@ namespace ClassRedirector {
 			var dirty = false;
 			foreach (var cl in AllTypes (module)) {
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
-					dirty = dirty || PatchClassPtrUsage (cl, classPtrField);
+					var madeChanges = PatchClassPtrUsage (cl, classPtrField);
+					dirty = dirty || madeChanges;
 				}
 			}
 			return dirty;
@@ -231,13 +203,10 @@ namespace ClassRedirector {
 			if (class_ptr is null) {
 				return false;
 			}
-
 			// step 1: remove the field
 			cl.Fields.Remove (class_ptr);
-
 			// step 2: remove init code from cctor
 			RemoveCCtorInit (cl, class_ptr);
-
 			// step 3: patch every method
 			PatchMethods (cl, class_ptr, classPtrField);
 			return true;
