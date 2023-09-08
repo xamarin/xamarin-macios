@@ -1410,8 +1410,36 @@
 		</ItemGroup>
 	</Target>
 
+	<!-- Add the pdb for Microsoft.<platform>.dll to the app bundle if we're debugging -->
+	<PropertyGroup>
+		<BundleDebugSymbolFileForSdkAssembly Condition="'$(BundleDebugSymbolFileForSdkAssembly)' == ''">$(_BundlerDebug)</BundleDebugSymbolFileForSdkAssembly>
+	</PropertyGroup>
+	<Target Name="_AddDebugSymbolsToBundle"
+		DependsOnTargets="ResolveRuntimePackAssets;_ComputeFrameworkVariables"
+		BeforeTargets="_ResolveCopyLocalAssetsForPublish"
+		Condition="'$(BundleDebugSymbolFileForSdkAssembly)' == 'true'"
+		>
+		<ItemGroup>
+			<ReferenceCopyLocalPaths
+				Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')"
+				Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == '$(_XamarinNugetPackageId)' and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+		</ItemGroup>
+	</Target>
+
+	<PropertyGroup>
+		<_ComputePublishLocationDependsOn>
+			$(_ComputePublishLocationDependsOn);
+			_GenerateBundleName;
+			_ParseBundlerArguments;
+			_ComputeMonoLibraries;
+			_DetectSigningIdentity;
+			_PrepareResourceRules;
+			_AddDebugSymbolsToBundle;
+		</_ComputePublishLocationDependsOn>
+	</PropertyGroup>
+
 	<Target Name="_ComputePublishLocation"
-		DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeMonoLibraries;_DetectSigningIdentity;_PrepareResourceRules"
+		DependsOnTargets="$(_ComputePublishLocationDependsOn)"
 		Condition="'$(_CanOutputAppBundle)' == 'true'"
 		>
 		<PropertyGroup>
