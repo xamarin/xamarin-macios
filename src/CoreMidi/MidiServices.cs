@@ -926,7 +926,7 @@ namespace CoreMidi {
 				dest += 8;
 				Marshal.WriteInt16 (buffer, dest, (short) packet_size);
 				dest += 2;
-				if (packet.ByteArray is null) {
+				if (packet.ByteArray is null || packet.ByteArray.Length < 1) {
 					Buffer.MemoryCopy ((void*) packet.BytePointer, (void*) (buffer + dest), packet_size, packet_size);
 				} else {
 					Marshal.Copy (packet.ByteArray, packet.start, buffer + dest, packet_size);
