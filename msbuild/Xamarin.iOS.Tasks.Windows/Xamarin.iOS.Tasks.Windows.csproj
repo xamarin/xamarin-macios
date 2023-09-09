@@ -50,15 +50,17 @@
     <Folder Include="Tasks\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Properties\Resources.Designer.cs" />
     <EmbeddedResource Update="Properties\Resources.resx">
+      <Type>Resx</Type>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <StronglyTypedFileName>Properties/Resources.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Xamarin.iOS.Tasks.Windows.Properties</StronglyTypedNamespace>
+      <StronglyTypedClassName>Resources</StronglyTypedClassName>
+      <GenerateResource>true</GenerateResource>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
