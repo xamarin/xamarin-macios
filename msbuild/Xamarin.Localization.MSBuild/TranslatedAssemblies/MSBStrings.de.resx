@@ -1211,4 +1211,30 @@
             {0}: the path to the linker assembly
         </comment>
     </data>
+  <data name="E7116" xml:space="preserve">
+        <value>Die Assembly {0} stellt keine ObjectFile-Metadaten bereit.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>Die Assembly {0} wurde mehrmals als Eingabeassembly übergeben (referenziert von {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Fehler beim Kompilieren von AOT {0}. Der AOT-Compiler wurde mit Code {1} beendet.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>Es wurde ein Assemblyverweiszyklus gefunden, der mit der Assembly {0} verknüpft ist.</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
 </root>
