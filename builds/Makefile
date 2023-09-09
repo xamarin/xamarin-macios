@@ -99,26 +99,6 @@ dotnet-install.sh: Makefile
 	$(Q) chmod +x $@.tmp
 	$(Q) mv $@.tmp $@
 
-# Fix the BCL assemblies we get for Mac Catalyst
-fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-maccatalyst-assembly/*.cs*) Makefile
-	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
-
-define FixMacCatalystAssembly
-$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
-
-downloads/fix-maccatalyst-tmpdir/$(1).dll: $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
-	$(Q) mkdir -p $$(dir $$@)
-	$(Q) mono fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe $$(abspath $$<) $$(abspath $$@).tmp
-	$(Q) mv $$(abspath $$@).tmp $$(abspath $$@)
-
-$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(1).dll: downloads/fix-maccatalyst-tmpdir/$(1).dll | $(PREFIX)/lib/mono/Xamarin.MacCatalyst
-	$(Q) $(CP) $$< $$@
-endef
-$(eval $(call FixMacCatalystAssembly,Mono.Security))
-$(eval $(call FixMacCatalystAssembly,mscorlib))
-$(eval $(call FixMacCatalystAssembly,System))
-$(eval $(call FixMacCatalystAssembly,System.Net.Http))
-
 .stamp-download-mono: $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) download-mono
 	$(Q) touch $@
