@@ -45,7 +45,8 @@ public partial class Generator {
 	//	- call/emit PrintPlatformAttributes on the type
 	void GenerateEnum (Type type)
 	{
-		if (AttributeManager.HasAttribute<FlagsAttribute> (type))
+		var isFlagsEnum = AttributeManager.HasAttribute<FlagsAttribute> (type);
+		if (isFlagsEnum)
 			print ("[Flags]");
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
@@ -238,6 +239,57 @@ public partial class Generator {
 				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;
 			print ("}");
+
+			if (isFlagsEnum) {
+				print ($"public static NSString[] ToArray (this {type.Name} value)");
+				print ("{");
+				indent++;
+				print ("var rv = new global::System.Collections.Generic.List<NSString> ();");
+				foreach (var kvp in fields) {
+					print ($"if (value.HasFlag ({type.Name}.{kvp.Key.Name}) && {kvp.Value.SymbolName} != IntPtr.Zero)");
+					indent++;
+					print ($"rv.Add ((NSString) Runtime.GetNSObject ({kvp.Value.SymbolName})!);");
+					indent--;
+				}
+				print ($"// In order to be forward-compatible, any unknown values are ignored.");
+				print ("return rv.ToArray ();");
+				indent--;
+				print ("}");
+				print ("");
+
+				print ($"public static {type.Name} ToFlags (global::System.Collections.Generic.IEnumerable<NSString{(nullable ? "?" : "")}>{(nullable ? "?" : "")} constants)");
+				print ("{");
+				indent++;
+				print ($"var rv = default ({type.Name});");
+				print ($"if (constants is null)");
+				indent++;
+				print ("return rv;");
+				indent--;
+				print ($"foreach (var constant in constants) {{");
+				indent++;
+				var first = true;
+				if (nullable) {
+					print ("if (constant is null)");
+					indent++;
+					print ("continue;");
+					indent--;
+					first = false;
+				}
+				foreach (var kvp in fields) {
+					print ($"{(first ? "if" : "else if")} (constant.IsEqualTo ({kvp.Value.SymbolName}))");
+					first = false;
+					indent++;
+					print ($"rv |= {type.Name}.{kvp.Key.Name};");
+					indent--;
+				}
+				print ($"// In order to be forward-compatible, any unknown values are ignored.");
+				indent--;
+				print ("}");
+				print ("return rv;");
+				indent--;
+				print ("}");
+				print ("");
+			}
 		}
 
 		if ((fields.Count > 0) || (error is not null) || (null_field is not null)) {
