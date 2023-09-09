@@ -2908,7 +2908,7 @@ namespace Registrar {
 						continue;
 					}
 
-					if (@class.Type.Is ("PassKit", "PKDisbursementAuthorizationControllerDelegate")) {
+					if (@class.Type.Is ("PassKit", "PKDisbursementAuthorizationControllerDelegate") || @class.Type.Is ("PassKit", "IPKDisbursementAuthorizationControllerDelegate")) {
 						exceptions.Add (ErrorHelper.CreateWarning (4189, $"The class '{@class.Type.FullName}' will not be registered it has been removed from the {App.Platform} SDK."));
 						continue;
 					}

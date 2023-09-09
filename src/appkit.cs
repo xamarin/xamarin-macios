@@ -16142,6 +16142,9 @@ namespace AppKit {
 		[Export ("setNeedsDisplayInRect:")]
 		void SetNeedsDisplayInRect (CGRect invalidRect);
 
+		[Export ("clipsToBounds")]
+		bool ClipsToBounds { get; set; }
+
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Subclass NSView and implement 'DrawRect'.")]
 		[Export ("lockFocus")]
 		void LockFocus ();
@@ -20176,15 +20179,15 @@ namespace AppKit {
 		[Field ("NSToolbarSidebarTrackingSeparatorItemIdentifier")]
 		NSString NSToolbarSidebarTrackingSeparatorItemIdentifier { get; }
 
-		// https://github.com/xamarin/xamarin-macios/issues/12871
-		// [MacCatalyst (14,0)][NoMac]
-		// [Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier")]
-		// NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
+		[MacCatalyst (14, 0)]
+		[NoMac]
+		[Field ("NSToolbarPrimarySidebarTrackingSeparatorItemIdentifier", "UIKit")]
+		NSString PrimarySidebarTrackingSeparatorItemIdentifier { get; }
 
-		// https://github.com/xamarin/xamarin-macios/issues/12871
-		// [MacCatalyst (14,0)][NoMac]
-		// [Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
-		// NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
+		[MacCatalyst (14, 0)]
+		[NoMac]
+		[Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier", "UIKit")]
+		NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
 
 		[Mac (13, 0), MacCatalyst (16, 0)]
 		[Export ("centeredItemIdentifiers", ArgumentSemantic.Copy)]
