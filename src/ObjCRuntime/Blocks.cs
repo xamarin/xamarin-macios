@@ -373,7 +373,7 @@ namespace ObjCRuntime {
 		public T GetDelegateForBlock<T> () where T : class
 #endif
 		{
-			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
+			return Runtime.GetDelegateForBlock<T> (invoke);
 		}
 
 #if NET

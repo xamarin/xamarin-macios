@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>'{0}' 파일의 압축을 풀 수 없습니다. 기본 ‘unzip’ 명령에 대한 자세한 내용은 빌드 로그를 참조하세요.</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>필요한 'Xamarin.Mac.dll' 어셈블리가 참조에 없습니다.
 		</value>
@@ -1518,7 +1524,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>WatchKit 프레임워크가 iOS SDK에서 제거되었으므로 '{0}' 클래스가 등록되지 않습니다.
+		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1541,6 +1547,9 @@
 	</data>
   <data name="MX4188" xml:space="preserve">
 		<value>'{0}' 형식에 대한 블록 서명을 계산할 수 없습니다. {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' 컴파일러가 없습니다. Xcode '명령줄 도구' 구성 요소를 설치하세요.
@@ -1812,5 +1821,8 @@
 	</data>
   <data name="MX8055" xml:space="preserve">
 		<value>어셈블리 '{0}'에서 'ObjCRuntime.__Registrar__' 형식을 찾을 수 없습니다.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
 	</data>
 </root>
