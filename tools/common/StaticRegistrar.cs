@@ -2877,6 +2877,24 @@ namespace Registrar {
 				}
 #endif
 
+				// Xcode 15 removed NewsstandKit
+				if (Driver.XcodeVersion.Major >= 15) {
+					if (IsTypeCore (@class, "NewsstandKit")) {
+						exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the NewsstandKit framework has been removed from the {App.Platform} SDK."));
+						continue;
+					}
+
+					if (@class.Type.Is ("PassKit", "PKDisbursementAuthorizationControllerDelegate") || @class.Type.Is ("PassKit", "IPKDisbursementAuthorizationControllerDelegate")) {
+						exceptions.Add (ErrorHelper.CreateWarning (4189, $"The class '{@class.Type.FullName}' will not be registered it has been removed from the {App.Platform} SDK."));
+						continue;
+					}
+
+					if (@class.Type.Is ("PassKit", "PKDisbursementAuthorizationController")) {
+						exceptions.Add (ErrorHelper.CreateWarning (4189, $"The class '{@class.Type.FullName}' will not be registered it has been removed from the {App.Platform} SDK."));
+						continue;
+					}
+				}
+
 				if (@class.IsFakeProtocol)
 					continue;
 

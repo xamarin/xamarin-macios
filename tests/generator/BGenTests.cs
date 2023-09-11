@@ -283,7 +283,7 @@ namespace GeneratorTests {
 			foreach (var ca in attributes)
 				lines.Add (RenderSupportedOSPlatformAttribute (ca));
 			lines.Sort ();
-			return string.Join ("\n", lines);
+			return string.Join ("\n", lines).Replace ("\r", string.Empty);
 		}
 
 		static string RenderSupportedOSPlatformAttribute (CustomAttribute ca)
@@ -311,7 +311,7 @@ namespace GeneratorTests {
 			var preserves = allSupportedAttributes.Count ();
 			var renderedAttributes = "\t" + string.Join ("\n\t", renderedSupportedAttributes.OrderBy (v => v)) + "\n";
 #if NET
-			const string expectedAttributes =
+			string expectedAttributes =
 @"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
@@ -332,7 +332,7 @@ namespace GeneratorTests {
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
 ";
 #else
-			const string expectedAttributes =
+			string expectedAttributes =
 @"	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
@@ -351,6 +351,9 @@ namespace GeneratorTests {
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 ";
 #endif
+
+			expectedAttributes = expectedAttributes.Replace ("\r", string.Empty);
+			renderedAttributes = renderedAttributes.Replace ("\r", string.Empty);
 
 			if (renderedAttributes != expectedAttributes) {
 				Console.WriteLine ($"Expected:");
@@ -1101,6 +1104,9 @@ namespace GeneratorTests {
 				someMethod [i] = type.Methods.Single (v => v.Name == "SomeMethod" + (i + 1).ToString ());
 				renderedSomeMethod [i] = string.Join ("\n", someMethod [i].CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
 
+				expectedAttributes [i] = expectedAttributes [i].Replace ("\r", string.Empty);
+				renderedSomeMethod [i] = renderedSomeMethod [i].Replace ("\r", string.Empty);
+
 				if (expectedAttributes [i] == renderedSomeMethod [i])
 					continue;
 
@@ -1180,6 +1186,8 @@ namespace GeneratorTests {
 [SupportedOSPlatform(""macos10.15"")]
 [UnsupportedOSPlatform(""ios"")]
 [UnsupportedOSPlatform(""tvos"")]";
+			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);
+
 			Assert.AreEqual (expectedPropertyAttributes, RenderSupportedOSPlatformAttributes (property), "Property attributes");
 			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
 		}
@@ -1207,6 +1215,9 @@ namespace GeneratorTests {
 [SupportedOSPlatform(""maccatalyst"")]
 [SupportedOSPlatform(""macos11.0"")]
 [UnsupportedOSPlatform(""tvos"")]";
+
+			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);
+			expectedSetterAttributes = expectedSetterAttributes.Replace ("\r", string.Empty);
 
 			Assert.AreEqual (expectedPropertyAttributes, RenderSupportedOSPlatformAttributes (property), "Property attributes");
 			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
@@ -1353,7 +1364,8 @@ namespace GeneratorTests {
 					var member = type.Methods.SingleOrDefault (v => v.Name == expectedMember.Method);
 					Assert.IsNotNull (member, $"Method not found: {expectedMember.Method} in {type.FullName}");
 					var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
-					if (renderedAttributes != expectedMember.Attributes) {
+					var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
+					if (renderedAttributes != expectedAttributes) {
 						var msg =
 							$"Property: {type.FullName}::{member.Name}\n" +
 							$"\tExpected attributes:\n" +
@@ -1376,7 +1388,8 @@ namespace GeneratorTests {
 					var member = type.Properties.SingleOrDefault (v => v.Name == expectedMember.Property);
 					Assert.IsNotNull (member, $"Property not found: {expectedMember.Property} in {type.FullName}");
 					var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
-					if (renderedAttributes != expectedMember.Attributes) {
+					var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
+					if (renderedAttributes != expectedAttributes) {
 						var msg =
 							$"Property: {type.FullName}::{member.Name}\n" +
 							$"\tExpected attributes:\n" +
@@ -1390,6 +1403,21 @@ namespace GeneratorTests {
 			}
 
 			Assert.That (failures, Is.Empty, "Failures");
+		}
+
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void ObsoletedOSPlatform (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("tests/obsoletedosplatform.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

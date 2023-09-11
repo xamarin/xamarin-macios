@@ -278,10 +278,10 @@ namespace ObjCRuntime {
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
-			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
+			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
-#if MONOMAC
+#if MONOMAC && !NET
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
 					NSLog ($"{AssemblyName} was loaded from {typeof (NSObject).Assembly.Location}");
@@ -1087,25 +1087,36 @@ namespace ObjCRuntime {
 			return del;
 		}
 
-		internal static Delegate? GetDelegateForBlock (IntPtr methodPtr, Type type)
+#if NET
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : System.MulticastDelegate
+#else
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : class
+#endif
 		{
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
-			Delegate? val;
-			var pair = new IntPtrTypeValueTuple (methodPtr, type);
+			var pair = new IntPtrTypeValueTuple (methodPtr, typeof (T));
 			lock (lock_obj) {
 				if (block_to_delegate_cache is null)
 					block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
 
-				if (block_to_delegate_cache.TryGetValue (pair, out val))
-					return val;
+				if (block_to_delegate_cache.TryGetValue (pair, out var cachedValue))
+#if NET
+					return (T) cachedValue;
+#else
+					return (T) (object) cachedValue;
+#endif
 			}
 
-			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
+			var val = Marshal.GetDelegateForFunctionPointer<T> (methodPtr);
 
 			lock (lock_obj) {
+#if NET
 				block_to_delegate_cache [pair] = val;
+#else
+				block_to_delegate_cache [pair] = (Delegate) (object) val;
+#endif
 			}
 			return val;
 		}
