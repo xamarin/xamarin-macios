@@ -151,6 +151,13 @@ SUPPORTED_API_VERSIONS_TVOS+=net7.0-16.4
 SUPPORTED_API_VERSIONS_MACOS+=net7.0-13.3
 SUPPORTED_API_VERSIONS_MACCATALYST+=net7.0-16.4
 
+## This is a subscription to the Xcode 15 version of our packages
+## This also needs corresponding entries in eng/Version.Details.xml and eng/Versions.props
+SUPPORTED_API_VERSIONS_IOS+=net8.0-17.0
+SUPPORTED_API_VERSIONS_TVOS+=net8.0-17.0
+SUPPORTED_API_VERSIONS_MACOS+=net8.0-14.0
+SUPPORTED_API_VERSIONS_MACCATALYST+=net8.0-17.0
+
 # The default target platform version for each .NET version
 
 DEFAULT_TARGET_PLATFORM_VERSIONS_IOS+=net7.0_16.4
