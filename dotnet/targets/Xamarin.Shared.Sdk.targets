@@ -1518,7 +1518,7 @@
 				PublishFolderType="Assembly"
 			/>
 			<ResolvedFileToPublish Remove="@(_CreateDumpExecutable)" />
-			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" />
+			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" Condition="'$(BundleCreateDump)' == 'true'" />
 
 			<!-- Remove any dylibs Mono told us not to link with -->
 			<ResolvedFileToPublish
@@ -1631,7 +1631,7 @@
 	<Target Name="_ComputeCodesignItems"
 		Outputs="$(_CodesignItemsPath)"
 		>
-		<ItemGroup Condition="'$(_RequireCodeSigning)' == 'true'">
+		<ItemGroup Condition="'$(_RequireCodeSigning)' == 'true' And '$(BundleCreateDump)' == 'true'">
 			<!-- The 'createdump' executable must be signed. -->
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/13417 -->
 			<_CreateDumpExecutableToSign Include="@(_CreateDumpExecutable -> '$(_DylibPublishDir)%(RelativePath)')" KeepMetadata="false">
