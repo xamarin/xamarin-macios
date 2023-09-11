@@ -512,7 +512,8 @@ namespace ScreenCaptureKit {
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (14, 0), NoMacCatalyst]
-	[Protocol][Model]
+	[Protocol]
+	[Model]
 	[BaseType (typeof (NSObject))]
 	interface SCContentSharingPickerObserver {
 		[Abstract]
