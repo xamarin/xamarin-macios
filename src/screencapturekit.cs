@@ -237,7 +237,7 @@ namespace ScreenCaptureKit {
 		[Mac (14, 0)]
 		[Static]
 		[Export ("infoForFilter:")]
-		SCShareableContentInfo Info (SCContentFilter filter);
+		SCShareableContentInfo GetInfo (SCContentFilter filter);
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -461,7 +461,7 @@ namespace ScreenCaptureKit {
 		SCContentSharingPickerMode AllowedPickerModes { get; set; }
 
 		[Export ("excludedWindowIDs", ArgumentSemantic.Strong)]
-		NSNumber [] ExcludedWindowIDs { get; set; }
+		NSNumber [] ExcludedWindowIds { get; set; }
 
 		[Export ("excludedBundleIDs", ArgumentSemantic.Strong)]
 		string [] ExcludedBundleIDs { get; set; }
@@ -482,6 +482,7 @@ namespace ScreenCaptureKit {
 		SCContentSharingPickerConfiguration DefaultConfiguration { get; set; }
 
 		[NullAllowed]
+		[BindAs (typeof (int))]
 		[Export ("maximumStreamCount", ArgumentSemantic.Strong)]
 		NSNumber MaximumStreamCount { get; set; }
 
@@ -501,17 +502,17 @@ namespace ScreenCaptureKit {
 		void Present ();
 
 		[Export ("presentPickerUsingContentStyle:")]
-		void PresentPickerUsingContentStyle (SCShareableContentStyle contentStyle);
+		void Present (SCShareableContentStyle contentStyle);
 
 		[Export ("presentPickerForStream:")]
-		void PresentPickerForStream (SCStream stream);
+		void Present (SCStream stream);
 
 		[Export ("presentPickerForStream:usingContentStyle:")]
-		void PresentPickerForStream (SCStream stream, SCShareableContentStyle contentStyle);
+		void Present (SCStream stream, SCShareableContentStyle contentStyle);
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (14, 0), NoMacCatalyst]
-	[Protocol]
+	[Protocol][Model]
 	[BaseType (typeof (NSObject))]
 	interface SCContentSharingPickerObserver {
 		[Abstract]
@@ -529,6 +530,7 @@ namespace ScreenCaptureKit {
 
 	[NoiOS, NoTV, NoWatch, Mac (14, 0), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SCShareableContentInfo {
 		[Export ("style")]
 		SCShareableContentStyle Style { get; }
