@@ -163,6 +163,7 @@ namespace LinkAll {
 			Assert.True (default_value, "DefaultValue");
 		}
 
+#if NET
 		static void Check (string calendarName, bool present)
 		{
 			var type = Type.GetType ("System.Globalization." + calendarName);
@@ -174,16 +175,11 @@ namespace LinkAll {
 		public void Calendars ()
 		{
 			Check ("GregorianCalendar", true);
-#if NET
 			Check ("UmAlQuraCalendar", true);
 			Check ("HijriCalendar", true);
 			Check ("ThaiBuddhistCalendar", true);
-#else
-			Check ("UmAlQuraCalendar", false);
-			Check ("HijriCalendar", false);
-			Check ("ThaiBuddhistCalendar", false);
-#endif
 		}
+#endif // NET
 
 		public enum CertificateProblem : long {
 			CertEXPIRED = 0x800B0101,
