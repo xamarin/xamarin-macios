@@ -55,9 +55,6 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
-#if DOTNET
-const char *xamarin_icu_dat_file_name = NULL;
-#endif
 #if MONOMAC || TARGET_OS_MACCATALYST
 NSString * xamarin_custom_bundle_name = @"MonoBundle";
 #endif
@@ -2585,22 +2582,6 @@ void
 xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
-	char *icu_dat_file_path = NULL;
-	int subtractPropertyCount = 0;
-
-	if (xamarin_icu_dat_file_name != NULL && *xamarin_icu_dat_file_name != 0) {
-#if !defined (NATIVEAOT)
-		char path [1024];
-		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
-			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
-		} else {
-			icu_dat_file_path = strdup (path);
-		}
-#endif // !defined (NATIVEAOT)
-	} else {
-		subtractPropertyCount++;
-	}
-
 	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
 	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
 
@@ -2613,7 +2594,6 @@ xamarin_vm_initialize ()
 		"TRUSTED_PLATFORM_ASSEMBLIES",
 		"NATIVE_DLL_SEARCH_DIRECTORIES",
 		"RUNTIME_IDENTIFIER",
-		"ICU_DAT_FILE_PATH", // Must be last.
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
@@ -2622,19 +2602,15 @@ xamarin_vm_initialize ()
 		trusted_platform_assemblies,
 		native_dll_search_directories,
 		RUNTIMEIDENTIFIER,
-		icu_dat_file_path, // might be NULL, if so we say we're passing one property less that what we really are (to skip this last one). This also means that this property must be the last one
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
-	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0])) - subtractPropertyCount;
+	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0]));
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
-	xamarin_free (pinvokeOverride);
 
+	xamarin_free (pinvokeOverride);
 	xamarin_free (trusted_platform_assemblies);
 	xamarin_free (native_dll_search_directories);
-
-	if (icu_dat_file_path != NULL)
-		free (icu_dat_file_path);
 
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");

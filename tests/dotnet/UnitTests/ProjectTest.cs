@@ -632,7 +632,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
-			Assert.That (createdump, Does.Exist, "createdump existence");
+			Assert.That (createdump, Does.Not.Exist, "createdump existence");
 		}
 
 		[Test]
@@ -971,6 +971,42 @@ namespace Xamarin.Tests {
 			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
 			string [] configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
 			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
+		}
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		// [TestCase ("MacCatalyst", "")] - No extension support yet
+		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var extensionProjectDir = GetProjectPath ("ExtensionProjectWithFrameworks", platform: platform);
+
+			Clean (extensionProjectDir);
+			Clean (consumingProjectDir);
+
+			DotNet.AssertBuild (consumingProjectDir, verbosity);
+
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
+			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+			var extensionFrameworksPath = Path.Combine (extensionPath, GetFrameworksRelativePath (platform));
+			Assert.IsFalse (Directory.Exists (extensionFrameworksPath), $"App extension framework directory exists when it shouldn't: {extensionFrameworksPath}");
+
+			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
+			var configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
+			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
+
+			var appFrameworksPath = Path.Combine (appPath, GetFrameworksRelativePath (platform));
+			Assert.That (Directory.Exists (appFrameworksPath), $"App Frameworks directory does not exist: {appFrameworksPath}");
+
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "SomewhatUnknownD.framework", "SomewhatUnknownD")), "SomewhatUnknownD");
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownD.framework", "UnknownD")), "UnknownD");
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownE.framework", "UnknownE")), "UnknownE");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
