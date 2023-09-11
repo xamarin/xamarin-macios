@@ -97,6 +97,7 @@ namespace Xharness.Jenkins {
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
 				Target = "dependencies",
+				Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS),
 				WorkingDirectory = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch")),
 			};
 			var nunitExecutionMTouch = new NUnitExecuteTask (jenkins, buildMTouch, processManager) {
