@@ -42,6 +42,23 @@ stages:
     condition: eq(${{ parameters.isPR }}, false)
 
   jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    steps:
+    - template: ../common/configure.yml
+      parameters:
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: false
+
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
@@ -49,6 +66,8 @@ stages:
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
+      condition: "eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      dependsOn: configure
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
@@ -63,6 +82,7 @@ stages:
       binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
       useDateTimeVersion: true
+      condition: "eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       postConvertSteps:
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -85,6 +105,7 @@ stages:
     - job: push_signed_nugets
       displayName: Push NuGets
       dependsOn: nuget_convert
+      condition: "eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       variables:
         skipNugetSecurityAnalysis: true
       pool:
