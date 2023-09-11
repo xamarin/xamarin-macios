@@ -1200,11 +1200,11 @@ namespace CoreSpotlight {
 		[Export ("compareByRank:")]
 		NSComparisonResult CompareByRank (CSSuggestion other);
 
-		[iOS (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoTV, NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
 		[Export ("score")]
 		NSNumber Score { get; }
 
-		[iOS (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoTV, NoWatch]
+		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
 		[Export ("suggestionDataSources")]
 		NSObject [] SuggestionDataSources { get; }
 	}
