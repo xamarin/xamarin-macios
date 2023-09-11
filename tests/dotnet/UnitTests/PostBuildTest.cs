@@ -116,9 +116,9 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		// [TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")] // Ignored due to https://github.com/dotnet/runtime/issues/90584
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		// [TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // Ignored due to https://github.com/dotnet/runtime/issues/90584
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		public void PublishTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
