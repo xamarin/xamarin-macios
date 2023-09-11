@@ -189,6 +189,11 @@ namespace ClassRedirector {
 		{
 			var dirty = false;
 			foreach (var cl in AllTypes (module)) {
+				// generic classes leave class_ptr references
+				// behind that we (apparently) can't find
+				if (cl.HasGenericParameters) {
+					continue;
+				}
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
 					var madeChanges = PatchClassPtrUsage (cl, classPtrField);
 					dirty = dirty || madeChanges;
