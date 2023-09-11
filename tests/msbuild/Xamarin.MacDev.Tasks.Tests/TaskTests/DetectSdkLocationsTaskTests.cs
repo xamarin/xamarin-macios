@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Xamarin.iOS.Tasks;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
