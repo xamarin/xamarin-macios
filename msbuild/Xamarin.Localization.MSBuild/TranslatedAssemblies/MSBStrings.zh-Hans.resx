@@ -1211,4 +1211,30 @@
             {0}: the path to the linker assembly
         </comment>
     </data>
+  <data name="E7116" xml:space="preserve">
+        <value>程序集 {0} 未提供 "ObjectFile" 元数据。</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>多次将程序集 {0} 作为(从 {1} 引用的)输入程序集传递。</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT 编译 {0} 失败，AOT 编译器已退出，代码为 {1}。</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>遇到与程序集 {0} 相关的程序集引用周期。</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
 </root>

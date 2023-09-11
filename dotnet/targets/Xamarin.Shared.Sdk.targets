@@ -10,6 +10,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FilterStaticFrameworks" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFullPaths" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -769,8 +770,49 @@
 			<Output TaskParameter="FrameworkToPublish" ItemName="_FilteredFrameworkToPublish" />
 		</FilterStaticFrameworks>
 
+		<!--
+
+			We need to use the full path to the framework for frameworks that
+			come from app extensions (since any relative paths from the app
+			extension projects won't be correct once loaded into the
+			containing project), so compute that. However, also do this for
+			app projects, so that we can properly deduplicate frameworks that
+			come from both extensions and the main app project.
+
+		 -->
+		<GetFullPaths
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			Items="@(_FilteredFrameworkToPublish)"
+			Metadata="Identity;SourceDirectory"
+		>
+			<Output TaskParameter="Output" ItemName="_FilteredFrameworkToPublishWithFullPath" />
+		</GetFullPaths>
+
+		<!-- If we're an app extension, store the list of all the frameworks to disk (and don't publish any of them to the appex) -->
+		<!-- Note that app extensions may be nested, so we first check if we have any app extensions with frameworks, read those, then store the full list to disk if we're an app extension, so the containing app project sees everything -->
+		<ReadItemsFromFile File="@(_ResolvedAppExtensionReferences->'%(Identity)\..\native-frameworks.items')" Condition="Exists('%(Identity)\..\native-frameworks.items')">
+			<Output TaskParameter="Items" ItemName="_FrameworksFromAppExtensions" />
+		</ReadItemsFromFile>
+
+		<WriteItemsToFile
+			Condition="'$(IsAppExtension)' == 'true'"
+			Items="@(_FilteredFrameworkToPublishWithFullPath);@(_FrameworksFromAppExtensions)"
+			ItemName="_FrameworksFromAppExtensions"
+			File="$(DeviceSpecificOutputPath)\native-frameworks.items"
+			IncludeMetadata="true"
+			Overwrite="true"
+		/>
+
 		<ItemGroup>
-			<_DirectoriesToPublish Include="@(_FilteredFrameworkToPublish)" />
+			<_FrameworksFromAppExtensions Update="@(_FrameworksFromAppExtensions)">
+				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
+			</_FrameworksFromAppExtensions>
+		</ItemGroup>
+
+		<ItemGroup>
+			<_DirectoriesToPublish Include="@(_FrameworksFromAppExtensions)" Condition="'$(IsAppExtension)' != 'true'" />
+			<_DirectoriesToPublish Include="@(_FilteredFrameworkToPublishWithFullPath)" Condition="'$(IsAppExtension)' != 'true'" />
 		</ItemGroup>
 	</Target>
 
@@ -1060,6 +1102,13 @@
 
 			<_RuntimeConfigurationFile>runtimeconfig.bin</_RuntimeConfigurationFile>
 		</PropertyGroup>
+
+		<!-- Not sure about how to handle nested app extensions here, but if it ever becomes a problem we can look into it (I believe only watch extensions can have embedded extensions at this point, and we don't support watchOS on .NET anyways) -->
+		<ItemGroup Condition="'$(IsAppExtension)' == 'true'">
+			<_CustomLinkFlags Include="-rpath" />
+			<_CustomLinkFlags Include="@executable_path/../../Frameworks" Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS'" />
+			<_CustomLinkFlags Include="@executable_path/../../../../Frameworks" Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'" />
+		</ItemGroup>
 
 		<ItemGroup>
 			<!-- Select the native libraries from mono we need to link with and potentially copy into the app -->
@@ -1744,7 +1793,7 @@
 				PublishFolderType="Assembly"
 			/>
 			<ResolvedFileToPublish Remove="@(_CreateDumpExecutable)" />
-			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" />
+			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" Condition="'$(BundleCreateDump)' == 'true'" />
 
 			<!-- Remove any dylibs Mono told us not to link with -->
 			<ResolvedFileToPublish
@@ -1857,7 +1906,7 @@
 	<Target Name="_ComputeCodesignItems"
 		Outputs="$(_CodesignItemsPath)"
 		>
-		<ItemGroup Condition="'$(_RequireCodeSigning)' == 'true'">
+		<ItemGroup Condition="'$(_RequireCodeSigning)' == 'true' And '$(BundleCreateDump)' == 'true'">
 			<!-- The 'createdump' executable must be signed. -->
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/13417 -->
 			<_CreateDumpExecutableToSign Include="@(_CreateDumpExecutable -> '$(_DylibPublishDir)%(RelativePath)')" KeepMetadata="false">

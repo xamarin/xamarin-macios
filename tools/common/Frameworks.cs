@@ -778,6 +778,11 @@ public class Frameworks : Dictionary<string, Framework> {
 
 	static bool FilterFrameworks (Application app, Framework framework)
 	{
+		if (framework.Name == "NewsstandKit" && Driver.XcodeVersion.Major >= 15) {
+			Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 15+.", framework.Name);
+			return false;
+		}
+
 		switch (app.Platform) {
 #if !NET
 		// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
