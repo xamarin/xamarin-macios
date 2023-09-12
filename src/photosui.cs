@@ -741,7 +741,7 @@ namespace PhotosUI {
 
 	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
-	interface PHPickerUpdateConfiguration : NSCopying {
+	interface PHPickerUpdateConfiguration : NSCopying, NSSecureCoding {
 		[Export ("selectionLimit")]
 		nint SelectionLimit { get; set; }
 
