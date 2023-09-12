@@ -184,8 +184,13 @@ namespace Xamarin.MacDev.Tasks {
 			Directory.CreateDirectory (OutputDirectory);
 
 			var aotAssemblyFiles = new List<ITaskItem> ();
+			var processes = new Task<Execution> [assembliesToAOT.Count];
+
+			var environment = new Dictionary<string, string?> {
+				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
+			};
+
 			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
-			var listOfArguments = new List<(IList<string> Arguments, string Input)> ();
 			for (var i = 0; i < assembliesToAOT.Count; i++) {
 				var asm = assembliesToAOT [i];
 				var input = asm.GetMetadata ("Input");
@@ -210,7 +215,6 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ processArguments, ex2!.Message);
 					return false;
 				}
-				arguments.Add ($"--path={Path.GetFullPath (InputDirectory)}");
 				arguments.Add ($"{string.Join (",", parsedArguments)}");
 				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
@@ -220,20 +224,16 @@ namespace Xamarin.MacDev.Tasks {
 				else
 					arguments.Add (input);
 
-				listOfArguments.Add (new (arguments, input));
-			}
-
-			Parallel.ForEach (listOfArguments, (arg) => {
-				ExecuteAsync (AOTCompilerPath, arg.Arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
+				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
 						if (v.Result.ExitCode != 0)
-							Log.LogError (MSBStrings.E7118 /* Failed to AOT compile {0}, the AOT compiler exited with code {1} */, Path.GetFileName (arg.Input), v.Result.ExitCode);
+							Log.LogError (MSBStrings.E7118 /* Failed to AOT compile {0}, the AOT compiler exited with code {1} */, Path.GetFileName (input), v.Result.ExitCode);
 
 						return System.Threading.Tasks.Task.FromResult<Execution> (v.Result);
-					})
-					.Unwrap ()
-					.Wait ();
-			});
+					}).Unwrap ();
+			}
+
+			System.Threading.Tasks.Task.WaitAll (processes);
 
 			AssemblyFiles = aotAssemblyFiles.ToArray ();
 
