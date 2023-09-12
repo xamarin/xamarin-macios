@@ -1432,7 +1432,7 @@ namespace Intents {
 		[Watch (5, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		Link,
-		[iOS (17, 0), MacCatalyst (17,0),  Watch (10, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
 		Reaction,
 	}
 
@@ -1703,7 +1703,7 @@ namespace Intents {
 		Unspecified = 0,
 		Ready = 1,
 		ContinueInApp = 2,
-		InProgress =3,
+		InProgress = 3,
 		Success = 4,
 #if XAMCORE_5_0 && !NET
 		[NoWatch]
@@ -4410,22 +4410,22 @@ namespace Intents {
 		[NullAllowed, Export ("audioMessageFile", ArgumentSemantic.Copy)]
 		INFile AudioMessageFile { get; }
 
-		[Watch (10,0), NoMac, iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:attachmentFiles:")]
-		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName, [NullAllowed] INFile[] attachmentFiles);
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName, [NullAllowed] INFile [] attachmentFiles);
 
-		[Watch (10,0), NoMac, iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:linkMetadata:")]
-		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, [NullAllowed] string serviceName, [NullAllowed] INMessageLinkMetadata linkMetadata);
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, [NullAllowed] string serviceName, [NullAllowed] INMessageLinkMetadata linkMetadata);
 
-		[Watch (10,0), NoMac, iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:numberOfAttachments:")]
-		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, [NullAllowed] string serviceName, INMessageType messageType, [NullAllowed] NSNumber numberOfAttachments);
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, [NullAllowed] string serviceName, INMessageType messageType, [NullAllowed] NSNumber numberOfAttachments);
 
 		[NullAllowed]
 		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("attachmentFiles", ArgumentSemantic.Copy)]
-		INFile[] AttachmentFiles { get; }
+		INFile [] AttachmentFiles { get; }
 
 		[NullAllowed]
 		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
@@ -12618,10 +12618,9 @@ namespace Intents {
 		Authorized,
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum INUnsendMessagesIntentResponseCode : long
-	{
+	public enum INUnsendMessagesIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -12636,10 +12635,9 @@ namespace Intents {
 		FailureRequiringInAppAuthentication,
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum INEditMessageIntentResponseCode : long
-	{
+	public enum INEditMessageIntentResponseCode : long {
 		Unspecified = 0,
 		Ready,
 		InProgress,
@@ -15090,11 +15088,10 @@ namespace Intents {
 		INHangUpCallIntentResponseCode Code { get; }
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(INIntentResponse))]
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
-	interface INUnsendMessagesIntentResponse
-	{
+	interface INUnsendMessagesIntentResponse {
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INUnsendMessagesIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
@@ -15103,22 +15100,20 @@ namespace Intents {
 		INUnsendMessagesIntentResponseCode Code { get; }
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(INIntent))]
-	interface INUnsendMessagesIntent
-	{
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntent))]
+	interface INUnsendMessagesIntent {
 		[Export ("initWithMessageIdentifiers:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] string[] messageIdentifiers);
+		NativeHandle Constructor ([NullAllowed] string [] messageIdentifiers);
 
 		[NullAllowed, Export ("messageIdentifiers", ArgumentSemantic.Copy)]
-		string[] MessageIdentifiers { get; }
+		string [] MessageIdentifiers { get; }
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
-	interface INMessageLinkMetadata : NSCopying, NSSecureCoding
-	{
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface INMessageLinkMetadata : NSCopying, NSSecureCoding {
 		[Export ("initWithSiteName:summary:title:openGraphType:linkURL:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] string siteName, [NullAllowed] string summary, [NullAllowed] string title, [NullAllowed] string openGraphType, [NullAllowed] NSUrl linkUrl);
@@ -15139,11 +15134,10 @@ namespace Intents {
 		NSUrl LinkUrl { get; set; }
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(INIntentResponse))]
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
-	interface INEditMessageIntentResponse
-	{
+	interface INEditMessageIntentResponse {
 		[Export ("initWithCode:userActivity:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INEditMessageIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
@@ -15152,10 +15146,9 @@ namespace Intents {
 		INEditMessageIntentResponseCode Code { get; }
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(INIntent))]
-	interface INEditMessageIntent
-	{
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntent))]
+	interface INEditMessageIntent {
 		[Export ("initWithMessageIdentifier:editedContent:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] string messageIdentifier, [NullAllowed] string editedContent);
@@ -15167,10 +15160,9 @@ namespace Intents {
 		string EditedContent { get; }
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Protocol]
-	interface INEditMessageIntentHandling
-	{
+	interface INEditMessageIntentHandling {
 		[Abstract]
 		[Export ("handleEditMessage:completion:")]
 		void HandleEditMessage (INEditMessageIntent intent, Action<INEditMessageIntentResponse> completion);
@@ -15182,10 +15174,9 @@ namespace Intents {
 		void ResolveEditedContent (INEditMessageIntent intent, Action<INStringResolutionResult> completion);
 	}
 
-	[Watch (10,0), NoTV, Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Protocol]
-	interface INUnsendMessagesIntentHandling
-	{
+	interface INUnsendMessagesIntentHandling {
 		[Abstract]
 		[Export ("handleUnsendMessages:completion:")]
 		void HandleUnsendMessages (INUnsendMessagesIntent intent, Action<INUnsendMessagesIntentResponse> completion);
