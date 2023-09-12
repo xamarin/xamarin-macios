@@ -23,6 +23,7 @@ namespace ShazamKit {
 		CustomCatalogInvalidURL = 301,
 		MediaLibrarySyncFailed = 400,
 		InternalError = 500,
+		MediaItemFetchFailed = 600
 	}
 
 	[iOS (15, 0), Mac (12, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
@@ -62,6 +63,9 @@ namespace ShazamKit {
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Field ("SHMediaItemFrequencySkewRanges")]
 		FrequencySkewRanges,
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("SHMediaItemCreationDate")]
+		SHMediaItemCreationDate,
 	}
 
 	[iOS (15, 0), Mac (12, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
@@ -190,9 +194,17 @@ namespace ShazamKit {
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("frequencySkewRanges", ArgumentSemantic.Strong)]
 		SHRange [] FrequencySkewRanges { get; }
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[NullAllowed, Export("creationDate", ArgumentSemantic.Strong)]
+		NSDate CreationDate { get; }
 	}
 
 	[iOS (15, 0), Mac (12, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
+	[Deprecated(PlatformName.MacOSX, 12, 0, message: "Use SHLibrary instead.")]
+	[Deprecated(PlatformName.iOS, 15, 0, message: "Use SHLibrary instead.")]
+	[Deprecated(PlatformName.TvOS, 15, 0, message: "Use SHLibrary instead.")]
+	[Deprecated(PlatformName.WatchOS, 8, 0, message: "Use SHLibrary instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SHMediaLibrary {

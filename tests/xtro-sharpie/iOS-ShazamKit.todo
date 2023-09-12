@@ -1,4 +1,0 @@
-!deprecated-attribute-missing! SHMediaLibrary missing a [Deprecated] attribute
-!missing-enum-value! SHErrorCode native value SHErrorCodeMediaItemFetchFailed = 600 not bound
-!missing-field! SHMediaItemCreationDate not bound
-!missing-selector! SHMediaItem::creationDate not bound
