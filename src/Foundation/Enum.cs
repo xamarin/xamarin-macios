@@ -282,7 +282,7 @@ namespace Foundation {
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		FileProtectionCompleteUntilFirstUserAuthentication = 0x40000000,
-		[iOS (17,0), NoMac, MacCatalyst (17,0), TV (17,0), Watch (10,0)]
+		[iOS (17, 0), NoMac, MacCatalyst (17, 0), TV (17, 0), Watch (10, 0)]
 		FileProtectionCompleteWhenUserInactive = 0x50000000,
 	}
 
@@ -1385,7 +1385,7 @@ namespace Foundation {
 		CompleteUnlessOpen,
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
 		CompleteUntilFirstUserAuthentication,
-		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSFileProtectionCompleteWhenUserInactive")]
 		CompleteWhenUserInactive,
 		[Field ("NSFileProtectionNone")]

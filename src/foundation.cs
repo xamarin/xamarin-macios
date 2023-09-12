@@ -890,10 +890,9 @@ namespace Foundation {
 
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NSGrammaticalCase : long
-	{
+	public enum NSGrammaticalCase : long {
 		NotSet = 0,
 		Nominative,
 		Accusative,
@@ -911,38 +910,34 @@ namespace Foundation {
 		Translative,
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NSGrammaticalPronounType : long
-	{
+	public enum NSGrammaticalPronounType : long {
 		NotSet = 0,
 		Personal,
 		Reflexive,
 		Possessive,
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NSGrammaticalDefiniteness : long
-	{
+	public enum NSGrammaticalDefiniteness : long {
 		NotSet = 0,
 		Indefinite,
 		Definite,
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NSGrammaticalDetermination : long
-	{
+	public enum NSGrammaticalDetermination : long {
 		NotSet = 0,
 		Independent,
 		Dependent,
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NSGrammaticalPerson : long
-	{
+	public enum NSGrammaticalPerson : long {
 		NotSet = 0,
 		First,
 		Second,
@@ -5311,11 +5306,11 @@ namespace Foundation {
 		[return: NullAllowed]
 		string GetLocalizedCalendarIdentifier (string calendarIdentifier);
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("languageIdentifier")]
 		string LanguageIdentifier { get; }
 
-		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[NullAllowed, Export ("regionCode")]
 		string RegionCode { get; }
 	}
@@ -6268,7 +6263,7 @@ namespace Foundation {
 		[Static]
 		NSUrl _FromStringRelative (string url, NSUrl relative);
 
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("URLWithString:encodingInvalidCharacters:")]
 		[return: NullAllowed]
@@ -7195,7 +7190,7 @@ namespace Foundation {
 		[Static, Export ("componentsWithString:")]
 		NSUrlComponents FromString (string urlString);
 
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("componentsWithString:encodingInvalidCharacters:")]
 		[return: NullAllowed]
@@ -7849,12 +7844,12 @@ namespace Foundation {
 		[Export ("webSocketTaskWithRequest:")]
 		NSUrlSessionWebSocketTask CreateWebSocketTask (NSUrlRequest request);
 
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("uploadTaskWithResumeData:")]
 		NSUrlSessionUploadTask UploadTask (NSData resumeData);
 
-		[Async (ResultTypeName = "NSUrlSessionUploadTaskResumeRequest")] 
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Async (ResultTypeName = "NSUrlSessionUploadTaskResumeRequest")]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("uploadTaskWithResumeData:completionHandler:")]
 		NSUrlSessionUploadTask UploadTask (NSData resumeData, Action<NSData, NSUrlResponse, NSError> completionHandler);
 	}
@@ -8320,11 +8315,11 @@ namespace Foundation {
 		[Export ("URLSession:didCreateTask:")]
 		void DidCreateTask (NSUrlSession session, NSUrlSessionTask task);
 
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("URLSession:task:didReceiveInformationalResponse:")]
 		void DidReceiveInformationalResponse (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response);
 
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("URLSession:task:needNewBodyStreamFromOffset:completionHandler:")]
 		void NeedNewBodyStreamFromOffset (NSUrlSession session, NSUrlSessionTask task, long offset, Action<NSInputStream> completionHandler);
 	}
@@ -18196,11 +18191,10 @@ namespace Foundation {
 		NSRange RangeInString (string @string);
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSTermOfAddress : NSCopying, NSSecureCoding
-	{
+	interface NSTermOfAddress : NSCopying, NSSecureCoding {
 		[Static]
 		[Export ("neutral")]
 		NSTermOfAddress Neutral { get; }
@@ -18215,20 +18209,19 @@ namespace Foundation {
 
 		[Static]
 		[Export ("localizedForLanguageIdentifier:withPronouns:")]
-		NSTermOfAddress GetLocalized (string language, NSMorphologyPronoun[] pronouns);
+		NSTermOfAddress GetLocalized (string language, NSMorphologyPronoun [] pronouns);
 
 		[NullAllowed, Export ("languageIdentifier")]
 		string LanguageIdentifier { get; }
 
 		[NullAllowed, Export ("pronouns", ArgumentSemantic.Copy)]
-		NSMorphologyPronoun[] Pronouns { get; }
+		NSMorphologyPronoun [] Pronouns { get; }
 	}
 
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSMorphologyPronoun : NSCopying, NSSecureCoding
-	{
+	interface NSMorphologyPronoun : NSCopying, NSSecureCoding {
 		[Export ("initWithPronoun:morphology:dependentMorphology:")]
 		NativeHandle Constructor (string pronoun, NSMorphology morphology, [NullAllowed] NSMorphology dependentMorphology);
 
