@@ -490,10 +490,10 @@ namespace ScreenCaptureKit {
 		bool Active { [Bind ("isActive")] get; set; }
 
 		[Export ("addObserver:")]
-		void AddObserver (SCContentSharingPickerObserver observer);
+		void AddObserver (ISCContentSharingPickerObserver observer);
 
 		[Export ("removeObserver:")]
-		void RemoveObserver (SCContentSharingPickerObserver observer);
+		void RemoveObserver (ISCContentSharingPickerObserver observer);
 
 		[Export ("setConfiguration:forStream:")]
 		void SetConfiguration ([NullAllowed] SCContentSharingPickerConfiguration pickerConfig, SCStream stream);
