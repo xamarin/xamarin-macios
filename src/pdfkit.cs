@@ -920,6 +920,10 @@ namespace PdfKit {
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("stampName")]
 		string StampName { get; set; }
+
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("activatableTextField")]
+		bool ActivatableTextField { [Bind ("isActivatableTextField")] get; }
 	}
 
 	[NoiOS]

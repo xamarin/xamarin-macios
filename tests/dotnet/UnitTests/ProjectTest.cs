@@ -1087,8 +1087,10 @@ namespace Xamarin.Tests {
 
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
-			Assert.AreEqual (1, errors.Count, "Error Count");
-			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
+			// Due to an implementation detail in .NET, the same error message is shown twice.
+			Assert.AreEqual (2, errors.Count, "Error Count");
+			Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
+			Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
 		}
 
 		[Test]
@@ -1406,6 +1408,53 @@ namespace Xamarin.Tests {
 			Assert.That (shared_libraries, Does.Contain (dylibPath), "The library ID is correct");
 			Assert.That (shared_libraries, Does.Contain ($"@executable_path/../../Contents/MonoBundle/{dylibRelPath}"),
 				"The dependent bundled shared library install name is relative to @executable_path");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void MultiTargetLibrary (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// Get all the supported API versions
+			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			var targetFrameworks = string.Join (";", supportedApiVersion.Select (v => v.Replace ("-", "-" + platform.AsString ().ToLowerInvariant ())));
+
+			var project = "MultiTargetingLibrary";
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
+			var rv = DotNet.AssertBuild (project_path, properties);
+			rv.AssertNoWarnings ();
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void InvalidTargetPlatformVersion (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// Pick a target platform version we don't support (such as iOS 6.66).
+			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + "6.66";
+			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			var validTargetPlatformVersions = supportedApiVersion.Where (v => v.StartsWith (Configuration.DotNetTfm + "-", StringComparison.Ordinal)).Select (v => v.Substring (Configuration.DotNetTfm.Length + 1));
+
+			var project = "MultiTargetingLibrary";
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Error count");
+			Assert.AreEqual ($"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', validTargetPlatformVersions)}", errors [0].Message, "Error message");
 		}
 	}
 }

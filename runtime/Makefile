@@ -167,7 +167,7 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-ifdef WATCHOS_SUPPORTS_32BIT_ARCHITECTURES
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call FrameworkTemplate,watchos,WATCHOS,armv7k arm64_32))
 else
 $(eval $(call FrameworkTemplate,watchos,WATCHOS,arm64_32))
@@ -242,7 +242,7 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
-ifdef WATCHOS_SUPPORTS_32BIT_ARCHITECTURES
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
 else
 $(eval $(call PlatformTemplate,watchos,WATCHOS,arm64_32))
@@ -599,18 +599,18 @@ DOTNET_MacCatalyst_LIBRARIES =
 
 define DotNetLibTemplate
 DOTNET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet.dylib \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-debug.dylib \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-debug.a \
-	$$(foreach lib,$$(DOTNET_$(1)_LIBRARIES),$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/$$(lib)) \
-	$$(foreach header,$$(SHIPPED_HEADERS),$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/$$(header)) \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-debug.a \
+	$$(foreach lib,$$(DOTNET_$(1)_LIBRARIES),$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/$$(lib)) \
+	$$(foreach header,$$(SHIPPED_HEADERS),$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/$$(header)) \
 
 DOTNET_TARGET_DIRS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin \
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin/%.h: xamarin/%.h | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/xamarin
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin/%.h: xamarin/%.h | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/xamarin
 	$$(Q) $$(CP) $$< $$@
 endef
 
@@ -618,10 +618,10 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 
 define DotNetCoreClrLibTemplate
 DOTNET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.dylib \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr.dylib \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-coreclr-debug.dylib \
 
 endef
 
@@ -629,8 +629,8 @@ $(foreach platform,$(DOTNET_CORECLR_PLATFORMS),$(foreach rid,$(DOTNET_$(platform
 
 define DotNetNativeAotLibTemplate
 DOTNET_TARGETS += \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot.a \
-	$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot-debug.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot-debug.a \
 
 endef
 
@@ -649,7 +649,7 @@ DOTNET_mac_DYLIB_FLAGS=-lcoreclr
 #
 
 define DotNetInstallLibTemplate
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-%.dylib: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).dylib) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-%.dylib: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).dylib) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
@@ -657,28 +657,28 @@ else
 endif
 	$(Q) install_name_tool -id @rpath/libxamarin-$$*.dylib $$@
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libxamarin-%.a: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-%.a: $$(foreach arch,$(3),.libs/$(4)/libxamarin-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libapp-%.a: $$(foreach arch,$(3),.libs/$(4)/libapp-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libapp-%.a: $$(foreach arch,$(3),.libs/$(4)/libapp-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 endif
 
-$(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native/libtvextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libtvextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/Microsoft.$(1).Runtime.$(2)/runtimes/$(2)/native
+$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libtvextension-%.a: $$(foreach arch,$(3),.libs/$(4)/libtvextension-%.$$(arch).a) | $(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native
 ifeq (1,$$(words $(3)))
 	$(Q) $(CP) $$^ $$@
 else
