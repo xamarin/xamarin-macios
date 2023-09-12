@@ -504,6 +504,10 @@
 			<!-- Set NativeAOT value -->
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' == 'NativeAOT'">true</_IsNativeAOTFeature>
 			<_IsNativeAOTFeature Condition="'$(_XamarinRuntime)' != 'NativeAOT'">false</_IsNativeAOTFeature>
+			<_IsCFNetworkHandlerFeature Condition="'$(UseNativeHttpHandler)' == 'true' And '$(MtouchHttpClientHandler)' == 'CFNetworkHandler'">true</_IsCFNetworkHandlerFeature>
+			<_IsCFNetworkHandlerFeature Condition="'$(_IsCFNetworkHandlerFeature)' == ''">false</_IsCFNetworkHandlerFeature>
+			<_IsNSUrlSessionHandlerFeature Condition="'$(UseNativeHttpHandler)' == 'true' And '$(MtouchHttpClientHandler)' == 'NSUrlSessionHandler'">true</_IsNSUrlSessionHandlerFeature>
+			<_IsNSUrlSessionHandlerFeature Condition="'$(_IsNSUrlSessionHandlerFeature)' == ''">false</_IsNSUrlSessionHandlerFeature>
 		</PropertyGroup>
 
 		<ItemGroup>
