@@ -235,7 +235,7 @@ namespace MonoTouchFixtures.CoreServices {
 				}
 			}
 
-			List<string> log = new List<string> ();
+			List<string> log = new ();
 
 			protected override void OnEvents (FSEvent [] events)
 			{
