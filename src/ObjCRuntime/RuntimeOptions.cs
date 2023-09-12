@@ -37,6 +37,10 @@ namespace ObjCRuntime {
 		{
 			var options = new RuntimeOptions ();
 			options.http_message_handler = ParseHttpMessageHandler (app, http_message_handler);
+   			#if NET
+    			options.UseCFNetworkHandler = _IsCFNetworkHandlerFeature;
+    			options.UseNSUrlSessionHandler = _IsNSUrlSessionHandlerFeature;
+   			#endif
 			return options;
 		}
 
@@ -101,7 +105,14 @@ namespace ObjCRuntime {
 				handler = NSUrlSessionHandlerValue;
 			} else {
 #if NET
-				handler = NSUrlSessionHandlerValue;
+				if (UseCFNetworkHandler)
+        			return new CFNetworkHandler ();
+			    else
+			    {
+			        if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
+			            Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");
+			        return new NSUrlSessionHandler ();
+			    }
 #else
 				handler = HttpClientHandlerValue;
 #endif
