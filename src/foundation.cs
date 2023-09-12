@@ -13599,10 +13599,6 @@ namespace Foundation {
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
 		NSString FileProtectionCompleteUntilFirstUserAuthentication { get; }
 
-		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17,0)]
-		[Field ("NSFileProtectionCompleteWhenUserInactive")]
-		NSString FileProtectionCompleteWhenUserInactive { get; }
-
 		[Field ("NSFileSystemSize")]
 		NSString SystemSize { get; }
 
