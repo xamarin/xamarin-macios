@@ -2587,7 +2587,9 @@ public class TestApp {
 		}
 
 		[Test]
+		[TestCase (Target.Dev, null, "ARMv7k", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32", MTouchBitcode.Unspecified)]
+		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
 		[TestCase (Target.Sim, null, "i386", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Sim, "x86_64", "x86_64", MTouchBitcode.Unspecified)]
 		public void Architectures_WatchOS (Target target, string abi, string expected_abi, MTouchBitcode bitcode)
@@ -2617,7 +2619,7 @@ public class TestApp {
 
 				mtouch.Abi = "armv7";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "device - armv7");
-				mtouch.AssertError ("MT", 75, "Invalid architecture 'ARMv7' for WatchOS projects. Valid architectures are: ARM64_32, ARM64_32+LLVM");
+				mtouch.AssertError ("MT", 75, "Invalid architecture 'ARMv7' for WatchOS projects. Valid architectures are: ARMv7k, ARMv7k+LLVM, ARM64_32, ARM64_32+LLVM");
 				mtouch.AssertErrorCount (1);
 			}
 		}
@@ -4166,7 +4168,6 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 		{
 			using (var intents_extension = new MTouchTool ()) {
 				intents_extension.Profile = Profile.watchOS;
-				intents_extension.Interpreter = "all";
 				intents_extension.CreateTemporaryWatchOSIntentsExtension ();
 				intents_extension.CreateTemporaryCacheDirectory ();
 				intents_extension.DSym = false; // faster test
@@ -4177,7 +4178,6 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 
 				using (var watch_extension = new MTouchTool ()) {
 					watch_extension.Profile = Profile.watchOS;
-					watch_extension.Interpreter = "all";
 					watch_extension.AppExtensions.Add (intents_extension);
 					watch_extension.CreateTemporaryCacheDirectory ();
 					watch_extension.CreateTemporaryWatchKitExtension ();

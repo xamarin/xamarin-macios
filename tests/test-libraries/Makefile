@@ -196,11 +196,15 @@ $(eval $(call Template,tvsimulator,TVSIMULATOR,x86_64 arm64,AppleTVSimulator,-mt
 $(eval $(call Template,tvos,TVOS,arm64,AppleTVOS,-mtvos-version-min=9.0 -isysroot $(DEVICETV_SDK)))
 endif
 ifdef INCLUDE_WATCH
-$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-mwatchos-simulator-version-min=2.0 -isysroot $(SIMULATORWATCH_SDK)))
-ifdef WATCHOS_SUPPORTS_32BIT_ARCHITECTURES
-$(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=2.0 -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
+ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
+$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86 x86_64,WatchSimulator,-mwatchos-simulator-version-min=$(MIN_WATCH_OS_VERSION) -isysroot $(SIMULATORWATCH_SDK)))
 else
-$(eval $(call Template,watchos,WATCHOS,arm64_32,WatchOS,-mwatchos-version-min=4.0 -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
+$(eval $(call Template,watchsimulator,WATCHSIMULATOR,x86_64,WatchSimulator,-mwatchos-simulator-version-min=$(MIN_WATCH_OS_VERSION) -isysroot $(SIMULATORWATCH_SDK)))
+endif
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
+$(eval $(call Template,watchos,WATCHOS,armv7k arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
+else
+$(eval $(call Template,watchos,WATCHOS,arm64_32,WatchOS,-mwatchos-version-min=$(MIN_WATCHOS_SDK_VERSION) -fembed-bitcode -isysroot $(DEVICEWATCH_SDK)))
 endif
 endif
 ifdef INCLUDE_MAC
@@ -233,8 +237,10 @@ $(eval $(call LibTemplate,arm64+x86_64,.libs/tvos/libtest.arm64.o,.libs/tvsimula
 endif
 
 ifdef INCLUDE_WATCH
-ifdef WATCHOS_SUPPORTS_32BIT_ARCHITECTURES
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
+ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
 $(eval $(call LibTemplate,armv7k+x86,.libs/watchos/libtest.armv7k.o,.libs/watchsimulator/libtest.x86.o,watchos-fat,WATCHOS))
+endif
 endif
 endif
 

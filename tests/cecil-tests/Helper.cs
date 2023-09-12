@@ -480,6 +480,17 @@ namespace Cecil.Tests {
 
 			return rv;
 		}
+
+		public static bool IsSubclassOf (this TypeDefinition? type, string @namespace, string name)
+		{
+			if (type is null)
+				return false;
+
+			if (type.Is (@namespace, name))
+				return true;
+
+			return IsSubclassOf (type.BaseType?.Resolve (), @namespace, name);
+		}
 	}
 
 	public static class CompatExtensions {

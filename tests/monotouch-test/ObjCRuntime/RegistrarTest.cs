@@ -2246,7 +2246,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if __MACOS__
+		// This test uses Assembly.LoadFrom, which isn't supported with NativeAOT
+#if __MACOS__ && !NATIVEAOT
 		[Test]
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{

@@ -1107,6 +1107,8 @@ namespace Xamarin.Bundler {
 				break;
 			case ApplePlatform.WatchOS:
 				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARMv7k);
+					validAbis.Add (Abi.ARMv7k | Abi.LLVM);
 					validAbis.Add (Abi.ARM64_32);
 					validAbis.Add (Abi.ARM64_32 | Abi.LLVM);
 				} else {
