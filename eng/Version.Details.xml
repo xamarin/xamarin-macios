@@ -61,21 +61,21 @@
       <Sha>63a764bfb56b1ef839206c22898e5dee2d6dbe71</Sha>
     </Dependency>
     <!-- This is a subscription to the Xcode 15 version of our packages (currently the latest version available in .NET 7) -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk.net8.0_17.0" Version="17.0.8314-ci.release-test-net8-0-xcode15-multi-targeting">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk.net8.0_17.0" Version="17.0.8316-ci.release-test-net8-0-xcode15-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>93827b580c4ea5e1ef2004e775722067f4c90ca1</Sha>
+      <Sha>fb231bb2533dec353a31acb53e6f3c9de4726c21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk.net8.0_14.0" Version="14.0.8314-ci.release-test-net8-0-xcode15-multi-targeting">
+    <Dependency Name="Microsoft.macOS.Sdk.net8.0_14.0" Version="14.0.8316-ci.release-test-net8-0-xcode15-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>93827b580c4ea5e1ef2004e775722067f4c90ca1</Sha>
+      <Sha>fb231bb2533dec353a31acb53e6f3c9de4726c21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk.net8.0_17.0" Version="17.0.8314-ci.release-test-net8-0-xcode15-multi-targeting">
+    <Dependency Name="Microsoft.iOS.Sdk.net8.0_17.0" Version="17.0.8316-ci.release-test-net8-0-xcode15-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>93827b580c4ea5e1ef2004e775722067f4c90ca1</Sha>
+      <Sha>fb231bb2533dec353a31acb53e6f3c9de4726c21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk.net8.0_17.0" Version="17.0.8314-ci.release-test-net8-0-xcode15-multi-targeting">
+    <Dependency Name="Microsoft.tvOS.Sdk.net8.0_17.0" Version="17.0.8316-ci.release-test-net8-0-xcode15-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>93827b580c4ea5e1ef2004e775722067f4c90ca1</Sha>
+      <Sha>fb231bb2533dec353a31acb53e6f3c9de4726c21</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0-rc.1.23419.3">
       <Uri>https://github.com/dotnet/runtime</Uri>
