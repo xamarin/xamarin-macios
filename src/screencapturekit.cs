@@ -511,6 +511,8 @@ namespace ScreenCaptureKit {
 		void Present (SCStream stream, SCShareableContentStyle contentStyle);
 	}
 
+	interface ISCContentSharingPickerObserver { }
+
 	[NoiOS, NoTV, NoWatch, Mac (14, 0), NoMacCatalyst]
 	[Protocol]
 	[Model]
