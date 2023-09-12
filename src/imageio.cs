@@ -80,7 +80,7 @@ namespace ImageIO {
 		[Field ("kCGImagePropertyTGADictionary")]
 		NSString TgaDictionary { get; }
 
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), Watch (10, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), Watch (10, 0), MacCatalyst(17,0)]
 		[Field ("kCGImagePropertyAVISDictionary")]
 		NSString AvisDictionary { get; }
 
@@ -2879,19 +2879,19 @@ namespace ImageIO {
 	interface CGImageDecodeOptions {
 		[Internal]
 		[Field ("kCGImageSourceDecodeRequest")]
-		IntPtr kDecodeRequest { get; }
+		IntPtr DecodeRequest { get; }
 
 		[Internal]
 		[Field ("kCGImageSourceDecodeToHDR")]
-		IntPtr kDecodeToHDR { get; }
+		IntPtr DecodeToHDR { get; }
 
 		[Internal]
 		[Field ("kCGImageSourceDecodeToSDR")]
-		IntPtr kDecodeToSDR { get; }
+		IntPtr DecodeToSDR { get; }
 
 		[Internal]
 		[Field ("kCGImageSourceDecodeRequestOptions")]
-		IntPtr kDecodeRequestOptions { get; }
+		IntPtr DecodeRequestOptions { get; }
 	}
 
 	[Partial]
@@ -2979,7 +2979,7 @@ namespace ImageIO {
 		[Export ("TgaDictionary")]
 		NSDictionary TgaDictionary { get; set; }
 
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), Watch (10, 0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), Watch (10, 0), MacCatalyst(17,0)]
 		[Export ("AvisDictionary")]
 		NSDictionary AvisDictionary { get; set; }
 
