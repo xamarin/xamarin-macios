@@ -23,7 +23,7 @@ namespace ShazamKit {
 		CustomCatalogInvalidURL = 301,
 		MediaLibrarySyncFailed = 400,
 		InternalError = 500,
-		MediaItemFetchFailed = 600
+		MediaItemFetchFailed = 600,
 	}
 
 	[iOS (15, 0), Mac (12, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
