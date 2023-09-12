@@ -556,6 +556,11 @@ namespace ObjCRuntime {
 
 		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			return AllocGCHandle (GetBlockWrapperCreator ((MethodInfo) GetGCHandleTarget (method)!, parameter));
 		}
 
@@ -621,6 +626,12 @@ namespace ObjCRuntime {
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		internal static void RegisterAssemblies ()
 		{
+#if NET
+			if (IsNativeAOT) {
+				return;
+			}
+#endif
+
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
@@ -999,6 +1010,11 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static MethodInfo? GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
 			// If this method is changed, that method will probably have to be updated too (tests!!!)
 			MethodInfo first = method;
@@ -1088,25 +1104,36 @@ namespace ObjCRuntime {
 			return del;
 		}
 
-		internal static Delegate? GetDelegateForBlock (IntPtr methodPtr, Type type)
+#if NET
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : System.MulticastDelegate
+#else
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : class
+#endif
 		{
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
-			Delegate? val;
-			var pair = new IntPtrTypeValueTuple (methodPtr, type);
+			var pair = new IntPtrTypeValueTuple (methodPtr, typeof (T));
 			lock (lock_obj) {
 				if (block_to_delegate_cache is null)
 					block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
 
-				if (block_to_delegate_cache.TryGetValue (pair, out val))
-					return val;
+				if (block_to_delegate_cache.TryGetValue (pair, out var cachedValue))
+#if NET
+					return (T) cachedValue;
+#else
+					return (T) (object) cachedValue;
+#endif
 			}
 
-			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
+			var val = Marshal.GetDelegateForFunctionPointer<T> (methodPtr);
 
 			lock (lock_obj) {
+#if NET
 				block_to_delegate_cache [pair] = val;
+#else
+				block_to_delegate_cache [pair] = (Delegate) (object) val;
+#endif
 			}
 			return val;
 		}
@@ -1213,6 +1240,11 @@ namespace ObjCRuntime {
 
 		internal static PropertyInfo? FindPropertyInfo (MethodInfo accessor)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			if (!accessor.IsSpecialName)
 				return null;
 
@@ -1547,6 +1579,11 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo? GetIntPtrConstructor (Type type)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+#endif
+
 			lock (intptr_ctor_cache) {
 				if (intptr_ctor_cache.TryGetValue (type, out var rv))
 					return rv;
@@ -1592,6 +1629,11 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo? GetIntPtr_BoolConstructor (Type type)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+#endif
+
 			lock (intptr_bool_ctor_cache) {
 				if (intptr_bool_ctor_cache.TryGetValue (type, out var rv))
 					return rv;
@@ -2337,6 +2379,11 @@ namespace ObjCRuntime {
 
 		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			// FIXME: I think it should be handled before getting here (but it's safer here for now)
 			if (!open_method.ContainsGenericParameters)
 				return (MethodInfo) open_method;
