@@ -23,7 +23,7 @@ namespace LocalAuthentication {
 		[Obsolete ("Use 'FaceId' instead.")]
 		TypeFaceId = FaceId,
 #endif
-		[iOS (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		OpticId = 1L << 2,
 	}
 
