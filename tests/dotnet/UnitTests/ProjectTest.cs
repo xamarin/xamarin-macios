@@ -1456,6 +1456,7 @@ namespace Xamarin.Tests {
 
 			// Get all the supported API versions
 			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			supportedApiVersion = RemovePostCurrentOnMacCatalyst (supportedApiVersion, platform);
 			var targetFrameworks = string.Join (";", supportedApiVersion.Select (v => v.Replace ("-", "-" + platform.AsString ().ToLowerInvariant ())));
 
 			var project = "MultiTargetingLibrary";
@@ -1465,6 +1466,19 @@ namespace Xamarin.Tests {
 			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
 			var rv = DotNet.AssertBuild (project_path, properties);
 			rv.AssertNoWarnings ();
+		}
+
+		// Mac Catalyst projects can't be built with an earlier version of Xcode (even library projects),
+		// which means that we can't build for target frameworks > than the current one (because we'll only have
+		// the Xcode installed for the current target framework, especially on bots).
+		// So filter out any target framework on Mac Catalyst that's after the current one.
+		internal static IList<string> RemovePostCurrentOnMacCatalyst (IList<string> self, ApplePlatform platform)
+		{
+			if (platform == ApplePlatform.MacCatalyst) {
+				var current = Configuration.DotNetTfm + "_" + Configuration.GetNuGetOsVersion (platform);
+				return self.Where (v => string.Compare (v, current, StringComparison.Ordinal) <= 0).ToList ();
+			}
+			return self;
 		}
 
 		[Test]
