@@ -285,6 +285,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					{ "Cinematic", "Cinematic", 14,0 },
 					{ "Symbols", "Symbols", 14, 0 },
+					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -463,6 +464,7 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 				{ "Symbols", "Symbols", 17, 0 },
+				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
