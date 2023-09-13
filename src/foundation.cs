@@ -13444,21 +13444,25 @@ namespace Foundation {
 		[Field ("NSFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionNone")]
 		NSString FileProtectionNone { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionComplete")]
 		NSString FileProtectionComplete { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionCompleteUnlessOpen")]
 		NSString FileProtectionCompleteUnlessOpen { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
