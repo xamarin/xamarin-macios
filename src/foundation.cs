@@ -882,11 +882,11 @@ namespace Foundation {
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSInflectionAgreementConceptAttributeName")]
-		InflectionConcept,
+		InflectionAgreementConcept,
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSInflectionReferentConceptAttributeName")]
-		InflectionReferentConceptAttributeName,
+		InflectionReferentConcept,
 
 	}
 
@@ -943,7 +943,6 @@ namespace Foundation {
 		Second,
 		Third,
 	}
-
 
 	[NoWatch]
 	[NoTV] // really inside WebKit
@@ -6989,7 +6988,7 @@ namespace Foundation {
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSURLDirectoryEntryCountKey")]
-		NSString NSURLDirectoryEntryCountKey { get; }
+		NSString DirectoryEntryCountKey { get; }
 
 		[Watch (7, 0)]
 		[TV (14, 0)]
@@ -7846,12 +7845,14 @@ namespace Foundation {
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("uploadTaskWithResumeData:")]
-		NSUrlSessionUploadTask UploadTask (NSData resumeData);
+		[return: ForcedType]
+		NSUrlSessionUploadTask CreateUploadTask (NSData resumeData);
 
 		[Async (ResultTypeName = "NSUrlSessionUploadTaskResumeRequest")]
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("uploadTaskWithResumeData:completionHandler:")]
-		NSUrlSessionUploadTask UploadTask (NSData resumeData, Action<NSData, NSUrlResponse, NSError> completionHandler);
+		[return: ForcedType]
+		NSUrlSessionUploadTask CreateUploadTask (NSData resumeData, Action<NSData, NSUrlResponse, NSError> completionHandler);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -8042,7 +8043,7 @@ namespace Foundation {
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSURLSessionUploadTaskResumeData")]
-		NSString TaskResumeDataKey { get; }
+		NSString ResumeDataKey { get; }
 
 		[Async]
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -8321,7 +8322,7 @@ namespace Foundation {
 
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("URLSession:task:needNewBodyStreamFromOffset:completionHandler:")]
-		void NeedNewBodyStreamFromOffset (NSUrlSession session, NSUrlSessionTask task, long offset, Action<NSInputStream> completionHandler);
+		void NeedNewBodyStream (NSUrlSession session, NSUrlSessionTask task, long offset, Action<NSInputStream> completionHandler);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -18002,6 +18003,7 @@ namespace Foundation {
 
 		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Export ("customPronounForLanguage:")]
@@ -18010,6 +18012,7 @@ namespace Foundation {
 
 		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+		[Obsoleted (PlatformName.MacCatalyst, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'NSTermOfAddress' instead.")]
 		[Export ("setCustomPronoun:forLanguage:error:")]
@@ -18045,6 +18048,7 @@ namespace Foundation {
 
 	[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'NSTermOfAddress' instead.")]
 	[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
 	[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'NSTermOfAddress' instead.")]
 	[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'NSTermOfAddress' instead.")]
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
