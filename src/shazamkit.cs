@@ -65,7 +65,7 @@ namespace ShazamKit {
 		FrequencySkewRanges,
 		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("SHMediaItemCreationDate")]
-		SHMediaItemCreationDate,
+		CreationDate,
 	}
 
 	[iOS (15, 0), Mac (12, 0), Watch (8, 0), TV (15, 0), MacCatalyst (15, 0)]
@@ -205,6 +205,7 @@ namespace ShazamKit {
 	[Deprecated (PlatformName.iOS, 15, 0, message: "Use SHLibrary instead.")]
 	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use SHLibrary instead.")]
 	[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use SHLibrary instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use SHLibrary instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SHMediaLibrary {
