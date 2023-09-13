@@ -1038,8 +1038,7 @@
 	<Target Name="_AOTCompile"
 			Condition="'$(_RunAotCompiler)' == 'true'"
 			DependsOnTargets="$(_AOTCompileDependsOn)"
-			Inputs="@(_AssembliesToAOT)"
-			Outputs="@(_AssembliesToAOT -> '%(ObjectFile)');@(_AssembliesToAOT -> '%(LLVMFile)');">
+		>
 
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
