@@ -449,3 +449,19 @@
 !unknown-field! AVAudioSessionMediaServicesWereResetNotification bound
 !missing-field! AVCaptureDeviceTypeContinuityCamera not bound
 !missing-selector! AVCaptureDevice::displayVideoZoomFactorMultiplier not bound
+!missing-enum-value! AVCaptureColorSpace native value AVCaptureColorSpace_AppleLog = 3 not bound
+!missing-selector! +AVExternalStorageDevice::authorizationStatus not bound
+!missing-selector! +AVExternalStorageDevice::requestAccessWithCompletionHandler: not bound
+!missing-selector! +AVExternalStorageDeviceDiscoverySession::isSupported not bound
+!missing-selector! +AVExternalStorageDeviceDiscoverySession::sharedSession not bound
+!missing-selector! AVCaptureVideoDataOutput::recommendedVideoSettingsForVideoCodecType:assetWriterOutputFileType:outputFileURL: not bound
+!missing-selector! AVExternalStorageDevice::displayName not bound
+!missing-selector! AVExternalStorageDevice::freeSize not bound
+!missing-selector! AVExternalStorageDevice::isConnected not bound
+!missing-selector! AVExternalStorageDevice::isNotRecommendedForCaptureUse not bound
+!missing-selector! AVExternalStorageDevice::nextAvailableURLsWithPathExtensions:error: not bound
+!missing-selector! AVExternalStorageDevice::totalSize not bound
+!missing-selector! AVExternalStorageDevice::uuid not bound
+!missing-selector! AVExternalStorageDeviceDiscoverySession::externalStorageDevices not bound
+!missing-type! AVExternalStorageDevice not bound
+!missing-type! AVExternalStorageDeviceDiscoverySession not bound
