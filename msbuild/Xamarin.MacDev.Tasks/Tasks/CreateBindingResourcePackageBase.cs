@@ -77,19 +77,9 @@ namespace Xamarin.MacDev.Tasks {
 				filesToZip.Add (manifestPath);
 
 				foreach (var nativeRef in filesToZip) {
-					var zipArguments = new List<string> ();
-					zipArguments.Add ("-9");
-					zipArguments.Add ("-r");
-					zipArguments.Add ("-y");
-					zipArguments.Add (zipFile);
-
-					var fullPath = Path.GetFullPath (nativeRef);
-					var workingDirectory = Path.GetDirectoryName (fullPath);
-					zipArguments.Add (Path.GetFileName (fullPath));
-					ExecuteAsync ("zip", zipArguments, workingDirectory: workingDirectory).Wait ();
-
-					packagedFiles.Add (zipFile);
+					CompressionHelper.TryCompress (Log, zipFile, nativeRef, false);
 				}
+				packagedFiles.Add (zipFile);
 			} else {
 				var bindingResourcePath = BindingResourcePath;
 				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
