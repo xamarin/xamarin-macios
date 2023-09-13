@@ -30,16 +30,16 @@ namespace HealthKitUI {
 		void SetActivitySummary ([NullAllowed] HKActivitySummary activitySummary, bool animated);
 	}
 
-	[iOS(17, 0), MacCatalyst(17, 0)]
+	[iOS (17, 0), MacCatalyst (17, 0)]
 	[Category]
-	[BaseType(typeof(HKHealthStore))]
+	[BaseType (typeof (HKHealthStore))]
 	interface HKHealthStore_UIViewController {
 
-		[Export("authorizationViewControllerPresenter")]
+		[Export ("authorizationViewControllerPresenter")]
 		[return: NullAllowed]
-		UIViewController GetAuthorizationViewControllerPresenter();
+		UIViewController GetAuthorizationViewControllerPresenter ();
 
-		[Export("setAuthorizationViewControllerPresenter:")]
-		void SetAuthorizationViewControllerPresenter([NullAllowed] UIViewController authorizationViewControllerPresenter);
+		[Export ("setAuthorizationViewControllerPresenter:")]
+		void SetAuthorizationViewControllerPresenter ([NullAllowed] UIViewController authorizationViewControllerPresenter);
 	}
 }
