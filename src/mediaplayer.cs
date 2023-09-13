@@ -1537,9 +1537,9 @@ namespace MediaPlayer {
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
-		[Deprecated (PlatformName.iOS, 17, 0)] 
-		[Deprecated (PlatformName.TvOS, 17, 0)] 
-		[Deprecated (PlatformName.MacCatalyst, 17, 0)] 
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 		[NullAllowed] // by default this property is null
 		[Export ("volumeWarningSliderImage", ArgumentSemantic.Retain)]
 		UIImage VolumeWarningSliderImage { get; set; }
