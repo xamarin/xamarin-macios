@@ -265,6 +265,11 @@ namespace Messages {
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUrl fileUrl, string localizedDescription, [NullAllowed] out NSError error);
 
+		[iOS (17,0), MacCatalyst (17, 0)]
+		[Export ("initWithFileURL:identifier:localizedDescription:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSUrl url, NSUuid identifier, string localizedDescription);
+
 		[Export ("imageFileURL", ArgumentSemantic.Strong)]
 		NSUrl ImageFileUrl { get; }
 
