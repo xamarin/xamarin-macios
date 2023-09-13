@@ -67,13 +67,13 @@ namespace Xamarin.MacDev.Tasks {
 			Directory.CreateDirectory (OutputDirectory);
 
 			var aotAssemblyFiles = new List<ITaskItem> ();
-			var processes = new Task<Execution> [Assemblies.Length];
 
 			var environment = new Dictionary<string, string> {
 				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
 			};
 
 			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
+			var listOfArguments = new List<(IList<string> Arguments, string Input)> ();
 			for (var i = 0; i < Assemblies.Length; i++) {
 				var asm = Assemblies [i];
 				var input = inputs [i];
@@ -103,16 +103,20 @@ namespace Xamarin.MacDev.Tasks {
 				arguments.AddRange (parsedProcessArguments);
 				arguments.Add (input);
 
-				processes [i] = ExecuteAsync (AOTCompilerPath, arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
-					.ContinueWith ((v) => {
-						if (v.Result.ExitCode != 0)
-							Log.LogError ("Failed to AOT compile {0}, the AOT compiler exited with code {1}", Path.GetFileName (input), v.Result.ExitCode);
-
-						return System.Threading.Tasks.Task.FromResult<Execution> (v.Result);
-					}).Unwrap ();
+				listOfArguments.Add (new (arguments, input));
 			}
 
-			System.Threading.Tasks.Task.WaitAll (processes);
+			Parallel.ForEach (listOfArguments, (arg) => {
+				ExecuteAsync (AOTCompilerPath, arg.Arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
+					.ContinueWith ((v) => {
+						if (v.Result.ExitCode != 0)
+							Log.LogError ("Failed to AOT compile {0}, the AOT compiler exited with code {1}", Path.GetFileName (arg.Input), v.Result.ExitCode);
+
+						return System.Threading.Tasks.Task.FromResult<Execution> (v.Result);
+					})
+					.Unwrap ()
+					.Wait ();
+			});
 
 			AssemblyFiles = aotAssemblyFiles.ToArray ();
 
