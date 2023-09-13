@@ -10,7 +10,7 @@
     <MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>7.0.5</MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23113.1</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>8.0.0-prerelease.23431.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>8.0.0-prerelease.23456.2</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
     <!-- Manually updated versions -->
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)</EmscriptenWorkloadVersion>
     <!-- custom variables -->
