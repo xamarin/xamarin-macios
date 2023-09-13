@@ -479,6 +479,12 @@ namespace Xamarin.Tests {
 			return GetVariable (variableName, variableName + " not found");
 		}
 
+		public static string GetNuGetOsVersion (ApplePlatform platform)
+		{
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_OS_VERSION";
+			return GetVariable (variableName, variableName + " not found");
+		}
+
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
