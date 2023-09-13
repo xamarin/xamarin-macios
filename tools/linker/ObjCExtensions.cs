@@ -78,7 +78,7 @@ namespace Xamarin.Linker {
 		public const string SceneKit = nameof (SceneKit);
 		public const string ScriptingBridge = nameof (ScriptingBridge);
 		public const string Security = nameof (Security);
-		public const string SensitiveContentAnalysis = nameof(SensitiveContentAnalysis);
+		public const string SensitiveContentAnalysis = nameof (SensitiveContentAnalysis);
 		public const string Social = nameof (Social);
 		public const string SpriteKit = nameof (SpriteKit);
 		public const string StoreKit = nameof (StoreKit);
