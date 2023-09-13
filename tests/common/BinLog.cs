@@ -175,7 +175,12 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<BuildLogEvent> GetBuildLogWarnings (string path)
 		{
-			return GetBuildMessages (path).Where (v => v.Type == BuildLogEventType.Warning);
+			return GetBuildMessages (path)
+				// Filter to warnings
+				.Where (v => v.Type == BuildLogEventType.Warning)
+				// We're often referencing earlier .NET projects (Touch.Unit/MonoTouch.Dialog), so ignore any out-of-support warnings.
+				.Where (v => v.Message?.Contains ("is out of support and will not receive security updates in the future") != true)
+				;
 		}
 
 		public static IEnumerable<BuildLogEvent> GetBuildLogErrors (string path)

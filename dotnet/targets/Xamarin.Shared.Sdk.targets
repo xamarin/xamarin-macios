@@ -747,9 +747,8 @@
 			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
 		</PropertyGroup>
 		<ItemGroup>
-			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll'">
-				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' != ''">$(_StrippedAssemblyDirectory)\%(ResolvedFileToPublish.DestinationSubPath)</OutputPath>
-				<OutputPath Condition="'%(ResolvedFileToPublish.DestinationSubPath)' == ''">$(_StrippedAssemblyDirectory)\%(Filename)%(Extension)</OutputPath>
+			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' And '%(ResolvedFileToPublish.Culture)' == ''">
+				<OutputPath>$(_StrippedAssemblyDirectory)\%(ResolvedFileToPublish.OriginalRelativePath)</OutputPath>
 			</_AssembliesToBeStripped>
 
 			<!-- Use forward slashes in OutputPath, otherwise ILStrip will create filenames that resemble the part of
@@ -1569,7 +1568,7 @@
 			<ResolvedFileToPublish Remove="@(_CompressedAppleBindingResourcePackage)" />
 
 			<!-- Rewrite the relative path so that everything ends up in the app bundle -->
-			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" />
+			<ResolvedFileToPublish RelativePath="$(_RelativeAppBundlePath)\%(RelativePath)" OriginalRelativePath="%(RelativePath)" />
 		</ItemGroup>
 
 		<!-- resolve any .xcframeworks and binding resource packages -->
