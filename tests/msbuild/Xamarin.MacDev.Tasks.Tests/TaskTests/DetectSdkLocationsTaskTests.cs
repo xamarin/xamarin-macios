@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Xamarin.iOS.Tasks;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
@@ -13,6 +14,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void InvalidXamarinSdkRoot ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 			var task = CreateTask<DetectSdkLocations> ();
 			task.XamarinSdkRoot = "XYZ";
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
@@ -25,6 +27,7 @@ namespace Xamarin.MacDev.Tasks {
 		public void InexistentSDKVersion ()
 		{
 			Configuration.AssertLegacyXamarinAvailable ();
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
 			var task = CreateTask<DetectSdkLocations> ();
 			task.SdkVersion = "4.0";
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
