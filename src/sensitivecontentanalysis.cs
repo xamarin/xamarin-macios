@@ -34,7 +34,7 @@ namespace SensitiveContentAnalysis {
 
 		[Export ("analyzeImageFile:completionHandler:")]
 		[Async]
-		void AnalyzeImage (NSUrl fileURL, Action<SCSensitivityAnalysis, NSError> completionHandler);
+		void AnalyzeImage (NSUrl fileUrl, Action<SCSensitivityAnalysis, NSError> completionHandler);
 
 		[Export ("analyzeCGImage:completionHandler:")]
 		[Async]
@@ -42,6 +42,6 @@ namespace SensitiveContentAnalysis {
 
 		[Export ("analyzeVideoFile:completionHandler:")]
 		[Async]
-		NSProgress AnalyzeVideo (NSUrl fileURL, Action<SCSensitivityAnalysis, NSError> completionHandler);
+		NSProgress AnalyzeVideo (NSUrl fileUrl, Action<SCSensitivityAnalysis, NSError> completionHandler);
 	}
 }
