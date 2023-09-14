@@ -295,9 +295,6 @@ namespace Xamarin.Tests {
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, hasPdb: false, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "runtimeconfig.bin"));
 
-			if (platform == ApplePlatform.MacOSX)
-				expectedFiles.Add (Path.Combine ("Contents", "MonoBundle", "createdump"));
-
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
