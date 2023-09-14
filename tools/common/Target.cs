@@ -277,6 +277,12 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+						case "NewsstandKit":
+							if (Driver.XcodeVersion.Major >= 15) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 15+.", framework.Name);
+								continue;
+							}
+							break;
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
 								if (App.AreAnyAssembliesTrimmed) {
