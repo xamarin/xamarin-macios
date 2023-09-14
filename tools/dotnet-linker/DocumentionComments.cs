@@ -28,7 +28,7 @@ namespace Xamarin.Utils {
 		public static string GetSignature (TypeDefinition type)
 		{
 			if (type.IsNested)
-				return type.Name;
+				return type.FullName.Replace ('/', '.');
 			return type.FullName;
 		}
 
@@ -39,42 +39,21 @@ namespace Xamarin.Utils {
 
 		public static string GetSignature (MethodDefinition method)
 		{
-			var sb = new StringBuilder ();
-			sb.Append (method.Name.Replace ('.', '#'));
-			sb.Append ('(');
-			for (var i = 0; i < method.Parameters.Count; i++) {
-				if (i > 0)
-					sb.Append (',');
+			var docCommentId = Mono.Cecil.Rocks.DocCommentId.GetDocCommentId (method);
 
-				var parameterType = method.Parameters [i].ParameterType;
-				WriteTypeSignature (sb, parameterType);
-			}
-			sb.Append (')');
+			// the `docCommentId` is in the form of `M:<TypeName>.<NestedTypeName>.<MethodName>(...)`
+			// and we need to skip the "M:" prefix and the type name(s) and keep just the method name
+			// and the argument list for the signature
 
-			return sb.ToString ();
-		}
-
-		static void WriteTypeSignature (StringBuilder sb, TypeReference type)
-		{
-			if (type is ByReferenceType brt) {
-				WriteTypeSignature (sb, brt.GetElementType ());
-				sb.Append ('@');
-				return;
+			var methodNameEnd = docCommentId.IndexOf ('(');
+			if (methodNameEnd == -1) {
+				// in some cases there aren't any brackets so the end of the doc comment is the end of the method name
+				methodNameEnd = docCommentId.Length - 1;
 			}
 
-			if (type is ArrayType at) {
-				WriteTypeSignature (sb, at.GetElementType ());
-				sb.Append ("[]");
-				return;
-			}
+			var methodNameStart = 1 + docCommentId.LastIndexOf ('.', startIndex: methodNameEnd);
 
-			if (type is PointerType pt) {
-				WriteTypeSignature (sb, pt.GetElementType ());
-				sb.Append ('*');
-				return;
-			}
-
-			sb.Append (type.FullName.Replace ('/', '.'));
+			return docCommentId.Substring (methodNameStart);
 		}
 	}
 }

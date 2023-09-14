@@ -10,6 +10,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FilterStaticFrameworks" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetFullPaths" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
@@ -163,11 +164,6 @@
 
 	<PropertyGroup>
 		<TargetPlatformSupported Condition=" '$(TargetPlatformIdentifier)' == '$(_PlatformName)' ">true</TargetPlatformSupported>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(_GlobalizationDataFileLocation)' == ''">
-		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' == 'true'">Resource</_GlobalizationDataFileLocation>
-		<_GlobalizationDataFileLocation Condition="'$(_UseNativeAot)' != 'true'">Assembly</_GlobalizationDataFileLocation>
 	</PropertyGroup>
 
 	<!-- dotnet publish -->
@@ -753,8 +749,49 @@
 			<Output TaskParameter="FrameworkToPublish" ItemName="_FilteredFrameworkToPublish" />
 		</FilterStaticFrameworks>
 
+		<!--
+
+			We need to use the full path to the framework for frameworks that
+			come from app extensions (since any relative paths from the app
+			extension projects won't be correct once loaded into the
+			containing project), so compute that. However, also do this for
+			app projects, so that we can properly deduplicate frameworks that
+			come from both extensions and the main app project.
+
+		 -->
+		<GetFullPaths
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			Items="@(_FilteredFrameworkToPublish)"
+			Metadata="Identity;SourceDirectory"
+		>
+			<Output TaskParameter="Output" ItemName="_FilteredFrameworkToPublishWithFullPath" />
+		</GetFullPaths>
+
+		<!-- If we're an app extension, store the list of all the frameworks to disk (and don't publish any of them to the appex) -->
+		<!-- Note that app extensions may be nested, so we first check if we have any app extensions with frameworks, read those, then store the full list to disk if we're an app extension, so the containing app project sees everything -->
+		<ReadItemsFromFile File="@(_ResolvedAppExtensionReferences->'%(Identity)\..\native-frameworks.items')" Condition="Exists('%(Identity)\..\native-frameworks.items')">
+			<Output TaskParameter="Items" ItemName="_FrameworksFromAppExtensions" />
+		</ReadItemsFromFile>
+
+		<WriteItemsToFile
+			Condition="'$(IsAppExtension)' == 'true'"
+			Items="@(_FilteredFrameworkToPublishWithFullPath);@(_FrameworksFromAppExtensions)"
+			ItemName="_FrameworksFromAppExtensions"
+			File="$(DeviceSpecificOutputPath)\native-frameworks.items"
+			IncludeMetadata="true"
+			Overwrite="true"
+		/>
+
 		<ItemGroup>
-			<_DirectoriesToPublish Include="@(_FilteredFrameworkToPublish)" />
+			<_FrameworksFromAppExtensions Update="@(_FrameworksFromAppExtensions)">
+				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
+			</_FrameworksFromAppExtensions>
+		</ItemGroup>
+
+		<ItemGroup>
+			<_DirectoriesToPublish Include="@(_FrameworksFromAppExtensions)" Condition="'$(IsAppExtension)' != 'true'" />
+			<_DirectoriesToPublish Include="@(_FilteredFrameworkToPublishWithFullPath)" Condition="'$(IsAppExtension)' != 'true'" />
 		</ItemGroup>
 	</Target>
 
@@ -918,7 +955,7 @@
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'NativeAOT'">NativeAOT.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
-			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
+			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier).$(_XamarinPackSuffix)</_XamarinNugetPackageId>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
@@ -1045,6 +1082,13 @@
 			<_RuntimeConfigurationFile>runtimeconfig.bin</_RuntimeConfigurationFile>
 		</PropertyGroup>
 
+		<!-- Not sure about how to handle nested app extensions here, but if it ever becomes a problem we can look into it (I believe only watch extensions can have embedded extensions at this point, and we don't support watchOS on .NET anyways) -->
+		<ItemGroup Condition="'$(IsAppExtension)' == 'true'">
+			<_CustomLinkFlags Include="-rpath" />
+			<_CustomLinkFlags Include="@executable_path/../../Frameworks" Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS'" />
+			<_CustomLinkFlags Include="@executable_path/../../../../Frameworks" Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'" />
+		</ItemGroup>
+
 		<ItemGroup>
 			<!-- Select the native libraries from mono we need to link with and potentially copy into the app -->
 			<_MonoLibrary
@@ -1069,7 +1113,6 @@
 			<!-- List all the properties passed to xamarin_bridge_vm_initialize in xamarin_vm_initialize (in runtime.m) -->
 			<_RuntimeConfigReservedProperties Include="APP_PATHS" />
 			<_RuntimeConfigReservedProperties Include="PINVOKE_OVERRIDE" />
-			<_RuntimeConfigReservedProperties Include="ICU_DAT_FILE_PATH" />
 			<_RuntimeConfigReservedProperties Include="TRUSTED_PLATFORM_ASSEMBLIES" />
 			<_RuntimeConfigReservedProperties Include="NATIVE_DLL_SEARCH_DIRECTORIES" />
 			<_RuntimeConfigReservedProperties Include="RUNTIME_IDENTIFIER" />
@@ -1237,9 +1280,6 @@
 				<Value>true</Value>
 				<Trim>true</Trim>
 			</RuntimeHostConfigurationOption>
-
-			<!-- Explicitly root the framework assembly due to NativeAOT trimming incompatibility tracked: https://github.com/dotnet/runtime/issues/86649 -->
-			<TrimmerRootAssembly Include="$(_PlatformAssemblyName)" />
 		</ItemGroup>
 
 		<ItemGroup>
@@ -1264,77 +1304,13 @@
 			<TrimmerRootAssembly Include="@(_TrimmerRootAssemblyButOnlyIntermediateAssembly->'%(Filename)')" />
 		</ItemGroup>
 
-		<!--
-
-			Collect all the native linker args ILC would have used and use
-			them ourselves when we link natively.
-
-			Unfortunately there's a major difference between LinkerArgs (as
-			used by ILC) and our _CustomLinkerFlags: ILC splits on space in
-			LinkerArg, while we quote (when necessary) the items in
-			_CustomLinkerFlags.
-
-			Example:
-
-				<LinkerArg Include="-framework UIKit" />
-
-					ILC will pass that as two separate arguments to the native
-					compiler
-
-				<_CustomLinkFlags Include="-framework UIKit" />
-
-					We'll pass that as a single argument ('-framework UIKit')
-					to the native compiler (which the native compiler doesn't
-					like)
-
-			So we need to convert the list of space-separated items in
-			LinkerArg to space-preserved items in _CustomLinkFlags.
-
-			How to do this in MSBuild is somewhat non-obvious: first we
-			convert the LinkerArg item group to a property where every item is
-			separated by a semi-colon, and where we've also replaced spaces by
-			semi-colons. This means we have a property where every flag we
-			want is separated by a semi-colon. Then we split on the property
-			string on a semi-colon and add those items to the _CustomLinkFlags
-			item group.
-
-			Note: this means ILC doesn't support linker flags with spaces in them.
-
-			Additionally, the LinkerArg item group are actually passed to the
-			native compiler by the NativeAOT build tasks, not the native
-			linker. This means they might contain wrapped linker arguments:
-			'-Wl,...', which the compiler understands, but not the linker.
-			Thus we need to unwrap the (compiler) arguments in LinkerArgs to
-			be actual linker arguments. Also note that there can be multiple
-			linker arguments passed using a single compiler argument, and
-			those are separated by a comma: "-Wl,-linkerarg1,-linkerarg2", so
-			we need to split those into multiple linker arguments as well. And
-			to make things even more complicated, there may be quotes as well:
-			<LinkerArg>'-Wl,-linkerarg1,-linkerarg2'</LinkerArg>.
-
-		-->
-		<PropertyGroup>
-			<_LinkerArgsSplitBySemiColon>@(LinkerArg->Replace(' ',';'))</_LinkerArgsSplitBySemiColon>
-		</PropertyGroup>
 		<ItemGroup>
-			<_AllLinkerArgs Include="$(_LinkerArgsSplitBySemiColon.Split(';'))" />
-			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="$([System.String]::new('%(Identity)').StartsWith('-Wl,'))">
-				<TransformedArgument>$([System.String]::new('%(Identity)').Substring(4))</TransformedArgument>
-			</_LinkerArgsWhichAreReallyCompilerArgs>
-			<!-- Handle quoted arguments: <LinkerArg>'-Wl,-linkerarg'</LinkerArg> -->
-			<_LinkerArgsWhichAreReallyCompilerArgs Include="@(_AllLinkerArgs)" Condition="$([System.String]::new('%(Identity)').StartsWith('%27-Wl,')) And $([System.String]::new('%(Identity)').EndsWith('%27'))">
-				<TransformedArgument>$([System.String]::new('%(Identity)').Substring(5, $([MSBuild]::Subtract($([System.String]::new('%(Identity)').Length), 6))))</TransformedArgument>
-			</_LinkerArgsWhichAreReallyCompilerArgs>
-			<_CompilerArgsTransformedToLinkerArgs Include="@(_LinkerArgsWhichAreReallyCompilerArgs->'%(TransformedArgument)')" />
-		</ItemGroup>
-		<PropertyGroup>
-			<_CompilerArgsTransformedToLinkerArgsSplitByComma>@(_CompilerArgsTransformedToLinkerArgs->Replace(',',';'))</_CompilerArgsTransformedToLinkerArgsSplitByComma>
-		</PropertyGroup>
-		<ItemGroup>
-			<_AllLinkerArgs Remove="@(_LinkerArgsWhichAreReallyCompilerArgs)" />
-			<_AllLinkerArgs Include="$(_CompilerArgsTransformedToLinkerArgsSplitByComma.Split(';'))" />
-
-			<_CustomLinkFlags Include="@(_AllLinkerArgs)" />
+			<!-- Collect extra native linker flags ILC would have used -->
+			<_CustomLinkFlags Include="@(NativeLibrary)" />
+			<_CustomLinkFlags Include="@(NativeSystemLibrary->'-l%(Identity)')" />
+			<_CustomLinkFlags Include="@(NativeFramework->'-Wl,-framework,%(Identity)')" />
+			<_CustomLinkFlags Include="@(ExtraLinkerArg->'-Wl,%(Identity)')" />
+			<_CustomLinkFlags Include="-L/usr/lib/swift" Condition="'$(_PlatformName)' == 'macOS'" />
 		</ItemGroup>
 
 		<ItemGroup>
@@ -1467,6 +1443,9 @@
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
 			<_MainLinkerFlags Include="-lcompression" />
+
+			<!-- In some cases ld may crash if -lobjc isn't passed -->
+			<_MainLinkerFlags Include="-lobjc" />
 
 			<_MainLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' == 'true'" Include="-exported_symbols_list" />
 			<_MainLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' == 'true'" Include="$(_ExportedSymbolsFile)" />
@@ -1731,7 +1710,7 @@
 				            '%(ResolvedFileToPublish.Filename)%(ResolvedFileToPublish.Extension)' == '$(_GlobalizationDataFile)' And
 				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)'
 				            "
-				PublishFolderType="$(_GlobalizationDataFileLocation)"
+				PublishFolderType="Assembly"
 			/>
 
 			<!-- Remove the libxamarin-*.dylib files we don't want -->
@@ -1767,6 +1746,18 @@
 				            "
 			/>
 
+			<!-- There's no need to ship any *.o files shipped by NativeAOT -->
+			<!-- We need to remove these from ResolvedFileToPublish before calling ComputeBundleLocation, because otherwise we get warnings about not knowing what to do with these files -->
+			<ResolvedFileToPublish
+				Remove="@(ResolvedFileToPublish)"
+				Condition=" '%(ResolvedFileToPublish.AssetType)' == 'native' And
+				            '%(ResolvedFileToPublish.RuntimeIdentifier)' == '$(RuntimeIdentifier)' And
+				            '%(ResolvedFileToPublish.Extension)' == '.o' And
+				            '%(ResolvedFileToPublish.NuGetPackageId)' == '$(_MonoNugetPackageId)' And
+				            '$(_UseNativeAot)' == 'true'
+				            "
+			/>
+
 			<!-- Put the 'createdump' executable in the expected location in the app bundle when using CoreCLR -->
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/11432 -->
 			<_CreateDumpExecutable
@@ -1781,7 +1772,7 @@
 				PublishFolderType="Assembly"
 			/>
 			<ResolvedFileToPublish Remove="@(_CreateDumpExecutable)" />
-			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" />
+			<ResolvedFileToPublish Include="@(_CreateDumpExecutable)" Condition="'$(BundleCreateDump)' == 'true'" />
 
 			<!-- Remove any dylibs Mono told us not to link with -->
 			<ResolvedFileToPublish
@@ -1894,7 +1885,7 @@
 	<Target Name="_ComputeCodesignItems"
 		Outputs="$(_CodesignItemsPath)"
 		>
-		<ItemGroup Condition="'$(_RequireCodeSigning)' == 'true'">
+		<ItemGroup Condition="'$(_RequireCodeSigning)' == 'true' And '$(BundleCreateDump)' == 'true'">
 			<!-- The 'createdump' executable must be signed. -->
 			<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/13417 -->
 			<_CreateDumpExecutableToSign Include="@(_CreateDumpExecutable -> '$(_DylibPublishDir)%(RelativePath)')" KeepMetadata="false">

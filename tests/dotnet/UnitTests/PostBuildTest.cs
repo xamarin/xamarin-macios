@@ -31,7 +31,7 @@ namespace Xamarin.Tests {
 			var findString = "Output Property: ArchiveDir";
 			var archiveDirRecord = recordArgs.Where (v => v?.Message?.Contains (findString) == true).ToList ();
 			Assert.That (archiveDirRecord.Count, Is.GreaterThan (0), "ArchiveDir");
-			var archiveDir = archiveDirRecord [0].Message.Substring (findString.Length + 1).Trim ();
+			var archiveDir = archiveDirRecord [0].Message?.Substring (findString.Length + 1)?.Trim ();
 			Assert.That (archiveDir, Does.Exist, "Archive directory existence");
 			AssertDSymDirectory (appPath);
 		}
@@ -116,9 +116,9 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		// [TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")] // Ignored due to https://github.com/dotnet/runtime/issues/90584
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		// [TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")] // Ignored due to https://github.com/dotnet/runtime/issues/90584
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		public void PublishTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";

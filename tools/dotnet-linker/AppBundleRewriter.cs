@@ -498,6 +498,19 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		public MethodReference DynamicDependencyAttribute_ctor__String_String_String {
+			get {
+				return GetMethodReference (CorlibAssembly,
+						System_Diagnostics_CodeAnalysis_DynamicDependencyAttribute,
+						".ctor",
+						".ctor(String,String,String)",
+						isStatic: false,
+						System_String,
+						System_String,
+						System_String);
+			}
+		}
+
 		public MethodReference RuntimeTypeHandle_Equals {
 			get {
 				return GetMethodReference (CorlibAssembly, System_RuntimeTypeHandle, "Equals", isStatic: false, System_RuntimeTypeHandle);
@@ -1189,6 +1202,20 @@ namespace Xamarin.Linker {
 			}
 		}
 
+#if NET
+		public bool TryGet_NSObject_RegisterToggleRef (out MethodDefinition? md)
+		{
+			// the NSObject.RegisterToggleRef method isn't present on all platforms (for example on Mac)
+			try {
+				_ = GetMethodReference (PlatformAssembly, Foundation_NSObject, "RegisterToggleRef", "Foundation.NSObject::RegisterToggleRef", predicate: null, out md);
+				return true;
+			} catch (InvalidOperationException) {
+				md = null;
+				return false;
+			}
+		}
+#endif
+
 		public void SetCurrentAssembly (AssemblyDefinition value)
 		{
 			current_assembly = value;
@@ -1228,9 +1255,24 @@ namespace Xamarin.Linker {
 
 		public CustomAttribute CreateDynamicDependencyAttribute (string memberSignature, TypeDefinition type)
 		{
+			if (type.HasGenericParameters) {
+				var typeName = Xamarin.Utils.DocumentationComments.GetSignature (type);
+				var assemblyName = type.Module.Assembly.Name.Name;
+				return CreateDynamicDependencyAttribute (memberSignature, typeName, assemblyName);
+			}
+
 			var attribute = new CustomAttribute (DynamicDependencyAttribute_ctor__String_Type);
 			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_String, memberSignature));
 			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_Type, type));
+			return attribute;
+		}
+
+		public CustomAttribute CreateDynamicDependencyAttribute (string memberSignature, string typeName, string assemblyName)
+		{
+			var attribute = new CustomAttribute (DynamicDependencyAttribute_ctor__String_String_String);
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_String, memberSignature));
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_String, typeName));
+			attribute.ConstructorArguments.Add (new CustomAttributeArgument (System_String, assemblyName));
 			return attribute;
 		}
 

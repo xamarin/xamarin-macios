@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>Nie można zdekompresować pliku "{0}". Przejrzyj dziennik kompilacji, aby uzyskać więcej informacji z poziomu polecenia natywnego "unzip".</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>W odwołaniach brakuje wymaganego zestawu „Xamarin.Mac.dll”
 		</value>
@@ -1518,7 +1524,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>Klasa „{0}” nie zostanie zarejestrowana, ponieważ platforma WatchKit została usunięta z zestawu iOS SDK.
+		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1541,6 +1547,9 @@
 	</data>
   <data name="MX4188" xml:space="preserve">
 		<value>Nie można obliczyć podpisu bloku dla typu „{0}”: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Brak kompilatora „{0}”. Zainstaluj składnik „Command-Line Tools” środowiska Xcode
@@ -1812,5 +1821,8 @@
 	</data>
   <data name="MX8055" xml:space="preserve">
 		<value>Nie można odnaleźć typu „ObjCRuntime.__Registrar__” w zestawie „{0}”.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
 	</data>
 </root>
