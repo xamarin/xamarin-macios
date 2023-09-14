@@ -236,7 +236,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS", "monotouch")]
 		[TestCase ("macOS", "xammac")]
 		[TestCase ("MacCatalyst", "monotouch")]
-		[Category ("AllPlatforms")]
+		// [Category ("AllPlatforms")]
 		public void BuildBundledResources (string platform, string prefix)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
