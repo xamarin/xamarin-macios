@@ -632,7 +632,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
-			Assert.That (createdump, Does.Exist, "createdump existence");
+			Assert.That (createdump, Does.Not.Exist, "createdump existence");
 		}
 
 		[Test]
@@ -971,6 +971,42 @@ namespace Xamarin.Tests {
 			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
 			string [] configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
 			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
+		}
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		// [TestCase ("MacCatalyst", "")] - No extension support yet
+		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var extensionProjectDir = GetProjectPath ("ExtensionProjectWithFrameworks", platform: platform);
+
+			Clean (extensionProjectDir);
+			Clean (consumingProjectDir);
+
+			DotNet.AssertBuild (consumingProjectDir, verbosity);
+
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
+			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+			var extensionFrameworksPath = Path.Combine (extensionPath, GetFrameworksRelativePath (platform));
+			Assert.IsFalse (Directory.Exists (extensionFrameworksPath), $"App extension framework directory exists when it shouldn't: {extensionFrameworksPath}");
+
+			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
+			var configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
+			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
+
+			var appFrameworksPath = Path.Combine (appPath, GetFrameworksRelativePath (platform));
+			Assert.That (Directory.Exists (appFrameworksPath), $"App Frameworks directory does not exist: {appFrameworksPath}");
+
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "SomewhatUnknownD.framework", "SomewhatUnknownD")), "SomewhatUnknownD");
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownD.framework", "UnknownD")), "UnknownD");
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownE.framework", "UnknownE")), "UnknownE");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
@@ -1397,6 +1433,53 @@ namespace Xamarin.Tests {
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["PublishAot"] = "true";
 			DotNet.AssertBuild (project_path, properties);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		public void PublishAot (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["PublishAot"] = "true";
+			properties ["_IsPublishing"] = "true"; // quack like "dotnet publish"
+			properties ["ExcludeNUnitLiteReference"] = "true"; // we're asserting no warnings, and NUnitLite produces a lot of them, so ignore NUnitLite
+			properties ["ExcludeTouchUnitReference"] = "true"; // we're asserting no warnings, and Touch.Unit produces a lot of them, so ignore Touch.Unit
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
+			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
+			var foundIL2049 = false;
+			var foundIL3053 = false;
+			rv.AssertNoWarnings ((evt) => {
+				// https://github.com/dotnet/runtime/issues/88994
+				if (evt.Code == "IL2049" && evt.Message == "System.Private.CoreLib: The internal attribute name 'RemoveAttributeInstances' being used in the xml is not supported by ILLink, check the spelling and the supported internal attributes.") {
+					foundIL2049 = true;
+					return false;
+				}
+
+				// This will probably go away when the IL2049 warning from above is fixed.
+				if (evt.Code == "IL3053" && evt.Message == $"Assembly 'Microsoft.{platform.AsString ()}' produced AOT analysis warnings.") {
+					foundIL3053 = true;
+					return false;
+				}
+
+				if (platform == ApplePlatform.iOS && evt.Message?.Trim () == "Supported iPhone orientations have not been set")
+					return false;
+
+				return true;
+			});
+
+			Assert.IsTrue (foundIL2049, "IL2049 not found - update test code to remove the code to ignore the IL2049");
+			Assert.IsTrue (foundIL3053, "IL3053 not found - update test code to remove the code to ignore the IL3053");
 		}
 
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)

@@ -173,9 +173,12 @@ namespace ObjCRuntime {
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
+#if !NET
 			// BaseDirectory may not be set in some Mono embedded environments
 			// so try some reasonable fallbacks in these cases.
+#endif
 			string basePath = AppDomain.CurrentDomain.BaseDirectory;
+#if !NET
 			if(!string.IsNullOrEmpty(basePath))
 				basePath = Path.Combine (basePath, "..");
 			else {
@@ -189,6 +192,7 @@ namespace ObjCRuntime {
 					basePath = Path.Combine (Environment.CurrentDirectory, "..");
 				}
 			}
+#endif
 
 			ResourcesPath = Path.Combine (basePath, "Resources");
 			FrameworksPath = Path.Combine (basePath, "Frameworks");
