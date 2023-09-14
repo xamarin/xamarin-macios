@@ -4427,7 +4427,7 @@ namespace Intents {
 		[Export ("attachmentFiles", ArgumentSemantic.Copy)]
 		INFile [] AttachmentFiles { get; }
 
-		[NullAllowed]
+		[NullAllowed, 	BindAs (typeof (int))]
 		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("numberOfAttachments", ArgumentSemantic.Copy)]
 		NSNumber NumberOfAttachments { get; }
