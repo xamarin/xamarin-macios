@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 
 var args = Environment.GetCommandLineArgs ();
-var expectedArgumentCount = 5;
+var expectedArgumentCount = 6;
 if (args.Length != expectedArgumentCount + 3 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
 	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
 	// second arg the script itself
@@ -23,6 +23,7 @@ var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, String
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
 var supportedApiVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var defaultTargetPlatformVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+var currentApiVersion = args [argumentIndex++].Replace ('-', '_');
 
 var platformLowerCase = platform.ToLowerInvariant ();
 
@@ -64,13 +65,13 @@ using (var writer = new StreamWriter (outputPath)) {
 
 	writer.WriteLine ($"	<!-- Using a .NET version we no longer support -->");
 	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true' And '$(TargetFrameworkVersion)' != '' And $([MSBuild]::VersionLessThan('$(TargetFrameworkVersion)', '{minDotNetVersion}'))\">");
-	writer.WriteLine ($"		<Import Project=\"Sdk-eol.props\" Sdk=\"Microsoft.{platform}.Sdk.{supportedApiVersions.OrderBy (v => v).Last ().Replace ('-', '_')}\" />");
+	writer.WriteLine ($"		<Import Project=\"Sdk-eol.props\" Sdk=\"Microsoft.{platform}.Sdk.{currentApiVersion}\" />");
 	writer.WriteLine ($"	</ImportGroup>");
 	writer.WriteLine ();
 
 	writer.WriteLine ($"	<!-- Using a specific, but unsupported, target platform version -->");
 	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true'\">");
-	writer.WriteLine ($"		<Import Project=\"Sdk-error.props\" Sdk=\"Microsoft.{platform}.Sdk.{supportedApiVersions.OrderBy (v => v).Last ().Replace ('-', '_')}\" />");
+	writer.WriteLine ($"		<Import Project=\"Sdk-error.props\" Sdk=\"Microsoft.{platform}.Sdk.{currentApiVersion}\" />");
 	writer.WriteLine ($"	</ImportGroup>");
 
 	writer.WriteLine ($"</Project>");
