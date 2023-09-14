@@ -817,11 +817,16 @@ namespace Xamarin.Tests {
 			}
 		}
 
-
 		public static IEnumerable<string> GetRefLibraries ()
 		{
 			foreach (var platform in GetIncludedPlatforms (true))
 				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, true));
+		}
+
+
+		public static string GetRefLibrary (ApplePlatform platform)
+		{
+			return GetBaseLibrary (platform, true);
 		}
 
 		public static string GetTargetFramework (Profile profile)
