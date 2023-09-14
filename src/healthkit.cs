@@ -804,8 +804,8 @@ namespace HealthKit {
 		[Export ("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
 		Action<HKWorkoutSession> WorkoutSessionMirroringStartHandler { get; set; }
 
-		[NoTV, NoWatch, NoMac, iOS(17,0), MacCatalyst(17,0)]
-		[NullAllowed, Export("authorizationViewControllerPresenter")]
+		[NoTV, NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("authorizationViewControllerPresenter")]
 		UIViewController AuthorizationViewControllerPresenter { get; set; }
 	}
 
