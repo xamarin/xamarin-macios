@@ -77,7 +77,8 @@ namespace Xamarin.MacDev.Tasks {
 				filesToZip.Add (manifestPath);
 
 				foreach (var nativeRef in filesToZip) {
-					CompressionHelper.TryCompress (Log, zipFile, nativeRef, false);
+					var workingDirectory = Path.GetDirectoryName (nativeRef);
+					CompressionHelper.TryCompress (Log, zipFile, new string [] { nativeRef }, false, workingDirectory, true);
 				}
 				packagedFiles.Add (zipFile);
 			} else {
