@@ -114,10 +114,6 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<Delete Files="%(_NativeFrameworkResource.ZipFile)" />
 
 		<Zip
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
-			Recursive="true"
-			Symlinks="true"
 			Sources="%(_NativeFrameworkResource.FrameworkPath)"
 			OutputFile="%(_NativeFrameworkResource.ZipFile)"
 			WorkingDirectory="%(_NativeFrameworkResource.FrameworkPath)" >

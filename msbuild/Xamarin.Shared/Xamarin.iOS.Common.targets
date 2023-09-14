@@ -590,10 +590,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Zip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(ZipExe)"
-			ToolPath="$(ZipPath)"
-			Recursive="true"
-			Symlinks="true"
 			Sources="@(_IpaPackageSource)"
 			OutputFile="$(IpaPackagePath)"
 			WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)ipa"
