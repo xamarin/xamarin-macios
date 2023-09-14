@@ -105,7 +105,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (180),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mtouch),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mtouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS),
 				InProcess = true,
 			};
 			yield return nunitExecutionMTouch;
