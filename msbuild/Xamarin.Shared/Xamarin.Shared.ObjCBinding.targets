@@ -96,9 +96,6 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<Delete Files="%(_NativeFrameworkResource.ZipFile)" />
 
 		<Zip
-			ZipPath="$(ZipPath)"
-			Recursive="true"
-			Symlinks="true"
 			Sources="%(_NativeFrameworkResource.FrameworkPath)"
 			OutputFile="%(_NativeFrameworkResource.ZipFile)"
 			WorkingDirectory="%(_NativeFrameworkResource.FrameworkPath)" >

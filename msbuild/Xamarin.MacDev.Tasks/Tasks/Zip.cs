@@ -15,20 +15,14 @@ using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public class Zip : XamarinTask, ICancelableTask {
-		CancellationTokenSource? cancellationTokenSource;
-
 		#region Inputs
 
 		[Output]
 		[Required]
 		public ITaskItem? OutputFile { get; set; }
 
-		public bool Recursive { get; set; }
-
 		[Required]
 		public ITaskItem [] Sources { get; set; } = Array.Empty<ITaskItem> ();
-
-		public bool Symlinks { get; set; }
 
 		[Required]
 		public ITaskItem? WorkingDirectory { get; set; }
@@ -37,39 +31,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		#endregion
 
-		static string GetExecutable (List<string> arguments, string toolName, string toolPathOverride)
-		{
-			if (string.IsNullOrEmpty (toolPathOverride)) {
-				arguments.Insert (0, toolName);
-				return "xcrun";
-			}
-			return toolPathOverride;
-		}
-
 		string GetWorkingDirectory ()
 		{
 			return WorkingDirectory!.GetMetadata ("FullPath");
-		}
-
-		List<string> GenerateCommandLineCommands ()
-		{
-			var args = new List<string> ();
-
-			if (Recursive)
-				args.Add ("-r");
-
-			if (Symlinks)
-				args.Add ("-y");
-
-			args.Add (OutputFile!.GetMetadata ("FullPath"));
-
-			var root = GetWorkingDirectory ();
-			for (int i = 0; i < Sources.Length; i++) {
-				var relative = PathUtils.AbsoluteToRelative (root, Sources [i].GetMetadata ("FullPath"));
-				args.Add (relative);
-			}
-
-			return args;
 		}
 
 		public override bool Execute ()
@@ -85,10 +49,17 @@ namespace Xamarin.MacDev.Tasks {
 				return rv;
 			}
 
-			var args = GenerateCommandLineCommands ();
-			var executable = GetExecutable (args, "zip", ZipPath);
-			cancellationTokenSource = new CancellationTokenSource ();
-			ExecuteAsync (Log, executable, args, workingDirectory: GetWorkingDirectory (), cancellationToken: cancellationTokenSource.Token).Wait ();
+			var zip = OutputFile!.GetMetadata ("FullPath");
+			var workingDirectory = GetWorkingDirectory ();
+			var sources = new List<string> ();
+			for (int i = 0; i < Sources.Length; i++) {
+				var relative = PathUtils.AbsoluteToRelative (workingDirectory, Sources [i].GetMetadata ("FullPath"));
+				sources.Add (relative);
+			}
+
+			if (!CompressionHelper.TryCompress (this.Log, zip, sources, false, workingDirectory, false))
+				return false;
+
 			return !Log.HasLoggedErrors;
 		}
 
@@ -96,8 +67,6 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			if (ShouldExecuteRemotely ()) {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-			} else {
-				cancellationTokenSource?.Cancel ();
 			}
 		}
 
