@@ -40,6 +40,11 @@ namespace Cecil.Tests {
 			return ad;
 		}
 
+		public static void AssertFailures (HashSet<string>? currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message)
+		{
+			AssertFailures<string> (currentFailures?.ToDictionary (v => v) ?? new Dictionary<string, string> (), knownFailures, nameOfKnownFailureSet, message, (v) => v);
+		}
+
 		public static void AssertFailures (Dictionary<string, string> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message)
 		{
 			AssertFailures<string> (currentFailures, knownFailures, nameOfKnownFailureSet, message, (v) => v);
@@ -217,6 +222,139 @@ namespace Cecil.Tests {
 
 			foreach (var item in assembly.EnumerateEvents (filter))
 				yield return item;
+		}
+
+		public static IEnumerable<MemberReference> EnumerateMembers (this AssemblyDefinition assembly, Func<MemberReference, bool>? filter = null)
+		{
+			foreach (var item in assembly.EnumerateTypes (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateFields (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateMethods (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateProperties (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateEvents (filter))
+				yield return item;
+		}
+
+		public static bool IsPubliclyVisible (this TypeDefinition type)
+		{
+			if (type.IsNested) {
+				if (type.IsNestedAssembly || type.IsNestedFamilyAndAssembly || type.IsNestedPrivate)
+					return false;
+				return IsPubliclyVisible (type.DeclaringType);
+			}
+
+			return type.IsPublic;
+		}
+
+		public static bool IsPubliclyVisible (this FieldDefinition field)
+		{
+			if (!IsPubliclyVisible (field.DeclaringType))
+				return false;
+
+			var visibility = field.Attributes & FieldAttributes.FieldAccessMask;
+			switch (visibility) {
+			case FieldAttributes.Private:
+			case FieldAttributes.FamANDAssem:
+			case FieldAttributes.Assembly:
+				return false;
+			case FieldAttributes.Family:
+			case FieldAttributes.FamORAssem:
+			case FieldAttributes.Public:
+				return true;
+			default:
+				throw new NotImplementedException ($"Unknown visibility: {visibility}");
+			}
+		}
+
+		public static bool IsPubliclyVisible (this MethodDefinition method)
+		{
+			if (!IsPubliclyVisible (method.DeclaringType))
+				return false;
+
+			var visibility = method.Attributes & MethodAttributes.MemberAccessMask;
+			switch (visibility) {
+			case MethodAttributes.Private:
+			case MethodAttributes.FamANDAssem:
+			case MethodAttributes.Assembly:
+				return false;
+			case MethodAttributes.Family:
+			case MethodAttributes.FamORAssem:
+			case MethodAttributes.Public:
+				return true;
+			default:
+				throw new NotImplementedException ($"Unknown visibility: {visibility}");
+			}
+		}
+
+		public static bool IsPubliclyVisible (this EventDefinition evt)
+		{
+			if (!IsPubliclyVisible (evt.DeclaringType))
+				return false;
+
+			var invokeMethod = evt.InvokeMethod;
+			if (invokeMethod is not null && IsPubliclyVisible (invokeMethod))
+				return true;
+			var addMethod = evt.AddMethod;
+			if (addMethod is not null && IsPubliclyVisible (addMethod))
+				return true;
+			var removeMethod = evt.RemoveMethod;
+			if (removeMethod is not null && IsPubliclyVisible (removeMethod))
+				return true;
+			return false;
+		}
+
+		public static bool IsPubliclyVisible (this PropertyDefinition property)
+		{
+			if (!IsPubliclyVisible (property.DeclaringType))
+				return false;
+
+			var getter = property.GetMethod;
+			if (getter is not null && IsPubliclyVisible (getter))
+				return true;
+			var setter = property.SetMethod;
+			if (setter is not null && IsPubliclyVisible (setter))
+				return true;
+			return false;
+		}
+
+		public static IEnumerable<MemberReference> EnumeratePublicMembers (this AssemblyDefinition assembly, Func<MemberReference, bool>? filter = null)
+		{
+			foreach (var item in assembly.EnumerateTypes (filter)) {
+				if (!IsPubliclyVisible (item))
+					continue;
+				yield return item;
+			}
+
+			foreach (var item in assembly.EnumerateFields (filter)) {
+				if (!IsPubliclyVisible (item))
+					continue;
+				yield return item;
+			}
+
+			foreach (var item in assembly.EnumerateMethods (filter)) {
+				if (!IsPubliclyVisible (item))
+					continue;
+				yield return item;
+			}
+
+			foreach (var item in assembly.EnumerateProperties (filter)) {
+				if (!IsPubliclyVisible (item))
+					continue;
+				yield return item;
+			}
+
+			foreach (var item in assembly.EnumerateEvents (filter)) {
+				if (!IsPubliclyVisible (item))
+					continue;
+				yield return item;
+			}
 		}
 
 		public static IEnumerable<ICustomAttributeProvider> EnumerateAttributeProviders (this TypeDefinition type, Func<ICustomAttributeProvider, bool>? filter = null)
@@ -419,7 +557,7 @@ namespace Cecil.Tests {
 			return string.Empty;
 		}
 
-		public static string RenderLocation (this ICustomAttributeProvider provider)
+		public static string RenderLocation (this object provider)
 		{
 			if (provider is IMemberDefinition md)
 				return RenderLocation (md);
