@@ -300,6 +300,11 @@ namespace Security {
 
 		}
 #if MONOMAC
+#if NET
+		[ObsoletedOSPlatform ("macos10.10")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10,10)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainAddGenericPassword (
 			IntPtr keychain,
@@ -311,6 +316,11 @@ namespace Security {
 			byte[] passwordData,
 			IntPtr itemRef);
 
+#if NET
+		[ObsoletedOSPlatform ("macos10.10")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10,10)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainFindGenericPassword (
 			IntPtr keychainOrArray,
@@ -322,6 +332,11 @@ namespace Security {
 			out IntPtr passwordData,
 			IntPtr itemRef);
 
+#if NET
+		[ObsoletedOSPlatform ("macos10.10")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10,10)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainAddInternetPassword (
 			IntPtr keychain,
@@ -340,6 +355,11 @@ namespace Security {
 			byte[] passwordData,
 			IntPtr itemRef);
 
+#if NET
+		[ObsoletedOSPlatform ("macos10.10")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10,10)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainFindInternetPassword (
 			IntPtr keychain,
@@ -358,6 +378,11 @@ namespace Security {
 			out IntPtr passwordData,
 			IntPtr itemRef);
 
+#if NET
+		[ObsoletedOSPlatform ("macos10.10")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10,10)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainItemFreeContent (IntPtr attrList, IntPtr data);
 

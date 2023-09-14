@@ -755,6 +755,10 @@ namespace Security {
 		[MacCatalyst (13, 1)]
 		[Field ("kSecUseAuthenticationContext")]
 		IntPtr UseAuthenticationContext { get; }
+
+		[TV(17, 0), NoWatch, NoMacCatalyst, NoMac, NoiOS]
+		[Field("kSecUseUserIndependentKeychain")]
+		IntPtr UseUserIndependentKeychain { get; }
 	}
 
 	[NoiOS]
@@ -1035,6 +1039,50 @@ namespace Security {
 		[MacCatalyst (13, 1)]
 		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorVariableIVX963SHA512AESGCM")]
 		EciesEncryptionCofactorVariableIvx963Sha512AesGcm,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureDigestRFC4754")]
+		EcdsaSignatureDigestRfc4754,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA1")]
+		EcdsaSignatureDigestRfc4754Sha1,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA224")]
+		EcdsaSignatureDigestRfc4754Sha224,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA256")]
+		EcdsaSignatureDigestRfc4754Sha256,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA384")]
+		EcdsaSignatureDigestRfc4754Sha384,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureDigestRFC4754SHA512")]
+		EcdsaSignatureDigestRfc4754Sha512,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA1")]
+		EcdsaSignatureMessageRfc4754Sha1,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA224")]
+		EcdsaSignatureMessageRfc4754Sha224,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA256")]
+		EcdsaSignatureMessageRfc4754Sha256,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA384")]
+		EcdsaSignatureMessageRfc4754Sha384,
+
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Field("kSecKeyAlgorithmECDSASignatureMessageRFC4754SHA512")]
+		EcdsaSignatureMessageRfc4754Sha512,
 	}
 
 	[MacCatalyst (13, 1)]
