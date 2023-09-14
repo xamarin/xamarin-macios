@@ -67,6 +67,6 @@ namespace MediaAccessibility {
 		bool CanProcess (Surface surface);
 
 		[Export ("processSurface:outSurface:timestamp:options:")]
-		MAFlashingLightsProcessorResult Process (Surface inSurface, Surface outSurface, double timestamp, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		MAFlashingLightsProcessorResult Process (Surface inSurface, Surface outSurface, double timestamp, [NullAllowed] NSDictionary options);
 	}
 }
