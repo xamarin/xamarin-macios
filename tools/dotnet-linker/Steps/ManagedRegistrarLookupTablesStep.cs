@@ -210,7 +210,7 @@ namespace Xamarin.Linker {
 			foreach (var type in types) {
 				yield return type;
 				if (type.HasNestedTypes) {
-					foreach (var td in IterateTypes(type.NestedTypes))
+					foreach (var td in IterateTypes (type.NestedTypes))
 						yield return td;
 				}
 			}
