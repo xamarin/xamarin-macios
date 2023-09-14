@@ -464,7 +464,7 @@ namespace ScreenCaptureKit {
 		NSNumber [] ExcludedWindowIds { get; set; }
 
 		[Export ("excludedBundleIDs", ArgumentSemantic.Strong)]
-		string [] ExcludedBundleIDs { get; set; }
+		string [] ExcludedBundleIds { get; set; }
 
 		[Export ("allowsChangingSelectedContent")]
 		bool AllowsChangingSelectedContent { get; set; }
