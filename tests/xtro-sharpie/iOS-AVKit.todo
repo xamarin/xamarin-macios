@@ -1,5 +1,0 @@
-!missing-enum! AVVideoFrameAnalysisType not bound
-!missing-enum-value! AVKitError native value AVKitErrorRecordingFailed = -1200 not bound
-!missing-selector! AVPlayerViewController::setVideoFrameAnalysisTypes: not bound
-!missing-selector! AVPlayerViewController::toggleLookupAction not bound
-!missing-selector! AVPlayerViewController::videoFrameAnalysisTypes not bound
