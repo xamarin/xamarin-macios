@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.MacDev.Tasks;
 
 #nullable enable
@@ -139,10 +140,12 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				case PublishFolderType.Unknown: // Don't copy unknown stuff anywhere
 				case PublishFolderType.AppleBindingResourcePackage: // These aren't copied to the bundle
 				case PublishFolderType.CompressedAppleBindingResourcePackage: // These aren't copied to the bundle
-				case PublishFolderType.StaticLibrary: // These aren't copied to the bundle
 				case PublishFolderType.CompressedAppleFramework: // Shouldn't really happen? Should be uncompresed by the time we get here.
 				case PublishFolderType.CompressedPlugIns: // Shouldn't really happen? Should be uncompresed by the time we get here.
 					Log.LogMessage (MessageImportance.Low, $"    Skipped {item.ItemSpec} because PublishFolderType={publishFolderType} items aren't copied to the app bundle.");
+					continue;
+				case PublishFolderType.StaticLibrary: // These aren't copied to the bundle
+					Log.LogWarning (null, null, null, item.ItemSpec, 0, 0, 0, 0, Resources.HotRestartStaticLibraryNotSupported);
 					continue;
 				default:
 					Log.LogMessage (MessageImportance.Low, $"    Skipped {item.ItemSpec} because of unknown PublishFolderType={publishFolderType}.");
