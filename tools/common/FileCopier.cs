@@ -134,16 +134,32 @@ namespace Xamarin.Bundler {
 				ReportError (1022, Errors.MT1022, source, target, err, strerror (err));
 		}
 
+		static bool? use_managed_copying;
+		static bool UseManagedCopying {
+			get {
+				if (!use_managed_copying.HasValue) {
+					if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_USE_MANAGED_UPDATE_DIRECTORY"))) {
+						use_managed_copying = true;
+					} else if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+						use_managed_copying = true;
+					} else {
+						use_managed_copying = false;
+					}
+				}
+				return use_managed_copying.Value;
+			}
+		}
+
 		static bool TryUpdateDirectory (string source, string target, out int errno)
 		{
-			var windows = Environment.OSVersion.Platform == PlatformID.Win32NT;
-			if (windows)
+			if (UseManagedCopying)
 				return TryUpdateDirectoryWindows (source, target, out errno);
 			return TryUpdateDirectoryMacOS (source, target, out errno);
 		}
 
 		static bool TryUpdateDirectoryWindows (string source, string target, out int errno)
 		{
+			Log (1, $"TryUpdateDirectoryWindows ({source}, {target})");
 			errno = 0;
 			Directory.CreateDirectory (target);
 
@@ -152,12 +168,12 @@ namespace Xamarin.Bundler {
 			if (attr.HasFlag (FileAttributes.Directory)) {
 				var dir = new DirectoryInfo (source);
 				foreach (var sourceFile in dir.GetFiles ()) {
-					var sourcePath = Path.Combine (source, sourceFile.Name);
-					var targetPath = Path.Combine (target, sourceFile.Name);
+					var sourcePath = sourceFile.FullName;
+					var targetPath = Path.Combine (target, Path.GetFileName (source), sourceFile.Name);
 					CopyIfNeeded (sourcePath, targetPath);
 				}
 				foreach (var subdir in dir.GetDirectories ()) {
-					rv &= TryUpdateDirectoryWindows (Path.Combine (source, subdir.Name), Path.Combine (target, subdir.Name), out errno);
+					rv &= TryUpdateDirectoryWindows (Path.Combine (source, subdir.Name), Path.Combine (target, Path.GetFileName (source)), out errno);
 				}
 			} else {
 				var targetPath = Path.Combine (target, Path.GetFileName (source));
@@ -171,6 +187,7 @@ namespace Xamarin.Bundler {
 			if (IsUptodate (source, target)) {
 				Log (3, "Target '{0}' is up-to-date", target);
 			} else {
+				Directory.CreateDirectory (Path.GetDirectoryName (target));
 				File.Copy (source, target, true);
 				Log (1, "Copied {0} to {1}", source, target);
 			}
