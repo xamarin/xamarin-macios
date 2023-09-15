@@ -249,7 +249,7 @@ namespace ObjCRuntime {
 			}
 		}
 		internal static bool UseCFNetworkHandler { get; private set; } = true;
-    	internal static bool UseNSUrlSessionHandler { get; private set; } = true;
+		internal static bool UseNSUrlSessionHandler { get; private set; } = true;
 		internal static bool Initialized {
 			get { return initialized; }
 		}
