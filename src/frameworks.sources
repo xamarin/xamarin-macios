@@ -2114,6 +2114,7 @@ MACOS_FRAMEWORKS =          \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
+	SensitiveContentAnalysis \
 	ServiceManagement       \
 	Security                \
 	SharedWithYou           \
@@ -2225,6 +2226,7 @@ IOS_FRAMEWORKS =         \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	SharedWithYou \
 	SharedWithYouCore \
@@ -2418,6 +2420,7 @@ MACCATALYST_FRAMEWORKS = \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	ServiceManagement \
 	SharedWithYou \
