@@ -37,10 +37,6 @@ namespace ObjCRuntime {
 		{
 			var options = new RuntimeOptions ();
 			options.http_message_handler = ParseHttpMessageHandler (app, http_message_handler);
-   			#if NET
-    			options.UseCFNetworkHandler = _IsCFNetworkHandlerFeature;
-    			options.UseNSUrlSessionHandler = _IsNSUrlSessionHandlerFeature;
-   			#endif
 			return options;
 		}
 
@@ -105,14 +101,7 @@ namespace ObjCRuntime {
 				handler = NSUrlSessionHandlerValue;
 			} else {
 #if NET
-				if (UseCFNetworkHandler)
-        			return new CFNetworkHandler ();
-			    else
-			    {
-			        if (handler_name is not null && handler_name != NSUrlSessionHandlerValue)
-			            Runtime.NSLog ($"{handler_name} is not a valid HttpMessageHandler, defaulting to System.Net.Http.NSUrlSessionHandlerValue");
-			        return new NSUrlSessionHandler ();
-			    }
+				handler = NSUrlSessionHandlerValue;
 #else
 				handler = HttpClientHandlerValue;
 #endif
@@ -167,6 +156,15 @@ namespace ObjCRuntime {
 
 		internal static RuntimeOptions? Read ()
 		{
+#if NET
+			var options = new RuntimeOptions ();
+			if (Runtime.UseCFNetworkHandler)
+				options.http_message_handler = CFNetworkHandlerValue;
+			else if (Runtime.UseNSUrlSessionHandler)
+				options.http_message_handler = NSUrlSessionHandlerValue;
+
+			return options;
+#else
 			// for iOS NSBundle.ResourcePath returns the path to the root of the app bundle
 			// for macOS apps NSBundle.ResourcePath returns foo.app/Contents/Resources
 			// for macOS frameworks NSBundle.ResourcePath returns foo.app/Versions/Current/Resources
@@ -182,6 +180,7 @@ namespace ObjCRuntime {
 				options.http_message_handler = (NSString) plist ["HttpMessageHandler"];
 				return options;
 			}
+#endif
 		}
 
 		// This is invoked by
@@ -221,8 +220,8 @@ namespace ObjCRuntime {
 		}
 #endif
 
-		// Use either Create() or Read().
-		RuntimeOptions ()
+			// Use either Create() or Read().
+			RuntimeOptions ()
 		{
 		}
 
