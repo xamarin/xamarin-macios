@@ -285,30 +285,7 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
-			var assemblies = lines.
-				Select (v => v.Trim ()).
-				Where (v => {
-					if (v.Length < 10)
-						return false;
-					if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
-						if (v [1] != ':') {
-							return false;
-						}
-					} else {
-						if (v [0] != '/') {
-							return false;
-						}
-					}
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
-						return false;
-					if (!File.Exists (v))
-						return false;
-					return true;
-				});
+			var assemblies = FilterToAssembly (lines, assemblyName, true);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
 			assemblies = assemblies.Distinct ();
@@ -910,17 +887,17 @@ namespace Xamarin.Tests {
 			Assert.That (libxamarin, Has.Length.LessThanOrEqualTo (1), $"No more than one libxamarin should be present, but found {libxamarin.Length}:\n\t{string.Join ("\n\t", libxamarin)}");
 		}
 
-		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)
+		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName, bool doAppCheckInsteadOfRefCheck = false)
 		{
-			var rv = FilterToAssembly2 (lines, assemblyName, false);
+			var rv = FilterToAssembly2 (lines, assemblyName, false, doAppCheckInsteadOfRefCheck);
 			if (!rv.Any ()) {
 				Console.WriteLine ($"Could not find any matching lines of {lines.Count ()} lines matching {assemblyName}");
-				rv = FilterToAssembly2 (lines, assemblyName, true);
+				rv = FilterToAssembly2 (lines, assemblyName, true, doAppCheckInsteadOfRefCheck);
 			}
 			return rv;
 		}
 
-		IEnumerable<string> FilterToAssembly2 (IEnumerable<string> lines, string assemblyName, bool log)
+		IEnumerable<string> FilterToAssembly2 (IEnumerable<string> lines, string assemblyName, bool log, bool doAppCheckInsteadOfRefCheck = false)
 		{
 			return lines.
 				Select (v => v.Trim ()).
@@ -953,10 +930,15 @@ namespace Xamarin.Tests {
 							Console.WriteLine ($"    4: {v}");
 						return false;
 					}
-					if (v.Contains (Path.DirectorySeparatorChar + "ref" + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
+					if (!doAppCheckInsteadOfRefCheck && v.Contains (Path.DirectorySeparatorChar + "ref" + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
 						if (log)
-							Console.WriteLine ($"    5: {v}");
+							Console.WriteLine ($"    5a: {v}");
 						return false; // Skip reference assemblies
+					}
+					if (doAppCheckInsteadOfRefCheck && !v.Contains ($"{assemblyName}.app", StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    5b: {v}");
+						return false;
 					}
 					if (!File.Exists (v)) {
 						if (log)
