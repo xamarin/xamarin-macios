@@ -59,9 +59,10 @@ class TestConfiguration {
                     $platformVars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)_$($platform)"
                     if ($platform -eq "Multiple") {
                         $platformVars["TEST_PLATFORM"] = ""
-                        $platformVars["TEST_CATEGORY"] = "Multiple"
+                        $platformVars["TEST_CATEGORY"] = "MultiPlatform"
                     } else {
                         $platformVars["TEST_PLATFORM"] = $platform
+                        $platformVars["TEST_CATEGORY"] = "!MultiPlatform"
                     }
                     $platformLabel = "$($label)_$($platform)"
                     $rv[$platformLabel] = $platformVars
