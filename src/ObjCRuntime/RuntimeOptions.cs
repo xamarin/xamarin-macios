@@ -220,8 +220,8 @@ namespace ObjCRuntime {
 		}
 #endif
 
-			// Use either Create() or Read().
-			RuntimeOptions ()
+		// Use either Create() or Read().
+		RuntimeOptions ()
 		{
 		}
 
