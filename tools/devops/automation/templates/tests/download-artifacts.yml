@@ -17,7 +17,7 @@ parameters:
   type: boolean
   default: true
 
-- name: simTestsConfigurations
+- name: testConfigurations
   type: object
 
 steps:
@@ -39,7 +39,6 @@ steps:
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)/Reports
 
-    - ${{ each label in parameters.simTestsConfigurations }}:
       # Unzip report.
       - task: ExtractFiles@1
         displayName: 'Extract HtmlReport'
@@ -47,6 +46,7 @@ steps:
         inputs:
           archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}-$(System.JobAttempt)/HtmlReport.zip"
           destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}-$(System.JobAttempt)"
+    - ${{ each testConfig in parameters.testConfigurations }}:
 
   - ${{ if eq(parameters.downloadTestSummary, true) }}:
     # Download the test report to write the comment.

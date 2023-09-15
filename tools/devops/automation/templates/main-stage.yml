@@ -73,7 +73,6 @@ parameters:
 - name: macOSName
   type: string
 
-- name: simTestsConfigurations
   type: object
   default: [
     'bcl',
@@ -95,6 +94,7 @@ parameters:
     'xammac',
     'xcframework',
     'xtro'
+- name: testConfigurations
   ]
 
 - name: deviceTestsConfigurations
@@ -294,7 +294,7 @@ stages:
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    testConfigurations: ${{ parameters.testConfigurations }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'

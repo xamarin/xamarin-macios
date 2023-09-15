@@ -66,7 +66,7 @@ parameters:
   type: boolean
   default: true
 
-- name: simTestsConfigurations
+- name: testConfigurations
   type: object
 
 - name: isPR
