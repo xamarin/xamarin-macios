@@ -460,27 +460,6 @@
 		<IlcCompileDependsOn>Compile;_ComputeLinkerArguments;_ComputeManagedAssemblyToLink;SetupOSSpecificProps;PrepareForILLink;_XamarinComputeIlcCompileInputs</IlcCompileDependsOn>
 	</PropertyGroup>
 
-	<!--
-		Workaround for SDK issue where setting PublishAot=true during build cannot resolve correct
-		runtime pack and IL compiler pack.
-
-		Setting PublishAotUsingRuntimePack=true unconditionally results in the runtime pack label to
-		be updated to "NativeAOT" instead of "Mono" and trying to build against NativeAOT runtime
-		pack instead of the Mono one.
-
-		Setting PublishAotUsingRuntimePack=false causes the NuGet resolution to check for known
-		ILCompiler packs and these don't exist for iOS-like platforms.
-
-		The workaround ensure that PublishAotUsingRuntimePack is false when SDK updates the runtime
-		pack labels, and thus the "Mono" label is used. We then set it to true right before
-		ProcessFrameworkReferences target to skip downloading the target ILCompiler pack.
-	-->
-	<Target Name="_WorkaroundAotRuntimePackResolution" BeforeTargets="ProcessFrameworkReferences" Condition="'$(PublishAot)' == 'true' And '$(_UseNativeAot)' != 'true'">
-		<PropertyGroup>
-			<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
-		</PropertyGroup>
-	</Target>
-
 	<Target Name="_ComputeLinkerFeatures">
 		<PropertyGroup Condition="'$(PublishAot)' == 'true'">
 			<!-- Yep, we want to run ILLink as well, because we need our custom steps to run (NativeAOT sets this to false, so set it back to true) -->

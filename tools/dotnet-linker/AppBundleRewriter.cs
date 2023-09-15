@@ -513,13 +513,9 @@ namespace Xamarin.Linker {
 
 		public MethodReference RuntimeTypeHandle_Equals {
 			get {
-				if (configuration.Application.XamarinRuntime == XamarinRuntime.MonoVM) {
-					return RegistrarHelper_RuntimeTypeHandleEquals;
-				}
 				return GetMethodReference (CorlibAssembly, System_RuntimeTypeHandle, "Equals", isStatic: false, System_RuntimeTypeHandle);
 			}
 		}
-
 		public MethodReference MethodBase_Invoke {
 			get {
 				return GetMethodReference (CorlibAssembly, System_Reflection_MethodBase, "Invoke", (v) =>
@@ -767,20 +763,6 @@ namespace Xamarin.Linker {
 						ObjCRuntime_RegistrarHelper, "Register",
 						isStatic: true,
 						ObjCRuntime_IManagedRegistrar);
-			}
-		}
-
-		public MethodReference RegistrarHelper_RuntimeTypeHandleEquals {
-			get {
-				return GetMethodReference (PlatformAssembly,
-						ObjCRuntime_RegistrarHelper,
-						"RuntimeTypeHandleEquals",
-						(v) => v.IsStatic
-						&& v.HasParameters
-						&& v.Parameters.Count == 2
-						&& v.Parameters [0].ParameterType is ByReferenceType brt1 && brt1.ElementType.Is ("System", "RuntimeTypeHandle")
-						&& v.Parameters [1].ParameterType.Is ("System", "RuntimeTypeHandle")
-						&& !v.HasGenericParameters);
 			}
 		}
 

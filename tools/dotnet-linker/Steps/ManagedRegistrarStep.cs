@@ -162,12 +162,6 @@ namespace Xamarin.Linker {
 			if (modified)
 				abr.SaveCurrentAssembly ();
 
-			if (App.XamarinRuntime == XamarinRuntime.MonoVM) {
-				var md = abr.RegistrarHelper_RuntimeTypeHandleEquals.Resolve ();
-				md.IsPublic = true;
-				Annotations.Mark (md);
-			}
-
 			// TODO: Move this to a separate "MakeEverythingWorkWithNativeAOTStep" linker step
 			if (App.XamarinRuntime == XamarinRuntime.NativeAOT && Configuration.Profile.IsProductAssembly (assembly)) {
 				ImplementNSObjectRegisterToggleRefMethodStub ();
