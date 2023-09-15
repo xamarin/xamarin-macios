@@ -4,9 +4,11 @@ using System;
 
 namespace Xamarin.Tests {
 	public static class Extensions {
-		public static void AssertNoWarnings (this ExecutionResult result)
+		public static void AssertNoWarnings (this ExecutionResult result, Func<BuildLogEvent, bool>? filter = null)
 		{
-			var warnings = BinLog.GetBuildLogWarnings (result.BinLogPath).ToArray ();
+			var warnings = BinLog.GetBuildLogWarnings (result.BinLogPath);
+			if (filter is not null)
+				warnings = warnings.Where (filter);
 			if (!warnings.Any ())
 				return;
 

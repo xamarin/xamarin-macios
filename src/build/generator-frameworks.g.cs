@@ -116,6 +116,7 @@ partial class Frameworks {
 		"SceneKit",
 		"ScreenTime",
 		"Security",
+		"SensitiveContentAnalysis",
 		"SensorKit",
 		"SharedWithYou",
 		"SharedWithYouCore",
@@ -254,6 +255,7 @@ partial class Frameworks {
 		"ScriptingBridge",
 		"SearchKit",
 		"Security",
+		"SensitiveContentAnalysis",
 		"ServiceManagement",
 		"SharedWithYou",
 		"SharedWithYouCore",
@@ -516,6 +518,7 @@ partial class Frameworks {
 		"SceneKit",
 		"ScreenTime",
 		"Security",
+		"SensitiveContentAnalysis",
 		"SensorKit",
 		"ServiceManagement",
 		"SharedWithYou",
@@ -674,6 +677,7 @@ partial class Frameworks {
 	bool? _ScriptingBridge;
 	bool? _SearchKit;
 	bool? _Security;
+	bool? _SensitiveContentAnalysis;
 	bool? _SensorKit;
 	bool? _ServiceManagement;
 	bool? _SharedWithYou;
@@ -838,6 +842,7 @@ partial class Frameworks {
 	public bool HaveScriptingBridge { get { if (!_ScriptingBridge.HasValue) _ScriptingBridge = GetValue ("ScriptingBridge"); return _ScriptingBridge.Value; } }
 	public bool HaveSearchKit { get { if (!_SearchKit.HasValue) _SearchKit = GetValue ("SearchKit"); return _SearchKit.Value; } }
 	public bool HaveSecurity { get { if (!_Security.HasValue) _Security = GetValue ("Security"); return _Security.Value; } }
+	public bool HaveSensitiveContentAnalysis { get { if (!_SensitiveContentAnalysis.HasValue) _SensitiveContentAnalysis = GetValue ("SensitiveContentAnalysis"); return _SensitiveContentAnalysis.Value; } }
 	public bool HaveSensorKit { get { if (!_SensorKit.HasValue) _SensorKit = GetValue ("SensorKit"); return _SensorKit.Value; } }
 	public bool HaveServiceManagement { get { if (!_ServiceManagement.HasValue) _ServiceManagement = GetValue ("ServiceManagement"); return _ServiceManagement.Value; } }
 	public bool HaveSharedWithYou { get { if (!_SharedWithYou.HasValue) _SharedWithYou = GetValue ("SharedWithYou"); return _SharedWithYou.Value; } }
