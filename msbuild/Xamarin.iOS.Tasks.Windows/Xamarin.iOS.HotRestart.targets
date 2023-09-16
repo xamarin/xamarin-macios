@@ -138,16 +138,13 @@
 
 		<CompileEntitlements
 			AppBundleDir="$(HotRestartAppBundlePath)"
-			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			Entitlements="$(_HotRestartEntitlementsFile)"
 			CompiledEntitlements="$(HotRestartAppBundlePath)\Entitlements.plist"
-			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="iPhoneOS"
 			SdkVersion="12.2"
-			SdkDevPath=" "
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)" />
 	</Target>
 
