@@ -28,11 +28,9 @@ namespace Xamarin.MacDev.Tasks {
 			var task = CreateTask<CustomCompileEntitlements> ();
 
 			task.AppBundleDir = AppBundlePath;
-			task.AppIdentifier = "32UV7A8CDE.com.xamarin.MySingleView";
 			task.BundleIdentifier = "com.xamarin.MySingleView";
 			task.CompiledEntitlements = new TaskItem (Path.Combine (MonoTouchProjectObjPath, "Entitlements.xcent"));
 			task.Entitlements = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "Entitlements.plist");
-			task.IsAppExtension = false;
 			task.ProvisioningProfile = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "profile.mobileprovision");
 			task.SdkPlatform = "iPhoneOS";
 			task.SdkVersion = "6.1";

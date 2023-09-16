@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>ExtensionConsumerWithFramework</ApplicationTitle>
+		<ApplicationId>com.xamarin.extensionconsumerwithframework</ApplicationId>
+		<RootTestsDirectory Condition="'$(RootTestsDirectory)' == ''">$(MSBuildThisFileDirectory)/../..</RootTestsDirectory>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\ExtensionProjectWithFrameworks\$(_PlatformName)\ExtensionProjectWithFrameworks.csproj">
+			<IsAppExtension>true</IsAppExtension>
+		</ProjectReference>
+
+		<!-- Both the extension and the consumer references UnknownE.framework -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownE.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
+		<!-- Only the consumer references SomewhatUnknownD.framework -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/SomewhatUnknownD.framework.zip"  CopyToPublishDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownD.bin" PublishFolderType="CompressedAppleFramework" />
+	</ItemGroup>
+</Project>
