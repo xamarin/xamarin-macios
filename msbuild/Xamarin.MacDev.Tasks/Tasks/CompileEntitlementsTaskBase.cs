@@ -49,9 +49,6 @@ namespace Xamarin.MacDev.Tasks {
 		public string AppBundleDir { get; set; } = string.Empty;
 
 		[Required]
-		public string AppIdentifier { get; set; } = string.Empty;
-
-		[Required]
 		public string BundleIdentifier { get; set; } = string.Empty;
 
 		[Required]
@@ -63,13 +60,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Entitlements { get; set; } = string.Empty;
 
-		[Required]
-		public bool IsAppExtension { get; set; }
-
 		public string ProvisioningProfile { get; set; } = string.Empty;
-
-		[Required]
-		public string SdkDevPath { get; set; } = string.Empty;
 
 		public bool SdkIsSimulator { get; set; }
 
