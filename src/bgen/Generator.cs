@@ -4799,10 +4799,12 @@ public partial class Generator : IMemberGatherer {
 				if (AttributeManager.HasAttribute (mi.DeclaringType, "MonoNativeFunctionWrapper"))
 					print ("[MonoNativeFunctionWrapper]\n");
 
-				print ("public delegate {0} {1} ({2});",
+				var accessibility = mi.DeclaringType.IsInternal (this) ? "internal" : "public";
+				print ("{3} delegate {0} {1} ({2});",
 					   RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes),
 					   shortName,
-					   RenderParameterDecl (mi.GetParameters ()));
+					   RenderParameterDecl (mi.GetParameters ()),
+					   accessibility);
 			}
 
 			if (group.Namespace is not null) {
