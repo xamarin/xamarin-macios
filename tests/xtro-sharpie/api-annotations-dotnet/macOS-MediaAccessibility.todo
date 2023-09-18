@@ -1,7 +1,0 @@
-!missing-selector! MAFlashingLightsProcessor::canProcessSurface: not bound
-!missing-selector! MAFlashingLightsProcessor::processSurface:outSurface:timestamp:options: not bound
-!missing-selector! MAFlashingLightsProcessorResult::intensityLevel not bound
-!missing-selector! MAFlashingLightsProcessorResult::mitigationLevel not bound
-!missing-selector! MAFlashingLightsProcessorResult::surfaceProcessed not bound
-!missing-type! MAFlashingLightsProcessor not bound
-!missing-type! MAFlashingLightsProcessorResult not bound
