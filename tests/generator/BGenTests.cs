@@ -1420,6 +1420,12 @@ namespace GeneratorTests {
 			bgen.AssertExecute ("build");
 		}
 
+		[Test]
+		public void InternalDelegate ()
+		{
+			BuildFile (Profile.iOS, "tests/internal-delegate.cs");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);
