@@ -24,10 +24,6 @@ parameters:
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
-- name: provisioningFailed
-  type: string 
-  default: 'False'
-
 - name: testConfigurations
   type: object
 
@@ -46,6 +42,10 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: dependenciesJson
+  type: string
+  default: ''
+
 steps:
 
 - template: ../common/checkout.yml
@@ -55,10 +55,6 @@ steps:
     commit: ${{ parameters.commit }}
 
 - template: download-artifacts.yml
-  parameters:
-    downloadHtmlReport: false
-    testConfigurations: ${{ parameters.testConfigurations }}
-    testPrefix: ${{ parameters.testPrefix }}
 
 - ${{ if parameters.isPR }}:
   - template: ../common/clean.yml
@@ -93,6 +89,7 @@ steps:
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
       }
   env:
+    DEPENDENCIES: ${{ dependenciesJson }}
     TEST_CONFIGURATIONS: ${{ convertToJson (parameters.testConfigurations) }}
     CONTEXT: ${{ parameters.statusContext }}
     DEVICE_PREFIX: ${{ parameters.testPrefix }}
