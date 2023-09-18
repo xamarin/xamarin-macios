@@ -201,6 +201,7 @@ stages:
       vmImage: ubuntu-latest
     variables:
       VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
+    condition: always()
     steps:
     - checkout: none
     - bash: |
