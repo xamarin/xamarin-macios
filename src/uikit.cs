@@ -16072,6 +16072,7 @@ namespace UIKit {
 		bool ExclusiveTouch { [Bind ("isExclusiveTouch")] get; set; }
 
 		[Export ("hitTest:withEvent:")]
+		[return: NullAllowed]
 		UIView HitTest (CGPoint point, [NullAllowed] UIEvent uievent);
 
 		[Export ("pointInside:withEvent:")]
