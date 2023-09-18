@@ -217,89 +217,87 @@ namespace NaturalLanguage {
 		SentimentScore,
 	}
 
-	[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum NLScript {
-		[Field("NLScriptUndetermined")]
+		[Field ("NLScriptUndetermined")]
 		Undetermined,
-		[Field("NLScriptArabic")]
+		[Field ("NLScriptArabic")]
 		Arabic,
-		[Field("NLScriptArmenian")]
+		[Field ("NLScriptArmenian")]
 		Armenian,
-		[Field("NLScriptBengali")]
+		[Field ("NLScriptBengali")]
 		Bengali,
-		[Field("NLScriptCanadianAboriginalSyllabics")]
+		[Field ("NLScriptCanadianAboriginalSyllabics")]
 		CanadianAboriginalSyllabics,
-		[Field("NLScriptCherokee")]
+		[Field ("NLScriptCherokee")]
 		Cherokee,
-		[Field("NLScriptCyrillic")]
+		[Field ("NLScriptCyrillic")]
 		Cyrillic,
-		[Field("NLScriptDevanagari")]
+		[Field ("NLScriptDevanagari")]
 		Devanagari,
-		[Field("NLScriptEthiopic")]
+		[Field ("NLScriptEthiopic")]
 		Ethiopic,
-		[Field("NLScriptGeorgian")]
+		[Field ("NLScriptGeorgian")]
 		Georgian,
-		[Field("NLScriptGreek")]
+		[Field ("NLScriptGreek")]
 		Greek,
-		[Field("NLScriptGujarati")]
+		[Field ("NLScriptGujarati")]
 		Gujarati,
-		[Field("NLScriptGurmukhi")]
+		[Field ("NLScriptGurmukhi")]
 		Gurmukhi,
-		[Field("NLScriptHebrew")]
+		[Field ("NLScriptHebrew")]
 		Hebrew,
-		[Field("NLScriptJapanese")]
+		[Field ("NLScriptJapanese")]
 		Japanese,
-		[Field("NLScriptKannada")]
+		[Field ("NLScriptKannada")]
 		Kannada,
-		[Field("NLScriptKhmer")]
+		[Field ("NLScriptKhmer")]
 		Khmer,
-		[Field("NLScriptKorean")]
+		[Field ("NLScriptKorean")]
 		Korean,
-		[Field("NLScriptLao")]
+		[Field ("NLScriptLao")]
 		Lao,
-		[Field("NLScriptLatin")]
+		[Field ("NLScriptLatin")]
 		Latin,
-		[Field("NLScriptMalayalam")]
+		[Field ("NLScriptMalayalam")]
 		Malayalam,
-		[Field("NLScriptMongolian")]
+		[Field ("NLScriptMongolian")]
 		Mongolian,
-		[Field("NLScriptMyanmar")]
+		[Field ("NLScriptMyanmar")]
 		Myanmar,
-		[Field("NLScriptOriya")]
+		[Field ("NLScriptOriya")]
 		Oriya,
-		[Field("NLScriptSimplifiedChinese")]
+		[Field ("NLScriptSimplifiedChinese")]
 		SimplifiedChinese,
-		[Field("NLScriptSinhala")]
+		[Field ("NLScriptSinhala")]
 		Sinhala,
-		[Field("NLScriptTamil")]
+		[Field ("NLScriptTamil")]
 		Tamil,
-		[Field("NLScriptTelugu")]
+		[Field ("NLScriptTelugu")]
 		Telugu,
-		[Field("NLScriptThai")]
+		[Field ("NLScriptThai")]
 		Thai,
-		[Field("NLScriptTibetan")]
+		[Field ("NLScriptTibetan")]
 		Tibetan,
-		[Field("NLScriptTraditionalChinese")]
-		TraditionalChinese,	
+		[Field ("NLScriptTraditionalChinese")]
+		TraditionalChinese,
 	}
 
-	[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NLContextualEmbeddingAssetsResult : long
-	{
+	public enum NLContextualEmbeddingAssetsResult : long {
 		Available,
 		NotAvailable,
 		Error,
 	}
 
-	[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	public enum NLContextualEmebeddingKey
-	{
-		[Field("NLContextualEmbeddingKeyLanguages")]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum NLContextualEmebeddingKey {
+		[Field ("NLContextualEmbeddingKeyLanguages")]
 		Languages,
-		[Field("NLContextualEmbeddingKeyScripts")]
+		[Field ("NLContextualEmbeddingKeyScripts")]
 		Scripts,
-		[Field("NLContextualEmbeddingKeyRevision")]
+		[Field ("NLContextualEmbeddingKeyRevision")]
 		Revision,
 	}
 }

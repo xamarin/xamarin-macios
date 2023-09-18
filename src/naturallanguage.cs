@@ -652,86 +652,84 @@ namespace NaturalLanguage {
 		bool Write (NLStrongDictionary dictionary, NLLanguage? language, NSUrl url, [NullAllowed] out NSError error);
 	}
 
-	[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-	[BaseType(typeof(NSObject))]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NLContextualEmbedding
-	{
+	interface NLContextualEmbedding {
 		[Static]
-		[Export("contextualEmbeddingWithModelIdentifier:")]
+		[Export ("contextualEmbeddingWithModelIdentifier:")]
 		[return: NullAllowed]
-		NLContextualEmbedding ContextualEmbeddingWithModelIdentifier(string modelIdentifier);
+		NLContextualEmbedding ContextualEmbeddingWithModelIdentifier (string modelIdentifier);
 
 		[Static]
-		[Export("contextualEmbeddingsForValues:")]
-		NLContextualEmbedding[] ContextualEmbeddingsForValues(NSDictionary<NSString, NSObject> valuesDictionary);
+		[Export ("contextualEmbeddingsForValues:")]
+		NLContextualEmbedding [] ContextualEmbeddingsForValues (NSDictionary<NSString, NSObject> valuesDictionary);
 
 		[Static]
-		[Export("contextualEmbeddingWithLanguage:")]
+		[Export ("contextualEmbeddingWithLanguage:")]
 		[return: NullAllowed]
-		NLContextualEmbedding ContextualEmbeddingWithLanguage(string language);
+		NLContextualEmbedding ContextualEmbeddingWithLanguage (string language);
 
 		[Static]
-		[Export("contextualEmbeddingWithScript:")]
+		[Export ("contextualEmbeddingWithScript:")]
 		[return: NullAllowed]
-		NLContextualEmbedding ContextualEmbeddingWithScript(string script);
+		NLContextualEmbedding ContextualEmbeddingWithScript (string script);
 
-		[Export("modelIdentifier")]
+		[Export ("modelIdentifier")]
 		string ModelIdentifier { get; }
 
-		[Export("languages", ArgumentSemantic.Copy)]
-		string[] Languages { get; }
+		[Export ("languages", ArgumentSemantic.Copy)]
+		string [] Languages { get; }
 
-		[Export("scripts", ArgumentSemantic.Copy)]
-		string[] Scripts { get; }
+		[Export ("scripts", ArgumentSemantic.Copy)]
+		string [] Scripts { get; }
 
-		[Export("revision")]
+		[Export ("revision")]
 		nuint Revision { get; }
 
-		[Export("dimension")]
+		[Export ("dimension")]
 		nuint Dimension { get; }
 
-		[Export("maximumSequenceLength")]
+		[Export ("maximumSequenceLength")]
 		nuint MaximumSequenceLength { get; }
 
-		[Export("loadWithError:")]
-		bool Load([NullAllowed] out NSError error);
+		[Export ("loadWithError:")]
+		bool Load ([NullAllowed] out NSError error);
 
-		[Export("unload")]
-		void Unload();
+		[Export ("unload")]
+		void Unload ();
 
-		[Export("embeddingResultForString:language:error:")]
+		[Export ("embeddingResultForString:language:error:")]
 		[return: NullAllowed]
-		NLContextualEmbeddingResult EmbeddingResult(string @string, [NullAllowed] string language, [NullAllowed] out NSError error);
+		NLContextualEmbeddingResult EmbeddingResult (string @string, [NullAllowed] string language, [NullAllowed] out NSError error);
 
-		[Export("hasAvailableAssets")]
+		[Export ("hasAvailableAssets")]
 		bool HasAvailableAssets { get; }
 
-		[Export("requestEmbeddingAssetsWithCompletionHandler:")]
+		[Export ("requestEmbeddingAssetsWithCompletionHandler:")]
 		[Async]
-		void RequestAssets(Action<NLContextualEmbeddingAssetsResult, NSError> completionHandler);
+		void RequestAssets (Action<NLContextualEmbeddingAssetsResult, NSError> completionHandler);
 	}
 
-	[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(NSObject))]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NLContextualEmbeddingResult
-	{
-		[Export("string")]
+	interface NLContextualEmbeddingResult {
+		[Export ("string")]
 		string String { get; }
 
-		[Export("language")]
+		[Export ("language")]
 		string Language { get; }
 
-		[Export("sequenceLength")]
+		[Export ("sequenceLength")]
 		nuint SequenceLength { get; }
 
-		[Export("enumerateTokenVectorsInRange:usingBlock:")]
+		[Export ("enumerateTokenVectorsInRange:usingBlock:")]
 		// [Async]
-		void EnumerateTokenVectorsInRange(NSRange range, Action<NSArray<NSNumber>, NSRange, IntPtr> block);
+		void EnumerateTokenVectorsInRange (NSRange range, Action<NSArray<NSNumber>, NSRange, IntPtr> block);
 
-		[Export("tokenVectorAtIndex:tokenRange:")]
+		[Export ("tokenVectorAtIndex:tokenRange:")]
 		[return: NullAllowed]
-		NSNumber[] TokenVectorAtIndex(nuint characterIndex, IntPtr tokenRange);
+		NSNumber [] TokenVectorAtIndex (nuint characterIndex, IntPtr tokenRange);
 	}
 }
