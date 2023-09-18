@@ -92,7 +92,7 @@ namespace ObjCRuntime {
 			First = 0x100,
 		}
 
-#if MONOMAC
+#if MONOMAC && !NET
 		[DllImport (Constants.libcLibrary)]
 		internal static extern int dladdr (IntPtr addr, out Dl_info info);
 
