@@ -2,4 +2,4 @@ TOP=../..
 include $(TOP)/Make.config
 
 run-tests:
-	$(DOTNET) test
+	$(DOTNET) test $(TEST_FILTER)

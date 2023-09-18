@@ -479,6 +479,12 @@ namespace Xamarin.Tests {
 			return GetVariable (variableName, variableName + " not found");
 		}
 
+		public static string GetNuGetOsVersion (ApplePlatform platform)
+		{
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_OS_VERSION";
+			return GetVariable (variableName, variableName + " not found");
+		}
+
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
@@ -811,11 +817,16 @@ namespace Xamarin.Tests {
 			}
 		}
 
-
 		public static IEnumerable<string> GetRefLibraries ()
 		{
 			foreach (var platform in GetIncludedPlatforms (true))
 				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, true));
+		}
+
+
+		public static string GetRefLibrary (ApplePlatform platform)
+		{
+			return GetBaseLibrary (platform, true);
 		}
 
 		public static string GetTargetFramework (Profile profile)
