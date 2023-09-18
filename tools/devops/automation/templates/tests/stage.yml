@@ -193,6 +193,7 @@ stages:
 
   - job: postDebugOutput
     dependsOn:
+    - tests
     - configure
     displayName: 'Post Debug output'
     timeoutInMinutes: 10
