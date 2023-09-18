@@ -219,6 +219,8 @@ public class AttributeManager {
 			return typeof (System.Runtime.Versioning.SupportedOSPlatformAttribute);
 		case "System.Runtime.Versioning.UnsupportedOSPlatformAttribute":
 			return typeof (System.Runtime.Versioning.UnsupportedOSPlatformAttribute);
+		case "System.Runtime.Versioning.ObsoletedOSPlatformAttribute":
+			return typeof (System.Runtime.Versioning.ObsoletedOSPlatformAttribute);
 #endif
 		}
 
@@ -338,6 +340,14 @@ public class AttributeManager {
 				return AttributeFactory.CreateNewAttribute<UnavailableAttribute> (up).Yield ();
 			else
 				return Enumerable.Empty<System.Attribute> ();
+		case "ObsoletedOSPlatformAttribute":
+			var oarg = attribute.ConstructorArguments [0].Value as string;
+			(var op, var ov) = ParseOSPlatformAttribute (oarg);
+			// might have been available for a while...
+			if (ov is null)
+				return AttributeFactory.CreateNewAttribute<ObsoletedAttribute> (op).Yield ();
+			else
+				return AttributeFactory.CreateNewAttribute<ObsoletedAttribute> (op, ov.Major, ov.Minor).Yield ();
 #endif
 		default:
 			return Enumerable.Empty<System.Attribute> ();

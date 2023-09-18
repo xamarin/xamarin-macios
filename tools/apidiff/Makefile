@@ -532,7 +532,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetGenerateReferenceXml,
 define UpdatedReferences
 $(APIDIFF_DIR)/updated-references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll $(MONO_API_INFO)
 	$$(Q) mkdir -p $$(dir $$@) $$(dir $$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).Ref)
-	$$(QF_GEN) $$(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).Ref.xml)
+	$$(QF_GEN) $$(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml)
 endef
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call UpdatedReferences,$(platform))))

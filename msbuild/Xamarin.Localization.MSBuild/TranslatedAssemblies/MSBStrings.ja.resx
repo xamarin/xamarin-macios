@@ -1211,4 +1211,30 @@
             {0}: the path to the linker assembly
         </comment>
     </data>
+  <data name="E7116" xml:space="preserve">
+        <value>アセンブリ {0} では 'ObjectFile' メタデータが提供されません。</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>アセンブリ {0} が入力アセンブリとして複数回渡されました ({1} から参照)。</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT コンパイル {0} に失敗しました。AOT コンパイラはコード {1} を表示して終了しました。</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>アセンブリ {0} に関連するアセンブリ参照サイクルが発生しました。</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
 </root>
