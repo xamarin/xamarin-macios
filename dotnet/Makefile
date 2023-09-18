@@ -208,6 +208,7 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--shorten $($(platform)_NUGET_WINDOWS_SDK_NAME)=Microsoft.$(platform).Win.Sdk) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(foreach supportedtpv,$(SUPPORTED_API_VERSIONS_$(shell echo $(platform) | tr a-z A-Z)),--shorten Microsoft.$(platform).Windows.Sdk.Aliased.$(subst -,_,$(supportedtpv))=Microsoft.$(platform).Aliased.Sdk)) \
 		$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),--shorten $($(rid)_NUGET_RUNTIME_NAME)=Microsoft.Runtime.$(rid))) \
+		$(foreach platform,$(DOTNET_PLATFORMS),$(foreach supportedtpv,$(SUPPORTED_API_VERSIONS_$(shell echo $(platform) | tr a-z A-Z)),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),--shorten Microsoft.$(platform).Runtime.$(rid).$(subst -,_,$(supportedtpv))=Microsoft.Runtime.$(rid)))) \
 		--tfm $(DOTNET_TFM) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
