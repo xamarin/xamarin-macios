@@ -194,12 +194,6 @@ namespace ObjCRuntime {
 			return entry.Registrar.LookupUnmanagedFunction (symbol, id);
 		}
 
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		static bool RuntimeTypeHandleEquals (ref RuntimeTypeHandle typeHandle, RuntimeTypeHandle otherTypeHandle)
-		{
-			return typeHandle.Equals (otherTypeHandle);
-		}
-
 		internal static Type LookupRegisteredType (Assembly assembly, uint id)
 		{
 			var entry = GetMapEntry (assembly);
