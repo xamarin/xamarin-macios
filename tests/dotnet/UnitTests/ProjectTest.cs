@@ -1456,15 +1456,8 @@ namespace Xamarin.Tests {
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
-			var foundIL2049 = false;
 			var foundIL3053 = false;
 			rv.AssertNoWarnings ((evt) => {
-				// https://github.com/dotnet/runtime/issues/88994
-				if (evt.Code == "IL2049" && evt.Message == "System.Private.CoreLib: The internal attribute name 'RemoveAttributeInstances' being used in the xml is not supported by ILLink, check the spelling and the supported internal attributes.") {
-					foundIL2049 = true;
-					return false;
-				}
-
 				// This will probably go away when the IL2049 warning from above is fixed.
 				if (evt.Code == "IL3053" && evt.Message == $"Assembly 'Microsoft.{platform.AsString ()}' produced AOT analysis warnings.") {
 					foundIL3053 = true;
@@ -1477,7 +1470,6 @@ namespace Xamarin.Tests {
 				return true;
 			});
 
-			Assert.IsTrue (foundIL2049, "IL2049 not found - update test code to remove the code to ignore the IL2049");
 			Assert.IsTrue (foundIL3053, "IL3053 not found - update test code to remove the code to ignore the IL3053");
 		}
 
