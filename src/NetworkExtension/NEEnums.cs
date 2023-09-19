@@ -36,7 +36,9 @@ namespace NetworkExtension {
 	[MacCatalyst (13, 1)]
 	[Native ("NEVPNIKEv2EncryptionAlgorithm")]
 	public enum NEVpnIke2EncryptionAlgorithm : long {
+		[NoTV]
 		DES = 1,
+		[NoTV]
 		TripleDES = 2,
 		AES128 = 3,
 		AES256 = 4,
@@ -52,7 +54,9 @@ namespace NetworkExtension {
 	[MacCatalyst (13, 1)]
 	[Native ("NEVPNIKEv2IntegrityAlgorithm")]
 	public enum NEVpnIke2IntegrityAlgorithm : long {
+		[NoTV]
 		SHA96 = 1,
+		[NoTV]
 		SHA160 = 2,
 		SHA256 = 3,
 		SHA384 = 4,
@@ -73,8 +77,11 @@ namespace NetworkExtension {
 	public enum NEVpnIke2DiffieHellman : long {
 		Invalid = 0,
 		Group0 = Invalid,
+		[NoTV]
 		Group1 = 1,
+		[NoTV]
 		Group2 = 2,
+		[NoTV]
 		Group5 = 5,
 		Group14 = 14,
 		Group15 = 15,
@@ -87,6 +94,8 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Group31 = 31,
+		[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		Group32 = 32,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -104,6 +113,7 @@ namespace NetworkExtension {
 		Any = 0,
 		Ethernet = 1,
 		WiFi = 2,
+		[NoTV]
 		Cellular = 3
 	}
 
@@ -121,12 +131,16 @@ namespace NetworkExtension {
 		ECDSA256 = 2,
 		ECDSA384 = 3,
 		ECDSA521 = 4,
+		[NoTV]
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Ed25519 = 5,
+		[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		Rsapss = 6,
 	}
 
 	// in Xcode7 SDK but marked as 8.0
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("NEFilterErrorDomain")]
 	[Native]
@@ -225,6 +239,7 @@ namespace NetworkExtension {
 		Cancelled = 5
 	}
 
+	[NoTV]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NETunnelProviderRoutingMethod : long {
@@ -236,6 +251,7 @@ namespace NetworkExtension {
 	}
 
 #if !MONOMAC
+	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -249,6 +265,7 @@ namespace NetworkExtension {
 		Logoff = 6
 	}
 
+	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -258,6 +275,7 @@ namespace NetworkExtension {
 		High = 2
 	}
 
+	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -283,7 +301,7 @@ namespace NetworkExtension {
 		InactiveSession = 4,
 	}
 
-	[NoWatch, NoTV, Mac (11, 0), iOS (14, 0)]
+	[NoWatch, Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("NEDNSProtocol")]
 	public enum NEDnsProtocol : long {
@@ -297,6 +315,16 @@ namespace NetworkExtension {
 	[Native ("NEDNSSettingsManagerError")]
 	[ErrorDomain ("NEDNSSettingsErrorDomain")]
 	public enum NEDnsSettingsManagerError : long {
+		Invalid = 1,
+		Disabled = 2,
+		Stale = 3,
+		CannotBeRemoved = 4,
+	}
+
+	[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Native]
+	public enum NERelayManagerError : long
+	{
 		Invalid = 1,
 		Disabled = 2,
 		Stale = 3,
