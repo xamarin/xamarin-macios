@@ -291,15 +291,11 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ShouldCreateOutputFile (ITaskItem item)
 		{
-			if (NativeFrameworks is not null && Array.IndexOf (NativeFrameworks, item) >= 0) {
-				// Don't copy any resolved frameworks back to Windows, because
-				// 1. They're not used in Inputs/Outputs, so the lack of them won't affect anything
-				// 2. They may be directories, and as such we'd have to expand them to (potentially numerous and large) files to copy them (uselessly) to Windows.
-				// 3. They may contain symlinks, which may not work correctly on Windows.
-				return false;
-			}
-
-			return true;
+			// Don't copy any files to Windows, because
+			// 1. They're not used in Inputs/Outputs, so the lack of them won't affect anything
+			// 2. They may be directories, and as such we'd have to expand them to (potentially numerous and large) files to copy them (uselessly) to Windows.
+			// 3. They may contain symlinks, which may not work correctly on Windows.
+			return false;
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
