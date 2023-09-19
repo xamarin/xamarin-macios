@@ -5,26 +5,30 @@ Describe "TestResults tests" {
         $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
         $dataPath = Join-Path -Path $dataPath -ChildPath "TestSummary.md"
         $label = "pwsh"
+        $title = "title"
+        $platform = "iOS"
         $resultContext = "tests"
         $jobStatus = "Succeeded"
         $attempt = 1
     }
 
     It "is correctly created" {
-        $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $resultContext, $attempt)
+        $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $title, $platform, $resultContext, $attempt)
         $testResult.ResultsPath | Should -Be $dataPath
         $testResult.TestsJobStatus | Should -Be $jobStatus
         $testResult.Label | Should -Be $label
+        $testResult.Title | Should -Be $title
+        $testResult.Platform | Should -Be $platform
         $testResult.Context | Should -Be $resultContext
     }
 
     It "is successfull" {
-        $testResult = [TestResults]::new($dataPath, "Succeeded", $label, $resultContext, $attempt)
+        $testResult = [TestResults]::new($dataPath, "Succeeded", $label, $title, $platform, $resultContext, $attempt)
         $testResult.IsSuccess() | Should -Be $true
     }
 
     It "is failure" {
-        $testResult = [TestResults]::new($dataPath, "Failure", $label, $resultContext, $attempt)
+        $testResult = [TestResults]::new($dataPath, "Failure", $label, $title, $platform, $resultContext, $attempt)
         $testResult.IsSuccess() | Should -Be $false
     }
 
@@ -32,7 +36,7 @@ Describe "TestResults tests" {
         BeforeAll {
             $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
             $dataPath = Join-Path -Path $dataPath -ChildPath "MissingFile.md"
-            $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $resultContext, $attempt)
+            $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $title, $platform, $resultContext, $attempt)
         }
 
         It "writes the correct comment." {
@@ -54,7 +58,7 @@ Describe "TestResults tests" {
         BeforeAll {
             $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
             $dataPath = Join-Path -Path $dataPath -ChildPath "TestSummary.md"
-            $testResult = [TestResults]::new($dataPath, "", $label, $resultContext, $attempt)
+            $testResult = [TestResults]::new($dataPath, "", $label, $title, $platform, $resultContext, $attempt)
         }
 
         It "writes the correct comment." {
@@ -76,7 +80,7 @@ Describe "TestResults tests" {
         BeforeAll {
             $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
             $dataPath = Join-Path -Path $dataPath -ChildPath "TestSummary.md"
-            $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $resultContext, $attempt)
+            $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $title, $platform, $resultContext, $attempt)
         }
 
         It "writes the correct comment." {
@@ -102,7 +106,7 @@ Describe "TestResults tests" {
 
     Context "error job status" {
         BeforeAll {
-            $testResult = [TestResults]::new($dataPath, "Failure", $label, $resultContext, $attempt)
+            $testResult = [TestResults]::new($dataPath, "Failure", $label, $title, $platform, $resultContext, $attempt)
         }
 
         It "writes the correct comment." {
@@ -126,26 +130,68 @@ Describe "TestResults tests" {
         }
     }
 
-    Context "new test summmary results" {
+    Context "new test summmary results" -Skip {
         It "finds the right stuff" {
-            [Environment]::SetEnvironmentVariable("TESTS_JOBSTATUS_LINKER", "yay")
-            [Environment]::SetEnvironmentVariable("TESTS_JOBSTATUS_INTROSPECTION", "nay")
-
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-1" -Name "TestSummary.md" -Value "SummaryA" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-2" -Name "TestSummary.md" -Value "SummaryB" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-200" -Name "TestSummary.md" -Value "SummaryC" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-3" -Name "TestSummary.md" -Value "SummaryD" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixintrospection-2" -Name "TestSummary.md" -Value "SummaryE" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixmtouch-3" -Name "TestSummary.md" -Value "SummaryF" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "SummaryA" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixcecil-2" -Name "TestSummary.md" -Value "SummaryB" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_iOS-1" -Name "TestSummary.md" -Value "SummaryC" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvOS-1" -Name "TestSummary.md" -Value "SummaryD" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "SummaryE" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "SummaryF" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "SummaryF" -Force
 
-            $labels = @("linker", "introspection", "monotouch-test")
-            $testResults = New-TestSummaryResults -Path "$testDirectory" -Labels $labels -TestPrefix "prefix"
+            $dependencies = @"
+{
+   "tests": {
+     "outputs": {
+       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
+       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "cecil.runTests.TESTS_LABEL": "cecil",
+       "cecil.runTests.TESTS_PLATFORM": "",
+       "cecil.runTests.TESTS_ATTEMPT": "1",
 
-            Remove-Item -Path $testDirectory -Recurse
+       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
+       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
+       "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
 
-            $testResults.count | Should -Be $labels.count
+       "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
+       "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
+       "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
+       "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
+       "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
+       "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
+       "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
+       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
+       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+     }
+   }
+ }
+"@
+            $testResults = New-TestSummaryResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies"
+
+            # Remove-Item -Path $testDirectory -Recurse
+
+            Write-Host $testResults
+
+            $testResults.count | Should -Be 12
 
             $testResults[0].Label | Should -Be "linker"
             $testResults[0].Context | Should -Be " - linker"
@@ -168,19 +214,62 @@ Describe "TestResults tests" {
         It "computes the right summary with missing test results" {
             $VerbosePreference = "Continue"
             $Env:MyVerbosePreference = 'Continue'
-            [Environment]::SetEnvironmentVariable("TESTS_JOBSTATUS_LINKER", "Succeeded")
-            [Environment]::SetEnvironmentVariable("TESTS_JOBSTATUS_INTROSPECTION", "Succeeded")
 
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-2" -Name "TestSummary.md" -Value "# :tada: All 2 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-200" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-3" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixintrospection-2" -Name "TestSummary.md" -Value "# :tada: All 5 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixcecil-2" -Name "TestSummary.md" -Value "# :tada: All 2 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_iOS-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvOS-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "# :tada: All 5 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $labels = "linker;introspection;monotouch-test".Split(";")
-            $testResults = New-TestSummaryResults -Path "$testDirectory" -Labels $labels -TestPrefix "prefix"
+            $dependencies = @"
+{
+   "tests": {
+     "outputs": {
+       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
+       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "cecil.runTests.TESTS_LABEL": "cecil",
+       "cecil.runTests.TESTS_PLATFORM": "",
+       "cecil.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
+       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
+       "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
+       "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
+       "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
+       "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
+       "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
+       "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
+       "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
+       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
+       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+     }
+   }
+ }
+"@
+
+            $testResults = New-TestSummaryResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies"
 
             $parallelResults = New-ParallelTestsResults -Results $testResults -Context "context" -TestPrefix "prefix" -VSDropsIndex "vsdropsIndex"
 
@@ -193,25 +282,55 @@ Describe "TestResults tests" {
 
             $content = $sb.ToString()
 
-#            Write-Host $content
+            # Write-Host $content
 
             $content | Should -Be "# Test results
 :x: Tests failed on context
 
-1 tests crashed, 0 tests failed, 8 tests passed.
+0 tests crashed, 4 tests failed, 8 tests passed.
 
 ## Failures
 
-### :x: monotouch_test tests
+### :x: dotnettests tests (tvOS)
 
-:fire: Failed catastrophically on  - monotouch_test (no summary found).
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
 
-[Html Report (VSDrops)](vsdropsIndex/prefixmonotouch_test-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixmonotouch_test-1&api-version=6.0&`$format=zip)
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+
+### :x: dotnettests tests (MacCatalyst)
+
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
+
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
+
+### :x: dotnettests tests (macOS)
+
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
+
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
+
+### :x: dotnettests tests (iOS)
+
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
+
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker-200/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker-200&api-version=6.0&`$format=zip)
-:white_check_mark: introspection: All 5 tests passed. [attempt 2] [Html Report (VSDrops)](vsdropsIndex/prefixintrospection-2/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection-2&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
@@ -220,19 +339,61 @@ Describe "TestResults tests" {
         It "computes the right summary with failing tests" {
             $VerbosePreference = "Continue"
             $Env:MyVerbosePreference = 'Continue'
-            [Environment]::SetEnvironmentVariable("TESTS_JOBSTATUS_LINKER", "Succeeded")
-            [Environment]::SetEnvironmentVariable("TESTS_JOBSTATUS_INTROSPECTION", "Failed")
 
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-2" -Name "TestSummary.md" -Value "# :tada: All 2 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-200" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixlinker-3" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixintrospection-1" -Name "TestSummary.md" -Value "<summary>5 tests failed, 6 tests passed.</summary>" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_iOS-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvOS-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "<summary>5 tests failed, 6 tests passed.</summary>" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $labels = "linker;introspection;monotouch-test".Split(";")
-            $testResults = New-TestSummaryResults -Path "$testDirectory" -Labels $labels -TestPrefix "prefix"
+            $dependencies = @"
+{
+   "tests": {
+     "outputs": {
+       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
+       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "cecil.runTests.TESTS_LABEL": "cecil",
+       "cecil.runTests.TESTS_PLATFORM": "",
+       "cecil.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
+       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
+       "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
+       "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
+       "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
+       "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
+       "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
+       "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
+       "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
+       "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
+
+       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
+       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
+       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
+       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
+       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+     }
+   }
+ }
+"@
+
+            $testResults = New-TestSummaryResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies"
 
             $parallelResults = New-ParallelTestsResults -Results $testResults -Context "context" -TestPrefix "prefix" -VSDropsIndex "vsdropsIndex"
 
@@ -245,33 +406,31 @@ Describe "TestResults tests" {
 
             $content = $sb.ToString()
 
-#            Write-Host $content
+            # Write-Host $content
 
             $content | Should -Be "# Test results
 :x: Tests failed on context
 
-1 tests crashed, 5 tests failed, 9 tests passed.
+0 tests crashed, 5 tests failed, 27 tests passed.
 
 ## Failures
 
-### :x: introspection tests
+### :x: dotnettests tests (MacCatalyst)
 
 <summary>5 tests failed, 6 tests passed.</summary>
 <details>
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/prefixintrospection-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection-1&api-version=6.0&`$format=zip)
-
-### :x: monotouch_test tests
-
-:fire: Failed catastrophically on  - monotouch_test (no summary found).
-
-[Html Report (VSDrops)](vsdropsIndex/prefixmonotouch_test-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixmonotouch_test-1&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker-200/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker-200&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "

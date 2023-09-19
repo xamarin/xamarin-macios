@@ -4,6 +4,8 @@ class TestResults {
     [string] $ResultsPath # path to the file with the results
     [string] $TestsJobStatus # the value of the env var that lets us know if the tests passed or not can be null or empty
     [string] $Label
+    [string] $Title
+    [string] $Platform
     [string] $Context
     [int] $Attempt
     hidden [int] $Passed
@@ -14,13 +16,17 @@ class TestResults {
         [string] $path,
         [string] $status,
         [string] $label,
+        [string] $title,
+        [string] $platform,
         [string] $context,
         [int] $attempt
     ) {
-        Write-Debug "TestsResults::new($path, $status, $label, $context, $attempt)"
+        Write-Debug "TestsResults::new($path, $status, $label, $title, $platform, $context, $attempt)"
         $this.ResultsPath = $path
         $this.TestsJobStatus = $status
         $this.Label = $label
+        $this.Title = $title
+        $this.Platform = $platform
         $this.Context = $context
         $this.Attempt = $attempt
         $this.Passed = -1
@@ -28,14 +34,14 @@ class TestResults {
     }
 
     [bool] IsSuccess() {
-        Write-Debug "`t$($this.Label) - IsSuccess()"
+        Write-Debug "`t$($this.GetLabelWithSuffix(`"`")) - IsSuccess()"
         if ($this.NotTestSummaryLabels.Contains($this.Label)) {
             Write-Debug "`t`t$($this.Label) - Found special label $($this.Label), checking only status."
             return $this.TestsJobStatus -eq "Succeeded"
         } else {
             $hasResultsPath = Test-Path $this.ResultsPath -PathType Leaf
-            Write-Debug "`t`t$($this.Label) - Path $($this.ResultsPath) exists? $hasResultsPath"
-            Write-Debug "`t`t$($this.Label) - Test status: $($this.TestsJobStatus)"
+            Write-Debug "`t`t$($this.GetLabelWithSuffix(`"`")) - Path $($this.ResultsPath) exists? $hasResultsPath"
+            Write-Debug "`t`t$($this.GetLabelWithSuffix(`"`")) - Test status: $($this.TestsJobStatus)"
             return $hasResultsPath -and ($this.TestsJobStatus -eq "Succeeded")
         }
     }
@@ -45,6 +51,20 @@ class TestResults {
             return " [attempt $($this.Attempt)]"
         }
         return ""
+    }
+
+    [string] GetLabelSuffix() {
+        if ($this.Platform -eq "Multiple") {
+            return " (Multiple platforms)"
+        } elseif ($this.Platform -eq "") {
+            return ""
+        } else {
+            return " ($($this.Platform))"
+        }
+    }
+
+    [string] GetLabelWithSuffix([string] $infix) {
+        return $this.Label + $infix + $this.GetLabelSuffix()
     }
 
     [void] WriteComment($stringBuilder) {
@@ -89,15 +109,15 @@ class TestResults {
     }
 
     [object] GetPassedTests() {
-        Write-Debug "$($this.Label) - GetPassedTests()"
+        Write-Debug "$($this.Title) - GetPassedTests()"
         if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
-            Write-Debug "`t$($this.Label) - Calculate results."
+            Write-Debug "`t$($this.Title) - Calculate results."
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
-                Write-Debug "`t$($this.Label) - IsSuccess() => TRUE"
+                Write-Debug "`t$($this.Title) - IsSuccess() => TRUE"
                 $this.Failed = 0
                 if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-                    Write-Debug "`t`t$($this.Label) - Found special label $($this.Label), adding a single pass."
+                    Write-Debug "`t`t$($this.Title) - Found special label $($this.Label), adding a single pass."
                     $this.Passed = 1
                 } else {
                     # in this case, the file contains a single line with the number and the following
@@ -112,11 +132,11 @@ class TestResults {
                         $this.Passed = $matches.passed -as [int]
                         Write-Debug "`tPassed tests count: $($this.Passed)"
                     } else {
-                        throw "Unable to understand the test result '$content' for test '$($this.Label)'"
+                        throw "Unable to understand the test result '$content' for test '$($this.GetLabelWithSuffix(`"`"))'"
                     }
                 }
             } else {
-                Write-Debug "`t$($this.Label) - IsSuccess() => FALSE"
+                Write-Debug "`t$($this.GetLabelWithSuffix(`"`")) - IsSuccess() => FALSE"
                 $fileIsPresent = Test-Path $this.ResultsPath -PathType Leaf
                 if ($this.TestsJobStatus -eq "" -or -not (Test-Path $this.ResultsPath -PathType Leaf)) {
                     Write-Debug "`t`tTests job status: $($this.TestsJobStatus)"
@@ -176,7 +196,7 @@ class TestResults {
                 }
             }
         }
-        Write-Debug "`t$($this.Label) - Passed: $($this.Passed) Failed: $($this.Failed)"
+        Write-Debug "`t$($this.GetLabelWithSuffix(`"`")) - Passed: $($this.Passed) Failed: $($this.Failed)"
         return [PSCustomObject]@{
             Passed = $this.Passed
             Failed = $this.Failed
@@ -252,8 +272,8 @@ class ParallelTestsResults {
     }
 
     [string] GetDownloadLinks($testResult) {
-        $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Label)-$($testResult.Attempt)/;/tests/vsdrops_index.html"
-        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Label)-$($testResult.Attempt)&api-version=6.0&`$format=zip"
+        $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Title)-$($testResult.Attempt)/;/tests/vsdrops_index.html"
+        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Title)-$($testResult.Attempt)&api-version=6.0&`$format=zip"
         $downloadInfo = "[Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)"
         return $downloadInfo
     }
@@ -263,9 +283,9 @@ class ParallelTestsResults {
         $result = $testResult.GetPassedTests()
         $attemptText = $testResult.GetAttemptText()
         if ($result.Passed -eq 0) {
-            $stringBuilder.AppendLine(":warning: $($testResult.Label): No tests selected.$attemptText $downloadInfo")
+            $stringBuilder.AppendLine(":warning: $($testResult.GetLabelWithSuffix(`"`")): No tests selected.$attemptText $downloadInfo")
         } else {
-            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed.$attemptText $downloadInfo")
+            $stringBuilder.AppendLine(":white_check_mark: $($testResult.GetLabelWithSuffix(`"`")): All $($result.Passed) tests passed.$attemptText $downloadInfo")
         }
     }
 
@@ -297,7 +317,7 @@ class ParallelTestsResults {
             foreach ($r in $failingTests)
             {
                 $attemptText = $r.GetAttemptText()
-                $stringBuilder.AppendLine("### :x: $($r.Label) tests$attemptText")
+                $stringBuilder.AppendLine("### :x: $($r.GetLabelWithSuffix(`" tests`"))$attemptText")
                 $stringBuilder.AppendLine("")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
@@ -359,11 +379,15 @@ function New-TestResults {
         [string]
         $Label,
         [string]
+        $Title,
+        [string]
+        $Platform,
+        [string]
         $Context,
         [int]
         $Attempt
     )
-    return [TestResults]::new($Path, $Status, $Label, $Context, $Attempt)
+    return [TestResults]::new($Path, $Status, $Label, $Title, $Platform, $Context, $Attempt)
 }
 
 <#
@@ -390,67 +414,69 @@ function New-ParallelTestsResults {
 #>
 function New-TestSummaryResults {
     param (
+        [Parameter(Mandatory)]
         [string]
         $Path,
-        [string[]]
-        $Labels,
+        [Parameter(Mandatory)]
         [string]
         $TestPrefix,
+        [Parameter(Mandatory)]
+        [string]
+        $Dependencies,
+        [string]
+        $TestConfigurations,
         [string]
         $UploadPrefix=""
     )
 
     $testResults = [System.Collections.ArrayList]@()
-    foreach ($label in $Labels) {
-        $label = $label.Replace("-", "_")
-        $environmentVariable = "TESTS_JOBSTATUS_$($label.ToUpper())"
-        $status = [Environment]::GetEnvironmentVariable($environmentVariable)
-
-        Write-Debug "Test results for $label is '$status'"
-
-        $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\${UploadPrefix}TestSummary-$TestPrefix$label-*"
-
-        # Get the list of directories
-        $directoryFilter = "TestSummary-$TestPrefix$label-*"
-        $testSummaryDirectories = Get-ChildItem -Path $Path -Directory -Filter $directoryFilter
-
-        if ($testSummaryDirectories.length -eq 0) {
-            Write-Debug "WARNING: Found no directories matching $directoryFilter for label $label and prefix $TestPrefix"
-            $testSummaryPath = Join-Path $Path "TestSummary-$TestPrefix$label-1" "TestSummary.md"
-            $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt 1
-            $testResults += $result
-            continue
-        }
-
-        # Compute the attempt # and create a list of (Name, Attempt) entries
-        $attemptDirectories = [System.Collections.ArrayList]@()
-        $computeAttempt = {this.Name.Substring($this.Name.LastIndexOf("-") + 1)}
-        foreach ($dir in $testSummaryDirectories) {
-            $attempt = [int] $dir.Name.Substring($dir.Name.LastIndexOf("-") + 1)
-            $obj = [PSCustomObject]@{
-                Name = $dir
-                Attempt = [int] $attempt
+    $dep = $Dependencies | ConvertFrom-Json -AsHashtable
+    $outputs = $dep.tests.outputs
+    $tests = [ordered]@{}
+    foreach ($name in $outputs.Keys) {
+        if ($name.EndsWith("TESTS_LABEL")) {
+            $label = $outputs[$name]
+            $namePrefix = $name.Replace("TESTS_LABEL","")
+            $title = $name.Substring(0, $name.IndexOf('.'))
+            $testResult = [PSCustomObject]@{
+                Label = $label
+                Title = $title
+                Status = $outputs[$namePrefix + "TESTS_JOBSTATUS"]
+                Bot = $outputs[$namePrefix + "TESTS_BOT"]
+                Platform = $outputs[$namePrefix + "TESTS_PLATFORM"]
+                Attempt = $outputs[$namePrefix + "TESTS_ATTEMPT"]
             }
-            $attemptDirectories += $obj
+            if ($tests.Contains($label)) {
+                $testInfo = $tests[$label]
+            } else {
+                $testInfo = [System.Collections.ArrayList]@()
+                $tests[$label] = $testInfo
+            }
+            $testInfo.Add($testResult) | Out-Null
+            Write-Debug "Added $label to tests ($title) Name: $name status: $($testResult.Status) bot: $($testResult.Bot) Platform: $($testResult.Platform) Attempt: $($testResult.Attempt)"
         }
+    }
 
-        # Sort the list by attempt #
-        $attemptDirectories = $attemptDirectories | Sort-Object -Property "Attempt"
+    foreach ($testGroup in $tests.GetEnumerator()) {
+        foreach ($testResult in $testGroup.Value) {
+            Write-Debug "Result: $testResult"
+            $label = $testResult.Label
+            $title = $testResult.Title
+            $status = $testResult.Status
+            $testAttempt = $testResult.Attempt
+            $platform = $testResult.Platform
 
-        # Get the last path in the array, that's the last attempt
-        $testSummaryDirectory = $attemptDirectories[$attemptDirectories.count-1]
-        $testAttempt = $testSummaryDirectory.Attempt
-        $testAttemptPath = $testSummaryDirectory.Name
-        $testSummaryPath = Join-Path $testAttemptPath "TestSummary.md"
+            $testSummaryPath = Join-Path "$Path" "${UploadPrefix}TestSummary-$TestPrefix$title-$testAttempt" "TestSummary.md"
 
-        Write-Debug "Found $($attemptDirectories.count) directories, selected $testSummaryDirectory and final path is $testSummaryPath"
+            Write-Debug "Test results for $label on attempt $testAttempt is '$status' in $testSummaryPath"
 
-        if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
-            Write-Debug "WARNING: Path $testSummaryPath does not exist"
+            if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
+                Write-Host "WARNING: Path $testSummaryPath does not exist"
+            }
+
+            $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Title $title -Platform $platform -Context "$Env:CONTEXT - $title" -Attempt $testAttempt
+            $testResults += $result
         }
-
-        $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt $testAttempt
-        $testResults += $result
     }
 
     return $testResults

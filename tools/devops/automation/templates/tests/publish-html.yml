@@ -66,13 +66,18 @@ steps:
 # as the separator
 - pwsh: |
       try {
+        gci env: | format-table -autosize | Out-String -Width 8192
+
         $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/"
         Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
         $DebugPreference = "Continue" # enable debug messages
 
-        $labels = "$Env:LABELS".Split(";")
-
-        $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}" -UploadPrefix "${{  parameters.uploadPrefix }}"
+        $testResults = New-TestSummaryResults `
+          -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
+          -TestPrefix "${{ parameters.testPrefix }}" `
+          -Dependencies "$Env:DEPENDENCIES" `
+          -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
+          -UploadPrefix "${{  parameters.uploadPrefix }}"
 
         $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
         $success = $parallelResults.IsSuccess()

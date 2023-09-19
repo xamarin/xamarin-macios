@@ -66,7 +66,7 @@ Describe 'Get-TestConfiguration' {
               -StatusContext "status-context" `
               -TestPrefix "test-prefix"
 
-            Write-Host "Test Config: $config"
+            #Write-Host "Test Config: $config"
         }
 
     }

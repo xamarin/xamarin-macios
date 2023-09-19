@@ -43,7 +43,6 @@ class TestConfiguration {
                     } elseif ($containsLegacyTests -and $isLegacyPlatform) {
                         $runThisPlatform = $true
                     }
-                    Write-Host "Running $($platform): runThisPlatform=$runThisPlatform containsDotNetTests: $containsDotNetTests isDotNetPlatform: $isDotNetPlatform containsLegacyTests: $containsLegacyTests isLegacyPlatform: $isLegacyPlatform"
                     if (!$runThisPlatform) {
                         continue
                     }

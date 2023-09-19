@@ -180,9 +180,11 @@ stages:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
+        label: $(LABEL)
         labelWithPlatform: $(LABEL_WITH_PLATFORM)
         testsLabels: $(TESTS_LABELS)
         statusContext: $(STATUS_CONTEXT)
+        testPlatform: $(TEST_PLATFORM)
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         keyringPass: ${{ parameters.keyringPass }}

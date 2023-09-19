@@ -7,7 +7,13 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
+- name: label
+  type: string
+
 - name: labelWithPlatform
+  type: string
+
+- name: testPlatform
   type: string
 
 - name: useXamarinStorage
@@ -141,6 +147,9 @@ steps:
 
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_LABEL;isOutput=true]${{ parameters.label }}"
+    echo "##vso[task.setvariable variable=TESTS_PLATFORM;isOutput=true]${{ parameters.testPlatform }}"
+    echo "##vso[task.setvariable variable=TESTS_ATTEMPT;isOutput=true]$SYSTEM_JOBATTEMPT"
 
     # uri used to create the vsdrops index using full uri
     export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX-$SYSTEM_JOBATTEMPT;/tests/"
