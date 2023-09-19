@@ -94,7 +94,7 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Group31 = 31,
-		[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		Group32 = 32,
 	}
 
@@ -135,7 +135,7 @@ namespace NetworkExtension {
 		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		Ed25519 = 5,
-		[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		Rsapss = 6,
 	}
 
@@ -321,10 +321,9 @@ namespace NetworkExtension {
 		CannotBeRemoved = 4,
 	}
 
-	[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum NERelayManagerError : long
-	{
+	public enum NERelayManagerError : long {
 		Invalid = 1,
 		Disabled = 2,
 		Stale = 3,

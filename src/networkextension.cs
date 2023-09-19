@@ -195,7 +195,7 @@ namespace NetworkExtension {
 		Unknown = 4,
 	}
 
-	[NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV(17,0)]
+	[NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (17, 0)]
 	[Native]
 	[ErrorDomain ("NEVPNConnectionErrorDomain")]
 	public enum NEVpnConnectionError : long {
@@ -2531,96 +2531,93 @@ namespace NetworkExtension {
 		string EthernetAddress { get; }
 	}
 
-	[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-	[BaseType(typeof(NSObject))]
-	interface NERelay : NSCopying, NSSecureCoding
-	{
-		[NullAllowed, Export("HTTP3RelayURL", ArgumentSemantic.Copy)]
+	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NERelay : NSCopying, NSSecureCoding {
+		[NullAllowed, Export ("HTTP3RelayURL", ArgumentSemantic.Copy)]
 		NSUrl Http3RelayUrl { get; set; }
 
-		[NullAllowed, Export("HTTP2RelayURL", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("HTTP2RelayURL", ArgumentSemantic.Copy)]
 		NSUrl Http2RelayUrl { get; set; }
 
-		[NullAllowed, Export("dnsOverHTTPSURL", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("dnsOverHTTPSURL", ArgumentSemantic.Copy)]
 		NSUrl DnsOverHttpsUrl { get; set; }
 
-		[NullAllowed, Export("syntheticDNSAnswerIPv4Prefix")]
+		[NullAllowed, Export ("syntheticDNSAnswerIPv4Prefix")]
 		string SyntheticDnsAnswerIPv4Prefix { get; set; }
 
-		[NullAllowed, Export("syntheticDNSAnswerIPv6Prefix")]
+		[NullAllowed, Export ("syntheticDNSAnswerIPv6Prefix")]
 		string SyntheticDnsAnswerIPv6Prefix { get; set; }
 
-		[Export("additionalHTTPHeaderFields", ArgumentSemantic.Copy)]
+		[Export ("additionalHTTPHeaderFields", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSString> AdditionalHttpHeaderFields { get; set; }
 
-		[NullAllowed, Export("rawPublicKeys", ArgumentSemantic.Copy)]
-		NSData[] RawPublicKeys { get; set; }
+		[NullAllowed, Export ("rawPublicKeys", ArgumentSemantic.Copy)]
+		NSData [] RawPublicKeys { get; set; }
 
-		[NullAllowed, Export("identityData", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("identityData", ArgumentSemantic.Copy)]
 		NSData IdentityData { get; set; }
 
-		[NullAllowed, Export("identityDataPassword")]
+		[NullAllowed, Export ("identityDataPassword")]
 		string IdentityDataPassword { get; set; }
 
-		[Field("NERelayErrorDomain")]
+		[Field ("NERelayErrorDomain")]
 		NSString ErrorDomain { get; }
 
-		[Notification, Field("NERelayConfigurationDidChangeNotification")]
+		[Notification, Field ("NERelayConfigurationDidChangeNotification")]
 		NSString ConfigurationDidChangeNotification { get; }
 	}
 
-	[TV(17, 0), NoWatch, Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-	[BaseType(typeof(NSObject))]
-	interface NERelayManager
-	{
+	[TV (17, 0), NoWatch, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NERelayManager {
 		[Static]
-		[Export("sharedManager")]
+		[Export ("sharedManager")]
 		NERelayManager Shared { get; }
 
-		[Export("loadFromPreferencesWithCompletionHandler:")]
+		[Export ("loadFromPreferencesWithCompletionHandler:")]
 		[Async]
-		void LoadFromPreferences(Action<NSError> completionHandler);
+		void LoadFromPreferences (Action<NSError> completionHandler);
 
-		[Export("removeFromPreferencesWithCompletionHandler:")]
+		[Export ("removeFromPreferencesWithCompletionHandler:")]
 		[Async]
-		void RemoveFromPreferences(Action<NSError> completionHandler);
+		void RemoveFromPreferences (Action<NSError> completionHandler);
 
-		[Export("saveToPreferencesWithCompletionHandler:")]
+		[Export ("saveToPreferencesWithCompletionHandler:")]
 		[Async]
-		void SaveToPreferences(Action<NSError> completionHandler);
+		void SaveToPreferences (Action<NSError> completionHandler);
 
-		[NullAllowed, Export("localizedDescription")]
+		[NullAllowed, Export ("localizedDescription")]
 		string LocalizedDescription { get; set; }
 
-		[Export("enabled")]
-		bool Enabled { [Bind("isEnabled")] get; set; }
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
 
-		[NullAllowed, Export("relays", ArgumentSemantic.Strong)]
-		NERelay[] Relays { get; set; }
+		[NullAllowed, Export ("relays", ArgumentSemantic.Strong)]
+		NERelay [] Relays { get; set; }
 
-		[NullAllowed, Export("matchDomains", ArgumentSemantic.Copy)]
-		string[] MatchDomains { get; set; }
+		[NullAllowed, Export ("matchDomains", ArgumentSemantic.Copy)]
+		string [] MatchDomains { get; set; }
 
-		[NullAllowed, Export("excludedDomains", ArgumentSemantic.Copy)]
-		string[] ExcludedDomains { get; set; }
+		[NullAllowed, Export ("excludedDomains", ArgumentSemantic.Copy)]
+		string [] ExcludedDomains { get; set; }
 
-		[NullAllowed, Export("onDemandRules", ArgumentSemantic.Copy)]
-		NEOnDemandRule[] OnDemandRules { get; set; }
+		[NullAllowed, Export ("onDemandRules", ArgumentSemantic.Copy)]
+		NEOnDemandRule [] OnDemandRules { get; set; }
 
 		[Static]
-		[Export("loadAllManagersFromPreferencesWithCompletionHandler:")]
+		[Export ("loadAllManagersFromPreferencesWithCompletionHandler:")]
 		[Async]
-		void LoadAllManagersFromPreferences(Action<NSArray<NERelayManager>, NSError> completionHandler);
+		void LoadAllManagersFromPreferences (Action<NSArray<NERelayManager>, NSError> completionHandler);
 	}
 
-	[NoWatch, NoTV, Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-	[BaseType(typeof(NEProvider))]
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NEProvider))]
 	[DisableDefaultCtor]
-	interface NEFailureHandlerProvider
-	{
-		[NoWatch, NoTV, Mac(14, 0), iOS(17, 0)]
-		[Export("handleFailure:completionHandler:")]
+	interface NEFailureHandlerProvider {
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0)]
+		[Export ("handleFailure:completionHandler:")]
 		[Async]
-		void HandleFailure(NSError error, Action completionHandler);
+		void HandleFailure (NSError error, Action completionHandler);
 	}
 }
