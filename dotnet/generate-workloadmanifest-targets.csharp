@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 
 var args = Environment.GetCommandLineArgs ();
-var expectedArgumentCount = 6;
+var expectedArgumentCount = 5;
 if (args.Length != expectedArgumentCount + 3 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
 	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
 	// second arg the script itself
@@ -21,58 +21,37 @@ var platform = args [argumentIndex++];
 var outputPath = args [argumentIndex++];
 var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
-var supportedApiVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var defaultTargetPlatformVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var currentApiVersion = args [argumentIndex++].Replace ('-', '_');
+var currentApiVersion = args [argumentIndex++];
+var defaultApiVersion = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
+var tfm = currentApiVersion;
 
 using (var writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
-	var minDotNetVersion = supportedApiVersions.OrderBy (v => v).First ().Split ('-') [0].Replace ("net", "");
-	writer.WriteLine ($"	<!-- Using a specific target platform version -->");
-	foreach (var apiVersion in supportedApiVersions.OrderBy (v => v)) {
-		var pkgVersion = apiVersion.Replace ('-', '_');
-		var tf = apiVersion.Split ('-')[0];
-		var tfv = tf.Replace ("net", "");
-		var tpv = apiVersion.Split ('-')[1];
-
-		writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And '$(TargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{tpv}'))\">");
-		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{pkgVersion}\" />");
-		if (hasWindows)
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{pkgVersion}\" Condition=\"$([MSBuild]::IsOSPlatform('windows'))\" />");
-		writer.WriteLine ($"	</ImportGroup>");
-		writer.WriteLine ();
+	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' \">");
+	{
+		var tfv = tfm.Replace ("net", "");
+		tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
+		var tpv = tfm.Substring (tfm.IndexOfAny (new char [] { '-', '_' }) + 1);
+		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And ('$(TargetPlatformVersion)' == '' Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{defaultApiVersion}')) Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{tpv}')))\" />");
 	}
-
-	writer.WriteLine ($"	<!-- Using the default target platform version -->");
-	foreach (var defaultTargetPlatformVersion in defaultTargetPlatformVersions) {
-		if (!supportedApiVersions.Contains (defaultTargetPlatformVersion.Replace ('_', '-'))) {
-			Console.Error.WriteLine ($"The default target platform version {defaultTargetPlatformVersion} does not match any of the supported API versions ({string.Join (", ", supportedApiVersions)}) for {platform}");
-			Environment.Exit (1);
+	writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.net6\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) \" />");
+	if (hasWindows) {
+		writer.WriteLine ();
+		{
+			var tfv = tfm.Replace ("net", "");
+			tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
+			var tpv = tfm.Substring (tfm.IndexOfAny (new char [] { '-', '_' }) + 1);
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And ('$(TargetPlatformVersion)' == '' Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{defaultApiVersion}')) Or $([MSBuild]::VersionEquals($(TargetPlatformVersion), '{tpv}'))) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
-
-		var pkgVersion = defaultTargetPlatformVersion;
-		var tf = defaultTargetPlatformVersion.Split ('_') [0];
-		var tfv = tf.Replace ("net", "");
-		writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And '$(TargetPlatformVersion)' == ''\">");
-		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{pkgVersion}\" />");
-		if (hasWindows)
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{pkgVersion}\" Condition=\"$([MSBuild]::IsOSPlatform('windows'))\" />");
-		writer.WriteLine ($"	</ImportGroup>");
-		writer.WriteLine ();
+		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.net6\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 	}
-
-	writer.WriteLine ($"	<!-- Using a .NET version we no longer support -->");
-	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true' And '$(TargetFrameworkVersion)' != '' And $([MSBuild]::VersionLessThan('$(TargetFrameworkVersion)', '{minDotNetVersion}'))\">");
-	writer.WriteLine ($"		<Import Project=\"Sdk-eol.props\" Sdk=\"Microsoft.{platform}.Sdk.{currentApiVersion}\" />");
 	writer.WriteLine ($"	</ImportGroup>");
 	writer.WriteLine ();
-
-	writer.WriteLine ($"	<!-- Using a specific, but unsupported, target platform version -->");
-	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' And '$(_AppleSdkLoaded)' != 'true'\">");
-	writer.WriteLine ($"		<Import Project=\"Sdk-error.props\" Sdk=\"Microsoft.{platform}.Sdk.{currentApiVersion}\" />");
-	writer.WriteLine ($"	</ImportGroup>");
+	writer.WriteLine ($"	<ItemGroup Condition=\" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) \">");
+	writer.WriteLine ($"		<SdkSupportedTargetPlatformIdentifier Include=\"{platformLowerCase}\" DisplayName=\"{platform}\" />");
+	writer.WriteLine ($"	</ItemGroup>");
 
 	writer.WriteLine ($"</Project>");
 	writer.WriteLine ();

@@ -6,12 +6,12 @@ using System.IO;
 using System.Xml;
 
 var args = Environment.GetCommandLineArgs ();
-var expectedArgumentCount = 8;
+var expectedArgumentCount = 7;
 if (args.Length != expectedArgumentCount + 3 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
 	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
 	// second arg the script itself
 	// then comes the ones we care about
-	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 2}");
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 3}");
 	Environment.Exit (1);
 	return;
 }
@@ -19,32 +19,16 @@ if (args.Length != expectedArgumentCount + 3 /* 2 default arguments (executable 
 var argumentIndex = 3;
 var platform = args [argumentIndex++];
 var version = args [argumentIndex++];
+var net7Version = args [argumentIndex++];
 var runtimeIdentifiers = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var outputPath = args [argumentIndex++];
 var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
 var currentApiVersion = args [argumentIndex++];
-var supportedApiVersions = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var versionsPropsPath = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
 
-currentApiVersion = currentApiVersion.Replace ('-', '_');
-
-var allApiVersions = new List<string> (supportedApiVersions);
-allApiVersions = allApiVersions.Select (v => v.Replace ('-', '_')).ToList ();
-
-var versionsPropsTable = File.ReadAllLines (versionsPropsPath).
-							Where (v => v.Count (f => f == '>') > 1).
-							Select (v => {
-								var split = v.Trim ().Split (new char [] { '<', '>', '/'}, StringSplitOptions.RemoveEmptyEntries);
-								var name = split [0];
-								var value = split [1];
-								return new Tuple<string, string> (name, value);
-							}).
-							ToDictionary (v => v.Item1, v => v.Item2, StringComparer.OrdinalIgnoreCase);
-
-var failed = false;
+var tfm = currentApiVersion;
 using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"{{");
 	writer.WriteLine ($"	\"version\": \"{version}\",");
@@ -52,23 +36,15 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		\"{platformLowerCase}\": {{");
 	writer.WriteLine ($"			\"description\": \".NET SDK Workload for building {platform} applications.\",");
 	writer.WriteLine ($"			\"packs\": [");
-	foreach (var tfm in allApiVersions) {
-		writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
-	}
+	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net7\",");
 	if (hasWindows) {
-		foreach (var tfm in allApiVersions) {
-			writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
-		}
+		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\",");
 	}
-	foreach (var tfm in allApiVersions)
-		writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{tfm}\",");
-
-	foreach (var tfm in allApiVersions) {
-		foreach (var rid in runtimeIdentifiers) {
-			writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{tfm}\",");
-		}
+	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{tfm}\",");
+	foreach (var rid in runtimeIdentifiers) {
+		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{tfm}\",");
 	}
-
 	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net8\"");
 	writer.WriteLine ($"			],");
 	writer.WriteLine ($"			\"extends\": [");
@@ -83,45 +59,46 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"	}},");
 	writer.WriteLine ($"	\"packs\": {{");
-
-	foreach (var tfm in allApiVersions) {
-		string apiVersion;
-		if (tfm == currentApiVersion) {
-			apiVersion = version;
-		} else {
-			var propsPackageName = $"Microsoft{platform}Sdk" + tfm.Replace ("-", "").Replace (".", "") + "PackageVersion";
-			if (!versionsPropsTable.TryGetValue (propsPackageName, out apiVersion)) {
-				Console.Error.WriteLine ($"❌ Unable to find a package version for {platform}/{tfm} in eng/Versions.props. Package name: {propsPackageName}");
-				apiVersion = "?";
-				failed = true;
-			}
-		}
-
-		writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.{tfm}\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.{tfm}\": {{");
+	writer.WriteLine ($"			\"kind\": \"sdk\",");
+	writer.WriteLine ($"			\"version\": \"{version}\",");
+	writer.WriteLine ($"		}},");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net7\": {{");
+	writer.WriteLine ($"			\"kind\": \"sdk\",");
+	writer.WriteLine ($"			\"version\": \"{net7Version}\",");
+	writer.WriteLine ($"			\"alias-to\": {{");
+	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Sdk\"");
+	writer.WriteLine ($"			}}");
+	writer.WriteLine ($"		}},");
+	if (hasWindows) {
+		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
-		writer.WriteLine ($"			\"version\": \"{apiVersion}\"");
+		writer.WriteLine ($"			\"version\": \"{version}\",");
+		writer.WriteLine ($"			\"alias-to\": {{");
+		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
-		if (hasWindows) {
-			writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\": {{");
-			writer.WriteLine ($"			\"kind\": \"sdk\",");
-			writer.WriteLine ($"			\"version\": \"{apiVersion}\",");
-			writer.WriteLine ($"			\"alias-to\": {{");
-			writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
-			writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
-			writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
-			writer.WriteLine ($"			}}");
-			writer.WriteLine ($"		}},");
-		}
-		writer.WriteLine ($"		\"Microsoft.{platform}.Ref.{tfm}\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\": {{");
+		writer.WriteLine ($"			\"kind\": \"sdk\",");
+		writer.WriteLine ($"			\"version\": \"{net7Version}\",");
+		writer.WriteLine ($"			\"alias-to\": {{");
+		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"			}}");
+		writer.WriteLine ($"		}},");
+	}
+	writer.WriteLine ($"		\"Microsoft.{platform}.Ref.{tfm}\": {{");
+	writer.WriteLine ($"			\"kind\": \"framework\",");
+	writer.WriteLine ($"			\"version\": \"{version}\"");
+	writer.WriteLine ($"		}},");
+	foreach (var rid in runtimeIdentifiers) {
+		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.{tfm}\": {{");
 		writer.WriteLine ($"			\"kind\": \"framework\",");
-		writer.WriteLine ($"			\"version\": \"{apiVersion}\"");
+		writer.WriteLine ($"			\"version\": \"{version}\"");
 		writer.WriteLine ($"		}},");
-		foreach (var rid in runtimeIdentifiers) {
-			writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.{tfm}\": {{");
-			writer.WriteLine ($"			\"kind\": \"framework\",");
-			writer.WriteLine ($"			\"version\": \"{apiVersion}\"");
-			writer.WriteLine ($"		}},");
-		}
 	}
 	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net8\": {{");
 	writer.WriteLine ($"			\"kind\": \"template\",");
@@ -134,6 +111,4 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"}}");
 }
 
-if (failed)
-	Environment.Exit (1);
 Environment.Exit (0);
