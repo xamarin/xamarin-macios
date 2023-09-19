@@ -15,6 +15,7 @@ parameters:
 
 - name: testPlatform
   type: string
+  default: ''
 
 - name: useXamarinStorage
   type: boolean
