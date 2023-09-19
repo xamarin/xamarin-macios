@@ -124,6 +124,20 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GetFrameworksRelativePath (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				return "Frameworks";
+			case ApplePlatform.MacCatalyst:
+			case ApplePlatform.MacOSX:
+				return Path.Combine ("Contents", "Frameworks");
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
 		protected void Clean (string project_path)
 		{
 			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path)!, "*", SearchOption.AllDirectories);
