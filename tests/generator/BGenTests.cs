@@ -1405,6 +1405,21 @@ namespace GeneratorTests {
 			Assert.That (failures, Is.Empty, "Failures");
 		}
 
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void ObsoletedOSPlatform (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("tests/obsoletedosplatform.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+		}
+
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{
 			return BuildFile (profile, true, false, filenames);

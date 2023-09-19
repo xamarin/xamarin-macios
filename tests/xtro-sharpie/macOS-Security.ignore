@@ -492,3 +492,10 @@
 !missing-pinvoke! SecCodeCreateWithXPCMessage is not bound
 !extra-enum-value! Managed value -2147483648 for SecAccessControlCreateFlags.ApplicationPassword not found in native headers
 !missing-enum-value! SecAccessControlCreateFlags native value kSecAccessControlApplicationPassword = 2147483648 not bound
+
+## xcode15
+!missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-pinvoke! SecCodeValidateFileResource is not bound
+!missing-field! kSecCFErrorResourceRecursive not bound
+!missing-field! kSecCodeInfoStapledNotarizationTicket not bound
+

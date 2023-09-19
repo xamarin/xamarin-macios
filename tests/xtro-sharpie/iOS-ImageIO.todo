@@ -1,6 +1,0 @@
-!missing-field! kCGImagePropertyAVISDictionary not bound
-!missing-field! kCGImageSourceDecodeRequest not bound
-!missing-field! kCGImageSourceDecodeRequestOptions not bound
-!missing-field! kCGImageSourceDecodeToHDR not bound
-!missing-field! kCGImageSourceDecodeToSDR not bound
-!unknown-field! kCGImagePropertyOpenEXRCompression bound

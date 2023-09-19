@@ -182,6 +182,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework SharedWithYouCore \
 						\
 	-weak_framework Symbols \
+	-weak_framework SensitiveContentAnalysis \
 
 SIMLAUNCHER64_FRAMEWORKS =  \
 	-framework GameKit				\

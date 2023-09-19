@@ -282,7 +282,7 @@ namespace ObjCRuntime {
 			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
-#if MONOMAC
+#if MONOMAC && !NET
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
 					NSLog ($"{AssemblyName} was loaded from {typeof (NSObject).Assembly.Location}");

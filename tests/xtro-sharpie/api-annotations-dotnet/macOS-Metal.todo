@@ -343,3 +343,4 @@
 !missing-type! MTLArchitecture not bound
 !missing-type! MTLIndirectInstanceAccelerationStructureDescriptor not bound
 !unknown-native-enum! MTLArgumentAccess bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple9 = 1009 not bound

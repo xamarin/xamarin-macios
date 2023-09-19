@@ -341,3 +341,21 @@
 !missing-type! MTLArchitecture not bound
 !missing-type! MTLIndirectInstanceAccelerationStructureDescriptor not bound
 !unknown-native-enum! MTLArgumentAccess bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple9 = 1009 not bound
+!missing-enum-value! MTLIndirectCommandType native value MTLIndirectCommandTypeDrawMeshThreadgroups = 128 not bound
+!missing-enum-value! MTLIndirectCommandType native value MTLIndirectCommandTypeDrawMeshThreads = 256 not bound
+!missing-protocol-member! MTLIndirectRenderCommand::clearBarrier not found
+!missing-protocol-member! MTLIndirectRenderCommand::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLIndirectRenderCommand::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setBarrier not found
+!missing-protocol-member! MTLIndirectRenderCommand::setMeshBuffer:offset:atIndex: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setObjectBuffer:offset:atIndex: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setObjectThreadgroupMemoryLength:atIndex: not found
+!missing-selector! MTLIndirectCommandBufferDescriptor::maxMeshBufferBindCount not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::maxObjectBufferBindCount not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::maxObjectThreadgroupMemoryBindCount not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setMaxMeshBufferBindCount: not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setMaxObjectBufferBindCount: not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setMaxObjectThreadgroupMemoryBindCount: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setSupportIndirectCommandBuffers: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::supportIndirectCommandBuffers not bound
