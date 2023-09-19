@@ -259,7 +259,7 @@ namespace ObjCRuntime {
 			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
-#if MONOMAC
+#if MONOMAC && !NET
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
 					NSLog ($"{AssemblyName} was loaded from {typeof (NSObject).Assembly.Location}");
@@ -1725,7 +1725,7 @@ namespace ObjCRuntime {
 					target_type = typeof (T);
 				else if (target_type.IsSubclassOf (typeof (T))) {
 					// do nothing, this is fine.
-				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T))) != 0) {
 					// If the instance itself claims it's an instance of the provided (generic argument) type,
 					// then we believe the instance. See bug #20692 for a test case.
 					target_type = typeof (T);
@@ -1804,7 +1804,7 @@ namespace ObjCRuntime {
 					// nothing to do
 				} else if (dynamic_type.IsSubclassOf (target_type)) {
 					target_type = dynamic_type;
-				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (target_type))) {
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (target_type)) != 0) {
 					// nothing to do
 				} else {
 					target_type = dynamic_type;
