@@ -1,3 +1,4 @@
+## xtro being not recognizing
 !unknown-field! SHErrorDomain bound
 !unknown-field! SHMediaItemAppleMusicID bound
 !unknown-field! SHMediaItemAppleMusicURL bound
@@ -27,3 +28,4 @@
 !unknown-type! SHSession bound
 !unknown-type! SHSignature bound
 !unknown-type! SHSignatureGenerator bound
+!unknown-field! SHMediaItemCreationDate bound
