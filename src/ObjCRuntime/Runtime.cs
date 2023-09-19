@@ -50,6 +50,10 @@ namespace ObjCRuntime {
 		static IntPtr NSObjectClass;
 		static bool initialized;
 
+		static bool useCFNetworkHandler = false;
+		static bool useNSUrlSessionHandler = false;
+
+
 		internal static IntPtrEqualityComparer IntPtrEqualityComparer;
 		internal static TypeEqualityComparer TypeEqualityComparer;
 
@@ -248,8 +252,9 @@ namespace ObjCRuntime {
 				return true;
 			}
 		}
-		internal static bool UseCFNetworkHandler { get; private set; } = true;
-		internal static bool UseNSUrlSessionHandler { get; private set; } = true;
+
+		internal static bool UseCFNetworkHandler => useCFNetworkHandler;
+		internal static bool UseNSUrlSessionHandler => useNSUrlSessionHandler;
 		internal static bool Initialized {
 			get { return initialized; }
 		}
