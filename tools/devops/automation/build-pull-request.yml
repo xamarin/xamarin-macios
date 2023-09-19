@@ -71,7 +71,7 @@ parameters:
       displayName: 'iOS64 Device Tests',
       testPool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: false,
-      testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      testsLabels: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
       makeTarget: 'vsts-device-tests',
       extraBotDemands: [
