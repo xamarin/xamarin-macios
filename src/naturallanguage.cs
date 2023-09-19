@@ -729,7 +729,7 @@ namespace NaturalLanguage {
 		[Export ("enumerateTokenVectorsInRange:usingBlock:")]
 		void EnumerateTokenVectors (NSRange range, TokenVectorEnumeratorHandler enumerationHandler);
 
-		[return: BindAs (typeof(nuint[]))]
+		[return: BindAs (typeof (nuint []))]
 		[Export ("tokenVectorAtIndex:tokenRange:")]
 		[return: NullAllowed]
 		NSNumber [] GetVector (nuint characterIndex, ref NSRange tokenRange);
