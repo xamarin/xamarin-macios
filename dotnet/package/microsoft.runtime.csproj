@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <PackageId>Microsoft.$(_PlatformName).Runtime.$(_RuntimeIdentifier).$(PackageOSTargetVersion)</PackageId>
+    <PackageId>Microsoft.$(_PlatformName).Runtime.$(_RuntimeIdentifier)</PackageId>
     <Description>Microsoft $(_PlatformName) runtime pack for $(_RuntimeIdentifier). Please do not reference directly.</Description>
     <_CreateRuntimeList>true</_CreateRuntimeList>
   </PropertyGroup>
