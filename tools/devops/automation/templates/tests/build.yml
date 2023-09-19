@@ -14,6 +14,9 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
+- name: label
+  type: string
+
 - name: labelWithPlatform
   type: string
 
@@ -222,6 +225,7 @@ steps:
 
 - template: ./run-tests.yml
   parameters:
+    label: ${{ parameters.label }}
     labelWithPlatform: ${{ parameters.labelWithPlatform }}
     statusContext: ${{ parameters.statusContext }}
     testsLabels: ${{ parameters.testsLabels }}
