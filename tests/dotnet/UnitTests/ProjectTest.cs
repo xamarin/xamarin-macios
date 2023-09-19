@@ -1009,6 +1009,24 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		// [TestCase ("MacCatalyst", "")] - No extension support yet
+		public void BuildTrimmedExtensionProject (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var project_path = GetProjectPath ("ExtensionProject", platform: platform);
+
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			properties ["MtouchLink"] = "Full";
+			properties ["LinkMode"] = "Full";
+			DotNet.AssertBuild (project_path, properties);
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
