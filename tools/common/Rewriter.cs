@@ -236,26 +236,29 @@ namespace ClassRedirector {
 				var old = body.Instructions [i];
 				if (old.OpCode == OpCodes.Ldsfld && old.Operand == classPtr) {
 					var @new = Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField));
-					PatchReferences (body, old, @new);
-					il.Replace (i, @new);
+					ReplaceAndPatch (body, il, i, @new);
 				}
 			}
 			body.OptimizeMacros ();
 		}
 
-		static void PatchReferences (MethodBody body, Instruction old, Instruction @new)
+		static bool PatchReferences (MethodBody body, Instruction old, Instruction @new)
 		{
+			bool changed = false;
 			foreach (var instruction in body.Instructions) {
 				if (instruction.Operand is Instruction target && target == old) {
 					instruction.Operand = @new;
+					changed = true;
 				} else if (instruction.Operand is Instruction [] targets) {
 					for (int i = 0; i < targets.Length; i++) {
 						if (targets [i] == old) {
 							@targets [i] = @new;
+							changed = true;
 						}
 					}
 				}
 			}
+			return changed;
 		}
 
 		void RemoveCCtorInit (TypeDefinition cl, FieldDefinition class_ptr)
@@ -263,12 +266,13 @@ namespace ClassRedirector {
 			var cctor = cl.Methods.FirstOrDefault (m => m.Name == ".cctor");
 			if (cctor is null)
 				return; // no static init - should never happen, but we can deal.
-
-			var il = cctor.Body.GetILProcessor ();
+			var body = cctor.Body;
+			var il = body.GetILProcessor ();
+			body.SimplifyMacros ();
 			Instruction? stsfld = null;
 			int i = 0;
-			for (; i < il.Body.Instructions.Count; i++) {
-				var instr = il.Body.Instructions [i];
+			for (; i < body.Instructions.Count; i++) {
+				var instr = body.Instructions [i];
 				// look for
 				// stsfld class_ptr
 				if (instr.OpCode == OpCodes.Stsfld && instr.Operand == class_ptr) {
@@ -289,20 +293,21 @@ namespace ClassRedirector {
 			var isLdStr = IsLdStr (il, i - 2);
 
 			if (isGetClassHandle && isLdStr) {
-				il.RemoveAt (i);
-				il.RemoveAt (i - 1);
-				il.RemoveAt (i - 2);
+				RemoveAndMaybeNoOp (body, il, i);
+				RemoveAndMaybeNoOp (body, il, i - 1);
+				RemoveAndMaybeNoOp (body, il, i - 2);
 			} else if (isGetClassHandle) {
 				// don't know how the string got on the stack, so at least get rid of the
 				// call to GetClassHandle by nopping it out. This still leaves the string on
 				// the stack, so pop it.
-				il.Replace (il.Body.Instructions [i - 1], Instruction.Create (OpCodes.Nop));
+				ReplaceAndPatch (body, il, i - 1, Instruction.Create (OpCodes.Nop));
 				// can't remove all three, so just pop the IntPtr.
-				il.Replace (il.Body.Instructions [i], Instruction.Create (OpCodes.Pop));
+				ReplaceAndPatch (body, il, i, Instruction.Create (OpCodes.Pop));
 			} else {
 				// can't remove all three, so just pop the IntPtr.
-				il.Replace (il.Body.Instructions [i], Instruction.Create (OpCodes.Pop));
+				ReplaceAndPatch (body, il, i, Instruction.Create (OpCodes.Pop));
 			}
+			body.OptimizeMacros ();
 
 			// if we're left with exactly 1 instruction and it's a return,
 			// then we can get rid of the entire method
@@ -317,6 +322,24 @@ namespace ClassRedirector {
 				if (cctor.Body.Instructions.Last ().OpCode == OpCodes.Ret &&
 					cctor.Body.Instructions.First ().OpCode == OpCodes.Nop)
 					cl.Methods.Remove (cctor);
+			}
+		}
+
+		void ReplaceAndPatch (MethodBody body, ILProcessor il, int index, Instruction @new)
+		{
+			var old = body.Instructions [index];
+			PatchReferences (body, old, @new);
+			il.Replace (index, @new);
+		}
+
+		void RemoveAndMaybeNoOp (MethodBody body, ILProcessor il, int index)
+		{
+			var old = body.Instructions [index];
+			var @new = Instruction.Create (OpCodes.Nop);
+			if (PatchReferences (body, old, @new)) {
+				il.Replace (index, @new);
+			} else {
+				il.Remove (old);
 			}
 		}
 
