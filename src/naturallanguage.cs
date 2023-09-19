@@ -659,21 +659,21 @@ namespace NaturalLanguage {
 		[Static]
 		[Export ("contextualEmbeddingWithModelIdentifier:")]
 		[return: NullAllowed]
-		NLContextualEmbedding ContextualEmbeddingWithModelIdentifier (string modelIdentifier);
+		NLContextualEmbedding CreateWithModelIdentifier (string modelIdentifier);
 
 		[Static]
 		[Export ("contextualEmbeddingsForValues:")]
-		NLContextualEmbedding [] ContextualEmbeddingsForValues (NSDictionary<NSString, NSObject> valuesDictionary);
+		NLContextualEmbedding [] Create (NSDictionary<NSString, NSObject> values);
 
 		[Static]
 		[Export ("contextualEmbeddingWithLanguage:")]
 		[return: NullAllowed]
-		NLContextualEmbedding ContextualEmbeddingWithLanguage (string language);
+		NLContextualEmbedding CreateWithLanguage (string language);
 
 		[Static]
 		[Export ("contextualEmbeddingWithScript:")]
 		[return: NullAllowed]
-		NLContextualEmbedding ContextualEmbeddingWithScript (string script);
+		NLContextualEmbedding CreateWithScript (string script);
 
 		[Export ("modelIdentifier")]
 		string ModelIdentifier { get; }
@@ -701,7 +701,7 @@ namespace NaturalLanguage {
 
 		[Export ("embeddingResultForString:language:error:")]
 		[return: NullAllowed]
-		NLContextualEmbeddingResult EmbeddingResult (string @string, [NullAllowed] string language, [NullAllowed] out NSError error);
+		NLContextualEmbeddingResult GetEmbeddingResult (string @string, [NullAllowed] string language, [NullAllowed] out NSError error);
 
 		[Export ("hasAvailableAssets")]
 		bool HasAvailableAssets { get; }
@@ -725,11 +725,10 @@ namespace NaturalLanguage {
 		nuint SequenceLength { get; }
 
 		[Export ("enumerateTokenVectorsInRange:usingBlock:")]
-		// [Async]
-		void EnumerateTokenVectorsInRange (NSRange range, Action<NSArray<NSNumber>, NSRange, IntPtr> block);
+		void EnumerateTokenVectors (NSRange range, Action<NSArray<NSNumber>, NSRange, IntPtr> block);
 
 		[Export ("tokenVectorAtIndex:tokenRange:")]
 		[return: NullAllowed]
-		NSNumber [] TokenVectorAtIndex (nuint characterIndex, IntPtr tokenRange);
+		NSNumber [] GetVector (nuint characterIndex, ref NSRange tokenRange);
 	}
 }
