@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Tuner;
 using ClassRedirector;
 using Mono.Linker;
 
@@ -230,10 +231,29 @@ namespace ClassRedirector {
 			if (body is null)
 				return;
 			var il = body.GetILProcessor ();
+			body.SimplifyMacros ();
 			for (var i = 0; i < body.Instructions.Count; i++) {
-				var instr = body.Instructions [i];
-				if (instr.OpCode == OpCodes.Ldsfld && instr.Operand == classPtr) {
-					il.Replace (instr, Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField)));
+				var old = body.Instructions [i];
+				if (old.OpCode == OpCodes.Ldsfld && old.Operand == classPtr) {
+					var @new = Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField));
+					PatchReferences (body, old, @new);
+					il.Replace (i, @new);
+				}
+			}
+			body.OptimizeMacros ();
+		}
+
+		static void PatchReferences (MethodBody body, Instruction old, Instruction @new)
+		{
+			foreach (var instruction in body.Instructions) {
+				if (instruction.Operand is Instruction target && target == old) {
+					instruction.Operand = @new;
+				} else if (instruction.Operand is Instruction [] targets) {
+					for (int i = 0; i < targets.Length; i++) {
+						if (targets [i] == old) {
+							@targets [i] = @new;
+						}
+					}
 				}
 			}
 		}
