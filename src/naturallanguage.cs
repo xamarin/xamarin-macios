@@ -711,7 +711,7 @@ namespace NaturalLanguage {
 		void RequestAssets (Action<NLContextualEmbeddingAssetsResult, NSError> completionHandler);
 	}
 
-	delegate void TokenVectorEnumeratorHandler(NSArray<NSNumber> tokenVector, NSRange tokenRange, out bool stop);
+	delegate void TokenVectorEnumeratorHandler (NSArray<NSNumber> tokenVector, NSRange tokenRange, out bool stop);
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
@@ -732,7 +732,7 @@ namespace NaturalLanguage {
 #if WATCHOS
 		[return: BindAs (typeof(int[]))]
 #else
-		[return: BindAs (typeof(long[]))]
+		[return: BindAs (typeof (long []))]
 #endif
 		[Export ("tokenVectorAtIndex:tokenRange:")]
 		[return: NullAllowed]
