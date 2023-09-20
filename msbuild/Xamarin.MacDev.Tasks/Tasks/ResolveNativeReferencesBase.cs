@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 using Microsoft.Build.Framework;
@@ -10,12 +11,13 @@ using Xamarin;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
 
-	public abstract class ResolveNativeReferencesBase : XamarinTask {
+	public class ResolveNativeReferences : XamarinTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -57,6 +59,14 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		public override bool Execute ()
+		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			return ExecuteLocally ();
+		}
+
+		bool ExecuteLocally ()
 		{
 			var native_frameworks = new List<ITaskItem> ();
 
@@ -270,5 +280,24 @@ namespace Xamarin.MacDev.Tasks {
 			}
 			return String.Empty;
 		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item)
+		{
+			// Don't copy any files to Windows, because
+			// 1. They're not used in Inputs/Outputs, so the lack of them won't affect anything
+			// 2. They may be directories, and as such we'd have to expand them to (potentially numerous and large) files to copy them (uselessly) to Windows.
+			// 3. They may contain symlinks, which may not work correctly on Windows.
+			return false;
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
