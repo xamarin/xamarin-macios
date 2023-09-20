@@ -1164,6 +1164,15 @@
 		</ItemGroup>
 	</Target>
 
+	<!-- https://github.com/xamarin/xamarin-macios/issues/19037 -->
+	<!-- The trimmer will set the RootMode for the current assembly to 'EntryPoint', but that doesn't work for app extension projects, because those are library projects that don't have entry points.
+		 So here we set RootMode=Library for these cases. -->
+	<Target Name="_FixRootAssemblyForAppExtensions" AfterTargets="PrepareForILLink" Condition="'$(IsAppExtension)' == 'true'">
+		<ItemGroup>
+			<TrimmerRootAssembly Update="@(TrimmerRootAssembly)" Condition=" '%(TrimmerRootAssembly.RootMode)' == 'EntryPoint' " RootMode="Library" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_CreateAOTDedupAssembly"
 			Condition="'$(_RunAotCompiler)' == 'true' And '$(IsMacEnabled)' == 'true'"
 			DependsOnTargets="_ComputeManagedAssemblyToLink"
