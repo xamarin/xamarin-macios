@@ -49,7 +49,7 @@ namespace Speech {
 		Authorized,
 	}
 
-	[Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
 	public enum SFSpeechErrorCode : long {
 		InternalServiceError = 1,
@@ -86,8 +86,8 @@ namespace Speech {
 		[Export ("addsPunctuation")]
 		bool AddsPunctuation { get; set; }
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[NullAllowed, Export("customizedLanguageModel", ArgumentSemantic.Copy)]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("customizedLanguageModel", ArgumentSemantic.Copy)]
 		SFSpeechLanguageModelConfiguration CustomizedLanguageModel { get; set; }
 	}
 
@@ -360,24 +360,24 @@ namespace Speech {
 		SFAcousticFeature Voicing { get; }
 	}
 
-	[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(NSObject))]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	interface SFSpeechLanguageModelConfiguration : NSCopying {
-		[Export("initWithLanguageModel:")]
-		NativeHandle Constructor(NSUrl languageModel);
+		[Export ("initWithLanguageModel:")]
+		NativeHandle Constructor (NSUrl languageModel);
 
-		[Export("initWithLanguageModel:vocabulary:")]
-		NativeHandle Constructor(NSUrl languageModel, [NullAllowed] NSUrl vocabulary);
+		[Export ("initWithLanguageModel:vocabulary:")]
+		NativeHandle Constructor (NSUrl languageModel, [NullAllowed] NSUrl vocabulary);
 
-		[Export("languageModel", ArgumentSemantic.Copy)]
+		[Export ("languageModel", ArgumentSemantic.Copy)]
 		NSUrl LanguageModel { get; }
 
-		[NullAllowed, Export("vocabulary", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("vocabulary", ArgumentSemantic.Copy)]
 		NSUrl Vocabulary { get; }
 	}
 
-	[Mac (14,0), iOS (17,0), MacCatalyst(17, 0)]
-	[BaseType (typeof(NSObject))]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSpeechLanguageModel {
 		[Static]
@@ -392,22 +392,22 @@ namespace Speech {
 	}
 
 	[Partial]
-	[Mac (14,0), iOS (17,0), MacCatalyst(17, 0)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	interface SFAnalysisContextTag {
-		[Field("SFAnalysisContextTagLeftContext")]
+		[Field ("SFAnalysisContextTagLeftContext")]
 		NSString LeftContext { get; }
 
-		[Field("SFAnalysisContextTagRightContext")]
+		[Field ("SFAnalysisContextTagRightContext")]
 		NSString RightContext { get; }
 
-		[Field("SFAnalysisContextTagSelectedText")]
+		[Field ("SFAnalysisContextTagSelectedText")]
 		NSString SelectedText { get; }
 	}
 
 	[Partial]
-	[Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	interface SFSpeech {
-		[Field("SFSpeechErrorDomain")]
+		[Field ("SFSpeechErrorDomain")]
 		NSString ErrorDomain { get; }
 	}
 }
