@@ -299,7 +299,7 @@ namespace Xamarin.MacDev {
 
 			workingDirectory = Path.GetFullPath (workingDirectory);
 
-			var resourcePaths = resources.Select (Path.GetFullPath).ToList ();
+			var resourcePaths = resources.Select ((v) => Path.Combine (workingDirectory, v)).ToList ();
 			foreach (var resource in resourcePaths) {
 				if (!resource.StartsWith (workingDirectory, StringComparison.Ordinal))
 					throw new InvalidOperationException ($"The resource to compress '{resource}' must be inside the working directory '{workingDirectory}'");
