@@ -1009,6 +1009,24 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		// [TestCase ("MacCatalyst", "")] - No extension support yet
+		public void BuildTrimmedExtensionProject (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var project_path = GetProjectPath ("ExtensionProject", platform: platform);
+
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			properties ["MtouchLink"] = "Full";
+			properties ["LinkMode"] = "Full";
+			DotNet.AssertBuild (project_path, properties);
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
@@ -1453,22 +1471,15 @@ namespace Xamarin.Tests {
 			properties ["_IsPublishing"] = "true"; // quack like "dotnet publish"
 			properties ["ExcludeNUnitLiteReference"] = "true"; // we're asserting no warnings, and NUnitLite produces a lot of them, so ignore NUnitLite
 			properties ["ExcludeTouchUnitReference"] = "true"; // we're asserting no warnings, and Touch.Unit produces a lot of them, so ignore Touch.Unit
+			properties ["TrimmerSingleWarn"] = "false"; // don't be shy, we want to know what the problem is
 			var rv = DotNet.AssertBuild (project_path, properties);
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
-			var foundIL2049 = false;
-			var foundIL3053 = false;
+			var foundIL3050 = false;
 			rv.AssertNoWarnings ((evt) => {
-				// https://github.com/dotnet/runtime/issues/88994
-				if (evt.Code == "IL2049" && evt.Message == "System.Private.CoreLib: The internal attribute name 'RemoveAttributeInstances' being used in the xml is not supported by ILLink, check the spelling and the supported internal attributes.") {
-					foundIL2049 = true;
-					return false;
-				}
-
-				// This will probably go away when the IL2049 warning from above is fixed.
-				if (evt.Code == "IL3053" && evt.Message == $"Assembly 'Microsoft.{platform.AsString ()}' produced AOT analysis warnings.") {
-					foundIL3053 = true;
+				if (evt.Code == "IL3050" && evt.Message == "<Module>..cctor(): Using member 'System.Enum.GetValues(Type)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. It might not be possible to create an array of the enum type at runtime. Use the GetValues<TEnum> overload or the GetValuesAsUnderlyingType method instead.") {
+					foundIL3050 = true;
 					return false;
 				}
 
@@ -1478,8 +1489,7 @@ namespace Xamarin.Tests {
 				return true;
 			});
 
-			Assert.IsTrue (foundIL2049, "IL2049 not found - update test code to remove the code to ignore the IL2049");
-			Assert.IsTrue (foundIL3053, "IL3053 not found - update test code to remove the code to ignore the IL3053");
+			Assert.IsTrue (foundIL3050, "IL3050 not found - update test code to remove the code to ignore the IL3050");
 		}
 
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)

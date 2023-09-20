@@ -1464,8 +1464,7 @@ namespace CloudKit {
 	interface CKQueryOperation {
 
 		[Field ("CKQueryOperationMaximumResults")]
-		[Internal]
-		IntPtr _MaximumResults { get; set; }
+		nint MaximumResults { get; }
 
 		[Export ("initWithQuery:")]
 		NativeHandle Constructor (CKQuery query);
