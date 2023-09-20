@@ -72,14 +72,15 @@ steps:
         Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
         $DebugPreference = "Continue" # enable debug messages
 
-        $testResults = New-TestSummaryResults `
+        $parallelResults = New-ParallelTestsResults `
           -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
           -TestPrefix "${{ parameters.testPrefix }}" `
           -Dependencies "$Env:DEPENDENCIES" `
           -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
-          -UploadPrefix "${{  parameters.uploadPrefix }}"
+          -UploadPrefix "${{  parameters.uploadPrefix }}" `
+          -Context "$Env:CONTEXT" `
+          -VSDropsIndex $vsdropsIndex
 
-        $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
         $success = $parallelResults.IsSuccess()
         $emoji = ":rocket:"
         if (-not $success) {

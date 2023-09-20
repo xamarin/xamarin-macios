@@ -38,6 +38,18 @@ parameters:
 
 steps:
 
+- bash: |
+    set -e
+    # don't do "set -x" here, because the duplicate vso output might confuse Azure DevOps
+    echo "Running tests on $AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_LABEL;isOutput=true]${{ parameters.label }}"
+    echo "##vso[task.setvariable variable=TESTS_PLATFORM;isOutput=true]${{ parameters.testPlatform }}"
+    echo "##vso[task.setvariable variable=TESTS_ATTEMPT;isOutput=true]$SYSTEM_JOBATTEMPT"
+    # assume something is going to fail
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+  display: Set output variables
+
 - pwsh: |
     Write-Host "##vso[task.setvariable variable=MAC_DESTDIR]/"
     Write-Host "##vso[task.setvariable variable=IOS_DESTDIR]/"
@@ -145,16 +157,6 @@ steps:
 - bash: |
     set -x
     set -e
-
-    set +x
-    echo "Running tests on $AGENT_NAME"
-    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
-    echo "##vso[task.setvariable variable=TESTS_LABEL;isOutput=true]${{ parameters.label }}"
-    echo "##vso[task.setvariable variable=TESTS_PLATFORM;isOutput=true]${{ parameters.testPlatform }}"
-    echo "##vso[task.setvariable variable=TESTS_ATTEMPT;isOutput=true]$SYSTEM_JOBATTEMPT"
-    # assume something is going to fail
-    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-    set -x
 
     # uri used to create the vsdrops index using full uri
     export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX-$SYSTEM_JOBATTEMPT;/tests/"
