@@ -208,7 +208,7 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--shorten $($(platform)_NUGET_WINDOWS_SDK_NAME)=Microsoft.$(platform).Win.Sdk) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--shorten Microsoft.$(platform).Windows.Sdk.Aliased.$(DOTNET_TFM)_$($(platform)_NUGET_OS_VERSION)=Microsoft.$(platform).Aliased.Sdk) \
 		$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),--shorten $($(rid)_NUGET_RUNTIME_NAME)=Microsoft.Runtime.$(rid))) \
-		--tfm $(DOTNET_TFM) \
+		--tfm $(DOTNET_TFM).xcode15 \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
