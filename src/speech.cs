@@ -51,6 +51,7 @@ namespace Speech {
 
 	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
+	[ErrorDomain ("SFSpeechErrorDomain")]
 	public enum SFSpeechErrorCode : long {
 		InternalServiceError = 1,
 		UndefinedTemplateClassName = 7,
@@ -402,12 +403,5 @@ namespace Speech {
 
 		[Field ("SFAnalysisContextTagSelectedText")]
 		NSString SelectedText { get; }
-	}
-
-	[Partial]
-	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
-	interface SFSpeech {
-		[Field ("SFSpeechErrorDomain")]
-		NSString ErrorDomain { get; }
 	}
 }
