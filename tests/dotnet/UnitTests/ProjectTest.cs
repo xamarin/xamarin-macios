@@ -272,7 +272,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
-		[Category ("AllPlatforms")]
+		// [Category ("AllPlatforms")] // builds a complete app, not just the binding projects, so can only be built on macOS
 		public void BuildInterdependentBindingProjects (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
