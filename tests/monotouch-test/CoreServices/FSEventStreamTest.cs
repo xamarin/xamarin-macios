@@ -75,6 +75,7 @@ namespace MonoTouchFixtures.CoreServices {
 
 		static void RunTest (FSEventStreamCreateFlags createFlags)
 		{
+			TestRuntime.IgnoreInCI ("This test fails randomly on the bots, potentially due to (randomly) high CPU usage.");
 			using var monitor = new TestFSMonitor (
 				Xamarin.Cache.CreateTemporaryDirectory (),
 				createFlags,
