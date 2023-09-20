@@ -48,7 +48,7 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_ATTEMPT;isOutput=true]$SYSTEM_JOBATTEMPT"
     # assume something is going to fail
     echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-  display: Set output variables
+  displayName: Set output variables
 
 - pwsh: |
     Write-Host "##vso[task.setvariable variable=MAC_DESTDIR]/"
