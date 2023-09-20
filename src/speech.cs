@@ -49,6 +49,14 @@ namespace Speech {
 		Authorized,
 	}
 
+	[Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+	[Native]
+	public enum SFSpeechErrorCode : long {
+		InternalServiceError = 1,
+		UndefinedTemplateClassName = 7,
+		MalformedSupplementalModel = 8,
+	}
+
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
@@ -77,6 +85,10 @@ namespace Speech {
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("addsPunctuation")]
 		bool AddsPunctuation { get; set; }
+
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[NullAllowed, Export("customizedLanguageModel", ArgumentSemantic.Copy)]
+		SFSpeechLanguageModelConfiguration CustomizedLanguageModel { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -346,5 +358,56 @@ namespace Speech {
 
 		[Export ("voicing", ArgumentSemantic.Copy)]
 		SFAcousticFeature Voicing { get; }
+	}
+
+	[Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[BaseType(typeof(NSObject))]
+	interface SFSpeechLanguageModelConfiguration : NSCopying {
+		[Export("initWithLanguageModel:")]
+		NativeHandle Constructor(NSUrl languageModel);
+
+		[Export("initWithLanguageModel:vocabulary:")]
+		NativeHandle Constructor(NSUrl languageModel, [NullAllowed] NSUrl vocabulary);
+
+		[Export("languageModel", ArgumentSemantic.Copy)]
+		NSUrl LanguageModel { get; }
+
+		[NullAllowed, Export("vocabulary", ArgumentSemantic.Copy)]
+		NSUrl Vocabulary { get; }
+	}
+
+	[Mac (14,0), iOS (17,0), MacCatalyst(17, 0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSpeechLanguageModel {
+		[Static]
+		[Export ("prepareCustomLanguageModelForUrl:clientIdentifier:configuration:completion:")]
+		[Async]
+		void PrepareCustomModel (NSUrl asset, string clientIdentifier, SFSpeechLanguageModelConfiguration configuration, Action<NSError> completion);
+
+		[Static]
+		[Export ("prepareCustomLanguageModelForUrl:clientIdentifier:configuration:ignoresCache:completion:")]
+		[Async]
+		void PrepareCustomModel (NSUrl asset, string clientIdentifier, SFSpeechLanguageModelConfiguration configuration, bool ignoresCache, Action<NSError> completion);
+	}
+
+	[Partial]
+	[Mac (14,0), iOS (17,0), MacCatalyst(17, 0)]
+	interface SFAnalysisContextTag {
+		[Field("SFAnalysisContextTagLeftContext")]
+		NSString LeftContext { get; }
+
+		[Field("SFAnalysisContextTagRightContext")]
+		NSString RightContext { get; }
+
+		[Field("SFAnalysisContextTagSelectedText")]
+		NSString SelectedText { get; }
+	}
+
+	[Partial]
+	[Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+	interface SFSpeech {
+		[Field("SFSpeechErrorDomain")]
+		NSString ErrorDomain { get; }
 	}
 }
