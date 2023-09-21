@@ -96,7 +96,7 @@ namespace Xamarin.Tests {
 				foreach (var f in fields) {
 					sb.Append (" ").Append (f);
 				}
-				Assert.That (fields.Count == 0, "There are fields in classHandles - rewriter was called when it should have done nothing." + sb );
+				Assert.That (fields.Count == 0, "There are fields in classHandles - rewriter was called when it should have done nothing." + sb);
 			} else {
 				// NB: there is always at least one field named "unused"
 				Assert.That (classHandles.HasFields && classHandles.Fields.Count () > 1, "There are no fields in ClassHandles - rewriter did nothing.");
