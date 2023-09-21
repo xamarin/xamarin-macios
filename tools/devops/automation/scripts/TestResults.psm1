@@ -479,17 +479,25 @@ function New-ParallelTestsResults {
     $outputs = $dep.tests.outputs
     $tests = [ordered]@{}
     foreach ($name in $outputs.Keys) {
-        if ($name.EndsWith("TESTS_LABEL")) {
+        if ($name.EndsWith(".TESTS_LABEL")) {
             $label = $outputs[$name]
-            $namePrefix = $name.Replace("TESTS_LABEL","")
             $title = $name.Substring(0, $name.IndexOf('.'))
+            $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") }
+            $botKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_BOT") }
+            $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
+            $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
+            Write-Host "Keys: Label=$label Title=$title Status=$statusKey Bot=$botKey Platform=$platformKey Attempt=$attemptKey"
+            $status =  if ($statusKey -eq $null) { "NotFound"} else { $outputs[$statusKey] }
+            $bot = if ($botKey -eq $null) { "NotFound" } else { $outputs[$botKey] }
+            $platform = if ($platformKey -eq $null) { "NotFound" } else { $outputs[$platformKey] }
+            $attempt = if ($attemptKey -eq $null) { -2 } else { [int]$outputs[$attemptKey] }
             $testResult = [PSCustomObject]@{
                 Label = $label
                 Title = $title
-                Status = $outputs[$namePrefix + "TESTS_JOBSTATUS"]
-                Bot = $outputs[$namePrefix + "TESTS_BOT"]
-                Platform = $outputs[$namePrefix + "TESTS_PLATFORM"]
-                Attempt = $outputs[$namePrefix + "TESTS_ATTEMPT"]
+                Status = $status
+                Bot = $bot
+                Platform = $platform
+                Attempt = $attempt
             }
             if ($tests.Contains($label)) {
                 $testInfo = $tests[$label]

@@ -81,11 +81,11 @@ Describe "TestResults tests" {
 {
   "tests": {
     "outputs": {
-      "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
+      "cecil.bash21.TESTS_BOT": "xambot-1199.Ventura",
       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-      "cecil.runTests.TESTS_LABEL": "cecil",
-      "cecil.runTests.TESTS_PLATFORM": "",
-      "cecil.runTests.TESTS_ATTEMPT": "1",
+      "cecil.bash21.TESTS_LABEL": "cecil",
+      "cecil.bash21.TESTS_PLATFORM": "",
+      "cecil.bash21.TESTS_ATTEMPT": "1",
 
       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
