@@ -253,10 +253,10 @@ namespace PushToTalk {
 		[Export ("setTransmissionMode:forChannelUUID:completionHandler:")]
 		void SetTransmissionMode (PTTransmissionMode transmissionMode, NSUuid channelUuid, [NullAllowed] Action<NSError> completionHandler);
 
-		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS(17, 0)]
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (17, 0)]
 		[Async]
-		[Export("setAccessoryButtonEventsEnabled:forChannelUUID:completionHandler:")]
-		void SetAccessoryButtonEventsEnabled(bool enabled, NSUuid channelUUID, [NullAllowed] Action<NSError> completionHandler);
+		[Export ("setAccessoryButtonEventsEnabled:forChannelUUID:completionHandler:")]
+		void SetAccessoryButtonEventsEnabled (bool enabled, NSUuid channelUUID, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 }
