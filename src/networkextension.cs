@@ -1037,6 +1037,7 @@ namespace NetworkExtension {
 		[NullAllowed, Export ("defaultPath")]
 		NWPath DefaultPath { get; }
 
+		[NoTV]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[MacCatalyst (13, 1)]
@@ -1233,6 +1234,7 @@ namespace NetworkExtension {
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; set; }
 
+		[NoTV]
 		[NullAllowed]
 		[Export ("protocol", ArgumentSemantic.Retain)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ProtocolConfiguration' instead.")]
