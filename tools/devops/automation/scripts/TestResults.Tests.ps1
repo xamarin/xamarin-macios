@@ -14,70 +14,6 @@ Describe "TestResults tests" {
         $testConfig = [TestConfiguration]::new($suite, $title, $platform, $resultContext)
         $jobStatus = "Succeeded"
         $attempt = 1
-        $dependencies = @"
-{
-   "tests": {
-     "outputs": {
-       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
-       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "cecil.runTests.TESTS_LABEL": "cecil",
-       "cecil.runTests.TESTS_PLATFORM": "",
-       "cecil.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
-       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
-       "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
-       "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
-       "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
-       "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
-       "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
-       "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
-       "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
-       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
-       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
-     }
-   }
- }
-"@
-
-        $dependenciesWithMissingResults = @"
-{
-   "tests": {
-     "outputs": {
-       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
-       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "cecil.runTests.TESTS_LABEL": "cecil",
-       "cecil.runTests.TESTS_PLATFORM": "",
-       "cecil.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
-       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
-       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
-     }
-   }
- }
-"@
-
         $matrix = @"
 {
     "cecil":
@@ -141,7 +77,79 @@ Describe "TestResults tests" {
     }
 }
 "@
+        $dependencies = @"
+{
+  "tests": {
+    "outputs": {
+      "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
+      "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+      "cecil.runTests.TESTS_LABEL": "cecil",
+      "cecil.runTests.TESTS_PLATFORM": "",
+      "cecil.runTests.TESTS_ATTEMPT": "1",
 
+      "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
+      "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
+      "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
+      "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
+      "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
+
+      "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
+      "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
+      "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
+      "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
+      "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
+
+      "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
+      "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Failed",
+      "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
+      "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
+      "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
+
+      "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
+      "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Failed",
+      "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
+      "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
+      "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
+
+      "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
+      "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
+      "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
+      "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
+      "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+    }
+  },
+  "configure": {
+    "outputs": {
+        "test_matrix.TEST_MATRIX": "$($matrix.Replace("`n", "\n").Replace("`"", "\`""))"
+    }
+  }
+}
+"@
+
+        $dependenciesWithMissingResults = @"
+{
+  "tests": {
+    "outputs": {
+      "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
+      "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+      "cecil.runTests.TESTS_LABEL": "cecil",
+      "cecil.runTests.TESTS_PLATFORM": "",
+      "cecil.runTests.TESTS_ATTEMPT": "1",
+
+      "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
+      "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
+      "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
+      "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
+      "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+    }
+  },
+  "configure": {
+    "outputs": {
+        "test_matrix.TEST_MATRIX": "$($matrix.Replace("`n", "\n").Replace("`"", "\`""))"
+    }
+  }
+}
+"@
     }
 
     It "is correctly created" {
@@ -274,7 +282,7 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "SummaryF" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "SummaryF" -Force
 
-            $testResults = New-TestSummaryResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -TestConfigurations "$matrix"
+            $testResults = New-TestSummaryResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies"
 
             # Remove-Item -Path $testDirectory -Recurse
 
@@ -308,7 +316,7 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependenciesWithMissingResults" -TestConfigurations "$matrix" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependenciesWithMissingResults" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -350,7 +358,6 @@ Describe "TestResults tests" {
         }
     }
 
-
     Context "new test summmary results" {
         It "computes the right summary with missing test results" {
             $VerbosePreference = "Continue"
@@ -366,51 +373,8 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $dependencies = @"
-{
-   "tests": {
-     "outputs": {
-       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
-       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "cecil.runTests.TESTS_LABEL": "cecil",
-       "cecil.runTests.TESTS_PLATFORM": "",
-       "cecil.runTests.TESTS_ATTEMPT": "1",
 
-       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
-       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
-       "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
-       "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
-       "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
-       "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
-       "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
-       "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
-       "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
-       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
-       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
-     }
-   }
- }
-"@
-
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -TestConfigurations "$matrix" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -421,7 +385,7 @@ Describe "TestResults tests" {
 
             $content = $sb.ToString()
 
-            Write-Host $content
+            Write-Host $content.Replace("&$", "&``$")
 
             $content | Should -Be "# Test results
 :x: Tests failed on context
@@ -488,51 +452,7 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $dependencies = @"
-{
-   "tests": {
-     "outputs": {
-       "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
-       "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "cecil.runTests.TESTS_LABEL": "cecil",
-       "cecil.runTests.TESTS_PLATFORM": "",
-       "cecil.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
-       "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
-       "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
-       "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
-       "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
-       "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
-       "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
-       "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
-       "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
-       "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
-
-       "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
-       "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
-       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
-       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
-       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
-     }
-   }
- }
-"@
-
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -TestConfigurations "$matrix" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -543,14 +463,41 @@ Describe "TestResults tests" {
 
             $content = $sb.ToString()
 
-            Write-Host $content
+            Write-Host $content.Replace("&$", "&``$")
 
             $content | Should -Be "# Test results
 :x: Tests failed on context
 
-0 tests crashed, 5 tests failed, 27 tests passed.
+0 tests crashed, 8 tests failed, 14 tests passed.
 
 ## Failures
+
+### :x: dotnettests tests (iOS)
+
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
+
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
+
+### :x: dotnettests tests (macOS)
+
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
+
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
+
+### :x: dotnettests tests (tvOS)
+
+<summary>1 tests failed, 0 tests passed.</summary>
+<details>
+
+</details>
+
+[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 ### :x: dotnettests tests (MacCatalyst)
 
@@ -564,9 +511,6 @@ Describe "TestResults tests" {
 ## Successes
 
 :white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)

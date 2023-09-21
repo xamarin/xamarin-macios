@@ -437,9 +437,6 @@ function New-ParallelTestsResults {
         [Parameter(Mandatory)]
         [string]
         $Dependencies,
-        [Parameter(Mandatory)]
-        [string]
-        $TestConfigurations,
         [string]
         $UploadPrefix="",
         [string]
@@ -448,8 +445,11 @@ function New-ParallelTestsResults {
         $VSDropsIndex
     )
 
+    Write-Host "Dependencies:`n$($Dependencies)"
 
-    $matrix = $TestConfigurations | ConvertFrom-Json -AsHashtable
+    $dep = $Dependencies | ConvertFrom-Json -AsHashtable
+
+    $matrix = $dep.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
     $suites = [ordered]@{}
     foreach ($title in $matrix.Keys) {
         Write-Host "Got title: $title"
@@ -476,8 +476,6 @@ function New-ParallelTestsResults {
     Write-Host "Test suites:"
     Write-Host $suites
 
-
-    $dep = $Dependencies | ConvertFrom-Json -AsHashtable
     $outputs = $dep.tests.outputs
     $tests = [ordered]@{}
     foreach ($name in $outputs.Keys) {
