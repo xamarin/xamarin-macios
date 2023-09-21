@@ -1,3 +1,4 @@
+# xcode15: xtro does not recognize these, yet they should be included
 !unknown-field! SNClassifierIdentifierVersion1 bound
 !unknown-field! SNErrorDomain bound
 !unknown-native-enum! SNErrorCode bound
@@ -11,3 +12,4 @@
 !unknown-type! SNClassificationResult bound
 !unknown-type! SNClassifySoundRequest bound
 !unknown-type! SNTimeDurationConstraint bound
+
