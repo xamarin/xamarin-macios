@@ -2712,10 +2712,13 @@
       </Item>
       <Item ItemId=";MT4178" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.]D;]A;		]]></Val>
+          <Val><![CDATA[The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[La classe '{0}' non verrà registrata perché il framework WatchKit è stato rimosso da iOS SDK.]D;]A;		]]></Val>
+            <Val><![CDATA[La classe '{0}' non verrà registrata perché il framework {1} è stato rimosso da {2}SDK]D;.]A;		]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.]D;]A;		]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3373,6 +3376,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX1307" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile estrarre il framework nativo '{0}' dall'assembly '{1}' perché non contiene la risorsa '{2}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX1308" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è stato possibile estrarre la libreria nativa '{0}' dall'assembly '{1}' perché non contiene la risorsa '{2}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX1502" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[One or more reference(s) to type '{0}' already exists inside '{1}' before linking]D;]A;		]]></Val>
@@ -3558,6 +3579,15 @@
           <Val><![CDATA[Unable to compute the block signature for the type '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Impossibile calcolare la firma del blocco per il tipo '{0}': {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX4189" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The class '{0}' will not be registered because it has been removed from the {1} SDK.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La classe '{0}' non verrà registrata perché è stata rimosso da {1} SDK.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3831,6 +3861,15 @@
           <Val><![CDATA[Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Impossibile trovare il tipo 'ObjCRuntime.__Registrar__' nell'assembly '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8056" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossibile effettuare il marshalling dell'oggetto Objective-C 0x{0} (tipo: {1}). Non è stata trovata alcuna istanza gestita esistente per questo oggetto, né è stato possibile creare una nuova istanza gestita di tipo generico {2}.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
