@@ -22,7 +22,7 @@
     <!-- This is a subscription to the Xcode 14.3 version of our packages -->
     <MicrosoftiOSSdknet70_164PackageVersion>16.4.7107-ci.release-7-0-3xx-multi-targeting</MicrosoftiOSSdknet70_164PackageVersion>
     <MicrosoftmacOSSdknet70_133PackageVersion>13.3.7107-ci.release-7-0-3xx-multi-targeting</MicrosoftmacOSSdknet70_133PackageVersion>
-    <MicrosoftMacCatalystSdknet70_164PackageVersion>16.4.7107-ci.release-7-0-3xx-multi-targeting</MicrosoftMacCatalystSdknet70_164PackageVersion>
+    <MicrosoftMacCatalystSdknet70_164PackageVersion>16.4.7108-ci.release-7-0-3xx-multi-targeting</MicrosoftMacCatalystSdknet70_164PackageVersion>
     <MicrosofttvOSSdknet70_164PackageVersion>16.4.7108-ci.release-7-0-3xx-multi-targeting</MicrosofttvOSSdknet70_164PackageVersion>
   </PropertyGroup>
 </Project>

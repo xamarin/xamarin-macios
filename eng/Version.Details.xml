@@ -44,9 +44,9 @@
       <Sha>b30f232061d2df393e444c4481c7a7d1767a7f13</Sha>
     </Dependency>
     <!-- This is a subscription to the Xcode 14.3 version of our packages (currently the latest version available in .NET 7) -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_16.4" Version="16.4.7107-ci.release-7-0-3xx-multi-targeting">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_16.4" Version="16.4.7108-ci.release-7-0-3xx-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>057aad801573554196f5b64888c9d93769823e9d</Sha>
+      <Sha>00f6b3f856304121750cdd9d420521b06be1dc2d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.macOS.Sdk.net7.0_13.3" Version="13.3.7107-ci.release-7-0-3xx-multi-targeting">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
