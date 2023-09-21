@@ -476,7 +476,7 @@ namespace ObjCRuntime {
 			var map = Runtime.options->RegistrationMap;
 
 			// Stuff 2 (32-bits) uints in one (64-bit) IntPtr, and use that as the key in the dictionary where we cache the lookup.
-			var key = new IntPtr (unchecked ((long) (((ulong) token_reference) << 32) + implicit_token_type ));
+			var key = new IntPtr (unchecked((long) (((ulong) token_reference) << 32) + implicit_token_type));
 			lock (token_to_member) {
 				if (token_to_member.TryGetValue (key, out var member))
 					return member;
