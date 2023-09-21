@@ -1141,10 +1141,14 @@ namespace Xamarin.Tests {
 
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
-			// Due to an implementation detail in .NET, the same error message is shown twice.
-			Assert.AreEqual (2, errors.Count, "Error Count");
-			Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
-			Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
+			Assert.AreEqual (1, errors.Count, "Error Count");
+			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
+
+			// With multi targeting, this happens instead:
+			// // Due to an implementation detail in .NET, the same error message is shown twice.
+			// Assert.AreEqual (2, errors.Count, "Error Count");
+			// Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
+			// Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
 		}
 
 		[Test]
@@ -1507,6 +1511,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void MultiTargetLibrary (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -1543,6 +1548,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void InvalidTargetPlatformVersion (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
