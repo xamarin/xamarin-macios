@@ -90,9 +90,16 @@ namespace Xamarin.Tests {
 			Assert.NotNull (classHandlesMaybe, "Couldn't find ClassHandles type.");
 			var classHandles = classHandlesMaybe!;
 			if (!rewriteHandles) {
-				Assert.That (!classHandles.HasFields, "There are fields in classHandles - rewriter was called when it should have done nothing.");
+				// NB: there is always at least one field named "unused"
+				var fields = classHandles.Fields.Where (f => f.Name != "unused").Select (f => f.Name).ToList ();
+				var sb = new StringBuilder ();
+				foreach (var f in fields) {
+					sb.Append (" ").Append (f);
+				}
+				Assert.That (fields.Count == 0, "There are fields in classHandles - rewriter was called when it should have done nothing." + sb );
 			} else {
-				Assert.That (classHandles.HasFields, "There are no fields in ClassHandles - rewriter did nothing.");
+				// NB: there is always at least one field named "unused"
+				Assert.That (classHandles.HasFields && classHandles.Fields.Count () > 1, "There are no fields in ClassHandles - rewriter did nothing.");
 				var field = classHandles.Fields.FirstOrDefault (f => f.Name.Contains ("SomeObj"));
 				Assert.IsNotNull (field, "Didn't find a field for 'SomeObj'");
 			}
