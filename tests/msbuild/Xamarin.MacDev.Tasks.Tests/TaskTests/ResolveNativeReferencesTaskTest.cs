@@ -40,7 +40,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 			// on Xcode 12.2+ you get arm64 for all (iOS, tvOS and watchOS) simulators
 			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-xcode12.2.plist");
 			var plist = PDictionary.FromFile (path);
-			var result = ResolveNativeReferencesBase.TryResolveXCFramework (log, plist, "N/A", targetFrameworkMoniker, isSimulator, architecture, out var frameworkPath);
+			var result = ResolveNativeReferences.TryResolveXCFramework (log, plist, "N/A", targetFrameworkMoniker, isSimulator, architecture, out var frameworkPath);
 			Assert.AreEqual (result, !string.IsNullOrEmpty (expected), "result");
 			Assert.That (frameworkPath, Is.EqualTo (expected), "frameworkPath");
 		}
@@ -53,7 +53,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 		{
 			var path = Path.Combine (Path.GetDirectoryName (GetType ().Assembly.Location), "Resources", "xcf-prexcode12.plist");
 			var plist = PDictionary.FromFile (path);
-			var result = ResolveNativeReferencesBase.TryResolveXCFramework (log, plist, "N/A", targetFrameworkMoniker, isSimulator, architecture, out var frameworkPath);
+			var result = ResolveNativeReferences.TryResolveXCFramework (log, plist, "N/A", targetFrameworkMoniker, isSimulator, architecture, out var frameworkPath);
 			Assert.AreEqual (result, !string.IsNullOrEmpty (expected), "result");
 			Assert.That (frameworkPath, Is.EqualTo (expected), "frameworkPath");
 		}
@@ -62,7 +62,7 @@ namespace Xamarin.MacDev.Tasks.Tests {
 		public void BadInfoPlist ()
 		{
 			var plist = new PDictionary ();
-			var result = ResolveNativeReferencesBase.TryResolveXCFramework (log, plist, "N/A", TargetFramework.DotNet_iOS_String, false, "x86_64", out var frameworkPath);
+			var result = ResolveNativeReferences.TryResolveXCFramework (log, plist, "N/A", TargetFramework.DotNet_iOS_String, false, "x86_64", out var frameworkPath);
 			Assert.IsFalse (result, "Invalid Info.plist");
 		}
 	}

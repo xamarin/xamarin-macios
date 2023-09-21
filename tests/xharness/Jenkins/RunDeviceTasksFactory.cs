@@ -61,7 +61,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS64) });
+						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS) });
 
 					if (createTodayExtension) {
 						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
