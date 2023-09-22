@@ -145,6 +145,9 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+#if !NET
+		[Ignore ("This only works in .NET")]
+#endif
 		public void Bug27430 ()
 		{
 			BuildFile (Profile.iOS, "bug27430.cs");
@@ -474,14 +477,14 @@ namespace GeneratorTests {
 			Assert.AreEqual (10, methodCount, "Async method count");
 		}
 
-#if !NET
-		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
+#if !NET
+		[Ignore ("This only works in .NET")]
+#endif
 		public void StackOverflow20696157 ()
 		{
 			BuildFile (Profile.iOS, "sof20696157.cs");
 		}
-#endif
 
 		[Test]
 		public void HyphenInName ()
@@ -784,6 +787,9 @@ namespace GeneratorTests {
 		public void GHIssue7304 () => BuildFile (Profile.macOSMobile, "ghissue7304.cs");
 
 		[Test]
+#if !NET
+		[Ignore ("This only works in .NET")]
+#endif
 		public void RefOutParameters ()
 		{
 			BuildFile (Profile.macOSMobile, true, "tests/ref-out-parameters.cs");
@@ -1418,6 +1424,12 @@ namespace GeneratorTests {
 			bgen.AddTestApiDefinition ("tests/obsoletedosplatform.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
+		}
+
+		[Test]
+		public void InternalDelegate ()
+		{
+			BuildFile (Profile.iOS, "tests/internal-delegate.cs");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

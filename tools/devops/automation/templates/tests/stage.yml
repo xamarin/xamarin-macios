@@ -17,7 +17,7 @@ parameters:
 # string that contains the extra labels to pass to xharness to select the tests to execute.
 - name: testsLabels
   type: string
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 # name of the pool that contains the iOS devices
 - name: testPool
