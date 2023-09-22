@@ -52,6 +52,7 @@ namespace ObjCRuntime {
 
 		internal static IntPtrEqualityComparer IntPtrEqualityComparer;
 		internal static TypeEqualityComparer TypeEqualityComparer;
+		internal static UInt64EqualityComparer UInt64EqualityComparer;
 
 		internal static DynamicRegistrar Registrar;
 #pragma warning restore 8618
@@ -310,6 +311,7 @@ namespace ObjCRuntime {
 
 			IntPtrEqualityComparer = new IntPtrEqualityComparer ();
 			TypeEqualityComparer = new TypeEqualityComparer ();
+			UInt64EqualityComparer = new UInt64EqualityComparer ();
 
 			Runtime.options = options;
 			delegates = new List<object> ();
@@ -2605,6 +2607,17 @@ namespace ObjCRuntime {
 			return x == y;
 		}
 		public int GetHashCode (IntPtr obj)
+		{
+			return obj.GetHashCode ();
+		}
+	}
+
+	internal class UInt64EqualityComparer : IEqualityComparer<ulong> {
+		public bool Equals (ulong x, ulong y)
+		{
+			return x == y;
+		}
+		public int GetHashCode (ulong obj)
 		{
 			return obj.GetHashCode ();
 		}

@@ -44,7 +44,7 @@ namespace ObjCRuntime {
 #pragma warning disable CS8618 // "Non-nullable field must contain a non-null value when exiting constructor." - we ensure these fields are non-null in other ways
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
 		static ConditionalWeakTable<Assembly, string> assembly_to_name; // accessed from multiple threads, but ConditionalWeakTables are thread-safe, so no locking required.
-		static Dictionary<IntPtr, MemberInfo?> token_to_member; // accessed from multiple threads, locking required.
+		static Dictionary<ulong, MemberInfo?> token_to_member; // accessed from multiple threads, locking required.
 		static Type? [] class_to_type;
 #pragma warning restore CS8618
 
@@ -58,7 +58,7 @@ namespace ObjCRuntime {
 				return;
 
 			assembly_to_name = new ConditionalWeakTable<Assembly, string> ();
-			token_to_member = new Dictionary<IntPtr, MemberInfo?> (Runtime.IntPtrEqualityComparer);
+			token_to_member = new Dictionary<ulong, MemberInfo?> (Runtime.UInt64EqualityComparer);
 			class_to_type = new Type? [map->map_count];
 
 			if (!Runtime.DynamicRegistrationSupported)
@@ -475,8 +475,8 @@ namespace ObjCRuntime {
 		{
 			var map = Runtime.options->RegistrationMap;
 
-			// Stuff 2 (32-bits) uints in one (64-bit) IntPtr, and use that as the key in the dictionary where we cache the lookup.
-			var key = new IntPtr (unchecked((long) (((ulong) token_reference) << 32) + implicit_token_type));
+			// Stuff 2 (32-bits) uints in a 64-bit ulong, and use that as the key in the dictionary where we cache the lookup.
+			var key = (((ulong) token_reference) << 32) + implicit_token_type;
 			lock (token_to_member) {
 				if (token_to_member.TryGetValue (key, out var member))
 					return member;
