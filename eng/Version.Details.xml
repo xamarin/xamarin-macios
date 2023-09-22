@@ -9,9 +9,9 @@
       <Sha>287c10d2539d47268a1083c4d533cf84124900cf</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-rc.2.23471.3">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-rc.2.23471.9">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>1757497f37245d1756870fb1c0b3221c0d235d54</Sha>
+      <Sha>12fc9044307e32e143eb7cbaf1d68badf61b192c</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-rtm.23468.24" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
@@ -43,9 +43,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>14a9d8d77450b06c33062edd2f009f405c84f7cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0-rc.2.23471.3">
+    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0-rc.2.23471.9">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>1757497f37245d1756870fb1c0b3221c0d235d54</Sha>
+      <Sha>12fc9044307e32e143eb7cbaf1d68badf61b192c</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
