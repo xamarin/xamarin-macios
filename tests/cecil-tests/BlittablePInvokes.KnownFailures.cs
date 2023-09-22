@@ -463,16 +463,6 @@ namespace Cecil.Tests {
 			"System.Void UIKit.UIAccessibility::UIAccessibilityRequestGuidedAccessSession(System.Boolean,ObjCRuntime.BlockLiteral*)",
 			"System.Void UIKit.UIGraphics::BeginImageContextWithOptions(CoreGraphics.CGSize,System.Boolean,System.Runtime.InteropServices.NFloat)",
 			"System.Void UIKit.UIGuidedAccessRestriction::UIGuidedAccessConfigureAccessibilityFeatures(System.UIntPtr,System.Boolean,ObjCRuntime.BlockLiteral*)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSend_NativeHandle_NativeHandle_Double_bool_NativeHandle(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,System.Double,System.Boolean,ObjCRuntime.NativeHandle)",
-			"System.Void ObjCRuntime.Messaging::void_objc_msgSendSuper_NativeHandle_NativeHandle_Double_bool_NativeHandle(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,System.Double,System.Boolean,ObjCRuntime.NativeHandle)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSend_CMTime_Int64_bool(System.IntPtr,System.IntPtr,CoreMedia.CMTime,System.Int64,System.Boolean)",
-			"ObjCRuntime.NativeHandle ObjCRuntime.Messaging::NativeHandle_objc_msgSendSuper_CMTime_Int64_bool(System.IntPtr,System.IntPtr,CoreMedia.CMTime,System.Int64,System.Boolean)",
-			"System.Boolean ObjCRuntime.Messaging::bool_objc_msgSend_Int64(System.IntPtr,System.IntPtr,System.Int64)",
-			"System.Boolean ObjCRuntime.Messaging::bool_objc_msgSendSuper_Int64(System.IntPtr,System.IntPtr,System.Int64)",
-			"System.Boolean ObjCRuntime.Messaging::bool_objc_msgSend_CMTime_CGRect_NativeHandle_NativeHandle(System.IntPtr,System.IntPtr,CoreMedia.CMTime,CoreGraphics.CGRect,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle)",
-			"System.Boolean ObjCRuntime.Messaging::bool_objc_msgSendSuper_CMTime_CGRect_NativeHandle_NativeHandle(System.IntPtr,System.IntPtr,CoreMedia.CMTime,CoreGraphics.CGRect,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle)",
-			"System.Boolean ObjCRuntime.Messaging::bool_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle)",
-			"System.Boolean ObjCRuntime.Messaging::bool_objc_msgSendSuper_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle(System.IntPtr,System.IntPtr,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle,ObjCRuntime.NativeHandle)",
 		};
 	}
 }
