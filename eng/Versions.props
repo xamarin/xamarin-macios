@@ -5,9 +5,9 @@
     <MicrosoftDotnetSdkInternalPackageVersion>8.0.100-rc.2.23469.21</MicrosoftDotnetSdkInternalPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>8.0.0-rc.2.23466.4</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>8.0.0-rc.2.23471.30</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rc.2.23469.4</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
-    <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>8.0.0-rc.2.23471.30</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.0-rc.2.23472.10</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rc.2.23471.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
+    <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>8.0.0-rc.2.23472.10</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23468.2</MicrosoftDotNetCecilPackageVersion>
     <MicrosoftDotNetXHarnessiOSSharedPackageVersion>8.0.0-prerelease.23456.2</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
