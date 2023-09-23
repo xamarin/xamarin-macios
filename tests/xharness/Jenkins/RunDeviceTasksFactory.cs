@@ -61,24 +61,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS64) });
-
-					var build32 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
-						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
-						ProjectPlatform = "iPhone",
-						Platform = TestPlatform.iOS_Unified32,
-						TestName = project.Name,
-					};
-					build32.CloneTestProject (jenkins.MainLog, processManager, project, HarnessConfiguration.RootDirectory);
-					projectTasks.Add (new RunDeviceTask (
-						jenkins: jenkins,
-						devices: jenkins.Devices,
-						buildTask: build32,
-						processManager: processManager,
-						tunnelBore: jenkins.TunnelBore,
-						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS32) });
+						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS) });
 
 					if (createTodayExtension) {
 						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
