@@ -74,10 +74,18 @@ namespace MonoTouchFixtures.CoreServices {
 			=> RunTest (FileEvents | UseExtendedData);
 
 		static void RunTest (FSEventStreamCreateFlags createFlags)
-			=> new TestFSMonitor (
+		{
+			TestRuntime.IgnoreInCI ("This test fails randomly on the bots, potentially due to (randomly) high CPU usage.");
+			using var monitor = new TestFSMonitor (
 				Xamarin.Cache.CreateTemporaryDirectory (),
 				createFlags,
-				maxFilesToCreate: 256).Run ();
+				maxFilesToCreate: 256);
+			try {
+				monitor.Run ();
+			} finally {
+				monitor.Stop ();
+			}
+		}
 
 		/// <summary>
 		/// Creates a slew of files on a background thread in some directory
@@ -124,6 +132,12 @@ namespace MonoTouchFixtures.CoreServices {
 
 				_directoriesToCreate = (int) Math.Sqrt (maxFilesToCreate);
 				_filesPerDirectoryToCreate = _directoriesToCreate;
+			}
+
+			protected override void Dispose (bool disposing)
+			{
+				_dispatchQueue.Dispose ();
+				base.Dispose (disposing);
 			}
 
 			public void Run ()

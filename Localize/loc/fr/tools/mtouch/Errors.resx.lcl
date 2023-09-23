@@ -2712,10 +2712,13 @@
       </Item>
       <Item ItemId=";MT4178" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.]D;]A;		]]></Val>
+          <Val><![CDATA[The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[La classe '{0}' ne sera pas enregistrée, car le framework WatchKit a été supprimé du kit iOS SDK.]D;]A;		]]></Val>
+            <Val><![CDATA[La classe '{0}' ne sera pas enregistrée car le framework {1} a été supprimé du {2} SDK.]D;]A;		]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.]D;]A;		]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3373,6 +3376,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX1307" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossible d'extraire le framework natif « {0} » de l'assembly « {1} », car il ne contient pas la ressource « {2} ».]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX1308" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossible d'extraire la bibliothèque native « {0} » de l'assembly « {1} », car elle ne contient pas la ressource « {2} ».]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX1502" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[One or more reference(s) to type '{0}' already exists inside '{1}' before linking]D;]A;		]]></Val>
@@ -3557,7 +3578,16 @@
         <Str Cat="Text">
           <Val><![CDATA[Unable to compute the block signature for the type '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Impossible de calculer la signature de bloc pour le type '{0}' : {1}]]></Val>
+            <Val><![CDATA[Impossible de calculer la signature de bloc pour le type '{0}' : {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX4189" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The class '{0}' will not be registered because it has been removed from the {1} SDK.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La classe « {0} » ne sera pas enregistrée car elle a été supprimée du SDK {1}.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3821,7 +3851,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Can't resolve metadata tokens for methods when using the managed static registrar (token: 0x{0}).]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Impossible de résoudre les jetons de métadonnées pour les méthodes lors de l’utilisation du bureau d’enregistrement statique managé (jeton : 0x{0}).]]></Val>
+            <Val><![CDATA[Impossible de résoudre les jetons de métadonnées pour les méthodes lors de l’utilisation du bureau d’enregistrement statique managé (jeton : 0x{0}).]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3831,6 +3861,15 @@
           <Val><![CDATA[Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Impossible de trouver le type 'ObjCRuntime.__Registrar__' dans l’assembly '{0}'.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8056" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec du marshalage de l'objet Objective-C 0x{0} (type : {1}). Impossible de trouver une instance gérée existante pour cet objet, et il n'a pas non plus été possible de créer une nouvelle instance gérée de type générique {2}.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
