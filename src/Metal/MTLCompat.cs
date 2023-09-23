@@ -18,7 +18,7 @@ namespace Metal {
 	}
 
 #if MONOMAC
-	public static partial class MTLDevice_Extensions {
+	public unsafe static partial class MTLDevice_Extensions {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLCounterSet[] GetIMTLCounterSets (this IMTLDevice This)
 		{
@@ -33,7 +33,7 @@ namespace Metal {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
 			var errorValue = NativeHandle.Zero;
 
-			var rv = global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newCounterSampleBufferWithDescriptor:error:"), descriptor.Handle, ref errorValue);
+			var rv = global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newCounterSampleBufferWithDescriptor:error:"), descriptor.Handle, &errorValue);
 			var ret = Runtime.GetINativeObject<IMTLCounterSampleBuffer> (rv, owns: false);
 			error = Runtime.GetNSObject<NSError> (errorValue);
 
@@ -48,7 +48,7 @@ namespace Metal {
 		{
 			if (sampleBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
-			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_UIntPtr_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, (UIntPtr) sampleIndex, barrier);
+			global::ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_UIntPtr_bool (This.Handle, Selector.GetHandle ("sampleCountersInBuffer:atSampleIndex:withBarrier:"), sampleBuffer.Handle, (UIntPtr) sampleIndex, barrier ? (byte) 1 : (byte) 0);
 		}
 	}
 #endif // MONOMAC
