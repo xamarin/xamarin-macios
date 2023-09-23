@@ -94,10 +94,6 @@ namespace Xharness {
 		iOSExtension = 1 << 3,
 		[Label ("ios-simulator")]
 		iOSSimulator = 1 << 4,
-		[Label ("ios-32")]
-		iOS32 = 1 << 5,
-		[Label ("ios-64")]
-		iOS64 = 1 << 6,
 		[Label ("mac")]
 		Mac = 1 << 7,
 		[Label ("maccatalyst")]
