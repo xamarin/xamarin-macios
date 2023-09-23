@@ -133,6 +133,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.3.0" />
     <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
       <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
       <Name>Touch.Client-iOS</Name>
