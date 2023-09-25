@@ -1,2 +1,0 @@
-!missing-enum-value! INIntentErrorCode native value INIntentErrorNoAppIntent = 10001 not bound
-!missing-enum-value! INIntentErrorCode native value INIntentErrorUnableToCreateAppIntentRepresentation = 10000 not bound

@@ -17,6 +17,13 @@ using System;
 using System.ComponentModel;
 using CoreLocation;
 using UniformTypeIdentifiers;
+#if MONOMAC
+using AppKit;
+using UIViewController = AppKit.NSViewController;
+#else
+using UIKit;
+using NSViewController = Foundation.NSObject;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -796,6 +803,10 @@ namespace HealthKit {
 		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
 		[Export ("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
 		Action<HKWorkoutSession> WorkoutSessionMirroringStartHandler { get; set; }
+
+		[NoTV, NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("authorizationViewControllerPresenter")]
+		UIViewController AuthorizationViewControllerPresenter { get; set; }
 	}
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);

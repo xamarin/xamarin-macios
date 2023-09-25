@@ -358,7 +358,6 @@
 !missing-null-allowed! 'UIKit.UIView UIKit.UITableViewDelegate::GetViewForHeader(UIKit.UITableView,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UITouch::get_View()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIView::get_Superview()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIView UIKit.UIView::HitTest(CoreGraphics.CGPoint,UIKit.UIEvent)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIView::SnapshotView(System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIView::ViewWithTag(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIViewControllerContextTransitioning::GetViewFor(Foundation.NSString)' is missing an [NullAllowed] on return type
