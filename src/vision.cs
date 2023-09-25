@@ -2146,7 +2146,7 @@ namespace Vision {
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("rectangleObservationWithRequestRevision:topLeft:topRight:bottomRight:bottomLeft:")]
-		VNRectangleObservation GetRectangleObservation (nuint requestRevision, CGPoint topLeft, CGPoint topRight, CGPoint bottomRight, CGPoint bottomLeft);
+		VNRectangleObservation FromRectangleObservation (nuint requestRevision, CGPoint topLeft, CGPoint topRight, CGPoint bottomRight, CGPoint bottomLeft);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2345,7 +2345,6 @@ namespace Vision {
 		[return: NullAllowed]
 		NSDictionary<NSString, NSArray<IMLComputeDeviceProtocol>> GetSupportedComputeDevices ([NullAllowed] out NSError error);
 
-		// could this be combined into a Get/Set pair? docs are a bit weird..
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("computeDeviceForComputeStage:")]
 		[return: NullAllowed]
@@ -3446,12 +3445,14 @@ namespace Vision {
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNHumanBodyPoseObservationJointsGroupName[]))]
+		NSString [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNHumanBodyPoseObservationJointName[]))]
+		NSString [] GetSupportedJointNames ([NullAllowed] out NSError error);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -3543,12 +3544,14 @@ namespace Vision {
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNHumanHandPoseObservationJointName[]))]
+		NSString[] GetSupportedJointNames ([NullAllowed] out NSError error);
 
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNHumanHandPoseObservationJointsGroupName[]))]
+		NSString[] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -4291,11 +4294,13 @@ namespace Vision {
 
 		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNAnimalBodyPoseObservationJointName[]))]
+		NSString[] GetSupportedJointNames ([NullAllowed] out NSError error);
 
 		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNAnimalBodyPoseObservationJointsGroupName[]))]
+		NSString[] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNAnimalBodyPoseObservation [] Results { get; }
@@ -4309,11 +4314,13 @@ namespace Vision {
 
 		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNHumanBodyPose3DObservationJointName[]))]
+		NSString[] GetSupportedJointNames ([NullAllowed] out NSError error);
 
 		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
+		[return: BindAs(typeof(VNHumanBodyPose3DObservationJointsGroupName[]))]
+		NSString[] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNHumanBodyPose3DObservation [] Results { get; }
@@ -4356,18 +4363,18 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNRecognizedPoints3DObservation {
 		[Export ("availableKeys", ArgumentSemantic.Copy)]
-		string [] AvailableKeys { get; }
+		NSString [] AvailableKeys { get; }
 
 		[Export ("availableGroupKeys", ArgumentSemantic.Copy)]
-		string [] AvailableGroupKeys { get; }
+		NSString [] AvailableGroupKeys { get; }
 
 		[Export ("recognizedPointForKey:error:")]
 		[return: NullAllowed]
-		VNRecognizedPoint3D GetRecognizedPoint (string pointKey, [NullAllowed] out NSError error);
+		VNRecognizedPoint3D GetRecognizedPoint (NSString pointKey, [NullAllowed] out NSError error);
 
 		[Export ("recognizedPointsForGroupKey:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, VNRecognizedPoint3D> GetRecognizedPoints (string groupKey, [NullAllowed] out NSError error);
+		NSDictionary<NSString, VNRecognizedPoint3D> GetRecognizedPoints (NSString groupKey, [NullAllowed] out NSError error);
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -4426,32 +4433,35 @@ namespace Vision {
 		}
 
 		[Export ("availableJointsGroupNames", ArgumentSemantic.Copy)]
-		string [] AvailableJointsGroupNames { get; }
+		[BindAs(typeof(VNHumanBodyPose3DObservationJointsGroupName[]))]
+		NSString [] AvailableJointsGroupNames { get; }
 
 		[Export ("availableJointNames", ArgumentSemantic.Copy)]
-		string [] AvailableJointNames { get; }
+		[BindAs(typeof(VNHumanBodyPose3DObservationJointName[]))]
+		NSString [] AvailableJointNames { get; }
 
 		[Export ("bodyHeight")]
 		float BodyHeight { get; }
 
 		[Export ("recognizedPointsForJointsGroupName:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, VNHumanBodyRecognizedPoint3D> GetRecognizedPoints (string jointsGroupName, [NullAllowed] out NSError error);
+		NSDictionary<NSString, VNHumanBodyRecognizedPoint3D> GetRecognizedPoints ([BindAs(typeof(VNHumanBodyPose3DObservationJointsGroupName))] NSString jointName, [NullAllowed] out NSError error);
 
 		[Export ("recognizedPointForJointName:error:")]
 		[return: NullAllowed]
-		VNHumanBodyRecognizedPoint3D GetRecognizedPoint (string jointName, [NullAllowed] out NSError error);
+		VNHumanBodyRecognizedPoint3D GetRecognizedPoint ([BindAs(typeof(VNHumanBodyPose3DObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
 
 		[Export ("pointInImageForJointName:error:")]
 		[return: NullAllowed]
-		VNPoint GetPointInImage (string jointName, [NullAllowed] out NSError error);
+		VNPoint GetPointInImage ([BindAs(typeof(VNHumanBodyPose3DObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
 
 		[Export ("parentJointNameForJointName:")]
 		[return: NullAllowed]
-		string GetParentJointName (string jointName);
+		[return: BindAs(typeof(VNHumanBodyPose3DObservationJointName))]
+		NSString GetParentJointName ([BindAs(typeof(VNHumanBodyPose3DObservationJointName))] NSString jointName);
 
 		[Export ("getCameraRelativePosition:forJointName:error:")]
-		bool GetCameraRelativePosition (ref Vector4 modelPositionOut, string jointName, [NullAllowed] out NSError error);
+		bool GetCameraRelativePosition (ref Vector4 modelPositionOut, [BindAs(typeof(VNHumanBodyPose3DObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -4459,17 +4469,19 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNAnimalBodyPoseObservation {
 		[Export ("availableJointNames", ArgumentSemantic.Copy)]
-		string [] AvailableJointNames { get; }
+		[BindAs(typeof(VNAnimalBodyPoseObservationJointName[]))]
+		NSString [] AvailableJointNames { get; }
 
 		[Export ("availableJointGroupNames", ArgumentSemantic.Copy)]
-		string [] AvailableJointGroupNames { get; }
+		[BindAs(typeof(VNAnimalBodyPoseObservationJointsGroupName[]))]
+		NSString [] AvailableJointGroupNames { get; }
 
 		[Export ("recognizedPointForJointName:error:")]
 		[return: NullAllowed]
-		VNRecognizedPoint GetRecognizedPoint (string jointName, [NullAllowed] out NSError error);
+		VNRecognizedPoint GetRecognizedPoint ([BindAs(typeof(VNAnimalBodyPoseObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
 
 		[Export ("recognizedPointsForJointsGroupName:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints (string jointsGroupName, [NullAllowed] out NSError error);
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints ([BindAs(typeof(VNAnimalBodyPoseObservationJointsGroupName))] NSString jointsGroupName, [NullAllowed] out NSError error);
 	}
 }
