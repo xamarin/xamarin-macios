@@ -64,9 +64,9 @@ namespace Vision {
 		TimeStampNotFound,
 		UnsupportedRequest,
 		Timeout,
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		UnsupportedComputeStage,
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		UnsupportedComputeDevice,
 	}
 
@@ -166,8 +166,8 @@ namespace Vision {
 		[Field ("VNBarcodeSymbologyMicroQR")]
 		MicroQR,
 
-		[iOS(17, 0), Mac(14, 0), TV(17, 0), MacCatalyst(17, 0)]
-		[Field("VNBarcodeSymbologyMSIPlessey")]
+		[iOS (17, 0), Mac (14, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Field ("VNBarcodeSymbologyMSIPlessey")]
 		MsiPlessey,
 	}
 
@@ -719,216 +719,215 @@ namespace Vision {
 		ClosedPath,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum VNAnimalBodyPoseObservationJointName {
 		[DefaultEnumValue]
-		[Field(null)]
+		[Field (null)]
 		None,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftEarTop")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftEarTop")]
 		LeftEarTop,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightEarTop")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightEarTop")]
 		RightEarTop,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftEarMiddle")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftEarMiddle")]
 		LeftEarMiddle,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightEarMiddle")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightEarMiddle")]
 		RightEarMiddle,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftEarBottom")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftEarBottom")]
 		LeftEarBottom,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightEarBottom")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightEarBottom")]
 		RightEarBottom,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftEye")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftEye")]
 		LeftEye,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightEye")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightEye")]
 		RightEye,
 
-		[Field("VNAnimalBodyPoseObservationJointNameNose")]
+		[Field ("VNAnimalBodyPoseObservationJointNameNose")]
 		Nose,
 
-		[Field("VNAnimalBodyPoseObservationJointNameNeck")]
+		[Field ("VNAnimalBodyPoseObservationJointNameNeck")]
 		Neck,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftFrontElbow")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftFrontElbow")]
 		LeftFrontElbow,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightFrontElbow")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightFrontElbow")]
 		RightFrontElbow,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftFrontKnee")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftFrontKnee")]
 		LeftFrontKnee,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightFrontKnee")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightFrontKnee")]
 		RightFrontKnee,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftFrontPaw")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftFrontPaw")]
 		LeftFrontPaw,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightFrontPaw")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightFrontPaw")]
 		RightFrontPaw,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftBackElbow")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftBackElbow")]
 		LeftBackElbo,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightBackElbow")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightBackElbow")]
 		RightBackElbow,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftBackKnee")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftBackKnee")]
 		LeftBackKnee,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightBackKnee")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightBackKnee")]
 		RightBackKnee,
 
-		[Field("VNAnimalBodyPoseObservationJointNameLeftBackPaw")]
+		[Field ("VNAnimalBodyPoseObservationJointNameLeftBackPaw")]
 		LeftBackPaw,
 
-		[Field("VNAnimalBodyPoseObservationJointNameRightBackPaw")]
+		[Field ("VNAnimalBodyPoseObservationJointNameRightBackPaw")]
 		RightBackPaw,
 
-		[Field("VNAnimalBodyPoseObservationJointNameTailTop")]
+		[Field ("VNAnimalBodyPoseObservationJointNameTailTop")]
 		TailTop,
 
-		[Field("VNAnimalBodyPoseObservationJointNameTailMiddle")]
+		[Field ("VNAnimalBodyPoseObservationJointNameTailMiddle")]
 		TailMiddle,
 
-		[Field("VNAnimalBodyPoseObservationJointNameTailBottom")]
+		[Field ("VNAnimalBodyPoseObservationJointNameTailBottom")]
 		TailBottom,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum VNAnimalBodyPoseObservationJointsGroupName {
 		[DefaultEnumValue]
-		[Field(null)]
+		[Field (null)]
 		None,
 
-		[Field("VNAnimalBodyPoseObservationJointsGroupNameHead")]
+		[Field ("VNAnimalBodyPoseObservationJointsGroupNameHead")]
 		Head,
 
-		[Field("VNAnimalBodyPoseObservationJointsGroupNameTrunk")]
+		[Field ("VNAnimalBodyPoseObservationJointsGroupNameTrunk")]
 		Trunk,
 
-		[Field("VNAnimalBodyPoseObservationJointsGroupNameForelegs")]
+		[Field ("VNAnimalBodyPoseObservationJointsGroupNameForelegs")]
 		Forelegs,
 
-		[Field("VNAnimalBodyPoseObservationJointsGroupNameHindlegs")]
+		[Field ("VNAnimalBodyPoseObservationJointsGroupNameHindlegs")]
 		Hindlegs,
 
-		[Field("VNAnimalBodyPoseObservationJointsGroupNameTail")]
+		[Field ("VNAnimalBodyPoseObservationJointsGroupNameTail")]
 		Tail,
 
-		[Field("VNAnimalBodyPoseObservationJointsGroupNameAll")]
+		[Field ("VNAnimalBodyPoseObservationJointsGroupNameAll")]
 		All,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum VNHumanBodyPose3DObservationJointName {
 		[DefaultEnumValue]
-		[Field(null)]
+		[Field (null)]
 		None,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRoot")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRoot")]
 		Root,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRightHip")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRightHip")]
 		RightHip,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRightKnee")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRightKnee")]
 		RightKnee,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRightAnkle")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRightAnkle")]
 		RightAnkle,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRightShoulder")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRightShoulder")]
 		RightShoulder,
 
-		[Field("VNHumanBodyPose3DObservationJointNameLeftHip")]
+		[Field ("VNHumanBodyPose3DObservationJointNameLeftHip")]
 		LeftHip,
 
-		[Field("VNHumanBodyPose3DObservationJointNameLeftKnee")]
+		[Field ("VNHumanBodyPose3DObservationJointNameLeftKnee")]
 		LeftKnee,
 
-		[Field("VNHumanBodyPose3DObservationJointNameLeftAnkle")]
+		[Field ("VNHumanBodyPose3DObservationJointNameLeftAnkle")]
 		LeftAnkle,
 
-		[Field("VNHumanBodyPose3DObservationJointNameSpine")]
+		[Field ("VNHumanBodyPose3DObservationJointNameSpine")]
 		Spine,
 
-		[Field("VNHumanBodyPose3DObservationJointNameCenterShoulder")]
+		[Field ("VNHumanBodyPose3DObservationJointNameCenterShoulder")]
 		CenterShoulder,
 
-		[Field("VNHumanBodyPose3DObservationJointNameCenterHead")]
+		[Field ("VNHumanBodyPose3DObservationJointNameCenterHead")]
 		CenterHead,
 
-		[Field("VNHumanBodyPose3DObservationJointNameTopHead")]
+		[Field ("VNHumanBodyPose3DObservationJointNameTopHead")]
 		TopHead,
 
-		[Field("VNHumanBodyPose3DObservationJointNameLeftShoulder")]
+		[Field ("VNHumanBodyPose3DObservationJointNameLeftShoulder")]
 		LeftShoulder,
 
-		[Field("VNHumanBodyPose3DObservationJointNameLeftElbow")]
+		[Field ("VNHumanBodyPose3DObservationJointNameLeftElbow")]
 		LeftElbow,
 
-		[Field("VNHumanBodyPose3DObservationJointNameLeftWrist")]
+		[Field ("VNHumanBodyPose3DObservationJointNameLeftWrist")]
 		LeftWrist,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRightElbow")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRightElbow")]
 		RightElbow,
 
-		[Field("VNHumanBodyPose3DObservationJointNameRightWrist")]
+		[Field ("VNHumanBodyPose3DObservationJointNameRightWrist")]
 		RightWrist,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum VNHumanBodyPose3DObservationJointsGroupName {
 		[DefaultEnumValue]
-		[Field(null)]
+		[Field (null)]
 		None,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameHead")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameHead")]
 		Head,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameTorso")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameTorso")]
 		Torso,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameLeftArm")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameLeftArm")]
 		LeftArm,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameRightArm")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameRightArm")]
 		RightArm,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameLeftLeg")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameLeftLeg")]
 		LeftLeg,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameRightLeg")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameRightLeg")]
 		RightLeg,
 
-		[Field("VNHumanBodyPose3DObservationJointsGroupNameAll")]
+		[Field ("VNHumanBodyPose3DObservationJointsGroupNameAll")]
 		All,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	public enum VNComputeStage {
 		[DefaultEnumValue]
-		[Field(null)]
+		[Field (null)]
 		None,
 
-		[Field("VNComputeStageMain")]
+		[Field ("VNComputeStageMain")]
 		Main,
 
-		[Field("VNComputeStagePostProcessing")]
+		[Field ("VNComputeStagePostProcessing")]
 		PostProcessing,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum VNBarcodeCompositeType : long
-	{
+	public enum VNBarcodeCompositeType : long {
 		None = 0,
 		Linked,
 		Gs1TypeA,
@@ -936,18 +935,16 @@ namespace Vision {
 		Gs1TypeC,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum VNHumanBodyPose3DObservationHeightEstimation : long
-	{
+	public enum VNHumanBodyPose3DObservationHeightEstimation : long {
 		Reference = 0,
 		Measured,
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum VNTrackOpticalFlowRequestComputationAccuracy : ulong
-	{
+	public enum VNTrackOpticalFlowRequestComputationAccuracy : ulong {
 		Low = 0,
 		Medium,
 		High,
@@ -1116,8 +1113,8 @@ namespace Vision {
 		[Export ("currentRevision")]
 		VNDetectBarcodesRequestRevision CurrentRevision { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("coalesceCompositeSymbologies")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("coalesceCompositeSymbologies")]
 		bool CoalesceCompositeSymbologies { get; set; }
 	}
 
@@ -2113,10 +2110,10 @@ namespace Vision {
 	[BaseType (typeof (VNDetectedObjectObservation))]
 	interface VNRectangleObservation {
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
@@ -2146,9 +2143,9 @@ namespace Vision {
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNRectangleObservation FromBoundingBox (VNRectangleObservationRequestRevision requestRevision, CGRect boundingBox);
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
-		[Export("rectangleObservationWithRequestRevision:topLeft:topRight:bottomRight:bottomLeft:")]
+		[Export ("rectangleObservationWithRequestRevision:topLeft:topRight:bottomRight:bottomLeft:")]
 		VNRectangleObservation GetRectangleObservation (nuint requestRevision, CGPoint topLeft, CGPoint topRight, CGPoint bottomRight, CGPoint bottomLeft);
 	}
 
@@ -2201,28 +2198,28 @@ namespace Vision {
 		[NullAllowed, Export ("payloadStringValue")]
 		string PayloadStringValue { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[NullAllowed, Export("payloadData", ArgumentSemantic.Copy)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("payloadData", ArgumentSemantic.Copy)]
 		NSData PayloadData { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("isGS1DataCarrier")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("isGS1DataCarrier")]
 		bool IsGS1DataCarrier { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("isColorInverted")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("isColorInverted")]
 		bool IsColorInverted { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("supplementalCompositeType")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supplementalCompositeType")]
 		VNBarcodeCompositeType SupplementalCompositeType { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[NullAllowed, Export("supplementalPayloadString")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("supplementalPayloadString")]
 		string SupplementalPayloadString { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[NullAllowed, Export("supplementalPayloadData", ArgumentSemantic.Copy)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("supplementalPayloadData", ArgumentSemantic.Copy)]
 		NSData SupplementalPayloadData { get; }
 	}
 
@@ -2305,7 +2302,7 @@ namespace Vision {
 
 		[Deprecated (PlatformName.MacOSX, 14, 0)]
 		[Deprecated (PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
@@ -2343,20 +2340,20 @@ namespace Vision {
 		//[Export ("currentRevision")]
 		//VNRequestRevision CurrentRevision { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("supportedComputeStageDevicesAndReturnError:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedComputeStageDevicesAndReturnError:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, NSArray<IMLComputeDeviceProtocol>> GetSupportedComputeDevices([NullAllowed] out NSError error);
+		NSDictionary<NSString, NSArray<IMLComputeDeviceProtocol>> GetSupportedComputeDevices ([NullAllowed] out NSError error);
 
 		// could this be combined into a Get/Set pair? docs are a bit weird..
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("computeDeviceForComputeStage:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("computeDeviceForComputeStage:")]
 		[return: NullAllowed]
-		IMLComputeDeviceProtocol GetComputeDevice(string computeStage);
+		IMLComputeDeviceProtocol GetComputeDevice (string computeStage);
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("setComputeDevice:forComputeStage:")]
-		void SetComputeDevice([NullAllowed] IMLComputeDeviceProtocol computeDevice, string computeStage);
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("setComputeDevice:forComputeStage:")]
+		void SetComputeDevice ([NullAllowed] IMLComputeDeviceProtocol computeDevice, string computeStage);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2488,13 +2485,13 @@ namespace Vision {
 		[Export ("performRequests:error:")]
 		bool Perform (VNRequest [] requests, out NSError error);
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("initWithCVPixelBuffer:depthData:orientation:options:")]
-		NativeHandle Constructor(CVPixelBuffer pixelBuffer, AVDepthData depthData, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithCVPixelBuffer:depthData:orientation:options:")]
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, AVDepthData depthData, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("initWithCMSampleBuffer:depthData:orientation:options:")]
-		NativeHandle Constructor(CMSampleBuffer sampleBuffer, AVDepthData depthData, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithCMSampleBuffer:depthData:orientation:options:")]
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, AVDepthData depthData, CGImagePropertyOrientation orientation, NSDictionary<NSString, NSObject> options);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2832,9 +2829,9 @@ namespace Vision {
 		[Export ("lastFrame")]
 		bool LastFrame { [Bind ("isLastFrame")] get; set; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("supportedNumberOfTrackersAndReturnError:")]
-		nuint GetSupportedNumberOfTrackers([NullAllowed] out NSError error);
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedNumberOfTrackersAndReturnError:")]
+		nuint GetSupportedNumberOfTrackers ([NullAllowed] out NSError error);
 	}
 
 	[TV (12, 0), iOS (12, 0)]
@@ -3396,20 +3393,20 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNDetectHumanBodyPoseRequest {
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Static]
 		[Export ("supportedJointNamesForRevision:error:")]
 		[return: BindAs (typeof (VNHumanBodyPoseObservationJointName []))]
 		[return: NullAllowed]
 		NSString [] GetSupportedJointNames (VNDetectHumanBodyPoseRequestRevision revision, [NullAllowed] out NSError error);
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Static]
 		[Export ("supportedJointsGroupNamesForRevision:error:")]
 		[return: NullAllowed]
@@ -3446,15 +3443,15 @@ namespace Vision {
 		[Export ("currentRevision")]
 		VNDetectHumanBodyPoseRequestRevision CurrentRevision { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("supportedJointsGroupNamesAndReturnError:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointsGroupNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("supportedJointNamesAndReturnError:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -3490,20 +3487,20 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNDetectHumanHandPoseRequest {
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Static]
 		[Export ("supportedJointNamesForRevision:error:")]
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNHumanHandPoseObservationJointName []))]
 		NSString [] GetSupportedJointNames (VNDetectHumanHandPoseRequestRevision revision, [NullAllowed] out NSError error);
 
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Static]
 		[Export ("supportedJointsGroupNamesForRevision:error:")]
 		[return: NullAllowed]
@@ -3543,15 +3540,15 @@ namespace Vision {
 		[Export ("currentRevision")]
 		VNDetectHumanHandPoseRequestRevision CurrentRevision { get; }
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-		[Export("supportedJointNamesAndReturnError:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
 
-		[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("supportedJointsGroupNamesAndReturnError:")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointsGroupNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -4224,256 +4221,255 @@ namespace Vision {
 		VNRectangleObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNImageBasedRequest))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
 	interface VNGenerateForegroundInstanceMaskRequest {
-		[Export("initWithCompletionHandler:")]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNInstanceMaskObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNInstanceMaskObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNImageBasedRequest))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNImageBasedRequest))]
 	[DisableDefaultCtor]
 	interface VNGeneratePersonInstanceMaskRequest {
-		[Export("initWithCompletionHandler:")]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNInstanceMaskObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNInstanceMaskObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNStatefulRequest))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNStatefulRequest))]
 	interface VNTrackTranslationalImageRegistrationRequest {
-		[Export("initWithCompletionHandler:")]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNImageTranslationAlignmentObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNImageTranslationAlignmentObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNStatefulRequest))]
-	interface VNTrackHomographicImageRegistrationRequest
-	{
-		[Export("initWithCompletionHandler:")]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNStatefulRequest))]
+	interface VNTrackHomographicImageRegistrationRequest {
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNImageHomographicAlignmentObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNImageHomographicAlignmentObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNStatefulRequest))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNStatefulRequest))]
 	interface VNTrackOpticalFlowRequest {
-		[Export("initWithCompletionHandler:")]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[Export("computationAccuracy", ArgumentSemantic.Assign)]
+		[Export ("computationAccuracy", ArgumentSemantic.Assign)]
 		VNTrackOpticalFlowRequestComputationAccuracy ComputationAccuracy { get; set; }
 
-		[Export("outputPixelFormat")]
+		[Export ("outputPixelFormat")]
 		uint OutputPixelFormat { get; set; }
 
-		[Export("keepNetworkOutput")]
+		[Export ("keepNetworkOutput")]
 		bool KeepNetworkOutput { get; set; }
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNPixelBufferObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNPixelBufferObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNImageBasedRequest))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNImageBasedRequest))]
 	interface VNDetectAnimalBodyPoseRequest {
-		[Export("initWithCompletionHandler:")]
+		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[Export("supportedJointNamesAndReturnError:")]
+		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
 
-		[Export("supportedJointsGroupNamesAndReturnError:")]
+		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointsGroupNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNAnimalBodyPoseObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNAnimalBodyPoseObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNStatefulRequest))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNStatefulRequest))]
 	interface VNDetectHumanBodyPose3DRequest {
-		[Export("initWithCompletionHandler:")]
-		NativeHandle Constructor([NullAllowed] VNRequestCompletionHandler completionHandler);
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
-		[Export("supportedJointNamesAndReturnError:")]
+		[Export ("supportedJointNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointNames ([NullAllowed] out NSError error);
 
-		[Export("supportedJointsGroupNamesAndReturnError:")]
+		[Export ("supportedJointsGroupNamesAndReturnError:")]
 		[return: NullAllowed]
-		string[] GetSupportedJointsGroupNames([NullAllowed] out NSError error);
+		string [] GetSupportedJointsGroupNames ([NullAllowed] out NSError error);
 
-		[NullAllowed, Export("results", ArgumentSemantic.Copy)]
-		VNHumanBodyPose3DObservation[] Results { get; }
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNHumanBodyPose3DObservation [] Results { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(NSObject))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VNPoint3D : NSCopying, NSSecureCoding {
-		[Export("initWithPosition:")]
-		[MarshalDirective(NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("initWithPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		NativeHandle Constructor(Vector4 position);
+		NativeHandle Constructor (Vector4 position);
 
-		[Export("position")]
+		[Export ("position")]
 		Vector4 Position {
-			[MarshalDirective(NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get; 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
 		}
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNPoint3D))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNPoint3D))]
 	[DisableDefaultCtor]
 	interface VNRecognizedPoint3D {
-		[Export("initWithPosition:")]
-		[MarshalDirective(NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("initWithPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		NativeHandle Constructor(Vector4 position);
+		NativeHandle Constructor (Vector4 position);
 
-		[Export("identifier")]
+		[Export ("identifier")]
 		string Identifier { get; }
 
-		[Field("VNRecognizedPoint3DGroupKeyAll")]
+		[Field ("VNRecognizedPoint3DGroupKeyAll")]
 		NSString GroupKeyAll { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNObservation))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNObservation))]
 	[DisableDefaultCtor]
 	interface VNRecognizedPoints3DObservation {
-		[Export("availableKeys", ArgumentSemantic.Copy)]
-		string[] AvailableKeys { get; }
+		[Export ("availableKeys", ArgumentSemantic.Copy)]
+		string [] AvailableKeys { get; }
 
-		[Export("availableGroupKeys", ArgumentSemantic.Copy)]
-		string[] AvailableGroupKeys { get; }
+		[Export ("availableGroupKeys", ArgumentSemantic.Copy)]
+		string [] AvailableGroupKeys { get; }
 
-		[Export("recognizedPointForKey:error:")]
+		[Export ("recognizedPointForKey:error:")]
 		[return: NullAllowed]
-		VNRecognizedPoint3D GetRecognizedPoint(string pointKey, [NullAllowed] out NSError error);
+		VNRecognizedPoint3D GetRecognizedPoint (string pointKey, [NullAllowed] out NSError error);
 
-		[Export("recognizedPointsForGroupKey:error:")]
+		[Export ("recognizedPointsForGroupKey:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, VNRecognizedPoint3D> GetRecognizedPoints(string groupKey, [NullAllowed] out NSError error);
+		NSDictionary<NSString, VNRecognizedPoint3D> GetRecognizedPoints (string groupKey, [NullAllowed] out NSError error);
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNRecognizedPoint3D))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNRecognizedPoint3D))]
 	[DisableDefaultCtor]
 	interface VNHumanBodyRecognizedPoint3D {
-		[Export("initWithPosition:")]
-		[MarshalDirective(NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("initWithPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		NativeHandle Constructor(Vector4 position);
+		NativeHandle Constructor (Vector4 position);
 
-		[Export("localPosition")]
+		[Export ("localPosition")]
 		Vector4 LocalPosition {
-			[MarshalDirective(NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
 
-		[Export("parentJoint")]
+		[Export ("parentJoint")]
 		string ParentJoint { get; }
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNObservation))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNObservation))]
 	[DisableDefaultCtor]
 	interface VNInstanceMaskObservation {
-		[Export("instanceMask")]
+		[Export ("instanceMask")]
 		CVPixelBuffer InstanceMask { get; }
 
-		[Export("allInstances", ArgumentSemantic.Copy)]
+		[Export ("allInstances", ArgumentSemantic.Copy)]
 		NSIndexSet AllInstances { get; }
 
-		[Export("generateMaskForInstances:error:")]
+		[Export ("generateMaskForInstances:error:")]
 		[return: NullAllowed]
-		CVPixelBuffer GenerateMask(NSIndexSet instances, [NullAllowed] out NSError error);
+		CVPixelBuffer GenerateMask (NSIndexSet instances, [NullAllowed] out NSError error);
 
-		[Export("generateMaskedImageOfInstances:fromRequestHandler:croppedToInstancesExtent:error:")]
+		[Export ("generateMaskedImageOfInstances:fromRequestHandler:croppedToInstancesExtent:error:")]
 		[return: NullAllowed]
-		CVPixelBuffer GenerateMaskedImage(NSIndexSet instances, VNImageRequestHandler requestHandler, bool cropResult, [NullAllowed] out NSError error);
+		CVPixelBuffer GenerateMaskedImage (NSIndexSet instances, VNImageRequestHandler requestHandler, bool cropResult, [NullAllowed] out NSError error);
 
-		[Export("generateScaledMaskForImageForInstances:fromRequestHandler:error:")]
+		[Export ("generateScaledMaskForImageForInstances:fromRequestHandler:error:")]
 		[return: NullAllowed]
-		CVPixelBuffer GenerateScaledMask(NSIndexSet instances, VNImageRequestHandler requestHandler, [NullAllowed] out NSError error);
+		CVPixelBuffer GenerateScaledMask (NSIndexSet instances, VNImageRequestHandler requestHandler, [NullAllowed] out NSError error);
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNRecognizedPoints3DObservation))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNRecognizedPoints3DObservation))]
 	[DisableDefaultCtor]
 	interface VNHumanBodyPose3DObservation {
-		[Export("heightEstimation")]
+		[Export ("heightEstimation")]
 		VNHumanBodyPose3DObservationHeightEstimation HeightEstimation { get; }
 
-		[Export("cameraOriginMatrix")]
+		[Export ("cameraOriginMatrix")]
 		Vector4 CameraOriginMatrix {
-			[MarshalDirective(NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
 
-		[Export("availableJointsGroupNames", ArgumentSemantic.Copy)]
-		string[] AvailableJointsGroupNames { get; }
+		[Export ("availableJointsGroupNames", ArgumentSemantic.Copy)]
+		string [] AvailableJointsGroupNames { get; }
 
-		[Export("availableJointNames", ArgumentSemantic.Copy)]
-		string[] AvailableJointNames { get; }
+		[Export ("availableJointNames", ArgumentSemantic.Copy)]
+		string [] AvailableJointNames { get; }
 
-		[Export("bodyHeight")]
+		[Export ("bodyHeight")]
 		float BodyHeight { get; }
 
-		[Export("recognizedPointsForJointsGroupName:error:")]
+		[Export ("recognizedPointsForJointsGroupName:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, VNHumanBodyRecognizedPoint3D> GetRecognizedPoints(string jointsGroupName, [NullAllowed] out NSError error);
+		NSDictionary<NSString, VNHumanBodyRecognizedPoint3D> GetRecognizedPoints (string jointsGroupName, [NullAllowed] out NSError error);
 
-		[Export("recognizedPointForJointName:error:")]
+		[Export ("recognizedPointForJointName:error:")]
 		[return: NullAllowed]
-		VNHumanBodyRecognizedPoint3D GetRecognizedPoint(string jointName, [NullAllowed] out NSError error);
+		VNHumanBodyRecognizedPoint3D GetRecognizedPoint (string jointName, [NullAllowed] out NSError error);
 
-		[Export("pointInImageForJointName:error:")]
+		[Export ("pointInImageForJointName:error:")]
 		[return: NullAllowed]
-		VNPoint GetPointInImage(string jointName, [NullAllowed] out NSError error);
+		VNPoint GetPointInImage (string jointName, [NullAllowed] out NSError error);
 
-		[Export("parentJointNameForJointName:")]
+		[Export ("parentJointNameForJointName:")]
 		[return: NullAllowed]
-		string GetParentJointName(string jointName);
+		string GetParentJointName (string jointName);
 
-		[Export("getCameraRelativePosition:forJointName:error:")]
-		bool GetCameraRelativePosition(ref Vector4 modelPositionOut, string jointName, [NullAllowed] out NSError error);
+		[Export ("getCameraRelativePosition:forJointName:error:")]
+		bool GetCameraRelativePosition (ref Vector4 modelPositionOut, string jointName, [NullAllowed] out NSError error);
 	}
 
-	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
-	[BaseType(typeof(VNRecognizedPointsObservation))]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (VNRecognizedPointsObservation))]
 	[DisableDefaultCtor]
 	interface VNAnimalBodyPoseObservation {
-		[Export("availableJointNames", ArgumentSemantic.Copy)]
-		string[] AvailableJointNames { get; }
+		[Export ("availableJointNames", ArgumentSemantic.Copy)]
+		string [] AvailableJointNames { get; }
 
-		[Export("availableJointGroupNames", ArgumentSemantic.Copy)]
-		string[] AvailableJointGroupNames { get; }
+		[Export ("availableJointGroupNames", ArgumentSemantic.Copy)]
+		string [] AvailableJointGroupNames { get; }
 
-		[Export("recognizedPointForJointName:error:")]
+		[Export ("recognizedPointForJointName:error:")]
 		[return: NullAllowed]
-		VNRecognizedPoint GetRecognizedPoint(string jointName, [NullAllowed] out NSError error);
+		VNRecognizedPoint GetRecognizedPoint (string jointName, [NullAllowed] out NSError error);
 
-		[Export("recognizedPointsForJointsGroupName:error:")]
+		[Export ("recognizedPointsForJointsGroupName:error:")]
 		[return: NullAllowed]
-		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints(string jointsGroupName, [NullAllowed] out NSError error);
+		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints (string jointsGroupName, [NullAllowed] out NSError error);
 	}
 }
