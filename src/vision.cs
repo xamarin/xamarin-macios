@@ -23,13 +23,13 @@ using AVFoundation;
 #if NET
 using Vector2 = global::System.Numerics.Vector2;
 using Vector3 = global::System.Numerics.Vector3;
-using Vector4 = global::System.Numerics.Vector4;
 using Matrix3 = global::CoreGraphics.NMatrix3;
+using Matrix4 = global::CoreGraphics.NMatrix4;
 #else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
-using Vector4 = global::OpenTK.Vector4;
 using Matrix3 = global::OpenTK.NMatrix3;
+using Matrix4 = global::OpenTK.NMatrix4;
 #endif
 
 #if !NET
@@ -202,6 +202,12 @@ namespace Vision {
 		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		Two = 2,
+		[TV(16, 0), Mac(13, 0), iOS(16, 0)]
+		[MacCatalyst(16, 0)]
+		Three = 3,
+		[TV(17, 0), Mac(14, 0), iOS(17, 0)]
+		[MacCatalyst(17, 0)]
+		Four = 4,
 	}
 
 	[TV (12, 0), iOS (12, 0)]
@@ -346,6 +352,9 @@ namespace Vision {
 	enum VNClassifyImageRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV(17, 0), Mac(14, 0), iOS(17, 0)]
+		[MacCatalyst(17, 0)]
+		Two = 2,
 	}
 
 	[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -363,6 +372,9 @@ namespace Vision {
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Two = 2,
+		[TV(17, 0), Mac(14, 0), iOS(17, 0)]
+		[MacCatalyst(17, 0)]
+		Three = 3,
 	}
 
 	[TV (13, 0), iOS (13, 0)]
@@ -390,6 +402,9 @@ namespace Vision {
 	enum VNGenerateAttentionBasedSaliencyImageRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV(17, 0), Mac(14, 0), iOS(17, 0)]
+		[MacCatalyst(17, 0)]
+		Two = 2,
 	}
 
 	[TV (13, 0), iOS (13, 0)]
@@ -398,6 +413,9 @@ namespace Vision {
 	enum VNGenerateImageFeaturePrintRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV(17, 0), Mac(14, 0), iOS(17, 0)]
+		[MacCatalyst(17, 0)]
+		Two = 2,
 	}
 
 	[TV (13, 0), iOS (13, 0)]
@@ -406,6 +424,9 @@ namespace Vision {
 	enum VNGenerateObjectnessBasedSaliencyImageRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV(17, 0), Mac(14, 0), iOS(17, 0)]
+		[MacCatalyst(17, 0)]
+		Two = 2,
 	}
 
 	[TV (13, 0), iOS (13, 0)]
@@ -507,6 +528,34 @@ namespace Vision {
 	[Native]
 	enum VNStatefulRequestRevision : ulong {
 		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Native]
+	enum VNDetectHumanBodyPose3DRequestRevision : ulong
+	{
+		One = 1,
+	}
+
+	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Native]
+	enum VNTrackHomographicImageRegistrationRequestRevision : ulong
+	{
+		One = 1,
+	}
+
+	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Native]
+	enum VNTrackTranslationalImageRegistrationRequestRevision : ulong
+	{
+		One = 1,
+	}
+
+	[TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+	[Native]
+	enum VNTrackOpticalFlowRequestRevision : ulong
+	{
 		One = 1,
 	}
 
@@ -4331,10 +4380,10 @@ namespace Vision {
 		[Export ("initWithPosition:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (Vector4 position);
+		NativeHandle Constructor (Matrix4 position);
 
 		[Export ("position")]
-		Vector4 Position {
+		Matrix4 Position {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
@@ -4347,7 +4396,7 @@ namespace Vision {
 		[Export ("initWithPosition:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (Vector4 position);
+		NativeHandle Constructor (Matrix4 position);
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -4382,10 +4431,10 @@ namespace Vision {
 		[Export ("initWithPosition:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (Vector4 position);
+		NativeHandle Constructor (Matrix4 position);
 
 		[Export ("localPosition")]
-		Vector4 LocalPosition {
+		Matrix4 LocalPosition {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
@@ -4425,7 +4474,7 @@ namespace Vision {
 		VNHumanBodyPose3DObservationHeightEstimation HeightEstimation { get; }
 
 		[Export ("cameraOriginMatrix")]
-		Vector4 CameraOriginMatrix {
+		Matrix4 CameraOriginMatrix {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
@@ -4457,6 +4506,10 @@ namespace Vision {
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNHumanBodyPose3DObservationJointName))]
 		NSString GetParentJointName ([BindAs (typeof (VNHumanBodyPose3DObservationJointName))] NSString jointName);
+
+		[Export ("getCameraRelativePosition:forJointName:error:")]
+		// MarshalDirective not needed bc Matrix4 param is passed by reference as opposed to by value as typically done
+		bool GetCameraRelativePosition (out Matrix4 modelPositionOut, [BindAs (typeof (VNHumanBodyPose3DObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]

@@ -43,6 +43,10 @@
 !unknown-native-enum! VNStatefulRequestRevision bound
 !unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
 !unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
+!unknown-native-enum! VNDetectHumanBodyPose3DRequestRevision bound
+!unknown-native-enum! VNTrackHomographicImageRegistrationRequestRevision bound
+!unknown-native-enum! VNTrackOpticalFlowRequestRevision bound
+!unknown-native-enum! VNTrackTranslationalImageRegistrationRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -54,6 +58,8 @@
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
 
-# API requires new marshal directive which needs to be manually tested (ideally via sample)
-!missing-selector! VNHumanBodyPose3DObservation::getCameraRelativePosition:forJointName:error: not bound
+# Xcode 15
+# Since the parameter is passed by reference rather than value, the marshal directive is not necessary
+# validated by VisionAnalyzer sample: https://github.com/haritha-mohan/vision-analyzer
+!wrong-simd-missing-marshaldirective! System.Boolean Vision.VNHumanBodyPose3DObservation::GetCameraRelativePosition(CoreGraphics.NMatrix4&,Vision.VNHumanBodyPose3DObservationJointName,Foundation.NSError&): simd type: simd_float4x4
 
