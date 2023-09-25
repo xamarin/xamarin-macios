@@ -142,7 +142,7 @@ namespace MessageUI {
 		NSString AttachmentURL { get; }
 
 		[Async]
-		[iOS (17,0), NoMacCatalyst, NoWatch, NoTV]
+		[iOS (17, 0), NoMacCatalyst, NoWatch, NoTV]
 		[Export ("setUPIVerificationCodeSendCompletion:")]
 		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}
