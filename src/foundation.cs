@@ -6266,7 +6266,7 @@ namespace Foundation {
 		[Static]
 		[Export ("URLWithString:encodingInvalidCharacters:")]
 		[return: NullAllowed]
-		NSUrl FromStringEncoded (string url, bool encodingInvalidCharacters);
+		NSUrl FromString (string url, bool encodingInvalidCharacters);
 
 		[Export ("absoluteString")]
 		[NullAllowed]
@@ -7193,7 +7193,7 @@ namespace Foundation {
 		[Static]
 		[Export ("componentsWithString:encodingInvalidCharacters:")]
 		[return: NullAllowed]
-		NSUrlComponents FromStringEncoded (string url, bool encodingInvalidCharacters);
+		NSUrlComponents FromString (string url, bool encodingInvalidCharacters);
 
 		[Export ("URL")]
 		NSUrl Url { get; }

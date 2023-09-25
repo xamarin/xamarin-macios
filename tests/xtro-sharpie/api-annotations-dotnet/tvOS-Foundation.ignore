@@ -12,17 +12,3 @@
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
-
-# we cannot deal with vargs
-!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:context: not bound
-!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options:context: not bound
-!missing-selector! NSAttributedString::initWithFormat:options:locale:context: not bound
-!missing-selector! NSAttributedString::initWithFormat:options:locale:context:arguments: not bound
-
-# we already expose static methods and we do not need the construtors
-!missing-selector! NSURL::initWithString:encodingInvalidCharacters: not bound
-!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
-
-# use with the vargs api and therefore no needed
-!missing-field! NSInflectionConceptsKey not bound
-

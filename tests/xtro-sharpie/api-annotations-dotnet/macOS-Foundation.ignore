@@ -568,19 +568,6 @@
 !missing-selector! NSXMLDTDNode::init not bound
 !missing-selector! NSXMLNode::detach not bound
 
-# we cannot deal with vargs
-!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:context: not bound
-!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options:context: not bound
-!missing-selector! NSAttributedString::initWithFormat:options:locale:context: not bound
-!missing-selector! NSAttributedString::initWithFormat:options:locale:context:arguments: not bound
-
-# we already expose static methods and we do not need the construtors
-!missing-selector! NSURL::initWithString:encodingInvalidCharacters: not bound
-!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
-
-# use with the vargs api and therefore no needed
-!missing-field! NSInflectionConceptsKey not bound
-
 ## these are implemented in a way that xtro doesn't see
 !missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
 !missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound
