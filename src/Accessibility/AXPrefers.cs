@@ -14,8 +14,9 @@ namespace Accessibility {
 
 		[DllImport (Constants.AccessibilityLibrary)]
 		static extern byte AXPrefersHorizontalTextLayout ();
-		
-		public static bool HorizontalTextEnabled () {
+
+		public static bool HorizontalTextEnabled ()
+		{
 			return AXPrefersHorizontalTextLayout () != 0;
 		}
 
