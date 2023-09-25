@@ -23,7 +23,6 @@ using CoreLocation;
 using CoreMedia;
 using CoreMidi;
 using CoreMotion;
-using CoreServices;
 using CoreSpotlight;
 using CoreTelephony;
 using CoreText;
@@ -61,7 +60,6 @@ using NewsstandKit;
 using NotificationCenter;
 using ObjCRuntime;
 using OpenGLES;
-using OpenTK;
 using PassKit;
 using Photos;
 using PhotosUI;
@@ -86,7 +84,6 @@ using UserNotificationsUI;
 using VideoSubscriberAccount;
 using VideoToolbox;
 using WatchConnectivity;
-using WatchKit;
 using WebKit;
 
 namespace Test {
@@ -225,7 +222,6 @@ namespace Test {
 	[Protocol] interface C133 : IUIAppearance { }
 	[Protocol] interface C134 : IUIAppearanceContainer { }
 	[Protocol] interface C135 : INSKeyedArchiverDelegate { }
-	[Protocol] interface C136 : IINSpeakable { }
 	[Protocol] interface C137 : IAUAudioUnitFactory { }
 	[Protocol] interface C138 : INSKeyedUnarchiverDelegate { }
 	[Protocol] interface C139 : IINStartAudioCallIntentHandling { }
@@ -364,7 +360,6 @@ namespace Test {
 	[Protocol] interface C272 : INSFetchRequestResult { }
 	[Protocol] interface C273 : ICSSearchableIndexDelegate { }
 	[Protocol] interface C274 : IUIViewControllerTransitionCoordinator { }
-	[Protocol] interface C275 : INSURLAuthenticationChallengeSender { }
 	[Protocol] interface C276 : IUIViewControllerTransitionCoordinatorContext { }
 	[Protocol] interface C277 : IUIViewControllerTransitioningDelegate { }
 	[Protocol] interface C278 : IUIFocusEnvironment { }
@@ -388,7 +383,6 @@ namespace Test {
 	[Protocol] interface C298 : IGKAchievementViewControllerDelegate { }
 	[Protocol] interface C299 : IGKTurnBasedEventHandlerDelegate { }
 	[Protocol] interface C300 : IUIGestureRecognizerDelegate { }
-	[Protocol] interface C301 : IGKPeerPickerControllerDelegate { }
 	[Protocol] interface C302 : IGKGameSessionEventListener { }
 	[Protocol] interface C303 : IGKChallengeEventHandlerDelegate { }
 	[Protocol] interface C304 : IGKChallengeListener { }
@@ -439,7 +433,6 @@ namespace Test {
 	[Protocol] interface C349 : IUNNotificationContentExtension { }
 	[Protocol] interface C350 : IWKUIDelegate { }
 	[Protocol] interface C351 : IUINavigationControllerDelegate { }
-	[Protocol] interface C352 : IWKImageAnimatable { }
 	[Protocol] interface C353 : IUIObjectRestoration { }
 	[Protocol] interface C354 : IUIPickerViewDataSource { }
 	[Protocol] interface C355 : IVSAccountManagerDelegate { }
@@ -585,7 +578,6 @@ namespace Test {
 	[Protocol][BaseType (typeof (NSObject))] interface M133 : IUIAppearance { }
 	[Protocol][BaseType (typeof (NSObject))] interface M134 : IUIAppearanceContainer { }
 	[Protocol][BaseType (typeof (NSObject))] interface M135 : INSKeyedArchiverDelegate { }
-	[Protocol][BaseType (typeof (NSObject))] interface M136 : IINSpeakable { }
 	[Protocol][BaseType (typeof (NSObject))] interface M137 : IAUAudioUnitFactory { }
 	[Protocol][BaseType (typeof (NSObject))] interface M138 : INSKeyedUnarchiverDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M139 : IINStartAudioCallIntentHandling { }
@@ -724,7 +716,6 @@ namespace Test {
 	[Protocol][BaseType (typeof (NSObject))] interface M272 : INSFetchRequestResult { }
 	[Protocol][BaseType (typeof (NSObject))] interface M273 : ICSSearchableIndexDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M274 : IUIViewControllerTransitionCoordinator { }
-	[Protocol][BaseType (typeof (NSObject))] interface M275 : INSURLAuthenticationChallengeSender { }
 	[Protocol][BaseType (typeof (NSObject))] interface M276 : IUIViewControllerTransitionCoordinatorContext { }
 	[Protocol][BaseType (typeof (NSObject))] interface M277 : IUIViewControllerTransitioningDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M278 : IUIFocusEnvironment { }
@@ -748,7 +739,6 @@ namespace Test {
 	[Protocol][BaseType (typeof (NSObject))] interface M298 : IGKAchievementViewControllerDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M299 : IGKTurnBasedEventHandlerDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M300 : IUIGestureRecognizerDelegate { }
-	[Protocol][BaseType (typeof (NSObject))] interface M301 : IGKPeerPickerControllerDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M302 : IGKGameSessionEventListener { }
 	[Protocol][BaseType (typeof (NSObject))] interface M303 : IGKChallengeEventHandlerDelegate { }
 	[Protocol][BaseType (typeof (NSObject))] interface M304 : IGKChallengeListener { }

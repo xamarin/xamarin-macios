@@ -640,7 +640,7 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (file))
 				return;
 
-			foreach (var line in File.ReadAllLines (file)) {
+			foreach (var line in File.ReadAllLines (file).Reverse ()) {
 				var eq = line.IndexOf ('=');
 				if (eq == -1)
 					continue;
