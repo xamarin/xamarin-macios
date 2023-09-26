@@ -2319,6 +2319,7 @@ TVOS_FRAMEWORKS =           \
 	ModelIO                 \
 	MultipeerConnectivity   \
 	OpenGLES                \
+	Phase                   \
 	Photos                  \
 	PhotosUI                \
 	ReplayKit               \
