@@ -64,9 +64,7 @@ namespace Vision {
 		TimeStampNotFound,
 		UnsupportedRequest,
 		Timeout,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		UnsupportedComputeStage,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		UnsupportedComputeDevice,
 	}
 
