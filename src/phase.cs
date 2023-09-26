@@ -241,7 +241,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASENumericPair")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseNumericPair {
 		[Export ("initWithFirstValue:secondValue:")]
 		NativeHandle Constructor (double first, double second);
@@ -255,7 +257,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASEEnvelopeSegment")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseEnvelopeSegment {
 		[Export ("initWithEndPoint:curveType:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -498,7 +502,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASEMixerParameters")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseMixerParameters {
 		[Export ("addSpatialMixerParametersWithIdentifier:source:listener:")]
 		void AddSpatialMixerParameters (string identifier, PhaseSource source, PhaseListener listener);
@@ -615,7 +621,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASEContainerNodeDefinition")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseContainerNodeDefinition {
 		[Static]
 		[Export ("new")]
@@ -816,7 +824,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASECardioidDirectivityModelSubbandParameters")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseCardioidDirectivityModelSubbandParameters {
 		[Export ("frequency")]
 		double Frequency { get; set; }
@@ -830,7 +840,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASEConeDirectivityModelSubbandParameters")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseConeDirectivityModelSubbandParameters {
 		[Export ("setInnerAngle:outerAngle:")]
 		void SetInnerAngle (double innerAngle, double outerAngle);
@@ -866,7 +878,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseDirectivityModelParameters), Name = "PHASEConeDirectivityModelParameters")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseConeDirectivityModelParameters {
 		[Export ("initWithSubbandParameters:")]
 		NativeHandle Constructor (PhaseConeDirectivityModelSubbandParameters [] subbandParameters);
@@ -897,7 +911,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseDistanceModelParameters), Name = "PHASEGeometricSpreadingDistanceModelParameters")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseGeometricSpreadingDistanceModelParameters {
 		[Export ("rolloffFactor")]
 		double RolloffFactor { get; set; }
@@ -1268,7 +1284,9 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASESpatialPipelineEntry")]
+#if TVOS
 	[DisableDefaultCtor]
+#endif
 	interface PhaseSpatialPipelineEntry {
 		[Export ("sendLevel")]
 		double SendLevel { get; set; }
