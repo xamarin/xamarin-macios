@@ -124,6 +124,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_BundleResourceWithLogicalName>
 	</ItemDefinitionGroup>
 
+	<Target Name="_DetectBuildType">
+		<PropertyGroup>
+			<IsHotRestartBuild Condition="'$(IsHotRestartBuild)' == 'True' And '$(_PlatformName)' != 'iOS'">False</IsHotRestartBuild>
+			<IsRemoteBuild Condition="'$(IsHotRestartBuild)' == 'True'">False</IsRemoteBuild>
+		</PropertyGroup>
+	</Target>
+
 	<!--
 		@(NativeReference) are not safe to use as an Input to a task, as frameworks are a directory and will appears unbuilt every time.
 		So we split it into two camps as a prebuild step
@@ -420,6 +427,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<CollectBundleResourcesDependsOn>
 			$(CollectBundleResourcesDependsOn);
+			_DetectBuildType;
 			_ComputeTargetArchitectures;
 			_ComputeTargetFrameworkMoniker;
 		</CollectBundleResourcesDependsOn>
@@ -506,6 +514,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<_CompileAppManifestDependsOn>
 			CollectAppManifests;
 			$(_CompileAppManifestDependsOn);
+			_DetectBuildType;
 			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
@@ -567,6 +576,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<PropertyGroup>
 		<_ReadAppManifestDependsOn>
 			$(_ReadAppManifestDependsOn);
+			_DetectBuildType;
 			_DetectAppManifest;
 			_DetectSdkLocations;
 			_CompileAppManifest;
@@ -604,6 +614,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<_WriteAppManifestDependsOn>
+			_DetectBuildType;
 			_CompileAppManifest;
 			_CompileImageAssets;
 			_CompileCoreMLModels;
@@ -1742,7 +1753,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
+	<Target Name="_DetectSdkLocations" DependsOnTargets="_DetectBuildType;_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1804,7 +1815,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_DetectBuildType;_CollectBundleResources;_PrepareUnpackLibraryResources"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
