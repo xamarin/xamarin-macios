@@ -36,6 +36,7 @@ namespace Introspection {
 		{
 			switch (type.Namespace) {
 			// Xcode 15:
+			case "MetalFX":
 			case "Cinematic":
 				// only present on device :/
 				if (TestRuntime.IsSimulatorOrDesktop)
