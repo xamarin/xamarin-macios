@@ -85,6 +85,7 @@ partial class Frameworks {
 		"Messages",
 		"MessageUI",
 		"Metal",
+		"MetalFX",
 		"MetalKit",
 		"MetalPerformanceShaders",
 		"MetalPerformanceShadersGraph",
@@ -219,6 +220,7 @@ partial class Frameworks {
 		"MediaPlayer",
 		"MediaToolbox",
 		"Metal",
+		"MetalFX",
 		"MetalKit",
 		"MetalPerformanceShaders",
 		"MetalPerformanceShadersGraph",
@@ -493,6 +495,7 @@ partial class Frameworks {
 		"Messages",
 		"MessageUI",
 		"Metal",
+		"MetalFX",
 		"MetalKit",
 		"MetalPerformanceShaders",
 		"MetalPerformanceShadersGraph",
@@ -640,6 +643,7 @@ partial class Frameworks {
 	bool? _Messages;
 	bool? _MessageUI;
 	bool? _Metal;
+	bool? _MetalFX;
 	bool? _MetalKit;
 	bool? _MetalPerformanceShaders;
 	bool? _MetalPerformanceShadersGraph;
@@ -805,6 +809,7 @@ partial class Frameworks {
 	public bool HaveMessages { get { if (!_Messages.HasValue) _Messages = GetValue ("Messages"); return _Messages.Value; } }
 	public bool HaveMessageUI { get { if (!_MessageUI.HasValue) _MessageUI = GetValue ("MessageUI"); return _MessageUI.Value; } }
 	public bool HaveMetal { get { if (!_Metal.HasValue) _Metal = GetValue ("Metal"); return _Metal.Value; } }
+	public bool HaveMetalFX { get { if (!_MetalFX.HasValue) _MetalFX = GetValue ("MetalFX"); return _MetalFX.Value; } }
 	public bool HaveMetalKit { get { if (!_MetalKit.HasValue) _MetalKit = GetValue ("MetalKit"); return _MetalKit.Value; } }
 	public bool HaveMetalPerformanceShaders { get { if (!_MetalPerformanceShaders.HasValue) _MetalPerformanceShaders = GetValue ("MetalPerformanceShaders"); return _MetalPerformanceShaders.Value; } }
 	public bool HaveMetalPerformanceShadersGraph { get { if (!_MetalPerformanceShadersGraph.HasValue) _MetalPerformanceShadersGraph = GetValue ("MetalPerformanceShadersGraph"); return _MetalPerformanceShadersGraph.Value; } }
