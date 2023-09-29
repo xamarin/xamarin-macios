@@ -621,9 +621,6 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASEContainerNodeDefinition")]
-#if TVOS
-	[DisableDefaultCtor]
-#endif
 	interface PhaseContainerNodeDefinition {
 		[Static]
 		[Export ("new")]
@@ -696,6 +693,7 @@ namespace Phase {
 	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASERandomNodeDefinition")]
 	[DisableDefaultCtor]
 	interface PhaseRandomNodeDefinition {
+		[DesignatedInitializer]
 		[Export ("init")]
 		NativeHandle Constructor ();
 
@@ -824,9 +822,6 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASECardioidDirectivityModelSubbandParameters")]
-#if TVOS
-	[DisableDefaultCtor]
-#endif
 	interface PhaseCardioidDirectivityModelSubbandParameters {
 		[Export ("frequency")]
 		double Frequency { get; set; }
@@ -840,9 +835,6 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASEConeDirectivityModelSubbandParameters")]
-#if TVOS
-	[DisableDefaultCtor]
-#endif
 	interface PhaseConeDirectivityModelSubbandParameters {
 		[Export ("setInnerAngle:outerAngle:")]
 		void SetInnerAngle (double innerAngle, double outerAngle);
@@ -911,9 +903,6 @@ namespace Phase {
 
 	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseDistanceModelParameters), Name = "PHASEGeometricSpreadingDistanceModelParameters")]
-#if TVOS
-	[DisableDefaultCtor]
-#endif
 	interface PhaseGeometricSpreadingDistanceModelParameters {
 		[Export ("rolloffFactor")]
 		double RolloffFactor { get; set; }
