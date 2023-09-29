@@ -4246,7 +4246,6 @@ namespace Vision {
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (VNStatefulRequest))]
-	[DisableDefaultCtor]
 	interface VNTrackTranslationalImageRegistrationRequest {
 		[Export ("initWithCompletionHandler:")]
 		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
@@ -4257,7 +4256,6 @@ namespace Vision {
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (VNStatefulRequest))]
-	[DisableDefaultCtor]
 	interface VNTrackHomographicImageRegistrationRequest {
 		[Export ("initWithCompletionHandler:")]
 		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
@@ -4268,7 +4266,6 @@ namespace Vision {
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (VNStatefulRequest))]
-	[DisableDefaultCtor]
 	interface VNTrackOpticalFlowRequest {
 		[Export ("initWithCompletionHandler:")]
 		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
@@ -4310,7 +4307,6 @@ namespace Vision {
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (VNStatefulRequest))]
-	[DisableDefaultCtor]
 	interface VNDetectHumanBodyPose3DRequest {
 		[Export ("initWithCompletionHandler:")]
 		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);

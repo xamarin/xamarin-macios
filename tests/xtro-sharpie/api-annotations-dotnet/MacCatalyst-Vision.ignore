@@ -1,0 +1,6 @@
+## Xcode 15
+## Since the modelPositionOut parameter is a pointer, there is no need to add an explicit marshal directive
+## ref: https://developer.apple.com/documentation/vision/vnhumanbodypose3dobservation/4210411-getcamerarelativeposition
+!extra-null-allowed! 'System.Boolean Vision.VNHumanBodyPose3DObservation::GetCameraRelativePosition(System.Numerics.Vector4&,System.String,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
+!wrong-simd-missing-marshaldirective! System.Boolean Vision.VNHumanBodyPose3DObservation::GetCameraRelativePosition(System.Numerics.Vector4&,System.String,Foundation.NSError&): simd type: simd_float4x4
+
