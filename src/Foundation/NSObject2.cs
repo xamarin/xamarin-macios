@@ -30,6 +30,7 @@ using System.Threading;
 using System.Drawing;
 #endif
 using System.Runtime.Versioning;
+using System.Diagnostics;
 
 #if NET
 using System.Runtime.InteropServices.ObjectiveC;
@@ -178,6 +179,8 @@ namespace Foundation {
 			set { flags = value ? (flags | Flags.RegisteredToggleRef) : (flags & ~Flags.RegisteredToggleRef); }
 		}
 
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected internal bool IsDirectBinding {
 			get { return ((flags & Flags.IsDirectBinding) == Flags.IsDirectBinding); }
 			set { flags = value ? (flags | Flags.IsDirectBinding) : (flags & ~Flags.IsDirectBinding); }
@@ -214,6 +217,7 @@ namespace Foundation {
 			InitializeObject (alloced);
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 #if NET
 		protected internal NSObject (NativeHandle handle)
 #else
@@ -223,6 +227,7 @@ namespace Foundation {
 		{
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 #if NET
 		protected NSObject (NativeHandle handle, bool alloced)
 #else
@@ -322,6 +327,7 @@ namespace Foundation {
 		}
 
 #if !XAMCORE_3_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static bool IsNewRefcountEnabled ()
 		{
 			return true;
@@ -333,6 +339,7 @@ namespace Foundation {
 		-The new refcounting is enabled; and
 		-The class is not a custom type - it must wrap a framework class.
 		*/
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void MarkDirty ()
 		{
 			MarkDirty (false);
@@ -598,6 +605,7 @@ namespace Foundation {
 			return this;
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NativeHandle SuperHandle {
 			get {
 				if (handle == IntPtr.Zero)
@@ -607,6 +615,7 @@ namespace Foundation {
 			}
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NativeHandle Handle {
 			get { return handle; }
 			set {
@@ -1118,12 +1127,14 @@ namespace Foundation {
 			return o;
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static NSObject Alloc (Class kls)
 		{
 			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
 			return new NSObject (h, true);
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void Init ()
 		{
 			if (handle == IntPtr.Zero)
