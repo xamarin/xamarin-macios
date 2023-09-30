@@ -821,10 +821,10 @@
 		<value>No se pudo descomprimir el archivo '{0}'. Revise el registro de compilación para más información del comando nativo "unzip".</value>
 	</data>
   <data name="MX1307" xml:space="preserve">
-		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>No se pudo extraer el marco nativo "{0}" del ensamblado "{1}", porque no contiene el recurso "{2}".</value>
 	</data>
   <data name="MX1308" xml:space="preserve">
-		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>No se pudo extraer la biblioteca nativa "{0}" del ensamblado "{1}", porque no contiene el recurso "{2}".</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>Falta el ensamblado "Xamarin.Mac.dll" necesario en las referencias.
@@ -1524,7 +1524,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+		<value>La clase "{0}" no se registrará porque el marco de trabajo de {1} se ha quitado del SDK de {2}.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1549,7 +1549,7 @@
 		<value>No se puede calcular la firma de bloque para el tipo '{0}': {1}</value>
 	</data>
   <data name="MX4189" xml:space="preserve">
-		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
+		<value>La clase "{0}" no se registrará porque se ha quitado del SDK de {1}.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Falta el compilador "{0}". Instale el componente "Herramientas de línea de comandos" de Xcode.
@@ -1823,6 +1823,6 @@
 		<value>No se encontró el tipo 'ObjCRuntime.__Registrar__' en el ensamblado '{0}'.</value>
 	</data>
   <data name="MX8056" xml:space="preserve">
-		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+		<value>No se pudieron calcular las referencias del objeto Objective-C 0x{0} (tipo: {1}). No se pudo encontrar una instancia administrada existente para este objeto ni se pudo crear una nueva instancia administrada de tipo genérico {2}.</value>
 	</data>
 </root>

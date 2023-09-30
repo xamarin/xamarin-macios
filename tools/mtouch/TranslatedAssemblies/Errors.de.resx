@@ -821,10 +821,10 @@
 		<value>Die Datei „{0}“ konnte nicht dekomprimiert werden. Überprüfen Sie das Buildprotokoll auf weitere Informationen aus dem nativen Befehl „unzip“.</value>
 	</data>
   <data name="MX1307" xml:space="preserve">
-		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>Das systemeigene Framework "{0}" konnte nicht aus der Assembly "{1}" extrahiert werden, da es die Ressource "{2}" nicht enthält.</value>
 	</data>
   <data name="MX1308" xml:space="preserve">
-		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>Die systemeigene Bibliothek "{0}" konnte nicht aus der Assembly "{1}" extrahiert werden, da sie die Ressource "{2}" nicht enthält.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>Die erforderliche Assembly "Xamarin.Mac.dll" fehlt in den Verweisen.
@@ -1524,7 +1524,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+		<value>Die Klasse "{0}" wird nicht registriert, da das Framework "{1}" aus dem SDK "{2}" entfernt wurde.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1549,7 +1549,7 @@
 		<value>Die Blocksignatur für den Typ „{0}“ kann nicht berechnet werden: {1}</value>
 	</data>
   <data name="MX4189" xml:space="preserve">
-		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
+		<value>Die Klasse "{0}" wird nicht registriert, da sie aus dem SDK "{1}" entfernt wurde.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Der Compiler "{0}" fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
@@ -1823,6 +1823,6 @@
 		<value>Der Typ „ObjCRuntime.__Registrar__“ wurde in der Assembly „{0}“ nicht gefunden.</value>
 	</data>
   <data name="MX8056" xml:space="preserve">
-		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+		<value>Fehler beim Marshallen des Objective-C-Objekts 0x{0} (Typ: {1}). Für dieses Objekt wurde keine vorhandene verwaltete Instanz gefunden, und es war auch nicht möglich, eine neue verwaltete Instanz des generischen Typs "{2}" zu erstellen.</value>
 	</data>
 </root>
