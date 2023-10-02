@@ -388,6 +388,7 @@ partial class Frameworks {
 		"MultipeerConnectivity",
 		"NaturalLanguage",
 		"Network",
+		"NetworkExtension",
 		"OpenGLES",
 		"OSLog",
 		"Photos",
