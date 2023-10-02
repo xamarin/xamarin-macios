@@ -1101,6 +1101,8 @@ namespace UIKit {
 		[Watch (7, 0), TV (14, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Mac = 5,
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		Vision = 6,
 	}
 
 	// NSInteger -> UIApplication.h
@@ -2449,6 +2451,8 @@ namespace UIKit {
 		Automatic,
 		Always,
 		Never,
+		[iOS (17,0), NoTV, MacCatalyst (17,0)]
+		Inline,
 	}
 
 	[NoWatch]
@@ -2576,6 +2580,8 @@ namespace UIKit {
 		Destructive = 1uL << 1,
 		[iOS (15, 0), TV (15, 0), NoWatch, MacCatalyst (15, 0)]
 		SingleSelection = 1uL << 5,
+		[iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (17, 0)]
+		DisplayAsPalette = 1uL << 7
 	}
 
 	[NoWatch, NoTV, iOS (13, 0)]
@@ -2712,6 +2718,10 @@ namespace UIKit {
 		[TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
 		[Field ("UIMenuDocument")]
 		Document,
+
+		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("UIMenuAutoFill")]
+		AutoFill,
 
 	}
 
@@ -3191,7 +3201,7 @@ namespace UIKit {
 		ReadableContent,
 	}
 
-	[NoWatch, NoTV, iOS (14, 0)]
+	[NoWatch, TV (17,0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum UIContextMenuInteractionAppearance : long {
@@ -3383,7 +3393,7 @@ namespace UIKit {
 		Ended,
 	}
 
-	[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, TV (17,0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum UIBehavioralStyle : ulong {
 		Automatic = 0,
