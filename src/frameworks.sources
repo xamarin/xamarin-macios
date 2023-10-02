@@ -35,6 +35,7 @@ ACCELERATE_SOURCES = \
 ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
 	Accessibility/AXAnimatedImagesUtilities.cs \
+	Accessibility/AXPrefers.cs \
 
 # Accounts
 

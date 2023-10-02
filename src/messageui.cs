@@ -140,6 +140,11 @@ namespace MessageUI {
 
 		[Field ("MFMessageComposeViewControllerAttachmentURL")]
 		NSString AttachmentURL { get; }
+
+		[Async]
+		[iOS (17, 0), NoMacCatalyst, NoWatch, NoTV]
+		[Export ("setUPIVerificationCodeSendCompletion:")]
+		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}
 
 	[BaseType (typeof (NSObject))]
