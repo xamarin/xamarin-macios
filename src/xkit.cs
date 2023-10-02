@@ -3628,6 +3628,22 @@ namespace UIKit {
 
 		[Export ("frameForTextAttachmentAtLocation:")]
 		CGRect GetFrameForTextAttachment (INSTextLocation location);
+
+		[Internal]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForVerticalOffset:requiresExactMatch:")]
+		[return: NullAllowed]
+		NSTextLineFragment _GetTextLineFragment (nfloat verticalOffset, byte requiresExactMatch);
+
+		[Wrap ("_GetTextLineFragment (verticalOffset, requiresExactMatch ? (byte) 1 : (byte) 0)")]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[return: NullAllowed]
+		NSTextLineFragment GetTextLineFragment (nfloat verticalOffset, bool requiresExactMatch);
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForTextLocation:isUpstreamAffinity:")]
+		[return: NullAllowed]
+		NSTextLineFragment GetTextLineFragment (INSTextLocation textLocation, bool isUpstreamAffinity);
 	}
 
 	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -4378,6 +4394,10 @@ namespace UIKit {
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		NSString CocoaVersionDocumentAttribute { get; }
+
+		[Field ("NSDefaultFontExcludedDocumentAttribute")]
+		[NoWatch, NoTV, Mac (14, 0), NoiOS, MacCatalyst (17, 0)]
+		NSString DefaultFontExcludedDocumentAttribute { get; }
 	}
 
 	[Static]
@@ -4429,11 +4449,5 @@ namespace UIKit {
 		[Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 
-		// This field is really inside WebKit
-		[NoWatch, NoTV]
-		[iOS (13, 0)]
-		[MacCatalyst (13, 1)]
-		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
-		NSString NSReadAccessUrlDocumentOption { get; }
 	}
 }
