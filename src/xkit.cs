@@ -58,6 +58,7 @@ using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayo
 using CollectionElementCategory=AppKit.NSCollectionElementCategory;
 using StringAttributes=AppKit.NSStringAttributes;
 using View=AppKit.NSView;
+using UICollectionLayoutSectionOrthogonalScrollingProperties = System.Object;
 #else
 using BezierPath = UIKit.UIBezierPath;
 using Image = UIKit.UIImage;
@@ -2020,6 +2021,10 @@ namespace UIKit {
 		[MacCatalyst (16, 0)]
 		[Export ("supplementaryContentInsetsReference", ArgumentSemantic.Assign)]
 		UIContentInsetsReference SupplementaryContentInsetsReference { get; set; }
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17,0), NoMac]
+		[Export ("orthogonalScrollingProperties")]
+		UICollectionLayoutSectionOrthogonalScrollingProperties OrthogonalScrollingProperties { get; }
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
@@ -2780,6 +2785,15 @@ namespace UIKit {
 
 		[Export ("dimension")]
 		nfloat Dimension { get; }
+
+		[Watch (10,0), TV (17,0), iOS (17,0), NoMac]
+		[Static]
+		[Export ("uniformAcrossSiblingsWithEstimate:")]
+		NSCollectionLayoutDimension CreateUniformAcrossSiblings (nfloat estimatedDimension);
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17,0), NoMac]
+		[Export ("isUniformAcrossSiblings")]
+		bool IsUniformAcrossSiblings { get; }
 	}
 
 
@@ -4388,7 +4402,7 @@ namespace UIKit {
 		NSString CocoaVersionDocumentAttribute { get; }
 
 		[Field ("NSDefaultFontExcludedDocumentAttribute")]
-		[NoWatch, NoTV, Mac (14, 0), NoiOS, MacCatalyst (17, 0)]
+		[Watch (10, 0), TV (17,0), Mac (14, 0), iOS (17,0), MacCatalyst (17, 0)]
 		NSString DefaultFontExcludedDocumentAttribute { get; }
 	}
 
