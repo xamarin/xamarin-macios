@@ -21,6 +21,7 @@ using UIKit;
 #if !COREBUILD && HAS_WEBKIT
 using WebKit;
 #endif
+using ObjCRuntime;
 
 #if !COREBUILD
 #if __MACOS__
@@ -211,15 +212,21 @@ namespace Foundation {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("ios17.0", message: "Starting with ios17.0 will always return null.")]
+		[ObsoletedOSPlatform ("maccatalyst17.0", message: "Starting with maccatalyst17.0 will always return null.")]
+		[ObsoletedOSPlatform ("macos14.0", message: "Starting with macos14.0 will always return null.")]
 #else
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Will always return null.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Will always return null.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Will always return null.")]
 		[iOS (13, 0)]
 #endif
 		public NSUrl? ReadAccessUrl {
 			get {
-				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
+				return null;
 			}
 			set {
-				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
+				// do nothing
 			}
 		}
 #endif // !TVOS && !WATCH

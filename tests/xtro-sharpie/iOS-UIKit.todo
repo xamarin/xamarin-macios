@@ -191,8 +191,6 @@
 !missing-selector! NSObject::setAutomationElements: not bound
 !missing-selector! NSObject::setAutomationElementsBlock: not bound
 !missing-selector! NSObject::setIsAccessibilityElementBlock: not bound
-!missing-selector! NSTextLayoutFragment::textLineFragmentForTextLocation:isUpstreamAffinity: not bound
-!missing-selector! NSTextLayoutFragment::textLineFragmentForVerticalOffset:requiresExactMatch: not bound
 !missing-selector! UIApplication::activateSceneSessionForRequest:errorHandler: not bound
 !missing-selector! UIBarButtonItem::isSymbolAnimationEnabled not bound
 !missing-selector! UIBarButtonItem::setSymbolAnimationEnabled: not bound
@@ -503,7 +501,6 @@
 !missing-selector! +UIShape::shapeWithProvider: not bound
 !missing-selector! UIHoverStyle::isEnabled not bound
 !missing-selector! UIHoverStyle::setEnabled: not bound
-!unknown-field! NSReadAccessURLDocumentOption bound
 !missing-enum! UISceneCaptureState not bound
 !missing-selector! +UITraitCollection::traitCollectionWithSceneCaptureState: not bound
 !missing-selector! UITraitCollection::sceneCaptureState not bound
