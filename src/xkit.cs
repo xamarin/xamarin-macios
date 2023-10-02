@@ -2024,7 +2024,7 @@ namespace UIKit {
 		[Export ("supplementaryContentInsetsReference", ArgumentSemantic.Assign)]
 		UIContentInsetsReference SupplementaryContentInsetsReference { get; set; }
 
-		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17,0), NoMac]
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), NoMac]
 		[Export ("orthogonalScrollingProperties")]
 		UICollectionLayoutSectionOrthogonalScrollingProperties OrthogonalScrollingProperties { get; }
 	}
@@ -2788,12 +2788,12 @@ namespace UIKit {
 		[Export ("dimension")]
 		nfloat Dimension { get; }
 
-		[Watch (10,0), TV (17,0), iOS (17,0), NoMac]
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), NoMac]
 		[Static]
 		[Export ("uniformAcrossSiblingsWithEstimate:")]
 		NSCollectionLayoutDimension CreateUniformAcrossSiblings (nfloat estimatedDimension);
 
-		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17,0), NoMac]
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), NoMac]
 		[Export ("isUniformAcrossSiblings")]
 		bool IsUniformAcrossSiblings { get; }
 	}
@@ -4404,7 +4404,7 @@ namespace UIKit {
 		NSString CocoaVersionDocumentAttribute { get; }
 
 		[Field ("NSDefaultFontExcludedDocumentAttribute")]
-		[Watch (10, 0), TV (17,0), Mac (14, 0), iOS (17,0), MacCatalyst (17, 0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		NSString DefaultFontExcludedDocumentAttribute { get; }
 	}
 

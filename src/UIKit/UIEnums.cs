@@ -2451,7 +2451,7 @@ namespace UIKit {
 		Automatic,
 		Always,
 		Never,
-		[iOS (17,0), NoTV, MacCatalyst (17,0)]
+		[iOS (17, 0), NoTV, MacCatalyst (17, 0)]
 		Inline,
 	}
 
@@ -3201,7 +3201,7 @@ namespace UIKit {
 		ReadableContent,
 	}
 
-	[NoWatch, TV (17,0), iOS (14, 0)]
+	[NoWatch, TV (17, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum UIContextMenuInteractionAppearance : long {
@@ -3393,7 +3393,7 @@ namespace UIKit {
 		Ended,
 	}
 
-	[NoWatch, TV (17,0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, TV (17, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum UIBehavioralStyle : ulong {
 		Automatic = 0,

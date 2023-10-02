@@ -115,7 +115,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Watch (10,0), TV (17,0), iOS (17,0)]
+		[Watch (10, 0), TV (17, 0), iOS (17, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern /* NSData */ IntPtr UIImageHEICRepresentation (/* UIImage */ IntPtr image);
@@ -125,7 +125,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Watch (10,0), TV (17,0), iOS (17,0)]
+		[Watch (10, 0), TV (17, 0), iOS (17, 0)]
 #endif
 		public NSData? HeicRepresentation
 			=> Runtime.GetNSObject<NSData> (UIImageHEICRepresentation (Handle));
