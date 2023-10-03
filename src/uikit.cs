@@ -8972,7 +8972,6 @@ namespace UIKit {
 		[Static]
 		[Export ("configurationWithTraitCollection:")]
 		UIImageConfiguration ConfigurationWithTraitCollection ([NullAllowed] UITraitCollection traitCollection);
-
 	}
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
@@ -18166,7 +18165,6 @@ namespace UIKit {
 		[Export ("toolbarItemPresentationSize")]
 		UINSToolbarItemPresentationSize ToolbarItemPresentationSize { get; }
 
-
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("traitCollectionWithTraits:")]
@@ -18798,7 +18796,6 @@ namespace UIKit {
 		[iOS (17, 0)]
 		[Field ("UITextContentTypeCreditCardType")]
 		NSString CreditCardType { get; }
-
 	}
 
 	[NoWatch]
@@ -27555,7 +27552,6 @@ namespace UIKit {
 	interface UIDocViewController
 #endif
 	{
-
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -27767,7 +27763,6 @@ namespace UIKit {
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		UIImageReaderConfiguration Configuration { get; }
-		// -(UIImage * _Nonnull)imageWithContentsOfFileURL:(NSURL * _Nonnull)url;
 		[Export ("imageWithContentsOfFileURL:")]
 		UIImage GetImage (NSUrl url);
 

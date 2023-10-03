@@ -2581,7 +2581,7 @@ namespace UIKit {
 		[iOS (15, 0), TV (15, 0), NoWatch, MacCatalyst (15, 0)]
 		SingleSelection = 1uL << 5,
 		[iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (17, 0)]
-		DisplayAsPalette = 1uL << 7
+		DisplayAsPalette = 1uL << 7,
 	}
 
 	[NoWatch, NoTV, iOS (13, 0)]
