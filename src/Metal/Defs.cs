@@ -492,16 +492,18 @@ namespace Metal {
 #endif
 	}
 
-#if IOS || MONOMAC || COREBUILD
+#if IOS || MONOMAC || COREBUILD || TVOS
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst13.4")]
 	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos16.0")]
 #else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
+	[Introduced (PlatformName.TvOS, 16, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLVertexAmplificationViewMapping {
@@ -514,10 +516,12 @@ namespace Metal {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst13.4")]
 	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos17.0")]
 #else
 	[Introduced (PlatformName.iOS, 13,0, PlatformArchitecture.All)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[Introduced (PlatformName.MacOSX, 10, 15, 4)]
+	[Introduced (PlatformName.TvOS, 17,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLCoordinate2D {
@@ -527,15 +531,13 @@ namespace Metal {
 	}
 #endif
 
-#if !TVOS || !NET
-
+#if !TVOS
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("ios14.0")]
-	[UnsupportedOSPlatform ("tvos")]
 #else
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[MacCatalyst (14, 0)]
 	[Mac (11, 0)]
 	[iOS (14, 0)]
 	[NoTV]
@@ -552,4 +554,19 @@ namespace Metal {
 		public nuint RefitScratchBufferSize;
 	}
 #endif
+
+#if NET
+	[SupportedOSPlatform ("ios16.0")]
+	[SupportedOSPlatform ("maccatalyst16.0")]
+	[SupportedOSPlatform ("macos13.0")]
+	[SupportedOSPlatform ("tvos16.0")]
+#else
+	[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), NoWatch]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLResourceId
+	{
+		public ulong Impl;
+	}
+
 }

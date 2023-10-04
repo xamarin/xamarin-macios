@@ -163,11 +163,42 @@
 !incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
-
+!incorrect-protocol-member! MTLComputeCommandEncoder::setBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setBufferOffset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setBuffers:offsets:attributeStrides:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::setBytes:length:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::architecture is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newIOFileHandleWithURL:compressionMethod:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newIOFileHandleWithURL:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectComputeCommand::setKernelBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIntersectionFunctionTable::setOpaqueCurveIntersectionFunctionWithSignature:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIntersectionFunctionTable::setOpaqueCurveIntersectionFunctionWithSignature:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBufferOffset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBuffers:offsets:attributeStrides:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBytes:length:attributeStride:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:completionHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsRenderDynamicLibraries is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIntersectionFunctionTable::gpuResourceID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLVisibleFunctionTable::gpuResourceID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::accelerationStructureCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::gpuResourceID is REQUIRED and should be abstract
 
 # MTLFunctionStitchingAttributeAlwaysInline is not documented and has no exposure
 !missing-type! MTLFunctionStitchingAttributeAlwaysInline not bound
+
+# to be fixed in XAMCORE_5_0
+!incorrect-protocol-member! MTLDevice::heapAccelerationStructureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapAccelerationStructureSizeAndAlignWithSize: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newArgumentEncoderWithBufferBinding: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newIOCommandQueueWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithMeshDescriptor:options:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithMeshDescriptor:options:reflection:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sparseTileSizeInBytesForSparsePageSize: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sparseTileSizeWithTextureType:pixelFormat:sampleCount:sparsePageSize: is REQUIRED and should be abstract
+
+# added and removed without a release, so ignoring
+!missing-protocol-member! MTLDevice::newIOHandleWithURL:compressionMethod:error: not found
+!missing-protocol-member! MTLDevice::newIOHandleWithURL:error: not found

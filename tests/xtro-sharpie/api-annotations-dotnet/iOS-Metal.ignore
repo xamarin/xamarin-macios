@@ -1,2 +1,45 @@
 ## Adding it to the icebox until it is available on all platforms
-!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple8 = 1008 not bound
+
+# has to wait for XAMCORE_5_0
+!incorrect-protocol-member! MTLIndirectRenderCommand::clearBarrier is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setBarrier is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setMeshBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setObjectBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setObjectThreadgroupMemoryLength:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setVertexBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResourceStateCommandEncoder::moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshBufferOffset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshBuffers:offsets:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshSamplerState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshSamplerStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshTexture:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshTextures:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectBufferOffset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectBuffers:offsets:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectBytes:length:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setMeshBytes:length:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectSamplerState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectSamplerStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectTexture:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectTextures:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setObjectThreadgroupMemoryLength:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerMeshThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerObjectThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::objectThreadExecutionWidth is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLSamplerState::gpuResourceID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectCommandBuffer::gpuResourceID is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::gpuResourceID is REQUIRED and should be abstract
+
+# deprecated but cannot be removed
+!unknown-native-enum! MTLArgumentAccess bound
