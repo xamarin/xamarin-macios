@@ -619,7 +619,7 @@ namespace Phase {
 		PhasePlaybackMode PlaybackMode { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASEContainerNodeDefinition")]
 	interface PhaseContainerNodeDefinition {
 		[Static]
@@ -689,7 +689,7 @@ namespace Phase {
 		PhaseStringMetaParameterDefinition SwitchMetaParameterDefinition { get; }
 	}
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseSoundEventNodeDefinition), Name = "PHASERandomNodeDefinition")]
 	[DisableDefaultCtor]
 	interface PhaseRandomNodeDefinition {
@@ -820,7 +820,7 @@ namespace Phase {
 		NSDictionary<NSString, PhaseMetaParameter> GlobalMetaParameters { get; }
 	}
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASECardioidDirectivityModelSubbandParameters")]
 	interface PhaseCardioidDirectivityModelSubbandParameters {
 		[Export ("frequency")]
@@ -833,7 +833,7 @@ namespace Phase {
 		double Sharpness { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject), Name = "PHASEConeDirectivityModelSubbandParameters")]
 	interface PhaseConeDirectivityModelSubbandParameters {
 		[Export ("setInnerAngle:outerAngle:")]
@@ -857,7 +857,7 @@ namespace Phase {
 	[DisableDefaultCtor]
 	interface PhaseDirectivityModelParameters { }
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseDirectivityModelParameters), Name = "PHASECardioidDirectivityModelParameters")]
 	[DisableDefaultCtor]
 	interface PhaseCardioidDirectivityModelParameters {
@@ -868,11 +868,8 @@ namespace Phase {
 		PhaseCardioidDirectivityModelSubbandParameters [] SubbandParameters { get; }
 	}
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseDirectivityModelParameters), Name = "PHASEConeDirectivityModelParameters")]
-#if TVOS
-	[DisableDefaultCtor]
-#endif
 	interface PhaseConeDirectivityModelParameters {
 		[Export ("initWithSubbandParameters:")]
 		NativeHandle Constructor (PhaseConeDirectivityModelSubbandParameters [] subbandParameters);
@@ -901,7 +898,7 @@ namespace Phase {
 		PhaseDistanceModelFadeOutParameters FadeOutParameters { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (PhaseDistanceModelParameters), Name = "PHASEGeometricSpreadingDistanceModelParameters")]
 	interface PhaseGeometricSpreadingDistanceModelParameters {
 		[Export ("rolloffFactor")]
