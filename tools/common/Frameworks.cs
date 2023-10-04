@@ -645,7 +645,8 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
 					{ "Symbols", "Symbols", 17, 0 },
-					{ "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
+					{ "NetworkExtension", "NetworkExtension", 17, 0 },
+          { "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
 				};
 			}
 			return tvos_frameworks;
