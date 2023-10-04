@@ -234,7 +234,19 @@ namespace Foundation {
 			return value as NSDictionary<TKey, TValue>;
 		}
 
-		protected T? GetStrongDictionary<T> (NSString key) where T : DictionaryContainer
+#if NET
+		protected T? GetStrongDictionary<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (NSString key)
+#else
+		protected T? GetStrongDictionary<T> (NSString key)
+#endif
+			where T : DictionaryContainer
+		{
+			return GetStrongDictionary (key, dict =>
+				(T?) Activator.CreateInstance (typeof (T), new object [] { dict }));
+		}
+
+		protected T? GetStrongDictionary<T> (NSString? key, Func<NSDictionary, T?> createStrongDictionary)
+			where T : DictionaryContainer
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
@@ -242,9 +254,8 @@ namespace Foundation {
 			var dict = GetNSDictionary (key);
 			if (dict is null)
 				return null;
-			return (T?) Activator.CreateInstance (typeof (T),
-				new object [] { dict }
-			);
+
+			return createStrongDictionary (dict);
 		}
 
 		protected NSString? GetNSStringValue (NSString key)

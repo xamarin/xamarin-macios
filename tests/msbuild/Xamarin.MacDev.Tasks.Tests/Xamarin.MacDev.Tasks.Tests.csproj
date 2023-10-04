@@ -39,6 +39,7 @@
   </ItemGroup>
 
   <Target Name="BuildTasksAssembly" AfterTargets="BeforeBuild">
+    <MSBuild Projects="..\..\..\msbuild\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" Targets="Restore" Properties="SomeGlobalPropertyToMakeThisUnique=RestoreMe" />
     <MSBuild Projects="..\..\..\msbuild\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" />
   </Target>
 

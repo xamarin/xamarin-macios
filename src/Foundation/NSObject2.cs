@@ -30,6 +30,7 @@ using System.Threading;
 using System.Drawing;
 #endif
 using System.Runtime.Versioning;
+using System.Diagnostics;
 
 #if NET
 using System.Runtime.InteropServices.ObjectiveC;
@@ -178,6 +179,8 @@ namespace Foundation {
 			set { flags = value ? (flags | Flags.RegisteredToggleRef) : (flags & ~Flags.RegisteredToggleRef); }
 		}
 
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected internal bool IsDirectBinding {
 			get { return ((flags & Flags.IsDirectBinding) == Flags.IsDirectBinding); }
 			set { flags = value ? (flags | Flags.IsDirectBinding) : (flags & ~Flags.IsDirectBinding); }
@@ -214,6 +217,7 @@ namespace Foundation {
 			InitializeObject (alloced);
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 #if NET
 		protected internal NSObject (NativeHandle handle)
 #else
@@ -223,6 +227,7 @@ namespace Foundation {
 		{
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 #if NET
 		protected NSObject (NativeHandle handle, bool alloced)
 #else
@@ -322,6 +327,7 @@ namespace Foundation {
 		}
 
 #if !XAMCORE_3_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static bool IsNewRefcountEnabled ()
 		{
 			return true;
@@ -333,6 +339,7 @@ namespace Foundation {
 		-The new refcounting is enabled; and
 		-The class is not a custom type - it must wrap a framework class.
 		*/
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void MarkDirty ()
 		{
 			MarkDirty (false);
@@ -472,15 +479,15 @@ namespace Foundation {
 
 #if MONOMAC
 			if (is_wrapper) {
-				does = Messaging.bool_objc_msgSend_IntPtr (this.Handle, selConformsToProtocolHandle, protocol);
+				does = Messaging.bool_objc_msgSend_IntPtr (this.Handle, selConformsToProtocolHandle, protocol) != 0;
 			} else {
-				does = Messaging.bool_objc_msgSendSuper_IntPtr (this.SuperHandle, selConformsToProtocolHandle, protocol);
+				does = Messaging.bool_objc_msgSendSuper_IntPtr (this.SuperHandle, selConformsToProtocolHandle, protocol) != 0;
 			}
 #else
 			if (is_wrapper) {
-				does = Messaging.bool_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (selConformsToProtocol), protocol);
+				does = Messaging.bool_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (selConformsToProtocol), protocol) != 0;
 			} else {
-				does = Messaging.bool_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (selConformsToProtocol), protocol);
+				does = Messaging.bool_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (selConformsToProtocol), protocol) != 0;
 			}
 #endif
 
@@ -598,6 +605,7 @@ namespace Foundation {
 			return this;
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NativeHandle SuperHandle {
 			get {
 				if (handle == IntPtr.Zero)
@@ -607,6 +615,7 @@ namespace Foundation {
 			}
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public NativeHandle Handle {
 			get { return handle; }
 			set {
@@ -710,12 +719,12 @@ namespace Foundation {
 		private void InvokeOnMainThread (Selector sel, NSObject obj, bool wait)
 		{
 #if NET
-			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait);
+			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait ? (byte) 1 : (byte) 0);
 #else
 #if MONOMAC
-			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, sel.Handle, obj.GetHandle (), wait);
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, sel.Handle, obj.GetHandle (), wait ? (byte) 1 : (byte) 0);
 #else
-			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait);
+			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (this.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), sel.Handle, obj.GetHandle (), wait ? (byte) 1 : (byte) 0);
 #endif
 #endif
 		}
@@ -735,14 +744,14 @@ namespace Foundation {
 			var d = new NSAsyncActionDispatcher (action);
 #if NET
 			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
+		                                                        NSDispatcher.Selector.Handle, d.Handle, 0);
 #else
 #if MONOMAC
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
-		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
+		                                                        NSDispatcher.Selector.Handle, d.Handle, 0);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
+															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 0);
 #endif
 #endif
 		}
@@ -752,14 +761,14 @@ namespace Foundation {
 			var d = new NSAsyncSynchronizationContextDispatcher (cb, state);
 #if NET
 			Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
+			                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 0);
 #else
 #if MONOMAC
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle,
-		                                                        NSDispatcher.Selector.Handle, d.Handle, false);
+		                                                        NSDispatcher.Selector.Handle, d.Handle, 0);
 #else
 			Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, false);
+															Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 0);
 #endif
 #endif
 		}
@@ -769,14 +778,14 @@ namespace Foundation {
 			using (var d = new NSActionDispatcher (action)) {
 #if NET
 				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), 
-				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 #else
 #if MONOMAC
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, 
-		                                                                NSDispatcher.Selector.Handle, d.Handle, true);
+		                                                                NSDispatcher.Selector.Handle, d.Handle, 1);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 #endif
 #endif
 			}
@@ -787,14 +796,14 @@ namespace Foundation {
 			using (var d = new NSSynchronizationContextDispatcher (cb, state)) {
 #if NET
 				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+				                                                Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 #else
 #if MONOMAC
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle,
-			                                                        NSDispatcher.Selector.Handle, d.Handle, true);
+			                                                        NSDispatcher.Selector.Handle, d.Handle, 1);
 #else
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (d.Handle, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone),
-																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, true);
+																Selector.GetHandle (NSDispatcher.SelectorName), d.Handle, 1);
 #endif
 #endif
 			}
@@ -1017,12 +1026,12 @@ namespace Foundation {
 			static void ScheduleDrain ()
 			{
 #if NET
-				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), NativeHandle.Zero, false);
+				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), NativeHandle.Zero, 0);
 #else
 #if MONOMAC
-				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (class_ptr, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, drainHandle, IntPtr.Zero, false);
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (class_ptr, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, drainHandle, IntPtr.Zero, 0);
 #else
-				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), IntPtr.Zero, false);
+				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), IntPtr.Zero, 0);
 #endif
 #endif
 			}
@@ -1118,12 +1127,14 @@ namespace Foundation {
 			return o;
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static NSObject Alloc (Class kls)
 		{
 			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
 			return new NSObject (h, true);
 		}
 
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void Init ()
 		{
 			if (handle == IntPtr.Zero)

@@ -441,7 +441,10 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["RuntimeIdentifier"] = "maccatalyst-x64";
+			// Be specific that we want "RuntimeIdentifier" specified on the command line, and "RuntimeIdentifiers" in a file
+			properties ["file:RuntimeIdentifiers"] = properties ["RuntimeIdentifiers"];
+			properties.Remove ("RuntimeIdentifiers");
+			properties ["cmdline:RuntimeIdentifier"] = "maccatalyst-x64";
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
@@ -632,7 +635,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var createdump = Path.Combine (appPath, "Contents", "MonoBundle", "createdump");
-			Assert.That (createdump, Does.Exist, "createdump existence");
+			Assert.That (createdump, Does.Not.Exist, "createdump existence");
 		}
 
 		[Test]
@@ -973,6 +976,42 @@ namespace Xamarin.Tests {
 			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
 		}
 
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		// [TestCase ("MacCatalyst", "")] - No extension support yet
+		public void BuildProjectsWithExtensionsAndFrameworks (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var consumingProjectDir = GetProjectPath ("ExtensionConsumerWithFrameworks", runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var extensionProjectDir = GetProjectPath ("ExtensionProjectWithFrameworks", platform: platform);
+
+			Clean (extensionProjectDir);
+			Clean (consumingProjectDir);
+
+			DotNet.AssertBuild (consumingProjectDir, verbosity);
+
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "ExtensionConsumerWithFrameworks.app", GetPlugInsRelativePath (platform), "ExtensionProjectWithFrameworks.appex");
+			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+			var extensionFrameworksPath = Path.Combine (extensionPath, GetFrameworksRelativePath (platform));
+			Assert.IsFalse (Directory.Exists (extensionFrameworksPath), $"App extension framework directory exists when it shouldn't: {extensionFrameworksPath}");
+
+			var pathToSearch = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug");
+			var configFiles = Directory.GetFiles (pathToSearch, "*.runtimeconfig.*", SearchOption.AllDirectories);
+			Assert.AreNotEqual (0, configFiles.Length, "runtimeconfig.json file does not exist");
+
+			var appFrameworksPath = Path.Combine (appPath, GetFrameworksRelativePath (platform));
+			Assert.That (Directory.Exists (appFrameworksPath), $"App Frameworks directory does not exist: {appFrameworksPath}");
+
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "SomewhatUnknownD.framework", "SomewhatUnknownD")), "SomewhatUnknownD");
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownD.framework", "UnknownD")), "UnknownD");
+			Assert.That (File.Exists (Path.Combine (appFrameworksPath, "UnknownE.framework", "UnknownE")), "UnknownE");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
@@ -1267,6 +1306,32 @@ namespace Xamarin.Tests {
 			} else {
 				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
 				Assert.True (jitNotAllowed, "Jit Not Allowed");
+			}
+		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Debug")]
+		public void CheckForMacCatalystDefaultEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			DotNet.AssertBuild (project_path, properties);
+
+			var executable = GetNativeExecutable (platform, appPath);
+			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
+			Assert.IsTrue (foundEntitlements, "Issues found with Entitlements.");
+			if (configuration == "Release") {
+				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.app-sandbox")?.Value, "com.apple.security.app-sandbox enlistment was not found in Release configuration.");
+				Assert.IsNull (entitlements.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was found in Release configuration.");
+			} else if (configuration == "Debug") {
+				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was not found in Debug configuration.");
 			}
 		}
 

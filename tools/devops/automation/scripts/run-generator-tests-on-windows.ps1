@@ -10,11 +10,33 @@ $Env:TESTS_USE_SYSTEM = "1"
 $configurationDotNetPlatforms = $Env:CONFIGURATION_DOTNET_PLATFORMS
 $dotnetPlatforms = $configurationDotNetPlatforms.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 foreach ($platform in $dotnetPlatforms) {
-  $manifestPath = "$Env:BUILD_SOURCESDIRECTORY\artifacts\AssetManifests\$($platform)\AssetManifest.xml"
-  $productVersion = Select-Xml -Path "$manifestPath" -XPath "/Build/Package[@Id='Microsoft.$($platform).Sdk']/@Version" | ForEach-Object { $_.Node.Value }
   $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
-  [Environment]::SetEnvironmentVariable($variableName, $productVersion)
-  Write-Host "$variableName = $productVersion"
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
+  [Environment]::SetEnvironmentVariable($variableName, $variableValue)
+  Write-Host "$variableName = $variableName"
+
+  $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
+  [Environment]::SetEnvironmentVariable($variableName, $variableValue)
+  Write-Host "$variableName = $variableValue"
+
+  $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
+  [Environment]::SetEnvironmentVariable($variableName, $variableValue)
+  Write-Host "$variableName = $variableValue"
+
+  $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+  $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
+  [Environment]::SetEnvironmentVariable($variableName, $variableValue)
+  Write-Host "$variableName = $variableValue"
+
+  $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+  foreach ($rid in $rids) {
+      $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+      $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURATION_" + $variableName)
+      [Environment]::SetEnvironmentVariable($variableName, $variableValue)
+      Write-Host "$variableName = $variableValue"
+  }
 }
 
 # Tell the tests how they can execute the C# compiler

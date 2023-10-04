@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>無法解壓縮檔案 '{0}'。請從原生的 '解壓縮' 命令，檢閱組建記錄檔以了解更多資訊。</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>無法從組件 '{1}' 擷取原生架構 '{0}'，因為它不包含資源 '{2}'。</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>無法從組件 '{1}' 擷取原生程式庫 '{0}'，因為它不包含資源 '{2}'。</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>參考中缺少必要的 'Xamarin.Mac.dll' 組件
 		</value>
@@ -1518,7 +1524,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>因為已從 iOS SDK 移除 WatchKit 架構，所以將不會登錄類別 '{0}'。
+		<value>因為已從 {2} SDK 移除 {1} 架構，所以將不會登錄類別 '{0}'。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1541,6 +1547,9 @@
 	</data>
   <data name="MX4188" xml:space="preserve">
 		<value>無法計算類型 '{0}' 的區塊簽章: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>因為類別 '{0}' 已從 {1} SDK 移除，所以不會登錄其。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 '{0}' 編譯器。請安裝 Xcode [命令列工具] 元件
@@ -1812,5 +1821,8 @@
 	</data>
   <data name="MX8055" xml:space="preserve">
 		<value>在組件 '{0}' 中找不到類型 'ObjCRuntime.__Registrar__'。</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>無法封送 Objective-C 物件 0x{0} (類型: {1})。找不到此物件的現有受控執行個體，也無法建立泛型型別 {2} 的新受控執行個體。</value>
 	</data>
 </root>

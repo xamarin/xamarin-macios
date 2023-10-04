@@ -259,7 +259,7 @@ namespace ObjCRuntime {
 			if (options->Size != Marshal.SizeOf<InitializationOptions> ()) {
 				var msg = $"Version mismatch between the native {ProductName} runtime and {AssemblyName}. Please reinstall {ProductName}.";
 				NSLog (msg);
-#if MONOMAC
+#if MONOMAC && !NET
 				try {
 					// Print out where Xamarin.Mac.dll and the native runtime was loaded from.
 					NSLog ($"{AssemblyName} was loaded from {typeof (NSObject).Assembly.Location}");
@@ -1065,25 +1065,36 @@ namespace ObjCRuntime {
 			return del;
 		}
 
-		internal static Delegate? GetDelegateForBlock (IntPtr methodPtr, Type type)
+#if NET
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : System.MulticastDelegate
+#else
+		internal static T GetDelegateForBlock<T> (IntPtr methodPtr) where T : class
+#endif
 		{
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
-			Delegate? val;
-			var pair = new IntPtrTypeValueTuple (methodPtr, type);
+			var pair = new IntPtrTypeValueTuple (methodPtr, typeof (T));
 			lock (lock_obj) {
 				if (block_to_delegate_cache is null)
 					block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
 
-				if (block_to_delegate_cache.TryGetValue (pair, out val))
-					return val;
+				if (block_to_delegate_cache.TryGetValue (pair, out var cachedValue))
+#if NET
+					return (T) cachedValue;
+#else
+					return (T) (object) cachedValue;
+#endif
 			}
 
-			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
+			var val = Marshal.GetDelegateForFunctionPointer<T> (methodPtr);
 
 			lock (lock_obj) {
+#if NET
 				block_to_delegate_cache [pair] = val;
+#else
+				block_to_delegate_cache [pair] = (Delegate) (object) val;
+#endif
 			}
 			return val;
 		}
@@ -1714,7 +1725,7 @@ namespace ObjCRuntime {
 					target_type = typeof (T);
 				else if (target_type.IsSubclassOf (typeof (T))) {
 					// do nothing, this is fine.
-				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T))) != 0) {
 					// If the instance itself claims it's an instance of the provided (generic argument) type,
 					// then we believe the instance. See bug #20692 for a test case.
 					target_type = typeof (T);
@@ -1793,7 +1804,7 @@ namespace ObjCRuntime {
 					// nothing to do
 				} else if (dynamic_type.IsSubclassOf (target_type)) {
 					target_type = dynamic_type;
-				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (target_type))) {
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (target_type)) != 0) {
 					// nothing to do
 				} else {
 					target_type = dynamic_type;

@@ -39,7 +39,17 @@ fi
 
 #  Start working
 make global.json
+
 make -C builds dotnet
+
+# Check if .NET is even enabled
+# Note that we do this after downloading .NET, because we need .NET to build some of our tests that may contain legacy tests (such as the MSBuild tests).
+var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=ENABLE_DOTNET)
+ENABLE_DOTNET=${var#*=}
+if test -z "$ENABLE_DOTNET"; then
+  echo "Not installing anything, because .NET is not enabled."
+  exit 0
+fi
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
 DOTNET=${var#*=}
