@@ -391,6 +391,7 @@ partial class Frameworks {
 		"NetworkExtension",
 		"OpenGLES",
 		"OSLog",
+		"Phase",
 		"Photos",
 		"PhotosUI",
 		"ReplayKit",
