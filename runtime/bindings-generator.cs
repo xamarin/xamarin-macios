@@ -2650,14 +2650,13 @@ namespace Xamarin.BindingMethods.Generator {
 				}
 			);
 
-			data.Add(
-				new FunctionData
-				{
+			data.Add (
+				new FunctionData {
 					Comment = " // bool func (Vector4, IntPtr, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,
 					ReturnType = Types.Bool,
-					Parameters = new ParameterData[] {
+					Parameters = new ParameterData [] {
 						new ParameterData { TypeData = Types.Vector4 },
 						new ParameterData { TypeData = Types.NativeHandleType },
 						new ParameterData { TypeData = Types.NativeHandleType },
