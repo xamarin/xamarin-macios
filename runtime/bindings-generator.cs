@@ -2650,6 +2650,21 @@ namespace Xamarin.BindingMethods.Generator {
 				}
 			);
 
+			data.Add(
+				new FunctionData
+				{
+					Comment = " // bool func (Vector4, IntPtr, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.Bool,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector4 },
+						new ParameterData { TypeData = Types.NativeHandleType },
+						new ParameterData { TypeData = Types.NativeHandleType },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
