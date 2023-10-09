@@ -1,4 +1,0 @@
-## Xcode 15
-## Since the modelPositionOut parameter is a pointer, there is no need to add an explicit marshal directive
-## ref: https://developer.apple.com/documentation/vision/vnhumanbodypose3dobservation/4210411-getcamerarelativeposition
-

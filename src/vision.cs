@@ -772,7 +772,7 @@ namespace Vision {
 		RightFrontPaw,
 
 		[Field ("VNAnimalBodyPoseObservationJointNameLeftBackElbow")]
-		LeftBackElbo,
+		LeftBackElbow,
 
 		[Field ("VNAnimalBodyPoseObservationJointNameRightBackElbow")]
 		RightBackElbow,
