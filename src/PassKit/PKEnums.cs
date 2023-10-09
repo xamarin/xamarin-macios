@@ -124,7 +124,9 @@ namespace PassKit {
 		ThreeDS = 1 << 0,
 		EMV = 1 << 1,
 		Credit = 1 << 2,
-		Debit = 1 << 3
+		Debit = 1 << 3,
+		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		InstantFundsOut = 1 << 7,
 	}
 
 	[NoMac]
@@ -385,5 +387,38 @@ namespace PassKit {
 		Connected,
 		Connecting,
 		FailedToConnect,
+	}
+
+	[iOS (17, 0), Mac (14, 0), Watch (10, 0), TV (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum PKApplePayLaterAvailability : long {
+		Available,
+		UnavailableItemIneligible,
+		UnavailableRecurringTransaction,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	[ErrorDomain ("PKDisbursementErrorDomain")]
+	public enum PKDisbursementErrorCode : long {
+		UnknownError = -1,
+		UnsupportedCardError = 1,
+		RecipientContactInvalidError,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+	[Native]
+	public enum PKPayLaterAction : long {
+		LearnMore = 0,
+		Calculator,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+	[Native]
+	public enum PKPayLaterDisplayStyle : long {
+		Standard = 0,
+		Badge,
+		Checkout,
+		Price,
 	}
 }
