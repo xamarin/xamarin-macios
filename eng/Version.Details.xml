@@ -26,39 +26,22 @@
       <Uri>https://github.com/dotnet/cecil</Uri>
       <Sha>a112f15aa032c029b7d9c77df3427111d93cf407</Sha>
     </Dependency>
-    <!-- This is a subscription to the Xcode 13.3/14.0 version of our packages released with the initial release of .NET 7 -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_15.4" Version="15.4.2391-ci.release-7-0-1xx-xcode13-3-multi-targeting">
+    <!-- This is a subscription of the .NET 7 versions of our packages -->
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7099">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>8d8aef87d5de1969068f5433482e25aaf0a5b44c</Sha>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk.net7.0_12.3" Version="12.3.2391-ci.release-7-0-1xx-xcode13-3-multi-targeting">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7099">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>8d8aef87d5de1969068f5433482e25aaf0a5b44c</Sha>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk.net7.0_16.0" Version="16.0.1502-ci.release-7-0-1xx-xcode14-multi-targeting">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7099">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>b30f232061d2df393e444c4481c7a7d1767a7f13</Sha>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk.net7.0_16.0" Version="16.0.1502-ci.release-7-0-1xx-xcode14-multi-targeting">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7099">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>b30f232061d2df393e444c4481c7a7d1767a7f13</Sha>
-    </Dependency>
-    <!-- This is a subscription to the Xcode 14.3 version of our packages (currently the latest version available in .NET 7) -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk.net7.0_16.4" Version="16.4.7108-ci.release-7-0-3xx-multi-targeting">
-      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>00f6b3f856304121750cdd9d420521b06be1dc2d</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk.net7.0_13.3" Version="13.3.7108-ci.release-7-0-3xx-multi-targeting">
-      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>00f6b3f856304121750cdd9d420521b06be1dc2d</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk.net7.0_16.4" Version="16.4.7108-ci.release-7-0-3xx-multi-targeting">
-      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>00f6b3f856304121750cdd9d420521b06be1dc2d</Sha>
-    </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk.net7.0_16.4" Version="16.4.7108-ci.release-7-0-3xx-multi-targeting">
-      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>00f6b3f856304121750cdd9d420521b06be1dc2d</Sha>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="7.0.7">
       <Uri>https://github.com/dotnet/runtime</Uri>
