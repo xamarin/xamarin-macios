@@ -2038,7 +2038,14 @@ public class TestApp {
 			var nunit_framework = Path.Combine (Configuration.RootPath, "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
 			if (!File.Exists (nunit_framework))
 				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
-			return new string [] { lib, nunit_framework };
+			var src_unsafe = Path.Combine (Configuration.RootPath, "packages", "system.runtime.compilerservices.unsafe", "4.3.0", "lib", "netstandard1.0", "System.Runtime.CompilerServices.Unsafe.dll");
+			if (!File.Exists (src_unsafe))
+				throw new FileNotFoundException ($"Could not find System.Runtime.CompilerServices.Unsafe.dll in {src_unsafe}. Has the version changed?");
+			return new string [] {
+				lib,
+				nunit_framework,
+				src_unsafe,
+			};
 		}
 
 		static string GetBindingsLibrary (Profile profile, out string version)

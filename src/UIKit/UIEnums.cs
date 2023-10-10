@@ -1563,9 +1563,9 @@ namespace UIKit {
 		None,
 		OnDrag,
 		Interactive,
-		[TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[TV (16, 0)] // Added in Xcode 14.0, but headers and documentation say it's available in iOS 7+ and Mac Catalyst 13.1+ (and tvOS 16.0)
 		OnDragWithAccessory,
-		[TV (16, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[TV (16, 0)] // Added in Xcode 14.0, but headers and documentation say it's available in iOS 7+ and Mac Catalyst 13.1+ (and tvOS 16.0)
 		InteractiveWithAccessory,
 	}
 

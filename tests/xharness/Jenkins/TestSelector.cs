@@ -246,8 +246,6 @@ namespace Xharness.Jenkins {
 			if (!Harness.INCLUDE_IOS) {
 				MainLog?.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.iOS, false);
-				selection.SetEnabled (PlatformLabel.iOS64, false);
-				selection.SetEnabled (PlatformLabel.iOS32, false);
 			}
 
 			if (!Harness.INCLUDE_WATCH) {
