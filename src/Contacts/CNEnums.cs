@@ -88,6 +88,7 @@ namespace Contacts {
 		NoAccessibleWritableContainers = 101,
 		UnauthorizedKeys = 102,
 		FeatureDisabledByUser = 103,
+		FeatureNotAvailable = 104,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,

@@ -93,6 +93,7 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "Cinematic":
 			case "PushToTalk":
 			case "ShazamKit":
 				// ShazamKit is not fully supported in the simulator
@@ -437,12 +438,28 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "HKHealthStore":
+				switch (name) {
+				case "workoutSessionMirroringStartHandler":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 #endif
 #if __WATCHOS__
 			case "INUserContext":
 				switch (name) {
 				case "encodeWithCoder:":
 					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "HKHealthStore":
+				switch (name) {
+				case "workoutSessionMirroringStartHandler":
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}
@@ -784,10 +801,10 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				case "MPSGraphExecutableExecutionDescriptor":
 					return TestRuntime.CheckXcodeVersion (14, 0);
-#if __WATCHOS__
 				case "HKElectrocardiogramVoltageMeasurement":
 					// NSCopying conformance added in Xcode 14
 					return !TestRuntime.CheckXcodeVersion (14, 0);
+#if __WATCHOS__
 				case "INParameter":
 					// NSCopying conformance added in Xcode 10
 					return !TestRuntime.CheckXcodeVersion (10, 0);
@@ -865,6 +882,12 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "HMLocationEvent":
 					return !TestRuntime.CheckXcodeVersion (9, 0);
+				}
+				break;
+			case "addTracksForCinematicAssetInfo:preferredStartingTrackID:": // cinematic method only supported on devices
+				switch (declaredType.Name) {
+				case "AVMutableComposition":
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 			}

@@ -105,6 +105,20 @@ steps:
       -t:Install
   displayName: 'Install workloads'
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download Build.props
+  inputs:
+    patterns: '**/Build.props'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+- pwsh: |
+    $path = "$(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}Build.props/Build.props"
+    Write-Host "Move $path to xamarin-macios"
+    mv $path ./xamarin-macios
+  displayName: Relocate Build.props
+  workingDirectory: $(Build.SourcesDirectory)
+
 # get and expand the needed libs for monotouch
 - task: DownloadPipelineArtifact@2
   displayName: Download test libraries dependencies

@@ -56,6 +56,14 @@ namespace CoreData {
 
 		[Field ("NSAffectedStoresErrorKey")]
 		NSString AffectedStoresForErrorKey { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Field ("NSPersistentStoreStagedMigrationManagerOptionKey")]
+		NSString StagedMigrationManagerOptionKey { get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (17, 0)]
+		[Field ("NSPersistentStoreDeferredLightweightMigrationOptionKey")]
+		NSString DeferredLightweightMigrationOptionKey { get; }
 	}
 
 	[NoWatch]
@@ -1371,6 +1379,16 @@ namespace CoreData {
 #else
 		NSDictionary EntityVersionHashesByName { get; }
 #endif
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("checksumsForVersionedModelAtURL:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, NSString> ChecksumsForVersionedModel (NSUrl modelUrl, [NullAllowed] out NSError error);
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("versionChecksum")]
+		string VersionChecksum { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -2346,6 +2364,14 @@ namespace CoreData {
 		[Export ("currentPersistentHistoryTokenFromStores:")]
 		[return: NullAllowed]
 		NSPersistentHistoryToken GetCurrentPersistentHistoryToken ([NullAllowed] NSObject [] stores);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[Export ("finishDeferredLightweightMigration:")]
+		bool FinishDeferredLightweightMigration ([NullAllowed] out NSError error);
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
+		[Export ("finishDeferredLightweightMigrationTask:")]
+		bool FinishDeferredLightweightMigrationTask ([NullAllowed] out NSError error);
 	}
 
 	interface NSPersistentStoreCoordinatorStoreChangeEventArgs {
@@ -2973,4 +2999,91 @@ namespace CoreData {
 		NSPersistentCloudKitContainerEventResultType ResultType { get; }
 	}
 
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSStagedMigrationManager {
+		[Export ("stages", ArgumentSemantic.Strong)]
+		NSMigrationStage [] Stages { get; }
+
+		[NullAllowed, Export ("container", ArgumentSemantic.Strong)]
+		NSPersistentContainer Container { get; }
+
+		[Export ("initWithMigrationStages:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSMigrationStage [] stages);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NSMigrationStage {
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSManagedObjectModelReference {
+		[Export ("resolvedModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModel ResolvedModel { get; }
+
+		[Export ("versionChecksum", ArgumentSemantic.Strong)]
+		string VersionChecksum { get; }
+
+		[Export ("initWithModel:versionChecksum:")]
+		NativeHandle Constructor (NSManagedObjectModel model, string versionChecksum);
+
+		[Export ("initWithFileURL:versionChecksum:")]
+		NativeHandle Constructor (NSUrl fileUrl, string versionChecksum);
+
+		[Export ("initWithEntityVersionHashes:inBundle:versionChecksum:")]
+		NativeHandle Constructor (NSDictionary versionHash, [NullAllowed] NSBundle bundle, string versionChecksum);
+
+		[Export ("initWithName:inBundle:versionChecksum:")]
+		NativeHandle Constructor (string modelName, [NullAllowed] NSBundle bundle, string versionChecksum);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSMigrationStage))]
+	[DisableDefaultCtor]
+	interface NSLightweightMigrationStage {
+		[Export ("versionChecksums", ArgumentSemantic.Strong)]
+		string [] VersionChecksums { get; }
+
+		[Export ("initWithVersionChecksums:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string [] versionChecksums);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSAttributeDescription))]
+	interface NSCompositeAttributeDescription {
+		[Export ("elements", ArgumentSemantic.Copy)]
+		NSAttributeDescription [] Elements { get; set; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSMigrationStage))]
+	[DisableDefaultCtor]
+	interface NSCustomMigrationStage {
+		[Export ("currentModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModelReference CurrentModel { get; }
+
+		[Export ("nextModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModelReference NextModel { get; }
+
+		[NullAllowed]
+		[Export ("willMigrateHandler", ArgumentSemantic.Copy)]
+		Func<NSStagedMigrationManager, NSCustomMigrationStage, NSError, bool> WillMigrateHandler { get; set; }
+
+		[NullAllowed]
+		[Export ("didMigrateHandler", ArgumentSemantic.Copy)]
+		Func<NSStagedMigrationManager, NSCustomMigrationStage, NSError, bool> DidMigrateHandler { get; set; }
+
+		[Export ("initWithCurrentModelReference:nextModelReference:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSManagedObjectModelReference currentModel, NSManagedObjectModelReference nextModel);
+	}
 }
+

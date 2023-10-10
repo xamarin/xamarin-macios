@@ -95,12 +95,18 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForURL (IntPtr inUrl, LSRoles inRole, /*out*/ IntPtr outError);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
 		public static NSUrl? GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
@@ -114,12 +120,18 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultApplicationURLForContentType (IntPtr inContentType, LSRoles inRole, /*out*/ IntPtr outError);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
 		public static NSUrl? GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
@@ -131,9 +143,21 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyApplicationURLsForURL (IntPtr inUrl, LSRoles inRole);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		public static NSUrl [] GetApplicationUrlsForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
 			if (url is null)
@@ -172,12 +196,18 @@ namespace CoreServices
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyApplicationURLsForBundleIdentifier (IntPtr inBundleIdentifier, /*out*/ IntPtr outError);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 #endif
 		public static NSUrl [] GetApplicationUrlsForBundleIdentifier (string bundleIdentifier)
 		{
@@ -234,9 +264,21 @@ namespace CoreServices
 
 #region Working with Role Handlers
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllRoleHandlersForContentType (IntPtr inContentType, LSRoles inRole);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		public static string?[]? GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType is null)
@@ -247,9 +289,21 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyDefaultRoleHandlerForContentType (IntPtr inContentType, LSRoles inRole);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		public static string GetDefaultRoleHandlerForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType is null)
@@ -260,10 +314,22 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern LSResult LSSetDefaultRoleHandlerForContentType (IntPtr inContentType,
 			LSRoles inRole, IntPtr inHandlerBundleID);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		// NOTE: intentionally swapped handlerBundleId and roles parameters for a nicer API
 		public static LSResult SetDefaultRoleHandlerForContentType (string contentType, string handlerBundleId,
 			LSRoles roles = LSRoles.All)
@@ -330,9 +396,21 @@ namespace CoreServices
 			);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern LSResult LSSetDefaultHandlerForURLScheme (IntPtr inUrlScheme, IntPtr inHandlerBundleId);
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos14.0")]
+#else
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+#endif
 		public static LSResult SetDefaultHandlerForUrlScheme (string urlScheme, string handlerBundleId)
 		{
 			if (urlScheme is null)

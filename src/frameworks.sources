@@ -34,6 +34,8 @@ ACCELERATE_SOURCES = \
 
 ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
+	Accessibility/AXAnimatedImagesUtilities.cs \
+	Accessibility/AXPrefers.cs \
 
 # Accounts
 
@@ -370,6 +372,8 @@ CLOUDKIT_SOURCES = \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
 	CloudKit/CKUserIdentityLookupInfo.cs \
+	CloudKit/CKSyncEngineFetchChangesScope.cs \
+	CloudKit/CKSyncEngineSendChangesScope.cs \
 
 # CFNetwork
 
@@ -378,6 +382,10 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPMessage.cs \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
+
+# Cinematic
+CINEMATIC_SOURCES = \
+	Cinematic/CNDecision.cs \
 
 # Compression
 
@@ -614,6 +622,7 @@ COREMIDI_SOURCES = \
 
 COREML_SOURCES = \
 	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLModel.cs \
 	CoreML/MLMultiArray.cs \
 	CoreML/MLMultiArrayConstraint.cs \
 
@@ -1363,8 +1372,8 @@ NETWORKEXTENSION_SOURCES = \
 
 # NewsstandKit
 
-NEWSSTANDKIT_API_SOURCES = \
-	NewsstandKit/Enums.cs \
+NEWSSTANDKIT_SOURCES = \
+	NewsstandKit/Compat.cs \
 
 # NotificationCenter
 
@@ -2007,6 +2016,7 @@ COMMON_FRAMEWORKS =         \
 	OSLog                   \
 	SceneKit                \
 	ShazamKit               \
+	Symbols                 \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
@@ -2029,6 +2039,7 @@ MACOS_FRAMEWORKS =          \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2104,6 +2115,7 @@ MACOS_FRAMEWORKS =          \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
+	SensitiveContentAnalysis \
 	ServiceManagement       \
 	Security                \
 	SharedWithYou           \
@@ -2142,6 +2154,7 @@ IOS_FRAMEWORKS =         \
 	CarPlay \
 	CFNetwork \
 	Chip \
+	Cinematic \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2214,6 +2227,7 @@ IOS_FRAMEWORKS =         \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	SharedWithYou \
 	SharedWithYouCore \
@@ -2273,6 +2287,7 @@ TVOS_FRAMEWORKS =           \
 	BackgroundTasks         \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
@@ -2303,7 +2318,9 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	NetworkExtension        \
 	OpenGLES                \
+	Phase                   \
 	Photos                  \
 	PhotosUI                \
 	ReplayKit               \
@@ -2406,6 +2423,7 @@ MACCATALYST_FRAMEWORKS = \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	ServiceManagement \
 	SharedWithYou \

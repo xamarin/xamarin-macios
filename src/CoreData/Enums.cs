@@ -58,7 +58,9 @@ namespace CoreData {
 		[MacCatalyst (13, 1)]
 		Uri = 1200,
 		Transformable = 1800,
-		ObjectID = 2000
+		ObjectID = 2000,
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		CompositeAttributeType = 2100,
 	}
 
 	// NUInteger -> NSFetchRequest.h

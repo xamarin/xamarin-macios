@@ -1551,6 +1551,10 @@
 		<ItemGroup>
 			<_AllLinkerFlags Include="@(_AssemblyLinkerFlags);@(_MainLinkerFlags);@(_CustomLinkFlags)" />
 			<_AllLinkerFlags Condition="'$(_ExportSymbolsExplicitly)' != 'true'" Include="@(_ReferencesLinkerFlags)" />
+
+			<!-- check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693 -->
+			<_AllLinkerFlags Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)', '15.0')) And '$(_UseClassicLinker)' != 'false'" Include="-Xlinker" />
+			<_AllLinkerFlags Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)', '15.0')) And '$(_UseClassicLinker)' != 'false'" Include="-ld_classic" />
 		</ItemGroup>
 
 		<LinkNativeCode

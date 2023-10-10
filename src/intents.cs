@@ -311,6 +311,8 @@ namespace Intents {
 		EncodingGeneric = 8000,
 		EncodingFailed = 8001,
 		DecodingGeneric = 9000,
+		UnableToCreateAppIntentRepresentation = 10000,
+		NoAppIntent = 10001,
 	}
 
 	[TV (14, 0)]
@@ -705,6 +707,8 @@ namespace Intents {
 		FailureMessageServiceNotAvailable,
 		[MacCatalyst (13, 1)]
 		FailureMessageTooManyResults,
+		[iOS (17, 0), MacCatalyst (17, 0)]
+		FailureRequiringInAppAuthentication,
 	}
 
 	[Deprecated (PlatformName.iOS, 15, 0)]
@@ -735,7 +739,8 @@ namespace Intents {
 		Success,
 		Failure,
 		FailureRequiringAppLaunch,
-		FailureMessageServiceNotAvailable
+		FailureMessageServiceNotAvailable,
+		FailureRequiringInAppAuthentication,
 	}
 
 	[Unavailable (PlatformName.MacOSX)]
@@ -965,18 +970,24 @@ namespace Intents {
 	[Native]
 	public enum INStartWorkoutIntentResponseCode : long {
 		Unspecified = 0,
-		Ready,
-		ContinueInApp,
-		Failure,
-		FailureRequiringAppLaunch,
-		FailureOngoingWorkout,
-		FailureNoMatchingWorkout,
+		Ready = 1,
+		ContinueInApp = 2,
+		Failure = 3,
+		FailureRequiringAppLaunch = 4,
+		FailureOngoingWorkout = 5,
+		FailureNoMatchingWorkout = 6,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 7, which is now defined as 'Success').")]
 		[MacCatalyst (13, 1)]
-		HandleInApp,
+#if XAMCORE_5_0 && !NET
+		[NoWatch]
+#endif
+		HandleInApp = 7,
 		[Advice ("The numerical value for this constant was different in iOS 11 and earlier iOS versions (it was 6, which is now defined as 'HandleInApp').")]
 		[MacCatalyst (13, 1)]
-		Success,
+#if XAMCORE_5_0 && !NET
+		[NoWatch]
+#endif
+		Success = 8,
 	}
 
 	[Unavailable (PlatformName.MacOSX)]
@@ -1421,6 +1432,8 @@ namespace Intents {
 		[Watch (5, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		Link,
+		[iOS (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
+		Reaction,
 	}
 
 	[NoTV, NoMac]
@@ -1522,6 +1535,8 @@ namespace Intents {
 		NoValidHandle,
 		RequestedHandleInvalid,
 		NoHandleForLabel,
+		[Mac (14, 0), MacCatalyst (17, 0)]
+		RequiringInAppAuthentication,
 	}
 
 	[NoTV, NoMac]
@@ -1686,17 +1701,20 @@ namespace Intents {
 	[Native]
 	public enum INPlayMediaIntentResponseCode : long {
 		Unspecified = 0,
-		Ready,
-		ContinueInApp,
-		InProgress,
-		Success,
-		HandleInApp,
-		Failure,
-		FailureRequiringAppLaunch,
-		FailureUnknownMediaType,
-		FailureNoUnplayedContent,
-		FailureRestrictedContent,
-		FailureMaxStreamLimitReached,
+		Ready = 1,
+		ContinueInApp = 2,
+		InProgress = 3,
+		Success = 4,
+#if XAMCORE_5_0 && !NET
+		[NoWatch]
+#endif
+		HandleInApp = 5,
+		Failure = 6,
+		FailureRequiringAppLaunch = 7,
+		FailureUnknownMediaType = 8,
+		FailureNoUnplayedContent = 9,
+		FailureRestrictedContent = 10,
+		FailureMaxStreamLimitReached = 11,
 	}
 
 	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
@@ -1754,12 +1772,15 @@ namespace Intents {
 	[Native]
 	public enum INAddMediaIntentResponseCode : long {
 		Unspecified = 0,
-		Ready,
-		InProgress,
-		Success,
-		HandleInApp,
-		Failure,
-		FailureRequiringAppLaunch,
+		Ready = 1,
+		InProgress = 2,
+		Success = 3,
+#if XAMCORE_5_0 && !NET
+		[NoWatch]
+#endif
+		HandleInApp = 4,
+		Failure = 5,
+		FailureRequiringAppLaunch = 6,
 	}
 
 	[Watch (6, 0), TV (14, 0), NoMac, iOS (13, 0)]
@@ -2038,6 +2059,8 @@ namespace Intents {
 		UnsupportedMmiUssd,
 		NoCallHistoryForRedial,
 		NoUsableHandleForRedial,
+		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		RequiringInAppAuthentication,
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
@@ -2060,6 +2083,8 @@ namespace Intents {
 		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		FailureCallRinging,
+		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		ResponseCode,
 	}
 
 	[Watch (6, 0), NoTV, NoMac, iOS (13, 0)]
@@ -4326,7 +4351,6 @@ namespace Intents {
 
 		[Watch (9, 0), NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:audioMessageFile:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName, [NullAllowed] INFile audioMessageFile);
 
 		[Watch (6, 1), NoMac, iOS (13, 2)]
@@ -4379,9 +4403,40 @@ namespace Intents {
 		[NullAllowed, Export ("serviceName")]
 		string ServiceName { get; }
 
+		[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'AttachmentFile' instead.")]
+		[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'AttachmentFile' instead.")]
+		[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'AttachmentFile' instead.")]
 		[Watch (9, 0), NoMac, iOS (16, 0), MacCatalyst (16, 0)]
 		[NullAllowed, Export ("audioMessageFile", ArgumentSemantic.Copy)]
 		INFile AudioMessageFile { get; }
+
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:attachmentFiles:")]
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName, [NullAllowed] INFile [] attachmentFiles);
+
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:linkMetadata:")]
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, [NullAllowed] string serviceName, [NullAllowed] INMessageLinkMetadata linkMetadata);
+
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:serviceName:messageType:numberOfAttachments:")]
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, [NullAllowed] string serviceName, INMessageType messageType, [NullAllowed] NSNumber numberOfAttachments);
+
+		[NullAllowed]
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("attachmentFiles", ArgumentSemantic.Copy)]
+		INFile [] AttachmentFiles { get; }
+
+		[NullAllowed, BindAs (typeof (int))]
+		[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("numberOfAttachments", ArgumentSemantic.Copy)]
+		NSNumber NumberOfAttachments { get; }
+
+		[NullAllowed]
+		[Watch (10, 0), NoMac, iOS (17, 0)]
+		[Export ("linkMetadata", ArgumentSemantic.Copy)]
+		INMessageLinkMetadata LinkMetadata { get; }
+
 	}
 
 #if NET
@@ -12563,6 +12618,40 @@ namespace Intents {
 		Authorized,
 	}
 
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum INUnsendMessagesIntentResponseCode : long {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureMessageNotFound,
+		FailurePastUnsendTimeLimit,
+		FailureMessageTypeUnsupported,
+		FailureUnsupportedOnService,
+		FailureMessageServiceNotAvailable,
+		FailureRequiringInAppAuthentication,
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum INEditMessageIntentResponseCode : long {
+		Unspecified = 0,
+		Ready,
+		InProgress,
+		Success,
+		Failure,
+		FailureRequiringAppLaunch,
+		FailureMessageNotFound,
+		FailurePastEditTimeLimit,
+		FailureMessageTypeUnsupported,
+		FailureUnsupportedOnService,
+		FailureMessageServiceNotAvailable,
+		FailureRequiringInAppAuthentication,
+	}
+
 	[Watch (8, 0), NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -14998,4 +15087,102 @@ namespace Intents {
 		[Export ("code")]
 		INHangUpCallIntentResponseCode Code { get; }
 	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INUnsendMessagesIntentResponse {
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (INUnsendMessagesIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INUnsendMessagesIntentResponseCode Code { get; }
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntent))]
+	interface INUnsendMessagesIntent {
+		[Export ("initWithMessageIdentifiers:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] string [] messageIdentifiers);
+
+		[NullAllowed, Export ("messageIdentifiers", ArgumentSemantic.Copy)]
+		string [] MessageIdentifiers { get; }
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface INMessageLinkMetadata : NSCopying, NSSecureCoding {
+		[Export ("initWithSiteName:summary:title:openGraphType:linkURL:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] string siteName, [NullAllowed] string summary, [NullAllowed] string title, [NullAllowed] string openGraphType, [NullAllowed] NSUrl linkUrl);
+
+		[NullAllowed, Export ("siteName")]
+		string SiteName { get; set; }
+
+		[NullAllowed, Export ("summary")]
+		string Summary { get; set; }
+
+		[NullAllowed, Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("openGraphType")]
+		string OpenGraphType { get; set; }
+
+		[NullAllowed, Export ("linkURL", ArgumentSemantic.Copy)]
+		NSUrl LinkUrl { get; set; }
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntentResponse))]
+	[DisableDefaultCtor]
+	interface INEditMessageIntentResponse {
+		[Export ("initWithCode:userActivity:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (INEditMessageIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INEditMessageIntentResponseCode Code { get; }
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (INIntent))]
+	interface INEditMessageIntent {
+		[Export ("initWithMessageIdentifier:editedContent:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] string messageIdentifier, [NullAllowed] string editedContent);
+
+		[NullAllowed, Export ("messageIdentifier")]
+		string MessageIdentifier { get; }
+
+		[NullAllowed, Export ("editedContent")]
+		string EditedContent { get; }
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Protocol]
+	interface INEditMessageIntentHandling {
+		[Abstract]
+		[Export ("handleEditMessage:completion:")]
+		void HandleEditMessage (INEditMessageIntent intent, Action<INEditMessageIntentResponse> completion);
+
+		[Export ("confirmEditMessage:completion:")]
+		void ConfirmEditMessage (INEditMessageIntent intent, Action<INEditMessageIntentResponse> completion);
+
+		[Export ("resolveEditedContentForEditMessage:withCompletion:")]
+		void ResolveEditedContent (INEditMessageIntent intent, Action<INStringResolutionResult> completion);
+	}
+
+	[Watch (10, 0), NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Protocol]
+	interface INUnsendMessagesIntentHandling {
+		[Abstract]
+		[Export ("handleUnsendMessages:completion:")]
+		void HandleUnsendMessages (INUnsendMessagesIntent intent, Action<INUnsendMessagesIntentResponse> completion);
+
+		[Export ("confirmUnsendMessages:completion:")]
+		void ConfirmUnsendMessages (INUnsendMessagesIntent intent, Action<INUnsendMessagesIntentResponse> completion);
+	}
+
 }
