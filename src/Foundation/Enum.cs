@@ -590,10 +590,10 @@ namespace Foundation {
 		SkipsSubdirectoryDescendants = 1 << 0,
 		SkipsPackageDescendants = 1 << 1,
 		SkipsHiddenFiles = 1 << 2,
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		IncludesDirectoriesPostOrder = 1 << 3,
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		ProducesRelativePathUrls = 1 << 4,
 	}
@@ -693,16 +693,12 @@ namespace Foundation {
 		Percent = 3,
 		Scientific = 4,
 		SpellOut = 5,
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		OrdinalStyle = 6,
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		CurrencyIsoCodeStyle = 8,
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		CurrencyPluralStyle = 9,
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		CurrencyAccountingStyle = 10,
 	}
@@ -745,12 +741,8 @@ namespace Foundation {
 	public enum NSFileCoordinatorReadingOptions : ulong {
 		WithoutChanges = 1,
 		ResolvesSymbolicLink = 1 << 1,
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ImmediatelyAvailableMetadataOnly = 1 << 2,
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ForUploading = 1 << 3
 	}
@@ -762,8 +754,6 @@ namespace Foundation {
 		ForMoving = 2,
 		ForMerging = 4,
 		ForReplacing = 8,
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		ContentIndependentMetadataOnly = 16,
 	}
@@ -803,13 +793,12 @@ namespace Foundation {
 	[Native]
 	public enum NSJsonWritingOptions : ulong {
 		PrettyPrinted = 1,
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		SortedKeys = (1 << 1),
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		FragmentsAllowed = (1 << 2),
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		WithoutEscapingSlashes = (1 << 3),
 	}
@@ -969,27 +958,20 @@ namespace Foundation {
 		None = 0,
 		WrapCalendarComponents = 1 << 0,
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		MatchStrictly = 1 << 1,
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		SearchBackwards = 1 << 2,
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		MatchPreviousTimePreservingSmallerUnits = 1 << 8,
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		MatchNextTimePreservingSmallerUnits = 1 << 9,
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		MatchNextTime = 1 << 10,
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		MatchFirst = 1 << 12,
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		MatchLast = 1 << 13,
 	}
@@ -1006,22 +988,17 @@ namespace Foundation {
 		Video,
 		Background,
 		Voice,
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 		[Watch (5, 0)]
 		[TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		ResponsiveData = 6,
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		AVStreaming = 8,
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		ResponsiveAV = 9,
-		[Mac (10, 12)]
-		[iOS (10, 0)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 		[MacCatalyst (13, 1)]
 		CallSignaling = 11,
 	}
@@ -1116,8 +1093,6 @@ namespace Foundation {
 		ShortGeneric
 	}
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSItemProviderErrorCode : long {
@@ -1129,8 +1104,6 @@ namespace Foundation {
 	}
 
 	[Native]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NSDateComponentsFormatterUnitsStyle : long {
 		Positional = 0,
@@ -1138,18 +1111,12 @@ namespace Foundation {
 		Short,
 		Full,
 		SpellOut,
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
-		[Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		Brief,
 	}
 
 	[Flags]
 	[Native]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NSDateComponentsFormatterZeroFormattingBehavior : ulong {
 		None = (0),
@@ -1162,8 +1129,6 @@ namespace Foundation {
 	}
 
 	[Native]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NSFormattingContext : long {
 		Unknown = 0,
@@ -1174,8 +1139,6 @@ namespace Foundation {
 		MiddleOfSentence = 5
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSDateIntervalFormatterStyle : ulong {
@@ -1186,8 +1149,6 @@ namespace Foundation {
 		Full = 4
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSEnergyFormatterUnit : long {
@@ -1197,8 +1158,6 @@ namespace Foundation {
 		Kilocalorie = (7 << 8) + 2
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSFormattingUnitStyle : long {
@@ -1207,8 +1166,6 @@ namespace Foundation {
 		Long
 	}
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSMassFormatterUnit : long {
@@ -1219,8 +1176,6 @@ namespace Foundation {
 		Stone = (6 << 8) + 3
 	}
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSLengthFormatterUnit : long {
@@ -1234,8 +1189,6 @@ namespace Foundation {
 		Mile = (5 << 8) + 4
 	}
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSQualityOfService : long {
@@ -1246,10 +1199,6 @@ namespace Foundation {
 		Default = -1
 	}
 
-	[Mac (10, 10, 3)]
-	[Watch (4, 0)]
-	[TV (11, 0)]
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSProcessInfoThermalState : long {
@@ -1318,7 +1267,6 @@ namespace Foundation {
 		InternalError = 1 << 4
 	}
 
-	[Mac (10, 11), iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -1326,7 +1274,6 @@ namespace Foundation {
 		Phonetic = (1 << 1)
 	}
 
-	[Mac (10, 11), iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSPersonNameComponentsFormatterStyle : long {
@@ -1337,8 +1284,6 @@ namespace Foundation {
 		Abbreviated
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSDecodingFailurePolicy : long {
@@ -1346,10 +1291,6 @@ namespace Foundation {
 		SetErrorAndReturn
 	}
 
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Watch (3, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -1364,7 +1305,6 @@ namespace Foundation {
 		DashSeparatorInDate = 1 << 8,
 		ColonSeparatorInTime = 1 << 9,
 		ColonSeparatorInTimeZone = 1 << 10,
-		[Mac (10, 13), iOS (11, 0), TV (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		FractionalSeconds = 1 << 11,
 		FullDate = Year | Month | Day | DashSeparatorInDate,
@@ -1372,10 +1312,6 @@ namespace Foundation {
 		InternetDateTime = FullDate | FullTime,
 	}
 
-	[Watch (3, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSUrlSessionTaskMetricsResourceFetchType : long {
@@ -1385,10 +1321,6 @@ namespace Foundation {
 		LocalCache
 	}
 
-	[Watch (3, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -1399,7 +1331,6 @@ namespace Foundation {
 	}
 
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSItemProviderRepresentationVisibility : long {
@@ -1413,14 +1344,12 @@ namespace Foundation {
 		OwnProcess = 3,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSItemProviderFileOptions : long {
 		OpenInPlace = 1,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSLinguisticTaggerUnit : long {
@@ -1430,7 +1359,6 @@ namespace Foundation {
 		Document,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSUrlSessionDelayedRequestDisposition : long {
@@ -1442,5 +1370,17 @@ namespace Foundation {
 	[Native]
 	public enum NSXpcConnectionOptions : ulong {
 		Privileged = (1 << 12),
+	}
+
+	[Mac (11, 0), MacCatalyst (13, 1)]
+	public enum NSFileProtectionType {
+		[Field ("NSFileProtectionComplete")]
+		Complete,
+		[Field ("NSFileProtectionCompleteUnlessOpen")]
+		CompleteUnlessOpen,
+		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
+		CompleteUntilFirstUserAuthentication,
+		[Field ("NSFileProtectionNone")]
+		None,
 	}
 }

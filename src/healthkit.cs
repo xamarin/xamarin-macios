@@ -17,6 +17,13 @@ using System;
 using System.ComponentModel;
 using CoreLocation;
 using UniformTypeIdentifiers;
+#if MONOMAC
+using AppKit;
+using UIViewController = AppKit.NSViewController;
+#else
+using UIKit;
+using NSViewController = Foundation.NSObject;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -24,7 +31,7 @@ using NativeHandle = System.IntPtr;
 
 namespace HealthKit {
 
-	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKDocumentTypeIdentifier {
 		[Field ("HKDocumentTypeIdentifierCDA")]
@@ -32,7 +39,6 @@ namespace HealthKit {
 	}
 
 	// NSInteger -> HKDefines.h
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("HKErrorDomain")]
@@ -50,9 +56,11 @@ namespace HealthKit {
 		UserExitedWorkoutSession,
 		RequiredAuthorizationDenied,
 		NoData,
+		WorkoutActivityNotAllowed,
+		DataSizeExceeded,
+		BackgroundWorkoutSessionNotAllowed,
 	}
 
-	[iOS (10, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -62,15 +70,14 @@ namespace HealthKit {
 		Outdoor
 	}
 
-	[NoiOS]
+	[iOS (17, 0)]
 	[Mac (13, 0)]
-	[NoMacCatalyst]
+	[MacCatalyst (17, 0)]
 	[Native]
 	public enum HKWorkoutSessionState : long {
 		NotStarted = 1,
 		Running,
 		Ended,
-		[Watch (3, 0)]
 		[NoMacCatalyst]
 		Paused,
 		[Watch (5, 0)]
@@ -81,8 +88,6 @@ namespace HealthKit {
 		Stopped,
 	}
 
-	[iOS (11, 0)]
-	[Watch (4, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -189,7 +194,6 @@ namespace HealthKit {
 
 	delegate void HKWorkoutRouteBuilderDataHandler (HKWorkoutRouteQuery query, CLLocation [] routeData, bool done, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -214,7 +218,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler2 completion);
 #endif
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithType:predicate:anchor:limit:resultsHandler:")]
 		NativeHandle Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, [NullAllowed] HKQueryAnchor anchor, nuint limit, HKAnchoredObjectUpdateHandler handler);
@@ -224,13 +227,11 @@ namespace HealthKit {
 		[Export ("initWithQueryDescriptors:anchor:limit:resultsHandler:")]
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, [NullAllowed] HKQueryAnchor anchor, nint limit, HKAnchoredObjectUpdateHandler resultsHandler);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("updateHandler", ArgumentSemantic.Copy)]
 		HKAnchoredObjectUpdateHandler UpdateHandler { get; set; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -274,47 +275,38 @@ namespace HealthKit {
 		[Field ("HKPredicateKeyPathWorkoutType")]
 		NSString WorkoutType { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathWorkoutTotalSwimmingStrokeCount")]
 		NSString WorkoutTotalSwimmingStrokeCount { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathDevice")]
 		NSString Device { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathSourceRevision")]
 		NSString SourceRevision { get; }
 
-		[iOS (9, 3), Watch (2, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathDateComponents")]
 		NSString DateComponents { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathCDATitle")]
 		NSString CdaTitle { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathCDAPatientName")]
 		NSString CdaPatientName { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathCDAAuthorName")]
 		NSString CdaAuthorName { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathCDACustodianName")]
 		NSString CdaCustodianName { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKPredicateKeyPathWorkoutTotalFlightsClimbed")]
 		NSString TotalFlightsClimbed { get; }
@@ -443,7 +435,6 @@ namespace HealthKit {
 	}
 
 	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
-	[iOS (10, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -454,7 +445,6 @@ namespace HealthKit {
 	}
 
 	[NoWatch]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("HKDetailedCdaErrorKeys")]
 	[Internal]
@@ -462,7 +452,6 @@ namespace HealthKit {
 		NSString ValidationError { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -487,14 +476,13 @@ namespace HealthKit {
 		[Export ("categorySampleWithType:value:startDate:endDate:")]
 		HKCategorySample FromType (HKCategoryType type, nint value, NSDate startDate, NSDate endDate);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("categorySampleWithType:value:startDate:endDate:device:metadata:")]
 		HKCategorySample FromType (HKCategoryType type, nint value, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 	}
 
-	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
 	[Abstract] // as per docs
@@ -506,7 +494,7 @@ namespace HealthKit {
 		HKDocumentType DocumentType { get; }
 	}
 
-	[NoWatch, iOS (10, 0), Mac (13, 0)]
+	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKDocumentSample), Name = "HKCDADocumentSample")]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCDADocumentSample
@@ -526,7 +514,7 @@ namespace HealthKit {
 		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, HKMetadata metadata, out NSError validationError);
 	}
 
-	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "HKCDADocument")]
 	[DisableDefaultCtor] // as per docs
@@ -547,7 +535,6 @@ namespace HealthKit {
 		string CustodianName { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -573,7 +560,6 @@ namespace HealthKit {
 		[Static, Export ("correlationWithType:startDate:endDate:objects:")]
 		HKCorrelation Create (HKCorrelationType correlationType, NSDate startDate, NSDate endDate, NSSet objects);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("correlationWithType:startDate:endDate:objects:device:metadata:")]
@@ -582,7 +568,6 @@ namespace HealthKit {
 
 	delegate void HKCorrelationQueryResultHandler (HKCorrelationQuery query, HKCorrelation [] correlations, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -598,7 +583,6 @@ namespace HealthKit {
 		NSDictionary SamplePredicates { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -611,7 +595,6 @@ namespace HealthKit {
 	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
 	delegate void HKHealthStoreCompletionHandler (bool success, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -650,18 +633,15 @@ namespace HealthKit {
 		[Export ("deleteObject:withCompletion:")]
 		void DeleteObject (HKObject obj, Action<bool, NSError> completion);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("deleteObjects:withCompletion:")]
 		void DeleteObjects (HKObject [] objects, Action<bool, NSError> completion);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("deleteObjectsOfType:predicate:withCompletion:")]
 		void DeleteObjects (HKObjectType objectType, NSPredicate predicate, Action<bool, nuint, NSError> completion);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("earliestPermittedSampleDate")]
 		NSDate EarliestPermittedSampleDate { get; }
@@ -670,13 +650,11 @@ namespace HealthKit {
 		[Export ("executeQuery:")]
 		void ExecuteQuery (HKQuery query);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("fitzpatrickSkinTypeWithError:")]
 		[return: NullAllowed]
 		HKFitzpatrickSkinTypeObject GetFitzpatrickSkinType (out NSError error);
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("wheelchairUseWithError:")]
 		[return: NullAllowed]
@@ -700,7 +678,6 @@ namespace HealthKit {
 		[return: NullAllowed]
 		NSDate GetDateOfBirth (out NSError error);
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("dateOfBirthComponentsWithError:")]
 		[return: NullAllowed]
@@ -737,12 +714,10 @@ namespace HealthKit {
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[NoWatch]
 		[Async]
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("handleAuthorizationForExtensionWithCompletion:")]
 		void HandleAuthorizationForExtension (Action<bool, NSError> completion);
 
-		[iOS (9, 0)]
 		[Deprecated (PlatformName.WatchOS, 4, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0)]
 		[MacCatalyst (13, 1)]
@@ -752,6 +727,10 @@ namespace HealthKit {
 
 		// HKWorkout category
 
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 10, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'HKWorkoutBuilder.Add (HKSample [] samples, HKWorkoutBuilderCompletionHandler completionHandler)' instead.")]
 		[Export ("addSamples:toWorkout:completion:")]
 		void AddSamples (HKSample [] samples, HKWorkout workout, HKStoreSampleAddedCallback callback);
 
@@ -767,19 +746,19 @@ namespace HealthKit {
 		[Export ("endWorkoutSession:")]
 		void EndWorkoutSession (HKWorkoutSession workoutSession);
 
-		[Watch (3, 0), NoiOS]
+		[NoiOS]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'HKWorkoutSession.Pause' instead.")]
 		[NoMacCatalyst]
 		[Export ("pauseWorkoutSession:")]
 		void PauseWorkoutSession (HKWorkoutSession workoutSession);
 
-		[Watch (3, 0), NoiOS]
+		[NoiOS]
 		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'HKWorkoutSession.Resume' instead.")]
 		[NoMacCatalyst]
 		[Export ("resumeWorkoutSession:")]
 		void ResumeWorkoutSession (HKWorkoutSession workoutSession);
 
-		[NoWatch, iOS (10, 0)]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("startWatchAppWithWorkoutConfiguration:completion:")]
@@ -787,13 +766,11 @@ namespace HealthKit {
 
 		// HKUserPreferences category
 
-		[iOS (8, 2)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("preferredUnitsForQuantityTypes:completion:")]
 		void GetPreferredUnits (NSSet quantityTypes, Action<NSDictionary, NSError> completion);
 
-		[iOS (8, 2)]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("HKUserPreferencesDidChangeNotification")]
@@ -821,11 +798,19 @@ namespace HealthKit {
 		[Async]
 		[Export ("requestPerObjectReadAuthorizationForType:predicate:completion:")]
 		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, HKHealthStoreCompletionHandler completion);
+
+		[NullAllowed]
+		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[Export ("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
+		Action<HKWorkoutSession> WorkoutSessionMirroringStartHandler { get; set; }
+
+		[NoTV, NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("authorizationViewControllerPresenter")]
+		UIViewController AuthorizationViewControllerPresenter { get; set; }
 	}
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -834,7 +819,6 @@ namespace HealthKit {
 		HKBiologicalSex BiologicalSex { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -910,72 +894,58 @@ namespace HealthKit {
 		[Export ("CoachedWorkout")]
 		bool CoachedWorkout { get; set; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("SexualActivityProtectionUsed")]
 		bool SexualActivityProtectionUsed { get; set; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("MenstrualCycleStart")]
 		bool MenstrualCycleStart { get; set; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("WeatherCondition")]
 		HKWeatherCondition WeatherCondition { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("WeatherTemperature")]
 		HKQuantity WeatherTemperature { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("WeatherHumidity")]
 		HKQuantity WeatherHumidity { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("LapLength")]
 		NSString LapLength { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("SwimmingLocationType")]
 		NSString SwimmingLocationType { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("SwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("SyncIdentifier")]
 		string SyncIdentifier { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("SyncVersion")]
 		int SyncVersion { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("InsulinDeliveryReason")]
 		HKInsulinDeliveryReason InsulinDeliveryReason { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("BloodGlucoseMealTime")]
 		HKBloodGlucoseMealTime BloodGlucoseMealTime { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("VO2MaxTestType")]
 		HKVO2MaxTestType VO2MaxTestType { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("HeartRateMotionContext")]
 		HKHeartRateMotionContext HeartRateMotionContext { get; }
@@ -1026,7 +996,6 @@ namespace HealthKit {
 		HKQuantity HeartRateEventThreshold { get; set; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -1088,72 +1057,58 @@ namespace HealthKit {
 		[Field ("HKMetadataKeyCoachedWorkout")]
 		NSString CoachedWorkout { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeySexualActivityProtectionUsed")]
 		NSString SexualActivityProtectionUsed { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyMenstrualCycleStart")]
 		NSString MenstrualCycleStart { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyWeatherCondition")]
 		NSString WeatherCondition { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyWeatherTemperature")]
 		NSString WeatherTemperature { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyWeatherHumidity")]
 		NSString WeatherHumidity { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyLapLength")]
 		NSString LapLength { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeySwimmingLocationType")]
 		NSString SwimmingLocationType { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeySwimmingStrokeStyle")]
 		NSString SwimmingStrokeStyle { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeySyncIdentifier")]
 		NSString SyncIdentifier { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeySyncVersion")]
 		NSString SyncVersion { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyInsulinDeliveryReason")]
 		NSString InsulinDeliveryReason { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyBloodGlucoseMealTime")]
 		NSString BloodGlucoseMealTime { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyVO2MaxTestType")]
 		NSString VO2MaxTestType { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKMetadataKeyHeartRateMotionContext")]
 		NSString HeartRateMotionContext { get; }
@@ -1301,9 +1256,32 @@ namespace HealthKit {
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("HKMetadataKeyUserMotionContext")]
 		NSString UserMotionContext { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyActivityType")]
+		NSString KeyActivityType { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyPhysicalEffortEstimationType")]
+		NSString PhysicalEffortEstimationType { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyAppleFitnessPlusSession")]
+		NSString AppleFitnessPlusSession { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyCyclingFunctionalThresholdPowerTestType")]
+		NSString CyclingFunctionalThresholdPowerTestType { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyMaximumLightIntensity")]
+		NSString MaximumLightIntensity { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKMetadataKeyWaterSalinity")]
+		NSString WaterSalinity { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
@@ -1326,18 +1304,15 @@ namespace HealthKit {
 		[Wrap ("WeakMetadata")]
 		HKMetadata Metadata { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("sourceRevision", ArgumentSemantic.Strong)]
 		HKSourceRevision SourceRevision { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("device", ArgumentSemantic.Strong)]
 		HKDevice Device { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
@@ -1390,7 +1365,6 @@ namespace HealthKit {
 		HKCorrelationType GetCorrelationType ([NullAllowed] NSString hkCorrelationTypeIdentifier);
 
 		[NoWatch] // HKDocumentType is iOS only, rdar #27865614
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Static]
@@ -1405,15 +1379,12 @@ namespace HealthKit {
 		HKWorkoutType GetWorkoutType ();
 #endif
 
-		[Watch (2, 2)]
-		[iOS (9, 3)]
 		[Mac (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("activitySummaryType")]
 		HKActivitySummaryType ActivitySummaryType { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("seriesTypeForIdentifier:")]
@@ -1464,7 +1435,6 @@ namespace HealthKit {
 
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKObjectType))]
@@ -1473,7 +1443,6 @@ namespace HealthKit {
 
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSampleType
@@ -1516,7 +1485,6 @@ namespace HealthKit {
 
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -1526,7 +1494,7 @@ namespace HealthKit {
 	}
 
 	[NoWatch] // marked as iOS-only (confirmed by Apple) even if some watchOS 3 API returns this type, rdar #27865614
-	[iOS (10, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentType
@@ -1534,7 +1502,6 @@ namespace HealthKit {
 
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -1553,7 +1520,6 @@ namespace HealthKit {
 	[MacCatalyst (15, 0)]
 	delegate void HKObserverQueryDescriptorUpdateHandler (HKObserverQuery query, NSSet<HKSampleType> samples, [BlockCallback] Action completion, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -1571,7 +1537,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, HKObserverQueryDescriptorUpdateHandler updateHandler);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1591,7 +1556,6 @@ namespace HealthKit {
 		NSComparisonResult Compare (HKQuantity quantity);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -1616,7 +1580,6 @@ namespace HealthKit {
 		[Wrap ("FromType (quantityType, quantity, startDate, endDate, metadata.GetDictionary ())")]
 		HKQuantitySample FromType (HKQuantityType quantityType, HKQuantity quantity, NSDate startDate, NSDate endDate, HKMetadata metadata);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("quantitySampleWithType:quantity:startDate:endDate:device:metadata:")]
@@ -1628,13 +1591,11 @@ namespace HealthKit {
 		nint Count { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
 	interface HKQuery {
-		[iOS (9, 3), Watch (2, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("objectType", ArgumentSemantic.Strong)]
 		HKObjectType ObjectType { get; }
@@ -1678,19 +1639,16 @@ namespace HealthKit {
 		[Export ("predicateForObjectsWithUUIDs:")]
 		NSPredicate GetPredicateForObjects (NSSet objectUuids);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForObjectsFromDevices:")]
 		NSPredicate GetPredicateForObjectsFromDevices (NSSet<HKDevice> devices);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForObjectsWithDeviceProperty:allowedValues:")]
 		NSPredicate GetPredicateForObjectsWithDeviceProperty (string key, NSSet<NSString> allowedValues);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForObjectsFromSourceRevisions:")]
@@ -1742,13 +1700,11 @@ namespace HealthKit {
 		[Export ("predicateForWorkoutsWithOperatorType:totalDistance:")]
 		NSPredicate GetPredicateForTotalDistance (NSPredicateOperatorType operatorType, HKQuantity totalDistance);
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:totalSwimmingStrokeCount:")]
 		NSPredicate GetPredicateForTotalSwimmingStrokeCount (NSPredicateOperatorType operatorType, HKQuantity totalSwimmingStrokeCount);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:totalFlightsClimbed:")]
@@ -1776,13 +1732,11 @@ namespace HealthKit {
 
 		// HKActivitySummaryPredicates
 
-		[iOS (9, 3), Watch (2, 2)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForActivitySummaryWithDateComponents:")]
 		NSPredicate GetPredicateForActivitySummary (NSDateComponents dateComponents);
 
-		[iOS (9, 3), Watch (2, 2)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("predicateForActivitySummariesBetweenStartDateComponents:endDateComponents:")]
@@ -1881,7 +1835,6 @@ namespace HealthKit {
 		NSPredicate GetPredicateForWorkouts (NSPredicate activityPredicate);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKObject))]
@@ -1916,7 +1869,6 @@ namespace HealthKit {
 
 	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, [NullAllowed] HKSample [] results, [NullAllowed] NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -1943,7 +1895,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQueryDescriptor [] queryDescriptors, nint limit, NSSortDescriptor [] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -1962,7 +1913,6 @@ namespace HealthKit {
 
 	delegate void HKSourceQueryCompletionHandler (HKSourceQuery query, NSSet sources, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -1973,7 +1923,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate objectPredicate, HKSourceQueryCompletionHandler completionHandler);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2059,7 +2008,6 @@ namespace HealthKit {
 
 	delegate void HKStatisticsCollectionEnumerator (HKStatistics result, bool stop);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2084,7 +2032,6 @@ namespace HealthKit {
 	delegate void HKStatisticsCollectionQueryStatisticsUpdateHandler (HKStatisticsCollectionQuery query, HKStatistics statistics, HKStatisticsCollection collection, NSError error);
 
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -2112,7 +2059,6 @@ namespace HealthKit {
 
 	delegate void HKStatisticsQueryHandler (HKStatisticsQuery query, HKStatistics result, NSError error);
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
@@ -2123,7 +2069,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, HKStatisticsQueryHandler handler);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKQuantityTypeIdentifier {
@@ -2323,17 +2268,14 @@ namespace HealthKit {
 		[Field ("HKQuantityTypeIdentifierDietaryCaffeine")]
 		DietaryCaffeine,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierBasalBodyTemperature")]
 		BasalBodyTemperature,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierDietaryWater")]
 		DietaryWater,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierUVExposure")]
 		UVExposure,
@@ -2341,37 +2283,30 @@ namespace HealthKit {
 		[Field ("HKQuantityTypeIdentifierElectrodermalActivity")]
 		ElectrodermalActivity,
 
-		[iOS (9, 3), Watch (2, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierAppleExerciseTime")]
 		AppleExerciseTime,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierDistanceWheelchair")]
 		DistanceWheelchair,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierPushCount")]
 		PushCount,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierDistanceSwimming")]
 		DistanceSwimming,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierSwimmingStrokeCount")]
 		SwimmingStrokeCount,
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierWaistCircumference")]
 		WaistCircumference,
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierVO2Max")]
 		VO2Max,
@@ -2381,22 +2316,18 @@ namespace HealthKit {
 		[Field ("HKQuantityTypeIdentifierDistanceDownhillSnowSports")]
 		DistanceDownhillSnowSports,
 
-		[iOS (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierInsulinDelivery")]
 		InsulinDelivery,
 
-		[iOS (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierRestingHeartRate")]
 		RestingHeartRate,
 
-		[iOS (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierWalkingHeartRateAverage")]
 		WalkingHeartRateAverage,
 
-		[iOS (11, 0), Watch (4, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKQuantityTypeIdentifierHeartRateVariabilitySDNN")]
 		HeartRateVariabilitySdnn,
@@ -2506,9 +2437,36 @@ namespace HealthKit {
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("HKQuantityTypeIdentifierWaterTemperature")]
 		WaterTemperature,
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingCadence")]
+		CyclingCadence,
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingFunctionalThresholdPower")]
+		CyclingFunctionalThresholdPower,
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingPower")]
+		CyclingPower,
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierCyclingSpeed")]
+		CyclingSpeed,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKQuantityTypeIdentifierEnvironmentalSoundReduction")]
+		EnvironmentalSoundReduction,
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierPhysicalEffort")]
+		PhysicalEffort,
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0)]
+		[Field ("HKQuantityTypeIdentifierTimeInDaylight")]
+		TimeInDaylight,
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCorrelationTypeIdentifier {
@@ -2526,7 +2484,6 @@ namespace HealthKit {
 		HeartbeatSeries,
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCategoryTypeIdentifier {
@@ -2535,37 +2492,30 @@ namespace HealthKit {
 		[Field ("HKCategoryTypeIdentifierSleepAnalysis")]
 		SleepAnalysis,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierAppleStandHour")]
 		AppleStandHour,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierCervicalMucusQuality")]
 		CervicalMucusQuality,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierOvulationTestResult")]
 		OvulationTestResult,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierMenstrualFlow")]
 		MenstrualFlow,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierIntermenstrualBleeding")]
 		IntermenstrualBleeding,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierSexualActivity")]
 		SexualActivity,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCategoryTypeIdentifierMindfulSession")]
 		MindfulSession,
@@ -2857,7 +2807,6 @@ namespace HealthKit {
 		ProlongedMenstrualPeriods,
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	enum HKCharacteristicTypeIdentifier {
@@ -2872,12 +2821,10 @@ namespace HealthKit {
 		[Field ("HKCharacteristicTypeIdentifierDateOfBirth")]
 		DateOfBirth,
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCharacteristicTypeIdentifierFitzpatrickSkinType")]
 		FitzpatrickSkinType,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKCharacteristicTypeIdentifierWheelchairUse")]
 		WheelchairUse,
@@ -2888,7 +2835,6 @@ namespace HealthKit {
 		ActivityMoveMode,
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
@@ -2976,7 +2922,6 @@ namespace HealthKit {
 		[Export ("mileUnit")]
 		HKUnit Mile { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("yardUnit")]
@@ -3009,13 +2954,11 @@ namespace HealthKit {
 		HKUnit PintImperialUnit { get; }
 
 		[Static]
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("cupUSUnit")]
 		HKUnit CupUSUnit { get; }
 
 		[Static]
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("cupImperialUnit")]
 		HKUnit CupImperialUnit { get; }
@@ -3091,13 +3034,11 @@ namespace HealthKit {
 		[Export ("kilocalorieUnit")]
 		HKUnit Kilocalorie { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("smallCalorieUnit")]
 		HKUnit SmallCalorie { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("largeCalorieUnit")]
@@ -3152,7 +3093,6 @@ namespace HealthKit {
 		HKUnit ReciprocalUnit ();
 
 		// HKUnit (Pharmacology) Category
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("internationalUnit")]
@@ -3234,9 +3174,18 @@ namespace HealthKit {
 		[Static]
 		[Export ("degreeAngleUnit")]
 		HKUnit DegreeAngle { get; }
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
+		[Static]
+		[Export ("luxUnitWithMetricPrefix:")]
+		HKUnit CreateLux (HKMetricPrefix prefix);
+
+		[Watch (10, 0), MacCatalyst (17, 0), Mac (14, 0), iOS (17, 0), NoTV]
+		[Static]
+		[Export ("luxUnit")]
+		HKUnit Lux { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -3266,7 +3215,6 @@ namespace HealthKit {
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("totalSwimmingStrokeCount", ArgumentSemantic.Strong)]
 		HKQuantity TotalSwimmingStrokeCount { get; }
@@ -3288,49 +3236,41 @@ namespace HealthKit {
 		[Static, Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKMetadata metadata);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:device:metadata:")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, device, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent [] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKDevice device, HKMetadata metadata);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("workoutWithActivityType:startDate:endDate:duration:totalEnergyBurned:totalDistance:device:metadata:")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, device, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKDevice device, HKMetadata metadata);
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalSwimmingStrokeCount:device:metadata:")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalSwimmingStrokeCount, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalSwimmingStrokeCount, device, metadata.GetDictionary ())")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent [] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKQuantity totalSwimmingStrokeCount, HKDevice device, HKMetadata metadata);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalFlightsClimbed:device:metadata:")]
 		HKWorkout CreateFlightsClimbedWorkout (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent [] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalFlightsClimbed, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("CreateFlightsClimbedWorkout (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalFlightsClimbed, device, metadata.GetDictionary ())")]
@@ -3348,12 +3288,10 @@ namespace HealthKit {
 		[Field ("HKWorkoutSortIdentifierTotalEnergyBurned")]
 		NSString SortIdentifierTotalEnergyBurned { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKWorkoutSortIdentifierTotalSwimmingStrokeCount")]
 		NSString SortIdentifierTotalSwimmingStrokeCount { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("HKWorkoutSortIdentifierTotalFlightsClimbed")]
 		NSString SortIdentifierTotalFlightsClimbed { get; }
@@ -3361,7 +3299,6 @@ namespace HealthKit {
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("totalFlightsClimbed", ArgumentSemantic.Strong)]
 		HKQuantity TotalFlightsClimbed { get; }
@@ -3380,7 +3317,6 @@ namespace HealthKit {
 		HKStatistics GetStatistics (HKQuantityType quantityType);
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3395,12 +3331,10 @@ namespace HealthKit {
 		[Export ("date", ArgumentSemantic.Copy)]
 		NSDate Date { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
 		NSDictionary WeakMetadata { get; }
 
-		[Watch (3, 0), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Wrap ("WeakMetadata")]
 		HKMetadata Metadata { get; }
@@ -3411,7 +3345,6 @@ namespace HealthKit {
 		[Static, Export ("workoutEventWithType:date:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date);
 
-		[Watch (3, 0), iOS (10, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[MacCatalyst (13, 1)]
@@ -3421,7 +3354,6 @@ namespace HealthKit {
 		[Export ("workoutEventWithType:date:metadata:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, NSDictionary metadata);
 
-		[Watch (3, 0), iOS (10, 0)]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'Create (HKWorkoutEventType, NSDateInterval, HKMetadata)' instead.")]
 		[MacCatalyst (13, 1)]
@@ -3430,25 +3362,21 @@ namespace HealthKit {
 		[Wrap ("Create (type, date, metadata.GetDictionary ()!)")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("workoutEventWithType:dateInterval:metadata:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDateInterval dateInterval, [NullAllowed] NSDictionary metadata);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (type, dateInterval, metadata.GetDictionary ())")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDateInterval dateInterval, HKMetadata metadata);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("dateInterval", ArgumentSemantic.Copy)]
 		NSDateInterval DateInterval { get; }
 	}
 
-	[iOS (8, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
@@ -3458,7 +3386,6 @@ namespace HealthKit {
 		NSString Identifier { get; }
 	}
 
-	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3467,18 +3394,15 @@ namespace HealthKit {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
 		NSDictionary WeakMetadata { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Wrap ("WeakMetadata")]
 		HKMetadata Metadata { get; }
 	}
 
-	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3517,7 +3441,7 @@ namespace HealthKit {
 		HKDevice LocalDevice { get; }
 	}
 
-	[NoWatch, iOS (10, 0), Mac (13, 0)]
+	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentQuery
@@ -3535,7 +3459,6 @@ namespace HealthKit {
 		NativeHandle Constructor (HKDocumentType documentType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor [] sortDescriptors, bool includeDocumentData, Action<HKDocumentQuery, HKDocumentSample [], bool, NSError> resultsHandler);
 	}
 
-	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -3565,7 +3488,6 @@ namespace HealthKit {
 		NSString UdiDeviceIdentifier { get; }
 	}
 
-	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3574,7 +3496,7 @@ namespace HealthKit {
 		HKFitzpatrickSkinType SkinType { get; }
 	}
 
-	[Watch (3, 0), iOS (10, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface HKWheelchairUseObject : NSCopying, NSSecureCoding {
@@ -3582,7 +3504,6 @@ namespace HealthKit {
 		HKWheelchairUse WheelchairUse { get; }
 	}
 
-	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3597,23 +3518,20 @@ namespace HealthKit {
 		[Export ("initWithSource:version:")]
 		NativeHandle Constructor (HKSource source, [NullAllowed] string version);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("productType")]
 		string ProductType { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("operatingSystemVersion", ArgumentSemantic.Assign)]
 		NSOperatingSystemVersion OperatingSystemVersion { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithSource:version:productType:operatingSystemVersion:")]
 		NativeHandle Constructor (HKSource source, [NullAllowed] string version, [NullAllowed] string productType, NSOperatingSystemVersion operatingSystemVersion);
 	}
 
-	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface HKSourceRevisionInfo {
@@ -3634,7 +3552,6 @@ namespace HealthKit {
 		//NSOperatingSystemVersion AnyOperatingSystem { get; }
 	}
 
-	[iOS (9, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3645,10 +3562,9 @@ namespace HealthKit {
 		HKQueryAnchor Create (nuint value);
 	}
 
-
-	[NoiOS]
 	[Mac (13, 0)]
-	[NoMacCatalyst]
+	[iOS (17, 0)]
+	[MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HKWorkoutSession : NSSecureCoding {
@@ -3660,8 +3576,6 @@ namespace HealthKit {
 		[Export ("locationType")]
 		HKWorkoutSessionLocationType LocationType { get; }
 
-		[Watch (3, 0)]
-		[NoMacCatalyst]
 		[Export ("workoutConfiguration", ArgumentSemantic.Copy)]
 		HKWorkoutConfiguration WorkoutConfiguration { get; }
 
@@ -3682,72 +3596,89 @@ namespace HealthKit {
 		[NullAllowed, Export ("endDate")]
 		NSDate EndDate { get; }
 
+		[NoiOS]
+		[NoMacCatalyst]
 		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithActivityType:locationType:")]
 		NativeHandle Constructor (HKWorkoutActivityType activityType, HKWorkoutSessionLocationType locationType);
 
-		[Watch (3, 0)]
-		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
+		[NoiOS]
 		[NoMacCatalyst]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use HKWorkoutSession (HKHealthStore, HKWorkoutConfiguration, out NSError) instead.")]
 		[Export ("initWithConfiguration:error:")]
 		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, out NSError error);
 
+		[NoiOS]
 		[Watch (5, 0)]
 		[NoMacCatalyst]
 		[Export ("initWithHealthStore:configuration:error:")]
 		NativeHandle Constructor (HKHealthStore healthStore, HKWorkoutConfiguration workoutConfiguration, [NullAllowed] out NSError error);
 
 		[Watch (5, 0)]
-		[NoMacCatalyst]
 		[Export ("prepare")]
 		void Prepare ();
 
 		[Watch (5, 0)]
-		[NoMacCatalyst]
 		[Export ("startActivityWithDate:")]
 		void StartActivity ([NullAllowed] NSDate date);
 
 		[Watch (5, 0)]
-		[NoMacCatalyst]
 		[Export ("stopActivityWithDate:")]
 		void StopActivity ([NullAllowed] NSDate date);
 
 		[Watch (5, 0)]
-		[NoMacCatalyst]
 		[Export ("end")]
 		void End ();
 
 		[Watch (5, 0)]
-		[NoMacCatalyst]
 		[Export ("pause")]
 		void Pause ();
 
 		[Watch (5, 0)]
-		[NoMacCatalyst]
 		[Export ("resume")]
 		void Resume ();
 
+		[NoiOS]
 		[Watch (5, 0)]
 		[NoMacCatalyst]
 		[Export ("associatedWorkoutBuilder")]
 		HKLiveWorkoutBuilder AssociatedWorkoutBuilder { get; }
 
-		[Watch (9, 0), NoTV, NoiOS, NoMacCatalyst]
+		[Watch (9, 0), NoTV]
 		[Export ("beginNewActivityWithConfiguration:date:metadata:")]
 		void BeginNewActivity (HKWorkoutConfiguration workoutConfiguration, NSDate date, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
 
-		[Watch (9, 0), NoTV, NoiOS, NoMacCatalyst]
+		[Watch (9, 0), NoTV]
 		[Export ("endCurrentActivityOnDate:")]
 		void EndCurrentActivity (NSDate date);
 
-		[Watch (9, 0), NoTV, NoiOS, NoMacCatalyst]
+		[Watch (9, 0), NoTV]
 		[Export ("currentActivity", ArgumentSemantic.Copy)]
 		HKWorkoutActivity CurrentActivity { get; }
+
+		[Watch (10, 0), NoTV, Mac (14, 0)]
+		[Export ("type")]
+		HKWorkoutSessionType Type { get; }
+
+		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, iOS (17, 0)]
+		[Export ("sendDataToRemoteWorkoutSession:completion:")]
+		[Async]
+		void SendDataToRemoteWorkoutSession (NSData data, Action<bool, NSError> completion);
+
+		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
+		[Export ("startMirroringToCompanionDeviceWithCompletion:")]
+		[Async]
+		void StartMirroringToCompanionDevice (Action<bool, NSError> completion);
+
+		[Watch (10, 0), NoTV, NoMacCatalyst, NoMac, NoiOS]
+		[Export ("stopMirroringToCompanionDeviceWithCompletion:")]
+		[Async]
+		void StopMirroringToCompanionDevice (Action<bool, NSError> completion);
 	}
 
-	[NoiOS]
 	[Mac (13, 0)]
-	[NoMacCatalyst]
+	[iOS (17, 0)]
+	[MacCatalyst (17, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface HKWorkoutSessionDelegate {
@@ -3759,22 +3690,28 @@ namespace HealthKit {
 		[Export ("workoutSession:didFailWithError:")]
 		void DidFail (HKWorkoutSession workoutSession, NSError error);
 
-		[Watch (3, 0)]
-		[NoMacCatalyst]
-		// [iOS (10,0)] // Issue filed at: https://github.com/xamarin/maccore/issues/2609
+		// // Issue filed at: https://github.com/xamarin/maccore/issues/2609
 		[Export ("workoutSession:didGenerateEvent:")]
 		void DidGenerateEvent (HKWorkoutSession workoutSession, HKWorkoutEvent @event);
 
-		[Watch (9, 0), NoiOS, NoTV, Mac (13, 0), NoMacCatalyst]
+		[Watch (9, 0), NoTV, Mac (13, 0)]
 		[Export ("workoutSession:didBeginActivityWithConfiguration:date:")]
 		void DidBeginActivity (HKWorkoutSession workoutSession, HKWorkoutConfiguration workoutConfiguration, NSDate date);
 
-		[Watch (9, 0), NoiOS, NoTV, Mac (13, 0), NoMacCatalyst]
+		[Watch (9, 0), NoTV, Mac (13, 0)]
 		[Export ("workoutSession:didEndActivityWithConfiguration:date:")]
 		void DidEndActivity (HKWorkoutSession workoutSession, HKWorkoutConfiguration workoutConfiguration, NSDate date);
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, Mac (14, 0)]
+		[Export ("workoutSession:didReceiveDataFromRemoteWorkoutSession:")]
+		void DidReceiveData (HKWorkoutSession workoutSession, NSData [] data);
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0), NoTV, Mac (14, 0)]
+		[Export ("workoutSession:didDisconnectFromRemoteDeviceWithError:")]
+		void DidDisconnect (HKWorkoutSession workoutSession, [NullAllowed] NSError error);
 	}
 
-	[iOS (9, 3), Watch (2, 2), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface HKActivitySummary : NSSecureCoding, NSCopying {
@@ -3829,7 +3766,7 @@ namespace HealthKit {
 		HKQuantity StandHoursGoal { get; set; }
 	}
 
-	[iOS (9, 3), Watch (2, 2), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKActivitySummaryQuery
@@ -3841,15 +3778,13 @@ namespace HealthKit {
 		NativeHandle Constructor ([NullAllowed] NSPredicate predicate, Action<HKActivitySummaryQuery, HKActivitySummary [], NSError> handler);
 	}
 
-	[iOS (9, 3), Watch (2, 2), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKObjectType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKActivitySummaryType
 	interface HKActivitySummaryType {
 	}
 
-	[Watch (3, 0)]
-	[iOS (10, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3868,7 +3803,7 @@ namespace HealthKit {
 		HKQuantity LapLength { get; set; }
 	}
 
-	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor]
@@ -3884,8 +3819,6 @@ namespace HealthKit {
 		HKSeriesType HeartbeatSeriesType { get; }
 	}
 
-	[iOS (11, 0)]
-	[Watch (4, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -3899,8 +3832,6 @@ namespace HealthKit {
 		void Discard ();
 	}
 
-	[iOS (11, 0)]
-	[Watch (4, 0)]
 	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSample))]
@@ -3910,7 +3841,7 @@ namespace HealthKit {
 		nuint Count { get; }
 	}
 
-	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSeriesSample))]
 	[DisableDefaultCtor]
@@ -3921,7 +3852,7 @@ namespace HealthKit {
 	}
 
 	delegate void HKWorkoutRouteBuilderAddMetadataHandler (bool success, NSError error);
-	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKSeriesBuilder))]
 	[DisableDefaultCtor]
@@ -3952,7 +3883,7 @@ namespace HealthKit {
 
 	delegate void HKWorkoutRouteQueryDataHandler (HKWorkoutRouteQuery query, [NullAllowed] CLLocation [] routeData, bool done, [NullAllowed] NSError error);
 
-	[Watch (4, 0), iOS (11, 0), Mac (13, 0)]
+	[Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (HKQuery))]
 	interface HKWorkoutRouteQuery {

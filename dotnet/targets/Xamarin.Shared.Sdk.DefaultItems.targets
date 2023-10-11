@@ -10,9 +10,6 @@
     <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
     <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
-
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' != 'macOS'">true</UseMonoRuntime>
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1091,13 +1091,13 @@ namespace GeneratorTests {
 
 @"[BindingImpl(3)]
 [Export(""someMethod3:"")]
-[SupportedOSPlatform(""ios11.0"")]
+[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
 @"[BindingImpl(3)]
 [Export(""someMethod4:"")]
-[SupportedOSPlatform(""ios11.0"")]
+[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 			};
@@ -1189,7 +1189,7 @@ namespace GeneratorTests {
 			var getter = messaging.Methods.First (v => v.Name == "get_IsLoadedInProcess");
 			var expectedPropertyAttributes =
 @"[SupportedOSPlatform(""maccatalyst"")]
-[SupportedOSPlatform(""macos10.15"")]
+[SupportedOSPlatform(""macos"")]
 [UnsupportedOSPlatform(""ios"")]
 [UnsupportedOSPlatform(""tvos"")]";
 			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);

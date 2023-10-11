@@ -63,6 +63,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
 	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;
 	writer.WriteLine ($"    <ManifestBuildVersion>{manifestBuildVersion}</ManifestBuildVersion>");
+	writer.WriteLine ($"    <EnableSideBySideManifests>true</EnableSideBySideManifests>");
 	writer.WriteLine ($"  </PropertyGroup>");
 	writer.WriteLine ($"  <ItemGroup>");
 	writer.WriteLine ($"    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->");

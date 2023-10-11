@@ -159,6 +159,7 @@ namespace ObjCRuntime {
 			IsSimulator = 0x10,
 #if NET
 			IsCoreCLR				= 0x20,
+			IsNativeAOT				= 0x40,
 #endif
 		}
 
@@ -222,6 +223,14 @@ namespace ObjCRuntime {
 				return (options->Flags.HasFlag (InitializationFlags.IsCoreCLR));
 			}
 		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		internal unsafe static bool IsNativeAOT {
+			get {
+				// The linker may turn calls to this property into a constant
+				return (options->Flags.HasFlag (InitializationFlags.IsNativeAOT));
+			}
+		}
 #endif
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -247,6 +256,20 @@ namespace ObjCRuntime {
 #if MONOMAC
 		[DllImport (Constants.libcLibrary)]
 		static extern int _NSGetExecutablePath (byte[] buf, ref int bufsize);
+#endif
+
+#if NET
+		[Preserve] // called from native - nativeaot-bridge.m and coreclr-bridge.m.
+		[UnmanagedCallersOnly (EntryPoint = "xamarin_objcruntime_runtime_nativeaotinitialize")]
+		unsafe static void SafeInitialize (InitializationOptions* options, IntPtr* exception_gchandle)
+		{
+			*exception_gchandle = IntPtr.Zero;
+			try {
+				Initialize (options);
+			} catch (Exception e) {
+				*exception_gchandle = AllocGCHandle (e);
+			}
+		}
 #endif
 
 		[Preserve] // called from native - runtime.m.
@@ -533,6 +556,11 @@ namespace ObjCRuntime {
 
 		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			return AllocGCHandle (GetBlockWrapperCreator ((MethodInfo) GetGCHandleTarget (method)!, parameter));
 		}
 
@@ -598,6 +626,12 @@ namespace ObjCRuntime {
 		// For XM it will also register all assemblies loaded in the current appdomain.
 		internal static void RegisterAssemblies ()
 		{
+#if NET
+			if (IsNativeAOT) {
+				return;
+			}
+#endif
+
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
@@ -976,6 +1010,11 @@ namespace ObjCRuntime {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		static MethodInfo? GetBlockWrapperCreator (MethodInfo method, int parameter)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			// A mirror of this method is also implemented in StaticRegistrar:FindBlockProxyCreatorMethod
 			// If this method is changed, that method will probably have to be updated too (tests!!!)
 			MethodInfo first = method;
@@ -1201,6 +1240,11 @@ namespace ObjCRuntime {
 
 		internal static PropertyInfo? FindPropertyInfo (MethodInfo accessor)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			if (!accessor.IsSpecialName)
 				return null;
 
@@ -1535,6 +1579,11 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo? GetIntPtrConstructor (Type type)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+#endif
+
 			lock (intptr_ctor_cache) {
 				if (intptr_ctor_cache.TryGetValue (type, out var rv))
 					return rv;
@@ -1580,6 +1629,11 @@ namespace ObjCRuntime {
 
 		static ConstructorInfo? GetIntPtr_BoolConstructor (Type type)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw CreateNativeAOTNotSupportedException ();
+#endif
+
 			lock (intptr_bool_ctor_cache) {
 				if (intptr_bool_ctor_cache.TryGetValue (type, out var rv))
 					return rv;
@@ -2325,6 +2379,11 @@ namespace ObjCRuntime {
 
 		internal static MethodInfo FindClosedMethod (Type closed_type, MethodBase open_method)
 		{
+#if NET
+			if (IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			// FIXME: I think it should be handled before getting here (but it's safer here for now)
 			if (!open_method.ContainsGenericParameters)
 				return (MethodInfo) open_method;

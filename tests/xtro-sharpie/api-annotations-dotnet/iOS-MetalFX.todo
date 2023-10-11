@@ -45,3 +45,5 @@
 !missing-selector! MTLFXTemporalScalerDescriptor::isInputContentPropertiesEnabled not bound
 !missing-selector! MTLFXTemporalScalerDescriptor::setAutoExposureEnabled: not bound
 !missing-selector! MTLFXTemporalScalerDescriptor::setInputContentPropertiesEnabled: not bound
+!missing-selector! +MTLFXTemporalScalerDescriptor::supportedInputContentMaxScaleForDevice: not bound
+!missing-selector! +MTLFXTemporalScalerDescriptor::supportedInputContentMinScaleForDevice: not bound

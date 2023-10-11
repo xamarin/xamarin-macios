@@ -116,8 +116,11 @@ steps:
 
 # expand all the prebuilt test dependencies
 - bash: |
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
     unzip -o $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+    ls -Rla@ .
+    xattr -s -c -r .
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Expand test libraries.
   timeoutInMinutes: 10

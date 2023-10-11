@@ -248,7 +248,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
@@ -263,7 +262,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif

@@ -258,6 +258,11 @@ namespace Xamarin.Bundler {
 				app.SkipMarkingNSObjectsInUserAssemblies = ParseBool (v, "--skip-marking-nsobjects-in-user-assemblies");
 			});
 
+			// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+			options.Add ("disable-automatic-linker-selection:", "Don't force the classic linker (ld64).", v => {
+				app.DisableAutomaticLinkerSelection = ParseBool (v, "--disable-automatic-linker-selection");
+			});
+
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
 
@@ -690,6 +695,11 @@ namespace Xamarin.Bundler {
 
 		static string sdk_root;
 		static string developer_directory;
+
+		public static string SdkRoot {
+			get => sdk_root;
+			set => sdk_root = value;
+		}
 
 		public static string DeveloperDirectory {
 			get {

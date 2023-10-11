@@ -64,13 +64,13 @@ namespace AudioUnit {
 		Initialized = -10849,
 		InvalidOfflineRender = -10848,
 		Unauthorized = -10847,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		MidiOutputBufferFull = -66753,
-		[iOS (11, 3), Mac (10, 13, 4), TV (11, 3), NoWatch]
+		[iOS (11, 3), TV (11, 3), NoWatch]
 		[MacCatalyst (13, 1)]
 		InvalidParameterValue = -66743,
-		[iOS (11, 0), Mac (10, 13), TV (11, 0), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		ExtensionNotFound = -66744,
 	}
@@ -84,7 +84,6 @@ namespace AudioUnit {
 		NotPermitted = -66748,
 		InitializationTimedOut = -66747,
 		InvalidFormat = -66746,
-		[iOS (10, 0), Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		RenderTimeout = -66745,
 	}
@@ -142,7 +141,6 @@ namespace AudioUnit {
 	{
 		CFNameRelease = (1 << 4),
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		OmitFromPresets = (1 << 13),
 		PlotHistory = (1 << 14),
@@ -225,6 +223,8 @@ namespace AudioUnit {
 		[NoiOS]
 		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
+		[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		InputMute = 1852403056, //pmin
 	}
 
 	[MacCatalyst (13, 1)]
@@ -290,14 +290,11 @@ namespace AudioUnit {
 		ParameterHistoryInfo = 53,
 		Nickname = 54,
 		OfflineRender = 37,
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ParameterIDName = 34,
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ParameterStringFromValue = 33,
 		ParameterClumpName = 35,
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ParameterValueFromString = 38,
 		ContextName = 25,
@@ -305,7 +302,6 @@ namespace AudioUnit {
 		ClassInfoFromDocument = 50,
 		RequestViewController = 56,
 		ParametersForOverview = 57,
-		[iOS (10, 0), Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		SupportsMpe = 58,
 		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
@@ -407,7 +403,6 @@ namespace AudioUnit {
 		MatrixLevels = 3006,
 		MatrixDimensions = 3009,
 		MeterClipping = 3011,
-		[iOS (10, 0), Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		InputAnchorTimeStamp = 3016,
 
@@ -534,10 +529,8 @@ namespace AudioUnit {
 		ReverbFilterFrequency = 14,
 		ReverbFilterBandwidth = 15,
 		ReverbFilterGain = 16,
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ReverbFilterType = 17,
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		ReverbFilterEnable = 18,
 
@@ -698,7 +691,6 @@ namespace AudioUnit {
 		ObstructionAttenuation = 11,
 	}
 
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	public enum SpatialMixerAttenuation {
 		Power = 0,
@@ -708,7 +700,6 @@ namespace AudioUnit {
 	}
 
 	[Flags]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	public enum SpatialMixerRenderingFlags {
 		InterAuralDelay = (1 << 0),
@@ -725,16 +716,10 @@ namespace AudioUnit {
 		BeganToRender = 0x02,
 		BeganToRenderLate = 0x04,
 
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		Loop = 0x08,
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		Interrupt = 0x10,
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		InterruptAtLoop = 0x20,
 	}
@@ -787,7 +772,6 @@ namespace AudioUnit {
 		Immediate = unchecked((long) 0xffffffff00000000),
 	}
 
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
@@ -907,7 +891,6 @@ namespace AudioUnit {
 		DistanceAttenuation = (1 << 2),
 	}
 
-	[iOS (10, 0), Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	public enum AUParameterAutomationEventType : uint {
 		Value = 0,
@@ -982,5 +965,14 @@ namespace AudioUnit {
 		HRTFPanner 				= 0x68727466, // 'hrtf'
 		NetReceive 				= 0x6E726376, // 'nrcv'
 #endif
+	}
+
+	[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch, NoiOS]
+	public enum AudioAggregateDriftCompensation : uint {
+		MinQuality = 0,
+		LowQuality = 0x20,
+		MediumQuality = 0x40,
+		HighQuality = 0x60,
+		MaxQuality = 0x7F,
 	}
 }

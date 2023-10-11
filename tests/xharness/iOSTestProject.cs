@@ -6,7 +6,6 @@ namespace Xharness {
 		public bool SkipiOSVariation;
 		public bool SkipwatchOSVariation; // skip both
 		public bool SkipwatchOSARM64_32Variation;
-		public bool SkipwatchOS32Variation;
 		public bool SkiptvOSVariation;
 		public bool SkipTodayExtensionVariation;
 		public bool SkipDeviceVariations;
@@ -22,7 +21,7 @@ namespace Xharness {
 		{
 			if (MonoNativeInfo is null)
 				return true;
-			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform, MonoNativeInfo.Flavor);
+			var min_version = MonoNativeHelper.GetMinimumOSVersion (devicePlatform);
 			return Version.Parse (productVersion) >= Version.Parse (min_version);
 		}
 
@@ -37,7 +36,6 @@ namespace Xharness {
 			rv.SkipiOSVariation = SkipiOSVariation;
 			rv.SkipwatchOSVariation = SkipwatchOSVariation;
 			rv.SkipwatchOSARM64_32Variation = SkipwatchOSARM64_32Variation;
-			rv.SkipwatchOS32Variation = SkipwatchOS32Variation;
 			rv.SkiptvOSVariation = SkiptvOSVariation;
 			rv.SkipTodayExtensionVariation = SkipTodayExtensionVariation;
 			rv.SkipDeviceVariations = SkipDeviceVariations;

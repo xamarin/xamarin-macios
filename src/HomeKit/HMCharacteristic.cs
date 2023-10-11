@@ -41,9 +41,6 @@ namespace HomeKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
-#else
-		[iOS (9, 3)]
-		[Watch (2, 2)]
 #endif
 		public bool Hidden {
 			get {

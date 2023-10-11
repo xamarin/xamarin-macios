@@ -19,7 +19,6 @@ namespace JavaScriptCore {
 
 	delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -31,7 +30,6 @@ namespace JavaScriptCore {
 		[Export ("initWithVirtualMachine:")]
 		NativeHandle Constructor (JSVirtualMachine virtualMachine);
 
-		[Mac (10, 10), iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("name")]
@@ -61,7 +59,6 @@ namespace JavaScriptCore {
 		[Static, Export ("currentArguments")]
 		JSValue [] CurrentArguments { get; }
 
-		[Mac (10, 10), iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Static, Export ("currentCallee")]
 		JSValue CurrentCallee { get; }
@@ -97,12 +94,11 @@ namespace JavaScriptCore {
 		IntPtr JSGlobalContextRefPtr { get; }
 	}
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0)]
 	[TV (13, 0)]
 	[MacCatalyst (13, 1)]
 	delegate void JSPromiseCreationExecutor (JSValue resolve, JSValue rejected);
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // invalid (null) Handle is returned
@@ -140,28 +136,28 @@ namespace JavaScriptCore {
 		[Static, Export ("valueWithUndefinedInContext:")]
 		JSValue Undefined (JSContext context);
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("valueWithNewPromiseInContext:fromExecutor:")]
 		JSValue CreatePromise (JSContext context, JSPromiseCreationExecutor callback);
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("valueWithNewPromiseResolvedWithResult:inContext:")]
 		JSValue CreateResolvedPromise (NSObject result, JSContext context);
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("valueWithNewPromiseRejectedWithReason:inContext:")]
 		JSValue CreateRejectedPromise (NSObject reason, JSContext context);
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
@@ -244,12 +240,10 @@ namespace JavaScriptCore {
 		[Export ("isObject")]
 		bool IsObject { get; }
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("isArray")]
 		bool IsArray { get; }
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("isDate")]
 		bool IsDate { get; }
@@ -329,14 +323,13 @@ namespace JavaScriptCore {
 		[Export ("JSValueRef")]
 		IntPtr JSValueRefPtr { get; }
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("isSymbol")]
 		bool IsSymbol { get; }
 	}
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_3_0
@@ -346,7 +339,6 @@ namespace JavaScriptCore {
 		[Static, Export ("managedValueWithValue:")]
 		JSManagedValue Get (JSValue value);
 
-		[Mac (10, 10), iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Static, Export ("managedValueWithValue:andOwner:")]
 		JSManagedValue Get (JSValue value, NSObject owner);
@@ -358,7 +350,6 @@ namespace JavaScriptCore {
 		JSValue Value { get; }
 	}
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -374,7 +365,6 @@ namespace JavaScriptCore {
 		void RemoveManagedReference (NSObject obj, NSObject owner);
 	}
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface JSPropertyDescriptorKeys {
@@ -398,7 +388,6 @@ namespace JavaScriptCore {
 		NSString Set { get; }
 	}
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
