@@ -8966,12 +8966,12 @@ namespace UIKit {
 		[Static]
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("configurationWithLocale:")]
-		UIImageConfiguration FromConfiguration ([NullAllowed] NSLocale locale);
+		UIImageConfiguration CreateConfiguration ([NullAllowed] NSLocale locale);
 
 		[NoWatch, TV (17, 0), iOS (17, 0)]
 		[Static]
 		[Export ("configurationWithTraitCollection:")]
-		UIImageConfiguration ConfigurationWithTraitCollection ([NullAllowed] UITraitCollection traitCollection);
+		UIImageConfiguration CreateConfiguration ([NullAllowed] UITraitCollection traitCollection);
 	}
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
@@ -17045,6 +17045,7 @@ namespace UIKit {
 		[NoWatch, NoTV, iOS (17, 0), MacCatalyst (17, 0)]
 		[NullAllowed, Export ("hoverStyle", ArgumentSemantic.Copy)]
 		UIHoverStyle HoverStyle { get; set; }
+
 		[Async]
 		[iOS (17, 0)]
 		[Static]
@@ -18207,7 +18208,7 @@ namespace UIKit {
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("traitCollectionByReplacingObject:forTrait:")]
-		UITraitCollection TraitCollectionByReplacingObject ([NullAllowed] NSObject @object, IUIObjectTraitDefinition trait);
+		UITraitCollection GetTraitCollectionByReplacingObject ([NullAllowed] NSObject @object, IUIObjectTraitDefinition trait);
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("objectForTrait:")]
@@ -27763,6 +27764,7 @@ namespace UIKit {
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		UIImageReaderConfiguration Configuration { get; }
+
 		[Export ("imageWithContentsOfFileURL:")]
 		UIImage GetImage (NSUrl url);
 
@@ -27805,7 +27807,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIPageControlProgressDelegate {
 		[Export ("pageControlProgress:initialProgressForPage:")]
-		float InitialProgressForPage (UIPageControlProgress progress, nint page);
+		float GetInitialProgressForPage (UIPageControlProgress progress, nint page);
 
 		[Export ("pageControlProgressVisibilityDidChange:")]
 		void VisibilityDidChange (UIPageControlProgress progress);
@@ -28091,7 +28093,7 @@ namespace UIKit {
 	interface UITextSelectionDisplayInteractionDelegate {
 		[Export ("selectionContainerViewBelowTextForSelectionDisplayInteraction:")]
 		[return: NullAllowed]
-		UIView GetSelectionContainerViewBellowText (UITextSelectionDisplayInteraction interaction);
+		UIView GetSelectionContainerViewBelowText (UITextSelectionDisplayInteraction interaction);
 	}
 
 	interface IUITraitDefinition { }

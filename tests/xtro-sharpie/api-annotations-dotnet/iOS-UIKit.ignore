@@ -18,7 +18,7 @@
 !missing-selector! UIPrintPaper::printRect not bound
 
 # Added in UIAccessibility, this is later inlined in UIView, else we will
-# add all of the properties to all objects whihc is not correct.
+# add all of the properties to all objects which is not correct.
 
 !missing-selector! NSObject::accessibilityDragSourceDescriptors not bound
 !missing-selector! NSObject::accessibilityDropPointDescriptors not bound
