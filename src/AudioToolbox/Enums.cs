@@ -6,9 +6,6 @@ using ObjCRuntime;
 
 namespace AudioToolbox {
 	[NoWatch]
-	[TV (10, 0)]
-	[Mac (10, 12)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum AudioSettingsFlags : uint {

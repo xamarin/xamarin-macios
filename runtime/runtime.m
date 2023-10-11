@@ -55,9 +55,6 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
-#if DOTNET
-const char *xamarin_icu_dat_file_name = NULL;
-#endif
 #if MONOMAC || TARGET_OS_MACCATALYST
 NSString * xamarin_custom_bundle_name = @"MonoBundle";
 #endif
@@ -82,7 +79,9 @@ enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = 
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
 enum XamarinTriState xamarin_log_exceptions = XamarinTriStateNone;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 bool xamarin_supports_dynamic_registration = true;
+#endif
 const char *xamarin_runtime_configuration_name = NULL;
 
 #if DOTNET
@@ -141,6 +140,7 @@ enum InitializationFlags : int {
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
 	InitializationFlagsIsCoreCLR                = 0x20,
+	InitializationFlagsIsNativeAOT              = 0x40,
 };
 
 struct InitializationOptions {
@@ -966,7 +966,9 @@ bool
 xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	if (!xamarin_supports_dynamic_registration) {
+#endif
 #if defined (CORECLR_RUNTIME)
 		if (xamarin_log_level > 0) {
 			MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
@@ -983,11 +985,16 @@ xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchan
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
 #endif
 		return true;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	}
+#endif
+
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
 	xamarin_register_assembly (rassembly, exception_gchandle);
 	xamarin_mono_object_release (&rassembly);
 	return *exception_gchandle == INVALID_GCHANDLE;
+#endif // SUPPORTS_DYNAMIC_REGISTRATION
 }
 
 // Returns a retained MonoObject. Caller must release.
@@ -1293,6 +1300,9 @@ xamarin_initialize ()
 #if defined (CORECLR_RUNTIME)
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsCoreCLR);
 #endif
+#if defined (NATIVEAOT)
+	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsNativeAOT);
+#endif
 
 	options.Delegates = &delegates;
 	options.Trampolines = &trampolines;
@@ -1304,12 +1314,14 @@ xamarin_initialize ()
 #endif
 
 #if defined (CORECLR_RUNTIME)
+#if !defined(__arm__) // the dynamic trampolines haven't been implemented in 32-bit ARM assembly.
 	options.xamarin_objc_msgsend = (void *) xamarin_dyn_objc_msgSend;
 	options.xamarin_objc_msgsend_super = (void *) xamarin_dyn_objc_msgSendSuper;
 #if !defined(__aarch64__)
 	options.xamarin_objc_msgsend_stret = (void *) xamarin_dyn_objc_msgSend_stret;
 	options.xamarin_objc_msgsend_super_stret = (void *) xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined(__aarch64__)
+#endif // !defined(__arm__)
 	options.unhandled_exception_handler = (void *) &xamarin_coreclr_unhandled_exception_handler;
 	options.reference_tracking_begin_end_callback = (void *) &xamarin_coreclr_reference_tracking_begin_end_callback;
 	options.reference_tracking_is_referenced_callback = (void *) &xamarin_coreclr_reference_tracking_is_referenced_callback;
@@ -2570,20 +2582,6 @@ void
 xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
-	char *icu_dat_file_path = NULL;
-	int subtractPropertyCount = 0;
-
-	if (xamarin_icu_dat_file_name != NULL && *xamarin_icu_dat_file_name != 0) {
-		char path [1024];
-		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
-			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
-		} else {
-			icu_dat_file_path = strdup (path);
-		}
-	} else {
-		subtractPropertyCount++;
-	}
-
 	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
 	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
 
@@ -2596,7 +2594,6 @@ xamarin_vm_initialize ()
 		"TRUSTED_PLATFORM_ASSEMBLIES",
 		"NATIVE_DLL_SEARCH_DIRECTORIES",
 		"RUNTIME_IDENTIFIER",
-		"ICU_DAT_FILE_PATH", // Must be last.
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
@@ -2605,19 +2602,15 @@ xamarin_vm_initialize ()
 		trusted_platform_assemblies,
 		native_dll_search_directories,
 		RUNTIMEIDENTIFIER,
-		icu_dat_file_path, // might be NULL, if so we say we're passing one property less that what we really are (to skip this last one). This also means that this property must be the last one
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
-	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0])) - subtractPropertyCount;
+	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0]));
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
-	xamarin_free (pinvokeOverride);
 
+	xamarin_free (pinvokeOverride);
 	xamarin_free (trusted_platform_assemblies);
 	xamarin_free (native_dll_search_directories);
-
-	if (icu_dat_file_path != NULL)
-		free (icu_dat_file_path);
 
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");

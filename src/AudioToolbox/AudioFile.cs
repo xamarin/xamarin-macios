@@ -53,15 +53,12 @@ namespace AudioToolbox {
 		AIFC = 0x41494643, // AIFC
 		WAVE = 0x57415645, // WAVE
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
 #endif
 		RF64 = 0x52463634, // RF64
 		SoundDesigner2 = 0x53643266, // Sd2f
@@ -79,26 +76,22 @@ namespace AudioToolbox {
 		ThreeGP2 = 0x33677032, // 3gp2
 		AMR = 0x616d7266, // amrf
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
 #endif
 		FLAC = 0x666c6163, // flac
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // loas
@@ -263,13 +256,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -281,13 +273,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -298,13 +289,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -315,13 +305,12 @@ namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13, 0)]
-	[Mac (10, 15)]
 	[TV (13, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]

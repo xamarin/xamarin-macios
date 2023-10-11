@@ -56,4 +56,5 @@ Write-Host "DOTNET_BCL_DIR: $Env:DOTNET_BCL_DIR"
     "--logger:console;verbosity=detailed" `
     "--logger:trx;LogFileName=$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/jenkins-results/windows/bgen-tests/results.trx" `
     "--logger:html;LogFileName=$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/jenkins-results/windows/bgen-tests/results.html" `
+    "--settings" "$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/tests/dotnet/Windows/config.runsettings" `
     "-bl:$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/jenkins-results/windows/bgen-tests/results.binlog"

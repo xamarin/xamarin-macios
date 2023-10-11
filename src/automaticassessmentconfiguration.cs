@@ -19,7 +19,7 @@ using NativeHandle = System.IntPtr;
 namespace AutomaticAssessmentConfiguration {
 
 	[ErrorDomain ("AEAssessmentErrorDomain")]
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum AEAssessmentErrorCode : long {
@@ -36,7 +36,7 @@ namespace AutomaticAssessmentConfiguration {
 		Punctuation = 1 << 1,
 	}
 
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
@@ -103,7 +103,7 @@ namespace AutomaticAssessmentConfiguration {
 		void SetConfiguration (AEAssessmentParticipantConfiguration configuration, AEAssessmentApplication application);
 	}
 
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -139,7 +139,7 @@ namespace AutomaticAssessmentConfiguration {
 
 	interface IAEAssessmentSessionDelegate { }
 
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]

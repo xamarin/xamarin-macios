@@ -47,7 +47,7 @@
         <key>DTXcodeBuild</key>
         <string>6C131e</string>
         <key>MinimumOSVersion</key>
-        <string>2.0</string>
+        <string>4.0</string>
         <key>UIDeviceFamily</key>
         <array>
                 <integer>4</integer>

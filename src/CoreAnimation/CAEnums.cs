@@ -51,9 +51,6 @@ namespace CoreAnimation {
 	}
 
 	[NoWatch] // headers not updated
-	[iOS (11, 0)]
-	[TV (11, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]

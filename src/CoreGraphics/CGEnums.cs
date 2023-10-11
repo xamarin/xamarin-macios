@@ -107,7 +107,6 @@ namespace CoreGraphics {
 		PlusLighter,
 	}
 
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CGPdfTagType /* int32_t */ {
@@ -175,7 +174,6 @@ namespace CoreGraphics {
 		Stream,
 	};
 
-	[iOS (11, 0), Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	public enum CGPDFAccessPermissions : uint {
 		AllowsLowQualityPrinting = (1 << 0),
@@ -191,9 +189,7 @@ namespace CoreGraphics {
 #if !NET
 	// uint32_t enum -> CGColorConverter.h
 	// this enum does not exist in the headers anymore
-	[TV (9, 2)]
 	[Obsoleted (PlatformName.TvOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
-	[iOS (9, 3)]
 	[Obsoleted (PlatformName.iOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
 	[NoWatch]
 	[NoMac]
@@ -205,10 +201,6 @@ namespace CoreGraphics {
 #endif
 
 	// uint32_t enum -> CGColorConversionInfo.h
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Watch (3, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	public enum CGColorConversionInfoTransformType : uint {
 		FromSpace = 0,

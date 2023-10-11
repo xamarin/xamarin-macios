@@ -132,7 +132,7 @@ namespace Xharness.Targets {
 		{
 			if (MonoNativeInfo is null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS);
 		}
 
 		public override IEnumerable<RelatedProject> GetRelatedProjects ()
