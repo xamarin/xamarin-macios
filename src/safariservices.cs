@@ -42,8 +42,16 @@ namespace SafariServices {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
+
+#if !XAMCORE_5_0
+		[Obsolete ("Constructor marked as unavailable.")]
+		[Export ("init")]
+		NativeHandle Constructor ();
+#endif
+
 		[Async]
 		[Static, Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
 		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
@@ -503,6 +511,10 @@ namespace SafariServices {
 	interface SFExtension {
 		[Field ("SFExtensionMessageKey")]
 		NSString MessageKey { get; }
+
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Field ("SFExtensionProfileKey")]
+		NSString ProfileKey { get; }
 	}
 
 	[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoTV, NoWatch]

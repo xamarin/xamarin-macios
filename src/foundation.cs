@@ -1199,16 +1199,19 @@ namespace Foundation {
 		[Export ("nextDateAfterDate:matchingComponents:options:")]
 		[MacCatalyst (13, 1)]
 		[MarshalNativeExceptions]
+		[return: NullAllowed]
 		NSDate FindNextDateAfterDateMatching (NSDate date, NSDateComponents components, NSCalendarOptions options);
 
 		[Export ("nextDateAfterDate:matchingHour:minute:second:options:")]
 		[MacCatalyst (13, 1)]
 		[MarshalNativeExceptions]
+		[return: NullAllowed]
 		NSDate FindNextDateAfterDateMatching (NSDate date, nint hour, nint minute, nint second, NSCalendarOptions options);
 
 		[Export ("nextDateAfterDate:matchingUnit:value:options:")]
 		[MacCatalyst (13, 1)]
 		[MarshalNativeExceptions]
+		[return: NullAllowed]
 		NSDate FindNextDateAfterDateMatching (NSDate date, NSCalendarUnit unit, nint value, NSCalendarOptions options);
 
 		[Export ("nextWeekendStartDate:interval:options:afterDate:")]
@@ -7344,15 +7347,6 @@ namespace Foundation {
 		[Export ("sendAsynchronousRequest:queue:completionHandler:")]
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName = "SendRequestAsync")]
 		void SendAsynchronousRequest (NSUrlRequest request, NSOperationQueue queue, NSUrlConnectionDataResponse completionHandler);
-
-#if HAS_NEWSSTANDKIT
-		// Extension from iOS5, NewsstandKit
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
-		[NoTV][NoMac][NoMacCatalyst]
-		[NullAllowed]
-		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
-		NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
-#endif
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSURLConnectionDelegate")]
@@ -13450,21 +13444,25 @@ namespace Foundation {
 		[Field ("NSFileProtectionKey")]
 		NSString FileProtectionKey { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionNone")]
 		NSString FileProtectionNone { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionComplete")]
 		NSString FileProtectionComplete { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionCompleteUnlessOpen")]
 		NSString FileProtectionCompleteUnlessOpen { get; }
 
+		[Obsolete ("Use the 'NSFileProtectionType' instead.")]
 		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]

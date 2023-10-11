@@ -1371,4 +1371,16 @@ namespace Foundation {
 	public enum NSXpcConnectionOptions : ulong {
 		Privileged = (1 << 12),
 	}
+
+	[Mac (11, 0), MacCatalyst (13, 1)]
+	public enum NSFileProtectionType {
+		[Field ("NSFileProtectionComplete")]
+		Complete,
+		[Field ("NSFileProtectionCompleteUnlessOpen")]
+		CompleteUnlessOpen,
+		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
+		CompleteUntilFirstUserAuthentication,
+		[Field ("NSFileProtectionNone")]
+		None,
+	}
 }

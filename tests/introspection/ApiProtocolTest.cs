@@ -34,6 +34,15 @@ namespace Introspection {
 
 		protected virtual bool Skip (Type type)
 		{
+			switch (type.Namespace) {
+			// Xcode 15:
+			case "Cinematic":
+				// only present on device :/
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+			}
+
 			switch (type.Name) {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement methodSignatureForSelector: -- trouble ahead
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
@@ -59,6 +68,9 @@ namespace Introspection {
 			// was removed by apple and is a compat class.
 			case "HMMatterRequestHandler":
 				return true;
+			case "CIFilterGenerator":
+				// only present on device :/
+				return TestRuntime.IsSimulatorOrDesktop;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -168,6 +180,11 @@ namespace Introspection {
 				case "PKShareablePassMetadataPreview":
 				// Xcode 14.3, Conformance not in headers
 				case "PKDeferredPaymentRequest":
+					return true;
+				// Xcode 15, Conformance not in headers
+				case "GKBasePlayer":
+				case "GKLocalPlayer":
+				case "GKPlayer":
 					return true;
 				}
 				break;
@@ -327,6 +344,20 @@ namespace Introspection {
 				// Xcode 14.3, Conformance not in headers
 				case "PKDeferredPaymentRequest":
 					return true;
+				// Xcode 15, Conformance not in headers
+				case "MKGeodesicPolyline":
+				case "MKPolyline":
+				case "MKCircle":
+				case "MKCircleRenderer":
+				case "MKGradientPolylineRenderer":
+				case "MKMultiPolygon":
+				case "MKMultiPolygonRenderer":
+				case "MKMultiPolyline":
+				case "MKMultiPolylineRenderer":
+				case "MKPolygonRenderer":
+				case "MKPolylineRenderer":
+				case "AVAudioPcmBuffer":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -481,6 +512,20 @@ namespace Introspection {
 				case "PKShareablePassMetadataPreview":
 				// Xcode 14.3, Conformance not in headers
 				case "PKDeferredPaymentRequest":
+					return true;
+				// Xcode 15, Conformance not in headers
+				case "MKGeodesicPolyline":
+				case "MKPolyline":
+				case "MKCircle":
+				case "MKCircleRenderer":
+				case "MKGradientPolylineRenderer":
+				case "MKMultiPolygon":
+				case "MKMultiPolygonRenderer":
+				case "MKMultiPolyline":
+				case "MKMultiPolylineRenderer":
+				case "MKPolygonRenderer":
+				case "MKPolylineRenderer":
+				case "AVAudioPcmBuffer":
 					return true;
 				}
 				break;

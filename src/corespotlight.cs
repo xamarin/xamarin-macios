@@ -74,6 +74,15 @@ namespace CoreSpotlight {
 		[Export ("initWithName:protectionClass:")]
 		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		[Export ("initWithName:protectionClass:bundleIdentifier:options:")]
+		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass, string bundleIdentifier, nint options);
+
+		[Wrap ("this (name, protectionClass.GetConstant (), bundleIdentifier, options)")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoTV, NoWatch]
+		NativeHandle Constructor (string name, NSFileProtectionType protectionClass, string bundleIdentifier, nint options);
+
 		[Export ("indexSearchableItems:completionHandler:")]
 		[Async]
 		void Index (CSSearchableItem [] items, [NullAllowed] Action<NSError> completionHandler);
@@ -1190,6 +1199,14 @@ namespace CoreSpotlight {
 
 		[Export ("compareByRank:")]
 		NSComparisonResult CompareByRank (CSSuggestion other);
+
+		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		[Export ("score")]
+		NSNumber Score { get; }
+
+		[iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
+		[Export ("suggestionDataSources")]
+		NSObject [] SuggestionDataSources { get; }
 	}
 
 	[NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]

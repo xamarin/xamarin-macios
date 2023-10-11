@@ -86,6 +86,8 @@ namespace CoreNFC {
 	}
 
 	//[NoTV, NoWatch, NoMac]
+	[Deprecated (PlatformName.iOS, 17, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NFCReaderSession), Name = "NFCISO15693ReaderSession")]
 	[DisableDefaultCtor]
