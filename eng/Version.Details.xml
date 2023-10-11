@@ -1,51 +1,51 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-rtm.23470.21">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-rc.2.23472.8">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>34e6dab21ebbcc2a89549b774311ae4b83723d03</Sha>
+      <Sha>e13fd5c19e383f99132b1bfd2496857db089b680</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0-rc.2.23469.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>575843df1aeb430a3071e2e494d29b59080751ad</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-rc.2.23469.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0-rc.2.23472.10">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>575843df1aeb430a3071e2e494d29b59080751ad</Sha>
+      <Sha>974edf97294f3fb1b74cfddaf0275a657886224b</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-rtm.23470.10" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>470af1426002d0314cc81f6cc6dc967904acc1c8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100.Transport" Version="8.0.0-rc.2.23463.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100.Transport" Version="8.0.0-rc.2.23471.3" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>1999c8c8ab7473a7e1c5b7bdf5ba6d9a985a69cc</Sha>
+      <Sha>190be5fe0709de5a3507448151c7fc84abff8628</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23461.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23468.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>
-      <Sha>a112f15aa032c029b7d9c77df3427111d93cf407</Sha>
+      <Sha>89be445dd4936157533ad96bafb95f701430653a</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7099">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7107">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>14a9d8d77450b06c33062edd2f009f405c84f7cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7099">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7107">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>14a9d8d77450b06c33062edd2f009f405c84f7cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7099">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7107">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>14a9d8d77450b06c33062edd2f009f405c84f7cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7099">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7107">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>14a9d8d77450b06c33062edd2f009f405c84f7cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="7.0.7">
+    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0-rc.2.23472.10">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>ad24dacc5b51b83dc4b716cebe70c9f871f57270</Sha>
+      <Sha>974edf97294f3fb1b74cfddaf0275a657886224b</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
