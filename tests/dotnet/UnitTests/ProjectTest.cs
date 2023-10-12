@@ -524,7 +524,7 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (1, uniqueErrors.Length, "Error count");
 			string expectedError;
 			if (notRecognized) {
-				expectedError = $"The specified RuntimeIdentifier '{runtimeIdentifier}' is not recognized. See https://aka.ms/netsdk1083 for more information.";
+				expectedError = $"The specified RuntimeIdentifier '{runtimeIdentifier}' is not recognized.";
 			} else {
 				expectedError = $"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.";
 			}
