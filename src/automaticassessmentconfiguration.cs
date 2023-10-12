@@ -172,7 +172,19 @@ namespace AutomaticAssessmentConfiguration {
 
 	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface AEAssessmentApplication : NSCopying {
+		[NoiOS]
+		[Export ("initWithBundleIdentifier:")]
+		NativeHandle Constructor (string bundleIdentifier);
+
+		[NoiOS]
+		[NoMacCatalyst] // header says it's available in Mac Catalyst, Apple's documentation + xtro says it's not, so don't add it for now.
+		[Export ("initWithBundleIdentifier:teamIdentifier")]
+		NativeHandle Constructor (string bundleIdentifier, [NullAllowed] string TeamIdentifier);
+
 		[Export ("bundleIdentifier")]
 		string BundleIdentifier { get; }
 
