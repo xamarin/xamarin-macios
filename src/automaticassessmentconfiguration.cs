@@ -182,7 +182,7 @@ namespace AutomaticAssessmentConfiguration {
 
 		[NoiOS]
 		[NoMacCatalyst] // header says it's available in Mac Catalyst, Apple's documentation + xtro says it's not, so don't add it for now.
-		[Export ("initWithBundleIdentifier:teamIdentifier")]
+		[Export ("initWithBundleIdentifier:teamIdentifier:")]
 		NativeHandle Constructor (string bundleIdentifier, [NullAllowed] string TeamIdentifier);
 
 		[Export ("bundleIdentifier")]
