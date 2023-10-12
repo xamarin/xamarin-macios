@@ -34,6 +34,7 @@ namespace AVKit {
 		ContentRatingUnknown = -1100,
 		ContentDisallowedByPasscode = -1101,
 		ContentDisallowedByProfile = -1102,
+		RecordingFailed = -1200,
 	}
 
 	[NoWatch]
