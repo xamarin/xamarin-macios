@@ -29,7 +29,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (result) {
 				foreach (var item in Assemblies) {
-					stripedItems.Add (new TaskItem (item.GetMetadata ("OutputPath"), item.CloneCustomMetadata ()));
+					var outputPath = item.GetMetadata ("OutputPath");
+					stripedItems.Add (new TaskItem (outputPath, item.CloneCustomMetadata ()));
+					Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
 				}
 			}
 
