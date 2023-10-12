@@ -857,7 +857,7 @@
 	<!-- The DependsOnTargets here will not force EnableAssemblyILStripping to be calculated before the condition is evaulated. The order in CreateAppBundleDependsOn matters. -->
 	<Target Name="_StripAssemblyIL" Condition="'$(EnableAssemblyILStripping)' == 'true'" DependsOnTargets="_ComputeStripAssemblyIL">
 		<PropertyGroup>
-			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)\stripped</_StrippedAssemblyDirectory>
+			<_StrippedAssemblyDirectory>$(DeviceSpecificIntermediateOutputPath)stripped</_StrippedAssemblyDirectory>
 		</PropertyGroup>
 		<ItemGroup>
 			<_AssembliesToBeStripped Include="@(ResolvedFileToPublish)" Condition="'%(Extension)' == '.dll' And '%(ResolvedFileToPublish.Culture)' == ''">
@@ -870,10 +870,7 @@
 			<_AssembliesToBeStripped>
 				<OutputPath>$([System.String]::Copy('%(OutputPath)').Replace('\', '/'))</OutputPath>
 			</_AssembliesToBeStripped>
-
-			<_AssemblyDirsToCreate Include="@(_AssembliesToBeStripped->'%(OutputPath)%(Directory)'->Distinct())"/>
 		</ItemGroup>
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="@(_AssemblyDirsToCreate)" />
 		<Xamarin.MacDev.Tasks.ILStrip
 			Assemblies="@(_AssembliesToBeStripped)"
 			SessionId="$(BuildSessionId)"
