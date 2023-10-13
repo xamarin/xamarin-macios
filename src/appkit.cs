@@ -10721,7 +10721,7 @@ namespace AppKit {
 		[Export ("removeSymbolEffectOfType:options:animated:")]
 		void RemoveSymbolEffect (NSSymbolEffect symbolEffect, NSSymbolEffectOptions options, bool animated);
 
-		[NoiOS, Mac (14, 0)]
+		[Mac (14, 0)]
 		[Export ("removeAllSymbolEffects")]
 		void RemoveAllSymbolEffects ();
 
@@ -13398,7 +13398,6 @@ namespace AppKit {
 		[Mac (14, 0)]
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; set; }
-
 	}
 
 #if !NET && !__MACCATALYST__
@@ -14702,7 +14701,6 @@ namespace AppKit {
 		[NoMacCatalyst, Mac (14, 0)]
 		[Export ("showInlinePredictionForCandidates:client:")]
 		void ShowInlinePrediction (NSTextCheckingResult [] candidates, INSTextInputClient client);
-
 	}
 
 	[NoMacCatalyst]
@@ -16629,7 +16627,6 @@ namespace AppKit {
 		[Mac (14, 0)]
 		[Export ("displayLinkWithTarget:selector:")]
 		CADisplayLink GetDisplayLink (NSObject target, Selector selector);
-
 	}
 
 	[NoMacCatalyst]

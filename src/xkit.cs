@@ -3629,13 +3629,6 @@ namespace UIKit {
 		[Export ("frameForTextAttachmentAtLocation:")]
 		CGRect GetFrameForTextAttachment (INSTextLocation location);
 
-		[Internal]
-		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
-		[Export ("textLineFragmentForVerticalOffset:requiresExactMatch:")]
-		[return: NullAllowed]
-		NSTextLineFragment _GetTextLineFragment (nfloat verticalOffset, byte requiresExactMatch);
-
-		[Wrap ("_GetTextLineFragment (verticalOffset, requiresExactMatch ? (byte) 1 : (byte) 0)")]
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[return: NullAllowed]
 		NSTextLineFragment GetTextLineFragment (nfloat verticalOffset, bool requiresExactMatch);
