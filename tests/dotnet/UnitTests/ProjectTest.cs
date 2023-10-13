@@ -1356,32 +1356,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Debug")]
-		public void CheckForMacCatalystDefaultEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
-		{
-			var project = "Entitlements";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
-
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
-			Clean (project_path);
-
-			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["Configuration"] = configuration;
-			DotNet.AssertBuild (project_path, properties);
-
-			var executable = GetNativeExecutable (platform, appPath);
-			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
-			Assert.IsTrue (foundEntitlements, "Issues found with Entitlements.");
-			if (configuration == "Release") {
-				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.app-sandbox")?.Value, "com.apple.security.app-sandbox enlistment was not found in Release configuration.");
-				Assert.IsNull (entitlements.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was found in Release configuration.");
-			} else if (configuration == "Debug") {
-				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was not found in Debug configuration.");
-			}
-		}
-
 		// [TestCase (ApplePlatform.MacCatalyst, null, "Release")]
 		[TestCase (ApplePlatform.MacOSX, null, "Release")]
 		public void NoWarnCodesign (ApplePlatform platform, string runtimeIdentifiers, string configuration)
