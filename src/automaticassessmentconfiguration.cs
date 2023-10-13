@@ -177,6 +177,7 @@ namespace AutomaticAssessmentConfiguration {
 #endif
 	interface AEAssessmentApplication : NSCopying {
 		[NoiOS]
+		[MacCatalyst (15, 0)]
 		[Export ("initWithBundleIdentifier:")]
 		NativeHandle Constructor (string bundleIdentifier);
 
