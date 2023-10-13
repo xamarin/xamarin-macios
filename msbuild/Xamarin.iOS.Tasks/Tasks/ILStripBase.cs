@@ -23,19 +23,17 @@ namespace Xamarin.MacDev.Tasks {
 			if (this.ShouldExecuteRemotely (SessionId))
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			var result = base.Execute ();
-
 			var stripedItems = new List<ITaskItem> ();
-
-			if (result) {
-				foreach (var item in Assemblies) {
-					var outputPath = item.GetMetadata ("OutputPath");
-					stripedItems.Add (new TaskItem (outputPath, item.CloneCustomMetadata ()));
-					Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
-				}
+			foreach (var item in Assemblies) {
+				var outputPath = item.GetMetadata ("OutputPath");
+				stripedItems.Add (new TaskItem (outputPath, item.CloneCustomMetadata ()));
+				Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
 			}
 
-			StrippedAssemblies = stripedItems.ToArray ();
+			var result = base.Execute ();
+
+			if (result)
+				StrippedAssemblies = stripedItems.ToArray ();
 
 			return result;
 		}
