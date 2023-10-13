@@ -1,0 +1,6 @@
+!missing-enum-value! NIErrorCode native value NIErrorCodeActiveExtendedDistanceSessionsLimitExceeded = -5880 not bound
+!missing-enum-value! NIErrorCode native value NIErrorCodeIncompatiblePeerDevice = -5881 not bound
+!missing-protocol-member! NIDeviceCapability::supportsExtendedDistanceMeasurement not found
+!missing-selector! NIDiscoveryToken::deviceCapabilities not bound
+!missing-selector! NINearbyPeerConfiguration::isExtendedDistanceMeasurementEnabled not bound
+!missing-selector! NINearbyPeerConfiguration::setExtendedDistanceMeasurementEnabled: not bound

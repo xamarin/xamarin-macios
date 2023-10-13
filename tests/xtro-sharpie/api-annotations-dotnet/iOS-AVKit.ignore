@@ -1,4 +1,1 @@
 ## not available on iOS - but we don't put availability attributes on error codes
-!extra-enum-value! Managed value -1100 for AVKitError.ContentRatingUnknown not found in native headers
-!extra-enum-value! Managed value -1101 for AVKitError.ContentDisallowedByPasscode not found in native headers
-!extra-enum-value! Managed value -1102 for AVKitError.ContentDisallowedByProfile not found in native headers

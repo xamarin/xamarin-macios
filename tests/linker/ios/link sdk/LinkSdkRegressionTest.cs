@@ -163,6 +163,9 @@ namespace LinkSdk {
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=865
 		public void Bug865_CanOpenUrl ()
 		{
+			if (TestRuntime.CheckXcodeVersion (15, 0))
+				Assert.Ignore ("NSUrl was fixed with Xcode 15.0");
+
 			Assert.False (UIApplication.SharedApplication.CanOpenUrl (null), "null");
 			// the above should not throw an ArgumentNullException
 			// and that's important because NSUrl.FromString and NSUrl.ctor(string) differs

@@ -1064,6 +1064,10 @@ namespace Introspection {
 				case "SdkVersion":
 					Assert.True (Version.TryParse (s, out _), fi.Name);
 					break;
+#if !XAMCORE_5_0
+				case "NewsstandKitLibrary": // Removed from iOS, but we have to keep the constant around for binary compatibility.
+					break;
+#endif
 #if !NET
 #if __TVOS__
 				case "PassKitLibrary": // not part of tvOS
@@ -1079,6 +1083,7 @@ namespace Introspection {
 							Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #if !__MACOS__
+				case "CinematicLibrary":
 				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
@@ -1091,6 +1096,12 @@ namespace Introspection {
 				case "MetalPerformanceShadersLibrary":
 				case "MetalPerformanceShadersGraphLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
+				case "PhaseLibrary":
+					// framework support for tvOS was added in xcode 15
+					// but not supported on tvOS simulator so load fails
 					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;

@@ -651,4 +651,87 @@ namespace NaturalLanguage {
 		[Wrap ("Write (dictionary.GetDictionary ()!, language.HasValue ? language.Value.GetConstant () : null, url, out error)")]
 		bool Write (NLStrongDictionary dictionary, NLLanguage? language, NSUrl url, [NullAllowed] out NSError error);
 	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NLContextualEmbedding {
+		[Static]
+		[Export ("contextualEmbeddingWithModelIdentifier:")]
+		[return: NullAllowed]
+		NLContextualEmbedding CreateWithModelIdentifier (string modelIdentifier);
+
+		[Static]
+		[Export ("contextualEmbeddingsForValues:")]
+		NLContextualEmbedding [] Create (NSDictionary<NSString, NSObject> values);
+
+		[Static]
+		[Export ("contextualEmbeddingWithLanguage:")]
+		[return: NullAllowed]
+		NLContextualEmbedding CreateWithLanguage (string language);
+
+		[Static]
+		[Export ("contextualEmbeddingWithScript:")]
+		[return: NullAllowed]
+		NLContextualEmbedding CreateWithScript (string script);
+
+		[Export ("modelIdentifier")]
+		string ModelIdentifier { get; }
+
+		[Export ("languages", ArgumentSemantic.Copy)]
+		string [] Languages { get; }
+
+		[Export ("scripts", ArgumentSemantic.Copy)]
+		string [] Scripts { get; }
+
+		[Export ("revision")]
+		nuint Revision { get; }
+
+		[Export ("dimension")]
+		nuint Dimension { get; }
+
+		[Export ("maximumSequenceLength")]
+		nuint MaximumSequenceLength { get; }
+
+		[Export ("loadWithError:")]
+		bool Load ([NullAllowed] out NSError error);
+
+		[Export ("unload")]
+		void Unload ();
+
+		[Export ("embeddingResultForString:language:error:")]
+		[return: NullAllowed]
+		NLContextualEmbeddingResult GetEmbeddingResult (string @string, [NullAllowed] string language, [NullAllowed] out NSError error);
+
+		[Export ("hasAvailableAssets")]
+		bool HasAvailableAssets { get; }
+
+		[Export ("requestEmbeddingAssetsWithCompletionHandler:")]
+		[Async]
+		void RequestAssets (Action<NLContextualEmbeddingAssetsResult, NSError> completionHandler);
+	}
+
+	delegate void TokenVectorEnumeratorHandler (NSArray<NSNumber> tokenVector, NSRange tokenRange, out bool stop);
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NLContextualEmbeddingResult {
+		[Export ("string")]
+		string String { get; }
+
+		[Export ("language")]
+		string Language { get; }
+
+		[Export ("sequenceLength")]
+		nuint SequenceLength { get; }
+
+		[Export ("enumerateTokenVectorsInRange:usingBlock:")]
+		void EnumerateTokenVectors (NSRange range, TokenVectorEnumeratorHandler enumerationHandler);
+
+		[return: BindAs (typeof (nuint []))]
+		[Export ("tokenVectorAtIndex:tokenRange:")]
+		[return: NullAllowed]
+		NSNumber [] GetVector (nuint characterIndex, ref NSRange tokenRange);
+	}
 }

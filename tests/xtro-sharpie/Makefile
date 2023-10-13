@@ -49,6 +49,14 @@ XIOS_RID = ios-arm64
 $(XIOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
 	-exclude RealityKit \
+	-exclude GameKit \
+	-exclude ARKit \
+	-exclude SensorKit \
+	-exclude GameController \
+	-exclude Matter \
+	-exclude MetalPerformanceShadersGraph \
+	-exclude NearbyInteraction \
+	-exclude WebKit \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
@@ -62,6 +70,12 @@ XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 $(XWATCHOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) \
 		-exclude RealityKit \
+		-exclude MediaPlayer \
+		-exclude AVFoundation \
+		-exclude CoreMedia \
+		-exclude AVFAudio \
+		-exclude ShazamKit \
+		-exclude SoundAnalysis \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
@@ -85,6 +99,13 @@ $(XMACOS_PCH): .stamp-check-sharpie
 		-exclude NearbyInteraction \
 		-exclude RealityKit \
 		-exclude JavaNativeFoundation \
+		-exclude GameKit \
+		-exclude CoreMediaIO \
+		-exclude ParavirtualizedGraphics \
+		-exclude GameController \
+		-exclude Matter \
+		-exclude MetalPerformanceShadersGraph \
+		-exclude WebKit \
 		$(CORETELEPHONY_HEADERS) \
 
 XMACCATALYST_ARCH = x86_64

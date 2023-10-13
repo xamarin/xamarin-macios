@@ -2,6 +2,7 @@ using System;
 
 using ObjCRuntime;
 using Foundation;
+using Surface = IOSurface.IOSurface;
 
 namespace MediaAccessibility {
 
@@ -44,5 +45,28 @@ namespace MediaAccessibility {
 		[Notification]
 		[Field ("kMADimFlashingLightsChangedNotification")]
 		NSString DimFlashingLightsChangedNotification { get; }
+	}
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MAFlashingLightsProcessorResult {
+		[Export ("surfaceProcessed")]
+		bool SurfaceProcessed { get; }
+
+		[Export ("mitigationLevel")]
+		float MitigationLevel { get; }
+
+		[Export ("intensityLevel")]
+		float IntensityLevel { get; }
+	}
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MAFlashingLightsProcessor {
+		[Export ("canProcessSurface:")]
+		bool CanProcess (Surface surface);
+
+		[Export ("processSurface:outSurface:timestamp:options:")]
+		MAFlashingLightsProcessorResult Process (Surface inSurface, Surface outSurface, double timestamp, [NullAllowed] NSDictionary options);
 	}
 }

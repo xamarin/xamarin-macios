@@ -821,10 +821,10 @@
 		<value>Nepovedlo se dekomprimovat soubor {0}. Zkontrolujte prosím v protokolu o sestavení další informace z nativního příkazu unzip.</value>
 	</data>
   <data name="MX1307" xml:space="preserve">
-		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>Nelze extrahovat nativní architekturu {0} ze sestavení {1}, protože neobsahuje prostředek {2}.</value>
 	</data>
   <data name="MX1308" xml:space="preserve">
-		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>Nelze extrahovat nativní knihovnu {0} ze sestavení {1}, protože neobsahuje prostředek {2}.</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>V referencích chybí požadované sestavení Xamarin.Mac.dll.
@@ -1524,7 +1524,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+		<value>Třída {0} nebude registrována, protože architektura {1} byla odebrána ze sady {2} SDK.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1549,7 +1549,7 @@
 		<value>Nepovedlo se vypočítat signaturu bloku pro typ „{0}“: {1}</value>
 	</data>
   <data name="MX4189" xml:space="preserve">
-		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
+		<value>Třída {0} nebude registrována, protože byla odebrána ze sady {1} SDK.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Chybí kompilátor {0}. Nainstalujte prosím nástroje příkazového řádku Xcode.
@@ -1823,6 +1823,6 @@
 		<value>V sestavení „{0}“ nelze najít typ „ObjCRuntime.__Registrar__“.</value>
 	</data>
   <data name="MX8056" xml:space="preserve">
-		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+		<value>Nepodařilo se zařadit objekt Objective-C 0x{0} (typ: {1}). Nepodařilo se najít existující spravovanou instanci pro tento objekt, ani nebylo možné vytvořit novou spravovanou instanci obecného typu {2}.</value>
 	</data>
 </root>

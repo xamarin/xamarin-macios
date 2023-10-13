@@ -249,4 +249,60 @@ namespace CloudKit {
 		ReadWrite = 1uL << 1,
 		Any = ReadOnly | ReadWrite,
 	}
+
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CKSyncEngineAccountChangeType : long {
+		SignIn,
+		SignOut,
+		SwitchAccounts,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CKSyncEngineSyncReason : long {
+		Scheduled,
+		Manual,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CKSyncEngineEventType : long {
+		StateUpdate,
+		AccountChange,
+		FetchedDatabaseChanges,
+		FetchedRecordZoneChanges,
+		SentDatabaseChanges,
+		SentRecordZoneChanges,
+		WillFetchChanges,
+		WillFetchRecordZoneChanges,
+		DidFetchRecordZoneChanges,
+		DidFetchChanges,
+		WillSendChanges,
+		DidSendChanges,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CKSyncEnginePendingRecordZoneChangeType : long {
+		SaveRecord,
+		DeleteRecord,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CKSyncEngineZoneDeletionReason : long {
+		Deleted,
+		Purged,
+		EncryptedDataReset,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CKSyncEnginePendingDatabaseChangeType : long {
+		SaveZone,
+		DeleteZone,
+	}
+
 }

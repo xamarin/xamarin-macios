@@ -3293,6 +3293,13 @@ namespace SceneKit {
 #endif
 		[Export ("currentRenderPassDescriptor")]
 		MTLRenderPassDescriptor CurrentRenderPassDescriptor { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("workingColorSpace")]
+		CGColorSpace WorkingColorSpace { get; }
 	}
 
 	[MacCatalyst (13, 1)]

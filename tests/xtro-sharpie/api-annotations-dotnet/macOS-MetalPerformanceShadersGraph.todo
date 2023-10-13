@@ -1,245 +1,27 @@
 ## appended from unclassified file
-!missing-enum! MPSGraphOptimization not bound
-!missing-enum! MPSGraphOptimizationProfile not bound
-!missing-enum! MPSGraphPoolingReturnIndicesMode not bound
-!missing-selector! MPSGraph::bandPartWithTensor:numLower:numUpper:name: not bound
-!missing-selector! MPSGraph::bandPartWithTensor:numLowerTensor:numUpperTensor:name: not bound
-!missing-selector! MPSGraph::coordinateAlongAxis:withShape:name: not bound
-!missing-selector! MPSGraph::coordinateAlongAxis:withShapeTensor:name: not bound
-!missing-selector! MPSGraph::coordinateAlongAxisTensor:withShape:name: not bound
-!missing-selector! MPSGraph::coordinateAlongAxisTensor:withShapeTensor:name: not bound
-!missing-selector! MPSGraph::expandDimsOfTensor:axes:name: not bound
-!missing-selector! MPSGraph::expandDimsOfTensor:axesTensor:name: not bound
-!missing-selector! MPSGraph::expandDimsOfTensor:axis:name: not bound
-!missing-selector! MPSGraph::gatherAlongAxis:withUpdatesTensor:indicesTensor:name: not bound
-!missing-selector! MPSGraph::gatherAlongAxisTensor:withUpdatesTensor:indicesTensor:name: not bound
-!missing-selector! MPSGraph::maxPooling2DReturnIndicesWithSourceTensor:descriptor:name: not bound
-!missing-selector! MPSGraph::maxPooling4DReturnIndicesWithSourceTensor:descriptor:name: not bound
-!missing-selector! MPSGraph::reductionAndWithTensor:axes:name: not bound
-!missing-selector! MPSGraph::reductionAndWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::reductionOrWithTensor:axes:name: not bound
-!missing-selector! MPSGraph::reductionOrWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::scatterAlongAxis:withDataTensor:updatesTensor:indicesTensor:mode:name: not bound
-!missing-selector! MPSGraph::scatterAlongAxis:withUpdatesTensor:indicesTensor:shape:mode:name: not bound
-!missing-selector! MPSGraph::scatterAlongAxisTensor:withDataTensor:updatesTensor:indicesTensor:mode:name: not bound
-!missing-selector! MPSGraph::scatterAlongAxisTensor:withUpdatesTensor:indicesTensor:shape:mode:name: not bound
-!missing-selector! MPSGraph::splitTensor:numSplits:axis:name: not bound
-!missing-selector! MPSGraph::splitTensor:splitSizes:axis:name: not bound
-!missing-selector! MPSGraph::splitTensor:splitSizesTensor:axis:name: not bound
-!missing-selector! MPSGraph::squeezeTensor:axes:name: not bound
-!missing-selector! MPSGraph::squeezeTensor:axesTensor:name: not bound
-!missing-selector! MPSGraph::squeezeTensor:axis:name: not bound
-!missing-selector! MPSGraph::squeezeTensor:name: not bound
-!missing-selector! MPSGraph::stackTensors:axis:name: not bound
-!missing-selector! MPSGraphCompilationDescriptor::optimizationLevel not bound
-!missing-selector! MPSGraphCompilationDescriptor::optimizationProfile not bound
-!missing-selector! MPSGraphCompilationDescriptor::setOptimizationLevel: not bound
-!missing-selector! MPSGraphCompilationDescriptor::setOptimizationProfile: not bound
-!missing-selector! MPSGraphExecutionDescriptor::compilationDescriptor not bound
-!missing-selector! MPSGraphExecutionDescriptor::setCompilationDescriptor: not bound
-!missing-selector! MPSGraphPooling2DOpDescriptor::returnIndicesDataType not bound
-!missing-selector! MPSGraphPooling2DOpDescriptor::returnIndicesMode not bound
-!missing-selector! MPSGraphPooling2DOpDescriptor::setReturnIndicesDataType: not bound
-!missing-selector! MPSGraphPooling2DOpDescriptor::setReturnIndicesMode: not bound
-!missing-selector! MPSGraphPooling4DOpDescriptor::returnIndicesDataType not bound
-!missing-selector! MPSGraphPooling4DOpDescriptor::returnIndicesMode not bound
-!missing-selector! MPSGraphPooling4DOpDescriptor::setReturnIndicesDataType: not bound
-!missing-selector! MPSGraphPooling4DOpDescriptor::setReturnIndicesMode: not bound
-!missing-selector! MPSGraphTensorData::initWithMTLBuffer:shape:dataType:rowBytes: not bound
-!missing-enum! MPSGraphExecutionStage not bound
-!missing-enum! MPSGraphRNNActivation not bound
-!missing-enum-value! MPSGraphPaddingStyle native value MPSGraphPaddingStyleONNX_SAME_LOWER = 4 not bound
-!missing-selector! +MPSGraphGRUDescriptor::descriptor not bound
-!missing-selector! +MPSGraphLSTMDescriptor::descriptor not bound
-!missing-selector! +MPSGraphSingleGateRNNDescriptor::descriptor not bound
-!missing-selector! MPSGraph::adamWithCurrentLearningRateTensor:beta1Tensor:beta2Tensor:epsilonTensor:valuesTensor:momentumTensor:velocityTensor:maximumVelocityTensor:gradientTensor:name: not bound
-!missing-selector! MPSGraph::adamWithLearningRateTensor:beta1Tensor:beta2Tensor:epsilonTensor:beta1PowerTensor:beta2PowerTensor:valuesTensor:momentumTensor:velocityTensor:maximumVelocityTensor:gradientTensor:name: not bound
-!missing-selector! MPSGraph::GRUGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:outputFwd:inputWeight:bias:descriptor:name: not bound
-!missing-selector! MPSGraph::GRUGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:outputFwd:inputWeight:bias:initState:descriptor:name: not bound
-!missing-selector! MPSGraph::GRUGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:outputFwd:stateGradient:inputWeight:bias:initState:mask:secondaryBias:descriptor:name: not bound
-!missing-selector! MPSGraph::GRUWithSourceTensor:recurrentWeight:inputWeight:bias:descriptor:name: not bound
-!missing-selector! MPSGraph::GRUWithSourceTensor:recurrentWeight:inputWeight:bias:initState:descriptor:name: not bound
-!missing-selector! MPSGraph::GRUWithSourceTensor:recurrentWeight:inputWeight:bias:initState:mask:secondaryBias:descriptor:name: not bound
-!missing-selector! MPSGraph::HammingDistanceWithPrimaryTensor:secondaryTensor:resultDataType:name: not bound
-!missing-selector! MPSGraph::LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:descriptor:name: not bound
-!missing-selector! MPSGraph::LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:inputWeight:bias:initState:initCell:descriptor:name: not bound
-!missing-selector! MPSGraph::LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:inputWeight:bias:initState:initCell:mask:descriptor:name: not bound
-!missing-selector! MPSGraph::LSTMGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:cellOutputFwd:stateGradient:cellGradient:inputWeight:bias:initState:initCell:mask:peephole:descriptor:name: not bound
-!missing-selector! MPSGraph::LSTMWithSourceTensor:recurrentWeight:initState:initCell:descriptor:name: not bound
-!missing-selector! MPSGraph::LSTMWithSourceTensor:recurrentWeight:inputWeight:bias:initState:initCell:descriptor:name: not bound
-!missing-selector! MPSGraph::LSTMWithSourceTensor:recurrentWeight:inputWeight:bias:initState:initCell:mask:peephole:descriptor:name: not bound
-!missing-selector! MPSGraph::maxPooling2DGradientWithGradientTensor:indicesTensor:outputShape:descriptor:name: not bound
-!missing-selector! MPSGraph::maxPooling2DGradientWithGradientTensor:indicesTensor:outputShapeTensor:descriptor:name: not bound
-!missing-selector! MPSGraph::maxPooling4DGradientWithGradientTensor:indicesTensor:outputShape:descriptor:name: not bound
-!missing-selector! MPSGraph::maxPooling4DGradientWithGradientTensor:indicesTensor:outputShapeTensor:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:initState:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:inputWeight:bias:initState:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:inputWeight:bias:initState:mask:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNGradientsWithSourceTensor:recurrentWeight:sourceGradient:zState:stateGradient:inputWeight:bias:initState:mask:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNWithSourceTensor:recurrentWeight:initState:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNWithSourceTensor:recurrentWeight:inputWeight:bias:initState:descriptor:name: not bound
-!missing-selector! MPSGraph::singleGateRNNWithSourceTensor:recurrentWeight:inputWeight:bias:initState:mask:descriptor:name: not bound
-!missing-selector! MPSGraph::truncateWithTensor:name: not bound
-!missing-selector! MPSGraphCompilationDescriptor::compilationCompletionHandler not bound
-!missing-selector! MPSGraphCompilationDescriptor::dispatchQueue not bound
-!missing-selector! MPSGraphCompilationDescriptor::setCompilationCompletionHandler: not bound
-!missing-selector! MPSGraphCompilationDescriptor::setDispatchQueue: not bound
-!missing-selector! MPSGraphCompilationDescriptor::setWaitForCompilationCompletion: not bound
-!missing-selector! MPSGraphCompilationDescriptor::waitForCompilationCompletion not bound
-!missing-selector! MPSGraphExecutableExecutionDescriptor::signalEvent:atExecutionEvent:value: not bound
-!missing-selector! MPSGraphExecutableExecutionDescriptor::waitForEvent:value: not bound
-!missing-selector! MPSGraphExecutionDescriptor::signalEvent:atExecutionEvent:value: not bound
-!missing-selector! MPSGraphExecutionDescriptor::waitForEvent:value: not bound
-!missing-selector! MPSGraphGRUDescriptor::bidirectional not bound
-!missing-selector! MPSGraphGRUDescriptor::flipZ not bound
-!missing-selector! MPSGraphGRUDescriptor::outputGateActivation not bound
-!missing-selector! MPSGraphGRUDescriptor::resetAfter not bound
-!missing-selector! MPSGraphGRUDescriptor::resetGateActivation not bound
-!missing-selector! MPSGraphGRUDescriptor::resetGateFirst not bound
-!missing-selector! MPSGraphGRUDescriptor::reverse not bound
-!missing-selector! MPSGraphGRUDescriptor::setBidirectional: not bound
-!missing-selector! MPSGraphGRUDescriptor::setFlipZ: not bound
-!missing-selector! MPSGraphGRUDescriptor::setOutputGateActivation: not bound
-!missing-selector! MPSGraphGRUDescriptor::setResetAfter: not bound
-!missing-selector! MPSGraphGRUDescriptor::setResetGateActivation: not bound
-!missing-selector! MPSGraphGRUDescriptor::setResetGateFirst: not bound
-!missing-selector! MPSGraphGRUDescriptor::setReverse: not bound
-!missing-selector! MPSGraphGRUDescriptor::setTraining: not bound
-!missing-selector! MPSGraphGRUDescriptor::setUpdateGateActivation: not bound
-!missing-selector! MPSGraphGRUDescriptor::training not bound
-!missing-selector! MPSGraphGRUDescriptor::updateGateActivation not bound
-!missing-selector! MPSGraphLSTMDescriptor::activation not bound
-!missing-selector! MPSGraphLSTMDescriptor::bidirectional not bound
-!missing-selector! MPSGraphLSTMDescriptor::cellGateActivation not bound
-!missing-selector! MPSGraphLSTMDescriptor::forgetGateActivation not bound
-!missing-selector! MPSGraphLSTMDescriptor::forgetGateLast not bound
-!missing-selector! MPSGraphLSTMDescriptor::inputGateActivation not bound
-!missing-selector! MPSGraphLSTMDescriptor::outputGateActivation not bound
-!missing-selector! MPSGraphLSTMDescriptor::produceCell not bound
-!missing-selector! MPSGraphLSTMDescriptor::reverse not bound
-!missing-selector! MPSGraphLSTMDescriptor::setActivation: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setBidirectional: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setCellGateActivation: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setForgetGateActivation: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setForgetGateLast: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setInputGateActivation: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setOutputGateActivation: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setProduceCell: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setReverse: not bound
-!missing-selector! MPSGraphLSTMDescriptor::setTraining: not bound
-!missing-selector! MPSGraphLSTMDescriptor::training not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::activation not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::bidirectional not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::reverse not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::setActivation: not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::setBidirectional: not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::setReverse: not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::setTraining: not bound
-!missing-selector! MPSGraphSingleGateRNNDescriptor::training not bound
-!missing-type! MPSGraphGRUDescriptor not bound
-!missing-type! MPSGraphLSTMDescriptor not bound
-!missing-type! MPSGraphSingleGateRNNDescriptor not bound
-!missing-enum! MPSGraphResizeNearestRoundingMode not bound
-!missing-selector! MPSGraph::cumulativeMaximumWithTensor:axis:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeMaximumWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::cumulativeMaximumWithTensor:axisTensor:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeMaximumWithTensor:axisTensor:name: not bound
-!missing-selector! MPSGraph::cumulativeMinimumWithTensor:axis:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeMinimumWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::cumulativeMinimumWithTensor:axisTensor:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeMinimumWithTensor:axisTensor:name: not bound
-!missing-selector! MPSGraph::cumulativeProductWithTensor:axis:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeProductWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::cumulativeProductWithTensor:axisTensor:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeProductWithTensor:axisTensor:name: not bound
-!missing-selector! MPSGraph::cumulativeSumWithTensor:axis:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeSumWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::cumulativeSumWithTensor:axisTensor:exclusive:reverse:name: not bound
-!missing-selector! MPSGraph::cumulativeSumWithTensor:axisTensor:name: not bound
-!missing-selector! MPSGraph::resizeBilinearWithGradientTensor:input:centerResult:alignCorners:layout:name: not bound
-!missing-selector! MPSGraph::resizeBilinearWithGradientTensor:input:scaleOffsetTensor:layout:name: not bound
-!missing-selector! MPSGraph::resizeBilinearWithTensor:sizeTensor:centerResult:alignCorners:layout:name: not bound
-!missing-selector! MPSGraph::resizeBilinearWithTensor:sizeTensor:scaleOffsetTensor:layout:name: not bound
-!missing-selector! MPSGraph::resizeNearestWithGradientTensor:input:nearestRoundingMode:centerResult:alignCorners:layout:name: not bound
-!missing-selector! MPSGraph::resizeNearestWithGradientTensor:input:scaleOffsetTensor:nearestRoundingMode:layout:name: not bound
-!missing-selector! MPSGraph::resizeNearestWithTensor:sizeTensor:nearestRoundingMode:centerResult:alignCorners:layout:name: not bound
-!missing-selector! MPSGraph::resizeNearestWithTensor:sizeTensor:scaleOffsetTensor:nearestRoundingMode:layout:name: not bound
-!missing-selector! MPSGraph::resizeTensor:sizeTensor:scaleOffsetTensor:mode:layout:name: not bound
-!missing-selector! MPSGraph::resizeWithGradientTensor:input:scaleOffsetTensor:mode:layout:name: not bound
-!missing-selector! MPSGraph::sortWithTensor:axis:descending:name: not bound
-!missing-selector! MPSGraph::sortWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::sortWithTensor:axisTensor:descending:name: not bound
-!missing-selector! MPSGraph::sortWithTensor:axisTensor:name: not bound
-!missing-null-allowed! 'MetalPerformanceShadersGraph.MPSGraphTensor MetalPerformanceShadersGraph.MPSGraph_MPSGraphTensorShapeOps::Cast(MetalPerformanceShadersGraph.MPSGraph,MetalPerformanceShadersGraph.MPSGraphTensor,MetalPerformanceShaders.MPSDataType,System.String)' is missing an [NullAllowed] on parameter #3
-!missing-selector! MPSGraph::transposeTensor:permutation:name: not bound
-!missing-selector! MPSGraph::argSortWithTensor:axis:descending:name: not bound
-!missing-selector! MPSGraph::argSortWithTensor:axis:name: not bound
-!missing-selector! MPSGraph::argSortWithTensor:axisTensor:descending:name: not bound
-!missing-selector! MPSGraph::argSortWithTensor:axisTensor:name: not bound
-!missing-selector! MPSGraph::batchToSpaceTensor:spatialAxes:batchAxis:blockDimensions:usePixelShuffleOrder:name: not bound
-!missing-selector! MPSGraph::batchToSpaceTensor:spatialAxesTensor:batchAxisTensor:blockDimensionsTensor:usePixelShuffleOrder:name: not bound
-!missing-selector! MPSGraph::bitwiseANDWithPrimaryTensor:secondaryTensor:name: not bound
-!missing-selector! MPSGraph::bitwiseLeftShiftWithPrimaryTensor:secondaryTensor:name: not bound
-!missing-selector! MPSGraph::bitwiseNOTWithTensor:name: not bound
-!missing-selector! MPSGraph::bitwiseORWithPrimaryTensor:secondaryTensor:name: not bound
-!missing-selector! MPSGraph::bitwisePopulationCountWithTensor:name: not bound
-!missing-selector! MPSGraph::bitwiseRightShiftWithPrimaryTensor:secondaryTensor:name: not bound
-!missing-selector! MPSGraph::bitwiseXORWithPrimaryTensor:secondaryTensor:name: not bound
-!missing-selector! MPSGraph::inverseOfTensor:name: not bound
-!missing-selector! MPSGraph::spaceToBatchTensor:spatialAxes:batchAxis:blockDimensions:usePixelShuffleOrder:name: not bound
-!missing-selector! MPSGraph::spaceToBatchTensor:spatialAxesTensor:batchAxisTensor:blockDimensionsTensor:usePixelShuffleOrder:name: not bound
-!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutDHWIO = 10 not bound
-!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutNCDHW = 7 not bound
-!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutNDHWC = 8 not bound
-!missing-enum-value! MPSGraphTensorNamedDataLayout native value MPSGraphTensorNamedDataLayoutOIDHW = 9 not bound
-!missing-selector! +MPSGraphConvolution3DOpDescriptor::descriptorWithStrideInX:strideInY:strideInZ:dilationRateInX:dilationRateInY:dilationRateInZ:groups:paddingLeft:paddingRight:paddingTop:paddingBottom:paddingFront:paddingBack:paddingStyle:dataLayout:weightsLayout: not bound
-!missing-selector! +MPSGraphConvolution3DOpDescriptor::descriptorWithStrideInX:strideInY:strideInZ:dilationRateInX:dilationRateInY:dilationRateInZ:groups:paddingStyle:dataLayout:weightsLayout: not bound
-!missing-selector! MPSGraph::convolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShape:forwardConvolutionDescriptor:name: not bound
-!missing-selector! MPSGraph::convolution3DDataGradientWithIncomingGradientTensor:weightsTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
-!missing-selector! MPSGraph::convolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShape:forwardConvolutionDescriptor:name: not bound
-!missing-selector! MPSGraph::convolution3DWeightsGradientWithIncomingGradientTensor:sourceTensor:outputShapeTensor:forwardConvolutionDescriptor:name: not bound
-!missing-selector! MPSGraph::convolution3DWithSourceTensor:weightsTensor:descriptor:name: not bound
-!missing-selector! MPSGraph::dequantizeTensor:scale:zeroPoint:dataType:name: not bound
-!missing-selector! MPSGraph::dequantizeTensor:scaleTensor:zeroPoint:dataType:axis:name: not bound
-!missing-selector! MPSGraph::dequantizeTensor:scaleTensor:zeroPointTensor:dataType:axis:name: not bound
-!missing-selector! MPSGraph::quantizeTensor:scale:zeroPoint:dataType:name: not bound
-!missing-selector! MPSGraph::quantizeTensor:scaleTensor:zeroPoint:dataType:axis:name: not bound
-!missing-selector! MPSGraph::quantizeTensor:scaleTensor:zeroPointTensor:dataType:axis:name: not bound
-!missing-selector! MPSGraph::reinterpretCastTensor:toType:name: not bound
-!missing-selector! MPSGraph::sampleGridWithSourceTensor:coordinateTensor:layout:normalizeCoordinates:relativeCoordinates:alignCorners:paddingMode:nearestRoundingMode:constantValue:name: not bound
-!missing-selector! MPSGraph::sampleGridWithSourceTensor:coordinateTensor:layout:normalizeCoordinates:relativeCoordinates:alignCorners:paddingMode:samplingMode:constantValue:name: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::dataLayout not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::dilationRateInX not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::dilationRateInY not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::dilationRateInZ not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::groups not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingBack not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingBottom not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingFront not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingLeft not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingRight not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingStyle not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::paddingTop not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setDataLayout: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setDilationRateInX: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setDilationRateInY: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setDilationRateInZ: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setExplicitPaddingWithPaddingLeft:paddingRight:paddingTop:paddingBottom:paddingFront:paddingBack: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setGroups: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingBack: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingBottom: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingFront: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingLeft: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingRight: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingStyle: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setPaddingTop: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setStrideInX: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setStrideInY: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setStrideInZ: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::setWeightsLayout: not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::strideInX not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::strideInY not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::strideInZ not bound
-!missing-selector! MPSGraphConvolution3DOpDescriptor::weightsLayout not bound
-!missing-selector! MPSGraphExecutable::getOutputTypesWithDevice:inputTypes:compilationDescriptor: not bound
-!missing-type! MPSGraphConvolution3DOpDescriptor not bound
+!unknown-native-enum! MPSGraphPaddingMode bound
+!unknown-native-enum! MPSGraphPaddingStyle bound
+!unknown-native-enum! MPSGraphReductionMode bound
+!unknown-native-enum! MPSGraphResizeMode bound
+!unknown-native-enum! MPSGraphScatterMode bound
+!unknown-native-enum! MPSGraphTensorNamedDataLayout bound
+!unknown-type! MPSGraph bound
+!unknown-type! MPSGraphCompilationDescriptor bound
+!unknown-type! MPSGraphConvolution2DOpDescriptor bound
+!unknown-type! MPSGraphCreateSparseOpDescriptor bound
+!unknown-type! MPSGraphDepthwiseConvolution2DOpDescriptor bound
+!unknown-type! MPSGraphDepthwiseConvolution3DOpDescriptor bound
+!unknown-type! MPSGraphDevice bound
+!unknown-type! MPSGraphExecutable bound
+!unknown-type! MPSGraphExecutableExecutionDescriptor bound
+!unknown-type! MPSGraphExecutionDescriptor bound
+!unknown-type! MPSGraphOperation bound
+!unknown-type! MPSGraphPooling2DOpDescriptor bound
+!unknown-type! MPSGraphPooling4DOpDescriptor bound
+!unknown-type! MPSGraphRandomOpDescriptor bound
+!unknown-type! MPSGraphShapedType bound
+!unknown-type! MPSGraphStencilOpDescriptor bound
+!unknown-type! MPSGraphTensor bound
+!unknown-type! MPSGraphTensorData bound
+!unknown-type! MPSGraphType bound
+!unknown-type! MPSGraphVariableOp bound

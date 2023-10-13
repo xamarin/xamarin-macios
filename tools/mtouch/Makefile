@@ -87,7 +87,6 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework iAd			\
 	-weak_framework Accounts		\
 	-weak_framework GLKit			\
-	-weak_framework NewsstandKit		\
 	-weak_framework CoreImage		\
 	-weak_framework CoreBluetooth		\
 	-weak_framework Twitter			\
@@ -181,6 +180,9 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework BackgroundAssets \
 	-weak_framework SharedWithYou \
 	-weak_framework SharedWithYouCore \
+						\
+	-weak_framework Symbols \
+	-weak_framework SensitiveContentAnalysis \
 
 SIMLAUNCHER64_FRAMEWORKS =  \
 	-framework GameKit				\
@@ -276,8 +278,12 @@ $(eval $(call RunRegistrar,tvos,x86_64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(SIMULATORTV_ARM64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvossimulator-arm64))
 $(eval $(call RunRegistrar,tvos,arm64,64,$(TVOS_SDK_VERSION),TVOS,$(DEVICETV_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/include,$(MONOTOUCH_TV_MONO_PATH),tvOS,tvos-arm64))
 $(eval $(call RunRegistrar,watchos,x86_64,64,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x64))
+ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
 $(eval $(call RunRegistrar,watchos,i386,32,$(WATCH_SDK_VERSION),WatchOS,$(SIMULATORWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,watchos-x86))
+endif
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call RunRegistrar,watchos,armv7k,32,$(WATCH_SDK_VERSION),WatchOS,$(DEVICEWATCH_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,armv7k))
+endif
 $(eval $(call RunRegistrar,watchos,arm64_32,32,$(WATCH_SDK_VERSION),WatchOS,$(DEVICEWATCH64_32_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/include,$(MONOTOUCH_WATCH_MONO_PATH),watchOS,arm64_32))
 $(eval $(call RunRegistrar,maccatalyst,x86_64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_X86_64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-x64))
 $(eval $(call RunRegistrar,maccatalyst,arm64,64,$(MACCATALYST_SDK_VERSION),MacCatalyst,$(MACCATALYST_ARM64_CFLAGS),$(IOS_DESTDIR)$(XAMARIN_MACCATALYST_SDK)/include,$(MONOTOUCH_MACCATALYST_MONO_PATH),MacCatalyst,maccatalyst-arm64))
@@ -296,10 +302,18 @@ else
 endif
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 %.registrar.watchos.device.a:    %.registrar.watchos.armv7k.a %.registrar.watchos.arm64_32.a
+else
+%.registrar.watchos.device.a:    %.registrar.watchos.arm64_32.a
+endif
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
+ifdef WATCHOS_SUPPORTS_32BIT_SIMULATOR_ARCHITECTURES
 %.registrar.watchos.simulator.a: %.registrar.watchos.i386.a %.registrar.watchos.x86_64.a
+else
+%.registrar.watchos.simulator.a: %.registrar.watchos.x86_64.a
+endif
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
 .libs/Microsoft.iOS.registrar.ios-arm.a: .libs/Microsoft.iOS.registrar.armv7.a .libs/Microsoft.iOS.registrar.armv7s.a
