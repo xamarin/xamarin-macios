@@ -72,6 +72,7 @@
     <FirstParty Include="System.IO.MemoryMappedFiles.dll" />
     <FirstParty Include="System.IO.Pipes.dll" />
     <FirstParty Include="System.Linq.dll" />
+    <FirstParty Include="System.Memory.dll" />
     <FirstParty Include="System.Net.Http.dll" />
     <FirstParty Include="System.Net.HttpListener.dll" />
     <FirstParty Include="System.Net.NameResolution.dll" />
@@ -91,6 +92,7 @@
     <FirstParty Include="System.Runtime.Numerics.dll" />
     <FirstParty Include="System.Security.Claims.dll" />
     <FirstParty Include="System.Security.Cryptography.dll" />
+    <FirstParty Include="System.Text.Json.dll" />
     <FirstParty Include="System.Text.RegularExpressions.dll" />
     <FirstParty Include="System.Threading.Channels.dll" />
     <FirstParty Include="Xamarin.Hosting.dll" />
