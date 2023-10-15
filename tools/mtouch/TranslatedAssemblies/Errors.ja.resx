@@ -961,6 +961,9 @@
 		<value>watchOS では HttpMessageHandler `{0}` は無効です。有効な値は NSUrlSessionHandler のみです。
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Keeping the dynamic registrar (by passing '--optimize=-remove-dynamic-registrar') is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed.</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>XML の説明を処理できませんでした: {0}
 		</value>
@@ -1105,6 +1108,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>アセンブリ '{1}' を {0} できませんでした
 		</value>
