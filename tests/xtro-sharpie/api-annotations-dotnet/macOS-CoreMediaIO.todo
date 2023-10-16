@@ -1,0 +1,208 @@
+!missing-enum! CMIOExtensionStreamClockType not bound
+!missing-enum! CMIOExtensionStreamDirection not bound
+!missing-enum! CMIOExtensionStreamDiscontinuityFlags not bound
+!missing-field! CMIOExtensionInfoDictionaryKey not bound
+!missing-field! CMIOExtensionMachServiceNameKey not bound
+!missing-field! CMIOExtensionPropertyDeviceCanBeDefaultInputDevice not bound
+!missing-field! CMIOExtensionPropertyDeviceCanBeDefaultOutputDevice not bound
+!missing-field! CMIOExtensionPropertyDeviceIsSuspended not bound
+!missing-field! CMIOExtensionPropertyDeviceLinkedCoreAudioDeviceUID not bound
+!missing-field! CMIOExtensionPropertyDeviceModel not bound
+!missing-field! CMIOExtensionPropertyDeviceTransportType not bound
+!missing-field! CMIOExtensionPropertyProviderManufacturer not bound
+!missing-field! CMIOExtensionPropertyProviderName not bound
+!missing-field! CMIOExtensionPropertyStreamActiveFormatIndex not bound
+!missing-field! CMIOExtensionPropertyStreamFrameDuration not bound
+!missing-field! CMIOExtensionPropertyStreamMaxFrameDuration not bound
+!missing-field! CMIOExtensionPropertyStreamSinkBufferQueueSize not bound
+!missing-field! CMIOExtensionPropertyStreamSinkBuffersRequiredForStartup not bound
+!missing-field! CMIOExtensionPropertyStreamSinkBufferUnderrunCount not bound
+!missing-field! CMIOExtensionPropertyStreamSinkEndOfData not bound
+!missing-field! kCMIOBlockBufferAttachmentKey_CVPixelBufferReference not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorFrameRect not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorIsDrawnInFramebuffer not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorIsVisible not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorPositionX not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorPositionY not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorReference not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorScale not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_CursorSeed not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_KeyboardModifiers not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_KeyboardModifiersEvent not bound
+!missing-field! kCMIOSampleBufferAttachment_MouseAndKeyboardModifiersKey_MouseButtonState not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_CAAudioTimeStamp not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_ClientSequenceID not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_ClosedCaptionSampleBuffer not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_DiscontinuityFlags not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_HDV1_PackData not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_HDV2_VAUX not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_HostTime not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_MouseAndKeyboardModifiers not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_MuxedSourcePresentationTimeStamp not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_NativeSMPTEFrameCount not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_NoDataMarker not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_NumberOfVideoFramesInBuffer not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_NumberOfVideoFramesInGOP not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_PixelBufferOverlaidByStaticImage not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_PulldownCadenceInfo not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_RepeatedBufferContents not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_SequenceNumber not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_SMPTETime not bound
+!missing-field! kCMIOSampleBufferAttachmentKey_SourceAudioFormatDescription not bound
+!missing-pinvoke! CMIODeviceProcessAVCCommand is not bound
+!missing-pinvoke! CMIODeviceProcessRS422Command is not bound
+!missing-pinvoke! CMIODeviceStartStream is not bound
+!missing-pinvoke! CMIODeviceStopStream is not bound
+!missing-pinvoke! CMIOObjectAddPropertyListener is not bound
+!missing-pinvoke! CMIOObjectAddPropertyListenerBlock is not bound
+!missing-pinvoke! CMIOObjectGetPropertyData is not bound
+!missing-pinvoke! CMIOObjectGetPropertyDataSize is not bound
+!missing-pinvoke! CMIOObjectHasProperty is not bound
+!missing-pinvoke! CMIOObjectIsPropertySettable is not bound
+!missing-pinvoke! CMIOObjectRemovePropertyListener is not bound
+!missing-pinvoke! CMIOObjectRemovePropertyListenerBlock is not bound
+!missing-pinvoke! CMIOObjectSetPropertyData is not bound
+!missing-pinvoke! CMIOObjectShow is not bound
+!missing-pinvoke! CMIOSampleBufferCopyNonRequiredAttachments is not bound
+!missing-pinvoke! CMIOSampleBufferCopySampleAttachments is not bound
+!missing-pinvoke! CMIOSampleBufferCreate is not bound
+!missing-pinvoke! CMIOSampleBufferCreateForImageBuffer is not bound
+!missing-pinvoke! CMIOSampleBufferCreateNoDataMarker is not bound
+!missing-pinvoke! CMIOSampleBufferGetDiscontinuityFlags is not bound
+!missing-pinvoke! CMIOSampleBufferGetSequenceNumber is not bound
+!missing-pinvoke! CMIOSampleBufferSetDiscontinuityFlags is not bound
+!missing-pinvoke! CMIOSampleBufferSetSequenceNumber is not bound
+!missing-pinvoke! CMIOStreamClockConvertHostTimeToDeviceTime is not bound
+!missing-pinvoke! CMIOStreamClockCreate is not bound
+!missing-pinvoke! CMIOStreamClockInvalidate is not bound
+!missing-pinvoke! CMIOStreamClockPostTimingEvent is not bound
+!missing-pinvoke! CMIOStreamCopyBufferQueue is not bound
+!missing-pinvoke! CMIOStreamDeckCueTo is not bound
+!missing-pinvoke! CMIOStreamDeckJog is not bound
+!missing-pinvoke! CMIOStreamDeckPlay is not bound
+!missing-pinvoke! CMIOStreamDeckStop is not bound
+!missing-protocol! CMIOExtensionDeviceSource not bound
+!missing-protocol! CMIOExtensionProviderSource not bound
+!missing-protocol! CMIOExtensionStreamSource not bound
+!missing-selector! +CMIOExtensionDevice::deviceWithLocalizedName:deviceID:legacyDeviceID:source: not bound
+!missing-selector! +CMIOExtensionDeviceProperties::devicePropertiesWithDictionary: not bound
+!missing-selector! +CMIOExtensionPropertyAttributes::propertyAttributesWithMinValue:maxValue:validValues:readOnly: not bound
+!missing-selector! +CMIOExtensionPropertyAttributes::readOnlyPropertyAttribute not bound
+!missing-selector! +CMIOExtensionPropertyState::propertyStateWithValue: not bound
+!missing-selector! +CMIOExtensionPropertyState::propertyStateWithValue:attributes: not bound
+!missing-selector! +CMIOExtensionProvider::ignoreSIGTERM not bound
+!missing-selector! +CMIOExtensionProvider::providerWithSource:clientQueue: not bound
+!missing-selector! +CMIOExtensionProvider::startServiceWithProvider: not bound
+!missing-selector! +CMIOExtensionProviderProperties::providerPropertiesWithDictionary: not bound
+!missing-selector! +CMIOExtensionScheduledOutput::scheduledOutputWithSequenceNumber:hostTimeInNanoseconds: not bound
+!missing-selector! +CMIOExtensionStream::streamWithLocalizedName:streamID:direction:clockType:source: not bound
+!missing-selector! +CMIOExtensionStream::streamWithLocalizedName:streamID:direction:customClockConfiguration:source: not bound
+!missing-selector! +CMIOExtensionStreamCustomClockConfiguration::customClockConfigurationWithClockName:sourceIdentifier:getTimeCallMinimumInterval:numberOfEventsForRateSmoothing:numberOfAveragesForRateSmoothing: not bound
+!missing-selector! +CMIOExtensionStreamFormat::streamFormatWithFormatDescription:maxFrameDuration:minFrameDuration:validFrameDurations: not bound
+!missing-selector! +CMIOExtensionStreamProperties::streamPropertiesWithDictionary: not bound
+!missing-selector! CMIOExtensionClient::clientID not bound
+!missing-selector! CMIOExtensionClient::pid not bound
+!missing-selector! CMIOExtensionClient::signingID not bound
+!missing-selector! CMIOExtensionDevice::addStream:error: not bound
+!missing-selector! CMIOExtensionDevice::deviceID not bound
+!missing-selector! CMIOExtensionDevice::initWithLocalizedName:deviceID:legacyDeviceID:source: not bound
+!missing-selector! CMIOExtensionDevice::legacyDeviceID not bound
+!missing-selector! CMIOExtensionDevice::localizedName not bound
+!missing-selector! CMIOExtensionDevice::notifyPropertiesChanged: not bound
+!missing-selector! CMIOExtensionDevice::removeStream:error: not bound
+!missing-selector! CMIOExtensionDevice::source not bound
+!missing-selector! CMIOExtensionDevice::streams not bound
+!missing-selector! CMIOExtensionDeviceProperties::initWithDictionary: not bound
+!missing-selector! CMIOExtensionDeviceProperties::linkedCoreAudioDeviceUID not bound
+!missing-selector! CMIOExtensionDeviceProperties::model not bound
+!missing-selector! CMIOExtensionDeviceProperties::propertiesDictionary not bound
+!missing-selector! CMIOExtensionDeviceProperties::setLinkedCoreAudioDeviceUID: not bound
+!missing-selector! CMIOExtensionDeviceProperties::setModel: not bound
+!missing-selector! CMIOExtensionDeviceProperties::setPropertiesDictionary: not bound
+!missing-selector! CMIOExtensionDeviceProperties::setPropertyState:forProperty: not bound
+!missing-selector! CMIOExtensionDeviceProperties::setSuspended: not bound
+!missing-selector! CMIOExtensionDeviceProperties::setTransportType: not bound
+!missing-selector! CMIOExtensionDeviceProperties::suspended not bound
+!missing-selector! CMIOExtensionDeviceProperties::transportType not bound
+!missing-selector! CMIOExtensionPropertyAttributes::initWithMinValue:maxValue:validValues:readOnly: not bound
+!missing-selector! CMIOExtensionPropertyAttributes::isReadOnly not bound
+!missing-selector! CMIOExtensionPropertyAttributes::maxValue not bound
+!missing-selector! CMIOExtensionPropertyAttributes::minValue not bound
+!missing-selector! CMIOExtensionPropertyAttributes::validValues not bound
+!missing-selector! CMIOExtensionPropertyState::attributes not bound
+!missing-selector! CMIOExtensionPropertyState::initWithValue: not bound
+!missing-selector! CMIOExtensionPropertyState::initWithValue:attributes: not bound
+!missing-selector! CMIOExtensionPropertyState::value not bound
+!missing-selector! CMIOExtensionProvider::addDevice:error: not bound
+!missing-selector! CMIOExtensionProvider::clientQueue not bound
+!missing-selector! CMIOExtensionProvider::connectedClients not bound
+!missing-selector! CMIOExtensionProvider::devices not bound
+!missing-selector! CMIOExtensionProvider::initWithSource:clientQueue: not bound
+!missing-selector! CMIOExtensionProvider::notifyPropertiesChanged: not bound
+!missing-selector! CMIOExtensionProvider::removeDevice:error: not bound
+!missing-selector! CMIOExtensionProvider::source not bound
+!missing-selector! CMIOExtensionProviderProperties::initWithDictionary: not bound
+!missing-selector! CMIOExtensionProviderProperties::manufacturer not bound
+!missing-selector! CMIOExtensionProviderProperties::name not bound
+!missing-selector! CMIOExtensionProviderProperties::propertiesDictionary not bound
+!missing-selector! CMIOExtensionProviderProperties::setManufacturer: not bound
+!missing-selector! CMIOExtensionProviderProperties::setName: not bound
+!missing-selector! CMIOExtensionProviderProperties::setPropertiesDictionary: not bound
+!missing-selector! CMIOExtensionProviderProperties::setPropertyState:forProperty: not bound
+!missing-selector! CMIOExtensionScheduledOutput::hostTimeInNanoseconds not bound
+!missing-selector! CMIOExtensionScheduledOutput::initWithSequenceNumber:hostTimeInNanoseconds: not bound
+!missing-selector! CMIOExtensionScheduledOutput::sequenceNumber not bound
+!missing-selector! CMIOExtensionStream::clockType not bound
+!missing-selector! CMIOExtensionStream::consumeSampleBufferFromClient:completionHandler: not bound
+!missing-selector! CMIOExtensionStream::customClockConfiguration not bound
+!missing-selector! CMIOExtensionStream::direction not bound
+!missing-selector! CMIOExtensionStream::initWithLocalizedName:streamID:direction:clockType:source: not bound
+!missing-selector! CMIOExtensionStream::initWithLocalizedName:streamID:direction:customClockConfiguration:source: not bound
+!missing-selector! CMIOExtensionStream::localizedName not bound
+!missing-selector! CMIOExtensionStream::notifyPropertiesChanged: not bound
+!missing-selector! CMIOExtensionStream::notifyScheduledOutputChanged: not bound
+!missing-selector! CMIOExtensionStream::sendSampleBuffer:discontinuity:hostTimeInNanoseconds: not bound
+!missing-selector! CMIOExtensionStream::source not bound
+!missing-selector! CMIOExtensionStream::streamID not bound
+!missing-selector! CMIOExtensionStream::streamingClients not bound
+!missing-selector! CMIOExtensionStreamCustomClockConfiguration::clockName not bound
+!missing-selector! CMIOExtensionStreamCustomClockConfiguration::getTimeCallMinimumInterval not bound
+!missing-selector! CMIOExtensionStreamCustomClockConfiguration::initWithClockName:sourceIdentifier:getTimeCallMinimumInterval:numberOfEventsForRateSmoothing:numberOfAveragesForRateSmoothing: not bound
+!missing-selector! CMIOExtensionStreamCustomClockConfiguration::numberOfAveragesForRateSmoothing not bound
+!missing-selector! CMIOExtensionStreamCustomClockConfiguration::numberOfEventsForRateSmoothing not bound
+!missing-selector! CMIOExtensionStreamCustomClockConfiguration::sourceIdentifier not bound
+!missing-selector! CMIOExtensionStreamFormat::formatDescription not bound
+!missing-selector! CMIOExtensionStreamFormat::initWithFormatDescription:maxFrameDuration:minFrameDuration:validFrameDurations: not bound
+!missing-selector! CMIOExtensionStreamFormat::maxFrameDuration not bound
+!missing-selector! CMIOExtensionStreamFormat::minFrameDuration not bound
+!missing-selector! CMIOExtensionStreamFormat::validFrameDurations not bound
+!missing-selector! CMIOExtensionStreamProperties::activeFormatIndex not bound
+!missing-selector! CMIOExtensionStreamProperties::frameDuration not bound
+!missing-selector! CMIOExtensionStreamProperties::initWithDictionary: not bound
+!missing-selector! CMIOExtensionStreamProperties::maxFrameDuration not bound
+!missing-selector! CMIOExtensionStreamProperties::propertiesDictionary not bound
+!missing-selector! CMIOExtensionStreamProperties::setActiveFormatIndex: not bound
+!missing-selector! CMIOExtensionStreamProperties::setFrameDuration: not bound
+!missing-selector! CMIOExtensionStreamProperties::setMaxFrameDuration: not bound
+!missing-selector! CMIOExtensionStreamProperties::setPropertiesDictionary: not bound
+!missing-selector! CMIOExtensionStreamProperties::setPropertyState:forProperty: not bound
+!missing-selector! CMIOExtensionStreamProperties::setSinkBufferQueueSize: not bound
+!missing-selector! CMIOExtensionStreamProperties::setSinkBuffersRequiredForStartup: not bound
+!missing-selector! CMIOExtensionStreamProperties::setSinkBufferUnderrunCount: not bound
+!missing-selector! CMIOExtensionStreamProperties::setSinkEndOfData: not bound
+!missing-selector! CMIOExtensionStreamProperties::sinkBufferQueueSize not bound
+!missing-selector! CMIOExtensionStreamProperties::sinkBuffersRequiredForStartup not bound
+!missing-selector! CMIOExtensionStreamProperties::sinkBufferUnderrunCount not bound
+!missing-selector! CMIOExtensionStreamProperties::sinkEndOfData not bound
+!missing-type! CMIOExtensionClient not bound
+!missing-type! CMIOExtensionDevice not bound
+!missing-type! CMIOExtensionDeviceProperties not bound
+!missing-type! CMIOExtensionPropertyAttributes not bound
+!missing-type! CMIOExtensionPropertyState not bound
+!missing-type! CMIOExtensionProvider not bound
+!missing-type! CMIOExtensionProviderProperties not bound
+!missing-type! CMIOExtensionScheduledOutput not bound
+!missing-type! CMIOExtensionStream not bound
+!missing-type! CMIOExtensionStreamCustomClockConfiguration not bound
+!missing-type! CMIOExtensionStreamFormat not bound
+!missing-type! CMIOExtensionStreamProperties not bound

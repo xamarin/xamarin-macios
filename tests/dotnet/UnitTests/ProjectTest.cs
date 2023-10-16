@@ -524,7 +524,7 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (1, uniqueErrors.Length, "Error count");
 			string expectedError;
 			if (notRecognized) {
-				expectedError = $"The specified RuntimeIdentifier '{runtimeIdentifier}' is not recognized.";
+				expectedError = $"The specified RuntimeIdentifier '{runtimeIdentifier}' is not recognized. See https://aka.ms/netsdk1083 for more information.";
 			} else {
 				expectedError = $"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.";
 			}
@@ -1141,10 +1141,14 @@ namespace Xamarin.Tests {
 
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
-			// Due to an implementation detail in .NET, the same error message is shown twice.
-			Assert.AreEqual (2, errors.Count, "Error Count");
-			Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
-			Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
+			Assert.AreEqual (1, errors.Count, "Error Count");
+			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
+
+			// With multi targeting, this happens instead:
+			// // Due to an implementation detail in .NET, the same error message is shown twice.
+			// Assert.AreEqual (2, errors.Count, "Error Count");
+			// Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
+			// Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
 		}
 
 		[Test]
@@ -1352,32 +1356,6 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Debug")]
-		public void CheckForMacCatalystDefaultEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
-		{
-			var project = "Entitlements";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
-
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
-			Clean (project_path);
-
-			var properties = GetDefaultProperties (runtimeIdentifiers);
-			properties ["Configuration"] = configuration;
-			DotNet.AssertBuild (project_path, properties);
-
-			var executable = GetNativeExecutable (platform, appPath);
-			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
-			Assert.IsTrue (foundEntitlements, "Issues found with Entitlements.");
-			if (configuration == "Release") {
-				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.app-sandbox")?.Value, "com.apple.security.app-sandbox enlistment was not found in Release configuration.");
-				Assert.IsNull (entitlements.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was found in Release configuration.");
-			} else if (configuration == "Debug") {
-				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.get-task-allow")?.Value, "com.apple.security.get-task-allow enlistment was not found in Debug configuration.");
-			}
-		}
-
 		// [TestCase (ApplePlatform.MacCatalyst, null, "Release")]
 		[TestCase (ApplePlatform.MacOSX, null, "Release")]
 		public void NoWarnCodesign (ApplePlatform platform, string runtimeIdentifiers, string configuration)
@@ -1508,6 +1486,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void MultiTargetLibrary (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -1544,6 +1523,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void InvalidTargetPlatformVersion (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
