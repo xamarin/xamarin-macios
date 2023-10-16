@@ -175,17 +175,13 @@ namespace Xharness.Jenkins {
 						if (test.Platform == TestPlatform.MacCatalyst) {
 							yield return new TestData { Variation = "Release (ARM64, LLVM)", Debug = false, UseLlvm = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) || !mac_supports_arm64, RuntimeIdentifier = arm64_runtime_identifier };
 							yield return new TestData { Variation = "Release", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) };
-							// Pending: We need to skip this consistency check to support universal apps:
-							// https://github.com/dotnet/sdk/blob/f90e558092ac61038ffa1017fe3a5aca1af5ae7e/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.RuntimeIdentifierInference.targets#L224-L226
-							// because the outer build has PublishAot=true and no RuntimeIdentifier set.
-							// Filed as https://github.com/dotnet/sdk/issues/33414.
-							// yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), Defines = "NATIVEAOT", LinkMode = "Full" };
-
+							yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), Defines = "NATIVEAOT", LinkMode = "Full" };
 							yield return new TestData { Variation = "Release (NativeAOT, ARM64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst) || !mac_supports_arm64, Defines = "NATIVEAOT", RuntimeIdentifier = arm64_runtime_identifier, LinkMode = "Full" };
 							yield return new TestData { Variation = "Release (NativeAOT, x64)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst), Defines = "NATIVEAOT", LinkMode = "Full", RuntimeIdentifier = x64_runtime_identifier };
 						}
 						if (test.Platform == TestPlatform.Mac) {
 							yield return new TestData { Variation = "Release", Debug = false, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
+							yield return new TestData { Variation = "Release (NativeAOT)", Debug = false, PublishAot = true, Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Monotouch) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac), Defines = "NATIVEAOT", LinkMode = "Full" };
 						}
 						if (test.TestProject.IsDotNetProject) {
 							yield return new TestData { Variation = "Release (all optimizations)", BundlerArguments = "--optimize:all", Registrar = "static", Debug = false, Profiling = false, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = ignore };
