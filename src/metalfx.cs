@@ -294,12 +294,12 @@ namespace MetalFX {
 		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportedInputContentMinScaleForDevice:")]
-		float SupportedInputContentMinScale (IMTLDevice device);
+		float GetSupportedInputContentMinScale (IMTLDevice device);
 
 		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportedInputContentMaxScaleForDevice:")]
-		float SupportedInputContentMaxScale (IMTLDevice device);
+		float GetSupportedInputContentMaxScale (IMTLDevice device);
 
 		[Static]
 		[Export ("supportsDevice:")]
