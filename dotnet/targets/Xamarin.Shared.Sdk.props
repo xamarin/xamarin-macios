@@ -19,8 +19,6 @@
 	<Import Project="$(_MobilePropsPath)" Condition="Exists('$(_MobilePropsPath)') And '$(BuildingInsideVisualStudio)' == 'true'" />
 	
 	<PropertyGroup>
-		<!-- This is used to simplify logic when determining which sdk to load (in WorkloadManifest.targets) -->
-		<_AppleSdkLoaded>true</_AppleSdkLoaded>
 		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
 		<UsingAppleNETSdk>true</UsingAppleNETSdk>
 		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) on the platform the build is running from (Mac or Win) -->
@@ -97,6 +95,10 @@
 
 		<!-- Enable the reflection-based json serializer by default. Ref: https://github.com/xamarin/xamarin-macios/issues/18057 -->
 		<JsonSerializerIsReflectionEnabledByDefault Condition="'$(JsonSerializerIsReflectionEnabledByDefault)' == ''">true</JsonSerializerIsReflectionEnabledByDefault>
+
+		<!-- Tell .NET to skip sanity checks that trigger too eagerly for builds with multiple RuntimeIdentifiers -->
+		<AllowPublishAotWithoutRuntimeIdentifier Condition="'$(AllowPublishAotWithoutRuntimeIdentifier)' == '' And '$(_UseNativeAot)' == 'true'">true</AllowPublishAotWithoutRuntimeIdentifier>
+		<AllowSelfContainedWithoutRuntimeIdentifier Condition="'$(AllowSelfContainedWithoutRuntimeIdentifier)' == ''">true</AllowSelfContainedWithoutRuntimeIdentifier>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->

@@ -159,6 +159,8 @@ namespace Xamarin.Linker {
 
 			il.InsertBefore (lastInstruction, il.Create (OpCodes.Newobj, registrarType.GetDefaultInstanceConstructor ()));
 			il.InsertBefore (lastInstruction, il.Create (OpCodes.Call, abr.RegistrarHelper_Register));
+
+			Annotations.Mark (moduleConstructor);
 		}
 
 		List<TypeData> GetTypesToRegister (TypeDefinition registrarType, AssemblyTrampolineInfo info)

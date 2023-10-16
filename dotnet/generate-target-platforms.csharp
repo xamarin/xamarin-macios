@@ -1,4 +1,4 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
 
 // arguments are: <platform> <outputPath>
 
@@ -6,23 +6,24 @@ using System.IO;
 using System.Xml;
 
 var args = Environment.GetCommandLineArgs ();
-var expectedArgumentCount = 4;
-if (args.Length != expectedArgumentCount + 3 /* 3 default arguments (executable + script + -s) + 'expectedArgumentCount' arguments we're interested in */) {
+var expectedArgumentCount = 2;
+if (args.Length != expectedArgumentCount + 2 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
 	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
 	// second arg the script itself
 	// then comes the ones we care about
-	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 3}");
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 2}");
 	Environment.Exit (1);
 	return;
 }
 
-var argumentIndex = 3;
-var platform = args [argumentIndex++];
-var dotnetTfm = args [argumentIndex++];
-var supportedTargetPlatformVersions = args [argumentIndex++].Split (' ');
-var outputPath = args [argumentIndex++];
+var platform = args [2];
+var outputPath = args [3];
+var plistPath = platform == "macOS" ? "../Versions-mac.plist.in" : "../Versions-ios.plist.in";
 
-var currentSupportedTPVs = supportedTargetPlatformVersions.Where (v => v.StartsWith (dotnetTfm + "-", StringComparison.Ordinal)).Select (v => v.Substring (dotnetTfm.Length + 1));
+var doc = new XmlDocument ();
+doc.Load (plistPath);
+var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
+
 var minSdkVersionName = $"DOTNET_MIN_{platform.ToUpper ()}_SDK_VERSION";
 var minSdkVersionString = File.ReadAllLines ("../Make.config").Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
 var minSdkVersion = Version.Parse (minSdkVersionString);
@@ -33,8 +34,11 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ("<Project>");
 	writer.WriteLine ("\t<ItemGroup>");
 
-	foreach (var tpv in currentSupportedTPVs) {
-		writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{tpv}\" />");
+	foreach (XmlNode n in nodes) {
+		var version = n.InnerText;
+		if (Version.Parse (version) < minSdkVersion)
+			continue;
+		writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
 	}
 
 	writer.WriteLine ("\t</ItemGroup>");

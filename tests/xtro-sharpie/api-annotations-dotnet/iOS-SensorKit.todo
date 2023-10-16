@@ -1,79 +1,47 @@
-!unknown-field! SRDeviceUsageCategoryBooks bound
-!unknown-field! SRDeviceUsageCategoryBusiness bound
-!unknown-field! SRDeviceUsageCategoryCatalogs bound
-!unknown-field! SRDeviceUsageCategoryDeveloperTools bound
-!unknown-field! SRDeviceUsageCategoryEducation bound
-!unknown-field! SRDeviceUsageCategoryEntertainment bound
-!unknown-field! SRDeviceUsageCategoryFinance bound
-!unknown-field! SRDeviceUsageCategoryFoodAndDrink bound
-!unknown-field! SRDeviceUsageCategoryGames bound
-!unknown-field! SRDeviceUsageCategoryGraphicsAndDesign bound
-!unknown-field! SRDeviceUsageCategoryHealthAndFitness bound
-!unknown-field! SRDeviceUsageCategoryKids bound
-!unknown-field! SRDeviceUsageCategoryLifestyle bound
-!unknown-field! SRDeviceUsageCategoryMedical bound
-!unknown-field! SRDeviceUsageCategoryMiscellaneous bound
-!unknown-field! SRDeviceUsageCategoryMusic bound
-!unknown-field! SRDeviceUsageCategoryNavigation bound
-!unknown-field! SRDeviceUsageCategoryNews bound
-!unknown-field! SRDeviceUsageCategoryNewsstand bound
-!unknown-field! SRDeviceUsageCategoryPhotoAndVideo bound
-!unknown-field! SRDeviceUsageCategoryProductivity bound
-!unknown-field! SRDeviceUsageCategoryReference bound
-!unknown-field! SRDeviceUsageCategoryShopping bound
-!unknown-field! SRDeviceUsageCategorySocialNetworking bound
-!unknown-field! SRDeviceUsageCategorySports bound
-!unknown-field! SRDeviceUsageCategoryStickers bound
-!unknown-field! SRDeviceUsageCategoryTravel bound
-!unknown-field! SRDeviceUsageCategoryUtilities bound
-!unknown-field! SRDeviceUsageCategoryWeather bound
-!unknown-field! SRErrorDomain bound
-!unknown-field! SRSensorAccelerometer bound
-!unknown-field! SRSensorAmbientLightSensor bound
-!unknown-field! SRSensorAmbientPressure bound
-!unknown-field! SRSensorDeviceUsageReport bound
-!unknown-field! SRSensorKeyboardMetrics bound
-!unknown-field! SRSensorMediaEvents bound
-!unknown-field! SRSensorMessagesUsageReport bound
-!unknown-field! SRSensorOnWristState bound
-!unknown-field! SRSensorPedometerData bound
-!unknown-field! SRSensorPhoneUsageReport bound
-!unknown-field! SRSensorRotationRate bound
-!unknown-field! SRSensorSiriSpeechMetrics bound
-!unknown-field! SRSensorTelephonySpeechMetrics bound
-!unknown-field! SRSensorVisits bound
-!unknown-native-enum! SRAmbientLightSensorPlacement bound
-!unknown-native-enum! SRAuthorizationStatus bound
-!unknown-native-enum! SRCrownOrientation bound
-!unknown-native-enum! SRDeletionReason bound
-!unknown-native-enum! SRErrorCode bound
-!unknown-native-enum! SRKeyboardMetricsSentimentCategory bound
-!unknown-native-enum! SRLocationCategory bound
-!unknown-native-enum! SRMediaEventType bound
-!unknown-native-enum! SRNotificationEvent bound
-!unknown-native-enum! SRTextInputSessionType bound
-!unknown-native-enum! SRWristLocation bound
-!unknown-pinvoke! SRAbsoluteTimeFromCFAbsoluteTime bound
-!unknown-pinvoke! SRAbsoluteTimeFromContinuousTime bound
-!unknown-pinvoke! SRAbsoluteTimeGetCurrent bound
-!unknown-pinvoke! SRAbsoluteTimeToCFAbsoluteTime bound
-!unknown-protocol! SRSensorReaderDelegate bound
-!unknown-type! SRAmbientLightSample bound
-!unknown-type! SRApplicationUsage bound
-!unknown-type! SRDeletionRecord bound
-!unknown-type! SRDevice bound
-!unknown-type! SRDeviceUsageReport bound
-!unknown-type! SRFetchRequest bound
-!unknown-type! SRFetchResult bound
-!unknown-type! SRKeyboardMetrics bound
-!unknown-type! SRKeyboardProbabilityMetric bound
-!unknown-type! SRMediaEvent bound
-!unknown-type! SRMessagesUsageReport bound
-!unknown-type! SRNotificationUsage bound
-!unknown-type! SRPhoneUsageReport bound
-!unknown-type! SRSensorReader bound
-!unknown-type! SRSupplementalCategory bound
-!unknown-type! SRTextInputSession bound
-!unknown-type! SRVisit bound
-!unknown-type! SRWebUsage bound
-!unknown-type! SRWristDetection bound
+!missing-enum! SRFaceMetricsContext not bound
+!missing-enum! SRSpeechMetricsSessionFlags not bound
+!missing-enum! SRWristTemperatureCondition not bound
+!missing-field! SRSensorFaceMetrics not bound
+!missing-field! SRSensorHeartRate not bound
+!missing-field! SRSensorOdometer not bound
+!missing-field! SRSensorWristTemperature not bound
+!missing-selector! SRAudioLevel::loudness not bound
+!missing-selector! SRAudioLevel::timeRange not bound
+!missing-selector! SRDevice::productType not bound
+!missing-selector! SRFaceMetrics::context not bound
+!missing-selector! SRFaceMetrics::faceAnchor not bound
+!missing-selector! SRFaceMetrics::partialFaceExpressions not bound
+!missing-selector! SRFaceMetrics::sessionIdentifier not bound
+!missing-selector! SRFaceMetrics::version not bound
+!missing-selector! SRFaceMetrics::wholeFaceExpressions not bound
+!missing-selector! SRFaceMetricsExpression::identifier not bound
+!missing-selector! SRFaceMetricsExpression::value not bound
+!missing-selector! SRSpeechExpression::activation not bound
+!missing-selector! SRSpeechExpression::confidence not bound
+!missing-selector! SRSpeechExpression::dominance not bound
+!missing-selector! SRSpeechExpression::mood not bound
+!missing-selector! SRSpeechExpression::timeRange not bound
+!missing-selector! SRSpeechExpression::valence not bound
+!missing-selector! SRSpeechExpression::version not bound
+!missing-selector! SRSpeechMetrics::audioLevel not bound
+!missing-selector! SRSpeechMetrics::sessionFlags not bound
+!missing-selector! SRSpeechMetrics::sessionIdentifier not bound
+!missing-selector! SRSpeechMetrics::soundClassification not bound
+!missing-selector! SRSpeechMetrics::speechExpression not bound
+!missing-selector! SRSpeechMetrics::speechRecognition not bound
+!missing-selector! SRSpeechMetrics::timestamp not bound
+!missing-selector! SRWristTemperature::condition not bound
+!missing-selector! SRWristTemperature::errorEstimate not bound
+!missing-selector! SRWristTemperature::timestamp not bound
+!missing-selector! SRWristTemperature::value not bound
+!missing-selector! SRWristTemperatureSession::duration not bound
+!missing-selector! SRWristTemperatureSession::startDate not bound
+!missing-selector! SRWristTemperatureSession::temperatures not bound
+!missing-selector! SRWristTemperatureSession::version not bound
+!missing-type! SRAudioLevel not bound
+!missing-type! SRFaceMetrics not bound
+!missing-type! SRFaceMetricsExpression not bound
+!missing-type! SRSpeechExpression not bound
+!missing-type! SRSpeechMetrics not bound
+!missing-type! SRWristTemperature not bound
+!missing-type! SRWristTemperatureSession not bound

@@ -1,8 +1,0 @@
-!extra-enum-value! Managed value 1 for NEOnDemandRuleInterfaceType.Ethernet is available for the current platform while the value in the native header is not
-!missing-enum! NEVPNConnectionError not bound
-!missing-field! NEVPNConnectionErrorDomain not bound
-!missing-selector! NEDNSOverHTTPSSettings::identityReference not bound
-!missing-selector! NEDNSOverHTTPSSettings::setIdentityReference: not bound
-!missing-selector! NEDNSOverTLSSettings::identityReference not bound
-!missing-selector! NEDNSOverTLSSettings::setIdentityReference: not bound
-!missing-selector! NEVPNConnection::fetchLastDisconnectErrorWithCompletionHandler: not bound

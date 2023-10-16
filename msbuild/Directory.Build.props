@@ -1,7 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<MessagingVersion>1.11.2</MessagingVersion>
-		<HotRestartVersion>1.0.119</HotRestartVersion>
+		<HotRestartVersion>1.0.125</HotRestartVersion>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
 </Project>
