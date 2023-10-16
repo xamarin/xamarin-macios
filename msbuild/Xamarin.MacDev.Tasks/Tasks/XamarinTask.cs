@@ -220,7 +220,12 @@ namespace Xamarin.MacDev.Tasks {
 			return fallbackValue;
 		}
 
-		protected IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<string>? directories)
+		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (params string[] directories)
+		{
+			return CreateItemsForAllFilesRecursively ((IEnumerable<string>?) directories);
+		}
+
+		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<string>? directories)
 		{
 			if (directories is null)
 				yield break;
@@ -235,7 +240,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<ITaskItem>? directories)
+		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<ITaskItem>? directories)
 		{
 			return CreateItemsForAllFilesRecursively (directories?.Select (v => v.ItemSpec));
 		}
