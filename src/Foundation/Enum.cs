@@ -1385,10 +1385,10 @@ namespace Foundation {
 		CompleteUnlessOpen,
 		[Field ("NSFileProtectionCompleteUntilFirstUserAuthentication")]
 		CompleteUntilFirstUserAuthentication,
+		[Field ("NSFileProtectionNone")]
+		None,
 		[Watch (10, 0), TV (17, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("NSFileProtectionCompleteWhenUserInactive")]
 		CompleteWhenUserInactive,
-		[Field ("NSFileProtectionNone")]
-		None,
 	}
 }
