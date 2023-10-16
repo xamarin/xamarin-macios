@@ -1,955 +1,276 @@
 !unknown-field! AVCaptureLensPositionCurrent bound
-!unknown-field! AVAssetChapterMetadataGroupsDidChangeNotification bound
-!unknown-field! AVAssetDurationDidChangeNotification bound
-!unknown-field! AVAssetMediaSelectionGroupsDidChangeNotification bound
-!unknown-field! AVAssetTrackSegmentsDidChangeNotification bound
-!unknown-field! AVAssetTrackTimeRangeDidChangeNotification bound
-!unknown-field! AVAssetTrackTrackAssociationsDidChangeNotification bound
-!unknown-field! AVAudioBitRateStrategy_Constant bound
-!unknown-field! AVAudioBitRateStrategy_LongTermAverage bound
-!unknown-field! AVAudioBitRateStrategy_Variable bound
-!unknown-field! AVAudioBitRateStrategy_VariableConstrained bound
-!unknown-field! AVAudioEngineConfigurationChangeNotification bound
-!unknown-field! AVAudioFileTypeKey bound
-!unknown-field! AVAudioSessionCategoryAmbient bound
-!unknown-field! AVAudioSessionCategoryMultiRoute bound
-!unknown-field! AVAudioSessionCategoryPlayAndRecord bound
-!unknown-field! AVAudioSessionCategoryPlayback bound
-!unknown-field! AVAudioSessionCategoryRecord bound
-!unknown-field! AVAudioSessionCategorySoloAmbient bound
-!unknown-field! AVAudioSessionInterruptionNotification bound
-!unknown-field! AVAudioSessionInterruptionOptionKey bound
-!unknown-field! AVAudioSessionInterruptionReasonKey bound
-!unknown-field! AVAudioSessionInterruptionTypeKey bound
-!unknown-field! AVAudioSessionInterruptionWasSuspendedKey bound
-!unknown-field! AVAudioSessionLocationLower bound
-!unknown-field! AVAudioSessionLocationUpper bound
-!unknown-field! AVAudioSessionMediaServicesWereLostNotification bound
-!unknown-field! AVAudioSessionMediaServicesWereResetNotification bound
-!unknown-field! AVAudioSessionModeDefault bound
-!unknown-field! AVAudioSessionModeGameChat bound
-!unknown-field! AVAudioSessionModeMeasurement bound
-!unknown-field! AVAudioSessionModeMoviePlayback bound
-!unknown-field! AVAudioSessionModeSpokenAudio bound
-!unknown-field! AVAudioSessionModeVideoChat bound
-!unknown-field! AVAudioSessionModeVideoRecording bound
-!unknown-field! AVAudioSessionModeVoiceChat bound
-!unknown-field! AVAudioSessionModeVoicePrompt bound
-!unknown-field! AVAudioSessionOrientationBack bound
-!unknown-field! AVAudioSessionOrientationBottom bound
-!unknown-field! AVAudioSessionOrientationFront bound
-!unknown-field! AVAudioSessionOrientationLeft bound
-!unknown-field! AVAudioSessionOrientationRight bound
-!unknown-field! AVAudioSessionOrientationTop bound
-!unknown-field! AVAudioSessionPolarPatternCardioid bound
-!unknown-field! AVAudioSessionPolarPatternOmnidirectional bound
-!unknown-field! AVAudioSessionPolarPatternSubcardioid bound
-!unknown-field! AVAudioSessionPortAirPlay bound
-!unknown-field! AVAudioSessionPortAVB bound
-!unknown-field! AVAudioSessionPortBluetoothA2DP bound
-!unknown-field! AVAudioSessionPortBluetoothHFP bound
-!unknown-field! AVAudioSessionPortBluetoothLE bound
-!unknown-field! AVAudioSessionPortBuiltInMic bound
-!unknown-field! AVAudioSessionPortBuiltInReceiver bound
-!unknown-field! AVAudioSessionPortBuiltInSpeaker bound
-!unknown-field! AVAudioSessionPortCarAudio bound
-!unknown-field! AVAudioSessionPortDisplayPort bound
-!unknown-field! AVAudioSessionPortFireWire bound
-!unknown-field! AVAudioSessionPortHDMI bound
-!unknown-field! AVAudioSessionPortHeadphones bound
-!unknown-field! AVAudioSessionPortHeadsetMic bound
-!unknown-field! AVAudioSessionPortLineIn bound
-!unknown-field! AVAudioSessionPortLineOut bound
-!unknown-field! AVAudioSessionPortPCI bound
-!unknown-field! AVAudioSessionPortThunderbolt bound
-!unknown-field! AVAudioSessionPortUSBAudio bound
-!unknown-field! AVAudioSessionPortVirtual bound
-!unknown-field! AVAudioSessionRouteChangeNotification bound
-!unknown-field! AVAudioSessionRouteChangePreviousRouteKey bound
-!unknown-field! AVAudioSessionRouteChangeReasonKey bound
-!unknown-field! AVAudioSessionSilenceSecondaryAudioHintNotification bound
-!unknown-field! AVAudioSessionSilenceSecondaryAudioHintTypeKey bound
-!unknown-field! AVAudioSessionSpatialAudioEnabledKey bound
-!unknown-field! AVAudioSessionSpatialPlaybackCapabilitiesChangedNotification bound
-!unknown-field! AVAudioTimePitchAlgorithmLowQualityZeroLatency bound
-!unknown-field! AVAudioTimePitchAlgorithmSpectral bound
-!unknown-field! AVAudioTimePitchAlgorithmTimeDomain bound
-!unknown-field! AVAudioTimePitchAlgorithmVarispeed bound
-!unknown-field! AVChannelLayoutKey bound
-!unknown-field! AVContentKeyRequestProtocolVersionsKey bound
-!unknown-field! AVContentKeyRequestRequiresValidationDataInSecureTokenKey bound
-!unknown-field! AVContentKeyRequestRetryReasonReceivedObsoleteContentKey bound
-!unknown-field! AVContentKeyRequestRetryReasonReceivedResponseWithExpiredLease bound
-!unknown-field! AVContentKeyRequestRetryReasonTimedOut bound
-!unknown-field! AVContentKeySessionServerPlaybackContextOptionProtocolVersions bound
-!unknown-field! AVContentKeySessionServerPlaybackContextOptionServerChallenge bound
-!unknown-field! AVContentKeySystemAuthorizationToken bound
-!unknown-field! AVContentKeySystemClearKey bound
-!unknown-field! AVContentKeySystemFairPlayStreaming bound
-!unknown-field! AVEncoderAudioQualityForVBRKey bound
-!unknown-field! AVEncoderAudioQualityKey bound
-!unknown-field! AVEncoderBitDepthHintKey bound
-!unknown-field! AVEncoderBitRateKey bound
-!unknown-field! AVEncoderBitRatePerChannelKey bound
-!unknown-field! AVEncoderBitRateStrategyKey bound
-!unknown-field! AVErrorDeviceKey bound
-!unknown-field! AVErrorFileSizeKey bound
-!unknown-field! AVErrorFileTypeKey bound
-!unknown-field! AVErrorMediaSubTypeKey bound
-!unknown-field! AVErrorMediaTypeKey bound
-!unknown-field! AVErrorPersistentTrackIDKey bound
-!unknown-field! AVErrorPIDKey bound
-!unknown-field! AVErrorPresentationTimeStampKey bound
-!unknown-field! AVErrorRecordingSuccessfullyFinishedKey bound
-!unknown-field! AVErrorTimeKey bound
-!unknown-field! AVFileType3GPP bound
-!unknown-field! AVFileType3GPP2 bound
-!unknown-field! AVFileTypeAC3 bound
-!unknown-field! AVFileTypeAIFC bound
-!unknown-field! AVFileTypeAIFF bound
-!unknown-field! AVFileTypeAMR bound
-!unknown-field! AVFileTypeAppleM4A bound
-!unknown-field! AVFileTypeAppleM4V bound
-!unknown-field! AVFileTypeAVCI bound
-!unknown-field! AVFileTypeCoreAudioFormat bound
-!unknown-field! AVFileTypeDNG bound
-!unknown-field! AVFileTypeEnhancedAC3 bound
-!unknown-field! AVFileTypeHEIC bound
-!unknown-field! AVFileTypeHEIF bound
-!unknown-field! AVFileTypeJPEG bound
-!unknown-field! AVFileTypeMPEG4 bound
-!unknown-field! AVFileTypeMPEGLayer3 bound
-!unknown-field! AVFileTypeProfileMPEG4AppleHLS bound
-!unknown-field! AVFileTypeProfileMPEG4CMAFCompliant bound
-!unknown-field! AVFileTypeQuickTimeMovie bound
-!unknown-field! AVFileTypeSunAU bound
-!unknown-field! AVFileTypeTIFF bound
-!unknown-field! AVFileTypeWAVE bound
-!unknown-field! AVFormatIDKey bound
-!unknown-field! AVFoundationErrorDomain bound
-!unknown-field! AVFragmentedMovieContainsMovieFragmentsDidChangeNotification bound
-!unknown-field! AVFragmentedMovieDurationDidChangeNotification bound
-!unknown-field! AVFragmentedMovieTrackSegmentsDidChangeNotification bound
-!unknown-field! AVFragmentedMovieTrackTimeRangeDidChangeNotification bound
-!unknown-field! AVFragmentedMovieWasDefragmentedNotification bound
-!unknown-field! AVLinearPCMBitDepthKey bound
-!unknown-field! AVLinearPCMIsBigEndianKey bound
-!unknown-field! AVLinearPCMIsFloatKey bound
-!unknown-field! AVLinearPCMIsNonInterleaved bound
-!unknown-field! AVMediaCharacteristicAudible bound
-!unknown-field! AVMediaCharacteristicContainsOnlyForcedSubtitles bound
-!unknown-field! AVMediaCharacteristicDescribesMusicAndSoundForAccessibility bound
-!unknown-field! AVMediaCharacteristicDescribesVideoForAccessibility bound
-!unknown-field! AVMediaCharacteristicDubbedTranslation bound
-!unknown-field! AVMediaCharacteristicEasyToRead bound
-!unknown-field! AVMediaCharacteristicFrameBased bound
-!unknown-field! AVMediaCharacteristicIsAuxiliaryContent bound
-!unknown-field! AVMediaCharacteristicIsMainProgramContent bound
-!unknown-field! AVMediaCharacteristicIsOriginalContent bound
-!unknown-field! AVMediaCharacteristicLanguageTranslation bound
-!unknown-field! AVMediaCharacteristicLegible bound
-!unknown-field! AVMediaCharacteristicTranscribesSpokenDialogForAccessibility bound
-!unknown-field! AVMediaCharacteristicUsesWideGamutColorSpace bound
-!unknown-field! AVMediaCharacteristicVisual bound
-!unknown-field! AVMediaCharacteristicVoiceOverTranslation bound
-!unknown-field! AVMediaTypeAudio bound
-!unknown-field! AVMediaTypeClosedCaption bound
-!unknown-field! AVMediaTypeMetadata bound
-!unknown-field! AVMediaTypeMuxed bound
-!unknown-field! AVMediaTypeSubtitle bound
-!unknown-field! AVMediaTypeText bound
-!unknown-field! AVMediaTypeTimecode bound
-!unknown-field! AVMediaTypeVideo bound
-!unknown-field! AVMetadata3GPUserDataKeyAlbumAndTrack bound
-!unknown-field! AVMetadata3GPUserDataKeyAuthor bound
-!unknown-field! AVMetadata3GPUserDataKeyCollection bound
-!unknown-field! AVMetadata3GPUserDataKeyCopyright bound
-!unknown-field! AVMetadata3GPUserDataKeyDescription bound
-!unknown-field! AVMetadata3GPUserDataKeyGenre bound
-!unknown-field! AVMetadata3GPUserDataKeyKeywordList bound
-!unknown-field! AVMetadata3GPUserDataKeyLocation bound
-!unknown-field! AVMetadata3GPUserDataKeyMediaClassification bound
-!unknown-field! AVMetadata3GPUserDataKeyMediaRating bound
-!unknown-field! AVMetadata3GPUserDataKeyPerformer bound
-!unknown-field! AVMetadata3GPUserDataKeyRecordingYear bound
-!unknown-field! AVMetadata3GPUserDataKeyThumbnail bound
-!unknown-field! AVMetadata3GPUserDataKeyTitle bound
-!unknown-field! AVMetadata3GPUserDataKeyUserRating bound
-!unknown-field! AVMetadataCommonIdentifierAccessibilityDescription bound
-!unknown-field! AVMetadataCommonIdentifierAlbumName bound
-!unknown-field! AVMetadataCommonIdentifierArtist bound
-!unknown-field! AVMetadataCommonIdentifierArtwork bound
-!unknown-field! AVMetadataCommonIdentifierAssetIdentifier bound
-!unknown-field! AVMetadataCommonIdentifierAuthor bound
-!unknown-field! AVMetadataCommonIdentifierContributor bound
-!unknown-field! AVMetadataCommonIdentifierCopyrights bound
-!unknown-field! AVMetadataCommonIdentifierCreationDate bound
-!unknown-field! AVMetadataCommonIdentifierCreator bound
-!unknown-field! AVMetadataCommonIdentifierDescription bound
-!unknown-field! AVMetadataCommonIdentifierFormat bound
-!unknown-field! AVMetadataCommonIdentifierLanguage bound
-!unknown-field! AVMetadataCommonIdentifierLastModifiedDate bound
-!unknown-field! AVMetadataCommonIdentifierLocation bound
-!unknown-field! AVMetadataCommonIdentifierMake bound
-!unknown-field! AVMetadataCommonIdentifierModel bound
-!unknown-field! AVMetadataCommonIdentifierPublisher bound
-!unknown-field! AVMetadataCommonIdentifierRelation bound
-!unknown-field! AVMetadataCommonIdentifierSoftware bound
-!unknown-field! AVMetadataCommonIdentifierSource bound
-!unknown-field! AVMetadataCommonIdentifierSubject bound
-!unknown-field! AVMetadataCommonIdentifierTitle bound
-!unknown-field! AVMetadataCommonIdentifierType bound
-!unknown-field! AVMetadataCommonKeyAccessibilityDescription bound
-!unknown-field! AVMetadataCommonKeyAlbumName bound
-!unknown-field! AVMetadataCommonKeyArtist bound
-!unknown-field! AVMetadataCommonKeyArtwork bound
-!unknown-field! AVMetadataCommonKeyAuthor bound
-!unknown-field! AVMetadataCommonKeyContributor bound
-!unknown-field! AVMetadataCommonKeyCopyrights bound
-!unknown-field! AVMetadataCommonKeyCreationDate bound
-!unknown-field! AVMetadataCommonKeyCreator bound
-!unknown-field! AVMetadataCommonKeyDescription bound
-!unknown-field! AVMetadataCommonKeyFormat bound
-!unknown-field! AVMetadataCommonKeyIdentifier bound
-!unknown-field! AVMetadataCommonKeyLanguage bound
-!unknown-field! AVMetadataCommonKeyLastModifiedDate bound
-!unknown-field! AVMetadataCommonKeyLocation bound
-!unknown-field! AVMetadataCommonKeyMake bound
-!unknown-field! AVMetadataCommonKeyModel bound
-!unknown-field! AVMetadataCommonKeyPublisher bound
-!unknown-field! AVMetadataCommonKeyRelation bound
-!unknown-field! AVMetadataCommonKeySoftware bound
-!unknown-field! AVMetadataCommonKeySource bound
-!unknown-field! AVMetadataCommonKeySubject bound
-!unknown-field! AVMetadataCommonKeyTitle bound
-!unknown-field! AVMetadataCommonKeyType bound
-!unknown-field! AVMetadataExtraAttributeBaseURIKey bound
-!unknown-field! AVMetadataExtraAttributeInfoKey bound
-!unknown-field! AVMetadataExtraAttributeValueURIKey bound
-!unknown-field! AVMetadataFormatHLSMetadata bound
-!unknown-field! AVMetadataFormatID3Metadata bound
-!unknown-field! AVMetadataFormatISOUserData bound
-!unknown-field! AVMetadataFormatiTunesMetadata bound
-!unknown-field! AVMetadataFormatQuickTimeMetadata bound
-!unknown-field! AVMetadataFormatQuickTimeUserData bound
-!unknown-field! AVMetadataFormatUnknown bound
-!unknown-field! AVMetadataIcyMetadataKeyStreamTitle bound
-!unknown-field! AVMetadataIcyMetadataKeyStreamURL bound
-!unknown-field! AVMetadataID3MetadataKeyAlbumSortOrder bound
-!unknown-field! AVMetadataID3MetadataKeyAlbumTitle bound
-!unknown-field! AVMetadataID3MetadataKeyAttachedPicture bound
-!unknown-field! AVMetadataID3MetadataKeyAudioEncryption bound
-!unknown-field! AVMetadataID3MetadataKeyAudioSeekPointIndex bound
-!unknown-field! AVMetadataID3MetadataKeyBand bound
-!unknown-field! AVMetadataID3MetadataKeyBeatsPerMinute bound
-!unknown-field! AVMetadataID3MetadataKeyComments bound
-!unknown-field! AVMetadataID3MetadataKeyCommercial bound
-!unknown-field! AVMetadataID3MetadataKeyCommercialInformation bound
-!unknown-field! AVMetadataID3MetadataKeyCommerical bound
-!unknown-field! AVMetadataID3MetadataKeyComposer bound
-!unknown-field! AVMetadataID3MetadataKeyConductor bound
-!unknown-field! AVMetadataID3MetadataKeyContentGroupDescription bound
-!unknown-field! AVMetadataID3MetadataKeyContentType bound
-!unknown-field! AVMetadataID3MetadataKeyCopyright bound
-!unknown-field! AVMetadataID3MetadataKeyCopyrightInformation bound
-!unknown-field! AVMetadataID3MetadataKeyDate bound
-!unknown-field! AVMetadataID3MetadataKeyEncodedBy bound
-!unknown-field! AVMetadataID3MetadataKeyEncodedWith bound
-!unknown-field! AVMetadataID3MetadataKeyEncodingTime bound
-!unknown-field! AVMetadataID3MetadataKeyEncryption bound
-!unknown-field! AVMetadataID3MetadataKeyEqualization bound
-!unknown-field! AVMetadataID3MetadataKeyEqualization2 bound
-!unknown-field! AVMetadataID3MetadataKeyEventTimingCodes bound
-!unknown-field! AVMetadataID3MetadataKeyFileOwner bound
-!unknown-field! AVMetadataID3MetadataKeyFileType bound
-!unknown-field! AVMetadataID3MetadataKeyGeneralEncapsulatedObject bound
-!unknown-field! AVMetadataID3MetadataKeyGroupIdentifier bound
-!unknown-field! AVMetadataID3MetadataKeyInitialKey bound
-!unknown-field! AVMetadataID3MetadataKeyInternationalStandardRecordingCode bound
-!unknown-field! AVMetadataID3MetadataKeyInternetRadioStationName bound
-!unknown-field! AVMetadataID3MetadataKeyInternetRadioStationOwner bound
-!unknown-field! AVMetadataID3MetadataKeyInvolvedPeopleList_v23 bound
-!unknown-field! AVMetadataID3MetadataKeyInvolvedPeopleList_v24 bound
-!unknown-field! AVMetadataID3MetadataKeyLanguage bound
-!unknown-field! AVMetadataID3MetadataKeyLeadPerformer bound
-!unknown-field! AVMetadataID3MetadataKeyLength bound
-!unknown-field! AVMetadataID3MetadataKeyLink bound
-!unknown-field! AVMetadataID3MetadataKeyLyricist bound
-!unknown-field! AVMetadataID3MetadataKeyMediaType bound
-!unknown-field! AVMetadataID3MetadataKeyModifiedBy bound
-!unknown-field! AVMetadataID3MetadataKeyMood bound
-!unknown-field! AVMetadataID3MetadataKeyMPEGLocationLookupTable bound
-!unknown-field! AVMetadataID3MetadataKeyMusicCDIdentifier bound
-!unknown-field! AVMetadataID3MetadataKeyMusicianCreditsList bound
-!unknown-field! AVMetadataID3MetadataKeyOfficialArtistWebpage bound
-!unknown-field! AVMetadataID3MetadataKeyOfficialAudioFileWebpage bound
-!unknown-field! AVMetadataID3MetadataKeyOfficialAudioSourceWebpage bound
-!unknown-field! AVMetadataID3MetadataKeyOfficialInternetRadioStationHomepage bound
-!unknown-field! AVMetadataID3MetadataKeyOfficialPublisherWebpage bound
-!unknown-field! AVMetadataID3MetadataKeyOriginalAlbumTitle bound
-!unknown-field! AVMetadataID3MetadataKeyOriginalArtist bound
-!unknown-field! AVMetadataID3MetadataKeyOriginalFilename bound
-!unknown-field! AVMetadataID3MetadataKeyOriginalLyricist bound
-!unknown-field! AVMetadataID3MetadataKeyOriginalReleaseTime bound
-!unknown-field! AVMetadataID3MetadataKeyOriginalReleaseYear bound
-!unknown-field! AVMetadataID3MetadataKeyOwnership bound
-!unknown-field! AVMetadataID3MetadataKeyPartOfASet bound
-!unknown-field! AVMetadataID3MetadataKeyPayment bound
-!unknown-field! AVMetadataID3MetadataKeyPerformerSortOrder bound
-!unknown-field! AVMetadataID3MetadataKeyPlayCounter bound
-!unknown-field! AVMetadataID3MetadataKeyPlaylistDelay bound
-!unknown-field! AVMetadataID3MetadataKeyPopularimeter bound
-!unknown-field! AVMetadataID3MetadataKeyPositionSynchronization bound
-!unknown-field! AVMetadataID3MetadataKeyPrivate bound
-!unknown-field! AVMetadataID3MetadataKeyProducedNotice bound
-!unknown-field! AVMetadataID3MetadataKeyPublisher bound
-!unknown-field! AVMetadataID3MetadataKeyRecommendedBufferSize bound
-!unknown-field! AVMetadataID3MetadataKeyRecordingDates bound
-!unknown-field! AVMetadataID3MetadataKeyRecordingTime bound
-!unknown-field! AVMetadataID3MetadataKeyRelativeVolumeAdjustment bound
-!unknown-field! AVMetadataID3MetadataKeyRelativeVolumeAdjustment2 bound
-!unknown-field! AVMetadataID3MetadataKeyReleaseTime bound
-!unknown-field! AVMetadataID3MetadataKeyReverb bound
-!unknown-field! AVMetadataID3MetadataKeySeek bound
-!unknown-field! AVMetadataID3MetadataKeySetSubtitle bound
-!unknown-field! AVMetadataID3MetadataKeySignature bound
-!unknown-field! AVMetadataID3MetadataKeySize bound
-!unknown-field! AVMetadataID3MetadataKeySubTitle bound
-!unknown-field! AVMetadataID3MetadataKeySynchronizedLyric bound
-!unknown-field! AVMetadataID3MetadataKeySynchronizedTempoCodes bound
-!unknown-field! AVMetadataID3MetadataKeyTaggingTime bound
-!unknown-field! AVMetadataID3MetadataKeyTermsOfUse bound
-!unknown-field! AVMetadataID3MetadataKeyTime bound
-!unknown-field! AVMetadataID3MetadataKeyTitleDescription bound
-!unknown-field! AVMetadataID3MetadataKeyTitleSortOrder bound
-!unknown-field! AVMetadataID3MetadataKeyTrackNumber bound
-!unknown-field! AVMetadataID3MetadataKeyUniqueFileIdentifier bound
-!unknown-field! AVMetadataID3MetadataKeyUnsynchronizedLyric bound
-!unknown-field! AVMetadataID3MetadataKeyUserText bound
-!unknown-field! AVMetadataID3MetadataKeyUserURL bound
-!unknown-field! AVMetadataID3MetadataKeyYear bound
-!unknown-field! AVMetadataIdentifier3GPUserDataAlbumAndTrack bound
-!unknown-field! AVMetadataIdentifier3GPUserDataAuthor bound
-!unknown-field! AVMetadataIdentifier3GPUserDataCollection bound
-!unknown-field! AVMetadataIdentifier3GPUserDataCopyright bound
-!unknown-field! AVMetadataIdentifier3GPUserDataDescription bound
-!unknown-field! AVMetadataIdentifier3GPUserDataGenre bound
-!unknown-field! AVMetadataIdentifier3GPUserDataKeywordList bound
-!unknown-field! AVMetadataIdentifier3GPUserDataLocation bound
-!unknown-field! AVMetadataIdentifier3GPUserDataMediaClassification bound
-!unknown-field! AVMetadataIdentifier3GPUserDataMediaRating bound
-!unknown-field! AVMetadataIdentifier3GPUserDataPerformer bound
-!unknown-field! AVMetadataIdentifier3GPUserDataRecordingYear bound
-!unknown-field! AVMetadataIdentifier3GPUserDataThumbnail bound
-!unknown-field! AVMetadataIdentifier3GPUserDataTitle bound
-!unknown-field! AVMetadataIdentifier3GPUserDataUserRating bound
-!unknown-field! AVMetadataIdentifierIcyMetadataStreamTitle bound
-!unknown-field! AVMetadataIdentifierIcyMetadataStreamURL bound
-!unknown-field! AVMetadataIdentifierID3MetadataAlbumSortOrder bound
-!unknown-field! AVMetadataIdentifierID3MetadataAlbumTitle bound
-!unknown-field! AVMetadataIdentifierID3MetadataAttachedPicture bound
-!unknown-field! AVMetadataIdentifierID3MetadataAudioEncryption bound
-!unknown-field! AVMetadataIdentifierID3MetadataAudioSeekPointIndex bound
-!unknown-field! AVMetadataIdentifierID3MetadataBand bound
-!unknown-field! AVMetadataIdentifierID3MetadataBeatsPerMinute bound
-!unknown-field! AVMetadataIdentifierID3MetadataComments bound
-!unknown-field! AVMetadataIdentifierID3MetadataCommercial bound
-!unknown-field! AVMetadataIdentifierID3MetadataCommercialInformation bound
-!unknown-field! AVMetadataIdentifierID3MetadataCommerical bound
-!unknown-field! AVMetadataIdentifierID3MetadataComposer bound
-!unknown-field! AVMetadataIdentifierID3MetadataConductor bound
-!unknown-field! AVMetadataIdentifierID3MetadataContentGroupDescription bound
-!unknown-field! AVMetadataIdentifierID3MetadataContentType bound
-!unknown-field! AVMetadataIdentifierID3MetadataCopyright bound
-!unknown-field! AVMetadataIdentifierID3MetadataCopyrightInformation bound
-!unknown-field! AVMetadataIdentifierID3MetadataDate bound
-!unknown-field! AVMetadataIdentifierID3MetadataEncodedBy bound
-!unknown-field! AVMetadataIdentifierID3MetadataEncodedWith bound
-!unknown-field! AVMetadataIdentifierID3MetadataEncodingTime bound
-!unknown-field! AVMetadataIdentifierID3MetadataEncryption bound
-!unknown-field! AVMetadataIdentifierID3MetadataEqualization bound
-!unknown-field! AVMetadataIdentifierID3MetadataEqualization2 bound
-!unknown-field! AVMetadataIdentifierID3MetadataEventTimingCodes bound
-!unknown-field! AVMetadataIdentifierID3MetadataFileOwner bound
-!unknown-field! AVMetadataIdentifierID3MetadataFileType bound
-!unknown-field! AVMetadataIdentifierID3MetadataGeneralEncapsulatedObject bound
-!unknown-field! AVMetadataIdentifierID3MetadataGroupIdentifier bound
-!unknown-field! AVMetadataIdentifierID3MetadataInitialKey bound
-!unknown-field! AVMetadataIdentifierID3MetadataInternationalStandardRecordingCode bound
-!unknown-field! AVMetadataIdentifierID3MetadataInternetRadioStationName bound
-!unknown-field! AVMetadataIdentifierID3MetadataInternetRadioStationOwner bound
-!unknown-field! AVMetadataIdentifierID3MetadataInvolvedPeopleList_v23 bound
-!unknown-field! AVMetadataIdentifierID3MetadataInvolvedPeopleList_v24 bound
-!unknown-field! AVMetadataIdentifierID3MetadataLanguage bound
-!unknown-field! AVMetadataIdentifierID3MetadataLeadPerformer bound
-!unknown-field! AVMetadataIdentifierID3MetadataLength bound
-!unknown-field! AVMetadataIdentifierID3MetadataLink bound
-!unknown-field! AVMetadataIdentifierID3MetadataLyricist bound
-!unknown-field! AVMetadataIdentifierID3MetadataMediaType bound
-!unknown-field! AVMetadataIdentifierID3MetadataModifiedBy bound
-!unknown-field! AVMetadataIdentifierID3MetadataMood bound
-!unknown-field! AVMetadataIdentifierID3MetadataMPEGLocationLookupTable bound
-!unknown-field! AVMetadataIdentifierID3MetadataMusicCDIdentifier bound
-!unknown-field! AVMetadataIdentifierID3MetadataMusicianCreditsList bound
-!unknown-field! AVMetadataIdentifierID3MetadataOfficialArtistWebpage bound
-!unknown-field! AVMetadataIdentifierID3MetadataOfficialAudioFileWebpage bound
-!unknown-field! AVMetadataIdentifierID3MetadataOfficialAudioSourceWebpage bound
-!unknown-field! AVMetadataIdentifierID3MetadataOfficialInternetRadioStationHomepage bound
-!unknown-field! AVMetadataIdentifierID3MetadataOfficialPublisherWebpage bound
-!unknown-field! AVMetadataIdentifierID3MetadataOriginalAlbumTitle bound
-!unknown-field! AVMetadataIdentifierID3MetadataOriginalArtist bound
-!unknown-field! AVMetadataIdentifierID3MetadataOriginalFilename bound
-!unknown-field! AVMetadataIdentifierID3MetadataOriginalLyricist bound
-!unknown-field! AVMetadataIdentifierID3MetadataOriginalReleaseTime bound
-!unknown-field! AVMetadataIdentifierID3MetadataOriginalReleaseYear bound
-!unknown-field! AVMetadataIdentifierID3MetadataOwnership bound
-!unknown-field! AVMetadataIdentifierID3MetadataPartOfASet bound
-!unknown-field! AVMetadataIdentifierID3MetadataPayment bound
-!unknown-field! AVMetadataIdentifierID3MetadataPerformerSortOrder bound
-!unknown-field! AVMetadataIdentifierID3MetadataPlayCounter bound
-!unknown-field! AVMetadataIdentifierID3MetadataPlaylistDelay bound
-!unknown-field! AVMetadataIdentifierID3MetadataPopularimeter bound
-!unknown-field! AVMetadataIdentifierID3MetadataPositionSynchronization bound
-!unknown-field! AVMetadataIdentifierID3MetadataPrivate bound
-!unknown-field! AVMetadataIdentifierID3MetadataProducedNotice bound
-!unknown-field! AVMetadataIdentifierID3MetadataPublisher bound
-!unknown-field! AVMetadataIdentifierID3MetadataRecommendedBufferSize bound
-!unknown-field! AVMetadataIdentifierID3MetadataRecordingDates bound
-!unknown-field! AVMetadataIdentifierID3MetadataRecordingTime bound
-!unknown-field! AVMetadataIdentifierID3MetadataRelativeVolumeAdjustment bound
-!unknown-field! AVMetadataIdentifierID3MetadataRelativeVolumeAdjustment2 bound
-!unknown-field! AVMetadataIdentifierID3MetadataReleaseTime bound
-!unknown-field! AVMetadataIdentifierID3MetadataReverb bound
-!unknown-field! AVMetadataIdentifierID3MetadataSeek bound
-!unknown-field! AVMetadataIdentifierID3MetadataSetSubtitle bound
-!unknown-field! AVMetadataIdentifierID3MetadataSignature bound
-!unknown-field! AVMetadataIdentifierID3MetadataSize bound
-!unknown-field! AVMetadataIdentifierID3MetadataSubTitle bound
-!unknown-field! AVMetadataIdentifierID3MetadataSynchronizedLyric bound
-!unknown-field! AVMetadataIdentifierID3MetadataSynchronizedTempoCodes bound
-!unknown-field! AVMetadataIdentifierID3MetadataTaggingTime bound
-!unknown-field! AVMetadataIdentifierID3MetadataTermsOfUse bound
-!unknown-field! AVMetadataIdentifierID3MetadataTime bound
-!unknown-field! AVMetadataIdentifierID3MetadataTitleDescription bound
-!unknown-field! AVMetadataIdentifierID3MetadataTitleSortOrder bound
-!unknown-field! AVMetadataIdentifierID3MetadataTrackNumber bound
-!unknown-field! AVMetadataIdentifierID3MetadataUniqueFileIdentifier bound
-!unknown-field! AVMetadataIdentifierID3MetadataUnsynchronizedLyric bound
-!unknown-field! AVMetadataIdentifierID3MetadataUserText bound
-!unknown-field! AVMetadataIdentifierID3MetadataUserURL bound
-!unknown-field! AVMetadataIdentifierID3MetadataYear bound
-!unknown-field! AVMetadataIdentifierISOUserDataAccessibilityDescription bound
-!unknown-field! AVMetadataIdentifierISOUserDataCopyright bound
-!unknown-field! AVMetadataIdentifierISOUserDataDate bound
-!unknown-field! AVMetadataIdentifierISOUserDataTaggedCharacteristic bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataAccountKind bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataAcknowledgement bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataAlbum bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataAlbumArtist bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataAppleID bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataArranger bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataArtDirector bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataArtist bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataArtistID bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataAuthor bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataBeatsPerMin bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataComposer bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataConductor bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataContentRating bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataCopyright bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataCoverArt bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataCredits bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataDescription bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataDirector bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataDiscCompilation bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataDiscNumber bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataEncodedBy bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataEncodingTool bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataEQ bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataExecProducer bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataGenreID bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataGrouping bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataLinerNotes bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataLyrics bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataOnlineExtras bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataOriginalArtist bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataPerformer bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataPhonogramRights bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataPlaylistID bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataPredefinedGenre bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataProducer bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataPublisher bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataRecordCompany bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataReleaseDate bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataSoloist bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataSongID bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataSongName bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataSoundEngineer bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataThanks bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataTrackNumber bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataTrackSubTitle bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataUserComment bound
-!unknown-field! AVMetadataIdentifieriTunesMetadataUserGenre bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataAccessibilityDescription bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataAlbum bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataArranger bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataArtist bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataArtwork bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataAuthor bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataCameraFrameReadoutTime bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataCameraIdentifier bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataCollectionUser bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataComment bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataComposer bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataContentIdentifier bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataCopyright bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataCreationDate bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataCredits bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataDescription bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataDetectedFace bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataDirectionFacing bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataDirectionMotion bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataDirector bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataDisplayName bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataEncodedBy bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataGenre bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataInformation bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataIsMontage bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataiXML bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataKeywords bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScore bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScoringVersion bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationBody bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationDate bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationHorizontalAccuracyInMeters bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationISO6709 bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationName bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationNote bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataLocationRole bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataMake bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataModel bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataOriginalArtist bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataPerformer bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataPhonogramRights bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataPreferredAffineTransform bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataProducer bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataPublisher bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataRatingUser bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataSoftware bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScore bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataTitle bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataVideoOrientation bound
-!unknown-field! AVMetadataIdentifierQuickTimeMetadataYear bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataAccessibilityDescription bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataAlbum bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataArranger bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataArtist bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataAuthor bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataChapter bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataComment bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataComposer bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataCopyright bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataCreationDate bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataCredits bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataDescription bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataDirector bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataDisclaimer bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataEncodedBy bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataFullName bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataGenre bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataHostComputer bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataInformation bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataKeywords bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataLocationISO6709 bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataMake bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataModel bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataOriginalArtist bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataOriginalFormat bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataOriginalSource bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataPerformers bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataPhonogramRights bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataProducer bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataProduct bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataPublisher bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataSoftware bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataSpecialPlaybackRequirements bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataTaggedCharacteristic bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataTrack bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataTrackName bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataURLLink bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataWarning bound
-!unknown-field! AVMetadataIdentifierQuickTimeUserDataWriter bound
-!unknown-field! AVMetadataISOUserDataKeyAccessibilityDescription bound
-!unknown-field! AVMetadataISOUserDataKeyCopyright bound
-!unknown-field! AVMetadataISOUserDataKeyDate bound
-!unknown-field! AVMetadataISOUserDataKeyTaggedCharacteristic bound
-!unknown-field! AVMetadataiTunesMetadataKeyAccountKind bound
-!unknown-field! AVMetadataiTunesMetadataKeyAcknowledgement bound
-!unknown-field! AVMetadataiTunesMetadataKeyAlbum bound
-!unknown-field! AVMetadataiTunesMetadataKeyAlbumArtist bound
-!unknown-field! AVMetadataiTunesMetadataKeyAppleID bound
-!unknown-field! AVMetadataiTunesMetadataKeyArranger bound
-!unknown-field! AVMetadataiTunesMetadataKeyArtDirector bound
-!unknown-field! AVMetadataiTunesMetadataKeyArtist bound
-!unknown-field! AVMetadataiTunesMetadataKeyArtistID bound
-!unknown-field! AVMetadataiTunesMetadataKeyAuthor bound
-!unknown-field! AVMetadataiTunesMetadataKeyBeatsPerMin bound
-!unknown-field! AVMetadataiTunesMetadataKeyComposer bound
-!unknown-field! AVMetadataiTunesMetadataKeyConductor bound
-!unknown-field! AVMetadataiTunesMetadataKeyContentRating bound
-!unknown-field! AVMetadataiTunesMetadataKeyCopyright bound
-!unknown-field! AVMetadataiTunesMetadataKeyCoverArt bound
-!unknown-field! AVMetadataiTunesMetadataKeyCredits bound
-!unknown-field! AVMetadataiTunesMetadataKeyDescription bound
-!unknown-field! AVMetadataiTunesMetadataKeyDirector bound
-!unknown-field! AVMetadataiTunesMetadataKeyDiscCompilation bound
-!unknown-field! AVMetadataiTunesMetadataKeyDiscNumber bound
-!unknown-field! AVMetadataiTunesMetadataKeyEncodedBy bound
-!unknown-field! AVMetadataiTunesMetadataKeyEncodingTool bound
-!unknown-field! AVMetadataiTunesMetadataKeyEQ bound
-!unknown-field! AVMetadataiTunesMetadataKeyExecProducer bound
-!unknown-field! AVMetadataiTunesMetadataKeyGenreID bound
-!unknown-field! AVMetadataiTunesMetadataKeyGrouping bound
-!unknown-field! AVMetadataiTunesMetadataKeyLinerNotes bound
-!unknown-field! AVMetadataiTunesMetadataKeyLyrics bound
-!unknown-field! AVMetadataiTunesMetadataKeyOnlineExtras bound
-!unknown-field! AVMetadataiTunesMetadataKeyOriginalArtist bound
-!unknown-field! AVMetadataiTunesMetadataKeyPerformer bound
-!unknown-field! AVMetadataiTunesMetadataKeyPhonogramRights bound
-!unknown-field! AVMetadataiTunesMetadataKeyPlaylistID bound
-!unknown-field! AVMetadataiTunesMetadataKeyPredefinedGenre bound
-!unknown-field! AVMetadataiTunesMetadataKeyProducer bound
-!unknown-field! AVMetadataiTunesMetadataKeyPublisher bound
-!unknown-field! AVMetadataiTunesMetadataKeyRecordCompany bound
-!unknown-field! AVMetadataiTunesMetadataKeyReleaseDate bound
-!unknown-field! AVMetadataiTunesMetadataKeySoloist bound
-!unknown-field! AVMetadataiTunesMetadataKeySongID bound
-!unknown-field! AVMetadataiTunesMetadataKeySongName bound
-!unknown-field! AVMetadataiTunesMetadataKeySoundEngineer bound
-!unknown-field! AVMetadataiTunesMetadataKeyThanks bound
-!unknown-field! AVMetadataiTunesMetadataKeyTrackNumber bound
-!unknown-field! AVMetadataiTunesMetadataKeyTrackSubTitle bound
-!unknown-field! AVMetadataiTunesMetadataKeyUserComment bound
-!unknown-field! AVMetadataiTunesMetadataKeyUserGenre bound
-!unknown-field! AVMetadataKeySpaceAudioFile bound
-!unknown-field! AVMetadataKeySpaceCommon bound
-!unknown-field! AVMetadataKeySpaceHLSDateRange bound
-!unknown-field! AVMetadataKeySpaceIcy bound
-!unknown-field! AVMetadataKeySpaceID3 bound
-!unknown-field! AVMetadataKeySpaceISOUserData bound
-!unknown-field! AVMetadataKeySpaceiTunes bound
-!unknown-field! AVMetadataKeySpaceQuickTimeMetadata bound
-!unknown-field! AVMetadataKeySpaceQuickTimeUserData bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyAccessibilityDescription bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyAlbum bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyArranger bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyArtist bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyArtwork bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyAuthor bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyCameraFrameReadoutTime bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyCameraIdentifier bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyCollectionUser bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyComment bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyComposer bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyContentIdentifier bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyCopyright bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyCreationDate bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyCredits bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyDescription bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyDirectionFacing bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyDirectionMotion bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyDirector bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyDisplayName bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyEncodedBy bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyGenre bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyInformation bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyIsMontage bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyiXML bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyKeywords bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyLocationBody bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyLocationDate bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyLocationISO6709 bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyLocationName bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyLocationNote bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyLocationRole bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyMake bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyModel bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyOriginalArtist bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyPerformer bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyPhonogramRights bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyProducer bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyPublisher bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyRatingUser bound
-!unknown-field! AVMetadataQuickTimeMetadataKeySoftware bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyTitle bound
-!unknown-field! AVMetadataQuickTimeMetadataKeyYear bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyAccessibilityDescription bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyAlbum bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyArranger bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyArtist bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyAuthor bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyChapter bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyComment bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyComposer bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyCopyright bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyCreationDate bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyCredits bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyDescription bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyDirector bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyDisclaimer bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyEncodedBy bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyFullName bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyGenre bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyHostComputer bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyInformation bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyKeywords bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyLocationISO6709 bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyMake bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyModel bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyOriginalArtist bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyOriginalFormat bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyOriginalSource bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyPerformers bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyPhonogramRights bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyProducer bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyProduct bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyPublisher bound
-!unknown-field! AVMetadataQuickTimeUserDataKeySoftware bound
-!unknown-field! AVMetadataQuickTimeUserDataKeySpecialPlaybackRequirements bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyTaggedCharacteristic bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyTrack bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyTrackName bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyURLLink bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyWarning bound
-!unknown-field! AVMetadataQuickTimeUserDataKeyWriter bound
-!unknown-field! AVMovieReferenceRestrictionsKey bound
-!unknown-field! AVMovieShouldSupportAliasDataReferencesKey bound
-!unknown-field! AVNumberOfChannelsKey bound
-!unknown-field! AVPlayerInterstitialEventMonitorCurrentEventDidChangeNotification bound
-!unknown-field! AVPlayerInterstitialEventMonitorEventsDidChangeNotification bound
-!unknown-field! AVPlayerItemDidPlayToEndTimeNotification bound
-!unknown-field! AVPlayerItemFailedToPlayToEndTimeErrorKey bound
-!unknown-field! AVPlayerItemFailedToPlayToEndTimeNotification bound
-!unknown-field! AVPlayerItemMediaSelectionDidChangeNotification bound
-!unknown-field! AVPlayerItemNewAccessLogEntryNotification bound
-!unknown-field! AVPlayerItemNewErrorLogEntryNotification bound
-!unknown-field! AVPlayerItemPlaybackStalledNotification bound
-!unknown-field! AVPlayerItemRecommendedTimeOffsetFromLiveDidChangeNotification bound
-!unknown-field! AVPlayerItemTimeJumpedNotification bound
-!unknown-field! AVPlayerRateDidChangeNotification bound
-!unknown-field! AVPlayerWaitingDuringInterstitialEventReason bound
-!unknown-field! AVPlayerWaitingToMinimizeStallsReason bound
-!unknown-field! AVPlayerWaitingWhileEvaluatingBufferingRateReason bound
-!unknown-field! AVPlayerWaitingWithNoItemToPlayReason bound
-!unknown-field! AVSampleBufferAudioRendererFlushTimeKey bound
-!unknown-field! AVSampleBufferAudioRendererOutputConfigurationDidChangeNotification bound
-!unknown-field! AVSampleBufferAudioRendererWasFlushedAutomaticallyNotification bound
-!unknown-field! AVSampleBufferRenderSynchronizerRateDidChangeNotification bound
-!unknown-field! AVSampleRateConverterAlgorithm_Mastering bound
-!unknown-field! AVSampleRateConverterAlgorithm_MinimumPhase bound
-!unknown-field! AVSampleRateConverterAlgorithm_Normal bound
-!unknown-field! AVSampleRateConverterAlgorithmKey bound
-!unknown-field! AVSampleRateConverterAudioQualityKey bound
-!unknown-field! AVSampleRateKey bound
-!unknown-field! AVSemanticSegmentationMatteTypeGlasses bound
-!unknown-field! AVSemanticSegmentationMatteTypeHair bound
-!unknown-field! AVSemanticSegmentationMatteTypeSkin bound
-!unknown-field! AVSemanticSegmentationMatteTypeTeeth bound
-!unknown-field! AVSpeechSynthesisIPANotationAttribute bound
-!unknown-field! AVSpeechSynthesisVoiceIdentifierAlex bound
-!unknown-field! AVSpeechUtteranceDefaultSpeechRate bound
-!unknown-field! AVSpeechUtteranceMaximumSpeechRate bound
-!unknown-field! AVSpeechUtteranceMinimumSpeechRate bound
-!unknown-field! AVStreamingKeyDeliveryContentKeyType bound
-!unknown-field! AVStreamingKeyDeliveryPersistentContentKeyType bound
-!unknown-field! AVTrackAssociationTypeAudioFallback bound
-!unknown-field! AVTrackAssociationTypeChapterList bound
-!unknown-field! AVTrackAssociationTypeForcedSubtitlesOnly bound
-!unknown-field! AVTrackAssociationTypeMetadataReferent bound
-!unknown-field! AVTrackAssociationTypeSelectionFollower bound
-!unknown-field! AVTrackAssociationTypeTimecode bound
-!unknown-field! AVURLAssetAllowsCellularAccessKey bound
-!unknown-field! AVURLAssetAllowsConstrainedNetworkAccessKey bound
-!unknown-field! AVURLAssetAllowsExpensiveNetworkAccessKey bound
-!unknown-field! AVURLAssetHTTPCookiesKey bound
-!unknown-field! AVURLAssetPreferPreciseDurationAndTimingKey bound
-!unknown-field! AVURLAssetURLRequestAttributionKey bound
-!unknown-field! AVVideoRangeHLG bound
-!unknown-field! AVVideoRangePQ bound
-!unknown-field! AVVideoRangeSDR bound
-!unknown-native-enum! AVAssetExportSessionStatus bound
-!unknown-native-enum! AVAssetImageGeneratorResult bound
-!unknown-native-enum! AVAssetReaderStatus bound
-!unknown-native-enum! AVAssetReferenceRestrictions bound
-!unknown-native-enum! AVAssetWriterStatus bound
-!unknown-native-enum! AVAudio3DMixingRenderingAlgorithm bound
-!unknown-native-enum! AVAudioCommonFormat bound
-!unknown-native-enum! AVAudioConverterInputStatus bound
-!unknown-native-enum! AVAudioConverterOutputStatus bound
-!unknown-native-enum! AVAudioConverterPrimeMethod bound
-!unknown-native-enum! AVAudioEngineManualRenderingMode bound
-!unknown-native-enum! AVAudioEngineManualRenderingStatus bound
-!unknown-native-enum! AVAudioEnvironmentDistanceAttenuationModel bound
-!unknown-native-enum! AVAudioPlayerNodeBufferOptions bound
-!unknown-native-enum! AVAudioPlayerNodeCompletionCallbackType bound
-!unknown-native-enum! AVAudioQuality bound
-!unknown-native-enum! AVAudioRoutingArbitrationCategory bound
-!unknown-native-enum! AVAudioSessionActivationOptions bound
-!unknown-native-enum! AVAudioSessionCategoryOptions bound
-!unknown-native-enum! AVAudioSessionInterruptionOptions bound
-!unknown-native-enum! AVAudioSessionInterruptionReason bound
-!unknown-native-enum! AVAudioSessionInterruptionType bound
-!unknown-native-enum! AVAudioSessionPortOverride bound
-!unknown-native-enum! AVAudioSessionPromptStyle bound
-!unknown-native-enum! AVAudioSessionRecordPermission bound
-!unknown-native-enum! AVAudioSessionRouteChangeReason bound
-!unknown-native-enum! AVAudioSessionRouteSharingPolicy bound
-!unknown-native-enum! AVAudioSessionSetActiveOptions bound
-!unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
-!unknown-native-enum! AVAudioSpatializationFormats bound
-!unknown-native-enum! AVAudioStereoOrientation bound
-!unknown-native-enum! AVAudioUnitDistortionPreset bound
-!unknown-native-enum! AVAudioUnitEQFilterType bound
-!unknown-native-enum! AVAudioUnitReverbPreset bound
-!unknown-native-enum! AVContentKeyRequestStatus bound
-!unknown-native-enum! AVDelegatingPlaybackCoordinatorRateChangeOptions bound
-!unknown-native-enum! AVDelegatingPlaybackCoordinatorSeekOptions bound
-!unknown-native-enum! AVError bound
-!unknown-native-enum! AVKeyValueStatus bound
-!unknown-native-enum! AVMovieWritingOptions bound
-!unknown-native-enum! AVMusicSequenceLoadOptions bound
-!unknown-native-enum! AVMusicTrackLoopCount bound
-!unknown-native-enum! AVPlayerActionAtItemEnd bound
-!unknown-native-enum! AVPlayerAudiovisualBackgroundPlaybackPolicy bound
-!unknown-native-enum! AVPlayerInterstitialEventRestrictions bound
-!unknown-native-enum! AVPlayerItemStatus bound
-!unknown-native-enum! AVPlayerLooperStatus bound
-!unknown-native-enum! AVPlayerStatus bound
-!unknown-native-enum! AVPlayerTimeControlStatus bound
-!unknown-native-enum! AVQueuedSampleBufferRenderingStatus bound
-!unknown-native-enum! AVSampleBufferRequestDirection bound
-!unknown-native-enum! AVSampleBufferRequestMode bound
-!unknown-native-enum! AVSpeechBoundary bound
-!unknown-native-enum! AVSpeechSynthesisVoiceGender bound
-!unknown-native-enum! AVSpeechSynthesisVoiceQuality bound
-!unknown-native-enum! AVVariantPreferences bound
-!unknown-protocol! AVAssetResourceLoaderDelegate bound
-!unknown-protocol! AVAsynchronousKeyValueLoading bound
-!unknown-protocol! AVAudioMixing bound
-!unknown-protocol! AVAudioPlayerDelegate bound
-!unknown-protocol! AVAudioRecorderDelegate bound
-!unknown-protocol! AVAudioStereoMixing bound
-!unknown-protocol! AVContentKeyRecipient bound
-!unknown-protocol! AVContentKeySessionDelegate bound
-!unknown-protocol! AVFragmentMinding bound
-!unknown-protocol! AVPlayerItemLegibleOutputPushDelegate bound
-!unknown-protocol! AVPlayerItemMetadataCollectorPushDelegate bound
-!unknown-protocol! AVPlayerItemMetadataOutputPushDelegate bound
-!unknown-protocol! AVPlayerItemOutputPullDelegate bound
-!unknown-protocol! AVPlayerItemOutputPushDelegate bound
-!unknown-protocol! AVQueuedSampleBufferRendering bound
-!unknown-protocol! AVSpeechSynthesizerDelegate bound
 !unknown-protocol! AVVideoCompositionValidationHandling bound
-!unknown-type! AVAsset bound
-!unknown-type! AVAssetTrack bound
-!unknown-type! AVAssetTrackGroup bound
-!unknown-type! AVAssetTrackSegment bound
-!unknown-type! AVAssetVariant bound
-!unknown-type! AVAssetVariantAudioAttributes bound
-!unknown-type! AVAssetVariantAudioRenditionSpecificAttributes bound
-!unknown-type! AVAssetVariantVideoAttributes bound
-!unknown-type! AVAudioBuffer bound
-!unknown-type! AVAudioChannelLayout bound
-!unknown-type! AVAudioCompressedBuffer bound
-!unknown-type! AVAudioConnectionPoint bound
-!unknown-type! AVAudioConverter bound
-!unknown-type! AVAudioEngine bound
-!unknown-type! AVAudioEnvironmentDistanceAttenuationParameters bound
-!unknown-type! AVAudioEnvironmentReverbParameters bound
-!unknown-type! AVAudioFile bound
-!unknown-type! AVAudioFormat bound
-!unknown-type! AVAudioInputNode bound
-!unknown-type! AVAudioIONode bound
-!unknown-type! AVAudioMix bound
-!unknown-type! AVAudioMixerNode bound
-!unknown-type! AVAudioMixingDestination bound
-!unknown-type! AVAudioMixInputParameters bound
-!unknown-type! AVAudioNode bound
-!unknown-type! AVAudioOutputNode bound
-!unknown-type! AVAudioPCMBuffer bound
-!unknown-type! AVAudioPlayer bound
-!unknown-type! AVAudioPlayerNode bound
-!unknown-type! AVAudioRecorder bound
-!unknown-type! AVAudioSession bound
-!unknown-type! AVAudioSessionChannelDescription bound
-!unknown-type! AVAudioSessionDataSourceDescription bound
-!unknown-type! AVAudioSessionPortDescription bound
-!unknown-type! AVAudioSessionRouteDescription bound
-!unknown-type! AVAudioSinkNode bound
-!unknown-type! AVAudioSourceNode bound
-!unknown-type! AVAudioTime bound
-!unknown-type! AVAudioUnitEQFilterParameters bound
-!unknown-type! AVComposition bound
-!unknown-type! AVCompositionTrack bound
-!unknown-type! AVCompositionTrackFormatDescriptionReplacement bound
-!unknown-type! AVCompositionTrackSegment bound
-!unknown-type! AVContentKey bound
-!unknown-type! AVContentKeyRequest bound
-!unknown-type! AVContentKeyResponse bound
-!unknown-type! AVContentKeySession bound
-!unknown-type! AVContentKeySpecifier bound
-!unknown-type! AVDateRangeMetadataGroup bound
-!unknown-type! AVFragmentedAsset bound
-!unknown-type! AVFragmentedAssetMinder bound
-!unknown-type! AVFragmentedAssetTrack bound
-!unknown-type! AVFragmentedMovie bound
-!unknown-type! AVFragmentedMovieMinder bound
-!unknown-type! AVFragmentedMovieTrack bound
-!unknown-type! AVMediaDataStorage bound
-!unknown-type! AVMediaSelection bound
-!unknown-type! AVMediaSelectionGroup bound
-!unknown-type! AVMediaSelectionOption bound
-!unknown-type! AVMetadataGroup bound
-!unknown-type! AVMetadataItem bound
-!unknown-type! AVMetadataItemFilter bound
-!unknown-type! AVMetadataItemValueRequest bound
-!unknown-type! AVMovie bound
-!unknown-type! AVMovieTrack bound
-!unknown-type! AVMutableAudioMix bound
-!unknown-type! AVMutableAudioMixInputParameters bound
-!unknown-type! AVMutableComposition bound
-!unknown-type! AVMutableCompositionTrack bound
-!unknown-type! AVMutableDateRangeMetadataGroup bound
-!unknown-type! AVMutableMediaSelection bound
-!unknown-type! AVMutableMetadataItem bound
-!unknown-type! AVMutableMovie bound
-!unknown-type! AVMutableMovieTrack bound
-!unknown-type! AVMutableTimedMetadataGroup bound
-!unknown-type! AVPersistableContentKeyRequest bound
-!unknown-type! AVPlayer bound
-!unknown-type! AVPlayerInterstitialEvent bound
-!unknown-type! AVPlayerInterstitialEventController bound
-!unknown-type! AVPlayerInterstitialEventMonitor bound
-!unknown-type! AVPlayerItem bound
-!unknown-type! AVPlayerItemAccessLog bound
-!unknown-type! AVPlayerItemAccessLogEvent bound
-!unknown-type! AVPlayerItemErrorLog bound
-!unknown-type! AVPlayerItemErrorLogEvent bound
-!unknown-type! AVPlayerItemMediaDataCollector bound
-!unknown-type! AVPlayerItemMetadataCollector bound
-!unknown-type! AVPlayerItemMetadataOutput bound
-!unknown-type! AVPlayerItemOutput bound
-!unknown-type! AVPlayerItemTrack bound
-!unknown-type! AVPlayerMediaSelectionCriteria bound
-!unknown-type! AVPortraitEffectsMatte bound
-!unknown-type! AVQueuePlayer bound
-!unknown-type! AVSampleBufferAudioRenderer bound
-!unknown-type! AVSampleBufferRenderSynchronizer bound
-!unknown-type! AVSemanticSegmentationMatte bound
-!unknown-type! AVSpeechSynthesisVoice bound
-!unknown-type! AVSpeechSynthesizer bound
-!unknown-type! AVSpeechUtterance bound
-!unknown-type! AVTimedMetadataGroup bound
-!unknown-type! AVURLAsset bound
+!deprecated-attribute-missing! AVAsset::chapterMetadataGroupsBestMatchingPreferredLanguages: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::mediaSelectionGroupForMediaCharacteristic: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::metadataForFormat: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::tracksWithMediaCharacteristic: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::tracksWithMediaType: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::trackWithTrackID: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAsset::unusedTrackID missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAssetTrack::associatedTracksOfType: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAssetTrack::metadataForFormat: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAssetTrack::samplePresentationTimeForTrackTime: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAssetTrack::segmentForTrackTime: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAudioSession::recordPermission missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVAudioSession::requestRecordPermission: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVMutableComposition::insertTimeRange:ofAsset:atTime:error: missing a [Deprecated] attribute
+!deprecated-attribute-missing! AVURLAsset::compatibleTrackForCompositionTrack: missing a [Deprecated] attribute
+!extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
+!missing-enum! AVAudioApplicationRecordPermission not bound
+!missing-enum! AVAudioSessionIOType not bound
+!missing-enum! AVMIDIControlChangeMessageType not bound
+!missing-enum! AVMIDIMetaEventType not bound
+!missing-enum! AVPlayerInterstitialEventAssetListResponseStatus not bound
+!missing-enum! AVSpeechSynthesisMarkerMark not bound
+!missing-enum! AVSpeechSynthesisPersonalVoiceAuthorizationStatus not bound
+!missing-enum! AVSpeechSynthesisVoiceTraits not bound
+!missing-enum-value! AVAudioSessionInterruptionReason native value AVAudioSessionInterruptionReasonRouteDisconnected = 4 not bound
+!missing-enum-value! AVError native value AVErrorAirPlayReceiverTemporarilyUnavailable = -11882 not bound
+!missing-enum-value! AVError native value AVErrorEncodeFailed = -11883 not bound
+!missing-enum-value! AVError native value AVErrorFailedToLoadSampleData = -11881 not bound
+!missing-enum-value! AVError native value AVErrorInvalidSampleCursor = -11880 not bound
+!missing-enum-value! AVError native value AVErrorSandboxExtensionDenied = -11884 not bound
+!missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
+!missing-field! AVAssetPlaybackConfigurationOptionStereoMultiviewVideo not bound
+!missing-field! AVAssetPlaybackConfigurationOptionStereoVideo not bound
+!missing-field! AVAudioApplicationInputMuteStateChangeNotification not bound
+!missing-field! AVAudioApplicationMuteStateKey not bound
+!missing-field! AVAudioSessionPortContinuityMicrophone not bound
+!missing-field! AVFileTypeAHAP not bound
+!missing-field! AVMediaCharacteristicEnhancesSpeechIntelligibility not bound
+!missing-field! AVMediaCharacteristicTactileMinimal not bound
+!missing-field! AVMediaTypeHaptic not bound
+!missing-field! AVPlayerInterstitialEventJoinCue not bound
+!missing-field! AVPlayerInterstitialEventLeaveCue not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification not bound
+!missing-field! AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey not bound
+!missing-field! AVPlayerInterstitialEventNoCue not bound
+!missing-field! AVSpeechSynthesisAvailableVoicesDidChangeNotification not bound
+!missing-field! AVURLAssetHTTPUserAgentKey not bound
+!missing-field! AVURLAssetOverrideMIMETypeKey not bound
+!missing-field! AVURLAssetPrimarySessionIdentifierKey not bound
+!missing-field! AVVideoAppleProRAWBitDepthKey not bound
+!missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+!missing-protocol! AVAssetDownloadDelegate not bound
+!missing-protocol! AVAudio3DMixing not bound
+!missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVPlayerInterstitialEvent should conform to NSCopying
+!missing-protocol-conformance! AVURLAsset should conform to AVContentKeyRecipient (defined in 'AVURLAssetContentKeyEligibility' category)
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
+!missing-protocol-member! AVSpeechSynthesizerDelegate::speechSynthesizer:willSpeakMarker:utterance: not found
+!missing-selector! +AVAssetDownloadConfiguration::downloadConfigurationWithAsset:title: not bound
+!missing-selector! +AVAssetDownloadURLSession::sessionWithConfiguration:assetDownloadDelegate:delegateQueue: not bound
+!missing-selector! +AVAssetPlaybackAssistant::assetPlaybackAssistantWithAsset: not bound
+!missing-selector! +AVAssetVariantQualifier::assetVariantQualifierWithPredicate: not bound
+!missing-selector! +AVAssetVariantQualifier::assetVariantQualifierWithVariant: not bound
+!missing-selector! +AVAssetVariantQualifier::predicateForBinauralAudio:mediaSelectionOption: not bound
+!missing-selector! +AVAssetVariantQualifier::predicateForChannelCount:mediaSelectionOption:operatorType: not bound
+!missing-selector! +AVAssetVariantQualifier::predicateForDownmixAudio:mediaSelectionOption: not bound
+!missing-selector! +AVAssetVariantQualifier::predicateForImmersiveAudio:mediaSelectionOption: not bound
+!missing-selector! +AVAssetVariantQualifier::predicateForPresentationHeight:operatorType: not bound
+!missing-selector! +AVAssetVariantQualifier::predicateForPresentationWidth:operatorType: not bound
+!missing-selector! +AVAudioApplication::requestRecordPermissionWithCompletionHandler: not bound
+!missing-selector! +AVAudioApplication::sharedInstance not bound
+!missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
+!missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
+!missing-selector! +AVMetadataItem::metadataItemsFromArray:filteredByMetadataItemFilter: not bound
+!missing-selector! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:date: not bound
+!missing-selector! +AVPlayerInterstitialEvent::interstitialEventWithPrimaryItem:time: not bound
+!missing-selector! +AVSampleBufferGenerator::notifyOfDataReadyForSampleBuffer:completionHandler: not bound
+!missing-selector! +AVSpeechSynthesisProviderVoice::updateSpeechVoices not bound
+!missing-selector! +AVSpeechSynthesizer::personalVoiceAuthorizationStatus not bound
+!missing-selector! +AVSpeechSynthesizer::requestPersonalVoiceAuthorizationWithCompletionHandler: not bound
+!missing-selector! +AVSpeechUtterance::speechUtteranceWithSSMLRepresentation: not bound
+!missing-selector! AVAssetCache::isPlayableOffline not bound
+!missing-selector! AVAssetCache::mediaSelectionOptionsInMediaSelectionGroup: not bound
+!missing-selector! AVAssetDownloadConfiguration::artworkData not bound
+!missing-selector! AVAssetDownloadConfiguration::auxiliaryContentConfigurations not bound
+!missing-selector! AVAssetDownloadConfiguration::optimizesAuxiliaryContentConfigurations not bound
+!missing-selector! AVAssetDownloadConfiguration::primaryContentConfiguration not bound
+!missing-selector! AVAssetDownloadConfiguration::setArtworkData: not bound
+!missing-selector! AVAssetDownloadConfiguration::setAuxiliaryContentConfigurations: not bound
+!missing-selector! AVAssetDownloadConfiguration::setOptimizesAuxiliaryContentConfigurations: not bound
+!missing-selector! AVAssetDownloadContentConfiguration::mediaSelections not bound
+!missing-selector! AVAssetDownloadContentConfiguration::setMediaSelections: not bound
+!missing-selector! AVAssetDownloadContentConfiguration::setVariantQualifiers: not bound
+!missing-selector! AVAssetDownloadContentConfiguration::variantQualifiers not bound
+!missing-selector! AVAssetDownloadTask::URLAsset not bound
+!missing-selector! AVAssetDownloadURLSession::assetDownloadTaskWithConfiguration: not bound
+!missing-selector! AVAssetPlaybackAssistant::loadPlaybackConfigurationOptionsWithCompletionHandler: not bound
+!missing-selector! AVAssetTrack::canProvideSampleCursors not bound
+!missing-selector! AVAssetTrack::makeSampleCursorAtFirstSampleInDecodeOrder not bound
+!missing-selector! AVAssetTrack::makeSampleCursorAtLastSampleInDecodeOrder not bound
+!missing-selector! AVAssetTrack::makeSampleCursorWithPresentationTimeStamp: not bound
+!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isBinaural not bound
+!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isDownmix not bound
+!missing-selector! AVAssetVariantAudioRenditionSpecificAttributes::isImmersive not bound
+!missing-selector! AVAssetVariantVideoAttributes::videoLayoutAttributes not bound
+!missing-selector! AVAssetVariantVideoLayoutAttributes::stereoViewComponents not bound
+!missing-selector! AVAudioApplication::isInputMuted not bound
+!missing-selector! AVAudioApplication::recordPermission not bound
+!missing-selector! AVAudioApplication::setInputMuted:error: not bound
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound
+!missing-selector! AVAudioSession::prefersInterruptionOnRouteDisconnect not bound
+!missing-selector! AVAudioSession::setPrefersInterruptionOnRouteDisconnect:error: not bound
+!missing-selector! AVComposition::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
+!missing-selector! AVComposition::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
+!missing-selector! AVComposition::mediaSelectionGroupForMediaCharacteristic: not bound
+!missing-selector! AVComposition::metadataForFormat: not bound
+!missing-selector! AVComposition::unusedTrackID not bound
+!missing-selector! AVCompositionTrack::associatedTracksOfType: not bound
+!missing-selector! AVCompositionTrack::hasMediaCharacteristic: not bound
+!missing-selector! AVCompositionTrack::metadataForFormat: not bound
+!missing-selector! AVCompositionTrack::samplePresentationTimeForTrackTime: not bound
+!missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
+!missing-selector! AVMutableComposition::insertTimeRange:ofAsset:atTime:completionHandler: not bound
+!missing-selector! AVMutableComposition::tracks not bound
+!missing-selector! AVMutableMovie::chapterMetadataGroupsBestMatchingPreferredLanguages: not bound
+!missing-selector! AVMutableMovie::chapterMetadataGroupsWithTitleLocale:containingItemsWithCommonKeys: not bound
+!missing-selector! AVMutableMovie::mediaSelectionGroupForMediaCharacteristic: not bound
+!missing-selector! AVMutableMovie::metadataForFormat: not bound
+!missing-selector! AVMutableMovie::unusedTrackID not bound
+!missing-selector! AVMutableMovieTrack::associatedTracksOfType: not bound
+!missing-selector! AVMutableMovieTrack::hasMediaCharacteristic: not bound
+!missing-selector! AVMutableMovieTrack::metadataForFormat: not bound
+!missing-selector! AVMutableMovieTrack::samplePresentationTimeForTrackTime: not bound
+!missing-selector! AVMutableMovieTrack::segmentForTrackTime: not bound
+!missing-selector! AVPlayer::defaultRate not bound
+!missing-selector! AVPlayer::setDefaultRate: not bound
+!missing-selector! AVPlayerInterstitialEvent::alignsResumptionWithPrimarySegmentBoundary not bound
+!missing-selector! AVPlayerInterstitialEvent::alignsStartWithPrimarySegmentBoundary not bound
+!missing-selector! AVPlayerInterstitialEvent::assetListResponse not bound
+!missing-selector! AVPlayerInterstitialEvent::cue not bound
+!missing-selector! AVPlayerInterstitialEvent::setAlignsResumptionWithPrimarySegmentBoundary: not bound
+!missing-selector! AVPlayerInterstitialEvent::setAlignsStartWithPrimarySegmentBoundary: not bound
+!missing-selector! AVPlayerInterstitialEvent::setCue: not bound
+!missing-selector! AVPlayerInterstitialEvent::setDate: not bound
+!missing-selector! AVPlayerInterstitialEvent::setIdentifier: not bound
+!missing-selector! AVPlayerInterstitialEvent::setPlayoutLimit: not bound
+!missing-selector! AVPlayerInterstitialEvent::setPrimaryItem: not bound
+!missing-selector! AVPlayerInterstitialEvent::setRestrictions: not bound
+!missing-selector! AVPlayerInterstitialEvent::setResumptionOffset: not bound
+!missing-selector! AVPlayerInterstitialEvent::setTemplateItems: not bound
+!missing-selector! AVPlayerInterstitialEvent::setTime: not bound
+!missing-selector! AVPlayerInterstitialEvent::setUserDefinedAttributes: not bound
+!missing-selector! AVPlayerInterstitialEvent::setWillPlayOnce: not bound
+!missing-selector! AVPlayerInterstitialEvent::willPlayOnce not bound
+!missing-selector! AVPlayerItem::automaticallyHandlesInterstitialEvents not bound
+!missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
+!missing-selector! AVPlayerItem::templatePlayerItem not bound
+!missing-selector! AVSampleBufferGenerator::createSampleBufferForRequest:addingToBatch:error: not bound
+!missing-selector! AVSampleBufferGenerator::createSampleBufferForRequest:error: not bound
+!missing-selector! AVSampleBufferGenerator::initWithAsset:timebase: not bound
+!missing-selector! AVSampleBufferGenerator::makeBatch not bound
+!missing-selector! AVSampleBufferGeneratorBatch::cancel not bound
+!missing-selector! AVSampleBufferGeneratorBatch::makeDataReadyWithCompletionHandler: not bound
+!missing-selector! AVSampleBufferRequest::direction not bound
+!missing-selector! AVSampleBufferRequest::initWithStartCursor: not bound
+!missing-selector! AVSampleBufferRequest::limitCursor not bound
+!missing-selector! AVSampleBufferRequest::maxSampleCount not bound
+!missing-selector! AVSampleBufferRequest::mode not bound
+!missing-selector! AVSampleBufferRequest::overrideTime not bound
+!missing-selector! AVSampleBufferRequest::preferredMinSampleCount not bound
+!missing-selector! AVSampleBufferRequest::setDirection: not bound
+!missing-selector! AVSampleBufferRequest::setLimitCursor: not bound
+!missing-selector! AVSampleBufferRequest::setMaxSampleCount: not bound
+!missing-selector! AVSampleBufferRequest::setMode: not bound
+!missing-selector! AVSampleBufferRequest::setOverrideTime: not bound
+!missing-selector! AVSampleBufferRequest::setPreferredMinSampleCount: not bound
+!missing-selector! AVSampleBufferRequest::startCursor not bound
+!missing-selector! AVSampleCursor::comparePositionInDecodeOrderWithPositionOfCursor: not bound
+!missing-selector! AVSampleCursor::copyCurrentSampleFormatDescription not bound
+!missing-selector! AVSampleCursor::currentChunkInfo not bound
+!missing-selector! AVSampleCursor::currentChunkStorageRange not bound
+!missing-selector! AVSampleCursor::currentChunkStorageURL not bound
+!missing-selector! AVSampleCursor::currentSampleAudioDependencyInfo not bound
+!missing-selector! AVSampleCursor::currentSampleDependencyAttachments not bound
+!missing-selector! AVSampleCursor::currentSampleDependencyInfo not bound
+!missing-selector! AVSampleCursor::currentSampleDuration not bound
+!missing-selector! AVSampleCursor::currentSampleIndexInChunk not bound
+!missing-selector! AVSampleCursor::currentSampleStorageRange not bound
+!missing-selector! AVSampleCursor::currentSampleSyncInfo not bound
+!missing-selector! AVSampleCursor::decodeTimeStamp not bound
+!missing-selector! AVSampleCursor::presentationTimeStamp not bound
+!missing-selector! AVSampleCursor::samplesRequiredForDecoderRefresh not bound
+!missing-selector! AVSampleCursor::samplesWithEarlierDecodeTimeStampsMayHaveLaterPresentationTimeStampsThanCursor: not bound
+!missing-selector! AVSampleCursor::samplesWithLaterDecodeTimeStampsMayHaveEarlierPresentationTimeStampsThanCursor: not bound
+!missing-selector! AVSampleCursor::stepByDecodeTime:wasPinned: not bound
+!missing-selector! AVSampleCursor::stepByPresentationTime:wasPinned: not bound
+!missing-selector! AVSampleCursor::stepInDecodeOrderByCount: not bound
+!missing-selector! AVSampleCursor::stepInPresentationOrderByCount: not bound
+!missing-selector! AVSpeechSynthesisMarker::bookmarkName not bound
+!missing-selector! AVSpeechSynthesisMarker::byteSampleOffset not bound
+!missing-selector! AVSpeechSynthesisMarker::initWithBookmarkName:atByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::initWithMarkerType:forTextRange:atByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::initWithParagraphRange:atByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::initWithPhonemeString:atByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::initWithSentenceRange:atByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::initWithWordRange:atByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::mark not bound
+!missing-selector! AVSpeechSynthesisMarker::phoneme not bound
+!missing-selector! AVSpeechSynthesisMarker::setBookmarkName: not bound
+!missing-selector! AVSpeechSynthesisMarker::setByteSampleOffset: not bound
+!missing-selector! AVSpeechSynthesisMarker::setMark: not bound
+!missing-selector! AVSpeechSynthesisMarker::setPhoneme: not bound
+!missing-selector! AVSpeechSynthesisMarker::setTextRange: not bound
+!missing-selector! AVSpeechSynthesisMarker::textRange not bound
+!missing-selector! AVSpeechSynthesisProviderRequest::initWithSSMLRepresentation:voice: not bound
+!missing-selector! AVSpeechSynthesisProviderRequest::ssmlRepresentation not bound
+!missing-selector! AVSpeechSynthesisProviderRequest::voice not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::age not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::gender not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::identifier not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::initWithName:identifier:primaryLanguages:supportedLanguages: not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::name not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::primaryLanguages not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::setAge: not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::setGender: not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::setVersion: not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::setVoiceSize: not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::supportedLanguages not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::version not bound
+!missing-selector! AVSpeechSynthesisProviderVoice::voiceSize not bound
+!missing-selector! AVSpeechSynthesisVoice::voiceTraits not bound
+!missing-selector! AVSpeechSynthesizer::writeUtterance:toBufferCallback:toMarkerCallback: not bound
+!missing-selector! AVSpeechUtterance::initWithSSMLRepresentation: not bound
+!missing-selector! AVURLAsset::httpSessionIdentifier not bound
+!missing-selector! AVURLAsset::mayRequireContentKeysForMediaDataProcessing not bound
+!missing-selector! NSCoder::decodeCMTimeForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeRangeForKey: not bound
+!missing-selector! NSCoder::encodeCMTime:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
+!missing-type! AVAssetCache not bound
+!missing-type! AVAssetDownloadConfiguration not bound
+!missing-type! AVAssetDownloadContentConfiguration not bound
+!missing-type! AVAssetDownloadTask not bound
+!missing-type! AVAssetDownloadURLSession not bound
+!missing-type! AVAssetPlaybackAssistant not bound
+!missing-type! AVAssetVariantQualifier not bound
+!missing-type! AVAssetVariantVideoLayoutAttributes not bound
+!missing-type! AVAudioApplication not bound
+!missing-type! AVSampleBufferGenerator not bound
+!missing-type! AVSampleBufferGeneratorBatch not bound
+!missing-type! AVSampleBufferRequest not bound
+!missing-type! AVSampleCursor not bound
+!missing-type! AVSpeechSynthesisMarker not bound
+!missing-type! AVSpeechSynthesisProviderRequest not bound
+!missing-type! AVSpeechSynthesisProviderVoice not bound
