@@ -3630,6 +3630,7 @@ namespace UIKit {
 		CGRect GetFrameForTextAttachment (INSTextLocation location);
 
 		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForVerticalOffset:requiresExactMatch:")]
 		[return: NullAllowed]
 		NSTextLineFragment GetTextLineFragment (nfloat verticalOffset, bool requiresExactMatch);
 
