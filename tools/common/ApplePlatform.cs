@@ -39,7 +39,7 @@ namespace Xamarin.Utils {
 		public static string ToFramework (this ApplePlatform @this, string? netVersion = null)
 		{
 			if (netVersion is null)
-				netVersion = "net7.0";
+				netVersion = "net8.0";
 
 			switch (@this) {
 			case ApplePlatform.iOS:

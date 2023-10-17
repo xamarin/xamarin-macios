@@ -29,9 +29,6 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
-#else
-	[iOS (8, 0)]
-	[TV (10, 2)]
 #endif
 	public class VTSession : NativeObject {
 #if !NET

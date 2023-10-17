@@ -1,14 +1,7 @@
 # fixed in XAMCORE_3_0 - API break
 
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound
 
 # Xcode1 4 beta 4
-!deprecated-attribute-wrong! GKBasePlayer::playerID has 16.0 not 13.0 on [Deprecated] attribute

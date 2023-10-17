@@ -1,0 +1,378 @@
+!missing-enum! CMTimeFlags not bound
+!missing-field! kCMFormatDescriptionChromaLocation_Bottom not bound
+!missing-field! kCMFormatDescriptionChromaLocation_BottomLeft not bound
+!missing-field! kCMFormatDescriptionChromaLocation_Center not bound
+!missing-field! kCMFormatDescriptionChromaLocation_DV420 not bound
+!missing-field! kCMFormatDescriptionChromaLocation_Left not bound
+!missing-field! kCMFormatDescriptionChromaLocation_Top not bound
+!missing-field! kCMFormatDescriptionChromaLocation_TopLeft not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_DCI_P3 not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_EBU_3213 not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_ITU_R_2020 not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_ITU_R_709_2 not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_P22 not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_P3_D65 not bound
+!missing-field! kCMFormatDescriptionColorPrimaries_SMPTE_C not bound
+!missing-field! kCMFormatDescriptionConformsToMPEG2VideoProfile not bound
+!missing-field! kCMFormatDescriptionExtension_AlternativeTransferCharacteristics not bound
+!missing-field! kCMFormatDescriptionExtension_BytesPerRow not bound
+!missing-field! kCMFormatDescriptionExtension_ChromaLocationBottomField not bound
+!missing-field! kCMFormatDescriptionExtension_ChromaLocationTopField not bound
+!missing-field! kCMFormatDescriptionExtension_CleanAperture not bound
+!missing-field! kCMFormatDescriptionExtension_ColorPrimaries not bound
+!missing-field! kCMFormatDescriptionExtension_ContentLightLevelInfo not bound
+!missing-field! kCMFormatDescriptionExtension_Depth not bound
+!missing-field! kCMFormatDescriptionExtension_FieldCount not bound
+!missing-field! kCMFormatDescriptionExtension_FieldDetail not bound
+!missing-field! kCMFormatDescriptionExtension_FormatName not bound
+!missing-field! kCMFormatDescriptionExtension_FullRangeVideo not bound
+!missing-field! kCMFormatDescriptionExtension_GammaLevel not bound
+!missing-field! kCMFormatDescriptionExtension_ICCProfile not bound
+!missing-field! kCMFormatDescriptionExtension_MasteringDisplayColorVolume not bound
+!missing-field! kCMFormatDescriptionExtension_OriginalCompressionSettings not bound
+!missing-field! kCMFormatDescriptionExtension_PixelAspectRatio not bound
+!missing-field! kCMFormatDescriptionExtension_RevisionLevel not bound
+!missing-field! kCMFormatDescriptionExtension_SampleDescriptionExtensionAtoms not bound
+!missing-field! kCMFormatDescriptionExtension_SpatialQuality not bound
+!missing-field! kCMFormatDescriptionExtension_TemporalQuality not bound
+!missing-field! kCMFormatDescriptionExtension_TransferFunction not bound
+!missing-field! kCMFormatDescriptionExtension_Vendor not bound
+!missing-field! kCMFormatDescriptionExtension_VerbatimImageDescription not bound
+!missing-field! kCMFormatDescriptionExtension_VerbatimISOSampleEntry not bound
+!missing-field! kCMFormatDescriptionExtension_VerbatimSampleDescription not bound
+!missing-field! kCMFormatDescriptionExtension_Version not bound
+!missing-field! kCMFormatDescriptionExtension_YCbCrMatrix not bound
+!missing-field! kCMFormatDescriptionExtension_AlphaChannelMode not bound
+!missing-field! kCMFormatDescriptionExtension_AuxiliaryTypeInfo not bound
+!missing-field! kCMFormatDescriptionExtension_ContainsAlphaChannel not bound
+!missing-field! kCMFormatDescriptionExtension_ProtectedContentOriginalFormat not bound
+!missing-field! kCMFormatDescriptionExtension_AmbientViewingEnvironment not bound
+!missing-field! kCMFormatDescriptionExtension_BitsPerComponent not bound
+!missing-field! kCMFormatDescriptionExtension_HorizontalFieldOfView not bound
+!missing-field! kCMFormatDescriptionExtensionKey_MetadataKeyTable not bound
+!missing-field! kCMFormatDescriptionFieldDetail_SpatialFirstLineEarly not bound
+!missing-field! kCMFormatDescriptionFieldDetail_SpatialFirstLineLate not bound
+!missing-field! kCMFormatDescriptionFieldDetail_TemporalBottomFirst not bound
+!missing-field! kCMFormatDescriptionFieldDetail_TemporalTopFirst not bound
+!missing-field! kCMFormatDescriptionAlphaChannelMode_PremultipliedAlpha not bound
+!missing-field! kCMFormatDescriptionAlphaChannelMode_StraightAlpha not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureHeight not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureHeightRational not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureHorizontalOffset not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureHorizontalOffsetRational not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureVerticalOffset not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureVerticalOffsetRational not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureWidth not bound
+!missing-field! kCMFormatDescriptionKey_CleanApertureWidthRational not bound
+!missing-field! kCMFormatDescriptionKey_PixelAspectRatioHorizontalSpacing not bound
+!missing-field! kCMFormatDescriptionKey_PixelAspectRatioVerticalSpacing not bound
+!missing-field! kCMFormatDescriptionTransferFunction_ITU_R_2020 not bound
+!missing-field! kCMFormatDescriptionTransferFunction_ITU_R_2100_HLG not bound
+!missing-field! kCMFormatDescriptionTransferFunction_ITU_R_709_2 not bound
+!missing-field! kCMFormatDescriptionTransferFunction_SMPTE_240M_1995 not bound
+!missing-field! kCMFormatDescriptionTransferFunction_SMPTE_ST_2084_PQ not bound
+!missing-field! kCMFormatDescriptionTransferFunction_SMPTE_ST_428_1 not bound
+!missing-field! kCMFormatDescriptionTransferFunction_UseGamma not bound
+!missing-field! kCMFormatDescriptionTransferFunction_Linear not bound
+!missing-field! kCMFormatDescriptionTransferFunction_sRGB not bound
+!missing-field! kCMFormatDescriptionVendor_Apple not bound
+!missing-field! kCMFormatDescriptionYCbCrMatrix_ITU_R_2020 not bound
+!missing-field! kCMFormatDescriptionYCbCrMatrix_ITU_R_601_4 not bound
+!missing-field! kCMFormatDescriptionYCbCrMatrix_ITU_R_709_2 not bound
+!missing-field! kCMFormatDescriptionYCbCrMatrix_SMPTE_240M_1995 not bound
+!missing-field! kCMImageDescriptionFlavor_3GPFamily not bound
+!missing-field! kCMImageDescriptionFlavor_ISOFamily not bound
+!missing-field! kCMImageDescriptionFlavor_QuickTimeMovie not bound
+!missing-field! kCMImageDescriptionFlavor_ISOFamilyWithAppleExtensions not bound
+!missing-field! kCMMetadataBaseDataType_AffineTransformF64 not bound
+!missing-field! kCMMetadataBaseDataType_BMP not bound
+!missing-field! kCMMetadataBaseDataType_DimensionsF32 not bound
+!missing-field! kCMMetadataBaseDataType_Float32 not bound
+!missing-field! kCMMetadataBaseDataType_Float64 not bound
+!missing-field! kCMMetadataBaseDataType_GIF not bound
+!missing-field! kCMMetadataBaseDataType_JPEG not bound
+!missing-field! kCMMetadataBaseDataType_JSON not bound
+!missing-field! kCMMetadataBaseDataType_PNG not bound
+!missing-field! kCMMetadataBaseDataType_PointF32 not bound
+!missing-field! kCMMetadataBaseDataType_PolygonF32 not bound
+!missing-field! kCMMetadataBaseDataType_PolylineF32 not bound
+!missing-field! kCMMetadataBaseDataType_RawData not bound
+!missing-field! kCMMetadataBaseDataType_RectF32 not bound
+!missing-field! kCMMetadataBaseDataType_SInt16 not bound
+!missing-field! kCMMetadataBaseDataType_SInt32 not bound
+!missing-field! kCMMetadataBaseDataType_SInt64 not bound
+!missing-field! kCMMetadataBaseDataType_SInt8 not bound
+!missing-field! kCMMetadataBaseDataType_UInt16 not bound
+!missing-field! kCMMetadataBaseDataType_UInt32 not bound
+!missing-field! kCMMetadataBaseDataType_UInt64 not bound
+!missing-field! kCMMetadataBaseDataType_UInt8 not bound
+!missing-field! kCMMetadataBaseDataType_UTF16 not bound
+!missing-field! kCMMetadataBaseDataType_UTF8 not bound
+!missing-field! kCMMetadataBaseDataType_PerspectiveTransformF64 not bound
+!missing-field! kCMMetadataDataType_QuickTimeMetadataDirection not bound
+!missing-field! kCMMetadataDataType_QuickTimeMetadataLocation_ISO6709 not bound
+!missing-field! kCMMetadataFormatDescription_StructuralDependencyKey_DependencyIsInvalidFlag not bound
+!missing-field! kCMMetadataFormatDescriptionKey_ConformingDataTypes not bound
+!missing-field! kCMMetadataFormatDescriptionKey_DataType not bound
+!missing-field! kCMMetadataFormatDescriptionKey_DataTypeNamespace not bound
+!missing-field! kCMMetadataFormatDescriptionKey_LanguageTag not bound
+!missing-field! kCMMetadataFormatDescriptionKey_LocalID not bound
+!missing-field! kCMMetadataFormatDescriptionKey_Namespace not bound
+!missing-field! kCMMetadataFormatDescriptionKey_SetupData not bound
+!missing-field! kCMMetadataFormatDescriptionKey_StructuralDependency not bound
+!missing-field! kCMMetadataFormatDescriptionKey_Value not bound
+!missing-field! kCMMetadataFormatDescriptionMetadataSpecificationKey_DataType not bound
+!missing-field! kCMMetadataFormatDescriptionMetadataSpecificationKey_ExtendedLanguageTag not bound
+!missing-field! kCMMetadataFormatDescriptionMetadataSpecificationKey_Identifier not bound
+!missing-field! kCMMetadataFormatDescriptionMetadataSpecificationKey_SetupData not bound
+!missing-field! kCMMetadataFormatDescriptionMetadataSpecificationKey_StructuralDependency not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataDirection_Facing not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataLocation_ISO6709 not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataPreferredAffineTransform not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataVideoOrientation not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataLivePhotoStillImageTransform not bound
+!missing-field! kCMMetadataIdentifier_QuickTimeMetadataLivePhotoStillImageTransformReferenceDimensions not bound
+!missing-field! kCMMetadataKeySpace_HLSDateRange not bound
+!missing-field! kCMMetadataKeySpace_Icy not bound
+!missing-field! kCMMetadataKeySpace_ID3 not bound
+!missing-field! kCMMetadataKeySpace_ISOUserData not bound
+!missing-field! kCMMetadataKeySpace_iTunes not bound
+!missing-field! kCMMetadataKeySpace_QuickTimeMetadata not bound
+!missing-field! kCMMetadataKeySpace_QuickTimeUserData not bound
+!missing-field! kCMSampleBufferConduitNotification_InhibitOutputUntil not bound
+!missing-field! kCMSampleBufferConduitNotification_ResetOutput not bound
+!missing-field! kCMSampleBufferConduitNotification_UpcomingOutputPTSRangeChanged not bound
+!missing-field! kCMSampleBufferConduitNotificationParameter_MaxUpcomingOutputPTS not bound
+!missing-field! kCMSampleBufferConduitNotificationParameter_MinUpcomingOutputPTS not bound
+!missing-field! kCMSampleBufferConduitNotificationParameter_ResumeTag not bound
+!missing-field! kCMSampleBufferConduitNotificationParameter_UpcomingOutputPTSRangeMayOverlapQueuedOutputPTSRange not bound
+!missing-field! kCMSampleBufferConsumerNotification_BufferConsumed not bound
+!missing-field! kCMSampleBufferDroppedFrameReason_Discontinuity not bound
+!missing-field! kCMSampleBufferDroppedFrameReason_FrameWasLate not bound
+!missing-field! kCMSampleBufferDroppedFrameReason_OutOfBuffers not bound
+!missing-field! kCMSampleBufferDroppedFrameReasonInfo_CameraModeSwitch not bound
+!missing-field! kCMSampleBufferNotification_DataBecameReady not bound
+!missing-field! kCMSampleBufferNotification_DataFailed not bound
+!missing-field! kCMSampleBufferNotificationParameter_OSStatus not bound
+!missing-field! kCMSoundDescriptionFlavor_3GPFamily not bound
+!missing-field! kCMSoundDescriptionFlavor_ISOFamily not bound
+!missing-field! kCMSoundDescriptionFlavor_QuickTimeMovie not bound
+!missing-field! kCMSoundDescriptionFlavor_QuickTimeMovieV2 not bound
+!missing-field! kCMTextFormatDescriptionColor_Alpha not bound
+!missing-field! kCMTextFormatDescriptionColor_Blue not bound
+!missing-field! kCMTextFormatDescriptionColor_Green not bound
+!missing-field! kCMTextFormatDescriptionColor_Red not bound
+!missing-field! kCMTextFormatDescriptionExtension_BackgroundColor not bound
+!missing-field! kCMTextFormatDescriptionExtension_DefaultFontName not bound
+!missing-field! kCMTextFormatDescriptionExtension_DefaultStyle not bound
+!missing-field! kCMTextFormatDescriptionExtension_DefaultTextBox not bound
+!missing-field! kCMTextFormatDescriptionExtension_DisplayFlags not bound
+!missing-field! kCMTextFormatDescriptionExtension_FontTable not bound
+!missing-field! kCMTextFormatDescriptionExtension_HorizontalJustification not bound
+!missing-field! kCMTextFormatDescriptionExtension_TextJustification not bound
+!missing-field! kCMTextFormatDescriptionExtension_VerticalJustification not bound
+!missing-field! kCMTextFormatDescriptionRect_Bottom not bound
+!missing-field! kCMTextFormatDescriptionRect_Left not bound
+!missing-field! kCMTextFormatDescriptionRect_Right not bound
+!missing-field! kCMTextFormatDescriptionRect_Top not bound
+!missing-field! kCMTextFormatDescriptionStyle_Ascent not bound
+!missing-field! kCMTextFormatDescriptionStyle_EndChar not bound
+!missing-field! kCMTextFormatDescriptionStyle_Font not bound
+!missing-field! kCMTextFormatDescriptionStyle_FontFace not bound
+!missing-field! kCMTextFormatDescriptionStyle_FontSize not bound
+!missing-field! kCMTextFormatDescriptionStyle_ForegroundColor not bound
+!missing-field! kCMTextFormatDescriptionStyle_Height not bound
+!missing-field! kCMTextFormatDescriptionStyle_StartChar not bound
+!missing-field! kCMTextMarkupAlignmentType_End not bound
+!missing-field! kCMTextMarkupAlignmentType_Left not bound
+!missing-field! kCMTextMarkupAlignmentType_Middle not bound
+!missing-field! kCMTextMarkupAlignmentType_Right not bound
+!missing-field! kCMTextMarkupAlignmentType_Start not bound
+!missing-field! kCMTextMarkupAttribute_Alignment not bound
+!missing-field! kCMTextMarkupAttribute_CharacterBackgroundColorARGB not bound
+!missing-field! kCMTextMarkupAttribute_CharacterEdgeStyle not bound
+!missing-field! kCMTextMarkupAttribute_GenericFontFamilyName not bound
+!missing-field! kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection not bound
+!missing-field! kCMTextMarkupAttribute_TextPositionPercentageRelativeToWritingDirection not bound
+!missing-field! kCMTextMarkupAttribute_VerticalLayout not bound
+!missing-field! kCMTextMarkupAttribute_WritingDirectionSizePercentage not bound
+!missing-field! kCMTextMarkupAttribute_FontFamilyNameList not bound
+!missing-field! kCMTextMarkupCharacterEdgeStyle_Depressed not bound
+!missing-field! kCMTextMarkupCharacterEdgeStyle_DropShadow not bound
+!missing-field! kCMTextMarkupCharacterEdgeStyle_None not bound
+!missing-field! kCMTextMarkupCharacterEdgeStyle_Raised not bound
+!missing-field! kCMTextMarkupCharacterEdgeStyle_Uniform not bound
+!missing-field! kCMTextMarkupGenericFontName_Casual not bound
+!missing-field! kCMTextMarkupGenericFontName_Cursive not bound
+!missing-field! kCMTextMarkupGenericFontName_Default not bound
+!missing-field! kCMTextMarkupGenericFontName_Fantasy not bound
+!missing-field! kCMTextMarkupGenericFontName_Monospace not bound
+!missing-field! kCMTextMarkupGenericFontName_MonospaceSansSerif not bound
+!missing-field! kCMTextMarkupGenericFontName_MonospaceSerif not bound
+!missing-field! kCMTextMarkupGenericFontName_ProportionalSansSerif not bound
+!missing-field! kCMTextMarkupGenericFontName_ProportionalSerif not bound
+!missing-field! kCMTextMarkupGenericFontName_SansSerif not bound
+!missing-field! kCMTextMarkupGenericFontName_Serif not bound
+!missing-field! kCMTextMarkupGenericFontName_SmallCapital not bound
+!missing-field! kCMTextVerticalLayout_LeftToRight not bound
+!missing-field! kCMTextVerticalLayout_RightToLeft not bound
+!missing-field! kCMTimebaseNotification_EffectiveRateChanged not bound
+!missing-field! kCMTimebaseNotification_TimeJumped not bound
+!missing-field! kCMTimebaseNotificationKey_EventTime not bound
+!missing-field! kCMTimeCodeFormatDescriptionExtension_SourceReferenceName not bound
+!missing-field! kCMTimeCodeFormatDescriptionKey_LangCode not bound
+!missing-field! kCMTimeCodeFormatDescriptionKey_Value not bound
+!missing-field! kCMTimeEpochKey not bound
+!missing-field! kCMTimeFlagsKey not bound
+!missing-field! kCMTimeIndefinite not bound
+!missing-field! kCMTimeInvalid not bound
+!missing-field! kCMTimeMappingInvalid not bound
+!missing-field! kCMTimeMappingSourceKey not bound
+!missing-field! kCMTimeMappingTargetKey not bound
+!missing-field! kCMTimeNegativeInfinity not bound
+!missing-field! kCMTimePositiveInfinity not bound
+!missing-field! kCMTimeRangeDurationKey not bound
+!missing-field! kCMTimeRangeInvalid not bound
+!missing-field! kCMTimeRangeStartKey not bound
+!missing-field! kCMTimeRangeZero not bound
+!missing-field! kCMTimeScaleKey not bound
+!missing-field! kCMTimeValueKey not bound
+!missing-field! kCMTimeZero not bound
+!missing-field! kCMTimingInfoInvalid not bound
+!missing-pinvoke! CMAudioFormatDescriptionCopyAsBigEndianSoundDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMAudioFormatDescriptionCreate is not bound
+!missing-pinvoke! CMAudioFormatDescriptionCreateFromBigEndianSoundDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMAudioFormatDescriptionCreateFromBigEndianSoundDescriptionData is not bound
+!missing-pinvoke! CMAudioFormatDescriptionCreateSummary is not bound
+!missing-pinvoke! CMAudioFormatDescriptionEqual is not bound
+!missing-pinvoke! CMBlockBufferGetTypeID is not bound
+!missing-pinvoke! CMBufferQueueCallForEachBuffer is not bound
+!missing-pinvoke! CMBufferQueueGetCallbacksForSampleBuffersSortedByOutputPTS is not bound
+!missing-pinvoke! CMBufferQueueGetEndPresentationTimeStamp is not bound
+!missing-pinvoke! CMBufferQueueGetFirstDecodeTimeStamp is not bound
+!missing-pinvoke! CMBufferQueueGetFirstPresentationTimeStamp is not bound
+!missing-pinvoke! CMBufferQueueGetMaxPresentationTimeStamp is not bound
+!missing-pinvoke! CMBufferQueueGetMinDecodeTimeStamp is not bound
+!missing-pinvoke! CMBufferQueueGetMinPresentationTimeStamp is not bound
+!missing-pinvoke! CMBufferQueueGetTypeID is not bound
+!missing-pinvoke! CMBufferQueueInstallTrigger is not bound
+!missing-pinvoke! CMBufferQueueInstallTriggerHandler is not bound
+!missing-pinvoke! CMBufferQueueInstallTriggerWithIntegerThreshold is not bound
+!missing-pinvoke! CMBufferQueueInstallTriggerHandlerWithIntegerThreshold is not bound
+!missing-pinvoke! CMBufferQueueRemoveTrigger is not bound
+!missing-pinvoke! CMBufferQueueResetWithCallback is not bound
+!missing-pinvoke! CMBufferQueueSetValidationCallback is not bound
+!missing-pinvoke! CMBufferQueueSetValidationHandler is not bound
+!missing-pinvoke! CMBufferQueueTestTrigger is not bound
+!missing-pinvoke! CMClockGetTypeID is not bound
+!missing-pinvoke! CMClosedCaptionFormatDescriptionCopyAsBigEndianClosedCaptionDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMClosedCaptionFormatDescriptionCreateFromBigEndianClosedCaptionDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMClosedCaptionFormatDescriptionCreateFromBigEndianClosedCaptionDescriptionData is not bound
+!missing-pinvoke! CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout is not bound
+!missing-pinvoke! CMFormatDescriptionEqual is not bound
+!missing-pinvoke! CMFormatDescriptionEqualIgnoringExtensionKeys is not bound
+!missing-pinvoke! CMMemoryPoolGetTypeID is not bound
+!missing-pinvoke! CMMetadataCreateIdentifierForKeyAndKeySpace is not bound
+!missing-pinvoke! CMMetadataCreateKeyFromIdentifier is not bound
+!missing-pinvoke! CMMetadataCreateKeyFromIdentifierAsCFData is not bound
+!missing-pinvoke! CMMetadataCreateKeySpaceFromIdentifier is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryDataTypeConformsToDataType is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryDataTypeIsBaseDataType is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryDataTypeIsRegistered is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryGetBaseDataTypeForConformingDataType is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryGetBaseDataTypes is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryGetConformingDataTypes is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryGetDataTypeDescription is not bound
+!missing-pinvoke! CMMetadataDataTypeRegistryRegisterDataType is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCopyAsBigEndianMetadataDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCreateByMergingMetadataFormatDescriptions is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCreateFromBigEndianMetadataDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCreateFromBigEndianMetadataDescriptionData is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCreateWithKeys is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCreateWithMetadataFormatDescriptionAndMetadataSpecifications is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionCreateWithMetadataSpecifications is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionGetIdentifiers is not bound
+!missing-pinvoke! CMMetadataFormatDescriptionGetKeyWithLocalID is not bound
+!missing-pinvoke! CMMuxedFormatDescriptionCreate is not bound
+!missing-pinvoke! CMSampleBufferCallBlockForEachSample is not bound
+!missing-pinvoke! CMSampleBufferCopySampleBufferForRange is not bound
+!missing-pinvoke! CMSampleBufferCreate is not bound
+!missing-pinvoke! CMSampleBufferCreateWithMakeDataReadyHandler is not bound
+!missing-pinvoke! CMSampleBufferCreateCopy is not bound
+!missing-pinvoke! CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer is not bound
+!missing-pinvoke! CMSampleBufferGetAudioStreamPacketDescriptions is not bound
+!missing-pinvoke! CMSampleBufferGetAudioStreamPacketDescriptionsPtr is not bound
+!missing-pinvoke! CMSampleBufferGetOutputSampleTimingInfoArray is not bound
+!missing-pinvoke! CMSampleBufferGetSampleSizeArray is not bound
+!missing-pinvoke! CMSampleBufferGetSampleTimingInfo is not bound
+!missing-pinvoke! CMSampleBufferHasDataFailed is not bound
+!missing-pinvoke! CMSampleBufferSetDataBufferFromAudioBufferList is not bound
+!missing-pinvoke! CMSampleBufferSetDataFailed is not bound
+!missing-pinvoke! CMSampleBufferSetInvalidateHandler is not bound
+!missing-pinvoke! CMSimpleQueueCreate is not bound
+!missing-pinvoke! CMSimpleQueueDequeue is not bound
+!missing-pinvoke! CMSimpleQueueEnqueue is not bound
+!missing-pinvoke! CMSimpleQueueGetCapacity is not bound
+!missing-pinvoke! CMSimpleQueueGetCount is not bound
+!missing-pinvoke! CMSimpleQueueGetHead is not bound
+!missing-pinvoke! CMSimpleQueueGetTypeID is not bound
+!missing-pinvoke! CMSimpleQueueReset is not bound
+!missing-pinvoke! CMSwapBigEndianClosedCaptionDescriptionToHost is not bound
+!missing-pinvoke! CMSwapBigEndianImageDescriptionToHost is not bound
+!missing-pinvoke! CMSwapBigEndianMetadataDescriptionToHost is not bound
+!missing-pinvoke! CMSwapBigEndianSoundDescriptionToHost is not bound
+!missing-pinvoke! CMSwapBigEndianTextDescriptionToHost is not bound
+!missing-pinvoke! CMSwapBigEndianTimeCodeDescriptionToHost is not bound
+!missing-pinvoke! CMSwapHostEndianClosedCaptionDescriptionToBig is not bound
+!missing-pinvoke! CMSwapHostEndianImageDescriptionToBig is not bound
+!missing-pinvoke! CMSwapHostEndianMetadataDescriptionToBig is not bound
+!missing-pinvoke! CMSwapHostEndianSoundDescriptionToBig is not bound
+!missing-pinvoke! CMSwapHostEndianTextDescriptionToBig is not bound
+!missing-pinvoke! CMSwapHostEndianTimeCodeDescriptionToBig is not bound
+!missing-pinvoke! CMTextFormatDescriptionCopyAsBigEndianTextDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMTextFormatDescriptionCreateFromBigEndianTextDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMTextFormatDescriptionCreateFromBigEndianTextDescriptionData is not bound
+!missing-pinvoke! CMTextFormatDescriptionGetDefaultStyle is not bound
+!missing-pinvoke! CMTextFormatDescriptionGetDefaultTextBox is not bound
+!missing-pinvoke! CMTextFormatDescriptionGetDisplayFlags is not bound
+!missing-pinvoke! CMTextFormatDescriptionGetFontName is not bound
+!missing-pinvoke! CMTextFormatDescriptionGetJustification is not bound
+!missing-pinvoke! CMTimebaseAddTimerDispatchSource is not bound
+!missing-pinvoke! CMTimebaseGetTypeID is not bound
+!missing-pinvoke! CMTimebaseRemoveTimerDispatchSource is not bound
+!missing-pinvoke! CMTimebaseSetTimerDispatchSourceNextFireTime is not bound
+!missing-pinvoke! CMTimebaseSetTimerDispatchSourceToFireImmediately is not bound
+!missing-pinvoke! CMTimeClampToRange is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionCopyAsBigEndianTimeCodeDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionCreate is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionCreateFromBigEndianTimeCodeDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionCreateFromBigEndianTimeCodeDescriptionData is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionGetFrameDuration is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionGetFrameQuanta is not bound
+!missing-pinvoke! CMTimeCodeFormatDescriptionGetTimeCodeFlags is not bound
+!missing-pinvoke! CMTimeMake is not bound
+!missing-pinvoke! CMTimeMakeWithEpoch is not bound
+!missing-pinvoke! CMTimeMapDurationFromRangeToRange is not bound
+!missing-pinvoke! CMTimeMappingShow is not bound
+!missing-pinvoke! CMTimeMapTimeFromRangeToRange is not bound
+!missing-pinvoke! CMTimeRangeContainsTime is not bound
+!missing-pinvoke! CMTimeRangeContainsTimeRange is not bound
+!missing-pinvoke! CMTimeRangeCopyAsDictionary is not bound
+!missing-pinvoke! CMTimeRangeCopyDescription is not bound
+!missing-pinvoke! CMTimeRangeEqual is not bound
+!missing-pinvoke! CMTimeRangeFromTimeToTime is not bound
+!missing-pinvoke! CMTimeRangeGetEnd is not bound
+!missing-pinvoke! CMTimeRangeGetIntersection is not bound
+!missing-pinvoke! CMTimeRangeGetUnion is not bound
+!missing-pinvoke! CMTimeRangeMake is not bound
+!missing-pinvoke! CMTimeRangeMakeFromDictionary is not bound
+!missing-pinvoke! CMTimeRangeShow is not bound
+!missing-pinvoke! CMTimeShow is not bound
+!missing-pinvoke! CMVideoFormatDescriptionCopyAsBigEndianImageDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionBlockBuffer is not bound
+!missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionData is not bound
+!missing-field! kCMSampleAttachmentKey_CryptorSubsampleAuxiliaryData not bound
+!missing-pinvoke! CMBufferQueueCreateWithHandlers is not bound
+!missing-pinvoke! CMAudioSampleBufferCreateWithPacketDescriptionsAndMakeDataReadyHandler is not bound
+!missing-pinvoke! CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler is not bound
+!missing-pinvoke! CMTimebaseCopySource is not bound

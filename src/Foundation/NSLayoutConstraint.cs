@@ -123,8 +123,6 @@ namespace UIKit
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
 		{
@@ -136,8 +134,6 @@ namespace UIKit
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
 		{

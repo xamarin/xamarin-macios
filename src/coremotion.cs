@@ -17,7 +17,6 @@ using System;
 namespace CoreMotion {
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	interface CMAccelerometerData : NSSecureCoding {
 		[Export ("acceleration")]
@@ -25,7 +24,6 @@ namespace CoreMotion {
 	}
 
 	[NoMac]
-	[iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMAccelerometerData))]
 	[DisableDefaultCtor]
@@ -37,7 +35,6 @@ namespace CoreMotion {
 		NSDate StartDate { get; }
 	}
 
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -164,7 +161,6 @@ namespace CoreMotion {
 		bool ShowsDeviceMovementDisplay { get; set; }
 	}
 
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	//<quote>You access CMAttitude objects through the attitude property of each CMDeviceMotion objects passed to an application.</quote>
@@ -189,7 +185,6 @@ namespace CoreMotion {
 		void MultiplyByInverseOfAttitude (CMAttitude attitude);
 	}
 
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -209,7 +204,6 @@ namespace CoreMotion {
 		[Export ("magneticField")]
 		CMCalibratedMagneticField MagneticField { get; }
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("heading")]
 		double Heading { get; }
@@ -222,7 +216,6 @@ namespace CoreMotion {
 		CMDeviceMotionSensorLocation SensorLocation { get; }
 	}
 
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -231,7 +224,6 @@ namespace CoreMotion {
 		CMRotationRate RotationRate { get; }
 	}
 
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
@@ -273,8 +265,6 @@ namespace CoreMotion {
 		void StopStepCountingUpdates ();
 	}
 
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMPedometerData : NSSecureCoding, NSCopying {
@@ -300,25 +290,20 @@ namespace CoreMotion {
 		[Export ("floorsDescended")]
 		NSNumber FloorsDescended { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("currentPace")]
 		NSNumber CurrentPace { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("currentCadence")]
 		NSNumber CurrentCadence { get; }
 
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("averageActivePace")]
 		NSNumber AverageActivePace { get; }
 	}
 
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMPedometer {
@@ -346,39 +331,30 @@ namespace CoreMotion {
 		[Export ("stopPedometerUpdates")]
 		void StopPedometerUpdates ();
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("isPaceAvailable")]
 		bool IsPaceAvailable { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("isCadenceAvailable")]
 		bool IsCadenceAvailable { get; }
 
-		[Watch (3, 0)]
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("isPedometerEventTrackingAvailable")]
 		bool IsPedometerEventTrackingAvailable { get; }
 
-		[Watch (3, 0)]
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("startPedometerEventUpdatesWithHandler:")]
 		void StartPedometerEventUpdates (Action<CMPedometerEvent, NSError> handler);
 
-		[Watch (3, 0)]
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("stopPedometerEventUpdates")]
 		void StopPedometerEventUpdates ();
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatus")]
@@ -412,7 +388,6 @@ namespace CoreMotion {
 		[Export ("stopActivityUpdates")]
 		void StopActivityUpdates ();
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatus")]
@@ -445,14 +420,12 @@ namespace CoreMotion {
 		[Export ("automotive")]
 		bool Automotive { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("cycling")]
 		bool Cycling { get; }
 	}
 
 	[NoMac]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CMLogItem))]
 	[DisableDefaultCtor] // this does not look to be meant to be user created (and crash when description is called)
@@ -465,7 +438,6 @@ namespace CoreMotion {
 	}
 
 	[NoMac]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMAltimeter {
@@ -480,7 +452,6 @@ namespace CoreMotion {
 		[Export ("stopRelativeAltitudeUpdates")]
 		void StopRelativeAltitudeUpdates ();
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatus")]
@@ -503,8 +474,6 @@ namespace CoreMotion {
 		void StopAbsoluteAltitudeUpdates ();
 	}
 
-	[Mac (10, 15)]
-	[Watch (4, 0), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CMAuthorizationStatus : long {
@@ -514,8 +483,16 @@ namespace CoreMotion {
 		Authorized,
 	}
 
+	[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4), TV (15, 4)]
+	[Native]
+	public enum CMOdometerOriginDevice : long {
+		Unknown = 0,
+		Local,
+		Remote,
+	}
+
+
 	[NoMac]
-	[iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMSensorDataList /* NSFastEnumeration */
@@ -523,12 +500,10 @@ namespace CoreMotion {
 	}
 
 	[NoMac]
-	[iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CMSensorRecorder {
 		[Static]
-		[iOS (9, 3)] // Apple changed the selector in 9.3 and removed the old one
 		[MacCatalyst (13, 1)]
 		[Export ("isAccelerometerRecordingAvailable")]
 		bool IsAccelerometerRecordingAvailable { get; }
@@ -540,28 +515,22 @@ namespace CoreMotion {
 		[Export ("isAuthorizedForRecording")]
 		bool IsAuthorizedForRecording { get; }
 
-		[iOS (9, 3)] // Apple changed the selector in 9.3 and removed the old one
 		[MacCatalyst (13, 1)]
 		[Export ("accelerometerDataFromDate:toDate:")]
 		[return: NullAllowed]
 		CMSensorDataList GetAccelerometerData (NSDate fromDate, NSDate toDate);
 
-		[iOS (9, 3)] // Apple changed the selector in 9.3 and removed the old one
 		[MacCatalyst (13, 1)]
 		[Export ("recordAccelerometerForDuration:")]
 		void RecordAccelerometer (double duration);
 
-		[Watch (4, 0), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("authorizationStatus")]
 		CMAuthorizationStatus AuthorizationStatus { get; }
 	}
 
-	[Mac (10, 15)]
-	[Watch (3, 0)]
 	[NoTV]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CMPedometerEventType : long {
@@ -569,10 +538,7 @@ namespace CoreMotion {
 		Resume
 	}
 
-	[Mac (10, 15)]
-	[Watch (3, 0)]
 	[NoTV]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // instances exposed from delegate
@@ -674,9 +640,12 @@ namespace CoreMotion {
 
 		[NullAllowed, Export ("monitorKinesiasExpirationDate")]
 		NSDate MonitorKinesiasExpirationDate { get; }
+
+		[Static]
+		[NullAllowed, Export ("version")]
+		string Version { get; }
 	}
 
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("CMErrorDomain")]
 	// untyped enum -> CMError.h
@@ -731,6 +700,15 @@ namespace CoreMotion {
 		HeadphoneRight,
 	}
 
+	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum CMHighFrequencyHeartRateDataConfidence : long {
+		Low = 0,
+		Medium,
+		High,
+		Highest,
+	}
+
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
@@ -740,7 +718,7 @@ namespace CoreMotion {
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
-	[NoMac]
+	[Mac (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface CMHeadphoneMotionManager {
 
@@ -779,7 +757,7 @@ namespace CoreMotion {
 	[iOS (14, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (14, 0)]
-	[NoMac]
+	[Mac (13, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -923,7 +901,7 @@ namespace CoreMotion {
 		NSDate StartDate { get; }
 	}
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[Native]
 	public enum CMWaterSubmersionState : long {
 		Unknown = 0,
@@ -931,7 +909,7 @@ namespace CoreMotion {
 		Submerged,
 	}
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[Mac (13, 0), iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[Native]
 	public enum CMWaterSubmersionDepthState : long {
 		Unknown = 0,
@@ -943,7 +921,7 @@ namespace CoreMotion {
 		SensorDepthError = 600,
 	}
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterSubmersionEvent : NSSecureCoding, NSCopying {
 		[Export ("date")]
@@ -953,7 +931,7 @@ namespace CoreMotion {
 		CMWaterSubmersionState State { get; }
 	}
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterSubmersionMeasurement : NSSecureCoding, NSCopying {
 		[Export ("date")]
@@ -972,7 +950,7 @@ namespace CoreMotion {
 		CMWaterSubmersionDepthState SubmersionState { get; }
 	}
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterTemperature : NSSecureCoding, NSCopying {
 		[Export ("date")]
@@ -987,7 +965,7 @@ namespace CoreMotion {
 
 	interface ICMWaterSubmersionManagerDelegate { }
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 #if NET
 	[Protocol, Model]
 #else
@@ -1012,7 +990,7 @@ namespace CoreMotion {
 		void ErrorOccurred (CMWaterSubmersionManager manager, NSError error);
 	}
 
-	[NoMac, NoiOS, NoMacCatalyst, Watch (9, 0), NoTV]
+	[NoMac, iOS (16, 0), NoMacCatalyst, Watch (9, 0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CMWaterSubmersionManager {
 		[Wrap ("WeakDelegate")]
@@ -1029,5 +1007,125 @@ namespace CoreMotion {
 		[Static]
 		[Export ("authorizationStatus")]
 		CMAuthorizationStatus AuthorizationStatus { get; }
+
+		[NullAllowed, Export ("maximumDepth")]
+		NSMeasurement<NSUnitLength> MaximumDepth { get; }
+	}
+
+	[Watch (10, 0), NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CMBatchedSensorManager {
+		[Static]
+		[Export ("authorizationStatus")]
+		CMAuthorizationStatus AuthorizationStatus { get; }
+
+		[Static]
+		[Export ("accelerometerSupported")]
+		bool AccelerometerSupported { [Bind ("isAccelerometerSupported")] get; }
+
+		[Export ("accelerometerActive")]
+		bool AccelerometerActive { [Bind ("isAccelerometerActive")] get; }
+
+		[Export ("accelerometerDataFrequency")]
+		nint AccelerometerDataFrequency { get; }
+
+		[NullAllowed, Export ("accelerometerBatch")]
+		CMAccelerometerData [] AccelerometerBatch { get; }
+
+		[Export ("startAccelerometerUpdates")]
+		void StartAccelerometerUpdates ();
+
+		[Export ("startAccelerometerUpdatesWithHandler:")]
+		void StartAccelerometerUpdates (Action<CMAccelerometerData [], NSError> handler);
+
+		[Export ("stopAccelerometerUpdates")]
+		void StopAccelerometerUpdates ();
+
+		[Static]
+		[Export ("deviceMotionSupported")]
+		bool DeviceMotionSupported { [Bind ("isDeviceMotionSupported")] get; }
+
+		[Export ("deviceMotionDataFrequency")]
+		nint DeviceMotionDataFrequency { get; }
+
+		[Export ("deviceMotionActive")]
+		bool DeviceMotionActive { [Bind ("isDeviceMotionActive")] get; }
+
+		[NullAllowed, Export ("deviceMotionBatch")]
+		CMDeviceMotion [] DeviceMotionBatch { get; }
+
+		[Export ("startDeviceMotionUpdates")]
+		void StartDeviceMotionUpdates ();
+
+		[Export ("startDeviceMotionUpdatesWithHandler:")]
+		void StartDeviceMotionUpdates (Action<CMDeviceMotion [], NSError> handler);
+
+		[Export ("stopDeviceMotionUpdates")]
+		void StopDeviceMotionUpdates ();
+	}
+
+	[Mac (14, 0), MacCatalyst (13, 1)]
+	[BaseType (typeof (NSObject))]
+	interface CMOdometerData : NSSecureCoding, NSCopying {
+		[Export ("startDate", ArgumentSemantic.Strong)]
+		NSDate StartDate { get; }
+
+		[Export ("endDate", ArgumentSemantic.Strong)]
+		NSDate EndDate { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("deltaDistance")]
+		double DeltaDistance { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("deltaDistanceAccuracy")]
+		double DeltaDistanceAccuracy { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("speed")]
+		double Speed { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("speedAccuracy")]
+		double SpeedAccuracy { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("gpsDate", ArgumentSemantic.Strong)]
+		NSDate GpsDate { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("deltaAltitude")]
+		double DeltaAltitude { get; }
+
+		[Watch (10, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("verticalAccuracy")]
+		double VerticalAccuracy { get; }
+
+		[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4)]
+		[Export ("originDevice", ArgumentSemantic.Assign)]
+		CMOdometerOriginDevice OriginDevice { get; }
+
+		[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4)]
+		[NullAllowed]
+		[Export ("slope", ArgumentSemantic.Strong)]
+		NSNumber Slope { get; }
+
+		[Watch (8, 4), iOS (15, 4), MacCatalyst (15, 4)]
+		[NullAllowed]
+		[Export ("maxAbsSlope", ArgumentSemantic.Strong)]
+		NSNumber MaxAbsSlope { get; }
+	}
+
+	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CMLogItem))]
+	interface CMHighFrequencyHeartRateData {
+		[Export ("heartRate")]
+		double HeartRate { get; }
+
+		[Export ("confidence")]
+		CMHighFrequencyHeartRateDataConfidence Confidence { get; }
+
+		[NullAllowed, Export ("date")]
+		NSDate Date { get; }
 	}
 }

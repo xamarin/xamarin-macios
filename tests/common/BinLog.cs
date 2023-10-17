@@ -112,6 +112,12 @@ namespace Xamarin.Tests {
 					continue;
 
 				yield return record.Args;
+
+				if (record.Args is BuildFinishedEventArgs) {
+					// Skip over anything that follows
+					// https://github.com/xamarin/xamarin-macios/issues/18568
+					break;
+				}
 			}
 		}
 
@@ -169,6 +175,20 @@ namespace Xamarin.Tests {
 					continue;
 				}
 
+				if (args is TargetFinishedEventArgs tfea) {
+					if (tfea.TargetOutputs is not null) {
+						yield return "TargetOutputs:";
+						foreach (var targetOutput in tfea.TargetOutputs) {
+							var tos = targetOutput?.ToString ()?.Split (eols, System.StringSplitOptions.RemoveEmptyEntries);
+							if (tos is not null) {
+								foreach (var to in tos)
+									yield return $"\t{to}";
+							}
+						}
+						continue;
+					}
+				}
+
 				foreach (var line in args.Message.Split (eols, System.StringSplitOptions.RemoveEmptyEntries))
 					yield return line;
 			}
@@ -191,15 +211,7 @@ namespace Xamarin.Tests {
 
 		public static IEnumerable<BuildLogEvent> GetBuildMessages (string path)
 		{
-			var reader = new BinLogReader ();
-			var eols = new char [] { '\n', '\r' };
-			foreach (var record in reader.ReadRecords (path)) {
-				if (record is null)
-					continue;
-				var args = record.Args;
-				if (args is null)
-					continue;
-
+			foreach (var args in ReadBuildEvents (path)) {
 				if (args is BuildErrorEventArgs buildError) {
 					var ea = buildError;
 					yield return new BuildLogEvent {
@@ -250,11 +262,7 @@ namespace Xamarin.Tests {
 		{
 			value = null;
 
-			var reader = new BinLogReader ();
-			foreach (var record in reader.ReadRecords (binlog)) {
-				var args = record?.Args;
-				if (args is null)
-					continue;
+			foreach (var args in ReadBuildEvents (binlog)) {
 				if (args is PropertyInitialValueSetEventArgs pivsea) {
 					if (string.Equals (property, pivsea.PropertyName, StringComparison.OrdinalIgnoreCase))
 						value = pivsea.PropertyValue;

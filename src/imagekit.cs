@@ -1148,7 +1148,6 @@ namespace ImageKit {
 		[Field ("IK_MailBundleIdentifier")]
 		NSString MailBundleIdentifier { get; }
 
-		[Mac (10, 10, 3)]
 		[Field ("IK_PhotosBundleIdentifier")]
 		NSString PhotosBundleIdentifier { get; }
 	}

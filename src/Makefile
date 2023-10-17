@@ -86,6 +86,10 @@ DOTNET_REFERENCES = \
 DOTNET_OR_GREATER_DEFINES:=$(foreach version,$(shell seq 6 $(firstword $(subst ., ,$(subst net,,$(DOTNET_TFM))))),/define:NET$(version)_0_OR_GREATER)
 DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
 
+ifeq ($(XCODE_IS_STABLE),true)
+DOTNET_FLAGS+=/define:XCODE_IS_STABLE
+endif
+
 DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
 DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
@@ -1322,7 +1326,7 @@ $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 	$(Q) chmod +x $@
 
 GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/legacy/bin/Debug/generate-frameworks-constants.exe
-DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/dotnet/bin/Debug/net7.0/generate-frameworks-constants.dll
+DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/dotnet/bin/Debug/$(DOTNET_TFM)/generate-frameworks-constants.dll
 
 $(GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
 	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/legacy/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)

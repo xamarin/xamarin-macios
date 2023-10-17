@@ -115,6 +115,16 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (14, 1))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.CyclingCadence:
+				case HKQuantityTypeIdentifier.CyclingFunctionalThresholdPower:
+				case HKQuantityTypeIdentifier.CyclingPower:
+				case HKQuantityTypeIdentifier.CyclingSpeed:
+				case HKQuantityTypeIdentifier.EnvironmentalSoundReduction:
+				case HKQuantityTypeIdentifier.PhysicalEffort:
+				case HKQuantityTypeIdentifier.TimeInDaylight:
+					if (!TestRuntime.CheckXcodeVersion (15, 0))
+						continue;
+					break;
 				}
 
 				try {

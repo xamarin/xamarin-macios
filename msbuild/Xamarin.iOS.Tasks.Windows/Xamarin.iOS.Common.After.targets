@@ -390,6 +390,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				RootDescriptorFiles="@(TrimmerRootDescriptor)"
 				OutputDirectory="$(IntermediateLinkDir)"
 				DumpDependencies="$(_TrimmerDumpDependencies)"
+				DependenciesFileFormat="$(_TrimmerDependenciesFileFormat)"
 				ExtraArgs="$(_RemoteExtraTrimmerArgs)"
 				ToolExe="$(_DotNetHostFileName)"
 				ToolPath="$(_DotNetHostDirectory)"
@@ -410,6 +411,16 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	<!-- https://github.com/dotnet/sdk/blob/bc0563507d23a20e71087b03cfa50a5b42b03f06/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.targets#L869-L872 -->
 	<Target Name="Run">
 		<Exec SessionId="$(BuildSessionId)" Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)"/>
+	</Target>
+
+	<Target Name="_VerifyNoAbsoluteOutputPath" Condition="'$(AllowAbsoluteOutputPath)' != 'true'" AfterTargets="_SayHello">
+		<!--
+			Remote builds won't work if either OutputPath or IntermediateOutputPath are is an absolute path, so just show an error in that case that tells people what the actual problem is (instead of a random and unintelligible build error).
+				Ref: https://github.com/xamarin/xamarin-macios/issues/18510
+				Ref: https://dev.azure.com/devdiv/DevDiv/_workitems/edit/1847166
+		-->
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(OutputPath)'))" Text="An absolute OutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(IntermediateOutputPath)'))" Text="An absolute IntermediateOutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
 	</Target>
 
 	<PropertyGroup>

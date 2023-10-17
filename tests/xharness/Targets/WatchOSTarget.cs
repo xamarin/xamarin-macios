@@ -20,11 +20,11 @@ namespace Xharness.Targets {
 		public string WatchOSProjectPath { get { return ProjectPath; } private set { ProjectPath = value; } }
 
 		public override string SimulatorArchitectures {
-			get { return "i386, x86_64"; }
+			get { return "x86_64"; }
 		}
 
 		public override string DeviceArchitectures {
-			get { return "ARMv7k, ARM64_32"; }
+			get { return "ARM64_32"; }
 		}
 
 		public override string DotNetSdk => "Microsoft.watchOS.Sdk";
@@ -86,21 +86,6 @@ namespace Xharness.Targets {
 			var csproj = inputProject;
 			var suffix = Suffix + "-extension";
 
-			// Remove unused configurations
-			csproj.DeleteConfiguration ("iPhone", "Release64");
-			csproj.DeleteConfiguration ("iPhone", "Debug64");
-
-			csproj.FixArchitectures ("i386", "ARMv7k", "iPhone", "Release32");
-			csproj.FixArchitectures ("i386", "ARMv7k", "iPhone", "Debug32");
-
-			// add Release64_32 and set the correct architecture
-			csproj.CloneConfiguration ("iPhone", "Release", "Release64_32");
-			csproj.FixArchitectures ("i386", "ARM64_32", "iPhone", "Release64_32");
-
-			// add Debug64_32 and set the correct architecture
-			csproj.CloneConfiguration ("iPhone", "Debug", "Debug64_32");
-			csproj.FixArchitectures ("i386", "ARM64_32", "iPhone", "Debug64_32");
-
 			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhoneSimulator", "Debug");
 			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhoneSimulator", "Release");
 			csproj.FixArchitectures (SimulatorArchitectures, DeviceArchitectures, "iPhone", "Debug");
@@ -128,7 +113,7 @@ namespace Xharness.Targets {
 
 			// Not linking a watch extensions requires passing -Os to the native compiler.
 			// https://github.com/mono/mono/issues/9867
-			var configurations = new string [] { "Debug", "Debug32", "Debug64_32", "Release", "Release32", "Release64_32" };
+			var configurations = new string [] { "Debug", "Release" };
 			foreach (var c in configurations) {
 				var flags = "-fembed-bitcode-marker";
 				if (csproj.GetMtouchLink ("iPhone", c) == "None")
@@ -242,7 +227,7 @@ namespace Xharness.Targets {
 		{
 			if (MonoNativeInfo is null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.watchOS);
 		}
 
 		public override string Suffix {

@@ -1664,11 +1664,10 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public string? NameConfigurationDictionary {

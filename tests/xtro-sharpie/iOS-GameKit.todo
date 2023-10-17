@@ -1,0 +1,19 @@
+!deprecated-attribute-missing! GKAchievement::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKNotificationBanner missing a [Deprecated] attribute
+!deprecated-attribute-wrong! GKBasePlayer::playerID has 16.0 not 13.0 on [Deprecated] attribute
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
+!missing-field! GKSessionErrorDomain not bound
+!missing-selector! GKAchievement::challengeComposeControllerWithMessage:players:completion: not bound
+!missing-selector! GKAchievementDescription::rarityPercent not bound
+!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
+!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound

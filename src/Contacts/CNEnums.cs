@@ -16,7 +16,6 @@ using Foundation;
 namespace Contacts {
 
 	// NSInteger -> CNContact.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactType : long {
@@ -25,7 +24,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContact.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactSortOrder : long {
@@ -36,7 +34,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactFormatterStyle : long {
@@ -45,7 +42,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactDisplayNameOrder : long {
@@ -55,7 +51,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactStore.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNEntityType : long {
@@ -63,7 +58,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactStore.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNAuthorizationStatus : long {
@@ -74,7 +68,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContainer.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContainerType : long {
@@ -85,7 +78,6 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNError.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("CNErrorDomain")]
@@ -96,6 +88,7 @@ namespace Contacts {
 		NoAccessibleWritableContainers = 101,
 		UnauthorizedKeys = 102,
 		FeatureDisabledByUser = 103,
+		FeatureNotAvailable = 104,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,
@@ -120,15 +113,12 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h
-	[iOS (9, 0), Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNPostalAddressFormatterStyle : long {
 		MailingAddress,
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CNContactOptions : long {

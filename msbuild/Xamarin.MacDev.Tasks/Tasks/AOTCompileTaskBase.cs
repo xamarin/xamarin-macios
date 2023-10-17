@@ -167,23 +167,26 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			// Figure out which assemblies need to be aot'ed, and which are up-to-date.
-			var assembliesToAOT = Assemblies.Where (asm => !IsUpToDate (asm)).ToArray ();
-			if (assembliesToAOT.Length == 0) {
+			var assembliesToAOT = Assemblies.Where (asm => !IsUpToDate (asm)).ToList ();
+			if (assembliesToAOT.Count == 0) {
 				Log.LogMessage (MessageImportance.Low, $"All the AOT-compiled code is up-to-date.");
 				return !Log.HasLoggedErrors;
 			}
 
+			// If any assembly changed, then we must re-generate the dedup assembly.
+			var dedupAssembly = Assemblies.SingleOrDefault (asm => {
+				Boolean.TryParse (asm.GetMetadata ("IsDedupAssembly"), out var isDedupAssembly);
+				return isDedupAssembly;
+			});
+			if (dedupAssembly is not null && !assembliesToAOT.Contains (dedupAssembly))
+				assembliesToAOT.Add (dedupAssembly);
+
 			Directory.CreateDirectory (OutputDirectory);
 
 			var aotAssemblyFiles = new List<ITaskItem> ();
-
-			var environment = new Dictionary<string, string?> {
-				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
-			};
-
 			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
 			var listOfArguments = new List<(IList<string> Arguments, string Input)> ();
-			for (var i = 0; i < assembliesToAOT.Length; i++) {
+			for (var i = 0; i < assembliesToAOT.Count; i++) {
 				var asm = assembliesToAOT [i];
 				var input = asm.GetMetadata ("Input");
 				var arch = asm.GetMetadata ("Arch");
@@ -191,6 +194,7 @@ namespace Xamarin.MacDev.Tasks {
 				var processArguments = asm.GetMetadata ("ProcessArguments");
 				var aotData = asm.GetMetadata ("AOTData");
 				var aotAssembly = asm.GetMetadata ("AOTAssembly");
+				var isDedupAssembly = object.ReferenceEquals (asm, dedupAssembly);
 
 				var aotAssemblyItem = new TaskItem (aotAssembly);
 				aotAssemblyItem.SetMetadata ("Arguments", "-Xlinker -rpath -Xlinker @executable_path/ -Qunused-arguments -x assembler -D DEBUG");
@@ -206,17 +210,21 @@ namespace Xamarin.MacDev.Tasks {
 					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ processArguments, ex2!.Message);
 					return false;
 				}
+				arguments.Add ($"--path={Path.GetFullPath (InputDirectory)}");
 				arguments.Add ($"{string.Join (",", parsedArguments)}");
-				if (globalAotArguments is not null)
+				if (globalAotArguments?.Any () == true)
 					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
 				arguments.AddRange (parsedProcessArguments);
-				arguments.Add (input);
+				if (isDedupAssembly)
+					arguments.AddRange (inputs);
+				else
+					arguments.Add (input);
 
 				listOfArguments.Add (new (arguments, input));
 			}
 
 			Parallel.ForEach (listOfArguments, (arg) => {
-				ExecuteAsync (AOTCompilerPath, arg.Arguments, environment: environment, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
+				ExecuteAsync (AOTCompilerPath, arg.Arguments, sdkDevPath: SdkDevPath, showErrorIfFailure: false /* we show our own error below */)
 					.ContinueWith ((v) => {
 						if (v.Result.ExitCode != 0)
 							Log.LogError (MSBStrings.E7118 /* Failed to AOT compile {0}, the AOT compiler exited with code {1} */, Path.GetFileName (arg.Input), v.Result.ExitCode);

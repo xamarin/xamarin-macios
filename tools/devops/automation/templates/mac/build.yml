@@ -147,10 +147,12 @@ steps:
 
 - bash: |
     set -ex
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z
     7z x $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}mac-test-package/mac-test-package.7z -o$(Build.SourcesDirectory)/artifacts/ -bb1
     # no prefix! we did expand to the exact name we are using
-    ls -Rla $(Build.SourcesDirectory)/artifacts/mac-test-package
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/mac-test-package
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/mac-test-package
   displayName: Expand tests.
 
 - bash: |

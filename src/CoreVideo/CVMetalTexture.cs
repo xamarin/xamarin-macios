@@ -32,7 +32,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (8, 0)]
 	[Mac (12, 0)]
 	[MacCatalyst (15, 0)]
 #endif

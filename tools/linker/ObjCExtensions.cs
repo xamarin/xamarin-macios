@@ -18,6 +18,7 @@ namespace Xamarin.Linker {
 #if !NET
 		public const string Chip = nameof (Chip);
 #endif
+		public const string Cinematic = nameof (Cinematic);
 		public const string CloudKit = nameof (CloudKit);
 		public const string Contacts = nameof (Contacts);
 		public const string ContactsUI = nameof (ContactsUI);
@@ -77,9 +78,11 @@ namespace Xamarin.Linker {
 		public const string SceneKit = nameof (SceneKit);
 		public const string ScriptingBridge = nameof (ScriptingBridge);
 		public const string Security = nameof (Security);
+		public const string SensitiveContentAnalysis = nameof (SensitiveContentAnalysis);
 		public const string Social = nameof (Social);
 		public const string SpriteKit = nameof (SpriteKit);
 		public const string StoreKit = nameof (StoreKit);
+		public const string Symbols = nameof (Symbols);
 		public const string ThreadNetwork = nameof (ThreadNetwork);
 		public const string UIKit = nameof (UIKit);
 		public const string VideoSubscriberAccount = nameof (VideoSubscriberAccount);

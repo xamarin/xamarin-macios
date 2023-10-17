@@ -10,9 +10,6 @@
     <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
     <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
-
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' != 'macOS'">true</UseMonoRuntime>
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,19 +18,6 @@
 	<None Include="@(ObjcBindingApiDefinition)" />
     <Compile Remove="@(ObjcBindingCoreSource)" />
     <None Include="@(ObjcBindingCoreSource)" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(_PlatformName)' == 'MacCatalyst'">
-    <EnableDefaultMacCatalystReleaseEntitlements Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == ''">True</EnableDefaultMacCatalystReleaseEntitlements>
-    <EnableDefaultMacCatalystDebugEntitlements Condition="'$(EnableDefaultMacCatalystDebugEntitlements)' == ''">True</EnableDefaultMacCatalystDebugEntitlements>
-  </PropertyGroup>
-
-  <ItemGroup Condition="'$(EnableDefaultMacCatalystDebugEntitlements)' == 'True' and '$(Configuration)' == 'Debug'">
-    <CustomEntitlements Include="com.apple.security.get-task-allow" Type="boolean" Value="true" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(EnableDefaultMacCatalystReleaseEntitlements)' == 'True' and '$(Configuration)' == 'Release'">
-    <CustomEntitlements Include="com.apple.security.app-sandbox" Type="boolean" Value="true" />
   </ItemGroup>
 
   <!-- Architecture -->

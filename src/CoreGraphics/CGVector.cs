@@ -89,8 +89,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static IntPtr NSStringFromCGVector (CGVector vector);
@@ -100,8 +98,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		public override string? ToString ()
 		{
@@ -113,8 +109,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static CGVector CGVectorFromString (IntPtr str);
@@ -124,8 +118,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		static public CGVector FromString (string s)
 		{

@@ -1,3 +1,2 @@
 ## only available on OSX (NA or unused in iOS)
 !missing-enum! EKAlarmType not bound
-!missing-enum-value! EKErrorCode native value EKErrorLast = 37 not bound

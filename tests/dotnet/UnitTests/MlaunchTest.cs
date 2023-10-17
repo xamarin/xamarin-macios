@@ -50,9 +50,9 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-16-4,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-17-0,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", "")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.tvOS-16-4,devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-3rd-generation-1080p")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.tvOS-17-0,devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-3rd-generation-1080p")]
 		public void GetMlaunchRunArguments (ApplePlatform platform, string runtimeIdentifiers, string device)
 		{
 			var project = "MySimpleApp";

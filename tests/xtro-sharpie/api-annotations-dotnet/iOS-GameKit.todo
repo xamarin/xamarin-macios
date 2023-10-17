@@ -1,0 +1,13 @@
+!deprecated-attribute-missing! GKAchievement::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKNotificationBanner missing a [Deprecated] attribute
+!missing-field! GKSessionErrorDomain not bound
+!missing-selector! GKAchievement::challengeComposeControllerWithMessage:players:completion: not bound
+!missing-selector! GKAchievementDescription::rarityPercent not bound
+!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
+!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound

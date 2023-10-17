@@ -1,0 +1,10 @@
+!missing-selector! +ARConfiguration::supportedVideoFormats not bound
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawTextureCoordinates(): simd type: simd_float2
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARFaceGeometry::GetRawVertices(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawBoundaryVertices(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawTextureCoordinates(): simd type: simd_float2
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPlaneGeometry::GetRawVertices(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARPointCloud::GetRawPoints(): simd type: simd_float3
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARSkeleton2D::get_RawJointLandmarks(): simd type: simd_float2
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARSkeleton3D::get_RawJointLocalTransforms(): simd type: simd_float4x4
+!wrong-simd-missing-marshaldirective! System.IntPtr ARKit.ARSkeleton3D::get_RawJointModelTransforms(): simd type: simd_float4x4

@@ -45,6 +45,8 @@ namespace Xamarin.MMP.Tests.Unit {
 				XamarinMacPrefix = Xamarin.Tests.Configuration.SdkRootXM,
 			};
 			try {
+				Driver.SdkRoot = Xamarin.Tests.Configuration.XcodeLocation;
+				Driver.ValidateXcode (null, false, false);
 				Profile.Current = new XamarinMacProfile ();
 				compiler.Compile (files);
 			} finally {

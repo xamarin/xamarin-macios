@@ -1964,7 +1964,6 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Profile.tvOS, MTouchBitcode.Marker)]
 		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
 		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
 		{
@@ -2687,13 +2686,13 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release")]
 		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)

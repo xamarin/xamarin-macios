@@ -152,6 +152,15 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
+# only install all the simulators when working on a PR, EO machines do not allow use to perform this step 
+- ${{ if parameters.isPR }}:
+  - bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
+    displayName: 'Provision simulators'
+- ${{ else }}:
+  - bash: |
+      xcodebuild -downloadPlatform iOS
+    displayName: 'Provision simulators'
+
 # Actual build of the project
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
   name: build

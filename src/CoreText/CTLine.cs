@@ -217,9 +217,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		unsafe static extern void CTLineEnumerateCaretOffsets (IntPtr line, BlockLiteral* blockEnumerator);
@@ -246,9 +243,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)

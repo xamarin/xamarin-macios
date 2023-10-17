@@ -3,4 +3,5 @@
 		<!-- Disables the transitive restore of packages like Microsoft.AspNetCore.App.Ref, Microsoft.WindowsDesktop.App.Ref -->
 		<DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
 	</PropertyGroup>
+	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>
