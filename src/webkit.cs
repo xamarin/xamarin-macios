@@ -4380,27 +4380,24 @@ namespace WebKit {
 		Handled,
 	}
 
-	[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+	[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum WKCookiePolicy : long
-	{
+	public enum WKCookiePolicy : long {
 		Allow,
 		Disallow,
 	}
 
-	[iOS(17,0), Mac(14, 0), MacCatalyst(17,0)]
+	[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 	[Native]
-	public enum WKInactiveSchedulingPolicy : long
-	{
+	public enum WKInactiveSchedulingPolicy : long {
 		Suspend,
 		Throttle,
 		None,
 	}
 
-	[NoiOS, Mac(14, 0), NoMacCatalyst]
+	[NoiOS, Mac (14, 0), NoMacCatalyst]
 	[Native]
-	public enum WKUserInterfaceDirectionPolicy : long
-	{
+	public enum WKUserInterfaceDirectionPolicy : long {
 		Content,
 		System,
 	}
@@ -4506,15 +4503,15 @@ namespace WebKit {
 		[Export ("removeObserver:")]
 		void RemoveObserver (IWKHttpCookieStoreObserver observer);
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
-		[Export("setCookiePolicy:completionHandler:")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("setCookiePolicy:completionHandler:")]
 		[Async]
-		void SetCookiePolicy(WKCookiePolicy policy, [NullAllowed] Action completionHandler);
+		void SetCookiePolicy (WKCookiePolicy policy, [NullAllowed] Action completionHandler);
 
-		[iOS(17,0), Mac(14, 0), MacCatalyst(17,0)]
-		[Export("getCookiePolicy:")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("getCookiePolicy:")]
 		[Async]
-		void GetCookiePolicy(Action<WKCookiePolicy> completionHandler);
+		void GetCookiePolicy (Action<WKCookiePolicy> completionHandler);
 	}
 
 	interface IWKHttpCookieStoreObserver { }
@@ -4727,8 +4724,8 @@ namespace WebKit {
 		[Export ("elementFullscreenEnabled")]
 		bool ElementFullscreenEnabled { [Bind ("isElementFullscreenEnabled")] get; set; }
 
-		[Mac(14, 0), iOS(17,0), MacCatalyst(17,0)]
-		[Export("inactiveSchedulingPolicy", ArgumentSemantic.Assign)]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("inactiveSchedulingPolicy", ArgumentSemantic.Assign)]
 		WKInactiveSchedulingPolicy InactiveSchedulingPolicy { get; set; }
 	}
 
@@ -4891,36 +4888,35 @@ namespace WebKit {
 		[Field ("WKWebsiteDataTypeFileSystem")]
 		NSString FileSystem { get; }
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
-		[Field("WKWebsiteDataTypeSearchFieldRecentSearches")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Field ("WKWebsiteDataTypeSearchFieldRecentSearches")]
 		NSString SearchFieldRecentSearches { get; }
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
-		[Field("WKWebsiteDataTypeMediaKeys")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Field ("WKWebsiteDataTypeMediaKeys")]
 		NSString MediaKeys { get; }
 
-		[iOS (17,0), Mac(14, 0), MacCatalyst(17, 0)]
-		[Field("WKWebsiteDataTypeHashSalt")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Field ("WKWebsiteDataTypeHashSalt")]
 		NSString HashSalt { get; }
 	}
 
-	[NoiOS, NoMacCatalyst, Mac (14,0)]
+	[NoiOS, NoMacCatalyst, Mac (14, 0)]
 	[Static]
-	interface WebViewNotification
-	{
-		[Field("WebViewDidBeginEditingNotification")]
+	interface WebViewNotification {
+		[Field ("WebViewDidBeginEditingNotification")]
 		NSString DidBeginEditing { get; }
 
-		[Field("WebViewDidChangeNotification")]
+		[Field ("WebViewDidChangeNotification")]
 		NSString DidChange { get; }
 
-		[Field("WebViewDidEndEditingNotification")]
+		[Field ("WebViewDidEndEditingNotification")]
 		NSString DidEndEditing { get; }
 
-		[Field("WebViewDidChangeTypingStyleNotification")]
+		[Field ("WebViewDidChangeTypingStyleNotification")]
 		NSString DidChangeTypingStyle { get; }
 
-		[Field("WebViewDidChangeSelectionNotification")]
+		[Field ("WebViewDidChangeSelectionNotification")]
 		NSString DidChangeSelection { get; }
 	}
 
@@ -4960,26 +4956,26 @@ namespace WebKit {
 		[Export ("httpCookieStore")]
 		WKHttpCookieStore HttpCookieStore { get; }
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
-		[NullAllowed, Export("identifier")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("identifier")]
 		NSUuid Identifier { get; }
 
-		[iOS(17,0), Mac(14, 0), MacCatalyst(17, 0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Static]
-		[Export("dataStoreForIdentifier:")]
-		WKWebsiteDataStore Create(NSUuid identifier);
+		[Export ("dataStoreForIdentifier:")]
+		WKWebsiteDataStore Create (NSUuid identifier);
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Async]
-		[Export("removeDataStoreForIdentifier:completionHandler:")]
-		void Remove(NSUuid identifier, Action<NSError> completionHandler);
+		[Export ("removeDataStoreForIdentifier:completionHandler:")]
+		void Remove (NSUuid identifier, Action<NSError> completionHandler);
 
-		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Async]
-		[Export("fetchAllDataStoreIdentifiers:")]
-		void FetchAllDataStoreIdentifiers(Action<NSArray<NSUuid>> completionHandler);
+		[Export ("fetchAllDataStoreIdentifiers:")]
+		void FetchAllDataStoreIdentifiers (Action<NSArray<NSUuid>> completionHandler);
 	}
 
 	[NoiOS, NoWatch, NoTV]
@@ -5644,12 +5640,12 @@ namespace WebKit {
 		[Export ("upgradeKnownHostsToHTTPS")]
 		bool UpgradeKnownHostsToHttps { get; set; }
 
-		[Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
-		[Export("allowsInlinePredictions")]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("allowsInlinePredictions")]
 		bool AllowsInlinePredictions { get; set; }
 
-		[NoiOS, Mac(14, 0)]
-		[Export("userInterfaceDirectionPolicy", ArgumentSemantic.Assign)]
+		[NoiOS, Mac (14, 0)]
+		[Export ("userInterfaceDirectionPolicy", ArgumentSemantic.Assign)]
 		WKUserInterfaceDirectionPolicy UserInterfaceDirectionPolicy { get; set; }
 	}
 
@@ -5841,8 +5837,8 @@ namespace WebKit {
 		[Export ("rect", ArgumentSemantic.Assign)]
 		CGRect Rect { get; set; }
 
-		[iOS(17,0), Mac(14, 0), MacCatalyst(17,0)]
-		[Export("allowTransparentBackground")]
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		[Export ("allowTransparentBackground")]
 		bool AllowTransparentBackground { get; set; }
 	}
 
