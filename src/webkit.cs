@@ -4380,6 +4380,31 @@ namespace WebKit {
 		Handled,
 	}
 
+	[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+	[Native]
+	public enum WKCookiePolicy : long
+	{
+		Allow,
+		Disallow,
+	}
+
+	[iOS(17,0), Mac(14, 0), MacCatalyst(17,0)]
+	[Native]
+	public enum WKInactiveSchedulingPolicy : long
+	{
+		Suspend,
+		Throttle,
+		None,
+	}
+
+	[NoiOS, Mac(14, 0), NoMacCatalyst]
+	[Native]
+	public enum WKUserInterfaceDirectionPolicy : long
+	{
+		Content,
+		System,
+	}
+
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
@@ -4480,6 +4505,16 @@ namespace WebKit {
 
 		[Export ("removeObserver:")]
 		void RemoveObserver (IWKHttpCookieStoreObserver observer);
+
+		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Export("setCookiePolicy:completionHandler:")]
+		[Async]
+		void SetCookiePolicy(WKCookiePolicy policy, [NullAllowed] Action completionHandler);
+
+		[iOS(17,0), Mac(14, 0), MacCatalyst(17,0)]
+		[Export("getCookiePolicy:")]
+		[Async]
+		void GetCookiePolicy(Action<WKCookiePolicy> completionHandler);
 	}
 
 	interface IWKHttpCookieStoreObserver { }
@@ -4691,6 +4726,10 @@ namespace WebKit {
 		[Mac (12, 3), iOS (15, 4), MacCatalyst (15, 4)]
 		[Export ("elementFullscreenEnabled")]
 		bool ElementFullscreenEnabled { [Bind ("isElementFullscreenEnabled")] get; set; }
+
+		[Mac(14, 0), iOS(17,0), MacCatalyst(17,0)]
+		[Export("inactiveSchedulingPolicy", ArgumentSemantic.Assign)]
+		WKInactiveSchedulingPolicy InactiveSchedulingPolicy { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -4851,6 +4890,38 @@ namespace WebKit {
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
 		[Field ("WKWebsiteDataTypeFileSystem")]
 		NSString FileSystem { get; }
+
+		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Field("WKWebsiteDataTypeSearchFieldRecentSearches")]
+		NSString SearchFieldRecentSearches { get; }
+
+		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Field("WKWebsiteDataTypeMediaKeys")]
+		NSString MediaKeys { get; }
+
+		[iOS (17,0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Field("WKWebsiteDataTypeHashSalt")]
+		NSString HashSalt { get; }
+	}
+
+	[NoiOS, NoMacCatalyst, Mac (14,0)]
+	[Static]
+	interface WebViewNotification
+	{
+		[Field("WebViewDidBeginEditingNotification")]
+		NSString DidBeginEditing { get; }
+
+		[Field("WebViewDidChangeNotification")]
+		NSString DidChange { get; }
+
+		[Field("WebViewDidEndEditingNotification")]
+		NSString DidEndEditing { get; }
+
+		[Field("WebViewDidChangeTypingStyleNotification")]
+		NSString DidChangeTypingStyle { get; }
+
+		[Field("WebViewDidChangeSelectionNotification")]
+		NSString DidChangeSelection { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -4888,6 +4959,27 @@ namespace WebKit {
 		[MacCatalyst (13, 1)]
 		[Export ("httpCookieStore")]
 		WKHttpCookieStore HttpCookieStore { get; }
+
+		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[NullAllowed, Export("identifier")]
+		NSUuid Identifier { get; }
+
+		[iOS(17,0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Static]
+		[Export("dataStoreForIdentifier:")]
+		WKWebsiteDataStore Create(NSUuid identifier);
+
+		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Static]
+		[Async]
+		[Export("removeDataStoreForIdentifier:completionHandler:")]
+		void Remove(NSUuid identifier, Action<NSError> completionHandler);
+
+		[iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0)]
+		[Static]
+		[Async]
+		[Export("fetchAllDataStoreIdentifiers:")]
+		void FetchAllDataStoreIdentifiers(Action<NSArray<NSUuid>> completionHandler);
 	}
 
 	[NoiOS, NoWatch, NoTV]
@@ -5093,7 +5185,9 @@ namespace WebKit {
 	interface WKWebView
 #if MONOMAC
 		: NSUserInterfaceValidations
-		/* TODO , NSTextFinderClient  K_API_AVAILABLE(macos(WK_MAC_TBA)) in 11.4 beta 2 */
+#if XAMCORE_5_0
+		, NSTextFinderClient
+#endif
 #endif
 	{
 
@@ -5549,6 +5643,14 @@ namespace WebKit {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
 		[Export ("upgradeKnownHostsToHTTPS")]
 		bool UpgradeKnownHostsToHttps { get; set; }
+
+		[Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+		[Export("allowsInlinePredictions")]
+		bool AllowsInlinePredictions { get; set; }
+
+		[NoiOS, Mac(14, 0)]
+		[Export("userInterfaceDirectionPolicy", ArgumentSemantic.Assign)]
+		WKUserInterfaceDirectionPolicy UserInterfaceDirectionPolicy { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -5738,6 +5840,10 @@ namespace WebKit {
 
 		[Export ("rect", ArgumentSemantic.Assign)]
 		CGRect Rect { get; set; }
+
+		[iOS(17,0), Mac(14, 0), MacCatalyst(17,0)]
+		[Export("allowTransparentBackground")]
+		bool AllowTransparentBackground { get; set; }
 	}
 
 	interface IWKScriptMessageHandlerWithReply { }
