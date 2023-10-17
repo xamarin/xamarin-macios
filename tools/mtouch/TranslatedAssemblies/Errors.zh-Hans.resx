@@ -821,10 +821,10 @@
 		<value>无法解压缩文件“{0}”。请查看生成日志，以从本机 “unzip” 命令获取详细信息。</value>
 	</data>
   <data name="MX1307" xml:space="preserve">
-		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>无法从程序集“{1}”中提取本机框架“{0}”，因为它不包含资源“{2}”。</value>
 	</data>
   <data name="MX1308" xml:space="preserve">
-		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>无法从程序集“{1}”中提取本机库“{0}”，因为它不包含资源“{2}”。</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>引用中缺少必需的 "Xamarin.Mac.dll" 程序集
@@ -959,6 +959,9 @@
   <data name="MT2015" xml:space="preserve">
 		<value>HttpMessageHandler `{0}` 对于 watchOS 无效。唯一的有效值是 NSUrlSessionHandler。
 		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>无法通过传递“--optimize=-remove-dynamic-registrar”来保持动态注册器，因为使用 NativeAOT 时不支持动态注册器。仍将删除对动态注册的支持。</value>
 	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>无法处理 XML 说明: {0}
@@ -1104,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>无法{0}程序集 "{1}" 
 		</value>
@@ -1524,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+		<value>不会注册类 "{0}"，因为已从 {2} SDK 中删除 {1} 框架。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1549,7 +1561,7 @@
 		<value>无法计算类型“{0}”的块签名: {1}</value>
 	</data>
   <data name="MX4189" xml:space="preserve">
-		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
+		<value>不会注册类“{0}”，因为它已从 SDK 中 {1} 移除。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 "{0}" 编译器。请安装 Xcode“命令行工具”组件
@@ -1823,6 +1835,6 @@
 		<value>在程序集“{0}”中找不到类型“ObjCRuntime.__Registrar__”。</value>
 	</data>
   <data name="MX8056" xml:space="preserve">
-		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+		<value>无法封送 Objective-C 对象 0x{0} (类型: {1})。找不到此对象的现有托管实例，也无法创建泛型类型 {2} 的新托管实例。</value>
 	</data>
 </root>
