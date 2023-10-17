@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
@@ -184,6 +186,26 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogError (MSBStrings.E7085 /* The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}. */, GetType ().Name, fallbackName ?? metadataName, metadataName, item.ItemSpec);
 			foundInMetadata = false;
 			return fallbackValue;
+		}
+
+		protected IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<string> directories)
+		{
+			if (directories is null)
+				yield break;
+
+			foreach (var dir in directories) {
+				// Don't try to find files if we don't have a directory in the first place (or it doesn't exist).
+				if (!Directory.Exists (dir))
+					continue;
+
+				foreach (var file in Directory.EnumerateFiles (dir, "*", SearchOption.AllDirectories))
+					yield return new TaskItem (file);
+			}
+		}
+
+		protected IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (IEnumerable<ITaskItem> directories)
+		{
+			return CreateItemsForAllFilesRecursively (directories?.Select (v => v.ItemSpec));
 		}
 	}
 }
