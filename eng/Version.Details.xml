@@ -31,17 +31,17 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>c0a2ffed7195092a50d3ed55a2be7e9f0bc25a24</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7099">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7117">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>c0a2ffed7195092a50d3ed55a2be7e9f0bc25a24</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7099">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7117">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>c0a2ffed7195092a50d3ed55a2be7e9f0bc25a24</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7099">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7117">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+      <Sha>c0a2ffed7195092a50d3ed55a2be7e9f0bc25a24</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="7.0.7">
       <Uri>https://github.com/dotnet/runtime</Uri>
