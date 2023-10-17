@@ -524,6 +524,9 @@ namespace Xamarin.MacDev.Tasks {
 			return false;
 		}
 
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			return CreateItemsForAllFilesRecursively (NativeReferences);
+		}
 	}
 }
