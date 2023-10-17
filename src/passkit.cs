@@ -2759,7 +2759,7 @@ namespace PassKit {
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor]
 	interface PKPayLaterView {
-		// [DesignatedInitializer]
+
 		[Export ("initWithAmount:currencyCode:")]
 		NativeHandle Constructor (NSDecimalNumber amount, string currencyCode);
 

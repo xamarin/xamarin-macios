@@ -40,7 +40,7 @@ namespace PassKit {
 		[UnsupportedOSPlatform ("tvos")]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void ValidateAmount (NSDecimalNumber amount, string currencyCode, Action<bool> callback)
+		public static void ValidateAmount (NSDecimalNumber amount, string currencyCode, Action<bool> callback)
 		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
