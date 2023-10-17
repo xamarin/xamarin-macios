@@ -2405,7 +2405,6 @@ MACCATALYST_FRAMEWORKS = \
 	Messages \
 	MessageUI \
 	Metal \
-	MetalFX \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \

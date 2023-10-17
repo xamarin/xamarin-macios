@@ -495,7 +495,6 @@ partial class Frameworks {
 		"Messages",
 		"MessageUI",
 		"Metal",
-		"MetalFX",
 		"MetalKit",
 		"MetalPerformanceShaders",
 		"MetalPerformanceShadersGraph",
