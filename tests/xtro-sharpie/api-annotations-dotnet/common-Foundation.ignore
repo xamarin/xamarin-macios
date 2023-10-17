@@ -211,7 +211,6 @@
 !missing-field! NSMallocException not bound
 !missing-field! NSMaximumKeyValueOperator not bound
 !missing-field! NSMinimumKeyValueOperator not bound
-!missing-field! NSNetServicesErrorCode not bound
 !missing-field! NSObjectInaccessibleException not bound
 !missing-field! NSObjectNotAvailableException not bound
 !missing-field! NSOldStyleException not bound
@@ -1351,6 +1350,15 @@
 !missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:error: not bound
 !missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:arguments:error: not bound
 !missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:error: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context:arguments: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:arguments: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:context: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options:context: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options: not bound
+!missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
 
 # https://github.com/xamarin/xamarin-macios/issues/15577
 !missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
@@ -1382,3 +1390,10 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
+
+# we provide a static method instead of the constructor since there are two of them
+!missing-selector! NSURL::initWithString:encodingInvalidCharacters: not bound
+!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
+
+# it is used in the selectors that support vargs and thefore cannot be used with out bindings
+!missing-field! NSInflectionConceptsKey not bound
