@@ -15,9 +15,9 @@
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</EmscriptenWorkloadVersion>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <MicrosoftMacCatalystSdkPackageVersion>16.4.7114</MicrosoftMacCatalystSdkPackageVersion>
-    <MicrosoftmacOSSdkPackageVersion>13.3.7114</MicrosoftmacOSSdkPackageVersion>
-    <MicrosoftiOSSdkPackageVersion>16.4.7114</MicrosoftiOSSdkPackageVersion>
-    <MicrosofttvOSSdkPackageVersion>16.4.7114</MicrosofttvOSSdkPackageVersion>
+    <MicrosoftMacCatalystSdkPackageVersion>16.4.7116</MicrosoftMacCatalystSdkPackageVersion>
+    <MicrosoftmacOSSdkPackageVersion>13.3.7116</MicrosoftmacOSSdkPackageVersion>
+    <MicrosoftiOSSdkPackageVersion>16.4.7116</MicrosoftiOSSdkPackageVersion>
+    <MicrosofttvOSSdkPackageVersion>16.4.7116</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>
