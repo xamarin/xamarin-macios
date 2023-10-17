@@ -129,6 +129,7 @@ struct MTRegistrationMap {
 	int skipped_map_count;
 	int protocol_wrapper_count;
 	int protocol_count;
+	void **classHandles;
 };
 
 typedef struct {
