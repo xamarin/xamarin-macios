@@ -960,6 +960,9 @@
 		<value>HttpMessageHandler `{0}` 对于 watchOS 无效。唯一的有效值是 NSUrlSessionHandler。
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>无法通过传递“--optimize=-remove-dynamic-registrar”来保持动态注册器，因为使用 NativeAOT 时不支持动态注册器。仍将删除对动态注册的支持。</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>无法处理 XML 说明: {0}
 		</value>
@@ -1104,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>无法{0}程序集 "{1}" 
 		</value>
