@@ -180,39 +180,7 @@ public partial class Generator : IMemberGatherer {
 
 		return type.IsInterface;
 	}
-
-	public string PrimitiveType (Type t, bool formatted = false)
-	{
-		if (t == TypeManager.System_Void)
-			return "void";
-
-		if (t.IsEnum) {
-			var enumType = t;
-
-			t = t.GetEnumUnderlyingType ();
-
-			if (IsNativeEnum (enumType, out var _, out var nativeType))
-				return nativeType;
-		}
-
-		if (t == TypeManager.System_Int32)
-			return "int";
-		if (t == TypeManager.System_Int16)
-			return "short";
-		if (t == TypeManager.System_Byte)
-			return "byte";
-		if (t == TypeManager.System_Float)
-			return "float";
-		if (t == TypeManager.System_Boolean)
-			return "bool";
-		if (t == TypeManager.System_Char)
-			return "char";
-		if (t == TypeManager.System_nfloat)
-			return "nfloat";
-
-		return formatted ? FormatType (null, t) : t.Name;
-	}
-
+	
 	// Is this a wrapped type of NSObject from the MonoTouch/MonoMac binding world?
 	public bool IsWrappedType (Type t)
 	{
@@ -227,7 +195,6 @@ public partial class Generator : IMemberGatherer {
 	{
 		return t.IsArray && IsWrappedType (t.GetElementType ());
 	}
-
 
 	// Is this type something that derives from DictionaryContainerType (or an interface marked up with StrongDictionary)
 	public bool IsDictionaryContainerType (Type t)
@@ -2745,86 +2712,13 @@ public partial class Generator : IMemberGatherer {
 		return objcClassName;
 	}
 
+	// TODO: Move to TypeManager
 	public string FormatType (Type usedIn, Type type)
 	{
 		return FormatTypeUsedIn (usedIn is null ? null : usedIn.Namespace, type);
 	}
 
-	public string FormatType (Type usedIn, Type type, bool protocolized)
-	{
-		return FormatTypeUsedIn (usedIn?.Namespace, type, protocolized);
-	}
-
-	public string FormatTypeUsedIn (string usedInNamespace, Type type, bool protocolized = false)
-	{
-		if (type == TypeManager.System_Void)
-			return "void";
-		if (type == TypeManager.System_SByte)
-			return "sbyte";
-		if (type == TypeManager.System_Int32)
-			return "int";
-		if (type == TypeManager.System_Int16)
-			return "short";
-		if (type == TypeManager.System_Int64)
-			return "long";
-		if (type == TypeManager.System_Byte)
-			return "byte";
-		if (type == TypeManager.System_UInt16)
-			return "ushort";
-		if (type == TypeManager.System_UInt32)
-			return "uint";
-		if (type == TypeManager.System_UInt64)
-			return "ulong";
-		if (type == TypeManager.System_Byte)
-			return "byte";
-		if (type == TypeManager.System_Float)
-			return "float";
-		if (type == TypeManager.System_Double)
-			return "double";
-		if (type == TypeManager.System_Boolean)
-			return "bool";
-		if (type == TypeManager.System_String)
-			return "string";
-		if (type == TypeManager.System_nfloat)
-			return "nfloat";
-		if (type == TypeManager.System_nint)
-			return "nint";
-		if (type == TypeManager.System_nuint)
-			return "nuint";
-		if (type == TypeManager.System_Char)
-			return "char";
-		if (type == TypeManager.System_nfloat)
-			return "nfloat";
-
-		if (type.IsArray)
-			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
-
-		var interfaceTag = protocolized == true ? "I" : "";
-		string tname;
-		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
-		// work with nested/nested/nested classes. But we are not writing a general solution because:
-		// 1. We have only encountered nested classes.
-		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a crazy complicated nested hierarchy, 
-		//    so we only solve the problem we have, no more.
-		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
-		if (types_that_must_always_be_globally_named.Contains (type.Name))
-			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
-		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
-			tname = interfaceTag + type.Name;
-		else
-			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
-
-		var targs = type.GetGenericArguments ();
-		if (targs.Length > 0) {
-			var isNullable = TypeManager.GetUnderlyingNullableType (type) is not null;
-			if (isNullable)
-				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
-			return RemoveArity (tname) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
-		}
-
-		return tname;
-	}
-
+	// TODO: String extension? Add test?  
 	static string RemoveArity (string typeName)
 	{
 		var arity = typeName.IndexOf ('`');
