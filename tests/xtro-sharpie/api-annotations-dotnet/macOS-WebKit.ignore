@@ -27,13 +27,6 @@
 !missing-selector! NSObject::webPlugInStart not bound
 !missing-selector! NSObject::webPlugInStop not bound
 
-# is bound, not sure what xtro is on
-!missing-selector! WKWebView::goBack: not bound
-!missing-selector! WKWebView::goForward: not bound
-!missing-selector! WKWebView::reload: not bound
-!missing-selector! WKWebView::reloadFromOrigin: not bound
-!missing-selector! WKWebView::stopLoading: not bound
-
 # enabled for XAMCORE 5, else breaking change
 !missing-protocol-conformance! WKWebView should conform to NSTextFinderClient (defined in 'WKNSTextFinderClient' category)
 

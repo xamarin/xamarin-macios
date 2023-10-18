@@ -5532,6 +5532,26 @@ namespace WebKit {
 		[Mac (13, 3), MacCatalyst (16, 4), iOS (16, 4), NoWatch, NoTV]
 		[Export ("inspectable")]
 		bool Inspectable { [Bind ("isInspectable")] get; set; }
+
+		[NoiOS, NoMacCatalyst, Mac(14,0)]
+		[Export("goBack:")]
+		void GoBack([NullAllowed] NSObject sender);
+
+		[NoiOS, NoMacCatalyst, Mac(14,0)]
+		[Export("goForward:")]
+		void GoForward([NullAllowed] NSObject sender);
+
+		[NoiOS, NoMacCatalyst, Mac(14,0)]
+		[Export("reload:")]
+		void Reload([NullAllowed] NSObject sender);
+
+		[NoiOS, NoMacCatalyst, Mac(14,0)]
+		[Export("reloadFromOrigin:")]
+		void ReloadFromOrigin([NullAllowed] NSObject sender);
+
+		[NoiOS, NoMacCatalyst, Mac(14,0)]
+		[Export("stopLoading:")]
+		void StopLoading([NullAllowed] NSObject sender);
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
