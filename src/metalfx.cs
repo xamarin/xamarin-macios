@@ -13,21 +13,19 @@ using NativeHandle = System.IntPtr;
 
 namespace MetalFX {
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Native]
-	public enum MTLFXSpatialScalerColorProcessingMode : long
-	{
+	public enum MTLFXSpatialScalerColorProcessingMode : long {
 		Perceptual = 0,
 		Linear = 1,
 		Hdr = 2,
 	}
 
-	interface IMTLFXSpatialScaler {}
+	interface IMTLFXSpatialScaler { }
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
-	interface MTLFXSpatialScaler
-	{
+	interface MTLFXSpatialScaler {
 		[Abstract]
 		[Export ("colorTextureUsage")]
 		MTLTextureUsage ColorTextureUsage { get; }
@@ -89,12 +87,11 @@ namespace MetalFX {
 		void Encode (IMTLCommandBuffer commandBuffer);
 	}
 
-	interface IMTLFXTemporalScaler {}
+	interface IMTLFXTemporalScaler { }
 
-	[Mac (13,0), iOS (16,0)]
+	[Mac (13, 0), iOS (16, 0)]
 	[Protocol]
-	interface MTLFXTemporalScaler
-	{
+	interface MTLFXTemporalScaler {
 		[Abstract]
 		[Export ("colorTextureUsage")]
 		MTLTextureUsage ColorTextureUsage { get; }
@@ -216,11 +213,10 @@ namespace MetalFX {
 		void Encode (IMTLCommandBuffer commandBuffer);
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(NSObject))]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MTLFXSpatialScalerDescriptor : NSCopying
-	{
+	interface MTLFXSpatialScalerDescriptor : NSCopying {
 		[Export ("colorTextureFormat", ArgumentSemantic.Assign)]
 		MTLPixelFormat ColorTextureFormat { get; set; }
 
@@ -251,11 +247,10 @@ namespace MetalFX {
 		bool SupportsDevice (IMTLDevice device);
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(NSObject))]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MTLFXTemporalScalerDescriptor : NSCopying
-	{
+	interface MTLFXTemporalScalerDescriptor : NSCopying {
 		[Export ("colorTextureFormat", ArgumentSemantic.Assign)]
 		MTLPixelFormat ColorTextureFormat { get; set; }
 
@@ -296,15 +291,15 @@ namespace MetalFX {
 		[return: NullAllowed, Release]
 		IMTLFXTemporalScaler Create (IMTLDevice device);
 
-		[Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportedInputContentMinScaleForDevice:")]
-		float SupportedInputContentMinScale (IMTLDevice device);
+		float GetSupportedInputContentMinScale (IMTLDevice device);
 
-		[Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("supportedInputContentMaxScaleForDevice:")]
-		float SupportedInputContentMaxScale (IMTLDevice device);
+		float GetSupportedInputContentMaxScale (IMTLDevice device);
 
 		[Static]
 		[Export ("supportsDevice:")]
