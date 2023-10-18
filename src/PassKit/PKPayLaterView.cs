@@ -53,8 +53,12 @@ namespace PassKit {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ValidateAmount, callback);
 #endif
-				using var nsCurrencyCode = new NSString (currencyCode);
-				PKPayLaterValidateAmount (amount.Handle, nsCurrencyCode.Handle, &block);
+				var nsCurrencyCodePtr = NSString.CreateNative (currencyCode);
+				try {
+					PKPayLaterValidateAmount (amount.Handle, nsCurrencyCodePtr, &block);
+				} finally {
+					NSString.ReleaseNative (nsCurrencyCodePtr);
+				}
 			}
 		}
 

@@ -2763,8 +2763,11 @@ namespace PassKit {
 		[Export ("initWithAmount:currencyCode:")]
 		NativeHandle Constructor (NSDecimalNumber amount, string currencyCode);
 
-		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed, Wrap ("WeakDelegate")]
 		IPKPayLaterViewDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
+		NSObject WeakDelegate { get; set; }
 
 		[Export ("amount", ArgumentSemantic.Copy)]
 		NSDecimalNumber Amount { get; set; }

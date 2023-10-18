@@ -5,3 +5,6 @@
 
 # No longer used enum, will be removed in XAMCORE_5_0
 !unknown-native-enum! PKDisbursementRequestSchedule bound
+
+# needed to allow our WeakDelegate wrap
+!extra-null-allowed! 'System.Void PassKit.PKPayLaterView::set_WeakDelegate(Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
