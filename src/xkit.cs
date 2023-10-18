@@ -1862,7 +1862,6 @@ namespace UIKit {
 #endif
 
 		[NoWatch, MacCatalyst (13, 1)]
-		[NoMacCatalyst]
 		[Override]
 		[Export ("textLists")]
 		NSTextList [] TextLists { get; set; }
