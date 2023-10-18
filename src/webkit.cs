@@ -5644,7 +5644,7 @@ namespace WebKit {
 		[Export ("allowsInlinePredictions")]
 		bool AllowsInlinePredictions { get; set; }
 
-		[NoiOS, Mac (14, 0)]
+		[NoiOS, Mac (14, 0), NoMacCatalyst]
 		[Export ("userInterfaceDirectionPolicy", ArgumentSemantic.Assign)]
 		WKUserInterfaceDirectionPolicy UserInterfaceDirectionPolicy { get; set; }
 	}
