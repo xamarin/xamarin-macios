@@ -821,10 +821,10 @@
 		<value>ファイル '{0}' を展開できませんでした。ビルド ログを参照して、ネイティブの 'unzip' コマンドからの詳細情報をご確認ください。</value>
 	</data>
   <data name="MX1307" xml:space="preserve">
-		<value>Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>リソース '{2}' が含まれていないため、アセンブリ '{1}' からネイティブ フレームワーク '{0}' を抽出できませんでした。</value>
 	</data>
   <data name="MX1308" xml:space="preserve">
-		<value>Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.</value>
+		<value>リソース '{2}' が含まれていないため、アセンブリ '{1}' からネイティブ ライブラリ '{0}' を抽出できませんでした。</value>
 	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>必要な 'Xamarin.Mac.dll' アセンブリが参照にありません
@@ -960,6 +960,9 @@
   <data name="MT2015" xml:space="preserve">
 		<value>watchOS では HttpMessageHandler `{0}` は無効です。有効な値は NSUrlSessionHandler のみです。
 		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>NativeAOT を使用する場合、動的レジストラーがサポートされていないため、('--optimize=-remove-dynamic-registrar' を渡すことによって) 動的レジストラーを維持することはできません。動的登録のサポートは引き続き削除されます。</value>
 	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>XML の説明を処理できませんでした: {0}
@@ -1105,6 +1108,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>アセンブリ '{1}' を {0} できませんでした
 		</value>
@@ -1525,7 +1537,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.
+		<value>{1} フレームワークが {2} SDK から削除されたため、クラス '{0}' は登録されません。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1550,7 +1562,7 @@
 		<value>型 '{0}' のブロック署名を計算できません: {1}</value>
 	</data>
   <data name="MX4189" xml:space="preserve">
-		<value>The class '{0}' will not be registered because it has been removed from the {1} SDK.</value>
+		<value>{1} SDK から削除されたため、クラス '{0}' は登録されません。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' コンパイラがありません。Xcode の 'Command-Line Tools' コンポーネントをインストールしてください
@@ -1824,6 +1836,6 @@
 		<value>アセンブリ '{0}' に型 'ObjCRuntime.__Registrar__' が見つかりませんでした。</value>
 	</data>
   <data name="MX8056" xml:space="preserve">
-		<value>Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.</value>
+		<value>Objective-C オブジェクト 0x{0} (型: {1}) をマーシャリングできませんでした。このオブジェクトの既存のマネージド インスタンスが見つかりませんでした。また、ジェネリック型 {2} の新しいマネージド インスタンスを作成することもできませんでした。</value>
 	</data>
 </root>

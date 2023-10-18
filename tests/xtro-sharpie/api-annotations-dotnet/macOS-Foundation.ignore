@@ -106,6 +106,7 @@
 !missing-selector! +NSValue::valueWithEdgeInsets: not bound
 !missing-selector! +NSXMLDocument::replacementClassForClass: not bound
 !missing-selector! +NSXMLDTD::predefinedEntityDeclarationForName: not bound
+!missing-selector! NSXMLNode::init not bound
 !missing-selector! +NSXMLNode::attributeWithName:stringValue: not bound
 !missing-selector! +NSXMLNode::attributeWithName:URI:stringValue: not bound
 !missing-selector! +NSXMLNode::commentWithStringValue: not bound
@@ -566,3 +567,7 @@
 !missing-selector! NSXMLDTD::init not bound
 !missing-selector! NSXMLDTDNode::init not bound
 !missing-selector! NSXMLNode::detach not bound
+
+## these are implemented in a way that xtro doesn't see
+!missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
+!missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound

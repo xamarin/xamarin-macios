@@ -503,7 +503,6 @@
 !missing-selector! +UIShape::shapeWithProvider: not bound
 !missing-selector! UIHoverStyle::isEnabled not bound
 !missing-selector! UIHoverStyle::setEnabled: not bound
-!unknown-field! NSReadAccessURLDocumentOption bound
 !missing-enum! UISceneCaptureState not bound
 !missing-selector! +UITraitCollection::traitCollectionWithSceneCaptureState: not bound
 !missing-selector! UITraitCollection::sceneCaptureState not bound

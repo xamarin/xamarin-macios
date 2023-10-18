@@ -8,7 +8,6 @@
 		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
 		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
 		<_XamarinIsPreviewRelease>@XCODE_IS_PREVIEW@</_XamarinIsPreviewRelease>
-		<_XamarinPackSuffix>@DOTNET_TFM@_@NUGET_OS_VERSION@</_XamarinPackSuffix>
 	</PropertyGroup>
 
 	<ItemGroup>@VALID_RUNTIME_IDENTIFIERS@
@@ -22,9 +21,9 @@
 			RuntimeFrameworkName="Microsoft.@PLATFORM@"
 			DefaultRuntimeFrameworkVersion="@NUGET_VERSION_NO_METADATA@"
 			LatestRuntimeFrameworkVersion="@NUGET_VERSION_NO_METADATA@"
-			TargetingPackName="Microsoft.@PLATFORM@.Ref.@DOTNET_TFM@_@NUGET_OS_VERSION@"
+			TargetingPackName="Microsoft.@PLATFORM@.Ref"
 			TargetingPackVersion="@NUGET_VERSION_NO_METADATA@"
-			RuntimePackNamePatterns="Microsoft.@PLATFORM@.Runtime.**RID**.@DOTNET_TFM@_@NUGET_OS_VERSION@"
+			RuntimePackNamePatterns="Microsoft.@PLATFORM@.Runtime.**RID**"
 			RuntimePackRuntimeIdentifiers="@RUNTIME_PACK_RUNTIME_IDENTIFIERS@"
 			Profile="@PLATFORM@"
 		/>

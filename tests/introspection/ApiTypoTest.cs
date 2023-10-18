@@ -1099,6 +1099,12 @@ namespace Introspection {
 					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;
+				case "PhaseLibrary":
+					// framework support for tvOS was added in xcode 15
+					// but not supported on tvOS simulator so load fails
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
 #endif
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
