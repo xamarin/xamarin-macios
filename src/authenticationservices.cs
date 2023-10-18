@@ -852,13 +852,6 @@ namespace AuthenticationServices {
 		[Export ("callerAuditToken")]
 		NSData CallerAuditToken { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (14, 0), NoMacCatalyst]
-		[Export ("supportedGrantTypes")]
-		ASAuthorizationProviderExtensionSupportedGrantTypes SupportedGrantTypes { get; }
-
-		[NoWatch, NoTV, NoiOS, Mac (14, 0), NoMacCatalyst]
-		[Export ("protocolVersion")]
-		ASAuthorizationProviderExtensionPlatformSSOProtocolVersion ProtocolVersion { get; }
 	}
 
 	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
