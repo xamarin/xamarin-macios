@@ -151,7 +151,7 @@ namespace Introspection {
 				case "CKSyncEnginePendingRecordZoneChange":
 				case "CKSyncEnginePendingZoneDelete":
 				case "CKSyncEnginePendingZoneSave":
-				case "CKSyncEngineState": 
+				case "CKSyncEngineState":
 				case "NSCursor":
 					return true;
 				default:

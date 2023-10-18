@@ -1321,7 +1321,6 @@ namespace Introspection {
 
 		protected override bool SkipInit (string selector, MethodBase m)
 		{
-			Console.Error.WriteLine ("Skip init {0}", selector);
 			switch (selector) {
 #if !XAMCORE_3_0
 			// DomEvent
