@@ -37,6 +37,13 @@ namespace Xamarin.MacDev.Tasks {
 				return true;
 			}
 
+			var nonexistent = NativeReferences.Where (v => !(Directory.Exists (v.ItemSpec) || File.Exists (v.ItemSpec)));
+			if (nonexistent.Any ()) {
+				foreach (var nonex in nonexistent)
+					Log.LogError (MSBStrings.E0190 /* The NativeResource item '{0}' does not exist. */, nonex.ItemSpec);
+				return false;
+			}
+
 			var compress = false;
 			if (string.Equals (Compress, "true", StringComparison.OrdinalIgnoreCase)) {
 				compress = true;

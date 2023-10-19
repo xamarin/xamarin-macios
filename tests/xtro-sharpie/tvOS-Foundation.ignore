@@ -13,3 +13,5 @@
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
 !missing-enum! NSNetServicesError not bound
+
+!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
