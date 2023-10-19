@@ -141,7 +141,7 @@ namespace MetalKit {
 		[Export ("multisampleColorAttachmentTextureUsage", ArgumentSemantic.Assign)]
 		MTLTextureUsage MultisampleColorAttachmentTextureUsage { get; set; }
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Export ("depthStencilStorageMode", ArgumentSemantic.Assign)]
 		MTLStorageMode DepthStencilStorageMode { get; set; }
 	}
@@ -202,7 +202,7 @@ namespace MetalKit {
 		[Field ("MTKTextureLoaderOptionOrigin")]
 		NSString OriginKey { get; }
 
-		[iOS (17, 0), Mac (14, 0), TV (17,0), MacCatalyst (17, 0)]
+		[iOS (17, 0), Mac (14, 0), TV (17, 0), MacCatalyst (17, 0)]
 		[Field ("MTKTextureLoaderOptionLoadAsArray")]
 		NSString LoadAsArrayKey { get; }
 
@@ -233,7 +233,7 @@ namespace MetalKit {
 
 		bool Srgb { get; set; }
 
-		[iOS (17, 0), Mac (14, 0), TV (17,0), MacCatalyst (17, 0)]
+		[iOS (17, 0), Mac (14, 0), TV (17, 0), MacCatalyst (17, 0)]
 		bool LoadAsArray { get; set; }
 	}
 
