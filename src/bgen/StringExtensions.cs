@@ -14,6 +14,14 @@ public static class StringExtensions {
 			_ => $"@\"{self.Replace ("\"", "\"\"")}\""
 		};
 	}
+	public static string? RemoveArity (this string? typeName)
+	{
+		if (typeName is null)
+			return typeName;
+
+		var arity = typeName.IndexOf ('`');
+		return arity > 0 ? typeName.Substring (0, arity) : typeName;
+	}
 
 	public static string CamelCase (this string ins)
 	{

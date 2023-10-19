@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 
 #nullable enable
 
 public class TypeManager {
-	
+	public BindingTouch BindingTouch;
+
 	// TODO: Initialize via de load method in the MarshalTypeList so that we have access in the
 	// Go method in the generator.
 	readonly HashSet<string> typesThatMustAlwaysBeGloballyNamed = new();
-	
+
 	Frameworks Frameworks { get; }
 
 	public Type System_Attribute { get; }
@@ -280,6 +282,7 @@ public class TypeManager {
 		if (bindingTouch.universe is null)
 			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
 
+		BindingTouch = bindingTouch;
 		Frameworks = bindingTouch.Frameworks;
 
 		/* corlib */
@@ -418,21 +421,11 @@ public class TypeManager {
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
 	}
-	
+
 	public string PrimitiveType (Type t, bool formatted = false)
 	{
 		if (t == System_Void)
 			return "void";
-
-		if (t.IsEnum) {
-			var enumType = t;
-
-			t = t.GetEnumUnderlyingType ();
-
-			if (IsNativeEnum (enumType, out var _, out var nativeType))
-				return nativeType;
-		}
-
 		if (t == System_Int32)
 			return "int";
 		if (t == System_Int16)
@@ -450,53 +443,67 @@ public class TypeManager {
 
 		return formatted ? FormatType (null, t) : t.Name;
 	}
-	
-	// TODO: Make it compile.
+
+	public string FormatType (Type usedIn, Type type)
+	{
+		return FormatTypeUsedIn (usedIn is null ? null : usedIn.Namespace, type);
+	}
+
 	public string FormatType (Type usedIn, Type type, bool protocolized)
 	{
 		return FormatTypeUsedIn (usedIn?.Namespace, type, protocolized);
 	}
-	
-	// TODO: Make it compile.
+
+	public string FormatType (Type usedIn, string @namespace, string name)
+	{
+		string tname;
+		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceManager.StandardNamespaces.Contains (@namespace))
+			tname = name;
+		else
+			tname = "global::" + @namespace + "." + name;
+
+		return tname;
+	}
+
 	public string FormatTypeUsedIn (string usedInNamespace, Type type, bool protocolized = false)
 	{
-		if (type == TypeManager.System_Void)
+		if (type == System_Void)
 			return "void";
-		if (type == TypeManager.System_SByte)
+		if (type == System_SByte)
 			return "sbyte";
-		if (type == TypeManager.System_Int32)
+		if (type == System_Int32)
 			return "int";
-		if (type == TypeManager.System_Int16)
+		if (type == System_Int16)
 			return "short";
-		if (type == TypeManager.System_Int64)
+		if (type == System_Int64)
 			return "long";
-		if (type == TypeManager.System_Byte)
+		if (type == System_Byte)
 			return "byte";
-		if (type == TypeManager.System_UInt16)
+		if (type == System_UInt16)
 			return "ushort";
-		if (type == TypeManager.System_UInt32)
+		if (type == System_UInt32)
 			return "uint";
-		if (type == TypeManager.System_UInt64)
+		if (type == System_UInt64)
 			return "ulong";
-		if (type == TypeManager.System_Byte)
+		if (type == System_Byte)
 			return "byte";
-		if (type == TypeManager.System_Float)
+		if (type == System_Float)
 			return "float";
-		if (type == TypeManager.System_Double)
+		if (type == System_Double)
 			return "double";
-		if (type == TypeManager.System_Boolean)
+		if (type == System_Boolean)
 			return "bool";
-		if (type == TypeManager.System_String)
+		if (type == System_String)
 			return "string";
-		if (type == TypeManager.System_nfloat)
+		if (type == System_nfloat)
 			return "nfloat";
-		if (type == TypeManager.System_nint)
+		if (type == System_nint)
 			return "nint";
-		if (type == TypeManager.System_nuint)
+		if (type == System_nuint)
 			return "nuint";
-		if (type == TypeManager.System_Char)
+		if (type == System_Char)
 			return "char";
-		if (type == TypeManager.System_nfloat)
+		if (type == System_nfloat)
 			return "nfloat";
 
 		if (type.IsArray)
@@ -512,18 +519,20 @@ public class TypeManager {
 		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
-		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) || ns.StandardNamespaces.Contains (type.Namespace) || string.IsNullOrEmpty (type.FullName))
+		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
+		         BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace) ||
+		         string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {
-			var isNullable = TypeManager.GetUnderlyingNullableType (type) is not null;
+			var isNullable = GetUnderlyingNullableType (type) is not null;
 			if (isNullable)
 				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
 			// TODO: RemoveArity is now a string exstension
-			return RemoveArity (tname) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
+			return tname.RemoveArity() + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
 		}
 
 		return tname;
