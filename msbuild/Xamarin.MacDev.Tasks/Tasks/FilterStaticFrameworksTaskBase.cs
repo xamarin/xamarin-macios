@@ -12,6 +12,8 @@ using Xamarin.Utils;
 namespace Xamarin.MacDev.Tasks {
 	// This task takes an itemgroup of frameworks, and filters out frameworks that aren't dynamic libraries.
 	public abstract class FilterStaticFrameworksTaskBase : XamarinTask {
+		public bool OnlyFilterFrameworks { get; set; }
+
 		[Output]
 		public ITaskItem []? FrameworkToPublish { get; set; }
 
@@ -29,6 +31,11 @@ namespace Xamarin.MacDev.Tasks {
 
 						if (!File.Exists (frameworkExecutablePath)) {
 							Log.LogError (158, frameworkExecutablePath, MSBStrings.E0158 /* The file '{0}' does not exist. */, frameworkExecutablePath);
+							continue;
+						}
+
+						if (OnlyFilterFrameworks && !Path.GetDirectoryName (frameworkExecutablePath).EndsWith (".framework", StringComparison.OrdinalIgnoreCase)) {
+							Log.LogMessage (MessageImportance.Low, $"Skipped processing {item.ItemSpec} because it's not a framework");
 							continue;
 						}
 
