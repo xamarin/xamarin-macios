@@ -1268,7 +1268,6 @@
 
 # the method is a static constructor that return a label for a New item, they used New not to represent the intent of the
 # method, but what label it returns (probably a new objc developer at apple)
-!missing-release-attribute-on-return-value! AppKit.NSMenuItemBadge AppKit.NSMenuItemBadge::CreateNewItems(System.nint)'s selector's ('newItemsWithCount:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
 # we cannot add a breaking change until xamr 5
 !incorrect-protocol-member! NSAccessibility::accessibilityAttributedUserInputLabels is REQUIRED and should be abstract

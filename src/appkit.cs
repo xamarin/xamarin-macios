@@ -28168,6 +28168,7 @@ namespace AppKit {
 
 		[Static]
 		[Export ("newItemsWithCount:")]
+		[return: Release]
 		NSMenuItemBadge CreateNewItems (nint itemCount);
 
 		[Static]
