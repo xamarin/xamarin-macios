@@ -1,32 +1,31 @@
-#if __IOS__ && !__MACCATALYST__
+// Can be uncommented when this issue is resolved: # https://github.com/xamarin/xamarin-macios/issues/19271
 
-using System;
-using Foundation;
-using UIKit;
-using PassKit;
-using NUnit.Framework;
+// #if __IOS__ && !__MACCATALYST__
 
-namespace MonoTouchFixtures.PassKit {
+// using System;
+// using Foundation;
+// using UIKit;
+// using PassKit;
+// using NUnit.Framework;
 
-	[TestFixture]
-	[Preserve (AllMembers = true)]
-	public class PKPayLaterViewTest {
+// namespace MonoTouchFixtures.PassKit {
 
-		[Test]
-		public void ValidateAmountTest ()
-		{
-			TestRuntime.AssertXcodeVersion (15, 0);
+// 	[TestFixture]
+// 	[Preserve (AllMembers = true)]
+// 	public class PKPayLaterViewTest {
 
-			// From testing with Xcode 15.0.0, all values give the value of false to the completion handler.
-			// Perhaps this will change in the future.
-			// Apple feedback was submitted here: https://feedbackassistant.apple.com/feedback/13268898
-			for (int i = 0; i < 1000; i++){
-				PKPayLaterView.ValidateAmount (new NSDecimalNumber (i), "USD", (eligible) => {
-					Assert.False (eligible);
-				});
-			}
-		}
-	}
-}
+// 		[Test]
+// 		public void ValidateAmountTest ()
+// 		{
+// 			TestRuntime.AssertXcodeVersion (15, 0);
 
-#endif
+// 			for (int i = 0; i < 1000; i++){
+// 				PKPayLaterView.ValidateAmount (new NSDecimalNumber (i), "USD", (eligible) => {
+// 					Assert.False (eligible);
+// 				});
+// 			}
+// 		}
+// 	}
+// }
+
+// #endif

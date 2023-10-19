@@ -8,3 +8,6 @@
 
 # needed to allow our WeakDelegate wrap
 !extra-null-allowed! 'System.Void PassKit.PKPayLaterView::set_WeakDelegate(Foundation.NSObject)' has a extraneous [NullAllowed] on parameter #0
+
+# https://github.com/xamarin/xamarin-macios/issues/19271
+!missing-pinvoke! PKPayLaterValidateAmount is not bound
