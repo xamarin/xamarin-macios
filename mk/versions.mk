@@ -52,7 +52,7 @@ else
 endif
 
 print-$(1)::
-	@printf "*** %-16s %-45s %s (%s)\n" "$(1)" "$(shell git config submodule.external/$(1).url)" "$(NEEDED_$(2)_VERSION)" "$(shell git config -f $(abspath $(TOP)/.gitmodules) submodule.external/$(1).branch)"
+	@printf "*** %-16s %-45s %s (%s)\n" "$(1)" "$(shell git config submodule.external/$(1).url)" "$(NEEDED_$(2)_VERSION)" "$(shell git config -f $(abspath $(GIT_DIRECTORY)modules) submodule.external/$(1).branch)"
 
 .PHONY: check-$(1) reset-$(1) print-$(1)
 

@@ -71,7 +71,7 @@ bindings-generated.m: bindings-generator.exe
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
-product.h: product.in.h Makefile $(TOP)/.git/index
+product.h: product.in.h Makefile $(GIT_DIRECTORY)/index
 	$(Q) sed -e 's/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/' $< > $@.tmp
 	$(Q) mv $@.tmp $@
 #
