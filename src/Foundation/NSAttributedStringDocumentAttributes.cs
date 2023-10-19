@@ -235,10 +235,10 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst13.1")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
+		[Mac (10, 15), iOS (13, 0), NoTV, NoWatch]
 #endif
 		public string? DocumentReading {
 			get {
