@@ -9970,7 +9970,7 @@ namespace UIKit {
 		[Export ("behavioralStyle")]
 		UIBehavioralStyle BehavioralStyle { get; }
 
-		[NoWatch, TV (17, 0), MacCatalyst (15, 0), iOS (15, 0)]
+		[NoWatch, NoTV, MacCatalyst (15, 0), iOS (15, 0)]
 		[Export ("preferredBehavioralStyle", ArgumentSemantic.Assign)]
 		UIBehavioralStyle PreferredBehavioralStyle { get; set; }
 
