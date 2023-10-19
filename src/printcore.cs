@@ -75,7 +75,6 @@ namespace PrintCore {
 	[BaseType (typeof (NSObject))]
 	interface PDEPlugIn
 	{
-		[Abstract]
 		[Export ("initWithBundle:")]
 		NativeHandle Constructor (NSBundle bundle);
 
@@ -91,20 +90,21 @@ namespace PrintCore {
 	[Protocol]
 	interface PDEPlugInCallbackProtocol
 	{
-		[NullAllowed, Export ("printSession")]
 		[Abstract]
 		[Internal]
+		[Export ("printSession")]
 		// Original: unsafe PMPrintSession* PrintSession { get; }
 		IntPtr _GetPrintSession ();
 
 		[Abstract]
-		[NullAllowed, Export ("printSettings")]
+		[Internal]
+		[Export ("printSettings")]
 		// Original: unsafe PMPrintSession* PrintSettings { get; }
 		IntPtr _GetPrintSettings ();
 
 		[Abstract]
 		[Internal]
-		[NullAllowed, Export ("pageFormat")]
+		[Export ("pageFormat")]
 		// Original: unsafe PMPageFormat* PageFormat { get; }
 		IntPtr _GetPageFormat ();
 
@@ -116,7 +116,7 @@ namespace PrintCore {
 
 		[Abstract]
 		[Internal]
-		[NullAllowed, Export ("ppdFile")]
+		[Export ("ppdFile")]
 		// Original: unsafe ppd_file_s* PpdFile { get; }
 		IntPtr _GetPpdFile ();
 

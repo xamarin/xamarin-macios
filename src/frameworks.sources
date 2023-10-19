@@ -1482,7 +1482,8 @@ PHOTOSUI_API_SOURCES = \
 # PrintCode
 PRINTCORE_SOURCES = \
 	PrintCore/Defs.cs	\
-	PrintCore/PrintCore.cs
+	PrintCore/PrintCore.cs \
+	PrintCore/PDEPlugInCallbackProtocol.cs \
 
 # PushToTalk
 PUSHTOTALK_SOURCES = \
