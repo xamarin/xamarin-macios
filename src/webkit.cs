@@ -4904,18 +4904,23 @@ namespace WebKit {
 	[NoiOS, NoMacCatalyst, Mac (14, 0)]
 	[Static]
 	interface WebViewNotification {
+		[Notification]
 		[Field ("WebViewDidBeginEditingNotification")]
 		NSString DidBeginEditing { get; }
 
+		[Notification]
 		[Field ("WebViewDidChangeNotification")]
 		NSString DidChange { get; }
 
+		[Notification]
 		[Field ("WebViewDidEndEditingNotification")]
 		NSString DidEndEditing { get; }
 
+		[Notification]
 		[Field ("WebViewDidChangeTypingStyleNotification")]
 		NSString DidChangeTypingStyle { get; }
 
+		[Notification]
 		[Field ("WebViewDidChangeSelectionNotification")]
 		NSString DidChangeSelection { get; }
 	}
