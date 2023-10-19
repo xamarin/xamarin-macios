@@ -28145,6 +28145,11 @@ namespace AppKit {
 	[NoMacCatalyst, Mac (14, 0)]
 	[BaseType (typeof (NSView))]
 	interface NSTextInsertionIndicator {
+
+		[DesignatedInitializer]
+		[Export ("initWithFrame:")]
+		NativeHandle Constructor (CGRect frameRect);
+
 		[Export ("displayMode", ArgumentSemantic.Assign)]
 		NSTextInsertionIndicatorDisplayMode DisplayMode { get; set; }
 
