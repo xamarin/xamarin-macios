@@ -16,7 +16,7 @@ using NativeHandle = System.IntPtr;
 
 namespace PrintCore {
 
-	[Mac (14,0)]
+	[Mac (13,0)]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
 	interface PDEPanel
@@ -70,7 +70,7 @@ namespace PrintCore {
 		void PrintWindowWillClose (bool userCanceled);
 	}
 
-	[Mac (14,0)]
+	[Mac (13,0)]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
 	interface PDEPlugIn
@@ -86,7 +86,7 @@ namespace PrintCore {
 
 	interface IPDEPlugInCallbackProtocol { }
 
-	[Mac (14,0)]
+	[Mac (13,0)]
 	[Protocol]
 	interface PDEPlugInCallbackProtocol
 	{
