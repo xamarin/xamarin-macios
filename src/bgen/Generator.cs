@@ -223,9 +223,8 @@ public partial class Generator : IMemberGatherer {
 		if (mai.IsAligned)
 			return "IntPtr";
 
-		if (mai.Type.IsEnum) {
+		if (mai.Type.IsEnum)
 			return PrimitiveType (mai.Type, formatted);
-		}
 
 		if (IsWrappedType (mai.Type)) {
 			if (!mai.Type.IsByRef)
@@ -860,10 +859,8 @@ public partial class Generator : IMemberGatherer {
 		if (GetNativeEnumToNativeExpression (pi.ParameterType, out var preExpression, out var postExpression, out var nativeType))
 			return preExpression + safe_name + postExpression;
 
-		if (castEnum && pi.ParameterType.IsEnum) {
+		if (castEnum && pi.ParameterType.IsEnum)
 			return "(" + PrimitiveType (pi.ParameterType) + ")" + safe_name;
-		}
-
 
 		if (castEnum && pi.ParameterType.Namespace == "System") {
 			if (pi.ParameterType.Name == "nint")
