@@ -250,7 +250,7 @@ namespace MetalFX {
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface MTLFXTemporalScalerDescriptor : NSCopying {
+	interface MTLFXTemporalScalerDescriptor {
 		[Export ("colorTextureFormat", ArgumentSemantic.Assign)]
 		MTLPixelFormat ColorTextureFormat { get; set; }
 
