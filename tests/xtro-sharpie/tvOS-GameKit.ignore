@@ -3,15 +3,9 @@
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound
 
-# Xcode1 4 beta 4
-!deprecated-attribute-wrong! GKBasePlayer::playerID has 16.0 not 13.0 on [Deprecated] attribute
-!missing-field! GKSessionErrorDomain not bound
-!missing-selector! GKLeaderboardEntry::context not bound
-!missing-selector! GKLeaderboardEntry::date not bound
-!missing-selector! GKLeaderboardEntry::formattedScore not bound
-!missing-selector! GKLeaderboardEntry::rank not bound
-!missing-selector! GKLeaderboardEntry::score not bound
+# addressed in XAMCORE_5_0
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFailWithError: is REQUIRED and should be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewControllerWasCancelled: is REQUIRED and should be abstract
+!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
+

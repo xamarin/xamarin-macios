@@ -8,3 +8,10 @@
 
 ## unsorted
 
+!missing-field! GKSessionErrorDomain not bound
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
+

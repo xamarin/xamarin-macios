@@ -1,7 +1,9 @@
-# fixed in XAMCORE_3_0 - API break
-
-
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
 
-# Xcode1 4 beta 4
+!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
+
+# addressed in XAMCORE_5_0
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFailWithError: is REQUIRED and should be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewControllerWasCancelled: is REQUIRED and should be abstract
+
