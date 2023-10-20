@@ -1266,9 +1266,6 @@
 
 # Will be deprecated in a future release 
 
-# the method is a static constructor that return a label for a New item, they used New not to represent the intent of the
-# method, but what label it returns (probably a new objc developer at apple)
-
 # we cannot add a breaking change until xamr 5
 !incorrect-protocol-member! NSAccessibility::accessibilityAttributedUserInputLabels is REQUIRED and should be abstract
 !incorrect-protocol-member! NSAccessibility::accessibilityUserInputLabels is REQUIRED and should be abstract

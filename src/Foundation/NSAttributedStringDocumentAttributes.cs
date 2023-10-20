@@ -242,10 +242,10 @@ namespace Foundation {
 #endif
 		public string? DocumentReading {
 			get {
-				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
+				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.NSDocumentReadingOption);
 			}
 			set {
-				SetStringValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
+				SetStringValue (NSAttributedStringDocumentReadingOptionKey.NSDocumentReadingOption, value);
 			}
 		}
 #endif // !TVOS && !WATCH

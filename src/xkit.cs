@@ -4441,7 +4441,7 @@ namespace UIKit {
 		[Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 
-		// comres from webkit
+		// comes from webkit
 		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
 		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
 		NSString NSReadAccessUrlDocumentOption { get; }
