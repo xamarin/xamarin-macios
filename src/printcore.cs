@@ -16,11 +16,10 @@ using NativeHandle = System.IntPtr;
 
 namespace PrintCore {
 
-	[Mac (13,0)]
+	[Mac (13, 0)]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
-	interface PDEPanel
-	{
+	interface PDEPanel {
 		[Abstract]
 		[Export ("willShow")]
 		void WillShow ();
@@ -38,7 +37,7 @@ namespace PrintCore {
 		bool RestoreValuesAndReturnError ([NullAllowed] out NSError error);
 
 		[NullAllowed, Export ("supportedPPDOptionKeys")]
-		string[] SupportedPpdOptionKeys { get; }
+		string [] SupportedPpdOptionKeys { get; }
 
 		[Abstract]
 		[Export ("PPDOptionKeyValueDidChange:ppdChoice:")]
@@ -70,26 +69,24 @@ namespace PrintCore {
 		void PrintWindowWillClose (bool userCanceled);
 	}
 
-	[Mac (13,0)]
+	[Mac (13, 0)]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
-	interface PDEPlugIn
-	{
+	interface PDEPlugIn {
 		[Export ("initWithBundle:")]
 		NativeHandle Constructor (NSBundle bundle);
 
 		[Abstract]
 		[Export ("PDEPanelsForType:withHostInfo:")]
 		[return: NullAllowed]
-		PDEPanel[] PDEPanelsForType (string pdeType, IPDEPlugInCallbackProtocol host);
+		PDEPanel [] PDEPanelsForType (string pdeType, IPDEPlugInCallbackProtocol host);
 	}
 
 	interface IPDEPlugInCallbackProtocol { }
 
-	[Mac (13,0)]
+	[Mac (13, 0)]
 	[Protocol]
-	interface PDEPlugInCallbackProtocol
-	{
+	interface PDEPlugInCallbackProtocol {
 		[Abstract]
 		[Internal]
 		[Export ("printSession")]
