@@ -26796,7 +26796,7 @@ namespace UIKit {
 		void Target ([NullAllowed] NSObject sender, [NullAllowed] NSObject target);
 
 		[iOS (17, 0)]
-#if !XAMCORE_5_0
+#if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("selectedImage", ArgumentSemantic.Copy)]
