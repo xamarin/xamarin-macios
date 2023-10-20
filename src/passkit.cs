@@ -1626,18 +1626,10 @@ namespace PassKit {
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementRequest {
 
-#if XAMCORE_5_0
 		[Export ("currencyCode")]
-#else
-		[NullAllowed, Export ("currencyCode")]
-#endif
 		string CurrencyCode { get; set; }
 
-#if XAMCORE_5_0
 		[Export ("summaryItems", ArgumentSemantic.Copy)]
-#else
-		[NullAllowed, Export ("summaryItems", ArgumentSemantic.Copy)]
-#endif
 		PKPaymentSummaryItem [] SummaryItems { get; set; }
 
 		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
