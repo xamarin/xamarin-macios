@@ -1,86 +1,19 @@
-!unknown-field! GKErrorDomain bound
-!unknown-field! GKExchangeTimeoutDefault bound
-!unknown-field! GKExchangeTimeoutNone bound
-!unknown-field! GKGameSessionErrorDomain bound
-!unknown-field! GKPlayerAuthenticationDidChangeNotificationName bound
-!unknown-field! GKPlayerDidChangeNotificationName bound
-!unknown-field! GKPlayerIDNoLongerAvailable bound
-!unknown-field! GKTurnTimeoutDefault bound
-!unknown-field! GKTurnTimeoutNone bound
-!unknown-field! GKVoiceChatServiceErrorDomain bound
-!unknown-native-enum! GKAccessPointLocation bound
-!unknown-native-enum! GKChallengeState bound
-!unknown-native-enum! GKConnectionState bound
-!unknown-native-enum! GKError bound
-!unknown-native-enum! GKFriendsAuthorizationStatus bound
-!unknown-native-enum! GKGameCenterViewControllerState bound
-!unknown-native-enum! GKGameSessionErrorCode bound
-!unknown-native-enum! GKInviteRecipientResponse bound
-!unknown-native-enum! GKLeaderboardPlayerScope bound
-!unknown-native-enum! GKLeaderboardTimeScope bound
-!unknown-native-enum! GKLeaderboardType bound
-!unknown-native-enum! GKMatchmakingMode bound
-!unknown-native-enum! GKMatchSendDataMode bound
-!unknown-native-enum! GKMatchType bound
-!unknown-native-enum! GKPeerPickerConnectionType bound
-!unknown-native-enum! GKPhotoSize bound
-!unknown-native-enum! GKPlayerConnectionState bound
-!unknown-native-enum! GKTransportType bound
-!unknown-native-enum! GKTurnBasedMatchOutcome bound
-!unknown-native-enum! GKTurnBasedMatchStatus bound
-!unknown-native-enum! GKTurnBasedParticipantStatus bound
-!unknown-native-enum! GKVoiceChatPlayerState bound
-!unknown-protocol! GKAchievementViewControllerDelegate bound
-!unknown-protocol! GKChallengeEventHandlerDelegate bound
-!unknown-protocol! GKChallengeListener bound
-!unknown-protocol! GKFriendRequestComposeViewControllerDelegate bound
-!unknown-protocol! GKGameCenterControllerDelegate bound
-!unknown-protocol! GKGameSessionEventListener bound
-!unknown-protocol! GKInviteEventListener bound
-!unknown-protocol! GKLeaderboardViewControllerDelegate bound
-!unknown-protocol! GKLocalPlayerListener bound
-!unknown-protocol! GKMatchDelegate bound
-!unknown-protocol! GKMatchmakerViewControllerDelegate bound
-!unknown-protocol! GKSavedGameListener bound
-!unknown-protocol! GKSessionDelegate bound
-!unknown-protocol! GKTurnBasedEventHandlerDelegate bound
-!unknown-protocol! GKTurnBasedEventListener bound
-!unknown-protocol! GKTurnBasedMatchmakerViewControllerDelegate bound
-!unknown-protocol! GKVoiceChatClient bound
-!unknown-type! GKAccessPoint bound
-!unknown-type! GKAchievement bound
-!unknown-type! GKAchievementChallenge bound
-!unknown-type! GKAchievementDescription bound
-!unknown-type! GKAchievementViewController bound
-!unknown-type! GKBasePlayer bound
-!unknown-type! GKChallenge bound
-!unknown-type! GKChallengeEventHandler bound
-!unknown-type! GKCloudPlayer bound
-!unknown-type! GKFriendRequestComposeViewController bound
-!unknown-type! GKGameCenterViewController bound
-!unknown-type! GKGameSession bound
-!unknown-type! GKInvite bound
-!unknown-type! GKLeaderboard bound
-!unknown-type! GKLeaderboardEntry bound
-!unknown-type! GKLeaderboardScore bound
-!unknown-type! GKLeaderboardSet bound
-!unknown-type! GKLeaderboardViewController bound
-!unknown-type! GKLocalPlayer bound
-!unknown-type! GKMatch bound
-!unknown-type! GKMatchmaker bound
-!unknown-type! GKMatchmakerViewController bound
-!unknown-type! GKMatchRequest bound
-!unknown-type! GKNotificationBanner bound
-!unknown-type! GKPlayer bound
-!unknown-type! GKSavedGame bound
-!unknown-type! GKScore bound
-!unknown-type! GKScoreChallenge bound
-!unknown-type! GKSession bound
-!unknown-type! GKTurnBasedEventHandler bound
-!unknown-type! GKTurnBasedExchange bound
-!unknown-type! GKTurnBasedExchangeReply bound
-!unknown-type! GKTurnBasedMatch bound
-!unknown-type! GKTurnBasedMatchmakerViewController bound
-!unknown-type! GKTurnBasedParticipant bound
-!unknown-type! GKVoiceChat bound
-!unknown-type! GKVoiceChatService bound
+!deprecated-attribute-missing! GKAchievement::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKNotificationBanner missing a [Deprecated] attribute
+!deprecated-attribute-wrong! GKBasePlayer::playerID has 16.0 not 13.0 on [Deprecated] attribute
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract
+!missing-field! GKSessionErrorDomain not bound
+!missing-selector! GKAchievement::challengeComposeControllerWithMessage:players:completion: not bound
+!missing-selector! GKAchievementDescription::rarityPercent not bound
+!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
+!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound
