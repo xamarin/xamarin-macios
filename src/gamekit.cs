@@ -1249,9 +1249,9 @@ namespace GameKit {
 		GKPlayerStateUpdateHandler PlayerStateUpdateHandler { get; set; }
 		//void SetPlayerStateUpdateHandler (GKPlayerStateUpdateHandler handler);
 
-		[MacCatalyst(13, 1)]
-		[Export("setPlayerVoiceChatStateDidChangeHandler:", ArgumentSemantic.Copy)]
-		void SetPlayerVoiceChatStateChangeHandler(Action<GKPlayer, GKVoiceChatPlayerState> handler);
+		[MacCatalyst (13, 1)]
+		[Export ("setPlayerVoiceChatStateDidChangeHandler:", ArgumentSemantic.Copy)]
+		void SetPlayerVoiceChatStateChangeHandler (Action<GKPlayer, GKVoiceChatPlayerState> handler);
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Players' instead.")]
