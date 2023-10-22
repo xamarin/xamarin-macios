@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Özel bağlayıcı bağımsız değişkenleri '-{0}' ayrıştırılamadı: {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>The NativeResource item '{0}' does not exist.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.
         </value>

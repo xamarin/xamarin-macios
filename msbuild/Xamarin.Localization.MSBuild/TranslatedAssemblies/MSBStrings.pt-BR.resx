@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Não foi possível analisar os argumentos do vinculador personalizado '-{0}': {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>The NativeResource item '{0}' does not exist.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Não foi possível resolver os IPs do host para as configurações do depurador de WiFi.
         </value>
