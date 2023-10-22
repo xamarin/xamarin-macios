@@ -14,3 +14,5 @@
 # we have bound this enum as GKErrorDomain instead
 !missing-field! GKSessionErrorDomain not bound
 
+# addressed in XAMCORE_5_0
+

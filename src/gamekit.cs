@@ -1247,6 +1247,11 @@ namespace GameKit {
 		[NullAllowed] // by default this property is null
 		[Export ("playerStateUpdateHandler", ArgumentSemantic.Copy)]
 		GKPlayerStateUpdateHandler PlayerStateUpdateHandler { get; set; }
+		//void SetPlayerStateUpdateHandler (GKPlayerStateUpdateHandler handler);
+
+		[MacCatalyst(13, 1)]
+		[Export("setPlayerVoiceChatStateDidChangeHandler:", ArgumentSemantic.Copy)]
+		void SetPlayerVoiceChatStateChangeHandler(Action<GKPlayer, GKVoiceChatPlayerState> handler);
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Players' instead.")]
@@ -1266,7 +1271,7 @@ namespace GameKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("playerVoiceChatStateDidChangeHandler", ArgumentSemantic.Copy)]
-		Action<GKPlayer, GKVoiceChatPlayerState> PlayerVoiceChatStateDidChangeHandler { get; set; }
+		Action<GKPlayer, GKVoiceChatPlayerState> PlayerVoiceChatStateDidChangeHandler { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1560,9 +1565,15 @@ namespace GameKit {
 		[Export ("matchmakerViewController:didFailWithError:"), EventArgs ("GKError")]
 		void DidFailWithError (GKMatchmakerViewController viewController, NSError error);
 
+#if !NET && !XAMCORE_5_0
+		[Abstract]
+#endif
 		[Export ("matchmakerViewController:didFindMatch:"), EventArgs ("GKMatch")]
 		void DidFindMatch (GKMatchmakerViewController viewController, GKMatch match);
 
+#if !NET && !XAMCORE_5_0
+		[Abstract]
+#endif
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'DidFindHostedPlayers' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'DidFindHostedPlayers' instead.")]
@@ -1571,6 +1582,9 @@ namespace GameKit {
 		[Export ("matchmakerViewController:didFindPlayers:"), EventArgs ("GKPlayers")]
 		void DidFindPlayers (GKMatchmakerViewController viewController, string [] playerIDs);
 
+#if !NET && !XAMCORE_5_0
+		[Abstract]
+#endif
 		[MacCatalyst (13, 1)]
 		[Export ("matchmakerViewController:didFindHostedPlayers:"), EventArgs ("GKMatchmakingPlayers")]
 		void DidFindHostedPlayers (GKMatchmakerViewController viewController, GKPlayer [] playerIDs);
@@ -2261,18 +2275,21 @@ namespace GameKit {
 	[Model]
 	[Protocol]
 	interface GKTurnBasedMatchmakerViewControllerDelegate {
-#if XAMCORE_5_0
+#if !XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("turnBasedMatchmakerViewControllerWasCancelled:")]
 		void WasCancelled (GKTurnBasedMatchmakerViewController viewController);
 
-#if XAMCORE_5_0
+#if !XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("turnBasedMatchmakerViewController:didFailWithError:")]
 		void FailedWithError (GKTurnBasedMatchmakerViewController viewController, NSError error);
 
+#if !NET && !XAMCORE_5_0
+		[Abstract]
+#endif
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GKTurnBasedEventListener.ReceivedTurnEvent' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GKTurnBasedEventListener.ReceivedTurnEvent' instead.")]
@@ -2281,6 +2298,9 @@ namespace GameKit {
 		[Export ("turnBasedMatchmakerViewController:didFindMatch:")]
 		void FoundMatch (GKTurnBasedMatchmakerViewController viewController, GKTurnBasedMatch match);
 
+#if !NET && !XAMCORE_5_0
+		[Abstract]
+#endif
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'GKTurnBasedEventListener.WantsToQuitMatch' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'GKTurnBasedEventListener.WantsToQuitMatch' instead.")]

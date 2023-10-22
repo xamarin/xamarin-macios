@@ -1,5 +1,3 @@
 # addressed in XAMCORE_5_0
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFailWithError: is REQUIRED and should be abstract
-!incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewControllerWasCancelled: is REQUIRED and should be abstract
 !missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
 
