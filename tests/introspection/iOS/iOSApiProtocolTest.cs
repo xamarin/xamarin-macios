@@ -513,6 +513,7 @@ namespace Introspection {
 				case "CKSyncEnginePendingZoneSave":
 				case "CKSyncEngineState":
 				case "CKSyncEnginePendingDatabaseChange":
+				case "NSCursor":
 					return true;
 				}
 				break;
@@ -773,6 +774,7 @@ namespace Introspection {
 				case "CKSyncEnginePendingZoneDelete":
 				case "CKSyncEnginePendingZoneSave":
 				case "CKSyncEngineState":
+				case "NSCursor":
 					return true;
 				}
 				break;
