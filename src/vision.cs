@@ -4457,10 +4457,6 @@ namespace Vision {
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNHumanBodyPose3DObservationJointName))]
 		NSString GetParentJointName ([BindAs (typeof (VNHumanBodyPose3DObservationJointName))] NSString jointName);
-
-		[Export ("getCameraRelativePosition:forJointName:error:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		bool GetCameraRelativePosition (out Vector4 modelPositionOut, [BindAs (typeof (VNHumanBodyPose3DObservationJointName))] NSString jointName, [NullAllowed] out NSError error);
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
