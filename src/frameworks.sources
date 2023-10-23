@@ -1446,6 +1446,7 @@ PASSKIT_API_SOURCES = \
 	
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
+	PassKit/PKPayLaterView.cs	\
 	PassKit/PKPaymentRequest.cs	\
 	PassKit/PKShareablePassMetadata.cs \
 
