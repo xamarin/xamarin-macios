@@ -775,7 +775,7 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkCampaignIdentifier")]
 		NSString AdNetworkCampaignIdentifier { get; }
 
-		[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (17,0)]
+		[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (17, 0)]
 		[Field ("SKStoreProductParameterAdNetworkSourceIdentifier")]
 		NSString AdNetworkSourceIdentifier { get; }
 
