@@ -212,40 +212,15 @@ namespace Foundation {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-		[ObsoletedOSPlatform ("ios17.0", message: "Starting with ios17.0 will always return null.")]
-		[ObsoletedOSPlatform ("maccatalyst17.0", message: "Starting with maccatalyst17.0 will always return null.")]
-		[ObsoletedOSPlatform ("macos14.0", message: "Starting with macos14.0 will always return null.")]
 #else
-		[Deprecated (PlatformName.iOS, 17, 0, message: "Will always return null.")]
-		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Will always return null.")]
-		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Will always return null.")]
 		[iOS (13, 0)]
 #endif
 		public NSUrl? ReadAccessUrl {
 			get {
-				return null;
+				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
 			}
 			set {
-				// do nothing
-			}
-		}
-#endif // !TVOS && !WATCH
-
-#if !TVOS && !WATCH
-#if NET
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 15), iOS (13, 0), NoTV, NoWatch]
-#endif
-		public string? DocumentReading {
-			get {
-				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
-			}
-			set {
-				SetStringValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
 			}
 		}
 #endif // !TVOS && !WATCH
