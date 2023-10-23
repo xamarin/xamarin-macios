@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Impossible d’analyser le ou les arguments de l’éditeur de liens personnalisés « -{0} » : {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>L'élément NativeResource « {0} » n'existe pas.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Impossible de résoudre les adresses IP des hôtes pour les paramètres du débogueur Wi-Fi.
         </value>
@@ -1206,7 +1212,7 @@
         <value>La tâche « {0} » n’a pas reçu de valeur pour le paramètre « {1} », ce qui est requis lors de la génération sur cette plateforme.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>L’assembly illink n’existe pas : '{0}'.</value>
+        <value>L’assembly illink n’existe pas : '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
         </comment>
