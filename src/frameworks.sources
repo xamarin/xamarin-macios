@@ -1188,6 +1188,9 @@ METAL_SOURCES = \
 	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
 
+# MetalFX
+
+
 # MetalKit
 
 METALKIT_SOURCES = \
@@ -2085,6 +2088,7 @@ MACOS_FRAMEWORKS =          \
 	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
+	MetalFX                 \
 	MetalKit                \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \
@@ -2201,6 +2205,7 @@ IOS_FRAMEWORKS =         \
 	Messages \
 	MessageUI \
 	Metal \
+	MetalFX \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \

@@ -1106,6 +1106,14 @@ namespace Introspection {
 						break;
 					goto default;
 #endif
+				case "MetalFXLibrary":
+#if __TVOS__
+					goto default;
+#else
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
+#endif
 				default:
 					if (fi.Name.EndsWith ("Library", StringComparison.Ordinal)) {
 #if __IOS__
