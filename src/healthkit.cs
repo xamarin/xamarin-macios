@@ -800,7 +800,7 @@ namespace HealthKit {
 		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, HKHealthStoreCompletionHandler completion);
 
 		[NullAllowed]
-		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
 		[Export ("workoutSessionMirroringStartHandler", ArgumentSemantic.Copy)]
 		Action<HKWorkoutSession> WorkoutSessionMirroringStartHandler { get; set; }
 

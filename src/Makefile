@@ -730,7 +730,7 @@ $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP
 		-e "s/@WATCH_SDK_VERSION@/$(WATCH_SDK_VERSION)/g" \
 		$< > $@
 
-$(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(TOP)/.git/HEAD | $(WATCH_BUILD_DIR)
+$(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(GIT_DIRECTORY)/HEAD | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.WatchOS|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
@@ -933,7 +933,7 @@ $(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/
 		-e "s/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/g" \
 		$< > $@
 
-$(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(TOP)/.git/HEAD | $(TVOS_BUILD_DIR)
+$(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(GIT_DIRECTORY)/HEAD | $(TVOS_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.TVOS|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
@@ -1099,7 +1099,7 @@ $(MACCATALYST_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.maccatalyst.cs.in Ma
 		-e "s/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g" \
 		$< > $@
 
-$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(TOP)/.git/HEAD | $(MACCATALYST_BUILD_DIR)
+$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(GIT_DIRECTORY)/HEAD | $(MACCATALYST_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.MacCatalyst|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \

@@ -1026,6 +1026,7 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Native]
 	public enum NSBezelStyle : ulong {
+		Automatic = 0,
 		Rounded = 1,
 		RegularSquare,
 		ThickSquare,
@@ -1206,7 +1207,12 @@ namespace AppKit {
 	[NoMacCatalyst]
 	[Native]
 	public enum NSBezierPathElement : ulong {
-		MoveTo, LineTo, CurveTo, ClosePath
+		MoveTo,
+		LineTo,
+		CurveTo,
+		ClosePath,
+		[Mac (14, 0)]
+		QuadraticCurveTo,
 	}
 	#endregion
 
@@ -1817,7 +1823,9 @@ namespace AppKit {
 	public enum NSSplitViewItemBehavior : long {
 		Default,
 		Sidebar,
-		ContentList
+		ContentList,
+		[Mac (14, 0)]
+		Inspector,
 	}
 
 	[NoMacCatalyst]
@@ -3151,4 +3159,82 @@ namespace AppKit {
 		Split = 0,
 		Unified = 1,
 	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSImageDynamicRange : long {
+		Unspecified = -1,
+		Standard = 0,
+		ConstrainedHigh = 1,
+		High = 2,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSMenuItemBadgeType : long {
+		None = 0,
+		Updates,
+		NewItems,
+		Alerts,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSMenuPresentationStyle : long {
+		Regular = 0,
+		Palette = 1,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSMenuSelectionMode : long {
+		Automatic = 0,
+		SelectOne = 1,
+		SelectAny = 2,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSPageLayoutResult : long {
+		Cancelled = 0,
+		Changed,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSPrintPanelResult : long {
+		Cancelled = 0,
+		Printed,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSTextCursorAccessoryPlacement : long {
+		Unspecified,
+		Backward,
+		Forward,
+		Invisible,
+		Center,
+		OffscreenLeft,
+		OffscreenTop,
+		OffscreenRight,
+		OffscreenBottom,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	[Flags]
+	public enum NSTextInsertionIndicatorAutomaticModeOptions : long {
+		EffectsView = 1L << 0,
+		WhileTracking = 1L << 1,
+	}
+
+	[NoMacCatalyst, Mac (14, 0)]
+	[Native]
+	public enum NSTextInsertionIndicatorDisplayMode : long {
+		Automatic = 0,
+		Hidden,
+		Visible,
+	}
+
 }

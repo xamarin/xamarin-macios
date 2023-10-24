@@ -2,15 +2,15 @@
   <!--Package versions-->
   <PropertyGroup>
     <!-- Versions updated by maestro -->
-    <MicrosoftDotnetSdkInternalPackageVersion>8.0.100-rtm.23513.4</MicrosoftDotnetSdkInternalPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>8.0.0-rtm.23511.16</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>8.0.100-rtm.23522.1</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>8.0.0-rtm.23519.13</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>8.0.0-rtm.23511.16</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23504.4</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.0-rtm.23519.13</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>8.0.0-rtm.23511.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion>
     <MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>7.0.7</MicrosoftNETRuntimeMonoTargetsSdkPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
-    <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23502.1</MicrosoftDotNetCecilPackageVersion>
-    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>8.0.0-prerelease.23516.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
+    <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23509.2</MicrosoftDotNetCecilPackageVersion>
+    <MicrosoftDotNetXHarnessiOSSharedPackageVersion>8.0.0-prerelease.23523.1</MicrosoftDotNetXHarnessiOSSharedPackageVersion>
     <!-- Manually updated versions -->
     <Emscriptennet7WorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</Emscriptennet7WorkloadVersion>
     <EmscriptenWorkloadVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100TransportVersion)</EmscriptenWorkloadVersion>
