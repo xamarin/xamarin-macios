@@ -511,6 +511,11 @@ namespace Introspection {
 				if (cstr == "Void .ctor(System.String, Foundation.NSBundle)")
 					return true;
 				break;
+			case "PKPayLaterView":
+				// headers have: (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+				if (cstr == "Void .ctor(CoreGraphics.CGRect)")
+					return true;
+				break;
 			case "VNDetectedPoint":
 				// This class is not meant to be instantiated
 				if (cstr == "Void .ctor(Double, Double)")

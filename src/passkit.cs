@@ -22,6 +22,7 @@ using UIImage = AppKit.NSImage;
 using UIViewController = AppKit.NSViewController;
 using UIWindow = AppKit.NSWindow;
 using UIControl = AppKit.NSControl;
+using UIView = AppKit.NSView;
 #else
 using UIKit;
 #if IOS
@@ -406,6 +407,10 @@ namespace PassKit {
 		[Export ("initWithPaymentRequest:")]
 		NativeHandle Constructor (PKPaymentRequest request);
 
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithDisbursementRequest:")]
+		NativeHandle Constructor (PKDisbursementRequest request);
+
 		[Export ("delegate", ArgumentSemantic.UnsafeUnretained)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -425,6 +430,21 @@ namespace PassKit {
 		[Static]
 		[Export ("canMakePaymentsUsingNetworks:capabilities:")]
 		bool CanMakePaymentsUsingNetworks (string [] supportedNetworks, PKMerchantCapability capabilties);
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("supportsDisbursements")]
+		bool SupportsDisbursements ();
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("supportsDisbursementsUsingNetworks:")]
+		bool SupportsDisbursements (string [] supportedNetworks);
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("supportsDisbursementsUsingNetworks:capabilities:")]
+		bool SupportsDisbursements (string [] supportedNetworks, PKMerchantCapability capabilities);
 	}
 #endif
 
@@ -646,6 +666,10 @@ namespace PassKit {
 		[NoWatch, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), NoTV]
 		[Export ("deferredPaymentRequest", ArgumentSemantic.Strong)]
 		PKDeferredPaymentRequest DeferredPaymentRequest { get; set; }
+
+		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[Export ("applePayLaterAvailability", ArgumentSemantic.Assign)]
+		PKApplePayLaterAvailability ApplePayLaterAvailability { get; set; }
 	}
 
 	[Mac (11, 0)]
@@ -1141,6 +1165,14 @@ namespace PassKit {
 		[iOS (16, 0), Mac (13, 0), Watch (9, 0), NoTV, MacCatalyst (16, 0)]
 		[Field ("PKPaymentNetworkBancontact")]
 		NSString Bancontact { get; }
+
+		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[Field ("PKPaymentNetworkPagoBancomat")]
+		NSString PagoBancomat { get; }
+
+		[iOS (17, 0), Mac (14, 0), Watch (10, 0), NoTV, MacCatalyst (17, 0)]
+		[Field ("PKPaymentNetworkTmoney")]
+		NSString Tmoney { get; }
 	}
 
 #if !WATCH
@@ -1229,6 +1261,25 @@ namespace PassKit {
 		[Async]
 		[Export ("dismissWithCompletion:")]
 		void Dismiss ([NullAllowed] Action completion);
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("supportsDisbursements")]
+		bool SupportsDisbursements ();
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("supportsDisbursementsUsingNetworks:")]
+		bool SupportsDisbursements (string [] supportedNetworks);
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("supportsDisbursementsUsingNetworks:capabilities:")]
+		bool SupportsDisbursements (string [] supportedNetworks, PKMerchantCapability capabilities);
+
+		[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("initWithDisbursementRequest:")]
+		NativeHandle Constructor (PKDisbursementRequest request);
 	}
 
 	interface IPKPaymentAuthorizationControllerDelegate { }
@@ -1554,15 +1605,19 @@ namespace PassKit {
 
 	interface IPKDisbursementAuthorizationControllerDelegate { }
 
+#if !XAMCORE_5_0
 	[NoMac] // only used in non-macOS API
 	[NoWatch]
 	[iOS (12, 2)]
 	[MacCatalyst (13, 1)]
+	[Obsoleted (PlatformName.iOS, 17, 0, message: "No longer used.")]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 0, message: "No longer used.")]
 	[Native]
 	public enum PKDisbursementRequestSchedule : long {
 		OneTime,
 		Future,
 	}
+#endif
 
 	[NoWatch]
 	[iOS (12, 2)]
@@ -1571,11 +1626,57 @@ namespace PassKit {
 	[BaseType (typeof (NSObject))]
 	interface PKDisbursementRequest {
 
-		[NullAllowed, Export ("currencyCode")]
+		[Export ("currencyCode")]
 		string CurrencyCode { get; set; }
 
-		[NullAllowed, Export ("summaryItems", ArgumentSemantic.Copy)]
+		[Export ("summaryItems", ArgumentSemantic.Copy)]
 		PKPaymentSummaryItem [] SummaryItems { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Export ("merchantIdentifier")]
+		string MerchantIdentifier { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Export ("regionCode")]
+		string RegionCode { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Export ("supportedNetworks", ArgumentSemantic.Copy)]
+		string [] SupportedNetworks { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Export ("merchantCapabilities", ArgumentSemantic.Assign)]
+		PKMerchantCapability MerchantCapabilities { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Export ("requiredRecipientContactFields", ArgumentSemantic.Strong)]
+		string [] RequiredRecipientContactFields { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[NullAllowed, Export ("recipientContact", ArgumentSemantic.Strong)]
+		PKContact RecipientContact { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[NullAllowed, Export ("supportedRegions", ArgumentSemantic.Copy)]
+		string [] SupportedRegions { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[NullAllowed, Export ("applicationData", ArgumentSemantic.Copy)]
+		NSData ApplicationData { get; set; }
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Export ("initWithMerchantIdentifier:currencyCode:regionCode:supportedNetworks:merchantCapabilities:summaryItems:")]
+		NativeHandle Constructor (string merchantIdentifier, string currencyCode, string regionCode, string [] supportedNetworks, PKMerchantCapability merchantCapabilities, PKPaymentSummaryItem [] summaryItems);
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Static]
+		[Export ("disbursementContactInvalidErrorWithContactField:localizedDescription:")]
+		NSError GetDisbursementContactInvalidError (string field, [NullAllowed] string localizedDescription);
+
+		[iOS (17, 0), NoMac, NoWatch, NoTV, NoMacCatalyst]
+		[Static]
+		[Export ("disbursementCardUnsupportedError")]
+		NSError DisbursementCardUnsupportedError { get; }
 	}
 
 	[Mac (11, 0)]
@@ -1671,12 +1772,12 @@ namespace PassKit {
 		PKRadioTechnology SupportedRadioTechnologies { get; set; }
 
 		// headers say [Watch (9,0)] but PKAddSecureElementPassConfiguration is not supported for watch
-		[iOS (16, 0), Mac (13, 0), NoMacCatalyst, NoTV, NoWatch]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), NoTV, NoWatch]
 		[Export ("manufacturerIdentifier")]
 		string ManufacturerIdentifier { get; set; }
 
 		// headers say [Watch (9,0)] but PKAddSecureElementPassConfiguration is not supported for watch
-		[iOS (16, 0), Mac (13, 0), NoMacCatalyst, NoTV, NoWatch]
+		[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), NoTV, NoWatch]
 		[NullAllowed, Export ("provisioningTemplateIdentifier", ArgumentSemantic.Strong)]
 		string ProvisioningTemplateIdentifier { get; set; }
 	}
@@ -2644,5 +2745,66 @@ namespace PassKit {
 		[Export ("initWithPaymentDescription:deferredBilling:managementURL:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string paymentDescription, PKDeferredPaymentSummaryItem deferredBilling, NSUrl managementUrl);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+	[BaseType (typeof (UIView))]
+	[DisableDefaultCtor]
+	interface PKPayLaterView {
+
+		[Export ("initWithAmount:currencyCode:")]
+		NativeHandle Constructor (NSDecimalNumber amount, string currencyCode);
+
+		[NullAllowed, Wrap ("WeakDelegate")]
+		IPKPayLaterViewDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Assign)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("amount", ArgumentSemantic.Copy)]
+		NSDecimalNumber Amount { get; set; }
+
+		[Export ("currencyCode")]
+		string CurrencyCode { get; set; }
+
+		[Export ("displayStyle", ArgumentSemantic.Assign)]
+		PKPayLaterDisplayStyle DisplayStyle { get; set; }
+
+		[Export ("action", ArgumentSemantic.Assign)]
+		PKPayLaterAction Action { get; set; }
+	}
+
+	interface IPKPayLaterViewDelegate { }
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), NoMacCatalyst]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface PKPayLaterViewDelegate {
+		[Abstract]
+		[Export ("payLaterViewDidUpdateHeight:")]
+		void PayLaterViewDidUpdateHeight (PKPayLaterView view);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[Static]
+	interface PKDirbursementError {
+		[Field ("PKDisbursementErrorContactFieldUserInfoKey")]
+		NSString ContactFieldUserInfoKey { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (PKPaymentSummaryItem))]
+	[DisableDefaultCtor]
+	interface PKInstantFundsOutFeeSummaryItem : NSCoding, NSCopying, NSSecureCoding {
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (PKPaymentSummaryItem))]
+	[DisableDefaultCtor]
+	interface PKDisbursementSummaryItem : NSCoding, NSCopying, NSSecureCoding {
 	}
 }
