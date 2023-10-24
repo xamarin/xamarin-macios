@@ -231,6 +231,25 @@ namespace Foundation {
 		}
 #endif // !TVOS && !WATCH
 
+#if !TVOS && !WATCH
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst13.1")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
+#endif
+		public string? DocumentReading {
+			get {
+				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
+			}
+			set {
+				SetStringValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
+			}
+		}
+#endif // !TVOS && !WATCH
+
 #if __MACOS__
 #if NET
 		[UnsupportedOSPlatform ("ios")]
