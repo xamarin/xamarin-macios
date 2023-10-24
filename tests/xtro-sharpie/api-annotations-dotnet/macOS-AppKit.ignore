@@ -1687,3 +1687,9 @@
 !missing-type! NSPDFPanel not bound
 !missing-type! NSPICTImageRep not bound
 !missing-type! NSPersistentDocument not bound
+
+# we cannot add a breaking change until xamr 5
+!incorrect-protocol-member! NSAccessibility::accessibilityAttributedUserInputLabels is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityUserInputLabels is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityAttributedUserInputLabels: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityUserInputLabels: is REQUIRED and should be abstract
