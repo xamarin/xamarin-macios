@@ -1,5 +1,0 @@
-# API removed by Apple, marked as deprecated
-
-# addressed in XAMCORE_5_0
-!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
-

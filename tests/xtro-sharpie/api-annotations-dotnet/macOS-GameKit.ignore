@@ -12,9 +12,6 @@
 !missing-field! GKVoiceChatServiceErrorDomain not bound
 # https://developer.apple.com/documentation/gamekit/gkvoicechatserviceerror?language=objc
 
-# addressed in XAMCORE_5_0
-!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
-
 # This selector does not exist (respond?) in macOS either
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 

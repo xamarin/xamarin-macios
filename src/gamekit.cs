@@ -57,10 +57,12 @@ namespace GameKit {
 	delegate void GKImageLoadedHandler  (NSImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (NSImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (NSViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
+	delegate void GKChallengeComposeHandler2 (NSViewController composeController, bool issuedChallenge, [NullAllowed] GKPlayer[] sentPlayers);
 #else
 	delegate void GKImageLoadedHandler (UIImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (UIViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
+	delegate void GKChallengeComposeHandler2 (UIViewController composeController, bool issuedChallenge, [NullAllowed] GKPlayer[] sentPlayers);
 #endif
 
 #if WATCH
@@ -2974,39 +2976,39 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
-#if false
-		// Some APIs missing on iOS, tvOS, watchOS as of Xcode 12 beta 3 - https://github.com/xamarin/maccore/issues/2269
-		// disabled since the selectors don't respond on macOS 11.0
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
 		[Export ("rank")]
 		nint Rank { get; }
 
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
 		[Export ("score")]
 		nint Score { get; }
 
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
 		[Export ("formattedScore", ArgumentSemantic.Strong)]
 		string FormattedScore { get; }
 
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
 		[Export ("context")]
 		nuint Context { get; }
 
+		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
-#endif
 
-#if XAMCORE_5_0
-		[TV(17, 0), iOS(17, 0), MacCatalyst(17, 0), Mac(14,0)]
-		[Export("challengeComposeControllerWithMessage:players:completion:")]
-#else
+		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
 		[MacCatalyst (13, 1)]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[Deprecated (PlatformName.iOS, 17, 0)]
 		[Deprecated (PlatformName.TvOS, 17, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 		[Deprecated (PlatformName.MacOSX, 14, 0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
-#endif
-		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
-		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
+
+		[TV(17, 0), iOS(17, 0), MacCatalyst(17, 0), Mac(14, 0), NoWatch]
+		[Export("challengeComposeControllerWithMessage:players:completion:")]
+		UIViewController ChallengeComposeControllerWithMessage([NullAllowed] string message, [NullAllowed] GKPlayer[] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]

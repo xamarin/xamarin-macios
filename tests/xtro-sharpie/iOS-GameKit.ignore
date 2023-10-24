@@ -1,7 +1,6 @@
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
 
-!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
 
 # addressed in XAMCORE_5_0
 

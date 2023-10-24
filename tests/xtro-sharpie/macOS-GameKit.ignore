@@ -23,7 +23,6 @@
 
 # addressed in XAMCORE_5_0
 !incorrect-protocol-member! GKTurnBasedEventHandlerDelegate::handleTurnEventForMatch:didBecomeActive: is REQUIRED and should be abstract
-!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
 
 # This selector does not exist (respond?) in macOS either
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
