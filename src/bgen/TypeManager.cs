@@ -531,7 +531,7 @@ public class TypeManager {
 			var isNullable = GetUnderlyingNullableType (type) is not null;
 			if (isNullable)
 				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
-			// TODO: RemoveArity is now a string exstension
+
 			return tname.RemoveArity() + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
 		}
 
