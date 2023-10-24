@@ -528,6 +528,8 @@
 !extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
 !incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
 !incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMenuLeaf::selectedImage is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMenuLeaf::setSelectedImage: is REQUIRED and should be abstract
 !extra-enum-value! Managed value 2 for UIActivityIndicatorViewStyle.Gray is available for the current platform while the value in the native header is not
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
 !missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
