@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>無法剖析自訂連結器引數 '-{0}': {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 項目 '{0}' 不存在。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>無法解析 WiFi 偵錯工具設定的主機 IP。
         </value>
