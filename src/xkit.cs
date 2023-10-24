@@ -2788,7 +2788,7 @@ namespace UIKit {
 		[Export ("dimension")]
 		nfloat Dimension { get; }
 
-		[Watch (10, 0), TV (17, 0), iOS (17, 0), NoMac]
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), NoMac, MacCatalyst (17, 0)]
 		[Static]
 		[Export ("uniformAcrossSiblingsWithEstimate:")]
 		NSCollectionLayoutDimension CreateUniformAcrossSiblings (nfloat estimatedDimension);
