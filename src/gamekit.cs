@@ -62,7 +62,7 @@ namespace GameKit {
 	delegate void GKImageLoadedHandler (UIImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (UIViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
-	delegate void GKChallengeComposeHandler2 (UIViewController composeController, bool issuedChallenge, [NullAllowed] GKPlayer[] sentPlayers);
+	delegate void GKChallengeComposeHandler2 (UIViewController composeController, bool issuedChallenge, [NullAllowed] GKPlayer [] sentPlayers);
 #endif
 
 #if WATCH
@@ -2976,23 +2976,23 @@ namespace GameKit {
 		[Export ("player", ArgumentSemantic.Strong)]
 		GKPlayer Player { get; }
 
-		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("rank")]
 		nint Rank { get; }
 
-		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("score")]
 		nint Score { get; }
 
-		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("formattedScore", ArgumentSemantic.Strong)]
 		string FormattedScore { get; }
 
-		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17, 0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("context")]
 		nuint Context { get; }
 
-		[Watch(10, 0), TV(17, 0), Mac(14, 0), iOS(17, 0), MacCatalyst(17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
 
@@ -3006,9 +3006,9 @@ namespace GameKit {
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 
-		[TV(17, 0), iOS(17, 0), MacCatalyst(17, 0), Mac(14, 0), NoWatch]
-		[Export("challengeComposeControllerWithMessage:players:completion:")]
-		UIViewController ChallengeComposeControllerWithMessage([NullAllowed] string message, [NullAllowed] GKPlayer[] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
+		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
+		[Export ("challengeComposeControllerWithMessage:players:completion:")]
+		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
