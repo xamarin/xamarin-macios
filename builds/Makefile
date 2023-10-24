@@ -122,7 +122,7 @@ ifneq ($(TRACKING_DOTNET_RUNTIME_SEPARATELY),)
 	$(Q) touch $@
 endif
 
-package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/index ./create-csproj-for-all-packagereferences.sh
+package-download/all-package-references.csproj: $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index ./create-csproj-for-all-packagereferences.sh
 	$(Q_GEN) ./create-csproj-for-all-packagereferences.sh --output "$(abspath $@.tmp)" $(if $(V),-v,)
 	$(Q) mv "$@.tmp" "$@"
 
@@ -747,7 +747,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAME
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
 	$(Q_LN) ln -hfs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin $@
 
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
 	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
@@ -849,7 +849,7 @@ IOS_COMMON_TARGETS = \
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 	$(Q_GEN) echo "Version: $(IOS_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@

@@ -244,15 +244,16 @@ namespace UIKit {
 		GreaterThanOrEqual = 1,
 	}
 
-	[Watch (7, 0), TV (14, 0), iOS (14, 0)]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
 	public enum NSLineBreakStrategy : ulong {
+		[Mac (11, 0), iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
 		None = 0x0,
 		PushOut = 1uL << 0,
+		[Mac (11, 0), iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
 		HangulWordPriority = 1uL << 1,
+		[Mac (11, 0), iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
 		Standard = 0xffff,
 	}
 
@@ -1745,7 +1746,7 @@ namespace UIKit {
 		NSTextTableBlock [] TextBlocks { get; [NotImplemented] set; }
 #endif
 
-		[iOS (16, 0), TV (16, 0), NoWatch, MacCatalyst (16, 0)]
+		[NoWatch, MacCatalyst (13, 1)]
 		[Export ("textLists")]
 		NSTextList [] TextLists { get; [NotImplemented] set; }
 
@@ -1759,8 +1760,7 @@ namespace UIKit {
 		[Export ("headerLevel")]
 		nint HeaderLevel { get; [NotImplemented] set; }
 
-		[Mac (11, 0), Watch (7, 0), TV (14, 0), iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("lineBreakStrategy")]
 		NSLineBreakStrategy LineBreakStrategy { get; [NotImplemented] set; }
 	}
@@ -1861,8 +1861,7 @@ namespace UIKit {
 		NSTextTableBlock [] TextBlocks { get; set; }
 #endif
 
-		[iOS (16, 0), TV (16, 0), NoWatch, MacCatalyst (16, 0)]
-		[NoMacCatalyst]
+		[NoWatch, MacCatalyst (13, 1)]
 		[Override]
 		[Export ("textLists")]
 		NSTextList [] TextLists { get; set; }
@@ -1879,8 +1878,7 @@ namespace UIKit {
 		[Override]
 		nint HeaderLevel { get; set; }
 
-		[Mac (11, 0), Watch (7, 0), TV (14, 0), iOS (14, 0)]
-		[MacCatalyst (14, 0)]
+		[MacCatalyst (13, 1)]
 		[Override]
 		[Export ("lineBreakStrategy", ArgumentSemantic.Assign)]
 		NSLineBreakStrategy LineBreakStrategy { get; set; }
@@ -3628,6 +3626,16 @@ namespace UIKit {
 
 		[Export ("frameForTextAttachmentAtLocation:")]
 		CGRect GetFrameForTextAttachment (INSTextLocation location);
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForVerticalOffset:requiresExactMatch:")]
+		[return: NullAllowed]
+		NSTextLineFragment GetTextLineFragment (nfloat verticalOffset, bool requiresExactMatch);
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForTextLocation:isUpstreamAffinity:")]
+		[return: NullAllowed]
+		NSTextLineFragment GetTextLineFragment (INSTextLocation textLocation, bool isUpstreamAffinity);
 	}
 
 	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -4378,6 +4386,10 @@ namespace UIKit {
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		NSString CocoaVersionDocumentAttribute { get; }
+
+		[Field ("NSDefaultFontExcludedDocumentAttribute")]
+		[NoWatch, NoTV, Mac (14, 0), NoiOS, MacCatalyst (17, 0)]
+		NSString DefaultFontExcludedDocumentAttribute { get; }
 	}
 
 	[Static]
@@ -4429,11 +4441,10 @@ namespace UIKit {
 		[Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 
-		// This field is really inside WebKit
-		[NoWatch, NoTV]
-		[iOS (13, 0)]
-		[MacCatalyst (13, 1)]
+		// comes from webkit
+		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
 		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
 		NSString NSReadAccessUrlDocumentOption { get; }
+
 	}
 }
