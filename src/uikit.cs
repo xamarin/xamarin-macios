@@ -1022,7 +1022,7 @@ namespace UIKit {
 		[Field ("UIAccessibilitySpeechAttributeSpellOut")]
 		NSString SpeechAttributeSpellOut { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
 		[Export ("accessibilityDirectTouchOptions", ArgumentSemantic.Assign)]
 		UIAccessibilityDirectTouchOptions AccessibilityDirectTouchOptions { get; set; }
 
@@ -8968,7 +8968,7 @@ namespace UIKit {
 		[Export ("configurationWithLocale:")]
 		UIImageConfiguration CreateConfiguration ([NullAllowed] NSLocale locale);
 
-		[NoWatch, TV (17, 0), iOS (17, 0)]
+		[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("configurationWithTraitCollection:")]
 		UIImageConfiguration CreateConfiguration ([NullAllowed] UITraitCollection traitCollection);
@@ -17047,7 +17047,7 @@ namespace UIKit {
 		UIHoverStyle HoverStyle { get; set; }
 
 		[Async]
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("animateWithSpringDuration:bounce:initialSpringVelocity:delay:options:animations:completion:")]
 		void Animate (double duration, nfloat bounce, nfloat velocity, double delay, UIViewAnimationOptions options, Action animations, [NullAllowed] Action<bool> completion);
@@ -18746,55 +18746,55 @@ namespace UIKit {
 		[Field ("UITextContentTypeDateTime")]
 		NSString DateTime { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeBirthdate")]
 		NSString Birthdate { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeBirthdateDay")]
 		NSString BirthdateDay { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeBirthdateMonth")]
 		NSString BirthdateMonth { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeBirthdateYear")]
 		NSString BirthdateYear { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardSecurityCode")]
 		NSString CreditCardSecurityCode { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardName")]
 		NSString CreditCardName { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardGivenName")]
 		NSString CreditCardGivenName { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardMiddleName")]
 		NSString CreditCardMiddleName { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardFamilyName")]
 		NSString CreditCardFamilyName { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardExpiration")]
 		NSString CreditCardExpiration { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardExpirationMonth")]
 		NSString CreditCardExpirationMonth { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardExpirationYear")]
 		NSString CreditCardExpirationYear { get; }
 
-		[iOS (17, 0)]
+		[iOS (17, 0), MacCatalyst (17, 0)]
 		[Field ("UITextContentTypeCreditCardType")]
 		NSString CreditCardType { get; }
 	}
@@ -27395,7 +27395,7 @@ namespace UIKit {
 		UIButtonRole Role { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), iOS (17, 0)]
+	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIContentUnavailableConfiguration : UIContentConfiguration, NSSecureCoding {

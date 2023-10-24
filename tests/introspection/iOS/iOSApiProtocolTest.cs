@@ -88,6 +88,7 @@ namespace Introspection {
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
 			case "SWCollaborationActionHandler":
+			case "UISymbolEffectCompletionContext":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
