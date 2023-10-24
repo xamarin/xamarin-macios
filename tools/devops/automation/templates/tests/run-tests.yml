@@ -312,7 +312,7 @@ steps:
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
   env:
-    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}-${{ parameters.testPrefix }}
 
 # Be nice and clean behind you
 - pwsh: |
