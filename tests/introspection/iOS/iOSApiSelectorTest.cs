@@ -55,6 +55,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "Chip":
+			case "MetalFX":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":

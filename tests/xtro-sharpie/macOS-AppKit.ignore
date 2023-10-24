@@ -1265,14 +1265,9 @@
 !extra-enum-value! Managed value 2048 for NSWindowStyle.Unscaled not found in native headers
 
 # Will be deprecated in a future release 
-!deprecated-attribute-missing! NSColorWell::isBordered missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSColorWell::setBordered: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWindow::setShowsToolbarButton: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWindow::showsToolbarButton missing a [Deprecated] attribute
+
+# we cannot add a breaking change until xamr 5
+!incorrect-protocol-member! NSAccessibility::accessibilityAttributedUserInputLabels is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityUserInputLabels is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityAttributedUserInputLabels: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityUserInputLabels: is REQUIRED and should be abstract
