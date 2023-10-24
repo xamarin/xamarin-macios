@@ -57,7 +57,6 @@ using Xamarin.Utils;
 public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 	internal static string NativeHandleType;
-
 	BindingTouch BindingTouch;
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
@@ -178,7 +177,7 @@ public partial class Generator : IMemberGatherer {
 		return type.IsInterface;
 	}
 
-	string PrimitiveType (Type t, bool formatted = false)
+	public string PrimitiveType (Type t, bool formatted = false)
 	{
 		if (t.IsEnum) {
 			var enumType = t;

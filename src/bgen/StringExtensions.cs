@@ -14,6 +14,7 @@ public static class StringExtensions {
 			_ => $"@\"{self.Replace ("\"", "\"\"")}\""
 		};
 	}
+
 	public static string? RemoveArity (this string? typeName)
 	{
 		if (typeName is null)

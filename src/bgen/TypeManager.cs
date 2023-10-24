@@ -8,9 +8,6 @@ using System.Reflection;
 
 public class TypeManager {
 	public BindingTouch BindingTouch;
-
-	// TODO: Initialize via de load method in the MarshalTypeList so that we have access in the
-	// Go method in the generator.
 	readonly HashSet<string> typesThatMustAlwaysBeGloballyNamed = new();
 
 	Frameworks Frameworks { get; }
