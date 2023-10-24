@@ -300,7 +300,22 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			return CreateItemsForAllFilesRecursively (NativeReferences);
+			var rv = new List<ITaskItem> ();
+			rv.AddRange (CreateItemsForAllFilesRecursively (NativeReferences));
+			if (References is not null) {
+				foreach (var reference in References) {
+					var resourcesPackage = Path.Combine (Path.GetDirectoryName (reference.ItemSpec), Path.GetFileNameWithoutExtension (reference.ItemSpec)) + ".resources";
+					if (Directory.Exists (resourcesPackage)) {
+						var resources = CreateItemsForAllFilesRecursively (new string [] { resourcesPackage });
+						rv.AddRange (resources);
+						continue;
+					}
+					var zipPackage = resourcesPackage + ".zip";
+					if (File.Exists (zipPackage))
+						rv.Add (new TaskItem (zipPackage));
+				}
+			}
+			return rv;
 		}
 	}
 }
