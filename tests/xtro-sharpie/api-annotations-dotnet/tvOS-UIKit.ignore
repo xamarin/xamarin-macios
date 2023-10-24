@@ -404,3 +404,7 @@
 # added and deprecated on xcode 15
 !missing-selector! UIControlUIControl::contextMenuInteraction:previewForDismissingMenuWithConfiguration: not bound
 !missing-selector! UIControlUIControl::contextMenuInteraction:previewForHighlightingMenuWithConfiguration: not bound
+
+# xamcore 5 changes
+!incorrect-protocol-member! UIMenuLeaf::selectedImage is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMenuLeaf::setSelectedImage: is REQUIRED and should be abstract
