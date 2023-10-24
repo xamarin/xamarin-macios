@@ -7116,7 +7116,7 @@ public partial class Generator : IMemberGatherer {
 			var targs = t.GetGenericArguments ();
 			if (targs.Length == 0)
 				return t.Name;
-			return $"global::{t.Namespace}." + t.Name.RemoveArity() + "<" + string.Join (", ", targs.Select (l => TypeManager.FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+			return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => TypeManager.FormatTypeUsedIn (null, l)).ToArray ()) + ">";
 		}
 		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
 			return "global::" + t.FullName;

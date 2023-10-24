@@ -8,7 +8,7 @@ using System.Reflection;
 
 public class TypeManager {
 	public BindingTouch BindingTouch;
-	readonly HashSet<string> typesThatMustAlwaysBeGloballyNamed = new();
+	readonly HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
 
 	Frameworks Frameworks { get; }
 
@@ -517,8 +517,8 @@ public class TypeManager {
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
-		         BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace) ||
-		         string.IsNullOrEmpty (type.FullName))
+				 BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace) ||
+				 string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
@@ -529,7 +529,7 @@ public class TypeManager {
 			if (isNullable)
 				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
 
-			return tname.RemoveArity() + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
+			return tname.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
 		}
 
 		return tname;

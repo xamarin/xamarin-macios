@@ -98,6 +98,6 @@ namespace GeneratorTests {
 		[TestCase ("`", "`")]
 		[TestCase (null, null)]
 		public void RemoveArityTest (string input, string output)
-			=> Assert.AreEqual (output,input.RemoveArity ());
+			=> Assert.AreEqual (output, input.RemoveArity ());
 	}
 }
