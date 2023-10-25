@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>无法分析自定义链接器参数 "-{0}": {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 项“{0}”不存在。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。
 </value>
