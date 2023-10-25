@@ -48,15 +48,25 @@
 
 	</Target>
 
+	<Target Name="_CollectHotRestartBundleContent" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns">
+		<!-- Collect everything to put in the app bundle, except static frameworks -->
+		<FilterStaticFrameworks
+			OnlyFilterFrameworks="true"
+			FrameworkToPublish="@(ResolvedFileToPublish);@(_FileNativeReference);@(_FrameworkNativeReference);@(_DecompressedPlugIns);@(_PlugIns);@(_DecompressedXpcServices);@(_XpcServices)"
+		>
+			<Output TaskParameter="FrameworkToPublish" ItemName="_CollectedHotRestartBundleContent" />
+		</FilterStaticFrameworks>
+	</Target>
+
 	<!-- Collect everything that goes in the app bundle, and figure out where to put it all -->
-	<Target Name="_ComputeHotRestartBundleContents" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns">
+	<Target Name="_ComputeHotRestartBundleContents" DependsOnTargets="_CollectHotRestartBundleContent">
 		<ComputeHotRestartBundleContents
 			HotRestartAppContentDir="$(HotRestartAppContentDir)"
 			HotRestartContentDir="$(HotRestartContentDir)"
 			HotRestartContentStampDir="$(HotRestartContentStampDir)"
 			HotRestartSignedAppDir="$(HotRestartSignedAppDir)"
 			RelativeAppBundlePath="$(_RelativeAppBundlePath)"
-			ResolvedFileToPublish="@(ResolvedFileToPublish);@(_FileNativeReference);@(_FrameworkNativeReference);@(_DecompressedPlugIns);@(_PlugIns)"
+			ResolvedFileToPublish="@(_CollectedHotRestartBundleContent)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="HotRestartAppContentDirContents" ItemName="_HotRestartAppContentDirContents" />
