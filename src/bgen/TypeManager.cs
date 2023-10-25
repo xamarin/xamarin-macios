@@ -511,7 +511,7 @@ public class TypeManager {
 		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
 		// work with nested/nested/nested classes. But we are not writing a general solution because:
 		// 1. We have only encountered nested classes.
-		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a crazy complicated nested hierarchy, 
+		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a super complicated nested hierarchy, 
 		//    so we only solve the problem we have, no more.
 		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
