@@ -8,8 +8,6 @@ using System.Reflection;
 
 public class TypeManager {
 	public BindingTouch BindingTouch;
-	readonly HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
-
 	Frameworks Frameworks { get; }
 
 	public Type System_Attribute { get; }
@@ -142,6 +140,22 @@ public class TypeManager {
 	public Type? NSDirectionalEdgeInsets { get; }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
+	HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
+
+	public void SetTypesThatMustAlwaysBeGloballyNamed (Type [] types) {
+		foreach (var t in types) {
+			// The generator will create special *Appearance types (these are
+			// nested classes). If we've bound a type with the same
+			// *Appearance name, we can end up in a situation where the csc
+			// compiler uses the the type we don't want due to C#'s resolution
+			// rules - this happens if the bound *Appearance type is
+			// referenced from the containing type of the special *Appearance
+			// type. So always reference the bound *Appearance types using
+			// global:: syntax.
+			if (t.Name.EndsWith ("Appearance", StringComparison.Ordinal))
+				typesThatMustAlwaysBeGloballyNamed.Add (t.Name);
+		}
+	}
 	public Dictionary<Type, string> NSNumberReturnMap {
 		get {
 			if (nsnumberReturnMap is not null)
