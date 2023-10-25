@@ -149,7 +149,7 @@ namespace CoreAnimation {
 		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
 
-	[NoMac]
+	[Mac (14, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CADisplayLink {
@@ -178,10 +178,11 @@ namespace CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFramesPerSecond' property.")]
-		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'PreferredFramesPerSecond' property.")]
-		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'PreferredFramesPerSecond' property.")]
-		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Obsoleted (PlatformName.TvOS, 10, 0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Obsoleted (PlatformName.WatchOS, 3, 0, message: "Use 'PreferredFramesPerSecond' property.")]
+		[Obsoleted (PlatformName.MacCatalyst, 13, 1, message: "Use 'PreferredFramesPerSecond' property.")]
+		[NoMac]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set; }
 
@@ -197,6 +198,7 @@ namespace CoreAnimation {
 		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'PreferredFrameRateRange' property.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'PreferredFrameRateRange' property.")]
+		[NoMac]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
 
