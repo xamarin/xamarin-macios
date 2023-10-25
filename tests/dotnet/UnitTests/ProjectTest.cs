@@ -1543,5 +1543,30 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', validTargetPlatformVersions)}", errors [0].Message, "Error message");
 		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "MtouchArch", "x64")]
+		[TestCase (ApplePlatform.iOS, "MtouchArch", "armv7s")]
+		[TestCase (ApplePlatform.TVOS, "MtouchArch", "arm64")]
+		[TestCase (ApplePlatform.MacOSX, "XamMacArch", "x64")]
+		public void InvalidArchProperty (ApplePlatform platform, string property, string value)
+		{
+			// Only keep this test around for .NET 9+10, after that we'll just assume everyone has removed the MtouchArch/XamMacArch properties from their project files,
+			// and at that point we can remove this test to save some testing time on the bots.
+			if (Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major > 10)
+				Assert.Ignore ("This test can be removed, we shouldn't need it anymore.");
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			properties [property] = value;
+			var rv = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Error count");
+			Assert.AreEqual ($"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.", errors [0].Message, "Error message");
+		}
 	}
 }
