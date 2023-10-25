@@ -142,7 +142,8 @@ public class TypeManager {
 	Dictionary<Type, string>? nsnumberReturnMap;
 	HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
 
-	public void SetTypesThatMustAlwaysBeGloballyNamed (Type [] types) {
+	public void SetTypesThatMustAlwaysBeGloballyNamed (Type [] types)
+	{
 		foreach (var t in types) {
 			// The generator will create special *Appearance types (these are
 			// nested classes). If we've bound a type with the same
