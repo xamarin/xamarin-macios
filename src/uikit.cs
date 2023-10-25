@@ -14953,7 +14953,7 @@ namespace UIKit {
 		[return: NullAllowed]
 		UITargetedPreview GetPreviewForHighlightingContextMenu (UITableView tableView, UIContextMenuConfiguration configuration);
 
-		[NoWatch, NoTV, iOS (13, 0)]
+		[NoWatch, TV (17, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("tableView:previewForDismissingContextMenuWithConfiguration:")]
 		[return: NullAllowed]
