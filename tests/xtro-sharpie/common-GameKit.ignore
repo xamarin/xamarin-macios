@@ -6,4 +6,9 @@
 
 # Xcode 12 beta 3 - these API are missing
 # https://github.com/xamarin/maccore/issues/2269
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
 
