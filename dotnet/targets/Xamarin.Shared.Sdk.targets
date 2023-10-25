@@ -994,12 +994,24 @@
 			/>
 	</Target>
 
+	<Target Name="_VerifyValidProperties">
+		<Error
+			Text="The property 'MtouchArch' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture."
+			Condition="'$(MtouchArch)' != '' And '$(AllowMtouchArchProperty)' != 'true'"
+			/>
+		<Error
+			Text="The property 'XamMacArch' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture."
+			Condition="'$(XamMacArch)' != '' And '$(AllowXamMacArchArchProperty)' != 'true'"
+			/>
+	</Target>
+
 	<PropertyGroup>
 		<_ComputeVariablesDependsOn>
 			_VerifyPreviewFeaturesIfUnstableXcode;
 			_VerifyValidRuntime;
 			_GenerateBundleName;
 			_ComputeFrameworkVariables;
+			_VerifyValidProperties;
 		</_ComputeVariablesDependsOn>
 		<!--
 			Don't execute ComputeResolvedFileToPublishList if we're in the
