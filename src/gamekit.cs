@@ -3008,7 +3008,7 @@ namespace GameKit {
 		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		[Export ("challengeComposeControllerWithMessage:players:completion:")]
 		[Async (ResultTypeName = "GKChallengeComposeControllerResult")]
-		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, [NullAllowed] GKPlayer[] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
+		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
