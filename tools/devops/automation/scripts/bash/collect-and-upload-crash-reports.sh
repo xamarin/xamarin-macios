@@ -11,7 +11,7 @@ elif [[ "$(find "$HOME/Library/Logs/DiagnosticReports" -type f | wc -l)" -eq 0 ]
 else
   if test -n "$MACIOS_UPLOAD_PREFIX"; then
     FILENAME="${MACIOS_UPLOAD_PREFIX}-"
-  if test -n "$MACIOS_TEST_PREFIX"; then
+  elif test -n "$MACIOS_TEST_PREFIX"; then
     FILENAME="$FILENAME${MACIOS_TEST_PREFIX}-"
   fi
   FILENAME="${FILENAME}crash-reports-$SYSTEM_STAGEDISPLAYNAME-$SYSTEM_JOBATTEMPT"
