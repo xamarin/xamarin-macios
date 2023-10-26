@@ -944,6 +944,12 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "affectsColorAppearance":
+				switch (declaredType.Name) {
+				case "UITraitTypesettingLanguage":
+					return true;
+				}
+				break;
 			}
 			return base.CheckStaticResponse (value, actualType, declaredType, ref name);
 		}

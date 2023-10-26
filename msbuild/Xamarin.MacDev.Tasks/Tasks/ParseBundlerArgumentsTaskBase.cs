@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
@@ -193,6 +194,17 @@ namespace Xamarin.MacDev.Tasks {
 						customLinkFlags.AddRange (lf);
 						break;
 					default:
+						// Handle arguments like -vvv and -qqqq
+						if (value.Length == 0 && name.Length > 1 && name.All (ch => ch == name [0])) {
+							switch (name [0]) {
+							case 'v':
+								Verbosity += name.Length;
+								continue;
+							case 'q':
+								Verbosity -= name.Length;
+								continue;
+							}
+						}
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
 						break;
 					}

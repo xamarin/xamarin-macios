@@ -106,7 +106,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			await ExecuteAsync (dotnetPath, arguments, environment: environment);
 
-			return File.ReadAllText (outputFile).Trim ();
+			if (File.Exists (outputFile))
+				return File.ReadAllText (outputFile).Trim ();
+			return string.Empty;
 		}
 	}
 }

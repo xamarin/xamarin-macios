@@ -9871,7 +9871,7 @@ namespace AppKit {
 		[Export ("locale", ArgumentSemantic.Copy)]
 		NSLocale Locale { get; }
 
-		[Mac (14, 0)]
+		[Mac (14, 0), NoMacCatalyst]
 		[Static]
 		[Export ("imageWithSymbolName:bundle:variableValue:")]
 		[return: NullAllowed]
