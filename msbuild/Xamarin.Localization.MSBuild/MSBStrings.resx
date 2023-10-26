@@ -1540,4 +1540,11 @@
             {0}: the path to an assembly
         </comment>
     </data>
+
+    <data name="E7120" xml:space="preserve">
+        <value>The mlaunch tool doesn't exist: '{0}'</value>
+        <comment>
+            {0}: the path to the mlaunch tool
+        </comment>
+    </data>
 </root>

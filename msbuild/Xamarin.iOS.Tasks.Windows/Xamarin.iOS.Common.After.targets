@@ -13,6 +13,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 -->
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindMlaunch" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
@@ -337,6 +338,18 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<ItemGroup>
 			<FileWrites Include="$(_RemoteILLinkCachePath)" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_FindMlaunchPath">
+		<FindMlaunch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RemoteMLaunchPath)' == ''"
+			KeepTemporaryOutput="$(FindMlaunchPathKeepKeepTemporaryOutput)"
+			RuntimeIdentifier="$(RuntimeIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			>
+			<Output TaskParameter="MlaunchPath" PropertyName="_RemoteMLaunchPath" />
+		</FindMlaunch>
 	</Target>
 
 	<!-- Overrides Core SDK target to remote the ILLink execution -->
