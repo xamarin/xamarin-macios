@@ -10,7 +10,7 @@
   <Import Project="..\..\eng\Versions.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
+    <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkPackageVersion)" />
     <PackageReference Include="Microsoft.DotNet.Cecil" Version="$(MicrosoftDotNetCecilPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
