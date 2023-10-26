@@ -33,7 +33,7 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 
 ## Feedback
 
-- Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/xamarin.ios) or the [Xamarin Forums](https://forums.xamarin.com/)
+- Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/xamarin.ios) or the [Xamarin Forums](https://learn.microsoft.com/en-us/answers/tags/18/xamarin)
 - [Request a new feature](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#writing-good-bug-reports-and-feature-requests) on GitHub
 - [Vote on existing feature requests](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions#before-submitting-an-issue)
 - [Submit bugs to GitHub Issues](https://github.com/xamarin/xamarin-macios/wiki/Submitting-Bugs-&-Suggestions)
