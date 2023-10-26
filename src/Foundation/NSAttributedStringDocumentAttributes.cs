@@ -21,6 +21,7 @@ using UIKit;
 #if !COREBUILD && HAS_WEBKIT
 using WebKit;
 #endif
+using ObjCRuntime;
 
 #if !COREBUILD
 #if __MACOS__

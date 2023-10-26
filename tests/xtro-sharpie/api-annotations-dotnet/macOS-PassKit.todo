@@ -1,6 +1,0 @@
-!missing-enum! PKApplePayLaterAvailability not bound
-!missing-enum-value! PKMerchantCapability native value PKMerchantCapabilityInstantFundsOut = 128 not bound
-!missing-field! PKPaymentNetworkTmoney not bound
-!missing-selector! PKPaymentRequest::applePayLaterAvailability not bound
-!missing-selector! PKPaymentRequest::setApplePayLaterAvailability: not bound
-!missing-field! PKPaymentNetworkPagoBancomat not bound

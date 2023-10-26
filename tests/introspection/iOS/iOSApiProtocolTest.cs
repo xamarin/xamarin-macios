@@ -88,6 +88,7 @@ namespace Introspection {
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
 			case "SWCollaborationActionHandler":
+			case "UISymbolEffectCompletionContext":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
@@ -513,6 +514,7 @@ namespace Introspection {
 				case "CKSyncEnginePendingZoneSave":
 				case "CKSyncEngineState":
 				case "CKSyncEnginePendingDatabaseChange":
+				case "NSCursor":
 					return true;
 				}
 				break;
@@ -773,6 +775,7 @@ namespace Introspection {
 				case "CKSyncEnginePendingZoneDelete":
 				case "CKSyncEnginePendingZoneSave":
 				case "CKSyncEngineState":
+				case "NSCursor":
 					return true;
 				}
 				break;

@@ -48,20 +48,30 @@
 
 	</Target>
 
+	<Target Name="_CollectHotRestartBundleContent" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns">
+		<!-- Collect everything to put in the app bundle, except static frameworks -->
+		<FilterStaticFrameworks
+			OnlyFilterFrameworks="true"
+			FrameworkToPublish="@(ResolvedFileToPublish);@(_FileNativeReference);@(_FrameworkNativeReference);@(_DecompressedPlugIns);@(_PlugIns);@(_DecompressedXpcServices);@(_XpcServices)"
+		>
+			<Output TaskParameter="FrameworkToPublish" ItemName="_CollectedHotRestartBundleContent" />
+		</FilterStaticFrameworks>
+	</Target>
+
 	<!-- Collect everything that goes in the app bundle, and figure out where to put it all -->
-	<Target Name="_ComputeHotRestartBundleContents" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns">
+	<Target Name="_ComputeHotRestartBundleContents" DependsOnTargets="_CollectHotRestartBundleContent">
 		<ComputeHotRestartBundleContents
 			HotRestartAppContentDir="$(HotRestartAppContentDir)"
 			HotRestartContentDir="$(HotRestartContentDir)"
 			HotRestartContentStampDir="$(HotRestartContentStampDir)"
-			HotRestartSignedAppDir="$(HotRestartSignedAppDir)"
+			HotRestartAppBundlePath="$(HotRestartAppBundlePath)"
 			RelativeAppBundlePath="$(_RelativeAppBundlePath)"
-			ResolvedFileToPublish="@(ResolvedFileToPublish);@(_FileNativeReference);@(_FrameworkNativeReference);@(_DecompressedPlugIns);@(_PlugIns)"
+			ResolvedFileToPublish="@(_CollectedHotRestartBundleContent)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
 			<Output TaskParameter="HotRestartAppContentDirContents" ItemName="_HotRestartAppContentDirContents" />
 			<Output TaskParameter="HotRestartContentDirContents" ItemName="_HotRestartContentDirContents" />
-			<Output TaskParameter="HotRestartSignedAppDirContents" ItemName="_HotRestartSignedAppDirContents" />
+			<Output TaskParameter="HotRestartAppBundleContents" ItemName="_HotRestartAppBundleDirContents" />
 		</ComputeHotRestartBundleContents>
 	</Target>
 
@@ -153,27 +163,27 @@
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_UnpackLibraryResources"
 		Inputs="@(_BundleResourceWithLogicalName)"
-		Outputs="@(_BundleResourceWithLogicalName -> '$(HotRestartSignedAppDir)%(LogicalName)')">
+		Outputs="@(_BundleResourceWithLogicalName -> '$(HotRestartAppBundlePath)\%(LogicalName)')">
 
 		<Copy
 			SourceFiles="@(_BundleResourceWithLogicalName)"
-			DestinationFiles="@(_BundleResourceWithLogicalName -> '$(HotRestartSignedAppDir)%(LogicalName)')"
+			DestinationFiles="@(_BundleResourceWithLogicalName -> '$(HotRestartAppBundlePath)\%(LogicalName)')"
 			SkipUnchangedFiles="true"
 		>
 			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 		</Copy>
 	</Target>
 
-	<!-- Copy the items in _HotRestartSignedAppDirContents to their destination directory -->
+	<!-- Copy the items in _HotRestartAppBundleDirContents to their destination directory -->
 	<Target Name="_CopyFilesToHotRestartSignedAppDirContents"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
 		DependsOnTargets="_CreateHotRestartCachedBundle;_ComputeHotRestartBundleContents"
-		Inputs="@(_HotRestartSignedAppDirContents)"
-		Outputs="@(_HotRestartSignedAppDirContents -> '%(DestinationFile)')">
+		Inputs="@(_HotRestartAppBundleDirContents)"
+		Outputs="@(_HotRestartAppBundleDirContents -> '%(DestinationFile)')">
 
 		<Copy
-			SourceFiles="@(_HotRestartSignedAppDirContents)"
-			DestinationFiles="@(_HotRestartSignedAppDirContents -> '%(DestinationFile)')"
+			SourceFiles="@(_HotRestartAppBundleDirContents)"
+			DestinationFiles="@(_HotRestartAppBundleDirContents -> '%(DestinationFile)')"
 			SkipUnchangedFiles="true"
 		>
 			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
@@ -236,7 +246,7 @@
 			<_CodeSignHotRestartInputs Include="$(_AppBundleManifestPath)" Outputs="$(HotRestartSignedAppDir)Info.plist" />
 			<_CodeSignHotRestartInputs Include="$(CodesignEntitlements)" Outputs="$(HotRestartSignedAppDir)$(CodesignEntitlements)" />
 			<_CodeSignHotRestartInputs Include="$(_ProvisioningProfilePath)" Outputs="$(HotRestartSignedAppDir)embedded.mobileprovision" />
-			<_CodeSignHotRestartInputs Include="@(_HotRestartSignedAppDirContents)" Outputs="%(_HotRestartSignedAppDirContents.DestinationFile)" />
+			<_CodeSignHotRestartInputs Include="@(_HotRestartAppBundleDirContents)" Outputs="%(_HotRestartAppBundleDirContents.DestinationFile)" />
 			<_CodeSignHotRestartInputs Include="$(HotRestartAppBundlePath)\Extracted" Outputs="$(HotRestartSignedAppDir)Extracted" />
 		</ItemGroup>
 	</Target>
@@ -246,9 +256,9 @@
 			_CreateHotRestartCachedBundle;
 			_UnpackLibraryResources;
 			_ComputeHotRestartBundleContents;
-			_CodesignHotRestartAppBundle;
 			_CopyHotRestartBundleResources;
 			_CopyFilesToHotRestartSignedAppDirContents;
+			_CodesignHotRestartAppBundle;
 			_CopyFilesToHotRestartContentDir;
 			_CopyFilesToHotRestartAppContentDir;
 			_CreateHotRestartAppMarkers;

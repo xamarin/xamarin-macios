@@ -55,6 +55,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "Chip":
+			case "MetalFX":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
@@ -943,6 +944,12 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "affectsColorAppearance":
+				switch (declaredType.Name) {
+				case "UITraitTypesettingLanguage":
+					return true;
+				}
+				break;
 			}
 			return base.CheckStaticResponse (value, actualType, declaredType, ref name);
 		}

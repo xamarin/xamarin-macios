@@ -58,6 +58,7 @@ using CollectionLayoutSectionOrthogonalScrollingBehavior=AppKit.NSCollectionLayo
 using CollectionElementCategory=AppKit.NSCollectionElementCategory;
 using StringAttributes=AppKit.NSStringAttributes;
 using View=AppKit.NSView;
+using UICollectionLayoutSectionOrthogonalScrollingProperties = System.Object;
 #else
 using BezierPath = UIKit.UIBezierPath;
 using Image = UIKit.UIImage;
@@ -2020,6 +2021,10 @@ namespace UIKit {
 		[MacCatalyst (16, 0)]
 		[Export ("supplementaryContentInsetsReference", ArgumentSemantic.Assign)]
 		UIContentInsetsReference SupplementaryContentInsetsReference { get; set; }
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), NoMac]
+		[Export ("orthogonalScrollingProperties")]
+		UICollectionLayoutSectionOrthogonalScrollingProperties OrthogonalScrollingProperties { get; }
 	}
 
 	[NoWatch, TV (13, 0), iOS (13, 0)]
@@ -2780,6 +2785,15 @@ namespace UIKit {
 
 		[Export ("dimension")]
 		nfloat Dimension { get; }
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), NoMac, MacCatalyst (17, 0)]
+		[Static]
+		[Export ("uniformAcrossSiblingsWithEstimate:")]
+		NSCollectionLayoutDimension CreateUniformAcrossSiblings (nfloat estimatedDimension);
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), NoMac]
+		[Export ("isUniformAcrossSiblings")]
+		bool IsUniformAcrossSiblings { get; }
 	}
 
 
@@ -3626,6 +3640,16 @@ namespace UIKit {
 
 		[Export ("frameForTextAttachmentAtLocation:")]
 		CGRect GetFrameForTextAttachment (INSTextLocation location);
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForVerticalOffset:requiresExactMatch:")]
+		[return: NullAllowed]
+		NSTextLineFragment GetTextLineFragment (nfloat verticalOffset, bool requiresExactMatch);
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("textLineFragmentForTextLocation:isUpstreamAffinity:")]
+		[return: NullAllowed]
+		NSTextLineFragment GetTextLineFragment (INSTextLocation textLocation, bool isUpstreamAffinity);
 	}
 
 	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -4376,6 +4400,10 @@ namespace UIKit {
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		NSString CocoaVersionDocumentAttribute { get; }
+
+		[Field ("NSDefaultFontExcludedDocumentAttribute")]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		NSString DefaultFontExcludedDocumentAttribute { get; }
 	}
 
 	[Static]
@@ -4427,11 +4455,10 @@ namespace UIKit {
 		[Field ("NSSourceTextScalingDocumentOption")]
 		NSString NSSourceTextScalingDocumentOption { get; }
 
-		// This field is really inside WebKit
-		[NoWatch, NoTV]
-		[iOS (13, 0)]
-		[MacCatalyst (13, 1)]
+		// comes from webkit
+		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
 		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
 		NSString NSReadAccessUrlDocumentOption { get; }
+
 	}
 }
