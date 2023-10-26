@@ -27378,7 +27378,7 @@ namespace UIKit {
 		UICollectionLayoutSectionOrthogonalScrollingBounce Bounce { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), iOS (17, 0)]
+	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface UIContentUnavailableButtonProperties : NSCopying, NSSecureCoding {
 		[NullAllowed, Export ("primaryAction", ArgumentSemantic.Copy)]
@@ -27476,7 +27476,7 @@ namespace UIKit {
 		UIBackgroundConfiguration Background { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), iOS (17, 0)]
+	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface UIContentUnavailableImageProperties : NSCopying, NSSecureCoding {
 		[NullAllowed, Export ("preferredSymbolConfiguration", ArgumentSemantic.Copy)]
@@ -27495,7 +27495,7 @@ namespace UIKit {
 		bool AccessibilityIgnoresInvertColors { get; set; }
 	}
 
-	[NoWatch, TV (17, 0), iOS (17, 0)]
+	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (NSObject))]
 	interface UIContentUnavailableTextProperties : NSCopying, NSSecureCoding {
 		[Export ("font", ArgumentSemantic.Strong)]
