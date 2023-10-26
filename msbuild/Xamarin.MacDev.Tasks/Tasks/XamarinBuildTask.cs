@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -8,51 +9,72 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Threading = System.Threading.Tasks;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class XamarinBuildTask : XamarinTask, ITaskCallback, ICancelableTask {
 		public bool KeepTemporaryOutput { get; set; }
 
 		[Required]
-		public string RuntimeIdentifier { get; set; }
+		public string RuntimeIdentifier { get; set; } = string.Empty;
+
+		enum FetchMode {
+			Property,
+			Item,
+		}
 
 		/// <summary>
-		/// Runs the target passed in computeValueTarget and returns its result.
-		/// The target must write the result into a text file using $(OutputFilePath) as path.
+		/// Fetches the specified property. An error will already have been logged if returning false.
 		/// </summary>
-		/// <returns></returns>
-		protected string ComputeValueUsingTarget (string computeValueTarget, string targetName)
+		/// <returns>
+		/// The specified property value.
+		/// </returns>
+		protected bool TryGetProperty (string name, string? targetName, [NotNullWhen (true)] out string? value) => TryGet (FetchMode.Property, name, targetName, out value);
+		protected bool TryGetProperty (string name, [NotNullWhen (true)] out string? value) => TryGetProperty (name, null, out value);
+
+		/// <summary>
+		/// Fetches the specified item. An error will already have been logged if returning false.
+		/// </summary>
+		/// <returns>
+		/// Json with the specified item(s).
+		/// </returns>
+		protected bool TryGetItem (string name, string? targetName, [NotNullWhen (true)] out string? value) => TryGet (FetchMode.Item, name, targetName, out value);
+		protected bool TryGetItem (string name, [NotNullWhen (true)] out string? value) => TryGetProperty (name, null, out value);
+
+		bool TryGet (FetchMode mode, string name, string? targetName, [NotNullWhen (true)] out string? value)
 		{
+			value = null;
+
 			var projectDirectory = Path.GetTempFileName ();
 			File.Delete (projectDirectory);
 			Directory.CreateDirectory (projectDirectory);
-			var projectPath = Path.Combine (projectDirectory, targetName + ".csproj");
+			var projectPath = Path.Combine (projectDirectory, name + ".csproj");
 
 			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
 		<TargetFramework>net{TargetFramework.Version}-{PlatformName}</TargetFramework>
 	</PropertyGroup>
-	{computeValueTarget}
 </Project>
 ";
 			File.WriteAllText (projectPath, csproj);
 
 			var dotnetPath = this.GetDotNetPath ();
-			var environment = default (Dictionary<string, string>);
+			var environment = default (Dictionary<string, string?>);
 			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
 			if (!string.IsNullOrEmpty (customHome)) {
-				environment = new Dictionary<string, string> { { "HOME", customHome } };
+				environment = new Dictionary<string, string?> { { "HOME", customHome } };
 			}
 
 			try {
-				ExecuteRestoreAsync (dotnetPath, projectPath, targetName, environment).Wait ();
+				ExecuteRestoreAsync (dotnetPath, projectPath, name, environment).Wait ();
 
 				// Don't try to run 'dotnet build' if restore failed.
 				if (Log.HasLoggedErrors)
-					return string.Empty;
+					return false;
 
-				return ExecuteBuildAsync (dotnetPath, projectPath, targetName, environment).Result;
+				value = ExecuteBuildAsync (dotnetPath, projectPath, mode, name, targetName, environment).Result;
 			} finally {
 				if (KeepTemporaryOutput) {
 					Log.LogMessage (MessageImportance.Normal, $"Temporary project directory for the {targetName} task: {projectDirectory}");
@@ -60,12 +82,14 @@ namespace Xamarin.MacDev.Tasks {
 					Directory.Delete (projectDirectory, true);
 				}
 			}
+
+			return !Log.HasLoggedErrors;
 		}
 
-		async Threading.Task ExecuteRestoreAsync (string dotnetPath, string projectPath, string targetName, Dictionary<string, string> environment)
+		async Threading.Task<bool> ExecuteRestoreAsync (string dotnetPath, string projectPath, string name, Dictionary<string, string?>? environment)
 		{
 			var projectDirectory = Path.GetDirectoryName (projectPath);
-			var binlog = Path.Combine (projectDirectory, targetName + ".binlog");
+			var binlog = Path.Combine (projectDirectory, name + "-restore.binlog");
 			var arguments = new List<string> ();
 
 			arguments.Add ("restore");
@@ -81,34 +105,43 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add (projectPath);
 
 			try {
-				await ExecuteAsync (dotnetPath, arguments, environment: environment);
+				await ExecuteAsync (dotnetPath, arguments, environment: environment, showErrorIfFailure: true);
 			} finally {
 				if (KeepTemporaryOutput) {
-					Log.LogMessage (MessageImportance.Normal, $"Temporary restore log for the {targetName} task: {binlog}");
+					Log.LogMessage (MessageImportance.Normal, $"Temporary restore log for the {GetType ().Name} task: {binlog}");
 				} else {
 					File.Delete (binlog);
 				}
 			}
+			return !Log.HasLoggedErrors;
 		}
 
-		async Threading.Task<string> ExecuteBuildAsync (string dotnetPath, string projectPath, string targetName, Dictionary<string, string> environment)
+		async Threading.Task<string> ExecuteBuildAsync (string dotnetPath, string projectPath, FetchMode mode, string name, string? targetName, Dictionary<string, string?>? environment)
 		{
 			var projectDirectory = Path.GetDirectoryName (projectPath);
-			var outputFile = Path.Combine (projectDirectory, "Output.txt");
-			var binlog = Path.Combine (projectDirectory, targetName + ".binlog");
+			var binlog = Path.Combine (projectDirectory, name + "-build.binlog");
 			var arguments = new List<string> ();
 
 			arguments.Add ("build");
-			arguments.Add ("/p:OutputFilePath=" + outputFile);
 			arguments.Add ("/p:RuntimeIdentifier=" + RuntimeIdentifier);
-			arguments.Add ($"/t:{targetName}");
+			if (!string.IsNullOrEmpty (targetName))
+				arguments.Add ($"/t:{targetName}");
 			arguments.Add ("/bl:" + binlog);
+			switch (mode) {
+			case FetchMode.Property:
+				arguments.Add ($"/getProperty:{name}");
+				break;
+			case FetchMode.Item:
+				arguments.Add ($"/getItem:{name}");
+				break;
+			default:
+				throw new InvalidOperationException ($"Unknown fetch mode: {mode}");
+			}
 			arguments.Add (projectPath);
 
-			await ExecuteAsync (dotnetPath, arguments, environment: environment);
-
-			if (File.Exists (outputFile))
-				return File.ReadAllText (outputFile).Trim ();
+			var rv = await ExecuteAsync (dotnetPath, arguments, environment: environment, showErrorIfFailure: true);
+			if (rv.ExitCode == 0)
+				return rv.StandardOutput!.ToString ();
 			return string.Empty;
 		}
 

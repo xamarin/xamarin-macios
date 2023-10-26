@@ -3,19 +3,17 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	public class FindILLink : XamarinBuildTask {
 		[Output]
-		public string ILLinkPath { get; set; }
+		public string ILLinkPath { get; set; } = string.Empty;
 
 		protected override bool ExecuteLocally ()
 		{
-			var targetName = "ComputeILLinkTaskPath";
-			var target = $@"<Target Name=""{targetName}"">
-	<WriteLinesToFile File=""$(OutputFilePath)"" Lines=""$(ILLinkTasksAssembly)"" />
-</Target>";
-
-			var illinkTaskPath = ComputeValueUsingTarget (target, targetName);
+			if (!TryGetProperty ("ILLinkTasksAssembly", out var illinkTaskPath))
+				return false;
 
 			// Don't do anything else if something already went wrong (in particular don't check if illink.dll exists).
 			if (Log.HasLoggedErrors)
@@ -31,4 +29,3 @@ namespace Xamarin.MacDev.Tasks {
 		}
 	}
 }
-
