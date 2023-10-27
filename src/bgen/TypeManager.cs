@@ -477,8 +477,10 @@ public class TypeManager {
 		return tname;
 	}
 
-	public string FormatTypeUsedIn (string? usedInNamespace, Type type, bool protocolized = false)
+	public string FormatTypeUsedIn (string? usedInNamespace, Type? type, bool protocolized = false)
 	{
+		if (type == null)
+			return "null";
 		if (type == System_Void)
 			return "void";
 		if (type == System_SByte)
@@ -519,9 +521,6 @@ public class TypeManager {
 			return "nfloat";
 
 		if (type.IsArray) {
-			if (type.GetElementType () is null) {
-				return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "? [" + new string (',', type.GetArrayRank () - 1) + "]";
-			}
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
 		}
 
