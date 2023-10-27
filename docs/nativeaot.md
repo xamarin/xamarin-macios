@@ -6,6 +6,8 @@ tvOS, Mac Catalyst and macOS apps in .NET 8.
 NativeAOT may produce smaller and/or faster apps - or it may not. It's very
 important to test and profile to determine the results of enabling NativeAOT.
 
+## How to enable NativeAOT?
+
 NativeAOT is enabled by setting the `PublishAot` property to `true` in the project file:
 
 ```xml
