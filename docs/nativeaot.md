@@ -37,17 +37,16 @@ because it's not possible to use `dotnet publish` when running from the IDE.
 
 ## Compatibility and limitations
 
-Note that NativeAOT does not support managed debugging.
+There are no known issues specific to our platforms with NativeAOT; but the
+[limitations][2] are exactly the same as for other supported platforms. 
+Nevertheless, we would like to point out a few features that are not available with NativeAOT, that are with Mono, when targeting Apple platforms:
 
-There's no interpreter when using NativeAOT, and as such the `UseInterpreter`
+- NativeAOT does not support managed debugging.
+- There's no interpreter when using NativeAOT, and as such the `UseInterpreter`
 and `MtouchInterpreter` properties have no effect.
-
-NativeAOT requires trimming, and `MAUI` isn't trimmer-safe, and thus
+- NativeAOT requires trimming, and `MAUI` isn't trimmer-safe, and thus
 unfortunately `MAUI` projects don't typically work with NativeAOT (we hope to
 rectify this situation for .NET 9).
-
-There are no known issues specific to our platforms with NativeAOT; but the
-[limitations][2] are exactly the same as for other platforms.
 
 [1]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot
 [2]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/?tabs=net8plus%2Cwindows#limitations-of-native-aot-deployment
