@@ -518,8 +518,13 @@ public class TypeManager {
 		if (type == System_nfloat)
 			return "nfloat";
 
-		if (type.IsArray)
+		if (type.IsArray) {
+			if (type.GetElementType () is null) {
+				return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "? [" + new string (',', type.GetArrayRank () - 1) + "]";
+			}
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
+		}
+
 
 		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
