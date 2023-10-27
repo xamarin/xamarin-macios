@@ -6,6 +6,10 @@ tvOS, Mac Catalyst and macOS apps in .NET 8.
 NativeAOT may produce smaller and/or faster apps - or it may not. It's very
 important to test and profile to determine the results of enabling NativeAOT.
 
+However, our initial testing shows significant improvements both in size (up
+to 50% smaller) and startup (up to 50% faster). For more information about
+performance see (pending link to blog post).
+
 ## How to enable NativeAOT?
 
 NativeAOT is enabled by setting the `PublishAot` property to `true` in the project file:
@@ -38,15 +42,19 @@ because it's not possible to use `dotnet publish` when running from the IDE.
 ## Compatibility and limitations
 
 There are no known issues specific to our platforms with NativeAOT; but the
-[limitations][2] are exactly the same as for other supported platforms. 
-Nevertheless, we would like to point out a few features that are not available with NativeAOT, that are with Mono, when targeting Apple platforms:
+[limitations][2] are exactly the same as for other supported platforms.
+
+Nevertheless, we would like to point out a few features that are not available
+with NativeAOT, that are with Mono, when targeting Apple platforms:
 
 - NativeAOT does not support managed debugging.
-- There's no interpreter when using NativeAOT, and as such the `UseInterpreter`
-and `MtouchInterpreter` properties have no effect.
+
+- There's no interpreter when using NativeAOT, and as such the
+  `UseInterpreter` and `MtouchInterpreter` properties have no effect.
+
 - NativeAOT requires trimming, and `MAUI` isn't trimmer-safe, and thus
-unfortunately `MAUI` projects don't typically work with NativeAOT (we hope to
-rectify this situation for .NET 9).
+  unfortunately `MAUI` projects don't typically work with NativeAOT (we hope
+  to rectify this situation for .NET 9).
 
 [1]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot
 [2]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/?tabs=net8plus%2Cwindows#limitations-of-native-aot-deployment
