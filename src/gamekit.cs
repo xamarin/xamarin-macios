@@ -1719,17 +1719,17 @@ namespace GameKit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Async (ResultTypeName = "GKChallengeComposeResult")]
-		[Deprecated(PlatformName.iOS, 17, 0)]
-		[Deprecated(PlatformName.MacOSX, 14, 0)]
-		[Deprecated(PlatformName.TvOS, 17, 0)]
-		[Deprecated(PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 
-		[TV(17, 0), iOS(17, 0), Mac(14, 0), MacCatalyst(17, 0), NoWatch]
-		[Export("challengeComposeControllerWithMessage:players:completion:")]
+		[TV (17, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
+		[Export ("challengeComposeControllerWithMessage:players:completion:")]
 		[Async (ResultTypeName = "GKChallengeComposeControllerResult")]
-		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, GKPlayer[] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
+		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 
 		[NoWatch]
 		[MacCatalyst (13, 1)]
