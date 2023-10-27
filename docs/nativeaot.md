@@ -8,7 +8,7 @@ important to test and profile to determine the results of enabling NativeAOT.
 
 However, our initial testing shows significant improvements both in size (up
 to 50% smaller) and startup (up to 50% faster). For more information about
-performance see (pending link to blog post).
+performance see [.NET 8 Performance Improvements in .NET MAUI][3].
 
 ## How to enable NativeAOT?
 
@@ -58,3 +58,4 @@ with NativeAOT, that are with Mono, when targeting Apple platforms:
 
 [1]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot
 [2]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/?tabs=net8plus%2Cwindows#limitations-of-native-aot-deployment
+[3]: https://devblogs.microsoft.com/dotnet/pending_link_to_blog_post
