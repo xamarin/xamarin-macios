@@ -535,7 +535,7 @@ public class TypeManager {
 		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
-		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace ) ||
+		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
 				 BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
 				 string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
