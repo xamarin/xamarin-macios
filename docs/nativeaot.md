@@ -35,6 +35,8 @@ NativeAOT is only used when publishing (`dotnet publish`). In particular
 This can be useful to install and run apps with `NativeAOT` from the IDE,
 because it's not possible to use `dotnet publish` when running from the IDE.
 
+## Compatibility and limitations
+
 Note that NativeAOT does not support managed debugging.
 
 There's no interpreter when using NativeAOT, and as such the `UseInterpreter`
