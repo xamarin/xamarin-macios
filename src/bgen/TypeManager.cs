@@ -456,17 +456,17 @@ public class TypeManager {
 		return formatted ? FormatType (null, t) : t.Name;
 	}
 
-	public string FormatType (Type usedIn, Type type)
+	public string FormatType (Type? usedIn, Type type)
 	{
-		return FormatTypeUsedIn (usedIn is null ? null : usedIn.Namespace, type);
+		return FormatTypeUsedIn (usedIn?.Namespace, type);
 	}
 
-	public string FormatType (Type usedIn, Type type, bool protocolized)
+	public string FormatType (Type? usedIn, Type type, bool protocolized)
 	{
 		return FormatTypeUsedIn (usedIn?.Namespace, type, protocolized);
 	}
 
-	public string FormatType (Type usedIn, string @namespace, string name)
+	public string FormatType (Type? usedIn, string @namespace, string name)
 	{
 		string tname;
 		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceManager.StandardNamespaces.Contains (@namespace))
@@ -477,7 +477,7 @@ public class TypeManager {
 		return tname;
 	}
 
-	public string FormatTypeUsedIn (string usedInNamespace, Type type, bool protocolized = false)
+	public string FormatTypeUsedIn (string? usedInNamespace, Type type, bool protocolized = false)
 	{
 		if (type == System_Void)
 			return "void";
