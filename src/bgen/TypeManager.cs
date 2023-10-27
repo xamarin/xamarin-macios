@@ -479,7 +479,7 @@ public class TypeManager {
 
 	public string FormatTypeUsedIn (string? usedInNamespace, Type? type, bool protocolized = false)
 	{
-		if (type == null)
+		if (type is null)
 			return "null";
 		if (type == System_Void)
 			return "void";
