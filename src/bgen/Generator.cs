@@ -5578,6 +5578,25 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	public class FieldBlock {
+		public bool is_category_class;
+		public bool is_static_class;
+		public bool is_partial;
+		public ModelAttribute model;
+		public bool is_model;
+		public ProtocolAttribute protocol;
+		public bool is_protocol;
+		public bool is_abstract;
+		public bool is_sealed;
+		public string class_visibility;
+
+		public DefaultCtorVisibilityAttribute default_ctor_visibility;
+		public BaseTypeAttribute bta;
+		public Type base_type;
+		public string objc_type_name;
+		public string register_name;
+	}
+
 	public void Generate (Type type)
 	{
 		if (ZeroCopyStrings) {
@@ -5603,6 +5622,10 @@ public partial class Generator : IMemberGatherer {
 		var instance_fields_to_clear_on_dispose = new List<string> ();
 		var gtype = GeneratedTypes.Lookup (type);
 		var appearance_selectors = gtype.ImplementsAppearance ? gtype.AppearanceSelectors : null;
+
+		FieldBlock fb = new();
+		// TODO: Now that I have the fieldblock class, I assign the below into the block. Once done, I can then
+		// 
 
 		using (var sw = GetOutputStreamForType (type)) {
 			this.sw = sw;
