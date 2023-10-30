@@ -480,7 +480,7 @@ public class TypeManager {
 	public string FormatTypeUsedIn (string? usedInNamespace, Type? type, bool protocolized = false)
 	{
 		if (type is null)
-			return "null";
+			throw new BindingException (1065, true );
 		if (type == System_Void)
 			return "void";
 		if (type == System_SByte)
