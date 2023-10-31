@@ -3,17 +3,15 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Ssh;
 
 namespace Xamarin.iOS.Tasks {
-	public class CopyArchiveFiles : Task, ICancelableTask {
+	public class CopyArchiveFiles : XamarinTask, ICancelableTask {
 		[Required]
 		public string ArchivePath { get; set; }
-
-		[Required]
-		public string SessionId { get; set; }
 
 		[Required]
 		public string AppName { get; set; }

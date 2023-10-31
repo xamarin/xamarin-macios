@@ -218,6 +218,22 @@ steps:
         TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
         Error = "Notarized xamarin.mac pkg not found." ;
         ShouldExist = $notarizedShouldExist;
+      },
+      @{
+        Path = "$pkgsPath\\bundle.zip" ;
+        Context = "bundle.zip" ;
+        Description = "bundle.zip" ;
+        TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
+        Error = "bundle.zip not found." ;
+        ShouldExist = $true;
+      },
+      @{
+        Path = "$pkgsPath\msbuild.zip" ;
+        Context = "msbuild.zip" ;
+        Description = "msbuild.zip" ;
+        TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
+        Error = "msbuild.zip not found." ;
+        ShouldExist = $true;
       }
     )
 
