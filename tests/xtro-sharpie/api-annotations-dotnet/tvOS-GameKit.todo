@@ -1,6 +1,0 @@
-!deprecated-attribute-missing! GKAchievement::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKNotificationBanner missing a [Deprecated] attribute
-!missing-selector! GKAchievement::challengeComposeControllerWithMessage:players:completion: not bound
-!missing-selector! GKAchievementDescription::rarityPercent not bound
-!missing-selector! GKLeaderboardEntry::challengeComposeControllerWithMessage:players:completion: not bound
