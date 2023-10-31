@@ -33,7 +33,12 @@ public static class ReflectionExtensions {
 
 		return baseType;
 	}
-
+	
+	public static BaseTypeAttribute? GetBaseTypeAttribute (Type type, AttributeManager AttributeManager)
+	{
+		return AttributeManager.GetCustomAttribute<BaseTypeAttribute> (type);
+	}
+	
 	public static List<PropertyInfo> GatherProperties (this Type type, Generator generator)
 	{
 		return type.GatherProperties (BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, generator);
@@ -139,6 +144,12 @@ public static class ReflectionExtensions {
 	{
 		return generator.AttributeManager.HasAttribute<InternalAttribute> (type)
 			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
+	}
+	
+	public static bool IsInternal (this Type type, AttributeManager AttributeManager)
+	{
+		return AttributeManager.HasAttribute<InternalAttribute> (type)
+		       || (AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
 	}
 
 	public static List<MethodInfo> GatherMethods (this Type type, BindingFlags flags, Generator generator)
