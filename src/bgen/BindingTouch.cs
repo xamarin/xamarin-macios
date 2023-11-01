@@ -78,7 +78,6 @@ public class BindingTouch : IDisposable {
 
 	NamespaceManager? namespaceManager;
 	public NamespaceManager NamespaceManager => namespaceManager!;
-
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {

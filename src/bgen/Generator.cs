@@ -3293,9 +3293,9 @@ public partial class Generator : IMemberGatherer {
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable is not null) {
 						var nt = TypeManager.FormatType (mi.DeclaringType, nullable);
-						convs.AppendFormat ($"{nt}* converted_{safe_name} = null;\n");
+						convs.Append ($"{nt}* converted_{safe_name} = null;\n");
 						convs.Append ($"{nt} converted_{safe_name}_v = default ({nt});\n");
-						convs.AppendFormat ($"if ({safe_name}.HasValue) {{\n");
+						convs.Append ($"if ({safe_name}.HasValue) {{\n");
 						convs.Append ($"\tconverted_{safe_name}_v = {safe_name}.Value;\n");
 						convs.Append ($"\tconverted_{safe_name} = &converted_{safe_name}_v;\n");
 						convs.Append ("}\n");
