@@ -3964,7 +3964,7 @@ public partial class Generator : IMemberGatherer {
 		var nullable = !pi.PropertyType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 
 		// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
-		PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute (type, this), pi.Name);
+		PropertyInfo parentBaseType = TypeManager.GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute (type, this), pi.Name);
 
 		// If so, we're not static, and we can't both read and write, but they can
 		if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType is not null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
@@ -6922,22 +6922,7 @@ public partial class Generator : IMemberGatherer {
 		return GetParentTypeWithSameNamedDelegate (bta, delegateName) is not null;
 	}
 
-	// TODO: If we ever have an API with nested properties of the same name more than
-	// 2 deep, we'll need to have this return a list of PropertyInfo and comb through them all.
-	PropertyInfo GetParentTypeWithSameNamedProperty (BaseTypeAttribute bta, string propertyName)
-	{
-		if (bta is null)
-			return null;
-
-		Type currentType = bta.BaseType;
-		while (currentType is not null && currentType != TypeManager.NSObject) {
-			PropertyInfo prop = currentType.GetProperty (propertyName, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
-			if (prop is not null)
-				return prop;
-			currentType = currentType.BaseType;
-		}
-		return null;
-	}
+	
 
 	string GetNotificationCenter (PropertyInfo pi)
 	{
