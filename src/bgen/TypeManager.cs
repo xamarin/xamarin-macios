@@ -614,7 +614,7 @@ public class TypeManager {
 
 	// TODO: If we ever have an API with nested properties of the same name more than
 	// 2 deep, we'll need to have this return a list of PropertyInfo and comb through them all.
-	public PropertyInfo GetParentTypeWithSameNamedProperty (BaseTypeAttribute bta, string propertyName)
+	public PropertyInfo? GetParentTypeWithSameNamedProperty (BaseTypeAttribute bta, string propertyName)
 	{
 		if (bta is null)
 			return null;
