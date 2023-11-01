@@ -15,11 +15,11 @@ namespace MonoTouchFixtures.Metal {
 		{
 			TestRuntime.AssertXcodeVersion (15, 0);
 			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
-			
+
 			// Convert once
 			outputPath = Path.Combine (paths [0], "output1");
 		}
-		
+
 
 		[TearDown]
 		public void TearDown ()
@@ -38,12 +38,12 @@ namespace MonoTouchFixtures.Metal {
 		public void CreateAndFlushTest ()
 		{
 			TestRuntime.AssertNotSimulator (); // metal api no supported on the sim
-			// create and flush, test should simple pass, no need to asserts
+											   // create and flush, test should simple pass, no need to asserts
 			using var compressIO = MTLIOCompressionContext.Create (outputPath, MTLIOCompressionMethod.Lzfse,
 				MTLIOCompressionContext.DefaultChunkSize);
 			Assert.NotNull (compressIO, "Null compress IO");
 			// add data
-			var data =  Enumerable.Repeat((byte)0x20, 20).ToArray();
+			var data = Enumerable.Repeat ((byte) 0x20, 20).ToArray ();
 			compressIO!.AppendData (data);
 			compressIO!.FlushAndDestroy ();
 			// ensure we do not have issues with a second flush and destroy

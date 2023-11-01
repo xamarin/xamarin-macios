@@ -246,9 +246,9 @@ namespace Metal {
 		[MacCatalyst (13, 1)]
 		Half = 53,
 
-		[Mac (14,0), iOS (17,0), TV (17, 0), MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 		FloatRG11B10 = 54,
-		[Mac (14,0), iOS (17,0), TV (17, 0), MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 		FloatRGB9E5 = 55,
 	}
 
@@ -683,7 +683,7 @@ namespace Metal {
 #endif
 		PixelFormatView = 0x0010,
 
-		[Mac (14,0), iOS (17,0), TV (17,0), MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 		ShaderAtomic = 0x20,
 	}
 
@@ -871,13 +871,13 @@ namespace Metal {
 		[MacCatalyst (14, 0)]
 		[Mac (11, 0), iOS (14, 0), NoTV] InstanceAccelerationStructure = 118,
 
-		[iOS (17,0), TV (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		BFloat = 121,
-		[iOS (17,0), TV (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		BFloat2 = 122,
-		[iOS (17,0), TV (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		BFloat3 = 123,
-		[iOS (17,0), TV (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		BFloat4 = 124,
 	}
 
@@ -1071,9 +1071,9 @@ namespace Metal {
 		v2_3 = (2 << 16) + 3,
 		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), Mac (12, 0), NoWatch]
 		v2_4 = (2uL << 16) + 4,
-		[iOS (16,0), TV (16,0), MacCatalyst (16,0), Mac (13,0), NoWatch]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoWatch]
 		v3_0 = (3uL << 16) + 0,
-		[iOS (17,0), TV (17,0), MacCatalyst (17,0), Mac (14,0), NoWatch]
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
 		v3_1 = (3uL << 16) + 1,
 	}
 
@@ -1116,7 +1116,7 @@ namespace Metal {
 		Sample0, Min, Max
 	}
 
-	[TV (16,0)]
+	[TV (16, 0)]
 	[iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
@@ -1258,9 +1258,9 @@ namespace Metal {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		Half = 53,
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (17, 0)]
 		FloatRG11B10 = 54,
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (17,0)]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (17, 0)]
 		FloatRGB9E5 = 55,
 	}
 
@@ -1374,9 +1374,9 @@ namespace Metal {
 		[Mac (11, 0), iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		ConcurrentDispatchThreads = 1 << 6,
-		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17,0)]
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
 		DrawMeshThreadgroups = (1uL << 7),
-		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17,0)]
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
 		DrawMeshThreads = (1uL << 8),
 	}
 
@@ -1390,7 +1390,7 @@ namespace Metal {
 	}
 
 
-	[Flags, Mac (11, 0), TV (17,0), iOS (13, 0)]
+	[Flags, Mac (11, 0), TV (17, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
@@ -1398,7 +1398,7 @@ namespace Metal {
 		Inward = 0x1,
 	}
 
-	[Flags, Mac (11, 0), TV (17,0), iOS (13, 0)]
+	[Flags, Mac (11, 0), TV (17, 0), iOS (13, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLSparseTextureMappingMode : ulong {
@@ -1563,7 +1563,7 @@ namespace Metal {
 		NonOpaque = (1u << 3),
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (16,0)]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Flags]
 	[Native]
@@ -1646,11 +1646,11 @@ namespace Metal {
 		[NoTV]
 		[MacCatalyst (14, 0)]
 		CompileToBinary = 1uL << 0,
-		[iOS (17,0), TV (17,0), MacCatalyst (17,0), Mac (14,0)]
+		[iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), Mac (14, 0)]
 		StoreFunctionInMetalScript = 1uL << 1,
 	}
 
-	[Flags, Mac (11, 0), iOS (14, 0), TV (16,0)]
+	[Flags, Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLIntersectionFunctionSignature : ulong {
@@ -1664,9 +1664,9 @@ namespace Metal {
 		PrimitiveMotion = (1uL << 4),
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoWatch]
 		ExtendedLimits = (1uL << 5),
-		[Mac (14,0), iOS (17,0), TV (17,0), MacCatalyst (17,0), NoWatch]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
 		MaxLevels = (1uL << 6),
-		[Mac (14,0), iOS (17,0), TV (17,0), MacCatalyst (17,0), NoWatch]
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
 		CurveData = (1uL << 7),
 	}
 
@@ -1689,43 +1689,41 @@ namespace Metal {
 		Alpha = 5,
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (17,0), NoWatch]
+	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 	public enum MTLMotionBorderMode : uint {
 		Clamp = 0,
 		Vanish = 1,
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0), NoWatch]
+	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0), NoWatch]
 	[Native]
 	public enum MTLAccelerationStructureInstanceDescriptorType : ulong {
 		Default = 0,
 		UserID = 1,
 		Motion = 2,
-		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17,0)]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		Indirect = 3,
-		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17,0)]
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		IndirectMotion = 4,
 	}
 
-	[Mac (12,5), iOS (15, 0), NoMacCatalyst, TV (17,0), NoWatch]
+	[Mac (12, 5), iOS (15, 0), NoMacCatalyst, TV (17, 0), NoWatch]
 	[Native]
 	public enum MTLTextureCompressionType : long {
 		Lossless = 0,
 		Lossy = 1,
 	}
 
-	[Flags, Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Flags, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLAccelerationStructureRefitOptions : ulong
-	{
+	public enum MTLAccelerationStructureRefitOptions : ulong {
 		VertexData = (1uL << 0),
 		PerPrimitiveData = (1uL << 1),
 	}
 
-	[Mac (11,0), iOS (14,0), MacCatalyst (14,0), TV (14,0)]
+	[Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0), TV (14, 0)]
 	[Native]
-	public enum MTLBindingType : long
-	{
+	public enum MTLBindingType : long {
 		Buffer = 0,
 		ThreadgroupMemory = 1,
 		Texture = 2,
@@ -1739,18 +1737,16 @@ namespace Metal {
 		ObjectPayload = 34,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLIOCommandQueueType : long
-	{
+	public enum MTLIOCommandQueueType : long {
 		Concurrent = 0,
 		Serial = 1,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLIOCompressionMethod : long
-	{
+	public enum MTLIOCompressionMethod : long {
 		Zlib = 0,
 		Lzfse = 1,
 		Lz4 = 2,
@@ -1758,99 +1754,88 @@ namespace Metal {
 		LZBitmap = 4
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLIOCompressionStatus : long
-	{
+	public enum MTLIOCompressionStatus : long {
 		Complete = 0,
 		Error = 1,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
 	[ErrorDomain ("MTLIOErrorDomain")]
-	public enum MTLIOError : long
-	{
+	public enum MTLIOError : long {
 		UrlInvalid = 1,
 		Internal = 2,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLIOPriority : long
-	{
+	public enum MTLIOPriority : long {
 		High = 0,
 		Normal = 1,
 		Low = 2,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLIOStatus : long
-	{
+	public enum MTLIOStatus : long {
 		Pending = 0,
 		Cancelled = 1,
 		Error = 2,
 		Complete = 3,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLLibraryOptimizationLevel : long
-	{
+	public enum MTLLibraryOptimizationLevel : long {
 		Default = 0,
 		Size = 1,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLSparsePageSize : long
-	{
+	public enum MTLSparsePageSize : long {
 		Size16 = 101,
 		Size64 = 102,
 		Size256 = 103,
 	}
 
-	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), TV (16,0)]
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 	[Native]
-	public enum MTLBindingAccess : long
-	{
+	public enum MTLBindingAccess : long {
 		ReadOnly = 0,
 		ReadWrite = 1,
 		WriteOnly = 2,
 	}
 
-	[Mac (14,0), iOS (17,0), MacCatalyst (17,0), TV (17,0)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[Native]
-	public enum MTLCurveType : long
-	{
+	public enum MTLCurveType : long {
 		Round = 0,
 		Flat = 1,
 	}
 
-	[Mac (14,0), iOS (17,0), MacCatalyst (17,0), TV (17,0)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[Native]
-	public enum MTLCurveBasis : long
-	{
+	public enum MTLCurveBasis : long {
 		BSpline = 0,
 		CatmullRom = 1,
 		Linear = 2,
 		Bezier = 3,
 	}
 
-	[Mac (14,0), iOS (17,0), MacCatalyst (17,0), TV (17,0)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 	[Native]
-	public enum MTLCurveEndCaps : long
-	{
+	public enum MTLCurveEndCaps : long {
 		None = 0,
 		Disk = 1,
 		Sphere = 2,
 	}
 
-	[Mac (13,3), iOS (16,4), MacCatalyst (16,4), TV (16,4)]
+	[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), TV (16, 4)]
 	[Native]
-	public enum MTLCompileSymbolVisibility : long
-	{
+	public enum MTLCompileSymbolVisibility : long {
 		Default = 0,
 		Hidden = 1,
 	}

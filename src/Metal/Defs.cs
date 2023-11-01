@@ -561,11 +561,10 @@ namespace Metal {
 	[SupportedOSPlatform ("macos13.0")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
-	[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0), NoWatch]
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), NoWatch]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct MTLResourceId
-	{
+	public struct MTLResourceId {
 		public ulong Impl;
 	}
 

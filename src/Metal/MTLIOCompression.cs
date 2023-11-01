@@ -20,23 +20,24 @@ namespace Metal {
 	[SupportedOSPlatform ("macos13.0")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
-	[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 	public class MTLIOCompressionContext : DisposableObject {
 
 		[Preserve (Conditional = true)]
-		MTLIOCompressionContext (NativeHandle handle, bool owns) : base (handle, owns) {}
+		MTLIOCompressionContext (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.MetalLibrary)]
 		static extern unsafe void MTLIOCompressionContextAppendData (void* context, void* data, nuint size);
 
-		unsafe void AppendData (void* data, nuint size) 
-			=> MTLIOCompressionContextAppendData ((void*) GetCheckedHandle (), data, size); 
+		unsafe void AppendData (void* data, nuint size)
+			=> MTLIOCompressionContextAppendData ((void*) GetCheckedHandle (), data, size);
 
-		public void AppendData (byte[] data)
+		public void AppendData (byte [] data)
 			=> AppendData (new ReadOnlySpan<byte> (data, 0, data.Length));
 
-		public void AppendData (ReadOnlySpan<byte>	data) {
+		public void AppendData (ReadOnlySpan<byte> data)
+		{
 			unsafe {
 				// Pass new bytes through deflater and write them too:
 				fixed (void* bufferPtr = &MemoryMarshal.GetReference (data)) {
@@ -45,9 +46,10 @@ namespace Metal {
 			}
 		}
 
-		public void AppendData (NSData data) {
+		public void AppendData (NSData data)
+		{
 			unsafe {
-				AppendData ((void*)data.Bytes, data.Length);
+				AppendData ((void*) data.Bytes, data.Length);
 			}
 		}
 
@@ -55,7 +57,8 @@ namespace Metal {
 		// [return: NullAllowed]
 		static extern IntPtr MTLIOCreateCompressionContext (IntPtr path, long type, nuint chunkSize);
 
-		public static MTLIOCompressionContext? Create (string path, MTLIOCompressionMethod type, nuint chunkSize) {
+		public static MTLIOCompressionContext? Create (string path, MTLIOCompressionMethod type, nuint chunkSize)
+		{
 			if (path is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 
