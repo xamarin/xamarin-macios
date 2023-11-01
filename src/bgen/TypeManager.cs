@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 
 #nullable enable
 
 public class TypeManager {
+	public BindingTouch BindingTouch;
 	Frameworks Frameworks { get; }
 
 	public Type System_Attribute { get; }
@@ -138,6 +140,23 @@ public class TypeManager {
 	public Type? NSDirectionalEdgeInsets { get; }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
+	HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
+
+	public void SetTypesThatMustAlwaysBeGloballyNamed (Type [] types)
+	{
+		foreach (var t in types) {
+			// The generator will create special *Appearance types (these are
+			// nested classes). If we've bound a type with the same
+			// *Appearance name, we can end up in a situation where the csc
+			// compiler uses the the type we don't want due to C#'s resolution
+			// rules - this happens if the bound *Appearance type is
+			// referenced from the containing type of the special *Appearance
+			// type. So always reference the bound *Appearance types using
+			// global:: syntax.
+			if (t.Name.EndsWith ("Appearance", StringComparison.Ordinal))
+				typesThatMustAlwaysBeGloballyNamed.Add (t.Name);
+		}
+	}
 	public Dictionary<Type, string> NSNumberReturnMap {
 		get {
 			if (nsnumberReturnMap is not null)
@@ -275,6 +294,7 @@ public class TypeManager {
 		if (bindingTouch.universe is null)
 			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
 
+		BindingTouch = bindingTouch;
 		Frameworks = bindingTouch.Frameworks;
 
 		/* corlib */
@@ -412,5 +432,125 @@ public class TypeManager {
 			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
+	}
+
+	public string PrimitiveType (Type t, bool formatted = false)
+	{
+		if (t == System_Void)
+			return "void";
+		if (t == System_Int32)
+			return "int";
+		if (t == System_Int16)
+			return "short";
+		if (t == System_Byte)
+			return "byte";
+		if (t == System_Float)
+			return "float";
+		if (t == System_Boolean)
+			return "bool";
+		if (t == System_Char)
+			return "char";
+		if (t == System_nfloat)
+			return "nfloat";
+
+		return formatted ? FormatType (null, t) : t.Name;
+	}
+
+	public string FormatType (Type? usedIn, Type type)
+	{
+		return FormatTypeUsedIn (usedIn?.Namespace, type);
+	}
+
+	public string FormatType (Type? usedIn, Type type, bool protocolized)
+	{
+		return FormatTypeUsedIn (usedIn?.Namespace, type, protocolized);
+	}
+
+	public string FormatType (Type? usedIn, string @namespace, string name)
+	{
+		string tname;
+		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceManager.StandardNamespaces.Contains (@namespace))
+			tname = name;
+		else
+			tname = "global::" + @namespace + "." + name;
+
+		return tname;
+	}
+
+	public string FormatTypeUsedIn (string? usedInNamespace, Type? type, bool protocolized = false)
+	{
+		if (type is null)
+			throw new BindingException (1065, true);
+		if (type == System_Void)
+			return "void";
+		if (type == System_SByte)
+			return "sbyte";
+		if (type == System_Int32)
+			return "int";
+		if (type == System_Int16)
+			return "short";
+		if (type == System_Int64)
+			return "long";
+		if (type == System_Byte)
+			return "byte";
+		if (type == System_UInt16)
+			return "ushort";
+		if (type == System_UInt32)
+			return "uint";
+		if (type == System_UInt64)
+			return "ulong";
+		if (type == System_Byte)
+			return "byte";
+		if (type == System_Float)
+			return "float";
+		if (type == System_Double)
+			return "double";
+		if (type == System_Boolean)
+			return "bool";
+		if (type == System_String)
+			return "string";
+		if (type == System_nfloat)
+			return "nfloat";
+		if (type == System_nint)
+			return "nint";
+		if (type == System_nuint)
+			return "nuint";
+		if (type == System_Char)
+			return "char";
+		if (type == System_nfloat)
+			return "nfloat";
+
+		if (type.IsArray) {
+			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
+		}
+
+
+		var interfaceTag = protocolized == true ? "I" : "";
+		string tname;
+		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
+		// work with nested/nested/nested classes. But we are not writing a general solution because:
+		// 1. We have only encountered nested classes.
+		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a super complicated nested hierarchy, 
+		//    so we only solve the problem we have, no more.
+		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
+		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
+			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
+		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
+				 BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
+				 string.IsNullOrEmpty (type.FullName))
+			tname = interfaceTag + type.Name;
+		else
+			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
+
+		var targs = type.GetGenericArguments ();
+		if (targs.Length > 0) {
+			var isNullable = GetUnderlyingNullableType (type) is not null;
+			if (isNullable)
+				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
+
+			return tname.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
+		}
+
+		return tname;
 	}
 }
