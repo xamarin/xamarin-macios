@@ -9,6 +9,8 @@ using System.Reflection;
 public class TypeManager {
 	public BindingTouch BindingTouch;
 	Frameworks Frameworks { get; }
+	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
+	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
 
 	public Type System_Attribute { get; }
 	public Type System_Boolean { get; }
@@ -552,5 +554,61 @@ public class TypeManager {
 		}
 
 		return tname;
+	}
+
+	public string RenderType (Type t, ICustomAttributeProvider? provider = null)
+	{
+		if (!t.IsEnum) {
+			switch (Type.GetTypeCode (t)) {
+			case TypeCode.Char:
+				return "char";
+			case TypeCode.String:
+				return "string";
+			case TypeCode.Int32:
+				return "int";
+			case TypeCode.UInt32:
+				return "uint";
+			case TypeCode.Int64:
+				return "long";
+			case TypeCode.UInt64:
+				return "ulong";
+			case TypeCode.Single:
+				return "float";
+			case TypeCode.Double:
+				return "double";
+			case TypeCode.Decimal:
+				return "decimal";
+			case TypeCode.SByte:
+				return "sbyte";
+			case TypeCode.Byte:
+				return "byte";
+			case TypeCode.Boolean:
+				return "bool";
+			}
+		}
+
+		if (t == System_Void)
+			return "void";
+
+		if (t == System_IntPtr) {
+			return AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr";
+		} else if (t == System_UIntPtr) {
+			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+		}
+
+		string ns = t.Namespace;
+		if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+			var targs = t.GetGenericArguments ();
+			if (targs.Length == 0)
+				return t.Name;
+			return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+		}
+		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
+			return "global::" + t.FullName;
+		if (t.Name == t.Namespace)
+			return "global::" + t.FullName;
+		else
+			return t.FullName;
+
 	}
 }
