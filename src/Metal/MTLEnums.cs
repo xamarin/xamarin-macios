@@ -570,6 +570,7 @@ namespace Metal {
 		Intersection = 6,
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		Mesh = 7,
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		Object = 8,
 	}
 
