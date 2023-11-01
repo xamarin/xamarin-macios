@@ -69,9 +69,11 @@ public class BindingTouch : IDisposable {
 
 	public MetadataLoadContext? universe;
 	public TypeManager? typeManager;
+	NamespaceManager? namespaceManager;
 	public TypeManager TypeManager => typeManager!;
 	public Frameworks? Frameworks;
 	public AttributeManager? AttributeManager;
+	public NamespaceManager NamespaceManager => namespaceManager!;
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -535,13 +537,13 @@ public class BindingTouch : IDisposable {
 					strong_dictionaries.Add (t);
 			}
 
-			var nsManager = new NamespaceManager (
+			namespaceManager ??= new NamespaceManager (
 				this,
 				ns ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
+			var g = new Generator (this, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
 				BaseDir = basedir ?? tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),

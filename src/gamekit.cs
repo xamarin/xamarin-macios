@@ -57,10 +57,12 @@ namespace GameKit {
 	delegate void GKImageLoadedHandler  (NSImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (NSImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (NSViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
+	delegate void GKChallengeComposeHandler2 (NSViewController composeController, bool issuedChallenge, GKPlayer[] sentPlayers);
 #else
 	delegate void GKImageLoadedHandler (UIImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (UIViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
+	delegate void GKChallengeComposeHandler2 (UIViewController composeController, bool issuedChallenge, [NullAllowed] GKPlayer [] sentPlayers);
 #endif
 
 #if WATCH
@@ -526,9 +528,10 @@ namespace GameKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface GKBasePlayer {
-		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
-		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use the GKPlayer.TeamPlayerId property to identify a player instead.")]
 		[NullAllowed, Export ("playerID", ArgumentSemantic.Retain)]
 		string PlayerID { get; }
@@ -1267,6 +1270,10 @@ namespace GameKit {
 		[MacCatalyst (13, 1)]
 		[Export ("setPlayer:muted:")]
 		void SetMuteStatus (GKPlayer player, bool isMuted);
+
+		[MacCatalyst (13, 1)]
+		[Export ("playerVoiceChatStateDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<GKPlayer, GKVoiceChatPlayerState> PlayerVoiceChatStateDidChangeHandler { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1560,13 +1567,13 @@ namespace GameKit {
 		[Export ("matchmakerViewController:didFailWithError:"), EventArgs ("GKError")]
 		void DidFailWithError (GKMatchmakerViewController viewController, NSError error);
 
-#if !NET
+#if !NET && !XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("matchmakerViewController:didFindMatch:"), EventArgs ("GKMatch")]
 		void DidFindMatch (GKMatchmakerViewController viewController, GKMatch match);
 
-#if !NET
+#if !NET && !XAMCORE_5_0
 		[Abstract]
 #endif
 		[NoTV]
@@ -1577,7 +1584,7 @@ namespace GameKit {
 		[Export ("matchmakerViewController:didFindPlayers:"), EventArgs ("GKPlayers")]
 		void DidFindPlayers (GKMatchmakerViewController viewController, string [] playerIDs);
 
-#if !NET
+#if !NET && !XAMCORE_5_0
 		[Abstract]
 #endif
 		[MacCatalyst (13, 1)]
@@ -1712,8 +1719,17 @@ namespace GameKit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Async (ResultTypeName = "GKChallengeComposeResult")]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
+
+		[TV (17, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0), NoWatch]
+		[Export ("challengeComposeControllerWithMessage:players:completion:")]
+		[Async (ResultTypeName = "GKChallengeComposeControllerResult")]
+		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 
 		[NoWatch]
 		[MacCatalyst (13, 1)]
@@ -1798,6 +1814,11 @@ namespace GameKit {
 		[Static]
 		[Export ("placeholderCompletedAchievementImage")]
 		UIImage PlaceholderCompletedAchievementImage { get; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("rarityPercent", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		NSNumber RarityPercent { get; }
 	}
 
 	[NoWatch]
@@ -1927,6 +1948,10 @@ namespace GameKit {
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.iOS, 17, 0, message: "Use UNNotificationRequest or provide custom UI instead. This method will become a no-op in a future version of GameKit.")]
+	[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use UNNotificationRequest or provide custom UI instead. This method will become a no-op in a future version of GameKit.")]
+	[Deprecated (PlatformName.TvOS, 16, 1, message: "Use UNNotificationRequest or provide custom UI instead. This method will become a no-op in a future version of GameKit.")]
+	[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use UNNotificationRequest or provide custom UI instead. This method will become a no-op in a future version of GameKit.")]
 	[BaseType (typeof (NSObject))]
 	partial interface GKNotificationBanner {
 		[Static, Export ("showBannerWithTitle:message:completionHandler:")]
@@ -1998,7 +2023,7 @@ namespace GameKit {
 		[Export ("handleMatchEnded:")]
 		void HandleMatchEnded (GKTurnBasedMatch match);
 
-#if !MONOMAC || NET
+#if !MONOMAC || NET || XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("handleTurnEventForMatch:didBecomeActive:")]
@@ -2252,15 +2277,19 @@ namespace GameKit {
 	[Model]
 	[Protocol]
 	interface GKTurnBasedMatchmakerViewControllerDelegate {
+#if !XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("turnBasedMatchmakerViewControllerWasCancelled:")]
 		void WasCancelled (GKTurnBasedMatchmakerViewController viewController);
 
+#if !XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("turnBasedMatchmakerViewController:didFailWithError:")]
 		void FailedWithError (GKTurnBasedMatchmakerViewController viewController, NSError error);
 
-#if !NET
+#if !NET && !XAMCORE_5_0
 		[Abstract]
 #endif
 		[NoTV]
@@ -2271,7 +2300,7 @@ namespace GameKit {
 		[Export ("turnBasedMatchmakerViewController:didFindMatch:")]
 		void FoundMatch (GKTurnBasedMatchmakerViewController viewController, GKTurnBasedMatch match);
 
-#if !NET
+#if !NET && !XAMCORE_5_0
 		[Abstract]
 #endif
 		[NoTV]
@@ -2647,6 +2676,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'DidRequestMatchWithOtherPlayers' instead.")]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'DidRequestMatchWithOtherPlayers' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 0, message: "Use 'DidRequestMatchWithOtherPlayers' instead.")]
 		[Export ("player:didRequestMatchWithPlayers:")]
 		void DidRequestMatchWithPlayers (GKPlayer player, string [] playerIDsToInvite);
 
@@ -2964,11 +2994,21 @@ namespace GameKit {
 		[Export ("date", ArgumentSemantic.Strong)]
 		NSDate Date { get; }
 #endif
+
 		[NoWatch] // header lists watch as supported, but UIViewController is not available on Watch!
 		[MacCatalyst (13, 1)]
 		[Async (ResultTypeName = "GKChallengeComposeResult")]
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0)]
+		[Deprecated (PlatformName.MacOSX, 14, 0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
+
+		[TV (17, 0), iOS (17, 0), MacCatalyst (17, 0), Mac (14, 0), NoWatch]
+		[Export ("challengeComposeControllerWithMessage:players:completion:")]
+		[Async (ResultTypeName = "GKChallengeComposeControllerResult")]
+		UIViewController ChallengeComposeControllerWithMessage ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler2 completionHandler);
 	}
 
 	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]

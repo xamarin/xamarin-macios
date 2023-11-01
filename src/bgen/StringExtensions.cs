@@ -15,6 +15,15 @@ public static class StringExtensions {
 		};
 	}
 
+	public static string? RemoveArity (this string? typeName)
+	{
+		if (typeName is null)
+			return typeName;
+
+		var arity = typeName.IndexOf ('`');
+		return arity > 0 ? typeName.Substring (0, arity) : typeName;
+	}
+
 	public static string CamelCase (this string ins)
 	{
 		return Char.ToUpper (ins [0]) + ins.Substring (1);

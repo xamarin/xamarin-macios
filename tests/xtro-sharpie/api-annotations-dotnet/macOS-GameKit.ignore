@@ -3,3 +3,15 @@
 # nor the below protocols
 
 # This selector does not exist in macOS, confirmed by intro.
+
+# Deprecated
+!missing-protocol-member! GKInviteEventListener::player:didRequestMatchWithPlayers: not found
+!missing-protocol-member! GKTurnBasedEventListener::player:didRequestMatchWithPlayers: not found
+
+# We have bound GKVoiceChatServiceError as GKVoiceChatServiceError which has no support for macOS
+!missing-field! GKVoiceChatServiceErrorDomain not bound
+# https://developer.apple.com/documentation/gamekit/gkvoicechatserviceerror?language=objc
+
+# This selector does not exist (respond?) in macOS either
+!missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
+
