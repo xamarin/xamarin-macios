@@ -118,7 +118,7 @@ public partial class Generator {
 		}
 
 		// properties
-		GenerateProperties (type, type);
+		GenerateFilterProperties (type, type);
 
 		// protocols
 		GenerateProtocolProperties (type, type, new HashSet<string> ());
@@ -147,14 +147,14 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i, originalType, fromProtocol: true);
+			GenerateFilterProperties (i, originalType, fromProtocol: true);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, originalType, processed);
 		}
 	}
 
-	void GenerateProperties (Type type, Type? originalType = null, bool fromProtocol = false)
+	void GenerateFilterProperties (Type type, Type? originalType = null, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
@@ -235,6 +235,7 @@ public partial class Generator {
 		}
 	}
 
+	
 	void PrintFilterExport (PropertyInfo p, ExportAttribute? export, bool setter)
 	{
 		if (export is null)
