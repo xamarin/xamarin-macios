@@ -26166,7 +26166,6 @@ namespace UIKit {
 		[NullAllowed, Export ("titleTextAttributesTransformer", ArgumentSemantic.Copy)]
 		UIConfigurationTextAttributesTransformerHandler TitleTextAttributesTransformer { get; set; }
 
-		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
 		[NullAllowed, Export ("titleLineBreakMode", ArgumentSemantic.Assign)]
 		UILineBreakMode TitleLineBreakMode { get; set; }
 
@@ -26179,7 +26178,6 @@ namespace UIKit {
 		[NullAllowed, Export ("subtitleTextAttributesTransformer", ArgumentSemantic.Copy)]
 		UIConfigurationTextAttributesTransformerHandler SubtitleTextAttributesTransformer { get; set; }
 
-		[TV (16, 4), iOS (16, 4), MacCatalyst (16, 4)]
 		[NullAllowed, Export ("subtitleLineBreakMode", ArgumentSemantic.Assign)]
 		UILineBreakMode SubtitleLineBreakMode { get; set; }
 
