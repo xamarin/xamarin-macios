@@ -86,7 +86,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 
-		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (params string[] directories)
+		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (params string [] directories)
 		{
 			return XamarinTask.CreateItemsForAllFilesRecursively ((IEnumerable<string>?) directories);
 		}

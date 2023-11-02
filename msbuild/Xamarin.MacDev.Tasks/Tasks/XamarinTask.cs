@@ -220,7 +220,7 @@ namespace Xamarin.MacDev.Tasks {
 			return fallbackValue;
 		}
 
-		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (params string[] directories)
+		protected internal static IEnumerable<ITaskItem> CreateItemsForAllFilesRecursively (params string [] directories)
 		{
 			return CreateItemsForAllFilesRecursively ((IEnumerable<string>?) directories);
 		}
