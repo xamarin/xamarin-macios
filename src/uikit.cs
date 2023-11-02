@@ -3377,6 +3377,7 @@ namespace UIKit {
 
 		[Export ("initWithDelegate:")]
 		[DesignatedInitializer]
+		[PostSnippet ("MarkDirty ();\n__mt_WeakDelegate_var = @delegate;", Optimizable = true)] // passing in the delegate as a parameter is basically the same as setting the property, so we also need to store it in a local field.
 		NativeHandle Constructor (IUIContextMenuInteractionDelegate @delegate);
 
 		[Export ("locationInView:")]
