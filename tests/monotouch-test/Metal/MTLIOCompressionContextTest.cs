@@ -17,7 +17,7 @@ namespace MonoTouchFixtures.Metal {
 			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
 
 			// Convert once
-			outputPath = Path.Combine (paths [0], "output1");
+			outputPath = Path.Combine (paths [0], $"monotouch-test-MTLIOCompressinoContextTest-output{System.Diagnostics.Process.GetCurrentProcess ().Id}");
 		}
 
 

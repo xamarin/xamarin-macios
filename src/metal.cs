@@ -4322,7 +4322,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setVertexBuffers:offsets:attributeStrides:withRange:")]
-		void SetVertexBuffers (IMTLBuffer [] buffers, IntPtr offsets, IntPtr strides, NSRange range);
+		void SetVertexBuffers (IntPtr buffers, IntPtr offsets, IntPtr strides, NSRange range);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
 #if NET
@@ -4371,7 +4371,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setMeshBuffers:offsets:withRange:")]
-		void SetMeshBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
+		void SetMeshBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
@@ -4385,7 +4385,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setMeshTextures:withRange:")]
-		void SetMeshTextures (IMTLTexture [] textures, NSRange range);
+		void SetMeshTextures (IntPtr textures, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
@@ -4399,7 +4399,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setMeshSamplerStates:withRange:")]
-		void SetMeshSamplerStates (IMTLSamplerState [] samplers, NSRange range);
+		void SetMeshSamplerStates (IntPtr samplers, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
@@ -4413,7 +4413,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setMeshSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
-		void SetMeshSamplerStates (IMTLSamplerState [] samplers, IntPtr lodMinClamps, IntPtr lodMaxClamps, NSRange range);
+		void SetMeshSamplerStates (IntPtr samplers, IntPtr lodMinClamps, IntPtr lodMaxClamps, NSRange range);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 #if XAMCORE_5_0
@@ -4434,7 +4434,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setObjectBuffers:offsets:withRange:")]
-		void SetObjectBuffers (IMTLBuffer [] buffers, IntPtr offsets, NSRange range);
+		void SetObjectBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
@@ -4476,14 +4476,14 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setObjectSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
-		void SetObjectSamplerStates (IMTLSamplerState [] samplers, IntPtr lodMinClamps, IntPtr lodMaxClamps, NSRange range);
+		void SetObjectSamplerStates (IntPtr samplers, IntPtr lodMinClamps, IntPtr lodMaxClamps, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("setObjectSamplerStates:withRange:")]
-		void SetObjectSamplerStates (IMTLSamplerState [] samplers, NSRange range);
+		void SetObjectSamplerStates (IntPtr samplers, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
@@ -4497,7 +4497,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("setObjectTextures:withRange:")]
-		void SetObjectTextures (IMTLTexture [] textures, NSRange range);
+		void SetObjectTextures (IntPtr textures, NSRange range);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
@@ -6117,7 +6117,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:")]
-		void MoveTextureMappingsFromTexture (IMTLTexture sourceTexture, nuint sourceSlice, nuint sourceLevel, MTLOrigin sourceOrigin, MTLSize sourceSize, IMTLTexture destinationTexture, nuint destinationSlice, nuint destinationLevel, MTLOrigin destinationOrigin);
+		void MoveTextureMappings (IMTLTexture sourceTexture, nuint sourceSlice, nuint sourceLevel, MTLOrigin sourceOrigin, MTLSize sourceSize, IMTLTexture destinationTexture, nuint destinationSlice, nuint destinationLevel, MTLOrigin destinationOrigin);
 	}
 
 	[iOS (13, 0), TV (13, 0)]
@@ -7220,7 +7220,6 @@ namespace Metal {
 	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
 	interface MTLIOFileHandle {
-		// @required @property (copy, atomic) NSString * _Nullable label;
 		[Abstract]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }

@@ -249,7 +249,7 @@ namespace Metal {
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 		FloatRG11B10 = 54,
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
-		FloatRGB9E5 = 55,
+		FloatRgb9E5 = 55,
 	}
 
 	[MacCatalyst (13, 1)]
@@ -1751,7 +1751,7 @@ namespace Metal {
 		Lzfse = 1,
 		Lz4 = 2,
 		Lzma = 3,
-		LZBitmap = 4
+		LzBitmap = 4
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
