@@ -58,4 +58,4 @@ with NativeAOT, that are with Mono, when targeting Apple platforms:
 
 [1]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot
 [2]: https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/?tabs=net8plus%2Cwindows#limitations-of-native-aot-deployment
-[3]: https://devblogs.microsoft.com/dotnet/pending_link_to_blog_post
+[3]: https://devblogs.microsoft.com/dotnet/dotnet-8-performance-improvements-in-dotnet-maui/
