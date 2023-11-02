@@ -5,10 +5,11 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Threading = System.Threading.Tasks;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class XamarinBuildTask : XamarinTask {
+	public abstract class XamarinBuildTask : XamarinTask, ITaskCallback, ICancelableTask {
 		public bool KeepTemporaryOutput { get; set; }
 
 		[Required]
@@ -109,6 +110,27 @@ namespace Xamarin.MacDev.Tasks {
 			if (File.Exists (outputFile))
 				return File.ReadAllText (outputFile).Trim ();
 			return string.Empty;
+		}
+
+		public override sealed bool Execute ()
+		{
+			if (this.ShouldExecuteRemotely (SessionId))
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			return ExecuteLocally ();
+		}
+
+		protected abstract bool ExecuteLocally ();
+
+		public virtual IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public virtual bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public virtual bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public virtual void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

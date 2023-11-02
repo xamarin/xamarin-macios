@@ -5,14 +5,14 @@ using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class FindAotCompilerTaskBase : XamarinBuildTask {
+	public class FindAotCompiler : XamarinBuildTask {
 		[Required]
 		public ITaskItem [] MonoAotCrossCompiler { get; set; }
 
 		[Output]
 		public string AotCompiler { get; set; }
 
-		public override bool Execute ()
+		protected override bool ExecuteLocally ()
 		{
 			// If we can't find the AOT compiler path in MonoAotCrossCompiler, evaluate a project file that does know how to find it.
 			// This happens when executing remotely from Windows, because the MonoAotCrossCompiler item group will be empty in that case.
