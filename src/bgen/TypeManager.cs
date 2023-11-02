@@ -556,7 +556,7 @@ public class TypeManager {
 		return tname;
 	}
 
-	public string RenderType (Type t, ICustomAttributeProvider? provider = null)
+	public string? RenderType (Type t, ICustomAttributeProvider? provider = null)
 	{
 		if (!t.IsEnum) {
 			switch (Type.GetTypeCode (t)) {
@@ -596,20 +596,23 @@ public class TypeManager {
 			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
 		}
 
-		string ns = t.Namespace;
-		if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
-			var targs = t.GetGenericArguments ();
-			if (targs.Length == 0)
-				return t.Name;
-			return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+		if (t.Namespace is not null) {
+			string ns = t.Namespace;
+			if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+				var targs = t.GetGenericArguments ();
+				if (targs.Length == 0)
+					return t.Name;
+				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+			}
+			if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
+				return "global::" + t.FullName;
+			if (t.Name == t.Namespace)
+				return "global::" + t.FullName;
+			else
+				return t.FullName;
 		}
-		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
-			return "global::" + t.FullName;
-		if (t.Name == t.Namespace)
-			return "global::" + t.FullName;
-		else
-			return t.FullName;
 
+		return t.FullName;
 	}
 
 	// TODO: If we ever have an API with nested properties of the same name more than
@@ -619,9 +622,9 @@ public class TypeManager {
 		if (bta is null)
 			return null;
 
-		Type currentType = bta.BaseType;
+		Type? currentType = bta.BaseType;
 		while (currentType is not null && currentType != NSObject) {
-			PropertyInfo prop = currentType.GetProperty (propertyName, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+			PropertyInfo? prop = currentType.GetProperty (propertyName, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 			if (prop is not null)
 				return prop;
 			currentType = currentType.BaseType;
@@ -635,8 +638,10 @@ public class TypeManager {
 	}
 
 	// Is this a wrapped type of NSObject from the MonoTouch/MonoMac binding world?
-	public bool IsWrappedType (Type t)
+	public bool IsWrappedType (Type? t)
 	{
+		if (t is null)
+			return false;
 		if (t.IsInterface)
 			return true;
 		if (NSObject is not null)
