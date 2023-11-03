@@ -33,8 +33,11 @@ namespace Metal {
 		unsafe void AppendData (void* data, nuint size)
 			=> MTLIOCompressionContextAppendData ((void*) GetCheckedHandle (), data, size);
 
-		public void AppendData (byte [] data)
-			=> AppendData (new ReadOnlySpan<byte> (data, 0, data.Length));
+		public void AppendData (byte [] data) {
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			AppendData (new ReadOnlySpan<byte> (data, 0, data.Length));
+		}
 
 		public void AppendData (ReadOnlySpan<byte> data)
 		{
@@ -48,6 +51,8 @@ namespace Metal {
 
 		public void AppendData (NSData data)
 		{
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			unsafe {
 				AppendData ((void*) data.Bytes, data.Length);
 			}
@@ -55,9 +60,9 @@ namespace Metal {
 
 		[DllImport (Constants.MetalLibrary)]
 		// [return: NullAllowed]
-		static extern IntPtr MTLIOCreateCompressionContext (IntPtr path, long type, nuint chunkSize);
+		static extern IntPtr MTLIOCreateCompressionContext (IntPtr path, long type, long chunkSize);
 
-		public static MTLIOCompressionContext? Create (string path, MTLIOCompressionMethod type, nuint chunkSize)
+		public static MTLIOCompressionContext? Create (string path, MTLIOCompressionMethod type, long chunkSize)
 		{
 			if (path is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
