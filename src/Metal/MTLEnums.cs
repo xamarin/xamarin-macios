@@ -1707,7 +1707,7 @@ namespace Metal {
 		IndirectMotion = 4,
 	}
 
-	[Mac (12, 5), iOS (15, 0), MacCatalyst (15,0), TV (17, 0), NoWatch]
+	[Mac (12, 5), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 	[Native]
 	public enum MTLTextureCompressionType : long {
 		Lossless = 0,

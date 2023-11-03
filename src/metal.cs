@@ -491,7 +491,7 @@ namespace Metal {
 		[Export ("accelerationStructureCommandEncoder")]
 		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder ();
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -2541,7 +2541,7 @@ namespace Metal {
 		[return: Release]
 		IMTLTexture CreateRemoteTexture (IMTLDevice device);
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -2613,7 +2613,7 @@ namespace Metal {
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
 
-		[Mac (12, 5), iOS (15, 0), MacCatalyst (15,0), TV (17, 0), NoWatch]
+		[Mac (12, 5), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 		[Export ("compressionType")]
 		MTLTextureCompressionType CompressionType { get; set; }
 
@@ -2697,7 +2697,7 @@ namespace Metal {
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
