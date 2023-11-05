@@ -5668,21 +5668,23 @@ public partial class Generator : IMemberGatherer {
 			ErrorHelper.Warning (1027);
 			ZeroCopyStrings = false;
 		}
+
 		type_wants_zero_copy = AttributeManager.HasAttribute<ZeroCopyStringsAttribute> (type) || ZeroCopyStrings;
-		
+
 		type_needs_thread_checks = DetermineTypeNeedsThreadChecks (type);
 		indent = 0;
-		
+
 		using (var sw = GetOutputStreamForType (type)) {
 			this.sw = sw;
-			FieldBlock fb = new(AttributeManager, TypeManager, type, GetGeneratedTypeName (type),GeneratedTypes.Lookup (type), GetAssemblyName ());
+			FieldBlock fb = new(AttributeManager, TypeManager, type, GetGeneratedTypeName (type),
+				GeneratedTypes.Lookup (type), GetAssemblyName ());
 
 			Header (sw);
-			
+
 			// Relocated this up to return before generating protocol types
 			if (!fb.is_static_class && fb.bta is null && fb.is_protocol)
 				return;
-			
+
 			// BLOCK 1: GENERATE PROTOCOL TYPES
 			if (fb.is_protocol) {
 				if (fb.is_static_class)
@@ -5690,9 +5692,10 @@ public partial class Generator : IMemberGatherer {
 				if (fb.is_model && fb.base_type == TypeManager.System_Object)
 					ErrorHelper.Warning (1060, type.FullName);
 
-				GenerateProtocolTypes (type, fb.class_visibility, fb.TypeName, fb.protocol.Name ?? fb.objc_type_name, fb.protocol);
+				GenerateProtocolTypes (type, fb.class_visibility, fb.TypeName, fb.protocol.Name ?? fb.objc_type_name,
+					fb.protocol);
 			}
-			
+
 			if (type.Namespace is not null) {
 				print ("namespace {0} {{", type.Namespace);
 				indent++;
@@ -5703,9 +5706,10 @@ public partial class Generator : IMemberGatherer {
 			is_direct_binding_value = null;
 			is_direct_binding = null;
 			if (BindThirdPartyLibrary)
-				is_direct_binding_value = string.Format ("GetType ().Assembly == global::{0}.this_assembly", ns.Messaging);
-			
-			
+				is_direct_binding_value =
+					string.Format ("GetType ().Assembly == global::{0}.this_assembly", ns.Messaging);
+
+
 			if (is_static_class || is_category_class || is_partial) {
 				base_type = TypeManager.System_Object;
 				if (!is_partial)
@@ -5713,16 +5717,21 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				if (is_protocol) {
 					var pName = !string.IsNullOrEmpty (protocol.Name) ? $"Name = \"{protocol.Name}\"" : string.Empty;
-					print ("[Protocol({0}{1}{2})]", pName, (!string.IsNullOrEmpty (pName) && protocol.IsInformal) ? ", " : string.Empty, protocol.IsInformal ? "IsInformal = true" : string.Empty);
+					print ("[Protocol({0}{1}{2})]", pName,
+						(!string.IsNullOrEmpty (pName) && protocol.IsInformal) ? ", " : string.Empty,
+						protocol.IsInformal ? "IsInformal = true" : string.Empty);
 				}
+
 				core_image_filter = AttributeManager.HasAttribute<CoreImageFilterAttribute> (type);
 				if (!type.IsEnum && !core_image_filter) {
 					if (is_model || AttributeManager.HasAttribute<SyntheticAttribute> (type)) {
 						is_direct_binding = false;
 						is_direct_binding_value = "false";
 					}
+
 					print ("[Register(\"{0}\", {1})]", register_name, is_direct_binding == false ? "false" : "true");
 				}
+
 				if (is_abstract || need_abstract.ContainsKey (type)) {
 					// Don't mark [Abstract] classes as abstract in .NET, we might need to create instances of them at some point.
 					// This can happen if the OS gives an instance of a subclass, but that subclass is private (so we haven't bound it).
@@ -5761,10 +5770,10 @@ public partial class Generator : IMemberGatherer {
 				return;
 			}
 
-			GenerateImplements (type,fb);
+			GenerateImplements (type, fb);
 
-			GenerateSelectorFields (type,fb);
-			
+			GenerateSelectorFields (type, fb);
+
 			print ("");
 
 			// Regular bindings (those that are not-static) or categories need this
@@ -5783,7 +5792,9 @@ public partial class Generator : IMemberGatherer {
 						print ("#pragma warning restore {0}", is_static_class ? "169" : "649");
 						print ("#else");
 					}
-					print ("static readonly {1} class_ptr = Class.GetHandle (\"{0}\");", objc_type_name, NativeHandleType);
+
+					print ("static readonly {1} class_ptr = Class.GetHandle (\"{0}\");", objc_type_name,
+						NativeHandleType);
 					if (is32BitNotSupported)
 						print ("#endif");
 					print ("");
@@ -5792,150 +5803,11 @@ public partial class Generator : IMemberGatherer {
 
 			if (!is_static_class && !is_partial) {
 				if (!is_model && !external) {
-					print ("public {1} {2} ClassHandle {{ get {{ return class_ptr; }} }}\n", objc_type_name, TypeName == "NSObject" ? "virtual" : "override", NativeHandleType);
+					print ("public {1} {2} ClassHandle {{ get {{ return class_ptr; }} }}\n", objc_type_name,
+						TypeName == "NSObject" ? "virtual" : "override", NativeHandleType);
 				}
 
-				var ctor_visibility = is_abstract ? "protected" : "public";
-				var disable_default_ctor = false;
-				if (default_ctor_visibility is not null) {
-					switch (default_ctor_visibility.Visibility) {
-					case Visibility.Public:
-						ctor_visibility = "public";
-						break;
-					case Visibility.Internal:
-						ctor_visibility = "internal";
-						break;
-					case Visibility.Protected:
-						ctor_visibility = "protected";
-						break;
-					case Visibility.ProtectedInternal:
-						ctor_visibility = "protected internal";
-						break;
-					case Visibility.Private:
-						ctor_visibility = string.Empty;
-						break;
-					case Visibility.Disabled:
-						disable_default_ctor = true;
-						break;
-					}
-				}
-
-				if (TypeName != "NSObject") {
-					var initSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"init\")" : "Selector.Init";
-					var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary) ? "Selector.GetHandle (\"initWithCoder:\")" : "Selector.InitWithCoder";
-					string v = (class_mod == "abstract " && default_ctor_visibility is null) ? "protected" : ctor_visibility;
-					var is32BitNotSupported = Is64BitiOSOnly (type);
-					if (external) {
-						if (!disable_default_ctor) {
-							GeneratedCode (sw, 2);
-							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
-								sw.WriteLine ("\n\n[DesignatedInitializer]");
-							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-							sw.WriteLine ("\t\t[Export (\"init\")]");
-							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
-							sw.WriteLine ("\t\t{");
-							if (is32BitNotSupported) {
-								sw.WriteLine ("\t\t#if ARCH_32");
-								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-								sw.WriteLine ("\t\t#else");
-							}
-							if (is_direct_binding_value is not null)
-								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
-							if (debug)
-								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
-							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, ns.Messaging);
-							sw.WriteLine ("\t\t\t");
-							if (is32BitNotSupported)
-								sw.WriteLine ("\t\t#endif");
-							sw.WriteLine ("\t\t}");
-						}
-					} else {
-						if (!disable_default_ctor) {
-							GeneratedCode (sw, 2);
-							if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
-								sw.WriteLine ("\t\t[DesignatedInitializer]");
-							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-							sw.WriteLine ("\t\t[Export (\"init\")]");
-							sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, TypeName);
-							sw.WriteLine ("\t\t{");
-							if (is32BitNotSupported) {
-								sw.WriteLine ("\t\t#if ARCH_32");
-								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-								sw.WriteLine ("\t\t#else");
-							}
-							if (type_needs_thread_checks) {
-								sw.Write ("\t\t\t");
-								GenerateThreadCheck (sw);
-							}
-							var indentation = 3;
-							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, ns.Messaging),
-														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, ns.Messaging));
-
-							WriteMarkDirtyIfDerived (sw, type);
-							if (is32BitNotSupported)
-								sw.WriteLine ("\t\t#endif");
-							sw.WriteLine ("\t\t}");
-							sw.WriteLine ();
-						}
-						var nscoding = ConformToNSCoding (type);
-						if (nscoding) {
-							GeneratedCode (sw, 2);
-							sw.WriteLine ("\t\t[DesignatedInitializer]");
-							sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-							sw.WriteLine ("\t\t[Export (\"initWithCoder:\")]");
-							sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", v, TypeName);
-							sw.WriteLine ("\t\t{");
-							if (is32BitNotSupported) {
-								sw.WriteLine ("\t\t#if ARCH_32");
-								sw.WriteLine ("\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
-								sw.WriteLine ("\t\t#else");
-							}
-							if (nscoding) {
-								if (debug)
-									sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", TypeName);
-								if (type_needs_thread_checks) {
-									sw.Write ("\t\t\t");
-									GenerateThreadCheck (sw);
-								}
-								var indentation = 3;
-								WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging),
-															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, ns.Messaging));
-								WriteMarkDirtyIfDerived (sw, type);
-							} else {
-								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
-							}
-							if (is32BitNotSupported)
-								sw.WriteLine ("\t\t#endif");
-							sw.WriteLine ("\t\t}");
-							sw.WriteLine ();
-						}
-					}
-					if (!is_sealed) {
-						GeneratedCode (sw, 2);
-						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-						sw.WriteLine ("\t\tprotected {0} (NSObjectFlag t) : base (t)", TypeName);
-						sw.WriteLine ("\t\t{");
-						if (is_direct_binding_value is not null)
-							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
-						WriteMarkDirtyIfDerived (sw, type);
-						sw.WriteLine ("\t\t}");
-						sw.WriteLine ();
-					}
-					GeneratedCode (sw, 2);
-					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.Write ($"\t\t");
-					if (!is_sealed)
-						sw.Write ("protected ");
-					sw.WriteLine ($"internal {TypeName} ({NativeHandleType} handle) : base (handle)");
-					sw.WriteLine ("\t\t{");
-					if (is_direct_binding_value is not null)
-						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
-					WriteMarkDirtyIfDerived (sw, type);
-					sw.WriteLine ("\t\t}");
-					sw.WriteLine ();
-				}
+				GenerateCtorVisibility (type, fb);
 			}
 
 			GenerateMethods (type, fb);
@@ -5999,9 +5871,11 @@ public partial class Generator : IMemberGatherer {
 						print ("	get {{ return typeof (_{0}); }}", dtype.Name);
 						print ("}\n");
 
-						print ("internal {0} _{1} {2} ({3})", generatedTypeOverrideType, interfaceName, delegateCreationMethodName, hasKeepRefUntil ? "object oref" : "");
+						print ("internal {0} _{1} {2} ({3})", generatedTypeOverrideType, interfaceName,
+							delegateCreationMethodName, hasKeepRefUntil ? "object oref" : "");
 						print ("{");
-						print ("	return (_{0})(new _{1}({2}));", interfaceName, dtype.Name, hasKeepRefUntil ? "oref" : "");
+						print ("	return (_{0})(new _{1}({2}));", interfaceName, dtype.Name,
+							hasKeepRefUntil ? "oref" : "");
 						print ("}\n");
 					}
 
@@ -6009,10 +5883,12 @@ public partial class Generator : IMemberGatherer {
 						print ("{0}_{1} Ensure{1} ()", isProtocolizedEventBacked ? "internal " : "", dtype.Name);
 					else {
 						print ("static System.Collections.ArrayList? instances;");
-						print ("{0}_{1} Ensure{1} (object oref)", isProtocolizedEventBacked ? "internal " : "", dtype.Name);
+						print ("{0}_{1} Ensure{1} (object oref)", isProtocolizedEventBacked ? "internal " : "",
+							dtype.Name);
 					}
 
-					print ("{"); indent++;
+					print ("{");
+					indent++;
 
 					if (isProtocolizedEventBacked) {
 						// If our delegate not null and it isn't the same type as our property
@@ -6020,7 +5896,8 @@ public partial class Generator : IMemberGatherer {
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
 						if (!BindThirdPartyLibrary) {
 							print ("if (Weak{0} is not null)", delName);
-							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName,
+								delName, delegateTypePropertyName);
 						}
 
 						print ("var del = {1} as _{0};", dtype.Name, delName);
@@ -6035,6 +5912,7 @@ public partial class Generator : IMemberGatherer {
 							print ("if (instances is null) instances = new System.Collections.ArrayList ();");
 							print ("if (!instances.Contains (this)) instances.Add (this);");
 						}
+
 						print ("{0} = (I{1})del;", delName, dtype.Name);
 						indent--;
 						print ("}");
@@ -6047,18 +5925,22 @@ public partial class Generator : IMemberGatherer {
 							print ("\tif (instances is null) instances = new System.Collections.ArrayList ();");
 							print ("\tif (!instances.Contains (this)) instances.Add (this);");
 						}
+
 						print ("\t{0} = del;", delName);
 						print ("}");
 						print ("return (_{0}) del;", dtype.Name);
 					}
-					indent--; print ("}\n");
+
+					indent--;
+					print ("}\n");
 
 					var noDefaultValue = new List<MethodInfo> ();
 
 					print ("#pragma warning disable 672");
 					print ("[Register]");
 					if (isProtocolizedEventBacked)
-						print ("internal class _{0} : {1}I{2} {{ ", dtype.Name, shouldOverride ? "_" + interfaceName + ", " : "NSObject, ", dtype.Name);
+						print ("internal class _{0} : {1}I{2} {{ ", dtype.Name,
+							shouldOverride ? "_" + interfaceName + ", " : "NSObject, ", dtype.Name);
 					else
 						print ("sealed class _{0} : {1} {{ ", dtype.Name, RenderType (dtype));
 
@@ -6066,7 +5948,9 @@ public partial class Generator : IMemberGatherer {
 					indent++;
 					if (hasKeepRefUntil) {
 						print ("object reference;");
-						print ("public _{0} (object reference) {{ this.reference = reference; IsDirectBinding = false; }}\n", dtype.Name);
+						print (
+							"public _{0} (object reference) {{ this.reference = reference; IsDirectBinding = false; }}\n",
+							dtype.Name);
 					} else
 						print ("public _{0} () {{ IsDirectBinding = false; }}\n", dtype.Name);
 
@@ -6110,8 +5994,10 @@ public partial class Generator : IMemberGatherer {
 						if (isProtocolizedEventBacked)
 							print ("[Export (\"{0}\")]", FindSelector (dtype, mi));
 
-						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, RenderType (mi.ReturnType), mi.Name, RenderParameterDecl (pars));
-						print ("{"); indent++;
+						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, RenderType (mi.ReturnType),
+							mi.Name, RenderParameterDecl (pars));
+						print ("{");
+						indent++;
 
 						if (mi.Name == bta.KeepRefUntil)
 							print ("instances?.Remove (reference);");
@@ -6150,11 +6036,15 @@ public partial class Generator : IMemberGatherer {
 									print ("{0} = args.{1};", par.Name, GetPublicParameterName (par));
 								}
 							}
+
 							if (AttributeManager.HasAttribute<CheckDisposedAttribute> (mi)) {
 								var arg = RenderArgs (pars.Take (1));
 								print ("if ({0}.Handle == IntPtr.Zero)", arg);
-								print ("\tthrow new ObjectDisposedException (\"{0}\", \"The object was disposed on the event, you should not call Dispose() inside the handler\");", arg);
+								print (
+									"\tthrow new ObjectDisposedException (\"{0}\", \"The object was disposed on the event, you should not call Dispose() inside the handler\");",
+									arg);
 							}
+
 							indent--;
 							print ("}");
 						} else {
@@ -6164,21 +6054,24 @@ public partial class Generator : IMemberGatherer {
 								generatedDelegates.Add (delname, null);
 								delegate_types.Add (type.Namespace + "." + delname, mi);
 							}
+
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 
 							print ("var handler = {0};", miname.PascalCase ());
 							print ("if (handler is not null)");
 							print ("	return handler ({0}{1});",
-								   sender,
-								   pars.Length == minPars ? "" : String.Format (", {0}", RenderArgs (pars.Skip (1))));
+								sender,
+								pars.Length == minPars ? "" : String.Format (", {0}", RenderArgs (pars.Skip (1))));
 
 							if (AttributeManager.HasAttribute<NoDefaultValueAttribute> (mi))
 								print ("throw new You_Should_Not_Call_base_In_This_Method ();");
 							else {
 								var def = GetDefaultValue (mi);
 								if ((def is string) && ((def as string) == "null") && mi.ReturnType.IsValueType)
-									print ("throw new Exception (\"No event handler has been added to the {0} event.\");", mi.Name);
+									print (
+										"throw new Exception (\"No event handler has been added to the {0} event.\");",
+										mi.Name);
 								else {
 									foreach (var j in pars) {
 										if (j.ParameterType.IsByRef && j.IsOut) {
@@ -6207,9 +6100,12 @@ public partial class Generator : IMemberGatherer {
 						if (!InlineSelectors) {
 							foreach (var mi in noDefaultValue) {
 								var export = AttributeManager.GetCustomAttribute<ExportAttribute> (mi);
-								print ("static {2} sel{0}Handle = Selector.GetHandle (\"{1}\");", mi.Name, export.Selector, NativeHandleType);
+								print ("static {2} sel{0}Handle = Selector.GetHandle (\"{1}\");", mi.Name,
+									export.Selector, NativeHandleType);
 							}
-							print ("static {0} selRespondsToSelector = " + selRespondsToSelector + ";", NativeHandleType);
+
+							print ("static {0} selRespondsToSelector = " + selRespondsToSelector + ";",
+								NativeHandleType);
 							selRespondsToSelector = "selRespondsToSelector";
 						}
 
@@ -6229,11 +6125,14 @@ public partial class Generator : IMemberGatherer {
 							} else {
 								print ("if (selHandle.Equals (sel{0}Handle))", mi.Name);
 							}
+
 							++indent;
 							print ("return {0} is not null;", mi.Name.PascalCase ());
 							--indent;
 						}
-						print ("return global::" + ns.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle) != 0;");
+
+						print ("return global::" + ns.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " +
+						       selRespondsToSelector + ", selHandle) != 0;");
 						--indent;
 						print ("}");
 
@@ -6241,7 +6140,8 @@ public partial class Generator : IMemberGatherer {
 						// bool_objc_msgSendSuper_IntPtr: for respondsToSelector:
 						if (!send_methods.ContainsKey ("bool_objc_msgSendSuper_IntPtr")) {
 							print (m, "[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSendSuper\")]");
-							print (m, "public extern static byte bool_objc_msgSendSuper_IntPtr (IntPtr receiever, IntPtr selector, IntPtr arg1);");
+							print (m,
+								"public extern static byte bool_objc_msgSendSuper_IntPtr (IntPtr receiever, IntPtr selector, IntPtr arg1);");
 							RegisterMethodName ("bool_objc_msgSendSuper_IntPtr");
 						}
 					}
@@ -6251,6 +6151,7 @@ public partial class Generator : IMemberGatherer {
 
 					print ("#pragma warning restore 672");
 				}
+
 				print ("");
 
 				string prev_miname = null;
@@ -6278,12 +6179,14 @@ public partial class Generator : IMemberGatherer {
 							if (bta.Singleton && mi.GetParameters ().Length == 0 || mi.GetParameters ().Length == 1)
 								print ("public event EventHandler {0} {{", Nomenclator.GetEventName (mi).CamelCase ());
 							else
-								print ("public event EventHandler<{0}> {1} {{", Nomenclator.GetEventArgName (mi), Nomenclator.GetEventName (mi).CamelCase ());
+								print ("public event EventHandler<{0}> {1} {{", Nomenclator.GetEventArgName (mi),
+									Nomenclator.GetEventName (mi).CamelCase ());
 							print ("\tadd {{ Ensure{0} ({1})!.{2} += value; }}", dtype.Name, ensureArg, miname);
 							print ("\tremove {{ Ensure{0} ({1})!.{2} -= value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						} else {
-							print ("public {0}? {1} {{", Nomenclator.GetDelegateName (mi), Nomenclator.GetDelegateApiName (mi).CamelCase ());
+							print ("public {0}? {1} {{", Nomenclator.GetDelegateName (mi),
+								Nomenclator.GetDelegateApiName (mi).CamelCase ());
 							print ("\tget {{ return Ensure{0} ({1})!.{2}; }}", dtype.Name, ensureArg, miname);
 							print ("\tset {{ Ensure{0} ({1})!.{2} = value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
@@ -6316,7 +6219,8 @@ public partial class Generator : IMemberGatherer {
 					if (instance_fields_to_clear_on_dispose.Count > 0) {
 						print ("if (Handle == IntPtr.Zero) {");
 						indent++;
-						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f, StringComparer.Ordinal))
+						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f,
+							         StringComparer.Ordinal))
 							print ("{0} = null;", field);
 						indent--;
 						print ("}");
@@ -6350,22 +6254,26 @@ public partial class Generator : IMemberGatherer {
 				print ("// EventArgs classes");
 				print ("//");
 			}
+
 			// Now add the EventArgs classes
 			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e, StringComparer.Ordinal)) {
 				if (Nomenclator.WasEventArgGenerated (eaclass)) {
 					continue;
 				}
+
 				int minPars = bta.Singleton ? 0 : 1;
 
 				var pars = eventArgTypes [eaclass];
 
-				print ("public partial class {0} : EventArgs {{", eaclass); indent++;
+				print ("public partial class {0} : EventArgs {{", eaclass);
+				indent++;
 				print ("public {0} ({1})", eaclass, RenderParameterDecl (pars.Skip (1), true));
 				print ("{");
 				indent++;
 				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					print ("this.{0} = {1};", GetPublicParameterName (p), p.Name.GetSafeParamName ());
 				}
+
 				indent--;
 				print ("}");
 
@@ -6375,9 +6283,12 @@ public partial class Generator : IMemberGatherer {
 					var bareType = pt.IsByRef ? pt.GetElementType () : pt;
 					var nullable = !pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p);
 
-					print ("public {0}{1} {2} {{ get; set; }}", RenderType (bareType), nullable ? "?" : "", GetPublicParameterName (p));
+					print ("public {0}{1} {2} {{ get; set; }}", RenderType (bareType), nullable ? "?" : "",
+						GetPublicParameterName (p));
 				}
-				indent--; print ("}\n");
+
+				indent--;
+				print ("}\n");
 			}
 
 			if (async_result_types.Count > 0) {
@@ -6393,7 +6304,8 @@ public partial class Generator : IMemberGatherer {
 					continue;
 				async_result_types_emitted.Add (async_type.Item1);
 
-				print ("public partial class {0} {{", async_type.Item1); indent++;
+				print ("public partial class {0} {{", async_type.Item1);
+				indent++;
 
 				StringBuilder ctor = new StringBuilder ();
 
@@ -6412,25 +6324,207 @@ public partial class Generator : IMemberGatherer {
 
 				print ("\npartial void Initialize ();");
 
-				print ("\npublic {0} ({1}) {{", async_type.Item1, ctor); indent++;
+				print ("\npublic {0} ({1}) {{", async_type.Item1, ctor);
+				indent++;
 				foreach (var pi in async_type.Item2) {
 					var safe_name = pi.Name.GetSafeParamName ();
 					print ("this.{0} = {1};", safe_name.Capitalize (), safe_name);
 				}
-				print ("Initialize ();");
-				indent--; print ("}");
 
-				indent--; print ("}\n");
+				print ("Initialize ();");
+				indent--;
+				print ("}");
+
+				indent--;
+				print ("}\n");
 			}
+
 			async_result_types.Clear ();
 
 			if (type.IsNested) {
 				indent--;
 				print ("}");
 			}
+
 			if (type.Namespace is not null) {
 				indent--;
 				print ("}");
+			}
+		}
+	}
+
+	public void GenerateCtorVisibility (Type type, FieldBlock fb)
+		{
+			string ctor_visibility = fb.is_abstract ? "protected" : "public";
+			bool disable_default_ctor = false;
+			if (fb.default_ctor_visibility is not null) {
+				switch (fb.default_ctor_visibility.Visibility) {
+				case Visibility.Public:
+					ctor_visibility = "public";
+					break;
+				case Visibility.Internal:
+					ctor_visibility = "internal";
+					break;
+				case Visibility.Protected:
+					ctor_visibility = "protected";
+					break;
+				case Visibility.ProtectedInternal:
+					ctor_visibility = "protected internal";
+					break;
+				case Visibility.Private:
+					ctor_visibility = string.Empty;
+					break;
+				case Visibility.Disabled:
+					disable_default_ctor = true;
+					break;
+				}
+			}
+
+			if (fb.TypeName != "NSObject") {
+				var initSelector = (InlineSelectors || BindThirdPartyLibrary)
+					? "Selector.GetHandle (\"init\")"
+					: "Selector.Init";
+				var initWithCoderSelector = (InlineSelectors || BindThirdPartyLibrary)
+					? "Selector.GetHandle (\"initWithCoder:\")"
+					: "Selector.InitWithCoder";
+				string v = (fb.class_mod == "abstract " && fb.default_ctor_visibility is null)
+					? "protected"
+					: ctor_visibility;
+				var is32BitNotSupported = Is64BitiOSOnly (type);
+				if (external) {
+					if (!disable_default_ctor) {
+						GeneratedCode (sw, 2);
+						if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
+							sw.WriteLine ("\n\n[DesignatedInitializer]");
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t[Export (\"init\")]");
+						sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, fb.TypeName);
+						sw.WriteLine ("\t\t{");
+						if (is32BitNotSupported) {
+							sw.WriteLine ("\t\t#if ARCH_32");
+							sw.WriteLine (
+								"\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+							sw.WriteLine ("\t\t#else");
+						}
+
+						if (is_direct_binding_value is not null)
+							sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
+						if (debug)
+							sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", fb.TypeName);
+						sw.WriteLine (
+							"\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");",
+							initSelector, ns.Messaging);
+						sw.WriteLine ("\t\t\t");
+						if (is32BitNotSupported)
+							sw.WriteLine ("\t\t#endif");
+						sw.WriteLine ("\t\t}");
+					}
+				} else {
+					if (!disable_default_ctor) {
+						GeneratedCode (sw, 2);
+						if (AttributeManager.HasAttribute<DesignatedDefaultCtorAttribute> (type))
+							sw.WriteLine ("\t\t[DesignatedInitializer]");
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t[Export (\"init\")]");
+						sw.WriteLine ("\t\t{0} {1} () : base (NSObjectFlag.Empty)", v, fb.TypeName);
+						sw.WriteLine ("\t\t{");
+						if (is32BitNotSupported) {
+							sw.WriteLine ("\t\t#if ARCH_32");
+							sw.WriteLine (
+								"\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+							sw.WriteLine ("\t\t#else");
+						}
+
+						if (type_needs_thread_checks) {
+							sw.Write ("\t\t\t");
+							GenerateThreadCheck (sw);
+						}
+
+						var indentation = 3;
+						WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
+							() => string.Format (
+								"InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");",
+								initSelector, ns.Messaging),
+							() => string.Format (
+								"InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");",
+								initSelector, ns.Messaging));
+
+						WriteMarkDirtyIfDerived (sw, type);
+						if (is32BitNotSupported)
+							sw.WriteLine ("\t\t#endif");
+						sw.WriteLine ("\t\t}");
+						sw.WriteLine ();
+					}
+
+					var nscoding = ConformToNSCoding (type);
+					if (nscoding) {
+						GeneratedCode (sw, 2);
+						sw.WriteLine ("\t\t[DesignatedInitializer]");
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t[Export (\"initWithCoder:\")]");
+						sw.WriteLine ("\t\t{0} {1} (NSCoder coder) : base (NSObjectFlag.Empty)", v, fb.TypeName);
+						sw.WriteLine ("\t\t{");
+						if (is32BitNotSupported) {
+							sw.WriteLine ("\t\t#if ARCH_32");
+							sw.WriteLine (
+								"\tthrow new PlatformNotSupportedException (\"This API is not supported on this version of iOS\");");
+							sw.WriteLine ("\t\t#else");
+						}
+
+						if (nscoding) {
+							if (debug)
+								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor (NSCoder)\");", fb.TypeName);
+							if (type_needs_thread_checks) {
+								sw.Write ("\t\t\t");
+								GenerateThreadCheck (sw);
+							}
+
+							var indentation = 3;
+							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding,
+								is_direct_binding_value,
+								() => string.Format (
+									"InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");",
+									initWithCoderSelector, ns.Messaging),
+								() => string.Format (
+									"InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");",
+									initWithCoderSelector, ns.Messaging));
+							WriteMarkDirtyIfDerived (sw, type);
+						} else {
+							sw.WriteLine (
+								"\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
+						}
+
+						if (is32BitNotSupported)
+							sw.WriteLine ("\t\t#endif");
+						sw.WriteLine ("\t\t}");
+						sw.WriteLine ();
+					}
+				}
+
+				if (!fb.is_sealed) {
+					GeneratedCode (sw, 2);
+					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+					sw.WriteLine ("\t\tprotected {0} (NSObjectFlag t) : base (t)", fb.TypeName);
+					sw.WriteLine ("\t\t{");
+					if (is_direct_binding_value is not null)
+						sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
+					WriteMarkDirtyIfDerived (sw, type);
+					sw.WriteLine ("\t\t}");
+					sw.WriteLine ();
+				}
+
+				GeneratedCode (sw, 2);
+				sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+				sw.Write ($"\t\t");
+				if (!fb.is_sealed)
+					sw.Write ("protected ");
+				sw.WriteLine ($"internal {fb.TypeName} ({NativeHandleType} handle) : base (handle)");
+				sw.WriteLine ("\t\t{");
+				if (is_direct_binding_value is not null)
+					sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
+				WriteMarkDirtyIfDerived (sw, type);
+				sw.WriteLine ("\t\t}");
+				sw.WriteLine ();
 			}
 		}
 	}
