@@ -33,8 +33,7 @@ namespace Metal {
 		unsafe void AppendData (void* data, nuint size)
 			=> MTLIOCompressionContextAppendData ((void*) GetCheckedHandle (), data, size);
 
-		public void AppendData (byte [] data)
-		{
+		public void AppendData (byte [] data) {
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			AppendData (new ReadOnlySpan<byte> (data, 0, data.Length));
