@@ -42,7 +42,7 @@ namespace ObjCRuntime {
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5500-L5514
 #if BGENERATOR
-			if (t == generator.TypeManager.System_Float || t == generator.TypeManager.System_Double || t == generator.TypeManager.System_nfloat)
+			if (t == generator.TypeCache.System_Float || t == generator.TypeCache.System_Double || t == generator.TypeCache.System_nfloat)
 				return true;
 #else
 			if (t == typeof (float) || t == typeof (double) || t == typeof (nfloat))

@@ -495,7 +495,7 @@ public class BindingTouch : IDisposable {
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
 			typeCache ??= new(this, api, universe.CoreAssembly, baselib);
-			typeManager ??= new (this, api, universe.CoreAssembly, baselib);
+			typeManager ??= new (this);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 #if NET

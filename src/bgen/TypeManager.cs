@@ -146,7 +146,7 @@ public class TypeManager {
 		return type.GenericTypeArguments [0];
 	}
 
-	public TypeManager (BindingTouch bindingTouch, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly)
+	public TypeManager (BindingTouch bindingTouch)
 	{
 		if (bindingTouch.Frameworks is null)
 			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
