@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-tvos</TargetFramework>
+    <TargetFramework>net9.0-tvos</TargetFramework>
     <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">tvOSApp1</RootNamespace>
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
