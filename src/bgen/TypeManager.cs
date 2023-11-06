@@ -134,8 +134,6 @@ public class TypeManager {
 	{
 		if (bindingTouch.Frameworks is null)
 			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
-		if (bindingTouch.universe is null)
-			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
 
 		BindingTouch = bindingTouch;
 		Frameworks = bindingTouch.Frameworks;
