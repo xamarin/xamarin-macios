@@ -9,6 +9,8 @@ using System.Reflection;
 public class TypeManager {
 	public BindingTouch BindingTouch;
 	Frameworks Frameworks { get; }
+	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
+	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
 
 	public Type System_Attribute { get; }
 	public Type System_Boolean { get; }
@@ -552,5 +554,109 @@ public class TypeManager {
 		}
 
 		return tname;
+	}
+
+	public string? RenderType (Type t, ICustomAttributeProvider? provider = null)
+	{
+		if (!t.IsEnum) {
+			switch (Type.GetTypeCode (t)) {
+			case TypeCode.Char:
+				return "char";
+			case TypeCode.String:
+				return "string";
+			case TypeCode.Int32:
+				return "int";
+			case TypeCode.UInt32:
+				return "uint";
+			case TypeCode.Int64:
+				return "long";
+			case TypeCode.UInt64:
+				return "ulong";
+			case TypeCode.Single:
+				return "float";
+			case TypeCode.Double:
+				return "double";
+			case TypeCode.Decimal:
+				return "decimal";
+			case TypeCode.SByte:
+				return "sbyte";
+			case TypeCode.Byte:
+				return "byte";
+			case TypeCode.Boolean:
+				return "bool";
+			}
+		}
+
+		if (t == System_Void)
+			return "void";
+
+		if (t == System_IntPtr) {
+			return AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr";
+		} else if (t == System_UIntPtr) {
+			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+		}
+
+		if (t.Namespace is not null) {
+			string ns = t.Namespace;
+			if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+				var targs = t.GetGenericArguments ();
+				if (targs.Length == 0)
+					return t.Name;
+				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+			}
+			if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
+				return "global::" + t.FullName;
+			if (t.Name == t.Namespace)
+				return "global::" + t.FullName;
+			else
+				return t.FullName;
+		}
+
+		return t.FullName;
+	}
+
+	// TODO: If we ever have an API with nested properties of the same name more than
+	// 2 deep, we'll need to have this return a list of PropertyInfo and comb through them all.
+	public PropertyInfo? GetParentTypeWithSameNamedProperty (BaseTypeAttribute bta, string propertyName)
+	{
+		if (bta is null)
+			return null;
+
+		Type? currentType = bta.BaseType;
+		while (currentType is not null && currentType != NSObject) {
+			PropertyInfo? prop = currentType.GetProperty (propertyName, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+			if (prop is not null)
+				return prop;
+			currentType = currentType.BaseType;
+		}
+		return null;
+	}
+
+	public bool IsNativeType (Type pt)
+	{
+		return (pt == System_Int32 || pt == System_Int64 || pt == System_Byte || pt == System_Int16);
+	}
+
+	// Is this a wrapped type of NSObject from the MonoTouch/MonoMac binding world?
+	public bool IsWrappedType (Type? t)
+	{
+		if (t is null)
+			return false;
+		if (t.IsInterface)
+			return true;
+		if (NSObject is not null)
+			return t.IsSubclassOf (NSObject) || t == NSObject;
+		return false;
+	}
+
+	public bool IsArrayOfWrappedType (Type t)
+	{
+		return t.IsArray && IsWrappedType (t.GetElementType ());
+	}
+
+	// Is this type something that derives from DictionaryContainerType (or an interface marked up with StrongDictionary)
+	public bool IsDictionaryContainerType (Type t)
+	{
+		return t.IsSubclassOf (DictionaryContainerType) || (t.IsInterface && AttributeManager.HasAttribute<StrongDictionaryAttribute> (t));
 	}
 }
