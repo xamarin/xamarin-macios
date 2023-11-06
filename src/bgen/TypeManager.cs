@@ -112,22 +112,6 @@ public class TypeManager {
 		}
 	}
 
-#if NET
-	static bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, [NotNullWhen (true)] out Type? type)
-#else
-	static bool TryGetType (Assembly assembly, string @namespace, string typename, out string fullname, out Type? type)
-#endif
-	{
-		if (string.IsNullOrEmpty (@namespace)) {
-			fullname = typename;
-		} else {
-			fullname = @namespace + "." + typename;
-		}
-
-		type = assembly.GetType (fullname);
-		return type is not null;
-	}
-
 	public Type? GetUnderlyingNullableType (Type type)
 	{
 		if (!type.IsConstructedGenericType)
