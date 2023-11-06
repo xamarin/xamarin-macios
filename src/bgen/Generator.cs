@@ -61,7 +61,7 @@ public partial class Generator : IMemberGatherer {
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
-	public TypeCache TypeCache { get { return BindingTouch.TypeCache; }}
+	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	Nomenclator nomenclator;
 	Nomenclator Nomenclator {
