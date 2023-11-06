@@ -8,6 +8,9 @@
 //
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+
 using Foundation;
 using CoreText;
 #if MONOMAC
@@ -70,6 +73,31 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.That (set_feature.FeatureGroup, Is.EqualTo (FontFeatureGroup.Ligatures), "#1");
 				Assert.That (set_feature.FeatureWeak, Is.EqualTo ((int) CTFontFeatureLigatures.Selector.RareLigaturesOn), "#2");
 			}
+		}
+
+		[Test]
+		public void MatchFontDescriptors ()
+		{
+			var fda1 = new CTFontDescriptorAttributes () {
+				Name = "Apple-Chancery",
+			};
+			using var desc1 = new CTFontDescriptor (fda1);
+			var tcs = new TaskCompletionSource<bool> ();
+			var rv = CTFontDescriptor.MatchFontDescriptors (new CTFontDescriptor [] { desc1 }, null, (CTFontDescriptorMatchingState state, CTFontDescriptorMatchingProgress progress) =>
+			{
+				try {
+					if (state == CTFontDescriptorMatchingState.Finished) {
+						Assert.AreEqual (1, progress.Result.Length, "Result.Length");
+						Assert.AreEqual (fda1.Name, progress.Result [0].GetAttributes ().Name, "Result[0].Name");
+						tcs.TrySetResult (true);
+					}
+				} catch (Exception e) {
+					tcs.TrySetException (e);
+				}
+				return true;
+			});
+			Assert.IsTrue (rv, "Return value");
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), tcs.Task);
 		}
 	}
 }
