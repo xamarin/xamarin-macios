@@ -38,7 +38,6 @@
 !incorrect-protocol-member! MTLDevice::maximumConcurrentCompilationTaskCount is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::setShouldMaximizeConcurrentCompilation: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::shouldMaximizeConcurrentCompilation is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBuffer::gpuAddress is REQUIRED and should be abstract
 
 # deprecated but cannot be removed
 !unknown-native-enum! MTLArgumentAccess bound

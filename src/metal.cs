@@ -224,9 +224,7 @@ namespace Metal {
 		IMTLBuffer CreateRemoteBuffer (IMTLDevice device);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#if XAMCORE_r54_0
 		[Abstract]
-#endif
 		[Export ("gpuAddress")]
 		ulong GpuAddress { get; }
 	}
@@ -408,15 +406,7 @@ namespace Metal {
 		[MacCatalyst (14, 0), Mac (11, 0), iOS (13, 0), NoTV]
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMacCatalyst, NoMac, NoiOS, TV (16,0)]
-
-#if XAMCORE_5_0
-		[Abstract]
-#endif
-
 #endif
 
 #else
@@ -462,9 +452,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -479,9 +466,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -491,7 +475,7 @@ namespace Metal {
 		[Export ("accelerationStructureCommandEncoder")]
 		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder ();
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -744,9 +728,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -762,9 +743,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -779,9 +757,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -796,9 +771,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -814,9 +786,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -927,9 +896,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -945,9 +911,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -963,9 +926,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -981,9 +941,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -1658,9 +1615,6 @@ namespace Metal {
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoMacCatalyst, TV (16,0), NoiOS]
 #endif
 
@@ -1676,9 +1630,6 @@ namespace Metal {
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoMacCatalyst, TV (16,0), NoiOS]
 #endif
 
@@ -1694,9 +1645,6 @@ namespace Metal {
 		[MacCatalyst (14, 0), Mac (11, 0), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMacCatalyst, NoMac, TV (16,0), NoiOS]
 #endif
 
@@ -1712,9 +1660,6 @@ namespace Metal {
 		[MacCatalyst (14, 0), Mac (11, 0), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMacCatalyst, NoMac, TV (16,0), NoiOS]
 #endif
 
@@ -1730,9 +1675,6 @@ namespace Metal {
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoMacCatalyst, TV (16,0), NoiOS]
 #endif
 
@@ -1782,9 +1724,6 @@ namespace Metal {
 		[iOS (14, 0), NoTV, NoMacCatalyst]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -1883,9 +1822,6 @@ namespace Metal {
 		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, TV (16,0), NoiOS, NoMacCatalyst]
 #endif
 
@@ -1901,9 +1837,6 @@ namespace Metal {
 		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, TV (16,0), NoiOS, NoMacCatalyst]
 #endif
 #else
@@ -1980,9 +1913,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -1997,9 +1927,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -2016,9 +1943,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -2035,9 +1959,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 		
@@ -2054,9 +1975,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -2071,9 +1989,6 @@ namespace Metal {
 		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, TV (16,0), NoiOS, NoMacCatalyst]
 #endif
 
@@ -2095,9 +2010,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, NoMacCatalyst, TV (16,0)]
 #endif
 
@@ -2112,9 +2024,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, NoMacCatalyst, TV (16,0)]
 #endif
 
@@ -2129,9 +2038,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, NoMacCatalyst, TV (16,0), NoWatch]
 #endif
 
@@ -2402,9 +2308,6 @@ namespace Metal {
 		[Mac (12,5), iOS (15, 0), NoMacCatalyst, NoTV, NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, NoMacCatalyst, TV (16,0), NoWatch]
 #endif
 
@@ -2541,7 +2444,7 @@ namespace Metal {
 		[return: Release]
 		IMTLTexture CreateRemoteTexture (IMTLDevice device);
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -2613,7 +2516,7 @@ namespace Metal {
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
 
-		[Mac (12, 5), iOS (15, 0), MacCatalyst (15,0), TV (17, 0), NoWatch]
+		[Mac (12, 5), iOS (15, 0), NoMacCatalyst, TV (17, 0), NoWatch]
 		[Export ("compressionType")]
 		MTLTextureCompressionType CompressionType { get; set; }
 
@@ -2697,7 +2600,7 @@ namespace Metal {
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
-		[Mac (13, 0), iOS (16, 0), TV (16,0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -2931,9 +2834,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
 #endif
 
@@ -2949,9 +2849,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
 #endif
 
@@ -2969,9 +2866,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
 #endif
 
@@ -2988,9 +2882,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
 #endif
 
@@ -3297,9 +3188,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -3375,9 +3263,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -3392,9 +3277,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 		
@@ -4158,11 +4040,7 @@ namespace Metal {
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-
-#if XAMCORE_5_0
-		[Abstract]
-#endif
-		[NoMacCatalyst, TV (16,0), NoiOS, NoMac]
+		[NoMacCatalyst, TV (16,0), NoiOS]
 #endif
 
 #else
@@ -4220,9 +4098,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4237,9 +4112,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4254,9 +4126,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4271,9 +4140,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4289,9 +4155,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4307,9 +4170,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4325,9 +4185,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4344,9 +4201,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4361,9 +4215,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4379,9 +4230,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4397,9 +4245,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4414,9 +4259,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4431,9 +4273,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4448,9 +4287,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -4465,9 +4301,6 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
 #endif
 
@@ -5086,9 +4919,6 @@ namespace Metal {
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5105,9 +4935,6 @@ namespace Metal {
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5123,9 +4950,6 @@ namespace Metal {
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5141,9 +4965,6 @@ namespace Metal {
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5648,9 +5469,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5666,9 +5484,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5683,9 +5498,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5700,9 +5512,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 
@@ -5717,9 +5526,6 @@ namespace Metal {
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
-#if XAMCORE_5_0
-		[Abstract]
-#endif
 		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
 

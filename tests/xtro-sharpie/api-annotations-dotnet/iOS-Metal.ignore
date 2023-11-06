@@ -40,7 +40,6 @@
 !incorrect-protocol-member! MTLSamplerState::gpuResourceID is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectCommandBuffer::gpuResourceID is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::gpuResourceID is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBuffer::gpuAddress is REQUIRED and should be abstract
 
 # deprecated but cannot be removed
 !unknown-native-enum! MTLArgumentAccess bound
