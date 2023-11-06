@@ -224,7 +224,9 @@ namespace Metal {
 		IMTLBuffer CreateRemoteBuffer (IMTLDevice device);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("gpuAddress")]
 		ulong GpuAddress { get; }
 	}
@@ -402,7 +404,10 @@ namespace Metal {
 		void PopDebugGroup ();
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (14, 0), Mac (11, 0), iOS (13, 0), TV (16,0)]
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#elif !TVOS
 		[MacCatalyst (14, 0), Mac (11, 0), iOS (13, 0), NoTV]
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
 #else
@@ -448,7 +453,10 @@ namespace Metal {
 		IMTLBlitCommandEncoder CreateBlitCommandEncoder (MTLBlitPassDescriptor blitPassDescriptor);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -462,7 +470,10 @@ namespace Metal {
 		IMTLResourceStateCommandEncoder CreateResourceStateCommandEncoder (MTLResourceStatePassDescriptor resourceStatePassDescriptor);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -475,7 +486,7 @@ namespace Metal {
 		[Export ("accelerationStructureCommandEncoder")]
 		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder ();
 
-		[Mac (13, 0), iOS (16, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -724,7 +735,10 @@ namespace Metal {
 #endif
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -738,8 +752,10 @@ namespace Metal {
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint bufferIndex);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -753,7 +769,10 @@ namespace Metal {
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable [] visibleFunctionTables, NSRange range);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -767,7 +786,10 @@ namespace Metal {
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -781,8 +803,10 @@ namespace Metal {
 		void SetIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTables, NSRange range);
 
 #if NET
-		
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -892,7 +916,10 @@ namespace Metal {
 		bool SupportIndirectCommandBuffers { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -907,7 +934,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -922,7 +952,10 @@ namespace Metal {
 		IMTLComputePipelineState CreateComputePipelineState (IMTLFunction [] functions, [NullAllowed] out NSError error);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -937,7 +970,10 @@ namespace Metal {
 		IMTLVisibleFunctionTable CreateVisibleFunctionTable (MTLVisibleFunctionTableDescriptor descriptor);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -1610,8 +1646,10 @@ namespace Metal {
 		void CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
+		[Abstract]
+#elif !TVOS
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
@@ -1625,8 +1663,10 @@ namespace Metal {
 		bool SupportsVertexAmplification (nuint count);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
+		[Abstract]
+#elif !TVOS
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
@@ -1640,8 +1680,10 @@ namespace Metal {
 		bool SupportsRasterizationRateMap (nuint layerCount);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (14, 0), Mac (11, 0), TV (16,0), iOS (13, 0)]
+		[Abstract]
+#elif !TVOS
 		[MacCatalyst (14, 0), Mac (11, 0), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
@@ -1655,8 +1697,10 @@ namespace Metal {
 		MTLSize GetSparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (14, 0), Mac (11, 0), TV (16,0), iOS (13, 0)]
+		[Abstract]
+#elif !TVOS
 		[MacCatalyst (14, 0), Mac (11, 0), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
@@ -1670,8 +1714,10 @@ namespace Metal {
 		nuint SparseTileSizeInBytes { get; }
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
+		[Abstract]
+#elif !TVOS
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
@@ -1720,7 +1766,10 @@ namespace Metal {
 		bool BarycentricCoordsSupported { [Bind ("areBarycentricCoordsSupported")] get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[iOS (14, 0), TV (16,0), NoMacCatalyst]
+		[Abstract]
+#elif !TVOS
 		[iOS (14, 0), NoTV, NoMacCatalyst]
 		[Abstract]
 #else
@@ -1818,7 +1867,10 @@ namespace Metal {
 		nuint LocationNumber { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), TV (16,0), iOS (14, 5), MacCatalyst (14, 5)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
 #else
@@ -1832,8 +1884,10 @@ namespace Metal {
 		bool Supports32BitFloatFiltering { get; }
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), TV (16,0), iOS (14, 5), MacCatalyst (14, 5)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
 #else
@@ -1908,8 +1962,10 @@ namespace Metal {
 		IMTLBinaryArchive CreateBinaryArchive (MTLBinaryArchiveDescriptor descriptor, [NullAllowed] out NSError error);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (!6,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -1923,7 +1979,10 @@ namespace Metal {
 		bool SupportsRaytracing { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -1939,7 +1998,10 @@ namespace Metal {
 #pragma warning restore
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -1955,7 +2017,10 @@ namespace Metal {
 		IMTLAccelerationStructure CreateAccelerationStructure (nuint size);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -1971,7 +2036,10 @@ namespace Metal {
 		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -1985,7 +2053,10 @@ namespace Metal {
 		bool SupportsFunctionPointers { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), TV (16,0), iOS (14, 5), MacCatalyst (14, 5)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
 #else
@@ -2006,7 +2077,10 @@ namespace Metal {
 		bool SupportsRenderDynamicLibraries { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
 		[Abstract]
 #else
@@ -2020,7 +2094,10 @@ namespace Metal {
 		bool SupportsRaytracingFromRender { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
 		[Abstract]
 #else
@@ -2034,7 +2111,10 @@ namespace Metal {
 		bool SupportsPrimitiveMotionBlur { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
 		[Abstract]
 #else
@@ -2304,7 +2384,10 @@ namespace Metal {
 		bool AllowGpuOptimizedContents { get; }
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12,5), iOS (15, 0), NoMacCatalyst, TV (16,0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12,5), iOS (15, 0), NoMacCatalyst, NoTV, NoWatch]
 		[Abstract]
 #else
@@ -2444,7 +2527,7 @@ namespace Metal {
 		[return: Release]
 		IMTLTexture CreateRemoteTexture (IMTLDevice device);
 
-		[Mac (13, 0), iOS (16, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -2516,7 +2599,7 @@ namespace Metal {
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
 
-		[Mac (12, 5), iOS (15, 0), NoMacCatalyst, TV (17, 0), NoWatch]
+		[Mac (12, 5), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 		[Export ("compressionType")]
 		MTLTextureCompressionType CompressionType { get; set; }
 
@@ -2600,7 +2683,7 @@ namespace Metal {
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
-		[Mac (13, 0), iOS (16, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -2830,7 +2913,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
@@ -2845,7 +2931,10 @@ namespace Metal {
 		IMTLFunctionHandle FunctionHandleWithFunction (IMTLFunction function, MTLRenderStages stage);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (!6,0), NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
@@ -2861,8 +2950,10 @@ namespace Metal {
 		IMTLVisibleFunctionTable NewVisibleFunctionTableWithDescriptor (MTLVisibleFunctionTableDescriptor descriptor, MTLRenderStages stage);
 
 #if NET
-
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
@@ -2878,7 +2969,10 @@ namespace Metal {
 		IMTLIntersectionFunctionTable NewIntersectionFunctionTableWithDescriptor (MTLIntersectionFunctionTableDescriptor descriptor, MTLRenderStages stage);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
 #else
@@ -3184,7 +3278,10 @@ namespace Metal {
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint bufferIndex, [NullAllowed] out MTLArgument reflection);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -3259,7 +3356,10 @@ namespace Metal {
 
 		// protocol, so no Async
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -3273,7 +3373,10 @@ namespace Metal {
 		void CreateIntersectionFunction (MTLIntersectionFunctionDescriptor descriptor, Action<IMTLFunction, NSError> completionHandler);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -4036,11 +4139,14 @@ namespace Metal {
 		void SetThreadgroupMemoryLength (nuint length, nuint offset, nuint index);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
+		[Abstract]
+#elif !TVOS
 		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
 		[Abstract]
 #else
-		[NoMacCatalyst, TV (16,0), NoiOS]
+		[NoMacCatalyst, TV (16,0), NoiOS, NoMac]
 #endif
 
 #else
@@ -4094,7 +4200,10 @@ namespace Metal {
 #endif
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4108,7 +4217,10 @@ namespace Metal {
 		void SetVertexVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4122,7 +4234,10 @@ namespace Metal {
 		void SetVertexVisibleFunctionTables (IMTLVisibleFunctionTable [] functionTables, NSRange range);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4136,7 +4251,10 @@ namespace Metal {
 		void SetVertexIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4151,7 +4269,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4166,7 +4287,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4181,7 +4305,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4197,7 +4324,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4211,7 +4341,10 @@ namespace Metal {
 		void SetFragmentIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTable, NSRange range);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4226,7 +4359,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4241,7 +4377,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4255,7 +4394,10 @@ namespace Metal {
 		void SetTileAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4269,7 +4411,10 @@ namespace Metal {
 		void SetTileIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4283,7 +4428,10 @@ namespace Metal {
 		void SetTileIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTable, NSRange range);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4297,7 +4445,10 @@ namespace Metal {
 		void SetTileVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
 		[Abstract]
 #else
@@ -4915,7 +5066,10 @@ namespace Metal {
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
@@ -4931,7 +5085,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
@@ -4946,7 +5103,10 @@ namespace Metal {
 		IMTLAccelerationStructure NewAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
@@ -4961,7 +5121,10 @@ namespace Metal {
 		IMTLAccelerationStructure NewAccelerationStructure (nuint size, nuint offset);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
 		[Abstract]
 #else
@@ -5465,7 +5628,10 @@ namespace Metal {
 		void SetComputePipelineStates (IMTLComputePipelineState [] pipelines, NSRange range);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -5480,7 +5646,10 @@ namespace Metal {
 
 #if NET
 
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -5494,7 +5663,10 @@ namespace Metal {
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint index);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -5508,7 +5680,10 @@ namespace Metal {
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable [] visibleFunctionTables, NSRange range);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
@@ -5522,7 +5697,10 @@ namespace Metal {
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint index);
 
 #if NET
-#if !TVOS
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
+		[Abstract]
+#elif !TVOS
 		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
 		[Abstract]
 #else
