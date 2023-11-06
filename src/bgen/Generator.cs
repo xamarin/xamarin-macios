@@ -1334,7 +1334,7 @@ public partial class Generator : IMemberGatherer {
 	public void Go ()
 	{
 		GeneratedTypes = new GeneratedTypes (this);
-		marshalTypes.Load (TypeManager, Frameworks);
+		marshalTypes.Load (TypeCache, Frameworks);
 
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
