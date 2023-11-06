@@ -34,9 +34,11 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		\"{platformLowerCase}\": {{");
 	writer.WriteLine ($"			\"description\": \".NET SDK Workload for building {platform} applications.\",");
 	writer.WriteLine ($"			\"packs\": [");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net9\",");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net8\",");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net7\",");
 	if (hasWindows) {
+		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net9\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\",");
 	}
@@ -44,20 +46,29 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	foreach (var rid in runtimeIdentifiers) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}\",");
 	}
-	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net8\"");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net9\"");
 	writer.WriteLine ($"			],");
 	writer.WriteLine ($"			\"extends\": [");
 	if (platform == "macOS") {
 		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling\",");
+		// writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net8\",");
 		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net7\",");
 	} else {
 		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}\",");
+		// writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net8\",");
 		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net7\",");
 	}
 	writer.WriteLine ($"			]");
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"	}},");
 	writer.WriteLine ($"	\"packs\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net9\": {{");
+	writer.WriteLine ($"			\"kind\": \"sdk\",");
+	writer.WriteLine ($"			\"version\": \"{version}\",");
+	writer.WriteLine ($"			\"alias-to\": {{");
+	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Sdk\"");
+	writer.WriteLine ($"			}}");
+	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net8\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
@@ -73,6 +84,15 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}},");
 	if (hasWindows) {
+		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net9\": {{");
+		writer.WriteLine ($"			\"kind\": \"sdk\",");
+		writer.WriteLine ($"			\"version\": \"{version}\",");
+		writer.WriteLine ($"			\"alias-to\": {{");
+		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"			}}");
+		writer.WriteLine ($"		}},");
 		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
 		writer.WriteLine ($"			\"version\": \"{version}\",");
@@ -102,7 +122,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"			\"version\": \"{version}\"");
 		writer.WriteLine ($"		}},");
 	}
-	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net8\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net9\": {{");
 	writer.WriteLine ($"			\"kind\": \"template\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
 		writer.WriteLine ($"			\"alias-to\": {{");

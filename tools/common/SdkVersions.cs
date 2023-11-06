@@ -157,7 +157,7 @@ namespace Xamarin {
 #endif
 
 	static class DotNetVersions {
-		public const string Tfm = "net8.0";
-		public const string Version = "8.0";
+		public const string Tfm = "net9.0";
+		public const string Version = "9.0";
 	}
 }
