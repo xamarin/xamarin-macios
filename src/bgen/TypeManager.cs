@@ -11,7 +11,7 @@ public class TypeManager {
 	Frameworks Frameworks { get; }
 	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
-
+	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 	public Type System_Attribute { get; }
 	public Type System_Boolean { get; }
 	public Type System_Byte { get; }

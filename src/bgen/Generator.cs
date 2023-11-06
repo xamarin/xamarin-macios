@@ -49,7 +49,6 @@ using System.IO;
 using System.Text;
 using System.ComponentModel;
 using System.Reflection;
-
 using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
@@ -62,6 +61,7 @@ public partial class Generator : IMemberGatherer {
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
 	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
+	TypeCache TypeCache { get { return BindingTouch.TypeCache; }}
 
 	Nomenclator nomenclator;
 	Nomenclator Nomenclator {
