@@ -83,8 +83,7 @@ namespace MonoTouchFixtures.CoreText {
 			};
 			using var desc1 = new CTFontDescriptor (fda1);
 			var tcs = new TaskCompletionSource<bool> ();
-			var rv = CTFontDescriptor.MatchFontDescriptors (new CTFontDescriptor [] { desc1 }, null, (CTFontDescriptorMatchingState state, CTFontDescriptorMatchingProgress progress) =>
-			{
+			var rv = CTFontDescriptor.MatchFontDescriptors (new CTFontDescriptor [] { desc1 }, null, (CTFontDescriptorMatchingState state, CTFontDescriptorMatchingProgress progress) => {
 				try {
 					if (state == CTFontDescriptorMatchingState.Finished) {
 						Assert.AreEqual (1, progress.Result.Length, "Result.Length");
