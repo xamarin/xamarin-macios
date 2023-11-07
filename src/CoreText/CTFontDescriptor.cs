@@ -162,8 +162,8 @@ namespace CoreText {
 
 		public NSDictionary Dictionary { get; private set; }
 
-		public NSUrl Url {
-			get { return (NSUrl) Dictionary [CTFontDescriptorAttributeKey.Url]; }
+		public NSUrl? Url {
+			get { return (NSUrl?) Dictionary [CTFontDescriptorAttributeKey.Url]; }
 			set { Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Url!, value); }
 		}
 
@@ -245,7 +245,7 @@ namespace CoreText {
 			set { Adapter.SetNativeValue (Dictionary, CTFontDescriptorAttributeKey.CascadeList!, value); }
 		}
 
-		public NSCharacterSet CharacterSet {
+		public NSCharacterSet? CharacterSet {
 			get { return (NSCharacterSet) Dictionary [CTFontDescriptorAttributeKey.CharacterSet]; }
 			set { Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.CharacterSet!, value); }
 		}
@@ -372,6 +372,23 @@ namespace CoreText {
 			}
 		}
 
+#if XAMCORE_5_0
+		public bool? Enabled {
+#else
+		public bool? WeakEnabled {
+#endif
+			get {
+				var value = (NSNumber?) Dictionary [CTFontDescriptorAttributeKey.Enabled];
+				if (value is null)
+					return null;
+				return value.Int32Value != 0;
+			}
+			set {
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, value is null ? null : new NSNumber ((value.Value ? 1 : 0)));
+			}
+		}
+
+#if !XAMCORE_5_0
 		public bool Enabled {
 			get {
 				var value = (NSNumber) Dictionary [CTFontDescriptorAttributeKey.Enabled];
@@ -383,6 +400,7 @@ namespace CoreText {
 				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, value ? new NSNumber (1) : null);
 			}
 		}
+#endif // !XAMCORE_5_0
 	}
 
 #if NET
