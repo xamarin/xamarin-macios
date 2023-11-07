@@ -1751,7 +1751,7 @@ public partial class Generator : IMemberGatherer {
 						  disposes: out disposes,
 						  by_ref_processing: out by_ref_processing,
 						  by_ref_init: out by_ref_init,
-					      needsTryFinally: out try_finally); ;
+						  needsTryFinally: out try_finally); ;
 
 			if (by_ref_init.Length > 0)
 				print (by_ref_init.ToString ());
