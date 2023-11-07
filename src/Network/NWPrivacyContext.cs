@@ -7,6 +7,7 @@ using CoreFoundation;
 using Foundation;
 using OS_nw_privacy_context = System.IntPtr;
 using OS_nw_resolver_config = System.IntPtr;
+using OS_nw_proxy_config = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -66,5 +67,41 @@ namespace Network {
 
 		public void RequireEncryptedNameResolution (bool requireEncryptedNameResolution, NWResolverConfig? fallbackResolverConfig)
 			=> nw_privacy_context_require_encrypted_name_resolution (GetCheckedHandle (), requireEncryptedNameResolution, fallbackResolverConfig.GetHandle ());
+
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_privacy_context_add_proxy (OS_nw_privacy_context privacy_context, OS_nw_proxy_config proxy_config);
+
+		public void AddProxy (NWProxyConfig proxyConfig)
+		{
+			if (proxyConfig is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxyConfig));
+			nw_privacy_context_add_proxy (GetCheckedHandle (), proxyConfig.GetCheckedHandle ());
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_privacy_context_clear_proxies (OS_nw_privacy_context privacy_context);
+
+#if NET
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+#endif
+		public void ClearProxies ()
+		{
+			nw_privacy_context_clear_proxies (GetCheckedHandle ());
+		}
+
 	}
+
 }
