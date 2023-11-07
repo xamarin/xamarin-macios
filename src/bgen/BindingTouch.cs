@@ -31,6 +31,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using Mono.Options;
 
@@ -83,6 +84,17 @@ public class BindingTouch : IDisposable {
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
 		get { return ikvm_type_lookup; }
 	}
+
+	private static BindingTouch? instance;
+
+	public static BindingTouch GetInstance ()
+	{
+		if (instance is null)
+			instance = new BindingTouch ();
+		return instance;
+	}
+
+	private BindingTouch () {}
 
 	public TargetFramework TargetFramework {
 		get { return target_framework!.Value; }
@@ -217,7 +229,7 @@ public class BindingTouch : IDisposable {
 
 	static int Main2 (string [] args)
 	{
-		using var touch = new BindingTouch ();
+		using var touch = BindingTouch.GetInstance ();
 		return touch.Main3 (args);
 	}
 

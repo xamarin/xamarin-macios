@@ -7,6 +7,8 @@ using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
+
+
 public class AttributeManager {
 	public BindingTouch BindingTouch;
 	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
@@ -16,7 +18,7 @@ public class AttributeManager {
 		BindingTouch = binding_touch;
 	}
 
-	Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
+	static Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
 	{
 		switch (fullname) {
 		case "AbstractAttribute":
@@ -239,7 +241,7 @@ public class AttributeManager {
 	}
 
 	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
-	System.Type ConvertTypeFromMeta (Type type, ICustomAttributeProvider provider)
+	static System.Type ConvertTypeFromMeta (Type type, ICustomAttributeProvider provider)
 	{
 		var rv = LookupReflectionType (type.FullName, provider);
 		if (rv is null)
@@ -248,16 +250,17 @@ public class AttributeManager {
 	}
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
-	Type ConvertTypeToMeta (System.Type type, ICustomAttributeProvider provider)
+	static Type ConvertTypeToMeta (System.Type type, ICustomAttributeProvider provider)
 	{
-		var ikvm_type_lookup = BindingTouch.IKVMTypeLookup;
+		BindingTouch bindingTouch = BindingTouch.GetInstance ();
+		var ikvm_type_lookup = bindingTouch.IKVMTypeLookup;
 
 		if (!ikvm_type_lookup.TryGetValue (type, out var rv)) {
 			// Brute force: look everywhere.
 			// Due to how types move around between assemblies in .NET 5 it gets complicated
 			// to figure out which assembly each type comes from, so just look in every assembly.
 			// Report a warning if we find the same type in multiple assemblies though.
-			var assemblies = BindingTouch.universe.GetAssemblies ();
+			var assemblies = bindingTouch.universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
 				var lookup = asm.GetType (type.Namespace + "." + type.Name);
 				if (lookup is null)
@@ -393,7 +396,7 @@ public class AttributeManager {
 	}
 #endif
 
-	IEnumerable<T> CreateAttributeInstance<T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
+	static IEnumerable<T> CreateAttributeInstance<T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		var convertedAttributes = ConvertOldAttributes (attribute);
 		if (convertedAttributes.Any ())
@@ -454,7 +457,7 @@ public class AttributeManager {
 		for (int i = 0; i < attribute.NamedArguments.Count; i++) {
 			var arg = attribute.NamedArguments [i];
 			var value = arg.TypedValue.Value;
-			if (arg.TypedValue.ArgumentType == TypeManager.System_String_Array) {
+			if (arg.TypedValue.ArgumentType == BindingTouch.GetInstance ().TypeManager.System_String_Array) {
 				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new string [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
@@ -479,7 +482,7 @@ public class AttributeManager {
 		return ((T) instance).Yield ();
 	}
 
-	T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
+	public static T [] FilterAttributes<T> (IList<CustomAttributeData> attributes, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		if (attributes is null || attributes.Count == 0)
 			return Array.Empty<T> ();
@@ -604,4 +607,26 @@ public class AttributeManager {
 		return false;
 	}
 
+}
+
+public static class ProviderExtensions {
+	public static T [] GetCustomAttributes<T> (this MemberInfo provider) where T : System.Attribute
+	{
+		return AttributeManager.FilterAttributes<T> (provider.GetCustomAttributesData (), provider);
+	}
+
+	public static T [] GetCustomAttributes<T> (this Assembly provider) where T : System.Attribute
+	{
+		return AttributeManager.FilterAttributes<T> (provider.GetCustomAttributesData (), provider);
+	}
+
+	public static T [] GetCustomAttributes<T> (this ParameterInfo provider) where T : System.Attribute
+	{
+		return AttributeManager.FilterAttributes<T> (provider.GetCustomAttributesData (), provider);
+	}
+
+	public static T [] GetCustomAttributes<T> (this Module provider) where T : System.Attribute
+	{
+		return AttributeManager.FilterAttributes<T> (provider.GetCustomAttributesData (), provider);
+	}
 }
