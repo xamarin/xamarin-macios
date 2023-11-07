@@ -8258,6 +8258,12 @@ namespace Foundation {
 		[MacCatalyst (16, 0)]
 		[Export ("requiresDNSSECValidation")]
 		bool RequiresDnsSecValidation { get; set; }
+
+		// not yet ready, waigin on pr https://github.com/xamarin/xamarin-macios/pull/7539 to be fixed
+		// to land this and the manual pro[erty
+		// [Internal]
+		// [Export ("proxyConfigurations", ArgumentSemantic.Copy)]
+		// IntPtr[] _ProxyConfigurations { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]

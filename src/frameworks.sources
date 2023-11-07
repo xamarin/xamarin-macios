@@ -1322,14 +1322,17 @@ NETWORK_SOURCES = \
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
+	Network/NWProxyConfig.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
+	Network/NWPrivacyContext.cs		\
 	Network/NWProtocolDefinition.cs		\
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
 	Network/NWQuicMetadata.cs			\
+	Network/NWRelayHop.cs			\
 	Network/NWResolutionReport.cs \
 	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \

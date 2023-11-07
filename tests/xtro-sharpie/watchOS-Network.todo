@@ -1,21 +1,2 @@
-!missing-pinvoke! nw_privacy_context_add_proxy is not bound
-!missing-pinvoke! nw_privacy_context_clear_proxies is not bound
-!missing-pinvoke! nw_proxy_config_add_excluded_domain is not bound
-!missing-pinvoke! nw_proxy_config_add_match_domain is not bound
-!missing-pinvoke! nw_proxy_config_clear_excluded_domains is not bound
-!missing-pinvoke! nw_proxy_config_clear_match_domains is not bound
-!missing-pinvoke! nw_proxy_config_create_http_connect is not bound
-!missing-pinvoke! nw_proxy_config_create_oblivious_http is not bound
-!missing-pinvoke! nw_proxy_config_create_relay is not bound
-!missing-pinvoke! nw_proxy_config_create_socksv5 is not bound
-!missing-pinvoke! nw_proxy_config_enumerate_excluded_domains is not bound
-!missing-pinvoke! nw_proxy_config_enumerate_match_domains is not bound
-!missing-pinvoke! nw_proxy_config_get_failover_allowed is not bound
-!missing-pinvoke! nw_proxy_config_set_failover_allowed is not bound
-!missing-pinvoke! nw_proxy_config_set_username_and_password is not bound
-!missing-pinvoke! nw_relay_hop_add_additional_http_header_field is not bound
-!missing-pinvoke! nw_relay_hop_create is not bound
-!missing-protocol! OS_nw_proxy_config not bound
-!missing-protocol! OS_nw_relay_hop not bound
 !missing-selector! NSURLSessionConfiguration::proxyConfigurations not bound
 !missing-selector! NSURLSessionConfiguration::setProxyConfigurations: not bound

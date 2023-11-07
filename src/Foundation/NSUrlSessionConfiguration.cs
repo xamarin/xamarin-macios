@@ -4,6 +4,7 @@
 // Authors:
 //     Manuel de la Pena <mandel@microsoft.com>
 using System;
+using Network;
 using ObjCRuntime;
 
 using Foundation;
@@ -63,6 +64,41 @@ namespace Foundation {
 			config.SessionType = SessionConfigurationType.Background;
 			return config;
 		}
+
+/*
+		The following cannot be used unitl PR  https://github.com/xamarin/xamarin-macios/pull/7539 lands.
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+#else
+		[TV (17,0), Watch (10,0), iOS (17,0), Mac (14,0), MacCatalyst (17,0)]
+#endif
+		 public NWProxyConfig[] ProxyConfigurations { 
+			 get {
+				 var proxyConfigurations = _ProxyConfigurations;
+				 if (proxyConfigurations == null)
+					 return Array.Empty<NWProxyConfig> ();
+				 var result = new NWProxyConfig [proxyConfigurations.Length];
+				 for (int i = 0; i < proxyConfigurations.Length; i++) {
+					 result [i] = new NWProxyConfig (proxyConfigurations [i], owns: false);
+				 }
+				 return result;
+			 }
+			 set {
+				 if (value is null) {
+					 _ProxyConfigurations = Array.Empty<IntPtr> ();
+					 return;
+				 }
+				 var proxyConfigurations = new IntPtr [value.Length];
+				 for (int i = 0; i < value.Length; i++) {
+					 proxyConfigurations [i] = value [i].GetHandle ();
+				 }
+				 _ProxyConfigurations = proxyConfigurations;
+			 }
+		 }
+*/
 
 	}
 }
