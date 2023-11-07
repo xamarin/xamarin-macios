@@ -130,6 +130,17 @@ jobs:
       artifactName: '${{ parameters.uploadPrefix }}package-internal'
     continueOnError: true
 
+  # download msbuild.zip and bundle.zip to the 'package' dir, so that they're uploaded into the 'package' artifact,
+  # since we later depend on these files being there later.
+  - task: DownloadPipelineArtifact@2
+    displayName: Add msbuild.zip and bundle.zip to the package artifact
+    inputs:
+      patterns: |
+        not-signed-package/msbuild.zip
+        not-signed-package/bundle.zip
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/package
+
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Build Artifacts (notarized)'
     inputs:
