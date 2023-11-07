@@ -20,6 +20,7 @@
     <Compile Include="../../common/StringUtils.cs" Link="StringUtils.cs" />
     <Compile Include="../../common/TargetFramework.cs" Link="TargetFramework.cs" />
     <Compile Include="../../common/ApplePlatform.cs" Link="ApplePlatform.cs" />
+    <Compile Include="../../common/SdkVersions.cs" Link="SdkVersions.cs" />
 
     <Compile Include="../../../tests/mtouch/Cache.cs" Link="Cache.cs" />
     <Compile Include="../../../tests/common/BinLog.cs" Link="BinLog.cs" />
