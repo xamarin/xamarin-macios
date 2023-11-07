@@ -32,19 +32,21 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreLocation {
 
 	// NSInteger -> CLError.h
 	[Native]
 	public enum CLError : long {
-		LocationUnknown  = 0,
-		Denied,              
-		Network,             
+		LocationUnknown = 0,
+		Denied,
+		Network,
 		HeadingFailure,
 		RegionMonitoringDenied,
 		RegionMonitoringFailure,
 		RegionMonitoringSetupDelayed,
-		
+
 		// ios5 osx10.8
 		RegionMonitoringResponseDelayed,
 		// ios5 osx10.7
@@ -63,7 +65,13 @@ namespace CoreLocation {
 
 		// ios7
 		RangingFailure,
-		RangingUnavailable
+		RangingUnavailable,
+
+		// ios14
+		PromptDeclined = 18,
+
+		// ios16
+		HistoricalLocationError,
 	}
 
 	// untyped enum -> CLLocationManager.h
@@ -75,7 +83,7 @@ namespace CoreLocation {
 		LandscapeRight,
 		FaceUp,
 		FaceDown
-	} 
+	}
 
 	// untyped enum -> CLLocationManager.h
 	public enum CLAuthorizationStatus : uint {
@@ -83,10 +91,12 @@ namespace CoreLocation {
 		Restricted,
 		Denied,
 
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'AuthorizedAlways' instead.")]
+		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'AuthorizedAlways' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AuthorizedAlways' instead.")]
 		Authorized,
 		AuthorizedAlways = Authorized,
-		AuthorizedWhenInUse			
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		AuthorizedWhenInUse,
 	}
 
 	// NSInteger -> CLLocationManager.h
@@ -94,9 +104,21 @@ namespace CoreLocation {
 	public enum CLActivityType : long {
 		Other = 1,
 		AutomotiveNavigation,
- 		Fitness,
+		Fitness,
 		OtherNavigation,
-		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14)]
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+		[MacCatalyst (13, 1)]
 		Airborne,
 	}
+
+	[Native]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
+	public enum CLAccuracyAuthorization : long {
+		FullAccuracy,
+		ReducedAccuracy,
+	}
+
 }

@@ -1,21 +1,23 @@
-﻿
+
 using System;
 using System.Diagnostics;
 
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+#else
 using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
+#endif
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Simd
-{
+namespace MonoTouchFixtures.Simd {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MatrixFloat2x2Test
-	{
+	public class MatrixFloat2x2Test {
 		[Test]
 		public void Identity ()
 		{
@@ -24,15 +26,18 @@ namespace MonoTouchFixtures.Simd
 				R1C1 = 1f,
 			};
 			Asserts.AreEqual (identity, MatrixFloat2x2.Identity, "identity");
+#if !NET
 			Asserts.AreEqual (Matrix2.Identity, MatrixFloat2x2.Identity, "opentk identity");
+#endif
 		}
 
+#if !NET //we no longer have OpenTK.Matrix2 to compare against
 		[Test]
 		public void ElementConstructor ()
 		{
 			var expected = GetTestMatrix ();
 			var actual = new MatrixFloat2x2 (expected.R0C0, expected.R0C1,
-			                                 expected.R1C0, expected.R1C1);
+											 expected.R1C0, expected.R1C1);
 			Asserts.AreEqual (expected, actual, "ctor 1");
 
 		}
@@ -228,6 +233,7 @@ namespace MonoTouchFixtures.Simd
 			Asserts.AreEqual (MatrixFloat2x2.Identity, actual, "tomatrix2 identity");
 			Asserts.AreEqual (Matrix2.Identity, actual, "tomatrix2 identity2");
 		}
+#endif // !NET
 
 		[Test]
 		public void ToStringTest ()
@@ -239,6 +245,7 @@ namespace MonoTouchFixtures.Simd
 
 		// GetHashCode doesn't have to be identical, so no need to test
 
+#if !NET
 		[Test]
 		public void Equals_Object ()
 		{
@@ -300,5 +307,6 @@ namespace MonoTouchFixtures.Simd
 				counter = 0;
 			return test_matrices [counter];
 		}
+#endif // !NET
 	}
 }

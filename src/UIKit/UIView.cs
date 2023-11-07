@@ -14,7 +14,7 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
@@ -28,7 +28,7 @@ namespace UIKit {
 
 		public void AddSubviews (params UIView [] views)
 		{
-			if (views == null)
+			if (views is null)
 				return;
 			foreach (var v in views)
 				AddSubview (v);
@@ -37,7 +37,7 @@ namespace UIKit {
 		public IEnumerator GetEnumerator ()
 		{
 			UIView [] subviews = Subviews;
-			if (subviews == null)
+			if (subviews is null)
 				yield break;
 			foreach (UIView uiv in subviews)
 				yield return uiv;
@@ -47,19 +47,6 @@ namespace UIKit {
 		{
 			BeginAnimations (animation, IntPtr.Zero);
 		}
-			
-#if !XAMCORE_2_0
-		[CompilerGenerated]
-		[iOS (4,2)]
-		public virtual bool EnableInputClicksWhenVisible {
-			[iOS (4,2)]
-			[Export ("enableInputClicksWhenVisible")]
-			get {
-				global::MonoTouch.UIKit.UIApplication.EnsureUIThread ();
-				return false;
-			}
-		}
-#endif
 
 		[Register]
 		class _UIViewStaticCallback : NSObject {
@@ -77,7 +64,7 @@ namespace UIKit {
 			[Export ("start")]
 			public void OnStart ()
 			{
-				if (WillStart != null)
+				if (WillStart is not null)
 					WillStart ();
 			}
 
@@ -86,20 +73,20 @@ namespace UIKit {
 			public void OnEnd ()
 			{
 				shared = null;
-				if (WillEnd != null)
+				if (WillEnd is not null)
 					WillEnd ();
 			}
 
 			public static _UIViewStaticCallback Prepare ()
 			{
-				if (shared == null){
+				if (shared is null) {
 					shared = new _UIViewStaticCallback ();
 					SetAnimationDelegate (shared);
 				}
 				return shared;
 			}
 		}
-		
+
 		public static event Action AnimationWillStart {
 			add {
 				_UIViewStaticCallback.Prepare ().WillStart += value;
@@ -122,9 +109,9 @@ namespace UIKit {
 		public static void Animate (double duration, Action animation, Action completion)
 		{
 			// animation null check will be done in AnimateNotify
-			AnimateNotify (duration, animation, (x) => { 
-				if (completion != null)
-					completion (); 
+			AnimateNotify (duration, animation, (x) => {
+				if (completion is not null)
+					completion ();
 			});
 		}
 
@@ -133,8 +120,8 @@ namespace UIKit {
 		{
 			// animation null check will be done in AnimateNotify
 			AnimateNotify (duration, delay, options, animation, (x) => {
-				if (completion != null)
-					completion (); 
+				if (completion is not null)
+					completion ();
 			});
 		}
 
@@ -142,8 +129,8 @@ namespace UIKit {
 		public static void Transition (UIView fromView, UIView toView, double duration, UIViewAnimationOptions options, Action completion)
 		{
 			TransitionNotify (fromView, toView, duration, options, (x) => {
-				if (completion != null)
-					completion (); 
+				if (completion is not null)
+					completion ();
 			});
 		}
 
@@ -152,25 +139,10 @@ namespace UIKit {
 		{
 			// animation null check will be done in AnimateNotify
 			TransitionNotify (withView, duration, options, animation, (x) => {
-				if (completion != null)
-					completion (); 
+				if (completion is not null)
+					completion ();
 			});
 		}
-
-#if !XAMCORE_2_0
-		[Advice ("Use the version with a 'ref float actualFontSize'.")]
-		public CGSize DrawString (string str, CGPoint point, nfloat width, UIKit.UIFont font, nfloat minFontSize, nfloat actualFontSize, UIKit.UILineBreakMode breakMode, UIKit.UIBaselineAdjustment adjustment)
-		{
-			nfloat temp = actualFontSize;
-			return DrawString (str, point, width, font, minFontSize, ref temp, breakMode, adjustment);
-		}
-
-		[Obsolete ("Use 'TranslatesAutoresizingMaskIntoConstraints'.")]
-		bool TranslatesAutoresizingMaskIntoConstrainst { 
-			get { return TranslatesAutoresizingMaskIntoConstraints; }
-			set { TranslatesAutoresizingMaskIntoConstraints = value; }
-		}
-#endif
 
 		public static Task<bool> AnimateAsync (double duration, Action animation)
 		{

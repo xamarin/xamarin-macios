@@ -11,14 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoMac.Foundation;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 
@@ -39,7 +36,7 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
-#if !XAMCORE_4_0
+#if !NET
 			case "AppKit.NSDraggingInfo":
 			case "MonoMac.AppKit.NSDraggingInfo": // binding mistakes.
 				return true;
@@ -73,6 +70,7 @@ namespace Introspection {
 			case "Foundation.NSUnitPressure": // -init should never be called on NSUnit!
 			case "Foundation.NSUnitSpeed": // -init should never be called on NSUnit!
 			case "MonoMac.EventKit.EKParticipant":
+			case "EventKit.EKCalendarItem":
 			case "EventKit.EKParticipant":
 			case "XamCore.CoreImage.CISampler":
 			case "CoreImage.CISampler":
@@ -98,30 +96,6 @@ namespace Introspection {
 			case "MonoMac.AppKit.NSWindow":
 			case "AppKit.NSWindow":
 				return true;
-#if !XAMCORE_2_0
-			case "MonoMac.AppKit.NSToolbar":   // mono[10518:626783] *** -[__NSDictionaryM removeObjectForKey:]: key cannot be nil
-			case "MonoMac.SceneKit.SCNRenderer": // -[SCNRenderer init]: unrecognized selector sent to instance 0x7c6446c0
-			case "MonoMac.SceneKit.SCNLookAtConstraint":
-				return true;
-#endif
-			case "MonoMac.Foundation.NSUrlSession":
-			case "Foundation.NSUrlSession":
-			case "MonoMac.Foundation.NSUrlSessionTask":
-			case "Foundation.NSUrlSessionTask":
-			case "MonoMac.Foundation.NSUrlSessionDataTask":
-			case "Foundation.NSUrlSessionDataTask":
-			case "MonoMac.Foundation.NSUrlSessionUploadTask":
-			case "Foundation.NSUrlSessionUploadTask":
-			case "MonoMac.Foundation.NSUrlSessionDownloadTask":
-			case "Foundation.NSUrlSessionDownloadTask":
-			case "MonoMac.Foundation.NSUrlSessionConfiguration":
-			case "Foundation.NSUrlSessionConfiguration":
-				// These types were introduced as 64-bit only in Mavericks, and 32+64bits in Yosemite. We can't
-				// express that with our AvailabilityAttribute, we set it as available (for all architectures, since
-				// we can't distinguish them) starting with Mavericks.
-				if (Mac.Is32BitMavericks)
-					return true;
-				break;
 
 			case "GLKit.GLKSkyboxEffect":
 				// Crashes inside libGL.dylib, most likely because something hasn't been initialized yet, because
@@ -135,15 +109,6 @@ namespace Introspection {
 				if (IntPtr.Size == 8)
 					return true;
 				break;
-
-#if !XAMCORE_3_0
-			case "SpriteKit.SKView":
-				// Causes a crash later. Filed as radar://18440271.
-				// Apple said they won't fix this ('init' isn't a designated initializer)
-				if (IntPtr.Size == 8)
-					return true;
-				break;
-#endif
 
 			case "MonoMac.AppKit.NSSpeechRecognizer":
 			case "AppKit.NSSpeechRecognizer":
@@ -179,7 +144,7 @@ namespace Introspection {
 				// https://trello.com/c/T6vkA2QF/62-29311598-ikpicturetaker-crashes-randomly-upon-deallocation?menu=filter&filter=corenfc
 				return true;
 			case "Photos.PHProjectChangeRequest":
-				if (TestRuntime.CheckSystemVersion (ObjCRuntime.PlatformName.MacOSX, 10, 15)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15)) {
 					/*
 	 Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'This method can only be called from inside of -[PHPhotoLibrary performChanges:completionHandler:] or -[PHPhotoLibrary performChangesAndWait:error:]'
 	0   CoreFoundation                      0x00007fff34f29063 __exceptionPreprocess + 250
@@ -191,21 +156,31 @@ namespace Introspection {
 				}
 				break;
 			case "AVKit.AVCaptureView":
-			// Deallocating the AVCaptureView starts up the A/V capturing pipeline (!):
-			/*
-24  com.apple.avfoundation            0x00007fff28298a2f -[AVCaptureSession startRunning] + 97
-25  com.apple.AVKit                   0x00007fff2866621f __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke_2 + 293
-26  com.apple.AVKit                   0x00007fff2866609a __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke + 489
-27  com.apple.AVKit                   0x00007fff28661bd4 -[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:] + 234
-28  com.apple.AVKit                   0x00007fff28661c53 -[AVCaptureController session] + 53
-29  com.apple.AVKit                   0x00007fff28670d2b -[AVCaptureView dealloc] + 124
+				// Deallocating the AVCaptureView starts up the A/V capturing pipeline (!):
+				/*
+	24  com.apple.avfoundation            0x00007fff28298a2f -[AVCaptureSession startRunning] + 97
+	25  com.apple.AVKit                   0x00007fff2866621f __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke_2 + 293
+	26  com.apple.AVKit                   0x00007fff2866609a __72-[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:]_block_invoke + 489
+	27  com.apple.AVKit                   0x00007fff28661bd4 -[AVCaptureController _createDefaultSessionAndFileOutputAsynchronously:] + 234
+	28  com.apple.AVKit                   0x00007fff28661c53 -[AVCaptureController session] + 53
+	29  com.apple.AVKit                   0x00007fff28670d2b -[AVCaptureView dealloc] + 124
 
-				This is unfortunate because capturing audio/video requires permission,
-				and since macOS tests don't execute in a session that can show UI,
-				the permission system (TCC) fails and the process ends up crashing
-				due to a privacy violation (even if the required entry is present in the Info.plist).
-		     */
+					This is unfortunate because capturing audio/video requires permission,
+					and since macOS tests don't execute in a session that can show UI,
+					the permission system (TCC) fails and the process ends up crashing
+					due to a privacy violation (even if the required entry is present in the Info.plist).
+				 */
 				return true;
+			case "AVFoundation.AVAudioRecorder": // Stopped working in macOS 10.15.2
+				return TestRuntime.CheckXcodeVersion (11, 2);
+			case "GameKit.GKGameCenterViewController": // the native 'init' method returned nil.
+				return TestRuntime.CheckXcodeVersion (11, 2);
+			case "MetalPerformanceShaders.MPSPredicate":
+				// Fails on Catalina: Could not initialize an instance of the type 
+				// 'MetalPerformanceShaders.MPSPredicate': the native 'init' method returned nil. 
+				if (Mac.CheckSystemVersion (10, 15))
+					return true;
+				break;
 			}
 
 			switch (type.Namespace) {
@@ -233,6 +208,10 @@ namespace Introspection {
 				break;
 			case "QTKit":
 				if (Mac.CheckSystemVersion (10, 15)) // QTKit is gone in 10.15
+					return true;
+				break;
+			case "ModelIO": // Looks like it is broken in macOS 11.0 beta 9 and fixed in 11.1 beta 2
+				if (!Mac.CheckSystemVersion (11, 1) && Mac.CheckSystemVersion (11, 0)) // Causes error on test: turning unknown type for VtValue with unregistered C++ type bool
 					return true;
 				break;
 			}
@@ -278,7 +257,7 @@ namespace Introspection {
 			case "AppKit.NSStoryboard":
 			case "MonoMac.AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
 			case "AVFoundation.AVCaptureInputPort": // https://bugzilla.xamarin.com/show_bug.cgi?id=57668
-			// Crashes on 10.12
+													// Crashes on 10.12
 			case "Contacts.CNContainer":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()
 			case "WebKit.WKNavigationAction":
@@ -300,6 +279,22 @@ namespace Introspection {
 			case "AVFoundation.AVAssetResourceLoadingDataRequest":
 			case "MonoMac.AVFoundation.AVCaptureDeviceInputSource": // Crashes on 10.9.5
 			case "AVFoundation.AVCaptureDeviceInputSource":
+				break;
+			// 11.0
+			case "AVFoundation.AVMediaSelection":
+			case "AVFoundation.AVMutableMediaSelection":
+			case "CoreLocation.CLBeacon":
+			case "GameKit.GKTurnBasedMatch":
+				break;
+			// crash with xcode 12.2 Beta 2 (and GM in iOS)
+			case "CoreSpotlight.CSLocalizedString":
+				if (TestRuntime.CheckXcodeVersion (12, 0))
+					return;
+				break;
+			// crash with xcode 14 Beta 6
+			case "IOSurface.IOSurface":
+				if (TestRuntime.CheckXcodeVersion (14, 0))
+					return;
 				break;
 			default:
 				base.CheckToString (obj);
@@ -328,12 +323,12 @@ namespace Introspection {
 			case "ImageKit.IKScannerDeviceView":
 			case "MonoMac.AppKit.NSFontPanel": // *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'An instance 0x11491cc00 of class NSButton was deallocated while key value observers were still registered with it.
 			case "AppKit.NSFontPanel":
-			case "MonoMac.AVFoundation.AVAudioRecorder":						// same on iOS
+			case "MonoMac.AVFoundation.AVAudioRecorder":                        // same on iOS
 			case "AVFoundation.AVAudioRecorder":
 			case "MonoMac.Foundation.NSUrlConnection":
 			case "Foundation.NSUrlConnection":
 			// 10.8:
-			case "MonoMac.Accounts.ACAccount":									// maybe the default .ctor is not allowed ?
+			case "MonoMac.Accounts.ACAccount":                                  // maybe the default .ctor is not allowed ?
 			case "Accounts.ACAccount":
 			case "MonoMac.Accounts.ACAccountCredential":
 			case "Accounts.ACAccountCredential":
@@ -356,6 +351,9 @@ namespace Introspection {
 				// crashes on El Capitan (b2) but not before
 				if (!Mac.CheckSystemVersion (10, 11))
 					goto default;
+				do_not_dispose.Add (obj);
+				break;
+			case "CoreLocation.CLBeacon":
 				do_not_dispose.Add (obj);
 				break;
 			default:

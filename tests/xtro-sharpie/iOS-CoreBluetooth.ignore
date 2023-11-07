@@ -4,3 +4,11 @@
 
 ## obsoleted (removed from headers) in iOS 8.4
 !extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
+!unknown-field! CBUUIDAppearanceString bound
+!unknown-field! CBUUIDDeviceNameString bound
+!unknown-field! CBUUIDGenericAccessProfileString bound
+!unknown-field! CBUUIDGenericAttributeProfileString bound
+!unknown-field! CBUUIDPeripheralPreferredConnectionParametersString bound
+!unknown-field! CBUUIDPeripheralPrivacyFlagString bound
+!unknown-field! CBUUIDReconnectionAddressString bound
+!unknown-field! CBUUIDServiceChangedString bound

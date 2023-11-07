@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>class_redirector</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\CSToObjCMap.cs">
+      <Link>CSToObjCMap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ObjCNameIndex.cs">
+      <Link>ObjCNameIndex.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\StaticRegistrarFile.cs">
+      <Link>StaticRegistrarFile.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

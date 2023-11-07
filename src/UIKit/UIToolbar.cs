@@ -17,17 +17,25 @@ namespace UIKit {
 		[Export ("setItems:animated:")]
 		public virtual void SetItems (UIBarButtonItem[] items, bool animated)
 		{
-			if (items == null)
+			if (items is null)
 				throw new ArgumentNullException ("items");
 			
 			// must be identical the [get|set]_Items
 			var nsa_items = NSArray.FromNSObjects (items);
 			
+#if NET
 			if (IsDirectBinding) {
-				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_bool (this.Handle, Selector.GetHandle ("setItems:animated:"), nsa_items.Handle, animated);
+				ObjCRuntime.Messaging.void_objc_msgSend_NativeHandle_bool (this.Handle, Selector.GetHandle ("setItems:animated:"), nsa_items.Handle, animated ? (byte) 1 : (byte) 0);
 			} else {
-				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_bool (this.SuperHandle, Selector.GetHandle ("setItems:animated:"), nsa_items.Handle, animated);
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_NativeHandle_bool (this.SuperHandle, Selector.GetHandle ("setItems:animated:"), nsa_items.Handle, animated ? (byte) 1 : (byte) 0);
 			}
+#else
+			if (IsDirectBinding) {
+				ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_bool (this.Handle, Selector.GetHandle ("setItems:animated:"), nsa_items.Handle, animated ? (byte) 1 : (byte) 0);
+			} else {
+				ObjCRuntime.Messaging.void_objc_msgSendSuper_IntPtr_bool (this.SuperHandle, Selector.GetHandle ("setItems:animated:"), nsa_items.Handle, animated ? (byte) 1 : (byte) 0);
+			}
+#endif
 			nsa_items.Dispose ();
 		}
 	}

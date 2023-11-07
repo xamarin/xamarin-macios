@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSDecimal
 //
 // Authors:
@@ -7,13 +7,8 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 //
 
-using System;
 using System.Globalization;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -32,7 +27,7 @@ namespace MonoTouchFixtures.Foundation {
 			// like "en-HU"
 			if (TestRuntime.CheckXcodeVersion (4, 5) && (CultureInfo.CurrentCulture.Name != "ar-AE")) {
 				// interestingly the call to `NSDecimal.NSDecimalString (ref this, NSLocale.CurrentLocale.Handle);` does not consider the current locale on iOS 5.1
-				var expected = NSNumberFormatter.LocalizedStringFromNumbernumberStyle ((NSNumber)f, NSNumberFormatterStyle.Decimal);
+				var expected = NSNumberFormatter.LocalizedStringFromNumbernumberStyle ((NSNumber) f, NSNumberFormatterStyle.Decimal);
 				Assert.That (nsd.ToString (), Is.EqualTo (expected), "ToString");
 			}
 			Assert.That (f, Is.EqualTo ((float) nsd), "float-rountrip");
@@ -49,7 +44,7 @@ namespace MonoTouchFixtures.Foundation {
 			// note: there's no NSNumber / Decimal conversions
 			if (TestRuntime.CheckXcodeVersion (4, 5) && (CultureInfo.CurrentCulture.Name != "ar-AE")) {
 				// interestingly the call to `NSDecimal.NSDecimalString (ref this, NSLocale.CurrentLocale.Handle);` does not consider the current locale on iOS 5.1
-				var expected = NSNumberFormatter.LocalizedStringFromNumbernumberStyle ((NSNumber)0.7d, NSNumberFormatterStyle.Decimal);
+				var expected = NSNumberFormatter.LocalizedStringFromNumbernumberStyle ((NSNumber) 0.7d, NSNumberFormatterStyle.Decimal);
 				Assert.That (nsd.ToString (), Is.EqualTo (expected), "ToString");
 			}
 			Assert.That (m, Is.EqualTo ((decimal) nsd), "decimal-rountrip");
@@ -65,7 +60,7 @@ namespace MonoTouchFixtures.Foundation {
 			// like "en-HU"
 			if (TestRuntime.CheckXcodeVersion (4, 5) && (CultureInfo.CurrentCulture.Name != "ar-AE")) {
 				// interestingly the call to `NSDecimal.NSDecimalString (ref this, NSLocale.CurrentLocale.Handle);` does not consider the current locale on iOS 5.1
-				var expected = NSNumberFormatter.LocalizedStringFromNumbernumberStyle ((NSNumber)d, NSNumberFormatterStyle.Decimal);
+				var expected = NSNumberFormatter.LocalizedStringFromNumbernumberStyle ((NSNumber) d, NSNumberFormatterStyle.Decimal);
 				Assert.That (nsd.ToString (), Is.EqualTo (expected), "ToString");
 			}
 			Assert.That (d, Is.EqualTo ((double) nsd), "double-rountrip");

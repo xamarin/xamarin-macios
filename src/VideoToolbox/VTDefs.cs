@@ -1,5 +1,5 @@
 //
-// VideoToolbox core types and enumerations
+// VideoToolbox core enumerations
 //
 // Authors: 
 // 		Miguel de Icaza (miguel@xamarin.com)
@@ -9,6 +9,7 @@
 //
 
 using System;
+using Foundation;
 using ObjCRuntime;
 
 namespace VideoToolbox {
@@ -16,46 +17,61 @@ namespace VideoToolbox {
 	// untyped enum -> VTErrors.h
 	public enum VTStatus {
 		Ok,
-		PropertyNotSupported                      = -12900,
-		PropertyReadOnly                          = -12901,
-		Parameter                                 = -12902,
-		InvalidSession                            = -12903,
-		AllocationFailed                          = -12904,
-		PixelTransferNotSupported                 = -12905,
-		CouldNotFindVideoDecoder                  = -12906,
-		CouldNotCreateInstance                    = -12907,
-		CouldNotFindVideoEncoder                  = -12908,
-		VideoDecoderBadData                       = -12909,
-		VideoDecoderUnsupportedDataFormat         = -12910,
-		VideoDecoderMalfunction                   = -12911,
-		VideoEncoderMalfunction                   = -12912,
-		VideoDecoderNotAvailableNow               = -12913,
-		ImageRotationNotSupported                 = -12914,
-		VideoEncoderNotAvailableNow               = -12915,
-		FormatDescriptionChangeNotSupported       = -12916,
-		InsufficientSourceColorData               = -12917,
-		CouldNotCreateColorCorrectionData         = -12918,
-		ColorSyncTransformConvertFailed           = -12919,
-		VideoDecoderAuthorization                 = -12210,
-		VideoEncoderAuthorization                 = -12211,
-		ColorCorrectionPixelTransferFailed        = -12212,
-		MultiPassStorageIdentifierMismatch        = -12913,
-		MultiPassStorageInvalid                   = -12214,
-		FrameSiloInvalidTimeStamp                 = -12215,
-		FrameSiloInvalidTimeRange                 = -12216,
-		CouldNotFindTemporalFilter                = -12217,
-		PixelTransferNotPermitted                 = -12218,
-		ColorCorrectionImageRotationFailed        = -12219,
-		VideoDecoderRemoved                       = -17690,
+		PropertyNotSupported = -12900,
+		PropertyReadOnly = -12901,
+		Parameter = -12902,
+		InvalidSession = -12903,
+		AllocationFailed = -12904,
+		PixelTransferNotSupported = -12905,
+		CouldNotFindVideoDecoder = -12906,
+		CouldNotCreateInstance = -12907,
+		CouldNotFindVideoEncoder = -12908,
+		VideoDecoderBadData = -12909,
+		VideoDecoderUnsupportedDataFormat = -12910,
+		VideoDecoderMalfunction = -12911,
+		VideoEncoderMalfunction = -12912,
+		VideoDecoderNotAvailableNow = -12913,
+		[Obsolete ("Use PixelRotationNotSupported enum value instead.")]
+		ImageRotationNotSupported = -12914,
+		PixelRotationNotSupported = -12914,
+		VideoEncoderNotAvailableNow = -12915,
+		FormatDescriptionChangeNotSupported = -12916,
+		InsufficientSourceColorData = -12917,
+		CouldNotCreateColorCorrectionData = -12918,
+		ColorSyncTransformConvertFailed = -12919,
+		VideoDecoderAuthorization = -12210,
+		VideoEncoderAuthorization = -12211,
+		ColorCorrectionPixelTransferFailed = -12212,
+		MultiPassStorageIdentifierMismatch = -12913,
+		MultiPassStorageInvalid = -12214,
+		FrameSiloInvalidTimeStamp = -12215,
+		FrameSiloInvalidTimeRange = -12216,
+		CouldNotFindTemporalFilter = -12217,
+		PixelTransferNotPermitted = -12218,
+		ColorCorrectionImageRotationFailed = -12219,
+		VideoDecoderRemoved = -17690,
+		SessionMalfunction = -17691,
+		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
+		DecoderNeedsRosetta = -17692,
+		[Mac (11, 0)]
+		[MacCatalyst (13, 1)]
+		EncoderNeedsRosetta = -17693,
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
+		VideoDecoderReferenceMissing = -17694,
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), Watch (9, 0), TV (15, 0)]
+		VideoDecoderCallbackMessaging = -17695,
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
+		VideoDecoderUnknownErr = -17696,
 	}
 
 	// uint32_t -> VTErrors.h
 	[Flags]
 	public enum VTDecodeFrameFlags : uint {
-		EnableAsynchronousDecompression = 1<<0,
-		DoNotOutputFrame = 1<<1,
-		OneTimeRealTimePlayback = 1<<2,
-		EnableTemporalProcessing = 1<<3,
+		EnableAsynchronousDecompression = 1 << 0,
+		DoNotOutputFrame = 1 << 1,
+		OneTimeRealTimePlayback = 1 << 2,
+		EnableTemporalProcessing = 1 << 3,
 	}
 
 	// UInt32 -> VTErrors.h
@@ -130,9 +146,9 @@ namespace VideoToolbox {
 		H263Profile0Level10,
 		H263Profile0Level45,
 		H263Profile3Level45,
-		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		HevcMainAutoLevel,
-		[Mac (10,13), iOS (11,0), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		HevcMain10AutoLevel,
 	}
 
@@ -224,8 +240,7 @@ namespace VideoToolbox {
 		ReadWrite
 	}
 
-	public struct VTDataRateLimit
-	{
+	public struct VTDataRateLimit {
 		public uint NumberOfBytes { get; set; }
 		public double Seconds { get; set; }
 
@@ -236,7 +251,7 @@ namespace VideoToolbox {
 		}
 	}
 
-	[iOS (9,0)]
+	[MacCatalyst (13, 1)]
 	public enum VTScalingMode {
 		Unset,
 		Normal,
@@ -245,10 +260,32 @@ namespace VideoToolbox {
 		Trim
 	}
 
-	[iOS (9,0)]
+	[MacCatalyst (13, 1)]
 	public enum VTDownsamplingMode {
 		Unset,
 		Decimate,
 		Average
+	}
+
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	[MacCatalyst (14, 0)]
+	public enum HdrMetadataInsertionMode {
+		[Field ("kVTHDRMetadataInsertionMode_None")]
+		None,
+		[Field ("kVTHDRMetadataInsertionMode_Auto")]
+		Auto,
+	}
+
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), Watch (9, 0), TV (16, 0)]
+	public enum VTRotation {
+		[DefaultEnumValue]
+		[Field ("kVTRotation_0")]
+		Zero,
+		[Field ("kVTRotation_CW90")]
+		ClockwiseNinety,
+		[Field ("kVTRotation_180")]
+		OneHundredAndEighty,
+		[Field ("kVTRotation_CCW90")]
+		CounterclockwiseNinety,
 	}
 }

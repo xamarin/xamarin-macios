@@ -1,0 +1,379 @@
+parameters:
+
+- name: provisionatorChannel
+  type: string
+  default: 'latest'
+
+- name: pool
+  type: string
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
+- name: runTests
+  type: boolean
+  default: true
+
+- name: runDeviceTests
+  type: boolean
+  default: false
+
+- name: runOldMacOSTests
+  type: boolean
+  default: true
+
+- name: runWindowsIntegration
+  type: boolean
+  default: true
+
+- name: runGovernanceTests
+  type: boolean
+  default: true
+
+- name: runSamples
+  type: boolean
+  default: false
+  
+- name: enableLegacySigning
+  type: boolean
+  default: true
+
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
+- name: forceInsertion
+  type: boolean
+  default: false 
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: pushNugets
+  type: boolean
+  default: true # default to true until otherwhise
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: xcodeChannel
+  type: string
+
+- name: macOSName
+  type: string
+
+- name: simTestsConfigurations
+  type: object
+  default: [
+    'bcl',
+    'cecil',
+    'dotnettests',
+    'fsharp',
+    'framework',
+    'generator',
+    'interdependent-binding-projects',
+    'install-source',
+    'introspection',
+    'linker',
+    'mac-binding-project',
+    'mmp',
+    'mononative',
+    'monotouch',
+    'msbuild',
+    'mtouch',
+    'xammac',
+    'xcframework',
+    'xtro'
+  ]
+
+- name: deviceTestsConfigurations
+  type: object
+
+- name: macTestsConfigurations
+  type: object
+
+- name: signingSetupSteps
+  type: stepList
+  default: []
+
+- name: legacyPackageJobs
+  type: object
+  default: [
+    {
+      job: 'xamarin_ios_sign_notarize',
+      name: 'Xamarin.iOS',
+      pattern: 'xamarin.ios-*',
+      conditionVariable: "INCLUDE_LEGACY_IOS",
+    },
+    {
+      job: 'xamarin_mac_sing_notarie',
+      name: 'Xamarin.Mac',
+      pattern: 'xamarin.mac-*',
+      conditionVariable: "INCLUDE_LEGACY_MAC",
+    }
+  ]
+
+- name: azureStorage
+  type: string
+
+- name: azureContainer
+  type: string
+
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
+- name: dependsOn
+  type: string
+  default: ''
+
+- name: dependsOnResult
+  type: string
+  default: ''
+
+stages:
+
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
+    dependsOn: ${{ parameters.dependsOn }}
+    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+    jobs:
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: governance-checks.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+
+
+- ${{ if parameters.isPR }}:
+  - stage: clean
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Clean up'
+    dependsOn: []
+    jobs:
+    - job:
+      displayName: 'Clean comments'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: ./common/clean.yml
+
+
+- stage: build_packages
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
+  dependsOn: ${{ parameters.dependsOn }}
+  ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+    condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  jobs:
+  - template: ./build/build-stage.yml
+    parameters:
+      xcodeChannel: ${{ parameters.xcodeChannel }}
+      macOSName: ${{ parameters.macOSName }}
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
+      runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: $(Github.Token)
+      xqaCertPass: $(xqa--certificates--password)
+      skipESRP: ${{ parameters.skipESRP }}
+      pool: ${{ parameters.pool }}
+
+- stage: build_macos_tests
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Build macOS tests'
+  dependsOn: ${{ parameters.dependsOn }}
+  ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+    condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  jobs:
+  - template: ./build/build-mac-tests-stage.yml
+    parameters:
+      xcodeChannel: ${{ parameters.xcodeChannel }}
+      macOSName: ${{ parameters.macOSName }}
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: $(Github.Token)
+      xqaCertPass: $(xqa--certificates--password)
+      pool: ${{ parameters.pool }}
+
+- stage: prepare_packages_legacy
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Prepare legacy packages'
+  condition: and(eq(dependencies.build_packages.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
+  dependsOn:
+  - build_packages
+  jobs:
+  - template: ./sign-and-notarized/prepare-pkg-stage.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      signingSetupSteps: ${{ parameters.signingSetupSteps }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      skipESRP: ${{ parameters.skipESRP }}
+      packages: ${{ parameters.legacyPackageJobs }}
+
+# .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
+# setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
+# Got to disable the lint check because azp yaml template engine does not allow use to do a multiline if :/ 
+# yamllint disable-line rule: line-length
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'), eq(parameters.forceInsertion, true))) }}:
+  - template: ./release/vs-insertion-prep.yml
+    parameters:
+      dependsOn: build_packages
+      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      pushNugets: ${{ parameters.pushNugets }}
+
+- stage: funnel
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
+  condition: and(eq(dependencies.prepare_packages_legacy.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
+  dependsOn:
+  - prepare_packages_legacy
+  jobs:
+  - template: ./sign-and-notarized/funnel.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      azureStorage:  ${{ parameters.azureStorage }}
+      azureContainer: ${{ parameters.azureContainer }}
+      packages: # flatten the pkgs for the parameter
+      - ${{ each pkg in parameters.legacyPackageJobs }}:
+        - ${{ pkg }}
+
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - stage: generate_api_diff
+    displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
+    dependsOn: ${{ parameters.dependsOn }}
+    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+    jobs:
+    - template: ./build/api-diff-stage.yml
+      parameters:
+        xcodeChannel: ${{ parameters.xcodeChannel }}
+        macOSName: ${{ parameters.macOSName }}
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        gitHubToken: $(Github.Token)
+        xqaCertPass: $(xqa--certificates--password)
+        pool: ${{ parameters.pool }}
+
+# Test stages
+
+# always run simulator tests
+- template: ./tests/stage.yml
+  parameters:
+    xcodeChannel: ${{ parameters.xcodeChannel }}
+    macOSName: ${{ parameters.macOSName }}
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    testPrefix: 'simulator_'
+    stageName: 'simulator_tests'
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
+    testPool: '' # use the default
+    useXamarinStorage: false
+    testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+    statusContext: 'VSTS: simulator tests'
+    makeTarget: 'jenkins'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(pass--lab--mac--builder--keychain)
+    gitHubToken: $(Github.Token)
+    xqaCertPass: $(xqa--certificates--password)
+    condition: ${{ parameters.runTests }}
+
+# devices are optional and will only be ran when we set them OR in CI
+- ${{ if eq(parameters.runDeviceTests, true) }}:
+  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+    - ${{ each config in parameters.deviceTestsConfigurations }}:
+      - template: ./tests/stage.yml
+        parameters:
+          xcodeChannel: ${{ parameters.xcodeChannel }}
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+          testPrefix: ${{ config.testPrefix }} 
+          stageName: ${{ config.stageName }} 
+          displayName: '${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
+          testPool: ${{ config.testPool }} 
+          useXamarinStorage: ${{ config.useXamarinStorage }} 
+          testsLabels: ${{ config.testsLabels }} 
+          statusContext: ${{ config.statusContext }} 
+          extraBotDemands: ${{ config.extraBotDemands }} 
+          makeTarget: ${{ config.makeTarget }} 
+          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+          keyringPass: $(pass-XamarinQA-bot-login) 
+          gitHubToken: $(Github.Token)
+          xqaCertPass: $(xqa--certificates--password)
+          condition: ${{ parameters.runDeviceTests }}
+          parseLabels: false
+
+- ${{ if eq(parameters.runOldMacOSTests, true) }}:
+  - ${{ each config in parameters.macTestsConfigurations }}:
+    - template: ./mac/stage.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        stageName: ${{ config.stageName }}
+        displayName: ' ${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
+        macPool: ${{ config.macPool }}
+        useImage: ${{ config.useImage }}
+        statusContext: ${{ config.statusContext }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        demands: ${{ config.demands }}
+
+- ${{ if eq(parameters.runWindowsIntegration, true) }}:
+  - template: ./windows/stage.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      repositoryAlias: ${{ parameters.repositoryAlias }}
+      commit: ${{ parameters.commit }}
+      stageName: windows_integration
+      displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
+      pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
+      statusContext: 'Windows Integration Tests'
+
+- ${{ if eq(parameters.runSamples, true) }}:
+  # TODO: Not the real step
+  - stage: sample_testing
+    displayName: '${{ stageDisplayNamePrefix }}Sample testing'
+    dependsOn:
+    - build_packages
+    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
+    jobs:
+    - job: sample_testing
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+      # TODO: do parse labels
+      - bash: |
+          echo "Samples!"
+        displayName: 'Sample testing'

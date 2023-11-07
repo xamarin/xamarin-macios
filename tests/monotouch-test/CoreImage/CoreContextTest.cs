@@ -12,7 +12,6 @@
 using System;
 using System.Drawing;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreImage;
 using CoreGraphics;
@@ -23,41 +22,24 @@ using AppKit;
 using OpenGL;
 #else
 using UIKit;
+#if HAS_OPENGLES
 using OpenGLES;
 #endif
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.OpenGLES;
-using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
 namespace MonoTouchFixtures.CoreImage {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CIContextTest {
-		
+
 		[Test]
 		public void CreateRefCount ()
 		{
 			// Bug #7117
-			
+
 			CIImage img = new CIImage (CIColor.FromRgb (0.5f, 0.5f, 0.5f));
 			Selector retainCount = new Selector ("retainCount");
 
@@ -66,18 +48,18 @@ namespace MonoTouchFixtures.CoreImage {
 #else
 			using (var ctx = CIContext.Create ()) {
 #endif
-				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5))) {
+				using (var v = ctx.CreateCGImage (img, new CGRect (0, 0, 5, 5))) {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #a1");
 				}
 
-				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 32, 32), CIImage.FormatARGB8, null)) {
+				using (var v = ctx.CreateCGImage (img, new CGRect (0, 0, 32, 32), CIImage.FormatARGB8, null)) {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #b1");
 				}
 
 #if !MONOMAC // CreateCGImage returning null on mac
-				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5), CIFormat.ARGB8, null)) {
+				using (var v = ctx.CreateCGImage (img, new CGRect (0, 0, 5, 5), CIFormat.ARGB8, null)) {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #c1");
 				}
@@ -85,7 +67,7 @@ namespace MonoTouchFixtures.CoreImage {
 			}
 		}
 
-#if !MONOMAC // No EAGLContext for Mac
+#if HAS_OPENGLES
 		[Test]
 		public void FromContext_13983 ()
 		{
@@ -105,10 +87,10 @@ namespace MonoTouchFixtures.CoreImage {
 			using (var cv = new CVPixelBuffer (1, 1, CVPixelFormatType.CV24RGB))
 			using (CIImage img = new CIImage (CIColor.FromRgb (0.5f, 0.5f, 0.5f))) {
 				// that one "null allowed" was undocumented
-				ci.Render (img, cv, RectangleF.Empty, null);
+				ci.Render (img, cv, CGRect.Empty, null);
 			}
 		}
-#endif
+#endif // HAS_OPENGLES
 	}
 }
 

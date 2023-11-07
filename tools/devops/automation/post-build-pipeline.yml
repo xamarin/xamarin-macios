@@ -1,0 +1,135 @@
+# YAML pipeline for post build operations. 
+# This pipeline will trigger automatically after successful completion of the `prepare_release` stage against the specified branches.
+
+trigger: none
+pr: none
+
+parameters:
+# Ideally we should read/get the list of .NET platforms from somewhere else, instead of hardcoding them here.
+# Note that this is _all_ the platforms we support (not just the enabled ones).
+- name: allDotnetPlatforms
+  type: object
+  default: [
+    {
+      platform: iOS,
+      conditionVariable: "INCLUDE_DOTNET_IOS"
+    },
+    {
+      platform: tvOS,
+      conditionVariable: "INCLUDE_DOTNET_TVOS"
+    },
+    {
+      platform: macOS,
+      conditionVariable: "INCLUDE_DOTNET_MACOS"
+    },
+    {
+      platform: MacCatalyst,
+      conditionVariable: "INCLUDE_DOTNET_MACCATALYST"
+    }]
+
+resources:
+  pipelines:
+  - pipeline: macios
+    source: xamarin-macios-ci
+    trigger:
+      branches:
+      - main
+      - release/*
+      - net7.0
+      - net8.0
+      - release-test/* # this is for testing the release pipeline on branches without GitHub's branch protection (so we can automate tests without requiring commits to go through pull requests, etc.).
+      stages:
+      - prepare_release
+
+jobs:
+- job: post_build
+  displayName: Post Build
+  pool:
+    vmImage: windows-2019
+  workspace:
+    clean: all
+  variables:
+  - group: Publish-Build-Assets
+  steps:
+  - checkout: self
+    path: s/xamarin-macios
+    clean: true
+
+  - task: UseDotNet@2
+    inputs:
+      version: 6.0.201
+
+  - download: macios
+    artifact: AssetManifests
+    displayName: Download AssetManifests
+
+  - download: macios
+    artifact: build-configuration
+    displayName: Download build configuration
+
+  - pwsh: |
+      Import-Module $Env:BUILD_SOURCESDIRECTORY\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+      $configFile = Join-Path "$Env:AGENT_BUILDDIRECTORY" "macios" "build-configuration" "configuration.json"
+      $buildConfiguration = Import-BuildConfiguration -ConfigFile $configFile
+      $buildConfiguration | Write-Host
+    name: configuration
+    displayName: 'Load configuration'
+
+  - script: make -C $(Build.SourcesDirectory)/dotnet version-props
+    displayName: make version props
+
+  # Iterate over all the .NET platforms, but we use the per-platform conditionVariable to determine
+  # if we need to do anything for each platform.
+  - ${{ each platform in parameters.allDotnetPlatforms }}:
+    - powershell: |
+        $platform = "${{ platform.platform }}"
+        & dotnet build -v:n -t:PushManifestToBuildAssetRegistry `
+          -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests\$($platform) `
+          -p:BuildAssetRegistryToken=$(MaestroAccessToken) `
+          $(Build.SourcesDirectory)\dotnet\package\Microsoft.$($platform).Ref\package.csproj `
+          -bl:$(Build.ArtifactStagingDirectory)\post-build-binlogs\push-bar-manifest-$($platform).binlog
+      displayName: 'Push ${{ platform.platform}} manifests to build asset registry'
+      condition: and(succeeded(), ne(variables['configuration.${{ platform.conditionVariable }}'],''))
+      # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
+      # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
+      workingDirectory: $(Build.SourcesDirectory)\..
+      name: pushManifests_${{ platform.platform }}
+
+    # Maestro will add a BARBuildId environment variable (by using a 'echo' statement like the one in this step)
+    # with the build id after successfully pushing the build to the asset registry. Since we're pushing multiple times,
+    # we need to read this variable after each time and copy it to a platform-specific variable (otherwise we'll
+    # only have access to the last build id). Note that this is why we need to use a step per platform to publish,
+    # because we can only read the BARBuildId environment variable in the _next_ step.
+    - bash: |
+        env -0 | sort -z | tr '\0' '\n' || true
+        echo "##vso[task.setvariable variable=BARBuildId;isOutput=true]$BARBUILDID"
+      condition: and(succeeded(), ne(variables['configuration.${{ platform.conditionVariable }}'],''))
+      displayName: Redirect environment
+      name: environment_redirect_${{ platform.platform }}
+
+  # Iterate over each build we pushed and add it to the default channel.
+  - powershell: |
+      Write-Host "Processing platforms: '$Env:CONFIGURATION_DOTNET_PLATFORMS'"
+      $versionEndpoint = 'https://maestro-prod.westus2.cloudapp.azure.com/api/assets/darc-version?api-version=2019-01-16'
+      $darcVersion = $(Invoke-WebRequest -Uri $versionEndpoint -UseBasicParsing).Content
+      $arcadeServicesSource = 'https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json'
+      $dotnetPlatforms = "$Env:CONFIGURATION_DOTNET_PLATFORMS".Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+      & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
+      foreach ($platform in $dotnetPlatforms) {
+        $envVar = "ENVIRONMENT_REDIRECT_$($platform.ToUpper())_BARBUILDID"
+        $barBuildId = [Environment]::GetEnvironmentVariable($envVar)
+        & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $barBuildId --publishing-infra-version 3 --skip-assets-publishing --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
+        Write-Host "Added $($platform) bar build id: $($barBuildId)"
+      }
+    displayName: Add builds to default darc channel
+    # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
+    # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
+    workingDirectory: $(Build.SourcesDirectory)\..
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: post-build-binlogs'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)\post-build-binlogs
+      artifactName: post-build-binlogs
+    condition: succeededOrFailed()
+    continueOnError: true

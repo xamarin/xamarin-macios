@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- <Import Project="..\..\..\packages\xunit.core.2.4.0\build\xunit.core.props" Condition="Exists('..\..\..\packages\xunit.core.2.4.0\build\xunit.core.props')" /> -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProjectGuid>{3A835432-B054-32FD-07CB-F9A8FFCFB44D}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>com.xamarin.bcltests.SystemXunit</RootNamespace>
+    <AssemblyName>com.xamarin.bcltests.SystemXunit</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+    <PackageReference Include="System.Buffers" Version="4.5.0" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.analyzers" Version="0.10.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="nunitlite">
+      <HintPath>monotouch\nunitlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Xunit.NetCore.Extensions">
+      <HintPath>monotouch\tests\Xunit.NetCore.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.execution.dotnet">
+      <HintPath>monotouch\tests\xunit.execution.dotnet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="monotouch_System_xunit-test.dll">
+      <HintPath>monotouch\tests\monotouch_System_xunit-test.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include=".\Contents.json">
+      <LogicalName>Assets.xcassets\AppIcon.appiconset\Contents.json</LogicalName>
+    </ImageAsset>
+    <ImageAsset Include=".\Contents.json">
+      <LogicalName>Assets.xcassets\Contents.json</LogicalName>
+    </ImageAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".\Info.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+    <None Include=".\Entitlements.plist">
+      <Link>Entitlements.plist</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.NUnit\NUnitTestRunner.cs">
+      <Link>TestRunner.NUnit\NUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.NUnit\ClassOrNamespaceFilter.cs">
+      <Link>TestRunner.NUnit\ClassOrNamespaceFilter.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.NUnit\TestMethodFilter.cs">
+      <Link>TestRunner.NUnit\TestMethodFilter.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\Extensions.Bool.cs">
+      <Link>TestRunner.Core\Extensions.Bool.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\LogWriter.cs">
+      <Link>TestRunner.Core\LogWriter.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\MinimumLogLevel.cs">
+      <Link>TestRunner.Core\MinimumLogLevel.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TcpTextWriter.cs">
+      <Link>TestRunner.Core\TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestAssemblyInfo.cs">
+      <Link>TestRunner.Core\TestAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestCompletionStatus.cs">
+      <Link>TestRunner.Core\TestCompletionStatus.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestExecutionState.cs">
+      <Link>TestRunner.Core\TestExecutionState.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestFailureInfo.cs">
+      <Link>TestRunner.Core\TestFailureInfo.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestRunner.cs">
+      <Link>TestRunner.Core\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestRunSelector.cs">
+      <Link>TestRunner.Core\TestRunSelector.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.Core\TestRunSelectorType.cs">
+      <Link>TestRunner.Core\TestRunSelectorType.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.xUnit\XUnitFilter.cs">
+      <Link>TestRunner.xUnit\XUnitFilter.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.xUnit\XUnitFilterType.cs">
+      <Link>TestRunner.xUnit\XUnitFilterType.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.xUnit\XUnitTestRunner.cs">
+      <Link>TestRunner.xUnit\XUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\ApplicationOptions.cs">
+      <Link>ApplicationOptions.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\iOSApp\AppDelegate.cs">
+      <Link>AppDelegate.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\iOSApp\Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\iOSApp\ViewController.cs">
+      <Link>ViewController.cs</Link>
+    </Compile>
+    <Compile Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\iOSApp\ViewController.designer.cs">
+      <Link>ViewController.designer.cs</Link>
+      <DependentUpon>ViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="/Users/prvysoky/Desktop/xamarin-macios/tests/bcl-test/generated/SystemXunit/ios/RegisterType.cs">
+      <Link>RegisterType.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.xUnit\NUnitXml.xslt">
+      <Link>TestRunner.xUnit\NUnitXml.xslt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="\Users\prvysoky\Desktop\xamarin-macios\tests\bcl-test\templates\common\TestRunner.xUnit\NUnit3Xml.xslt">
+      <Link>TestRunner.xUnit\NUnit3Xml.xslt</Link>
+    </EmbeddedResource>
+    <Content Include="/Users/prvysoky/Desktop/xamarin-macios/tests/bcl-test/common-monotouch_System_xunit-test.dll.ignore">
+      <Link>common-monotouch_System_xunit-test.dll.ignore</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="/Users/prvysoky/Desktop/xamarin-macios/external/mono/sdks/out/ios-bcl/monotouch/tests/nunit-excludes.txt">
+      <Link>nunit-excludes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="/Users/prvysoky/Desktop/xamarin-macios/external/mono/sdks/out/ios-bcl/monotouch/tests/xunit-excludes.txt">
+      <Link>xunit-excludes.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" /> -->
+</Project>

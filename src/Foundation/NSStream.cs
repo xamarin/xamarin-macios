@@ -29,12 +29,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using System.Net;
 using System.Net.Sockets;
 using ObjCRuntime;
 #if !WATCH
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 #else
 using CoreServices;
@@ -49,7 +50,13 @@ namespace Foundation {
 	public enum NSStreamServiceType {
 		Default, VoIP, Video, Background, Voice
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSStreamSocksOptions {
 		public string HostName;
 		public int HostPort;
@@ -57,7 +64,7 @@ namespace Foundation {
 		public string Username;
 		public string Password;
 	}
-	
+
 	public partial class NSStream {
 		public NSObject this [NSString key] {
 			get {
@@ -71,7 +78,7 @@ namespace Foundation {
 		public NSStreamSocksOptions SocksOptions {
 			get {
 				var d = this [SocksProxyConfigurationKey] as NSDictionary;
-				if (d == null)
+				if (d is null)
 					return null;
 				var ret = new NSStreamSocksOptions ();
 				var host = d [SocksProxyHostKey] as NSString;
@@ -79,25 +86,25 @@ namespace Foundation {
 				var version = d [SocksProxyVersionKey] as NSString;
 				var user = d [SocksProxyUserKey] as NSString;
 				var pass = d [SocksProxyPasswordKey] as NSString;
-				if (host != null)
+				if (host is not null)
 					ret.HostName = (string) host;
-				if (port != null)
+				if (port is not null)
 					ret.HostPort = port.Int32Value;
-				if (version != null)
+				if (version is not null)
 					ret.Version = (version == SocksProxyVersion4) ? 4 : (version == SocksProxyVersion5 ? 5 : -1);
-				if (user != null)
+				if (user is not null)
 					ret.Username = (string) user;
-				if (pass != null)
+				if (pass is not null)
 					ret.Password = (string) pass;
 				return ret;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					this [SocksProxyConfigurationKey] = null;
 					return;
 				}
 				var d = new NSMutableDictionary ();
-				if (value.HostName != null)
+				if (value.HostName is not null)
 					d [SocksProxyHostKey] = new NSString (value.HostName);
 				if (value.HostPort != 0)
 					d [SocksProxyPortKey] = new NSNumber (value.HostPort);
@@ -105,9 +112,9 @@ namespace Foundation {
 					d [SocksProxyVersionKey] = SocksProxyVersion4;
 				if (value.Version == 5)
 					d [SocksProxyVersionKey] = SocksProxyVersion5;
-				if (value.Username != null)
+				if (value.Username is not null)
 					d [SocksProxyUserKey] = new NSString (value.Username);
-				if (value.Password != null)
+				if (value.Password is not null)
 					d [SocksProxyPasswordKey] = new NSString (value.Password);
 				this [SocksProxyConfigurationKey] = d;
 			}
@@ -115,7 +122,7 @@ namespace Foundation {
 
 		public NSStreamSocketSecurityLevel SocketSecurityLevel {
 			get {
-				var k = this[SocketSecurityLevelKey] as NSString;
+				var k = this [SocketSecurityLevelKey] as NSString;
 				if (k == SocketSecurityLevelNone)
 					return NSStreamSocketSecurityLevel.None;
 				if (k == SocketSecurityLevelSslV2)
@@ -130,7 +137,7 @@ namespace Foundation {
 			}
 			set {
 				NSString v = null;
-				switch (value){
+				switch (value) {
 				case NSStreamSocketSecurityLevel.None:
 					v = SocketSecurityLevelNone;
 					break;
@@ -147,7 +154,7 @@ namespace Foundation {
 					v = SocketSecurityLevelNegotiatedSsl;
 					break;
 				}
-				if (v != null)
+				if (v is not null)
 					this [SocketSecurityLevelKey] = v;
 			}
 		}
@@ -179,7 +186,7 @@ namespace Foundation {
 			}
 			set {
 				NSString v = null;
-				switch (value){
+				switch (value) {
 				case NSStreamServiceType.Background:
 					v = NetworkServiceTypeBackground;
 					break;
@@ -200,7 +207,7 @@ namespace Foundation {
 		}
 
 		static void AssignStreams (IntPtr read, IntPtr write,
-				    out NSInputStream readStream, out NSOutputStream writeStream)
+					out NSInputStream readStream, out NSOutputStream writeStream)
 		{
 			readStream = Runtime.GetNSObject<NSInputStream> (read);
 			writeStream = Runtime.GetNSObject<NSOutputStream> (write);
@@ -208,9 +215,9 @@ namespace Foundation {
 
 		public static void CreatePairWithSocket (CFSocket socket,
 							 out NSInputStream readStream,
-		                                         out NSOutputStream writeStream)
+												 out NSOutputStream writeStream)
 		{
-			if (socket == null)
+			if (socket is null)
 				throw new ArgumentNullException ("socket");
 
 			IntPtr read, write;
@@ -219,9 +226,9 @@ namespace Foundation {
 		}
 
 		public static void CreatePairWithPeerSocketSignature (AddressFamily family, SocketType type,
-		                                                      ProtocolType proto, IPEndPoint endpoint,
-		                                                      out NSInputStream readStream,
-		                                                      out NSOutputStream writeStream)
+															  ProtocolType proto, IPEndPoint endpoint,
+															  out NSInputStream readStream,
+															  out NSOutputStream writeStream)
 		{
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
@@ -233,8 +240,8 @@ namespace Foundation {
 
 #if !WATCH // There's no CFStreamCreatePairWithSocketToCFHost in WatchOS
 		public static void CreatePairWithSocketToHost (IPEndPoint endpoint,
-		                                               out NSInputStream readStream,
-		                                               out NSOutputStream writeStream)
+													   out NSInputStream readStream,
+													   out NSOutputStream writeStream)
 		{
 			using (var host = CFHost.Create (endpoint)) {
 				IntPtr read, write;

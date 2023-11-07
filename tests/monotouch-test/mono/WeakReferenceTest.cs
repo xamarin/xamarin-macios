@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for WeakAttribute
 //
 // Authors:
@@ -8,21 +8,16 @@
 // Copyright 2018 Xamarin Inc. All rights reserved.
 //
 
+#if !NET // WeakAttribute is not supported in .NET
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 using System.Threading;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures {
 
@@ -38,15 +33,16 @@ namespace MonoTouchFixtures {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.WatchOS, 3, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
 		[Test]
 		public void NoRetainCyclesExpectedTest ()
 		{
-			var thread = new Thread (delegate () {
+			var thread = new Thread (delegate ()
+			{
 				MyParentView.weakcount = 0;
 				for (int i = 0; i < totalTestObjects; i++) {
 					var parent = new MyParentView (useWeak: true);
@@ -62,7 +58,7 @@ namespace MonoTouchFixtures {
 			GC.WaitForPendingFinalizers ();
 			GC.WaitForPendingFinalizers ();
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => { }, () => MyParentView.weakcount < totalTestObjects);
 			Assert.That (MyParentView.weakcount, Is.LessThan (totalTestObjects), "No retain cycles expected");
 		}
 
@@ -83,7 +79,7 @@ namespace MonoTouchFixtures {
 			Assert.That (MyParentView.noweakcount, Is.EqualTo (totalTestObjects), "Retain cycles expected");
 
 			for (int i = 0; i < totalTestObjects; i++) {
-				using (var parent = Runtime.GetNSObject<MyParentView> (cache[i])) {
+				using (var parent = Runtime.GetNSObject<MyParentView> (cache [i])) {
 					var child = (MyButton) parent.Children [0];
 					child.RemoveStrongRef ();
 				}
@@ -144,3 +140,4 @@ namespace MonoTouchFixtures {
 		public void RemoveStrongRef () => strong = null;
 	}
 }
+#endif // !NET

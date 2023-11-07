@@ -1,41 +1,77 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
 
-var args = Environment.GetCommandLineArgs ();
-if (args.Length != 6 /* 2 default + 4 real */) {
-	Console.WriteLine ($"Need 4 arguments, got {args.Length - 2} arguments");
+using System.IO;
+using System.Text;
+
+try {
+	var args = Environment.GetCommandLineArgs ();
+	var defaultArgumentCount = 3;
+	var actualArgumentCount = 6;
+	if (args.Length != defaultArgumentCount + actualArgumentCount) {
+		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length - defaultArgumentCount} arguments");
+		Environment.Exit (1);
+		return;
+	}
+
+	args = args.Skip (3).ToArray ();
+
+	var csharpOutput = args [0];
+
+	args = args.Skip (1).ToArray ();
+
+	var iosframeworks = args [0].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var macosframeworks = args [1].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var watchosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var tvosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var maccatalystframeworks = args [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+	var allframeworks = new string [] [] {
+		iosframeworks,
+		macosframeworks,
+		watchosframeworks,
+		tvosframeworks,
+		maccatalystframeworks,
+	};
+	var names = new string [] {
+		"iosframeworks",
+		"macosframeworks",
+		"watchosframeworks",
+		"tvosframeworks",
+		"maccatalystframeworks",
+	};
+
+	var all = new HashSet<string> ();
+	foreach (var fws in allframeworks)
+		foreach (var fw in fws)
+			all.Add (fw);
+
+	var sb = new StringBuilder ();
+	sb.AppendLine ("using System.Collections.Generic;");
+	sb.AppendLine ();
+	sb.AppendLine ("partial class Frameworks {");
+
+	for (int i = 0; i < names.Length; i++) {
+		var name = names [i];
+		var frameworks = allframeworks [i];
+		sb.AppendLine ($"\t// GENERATED FILE - DO NOT EDIT");
+		sb.AppendLine ($"\tinternal readonly HashSet<string> {name} = new HashSet<string> {{");
+		foreach (var fw in frameworks.OrderBy (v => v)) {
+			sb.AppendLine ($"\t\t\"{fw}\",");
+		}
+		sb.AppendLine ("\t};");
+	}
+
+	var allArray = all.ToArray ();
+	Array.Sort (allArray);
+	foreach (var fw in allArray)
+		sb.AppendLine ($"\tbool? _{fw.Replace (".", "")};");
+	foreach (var fw in allArray)
+		sb.AppendLine ($"\tpublic bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
+	sb.AppendLine ("}");
+
+	File.WriteAllText (csharpOutput, sb.ToString ());
+
+	Environment.Exit (0);
+} catch (Exception e) {
+	Console.WriteLine ("Failed: {0}", e);
 	Environment.Exit (1);
-	return;
 }
-
-var iosframeworks = args [2].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var macosframeworks = args [3].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var watchosframeworks = args [4].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var tvosframeworks = args [5].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-var allframeworks = new string [] [] { iosframeworks, macosframeworks, watchosframeworks, tvosframeworks };
-var names = new string [] { "iosframeworks", "macosframeworks", "watchosframeworks", "tvosframeworks" };
-
-var all = new HashSet<string> ();
-foreach (var fws in allframeworks)
-	foreach (var fw in fws)
-		all.Add (fw)
-
-Console.WriteLine ("using System.Collections.Generic;");
-Console.WriteLine ();
-Console.WriteLine ("partial class Frameworks {");
-
-for (int i = 0; i < names.Length; i++) {
-	var name = names [i];
-	var frameworks = allframeworks [i];
-	Console.Write ($"\treadonly HashSet<string> {name} = new HashSet<string> {{\"");
-	Console.Write (string.Join ("\", \"", frameworks));
-	Console.WriteLine ("\"};");
-}
-
-var allArray = all.ToArray ();
-Array.Sort (allArray);
-foreach (var fw in allArray)
-	Console.WriteLine ($"\tbool? _{fw.Replace (".", "")};");
-foreach (var fw in allArray)
-	Console.WriteLine ($"\tpublic bool Have{fw} {{ get {{ if (!_{fw}.HasValue) _{fw} = GetValue (\"{fw}\"); return _{fw}.Value; }} }}");
-Console.WriteLine ("}");
-Environment.Exit (0);

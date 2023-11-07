@@ -1,4 +1,3 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 
@@ -7,31 +6,51 @@ using ModelIO;
 using ObjCRuntime;
 using Metal;
 
+#nullable enable
+
 namespace Metal {
 	public partial class MTLVertexDescriptor {
 
-		[iOS (9,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern  /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIO (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor);
 
-		[iOS (9,0)]
-		public static MTLVertexDescriptor FromModelIO (MDLVertexDescriptor descriptor)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			return Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIO (descriptor.Handle));
 		}
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIOWithError (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor, out IntPtr error);
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		public static MTLVertexDescriptor FromModelIO (MDLVertexDescriptor descriptor, out NSError error)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
+		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor, out NSError? error)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			IntPtr err;
 			var vd = Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIOWithError (descriptor.Handle, out err));
@@ -40,4 +59,3 @@ namespace Metal {
 		}
 	}
 }
-#endif

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\common\Execution.cs" Link="Execution.cs" />
+    <Compile Include="..\common\StringUtils.cs" Link="StringUtils.cs" />
+  </ItemGroup>
+
+</Project>

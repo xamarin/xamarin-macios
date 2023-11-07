@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 
 using MonoMac.Foundation;
 using MonoMac.AppKit;
 
-namespace WebKitDelegateEvents
-{
-	public partial class MainWindow : NSWindow
-	{
+namespace WebKitDelegateEvents {
+	public partial class MainWindow : NSWindow {
 		public MainWindow (IntPtr handle) : base (handle)
 		{
 		}

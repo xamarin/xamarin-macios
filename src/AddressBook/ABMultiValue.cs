@@ -27,6 +27,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -38,95 +40,117 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0)]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
 	static class ABMultiValue {
 		public const uint Mask = (1 << 8);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyValueAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCopyValueAtIndex")]
 		public static extern IntPtr CopyValueAtIndex (IntPtr multiValue, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCopyLabelAtIndex")]
 		public static extern IntPtr CopyLabelAtIndex (IntPtr multiValue, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetIdentifierAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetIdentifierAtIndex")]
 		public static extern int /* ABMultiValueIdentifier */ GetIdentifierAtIndex (IntPtr multiValue, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCopyArrayOfAllValues")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCopyArrayOfAllValues")]
 		public static extern IntPtr CopyArrayOfAllValues (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetCount")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetCount")]
 		public static extern nint GetCount (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetFirstIndexOfValue")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetFirstIndexOfValue")]
 		public static extern nint GetFirstIndexOfValue (IntPtr multiValue, IntPtr value);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetIndexForIdentifier")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetIndexForIdentifier")]
 		public static extern nint GetIndexForIdentifier (IntPtr multiValue, int /* ABMultiValueIdentifier */ identifier);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueGetPropertyType")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueGetPropertyType")]
 		public static extern ABPropertyType GetPropertyType (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCreateMutable")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCreateMutable")]
 		public static extern IntPtr CreateMutable (ABPropertyType type);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueCreateMutableCopy")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueCreateMutableCopy")]
 		public static extern IntPtr CreateMutableCopy (IntPtr multiValue);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueAddValueAndLabel")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueAddValueAndLabel")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool AddValueAndLabel (IntPtr multiValue, IntPtr value, IntPtr label, out int /* int32_t */ outIdentifier);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueReplaceValueAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueReplaceValueAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool ReplaceValueAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueReplaceLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueReplaceLabelAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool ReplaceLabelAtIndex (IntPtr multiValue, IntPtr value, nint index);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueInsertValueAndLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueInsertValueAndLabelAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool InsertValueAndLabelAtIndex (IntPtr multiValue, IntPtr value, IntPtr label, nint index, out int /* int32_t */ outIdentifier);
 
-		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueRemoveValueAndLabelAtIndex")]
+		[DllImport (Constants.AddressBookLibrary, EntryPoint = "ABMultiValueRemoveValueAndLabelAtIndex")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
-
-		public static IntPtr ToIntPtr (NSObject value)
-		{
-			return value == null ? IntPtr.Zero : value.Handle;
-		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public struct ABMultiValueEntry<T>
-	{
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
+	public struct ABMultiValueEntry<T> {
 		ABMultiValue<T> self;
 		nint index;
 
 		internal ABMultiValueEntry (ABMultiValue<T> self, nint index)
 		{
-			this.self   = self;
-			this.index  = index;
+			this.self = self;
+			this.index = index;
 		}
 
 		internal void AssertValid ()
 		{
-			if (self == null)
+			if (self is null)
 				throw new InvalidOperationException ();
 		}
 
 		public bool IsReadOnly {
-			get {return self.IsReadOnly;}
+			get { return self.IsReadOnly; }
 		}
 
-		IntPtr ToIntPtr (T value)
+		NativeHandle ToIntPtr (T value)
 		{
 			var mutable = self as ABMutableMultiValue<T>;
-			if (mutable == null)
+			if (mutable is null)
 				throw CreateNotSupportedException ();
 			return mutable.toNative (value);
 		}
 
 		static Exception CreateNotSupportedException ()
 		{
-			return new NotSupportedException ("ABMultiValue record is read-only. " + 
+			return new NotSupportedException ("ABMultiValue record is read-only. " +
 					"To update properties, use an ABMutableMultiValue<T>. " +
 					"See ABMultiValue<T>.ToMutableMultiValue().");
 		}
@@ -145,16 +169,16 @@ namespace AddressBook {
 			}
 		}
 
-		public NSString Label {
+		public NSString? Label {
 			get {
 				AssertValid ();
-				return (NSString) Runtime.GetNSObject (ABMultiValue.CopyLabelAtIndex (self.Handle, index));
+				return Runtime.GetNSObject<NSString> (ABMultiValue.CopyLabelAtIndex (self.Handle, index));
 			}
 			set {
 				if (IsReadOnly)
 					throw CreateNotSupportedException ();
 				AssertValid ();
-				ABMultiValue.ReplaceLabelAtIndex (self.Handle, ABMultiValue.ToIntPtr (value), index);
+				ABMultiValue.ReplaceLabelAtIndex (self.Handle, value.GetHandle (), index);
 			}
 		}
 
@@ -166,82 +190,57 @@ namespace AddressBook {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public class ABMultiValue<T> : INativeObject, IDisposable, IEnumerable<ABMultiValueEntry<T>>
-	{
-		IntPtr handle;
-		internal Converter<IntPtr, T> toManaged;
-		internal Converter<T, IntPtr> toNative;
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
+	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>> {
+		internal Converter<NativeHandle, T> toManaged;
+		internal Converter<T, NativeHandle> toNative;
 
-		internal ABMultiValue (IntPtr handle)
-			: this (handle, 
-					v => (T) (object) Runtime.GetNSObject (v), 
-					v => v == null ? IntPtr.Zero : ((INativeObject) v).Handle)
+		[Preserve (Conditional = true)]
+		internal ABMultiValue (NativeHandle handle, bool owns)
+			: this (handle,
+					v => (T) (object) Runtime.GetNSObject (v)!,
+					v => ((INativeObject?) v).GetHandle (), owns)
 		{
 			if (!typeof (NSObject).IsAssignableFrom (typeof (T)))
 				throw new InvalidOperationException ("T must be an NSObject!");
 		}
 
-		internal ABMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
+		internal ABMultiValue (NativeHandle handle, Converter<NativeHandle, T> toManaged, Converter<T, NativeHandle> toNative, bool owns)
+			: base (handle, owns)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentException ("Handle must not be null.", "handle");
-			if (toManaged == null)
-				throw new ArgumentNullException ("toManaged");
-			if (toNative == null)
-				throw new ArgumentNullException ("toNative");
+			if (toManaged is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toManaged));
+			if (toNative is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toNative));
 
-			this.handle = handle;
 			this.toManaged = toManaged;
-			this.toNative  = toNative;
-		}
-
-		~ABMultiValue ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero)
-				CFObject.CFRelease (handle);
-			handle = IntPtr.Zero;
-		}
-
-		internal void AssertValid ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("");
-		}
-
-		public IntPtr Handle {
-			get {
-				AssertValid ();
-				return handle;
-			}
+			this.toNative = toNative;
 		}
 
 		public virtual bool IsReadOnly {
 			get {
-				AssertValid ();
+				GetCheckedHandle ();
 				return true;
 			}
 		}
 
 		public ABPropertyType PropertyType {
-			get {return ABMultiValue.GetPropertyType (Handle);}
+			get { return ABMultiValue.GetPropertyType (Handle); }
 		}
 
-		public T[] GetValues ()
+		public T [] GetValues ()
 		{
 			return NSArray.ArrayFromHandle (ABMultiValue.CopyArrayOfAllValues (Handle), toManaged)
-				?? new T [0];
+				?? Array.Empty<T> ();
 		}
 
 		public nint Count {
@@ -286,41 +285,48 @@ namespace AddressBook {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public class ABMutableMultiValue<T> : ABMultiValue<T>
-	{
-		internal ABMutableMultiValue (IntPtr handle)
-			: base (handle)
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
+	public class ABMutableMultiValue<T> : ABMultiValue<T> {
+		[Preserve (Conditional = true)]
+		internal ABMutableMultiValue (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
-		internal ABMutableMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
-			: base (handle, toManaged, toNative)
+		internal ABMutableMultiValue (NativeHandle handle, Converter<NativeHandle, T> toManaged, Converter<T, NativeHandle> toNative)
+			: base (handle, toManaged, toNative, false)
 		{
 		}
 
 		public override bool IsReadOnly {
 			get {
-				AssertValid ();
+				GetCheckedHandle ();
 				return false;
 			}
 		}
 
-		public bool Add (T value, NSString label)
+		public bool Add (T value, NSString? label)
 		{
-			int _;
-			return ABMultiValue.AddValueAndLabel (Handle, 
+			return ABMultiValue.AddValueAndLabel (Handle,
 						toNative (value),
-						ABMultiValue.ToIntPtr (label),
+						label.GetHandle (),
 						out _);
 		}
 
-		public bool Insert (nint index, T value, NSString label)
+		public bool Insert (nint index, T value, NSString? label)
 		{
-			int _;
 			return ABMultiValue.InsertValueAndLabelAtIndex (Handle,
 					toNative (value),
-					ABMultiValue.ToIntPtr (label),
+					label.GetHandle (),
 					index,
 					out _);
 		}
@@ -331,27 +337,54 @@ namespace AddressBook {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableDateMultiValue : ABMutableMultiValue<NSDate> {
 		public ABMutableDateMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime))
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime), true)
 		{
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableDictionaryMultiValue : ABMutableMultiValue<NSDictionary> {
 		public ABMutableDictionaryMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary))
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary), true)
 		{
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableStringMultiValue : ABMutableMultiValue<string> {
 		public ABMutableStringMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString), 
-					ABPerson.ToString, ABPerson.ToIntPtr)
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString),
+					ABPerson.ToString, CFString.CreateNative)
 		{
 		}
 	}

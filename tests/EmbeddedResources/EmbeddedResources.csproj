@@ -15,9 +15,12 @@
     <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' Or '$(Configuration)' == 'Debug64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -26,7 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode' Or '$(Configuration)' == 'Release64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
@@ -36,8 +39,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="System" />
     <Reference Include="System.Core" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -46,6 +54,9 @@
     <Compile Include="ResourcesTest.cs" />
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

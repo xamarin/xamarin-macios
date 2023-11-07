@@ -1,6 +1,3 @@
-﻿
-#if XAMCORE_2_0
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,13 +9,14 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSSet1Test {
 
 		[Test]
 		public void Ctor ()
 		{
 			using (var arr = new NSSet<NSDate> ()) {
-				Assert.AreEqual (0, arr.Count, "Count");
+				Assert.AreEqual ((nuint) 0, arr.Count, "Count");
 			}
 		}
 
@@ -26,10 +24,10 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor_Params ()
 		{
 			using (var arr = new NSSet<NSString> ((NSString) "foo")) {
-				Assert.AreEqual (1, arr.Count, "Count");
+				Assert.AreEqual ((nuint) 1, arr.Count, "Count");
 			}
 			using (var arr = new NSSet<NSString> ((NSString) "foo", (NSString) "bar")) {
-				Assert.AreEqual (2, arr.Count, "Count");
+				Assert.AreEqual ((nuint) 2, arr.Count, "Count");
 			}
 		}
 
@@ -40,8 +38,8 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var first = new NSSet<NSString> (v1)) {
 				using (var second = new NSSet<NSString> (first)) {
-					Assert.AreEqual (1, first.Count, "1 count");
-					Assert.AreEqual (1, second.Count, "2 count");
+					Assert.AreEqual ((nuint) 1, first.Count, "1 count");
+					Assert.AreEqual ((nuint) 1, second.Count, "2 count");
 				}
 			}
 		}
@@ -53,8 +51,8 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var first = new NSMutableSet<NSString> (v1)) {
 				using (var second = new NSSet<NSString> (first)) {
-					Assert.AreEqual (1, first.Count, "1 count");
-					Assert.AreEqual (1, second.Count, "2 count");
+					Assert.AreEqual ((nuint) 1, first.Count, "1 count");
+					Assert.AreEqual ((nuint) 1, second.Count, "2 count");
 				}
 			}
 		}
@@ -121,7 +119,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var first = new NSSet<NSString> (v1)) {
 				using (var second = new NSSet<NSString> (v2)) {
 					using (var third = first + second) {
-						Assert.AreEqual (2, third.Count, "+ Count");
+						Assert.AreEqual ((nuint) 2, third.Count, "+ Count");
 						Assert.IsTrue (third.Contains (v1), "+ 1");
 						Assert.IsTrue (third.Contains (v2), "+ 2");
 					}
@@ -138,7 +136,7 @@ namespace MonoTouchFixtures.Foundation {
 			using (var first = new NSSet<NSString> (v1, v2)) {
 				using (var second = new NSSet<NSString> (v2)) {
 					using (var third = first - second) {
-						Assert.AreEqual (1, third.Count, "- Count");
+						Assert.AreEqual ((nuint) 1, third.Count, "- Count");
 						Assert.IsTrue (third.Contains (v1), "- 1");
 					}
 				}
@@ -152,9 +150,9 @@ namespace MonoTouchFixtures.Foundation {
 			var values = new NSString [C];
 			for (int i = 0; i < C; i++)
 				values [i] = (NSString) i.ToString ();
-			
+
 			using (var st = new NSSet<NSString> (values)) {
-				Assert.AreEqual (C, st.Count, "Count 1");
+				Assert.AreEqual ((nuint) C, st.Count, "Count 1");
 
 				var lst = new List<NSString> ();
 				foreach (var a in (IEnumerable<NSString>) st) {
@@ -176,7 +174,7 @@ namespace MonoTouchFixtures.Foundation {
 				values [i] = (NSString) i.ToString ();
 
 			using (var st = new NSSet<NSString> (values)) {
-				Assert.AreEqual (C, st.Count, "Count 1");
+				Assert.AreEqual ((nuint) C, st.Count, "Count 1");
 
 				var lst = new List<NSString> ();
 				foreach (NSString a in (IEnumerable) st) {
@@ -192,8 +190,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void OperatorPlusReferenceTest ()
 		{
-			var one = new NSSet<NSString> ((NSString)"1", (NSString)"2", (NSString)"3");
-			var two = new NSSet<NSString> ((NSString)"4", (NSString)"5", (NSString)"6");
+			var one = new NSSet<NSString> ((NSString) "1", (NSString) "2", (NSString) "3");
+			var two = new NSSet<NSString> ((NSString) "4", (NSString) "5", (NSString) "6");
 			NSSet<NSString> nil = null;
 			using (var sum = one + nil)
 			using (var sum2 = two + one)
@@ -205,5 +203,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-
-#endif // XAMCORE_2_0

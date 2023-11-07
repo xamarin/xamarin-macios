@@ -1,9 +1,11 @@
-﻿#if !XAMCORE_3_0 && !MONOMAC
+#if !XAMCORE_3_0 && !MONOMAC && !NET
 
 using System;
 using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace MediaPlayer {
 	public partial class MPPlayableContentDelegate {
@@ -24,17 +26,19 @@ namespace MediaPlayer {
 
 	}
 
-#if !XAMCORE_4_0
 	public partial class MPPlayableContentDataSource : NSObject {
-		[Unavailable (PlatformName.MacOSX, PlatformArchitecture.All)]
-		[iOS (10, 0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#endif
 		[Obsolete ("Use 'MPPlayableContentDataSource_Extensions.GetContentItemAsync' instead.")]
 		public unsafe virtual Task<MPContentItem> GetContentItemAsync (string identifier)
 		{
 			return MPPlayableContentDataSource_Extensions.GetContentItemAsync (this, identifier);
 		}
 	}
-#endif
 }
 
 #endif

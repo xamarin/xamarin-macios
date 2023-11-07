@@ -8,82 +8,69 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 using NUnit.Framework;
 
 namespace LinkSdk.Aot {
-	
+
 	static class AotExtension {
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3285		
-		public static IEnumerable<Type> GetInterfaces(this Type type, Type interfaceType)
+		public static IEnumerable<Type> GetInterfaces (this Type type, Type interfaceType)
 		{
- 			Type[] interfaces = type.GetInterfaces();
+			Type [] interfaces = type.GetInterfaces ();
 			foreach (Type t in interfaces) {
 				Type typeToCheck = t;
 				if (t.IsGenericType)
-					 typeToCheck = t.GetGenericTypeDefinition();
+					typeToCheck = t.GetGenericTypeDefinition ();
 				if (typeToCheck == interfaceType)
 					yield return t;
 			}
 			yield break;
 		}
 	}
-	
+
 	interface IAotTest {
 	}
-	
+
+	interface IExpectException {
+	}
+
 	[TestFixture]
 	// already done in Bug2096Test.cs -> [Preserve (AllMembers = true)]
 	public partial class AotBugsTest : IAotTest {
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3285		
 		[Test]
 		public void Aot_3285 ()
 		{
 			// called as an extension method (always worked)
-			Assert.False (GetType ().GetInterfaces (typeof (IExpectException)).Select (interf => interf != null).FirstOrDefault (), "false");
-			
+			Assert.False (GetType ().GetInterfaces (typeof (IExpectException)).Select (interf => interf is not null).FirstOrDefault (), "false");
+
 			// workaround for #3285 - similar to previous fix for monotouch/aot
 			// called as a static method (does not change the result - but it was closer to the original test case)
-			Assert.True (AotExtension.GetInterfaces (GetType (), typeof (IAotTest)).Select (interf => interf != null).FirstOrDefault (delegate { return true; }), "delegate");
-			
+			Assert.True (AotExtension.GetInterfaces (GetType (), typeof (IAotTest)).Select (interf => interf is not null).FirstOrDefault (delegate { return true; }), "delegate");
+
 			// actual, failing, test case (fixed by inlining code)
-			Assert.True (GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf != null).FirstOrDefault (), "FirstOrDefault/true");
-			
+			Assert.True (GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf is not null).FirstOrDefault (), "FirstOrDefault/true");
+
 			// other similar cases (returning bool with optional predicate delegate)
-			var enumerable = GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf != null);
+			var enumerable = GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf is not null);
 			Assert.True (enumerable.Any (), "Any");
 			Assert.True (enumerable.ElementAt (0), "ElementAt");
 			Assert.True (enumerable.ElementAtOrDefault (0), "ElementAtOrDefault");
 			Assert.True (enumerable.First (), "First");
-			Assert.True (enumerable.Last (), "Last");						// failed before fix
-			Assert.True (enumerable.LastOrDefault (), "LastOrDefault");		// failed before fix
+			Assert.True (enumerable.Last (), "Last");                       // failed before fix
+			Assert.True (enumerable.LastOrDefault (), "LastOrDefault");     // failed before fix
 			Assert.True (enumerable.Max (), "Max");
 			Assert.True (enumerable.Min (), "Min");
-			Assert.True (enumerable.Single (), "Single");					// failed before fix
-			Assert.True (enumerable.SingleOrDefault (), "SingleOrDefault");	// failed before fix
+			Assert.True (enumerable.Single (), "Single");                   // failed before fix
+			Assert.True (enumerable.SingleOrDefault (), "SingleOrDefault"); // failed before fix
 		}
-		
+
 		[Test]
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3444
 		public void ConcurrentDictionary_3444 ()
@@ -91,84 +78,84 @@ namespace LinkSdk.Aot {
 			// note: similar, but simpler, than the original bug report (same exception)
 			var cd = new ConcurrentDictionary<string, object> ();
 		}
-		
+
 		class SomeObject {
 			public event EventHandler Event;
-			
+
 			public void RaiseEvent ()
 			{
 				var fn = this.Event;
-				if (fn != null)
+				if (fn is not null)
 					fn (this, EventArgs.Empty);
 			}
 		}
-		
+
 		void OnEvent (object sender, EventArgs e)
 		{
 		}
-		
+
 		[Test]
 		public void EventInfo_3682 ()
 		{
 			var so = new SomeObject ();
-			
+
 			var e = so.GetType ().GetEvent ("Event");
-			if (e != null)
+			if (e is not null)
 				e.AddEventHandler (so, new EventHandler (OnEvent));
 		}
-		
+
 		[Test]
 		public void Workaround_3682 ()
 		{
 			var so = new SomeObject ();
 			var e = so.GetType ().GetEvent ("Event");
-			if (e != null) {
+			if (e is not null) {
 				var add = e.GetAddMethod ();
-				add.Invoke (so, new object[] { new EventHandler(OnEvent) });
+				add.Invoke (so, new object [] { new EventHandler (OnEvent) });
 			}
 		}
-		
+
 		class Counseling {
 			public int FK_PERSON;
-			
+
 			public Counseling (int i)
 			{
 				FK_PERSON = i;
 			}
 		}
-		
+
 		class PersonDetail {
 			public int Id;
-			
+
 			public PersonDetail (int i)
 			{
-				Id = i; 
+				Id = i;
 			}
 		}
-		
+
 		class CounselingWithPerson {
 			public Counseling Counseling { get; private set; }
 			public PersonDetail PersonDetail { get; private set; }
-			
+
 			public CounselingWithPerson (Counseling c, PersonDetail p)
 			{
 				Counseling = c;
 				PersonDetail = p;
 			}
 		}
-		
+
 		[Test]
 		public void Linq_Join_3627 ()
 		{
 			List<Counseling> c = new List<Counseling> () {
-				new Counseling (1) 
+				new Counseling (1)
 			};
 			List<PersonDetail> p = new List<PersonDetail> () {
 				new PersonDetail (1)
 			};
 			var query = (from wqual in c
-				join personTable in p on wqual.FK_PERSON equals personTable.Id
-				select new CounselingWithPerson (wqual, personTable));    
+						 join personTable in p on wqual.FK_PERSON equals personTable.Id
+						 select new CounselingWithPerson (wqual, personTable));
 			Assert.NotNull (query.ToList ());
 			// above throws ExecutionEngineException
 		}
@@ -176,17 +163,17 @@ namespace LinkSdk.Aot {
 		public void Workaround_3627 ()
 		{
 			List<Counseling> c = new List<Counseling> () {
-				new Counseling (1) 
+				new Counseling (1)
 			};
 			List<PersonDetail> p = new List<PersonDetail> () {
 				new PersonDetail (1)
 			};
 			var query = (from wqual in c
-				join personTable in p on wqual.FK_PERSON.ToString () equals personTable.Id.ToString ()
-				select new CounselingWithPerson (wqual, personTable));    
+						 join personTable in p on wqual.FK_PERSON.ToString () equals personTable.Id.ToString ()
+						 select new CounselingWithPerson (wqual, personTable));
 			Assert.NotNull (query.ToList ());
 		}
-		
+
 		public class Foo {
 			public int Id { get; set; }
 			public string Name { get; set; }
@@ -195,10 +182,10 @@ namespace LinkSdk.Aot {
 		[Test]
 		public void Linq ()
 		{
-			var list = new List<Foo>();
-			list.Add (new Foo { Id = 3, Name="def"});
-			list.Add (new Foo { Id = 2, Name="def"});
-			list.Add (new Foo { Id = 1, Name="ggg"});
+			var list = new List<Foo> ();
+			list.Add (new Foo { Id = 3, Name = "def" });
+			list.Add (new Foo { Id = 2, Name = "def" });
+			list.Add (new Foo { Id = 1, Name = "ggg" });
 			var x = from l in list orderby l.Name, l.Id select l;
 			Assert.That (x.Count (), Is.EqualTo (3), "Count");
 			// above throws ExecutionEngineException
@@ -207,13 +194,13 @@ namespace LinkSdk.Aot {
 		[Test]
 		public void Linq_Workaround ()
 		{
-			var list = new List<Foo>();
-			list.Add (new Foo { Id = 3, Name="def"});
-			list.Add (new Foo { Id = 2, Name="def"});
-			list.Add (new Foo { Id = 1, Name="ggg"});
+			var list = new List<Foo> ();
+			list.Add (new Foo { Id = 3, Name = "def" });
+			list.Add (new Foo { Id = 2, Name = "def" });
+			list.Add (new Foo { Id = 1, Name = "ggg" });
 			var x = from l in list orderby l.Name, l.Id.ToString () descending select l;
 		}
-		
+
 		[Test]
 		public void SortDescending_3114 ()
 		{
@@ -238,7 +225,7 @@ namespace LinkSdk.Aot {
 			// Attempting to JIT compile method 'System.Linq.OrderedEnumerable`1<System.DateTime>:CreateOrderedEnumerable<string> (System.Func`2<System.DateTime, string>,System.Collections.Generic.IComparer`1<string>,bool)' while running with --aot-only.
 			Assert.That (result.Count (), Is.EqualTo (2), "Count");
 		}
-		
+
 		[Test]
 		public void Any_3735 ()
 		{
@@ -250,7 +237,7 @@ namespace LinkSdk.Aot {
 			// above throws ExecutionEngineException
 			// Attempting to JIT compile method '(wrapper managed-to-managed) System.Environment/SpecialFolder[]:System.Collections.Generic.IEnumerable`1.GetEnumerator ()' while running with --aot-only.
 		}
-		
+
 		[Test]
 		public void Workaround_3735 ()
 		{
@@ -261,7 +248,7 @@ namespace LinkSdk.Aot {
 			};
 			Assert.True (list.Any (rounding => rounding == MidpointRounding.AwayFromZero));
 		}
-		
+
 		Task<bool> InnerTestB<T> ()
 		{
 			return Task.Factory.StartNew (() => default (T)).ContinueWith (t => true);
@@ -271,43 +258,42 @@ namespace LinkSdk.Aot {
 		public void Continuation_2337 ()
 		{
 			InnerTestB<string> ();
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3902
-		
+
 		class Question {
 			public bool Deleted { get; set; }
 			public bool IsAnswered { get; set; }
 			public int Position { get; set; }
 			public int SectionId { get; set; }
 		}
-		
+
 		class Section {
 			public int BoardId { get; set; }
 			public int Id { get; set; }
 			public int BulletinBoardId { get; set; }
 			public int Position { get; set; }
 		}
-		
-		List<T> Table<T> () where T : new ()
+
+		List<T> Table<T> () where T : new()
 		{
 			List<T> list = new List<T> ();
-			for (int i=0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 				list.Add (new T ());
 			return list;
 		}
-		
+
 		[Test]
 		public void Linq_3902_c1 ()
 		{
 			int boardId = 0;
-			var result = from q in Table<Question> () where q.Deleted == false
-				join s in Table<Section> () on q.SectionId equals s.Id
-				where s.BoardId == boardId
-				orderby q.IsAnswered, s.Position, q.Position
-				select q;
+			var result = from q in Table<Question> ()
+						 where q.Deleted == false
+						 join s in Table<Section> () on q.SectionId equals s.Id
+						 where s.BoardId == boardId
+						 orderby q.IsAnswered, s.Position, q.Position
+						 select q;
 			// note: orderby causing:
 			// Attempting to JIT compile method 'System.Linq.OrderedEnumerable`1<<>__AnonType0`2<MonoTouchFixtures.AotBugsTest/Question, MonoTouchFixtures.AotBugsTest/Section>>:CreateOrderedEnumerable<int> (System.Func`2<<>__AnonType0`2<MonoTouchFixtures.AotBugsTest/Question, MonoTouchFixtures.AotBugsTest/Section>, int>,System.Collections.Generic.IComparer`1<int>,bool)' while running with --aot-only.
 			Assert.NotNull (result);
@@ -317,43 +303,42 @@ namespace LinkSdk.Aot {
 		public void Workaround_3902_c1 ()
 		{
 			int boardId = 0;
-			var result = from q in Table<Question> () where q.Deleted == false
-				join s in Table<Section> () on q.SectionId equals s.Id
-				where s.BoardId == boardId
-				orderby q.IsAnswered.ToString (), s.Position.ToString (), q.Position.ToString ()
-				select q;
+			var result = from q in Table<Question> ()
+						 where q.Deleted == false
+						 join s in Table<Section> () on q.SectionId equals s.Id
+						 where s.BoardId == boardId
+						 orderby q.IsAnswered.ToString (), s.Position.ToString (), q.Position.ToString ()
+						 select q;
 			Assert.NotNull (result);
 		}
-		
+
 		[Test]
 		public void Linq_3902_c4 ()
 		{
 			int boardId = 0;
-			var results = from q in Table<Question> () where q.Deleted == false
-				join s in Table<Section> () on q.SectionId equals s.Id
-				where s.BoardId == boardId
-				select q;
+			var results = from q in Table<Question> ()
+						  where q.Deleted == false
+						  join s in Table<Section> () on q.SectionId equals s.Id
+						  where s.BoardId == boardId
+						  select q;
 			// query is ok
 			foreach (var result in results)
 				Assert.NotNull (result);
-			// accessing elements throws with:
-			// Attempting to JIT compile method 'System.Linq.Enumerable:<ToLookup`2>m__5A<MonoTouchFixtures.AotBugsTest/Section, int> (MonoTouchFixtures.AotBugsTest/Section)' while running with --aot-only.
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
 
 		[Test]
 		public void Workaround_3902_c4 ()
 		{
 			int boardId = 0;
-			var results = from q in Table<Question> () where q.Deleted == false
-				join s in Table<Section> () on q.SectionId.ToString () equals s.Id.ToString ()
-				where s.BoardId == boardId
-				select q;
+			var results = from q in Table<Question> ()
+						  where q.Deleted == false
+						  join s in Table<Section> () on q.SectionId.ToString () equals s.Id.ToString ()
+						  where s.BoardId == boardId
+						  select q;
 			foreach (var result in results)
 				Assert.NotNull (result);
 		}
-		
+
 		public class VirtualGeneric {
 			public virtual ICollection<T> MakeCollectionOfInputs<T> (T input1, T input2, T input3)
 			{
@@ -364,7 +349,7 @@ namespace LinkSdk.Aot {
 				return alist;
 			}
 		}
-		
+
 		[Test]
 		public void Virtual_4114 ()
 		{
@@ -382,28 +367,26 @@ namespace LinkSdk.Aot {
 				return alist;
 			}
 		}
-		
+
 		[Test]
 		public void Override_4114 ()
 		{
 			OverrideGeneric g = new OverrideGeneric ();
 			// Attempting to JIT compile method 'MonoTouchFixtures.AotBugsTest/OverrideGeneric:MakeCollectionOfInputs<double> (double,double,double)' while running with --aot-only.
 			g.MakeCollectionOfInputs<double> (1.0, 2.0, 3.0);
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
-		
+
 		public sealed class NewDictionary<TKey, TValue> {
 			Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue> ();
-		
+
 			public NewDictionary (IEnumerable<KeyValuePair<TKey, TValue>> items)
 			{
 				ForEach (items, (item) => _dictionary.Add (item.Key, item.Value));
 			}
-		
+
 			static void ForEach<T> (IEnumerable<T> collection, Action<T> action)
 			{
-				if (collection != null)
+				if (collection is not null)
 					foreach (T item in collection)
 						action (item);
 			}
@@ -414,43 +397,42 @@ namespace LinkSdk.Aot {
 		{
 			// Attempting to JIT compile method 'MonoTouchFixtures.AotBugsTest/NewDictionary`2<string, string>:ForEach<System.Collections.Generic.KeyValuePair`2<string, string>> (System.Collections.Generic.IEnumerable`1<System.Collections.Generic.KeyValuePair`2<string, string>>,System.Action`1<System.Collections.Generic.KeyValuePair`2<string, string>>)' while running with --aot-only.
 			new NewDictionary<string, string> (null);
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
-		
+
 		public class Enumbers<T> {
 			public IEnumerable<KeyValuePair<T, string>> Enumerate (List<KeyValuePair<T, string>> alist)
 			{
 				return MakeEnumerable (alist.ToArray ());
 			}
-			
-			IEnumerable<KeyValuePair<T, string>> MakeEnumerable (KeyValuePair<T, string>[] data)
+
+			IEnumerable<KeyValuePair<T, string>> MakeEnumerable (KeyValuePair<T, string> [] data)
 			{
 				return data.AsEnumerable ();
 			}
 		}
 
 		[Test]
-		[ExpectedException (typeof (NullReferenceException))]
 		public void AsEnumerable_4114 ()
 		{
 			Enumbers<string> e = new Enumbers<string> ();
 			//  Attempting to JIT compile method 'System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<string, string>>:ToArray ()' while running with --aot-only.
-			e.Enumerate (null);
+			Assert.Throws<NullReferenceException> (() => e.Enumerate (null));
 		}
 
 		static object mInstance = null;
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
-			public static object getInstance() {
-			if (mInstance == null)
-				mInstance = new object();
+		[MethodImpl (MethodImplOptions.Synchronized)]
+		public static object getInstance ()
+		{
+			if (mInstance is null)
+				mInstance = new object ();
 			return mInstance;
 		}
 
 		// #9805
 		[Test]
-		public void Synchronized () {
+		public void Synchronized ()
+		{
 			getInstance ();
 		}
 
@@ -483,15 +465,18 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("MulticastDelegate.BeginInvoke isn't supported in .NET (https://github.com/dotnet/runtime/issues/16312)")]
+#endif
 		public void Bug5354 ()
 		{
 			Action<string> testAction = (string s) => { s.ToString (); };
 			testAction.BeginInvoke ("Teszt", null, null);
 		}
 
-		public static IEnumerable<string> GetStringList<T>() where T : struct, IConvertible
+		public static IEnumerable<string> GetStringList<T> () where T : struct, IConvertible
 		{
-			return Enum.GetValues(typeof(T)).Cast<T>().Select(x=>x.ToString());
+			return Enum.GetValues (typeof (T)).Cast<T> ().Select (x => x.ToString ());
 		}
 
 		[Test]
@@ -508,14 +493,13 @@ namespace LinkSdk.Aot {
 		public void Bug12811b ()
 		{
 			int n = 1;
-			foreach (var e in Enum.GetValues (typeof (NSFileManagerItemReplacementOptions)).Cast<NSFileManagerItemReplacementOptions> ().Select (x=>x.ToString ())) {
+			foreach (var e in Enum.GetValues (typeof (NSFileManagerItemReplacementOptions)).Cast<NSFileManagerItemReplacementOptions> ().Select (x => x.ToString ())) {
 				Assert.NotNull (e, n.ToString ());
 				n++;
 			}
 		}
 
-		public enum MyEnum8ElementsInInt32 : int
-		{
+		public enum MyEnum8ElementsInInt32 : int {
 			Zero = 0
 			, One = 1
 			, Two = 2
@@ -526,8 +510,7 @@ namespace LinkSdk.Aot {
 			, Seven = 7
 		}
 
-		public enum MyEnum8ElementsInUInt32 : uint
-		{
+		public enum MyEnum8ElementsInUInt32 : uint {
 			Zero = 0
 			, One = 1
 			, Two = 2
@@ -538,8 +521,7 @@ namespace LinkSdk.Aot {
 			, Seven = 7
 		}
 
-		public enum MyEnum7ElementsInUInt16 : ushort
-		{
+		public enum MyEnum7ElementsInUInt16 : ushort {
 			Zero = 0
 			, One = 1
 			, Two = 2
@@ -549,8 +531,7 @@ namespace LinkSdk.Aot {
 			, Six = 6
 		}
 
-		public enum MyEnum8ElementsInUInt16 : ushort
-		{
+		public enum MyEnum8ElementsInUInt16 : ushort {
 			Zero = 0
 			, One = 1
 			, Two = 2
@@ -600,8 +581,8 @@ namespace LinkSdk.Aot {
 		[Test]
 		public void Bug26245 ()
 		{
-			var c = new Collection<PointF> ();
-			c.Add (new PointF (50, 50)); // crashed under ARM64
+			var c = new Collection<CGPoint> ();
+			c.Add (new CGPoint (50, 50)); // crashed under ARM64
 			Assert.That (c.Count, Is.EqualTo (1));
 		}
 
@@ -619,8 +600,7 @@ namespace LinkSdk.Aot {
 
 		// The first character of this class is a cyrillic c, not a latin c.
 		[Preserve (AllMembers = true)]
-		public class сolor_bug_56876
-		{
+		public class сolor_bug_56876 {
 			[System.Runtime.InteropServices.DllImport ("/usr/lib/libobjc.dylib")]
 			static extern void sel_registerName (сolor_bug_56876 сolor);
 		}

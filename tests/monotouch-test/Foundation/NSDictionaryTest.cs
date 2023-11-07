@@ -3,27 +3,14 @@ using System.Runtime.InteropServices;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSDictionaryTest {
 
 		//
@@ -35,34 +22,34 @@ namespace MonoTouchFixtures.Foundation {
 			var key = new NSString ("key");
 			var value = new NSString ("value");
 			var j = new NSDictionary (key, value);
-		
-			Assert.AreEqual (j.Count, 1, "count");
+
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual (j [key], value, "key lookup");
 
 			j = new NSDictionary (new NSString ("first"), new NSString ("first-k"),
-			                      new NSString ("second"), new NSString ("second-k"));
-			Assert.AreEqual (j.Count, 2, "count");
-			Assert.AreEqual ((string)(NSString)(j ["first"]), "first-k", "lookup1");
-			Assert.AreEqual ((string)(NSString)(j ["second"]), "second-k", "lookup2");
+								  new NSString ("second"), new NSString ("second-k"));
+			Assert.AreEqual (j.Count, (nuint) 2, "count");
+			Assert.AreEqual ((string) (NSString) (j ["first"]), "first-k", "lookup1");
+			Assert.AreEqual ((string) (NSString) (j ["second"]), "second-k", "lookup2");
 		}
 
 		[Test]
 		public void DictionaryCtorKeyValuesObjects ()
 		{
 			var j = new NSDictionary ("key", "value");
-			
-			Assert.AreEqual (j.Count, 1, "count");
-			Assert.AreEqual ((string)(NSString)(j ["key"]), "value", "key lookup");
-			
+
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
+			Assert.AreEqual ((string) (NSString) (j ["key"]), "value", "key lookup");
+
 			j = new NSDictionary (1, 2, 3, 4);
 
-			Assert.AreEqual (j.Count, 2, "count");
+			Assert.AreEqual (j.Count, (nuint) 2, "count");
 			Assert.AreEqual (((NSNumber) j [new NSNumber (1)]).Int32Value, 2, "lookup1");
 			Assert.AreEqual (((NSNumber) j [new NSNumber (3)]).Int32Value, 4, "lookup2");
 		}
 
 		[Test]
-		public void InbalancedCtor()
+		public void InbalancedCtor ()
 		{
 			try {
 				var j = new NSDictionary (new NSString ("key"), new NSString ("value"), new NSString ("other"));
@@ -73,7 +60,7 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
-		public void InbalancedCtor2()
+		public void InbalancedCtor2 ()
 		{
 			try {
 				var j = new NSDictionary (1, 2, 3);
@@ -86,16 +73,16 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void KeyValue_Autorelease ()
 		{
-			using (var k = new NSString ("keyz")) 
+			using (var k = new NSString ("keyz"))
 			using (var v = new NSString ("valuez")) {
 				var k1 = k.RetainCount;
 				if (k1 >= int.MaxValue)
 					Assert.Ignore ("RetainCount unusable for testing");
 				var k2 = k1;
-				Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
+				Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
 				var v1 = v.RetainCount;
 				var v2 = v1;
-				Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
+				Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
 				using (var d = new NSDictionary (k, v)) {
 					k2 = k.RetainCount;
 					Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
@@ -119,16 +106,16 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void XForY_Autorelease ()
 		{
-			using (var k = new NSString ("keyz")) 
+			using (var k = new NSString ("keyz"))
 			using (var v = new NSString ("valuez")) {
 				var k1 = k.RetainCount;
 				if (k1 >= int.MaxValue)
 					Assert.Ignore ("RetainCount unusable for testing");
 				var k2 = k1;
-				Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
+				Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
 				var v1 = v.RetainCount;
 				var v2 = v1;
-				Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
+				Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
 				using (var d = new NSDictionary (k, v)) {
 					k2 = k.RetainCount;
 					Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
@@ -159,24 +146,24 @@ namespace MonoTouchFixtures.Foundation {
 		public void FromObjectsAndKeysTest ()
 		{
 			{
-				var keys = new NSObject[] { new NSNumber(1), new NSNumber(2) };
-				var objs = new NSObject[] { new NSNumber(1), new NSNumber(4) };
+				var keys = new NSObject [] { new NSNumber (1), new NSNumber (2) };
+				var objs = new NSObject [] { new NSNumber (1), new NSNumber (4) };
 				NSDictionary ns = NSDictionary.FromObjectsAndKeys (objs, keys, 1);
 				Console.WriteLine (ns.Count);
-				Assert.AreEqual (1, ns.Count, "#1");
+				Assert.AreEqual ((nuint) 1, ns.Count, "#1");
 			}
 			{
-				var keys = new object[] { 1, 2 };
-				var objs = new object[] { 3, 4 };
+				var keys = new object [] { 1, 2 };
+				var objs = new object [] { 3, 4 };
 				NSDictionary ns = NSDictionary.FromObjectsAndKeys (objs, keys, 1);
-				Assert.AreEqual (1, ns.Count, "#2");
+				Assert.AreEqual ((nuint) 1, ns.Count, "#2");
 			}
 		}
 
 		[Test]
 		public void Copy ()
 		{
-			using (var k = new NSString ("key")) 
+			using (var k = new NSString ("key"))
 			using (var v = new NSString ("value"))
 			using (var d = new NSDictionary (k, v)) {
 				// NSObject.Copy works because NSDictionary conforms to NSCopying
@@ -201,7 +188,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void MutableCopy ()
 		{
-			using (var k = new NSString ("key")) 
+			using (var k = new NSString ("key"))
 			using (var v = new NSString ("value"))
 			using (var d = new NSDictionary (k, v)) {
 				// NSObject.Copy works because NSDictionary conforms to NSMutableCopying
@@ -226,7 +213,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void IndexerTest ()
 		{
 			// This test doesn't work on Lion, because Lion returns mutable dictionaries in some places this test asserts that those dictionaries are non-mutable.
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			IntPtr strkeyptr = IntPtr.Zero;
 			IntPtr strobjptr = IntPtr.Zero;
 			IntPtr objptr;

@@ -4,27 +4,13 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DatePickerTest {
@@ -61,10 +47,12 @@ namespace MonoTouchFixtures.UIKit {
 
 				// some null checks are done, otherwise we end up with
 				// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Invalid parameter not satisfying: date
-				Assert.Throws<ArgumentNullException> (delegate {
+				Assert.Throws<ArgumentNullException> (delegate
+				{
 					dp.Date = null;
 				});
-				Assert.Throws<ArgumentNullException> (delegate {
+				Assert.Throws<ArgumentNullException> (delegate
+				{
 					dp.SetDate (null, true);
 				});
 			}
@@ -73,7 +61,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrame ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (UIDatePicker dp = new UIDatePicker (frame)) {
 				Assert.That (dp.Frame.X, Is.EqualTo (frame.X), "X");
 				Assert.That (dp.Frame.Y, Is.EqualTo (frame.Y), "Y");

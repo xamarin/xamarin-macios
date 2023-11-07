@@ -19,6 +19,8 @@
     <MtouchProfiling>%MTOUCH_PROFILING%</MtouchProfiling>
     <MtouchUseLlvm>%MTOUCH_USELLVM%</MtouchUseLlvm>
     <MtouchEnableBitcode>%MTOUCH_ENABLEBITCODE%</MtouchEnableBitcode>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
     <MtouchArch>%SIMULATOR_ARCH%</MtouchArch>
@@ -31,7 +33,10 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\tvOS\Touch.Client-tvOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-tvOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">

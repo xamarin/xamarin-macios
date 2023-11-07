@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json.schemastore.org/ide.host",
+  "appliesTo": "MacOSApplication | MacOSAppExtension | MacOSBinding | MacOSClassLibary",
+  "defaultItemExtension": "cs",
+  "itemHierarchyPaths": [ "macOS" ]
+}

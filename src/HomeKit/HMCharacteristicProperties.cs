@@ -1,11 +1,17 @@
+#nullable enable
+
 using System;
+
 using ObjCRuntime;
 using Foundation;
 
 namespace HomeKit {
 
-	[iOS (8,0)]
-	[TV (10,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class HMCharacteristicProperties {
 
 		public bool SupportsChangeNumber { get; set; }

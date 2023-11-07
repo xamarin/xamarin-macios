@@ -1,4 +1,4 @@
-﻿#if __IOS__ || MONOMAC
+#if __IOS__ || MONOMAC
 
 using System;
 using System.IO;
@@ -16,7 +16,7 @@ namespace MonoTouchFixtures.WebKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 		}
 
 		[Test]
@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.WebKit {
 			var completed = false;
 			string d = Path.Combine (NSBundle.MainBundle.ResourcePath, "access-denied.html");
 			string g = Path.Combine (NSBundle.MainBundle.ResourcePath, "access-granted.html");
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (3000), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				using (var denied = NSUrl.FromFilename (d))
 				using (var granted = NSUrl.FromFilename (g)) {
 					var options = new NSAttributedStringDocumentAttributes {

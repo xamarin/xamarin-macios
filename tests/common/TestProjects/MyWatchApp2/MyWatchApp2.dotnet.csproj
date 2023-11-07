@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-watchos</TargetFramework>
+    <RuntimeIdentifier>watchos-x86</RuntimeIdentifier>
+    <IsWatchOSApp>true</IsWatchOSApp>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyWatchKit2Extension\MyWatchKit2Extension.dotnet.csproj">
+      <Name>MyWatchKit2Extension</Name>
+      <IsAppExtension>True</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

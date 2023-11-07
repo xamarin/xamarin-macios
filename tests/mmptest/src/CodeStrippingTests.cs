@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -6,15 +6,20 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
-	public class CodeStrippingTests
-	{
-		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-thin");
+namespace Xamarin.MMP.Tests {
+	public class CodeStrippingTests {
+		static Func<string, bool> LipoStripConditional = s => s.Contains ("lipo") && s.Contains ("-extract_family");
 		static Func<string, bool> LipoStripSkipPosixAndMonoNativeConditional = s => LipoStripConditional (s) && !s.Contains ("libMonoPosixHelper.dylib") && !s.Contains ("libmono-native.dylib");
 
-		static Func<string, bool> DidAnyLipoStrip = output => output.SplitLines ().Any (LipoStripConditional);
-		static Func<string, bool> DidAnyLipoStripSkipPosixAndMonoNative = output => output.SplitLines ().Any (LipoStripSkipPosixAndMonoNativeConditional);
+		static bool DidAnyLipoStripSkipPosixAndMonoNative (BuildResult buildResult)
+		{
+			return buildResult.BuildOutputLines.Any (LipoStripSkipPosixAndMonoNativeConditional);
+		}
+
+		static bool DidAnyLipoStrip (BuildResult buildResult)
+		{
+			return buildResult.BuildOutputLines.Any (LipoStripConditional);
+		}
 
 		static TI.UnifiedTestConfig CreateStripTestConfig (bool? strip, string tmpDir, string additionalMMPArgs = "")
 		{
@@ -24,7 +29,7 @@ namespace Xamarin.MMP.Tests
 				test.CSProjConfig = $"<MonoBundlingExtraArgs>--optimize={(strip.Value ? "+" : "-")}trim-architectures {additionalMMPArgs}</MonoBundlingExtraArgs>";
 			else if (!string.IsNullOrEmpty (additionalMMPArgs))
 				test.CSProjConfig = $"<MonoBundlingExtraArgs>{additionalMMPArgs}</MonoBundlingExtraArgs>";
-			
+
 			return test;
 		}
 
@@ -35,24 +40,24 @@ namespace Xamarin.MMP.Tests
 				Assert.AreEqual (1, archsFound.Count, "Did not contain one archs");
 				Assert.True (archsFound.Contains (Abi.x86_64), "Did not contain x86_64");
 			} else {
-				Assert.AreEqual (2, archsFound.Count, "Did not contain two archs");
-				Assert.True (archsFound.Contains (Abi.i386), "Did not contain i386");
+				Assert.That (archsFound.Count, Is.GreaterThanOrEqualTo (2), "Did not contain two or more archs");
+				Assert.True (archsFound.Contains (Abi.i386) || archsFound.Contains (Abi.ARM64), "Did not contain i386 nor arm64");
 				Assert.True (archsFound.Contains (Abi.x86_64), "Did not contain x86_64");
 			}
 		}
 
 		void StripTestCore (TI.UnifiedTestConfig test, bool debugStrips, bool releaseStrips, string libPath, bool shouldWarn)
 		{
-			string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-			Assert.AreEqual (debugStrips, DidAnyLipoStrip (buildOutput), "Debug lipo usage did not match expectations");
+			var testResult = TI.TestUnifiedExecutable (test);
+			Assert.AreEqual (debugStrips, DidAnyLipoStrip (testResult.BuildResult), "Debug lipo usage did not match expectations");
 			AssertStrip (Path.Combine (test.TmpDir, "bin/Debug/UnifiedExample.app/", libPath), shouldStrip: debugStrips);
-			Assert.AreEqual (shouldWarn && debugStrips, buildOutput.Contains ("MM2108"), "Debug warning did not match expectations");
+			Assert.AreEqual (shouldWarn && debugStrips, testResult.BuildResult.HasMessage (2108), "Debug warning did not match expectations");
 
 			test.Release = true;
-			buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-			Assert.AreEqual (releaseStrips, DidAnyLipoStrip (buildOutput), "Release lipo usage did not match expectations");
+			testResult = TI.TestUnifiedExecutable (test);
+			Assert.AreEqual (releaseStrips, DidAnyLipoStrip (testResult.BuildResult), "Release lipo usage did not match expectations");
 			AssertStrip (Path.Combine (test.TmpDir, "bin/Release/UnifiedExample.app/", libPath), shouldStrip: releaseStrips);
-			Assert.AreEqual (shouldWarn && releaseStrips, buildOutput.Contains ("MM2108"), "Release warning did not match expectations");
+			Assert.AreEqual (shouldWarn && releaseStrips, testResult.BuildResult.HasMessage (2108), "Release warning did not match expectations");
 		}
 
 		[TestCase (null, false, true)]
@@ -60,12 +65,11 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false, false)]
 		public void ShouldStripMonoPosixHelper (bool? strip, bool debugStrips, bool releaseStrips)
 		{
-			var posixHelper = Path.Combine (Configuration.SdkRootXM, "lib", "libMonoPosixHelper.dylib");
+			var posixHelper = Path.Combine (Configuration.SdkRootXM, "SDKs", "Xamarin.macOS.sdk", "lib", "libMonoPosixHelper.dylib");
 			if (Xamarin.MachO.GetArchitectures (posixHelper).Count < 2)
 				Assert.Ignore ($"libMonoPosixHelper.dylib is not a fat library.");
 
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir);
 				// Mono's linker is smart enough to remove libMonoPosixHelper unless used (DeflateStream uses it)
 				test.TestCode = "using (var ms = new System.IO.MemoryStream ()) { using (var gz = new System.IO.Compression.DeflateStream (ms, System.IO.Compression.CompressionMode.Compress)) { }}";
@@ -78,12 +82,13 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false, false)]
 		public void ShouldStripUserFramework (bool? strip, bool debugStrips, bool releaseStrips)
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
+			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $"--native-reference={frameworkPath}");
 
-				StripTestCore (test, debugStrips, releaseStrips, "Contents/Frameworks/Foo.framework/Foo", shouldWarn: true);
+				var frameworkName = Path.GetFileNameWithoutExtension (frameworkPath);
+				StripTestCore (test, debugStrips, releaseStrips, $"Contents/Frameworks/{frameworkName}.framework/{frameworkName}", shouldWarn: true);
 			});
 		}
 
@@ -93,57 +98,63 @@ namespace Xamarin.MMP.Tests
 		[TestCase (false, false)]
 		public void ExplictStripOption_ThirdPartyLibrary_AndWarnsIfSo (bool? strip, bool shouldStrip)
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			MMPTests.RunMMPTest (tmpDir => {
 				string originalLocation = Path.Combine (Configuration.SourceRoot, "tests", "test-libraries", "libtest-fat.macos.dylib");
-				string newLibraryLocation =  Path.Combine (tmpDir, "libTest.dylib");
+				string newLibraryLocation = Path.Combine (tmpDir, "libTest.dylib");
 				File.Copy (originalLocation, newLibraryLocation);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $" --native-reference=\"{newLibraryLocation}\"");
 				test.Release = true;
 
-				var testOutput = TI.TestUnifiedExecutable (test);
-				string buildOutput = testOutput.BuildOutput;
-				Assert.AreEqual (shouldStrip, DidAnyLipoStrip (buildOutput), "lipo usage did not match expectations");
+				var testResult = TI.TestUnifiedExecutable (test);
+				var bundleDylib = Path.Combine (test.BundlePath, "Contents", "MonoBundle", "libTest.dylib");
+				Assert.That (bundleDylib, Does.Exist, "libTest.dylib presence in app bundle");
+
+				var architectures = MachO.GetArchitectures (bundleDylib);
 				if (shouldStrip) {
-					testOutput.Messages.AssertWarning (2108, "libTest.dylib was stripped of architectures except x86_64 to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+					Assert.AreEqual (1, architectures.Count, "libTest.dylib should only contain 1 architecture");
+					Assert.AreEqual (Abi.x86_64, architectures [0], "libTest.dylib should be x86_64");
+					testResult.Messages.AssertWarning (2108, "libTest.dylib was stripped of architectures except x86_64 to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
 				} else {
-					testOutput.Messages.AssertWarningCount (0);
+					Assert.AreEqual (2, architectures.Count, "libTest.dylib should contain 2+ architectures");
+					Assert.That (architectures, Is.EquivalentTo (new Abi [] { Abi.i386, Abi.x86_64 }), "libTest.dylib should be x86_64 + i386");
+					testResult.Messages.AssertWarningCount (0);
 				}
 			});
 		}
 
-		void AssertNoLipoOrWarning (string buildOutput, string context)
+		void AssertNoLipoOrWarning (BuildResult buildOutput, string context)
 		{
-			Assert.False (DidAnyLipoStrip (buildOutput), "lipo incorrectly run in context: " + context + "\n" + buildOutput);
-			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context + "\n" + buildOutput);
+			Assert.False (DidAnyLipoStrip (buildOutput), "lipo incorrectly run in context: " + context);
+			Assert.False (buildOutput.HasMessage (2108), "MM2108 incorrectly given in in context: " + context);
 		}
 
-		void AssertLipoOnlyMonoPosixAndMonoNative (string buildOutput, string context)
+		void AssertLipoOnlyMonoPosixAndMonoNative (BuildResult buildOutput, string context)
 		{
-			Assert.False (DidAnyLipoStripSkipPosixAndMonoNative (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context + "\n" + buildOutput);
-			Assert.False (buildOutput.Contains ("MM2108"), "MM2108 incorrectly given in in context: " + context + "\n" + buildOutput);
+			Assert.False (DidAnyLipoStripSkipPosixAndMonoNative (buildOutput), "lipo incorrectly run in context outside of libMonoPosixHelper/libmono-native: " + context);
+			Assert.False (buildOutput.HasMessage (2108), "MM2108 incorrectly given in in context: " + context);
 		}
 
 		[TestCase (false)]
 		[TestCase (true)]
 		public void ThirdPartyLibrary_WithIncorrectBitness_ShouldWarnOnRelease (bool sixtyFourBits)
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
+			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
 
 				// Should always skip lipo/warning in Debug
-				string buildOutput = TI.TestUnifiedExecutable(test).BuildOutput;
-				AssertNoLipoOrWarning (buildOutput, "Debug");
+				var testResult = TI.TestUnifiedExecutable (test);
+				AssertNoLipoOrWarning (testResult.BuildResult, "Debug");
 
 				// Should always lipo/warn in Release
 				test.Release = true;
-				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.True (DidAnyLipoStrip (buildOutput), $"lipo did not run in release\n{buildOutput}");
-				Assert.True (buildOutput.Contains ("MM2108"), $"MM2108 not given in release\n{buildOutput}");
+				testResult = TI.TestUnifiedExecutable (test);
+				Assert.True (DidAnyLipoStrip (testResult.BuildResult), $"lipo did not run in release");
+				testResult.BuildResult.Messages.AssertError (2108, $"{frameworkPath} was stripped of architectures except x86_64 to comply with App Store restrictions. This could break existing codesigning signatures. Consider stripping the library with lipo or disabling with --optimize=-trim-architectures");
+				// Assert.True (testResult.Contains ("MM2108"), $"MM2108 not given in release");
 
 			});
 		}
@@ -151,18 +162,18 @@ namespace Xamarin.MMP.Tests
 		[TestCase]
 		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn ()
 		{
-			MMPTests.RunMMPTest (tmpDir =>
-			{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
+			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 
 				TI.UnifiedTestConfig test = CreateStripTestConfig (null, tmpDir, $" --native-reference=\"{frameworkPath}\"");
 
-				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				AssertNoLipoOrWarning (buildOutput, "Debug");
+				var testResult = TI.TestUnifiedExecutable (test);
+				AssertNoLipoOrWarning (testResult.BuildResult, "Debug");
 
 				test.Release = true;
-				buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
-				AssertLipoOnlyMonoPosixAndMonoNative (buildOutput, "Release"); // libMonoPosixHelper.dylib and libmono-native.dylib will lipo in Release
+				testResult = TI.TestUnifiedExecutable (test);
+				AssertLipoOnlyMonoPosixAndMonoNative (testResult.BuildResult, "Release"); // libMonoPosixHelper.dylib and libmono-native.dylib will lipo in Release
 			});
 		}
 	}

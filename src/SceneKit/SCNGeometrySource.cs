@@ -11,38 +11,40 @@ using System;
 
 using CoreGraphics;
 using Foundation;
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 using Metal;
 #endif
+
+#nullable enable
 
 namespace SceneKit {
 	public partial class SCNGeometrySource {
 
 		public static unsafe SCNGeometrySource FromVertices (SCNVector3 [] vertices)
 		{
-			if (vertices == null)
-				throw new ArgumentNullException ("vertices");
+			if (vertices is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vertices));
 
-			fixed (SCNVector3 *ptr = &vertices [0])
-				return FromVertices ((IntPtr)ptr, vertices.Length);
+			fixed (SCNVector3* ptr = &vertices [0])
+				return FromVertices ((IntPtr) ptr, vertices.Length);
 		}
 
 		public static unsafe SCNGeometrySource FromNormals (SCNVector3 [] normals)
 		{
-			if (normals == null)
-				throw new ArgumentNullException ("normals");
+			if (normals is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (normals));
 
-			fixed (SCNVector3 *ptr = &normals[0])
-				return FromNormals ((IntPtr)ptr, normals.Length);
+			fixed (SCNVector3* ptr = &normals [0])
+				return FromNormals ((IntPtr) ptr, normals.Length);
 		}
 
 		public static unsafe SCNGeometrySource FromTextureCoordinates (CGPoint [] texcoords)
 		{
-			if (texcoords == null)
-				throw new ArgumentNullException ("texcoords");
+			if (texcoords is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (texcoords));
 
-			fixed (CGPoint *ptr = &texcoords[0])
-				return FromTextureCoordinates ((IntPtr)ptr, texcoords.Length);
+			fixed (CGPoint* ptr = &texcoords [0])
+				return FromTextureCoordinates ((IntPtr) ptr, texcoords.Length);
 		}
 
 		static NSString SemanticToToken (SCNGeometrySourceSemantics geometrySourceSemantic)
@@ -68,18 +70,18 @@ namespace SceneKit {
 				throw new System.ArgumentException ("geometrySourceSemantic");
 			}
 		}
-		
+
 		public static SCNGeometrySource FromData (NSData data, SCNGeometrySourceSemantics semantic, nint vectorCount, bool floatComponents, nint componentsPerVector, nint bytesPerComponent, nint offset, nint stride)
 		{
 			return FromData (data, SemanticToToken (semantic), vectorCount, floatComponents, componentsPerVector, bytesPerComponent, offset, stride);
 		}
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 		public static SCNGeometrySource FromMetalBuffer (IMTLBuffer mtlBuffer, MTLVertexFormat vertexFormat, SCNGeometrySourceSemantics semantic, nint vertexCount, nint offset, nint stride)
 		{
 			return FromMetalBuffer (mtlBuffer, vertexFormat, SemanticToToken (semantic), vertexCount, offset, stride);
 		}
 #endif
 	}
-	
+
 }

@@ -1,19 +1,13 @@
-#if !XAMCORE_2_0
-using MonoMac.Foundation;
-#else
 using Foundation;
-#endif
 
-namespace Test
-{
+namespace Test {
 	[BaseType (typeof (NSObject))]
-	interface SimServiceConnectionManager {}
+	interface SimServiceConnectionManager { }
 
 	// Both these should produce the same output,
-	// both calling xamarin_IntPtr_objc_msgSend
+	// both calling xamarin_IntPtr_objc_msgSend_exception
 	[BaseType (typeof (NSObject))]
-	interface MarshalOnProperty
-	{
+	interface MarshalOnProperty {
 		[Static]
 		[Export ("sharedConnectionManager")]
 		[MarshalNativeExceptions]
@@ -21,10 +15,9 @@ namespace Test
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface MarshalInProperty
-	{
+	interface MarshalInProperty {
 		[Static]
 		[Export ("sharedConnectionManager")]
-		SimServiceConnectionManager Shared { [MarshalNativeExceptions]get; }
+		SimServiceConnectionManager Shared { [MarshalNativeExceptions] get; }
 	}
 }

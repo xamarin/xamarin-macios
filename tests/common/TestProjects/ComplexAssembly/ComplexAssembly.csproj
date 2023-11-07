@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <OutputType>Library</OutputType>
+
+    <!-- create a pdb file -->
+    <DebugType>portable</DebugType>
+
+    <RootTestsDirectory>$(MSBuildThisFileDirectory)\..</RootTestsDirectory>
+    <EmbeddedResourcesTestDirectory>$(RootTestsDirectory)\ComplexAssembly</EmbeddedResourcesTestDirectory>
+
+    <!-- add a config file -->
+    <AppConfig>App.config</AppConfig>
+  </PropertyGroup>
+</Project>

@@ -21,15 +21,16 @@ using TextAttributes = UIKit.UITextAttributes;
 
 namespace UIKit {
 	public partial class UIBarItem {
+
 		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 		{
-			using (var dict = attributes == null ? null : attributes.Dictionary)
+			using (var dict = attributes is null ? null : attributes.Dictionary)
 				_SetTitleTextAttributes (dict, state);
 		}
 
 		public TextAttributes GetTitleTextAttributes (UIControlState state)
 		{
-			using (var d = _GetTitleTextAttributes (state)){
+			using (var d = _GetTitleTextAttributes (state)) {
 				return new TextAttributes (d);
 			}
 		}
@@ -37,16 +38,16 @@ namespace UIKit {
 		public partial class UIBarItemAppearance {
 			public virtual void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 			{
-				if (attributes == null)
+				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
-				using (var dict = attributes.Dictionary){
+				using (var dict = attributes.Dictionary) {
 					_SetTitleTextAttributes (dict, state);
 				}
 			}
 
 			public virtual TextAttributes GetTitleTextAttributes (UIControlState state)
 			{
-				using (var d = _GetTitleTextAttributes (state)){
+				using (var d = _GetTitleTextAttributes (state)) {
 					return new TextAttributes (d);
 				}
 			}

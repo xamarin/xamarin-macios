@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVPlayerLayer.cs: AVPlayerLayer class
 //
 // Authors:
@@ -12,19 +12,26 @@
 using ObjCRuntime;
 using CoreVideo;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVPlayerLayer {
-		[iOS (9,0), Mac (10,11)]
-		public CVPixelBufferAttributes PixelBufferAttributes { 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public CVPixelBufferAttributes? PixelBufferAttributes {
 			get {
-				if (WeakPixelBufferAttributes != null) {
+				if (WeakPixelBufferAttributes is not null) {
 					var strongDict = new CVPixelBufferAttributes (WeakPixelBufferAttributes);
 					return strongDict;
 				}
 				return null;
 			}
 			set {
-				WeakPixelBufferAttributes = value != null ? value.Dictionary : null;
+				WeakPixelBufferAttributes = value?.Dictionary;
 			}
 		}
 	}

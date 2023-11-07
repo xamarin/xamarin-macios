@@ -4,9 +4,11 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 	public partial class CAKeyFrameAnimation {
-		public T[] GetValuesAs <T> () where T : class, INativeObject
+		public T [] GetValuesAs<T> () where T : class, INativeObject
 		{
 			return NSArray.FromArrayNative<T> (_Values);
 		}
@@ -28,8 +30,8 @@ namespace CoreAnimation {
 				NSString result;
 				if (value == CAAnimation.AnimationLinear)
 					result = CAAnimation.AnimationLinear;
-				else if (value == CAAnimation.AnimationDescrete)
-					result = CAAnimation.AnimationDescrete;
+				else if (value == CAAnimation.AnimationDiscrete)
+					result = CAAnimation.AnimationDiscrete;
 				else if (value == CAAnimation.AnimationPaced)
 					result = CAAnimation.AnimationPaced;
 				else if (value == CAAnimation.AnimationCubic)
@@ -37,12 +39,10 @@ namespace CoreAnimation {
 				else if (value == CAAnimation.AnimationCubicPaced)
 					result = CAAnimation.AnimationCubicPaced;
 				else
-					result = (NSString)value;
+					result = (NSString) value;
 
 				_CalculationMode = result;
 			}
 		}
 	}
 }
-
-

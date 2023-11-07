@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "contrôleur macOS",
+  "description": "Contrôleur d’affichage macOS avec interface utilisateur implémentée dans le code",
+  "symbols/namespace/description": "espace de noms pour le code généré"
+}

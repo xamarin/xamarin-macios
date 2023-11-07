@@ -7,23 +7,18 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace DontLink.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class TableViewSourceTest {
@@ -33,7 +28,7 @@ namespace DontLink.UIKit {
 		// update its members (e.g. bug 8298 for iOS6 additions).
 
 		// note: test executed inside the dontlink.app on purpose ;-)
-		
+
 		[Test]
 		public void ValidateMembers ()
 		{
@@ -49,7 +44,8 @@ namespace DontLink.UIKit {
 			foreach (var mi in typeof (UITableViewSource).GetMethods (flags))
 				tvsource.Add (mi.ToString ());
 
-			methods.RemoveAll (delegate (string name) {
+			methods.RemoveAll (delegate (string name)
+			{
 				return tvsource.Contains (name);
 			});
 			Assert.That (methods.Count, Is.EqualTo (0), "Incomplete bindings! Please add the following members to UITableViewSource: " + String.Join (", ", methods));

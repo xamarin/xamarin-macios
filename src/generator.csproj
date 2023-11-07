@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+  <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.props" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -7,9 +8,11 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>bgen</AssemblyName>
     <RootNamespace>bgen</RootNamespace>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <BuildDir Condition="'$(BUILD_DIR)' != ''">$(BUILD_DIR)\</BuildDir>
     <BuildDir Condition="'$(BUILD_DIR)' == ''">build\</BuildDir>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>8601,8618</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -25,6 +28,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="4.7.2" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
@@ -37,6 +41,14 @@
     </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'maccatalyst' ">
     <StartAction>Project</StartAction>
     <StartArguments>@build/$(RunConfiguration).rsp</StartArguments>
     <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
@@ -80,282 +92,43 @@
     <None Include="..\docs\website\generator-errors.md">
       <Link>generator-errors.md</Link>
     </None>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Impl\ITypeOwner.cs">
-      <Link>ikvm\ITypeOwner.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Impl\SymbolSupport.cs">
-      <Link>ikvm\SymbolSupport.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Security\Mono.Security.Cryptography\CryptoConvert.cs">
-      <Link>ikvm\CryptoConvert.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\AmbiguousMatchException.cs">
-      <Link>ikvm\AmbiguousMatchException.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Assembly.cs">
-      <Link>ikvm\Assembly.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\AssemblyName.cs">
-      <Link>ikvm\AssemblyName.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\BadImageFormatException.cs">
-      <Link>ikvm\BadImageFormatException.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Binder.cs">
-      <Link>ikvm\Binder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\ConstructorInfo.cs">
-      <Link>ikvm\ConstructorInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\CustomAttributeData.cs">
-      <Link>ikvm\CustomAttributeData.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\CustomAttributeNamedArgument.cs">
-      <Link>ikvm\CustomAttributeNamedArgument.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\CustomAttributeTypedArgument.cs">
-      <Link>ikvm\CustomAttributeTypedArgument.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\CustomModifiers.cs">
-      <Link>ikvm\CustomModifiers.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Enums.cs">
-      <Link>ikvm\Enums.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\EventInfo.cs">
-      <Link>ikvm\EventInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\ExceptionHandlingClause.cs">
-      <Link>ikvm\ExceptionHandlingClause.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\FieldInfo.cs">
-      <Link>ikvm\FieldInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\FieldSignature.cs">
-      <Link>ikvm\FieldSignature.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Fusion.cs">
-      <Link>ikvm\Fusion.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\GenericWrappers.cs">
-      <Link>ikvm\GenericWrappers.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\InterfaceMapping.cs">
-      <Link>ikvm\InterfaceMapping.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\LocalVariableInfo.cs">
-      <Link>ikvm\LocalVariableInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\ManifestResourceInfo.cs">
-      <Link>ikvm\ManifestResourceInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MarshalSpec.cs">
-      <Link>ikvm\MarshalSpec.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MemberInfo.cs">
-      <Link>ikvm\MemberInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MethodBase.cs">
-      <Link>ikvm\MethodBase.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MethodBody.cs">
-      <Link>ikvm\MethodBody.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MethodImplMap.cs">
-      <Link>ikvm\MethodImplMap.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MethodInfo.cs">
-      <Link>ikvm\MethodInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\MethodSignature.cs">
-      <Link>ikvm\MethodSignature.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Missing.cs">
-      <Link>ikvm\Missing.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Module.cs">
-      <Link>ikvm\Module.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\ParameterInfo.cs">
-      <Link>ikvm\ParameterInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\ParameterModifier.cs">
-      <Link>ikvm\ParameterModifier.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Projection.cs">
-      <Link>ikvm\Projection.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\PropertyInfo.cs">
-      <Link>ikvm\PropertyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\PropertySignature.cs">
-      <Link>ikvm\PropertySignature.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Signature.cs">
-      <Link>ikvm\Signature.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\StandAloneMethodSig.cs">
-      <Link>ikvm\StandAloneMethodSig.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\StrongNameKeyPair.cs">
-      <Link>ikvm\StrongNameKeyPair.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Type.cs">
-      <Link>ikvm\Type.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\TypeInfo.cs">
-      <Link>ikvm\TypeInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\TypeNameParser.cs">
-      <Link>ikvm\TypeNameParser.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Universe.cs">
-      <Link>ikvm\Universe.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Util.cs">
-      <Link>ikvm\Util.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\coreclr.cs">
-      <Link>ikvm\coreclr.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\AssemblyBuilder.cs">
-      <Link>ikvm\AssemblyBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\ConstructorBuilder.cs">
-      <Link>ikvm\ConstructorBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\CustomAttributeBuilder.cs">
-      <Link>ikvm\CustomAttributeBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\CustomModifiersBuilder.cs">
-      <Link>ikvm\CustomModifiersBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\EnumBuilder.cs">
-      <Link>ikvm\EnumBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\Enums.cs">
-      <Link>ikvm\Enums.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\EventBuilder.cs">
-      <Link>ikvm\EventBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\ExceptionHandler.cs">
-      <Link>ikvm\ExceptionHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\FieldBuilder.cs">
-      <Link>ikvm\FieldBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\ILGenerator.cs">
-      <Link>ikvm\ILGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\MethodBuilder.cs">
-      <Link>ikvm\MethodBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\ModuleBuilder.cs">
-      <Link>ikvm\ModuleBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\OpCode.cs">
-      <Link>ikvm\OpCode.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\OpCodes.cs">
-      <Link>ikvm\OpCodes.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\ParameterBuilder.cs">
-      <Link>ikvm\ParameterBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\PropertyBuilder.cs">
-      <Link>ikvm\PropertyBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\SignatureHelper.cs">
-      <Link>ikvm\SignatureHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\Tokens.cs">
-      <Link>ikvm\Tokens.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Emit\TypeBuilder.cs">
-      <Link>ikvm\TypeBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Metadata\CliHeader.cs">
-      <Link>ikvm\CliHeader.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Metadata\MetadataRW.cs">
-      <Link>ikvm\MetadataRW.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Metadata\Tables.cs">
-      <Link>ikvm\Tables.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\AssemblyReader.cs">
-      <Link>ikvm\AssemblyReader.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\Authenticode.cs">
-      <Link>ikvm\Authenticode.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\ByteReader.cs">
-      <Link>ikvm\ByteReader.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\EventInfoImpl.cs">
-      <Link>ikvm\EventInfoImpl.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\Field.cs">
-      <Link>ikvm\Field.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\GenericTypeParameter.cs">
-      <Link>ikvm\GenericTypeParameter.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\MetadataReader.cs">
-      <Link>ikvm\MetadataReader.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\Method.cs">
-      <Link>ikvm\Method.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\ModuleReader.cs">
-      <Link>ikvm\ModuleReader.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\PEReader.cs">
-      <Link>ikvm\PEReader.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\PropertyInfoImpl.cs">
-      <Link>ikvm\PropertyInfoImpl.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\ResourceModule.cs">
-      <Link>ikvm\ResourceModule.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Reader\TypeDefImpl.cs">
-      <Link>ikvm\TypeDefImpl.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\ByteBuffer.cs">
-      <Link>ikvm\ByteBuffer.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\Heaps.cs">
-      <Link>ikvm\Heaps.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\MetadataWriter.cs">
-      <Link>ikvm\MetadataWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\ModuleWriter.cs">
-      <Link>ikvm\ModuleWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\PEWriter.cs">
-      <Link>ikvm\PEWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\ResourceSection.cs">
-      <Link>ikvm\ResourceSection.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\TextSection.cs">
-      <Link>ikvm\TextSection.cs</Link>
-    </Compile>
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\external\ikvm\reflect\Writer\VersionInfo.cs">
-      <Link>ikvm\VersionInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\src\btouch.cs" />
     <Compile Include="..\src\error.cs" />
-    <Compile Include="..\src\generator.cs" />
-    <Compile Include="..\src\generator-attributes.cs" />
-    <Compile Include="..\src\generator-attribute-manager.cs" />
-    <Compile Include="..\src\generator-enums.cs" />
-    <Compile Include="..\src\generator-filters.cs" />
-    <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodInfo.cs" />
+    <Compile Include="..\src\bgen\AttributeConversionManager.cs" />
+    <Compile Include="..\src\bgen\AsyncMethodKind.cs" />
+    <Compile Include="..\src\bgen\AttributeManager.cs" />
+    <Compile Include="..\src\bgen\Attributes.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.ConstructorArguments.cs" />
+    <Compile Include="..\src\bgen\AttributeFactory.cs" />
+    <Compile Include="..\src\bgen\BodyOption.cs" />
+    <Compile Include="..\src\bgen\BindingTouch.cs" />
+    <Compile Include="..\src\bgen\CollectionsExtensions.cs" />
+    <Compile Include="..\src\bgen\CustomAttributeDataExtensions.cs" />
+    <Compile Include="..\src\bgen\Enums.cs" />
+    <Compile Include="..\src\bgen\ExtensionMethods.cs" />
+    <Compile Include="..\src\bgen\Frameworks.cs" />
+    <Compile Include="..\src\bgen\Filters.cs" />
+    <Compile Include="..\src\bgen\GeneratedType.cs" />
+    <Compile Include="..\src\bgen\GeneratedTypes.cs" />
+    <Compile Include="..\src\bgen\Generator.cs" />
+    <Compile Include="..\src\bgen\Generator.PrintAttributes.cs" />
+    <Compile Include="..\src\bgen\MarshalInfo.cs" />
+    <Compile Include="..\src\bgen\MarshalTypeList.cs" />
+    <Compile Include="..\src\bgen\MarshalType.cs" />
+    <Compile Include="..\src\bgen\IMemberGatherer.cs" />
+    <Compile Include="..\src\bgen\MemberInformation.cs" />
+    <Compile Include="..\src\bgen\NamespaceManager.cs" />
+    <Compile Include="..\src\bgen\Nomenclator.cs" />
+    <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
+    <Compile Include="..\src\bgen\PlatformNameExtensions.cs" />
+    <Compile Include="..\src\bgen\StringExtensions.cs" />
+    <Compile Include="..\src\bgen\ThreadCheck.cs" />
+    <Compile Include="..\src\bgen\TrampolineInfo.cs" />
+    <Compile Include="..\src\bgen\TypeExtensions.cs" />
+    <Compile Include="..\src\bgen\TypeManager.cs" />
+    <Compile Include="..\src\bgen\WrapPropMemberInformation.cs" />
+    <Compile Include="..\tools\common\ApplePlatform.cs" />
     <Compile Include="..\tools\common\TargetFramework.cs" />
     <Compile Include="..\tools\common\StringUtils.cs" />
     <Compile Include="$(BuildDir)generator-frameworks.g.cs" />
@@ -369,12 +142,12 @@
     <Compile Include="..\src\Foundation\ProtocolAttribute.cs" />
     <Compile Include="..\src\Foundation\RegisterAttribute.cs" />
     <Compile Include="..\src\Foundation\XpcInterfaceAttribute.cs" />
-    <Compile Include="..\src\ObjCRuntime\AlphaAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\ArgumentSemantic.cs" />
     <Compile Include="..\src\ObjCRuntime\BindAsAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\BindingImplAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\LinkWithAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\NativeAttribute.cs" />
+    <Compile Include="..\src\ObjCRuntime\NativeNameAttribute.cs" />
     <Compile Include="..\src\ObjCRuntime\PlatformAvailability2.cs" />
     <Compile Include="..\src\ObjCRuntime\PlatformAvailabilityShadow.cs" />
     <Compile Include="..\src\ObjCRuntime\Registrar.core.cs" />
@@ -382,8 +155,29 @@
     <Compile Include="..\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
+    <Compile Include="..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+    <Compile Include="..\tools\common\Driver.execution.cs">
+      <Link>Driver.execution.cs</Link>
+    </Compile>
+    <Compile Include="..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Target Name="AfterBuild">
-    <Exec Command="make bgen" />
+    <!-- Only run 'make bgen' if we're not executed as part of 'make' (i.e. MAKEFLAGS is empty) -->
+    <Exec Command="make bgen" Condition="'$(MAKEFLAGS)' == ''" />
   </Target>
+  <Import Project="..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets" Condition="Exists('..\packages\XliffTasks.1.0.0-beta.19607.1\build\XliffTasks.targets')" />
 </Project>

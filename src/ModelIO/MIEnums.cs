@@ -1,4 +1,3 @@
-#if XAMCORE_2_0 || !MONOMAC
 //
 // ModelIO/MIEnums.cs: enumerations and definitions
 //
@@ -15,139 +14,102 @@ using CoreFoundation;
 using CoreGraphics;
 using Metal;
 using ObjCRuntime;
-using Vector2 = global::OpenTK.Vector2;
-using Vector3 = global::OpenTK.Vector3;
-using Vector4 = global::OpenTK.Vector4;
-using Vector4i = global::OpenTK.Vector4i;
-using VectorInt4 = global::OpenTK.Vector4i;
-using Matrix2 = global::OpenTK.Matrix2;
-using Matrix3 = global::OpenTK.Matrix3;
-using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+
+#nullable enable
 
 namespace ModelIO {
 	[Native]
 	public enum MDLVertexFormat : ulong {
 		Invalid = 0,
 
-		PackedBits           =  0x1000,
-		UCharBits            = 0x10000,
-		CharBits             = 0x20000,
-		UCharNormalizedBits  = 0x30000,
-		CharNormalizedBits   = 0x40000,
-		UShortBits           = 0x50000,
-		ShortBits            = 0x60000,
+		PackedBits = 0x1000,
+		UCharBits = 0x10000,
+		CharBits = 0x20000,
+		UCharNormalizedBits = 0x30000,
+		CharNormalizedBits = 0x40000,
+		UShortBits = 0x50000,
+		ShortBits = 0x60000,
 		UShortNormalizedBits = 0x70000,
-		ShortNormalizedBits  = 0x80000,
-		UIntBits             = 0x90000,
-		IntBits              = 0xA0000,
-		HalfBits             = 0xB0000,
-		FloatBits            = 0xC0000,
+		ShortNormalizedBits = 0x80000,
+		UIntBits = 0x90000,
+		IntBits = 0xA0000,
+		HalfBits = 0xB0000,
+		FloatBits = 0xC0000,
 
-		UChar  = UCharBits | 1,
+		UChar = UCharBits | 1,
 		UChar2 = UCharBits | 2,
 		UChar3 = UCharBits | 3,
 		UChar4 = UCharBits | 4,
 
-		Char =  CharBits | 1,
+		Char = CharBits | 1,
 		Char2 = CharBits | 2,
 		Char3 = CharBits | 3,
 		Char4 = CharBits | 4,
 
-		UCharNormalized  = UCharNormalizedBits | 1,
+		UCharNormalized = UCharNormalizedBits | 1,
 		UChar2Normalized = UCharNormalizedBits | 2,
 		UChar3Normalized = UCharNormalizedBits | 3,
 		UChar4Normalized = UCharNormalizedBits | 4,
 
-		CharNormalized  = CharNormalizedBits | 1,
+		CharNormalized = CharNormalizedBits | 1,
 		Char2Normalized = CharNormalizedBits | 2,
 		Char3Normalized = CharNormalizedBits | 3,
 		Char4Normalized = CharNormalizedBits | 4,
 
-		UShort  = UShortBits | 1,
+		UShort = UShortBits | 1,
 		UShort2 = UShortBits | 2,
 		UShort3 = UShortBits | 3,
 		UShort4 = UShortBits | 4,
 
-		Short  = ShortBits | 1,
+		Short = ShortBits | 1,
 		Short2 = ShortBits | 2,
 		Short3 = ShortBits | 3,
 		Short4 = ShortBits | 4,
 
-		UShortNormalized  = UShortNormalizedBits | 1,
+		UShortNormalized = UShortNormalizedBits | 1,
 		UShort2Normalized = UShortNormalizedBits | 2,
 		UShort3Normalized = UShortNormalizedBits | 3,
 		UShort4Normalized = UShortNormalizedBits | 4,
 
-		ShortNormalized  = ShortNormalizedBits | 1,
+		ShortNormalized = ShortNormalizedBits | 1,
 		Short2Normalized = ShortNormalizedBits | 2,
 		Short3Normalized = ShortNormalizedBits | 3,
 		Short4Normalized = ShortNormalizedBits | 4,
 
-		UInt  = UIntBits | 1,
+		UInt = UIntBits | 1,
 		UInt2 = UIntBits | 2,
 		UInt3 = UIntBits | 3,
 		UInt4 = UIntBits | 4,
 
-		Int  = IntBits | 1,
+		Int = IntBits | 1,
 		Int2 = IntBits | 2,
 		Int3 = IntBits | 3,
 		Int4 = IntBits | 4,
 
-		Half  = HalfBits | 1,
+		Half = HalfBits | 1,
 		Half2 = HalfBits | 2,
 		Half3 = HalfBits | 3,
 		Half4 = HalfBits | 4,
 
-		Float  = FloatBits | 1,
+		Float = FloatBits | 1,
 		Float2 = FloatBits | 2,
 		Float3 = FloatBits | 3,
 		Float4 = FloatBits | 4,
 
-		Int1010102Normalized  = IntBits  | PackedBits | 4,
+		Int1010102Normalized = IntBits | PackedBits | 4,
 		UInt1010102Normalized = UIntBits | PackedBits | 4,
 	}
 
-#if !COREBUILD
-	public static class MDLVertexFormatExtensions {
-		
-		[iOS (9,0)][Mac (10,11)]
-		[DllImport (Constants.MetalKitLibrary)]
-		static extern /* MTLVertexFormat */ nuint MTKMetalVertexFormatFromModelIO (/* MTLVertexFormat */ nuint vertexFormat);
-
-		[iOS (9,0)][Mac (10,11)]
-		public static MTLVertexFormat ToMetalVertexFormat (this MDLVertexFormat vertexFormat)
-		{
-			nuint mtlVertexFormat = MTKMetalVertexFormatFromModelIO ((nuint)(ulong)vertexFormat);
-			return (MTLVertexFormat)(ulong)mtlVertexFormat;
-		}
-	}
-#endif
-
 	[Native]
-	public enum MDLMeshBufferType : ulong
-	{
+	public enum MDLMeshBufferType : ulong {
 		Vertex = 1,
-		Index = 2
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	public struct  MDLAxisAlignedBoundingBox {
-		public Vector3 MaxBounds;
-		public Vector3 MinBounds;
-
-		public MDLAxisAlignedBoundingBox (Vector3 maxBounds, Vector3 minBounds)
-		{
-			MaxBounds = maxBounds;
-			MinBounds = minBounds;
-		}
-
+		Index = 2,
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		Custom = 3,
 	}
 
 	[Native]
-	public enum MDLGeometryType : long
-	{
+	public enum MDLGeometryType : long {
 		Points = 0,
 		Lines,
 		Triangles,
@@ -155,7 +117,7 @@ namespace ModelIO {
 		Quads,
 		VariableTopology,
 	}
-	
+
 	[Native]
 	public enum MDLIndexBitDepth : ulong {
 		Invalid,
@@ -205,7 +167,9 @@ namespace ModelIO {
 		Float2,
 		Float3,
 		Float4,
-		Matrix44
+		Matrix44,
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		Buffer,
 	}
 
 	[Native]
@@ -237,8 +201,7 @@ namespace ModelIO {
 	}
 
 	[Native]
-	public enum MDLLightType : ulong
-	{
+	public enum MDLLightType : ulong {
 		Unknown = 0,
 		Ambient,
 		Directional,
@@ -253,59 +216,28 @@ namespace ModelIO {
 		Environment
 	}
 
-#if !XAMCORE_4_0
-	[Obsolete ("Use 'MDLVoxelIndexExtent2' instead.")]
-	[StructLayout(LayoutKind.Sequential)]
-	public struct MDLVoxelIndexExtent {
-		public MDLVoxelIndexExtent (Vector4 minimumExtent, Vector4 maximumExtent)
-		{
-			this.MinimumExtent = minimumExtent;
-			this.MaximumExtent = maximumExtent;
-		}
-		public Vector4 MinimumExtent, MaximumExtent;
-	}
-#endif
-
-	[StructLayout(LayoutKind.Sequential)]
-#if XAMCORE_4_0
-	public struct MDLVoxelIndexExtent {
-#else
-	public struct MDLVoxelIndexExtent2 {
-#endif
-		public VectorInt4 MinimumExtent { get; private set; }
-		public VectorInt4 MaximumExtent { get; private set; }
-
-#if XAMCORE_4_0
-		public MDLVoxelIndexExtent (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
-#else
-		public MDLVoxelIndexExtent2 (VectorInt4 minimumExtent, VectorInt4 maximumExtent)
-#endif
-		{
-			this.MinimumExtent = minimumExtent;
-			this.MaximumExtent = maximumExtent;
-		}
-	}
-
 	[Native]
-	public enum MDLCameraProjection : ulong
-	{
+	public enum MDLCameraProjection : ulong {
 		Perspective = 0,
 		Orthographic = 1,
 	}
 
 	[Native]
-	public enum MDLMaterialFace : ulong
-	{
+	public enum MDLMaterialFace : ulong {
 		Front = 0,
 		Back,
 		DoubleSided,
 	}
 
 	[Native]
-	public enum MDLProbePlacement : long
-	{
+	public enum MDLProbePlacement : long {
 		UniformGrid = 0,
 		IrradianceDistribution,
 	}
+
+	[MacCatalyst (13, 1)]
+	public enum MDLNoiseTextureType {
+		Vector,
+		Cellular,
+	}
 }
-#endif

@@ -10,9 +10,12 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreHaptics {
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CHHapticEventParameterId {
 		[Field ("CHHapticEventParameterIDHapticIntensity")]
 		HapticIntensity,
@@ -45,7 +48,8 @@ namespace CoreHaptics {
 		AudioBrightness,
 	}
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CHHapticDynamicParameterId {
 		[Field ("CHHapticDynamicParameterIDHapticIntensityControl")]
 		HapticIntensityControl,
@@ -84,7 +88,8 @@ namespace CoreHaptics {
 		AudioReleaseTimeControl,
 	}
 
-	[Mac (10, 15), iOS (13, 0)]
+	[iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	public enum CHHapticEventType {
 		[Field ("CHHapticEventTypeHapticTransient")]
 		HapticTransient,
@@ -99,7 +104,8 @@ namespace CoreHaptics {
 		AudioCustom,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CHHapticErrorCode : long {
 		EngineNotRunning = -4805,
@@ -112,6 +118,7 @@ namespace CoreHaptics {
 		InvalidPatternData = -4813,
 		InvalidPatternDictionary = -4814,
 		InvalidAudioSession = -4815,
+		InvalidEngineParameter = -4816,
 		InvalidParameterType = -4820,
 		InvalidEventType = -4821,
 		InvalidEventTime = -4822,
@@ -121,24 +128,36 @@ namespace CoreHaptics {
 		BadEventEntry = -4830,
 		BadParameterEntry = -4831,
 		InvalidTime = -4840,
+		FileNotFound = -4851,
+		InsufficientPower = -4897,
 		UnknownError = -4898,
 		MemoryError = -4899,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CHHapticEngineFinishedAction : long {
 		StopEngine = 1,
 		LeaveEngineRunning = 2,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0), TV (14, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CHHapticEngineStoppedReason : long {
 		AudioSessionInterrupt = 1,
 		ApplicationSuspended = 2,
 		IdleTimeout = 3,
 		NotifyWhenFinished = 4,
+		[iOS (14, 0)]
+		[NoMac]
+		[MacCatalyst (14, 0)]
+		EngineDestroyed = 5,
+		[iOS (14, 0)]
+		[NoMac]
+		[MacCatalyst (14, 0)]
+		GameControllerDisconnect = 6,
 		SystemError = -1,
 	}
-} 
+}

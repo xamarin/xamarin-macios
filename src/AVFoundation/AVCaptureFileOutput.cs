@@ -13,13 +13,15 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureFileOutput {
-		class recordingProxy : AVCaptureFileOutputRecordingDelegate  {
+		class recordingProxy : AVCaptureFileOutputRecordingDelegate {
 			Action<NSObject []> startRecordingFromConnections;
-			Action<NSObject[],NSError> finishedRecording;
+			Action<NSObject [], NSError?> finishedRecording;
 
-			public recordingProxy (Action<NSObject []> startRecordingFromConnections, Action<NSObject[],NSError> finishedRecording)
+			public recordingProxy (Action<NSObject []> startRecordingFromConnections, Action<NSObject [], NSError?> finishedRecording)
 			{
 				this.startRecordingFromConnections = startRecordingFromConnections;
 				this.finishedRecording = finishedRecording;
@@ -30,14 +32,14 @@ namespace AVFoundation {
 				startRecordingFromConnections (connections);
 			}
 
-			public override void FinishedRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections, NSError error)
+			public override void FinishedRecording (AVCaptureFileOutput captureOutput, NSUrl outputFileUrl, NSObject [] connections, NSError? error)
 			{
 				finishedRecording (connections, error);
 			}
 
 		}
-		
-		public void StartRecordingToOutputFile (NSUrl outputFileUrl, Action<NSObject []> startRecordingFromConnections, Action<NSObject[],NSError> finishedRecording)
+
+		public void StartRecordingToOutputFile (NSUrl outputFileUrl, Action<NSObject []> startRecordingFromConnections, Action<NSObject [], NSError?> finishedRecording)
 		{
 			StartRecordingToOutputFile (outputFileUrl, new recordingProxy (startRecordingFromConnections, finishedRecording));
 		}

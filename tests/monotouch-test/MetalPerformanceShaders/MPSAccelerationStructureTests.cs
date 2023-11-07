@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSAccelerationStructure
 //
 // Authors:
@@ -18,24 +18,31 @@ using Metal;
 using MetalPerformanceShaders;
 
 using NUnit.Framework;
+
+#if NET
+using CoreGraphics;
+#else
 using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSAccelerationStructureTests {
 
 		IMTLDevice device;
-		nuint vector3Size = (nuint) Marshal.SizeOf<OpenTK.NVector3> ();
+		nuint vector3Size = (nuint) Marshal.SizeOf<NVector3> ();
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null || !MPSKernel.Supports (device))
+			if (device is null || !MPSKernel.Supports (device))
 				Assert.Inconclusive ("Metal is not supported");
 		}
 

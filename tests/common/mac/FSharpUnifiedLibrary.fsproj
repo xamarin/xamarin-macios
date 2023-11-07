@@ -40,9 +40,6 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info.plist" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Component1.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.FSharp.targets" />

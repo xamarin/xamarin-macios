@@ -32,23 +32,25 @@ namespace Foundation {
 
 		public static void GlobalSetClassName (string name, Class kls)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
-			if (kls == null)
-				throw new ArgumentNullException ("kls");
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
+			if (kls is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kls));
 
-			var nsname = new NSString (name);
-			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (class_ptr, Selector.GetHandle ("setClassName:forClass:"), nsname.Handle, kls.Handle);
-			nsname.Dispose ();
+			var ptr = CFString.CreateNative (name);
+			ObjCRuntime.Messaging.void_objc_msgSend_IntPtr_IntPtr (class_ptr, Selector.GetHandle ("setClassName:forClass:"), ptr, kls.Handle);
+			CFString.ReleaseNative (ptr);
 		}
 
 		public static string GlobalGetClassName (Class kls)
 		{
-			if (kls == null)
-				throw new ArgumentNullException ("kls");
-			return NSString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("classNameForClass:"), kls.Handle));
+			if (kls is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kls));
+
+			return CFString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("classNameForClass:"), kls.Handle));
 		}
 
+#if !NET
 		public bool RequiresSecureCoding {
 			get {
 				return GetRequiresSecureCoding ();
@@ -57,5 +59,6 @@ namespace Foundation {
 				SetRequiresSecureCoding (value);
 			}
 		}
+#endif
 	}
 }

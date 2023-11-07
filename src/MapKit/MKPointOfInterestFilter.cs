@@ -3,19 +3,21 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
-	public enum  MKPointOfInterestFilterType {
+	public enum MKPointOfInterestFilterType {
 		Including,
 		Excluding,
 	}
 
 	public partial class MKPointOfInterestFilter {
-		public MKPointOfInterestFilter (MKPointOfInterestCategory[] categories) : this (categories, MKPointOfInterestFilterType.Including)
+		public MKPointOfInterestFilter (MKPointOfInterestCategory [] categories) : this (categories, MKPointOfInterestFilterType.Including)
 		{
 		}
 
-		public MKPointOfInterestFilter (MKPointOfInterestCategory[] categories, MKPointOfInterestFilterType type)
+		public MKPointOfInterestFilter (MKPointOfInterestCategory [] categories, MKPointOfInterestFilterType type)
 		{
 			// two different `init*` would share the same C# signature
 			switch (type) {

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-run id="2" name="mock-assembly.dll" fullname="D:\Dev\NUnit\nunit-3.0\work\bin\vs2008\Debug\mock-assembly.dll" testcasecount="5" result="Passed" time="0.154" total="4" passed="4" failed="0" inconclusive="0" skipped="1" asserts="2" run-date="2011-07-26" start-time="11:34:27">
+  <environment nunit-version="1.0.0.0" clr-version="2.0.50727.4961" os-version="Microsoft Windows NT 6.1.7600.0" platform="Win32NT" cwd="D:\Dev\NUnit\nunit-3.0\work\bin\vs2008\Debug" machine-name="CHARLIE-LAPTOP" user="charlie" user-domain="charlie-laptop" culture="en-US" uiculture="en-US" />
+  <test-suite type="Assembly" id="1036" name="mock-assembly.dll" fullname="D:\Dev\NUnit\nunit-3.0\work\bin\vs2008\Debug\mock-assembly.dll" testcasecount="25" result="Failed" time="0.154" total="18" passed="12" failed="2" inconclusive="1" skipped="3" asserts="2">
+    <properties>
+      <property name="_PID" value="11928" />
+      <property name="_APPDOMAIN" value="test-domain-mock-assembly.dll" />
+    </properties>
+    <failure>
+      <message><![CDATA[Child test failed]]></message>
+    </failure>
+    <test-suite type="TestFixture" id="1023" name="BadFixture" fullname="NUnit.Tests.BadFixture" testcasecount="1" result="Skipped" label="Invalid" time="0.000" total="0" passed="0" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_SKIPREASON" value="No suitable constructor was found" />
+      </properties>
+      <reason>
+        <message><![CDATA[No suitable constructor was found]]></message>
+      </reason>
+    </test-suite>
+    <test-suite type="TestFixture" id="1025" name="FixtureWithTestCases" fullname="NUnit.Tests.FixtureWithTestCases" testcasecount="2" result="Passed" time="0.010" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="2">
+      <test-suite type="ParameterizedMethod" id="1026" name="MethodWithParameters" fullname="NUnit.Tests.FixtureWithTestCases.MethodWithParameters" testcasecount="2" result="Passed" time="0.009" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="2">
+        <test-case id="1027" name="MethodWithParameters(2,2)" fullname="NUnit.Tests.FixtureWithTestCases.MethodWithParameters(2,2)" result="Passed" time="0.006" asserts="1" />
+        <test-case id="1028" name="MethodWithParameters(9,11)" fullname="NUnit.Tests.FixtureWithTestCases.MethodWithParameters(9,11)" result="Passed" time="0.000" asserts="1" />
+      </test-suite>
+    </test-suite>
+    <test-suite type="TestFixture" id="1012" name="OneTestCase" fullname="NUnit.Tests.Singletons.OneTestCase" testcasecount="1" result="Passed" time="0.001" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-case id="1013" name="TestCase" fullname="NUnit.Tests.Singletons.OneTestCase.TestCase" result="Passed" time="0.000" asserts="0" />
+    </test-suite>
+    <test-suite type="TestFixture" id="1014" name="MockTestFixture" fullname="NUnit.Tests.TestAssembly.MockTestFixture" testcasecount="1" result="Passed" time="0.001" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-case id="1015" name="MyTest" fullname="NUnit.Tests.TestAssembly.MockTestFixture.MyTest" result="Passed" time="0.001" asserts="0" />
+    </test-suite>
+  </test-suite>
+</test-run>

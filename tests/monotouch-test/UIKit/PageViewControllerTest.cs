@@ -11,20 +11,15 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PageViewControllerTest {
-		
+
 		[Test]
 		public void Defaults ()
 		{
@@ -43,9 +38,9 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That (pvc.TransitionStyle, Is.EqualTo (UIPageViewControllerTransitionStyle.PageCurl), "TransitionStyle");
 			Assert.That (pvc.ViewControllers.Length, Is.EqualTo (0), "ViewControllers");
 		}
-		
+
 		UIPageViewController pvc;
-		
+
 		[Test]
 		public void SetViewControllers ()
 		{
@@ -54,7 +49,7 @@ namespace MonoTouchFixtures.UIKit {
 			pvc.SetViewControllers (pvc.ViewControllers, UIPageViewControllerNavigationDirection.Forward, false, Complete);
 			Assert.Null (pvc, "pvc");
 		}
-		
+
 		void Complete (bool finished)
 		{
 			Assert.True (finished, "finished");

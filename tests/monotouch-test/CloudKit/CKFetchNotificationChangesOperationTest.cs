@@ -1,21 +1,15 @@
-﻿using System;
+using System;
 using NUnit.Framework;
-#if XAMCORE_2_0
 using Foundation;
 using CloudKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CloudKit;
-#endif
+using Xamarin.Utils;
 
-namespace MonoTouchFixtures.CloudKit
-{
+namespace MonoTouchFixtures.CloudKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CKFetchNotificationChangesOperationTest
-	{
+	public class CKFetchNotificationChangesOperationTest {
 		CKServerChangeToken token = null;
 		CKFetchNotificationChangesOperation op = null;
 
@@ -23,7 +17,7 @@ namespace MonoTouchFixtures.CloudKit
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			op = new CKFetchNotificationChangesOperation (token);
 		}
 
@@ -36,14 +30,14 @@ namespace MonoTouchFixtures.CloudKit
 		[Test]
 		public void TestNotificationChangedSetter ()
 		{
-			op.NotificationChanged = (obj) => { Console.WriteLine ("Notification");};
+			op.NotificationChanged = (obj) => { Console.WriteLine ("Notification"); };
 			Assert.NotNull (op.NotificationChanged);
 		}
 
 		[Test]
 		public void TestCompletedSetter ()
 		{
-			op.Completed = (arg1, arg2) => { Console.WriteLine ("Completed");};
+			op.Completed = (arg1, arg2) => { Console.WriteLine ("Completed"); };
 			Assert.NotNull (op.Completed);
 		}
 

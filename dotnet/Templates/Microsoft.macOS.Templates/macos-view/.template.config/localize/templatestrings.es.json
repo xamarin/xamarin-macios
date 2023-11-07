@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Vista de macOS",
+  "description": "Vista de macOS con interfaz de usuario implementado en el Interface Builder de Xcode (archivo XIB)",
+  "symbols/namespace/description": "espacio de nombres para el código generado"
+}

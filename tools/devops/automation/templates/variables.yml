@@ -1,0 +1,45 @@
+variables:
+- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
+  - template: templates/vsts-variables.yml
+- template: templates/common/vs-release-vars.yml@sdk-insertions  # used for the insertion steps
+- group: xamops-azdev-secrets
+- group: Xamarin-Secrets
+- group: Xamarin Signing
+- group: Xamarin Release
+- group: Xamarin Notarization
+- group: XamarinCompatLab                                     # provisionator-uri setting
+- group: VSEng DTL secrets
+- name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
+  value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
+- name: system.debug
+  value: true
+- name: SigningKeychain
+  value: "builder.keychain"
+- name: VSDropsPrefix
+  value: 'https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/device-tests'
+- name: USE_TCP_TUNNEL                                        # Needed to ensure that devices uses the usb cable to communicate with the devices to run the tests.
+  value: true
+- name: TeamName
+  value: 'xamarin-macios'
+- name: PROVISIONATOR_CHANNEL
+  value: ${{ parameters.provisionatorChannel }}
+- name: PRBuildPool
+  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted'
+- name: PRBuildPoolUrl
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=366&view=agents'
+- name: CIBuildPool
+  value: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted'
+- name: CIBuildPoolUrl
+  value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
+- name: CIBuild
+  value: true
+- name: azureStorage
+  value: 'bosstoragemirror'
+- name: azureContainer
+  value: 'wrench'
+- name: BUILD_REVISION
+  value: azure-devops-$(Build.SourceVersion)
+- name: MacPoolAccessToken
+  value: $(botdeploy--azdo--token--register--untrusted)

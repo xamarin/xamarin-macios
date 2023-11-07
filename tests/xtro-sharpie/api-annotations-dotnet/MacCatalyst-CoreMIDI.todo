@@ -1,0 +1,11 @@
+!missing-enum! MIDINoteAttribute not bound
+!missing-enum! MIDIPerNoteManagementOptions not bound
+!missing-enum! MIDIProgramChangeOptions not bound
+!missing-enum! MIDIUtilityStatus not bound
+!missing-enum-value! MidiMessageType native value kMIDIMessageTypeUnknownF = 15 not bound
+!missing-enum-value! MidiSysExStatus native value kMIDISysExStatusMixedDataSetHeader = 8 not bound
+!missing-enum-value! MidiSysExStatus native value kMIDISysExStatusMixedDataSetPayload = 9 not bound
+!missing-pinvoke! MIDIEventListForEachEvent is not bound
+## appended from unclassified file
+!missing-pinvoke! MIDIBluetoothDriverActivateAllConnections is not bound
+!missing-pinvoke! MIDIBluetoothDriverDisconnect is not bound

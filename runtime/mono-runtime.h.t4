@@ -18,6 +18,15 @@
 extern "C" {
 #endif
 
+/*
+ * Wrapper GCHandle functions that takes pointer sized handles instead of ints,
+ * so that we can adapt our code incrementally to use pointers instead of ints
+ * until Mono's pointer-sized API is available for us.
+ * Ref: https://github.com/dotnet/runtime/commit/3886a63841434af716292172737a42757a15c6a6
+ */
+#define INVALID_GCHANDLE NULL
+typedef void* GCHandle;
+
 /* This is copied from eglib's header files */
 typedef unsigned int   guint;
 typedef int32_t        gboolean;
@@ -45,8 +54,8 @@ char *xamarin_get_mono_runtime_build_info (); // returns NULL if libmono couldn'
 
 #ifdef DYNAMIC_MONO_RUNTIME
 <# foreach (var export in exports) { #>
-#define <#= export.EntryPoint #> <#= export.EntryPoint #>_impl
-<# } #>
+<#= export.DotNetIf #>#define <#= export.EntryPoint #> <#= export.EntryPoint #>_impl
+<#= export.DotNetEndIf #><# } #>
 #endif
 
 /* This is copied from mono's header files */
@@ -56,7 +65,12 @@ char *xamarin_get_mono_runtime_build_info (); // returns NULL if libmono couldn'
 typedef int32_t	mono_bool;
 
 /* metadata/image.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoAssembly is not related to MonoObject, but for the CoreCLR bridge we use the same memory representation for both types.
+typedef struct _MonoObject MonoAssembly;
+#else
 typedef struct _MonoAssembly MonoAssembly;
+#endif
 typedef struct _MonoAssemblyName MonoAssemblyName;
 typedef struct _MonoImage MonoImage;
 
@@ -68,11 +82,26 @@ typedef enum {
 } MonoImageOpenStatus;
 
 /* metadata/metadata.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoClass is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoClass;
+#else
 typedef struct _MonoClass MonoClass;
+#endif
 typedef struct _MonoDomain MonoDomain;
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoMethod is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoMethod;
+#else
 typedef struct _MonoMethod MonoMethod;
+#endif
 typedef struct _MonoMethodSignature MonoMethodSignature;
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoType is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoType;
+#else
 typedef struct _MonoType MonoType;
+#endif
 
 /* metadata/class.h */
 typedef struct MonoVTable MonoVTable;
@@ -80,30 +109,44 @@ typedef struct MonoVTable MonoVTable;
 typedef struct _MonoClassField MonoClassField;
 
 /* metadata/object.h */
+#if defined (CORECLR_RUNTIME)
+// In Mono, these types are substructs of MonoObject, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoString;
+typedef struct _MonoObject MonoArray;
+typedef struct _MonoObject MonoReflectionAssembly;
+typedef struct _MonoObject MonoReflectionMethod;
+typedef struct _MonoObject MonoReflectionType;
+typedef struct _MonoObject MonoException;
+#else
 typedef struct _MonoString MonoString;
 typedef struct _MonoArray MonoArray;
-typedef struct _MonoReflectionMethod MonoReflectionMethod;
 typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
+typedef struct _MonoReflectionMethod MonoReflectionMethod;
 typedef struct _MonoReflectionType MonoReflectionType;
 typedef struct _MonoException MonoException;
+#endif
 typedef struct _MonoThread MonoThread;
 typedef struct _MonoThreadsSync MonoThreadsSync;
-typedef struct {
-	MonoVTable *vtable;
-	MonoThreadsSync *synchronisation;
-} MonoObject;
+typedef struct _MonoObject MonoObject;
 
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoReferenceQueue is not related to MonoObject at all, but for the CoreCLR bridge we use the same struct representation for both types.
+typedef struct _MonoObject MonoReferenceQueue;
+#else
 typedef struct _MonoReferenceQueue MonoReferenceQueue;
+#endif
 typedef void (*mono_reference_queue_callback) (void *user_data);
 
+#if !defined (CORECLR_RUNTIME)
 #define mono_array_addr(array,type,index) ((type*)(void*) mono_array_addr_with_size (array, sizeof (type), index))
 #define mono_array_get(array,type,index) ( *(type*)mono_array_addr ((array), type, (index)) )
-#define mono_array_setref(array,index,value)	\
+#define mono_array_setref(array,index,value,exception_gchandle)	\
 	do {	\
 		void **__p = (void **) mono_array_addr ((array), void*, (index));	\
 		mono_gc_wbarrier_set_arrayref ((array), __p, (MonoObject*)(value));	\
 		/* *__p = (value);*/	\
 	} while (0)
+#endif // !defined (CORECLR_RUNTIME)
 
 /* metadata/assembly.h */
 
@@ -163,6 +206,17 @@ typedef enum {
 	/* Deprecated, the mdb debugger is not longer supported. */
 	MONO_DEBUG_FORMAT_DEBUGGER
 } MonoDebugFormat;
+
+/* mini/debugger-agent.h */
+
+typedef struct {
+	const char *name;
+	void (*connect) (const char *address);
+	void (*close1) (void);
+	void (*close2) (void);
+	gboolean (*send) (void *buf, size_t len);
+	ssize_t (*recv) (void *buf, size_t len);
+} DebuggerTransport;
 
 /* metadata/mini.h */
 typedef gboolean (*MonoExceptionFrameWalk)      (MonoMethod *method, gpointer ip, size_t native_offset, gboolean managed, gpointer user_data);
@@ -251,7 +305,12 @@ typedef enum {
 	MONO_HASH_KEY_VALUE_GC = MONO_HASH_KEY_GC | MONO_HASH_VALUE_GC,
 } MonoGHashGCType;
 
+#if defined (CORECLR_RUNTIME)
+// In Mono, MonoGHashTable is not related to MonoObject, but for the CoreCLR bridge we use the same memory representation for both types.
+typedef struct _MonoObject MonoGHashTable;
+#else
 typedef struct _MonoGHashTable MonoGHashTable;
+#endif
 
 /* utils/mono-logger.h */
 
@@ -267,11 +326,31 @@ typedef enum {
 	MONO_AOT_MODE_LLVMONLY,
 	MONO_AOT_MODE_INTERP,
 	MONO_AOT_MODE_INTERP_LLVMONLY,
+	MONO_AOT_MODE_LLVMONLY_INTERP,
+	MONO_AOT_MODE_INTERP_ONLY,
 } MonoAotMode;
 
 /* metadata/marshal.h */
 
-typedef void (*MonoFtnPtrEHCallback) (guint32 gchandle);
+// The 'gchandle' parameter is defined as a 'guint32' in mono/mono's 2020-02 branch, and as a 'MonoGCHandle' (aka void*) in mono/mono's main branch.
+// Here we go with the latter (void*), because that's the future, and it should also be compatible with the 2020-02 branch.
+typedef void (*MonoFtnPtrEHCallback) (GCHandle gchandle);
+
+/* mini/mono-private-unstable.h */
+typedef struct {
+	uint32_t kind; // 0 = Path of runtimeconfig.blob, 1 = pointer to image data, >= 2 undefined
+	union {
+		struct {
+			const char *path;
+		} name;
+		struct {
+			const char *data;
+			uint32_t data_len;
+		} data;
+	} runtimeconfig;
+} MonovmRuntimeConfigArguments;
+
+typedef void (*MonovmRuntimeConfigArgumentsCleanup)          (MonovmRuntimeConfigArguments *args, void *user_data);
 
 /* not in any header */
 
@@ -283,17 +362,21 @@ void mono_gc_init_finalizer_thread ();
 
 <# foreach (var export in exports) { #>
 
-MONO_API <#= export.ReturnType #>
+<#= export.DotNetIf #>MONO_API <#= export.ReturnType #>
 <#= export.EntryPoint #> (<#= export.ArgumentSignature #>);
-<# } #>
+<#= export.DotNetEndIf #><# } #>
 
 <# foreach (var export in exports) {
 	if (!export.Optional)
 		continue; #>
-bool
+<#= export.DotNetIf #>bool
 <#= export.EntryPoint #>_exists ();
+<#= export.DotNetEndIf #>
 
 <# } #>
+
+
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

@@ -25,23 +25,37 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
 	public partial class DispatchData : DispatchObject {
 #if !COREBUILD
-		public DispatchData (IntPtr handle, bool owns) : base (handle, owns)
+		[Preserve (Conditional = true)]
+#if NET
+		internal DispatchData (NativeHandle handle, bool owns) : base (handle, owns)
+#else
+		public DispatchData (NativeHandle handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 
-		public DispatchData (IntPtr handle) : base (handle, false)
+#if !NET
+		public DispatchData (NativeHandle handle) : base (handle, false)
 		{
 		}
+#endif
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_data_create (IntPtr buffer, nuint size, IntPtr dispatchQueue, IntPtr destructor);
@@ -52,8 +66,8 @@ namespace CoreFoundation {
 		//
 		public static DispatchData FromByteBuffer (byte [] buffer)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException (nameof (buffer));
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			var b = Marshal.AllocHGlobal (buffer.Length);
 			Marshal.Copy (buffer, 0, b, buffer.Length);
 			var dd = dispatch_data_create (b, (nuint) buffer.Length, IntPtr.Zero, destructor: free);
@@ -62,8 +76,8 @@ namespace CoreFoundation {
 
 		public static DispatchData FromByteBuffer (byte [] buffer, int start, int length)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException (nameof (buffer));
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			if (start < 0 || start >= buffer.Length)
 				throw new ArgumentException (nameof (start));
 			if (length < 0)
@@ -82,10 +96,24 @@ namespace CoreFoundation {
 		//
 		public static DispatchData FromBuffer (IntPtr buffer, nuint size)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException (nameof (buffer));
+			if (buffer == IntPtr.Zero)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			var dd = dispatch_data_create (buffer, (nuint) size, IntPtr.Zero, destructor: IntPtr.Zero);
 			return new DispatchData (dd, owns: true);
+		}
+
+		// create a dd using the data of the span 
+		public static DispatchData FromReadOnlySpan (ReadOnlySpan<byte> content)
+		{
+			unsafe {
+				fixed (byte* ptr = content) {
+					// As per the documentation for dispatch_data_create, seems the data the pointer points to is copied 
+					// internally when specifying DISPATCH_DATA_DESTRUCTOR_DEFAULT as the destructor,
+					// and DISPATCH_DATA_DESTRUCTOR_DEFAULT=NULL, which is what you're passing, which means the code is OK. 
+					var dd = dispatch_data_create ((IntPtr) ptr, (nuint) content.Length, IntPtr.Zero, destructor: IntPtr.Zero);
+					return new DispatchData (dd, owns: true);
+				}
+			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
@@ -107,10 +135,10 @@ namespace CoreFoundation {
 
 		public static DispatchData Concat (DispatchData data1, DispatchData data2)
 		{
-			if (data1 == null)
-				throw new ArgumentNullException (nameof (data1));
-			if (data2 == null)
-				throw new ArgumentNullException (nameof (data2));
+			if (data1 is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data1));
+			if (data2 is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data2));
 
 			return new DispatchData (dispatch_data_create_concat (data1.Handle, data2.Handle), owns: true);
 		}
@@ -122,6 +150,19 @@ namespace CoreFoundation {
 		{
 			return new DispatchData (dispatch_data_create_subrange (Handle, offset, size), owns: true);
 		}
+
+		// copies the dispatch data to a managed array
+		public byte [] ToArray ()
+		{
+			IntPtr bufferAddress = IntPtr.Zero;
+			nuint bufferSize = 0;
+			using DispatchData dataCopy = CreateMap (out bufferAddress, out bufferSize);
+
+			byte [] managedArray = new byte [(int) bufferSize];
+			Marshal.Copy (bufferAddress, managedArray, 0, (int) bufferSize);
+			return managedArray;
+		}
+
 #endif
 	}
 }

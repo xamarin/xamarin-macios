@@ -1,0 +1,6 @@
+## The following were deprecated in ios(10.0, 10.0)
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+
+## unsorted
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound

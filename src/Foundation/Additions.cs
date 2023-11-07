@@ -1,7 +1,6 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 
 #if !MONOMAC && !WATCH
-#if XAMCORE_2_0
 
 using System;
 
@@ -15,15 +14,14 @@ namespace Foundation {
 		// https://trello.com/c/5SoMWz30/336-nsindexpath-expose-longrow-longsection-longitem-instead-of-changing-the-int-nature-of-them
 		// their usage makes it very unlikely to ever exceed 2^31
 
-		public int Row { 
+		public int Row {
 			get { return (int) LongRow; }
 		}
 
-		public int Section { 
+		public int Section {
 			get { return (int) LongSection; }
 		}
 	}
 }
 
-#endif // XAMCORE_2_0
 #endif // !MONOMAC && !WATCH

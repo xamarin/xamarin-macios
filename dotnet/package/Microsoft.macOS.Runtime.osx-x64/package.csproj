@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <_PlatformName>macOS</_PlatformName>
+    <_RuntimeIdentifier>osx-x64</_RuntimeIdentifier>
+  </PropertyGroup>
+
+  <Import Project="../microsoft.runtime.csproj" />
+</Project>

@@ -1,0 +1,174 @@
+XAMARIN SOFTWARE LICENSE TERMS
+XAMARIN STUDIO
+
+These license terms are an agreement between Xamarin Inc. and you. They apply to the software named above. They also apply to any Xamarin services or updates for the software, except to the extent those have different terms.
+
+BY USING THE SOFTWARE, YOU ACCEPT THESE TERMS. IF YOU DO NOT ACCEPT THEM, DO NOT USE THE SOFTWARE.
+
+SECTION I: XAMARIN STUDIO COMMUNITY. If you do not have an active Visual Studio Enterprise or Visual Studio Professional subscription, then your license is for Xamarin Studio Community, and this Section I and Section III below apply to your use of Xamarin Studio. If you comply with these license terms, you have the rights in those sections.
+
+1.	INSTALLATION AND USE RIGHTS.
+
+a.	Individual license. If you are an individual working on your own applications to sell or for any other purpose, you may use the software to develop and test those applications.
+
+b.	Organization licenses. If you are an organization, your users may use the software as follows:
+
+Any number of your users may use the software to develop and test your applications released under Open Source Initiative (OSI) approved open source software licenses.
+
+Any number of your users may use the software to develop and test Xamarin Studio or Visual Studio extensions and Xamarin Component Store or Visual Studio Marketplace components. 
+
+Any number of your users may use the software to develop and test your applications as part of online or in person classroom training and education, or for performing academic research.
+
+If none of the above apply, and you are also not an enterprise (defined below), then up to 5 of your individual users can use the software concurrently to develop and test your applications.
+
+If you are an enterprise, your employees and contractors may not use the software to develop or test your applications, except for open source and education purposes as permitted above. An “enterprise” is any organization and its affiliates who collectively have more than (i) 250 PCs or users and (ii) one million dollars (or the equivalent in other currencies) in annual revenues, and “affiliates” means those entities that control (via majority ownership), are controlled by, or are under common control with an organization.
+
+c.	Demo Use. The uses permitted above includes use of the software in demonstrating your applications.
+
+2.	SUPPORT SERVICES. Because Xamarin Studio Community is licensed “as is,” we may not provide support services for it.
+
+3.	DISCLAIMER OF WARRANTY. XAMARIN STUDIO COMMUNITY IS LICENSED “AS-IS.”  YOU BEAR THE RISK OF USING IT. XAMARIN GIVES NO EXPRESS WARRANTIES, GUARANTEES OR CONDITIONS. TO THE EXTENT PERMITTED UNDER YOUR LOCAL LAWS, XAMARIN EXCLUDES THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+
+SECTION II: XAMARIN STUDIO ENTERPRISE AND XAMARIN STUDIO PROFESSIONAL: When you acquire an active and valid subscription for either Microsoft Visual Studio Enterprise or Microsoft Visual Studio Professional (“Visual Studio”), and either enter a coupon code or sign in to the software, then your license is for Xamarin Studio Enterprise or Xamarin Studio Professional, respectively, and the license terms in this Section II and Section III below apply. If you comply with these license terms, you have the rights in those sections. You may not share your coupon code or access credentials. 
+
+
+1.	INSTALLATION AND USE RIGHTS.
+
+a.	General. The software is licensed on a per user basis. One user may use copies of the software to develop and test your applications. This includes using copies of the software on your own internal servers that remain fully dedicated to your own use. You may not separate the components of the software and run those in a production environment, or on different devices (except as otherwise stated in this agreement), or for any purpose other than developing and testing your applications. 
+
+b.	Demo Use. The uses permitted above includes use of the software in demonstrating your applications.
+
+2.	DOCUMENTATION. Any person that has valid access to your computer or internal network may copy and use the documentation for your internal, reference purposes.
+
+3.	NOT FOR RESALE SOFTWARE. You may not sell software marked as “NFR” or “Not for Resale.”
+
+4.	PROOF OF LICENSE. Your proof of license is the Xamarin Studio coupon code you received through your Visual Studio subscription and your receipt and/or being able to access the software service through your Xamarin or Microsoft account. 
+
+5.	TRANSFER TO A THIRD PARTY.  If you are a valid licensee of Visual Studio and the software, you may transfer this software together with Visual Studio and the applicable license agreements directly to another party. Before the transfer, that party must agree that this agreement applies to the transfer and use of the software. The transfer must include the software and coupon code. You must uninstall all copies of the software after transferring it from your device(s). You may not retain any copies of the coupon code to be transferred, and may only retain copies of the software if otherwise licensed to do so. If you have acquired a non-perpetual license to use the software or if the software is marked Not for Resale you may not transfer the software or this agreement to another party.
+
+6.	SUPPORT SERVICES. Xamarin provides support services for the software as described at https://www.xamarin.com/support. 
+
+7.	LIMITED WARRANTY. If you follow the instructions, the software will perform substantially as described in the Xamarin materials that you receive in or with the software.
+References to “limited warranty” are references to the express warranty provided by Xamarin. This warranty is given in addition to other rights and remedies you may have under law, including your rights and remedies in accordance with the statutory guarantees under local Consumer Law.
+
+8.	TERM OF WARRANTY; WARRANTY RECIPIENT; LENGTH OF ANY IMPLIED WARRANTIES. The limited warranty covers the software for one year after acquired by the first user. If you receive supplements, updates, or replacement software during that year, they will be covered for the remainder of the warranty or 30 days, whichever is longer. If the first user transfers the software, the remainder of the warranty will apply to the recipient.
+
+To the extent permitted by law, any implied warranties, guarantees, or conditions last only during the term of the limited warranty. Some states do not allow limitations on how long an implied warranty lasts, so these limitations may not apply to you. They also might not apply to you because some countries may not allow limitations on how long an implied warranty, guarantee or condition lasts.
+
+9.	EXCLUSIONS FROM WARRANTY. This warranty does not cover problems caused by your acts (or failures to act), the acts of others, or events beyond Xamarin’s reasonable control.
+
+10.	REMEDY FOR BREACH OF WARRANTY. Xamarin will repair or replace the software at no charge. If Xamarin cannot repair or replace it, Xamarin will refund the amount shown on your receipt for the software. It will also repair or replace supplements, updates, and replacement software at no charge. If Xamarin cannot repair or replace them, it will refund the amount you paid for them, if any. You must uninstall the software and return any media and other associated materials to Xamarin with proof of purchase to obtain a refund. These are your only remedies for breach of the limited warranty.
+
+11.	CONSUMER RIGHTS NOT AFFECTED. You may have additional consumer rights under your local laws, which this agreement cannot change.
+
+12.	WARRANTY PROCEDURES. You need proof of purchase for warranty service.
+
+For warranty service or information about how to obtain a refund for software, contact Microsoft or Xamarin at:
+
+(800) MICROSOFT;
+Microsoft Customer Service and Support, One Microsoft Way, Redmond, WA 98052-6399; 
+visit aka.ms/nareturns or email xamacctg@microsoft.com.
+
+13.	NO OTHER WARRANTIES. The limited warranty is the only direct warranty from Xamarin. Xamarin gives no other express warranties, guarantees, or conditions. Where allowed by your local laws, Xamarin excludes implied warranties of merchantability, fitness for a particular purpose, and non-infringement. If your local laws give you any implied warranties, guarantees or conditions, despite this exclusion, your remedies are described in the Remedy for Breach of Warranty clause above, to the extent permitted by your local laws.
+
+FOR AUSTRALIA ONLY. References to “Limited Warranty” are references to the warranty provided by Xamarin. This warranty is given in addition to other rights and remedies you may have under law, including your rights and remedies in accordance with the statutory guarantees under the Australian Consumer Law. Our goods come with guarantees that cannot be excluded under the Australian Consumer Law. You are entitled to a replacement or refund for a major failure and compensation for any other reasonably foreseeable loss or damage. You are also entitled to have the goods repaired or replaced if the goods fail to be of acceptable quality and the failure does not amount to a major failure. Goods presented for repair may be replaced by refurbished goods of the same type rather than being replaced. Refurbished parts may be used to repair the goods.
+
+14.	LIMITATION ON AND EXCLUSION OF DAMAGES FOR BREACH OF WARRANTY. The Limitation on and Exclusion of Damages clause above applies to breaches of this limited warranty.
+
+This warranty gives you specific legal rights, and you may also have other rights that vary from state to state. You may also have other rights that vary from country to country.
+
+
+SECTION III. GENERAL TERMS: The license terms in this Section III apply to the software regardless of whether you have the Community, Professional, or Enterprise level of the software.
+
+1.	THIRD PARTY COMPONENTS. The software may include third party components with separate legal notices or governed by other agreements, as described in the ThirdPartyNotices file(s) accompanying the software. Even if such components are governed by other agreements, the disclaimers and the limitations on and exclusions of damages below also apply. 
+
+The software may also include components licensed under open source licenses with source code availability obligations. Copies of those licenses, if applicable, are included in the ThirdPartyNotices file(s). You may obtain this source code from us, if and as required under the relevant open source licenses, by sending a money order or check for $5.00 to: Source Code Compliance Team, Microsoft Corporation, 1 Microsoft Way, Redmond, WA 98052. Please write “open source compliance for Xamarin Studio” in the memo line of your payment. 
+
+2.	PACKAGE MANAGERS. The software includes package managers, like NuGet, that give you the option to download other Xamarin and third party software packages to use with your application. Those packages are under their own licenses, and not this agreement. Xamarin does not distribute, license or provide any warranties for any of the third party packages.
+
+3.	DISTRIBUTABLE CODE. The software contains code that you are permitted to distribute without modification (except as expressly permitted below) in applications you develop as described in this Section.  (For this Section the term “distribution” also means deployment of your applications for third parties to access over the Internet.)
+
+a.	Distribution Rights. The code and other files listed below are “Distributable Code”.
+
+Distribution in Your Applications. You may copy and distribute the object code form of the Distributable Code only and solely as part of your applications that you develop using the software, and only for use on the platforms identified on the REDIST list located at http://xmn.io/redists. For clarity, the term “distribute” includes deployment of your applications for third parties to access over the Internet.
+
+Sample Code and Templates. You may copy, modify and distribute the source and object code form of any code marked as “sample” or “template”.
+
+Third Party Distribution. You may permit distributors of your applications to copy and distribute the Distributable Code as part of those applications. 
+
+b.	Distribution Requirements. For any Distributable Code you distribute, you must:
+
+add significant primary functionality to it in your applications; 
+
+require distributors and external end users to agree to terms that protect the Distributable Code at least as much as this agreement; and
+
+indemnify, defend, and hold harmless Xamarin from any claims, including attorneys’ fees, related to the distribution or use of your applications, except to the extent that any claim is based solely on the Distributable Code.
+
+c.	Distribution Restrictions. You may not:
+
+use Xamarin’s trademarks in your applications’ names or in a way that suggests your applications come from or are endorsed by Xamarin; or 
+
+modify or distribute the source code of any Distributable Code so that any part of it becomes subject to an Excluded License. An “Excluded License” is one that requires, as a condition of use, modification or distribution, that (i) the code be disclosed or distributed in source code form; or (ii) others have the right to modify it.
+
+4.	DATA. The software may prompt you from time to time to sign in. If you do not sign in when prompted, you may not be able to use the software and access your data in the software. The software may collect information about you and your use of the software, and send that to Xamarin and its affiliates. They may use this information to provide services and improve our products and services. You may opt-out of many of these scenarios, but not all, as described in the product documentation. There are also some features in the software that may enable you and Xamarin to collect data from users of your applications. If you use these features you must comply with applicable law, including providing appropriate notices to users of your applications and you should provide a copy of Microsoft’s privacy statement to your users. The Microsoft privacy statement is located, here https://go.microsoft.com/fwlink/?LinkID=824704. You can learn more about data collection and use in the help documentation and our privacy statement. Your use of the software operates as your consent to these practices.
+
+5.	SCOPE OF LICENSE. The software is licensed, not sold. This agreement only gives you some rights to use the software. Xamarin reserves all other rights. Unless applicable law gives you more rights despite this limitation, you may use the software only as expressly permitted in this agreement. In doing so, you must comply with any technical limitations in the software that only allow you to use it in certain ways. You may not:
+
+work around any technical limitations in the software;
+
+reverse engineer, decompile or disassemble the software, or otherwise attempt to derive the source code for the software except, and only to the extent required by third party licensing terms governing use of certain open source components that may be included with the software;
+
+remove, minimize, block or modify any notices of Xamarin or its suppliers in the software;
+
+use the software in any way that is against the law; or
+
+share, publish, rent or lease the software, or provide the software as a stand-alone hosted solution for others to use.
+
+6.	EXPORT RESTRICTIONS. You must comply with all domestic and international export laws and regulations that apply to the software, which include restrictions on destinations, end users, and end use. For further information on export restrictions, visit www.microsoft.com/exporting.
+
+7.	ENTIRE AGREEMENT. This agreement (including the warranty below), and the terms for supplements, updates, Internet-based services and support services that you use, are the entire agreement for the software and services.
+
+8.	APPLICABLE LAW. If you acquired the software in the United States, Washington law applies to interpretation of and claims for breach of this agreement, and the laws of the state where you live apply to all other claims. If you acquired the software in any other country, its laws apply.
+
+9.	CONSUMER RIGHTS; REGIONAL VARIATIONS. This agreement describes certain legal rights. You may have other rights, including consumer rights, under the laws of your state or country. Separate and apart from your relationship with Xamarin, you may also have rights with respect to the party from which you acquired the software. This agreement does not change those other rights if the laws of your state or country do not permit it to do so. For example, if you acquired the software in one of the below regions, or mandatory country law applies, then the following provisions apply to you:
+
+a.	Australia. References to “Limited Warranty” are references to the express warranty provided by Xamarin or the manufacturer or installer. This warranty is given in addition to other rights and remedies you may have under law, including your rights and remedies in accordance with the statutory guarantees under the Australian Consumer Law.
+
+In this section, “goods” refers to the software for which Xamarin or the manufacturer or installer provides the express warranty. Our goods come with guarantees that cannot be excluded under the Australian Consumer Law. You are entitled to a replacement or refund for a major failure and compensation for any other reasonably foreseeable loss or damage. You are also entitled to have the goods repaired or replaced if the goods fail to be of acceptable quality and the failure does not amount to a major failure
+
+b.	Canada. If you acquired this software in Canada, you may stop receiving updates by turning off the automatic update feature, disconnecting your device from the Internet (if and when you re-connect to the Internet, however, the software will resume checking for and installing updates), or uninstalling the software. The product documentation, if any, may also specify how to turn off updates for your specific device or software.
+
+c.	Germany and Austria.
+
+i.	Warranty. The properly licensed software will perform substantially as described in any Xamarin materials that accompany the software. However, Xamarin gives no contractual guarantee in relation to the licensed software.
+
+ii.	Limitation of Liability. In case of intentional conduct, gross negligence, claims based on the Product Liability Act, as well as, in case of death or personal or physical injury, Xamarin is liable according to the statutory law.
+
+Subject to the foregoing clause (ii), Xamarin will only be liable for slight negligence if Xamarin is in breach of such material contractual obligations, the fulfillment of which facilitate the due performance of this agreement, the breach of which would endanger the purpose of this agreement and the compliance with which a party may constantly trust in (so-called “cardinal obligations”). In other cases of slight negligence, Xamarin will not be liable for slight negligence.
+
+10.	LIMITATION ON AND EXCLUSION OF DAMAGES. YOU CAN RECOVER FROM XAMARIN AND ITS SUPPLIERS ONLY DIRECT DAMAGES UP TO $5.00. YOU CANNOT RECOVER ANY OTHER DAMAGES, INCLUDING CONSEQUENTIAL, LOST PROFITS, SPECIAL, INDIRECT OR INCIDENTAL DAMAGES.
+
+This limitation applies to (a) anything related to the software, services, content (including code) on third party Internet sites, or third party applications; and (b) claims for breach of contract, breach of warranty, guarantee or condition, strict liability, negligence, or other tort to the extent permitted by applicable law.
+
+It also applies even if Xamarin knew or should have known about the possibility of the damages. The above limitation or exclusion may not apply to you because your state or country may not allow the exclusion or limitation of incidental, consequential or other damages.
+
+Please note: As this software is distributed in Quebec, Canada, some of the clauses in this agreement are provided below in French.
+
+Remarque : Ce logiciel étant distribué au Québec, Canada, certaines des clauses dans ce contrat sont fournies ci-dessous en français.
+
+EXONÉRATION DE GARANTIE. Le logiciel visé par une licence est offert « tel quel ». Toute utilisation de ce logiciel est à votre seule risque et péril. Xamarin n’accorde aucune autre garantie expresse. Vous pouvez bénéficier de droits additionnels en vertu du droit local sur la protection des consommateurs, que ce contrat ne peut modifier. La ou elles sont permises par le droit locale, les garanties implicites de qualité marchande, d’adéquation à un usage particulier et d’absence de contrefaçon sont exclues.
+
+LIMITATION DES DOMMAGES-INTÉRÊTS ET EXCLUSION DE RESPONSABILITÉ POUR LES DOMMAGES. Vous pouvez obtenir de Xamarin et de ses fournisseurs une indemnisation en cas de dommages directs uniquement à hauteur de 5,00 $ US. Vous ne pouvez prétendre à aucune indemnisation pour les autres dommages, y compris les dommages spéciaux, indirects ou accessoires et pertes de bénéfices.
+
+Cette limitation concerne:
+
+tout ce qui est relié au logiciel, aux services ou au contenu (y compris le code) figurant sur des sites Internet tiers ou dans des programmes tiers; et
+
+les réclamations au titre de violation de contrat ou de garantie, ou au titre de responsabilité stricte, de négligence ou d’une autre faute dans la limite autorisée par la loi en vigueur.
+
+Elle s’applique également, même si Xamarin connaissait ou devrait connaître l’éventualité d’un tel dommage. Si votre pays n’autorise pas l’exclusion ou la limitation de responsabilité pour les dommages indirects, accessoires ou de quelque nature que ce soit, il se peut que la limitation ou l’exclusion ci-dessus ne s’appliquera pas à votre égard.
+
+EFFET JURIDIQUE. Le présent contrat décrit certains droits juridiques. Vous pourriez avoir d’autres droits prévus par les lois de votre pays. Le présent contrat ne modifie pas les droits que vous confèrent les lois de votre pays si celles-ci ne le permettent pas.
+
+EULA ID: Xamarin Studio 10 November 2016
+

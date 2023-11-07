@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <IsBindingProject>true</IsBindingProject>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;XCFRAMEWORK;FRAMEWORK_TEST</DefineConstants>
+    <RootNamespace>bindingstest</RootNamespace>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>bindings-framework-test</AssemblyName>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+    <BindingsFrameworkDirectory>$(RootTestsDirectory)\bindings-framework-test</BindingsFrameworkDirectory>
+
+    <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(BindingsFrameworkDirectory)/ApiDefinition.cs" />
+    <ObjcBindingCoreSource Include="$(BindingsFrameworkDirectory)/StructsAndEnums.cs" />
+
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+    <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework" />
+
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\XTest.xcframework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+
+  <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+</Project>

@@ -1,0 +1,261 @@
+## new @required on existing protocols are breaking changes
+!incorrect-protocol-member! CIImageProcessorInput::digest is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorOutput::digest is REQUIRED and should be abstract
+!incorrect-protocol-member! CIAttributedTextImageGenerator::padding is REQUIRED and should be abstract
+!incorrect-protocol-member! CIAttributedTextImageGenerator::setPadding: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCube::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCube::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubesMixedWithMask::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubesMixedWithMask::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubeWithColorSpace::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubeWithColorSpace::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CITextImageGenerator::padding is REQUIRED and should be abstract
+!incorrect-protocol-member! CITextImageGenerator::setPadding: is REQUIRED and should be abstract
+
+## requires varargs support
+!missing-selector! +CIFilter::filterWithName:keysAndValues: not bound
+!missing-selector! CISampler::initWithImage:keysAndValues: not bound
+!missing-selector! +CISampler::samplerWithImage:keysAndValues: not bound
+
+
+## bound in informal protocol CIImageProvider
+!missing-selector! NSObject::provideImageData:bytesPerRow:origin::size::userInfo: not bound
+
+## at some point in time (iOS11/macOS 10.11) this API was removed/deprecated and we added a compatibility
+## stub using 'autoAdjustmentFiltersWithOptions:'. Now it's back (in headers but can be ignored)
+!missing-selector! CIImage::autoAdjustmentFilters not bound
+
+## we already provide alternative API to create the filters
+!missing-selector! +CIFilter::accordionFoldTransitionFilter not bound
+!missing-selector! +CIFilter::additionCompositingFilter not bound
+!missing-selector! +CIFilter::affineClampFilter not bound
+!missing-selector! +CIFilter::affineTileFilter not bound
+!missing-selector! +CIFilter::attributedTextImageGeneratorFilter not bound
+!missing-selector! +CIFilter::aztecCodeGeneratorFilter not bound
+!missing-selector! +CIFilter::barcodeGeneratorFilter not bound
+!missing-selector! +CIFilter::barsSwipeTransitionFilter not bound
+!missing-selector! +CIFilter::bicubicScaleTransformFilter not bound
+!missing-selector! +CIFilter::blendWithAlphaMaskFilter not bound
+!missing-selector! +CIFilter::blendWithBlueMaskFilter not bound
+!missing-selector! +CIFilter::blendWithMaskFilter not bound
+!missing-selector! +CIFilter::blendWithRedMaskFilter not bound
+!missing-selector! +CIFilter::bloomFilter not bound
+!missing-selector! +CIFilter::bokehBlurFilter not bound
+!missing-selector! +CIFilter::boxBlurFilter not bound
+!missing-selector! +CIFilter::checkerboardGeneratorFilter not bound
+!missing-selector! +CIFilter::circularScreenFilter not bound
+!missing-selector! +CIFilter::CMYKHalftone not bound
+!missing-selector! +CIFilter::code128BarcodeGeneratorFilter not bound
+!missing-selector! +CIFilter::colorBlendModeFilter not bound
+!missing-selector! +CIFilter::colorBurnBlendModeFilter not bound
+!missing-selector! +CIFilter::colorClampFilter not bound
+!missing-selector! +CIFilter::colorControlsFilter not bound
+!missing-selector! +CIFilter::colorCrossPolynomialFilter not bound
+!missing-selector! +CIFilter::colorCubeFilter not bound
+!missing-selector! +CIFilter::colorCubesMixedWithMaskFilter not bound
+!missing-selector! +CIFilter::colorCubeWithColorSpaceFilter not bound
+!missing-selector! +CIFilter::colorCurvesFilter not bound
+!missing-selector! +CIFilter::colorDodgeBlendModeFilter not bound
+!missing-selector! +CIFilter::colorInvertFilter not bound
+!missing-selector! +CIFilter::colorMapFilter not bound
+!missing-selector! +CIFilter::colorMatrixFilter not bound
+!missing-selector! +CIFilter::colorMonochromeFilter not bound
+!missing-selector! +CIFilter::colorPolynomialFilter not bound
+!missing-selector! +CIFilter::colorPosterizeFilter not bound
+!missing-selector! +CIFilter::comicEffectFilter not bound
+!missing-selector! +CIFilter::convolution3X3Filter not bound
+!missing-selector! +CIFilter::convolution5X5Filter not bound
+!missing-selector! +CIFilter::convolution7X7Filter not bound
+!missing-selector! +CIFilter::convolution9HorizontalFilter not bound
+!missing-selector! +CIFilter::convolution9VerticalFilter not bound
+!missing-selector! +CIFilter::copyMachineTransitionFilter not bound
+!missing-selector! +CIFilter::coreMLModelFilter not bound
+!missing-selector! +CIFilter::crystallizeFilter not bound
+!missing-selector! +CIFilter::darkenBlendModeFilter not bound
+!missing-selector! +CIFilter::depthOfFieldFilter not bound
+!missing-selector! +CIFilter::depthToDisparityFilter not bound
+!missing-selector! +CIFilter::differenceBlendModeFilter not bound
+!missing-selector! +CIFilter::discBlurFilter not bound
+!missing-selector! +CIFilter::disintegrateWithMaskTransitionFilter not bound
+!missing-selector! +CIFilter::disparityToDepthFilter not bound
+!missing-selector! +CIFilter::dissolveTransitionFilter not bound
+!missing-selector! +CIFilter::ditherFilter not bound
+!missing-selector! +CIFilter::divideBlendModeFilter not bound
+!missing-selector! +CIFilter::documentEnhancerFilter not bound
+!missing-selector! +CIFilter::dotScreenFilter not bound
+!missing-selector! +CIFilter::edgePreserveUpsampleFilter not bound
+!missing-selector! +CIFilter::edgesFilter not bound
+!missing-selector! +CIFilter::edgeWorkFilter not bound
+!missing-selector! +CIFilter::eightfoldReflectedTileFilter not bound
+!missing-selector! +CIFilter::exclusionBlendModeFilter not bound
+!missing-selector! +CIFilter::exposureAdjustFilter not bound
+!missing-selector! +CIFilter::falseColorFilter not bound
+!missing-selector! +CIFilter::flashTransitionFilter not bound
+!missing-selector! +CIFilter::fourfoldReflectedTileFilter not bound
+!missing-selector! +CIFilter::fourfoldRotatedTileFilter not bound
+!missing-selector! +CIFilter::fourfoldTranslatedTileFilter not bound
+!missing-selector! +CIFilter::gaborGradientsFilter not bound
+!missing-selector! +CIFilter::gammaAdjustFilter not bound
+!missing-selector! +CIFilter::gaussianBlurFilter not bound
+!missing-selector! +CIFilter::gaussianGradientFilter not bound
+!missing-selector! +CIFilter::glideReflectedTileFilter not bound
+!missing-selector! +CIFilter::gloomFilter not bound
+!missing-selector! +CIFilter::hardLightBlendModeFilter not bound
+!missing-selector! +CIFilter::hatchedScreenFilter not bound
+!missing-selector! +CIFilter::heightFieldFromMaskFilter not bound
+!missing-selector! +CIFilter::hexagonalPixellateFilter not bound
+!missing-selector! +CIFilter::highlightShadowAdjustFilter not bound
+!missing-selector! +CIFilter::hueAdjustFilter not bound
+!missing-selector! +CIFilter::hueBlendModeFilter not bound
+!missing-selector! +CIFilter::hueSaturationValueGradientFilter not bound
+!missing-selector! +CIFilter::kaleidoscopeFilter not bound
+!missing-selector! +CIFilter::keystoneCorrectionCombinedFilter not bound
+!missing-selector! +CIFilter::keystoneCorrectionHorizontalFilter not bound
+!missing-selector! +CIFilter::keystoneCorrectionVerticalFilter not bound
+!missing-selector! +CIFilter::LabDeltaE not bound
+!missing-selector! +CIFilter::lanczosScaleTransformFilter not bound
+!missing-selector! +CIFilter::lenticularHaloGeneratorFilter not bound
+!missing-selector! +CIFilter::lightenBlendModeFilter not bound
+!missing-selector! +CIFilter::linearBurnBlendModeFilter not bound
+!missing-selector! +CIFilter::linearDodgeBlendModeFilter not bound
+!missing-selector! +CIFilter::linearGradientFilter not bound
+!missing-selector! +CIFilter::linearToSRGBToneCurveFilter not bound
+!missing-selector! +CIFilter::lineOverlayFilter not bound
+!missing-selector! +CIFilter::lineScreenFilter not bound
+!missing-selector! +CIFilter::luminosityBlendModeFilter not bound
+!missing-selector! +CIFilter::maskedVariableBlurFilter not bound
+!missing-selector! +CIFilter::maskToAlphaFilter not bound
+!missing-selector! +CIFilter::maximumComponentFilter not bound
+!missing-selector! +CIFilter::maximumCompositingFilter not bound
+!missing-selector! +CIFilter::medianFilter not bound
+!missing-selector! +CIFilter::meshGeneratorFilter not bound
+!missing-selector! +CIFilter::minimumComponentFilter not bound
+!missing-selector! +CIFilter::minimumCompositingFilter not bound
+!missing-selector! +CIFilter::mixFilter not bound
+!missing-selector! +CIFilter::modTransitionFilter not bound
+!missing-selector! +CIFilter::morphologyGradientFilter not bound
+!missing-selector! +CIFilter::morphologyMaximumFilter not bound
+!missing-selector! +CIFilter::morphologyMinimumFilter not bound
+!missing-selector! +CIFilter::morphologyRectangleMaximumFilter not bound
+!missing-selector! +CIFilter::morphologyRectangleMinimumFilter not bound
+!missing-selector! +CIFilter::motionBlurFilter not bound
+!missing-selector! +CIFilter::multiplyBlendModeFilter not bound
+!missing-selector! +CIFilter::multiplyCompositingFilter not bound
+!missing-selector! +CIFilter::noiseReductionFilter not bound
+!missing-selector! +CIFilter::opTileFilter not bound
+!missing-selector! +CIFilter::overlayBlendModeFilter not bound
+!missing-selector! +CIFilter::pageCurlTransitionFilter not bound
+!missing-selector! +CIFilter::pageCurlWithShadowTransitionFilter not bound
+!missing-selector! +CIFilter::paletteCentroidFilter not bound
+!missing-selector! +CIFilter::palettizeFilter not bound
+!missing-selector! +CIFilter::parallelogramTileFilter not bound
+!missing-selector! +CIFilter::PDF417BarcodeGenerator not bound
+!missing-selector! +CIFilter::perspectiveCorrectionFilter not bound
+!missing-selector! +CIFilter::perspectiveRotateFilter not bound
+!missing-selector! +CIFilter::perspectiveTileFilter not bound
+!missing-selector! +CIFilter::perspectiveTransformFilter not bound
+!missing-selector! +CIFilter::perspectiveTransformWithExtentFilter not bound
+!missing-selector! +CIFilter::photoEffectChromeFilter not bound
+!missing-selector! +CIFilter::photoEffectFadeFilter not bound
+!missing-selector! +CIFilter::photoEffectInstantFilter not bound
+!missing-selector! +CIFilter::photoEffectMonoFilter not bound
+!missing-selector! +CIFilter::photoEffectNoirFilter not bound
+!missing-selector! +CIFilter::photoEffectProcessFilter not bound
+!missing-selector! +CIFilter::photoEffectTonalFilter not bound
+!missing-selector! +CIFilter::photoEffectTransferFilter not bound
+!missing-selector! +CIFilter::pinLightBlendModeFilter not bound
+!missing-selector! +CIFilter::pixellateFilter not bound
+!missing-selector! +CIFilter::pointillizeFilter not bound
+!missing-selector! +CIFilter::QRCodeGenerator not bound
+!missing-selector! +CIFilter::radialGradientFilter not bound
+!missing-selector! +CIFilter::randomGeneratorFilter not bound
+!missing-selector! +CIFilter::rippleTransitionFilter not bound
+!missing-selector! +CIFilter::roundedRectangleGeneratorFilter not bound
+!missing-selector! +CIFilter::saliencyMapFilter not bound
+!missing-selector! +CIFilter::saturationBlendModeFilter not bound
+!missing-selector! +CIFilter::screenBlendModeFilter not bound
+!missing-selector! +CIFilter::sepiaToneFilter not bound
+!missing-selector! +CIFilter::shadedMaterialFilter not bound
+!missing-selector! +CIFilter::sharpenLuminanceFilter not bound
+!missing-selector! +CIFilter::sixfoldReflectedTileFilter not bound
+!missing-selector! +CIFilter::sixfoldRotatedTileFilter not bound
+!missing-selector! +CIFilter::smoothLinearGradientFilter not bound
+!missing-selector! +CIFilter::softLightBlendModeFilter not bound
+!missing-selector! +CIFilter::sourceAtopCompositingFilter not bound
+!missing-selector! +CIFilter::sourceInCompositingFilter not bound
+!missing-selector! +CIFilter::sourceOutCompositingFilter not bound
+!missing-selector! +CIFilter::sourceOverCompositingFilter not bound
+!missing-selector! +CIFilter::spotColorFilter not bound
+!missing-selector! +CIFilter::spotLightFilter not bound
+!missing-selector! +CIFilter::sRGBToneCurveToLinearFilter not bound
+!missing-selector! +CIFilter::starShineGeneratorFilter not bound
+!missing-selector! +CIFilter::straightenFilter not bound
+!missing-selector! +CIFilter::stripesGeneratorFilter not bound
+!missing-selector! +CIFilter::subtractBlendModeFilter not bound
+!missing-selector! +CIFilter::sunbeamsGeneratorFilter not bound
+!missing-selector! +CIFilter::swipeTransitionFilter not bound
+!missing-selector! +CIFilter::temperatureAndTintFilter not bound
+!missing-selector! +CIFilter::textImageGeneratorFilter not bound
+!missing-selector! +CIFilter::thermalFilter not bound
+!missing-selector! +CIFilter::toneCurveFilter not bound
+!missing-selector! +CIFilter::triangleKaleidoscopeFilter not bound
+!missing-selector! +CIFilter::triangleTileFilter not bound
+!missing-selector! +CIFilter::twelvefoldReflectedTileFilter not bound
+!missing-selector! +CIFilter::unsharpMaskFilter not bound
+!missing-selector! +CIFilter::vibranceFilter not bound
+!missing-selector! +CIFilter::vignetteEffectFilter not bound
+!missing-selector! +CIFilter::vignetteFilter not bound
+!missing-selector! +CIFilter::whitePointAdjustFilter not bound
+!missing-selector! +CIFilter::xRayFilter not bound
+!missing-selector! +CIFilter::zoomBlurFilter not bound
+## xcode 12
+!missing-selector! +CIFilter::areaAverageFilter not bound
+!missing-selector! +CIFilter::areaHistogramFilter not bound
+!missing-selector! +CIFilter::areaMaximumAlphaFilter not bound
+!missing-selector! +CIFilter::areaMaximumFilter not bound
+!missing-selector! +CIFilter::areaMinimumAlphaFilter not bound
+!missing-selector! +CIFilter::areaMinimumFilter not bound
+!missing-selector! +CIFilter::areaMinMaxFilter not bound
+!missing-selector! +CIFilter::areaMinMaxRedFilter not bound
+!missing-selector! +CIFilter::bumpDistortionFilter not bound
+!missing-selector! +CIFilter::bumpDistortionLinearFilter not bound
+!missing-selector! +CIFilter::circleSplashDistortionFilter not bound
+!missing-selector! +CIFilter::circularWrapFilter not bound
+!missing-selector! +CIFilter::colorAbsoluteDifferenceFilter not bound
+!missing-selector! +CIFilter::colorThresholdFilter not bound
+!missing-selector! +CIFilter::colorThresholdOtsuFilter not bound
+!missing-selector! +CIFilter::columnAverageFilter not bound
+!missing-selector! +CIFilter::displacementDistortionFilter not bound
+!missing-selector! +CIFilter::drosteFilter not bound
+!missing-selector! +CIFilter::glassDistortionFilter not bound
+!missing-selector! +CIFilter::glassLozengeFilter not bound
+!missing-selector! +CIFilter::histogramDisplayFilter not bound
+!missing-selector! +CIFilter::holeDistortionFilter not bound
+!missing-selector! +CIFilter::KMeansFilter not bound
+!missing-selector! +CIFilter::lightTunnelFilter not bound
+!missing-selector! +CIFilter::ninePartStretchedFilter not bound
+!missing-selector! +CIFilter::ninePartTiledFilter not bound
+!missing-selector! +CIFilter::pinchDistortionFilter not bound
+!missing-selector! +CIFilter::rowAverageFilter not bound
+!missing-selector! +CIFilter::stretchCropFilter not bound
+!missing-selector! +CIFilter::torusLensDistortionFilter not bound
+!missing-selector! +CIFilter::twirlDistortionFilter not bound
+!missing-selector! +CIFilter::vortexDistortionFilter not bound
+## xcode 13
+!missing-selector! +CIFilter::convolutionRGB3X3Filter not bound
+!missing-selector! +CIFilter::convolutionRGB5X5Filter not bound
+!missing-selector! +CIFilter::convolutionRGB7X7Filter not bound
+!missing-selector! +CIFilter::convolutionRGB9HorizontalFilter not bound
+!missing-selector! +CIFilter::convolutionRGB9VerticalFilter not bound
+!missing-selector! +CIFilter::linearLightBlendModeFilter not bound
+!missing-selector! +CIFilter::personSegmentationFilter not bound
+!missing-selector! +CIFilter::vividLightBlendModeFilter not bound
+## xcode 14
+!missing-selector! +CIFilter::areaLogarithmicHistogramFilter not bound
+!missing-selector! +CIFilter::convertLabToRGBFilter not bound
+!missing-selector! +CIFilter::convertRGBtoLabFilter not bound
+# xcode 15
+!incorrect-protocol-member! CIPhotoEffect::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIPhotoEffect::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::roiTileCount is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::roiTileIndex is REQUIRED and should be abstract

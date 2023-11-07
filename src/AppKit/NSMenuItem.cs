@@ -26,26 +26,31 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSMenuItem {
-		NSObject target;
-		Selector action;
+		NSObject? target;
+		Selector? action;
 
 		public NSMenuItem (string title, EventHandler handler) : this (title, "", handler)
 		{
 		}
-		
+
 		public NSMenuItem (string title, string charCode, EventHandler handler) : this (title, null, charCode)
 		{
 			Activated += handler;
 		}
 
-		public NSMenuItem (string title, string charCode, EventHandler handler, Func <NSMenuItem, bool> validator) : this (title, null, charCode)
+		public NSMenuItem (string title, string charCode, EventHandler handler, Func<NSMenuItem, bool> validator) : this (title, null, charCode)
 		{
 			Activated += handler;
 			ValidateMenuItem = validator;
@@ -58,7 +63,7 @@ namespace AppKit {
 		public NSMenuItem (string title) : this (title, null, "")
 		{
 		}
-		
+
 		public event EventHandler Activated {
 			add {
 				target = ActionDispatcher.SetupAction (Target, value);
@@ -77,17 +82,18 @@ namespace AppKit {
 		}
 
 		[Advice ("The 'Activated' event must be set before setting 'ValidateMenuItem'.")]
-		public Func <NSMenuItem, bool> ValidateMenuItem {
+		public Func<NSMenuItem, bool>? ValidateMenuItem {
 			get {
 				return (target as ActionDispatcher)?.ValidateMenuItemFunc;
 			}
 			set {
-				if (!(target is ActionDispatcher))
+				if (!(target is ActionDispatcher dispatcher))
 					throw new InvalidOperationException ("Target is not an 'ActionDispatcher'. 'ValidateMenuItem' may only be set after setting the 'Activated' event.");
 
-				(target as ActionDispatcher).ValidateMenuItemFunc = value;
+				dispatcher.ValidateMenuItemFunc = value;
 			}
 		}
 
 	}
 }
+#endif // !__MACCATALYST__

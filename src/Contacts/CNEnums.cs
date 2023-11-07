@@ -1,4 +1,4 @@
-﻿//
+//
 // Contacts bindings
 //
 // Authors:
@@ -11,12 +11,12 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
+#nullable enable
 
 namespace Contacts {
 
 	// NSInteger -> CNContact.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactType : long {
 		Person,
@@ -24,7 +24,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContact.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactSortOrder : long {
 		None,
@@ -34,7 +34,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactFormatterStyle : long {
 		FullName,
@@ -42,7 +42,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactFormatter.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContactDisplayNameOrder : long {
 		UserDefault,
@@ -51,14 +51,14 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContactStore.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNEntityType : long {
 		Contacts
 	}
 
 	// NSInteger -> CNContactStore.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNAuthorizationStatus : long {
 		NotDetermined = 0,
@@ -68,7 +68,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNContainer.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNContainerType : long {
 		Unassigned = 0,
@@ -78,7 +78,7 @@ namespace Contacts {
 	}
 
 	// NSInteger -> CNError.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("CNErrorDomain")]
 	public enum CNErrorCode : long {
@@ -88,6 +88,7 @@ namespace Contacts {
 		NoAccessibleWritableContainers = 101,
 		UnauthorizedKeys = 102,
 		FeatureDisabledByUser = 103,
+		FeatureNotAvailable = 104,
 		RecordDoesNotExist = 200,
 		InsertedRecordAlreadyExists = 201,
 		ContainmentCycle = 202,
@@ -103,18 +104,54 @@ namespace Contacts {
 		PolicyViolation = 500,
 		ClientIdentifierInvalid = 600,
 		ClientIdentifierDoesNotExist = 601,
+		ClientIdentifierCollision = 602,
+		ChangeHistoryExpired = 603,
+		ChangeHistoryInvalidAnchor = 604,
+		ChangeHistoryInvalidFetchRequest = 605,
 		VCardMalformed = 700,
 		VCardSummarizationError = 701,
 	}
 
 	// NSInteger -> CNPostalAddressFormatter.h
-	[iOS (9,0), Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CNPostalAddressFormatterStyle : long {
 		MailingAddress,
 	}
+
+	[MacCatalyst (13, 1)]
+	[Flags]
+	public enum CNContactOptions : long {
+		None = 0,
+		Nickname = 1 << 0,
+		PhoneticGivenName = 1 << 1,
+		PhoneticMiddleName = 1 << 2,
+		PhoneticFamilyName = 1 << 3,
+		OrganizationName = 1 << 4,
+		DepartmentName = 1 << 5,
+		JobTitle = 1 << 6,
+		Birthday = 1 << 7,
+		NonGregorianBirthday = 1 << 8,
+		Note = 1 << 9,
+#if !MONOMAC
+		[NoMac]
+		[MacCatalyst (13, 1)]
+		ImageData = 1 << 10,
+#endif
+		ThumbnailImageData = 1 << 11,
+#if !MONOMAC
+		[NoMac]
+		[MacCatalyst (13, 1)]
+		ImageDataAvailable = 1 << 12,
+#endif
+		Type = 1 << 13,
+		PhoneNumbers = 1 << 14,
+		EmailAddresses = 1 << 15,
+		PostalAddresses = 1 << 16,
+		Dates = 1 << 17,
+		UrlAddresses = 1 << 18,
+		Relations = 1 << 19,
+		SocialProfiles = 1 << 20,
+		InstantMessageAddresses = 1 << 21,
+	}
 }
-
-#endif // XAMCORE_2_0
-
-

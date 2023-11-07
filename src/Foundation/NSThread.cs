@@ -37,16 +37,16 @@ namespace Foundation {
 		}
 
 		[DllImport ("__Internal")]
-		static extern IntPtr xamarin_init_nsthread (IntPtr handle, bool is_direct_binding, IntPtr target, IntPtr selector, IntPtr argument);
+		static extern IntPtr xamarin_init_nsthread (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool is_direct_binding, IntPtr target, IntPtr selector, IntPtr argument);
 
 		IntPtr InitNSThread (NSObject target, Selector selector, NSObject argument)
 		{
-			if (target == null)
-				throw new ArgumentNullException ("target");	
-			if (selector == null)
+			if (target is null)
+				throw new ArgumentNullException ("target");
+			if (selector is null)
 				throw new ArgumentNullException ("selector");
 
-			return xamarin_init_nsthread (IsDirectBinding ? this.Handle : this.SuperHandle, IsDirectBinding, target.Handle, selector.Handle, argument == null ? IntPtr.Zero : argument.Handle);
+			return xamarin_init_nsthread (IsDirectBinding ? this.Handle : this.SuperHandle, IsDirectBinding, target.Handle, selector.Handle, argument is null ? IntPtr.Zero : argument.Handle);
 		}
 
 		[Export ("initWithTarget:selector:object:")]

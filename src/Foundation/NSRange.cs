@@ -22,27 +22,45 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 
 namespace Foundation {
-	public struct NSRange {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public struct NSRange : IEquatable<NSRange> {
 		public nint Location;
 		public nint Length;
 
-#if XAMCORE_2_0
 		public static readonly nint NotFound = nint.MaxValue;
-#else
-		public const int NotFound = Int32.MaxValue;
-#endif
-		
+
 		public NSRange (nint start, nint len)
 		{
 			Location = start;
 			Length = len;
 		}
 
+		public override int GetHashCode ()
+		{
+			return HashCode.Combine (Location, Length);
+		}
+
+		public override bool Equals (object obj)
+		{
+			return obj is NSRange other && Equals (other);
+		}
+
+		public bool Equals (NSRange other)
+		{
+			return Location == other.Location && Length == other.Length;
+		}
+
 		public override string ToString ()
 		{
-			return String.Format ("[Location={0},Length={1}]", Location, Length);
+			return string.Format ("[Location={0},Length={1}]", Location, Length);
 		}
 	}
 }

@@ -12,27 +12,11 @@
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
@@ -75,7 +59,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (tbi.TitlePositionAdjustment.Vertical, Is.EqualTo ((nfloat) 0f), "TitlePositionAdjustment.Vertical");
 			}
 		}
-		
+
 		[Test]
 		public void Ctor_3 ()
 		{
@@ -130,8 +114,8 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Ctor_3b_Null ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-				
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+
 			using (UIImage img = new UIImage ()) {
 				using (UITabBarItem tbi1 = new UITabBarItem (null, null, null)) {
 					Assert.Null (tbi1.Title, "Title-1a");
@@ -151,7 +135,7 @@ namespace MonoTouchFixtures.UIKit {
 
 					var hasSelectedImage = true;
 #if __IOS__
-					if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7,1))
+					if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 1))
 						hasSelectedImage = false;
 #endif
 					if (hasSelectedImage)
@@ -165,7 +149,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void SelectedImage_7a ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UIImage i1 = new UIImage ())
 			using (UITabBarItem tbi = new UITabBarItem ("title", i1, null)) {
@@ -184,7 +168,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void SelectedImage_7b ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (UIImage i1 = new UIImage ())
 			using (UIImage i2 = new UIImage ())

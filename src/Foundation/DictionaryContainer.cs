@@ -27,8 +27,9 @@
 //
 
 using System;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 using CoreFoundation;
@@ -40,53 +41,56 @@ using CoreMedia;
 #endif // !WATCH
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace Foundation {
 
-	public abstract class DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public abstract class DictionaryContainer {
 #if !COREBUILD
 		protected DictionaryContainer ()
 		{
 			Dictionary = new NSMutableDictionary ();
 		}
 
-		protected DictionaryContainer (NSDictionary dictionary)
+		protected DictionaryContainer (NSDictionary? dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
-			Dictionary = dictionary;
+			Dictionary = dictionary ?? new NSMutableDictionary ();
 		}
-		
+
 		public NSDictionary Dictionary { get; private set; }
 
-		protected T[] GetArray<T> (NSString key) where T : NSObject
+		protected T []? GetArray<T> (NSString key) where T : NSObject
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-			if (value == IntPtr.Zero)
-				return null;
-
 			return NSArray.ArrayFromHandle<T> (value);
 		}
 
-		protected T[] GetArray<T> (NSString key, Func<IntPtr, T> creator)
+		protected T []? GetArray<T> (NSString key, Func<NativeHandle, T> creator)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-			if (value == IntPtr.Zero)
-				return null;
-
 			return NSArray.ArrayFromHandleFunc<T> (value, creator);
 		}
 
 		protected int? GetInt32Value (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
@@ -97,8 +101,8 @@ namespace Foundation {
 
 		protected uint? GetUInt32Value (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
@@ -109,40 +113,32 @@ namespace Foundation {
 
 		protected nint? GetNIntValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
 
-#if XAMCORE_2_0
 			return ((NSNumber) value).NIntValue;
-#else
-			return ((NSNumber) value).IntValue;
-#endif
 		}
 
 		protected nuint? GetNUIntValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
 
-#if XAMCORE_2_0
 			return ((NSNumber) value).NUIntValue;
-#else
-			return ((NSNumber) value).UnsignedIntegerValue;
-#endif
 		}
 
 		protected long? GetLongValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
@@ -153,8 +149,8 @@ namespace Foundation {
 
 		protected uint? GetUIntValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
@@ -165,8 +161,8 @@ namespace Foundation {
 
 		protected float? GetFloatValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
@@ -177,8 +173,8 @@ namespace Foundation {
 
 		protected double? GetDoubleValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
@@ -189,8 +185,8 @@ namespace Foundation {
 
 		protected bool? GetBoolValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
 			if (value == IntPtr.Zero)
@@ -199,85 +195,104 @@ namespace Foundation {
 			return CFBoolean.GetValue (value);
 		}
 
-		protected T GetNativeValue<T> (NSString key) where T : class, INativeObject
+		protected T? GetNativeValue<T> (NSString key) where T : class, INativeObject
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			return Runtime.GetINativeObject<T> (Dictionary.LowlevelObjectForKey (key.Handle), false);
 		}
 
-		protected NSDictionary GetNSDictionary (NSString key)
+		protected string []? GetStringArrayValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+
+			var array = Dictionary.LowlevelObjectForKey (key.Handle);
+			return CFArray.StringArrayFromHandle (array)!;
+		}
+
+		protected NSDictionary? GetNSDictionary (NSString key)
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			Dictionary.TryGetValue (key, out value);
 			return value as NSDictionary;
 		}
-		
-#if XAMCORE_2_0
-		protected NSDictionary <TKey, TValue> GetNSDictionary <TKey, TValue> (NSString key)
+
+		protected NSDictionary<TKey, TValue>? GetNSDictionary<TKey, TValue> (NSString key)
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			Dictionary.TryGetValue (key, out value);
-			return value as NSDictionary <TKey, TValue>;
+			return value as NSDictionary<TKey, TValue>;
 		}
-#endif
 
-		protected T GetStrongDictionary<T> (NSString key) where T : DictionaryContainer
+#if NET
+		protected T? GetStrongDictionary<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (NSString key)
+#else
+		protected T? GetStrongDictionary<T> (NSString key)
+#endif
+			where T : DictionaryContainer
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			return GetStrongDictionary (key, dict =>
+				(T?) Activator.CreateInstance (typeof (T), new object [] { dict }));
+		}
+
+		protected T? GetStrongDictionary<T> (NSString? key, Func<NSDictionary, T?> createStrongDictionary)
+			where T : DictionaryContainer
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			var dict = GetNSDictionary (key);
-			if (dict == null)
+			if (dict is null)
 				return null;
-			T value = (T)Activator.CreateInstance (typeof(T),
-				new object[] { dict }
-			);
 
-			return value;
+			return createStrongDictionary (dict);
 		}
 
-		protected NSString GetNSStringValue (NSString key)
+		protected NSString? GetNSStringValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			Dictionary.TryGetValue (key, out value);
 			return value as NSString;
 		}
 
-		protected string GetStringValue (NSString key)
+		protected string? GetStringValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			NSObject value;
 			if (!Dictionary.TryGetValue (key, out value))
 				return null;
-			
-			return CFString.FetchString (value.Handle);
+
+			return CFString.FromHandle (value.Handle);
 		}
 
-		protected string GetStringValue (string key)
+		protected string? GetStringValue (string key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
-			using (var str = new CFString (key)) {
-				return CFString.FetchString (CFDictionary.GetValue (Dictionary.Handle, str.Handle));
+			var keyHandle = CFString.CreateNative (key);
+			try {
+				return CFString.FromHandle (CFDictionary.GetValue (Dictionary.Handle, keyHandle));
+			} finally {
+				CFString.ReleaseNative (keyHandle);
 			}
 		}
-#if XAMCORE_2_0
+
 		protected CGRect? GetCGRectValue (NSString key)
 		{
 			var dictValue = GetNSDictionary (key);
@@ -307,11 +322,13 @@ namespace Foundation {
 
 			return value;
 		}
-#endif // XAMCORE_2_0
+
 #if !WATCH
 		protected CMTime? GetCMTimeValue (NSString key)
 		{
 			var dictValue = GetNSDictionary (key);
+			if (dictValue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictValue));
 			var value = CMTime.FromDictionary (dictValue);
 			if (value.IsInvalid)
 				return null;
@@ -319,10 +336,10 @@ namespace Foundation {
 			return value;
 		}
 #endif // !WATCH
-		bool NullCheckAndRemoveKey (NSString key, bool removeEntry)
+		bool NullCheckAndRemoveKey ([NotNullWhen (true)] NSString key, bool removeEntry)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			if (removeEntry)
 				RemoveValue (key);
@@ -330,28 +347,32 @@ namespace Foundation {
 			return !removeEntry;
 		}
 
-		protected void SetArrayValue (NSString key, NSNumber[] values)
+		protected void SetArrayValue (NSString key, NSNumber []? values)
 		{
-			if (NullCheckAndRemoveKey (key, values == null))
+			if (NullCheckAndRemoveKey (key, values is null))
 				Dictionary [key] = NSArray.FromNSObjects (values);
 		}
 
-		protected void SetArrayValue<T> (NSString key, T[] values)
+		protected void SetArrayValue<T> (NSString key, T []? values)
 		{
-			if (NullCheckAndRemoveKey (key, values == null))
-				Dictionary [key] = NSArray.FromNSObjects (values.Select (x => NSObject.FromObject (x)).ToArray ());
+			if (NullCheckAndRemoveKey (key, values is null)) {
+				var nsValues = new NSObject [values!.Length];
+				for (var i = 0; i < values.Length; i++)
+					nsValues [i] = NSObject.FromObject (values [i]);
+				Dictionary [key] = NSArray.FromNSObjects (nsValues);
+			}
 		}
 
-		protected void SetArrayValue (NSString key, string[] values)
+		protected void SetArrayValue (NSString key, string []? values)
 		{
-			if (NullCheckAndRemoveKey (key, values == null))
+			if (NullCheckAndRemoveKey (key, values is null))
 				Dictionary [key] = NSArray.FromStrings (values);
 		}
 
-		protected void SetArrayValue (NSString key, INativeObject[] values)
+		protected void SetArrayValue (NSString key, INativeObject []? values)
 		{
-			if (NullCheckAndRemoveKey (key, values == null))
-				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, CFArray.FromNativeObjects (values).Handle);
+			if (NullCheckAndRemoveKey (key, values is null))
+				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, CFArray.FromNativeObjects (values!).Handle);
 		}
 
 		#region Sets CFBoolean value
@@ -359,7 +380,7 @@ namespace Foundation {
 		protected void SetBooleanValue (NSString key, bool? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, value.Value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);			
+				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, value!.Value ? CFBoolean.TrueHandle : CFBoolean.FalseHandle);
 		}
 
 		#endregion
@@ -369,59 +390,57 @@ namespace Foundation {
 		protected void SetNumberValue (NSString key, int? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, uint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
-#if XAMCORE_2_0
 		protected void SetNumberValue (NSString key, nint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);	
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, nuint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);	
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
-#endif
 
 		protected void SetNumberValue (NSString key, long? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, float? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		protected void SetNumberValue (NSString key, double? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = new NSNumber (value.Value);				
+				Dictionary [key] = new NSNumber (value!.Value);
 		}
 
 		#endregion
 
 		#region Sets NSString value
 
-		protected void SetStringValue (NSString key, string value)
+		protected void SetStringValue (NSString key, string? value)
 		{
-			SetStringValue (key, value == null ? (NSString) null : new NSString (value));
+			SetStringValue (key, value is null ? (NSString) null! : new NSString (value));
 		}
 
-		protected void SetStringValue (NSString key, NSString value)
+		protected void SetStringValue (NSString key, NSString? value)
 		{
-			if (NullCheckAndRemoveKey (key, value == null))
+			if (NullCheckAndRemoveKey (key, value is null))
 				Dictionary [key] = value;
 		}
 
@@ -429,48 +448,47 @@ namespace Foundation {
 
 		#region Sets Native value
 
-		protected void SetNativeValue (NSString key, INativeObject value, bool removeNullValue = true)
+		protected void SetNativeValue (NSString key, INativeObject? value, bool removeNullValue = true)
 		{
-			if (NullCheckAndRemoveKey (key, removeNullValue && value == null))
-				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, value == null ? IntPtr.Zero : value.Handle);
+			if (NullCheckAndRemoveKey (key, removeNullValue && value is null))
+				CFMutableDictionary.SetValue (Dictionary.Handle, key.Handle, value.GetHandle ());
 		}
 
 		#endregion
 
 		protected void RemoveValue (NSString key)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
 
 			((NSMutableDictionary) Dictionary).Remove (key);
 		}
 
 		#region Sets structs values
 
-#if XAMCORE_2_0
 		protected void SetCGRectValue (NSString key, CGRect? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = value.Value.ToDictionary ();
+				Dictionary [key] = value!.Value.ToDictionary ();
 		}
 
 		protected void SetCGSizeValue (NSString key, CGSize? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = value.Value.ToDictionary ();
+				Dictionary [key] = value!.Value.ToDictionary ();
 		}
 
 		protected void SetCGPointValue (NSString key, CGPoint? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = value.Value.ToDictionary ();
+				Dictionary [key] = value!.Value.ToDictionary ();
 		}
-#endif // XAMCORE_2_0
+
 #if !WATCH
 		protected void SetCMTimeValue (NSString key, CMTime? value)
 		{
 			if (NullCheckAndRemoveKey (key, !value.HasValue))
-				Dictionary [key] = value.Value.ToDictionary ();
+				Dictionary [key] = value!.Value.ToDictionary ();
 		}
 #endif //!WATCH
 		#endregion
@@ -481,17 +499,17 @@ namespace Foundation {
 	static class DictionaryContainerHelper {
 
 		// helper to avoid the (common pattern)
-		// 	var p = x == null ? IntPtr.Zero : h.Dictionary.Handle;
-		static public IntPtr GetHandle (this DictionaryContainer self)
+		// 	var p = x is null ? NativeHandle.Zero : h.Dictionary.Handle;
+		static public NativeHandle GetHandle (this DictionaryContainer? self)
 		{
-			return self == null ? IntPtr.Zero : self.Dictionary.Handle;
+			return self is null ? NativeHandle.Zero : self.Dictionary.Handle;
 		}
 
 		// helper to avoid the (common pattern)
-		// 	var p = x == null ? null : x.Dictionary;
-		static public NSDictionary GetDictionary (this DictionaryContainer self)
+		// 	var p = x is null ? null : x.Dictionary;
+		static public NSDictionary? GetDictionary (this DictionaryContainer? self)
 		{
-			return self == null ? null : self.Dictionary;
+			return self is null ? null : self.Dictionary;
 		}
 	}
 #endif

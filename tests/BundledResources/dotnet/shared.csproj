@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<RootTestsDirectory>$(MSBuildThisFileDirectory)\..\..</RootTestsDirectory>
+		<BundledResourcesTestDirectory>$(RootTestsDirectory)\BundledResources</BundledResourcesTestDirectory>
+	</PropertyGroup>
+
+	<Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<BundleResource Include="$(RootTestsDirectory)\monotouch-test\basn3p08.png">
+			<Link>basn3p08.png</Link>
+		</BundleResource>
+		<BundleResource Include="$(RootTestsDirectory)\monotouch-test\basn3p08_with_loc.png">
+			<Link>basn3p08_with_loc.png</Link>
+		</BundleResource>
+		<BundleResource Include="$(RootTestsDirectory)\monotouch-test\xamvideotest.mp4">
+			<Link>xamvideotest.mp4</Link>
+		</BundleResource>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="$(BundledResourcesTestDirectory)\ResourcesTest.cs" />
+	</ItemGroup>
+</Project>

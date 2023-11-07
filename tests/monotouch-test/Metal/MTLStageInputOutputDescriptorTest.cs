@@ -2,35 +2,33 @@
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLStageInputOutputDescriptorTest {
-		MTLStageInputOutputDescriptor descriptor  = null;
-		
+		MTLStageInputOutputDescriptor descriptor = null;
+
 		[SetUp]
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 			descriptor = MTLStageInputOutputDescriptor.Create ();
 		}
-		
+
 		[TearDown]
 		public void TearDown ()
 		{
-			if (descriptor != null)
+			if (descriptor is not null)
 				descriptor.Dispose ();
 			descriptor = null;
 		}
-		
+
 		[Test]
 		public void GetLayoutsTest ()
 		{
@@ -55,7 +53,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			uint index = 5;
 			descriptor.IndexBufferIndex = 5;
-			Assert.AreEqual (descriptor.IndexBufferIndex, index);
+			Assert.AreEqual (descriptor.IndexBufferIndex, (nuint) index);
 		}
 	}
 }

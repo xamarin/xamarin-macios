@@ -1,0 +1,16 @@
+!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
+!missing-field! NSToolbarItemKey not bound
+!missing-protocol! NSAccessibilityColor not bound
+!missing-protocol-member! NSToolbarDelegate::toolbar:itemIdentifier:canBeInsertedAtIndex: not found
+!missing-protocol-member! NSToolbarDelegate::toolbarImmovableItemIdentifiers: not found
+!missing-selector! NSToolbar::centeredItemIdentifiers not bound
+!missing-selector! NSToolbar::setCenteredItemIdentifiers: not bound
+!missing-selector! NSToolbarItem::isVisible not bound
+!missing-selector! NSToolbarItem::possibleLabels not bound
+!missing-selector! NSToolbarItem::setPossibleLabels: not bound

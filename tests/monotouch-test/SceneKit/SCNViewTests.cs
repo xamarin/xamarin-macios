@@ -1,4 +1,4 @@
-﻿//
+//
 // SCNViewTests.cs
 //
 // Authors:
@@ -12,15 +12,9 @@
 using System;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using SceneKit;
 using CoreGraphics;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SceneKit;
-using CGRect = System.Drawing.RectangleF;
-#endif
 
 namespace MonoTouchFixtures.SceneKit {
 
@@ -33,6 +27,7 @@ namespace MonoTouchFixtures.SceneKit {
 		{
 			// Issue: https://github.com/xamarin/xamarin-macios/issues/3392
 			TestRuntime.AssertXcodeVersion (7, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			var view = new SCNView (new CGRect (), (NSDictionary) null);
 			Assert.NotNull (view, "View not null");

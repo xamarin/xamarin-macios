@@ -7,14 +7,18 @@ MONO_BRANCH    := $(shell cd $(MONO_PATH) 2> /dev/null && git symbolic-ref --sho
 endif
 
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 92433b7757c57de089b3edb0e7060d90363273f9
-NEEDED_MACCORE_BRANCH := master
+NEEDED_MACCORE_VERSION := 8c4ba27285ee7c7e9c195fa04e74ab72a875d8c5
+NEEDED_MACCORE_BRANCH := main
 
 MACCORE_DIRECTORY := maccore
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
 MACCORE_VERSION   := $(shell cd $(MACCORE_PATH) 2> /dev/null && git rev-parse HEAD 2> /dev/null)
 MACCORE_BRANCH    := $(shell cd $(MACCORE_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
 endif
+
+# Available versions can be seen here:
+# https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.Mlaunch/versions
+MLAUNCH_NUGET_VERSION=1.0.83
 
 define CheckVersionTemplate
 check-$(1)::
@@ -100,6 +104,4 @@ $(MACCORE_PATH):
 	$(Q) $(MAKE) reset-maccore
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
--include $(MACCORE_PATH)/mk/versions.mk
-$(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif

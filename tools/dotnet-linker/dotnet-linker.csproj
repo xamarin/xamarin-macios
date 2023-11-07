@@ -1,0 +1,296 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <RootNamespace>dotnet_linker</RootNamespace>
+    <DefineConstants>$(DefineConstants);BUNDLER</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <Import Project="..\..\eng\Versions.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.ILLink" Version="$(MicrosoftNETILLinkPackageVersion)" />
+    <PackageReference Include="Microsoft.DotNet.Cecil" Version="$(MicrosoftDotNetCecilPackageVersion)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\common\ApplePlatform.cs">
+      <Link>tools\common\ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\common\MachO.cs">
+      <Link>tools\common\MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>src\ObjCRuntime\ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\common\AssemblyBuildTarget.cs">
+      <Link>tools\common\AssemblyBuildTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CompilerFlags.cs">
+      <Link>external\tools\common\CompilerFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CoreResolver.cs">
+      <Link>external\tools\common\CoreResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\common\error.cs">
+      <Link>tools\common\error.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ErrorHelper.tools.cs">
+      <Link>tools\common\ErrorHelper.tools.cs</Link>
+    </Compile>
+    <Compile Include="..\mtouch\Errors.designer.cs">
+      <Link>tools\mtouch\Errors.designer.cs</Link>
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\common\Frameworks.cs">
+      <Link>tools\common\Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\mtouch\Stripper.cs">
+      <Link>external\tools\mtouch\Stripper.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Application.cs">
+      <Link>external\tools\common\Application.cs</Link>
+    </Compile>
+    <Compile Include="..\common\cache.cs">
+      <Link>external\tools\common\cache.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Assembly.cs">
+      <Link>external\tools\common\Assembly.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Driver.cs">
+      <Link>external\tools\common\Driver.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Driver.execution.cs">
+      <Link>external\tools\common\Driver.execution.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Execution.cs">
+      <Link>external\tools\common\Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\common\FileCopier.cs">
+      <Link>external\tools\common\FileCopier.cs</Link>
+    </Compile>
+    <Compile Include="..\common\FileUtils.cs">
+      <Link>external\tools\common\FileUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\LinkMode.cs">
+      <Link>external\tools\common\LinkMode.cs</Link>
+    </Compile>
+    <Compile Include="..\common\SdkVersions.cs">
+      <Link>external\tools\common\SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ProductConstants.cs">
+      <Link>external\tools\common\ProductConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Symbols.cs">
+      <Link>external\tools\common\Symbols.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Target.cs">
+      <Link>external\tools\common\Assembly.cs</Link>
+    </Compile>
+    <Compile Include="..\common\DerivedLinkContext.cs">
+      <Link>external\tools\common\DerivedLinkContext.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Optimizations.cs">
+      <Link>external\tools\common\Optimizations.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PInvokeWrapperGenerator.cs">
+      <Link>external\tools\common\PInvokeWrapperGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PathUtils.cs">
+      <Link>external\tools\common\PathUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PListExtensions.cs">
+      <Link>external\tools\common\PListExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
+      <Link>external\tools\common\OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CSToObjCMap.cs">
+      <Link>tools\common\CSToObjCMap.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Rewriter.cs">
+      <Link>tools\common\Rewriter.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ObjCNameIndex.cs">
+      <Link>tools\common\ObjCNameIndex.cs</Link>
+    </Compile>
+    <Compile Include="..\common\StaticRegistrar.cs">
+      <Link>external\tools\common\StaticRegistrar.cs</Link>
+    </Compile>
+    <Compile Include="..\common\StringUtils.cs">
+      <Link>external\tools\common\StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\common\TargetFramework.cs">
+      <Link>external\tools\common\TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CustomSymbolWriter.cs">
+      <Link>external\tools\linker\CustomSymbolWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
+      <Link>external\tools\linker\CoreOptimizeGeneratedCode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreTypeMapStep.cs">
+      <Link>external\tools\linker\CoreTypeMapStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
+      <Link>external\src\ObjCRuntime\Registrar.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
+      <Link>external\src\ObjCRuntime\Registrar.core.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ArgumentSemantic.cs">
+      <Link>external\src\ObjCRuntime\ArgumentSemantic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\BindingImplAttribute.cs">
+      <Link>external\src\ObjCRuntime\BindingImplAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
+      <Link>external\src\ObjCRuntime\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\Foundation\ExportAttribute.cs">
+      <Link>external\src\Foundation\ExportAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\Foundation\ConnectAttribute.cs">
+      <Link>external\src\Foundation\ConnectAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ExceptionMode.cs">
+      <Link>external\src\ObjCRuntime\ExceptionMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
+      <Link>external\src\ObjCRuntime\LinkWithAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
+      <Link>external\src\ObjCRuntime\PlatformAvailability2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
+      <Link>external\src\ObjCRuntime\RuntimeOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ApplyPreserveAttribute.cs">
+      <Link>external\tools\linker\ApplyPreserveAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>external\tools\linker\ExceptionalSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
+      <Link>external\tools\linker\MonoTouch.Tuner\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
+      <Link>external\tools\linker\MonoTouch.Tuner\ListExportedSymbols.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs">
+      <Link>external\tools\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileExtensions.cs">
+      <Link>external\tools\linker\MobileExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MarkNSObjects.cs">
+      <Link>external\tools\linker\MarkNSObjects.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ObjCExtensions.cs">
+      <Link>external\tools\linker\ObjCExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\Extensions.cs">
+      <Link>external\mono-archive\Mono.Tuner\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\I18nAssemblies.cs">
+      <Link>external\mono-archive\Linker\I18nAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\MethodDefinitionExtensions.cs">
+      <Link>mono-archive\Linker\MethodDefinitionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\TypeReferenceExtensions.cs">
+      <Link>mono-archive\Linker\Linker\TypeReferenceExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\CecilRocks.cs">
+      <Link>external\mono-archive\Mono.Tuner\CecilRocks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
+      <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs">
+      <Link>external\Xamarin.MacDev\Xamarin.MacDev\MacCatalystSupport.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BitCodeMode.cs">
+      <Link>external\tools\common\BitCodeMode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
+      <Link>external\tools\linker\RemoveUserResourcesSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\common\DlsymOptions.cs">
+      <Link>external\tools\common\DlsymOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\common\XamarinRuntime.cs">
+      <Link>tools\common\XamarinRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RegistrarRemovalTrackingStep.cs">
+      <Link>tools\linker\RegistrarRemovalTrackingStep.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\mtouch\Errors.resx">
+      <Link>tools\mtouch\Errors.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
+      <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
+      <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.cs.resx">
+      <Link>tools\mtouch\Errors.cs.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.cs</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.de.resx">
+      <Link>tools\mtouch\Errors.de.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.de</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.es.resx">
+      <Link>tools\mtouch\Errors.es.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.es</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.fr.resx">
+      <Link>tools\mtouch\Errors.fr.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.fr</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.it.resx">
+      <Link>tools\mtouch\Errors.it.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.it</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ja.resx">
+      <Link>tools\mtouch\Errors.ja.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.ja</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ko.resx">
+      <Link>tools\mtouch\Errors.ko.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.ko</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pl.resx">
+      <Link>tools\mtouch\Errors.pl.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.pl</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-BR.resx">
+      <Link>tools\mtouch\Errors.pt-BR.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.pt-BR</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ru.resx">
+      <Link>tools\mtouch\Errors.ru.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.ru</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.tr.resx">
+      <Link>tools\mtouch\Errors.tr.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.tr</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hans.resx">
+      <Link>tools\mtouch\Errors.zh-Hans.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hans</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hant.resx">
+      <Link>tools\mtouch\Errors.zh-Hant.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
+    <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
+  </Target>
+</Project>

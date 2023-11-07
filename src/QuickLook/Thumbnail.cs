@@ -26,7 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -43,12 +46,12 @@ namespace QuickLook {
 		[DllImport(Constants.QuickLookLibrary)]
 		extern static /* CGImageRef */ IntPtr QLThumbnailImageCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFUrlRef */ IntPtr url, CGSize maxThumbnailSize, /* CFDictionaryRef */ IntPtr options);
 
-		public static CGImage Create (NSUrl url, CGSize maxThumbnailSize, float scaleFactor = 1, bool iconMode = false)
+		public static CGImage? Create (NSUrl url, CGSize maxThumbnailSize, float scaleFactor = 1, bool iconMode = false)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			NSMutableDictionary dictionary = null;
+			NSMutableDictionary? dictionary = null;
 
 			if (scaleFactor != 1 && iconMode != false) {
 				dictionary = new NSMutableDictionary ();
@@ -56,7 +59,7 @@ namespace QuickLook {
 				dictionary.LowlevelSetObject (iconMode ? CFBoolean.TrueHandle : CFBoolean.FalseHandle, OptionIconModeKey.Handle);
 			}
 			
-			var handle = QLThumbnailImageCreate (IntPtr.Zero, url.Handle, maxThumbnailSize, dictionary == null ? IntPtr.Zero : dictionary.Handle);
+			var handle = QLThumbnailImageCreate (IntPtr.Zero, url.Handle, maxThumbnailSize, dictionary.GetHandle ());
 			GC.KeepAlive (dictionary);
 			if (handle != IntPtr.Zero)
 				return new CGImage (handle, true);

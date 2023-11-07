@@ -6,11 +6,18 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
@@ -18,11 +25,24 @@ namespace Network {
 	// The content context, there are a few pre-configured content contexts for sending
 	// available as static properties on this class
 	//
-	[TV (12,0), Mac (10,14), iOS (12,0)]
-	[Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
+#endif
 	public class NWContentContext : NativeObject {
 		bool global;
-		public NWContentContext (IntPtr handle, bool owns) : base (handle, owns)
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
+#else
+		public NWContentContext (NativeHandle handle, bool owns) : base (handle, owns)
+#endif
 		{
 		}
 
@@ -39,7 +59,7 @@ namespace Network {
 			return new NWContentContext (handle, owns: true, global: true);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (global)
 				return;
@@ -47,19 +67,20 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		extern static IntPtr nw_content_context_create (string contextIdentifier);
+		extern static IntPtr nw_content_context_create (IntPtr contextIdentifier);
 
 		public NWContentContext (string contextIdentifier)
 		{
-			if (contextIdentifier == null)
-				throw new ArgumentNullException (nameof (contextIdentifier));
-			InitializeHandle (nw_content_context_create (contextIdentifier));
+			if (contextIdentifier is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contextIdentifier));
+			using var contextIdentifierPtr = new TransientString (contextIdentifier);
+			InitializeHandle (nw_content_context_create (contextIdentifierPtr));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_get_identifier (IntPtr handle);
 
-		public string Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetCheckedHandle ()));
+		public string? Identifier => Marshal.PtrToStringAnsi (nw_content_context_get_identifier (GetCheckedHandle ()));
 
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -101,7 +122,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static void nw_content_context_set_antecedent (IntPtr handle, IntPtr value);
 
-		public NWContentContext Antecedent {
+		public NWContentContext? Antecedent {
 			get {
 				var h = nw_content_context_copy_antecedent (GetCheckedHandle ());
 				if (h == IntPtr.Zero)
@@ -116,20 +137,20 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_content_context_copy_protocol_metadata (IntPtr handle, IntPtr protocol);
 
-		public NWProtocolMetadata GetProtocolMetadata (NWProtocolDefinition protocolDefinition)
+		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition protocolDefinition)
 		{
-			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+			if (protocolDefinition is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			if (x == IntPtr.Zero)
 				return null;
 			return new NWProtocolMetadata (x, owns: true);
 		}
 
-		public T GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
+		public T? GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
 		{
-			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+			if (protocolDefinition is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
@@ -139,52 +160,55 @@ namespace Network {
 
 		public void SetMetadata (NWProtocolMetadata protocolMetadata)
 		{
-			if (protocolMetadata == null)
-				throw new ArgumentNullException (nameof (protocolMetadata));
+			if (protocolMetadata is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolMetadata));
 			nw_content_context_set_metadata_for_protocol (GetCheckedHandle (), protocolMetadata.Handle);
 		}
 
+#if !NET
 		delegate void ProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata);
 		static ProtocolIterator static_ProtocolIterator = TrampolineProtocolIterator;
 
 		[MonoPInvokeCallback (typeof (ProtocolIterator))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition,NWProtocolMetadata>> (block);
-			if (del != null) {
-				var pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
-				var meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
+			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition?, NWProtocolMetadata?>> (block);
+			if (del is not null) {
+				using NWProtocolDefinition? pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
+				using NWProtocolMetadata? meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
 
 				del (pdef, meta);
-
-				pdef?.Dispose ();
-				meta?.Dispose ();
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, ref BlockLiteral callback);
+		unsafe static extern void nw_content_context_foreach_protocol_metadata (IntPtr handle, BlockLiteral* callback);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void IterateProtocolMetadata (Action<NWProtocolDefinition,NWProtocolMetadata> callback)
+		public void IterateProtocolMetadata (Action<NWProtocolDefinition?, NWProtocolMetadata?> callback)
 		{
-			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_ProtocolIterator, callback);
-
-			try {
-				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineProtocolIterator;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWContentContext), nameof (TrampolineProtocolIterator));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_ProtocolIterator, callback);
+#endif
+				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), &block);
 			}
 		}
 
 		//
 		// Use this as a parameter to NWConnection.Send's with all the default properties
 		// ie: NW_CONNECTION_DEFAULT_MESSAGE_CONTEXT, use this for datagrams
-		static NWContentContext defaultMessage;
+		static NWContentContext? defaultMessage;
 		public static NWContentContext DefaultMessage {
 			get {
-				if (defaultMessage == null)
+				if (defaultMessage is null)
 					defaultMessage = MakeGlobal (NWContentContextConstants._DefaultMessage);
 
 				return defaultMessage;
@@ -193,21 +217,21 @@ namespace Network {
 
 		// Use this as a parameter to NWConnection.Send's to indicate that no more sends are expected
 		// (ie: NW_CONNECTION_FINAL_MESSAGE_CONTEXT)
-		static NWContentContext finalMessage;
+		static NWContentContext? finalMessage;
 		public static NWContentContext FinalMessage {
 			get {
-				if (finalMessage == null)
-					finalMessage = MakeGlobal (NWContentContextConstants._FinalSend); 
+				if (finalMessage is null)
+					finalMessage = MakeGlobal (NWContentContextConstants._FinalSend);
 				return finalMessage;
 			}
 		}
 
 		// This sending context represents the entire connection
 		// ie: NW_CONNECTION_DEFAULT_STREAM_CONTEXT
-		static NWContentContext defaultStream;
+		static NWContentContext? defaultStream;
 		public static NWContentContext DefaultStream {
 			get {
-				if (defaultStream == null)
+				if (defaultStream is null)
 					defaultStream = MakeGlobal (NWContentContextConstants._DefaultStream);
 				return defaultStream;
 			}

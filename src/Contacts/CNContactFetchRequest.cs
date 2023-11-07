@@ -4,12 +4,13 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
 
 namespace Contacts {
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 	public partial class CNContactFetchRequest {
 
 		public CNContactFetchRequest (params ICNKeyDescriptor [] keysToFetch)
@@ -40,7 +41,7 @@ namespace Contacts {
 		// NSObject.ConformsToProtocol won't work for *Wrapper types, like what returns ICNKeyDescriptor instances
 		static bool ConformsToProtocol (IntPtr handle, IntPtr protocol)
 		{
-			return Messaging.bool_objc_msgSend_IntPtr (handle, Selector.GetHandle ("conformsToProtocol:"), protocol);
+			return Messaging.bool_objc_msgSend_IntPtr (handle, Selector.GetHandle ("conformsToProtocol:"), protocol) != 0;
 		}
 
 		static NSArray Validate (params INativeObject [] keysToFetch)
@@ -60,5 +61,4 @@ namespace Contacts {
 			return NSArray.FromNativeObjects (keysToFetch);
 		}
 	}
-#endif // XAMCORE_2_0
 }

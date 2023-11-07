@@ -1,4 +1,4 @@
-# fixed in XAMCORE_4_0 - API break
+# fixed in .NET - API break
 !incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
@@ -24,9 +24,6 @@
 ## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 !missing-protocol-conformance! MDLAsset should conform to NSFastEnumeration
 !missing-protocol-conformance! MDLMaterial should conform to NSFastEnumeration
-
-## deprecated in xcode9 (default one, i.e. `init`, should be identical)
-!missing-selector! MDLTransform::initWithIdentity not bound
 
 # Initial result from new rule missing-release-attribute-on-return-value
 !missing-release-attribute-on-return-value! ModelIO.IMDLMeshBuffer ModelIO.IMDLMeshBufferAllocator::CreateBuffer(Foundation.NSData,ModelIO.MDLMeshBufferType)'s selector's ('newBufferWithData:type:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
@@ -56,3 +53,6 @@
 !missing-release-attribute-on-return-value! ModelIO.MDLMesh ModelIO.MDLMesh::CreatePlane(OpenTK.Vector2,OpenTK.Vector2i,ModelIO.MDLGeometryType,ModelIO.IMDLMeshBufferAllocator)'s selector's ('newPlaneWithDimensions:segments:geometryType:allocator:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.MDLMesh ModelIO.MDLMesh::CreateSubdividedMesh(ModelIO.MDLMesh,System.nuint,System.nuint)'s selector's ('newSubdividedMesh:submeshIndex:subdivisionLevels:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! ModelIO.MDLMesh ModelIO.MDLMesh::NewBoxWithDimensions(OpenTK.Vector3,OpenTK.Vector3i,ModelIO.MDLGeometryType,System.Boolean,ModelIO.IMDLMeshBufferAllocator)'s selector's ('newBoxWithDimensions:segments:geometryType:inwardNormals:allocator:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+# incorrect result on `ref` parameter
+!extra-null-allowed! 'System.Void ModelIO.MDLObject::EnumerateChildObjects(ObjCRuntime.Class,ModelIO.MDLObject,ModelIO.MDLObjectHandler,System.Boolean&)' has a extraneous [NullAllowed] on parameter #3

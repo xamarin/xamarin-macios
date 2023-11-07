@@ -1,18 +1,16 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLTextureReferenceTypeTests {
 		MTLTextureReferenceType reference = null;
 
@@ -26,7 +24,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (reference != null)
+			if (reference is not null)
 				reference.Dispose ();
 			reference = null;
 		}

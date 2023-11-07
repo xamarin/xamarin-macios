@@ -31,11 +31,17 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 
-	[Watch (4,0)]
-	public class CVPixelBufferPoolSettings : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CVPixelBufferPoolSettings : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferPoolSettings ()
 			: base (new NSMutableDictionary ())
@@ -67,7 +73,12 @@ namespace CoreVideo {
 #endif
 	}
 
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public partial class CVPixelBufferPoolAllocationSettings : DictionaryContainer {
 #if !COREBUILD
 		public CVPixelBufferPoolAllocationSettings ()

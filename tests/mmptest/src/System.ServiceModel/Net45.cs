@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using Xamarin.Bundler;
 using System.Text;
 using System.IO;
 using Xamarin.MMP.Tests;
+using Xamarin.Tests;
 
 namespace MonoTouchFixtures.ServiceModel {
 	//https://testrail.xamarin.com/index.php?/cases/view/236768&group_by=cases:section_id&group_order=asc&group_id=72254
@@ -24,7 +25,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		public void ShouldIncludeSystemServiceModel ()
 		{
 			StringBuilder output = new StringBuilder ();
-			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, null, output);
+			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, output);
 			Assert.That (result, Is.EqualTo (0));
 			Assert.That (output.ToString (), Contains.Substring ("System.Web.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"));
 		}
@@ -33,7 +34,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		public void ShouldNotIncludeSystemDrawing ()
 		{
 			StringBuilder output = new StringBuilder ();
-			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, null, output);
+			int result = Driver.RunCommand ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/monop", new [] { "--refs", $"-r:{TI.FindRootDirectory ()}/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/System.ServiceModel.dll" }, output);
 			Assert.That (result, Is.EqualTo (0));
 			Assert.That (output.ToString (), !Contains.Substring ("System.Drawing"));
 		}
@@ -41,7 +42,7 @@ namespace MonoTouchFixtures.ServiceModel {
 		[Test]
 		public void ServiceModelShouldCreateCommunicationException ()
 		{
-			var testFolder = Path.Combine (TI.FindRootDirectory (), "../tests/common/mac/TestProjects/ServiceModel_Test/ServiceModel_Test");
+			var testFolder = Path.Combine (Configuration.TestProjectsDirectory, "ServiceModel_Test", "ServiceModel_Test");
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);

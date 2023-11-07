@@ -1,8 +1,11 @@
+Build.props
 Make.config.inc
 Make.config.local
 configure.inc
+dotnet.config
 _ios-build
 _mac-build
+_build
 *.userprefs
 *.user
 *.suo
@@ -26,6 +29,14 @@ tests/bcl-test/BCLTests/generated
 tests/bcl-test/generated
 tests/bcl-test/BCL\ tests\ group*.csproj
 tests/bcl-test/Mac\ OS\ X\ BCL\ \tests*.csproj
-tests/bcl-test/mscorlib-mac-full.csproj
-tests/bcl-test/mscorlib-mac-modern.csproj
-tests/bcl-test/mscorlib.csproj
+tests/bcl-test/mscorlib*.csproj
+tests/bcl-test/SystemCoreXunit*.csproj
+tests/bcl-test/SystemXunit.csproj
+global.json
+.idea
+device-tests-provisioning.csx
+build-provisioning.csx
+provision-xcode.csx
+mono_crash.*.json
+*.binlog
+.vscode

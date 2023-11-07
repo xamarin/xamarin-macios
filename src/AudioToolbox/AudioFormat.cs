@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -40,22 +43,28 @@ using AudioFileID = System.IntPtr;
 namespace AudioToolbox {
 
 	// AudioFormatListItem
-	[Watch (6,0)]
-	[StructLayout(LayoutKind.Sequential)]
-	public struct AudioFormat
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (6, 0)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioFormat {
 		public AudioStreamBasicDescription AudioStreamBasicDescription;
 		public AudioChannelLayoutTag AudioChannelLayoutTag;
 
 #if !WATCH
-		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat[] formatList)
+		public unsafe static AudioFormat? GetFirstPlayableFormat (AudioFormat [] formatList)
 		{
-			if (formatList == null)
-				throw new ArgumentNullException ("formatList");
+			if (formatList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
 			if (formatList.Length < 2)
-				throw new ArgumentException ("formatList");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
 
- 			fixed (AudioFormat* item = &formatList[0]) {
+			fixed (AudioFormat* item = &formatList [0]) {
 				uint index;
 				int size = sizeof (uint);
 				var ptr_size = sizeof (AudioFormat) * formatList.Length;
@@ -76,23 +85,28 @@ namespace AudioToolbox {
 
 	public enum AudioFormatError : int // Implictly cast to OSType
 	{
-		None					= 0,
-		Unspecified				= 0x77686174,	// 'what'
-		UnsupportedProperty 	= 0x70726f70,	// 'prop'
-		BadPropertySize			= 0x2173697a,	// '!siz'
-		BadSpecifierSize		= 0x21737063,	// '!spc'
-		UnsupportedDataFormat	= 0x666d743f,	// 'fmt?'
-		UnknownFormat			= 0x21666d74	// '!fmt'
+		None = 0,
+		Unspecified = 0x77686174,   // 'what'
+		UnsupportedProperty = 0x70726f70,   // 'prop'
+		BadPropertySize = 0x2173697a,   // '!siz'
+		BadSpecifierSize = 0x21737063,  // '!spc'
+		UnsupportedDataFormat = 0x666d743f, // 'fmt?'
+		UnknownFormat = 0x21666d74  // '!fmt'
 
-        // TODO: Not documented
-        // '!dat'
+		// TODO: Not documented
+		// '!dat'
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioValueRange
-	{
-    	public double Minimum;
-    	public double Maximum;
+	public struct AudioValueRange {
+		public double Minimum;
+		public double Maximum;
 	}
 
 	public enum AudioBalanceFadeType : uint // UInt32 in AudioBalanceFades
@@ -101,12 +115,16 @@ namespace AudioToolbox {
 		EqualPower = 1
 	}
 
-	public class AudioBalanceFade
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AudioBalanceFade {
 #if !COREBUILD
 		[StructLayout (LayoutKind.Sequential)]
-		struct Layout
-		{
+		struct Layout {
 			public float LeftRightBalance;
 			public float BackFrontFade;
 			public AudioBalanceFadeType Type;
@@ -115,8 +133,8 @@ namespace AudioToolbox {
 
 		public AudioBalanceFade (AudioChannelLayout channelLayout)
 		{
-			if (channelLayout == null)
-				throw new ArgumentNullException ("channelLayout");
+			if (channelLayout is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (channelLayout));
 
 			this.ChannelLayout = channelLayout;
 		}
@@ -126,20 +144,20 @@ namespace AudioToolbox {
 		public AudioBalanceFadeType Type { get; set; }
 		public AudioChannelLayout ChannelLayout { get; private set; }
 
-		public unsafe float[] GetBalanceFade ()
+		public unsafe float []? GetBalanceFade ()
 		{
 			var type_size = sizeof (Layout);
 
 			var str = ToStruct ();
 			var ptr = Marshal.AllocHGlobal (type_size);
-			(*(Layout *) ptr) = str;
+			(*(Layout*) ptr) = str;
 
 			int size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.BalanceFade, type_size, ptr, out size) != 0)
 				return null;
 
 			AudioFormatError res;
-			var data = new float[size / sizeof (float)];
+			var data = new float [size / sizeof (float)];
 			fixed (float* data_ptr = data) {
 				res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.BalanceFade, type_size, ptr, ref size, data_ptr);
 			}
@@ -152,35 +170,38 @@ namespace AudioToolbox {
 
 		Layout ToStruct ()
 		{
-			var l = new Layout ()
-			{
+			var l = new Layout () {
 				LeftRightBalance = LeftRightBalance,
 				BackFrontFade = BackFrontFade,
 				Type = Type,
 			};
 
-			if (ChannelLayout != null) {
+			if (ChannelLayout is not null) {
 				int temp;
 				l.ChannelLayoutWeak = ChannelLayout.ToBlock (out temp);
 			}
-			
+
 			return l;
-		}	
+		}
 #endif // !COREBUILD
 	}
 
 	public enum PanningMode : uint // UInt32 in AudioPanningInfo
 	{
-		SoundField					= 3,
-		VectorBasedPanning			= 4
+		SoundField = 3,
+		VectorBasedPanning = 4
 	}
 
-	public class AudioPanningInfo
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AudioPanningInfo {
 #if !COREBUILD
 		[StructLayout (LayoutKind.Sequential)]
-		struct Layout
-		{
+		struct Layout {
 			public PanningMode PanningMode;
 			public AudioChannelFlags CoordinateFlags;
 			public float Coord0, Coord1, Coord2;
@@ -190,32 +211,32 @@ namespace AudioToolbox {
 
 		public AudioPanningInfo (AudioChannelLayout outputChannelMap)
 		{
-			if (outputChannelMap == null)
-				throw new ArgumentNullException ("outputChannelMap");
+			if (outputChannelMap is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputChannelMap));
 
 			this.OutputChannelMap = outputChannelMap;
 		}
 
 		public PanningMode PanningMode { get; set; }
 		public AudioChannelFlags CoordinateFlags { get; set; }
-		public float[] Coordinates { get; private set; }
+		public float [] Coordinates { get; private set; } = Array.Empty<float> ();
 		public float GainScale { get; set; }
 		public AudioChannelLayout OutputChannelMap { get; private set; }
 
-		public unsafe float[] GetPanningMatrix ()
+		public unsafe float []? GetPanningMatrix ()
 		{
 			var type_size = sizeof (Layout);
 
 			var str = ToStruct ();
 			var ptr = Marshal.AllocHGlobal (type_size);
-			*((Layout *)ptr) = str;
+			*((Layout*) ptr) = str;
 
 			int size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (AudioFormatProperty.PanningMatrix, type_size, ptr, out size) != 0)
 				return null;
 
 			AudioFormatError res;
-			var data = new float[size / sizeof (float)];
+			var data = new float [size / sizeof (float)];
 			fixed (float* data_ptr = data) {
 				res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.PanningMatrix, type_size, ptr, ref size, data_ptr);
 			}
@@ -228,8 +249,7 @@ namespace AudioToolbox {
 
 		Layout ToStruct ()
 		{
-			var l = new Layout ()
-			{
+			var l = new Layout () {
 				PanningMode = PanningMode,
 				CoordinateFlags = CoordinateFlags,
 				Coord0 = Coordinates [0],
@@ -238,18 +258,23 @@ namespace AudioToolbox {
 				GainScale = GainScale
 			};
 
-			if (OutputChannelMap != null) {
+			if (OutputChannelMap is not null) {
 				int temp;
 				l.OutputChannelMapWeak = OutputChannelMap.ToBlock (out temp);
 			}
-			
+
 			return l;
-		}	
+		}
 #endif // !COREBUILD
 	}
 
-	static partial class AudioFormatPropertyNative
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	static partial class AudioFormatPropertyNative {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		public extern static AudioFormatError AudioFormatGetPropertyInfo (AudioFormatProperty propertyID, int inSpecifierSize, ref AudioFormatType inSpecifier,
 			out uint outPropertyDataSize);
@@ -331,7 +356,7 @@ namespace AudioToolbox {
 			ref int ioPropertyDataSize, out uint outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		public  extern static AudioFormatError AudioFormatGetProperty (AudioFormatProperty inPropertyID, int inSpecifierSize, IntPtr inSpecifier, ref int ioPropertyDataSize,
+		public extern static AudioFormatError AudioFormatGetProperty (AudioFormatProperty inPropertyID, int inSpecifierSize, IntPtr inSpecifier, ref int ioPropertyDataSize,
 			ref AudioStreamBasicDescription outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -342,51 +367,60 @@ namespace AudioToolbox {
 	// Properties are used from various types (most suitable should be used)
 	enum AudioFormatProperty : uint // UInt32 AudioFormatPropertyID
 	{
-		FormatInfo					= 0x666d7469,	// 'fmti'
-		FormatName					= 0x666e616d,	// 'fnam'
-		EncodeFormatIDs				= 0x61636f66,	// 'acof'
-		DecodeFormatIDs				= 0x61636966,	// 'acif'
-		FormatList					= 0x666c7374,	// 'flst'
-		ASBDFromESDS 				= 0x65737364,	// 'essd'	// TODO: FromElementaryStreamDescriptor
-		ChannelLayoutFromESDS 		= 0x6573636c,	// 'escl'	// TODO:
-		OutputFormatList			= 0x6f666c73,	// 'ofls'
-		FirstPlayableFormatFromList	= 0x6670666c,	// 'fpfl'
-		FormatIsVBR 				= 0x66766272,	// 'fvbr'
-		FormatIsExternallyFramed	= 0x66657866,	// 'fexf'
-		FormatIsEncrypted			= 0x63727970,	// 'cryp'
-		Encoders					= 0x6176656e,	// 'aven'	
-		Decoders					= 0x61766465,	// 'avde'
-		AvailableEncodeChannelLayoutTags	= 0x6165636c,	// 'aecl'
-		AvailableEncodeNumberChannels		= 0x61766e63,	// 'avnc'
-		AvailableEncodeBitRates		= 0x61656272,	// 'aebr'
-		AvailableEncodeSampleRates	= 0x61657372,	// 'aesr'
-		ASBDFromMPEGPacket			= 0x61646d70,	// 'admp'	// TODO:
+		FormatInfo = 0x666d7469,    // 'fmti'
+		FormatName = 0x666e616d,    // 'fnam'
+		EncodeFormatIDs = 0x61636f66,   // 'acof'
+		DecodeFormatIDs = 0x61636966,   // 'acif'
+		FormatList = 0x666c7374,    // 'flst'
+		ASBDFromESDS = 0x65737364,  // 'essd'	// TODO: FromElementaryStreamDescriptor
+		ChannelLayoutFromESDS = 0x6573636c, // 'escl'	// TODO:
+		OutputFormatList = 0x6f666c73,  // 'ofls'
+		FirstPlayableFormatFromList = 0x6670666c,   // 'fpfl'
+		FormatIsVBR = 0x66766272,   // 'fvbr'
+		FormatIsExternallyFramed = 0x66657866,  // 'fexf'
+		FormatIsEncrypted = 0x63727970, // 'cryp'
+		Encoders = 0x6176656e,  // 'aven'	
+		Decoders = 0x61766465,  // 'avde'
+		AvailableEncodeChannelLayoutTags = 0x6165636c,  // 'aecl'
+		AvailableEncodeNumberChannels = 0x61766e63, // 'avnc'
+		AvailableEncodeBitRates = 0x61656272,   // 'aebr'
+		AvailableEncodeSampleRates = 0x61657372,    // 'aesr'
+		ASBDFromMPEGPacket = 0x61646d70,    // 'admp'	// TODO:
 
-		BitmapForLayoutTag			= 0x626d7467,	// 'bmtg'
-		MatrixMixMap				= 0x6d6d6170,	// 'mmap'
-		ChannelMap					= 0x63686d70,	// 'chmp'
-		NumberOfChannelsForLayout	= 0x6e63686d,	// 'nchm'
-		AreChannelLayoutsEquivalent	= 0x63686571,	// 'cheq'	// TODO:
-		ChannelLayoutHash           = 0x63686861,   // 'chha'
-		ValidateChannelLayout		= 0x7661636c,	// 'vacl'
-		ChannelLayoutForTag			= 0x636d706c,	// 'cmpl'
-		TagForChannelLayout			= 0x636d7074,	// 'cmpt'
-		ChannelLayoutName			= 0x6c6f6e6d,	// 'lonm'
-		ChannelLayoutSimpleName		= 0x6c6f6e6d,	// 'lsnm'
-		ChannelLayoutForBitmap		= 0x636d7062,	// 'cmpb'
-		ChannelName					= 0x636e616d,	// 'cnam'
-		ChannelShortName			= 0x63736e6d,	// 'csnm'
+		BitmapForLayoutTag = 0x626d7467,    // 'bmtg'
+		MatrixMixMap = 0x6d6d6170,  // 'mmap'
+		ChannelMap = 0x63686d70,    // 'chmp'
+		NumberOfChannelsForLayout = 0x6e63686d, // 'nchm'
+		AreChannelLayoutsEquivalent = 0x63686571,   // 'cheq'	// TODO:
+		ChannelLayoutHash = 0x63686861,   // 'chha'
+		ValidateChannelLayout = 0x7661636c, // 'vacl'
+		ChannelLayoutForTag = 0x636d706c,   // 'cmpl'
+		TagForChannelLayout = 0x636d7074,   // 'cmpt'
+		ChannelLayoutName = 0x6c6f6e6d, // 'lonm'
+		ChannelLayoutSimpleName = 0x6c6f6e6d,   // 'lsnm'
+		ChannelLayoutForBitmap = 0x636d7062,    // 'cmpb'
+		ChannelName = 0x636e616d,   // 'cnam'
+		ChannelShortName = 0x63736e6d,  // 'csnm'
 
-		TagsForNumberOfChannels		= 0x74616763,	// 'tagc'
-		PanningMatrix				= 0x70616e6d,	// 'panm'
-		BalanceFade					= 0x62616c66,	// 'balf'
+		TagsForNumberOfChannels = 0x74616763,   // 'tagc'
+		PanningMatrix = 0x70616e6d, // 'panm'
+		BalanceFade = 0x62616c66,   // 'balf'
 
-		ID3TagSize					= 0x69643373,	// 'id3s' // TODO:
-		ID3TagToDictionary			= 0x69643364,	// 'id3d' // TODO:
+		ID3TagSize = 0x69643373,    // 'id3s' // TODO:
+		ID3TagToDictionary = 0x69643364,    // 'id3d' // TODO:
 
 #if !MONOMAC
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("ios8.0")]
+		[ObsoletedOSPlatform ("maccatalyst13.1")]
+		[ObsoletedOSPlatform ("tvos9.0")]
+#else
 		[Deprecated (PlatformName.iOS, 8, 0)]
-		HardwareCodecCapabilities	= 0x68776363,	// 'hwcc'
+#endif
+		HardwareCodecCapabilities = 0x68776363, // 'hwcc'
 #endif
 	}
 #endif // !WATCH

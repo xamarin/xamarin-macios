@@ -18,21 +18,21 @@ using UIKit;
 
 namespace UIKit {
 
-	// NSInteger -> UIGuidedAccessRestrictions.h
-	[Native]
-	[iOS (7,0)]
-	public enum UIGuidedAccessRestrictionState : long {
-		Allow,
-		Deny
-	}
-
 	public static partial class UIGuidedAccessRestriction {
 #if !COREBUILD
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* UIGuidedAccessRestrictionState */ nint UIGuidedAccessRestrictionStateForIdentifier (/* NSString */ IntPtr restrictionIdentifier);
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public static UIGuidedAccessRestrictionState GetState (string restrictionIdentifier)
 		{
 			IntPtr p = NSString.CreateNative (restrictionIdentifier);
@@ -42,49 +42,81 @@ namespace UIKit {
 		}
 
 #if IOS
+#if NET
+		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (12,2)]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
-		static extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, bool enabled, IntPtr completion);
+		static unsafe extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* completion);
 
+#if NET
+		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
+		// [SupportedOSPlatform ("maccatalyst")]
+		// [SupportedOSPlatform ("tvos")]
+#else
 		[iOS (12,2)]
+#endif
 		public delegate void UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (bool success, NSError error);
 
+#if !NET
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, bool success, IntPtr error);
+		internal delegate void DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler (IntPtr block, byte success, IntPtr error);
+#endif
 
 		static internal class UIGuidedAccessConfigureAccessibilityFeaturesTrampoline {
+#if !NET
 			static internal readonly DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler Handler = Invoke;
+#endif
 
+#if NET
+			[UnmanagedCallersOnlyAttribute]
+#else
 			[MonoPInvokeCallback (typeof (DUIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler))]
-			static unsafe void Invoke (IntPtr block, bool success, IntPtr error)
+#endif
+			internal static unsafe void Invoke (IntPtr block, byte success, IntPtr error)
 			{
 				var descriptor = (BlockLiteral*) block;
 				var del = (UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler) (descriptor->Target);
-				if (del != null)
-					del (success, Runtime.GetNSObject<NSError> (error));
+				if (del is not null)
+					del (success != 0, Runtime.GetNSObject<NSError> (error));
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (12,2)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void ConfigureAccessibilityFeatures (UIGuidedAccessAccessibilityFeature features, bool enabled, UIGuidedAccessConfigureAccessibilityFeaturesCompletionHandler completionHandler)
 		{
-			if (completionHandler == null)
+			if (completionHandler is null)
 				throw new ArgumentNullException (nameof (completionHandler));
 
 			unsafe {
-				BlockLiteral* block_ptr_completionHandler;
-				BlockLiteral block_completionHandler;
-				block_completionHandler = new BlockLiteral ();
-				block_ptr_completionHandler = &block_completionHandler;
-				block_completionHandler.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
-
-				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, (IntPtr) block_ptr_completionHandler);
-				block_ptr_completionHandler->CleanupBlock ();
+#if NET
+				delegate* unmanaged<IntPtr, byte, IntPtr, void> trampoline = &UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Invoke;
+				using var block = new BlockLiteral (trampoline, completionHandler, typeof (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline), nameof (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Invoke));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
+#endif
+				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, &block);
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (12,2)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static Task<(bool Success, NSError Error)> ConfigureAccessibilityFeaturesAsync (UIGuidedAccessAccessibilityFeature features, bool enabled)
 		{
@@ -95,20 +127,6 @@ namespace UIKit {
 #endif
 #endif // !COREBUILD
 	}
-
-#if !XAMCORE_2_0
-	[Obsolete ("Use IUIGuidedAccessRestrictionDelegate")]
-	public interface IUIGuidedAccessRestriction : INativeObject {
-
-		string [] GetGuidedAccessRestrictionIdentifiers { get; }
-
-		void GuidedAccessRestrictionChangedState (string restrictionIdentifier, UIGuidedAccessRestrictionState newRestrictionState);
-
-		string GetTextForGuidedAccessRestriction  (string restrictionIdentifier);
-
-		string GetDetailTextForGuidedAccessRestriction (string restrictionIdentifier);
-	}
-#endif
 }
 
 #endif // !WATCH

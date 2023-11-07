@@ -1,4 +1,5 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
+#nullable enable
+
 using System;
 using Metal;
 using Foundation;
@@ -8,7 +9,7 @@ namespace MetalPerformanceShaders {
 		public unsafe MPSCnnBinaryConvolution (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			fixed (void *outputBiasTermsHandle = outputBiasTerms)
+			fixed (void* outputBiasTermsHandle = outputBiasTerms)
 			fixed (void* outputScaleTermsHandle = outputScaleTerms)
 			fixed (void* inputBiasTermsHandle = inputBiasTerms)
 			fixed (void* inputScaleTermsHandle = inputScaleTerms)
@@ -20,7 +21,7 @@ namespace MetalPerformanceShaders {
 		public unsafe MPSCnnBinaryFullyConnected (IMTLDevice device, IMPSCnnConvolutionDataSource convolutionData, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			fixed (void *outputBiasTermsHandle = outputBiasTerms)
+			fixed (void* outputBiasTermsHandle = outputBiasTerms)
 			fixed (void* outputScaleTermsHandle = outputScaleTerms)
 			fixed (void* inputBiasTermsHandle = inputBiasTerms)
 			fixed (void* inputScaleTermsHandle = inputScaleTerms)
@@ -28,4 +29,3 @@ namespace MetalPerformanceShaders {
 		}
 	}
 }
-#endif

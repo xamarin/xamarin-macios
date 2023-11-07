@@ -1,0 +1,13 @@
+## it's an internal that is called from a non-generated binding
+!incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
+
+## bad API signature, removed in XAMCORE_3_0
+!extra-null-allowed! 'SpriteKit.SKShapeNode SpriteKit.SKShapeNode::FromPoints(CoreGraphics.CGPoint&,System.UIntPtr)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'SpriteKit.SKShapeNode SpriteKit.SKShapeNode::FromSplinePoints(CoreGraphics.CGPoint&,System.UIntPtr)' has a extraneous [NullAllowed] on parameter #0
+
+## headers documents it as: default to `nil`
+!extra-null-allowed! 'System.Void SpriteKit.SKAction::set_TimingFunction2(SpriteKit.SKActionTimingFunction2)' has a extraneous [NullAllowed] on parameter #0
+
+## kept for compatibility (unit tested)
+!extra-null-allowed! 'System.Void SpriteKit.SKKeyframeSequence::.ctor(Foundation.NSObject[],Foundation.NSArray)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void SpriteKit.SKKeyframeSequence::.ctor(Foundation.NSObject[],Foundation.NSArray)' has a extraneous [NullAllowed] on parameter #1

@@ -21,26 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
-	
+
 	public partial class NSTreeController {
-		
+
 		// note: if needed override the protected Get|Set methods
-		public NSIndexPath SelectionIndexPath { 
+		public NSIndexPath SelectionIndexPath {
 			get { return GetSelectionIndexPath (); }
 			// ignore return value (bool)
-			set { SetSelectionIndexPath(value); }
+			set { SetSelectionIndexPath (value); }
 		}
-		
+
 		// note: if needed override the protected Get|Set methods
-		public NSIndexPath [] SelectionIndexPaths { 
+		public NSIndexPath [] SelectionIndexPaths {
 			get { return GetSelectionIndexPaths (); }
 			// ignore return value (bool)
 			set { SetSelectionIndexPaths (value); }
 		}
 	}
 }
+#endif // !__MACCATALYST__

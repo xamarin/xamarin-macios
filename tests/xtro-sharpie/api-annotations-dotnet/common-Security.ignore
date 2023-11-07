@@ -1,0 +1,30 @@
+## 'kSecAttrPersistentReference' (correct), 'kSecAttrPersistantReference' (incorrect). Persistent with an "a" instead of "e".
+!missing-field! kSecAttrPersistantReference not bound
+!missing-field! kSecRandomDefault not bound
+
+
+## used in mscorlib.dll mcs/class/corlib/CommonCrypto/CommonCrypto.cs
+!missing-pinvoke! SecRandomCopyBytes is not bound
+
+## *GetTypeID are generally not bound
+!missing-pinvoke! SecAccessControlGetTypeID is not bound
+
+## untyped enum in Security.framework/Headers/SecPolicy.h but the API use CFOptionFlags
+!unknown-native-enum! SecRevocation bound
+
+## identical to NSObject version (headers macros) which can be called by CFObject
+!missing-pinvoke! sec_release is not bound
+!missing-pinvoke! sec_retain is not bound
+
+## the following are manualy bound as NativeObject
+
+## xcode10.0 backlog
+!missing-pinvoke! sec_protocol_options_set_challenge_block is not bound
+!missing-pinvoke! sec_protocol_options_set_verify_block is not bound
+
+## xcode11.0 backlog
+!missing-pinvoke! sec_protocol_options_set_pre_shared_key_selection_block is not bound
+
+## extra value for initialization
+!extra-enum-value! Managed value -1 for SslSessionState.Invalid not found in native headers
+

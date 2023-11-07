@@ -7,77 +7,50 @@
 // Copyright 2012-2014 Xamarin Inc. (http://www.xamarin.com)
 //
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 // CFHTTPAuthentication is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
-#if XAMCORE_4_0
+#if NET
 namespace CFNetwork {
 #else
 namespace CoreServices {
 #endif
 
-	public class CFHTTPAuthentication : CFType, INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CFHTTPAuthentication (IntPtr handle)
-			: this (handle, false)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CFHTTPAuthentication : CFType {
+		[Preserve (Conditional = true)]
+		internal CFHTTPAuthentication (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
-		internal CFHTTPAuthentication (IntPtr handle, bool owns)
-		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
-		}
-
-		[DllImport (Constants.CFNetworkLibrary, EntryPoint="CFHTTPAuthenticationGetTypeID")]
+		[DllImport (Constants.CFNetworkLibrary, EntryPoint = "CFHTTPAuthenticationGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
-
-		~CFHTTPAuthentication ()
-		{
-			Dispose (false);
-		}
-		
-		protected void CheckHandle ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException (GetType ().Name);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get {
-				CheckHandle ();
-				return handle;
-			}
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFHTTPAuthenticationRef */ IntPtr CFHTTPAuthenticationCreateFromResponse (/* CFAllocatorRef */ IntPtr alloc, /* CFHTTPMessageRef */ IntPtr response);
 
-		public static CFHTTPAuthentication CreateFromResponse (CFHTTPMessage response)
+		public static CFHTTPAuthentication? CreateFromResponse (CFHTTPMessage response)
 		{
-			if (response == null)
-				throw new ArgumentNullException ("response");
+			if (response is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (response));
 
 			if (response.IsRequest)
 				throw new InvalidOperationException ();
@@ -90,6 +63,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationIsValid (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFStreamError* */ IntPtr error);
 
 		public bool IsValid {
@@ -97,12 +71,13 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationAppliesToRequest (/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFHTTPMessageRef */ IntPtr request);
 
 		public bool AppliesToRequest (CFHTTPMessage request)
 		{
-			if (request == null)
-				throw new ArgumentNullException ("request");
+			if (request is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 
 			if (!request.IsRequest)
 				throw new InvalidOperationException ();
@@ -111,6 +86,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresAccountDomain (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresAccountDomain {
@@ -118,6 +94,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresOrderedRequests (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresOrderedRequests {
@@ -125,6 +102,7 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFHTTPAuthenticationRequiresUserNameAndPassword (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
 		public bool RequiresUserNameAndPassword {
@@ -134,13 +112,10 @@ namespace CoreServices {
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFString */ IntPtr CFHTTPAuthenticationCopyMethod (/* CFHTTPAuthenticationRef */ IntPtr auth);
 
-		public string GetMethod ()
+		public string? GetMethod ()
 		{
 			var ptr = CFHTTPAuthenticationCopyMethod (Handle);
-			if (ptr == IntPtr.Zero)
-				return null;
-			using (var method = new CFString (ptr))
-				return method;
+			return CFString.FromHandle (ptr, true);
 		}
 	}
 }

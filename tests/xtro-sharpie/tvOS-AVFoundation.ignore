@@ -1,17 +1,56 @@
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
 
-# as per the header comments, the following two enums have to be ignored on tvOS
+# as per the header comments, the following enum has to be ignored on tvOS
 !missing-enum! AVAudioSessionIOType not bound
-!missing-enum! AVAudioSessionRecordPermission not bound
 
 # removed in TV 12,0, API that used them was removed in TV 10, added obsolete attr.
 !unknown-field! AVAssetDownloadTaskMediaSelectionKey bound
 !unknown-field! AVAssetDownloadTaskMinimumRequiredMediaBitrateKey bound
 
-# added in TV 12, but makes no sense to bind it because AVCaptureDevice does not exist in tvOS
-!missing-field! AVCaptureLensPositionCurrent not bound
+# not used on tvOS
+!missing-enum! AVAudioSessionInterruptionReason not bound
+!missing-protocol! AVVideoCompositionInstruction not bound
+!incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
+!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+!missing-field! AVCoreAnimationBeginTimeAtZero not bound
+!missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
+!missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
+!missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
+!incorrect-protocol-member! AVAudio3DMixing::pointSourceInHeadMode is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setPointSourceInHeadMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setSourceMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
+!extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
+!missing-field! AVPlayerItemTimeJumpedOriginatingParticipantKey not bound
 
-# Initial result from new rule missing-release-attribute-on-return-value
-!missing-release-attribute-on-return-value! CoreMedia.CMSampleBuffer AVFoundation.AVAssetReaderOutput::CopyNextSampleBuffer()'s selector's ('copyNextSampleBuffer') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
-!missing-release-attribute-on-return-value! CoreVideo.CVPixelBuffer AVFoundation.AVVideoCompositionRenderContext::CreatePixelBuffer()'s selector's ('newPixelBuffer') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound
+!incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
+!missing-selector! AVMutableComposition::tracks not bound
+!missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
+!missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
+!missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
+!missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
+!missing-selector! NSCoder::decodeCMTimeForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeRangeForKey: not bound
+!missing-selector! NSCoder::encodeCMTime:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
+!extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound
+!incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract

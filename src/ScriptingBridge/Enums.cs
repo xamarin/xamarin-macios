@@ -23,12 +23,10 @@
 //
 using System;
 
-namespace ScriptingBridge
-{
+namespace ScriptingBridge {
 	// AE.framework/Headers/AEDataModel.h:typedef SInt32 AESendMode;
 	[Flags]
-	public enum AESendMode : int
-	{
+	public enum AESendMode : int {
 		NoReply = 0x00000001,
 		QueueReply = 0x00000002,
 		WaitReply = 0x00000003,
@@ -46,8 +44,7 @@ namespace ScriptingBridge
 	// LaunchServices.framework/Headers/LSOpen.h:typedef OptionBits LSLaunchFlags;
 	// DirectoryService.framework/Headers/DirServicesTypes.h:typedef UInt32 OptionBits;
 	[Flags]
-	public enum LSLaunchFlags : uint
-	{
+	public enum LSLaunchFlags : uint {
 		LaunchDefaults = 0x00000001,
 		LaunchAndPrint = 0x00000002,
 		LaunchReserved2 = 0x00000004,
@@ -69,4 +66,3 @@ namespace ScriptingBridge
 	}
 
 }
-

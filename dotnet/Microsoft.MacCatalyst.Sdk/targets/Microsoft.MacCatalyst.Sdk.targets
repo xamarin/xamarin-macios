@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Xamarin.Shared.Sdk.targets" />
+
+  <PropertyGroup>
+    <RunEnvironment Condition="'$(XamarinDebugMode)' != ''">$(RunEnvironment) --env '__XAMARIN_DEBUG_MODE__=$(XamarinDebugMode)'</RunEnvironment>
+    <RunEnvironment Condition="'$(XamarinDebugPort)' != ''">$(RunEnvironment) --env '__XAMARIN_DEBUG_PORT__=$(XamarinDebugPort)'</RunEnvironment>
+    <RunEnvironment Condition="'$(XamarinDebugHosts)' != ''">$(RunEnvironment) --env '__XAMARIN_DEBUG_HOSTS__=$(XamarinDebugHosts)'</RunEnvironment>
+    <RunEnvironment Condition="'$(XamarinDebugConnectTimeout)' != ''">$(RunEnvironment) --env '__XAMARIN_DEBUG_CONNECT_TIMEOUT__=$(XamarinDebugConnectTimeout)'</RunEnvironment>
+    <OpenArguments>$(OpenArguments) $(RunEnvironment)</OpenArguments>
+    <OpenArguments Condition="'$(StandardOutputPath)' != ''">$(OpenArguments) --stdout '$(StandardOutputPath)'</OpenArguments>
+    <OpenArguments Condition="'$(StandardErrorPath)' != ''">$(OpenArguments) --stderr '$(StandardErrorPath)'</OpenArguments>
+    <OpenArguments Condition="'$(StandardInputPath)' != ''">$(OpenArguments) --stdin '$(StandardInputPath)'</OpenArguments>
+    <OpenArguments Condition="'$(OpenNewInstance)' == 'true'">$(OpenArguments) -n</OpenArguments>
+    <RunCommand>open</RunCommand>
+    <RunArguments>$(OpenArguments) "$(TargetDir)/$(AssemblyName).app" --args</RunArguments>
+  </PropertyGroup>
+</Project>

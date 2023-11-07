@@ -40,21 +40,12 @@ namespace Xamarin.Linker {
 
 		protected virtual void SweepAssemblyDefinition (AssemblyDefinition assembly)
 		{
-			SweepMainModule (assembly.MainModule);
-		}
-
-		protected void SweepMainModule (ModuleDefinition main)
-		{
-			// if we save (only or by linking) then unmarked exports (e.g. forwarders) must be cleaned
-			// or they can point to nothing which will break later (e.g. when re-loading for stripping IL)
-			// reference: https://bugzilla.xamarin.com/show_bug.cgi?id=36577
-			if (main.HasExportedTypes)
-				SweepCollectionNonAttributable (main.ExportedTypes);
+			var main = assembly.MainModule;
 			// only when linking should we remove module references, if we (re)save the assembly then
 			// the entrypoints (for p/invokes) will be required later
 			// reference: https://bugzilla.xamarin.com/show_bug.cgi?id=35372
 			if (main.HasModuleReferences && (CurrentAction == AssemblyAction.Link))
-				SweepCollectionNonAttributable (main.ModuleReferences);
+				SweepCollectionMetadata (main.ModuleReferences);
 		}
 	}
 }

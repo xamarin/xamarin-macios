@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGContextPDF
 //
 // Authors:
@@ -8,28 +8,10 @@
 //
 
 using System;
-using System.Drawing;
-using System.IO;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
@@ -50,7 +32,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var url = new NSUrl (filename))
 			using (var ctx = new CGContextPDF (url)) {
 				ctx.BeginPage (PDFInfoTest.GetInfo ());
-				ctx.SetUrl (url, RectangleF.Empty);
+				ctx.SetUrl (url, CGRect.Empty);
 				ctx.EndPage ();
 			}
 		}
@@ -58,7 +40,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Context_Url_Rect ()
 		{
-			var rect = new RectangleF (10, 10, 100, 100);
+			var rect = new CGRect (10, 10, 100, 100);
 			using (var url = new NSUrl (filename))
 			using (var ctx = new CGContextPDF (url, rect)) {
 				ctx.BeginPage ((CGPDFPageInfo) null);
@@ -71,8 +53,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void Context_Url_Rect_Info ()
 		{
 			using (var url = new NSUrl (filename))
-			using (var ctx = new CGContextPDF (url, new RectangleF (0, 0, 1000, 1000), PDFInfoTest.GetInfo ())) {
-				ctx.AddDestination ("monkey", PointF.Empty);
+			using (var ctx = new CGContextPDF (url, new CGRect (0, 0, 1000, 1000), PDFInfoTest.GetInfo ())) {
+				ctx.AddDestination ("monkey", CGPoint.Empty);
 				ctx.Close ();
 			}
 		}
@@ -80,22 +62,22 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Constructors ()
 		{
-			if (TestRuntime.CheckXcodeVersion (9,3))
+			if (TestRuntime.CheckXcodeVersion (9, 3))
 				Assert.Ignore ("Crash (at least on simulator) with iOS 11.3 beta 1");
-			
+
 			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null), "null CGDataConsumer");
 
-			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, RectangleF.Empty), "null CGDataConsumer, Empty");
+			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, CGRect.Empty), "null CGDataConsumer, Empty");
 
-			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, RectangleF.Empty, null), "null CGDataConsumer, Empty, null");
+			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, CGRect.Empty, null), "null CGDataConsumer, Empty, null");
 
 			Assert.Throws<Exception> (() => new CGContextPDF ((CGDataConsumer) null, null), "null CGDataConsumer, null");
 
 			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null), "null NSUrl");
 
-			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, RectangleF.Empty), "null NSUrl, Empty");
+			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, CGRect.Empty), "null NSUrl, Empty");
 
-			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, RectangleF.Empty, null), "null NSUrl, Empty, null");
+			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, CGRect.Empty, null), "null NSUrl, Empty, null");
 
 			Assert.Throws<Exception> (() => new CGContextPDF ((NSUrl) null, null), "null NSUrl, null");
 
@@ -112,7 +94,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				ctx.BeginTag (CGPdfTagType.Header, (NSDictionary) null);
 				ctx.EndTag ();
 				ctx.BeginTag (CGPdfTagType.Caption, d);
-				ctx.SetUrl (url, RectangleF.Empty);
+				ctx.SetUrl (url, CGRect.Empty);
 				ctx.EndTag ();
 				ctx.EndPage ();
 			}
@@ -134,7 +116,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				ctx.BeginTag (CGPdfTagType.Header, tp);
 				ctx.EndTag ();
 				ctx.BeginTag (CGPdfTagType.Caption, (CGPdfTagProperties) null);
-				ctx.SetUrl (url, RectangleF.Empty);
+				ctx.SetUrl (url, CGRect.Empty);
 				ctx.EndTag ();
 				ctx.EndPage ();
 			}

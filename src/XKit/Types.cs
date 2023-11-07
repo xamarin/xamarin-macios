@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -33,7 +36,12 @@ namespace AppKit {
 namespace UIKit {
 #endif
 
-	[Watch (4,0), TV (11,0), iOS (11,0)]
+#if NET
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NSDirectionalEdgeInsets {
 
@@ -64,10 +72,10 @@ namespace UIKit {
 			return (Bottom == other.Bottom);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (obj is NSDirectionalEdgeInsets)
-				return Equals ((NSDirectionalEdgeInsets) obj);
+			if (obj is NSDirectionalEdgeInsets insets)
+				return Equals (insets);
 			return false;
 		}
 
@@ -83,7 +91,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return Top.GetHashCode () ^ Leading.GetHashCode () ^ Trailing.GetHashCode () ^ Bottom.GetHashCode ();
+			return HashCode.Combine (Top, Leading, Trailing, Bottom);
 		}
 
 #if !MONOMAC

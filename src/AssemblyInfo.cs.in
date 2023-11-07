@@ -9,11 +9,36 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+#if NET
+[assembly: AssemblyInformationalVersion ("@NUGET_VERSION_NO_METADATA@; git-rev-head:@PACKAGE_HEAD_REV@; git-branch:@PACKAGE_HEAD_BRANCH@")]
+[assembly: AssemblyTitle ("Microsoft.@DOTNET_PLATFORM@")]
+[assembly: AssemblyProduct ("Microsoft.@DOTNET_PLATFORM@")]
+#else
 [assembly: AssemblyInformationalVersion ("@PACKAGE_VERSION_MAJOR@.@PACKAGE_VERSION_MINOR@.@PACKAGE_VERSION_REV@.@PACKAGE_VERSION_BUILD@; git-rev-head:@PACKAGE_HEAD_REV@; git-branch:@PACKAGE_HEAD_BRANCH@")]
 [assembly: AssemblyTitle ("@PRODUCT_NAME@")]
 [assembly: AssemblyProduct ("@PRODUCT_NAME@")]
+#endif
 // FIXME: Probably need to add Copyright 2009-2011 Novell Inc.
 // [assembly: AssemblyCopyright ("Copyright 2011-2014 Xamarin Inc.")]
-[assembly: AssemblyCompany ("Xamarin Inc.")]
+[assembly: AssemblyCompany ("Microsoft Corp.")]
 
+[assembly: AssemblyMetadata ("IsTrimmable", "True")]
+
+#if !NET
 [assembly: InternalsVisibleTo ("System.Net.Http,PublicKey=002400000480000094000000060200000024000052534131000400000100010007d1fa57c4aed9f0a32e84aa0faefd0de9e8fd6aec8f87fb03766c834c99921eb23be79ad9d5dcc1dd9ad236132102900b723cf980957fc4e177108fc607774f29e8320e92ea05ece4e821c0a5efe8f1645c4c0c93c1ab99285d622caa652c1dfad63d745d6f2de5f17e5eaf0fc4963d261c8a12436518206dc093344d5ad293")]
+#endif
+
+#if NET
+// Use a two-part version, because there shouldn't be any API changes when the third or fourth digit changes (according to Semver 2.0 rules).
+// In other words: the following scenario is safe:
+// - Assembly A builds against Microsoft.*.dll v1.0.1
+// - Assembly B builds against Assembly A and Microsoft.*.dll v1.0.0
+// - Assembly B should build just fine, because those two versions of Microsoft.*.dll have the exact same API.
+// To avoid scenarios where everybody would have to update to the latest patch version of Microsoft.*.dll
+// in order to compile stuff, we erase the third and fourth number and only use 0 for both.
+[assembly: AssemblyVersion ("@NUGET_VERSION_MAJOR@.@NUGET_VERSION_MINOR@.0.0")]
+#endif
+
+#if NET && !XCODE_IS_STABLE && !COREBUILD
+[assembly: RequiresPreviewFeatures("These are preview bindings for an unstable version of Xcode. Opt into preview features by adding <EnablePreviewFeatures>True</EnablePreviewFeatures> to your project file.")]
+#endif

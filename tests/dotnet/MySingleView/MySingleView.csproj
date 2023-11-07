@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>MySingleTitle</ApplicationTitle>
+		<ApplicationId>com.xamarin.mysingletitle</ApplicationId>
+		<ApplicationVersion>3.14</ApplicationVersion>
+		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+	</PropertyGroup>
+</Project>

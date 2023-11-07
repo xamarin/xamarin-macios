@@ -13,33 +13,13 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
-using AVFoundation;
 using CoreGraphics;
 using CoreImage;
 using CoreText;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreImage;
-using MonoTouch.CoreText;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreImage {
 
@@ -54,7 +34,11 @@ namespace MonoTouchFixtures.CoreImage {
 			using (var url = NSUrl.FromFilename (file))
 			using (var input = CIImage.FromUrl (url))
 			using (var filter = new CIHighlightShadowAdjust ()) {
+#if NET
+				filter.InputImage = input;
+#else
 				filter.Image = input;
+#endif
 				filter.HighlightAmount = 0.75f;
 				filter.ShadowAmount = 1.5f;
 				// https://bugzilla.xamarin.com/show_bug.cgi?id=15465
@@ -62,23 +46,23 @@ namespace MonoTouchFixtures.CoreImage {
 			}
 		}
 
-		class MyFilter : CIFilter
-		{
+		class MyFilter : CIFilter {
 			public int Input { get; set; }
 		}
 
 		[Test]
 		public void CustomFilterTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			MyFilter filter = new MyFilter ();
 			Assert.NotNull (filter);
 			filter.Input = 10;
-			Assert.AreEqual(10, filter.Input);
+			Assert.AreEqual (10, filter.Input);
 		}
 
+#if !NET
 		[Test]
 		public void UnsupportedInputImage ()
 		{
@@ -90,6 +74,7 @@ namespace MonoTouchFixtures.CoreImage {
 				Assert.Null (filter.Image, "Image");
 			}
 		}
+#endif // !NET
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);
@@ -97,8 +82,8 @@ namespace MonoTouchFixtures.CoreImage {
 		[Test]
 		public void ColorSpace ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var f = new CIColorCubeWithColorSpace ()) {
 				Assert.Null (f.ColorSpace, "ColorSpace/default");

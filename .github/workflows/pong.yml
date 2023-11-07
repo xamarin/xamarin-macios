@@ -1,0 +1,44 @@
+name: Update local copy
+
+on: repository_dispatch
+
+# lock to ensure we do not step on each other
+concurrency: 
+  group: 'pong-mirror'
+  cancel-in-progress: false
+
+
+jobs:
+  updateRemote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Add remotes'
+        run: |
+          git remote add public "http://$Env:GITHUB_TOKEN@github.com/xamarin/xamarin-macios.git"
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.access-token }}
+
+      - name: 'Fetch remote'
+        run: git fetch public
+
+      - name: 'Update local branch'
+        run: |
+          $branch = "$Env:BRANCH".Replace("refs/heads/","")
+          git checkout $branch
+          git pull public $branch
+          git push origin $branch
+        shell: pwsh
+        env:
+          BRANCH: ${{ github.event.client_payload.ref }}
+          
+      - name: Merge public with private
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          from_branch: ${{ github.event.client_payload.ref }}
+          target_branch: ${{ github.event.client_payload.ref }}-private
+          github_token: ${{ github.token }}

@@ -1,0 +1,154 @@
+# generic steps to get the test results, remove any private informaiton and add them to the github page.
+parameters:
+
+- name: reason 
+  type: string 
+  default: 'pr' # default reason is a pr build 
+
+- name: testPrefix
+  type: string 
+  default: 'sim' # always sim, but use a param to move in the future if needed
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+
+steps:
+
+- template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ eq(parameters.reason, "pr") }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- checkout: macios.ci 
+  clean: true
+  lfs: true
+
+# do not trust clean workspace
+- pwsh: |
+    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
+    Write-Host "Removing data in path $downloadsPath"
+    if (Test-Path -Path $downloadsPath) { # true if path exists and a dir
+      rm -Rf "$downloadsPath/*"
+    }
+  displayName: 'Clean download dir'
+
+# downlod ALL artifacts
+- download: macios 
+
+- pwsh: |
+    Import-Module $Env:BUILD_SOURCESDIRECTORY\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    $configFile = Join-Path $(PIPELINE.WORKSPACE) "macios" "build-configuration" "configuration.json"
+    $config = Import-BuildConfiguration -ConfigFile $configFile
+    $config | Write-Host
+
+    # export variables to be present in the othe steps
+    Write-Host "##vso[task.setvariable variable=BuildReason;isOutput=true]$($config.BuildReason)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranchName;isOutput=true]$($config.BuildSourceBranchName)"
+    Write-Host "##vso[task.setvariable variable=BuildSourceBranch;isOutput=true]$($config.BuildSourceBranch)"
+    Write-Host "##vso[task.setvariable variable=BuildId;isOutput=true]$($config.BuildId)"
+    Write-Host "##vso[task.setvariable variable=Commit;isOutput=true]$($config.Commit)"
+    # calculate branch name and destination dir
+    $branchName = ""
+    if ($config.BuildReason -eq "PullRequest") {
+      $branchName = "pr/PR$($config.Commit)"
+    } else {
+      $branchName = "ci/$($config.BuildSourceBranchName)/$($config.Commit)"
+    }
+
+    $branchName = "$branchName/$($config.BuildId)"
+    Write-Host "##vso[task.setvariable variable=PublishingBranchName;isOutput=true]$branchName"
+    Write-Host "##vso[task.setvariable variable=PublishingPath;isOutput=true]$branchName"
+  name: configuration
+  displayName: 'Parse build configuration'
+  timeoutInMinutes: 1
+
+- pwsh: |
+    $htmlRepo = Join-Path $(Build.SourcesDirectory) "macios.ci"
+    cd $htmlRepo 
+
+    # it uses https which is problematic, we move to use the pat so that a push will work
+    git remote remove origin
+    git remote add origin https://$(GitHub.Token)@github.com/xamarin/macios.ci.git
+    git remote # don't add -v else we see the pat
+
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
+    Write-Host "New branch name: $Env:PublishingBranchName"
+    git checkout -b $Env:PublishingBranchName
+  displayName: 'Create remote branch'
+  timeoutInMinutes: 10
+  env:
+    OriginalBuildReason: $(configuration.BuildReason)
+    OriginalSourceBranch: $(configuration.BuildSourceBranchName)
+    OriginalBuildId: $(configuration.BuildId)
+    OriginalCommit: $(configuration.Commit)
+    PublishingBranchName: $(configuration.PublishingBranchName)
+
+- pwsh: |
+    $htmlRepo = Join-Path $(Build.SourcesDirectory) "macios.ci"
+    $downloadsPath = Join-Path $(PIPELINE.WORKSPACE) "macios"
+    if ($Env:SYSTEM_DEBUG) {
+      Get-ChildItem  $downloadsPath -Recurse
+    }
+    $destinationRoot =  Join-Path $(Build.SourcesDirectory) "macios.ci" $Env:PublishingPath
+    Write-Host "Destination root: $destinationRoot"
+    mkdir -p $destinationRoot 
+
+    # find all zips, and expand them
+    $zips = Get-ChildItem -Path $downloadsPath -Filter *.zip -Recurse -File
+    foreach($zip in $zips) {
+      $destinationPath = Join-Path $destinationRoot $zip.Directory.Name
+      Write-Host "Expanding $($zip.FullName) to $destinationPath"
+      Expand-Archive -Force -LiteralPath $zip.FullName -DestinationPath $destinationPath 
+    }
+
+    if ($Env:SYSTEM_DEBUG) {
+      Get-ChildItem $destinationRoot -Recurse
+    }
+
+    # clean logs, xml, etc print those rm calls for debugging
+    $extensionsToDelete = @("*.log", "*.tmp", "*.txt", "*.xml", "*.crash", "*.css", "*.js", "*.cs", "*.binlog", "*.todo.html")
+    foreach ($extension in $extensionsToDelete) {
+      Get-ChildItem -Path $destinationRoot -Filter $extension -Recurse -File | ForEach-Object {
+        Write-Host "rm $($_.FullName)"
+        rm $_.FullName
+      }
+    }
+
+    # remove empty dirs
+    $empty = Get-ChildItem $destinationRoot -Recurse -Force -Directory |
+      Sort-Object -Property FullName -Descending |
+      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } 
+    foreach ($d in $empty) {
+      try {
+        Write-Host "Removing $d"
+        Remove-Item -Verbose -Force $d
+      } catch {
+        $null  # do nothing
+      }
+    }
+
+    if ($Env:SYSTEM_DEBUG) {
+      Get-ChildItem $destinationRoot -Recurse
+    }
+    cd $htmlRepo 
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
+    git add $Env:PublishingPath
+    git commit -m"[CI] Add test results for branch $Env:BuildSourceBranch build $Env:OriginalBuildId"
+    git push origin $Env:PublishingBranchName -f
+  displayName: 'Add files and clean logs'
+  timeoutInMinutes: 30
+  env:
+    PublishingPath: $(configuration.PublishingPath)
+    OriginalBuildId: $(configuration.BuildId)
+    PublishingBranchName: $(configuration.PublishingBranchName)

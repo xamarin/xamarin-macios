@@ -4,13 +4,11 @@ using System.Text.RegularExpressions;
 
 using NUnit.Framework;
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	public delegate void Action ();
 
-	public static class Asserts
-	{
-		public static void Throws<T> (Action action, string expectedExceptionMessage, string message = "") where T: Exception
+	public static class Asserts {
+		public static void Throws<T> (Action action, string expectedExceptionMessage, string message = "") where T : Exception
 		{
 			try {
 				action ();
@@ -20,7 +18,7 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static void ThrowsPartial<T> (Action action, string [] expectedExceptionMessages, string message = "") where T: Exception
+		public static void ThrowsPartial<T> (Action action, string [] expectedExceptionMessages, string message = "") where T : Exception
 		{
 			try {
 				action ();
@@ -31,8 +29,8 @@ namespace Xamarin.Tests
 					StartsWith (expectedExceptionMessages [i], actual [i], i.ToString ());
 			}
 		}
-		
-		public static void ThrowsPattern<T> (Action action, string expectedExceptionPattern, string message = "") where T: Exception
+
+		public static void ThrowsPattern<T> (Action action, string expectedExceptionPattern, string message = "") where T : Exception
 		{
 			try {
 				action ();
@@ -41,13 +39,13 @@ namespace Xamarin.Tests
 				IsLike (expectedExceptionPattern, ex.Message, message);
 			}
 		}
-		
+
 		public static void StartsWith (string expectedStartsWith, string actual, string message)
 		{
 			if (!actual.StartsWith (expectedStartsWith, StringComparison.Ordinal))
 				throw new AssertionException (string.Format ("Expected '{0}' to start with '{1}'. {2}", actual, expectedStartsWith, message));
 		}
-		
+
 		public static void IsLike (string pattern, string actual, string message)
 		{
 			if (!Regex.IsMatch (actual, pattern, RegexOptions.CultureInvariant))
@@ -67,4 +65,3 @@ namespace Xamarin.Tests
 		}
 	}
 }
-

@@ -1,0 +1,47 @@
+14:48:45.0272010 Test log server listening on: 0.0.0.0:49987
+14:48:45.0308310 System log for the 'iPhone X (iOS 13.3) - created by xharness' simulator is: /Users/mandel/Library/Logs/CoreSimulator/96EBF3D8-393E-4166-B1AF-4A3BDEAC5021/system.log
+14:48:45.0314300 *** Executing com.xamarin.bcltests.mscorlib Part 1/Classic in the simulator ***
+14:48:45.0328640 Starting test run
+14:48:45.0332180 /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch --sdkroot /Applications/Xcode113.app -v -argument=-connection-mode -argument=none -argument=-app-arg:-autostart -setenv=NUNIT_AUTOSTART=true -argument=-app-arg:-autoexit -setenv=NUNIT_AUTOEXIT=true -argument=-app-arg:-enablenetwork -setenv=NUNIT_ENABLE_NETWORK=true -argument=-app-arg:-hostname:127.0.0.1 -setenv=NUNIT_HOSTNAME=127.0.0.1 -argument=-app-arg:-transport:Tcp -setenv=NUNIT_TRANSPORT=TCP -argument=-app-arg:-hostport:49987 -setenv=NUNIT_HOSTPORT=49987 --launchsim "/Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/tests/xharness/tmp-test-dir/mscorlib Part 1/bin/mscorlib Part 1/iPhoneSimulator/Debug-unified/com.xamarin.bcltests.mscorlib Part 1.app" --stdout=/dev/ttys000 --stderr=/dev/ttys000 --device=:v2:udid=96EBF3D8-393E-4166-B1AF-4A3BDEAC5021
+14:48:45.2834160 Using Xcode 11.3 found in /Applications/Xcode113.app
+14:48:45.2865790 Xamarin.Hosting: Xamarin.Hosting
+14:48:45.2867370 Xamarin.Hosting:     Version: cec1cba137 (master)
+14:48:45.2867590 Xamarin.Hosting:     Xcode: /Applications/Xcode113.app
+14:48:45.2886960 Xamarin.Hosting:     Xcode Version: 11.3
+14:48:45.2892130 Xamarin.Hosting:     Verbosity: 11
+14:48:45.2987220 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/DVTFoundation
+14:48:45.3024060 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTiPhoneSimulatorRemoteClient.framework/DVTiPhoneSimulatorRemoteClient
+14:48:45.3024840 Xamarin.Hosting: Loaded /Library/Developer/PrivateFrameworks/CoreSimulator.framework/CoreSimulator
+14:48:45.3026130 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DTDeviceKitBase.framework/DTDeviceKitBase
+14:48:45.3154170 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTKit.framework/DVTKit
+14:48:45.3159370 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DTDeviceKit.framework/DTDeviceKit
+14:48:45.3160450 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DTXConnectionServices.framework/DTXConnectionServices
+14:48:45.3167760 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTSourceControl.framework/DVTSourceControl
+14:48:45.3168970 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTServices.framework/DVTServices
+14:48:45.3170070 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTPortal.framework/DVTPortal
+14:48:45.3236970 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTDocumentation.framework/DVTDocumentation
+14:48:45.3244800 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTAnalyticsClient.framework/DVTAnalyticsClient
+14:48:45.3254630 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/DVTAnalytics.framework/DVTAnalytics
+14:48:45.3273940 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/SourceKit.framework/SourceKit
+14:48:45.3451120 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/Frameworks/IDEFoundation.framework/IDEFoundation
+14:48:45.3459620 Xamarin.Hosting: Loaded /Applications/Xcode113.app/Contents/SharedFrameworks/IDEProducts.framework/IDEProducts
+14:48:45.4904370 Xamarin.Hosting: Simulator watchdogs are already disabled for 'iOS 13.3 (17C45) - iPhone X'.
+14:48:45.5001330 Xamarin.Hosting: Launching simulator application 'com.apple.iphonesimulator'
+14:48:45.8284390 Xamarin.Hosting: Ready notification 'com.apple.iphonesimulator.ready' received from the simulator.
+14:48:45.8317100 Xamarin.Hosting: Booting iPhone X (iOS 13.3) - created by xharness...
+14:48:46.4418970 Xamarin.Hosting: Booted iPhone X (iOS 13.3) - created by xharness successfully.
+14:48:46.4461820 Copying in /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/tests/xharness/tmp-test-dir/mscorlib Part 1/bin/mscorlib Part 1/iPhoneSimulator/Debug-unified/com.xamarin.bcltests.mscorlib Part 1.app/.monotouch-64
+14:48:48.1443990 Xamarin.Hosting: No need to boot (already booted): iPhone X (iOS 13.3) - created by xharness
+14:48:48.1459630 Xamarin.Hosting: Installing /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/tests/xharness/tmp-test-dir/mscorlib Part 1/bin/mscorlib Part 1/iPhoneSimulator/Debug-unified/com.xamarin.bcltests.mscorlib Part 1.app with Bundle Identifier com.xamarin.bcltests.mscorlib Part 1 on 'iOS 13.3 (17C45) - iPhone X'...
+14:49:25.8788620 Xamarin.Hosting: Installed 'com.xamarin.bcltests.mscorlib Part 1' from /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/tests/xharness/tmp-test-dir/mscorlib Part 1/bin/mscorlib Part 1/iPhoneSimulator/Debug-unified/com.xamarin.bcltests.mscorlib Part 1.app
+14:49:26.6020030 Xamarin.Hosting: Could not find any potentially troublesome weak load commands.
+14:49:26.7037460 Xamarin.Hosting: The bundle id com.xamarin.bcltests.mscorlib Part 1 was successfully installed.
+14:49:26.7087350 Xamarin.Hosting: Launching com.xamarin.bcltests.mscorlib Part 1 on 'iOS 13.3 (17C45) - iPhone X'
+14:49:26.7808590 Xamarin.Hosting: Launched com.xamarin.bcltests.mscorlib Part 1 with pid 94797
+14:49:26.7861460 Xamarin.Hosting: Device 'iOS 13.3 (17C45) - iPhone X' booted.
+14:49:31.0250650 Connection from 127.0.0.1:53085 saving logs to /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/jenkins-results/tests/20200320_144720/mscorlib Part 1/122/test-classic-20200320_144845.log
+14:49:31.0257860 Test run started
+14:50:01.4773140 Tests have finished executing
+14:50:01.7897340 Xamarin.Hosting: Simulated process has exited.
+14:50:02.0809610 Test run completed
+14:50:02.1691940 Test run succeeded

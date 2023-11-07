@@ -1,0 +1,10 @@
+## The following types are only available on watchOS (not iOS, so definitively not Catalyst)
+!missing-enum! CMFallDetectionEventUserResolution not bound
+
+## not available on Catalyst (tested with macOS 12 b3)
+!missing-selector! +CMAltimeter::isAbsoluteAltitudeAvailable not bound
+!missing-selector! CMAltimeter::startAbsoluteAltitudeUpdatesToQueue:withHandler: not bound
+!missing-selector! CMAltimeter::stopAbsoluteAltitudeUpdates not bound
+
+## no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration

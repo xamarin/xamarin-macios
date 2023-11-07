@@ -1,0 +1,8 @@
+!extra-enum-value! Managed value -2147483648 for SecAccessControlCreateFlags.ApplicationPassword not found in native headers
+!missing-enum-value! SecAccessControlCreateFlags native value kSecAccessControlApplicationPassword = 2147483648 not bound
+!missing-protocol! OS_sec_certificate not bound
+!missing-protocol! OS_sec_identity not bound
+!missing-protocol! OS_sec_object not bound
+!missing-protocol! OS_sec_protocol_metadata not bound
+!missing-protocol! OS_sec_protocol_options not bound
+!missing-protocol! OS_sec_trust not bound

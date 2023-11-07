@@ -28,37 +28,38 @@
 using System;
 using Foundation;
 
+#nullable enable
+
 namespace CoreImage {
 
 	// convenience enum for CIDetectorAccuracy[High|Low] internal fields in CIDetector (coreimage.cs)
-	public enum FaceDetectorAccuracy
-	{
+	public enum FaceDetectorAccuracy {
 		High,
 		Low
 	}
 
 	public partial class CIDetector {
-		public static CIDetector CreateFaceDetector (CIContext context, bool highAccuracy)
+		public static CIDetector? CreateFaceDetector (CIContext context, bool highAccuracy)
 		{
 			// TypeFace is the only detector supported now
 			using (var options = NSDictionary.FromObjectsAndKeys (new NSObject [] { highAccuracy ? AccuracyHigh : AccuracyLow },
-									      new NSObject [] { Accuracy }))
+										  new NSObject [] { Accuracy }))
 				return FromType (TypeFace, context, options);
 		}
 
-		public static CIDetector CreateFaceDetector (CIContext context, bool highAccuracy, float minFeatureSize)
+		public static CIDetector? CreateFaceDetector (CIContext context, bool highAccuracy, float minFeatureSize)
 		{
 			// MinFeatureSize exists only in iOS6+, before this the field is null (and would throw if used)
-			if (MinFeatureSize == null)
+			if (MinFeatureSize is null)
 				return CreateFaceDetector (context, highAccuracy);
 
 			// TypeFace is the only detector supported now
 			using (var options = NSDictionary.FromObjectsAndKeys (new NSObject [] { highAccuracy ? AccuracyHigh : AccuracyLow, new NSNumber (minFeatureSize) },
-									      new NSObject [] { Accuracy, MinFeatureSize, }))
+										  new NSObject [] { Accuracy, MinFeatureSize, }))
 				return FromType (TypeFace, context, options);
 		}
 
-		public static CIDetector CreateFaceDetector (CIContext context, FaceDetectorAccuracy? accuracy = null, float? minFeatureSize = null, bool? trackingEnabled = null)
+		public static CIDetector? CreateFaceDetector (CIContext context, FaceDetectorAccuracy? accuracy = null, float? minFeatureSize = null, bool? trackingEnabled = null)
 		{
 			CIDetectorOptions dopt = new CIDetectorOptions () {
 				Accuracy = accuracy,
@@ -70,35 +71,35 @@ namespace CoreImage {
 				return FromType (TypeFace, context, options);
 		}
 
-		public static CIDetector CreateFaceDetector (CIContext context, CIDetectorOptions detectorOptions)
+		public static CIDetector? CreateFaceDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeFace, context, options);
 		}
 
-		public static CIDetector CreateRectangleDetector (CIContext context, CIDetectorOptions detectorOptions)
+		public static CIDetector? CreateRectangleDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeRectangle, context, options);
 		}
 
-		
-		public static CIDetector CreateQRDetector (CIContext context, CIDetectorOptions detectorOptions)
+
+		public static CIDetector? CreateQRDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeQRCode, context, options);
 		}
 
-		public static CIDetector CreateTextDetector (CIContext context, CIDetectorOptions detectorOptions)
+		public static CIDetector? CreateTextDetector (CIContext context, CIDetectorOptions detectorOptions)
 		{
-			using (var options = detectorOptions == null ? null : detectorOptions.ToDictionary ())
+			using (var options = detectorOptions?.ToDictionary ())
 				return FromType (TypeText, context, options);
 		}
 
 		public CIFeature [] FeaturesInImage (CIImage image, CIImageOrientation orientation)
 		{
 			using (var options = NSDictionary.FromObjectsAndKeys (new NSObject [] { new NSNumber ((int) orientation) },
-									      new NSObject [] { ImageOrientation })){
+										  new NSObject [] { ImageOrientation })) {
 				return FeaturesInImage (image, options);
 			}
 		}

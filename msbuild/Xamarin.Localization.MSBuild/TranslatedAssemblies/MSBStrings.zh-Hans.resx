@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="M0001" xml:space="preserve">
+        <value>从以下参数开始执行工具 {0}: {1}
+</value>
+    </data>
+  <data name="M0002" xml:space="preserve">
+        <value>工具 {0} 执行已完成(退出代码 = {1})。
+</value>
+    </data>
+  <data name="E0003" xml:space="preserve">
+        <value>执行工具“{0}”时出错: {1}
+</value>
+    </data>
+  <data name="E0004" xml:space="preserve">
+        <value>未能 codesign“{0}”: {1}
+</value>
+    </data>
+  <data name="E0005" xml:space="preserve">
+        <value>未能对 “{0}” 进行代码签名
+</value>
+    </data>
+  <data name="E0006" xml:space="preserve">
+        <value>  找不到“{0}”。
+</value>
+    </data>
+  <data name="E0007" xml:space="preserve">
+        <value>加载“{0}”时出错: 未知图像格式。
+</value>
+    </data>
+  <data name="E0008" xml:space="preserve">
+        <value>“{2}”的 iTunesArtwork 维度({0}x{1})无效。
+</value>
+    </data>
+  <data name="E0009" xml:space="preserve">
+        <value>针对“{2}”检测到多个具有相同的维数的 iTunesArtwork 文件({0}x{1})。
+        </value>
+    </data>
+  <data name="E0010" xml:space="preserve">
+        <value>加载“{0}”时出错: {1}
+</value>
+    </data>
+  <data name="E0011" xml:space="preserve">
+        <value>无法分析 MinimumOSVersion 值“{0}”
+</value>
+    </data>
+  <data name="E0012" xml:space="preserve">
+        <value>无法分析 TargetArchitectures“{0}”
+        </value>
+    </data>
+  <data name="E0013" xml:space="preserve">
+        <value>未安装“{1}”的 {0} SDK。
+</value>
+    </data>
+  <data name="E0014" xml:space="preserve">
+        <value>可执行文件(CFBundleExecutable)名称({0})不能以 ".app" 结尾，因为 iOS 可能无法启动应用。
+</value>
+    </data>
+  <data name="W0016" xml:space="preserve">
+        <value>针对 watchOS 进行生成时，只能虚设 watchOS 4.3 SDK。
+</value>
+    </data>
+  <data name="M0017" xml:space="preserve">
+        <value>已允许所有 http 加载。
+</value>
+    </data>
+  <data name="M0018" xml:space="preserve">
+        <value>已允许任意 HTTP 加载以支持调试。
+</value>
+    </data>
+  <data name="W0019" xml:space="preserve">
+        <value>尚未设置受支持的 iPhone 方向
+</value>
+    </data>
+  <data name="W0020" xml:space="preserve">
+        <value>受支持的 iPhone 方向不匹配
+</value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="W0021" xml:space="preserve">
+        <value>尚未设置受支持的 iPad 方向
+</value>
+    </data>
+  <data name="W0022" xml:space="preserve">
+        <value>受支持的 iPad 方向不匹配
+</value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="E0023" xml:space="preserve">
+        <value>iTunesMetadata.plist 数量不能超过 1 个。
+        </value>
+    </data>
+  <data name="E0024" xml:space="preserve">
+        <value>加载设置 plist 文件“{0}/Settings.bundle/Root.plist”时出错: {1}。
+</value>
+    </data>
+  <data name="E0025" xml:space="preserve">
+        <value>无法分析 SDK 版本“{0}”
+</value>
+    </data>
+  <!-- E0026: not used anymore -->
+  <!-- E0027: not used anymore -->
+  <!-- E0028: not used anymore -->
+  <!-- E0029: not used anymore -->
+  <!-- E0030: not used anymore -->
+  <!-- E0031: not used anymore -->
+  <data name="E0032" xml:space="preserve">
+        <value>无法找到 SDK bin 目录
+</value>
+    </data>
+  <!-- E0033: not used anymore -->
+  <!-- E0034: not used anymore -->
+  <!-- E0035: not used anymore -->
+  <!-- E0036: not used anymore -->
+  <!-- E0037: not used anymore -->
+  <!-- E0038: not used anymore -->
+  <!-- E0039: not used anymore -->
+  <!-- E0040: not used anymore -->
+  <!-- E0041: not used anymore -->
+  <!-- E0042: not used anymore -->
+  <!-- E0043: not used anymore -->
+  <data name="E0044" xml:space="preserve">
+        <value>在“{0}”中找不到有效的 Xcode 应用捆绑包。请在 Visual Studio 的首选项 {1} 中更新 Apple SDK 位置。
+</value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
+    </data>
+  <data name="E0045" xml:space="preserve">
+        <value>找不到有效的可用 Xcode 开发人员路径
+</value>
+    </data>
+  <data name="E0046" xml:space="preserve">
+        <value>找不到“{0}”
+        </value>
+    </data>
+  <data name="M0047" xml:space="preserve">
+        <value>正在“{1}”中搜索“{0}”
+</value>
+    </data>
+  <data name="E0048" xml:space="preserve">
+        <value>未知的 SQL 平台: {0}
+</value>
+    </data>
+  <data name="E0049" xml:space="preserve">
+        <value>找不到具有名称或 UUID {0} 的预配配置文件。
+</value>
+    </data>
+  <data name="E0050" xml:space="preserve">
+        <value>未知的搜索选项: {0}
+</value>
+    </data>
+  <data name="W0051" xml:space="preserve">
+        <value>“{0}”的本机引用类型未知。
+</value>
+    </data>
+  <data name="W0052" xml:space="preserve">
+        <value>不支持动态本机引用:“{0}”
+</value>
+    </data>
+  <data name="E0053" xml:space="preserve">
+        <value>Xamarin.iOS 不再支持目标体系结构 ARMv6。请选择受支持的体系结构。
+</value>
+    </data>
+  <data name="W0054" xml:space="preserve">
+        <value>无法创建响应文件“{0}”: {1}
+</value>
+    </data>
+  <data name="E0055" xml:space="preserve">
+        <value>无法加载 Info.plist: {0}
+</value>
+    </data>
+  <data name="E0057" xml:space="preserve">
+        <value>无效的体系结构:“{0}”。
+</value>
+    </data>
+  <data name="E0058" xml:space="preserve">
+        <value>无法分析目标设备信息。
+</value>
+    </data>
+  <data name="E0059" xml:space="preserve">
+        <value>找不到目标设备。
+</value>
+    </data>
+  <data name="E0060" xml:space="preserve">
+        <value>找不到设备体系结构信息。
+</value>
+    </data>
+  <data name="E0061" xml:space="preserve">
+        <value>无效的目标体系结构:“{0}”
+</value>
+    </data>
+  <data name="E0062" xml:space="preserve">
+        <value>找不到设备操作系统信息。
+</value>
+    </data>
+  <data name="E0063" xml:space="preserve">
+        <value>找不到设备模型信息。
+</value>
+    </data>
+  <data name="E0064" xml:space="preserve">
+        <value>找不到 iOS 版本信息。
+</value>
+    </data>
+  <data name="E0065" xml:space="preserve">
+        <value>找不到资源规则文件“{0}”。
+</value>
+    </data>
+  <data name="E0066" xml:space="preserve">
+        <value>未能分析 SdkVersion“{0}”。
+</value>
+    </data>
+  <data name="E0067" xml:space="preserve">
+        <value>Xcode 10 不支持 watchOS 1 应用。请升级到 watchOS 2 应用，或使用较旧版本的 Xcode。</value>
+    </data>
+  <data name="E0068" xml:space="preserve">
+        <value>需要安装 Xcode &gt;= 6.2 才能生成 WatchKit 应用程序。
+</value>
+    </data>
+  <data name="E0069" xml:space="preserve">
+        <value>iOS {0} 不支持 WatchKit。
+</value>
+    </data>
+  <data name="E0070" xml:space="preserve">
+        <value>在 Xcode 应用捆绑包中找不到 WatchKit 启动程序。
+</value>
+    </data>
+  <data name="W0071" xml:space="preserve">
+        <value>应用扩展“{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</value>
+    </data>
+  <data name="W0072" xml:space="preserve">
+        <value>应用扩展“{0}”未指定任何 CFBundleVersion
+</value>
+    </data>
+  <data name="W0073" xml:space="preserve">
+        <value>应用扩展“{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</value>
+    </data>
+  <data name="W0074" xml:space="preserve">
+        <value>应用扩展“{0}”的 NSExtensionPointIdentifier 值(“{1}”)无法识别。
+</value>
+    </data>
+  <data name="W0075" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定任何 CFBundleShortVersionString
+</value>
+    </data>
+  <data name="W0076" xml:space="preserve">
+        <value>Watch 应用“{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</value>
+    </data>
+  <data name="W0077" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定任何 CFBundleVersion
+</value>
+    </data>
+  <data name="W0078" xml:space="preserve">
+        <value>Watch 应用“{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</value>
+    </data>
+  <data name="W0079" xml:space="preserve">
+        <value>Watch 扩展 “{0}”未指定任何 CFBundleShortVersionString)
+</value>
+    </data>
+  <data name="W0080" xml:space="preserve">
+        <value>Watch 扩展 “{0}”的 CFBundleShortVersionString ({1})与主应用捆绑包的 CFBundleShortVersionString ({2})不匹配
+</value>
+    </data>
+  <data name="W0081" xml:space="preserve">
+        <value>Watch 扩展 “{0}”未指定任何 CFBundleVersion
+</value>
+    </data>
+  <data name="W0082" xml:space="preserve">
+        <value>Watch 扩展 “{0}”的 CFBundleVersion ({1})与主应用捆绑包的 CFBundleVersion ({2})不匹配
+</value>
+    </data>
+  <!-- E0083: not used anymore -->
+  <data name="E0084" xml:space="preserve">
+        <value>在路径“{}”中找不到 {0}“{1}”SDK
+        </value>
+    </data>
+  <data name="E0085" xml:space="preserve">
+        <value>在“{2}”中找不到 {0}“{1}”SDK usr 路径
+        </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
+    </data>
+  <data name="E0086" xml:space="preserve">
+        <value>找不到有效的 Xcode 开发人员路径
+</value>
+    </data>
+  <!-- E0087: not used anymore -->
+  <!-- E0088: not used anymore -->
+  <data name="E0089" xml:space="preserve">
+        <value>无法识别的平台: {0}
+</value>
+    </data>
+  <data name="W0090" xml:space="preserve">
+        <value>资产不属于资产目录: {0}
+</value>
+    </data>
+  <data name="E0091" xml:space="preserve">
+        <value>找不到文件: {0}
+</value>
+    </data>
+  <data name="E0092" xml:space="preserve">
+        <value>无效的 JSON: {0}
+</value>
+    </data>
+  <data name="E0093" xml:space="preserve">
+        <value>未生成部分 Info.plist 文件: {0}
+</value>
+    </data>
+  <data name="E0094" xml:space="preserve">
+        <value>未能加载 {0} 日志文件“{1}”: {2}
+        </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
+    </data>
+  <data name="W0095" xml:space="preserve">
+        <value>无法分析 altool 输出: {0}。
+            输出: {1}
+        </value>
+    </data>
+  <!-- E0096: not used anymore -->
+  <data name="E0097" xml:space="preserve">
+        <value>未指定 API 定义文件。
+</value>
+    </data>
+  <data name="E0098" xml:space="preserve">
+        <value>{0} 已失败。
+        </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
+    </data>
+  <data name="E0099" xml:space="preserve">
+        <value>  在磁盘上找不到捆绑资源“{0}”(应位于“{1}”中)
+</value>
+    </data>
+  <data name="E0100" xml:space="preserve">
+        <value>路径“{0}”将导致应用捆绑包外的文件无法使用。
+</value>
+    </data>
+  <data name="E0101" xml:space="preserve">
+        <value>Info.plist 文件应具有生成操作 "None"。
+</value>
+    </data>
+  <data name="E0102" xml:space="preserve">
+        <value>名称“{0}”是预留名称，不能使用。
+</value>
+    </data>
+  <data name="W0103" xml:space="preserve">
+        <value>在“框架”目录中找到了一个非框架目录: {0}
+</value>
+    </data>
+  <data name="W0104" xml:space="preserve">
+        <value>框架 {0} 不包含名为 {1} 的二进制文件
+</value>
+    </data>
+  <data name="M0105" xml:space="preserve">
+        <value>未找到 Frameworks 目录。
+</value>
+    </data>
+  <data name="W0106" xml:space="preserve">
+        <value>无法确定清单密钥“{0}”的值
+</value>
+    </data>
+  <data name="E0107" xml:space="preserve">
+        <value>加载部分 Info.plist 模板文件“{0}”时出错: {1}
+</value>
+    </data>
+  <data name="W0108" xml:space="preserve">
+        <value>无法在不具有预配配置文件的 Entitlements.plist 中扩展 $(TeamIdentifierPrefix)。
+</value>
+    </data>
+  <data name="W0109" xml:space="preserve">
+        <value>无法在不具有预配配置文件的 Entitlements.plist 中扩展 $(AppIdentifierPrefix)。
+</value>
+    </data>
+  <data name="W0110" xml:space="preserve">
+        <value>iCloud 权利(如“{0}”)需要预配配置文件。
+</value>
+    </data>
+  <data name="W0111" xml:space="preserve">
+        <value>iCloud 权利“{0}”不受预配配置文件支持。
+        </value>
+    </data>
+  <data name="E0112" xml:space="preserve">
+        <value>未找到 Entitlements.plist 模板“{0}”。
+</value>
+    </data>
+  <data name="E0113" xml:space="preserve">
+        <value>加载 Entitlements.plist 模板“{0}”时出错: {1}
+</value>
+    </data>
+  <data name="E0114" xml:space="preserve">
+        <value>写入 xcent 文件“{0}”时出错: {1}
+</value>
+    </data>
+  <data name="E0115" xml:space="preserve">
+        <value>写入 archived-expanded-entitlements.xcent 文件时出错: {0}
+</value>
+    </data>
+  <data name="M0116" xml:space="preserve">
+        <value>工具 {0} 执行已完成。
+</value>
+    </data>
+  <data name="E0117" xml:space="preserve">
+        <value>{0} 已退出，代码为 {1}
+</value>
+    </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} 已退出，代码为 {1}:
+{2}</value>
+    </data>
+  <data name="M0119" xml:space="preserve">
+        <value>即将跳过“{0}”，因为输出文件“{1}”较新。
+</value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
+    </data>
+  <data name="E0120" xml:space="preserve">
+        <value>保存“{0}”时出错: {1}
+</value>
+    </data>
+  <data name="M0121" xml:space="preserve">
+        <value>正在创建绑定资源包: {0}
+</value>
+    </data>
+  <data name="E0122" xml:space="preserve">
+        <value>加载“{0}”时出错
+</value>
+    </data>
+  <data name="E0123" xml:space="preserve">
+        <value>创建包失败。无法分析其他参数。
+</value>
+    </data>
+  <data name="E0124" xml:space="preserve">
+        <value>标识“{0}”与默认密钥链中的任何有效证书/私钥对都不匹配。
+        </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
+    </data>
+  <data name="M0125" xml:space="preserve">
+        <value>检测到的签名标识:
+</value>
+    </data>
+  <data name="M0126" xml:space="preserve">
+        <value>证书“{0}”与所有前缀“{1}”都不匹配。
+</value>
+    </data>
+  <data name="M0127" xml:space="preserve">
+        <value>证书“{0}”已过期 ({1})
+</value>
+    </data>
+  <data name="E0128" xml:space="preserve">
+        <value>在密钥链中找不到有效的 {0} 代码签名密钥。需要从 https://developer.apple.com 请求代码签名证书。
+</value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0129" xml:space="preserve">
+        <value>证书“{0}”与“{1}”不匹配。
+        </value>
+    </data>
+  <data name="E0130" xml:space="preserve">
+        <value>密钥链中找不到 {0} 代码签名密钥“{1}”。
+</value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
+    </data>
+  <data name="E0131" xml:space="preserve">
+        <value>在 {1} 上找不到 {0} 的任何可用预配配置文件。
+</value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0132" xml:space="preserve">
+        <value>“{0}”与“{1}”不匹配。
+</value>
+    </data>
+  <data name="E0133" xml:space="preserve">
+        <value>已安装的预配配置文件均与已安装 {0} {1} 签名标识不匹配。
+</value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
+    </data>
+  <data name="M0134" xml:space="preserve">
+        <value>查找具有兼容 AppID 的匹配预配配置文件，仅保留那些具有最长的匹配(通配符) ID 的配置文件。
+</value>
+    </data>
+  <data name="M0135" xml:space="preserve">
+        <value>AppID: 已排除 {0}，因为我们找到了更好的匹配项: {1}。
+</value>
+    </data>
+  <data name="M0136" xml:space="preserve">
+        <value>AppID: 已排除 {0}，因为我们找到了更好的匹配项: {1}。
+</value>
+    </data>
+  <data name="W0137" xml:space="preserve">
+        <value>没有与捆绑包标识符匹配的已安装的预配配置文件。
+</value>
+    </data>
+  <data name="M0138" xml:space="preserve">
+        <value>多个预配配置文件与捆绑包标识符匹配。请使用第一个匹配项。
+</value>
+    </data>
+  <data name="E0139" xml:space="preserve">
+        <value>{0} 未定义 CFBundleIdentifier
+</value>
+    </data>
+  <data name="E0140" xml:space="preserve">
+        <value>找不到指定的 {0} 预配配置文件“{1}”
+</value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
+    </data>
+  <data name="E0141" xml:space="preserve">
+        <value>项目捆绑包标识符“{0}”与指定的预配配置文件“{1}”不匹配
+</value>
+    </data>
+  <data name="M0142" xml:space="preserve">
+        <value>多个签名标识与“{0}”匹配。请使用第一个匹配项。
+</value>
+    </data>
+  <data name="M0143" xml:space="preserve">
+        <value>找到了多个签名标识。请使用第一个标识。
+</value>
+    </data>
+  <data name="E0144" xml:space="preserve">
+        <value>找不到指定的 {0} 预配配置文件“{1}”
+</value>
+    </data>
+  <data name="E0145" xml:space="preserve">
+        <value>没有与指定的预配配置文件“{1}”匹配的 {0} 签名标识。
+</value>
+    </data>
+  <data name="E0146" xml:space="preserve">
+        <value>捆绑包标识符“{0}”与所选签名标识“{0}”的任何已安装的预配配置文件都不匹配。
+</value>
+    </data>
+  <data name="E0147" xml:space="preserve">
+        <value>捆绑包标识符“{0}”与所选签名标识“{0}”的任何已安装的预配配置文件都不匹配。
+</value>
+    </data>
+  <data name="E0148" xml:space="preserve">
+        <value>捆绑包标识符“{0}”与任何已安装的预配配置文件都不匹配。
+</value>
+    </data>
+  <data name="M0149" xml:space="preserve">
+        <value>  在 {1} 中找到 {0}
+</value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
+    </data>
+  <data name="E0150" xml:space="preserve">
+        <value>  AssemblyPath 不能为 null 或空
+</value>
+    </data>
+  <data name="M0151" xml:space="preserve">
+        <value>生成的捆绑包名称: {0}
+</value>
+    </data>
+  <data name="E0152" xml:space="preserve">
+        <value>未指定任何属性。
+</value>
+    </data>
+  <data name="E0153" xml:space="preserve">
+        <value>“{0}”中的字典不包含该密钥: {1}
+</value>
+    </data>
+  <data name="E0154" xml:space="preserve">
+        <value>无法分析数组索引: {0}
+</value>
+    </data>
+  <data name="E0155" xml:space="preserve">
+        <value>数组索引超出项“{0}”的范围
+</value>
+    </data>
+  <data name="E0156" xml:space="preserve">
+        <value>{0} 值不支持子属性。
+</value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
+    </data>
+  <data name="E0157" xml:space="preserve">
+        <value>不支持获取 {0} 值。
+</value>
+    </data>
+  <data name="E0158" xml:space="preserve">
+        <value>文件“{0}”不存在。
+</value>
+    </data>
+  <data name="E0159" xml:space="preserve">
+        <value>文件“{0}”与“{1}”冲突。
+</value>
+    </data>
+  <data name="E0160" xml:space="preserve">
+        <value>Watch 应用/扩展需要 Xcode 6.2 或更高版本。当前的 Xcode 版本为 {0}
+</value>
+    </data>
+  <data name="E0161" xml:space="preserve">
+        <value>项必须具有计算出的逻辑名称。
+</value>
+    </data>
+  <data name="M0162" xml:space="preserve">
+        <value>已跳过重复条目: {0}
+</value>
+    </data>
+  <data name="M0163" xml:space="preserve">
+        <value>文件不存在，将创建: {0}
+</value>
+    </data>
+  <data name="M0164" xml:space="preserve">
+        <value>正在创建目录“{0}”
+</value>
+    </data>
+  <data name="M0165" xml:space="preserve">
+        <value>正在将文件从“{0}”复制到“{1}”
+</value>
+    </data>
+  <data name="E0166" xml:space="preserve">
+        <value>必须指定 DestinationFolder 或 DestinationFiles，但不能同时指定这两者。
+</value>
+    </data>
+  <data name="E0167" xml:space="preserve">
+        <value>DestinationFiles 数目必须与 SourceFiles 数目匹配。
+</value>
+    </data>
+  <data name="M0168" xml:space="preserve">
+        <value>  正在跳过框架程序集: {0}
+</value>
+    </data>
+  <data name="E0169" xml:space="preserve">
+        <value>未知的目标框架标识符: {0}。
+        </value>
+    </data>
+  <data name="E0170" xml:space="preserve">
+        <value>在 {1} 中找不到 {0}。
+        </value>
+    </data>
+  <data name="E0171" xml:space="preserve">
+        <value>未安装 {0} SDK。
+        </value>
+    </data>
+  <data name="E0172" xml:space="preserve">
+        <value>未安装 {0} SDK 版本“{1}”，找不到更新的版本。
+        </value>
+    </data>
+  <data name="E0173" xml:space="preserve">
+        <value>未安装 {0} SDK 版本“{1}”。请改用更新的版本“{2}”。
+        </value>
+    </data>
+  <data name="E0174" xml:space="preserve">
+        <value>xcframework“{0}”的格式不正确或未知，无法处理。</value>
+    </data>
+  <data name="E0175" xml:space="preserve">
+        <value>在“{0}”中找不到匹配的框架。SupportedPlatform: “{0}”，SupportedPlatformVariant: “{1}”，SupportedArchitectures: “{2}”。</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
+    </data>
+  <data name="W0176" xml:space="preserve">
+        <value>“{0}”和“{1}”选项冲突。将忽略“{1}”。
+        </value>
+    </data>
+  <data name="E0177" xml:space="preserve">
+        <value>无法获取 ISshCommands 实例。请检查是否已建立到 Mac 的有效连接。</value>
+    </data>
+  <data name="E0178" xml:space="preserve">
+        <value>尝试将存档“{0}”复制到“{1}”时出错。详细信息: {2}</value>
+    </data>
+  <data name="E0179" xml:space="preserve">
+        <value>没有可用的 Mac 连接。不会执行任务“{0}”</value>
+    </data>
+  <data name="E0180" xml:space="preserve">
+        <value>无法反序列化数据集 {0}</value>
+    </data>
+  <data name="E0181" xml:space="preserve">
+        <value>文件 {0} 没有 ImageAsset 作为生成操作。</value>
+    </data>
+  <data name="E0182" xml:space="preserve">
+        <value>无法为目录 {1} 中的 {0} 解析 UTI</value>
+    </data>
+  <data name="E0183" xml:space="preserve">
+        <value>尝试验证 Xcode 和 Xamarin.iOS 之间的兼容性时出错</value>
+    </data>
+  <data name="E0184" xml:space="preserve">
+        <value>项目采用不兼容的 Xcode ({0}) 版本生成，可能会导致意外的警告或错误。请安装 Xcode“{1}”或访问文档以了解详细信息。</value>
+    </data>
+  <data name="E0185" xml:space="preserve">
+        <value>尝试验证 Xcode 和 Xamarin.iOS 之间的兼容性时出错。详细信息: {0}
+        </value>
+    </data>
+  <data name="E0186" xml:space="preserve">
+        <value>提供的存档路径并非来自有效的存档文件(.xcarchive)。存档路径:“{0}”</value>
+    </data>
+  <data name="E0187" xml:space="preserve">
+        <value>无法将 macOS 版本 {0} 映射到相应的 Mac Catalyst 版本。有效的 macOS 版本为: {1}</value>
+    </data>
+  <data name="E0188" xml:space="preserve">
+        <value>无法将 Mac Catalyst 版本 {0} 映射到相应的 macOS 版本。有效的 Mac Catalyst 版本为: {1}</value>
+    </data>
+  <data name="E0189" xml:space="preserve">
+        <value>无法分析自定义链接器参数 "-{0}": {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 项“{0}”不存在。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+  <data name="E7001" xml:space="preserve">
+        <value>无法解析 WiFi 调试程序设置的主机 IP。
+</value>
+    </data>
+  <data name="E7002" xml:space="preserve">
+        <value>此计算机没有任何网络适配器。在通过 WiFi 对设备进行调试或分析时需要此适配器。
+</value>
+    </data>
+  <data name="E7003" xml:space="preserve">
+        <value>应用扩展“{0}”不包含 Info.plist。
+</value>
+    </data>
+  <data name="E7004" xml:space="preserve">
+        <value>应用扩展“{0}”未指定 CFBundleIdentifier。
+</value>
+    </data>
+  <data name="E7005" xml:space="preserve">
+        <value>应用扩展“{0}”未指定 CFBundleExecutable。
+</value>
+    </data>
+  <data name="E7006" xml:space="preserve">
+        <value>应用扩展“{0}”的 CFBundleIdentifier ({1})无效，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</value>
+    </data>
+  <data name="E7007" xml:space="preserve">
+        <value>应用扩展“{0}”有一个以非法后缀 ".key" 结尾的 CFBundleIdentifier ({1})。
+</value>
+    </data>
+  <data name="E7008" xml:space="preserve">
+        <value>应用扩展“{0}”未指定 CFBundleShortVersionString。
+</value>
+    </data>
+  <data name="E7009" xml:space="preserve">
+        <value>应用扩展“{0}”包含无效的 Info.plist: 它不包含 NSExtension 字典。
+</value>
+    </data>
+  <data name="E7010" xml:space="preserve">
+        <value>应用扩展“{0}”包含无效的 Info.plist: NSExtension 字典不包含 NSExtensionPointIdentifier 值。
+</value>
+    </data>
+  <!-- E7011: not used anymore -->
+  <!-- E7012: not used anymore -->
+  <!-- E7013: not used anymore -->
+  <data name="E7014" xml:space="preserve">
+        <value>Watch 应用“{0}”不包含 Info.plist。
+</value>
+    </data>
+  <data name="E7015" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定 CFBundleIdentifier。
+</value>
+    </data>
+  <data name="E7016" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 CFBundleIdentifier ({1})，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</value>
+    </data>
+  <data name="E7017" xml:space="preserve">
+        <value>Watch 应用“{0}”没有有效的 UIDeviceFamily 值。期望查找 "Watch (4)"，但找到“{1} ({2})”。
+</value>
+    </data>
+  <data name="E7018" xml:space="preserve">
+        <value>Watch 应用 "{name}" 未指定 CFBundleExecutable
+</value>
+    </data>
+  <data name="E7019" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 WKCompanionAppBundleIdentifier 值 ("{1}")，它与主应用捆绑包的 CFBundleIdentifier  ("{2}") 不匹配。
+</value>
+    </data>
+  <data name="E7020" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: WKWatchKitApp 密钥必须存在，并且值为 "true"。
+</value>
+    </data>
+  <data name="E7021" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: 不得包含 LSRequiresIPhoneOS 密钥。
+</value>
+    </data>
+  <data name="E7022" xml:space="preserve">
+        <value>Watch 应用“{0}”不包含任何 Watch 扩展。
+</value>
+    </data>
+  <data name="E7022_A" xml:space="preserve">
+        <value>Watch 应用“{0}”不包含 Watch 扩展。
+</value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
+    </data>
+  <data name="E7023" xml:space="preserve">
+        <value>Watch 应用“{0}”不包含 Info.plist。
+</value>
+    </data>
+  <data name="E7024" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定任何 CFBundleIdentifier。
+</value>
+    </data>
+  <data name="E7025" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定任何 CFBundleExecutable。
+</value>
+    </data>
+  <data name="E7026" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 CFBundleIdentifier ({1})，它不以主应用捆绑包的 CFBundleIdentifier ({2})开头。
+</value>
+    </data>
+  <data name="E7027" xml:space="preserve">
+        <value>Watch 应用“{0}”具有以非法后缀 "key" 结尾的 CFBundleIdentifier ({1})。
+</value>
+    </data>
+  <data name="E7028" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: 它不包含 NSExtension 字典。
+</value>
+    </data>
+  <data name="E7029" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: NSExtensionPointIdentifier 必须为 "com.apple.watchkit"。
+</value>
+    </data>
+  <data name="E7029_A" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: NSExtension 字典必须包含 NSExtensionPointIdentifier。
+</value>
+    </data>
+  <data name="E7030" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: NSExtension 字典必须包含 NSExtensionAttributes。
+</value>
+    </data>
+  <data name="E7031" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 WKAppBundleIdentifier 值(“{1}”)，它与父 Watch 应用捆绑包的 CFBundleIdentifier  (“{2}”)不匹配。
+</value>
+    </data>
+  <data name="E7031_A" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: NSExtensionAttributes 字典必须包含 WKAppBundleIdentifier。
+</value>
+    </data>
+  <data name="E7032" xml:space="preserve">
+        <value>WatchKit 扩展“{0}”具有无效的 Info.plist: UIRequiredDeviceCapabilities 字典不应包含 "watch-companion" 功能。
+</value>
+    </data>
+  <data name="E7032_A" xml:space="preserve">
+        <value>WatchKit 扩展“{0}”具有无效的 Info.plist: UIRequiredDeviceCapabilities 数组不应包含 "watch-companion" 功能。
+</value>
+    </data>
+  <data name="E7033" xml:space="preserve">
+        <value>Watch 应用“{0}”不包含 Info.plist。
+</value>
+    </data>
+  <data name="E7034" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定 CFBundleIdentifier。
+</value>
+    </data>
+  <data name="E7035" xml:space="preserve">
+        <value>Watch 应用“{0}”没有有效的 UIDeviceFamily 值。期望查找“{1}”，但找到“{2} ({3})”。
+</value>
+    </data>
+  <data name="E7036" xml:space="preserve">
+        <value>Watch 应用“{0}”未指定任何 CFBundleExecutable。
+</value>
+    </data>
+  <data name="E7037" xml:space="preserve">
+        <value>WatchKit 扩展“{0}”具有无效的 WKAppBundleIdentifier 值(“{1}”)，它与 Watch 应用的 CFBundleIdentifier (“{2}”)不匹配。
+</value>
+    </data>
+  <data name="E7038" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 WKCompanionAppBundleIdentifier 值 ("{1}")，它与主应用捆绑包的 CFBundleIdentifier  ("{2}") 不匹配。
+</value>
+    </data>
+  <data name="E7038_A" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: WKCompanionAppBundleIdentifier 必须存在，并且必须与主应用捆绑包的 CFBundleIdentifier 匹配。
+</value>
+    </data>
+  <data name="E7039" xml:space="preserve">
+        <value>Watch 应用“{0}”具有无效的 Info.plist: 不得包含 LSRequiresIPhoneOS 密钥。
+</value>
+    </data>
+  <data name="E7040" xml:space="preserve">
+        <value>应用捆绑包 {0} 不包含 Info.plist。
+</value>
+    </data>
+  <data name="E7041" xml:space="preserve">
+        <value>{0} 未指定任何 CFBundleIdentifier。
+</value>
+    </data>
+  <data name="E7042" xml:space="preserve">
+        <value>{0} 未指定任何 CFBundleExecutable。
+</value>
+    </data>
+  <data name="E7043" xml:space="preserve">
+        <value>{0} 未指定任何 CFBundleSupportedPlatforms。
+</value>
+    </data>
+  <data name="E7044" xml:space="preserve">
+        <value>{0} 未指定任何 UIDeviceFamily。
+</value>
+    </data>
+  <data name="E7044_A" xml:space="preserve">
+        <value>{0} 无效: UIDeviceFamily 密钥必须包含“{1}”的值。
+</value>
+    </data>
+  <data name="E7045" xml:space="preserve">
+        <value>无法识别的类型: {Type}
+</value>
+    </data>
+  <data name="E7046" xml:space="preserve">
+        <value>添加: 未正确指定的条目“{0}”
+</value>
+    </data>
+  <data name="E7047" xml:space="preserve">
+        <value>添加: 包含无效数组索引的条目“{0}”
+</value>
+    </data>
+  <data name="E7048" xml:space="preserve">
+        <value>添加: 已存在的条目“{0}”
+</value>
+    </data>
+  <data name="E7049" xml:space="preserve">
+        <value>添加: 无法向父项添加条目“{0}”
+</value>
+    </data>
+  <data name="E7050" xml:space="preserve">
+        <value>删除: 无法从父项中删除条目“{0}”
+</value>
+    </data>
+  <data name="E7051" xml:space="preserve">
+        <value>删除: 包含无效数组索引的条目“{0}”
+</value>
+    </data>
+  <data name="E7052" xml:space="preserve">
+        <value>删除: 不存在条目“{0}”
+</value>
+    </data>
+  <data name="E7053" xml:space="preserve">
+        <value>导入: 未正确指定的条目“{0}”
+</value>
+    </data>
+  <data name="E7054" xml:space="preserve">
+        <value>导入: 包含无效数组索引的条目“{0}”
+</value>
+    </data>
+  <data name="E7055" xml:space="preserve">
+        <value>导入: 读取文件时出错: {0}
+</value>
+    </data>
+  <data name="E7056" xml:space="preserve">
+        <value>导入: 无法向父项添加条目“{0}”
+</value>
+    </data>
+  <data name="E7057" xml:space="preserve">
+        <value>合并: 无法将数组条目添加到字典
+</value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
+    </data>
+  <data name="E7058" xml:space="preserve">
+        <value>合并: 指定的条目必须是容器
+</value>
+    </data>
+  <data name="E7059" xml:space="preserve">
+        <value>合并: 包含无效数组索引的条目“{0}”
+</value>
+    </data>
+  <data name="E7060" xml:space="preserve">
+        <value>合并: 不存在条目“{0}”
+</value>
+    </data>
+  <data name="E7061" xml:space="preserve">
+        <value>合并: 读取文件时出错: {0}
+</value>
+    </data>
+  <data name="E7062" xml:space="preserve">
+        <value>设置: 未正确指定的条目“{0}”
+</value>
+    </data>
+  <data name="E7063" xml:space="preserve">
+        <value>设置: 包含无效数组索引的条目“{0}”
+</value>
+    </data>
+  <data name="E7064" xml:space="preserve">
+        <value>设置: 不存在条目“{0}”
+</value>
+    </data>
+  <!-- E7068: not in use anymore -->
+  <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14+ 不支持 watchOS 1 应用。请将你的项目迁移到 watchOS 2+。</value>
+    </data>
+  <data name="E7070" xml:space="preserve">
+        <value>无效的体系结构({0}): 一次无法链接多个体系结构。</value>
+    </data>
+  <data name="E7071" xml:space="preserve">
+        <value>无法分析 AOT 编译器参数: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+  <data name="InvalidFramework" xml:space="preserve">
+        <value>无效框架: {0}</value>
+    </data>
+  <data name="InvalidPlatform" xml:space="preserve">
+        <value>平台无效: {0}</value>
+    </data>
+  <data name="E7072" xml:space="preserve">
+        <value>包产品要求文件包含与目标体系结构({1})不匹配的体系结构({0})</value>
+    </data>
+  <data name="E7073" xml:space="preserve">
+        <value>必须至少指定一个应用程序包。</value>
+    </data>
+  <data name="E7074" xml:space="preserve">
+        <value>应用程序包 {0} 不存在。</value>
+    </data>
+  <data name="E7075" xml:space="preserve">
+        <value>未为应用程序包 {0} 提供 “SpecificSubDirectory” 元数据。</value>
+    </data>
+  <data name="E7076" xml:space="preserve">
+        <value>无法合并 symlink“{0}”，它具有不同的目标。</value>
+    </data>
+  <data name="E7077" xml:space="preserve">
+        <value>无法合并文件“{0}”，它在输入应用程序包之间有所不同。</value>
+    </data>
+  <data name="E7078" xml:space="preserve">
+        <value>应用程序包无效: Mach-O 文件 {0} 具有依赖文件。</value>
+    </data>
+  <data name="E7079" xml:space="preserve">
+        <value>应用程雪包无效: 文件 {0} 在输入应用程序包之间具有不同的类型。</value>
+    </data>
+  <data name="E7080" xml:space="preserve">
+        <value>应用程序包文件 #{0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+  <data name="E7081" xml:space="preserve">
+        <value>AOT 编译器“{0}”不存在。</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>{0}info.plist 中的值({1})与项目文件中的 SupportedOSPlatformVersion 值({2})不匹配(如果项目文件中没有 SupportedOSPlatformVersion 值，则已假定默认值)。请更改 Info.plist 中的值以匹配 SupportedOSPlatformVersion 值，或删除 Info.plist 中的值(如果尚不存在，则将 SupportedOSPlatformVersion 值添加到项目文件)。</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>所有字体文件都必须位于应用捆绑包中的同一目录中。以下字体文件在应用捆绑包中具有不同的目标目录:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>目标目录是 {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="E7085" xml:space="preserve">
+        <value>没有为“{0}”任务提供所需参数“{1}”的值，资源 {3} 上也没有“{2}”元数据</value>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>正在创建压缩绑定资源包，因为输入中存在符号链接。</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>值“{0}”对于 Compress 属性无效。有效值: “true”、“false” 或 “auto”。</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>目录中 {0} 应有一个 “manifest” 文件。</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="E7088" xml:space="preserve">
+        <value>无法识别项“{1}”上的 “PublishFolderType” 元数据值“{0}”。该文件将不会复制到应用捆绑包。</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>文件“{0}”未指定 “PublishFolderType” 元数据，并且无法计算默认值。该文件不会复制到应用捆绑包。</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>无法识别项“{1}”上的 “PublishFolderType” 元数据值“{0}”。该文件将不会复制到应用捆绑包。如果文件不应复制到应用捆绑包，请删除项上的“{2}”元数据。</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>框架 {0} 是静态库的框架，不会复制到应用。</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>文件 "{0}" 是无效的框架: {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>绑定资源包 {0} 不存在。</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>文件或目录“{0}”不是框架，也不是框架中的文件。</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>已使用不同的元数据多次为 {0} 请求代码签名。其中一个的元数据为“{1}”，而另一个的元数据为“{2}”</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>已使用不同的元数据多次为 {0} 请求代码签名。已为一个项设置元数据“{1}={2}”，但未设置另一项。</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>已使用不同的元数据多次为“{0}”请求代码签名。元数据“{1}”为每一项提供不同的值(一次为“{2}”，另一次为“{3}”)。</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily 值 “6” 对此平台无效。它仅对 Mac Catalyst 有效。</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily 值 “6” 需要 macOS 11.0。请将项目文件中的 “SupportedOSPlatformVersion” 设置为至少 14.0 (Mac Catalyst 版本等效于 macOS 11.0)。当前值为 {0} (等效于 macOS {1})。</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>找不到绑定资源包: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>值为“{1}”的未知属性“{0}”。</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>在 CustomEntitlements 项组中为类型为“{2}”的权利“{1}”指定的值“{0}”无效。根本不应为任何值。</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>在 CustomEntitlements 项组中为类型为“{2}”的权利“{1}”指定的值“{0}”无效。应为 “true” 或 “false”。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>在 CustomEntitlements 项组中指定的权利“{1}”的类型“{0}”未知。应为 “Remove”、“Boolean”、“String” 或“StringArray”。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>绑定的资源包“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip 文件“{0}”中应有名为“{1}”的文件。</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip 文件“{0}”不存在。</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>文件“{0}”不存在。</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>无法以本机引用处理项“{0}”: 未知类型。</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>无法从 xcframework“{1}”加载 Info.plist“{0}”。</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>目录“{0}”不存在。</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>在 zip 文件“{1}”中找不到文件或目录“{0}”。</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>无法处理此平台上的 zip 文件“{0}”: 文件“{1}”为符号链接。</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}"任务未给参数 "{1}" 提供值，在此平台上生成时需要该值。</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>illink 程序集不存在:“{0}”。</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>程序集 {0} 未提供 "ObjectFile" 元数据。</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>多次将程序集 {0} 作为(从 {1} 引用的)输入程序集传递。</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT 编译 {0} 失败，AOT 编译器已退出，代码为 {1}。</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>遇到与程序集 {0} 相关的程序集引用周期。</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
+</root>

@@ -26,75 +26,50 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
-	class CFData : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		public CFData (IntPtr handle)
-			: this (handle, false)
+	class CFData : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CFData (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
-		public CFData (IntPtr handle, bool owns)
-		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
-		}
-
-		~CFData ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFDataGetTypeID")]
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFDataGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 
 #if !COREBUILD
 		public static CFData FromDataNoCopy (IntPtr buffer, nint length)
 		{
 			return new CFData (CFDataCreateWithBytesNoCopy (IntPtr.Zero, buffer, length, CFAllocator.null_ptr), true);
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFDataRef */ IntPtr CFDataCreateWithBytesNoCopy (/* CFAllocatorRef */ IntPtr allocator, /* UInt8* */ IntPtr bytes, /* CFIndex */ nint length, /* CFAllocatorRef */ IntPtr bytesDeallocator);
 #endif
 
 		public nint Length {
-			get { return CFDataGetLength (handle); }
+			get { return CFDataGetLength (Handle); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFDataGetLength (/* CFDataRef */ IntPtr theData);
 
-		public byte[] GetBuffer ()
+		public byte [] GetBuffer ()
 		{
 			var buffer = new byte [Length];
-			var ptr = CFDataGetBytePtr (handle);
+			var ptr = CFDataGetBytePtr (Handle);
 			Marshal.Copy (ptr, buffer, 0, buffer.Length);
 			return buffer;
 		}
@@ -106,7 +81,7 @@ namespace CoreFoundation {
 		 * Exposes a read-only pointer to the underlying storage.
 		 */
 		public IntPtr Bytes {
-			get { return CFDataGetBytePtr (handle); }
+			get { return CFDataGetBytePtr (Handle); }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -116,7 +91,7 @@ namespace CoreFoundation {
 		{
 			return new CFData (CFDataCreate (IntPtr.Zero, buffer, length), true);
 		}
-		
+
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFDataRef */ IntPtr CFDataCreateCopy (/* CFAllocatorRef */ IntPtr allocator, /* CFDataRef */ IntPtr theData);
 

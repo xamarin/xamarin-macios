@@ -1,0 +1,62 @@
+# This template will gather all the logs of a mac agent from a given starting poing in time
+# to a given end point. The template also takes the path for the file where the logs will be written.
+#
+
+parameters:
+
+- name: workingDirectory
+  type: string
+  default: ''
+
+- name: outputPath 
+  type: string 
+  default: 'agent-logs.log'
+
+- name: predicate
+  type: string
+  default: ''
+
+- name: style
+  type: string
+  default: 'compact'
+  values:
+  - default
+  - compact
+  - json
+  - syslog
+
+- name: uploadLogs
+  type: boolean
+  default: true
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- pwsh: >-
+    $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/generate_agent_logs.ps1
+    -VstsToken "$(System.AccessToken)"
+    -Style "${{ parameters.style }}"
+    -Output "${{ parameters.outputPath }}"
+    -Predicate "${{ parameters.predicate }}"
+  displayName: 'Gathering agent logs'
+  condition: always()
+  continueOnError: true
+  ${{ if ne(parameters.workingDirectory, '') }}:
+    workingDirectory: ${{ parameters.workingDirectory }}
+
+# only upload when told so
+- ${{ if eq(parameters.uploadLogs, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: Agent logs'
+    condition: always()
+    inputs:
+      # add or not the working dir to the upload
+      ${{ if eq(parameters.workingDirectory, '') }}:
+        targetPath: ${{ parameters.outputPath }}
+      ${{ else }}:
+        targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
+      artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
+    continueOnError: true

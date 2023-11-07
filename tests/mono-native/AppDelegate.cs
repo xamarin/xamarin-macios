@@ -2,18 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using MonoTouch.NUnit.UI;
 using NUnit.Framework.Internal;
 
-namespace Mono.Native.Tests
-{
+namespace Mono.Native.Tests {
 	// The UIApplicationDelegate for the application. This class is responsible for launching the 
 	// User Interface of the application, as well as listening (and optionally responding) to 
 	// application events from iOS.
@@ -29,8 +23,7 @@ namespace Mono.Native.Tests
 			try {
 				runner.OpenWriter ("Magic Tap");
 				runner.Run (runner.LoadedTest as TestSuite);
-			}
-			finally {
+			} finally {
 				runner.CloseWriter ();
 			}
 			return true;
@@ -55,7 +48,7 @@ namespace Mono.Native.Tests
 			window.RootViewController = new UINavigationController (runner.GetViewController ());
 			// make the window visible
 			window.MakeKeyAndVisible ();
-			
+
 			return true;
 		}
 
@@ -87,6 +80,11 @@ namespace Mono.Native.Tests
 
 			return true;
 		}
+
+		static void Main (string [] args)
+		{
+			UIApplication.Main (args, null, typeof (AppDelegate));
+		}
 	}
 
 	class AsyncController : UIViewController {
@@ -111,11 +109,7 @@ namespace Mono.Native.Tests
 				View.BackgroundColor = UIColor.LightGray;
 				break;
 			}
-#if XAMCORE_2_0
 			NSTimer.CreateScheduledTimer (0.01, (v) => action ());
-#else
-			NSTimer.CreateScheduledTimer (0.01, () => action ());
-#endif
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace Xamarin.Linker {
 			if (!LinkContext.ProtocolImplementations.TryGetValue (type, out var list))
 				LinkContext.ProtocolImplementations [type] = list = new List<TypeDefinition> ();
 			var it = iface.InterfaceType.Resolve ();
-			if (it == null) {
+			if (it is null) {
 				// The interface type might already have been linked away, so go look for it among those types as well
 				it = LinkContext.GetLinkedAwayType (iface.InterfaceType, out _);
 			}

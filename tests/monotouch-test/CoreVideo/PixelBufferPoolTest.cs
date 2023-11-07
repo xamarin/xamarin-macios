@@ -11,23 +11,16 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using CoreVideo;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreVideo;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreVideo {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PixelBufferPoolTest
-	{
+	public class PixelBufferPoolTest {
 		[Test]
 		public void AllocationSettings_Threshold ()
 		{

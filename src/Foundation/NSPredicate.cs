@@ -14,10 +14,10 @@ namespace Foundation {
 		// a single `nil` is a valid parameter, not to be confused with no parameters
 		public static NSPredicate FromFormat (string predicateFormat, NSObject argument)
 		{
-			return _FromFormat (predicateFormat, new NSObject[] { argument });
+			return _FromFormat (predicateFormat, new NSObject [] { argument });
 		}
 
-		public static NSPredicate FromFormat (string predicateFormat, params NSObject[] arguments)
+		public static NSPredicate FromFormat (string predicateFormat, params NSObject [] arguments)
 		{
 			return _FromFormat (predicateFormat, arguments);
 		}

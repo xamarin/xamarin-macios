@@ -7,6 +7,8 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVPlayerItemVideoOutput {
 
@@ -15,7 +17,7 @@ namespace AVFoundation {
 			OutputSettings
 		}
 
-		AVPlayerItemVideoOutput (NSDictionary data, AVPlayerItemVideoOutput.InitMode mode) : base (NSObjectFlag.Empty)
+		AVPlayerItemVideoOutput (NSDictionary? data, AVPlayerItemVideoOutput.InitMode mode) : base (NSObjectFlag.Empty)
 		{
 			switch (mode) {
 			case InitMode.PixelAttributes:
@@ -31,7 +33,7 @@ namespace AVFoundation {
 
 		[DesignatedInitializer]
 		[Advice ("Please use the constructor that uses one of the available StrongDictionaries. This constructor expects PixelBuffer attributes.")]
-		protected AVPlayerItemVideoOutput (NSDictionary pixelBufferAttributes) : this (pixelBufferAttributes, InitMode.PixelAttributes) {}
+		protected AVPlayerItemVideoOutput (NSDictionary pixelBufferAttributes) : this (pixelBufferAttributes, InitMode.PixelAttributes) { }
 	}
 }
 

@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "macOS Controller",
+  "description": "Controller di visualizzazione macOS con interfaccia utente implementata nel codice",
+  "symbols/namespace/description": "spazio dei nomi per il codice generato"
+}

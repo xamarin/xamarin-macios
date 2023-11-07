@@ -1,4 +1,4 @@
-﻿//
+//
 // INPaymentStatusResolutionResult.cs
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !MONOMAC
+#if !MONOMAC && !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -18,11 +18,11 @@ namespace Intents {
 		public static INPaymentStatusResolutionResult GetSuccess (INPaymentStatus resolvedValue)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
-				return SuccessWithResolvedPaymentStatus (resolvedValue);
+			return SuccessWithResolvedPaymentStatus (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -30,11 +30,11 @@ namespace Intents {
 		public static INPaymentStatusResolutionResult GetConfirmationRequired (INPaymentStatus valueToConfirm)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #endif
-				return ConfirmationRequiredWithPaymentStatusToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithPaymentStatusToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

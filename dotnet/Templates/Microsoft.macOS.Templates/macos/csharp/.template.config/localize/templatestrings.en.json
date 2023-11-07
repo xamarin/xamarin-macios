@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "macOS Application",
+  "description": "A project for creating a .NET macOS application",
+  "symbols/bundleId/description": "Overrides CFBundleIdentifier in the Info.plist",
+  "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
+}

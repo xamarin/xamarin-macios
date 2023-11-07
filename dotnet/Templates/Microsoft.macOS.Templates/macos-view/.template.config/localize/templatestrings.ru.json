@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Представление macOS",
+  "description": "Представление macOS с пользовательским интерфейсом, реализованным в Interface Builder Xcode (файл XIB)",
+  "symbols/namespace/description": "пространство имен для созданного кода"
+}

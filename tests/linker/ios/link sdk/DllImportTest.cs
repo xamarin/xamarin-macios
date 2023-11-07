@@ -10,15 +10,10 @@
 using System;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
+#if !__MACOS__
 using UIKit;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -56,8 +51,12 @@ namespace LinkSdk {
 				// note 2: simulators also got the new libsqlite version with Xcode 9, and since Xcode 9 ships an ever newer sqlite version,
 				// we get even more API as well.
 				var hasNewerSqlite = TestRuntime.CheckXcodeVersion (9, 0);
+#if __MACOS__ || __MACCATALYST__
+				var hasNewSqlite = hasNewerSqlite || TestRuntime.CheckXcodeVersion (8, 0);
+#else
 				var hasNewSqlite = hasNewerSqlite || TestRuntime.CheckXcodeVersion (8, 0) && Runtime.Arch == Arch.DEVICE;
-				
+#endif
+
 				var new_symbols = new string [] {
 					"sqlite3_key",
 					"sqlite3_rekey",
@@ -76,22 +75,26 @@ namespace LinkSdk {
 
 				foreach (var symbol in newer_symbols)
 					Assert.That (Dlfcn.dlsym (lib, symbol), hasNewerSqlite ? Is.Not.EqualTo (IntPtr.Zero) : Is.EqualTo (IntPtr.Zero), symbol);
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}
 
 		[Test]
-		public void LackOfCapget ()
+		public void PingSend ()
 		{
+			var p = new Ping ();
+#if __WATCHOS__
+			// no socket support
+			Assert.Throws<PlatformNotSupportedException> (delegate { p.Send ("localhost"); });
+#elif NET
+			// support was implemented with https://github.com/dotnet/runtime/pull/52240
+			var reply = p.Send ("localhost");
+			Assert.That (reply.Status, Is.EqualTo (IPStatus.Success), "Pong");
+#else
 			// OSX/iOS libc (libSystem.dylib) does not have a capget - which breaks dlsym=false (required for tvOS)
 			// iOS (tvOS/watchOS) does not support Process to run ping either so it ends up with a InvalidOperationException
 			// which is now "optimized" to reduce code size (and remove DllImport) until we implement ping (see: #964)
-			var p = new Ping ();
-#if __WATCHOS__
-			Assert.Throws<PlatformNotSupportedException> (delegate { p.Send ("localhost"); });
-#else
 			Assert.Throws<InvalidOperationException> (delegate { p.Send ("localhost"); });
 #endif
 		}

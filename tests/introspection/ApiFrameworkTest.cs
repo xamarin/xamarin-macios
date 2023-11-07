@@ -1,4 +1,3 @@
-﻿#if __UNIFIED__
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,11 +12,7 @@ using ObjCRuntime;
 public class Application {
 	public bool IsSimulatorBuild {
 		get {
-#if __IOS__
-			return Runtime.Arch == Arch.SIMULATOR;
-#else
-			return true;
-#endif
+			return TestRuntime.IsSimulator;
 		}
 	}
 }
@@ -33,7 +28,7 @@ namespace Introspection {
 
 		public bool Skip (string @namespace)
 		{
-			if (@namespace == null)
+			if (@namespace is null)
 				return true;
 			if (namespaces.Contains (@namespace))
 				return true;
@@ -42,7 +37,7 @@ namespace Introspection {
 			// we always link with the CoreFoundation framework
 			case "CoreFoundation":
 				return true;
-				// not a framework but a dynamic library /usr/lib/libcompression.dylib - tracked elsewhere (p/invoke only)
+			// not a framework but a dynamic library /usr/lib/libcompression.dylib - tracked elsewhere (p/invoke only)
 			case "Compression":
 				return true;
 			// not a framework, largely p/invokes to /usr/lib/libobjc.dylib
@@ -56,17 +51,21 @@ namespace Introspection {
 			case "System.Drawing":
 				return true;
 #if __IOS__
+#if !NET
 			// Some CF* types that requires CFNetwork which we always link with
 			// ref: tools/common/CompilerFlags.cs
 			case "CoreServices":
+#endif
+#if !NET
 			case "WatchKit": // Apple removed WatchKit from iOS
+#endif
 				return true;
-#elif __TVOS__ && !XAMCORE_4_0
+#elif __TVOS__ && !NET
 			// mistakes (can't be fixed without breaking binary compatibility)
 			case "CoreSpotlight":
 			case "WebKit":
 				return true;
-#elif __WATCHOS__ && !XAMCORE_4_0
+#elif __WATCHOS__ && !NET
 			// helpers (largely enums) for AVFoundation API - no p/invokes or obj-C API that requires native linking
 			case "AudioToolbox":
 				return true;
@@ -84,6 +83,9 @@ namespace Introspection {
 			// not directly bindings
 			case "System.Net.Http":
 				return true;
+			// Removed in Xcode 15
+			case "NewsstandKit":
+				return true;
 			default:
 				return false;
 			}
@@ -91,12 +93,14 @@ namespace Introspection {
 
 		Frameworks GetFrameworks ()
 		{
-#if __IOS__
-			return Frameworks.GetiOSFrameworks (app);
+#if __MACCATALYST__
+			return Frameworks.GetMacCatalystFrameworks ();
+#elif __IOS__
+			return Frameworks.GetiOSFrameworks (app.IsSimulatorBuild);
 #elif __TVOS__
 			return Frameworks.TVOSFrameworks;
 #elif __WATCHOS__
-			return Frameworks.GetwatchOSFrameworks (app);
+			return Frameworks.GetwatchOSFrameworks (app.IsSimulatorBuild);
 #elif __MACOS__
 			return Frameworks.MacFrameworks;
 #else
@@ -132,6 +136,8 @@ namespace Introspection {
 						continue;
 					}
 					break;
+				case "Errors":
+					continue;
 				}
 				// Either Skip method or Frameworks.cs needs to be updated
 				ReportError ("Unknown framework '{0}'", ns);
@@ -139,12 +145,11 @@ namespace Introspection {
 			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__ && !NET
 		[Test]
 		public void Simlauncher ()
 		{
-			if (Runtime.Arch != Arch.SIMULATOR)
-				Assert.Ignore ("Only needed on simulator");
+			TestRuntime.AssertSimulator ("Only needed on simulator");
 
 			var all = GetFrameworks ();
 
@@ -197,8 +202,9 @@ namespace Introspection {
 				}
 
 			}
+
+			AssertIfErrors ($"{Errors} unknown frameworks found:\n{ErrorData}");
 		}
 #endif
 	}
 }
-#endif

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--  Default inclusion -->
+
+  <PropertyGroup>
+    <!-- Enable default inclusion behavior unless told otherwise, but default to the value for EnableDefaultItems -->
+    <!-- We have a public property for each platform, and unify them into a single private property for our own build logic -->
+    <EnableDefaultiOSItems Condition=" '$(_PlatformName)' == 'iOS' And '$(EnableDefaultiOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultiOSItems>
+    <EnableDefaulttvOSItems Condition=" '$(_PlatformName)' == 'tvOS' And '$(EnableDefaulttvOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaulttvOSItems>
+    <EnableDefaultwatchOSItems Condition=" '$(_PlatformName)' == 'watchOS' And '$(EnableDefaultwatchOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultwatchOSItems>
+    <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
+    <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Exclude api definitions and core sources from the compilation file list, but let them without build action so they're not hidden in the IDE. We'll re-add them later (this way we make sure they only show up once in the Compile item group) -->
+    <Compile Remove="@(ObjcBindingApiDefinition)" />
+	<None Include="@(ObjcBindingApiDefinition)" />
+    <Compile Remove="@(ObjcBindingCoreSource)" />
+    <None Include="@(ObjcBindingCoreSource)" />
+  </ItemGroup>
+
+  <!-- Architecture -->
+  <PropertyGroup Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' != '' ">
+    <!-- Clear RuntimeIdentifier -->
+    <RuntimeIdentifier />
+    <!-- Check if RuntimeIdentifier was cleared. If it wasn't it was set on the command line, and in that case, try to clear RuntimeIdentifiers instead -->
+    <_RuntimeIdentifiersClashMessage Condition="'$(RuntimeIdentifier)' != ''">RuntimeIdentifier was set on the command line, and will override the value for RuntimeIdentifiers set in the project file.</_RuntimeIdentifiersClashMessage>
+    <RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' != ''" />
+    <!-- If we couldn't clear RuntimeIdentifiers either, then both were set on the command line. This is an error -->
+    <_RuntimeIdentifiersClashErrorMessage  Condition="'$(RuntimeIdentifier)' != '' And '$(RuntimeIdentifiers)' != ''">Both RuntimeIdentifier and RuntimeIdentifiers were passed on the command line, but only one of them can be set at a time.</_RuntimeIdentifiersClashErrorMessage>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_ComputeTargetArchitecturesDependsOn>
+      $(_ComputeTargetArchitecturesDependsOn);
+      _MapRuntimeIdentifierToTargetArchitecture
+    </_ComputeTargetArchitecturesDependsOn>
+  </PropertyGroup>
+
+  <!-- Map RuntimeIdentifier(s) to TargetArchitectures, which is what our old targets and tasks expect -->
+  <!-- This doesn't cover every single possibility (in particular it does not handle ARMv7s, either as a thin or fat option, and the same for ARMv7k), but that can be done by passing /p:TargetArchitectures=ARMv7s to msbuild -->
+  <Target Name="_MapRuntimeIdentifierToTargetArchitecture" Condition="'$(TargetArchitectures)' == ''">
+    <ItemGroup>
+        <!-- Convert RuntimeIdentifiers (a property) to an item group -->
+        <_RuntimeIdentifierWithTargetArchitecture Include="$(RuntimeIdentifiers);$(RuntimeIdentifier)" />
+        <!-- map the runtime identifier to a target architecture -->
+        <_RuntimeIdentifierWithTargetArchitecture Update="@(_RuntimeIdentifierWithTargetArchitecture)">
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-arm64')) ">ARM64</TargetArchitecture>
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-arm')) ">ARMv7</TargetArchitecture>
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-x64')) ">x86_64</TargetArchitecture>
+            <TargetArchitecture Condition=" $([System.String]::Copy('%(Identity)').EndsWith('-x86')) ">i386</TargetArchitecture>
+        </_RuntimeIdentifierWithTargetArchitecture>
+        <_RuntimeIdentifiersWithoutTargetArchitecture Include="@(_RuntimeIdentifierWithTargetArchitecture)" Condition="'%(_RuntimeIdentifierWithTargetArchitecture.TargetArchitecture)' == ''" />
+    </ItemGroup>
+    <Error Condition="@(_RuntimeIdentifiersWithoutTargetArchitecture->Count()) != 0" Text="Unable to map the following RuntimeIdentifier values to a target architecture: @(_RuntimeIdentifiersWithoutTargetArchitecture)" />
+    <!-- Map the item group of runtime identifiers into the TargetArchitectures property -->
+    <PropertyGroup>
+      <TargetArchitectures>@(_RuntimeIdentifierWithTargetArchitecture -> '%(TargetArchitecture)', ', ')</TargetArchitectures>
+    </PropertyGroup>
+  </Target>
+
+  <PropertyGroup Condition="('$(RuntimeIdentifier)' != '' Or '$(RuntimeIdentifiers)' != '') And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+    <_IsDotNetSimulatorBuild Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_IsDotNetSimulatorBuild>
+    <_IsDotNetSimulatorBuild Condition="'$(_IsDotNetSimulatorBuild)' == ''">false</_IsDotNetSimulatorBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
+    <ComputedPlatform Condition="'$(_IsDotNetSimulatorBuild)' == 'true'">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_RuntimeFrameworkVersion>$(BundledNETCorePlatformsPackageVersion)</_RuntimeFrameworkVersion>
+    <_RuntimeFrameworkVersion Condition="'$(CUSTOM_DOTNET_VERSION)' != ''">$(CUSTOM_DOTNET_VERSION)</_RuntimeFrameworkVersion>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(DisableImplicitFrameworkReferences)' != 'true'">
+    <FrameworkReference Include="Microsoft.$(_PlatformName)" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Add a reference to our custom nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
+    <PackageReference Include="System.Runtime.InteropServices.NFloat.Internal" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))" Version="[6.0.1, )" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <!--
+
+    This a workaround for an issue with the Microsoft.NETCore.App runtime pack
+    selection. The Microsoft.NETCore.App known framework reference sets
+    LatestRuntimeFrameworkVersion=6.0.1, which means that when a project is
+    restored, the 6.0.1 packages (from NuGet) will be selected instead of the
+    bundled packages (which has version 6.0.3). The problem with this is that
+    the 6.0.1 packages don't have the new nfloat API. So we try to override
+    the LatestRuntimeFrameworkVersion=6.0.1 value on the
+    KnownFrameworkReference by explicitly setting the RuntimeFrameworkVersion
+    value on the FrameworkReference when LatestRuntimeFrameworkVersion<6.0.3.
+
+    Ref: https://github.com/dotnet/sdk/blob/31d4db7dc94bb2f1f4d0ef84ebf158d61f2a7c4f/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L587-L594
+  -->
+  <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
+    <FrameworkReference
+        Update="Microsoft.NETCore.App"
+        Condition="
+        (
+          @(KnownFrameworkReference->AnyHaveMetadataValue('LatestRuntimeFrameworkVersion', '6.0.1')) Or
+          @(KnownFrameworkReference->AnyHaveMetadataValue('LatestRuntimeFrameworkVersion', '6.0.2'))
+        )
+        "
+        >
+      <RuntimeFrameworkVersion>6.0.3</RuntimeFrameworkVersion>
+    </FrameworkReference>
+  </ItemGroup>
+</Project>

@@ -6,24 +6,18 @@ using System;
 using System.Drawing;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using CoreGraphics;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PasteboardTest {
-		
+
 		[Test]
 		public void ImagesTest ()
 		{
@@ -31,7 +25,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (var dp = new CGDataProvider (file)) {
 				using (var cgimg = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
 					using (var img = new UIImage (cgimg)) {
-						UIPasteboard.General.Images = new UIImage[] { img };
+						UIPasteboard.General.Images = new UIImage [] { img };
 						if (TestRuntime.CheckXcodeVersion (8, 0))
 							Assert.True (UIPasteboard.General.HasImages, "HasImages");
 
@@ -41,7 +35,7 @@ namespace MonoTouchFixtures.UIKit {
 
 						Assert.AreEqual (1, UIPasteboard.General.Images.Length, "a - length");
 
-						UIPasteboard.General.Images = new UIImage[] { img, img };
+						UIPasteboard.General.Images = new UIImage [] { img, img };
 						Assert.AreEqual (2, UIPasteboard.General.Images.Length, "b - length");
 						Assert.IsNotNull (UIPasteboard.General.Images [0], "b - nonnull[0]");
 						Assert.IsNotNull (UIPasteboard.General.Images [1], "b - nonnull[0]");

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProjectGuid>{CE09F37A-C1E9-488D-B72D-26269D735ECD}</ProjectGuid>
+    <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyTVMetalGame</RootNamespace>
+    <AssemblyName>MyTVMetalGame</AssemblyName>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <IOSDebuggerPort>51092</IOSDebuggerPort>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchFloat32>true</MtouchFloat32>
+    <MtouchEnableBitcode>true</MtouchEnableBitcode>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <MtouchFastDev>true</MtouchFastDev>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <IOSDebuggerPort>39926</IOSDebuggerPort>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.TVOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Back.imagestacklayer\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Back.imagestacklayer\Content.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Front.imagestacklayer\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Front.imagestacklayer\Content.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Middle.imagestacklayer\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Large.imagestack\Middle.imagestacklayer\Content.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Back.imagestacklayer\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Back.imagestacklayer\Content.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Front.imagestacklayer\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Front.imagestacklayer\Content.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Middle.imagestacklayer\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\App Icon - Small.imagestack\Middle.imagestacklayer\Content.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Top Shelf Image Wide.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\App Icon &amp; Top Shelf Image.brandassets\Top Shelf Image.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Contents.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="Shaders.metal" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="GameViewController.cs" />
+    <Compile Include="GameViewController.designer.cs">
+      <DependentUpon>GameViewController.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="Main.storyboard" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
+</Project>

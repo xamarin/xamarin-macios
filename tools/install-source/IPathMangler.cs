@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 
-namespace InstallSources
-{
+namespace InstallSources {
 	/// <summary>
 	/// Represents a class that knows how to change paths to ensure that the correct source path is used.
 	/// </summary>
-	public interface IPathMangler
-	{
+	public interface IPathMangler {
 		/// <summary>
 		/// Returns the real source path for the given path found in an mdb.
 		/// </summary>

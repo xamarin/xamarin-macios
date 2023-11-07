@@ -1,10 +1,15 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
+#if NET
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+#else
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+#endif
+
+#nullable enable
 
 namespace ModelIO {
 	public partial class MDLTransform {
-#if !XAMCORE_4_0
+#if !NET
 		// Inlined from the MDLTransformComponent protocol.
 		public static MatrixFloat4x4 CreateGlobalTransform4x4 (MDLObject obj, double atTime)
 		{
@@ -13,4 +18,3 @@ namespace ModelIO {
 #endif
 	}
 }
-#endif

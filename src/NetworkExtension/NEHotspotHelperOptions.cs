@@ -1,5 +1,7 @@
-#if !MONOMAC
-	
+#nullable enable
+
+#if !MONOMAC && !TVOS
+
 using Foundation;
 
 namespace NetworkExtension {
@@ -7,10 +9,10 @@ namespace NetworkExtension {
 	public class NEHotspotHelperOptions : DictionaryContainer {
 
 #if !COREBUILD
-		public NEHotspotHelperOptions () : base (new NSMutableDictionary ()) {}
-		public NEHotspotHelperOptions (NSDictionary dictionary) : base (dictionary) {}
+		public NEHotspotHelperOptions () : base (new NSMutableDictionary ()) { }
+		public NEHotspotHelperOptions (NSDictionary dictionary) : base (dictionary) { }
 
-		public NSString DisplayName {
+		public NSString? DisplayName {
 			get {
 				return GetNSStringValue (NEHotspotHelperOptionInternal.DisplayName);
 			}

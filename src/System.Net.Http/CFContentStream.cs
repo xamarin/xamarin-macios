@@ -32,27 +32,21 @@ using System.IO;
 using System.Net;
 using System.Runtime.ExceptionServices;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
-#elif XAMCORE_2_0 || SYSTEM_NET_HTTP
+#else
 using CoreServices;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
 #endif
 
-namespace System.Net.Http
-{
-	class BufferData 
-	{
-		public byte[] Buffer;
+namespace System.Net.Http {
+	class BufferData {
+		public byte [] Buffer;
 		public int Length;
 	}
 
-	class CFContentStream : HttpContent
-	{
+	class CFContentStream : HttpContent {
 		readonly CFHTTPStream http_stream;
 		BufferData data;
 		Mutex data_mutex;
@@ -95,7 +89,7 @@ namespace System.Net.Http
 		{
 			var gotMutex = data_mutex.WaitOne ();
 			if (gotMutex) {
-				var stream = (CFHTTPStream)sender;
+				var stream = (CFHTTPStream) sender;
 				if (e.EventType == CFStreamEventType.ErrorOccurred)
 					Volatile.Write (ref http_exception, ExceptionDispatchInfo.Capture (stream.GetError ()));
 				data_mutex.ReleaseMutex ();
@@ -125,16 +119,16 @@ namespace System.Net.Http
 			data_event.Set ();
 		}
 
-		protected internal override async Task SerializeToStreamAsync (Stream stream, TransportContext context)
+		protected override async Task SerializeToStreamAsync (Stream stream, TransportContext context)
 		{
 			while (data_event.WaitOne ()) {
 				data_mutex.WaitOne ();
-				if (http_exception != null) {
+				if (http_exception is not null) {
 					http_exception.Throw ();
 					data_mutex.ReleaseMutex ();
 					break;
 				}
-				if (data == null || data.Length <= 0) {
+				if (data is null || data.Length <= 0) {
 					data_mutex.ReleaseMutex ();
 					data_read_event.Set ();
 					break;
@@ -147,7 +141,10 @@ namespace System.Net.Http
 			}
 		}
 
-		protected internal override bool TryComputeLength (out long length)
+#if !NET
+		internal
+#endif
+		protected override bool TryComputeLength (out long length)
 		{
 			length = 0;
 			return false;

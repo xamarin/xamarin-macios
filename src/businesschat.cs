@@ -18,20 +18,32 @@ using UIControl = AppKit.NSControl;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace BusinessChat {
 
-	[Mac (10,13,4), iOS (11,3)]
-	[BaseType (typeof(UIControl))]
+	[Deprecated (PlatformName.MacOSX, 13, 1)]
+	[Deprecated (PlatformName.iOS, 16, 2)]
+	[iOS (11, 3)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
+	[BaseType (typeof (UIControl))]
 	[DisableDefaultCtor]
 	interface BCChatButton {
 		[Export ("initWithStyle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (BCChatButtonStyle style);
+		NativeHandle Constructor (BCChatButtonStyle style);
 	}
 
 
-	[Mac (10,13,4), iOS (11,3)]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.MacOSX, 13, 1)]
+	[Deprecated (PlatformName.iOS, 16, 2)]
+	[iOS (11, 3)]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 16, 2)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BCChatAction {
 

@@ -8,7 +8,7 @@ using ObjCRuntime;
 namespace Foundation {
 	public partial class NSBundle : NSObject {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetLocalizedString' instead.")]
 		public virtual string LocalizedString (string key, string value, string table)
 		{
@@ -16,12 +16,14 @@ namespace Foundation {
 		}
 
 		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public string LocalizedString (string key, string comment) {
+		public string LocalizedString (string key, string comment)
+		{
 			return LocalizedString (key, "", "");
 		}
 
 		[Obsolete ("Use 'GetLocalizedString' instead.")]
-		public string LocalizedString (string key, string val, string table, string comment) {
+		public string LocalizedString (string key, string val, string table, string comment)
+		{
 			return LocalizedString (key, val, table);
 		}
 #endif
@@ -30,7 +32,8 @@ namespace Foundation {
 			return GetLocalizedString ((NSString) key, (NSString) value, (NSString) table);
 		}
 
-		public string [] PathsForResources (string fileExtension) {
+		public string [] PathsForResources (string fileExtension)
+		{
 			return PathsForResources (fileExtension, null);
 		}
 	}

@@ -35,6 +35,14 @@
 !unknown-native-enum! VNGenerateObjectnessBasedSaliencyImageRequestRevision bound
 !unknown-native-enum! VNRecognizeAnimalsRequestRevision bound
 !unknown-native-enum! VNRecognizeTextRequestRevision bound
+!unknown-native-enum! VNDetectContourRequestRevision bound
+!unknown-native-enum! VNDetectHumanBodyPoseRequestRevision bound
+!unknown-native-enum! VNDetectHumanHandPoseRequestRevision bound
+!unknown-native-enum! VNDetectTrajectoriesRequestRevision bound
+!unknown-native-enum! VNGenerateOpticalFlowRequestRevision bound
+!unknown-native-enum! VNStatefulRequestRevision bound
+!unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
+!unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 
@@ -46,6 +54,12 @@
 ## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
 !missing-selector! VNRequest::init not bound
 
-## Will be removed in future xcode11 beta
-!missing-field! VNAnimalDetectorCat not bound
-!missing-field! VNAnimalDetectorDog not bound
+# Not really needed anymore, this old(?) unbound APIs got replaced
+
+# API introduced and deprecated at the same time in Xcode 12
+
+# Existing enums with name changes relevant only to Swift
+
+# API requires new marshal directive which needs to be manually tested (ideally via sample)
+!missing-selector! VNHumanBodyPose3DObservation::getCameraRelativePosition:forJointName:error: not bound
+

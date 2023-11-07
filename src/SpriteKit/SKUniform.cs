@@ -11,6 +11,14 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
@@ -20,8 +28,11 @@ using Matrix4 = global::OpenTK.Matrix4;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+#endif // NET
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#nullable enable
+
+#if !WATCH
 namespace SpriteKit {
 	public partial class SKUniform {
 
@@ -31,11 +42,11 @@ namespace SpriteKit {
 		{
 			if (!versionCheck.HasValue) {
 #if MONOMAC
-				versionCheck = PlatformHelper.CheckSystemVersion (10, 12);
+				versionCheck = SystemVersion.CheckmacOS (10, 12);
 #elif TVOS || IOS
-				versionCheck = UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
+				versionCheck = SystemVersion.CheckiOS (10, 0);
 #else
-				#error Unknown platform
+#error Unknown platform
 #endif
 			}
 			return versionCheck.Value;
@@ -74,7 +85,7 @@ namespace SpriteKit {
 				InitializeHandle (InitWithNameFloatVector4 (name, value), "initWithName:floatVector4:");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// Apple deprecated initWithName:floatMatrix2: in macOS10.12/iOS10.0
 		// and made available initWithName:matrixFloat2x2: so we invoke
 		// the right one at runtime depending on which OS version we are running
@@ -112,7 +123,9 @@ namespace SpriteKit {
 			else
 				InitializeHandle (InitWithNameFloatMatrix3 (name, value), "initWithName:floatMatrix3:");
 		}
+#endif // !NET
 
+#if !NET
 		// Apple deprecated initWithName:floatMatrix4: in macOS10.12/iOS10.0
 		// and made available initWithName:matrixFloat4x4: so we invoke
 		// the right one at runtime depending on which OS version we are running
@@ -131,13 +144,12 @@ namespace SpriteKit {
 			else
 				InitializeHandle (InitWithNameFloatMatrix4 (name, value), "initWithName:floatMatrix4:");
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 		// Apple deprecated floatVector2Value in macOS10.12/iOS10.0
 		// and made available vectorFloat2Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		public virtual Vector2 FloatVector2Value
-		{
+		public virtual Vector2 FloatVector2Value {
 			get {
 				if (CheckSystemVersion ())
 					return _VectorFloat2Value;
@@ -155,8 +167,7 @@ namespace SpriteKit {
 		// Apple deprecated floatVector3Value in macOS10.12/iOS10.0
 		// and made available vectorFloat3Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		public virtual Vector3 FloatVector3Value
-		{
+		public virtual Vector3 FloatVector3Value {
 			get {
 				if (CheckSystemVersion ())
 					return _VectorFloat3Value;
@@ -174,8 +185,7 @@ namespace SpriteKit {
 		// Apple deprecated floatVector4Value in macOS10.12/iOS10.0
 		// and made available vectorFloat4Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		public virtual Vector4 FloatVector4Value
-		{
+		public virtual Vector4 FloatVector4Value {
 			get {
 				if (CheckSystemVersion ())
 					return _VectorFloat4Value;
@@ -190,7 +200,7 @@ namespace SpriteKit {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// Apple deprecated floatMatrix2Value in macOS10.12/iOS10.0
 		// and made available matrixFloat2x2Value so we invoke
 		// the right one at runtime depending on which OS version we are running
@@ -202,8 +212,7 @@ namespace SpriteKit {
 		// this property still returns the correct matrix for < macOS 10.12 /
 		// iOS 10.0
 		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
-		public virtual Matrix2 FloatMatrix2Value
-		{
+		public virtual Matrix2 FloatMatrix2Value {
 			get {
 				if (CheckSystemVersion ())
 					return (Matrix2) MatrixFloat2x2.Transpose (MatrixFloat2x2Value);
@@ -229,8 +238,7 @@ namespace SpriteKit {
 		// this property still returns the correct matrix for < macOS 10.12 /
 		// iOS 10.0
 		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
-		public virtual Matrix3 FloatMatrix3Value
-		{
+		public virtual Matrix3 FloatMatrix3Value {
 			get {
 				if (CheckSystemVersion ())
 					return (Matrix3) MatrixFloat3x3.Transpose (MatrixFloat3x3Value);
@@ -244,7 +252,9 @@ namespace SpriteKit {
 					_FloatMatrix3Value = value;
 			}
 		}
+#endif // !NET
 
+#if !NET
 		// Apple deprecated floatMatrix4Value in macOS10.12/iOS10.0
 		// and made available matrixFloat4x4Value so we invoke
 		// the right one at runtime depending on which OS version we are running
@@ -256,8 +266,7 @@ namespace SpriteKit {
 		// this property still returns the correct matrix for < macOS 10.12 /
 		// iOS 10.0
 		[Obsolete ("Use 'MatrixFloat4x4Value' instead.")]
-		public virtual Matrix4 FloatMatrix4Value
-		{
+		public virtual Matrix4 FloatMatrix4Value {
 			get {
 				if (CheckSystemVersion ())
 					return (Matrix4) MatrixFloat4x4.Transpose (MatrixFloat4x4Value);
@@ -271,7 +280,7 @@ namespace SpriteKit {
 					_FloatMatrix4Value = value;
 			}
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 	}
 }
-#endif // XAMCORE_2_0
+#endif // !WATCH

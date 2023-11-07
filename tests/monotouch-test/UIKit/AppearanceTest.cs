@@ -1,4 +1,4 @@
-﻿//
+//
 // UIAppearance Unit Tests
 //
 // Authors:
@@ -11,27 +11,12 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -64,7 +49,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -74,10 +59,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.Appearance.TextColor, "null 1");
 				UILabel.Appearance.TextColor = UIColor.Red;
 				UILabel.Appearance.TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual (1, a, "a1");
-				Assert.AreEqual (1, r, "r1");
-				Assert.AreEqual (0, g, "g1");
-				Assert.AreEqual (0, b, "b1");
+				Assert.AreEqual ((nfloat) 1, a, "a1");
+				Assert.AreEqual ((nfloat) 1, r, "r1");
+				Assert.AreEqual ((nfloat) 0, g, "g1");
+				Assert.AreEqual ((nfloat) 0, b, "b1");
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.GetAppearance (traits).TextColor, "other null 2");
@@ -93,7 +78,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -102,10 +87,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.AppearanceWhenContainedIn (typeof (UITextField)).TextColor, "null 1");
 				UILabel.AppearanceWhenContainedIn (typeof (UITextField)).TextColor = UIColor.Blue;
 				UILabel.AppearanceWhenContainedIn (typeof (UITextField)).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual (1, a, "a1");
-				Assert.AreEqual (0, r, "r1");
-				Assert.AreEqual (0, g, "g1");
-				Assert.AreEqual (1, b, "b1");
+				Assert.AreEqual ((nfloat) 1, a, "a1");
+				Assert.AreEqual ((nfloat) 0, r, "r1");
+				Assert.AreEqual ((nfloat) 0, g, "g1");
+				Assert.AreEqual ((nfloat) 1, b, "b1");
 
 				// check that other appearance instances didn't change (bug 26353)
 				Assert.IsNull (UILabel.Appearance.TextColor, "other null 1");
@@ -122,7 +107,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn_UITraitCollection ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -131,10 +116,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance (traits, typeof (UITextField)).TextColor, "null 1");
 				UILabel.GetAppearance (traits, typeof (UITextField)).TextColor = UIColor.Blue;
 				UILabel.GetAppearance (traits, typeof (UITextField)).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual (1, a, "a1");
-				Assert.AreEqual (0, r, "r1");
-				Assert.AreEqual (0, g, "g1");
-				Assert.AreEqual (1, b, "b1");
+				Assert.AreEqual ((nfloat) 1, a, "a1");
+				Assert.AreEqual ((nfloat) 0, r, "r1");
+				Assert.AreEqual ((nfloat) 0, g, "g1");
+				Assert.AreEqual ((nfloat) 1, b, "b1");
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "other null 1");
@@ -153,10 +138,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance<CustomLabel> (traits, typeof (UITextField)).TextColor, "g null 1");
 				UILabel.GetAppearance<CustomLabel> (traits, typeof (UITextField)).TextColor = UIColor.Blue;
 				UILabel.GetAppearance<CustomLabel> (traits, typeof (UITextField)).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual (1, a, "g a1");
-				Assert.AreEqual (0, r, "g r1");
-				Assert.AreEqual (0, g, "g g1");
-				Assert.AreEqual (1, b, "g b1");
+				Assert.AreEqual ((nfloat) 1, a, "g a1");
+				Assert.AreEqual ((nfloat) 0, r, "g r1");
+				Assert.AreEqual ((nfloat) 0, g, "g g1");
+				Assert.AreEqual ((nfloat) 1, b, "g b1");
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "g other null 1");
@@ -172,7 +157,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance_UITraitCollection ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -181,10 +166,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance (traits).TextColor, "null 1");
 				UILabel.GetAppearance (traits).TextColor = UIColor.Blue;
 				UILabel.GetAppearance (traits).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual (1, a, "a1");
-				Assert.AreEqual (0, r, "r1");
-				Assert.AreEqual (0, g, "g1");
-				Assert.AreEqual (1, b, "b1");
+				Assert.AreEqual ((nfloat) 1, a, "a1");
+				Assert.AreEqual ((nfloat) 0, r, "r1");
+				Assert.AreEqual ((nfloat) 0, g, "g1");
+				Assert.AreEqual ((nfloat) 1, b, "b1");
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "other null 1");
@@ -204,10 +189,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (UILabel.GetAppearance<CustomLabel> (traits).TextColor, "g null 1");
 				UILabel.GetAppearance<CustomLabel> (traits).TextColor = UIColor.Blue;
 				UILabel.GetAppearance<CustomLabel> (traits).TextColor.GetRGBA (out r, out g, out b, out a);
-				Assert.AreEqual (1, a, "g a1");
-				Assert.AreEqual (0, r, "g r1");
-				Assert.AreEqual (0, g, "g g1");
-				Assert.AreEqual (1, b, "g b1");
+				Assert.AreEqual ((nfloat) 1, a, "g a1");
+				Assert.AreEqual ((nfloat) 0, r, "g r1");
+				Assert.AreEqual ((nfloat) 0, g, "g g1");
+				Assert.AreEqual ((nfloat) 1, b, "g b1");
 
 				// check that other appearance instances didn't change
 				Assert.IsNull (UILabel.Appearance.TextColor, "g other null 1");
@@ -220,7 +205,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-		class CustomLabel : UILabel {}
+		class CustomLabel : UILabel { }
 	}
 }
 

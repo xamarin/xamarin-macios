@@ -26,68 +26,52 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
-	// CGLayer.h
-	public class CGLayer : INativeObject
-#if !COREBUILD
-		, IDisposable
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
-	{
+	// CGLayer.h
+	public class CGLayer : NativeObject {
 #if !COREBUILD
-		IntPtr handle;
-
-		internal CGLayer (IntPtr handle)
+		[Preserve (Conditional = true)]
+		internal CGLayer (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid parameters to layer creation");
-					
-			this.handle = handle;
-			CGLayerRetain (handle);
 		}
 
-		[Preserve (Conditional=true)]
-		internal CGLayer (IntPtr handle, bool owns)
-		{
-			if (!owns)
-				CGLayerRetain (handle);
-
-			this.handle = handle;
-		}
-
-		~CGLayer ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGLayerRelease (/* CGLayerRef */ IntPtr layer);
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGLayerRef */ IntPtr CGLayerRetain (/* CGLayerRef */ IntPtr layer);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected internal override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGLayerRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CGLayerRetain (GetCheckedHandle ());
+		}
+
+		protected internal override void Release ()
+		{
+			CGLayerRelease (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -95,26 +79,26 @@ namespace CoreGraphics {
 
 		public CGSize Size {
 			get {
-				return CGLayerGetSize (handle);
+				return CGLayerGetSize (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGContextRef */ IntPtr CGLayerGetContext (/* CGLayerRef */ IntPtr layer);
 
 		public CGContext Context {
 			get {
-				return new CGContext (CGLayerGetContext (handle));
+				return new CGContext (CGLayerGetContext (Handle), false);
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGLayerRef */ IntPtr CGLayerCreateWithContext (/* CGContextRef */ IntPtr context, CGSize size, /* CFDictionaryRef */ IntPtr auxiliaryInfo);
 
-		public static CGLayer Create (CGContext context, CGSize size)
+		public static CGLayer Create (CGContext? context, CGSize size)
 		{
 			// note: auxiliaryInfo is reserved and should be null
-			return new CGLayer (CGLayerCreateWithContext (context == null ? IntPtr.Zero : context.Handle, size, IntPtr.Zero), true);
+			return new CGLayer (CGLayerCreateWithContext (context.GetHandle (), size, IntPtr.Zero), true);
 		}
 #endif
 	}

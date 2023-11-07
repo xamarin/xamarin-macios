@@ -6,6 +6,9 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -13,48 +16,35 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
-using OS_nw_protocol_metadata=System.IntPtr;
-using OS_nw_ws_response=System.IntPtr;
-using dispatch_queue_t =System.IntPtr;
+using OS_nw_protocol_metadata = System.IntPtr;
+using OS_nw_ws_response = System.IntPtr;
+using dispatch_queue_t = System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketOpCode : int {
-		Cont = 0x0,
-		Text = 0x1,
-		Binary = 0x2,
-		Close = 0x8,
-		Ping = 0x9,
-		Pong = 0xA,
-		Invalid = -1,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketCloseCode : int {
-		NormalClosure = 1000,
-		GoingAway = 1001,
-		ProtocolError = 1002,
-		UnsupportedData = 1003,
-		NoStatusReceived = 1005,
-		AbnormalClosure = 1006,
-		InvalidFramePayloadData = 1007,
-		PolicyViolation = 1008,
-		MessageTooBig = 1009,
-		MandatoryExtension = 1010,
-		InternalServerError = 1011,
-		TlsHandshake = 1015,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13, 0)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
+#endif
 	public class NWWebSocketMetadata : NWProtocolMetadata {
 
-		internal NWWebSocketMetadata (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWWebSocketMetadata (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_protocol_metadata nw_ws_create_metadata (NWWebSocketOpCode opcode);
 
-		public NWWebSocketMetadata (NWWebSocketOpCode opcode) : this (nw_ws_create_metadata (opcode), owns: true) {}
+		public NWWebSocketMetadata (NWWebSocketOpCode opcode) : this (nw_ws_create_metadata (opcode), owns: true) { }
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern NWWebSocketCloseCode nw_ws_metadata_get_close_code (OS_nw_protocol_metadata metadata);
@@ -73,49 +63,54 @@ namespace Network {
 		public NWWebSocketOpCode OpCode => nw_ws_metadata_get_opcode (GetCheckedHandle ());
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_metadata_set_pong_handler (OS_nw_protocol_metadata metadata, dispatch_queue_t client_queue, ref BlockLiteral pong_handler);
+		unsafe static extern void nw_ws_metadata_set_pong_handler (OS_nw_protocol_metadata metadata, dispatch_queue_t client_queue, BlockLiteral* pong_handler);
 
+#if !NET
 		delegate void nw_ws_metadata_set_pong_handler_t (IntPtr block, IntPtr error);
 		static nw_ws_metadata_set_pong_handler_t static_PongHandler = TrampolinePongHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_metadata_set_pong_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolinePongHandler (IntPtr block, IntPtr error)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWError>> (block);
-			if (del != null) {
-				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
+			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
+			if (del is not null) {
+				var nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
 				del (nwError);
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetPongHandler (DispatchQueue queue, Action<NWError> handler)
+		public void SetPongHandler (DispatchQueue queue, Action<NWError?> handler)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
-				BlockLiteral block_handler = new BlockLiteral ();
-				block_handler.SetupBlockUnsafe (static_PongHandler, handler);
-				try {
-					nw_ws_metadata_set_pong_handler (GetCheckedHandle (), queue.Handle, ref block_handler);
-				} finally {
-					block_handler.CleanupBlock ();
-				}
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolinePongHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketMetadata), nameof (TrampolinePongHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_PongHandler, handler);
+#endif
+				nw_ws_metadata_set_pong_handler (GetCheckedHandle (), queue.Handle, &block);
 			}
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_ws_response nw_ws_metadata_copy_server_response (OS_nw_protocol_metadata metadata);
 
-		public NWWebSocketResponse ServerResponse {
+		public NWWebSocketResponse? ServerResponse {
 			get {
 				var reponsePtr = nw_ws_metadata_copy_server_response (GetCheckedHandle ());
-				return (reponsePtr == IntPtr.Zero) ? null :  new NWWebSocketResponse (reponsePtr, owns: true);
+				return (reponsePtr == IntPtr.Zero) ? null : new NWWebSocketResponse (reponsePtr, owns: true);
 			}
-		} 
+		}
 	}
 }

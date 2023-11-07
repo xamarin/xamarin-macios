@@ -11,27 +11,28 @@ using System;
 using System.Net;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
 using AppKit;
-using PlatformException=Foundation.ObjCException;
+#if NET
+using PlatformException = ObjCRuntime.ObjCException;
 #else
-using UIKit;
-using PlatformException=Foundation.MonoTouchException;
+using PlatformException=Foundation.ObjCException;
 #endif
 #else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using PlatformException=MonoTouch.Foundation.MonoTouchException;
+using UIKit;
+#if NET
+using PlatformException = ObjCRuntime.ObjCException;
+#else
+using PlatformException = Foundation.MonoTouchException;
+#endif
 #endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class KeyedUnarchiverTest {

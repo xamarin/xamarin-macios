@@ -1,21 +1,15 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
+using Foundation;
 
 namespace CoreLocation {
 
-#if !XAMCORE_2_0
-	public partial class CLBeaconRegion {
-
-		[Obsolete ("Does not return a valid instance on iOS 8.")]
-		public CLBeaconRegion ()
-		{
-		}
-	}
-#endif
-
-#if !XAMCORE_4_0 && !WATCH
+#nullable enable
+#if !NET && !WATCH
 
 #if !TVOS
 	public partial class CLHeading {
@@ -26,7 +20,7 @@ namespace CoreLocation {
 			return base.Description;
 		}
 	}
-#endif
+#endif // !TVOS
 
 	public partial class CLLocation {
 
@@ -36,5 +30,36 @@ namespace CoreLocation {
 			return base.Description;
 		}
 	}
-#endif
+#endif // !NET && !WATCH
+
+#if !NET && (WATCH || TVOS || MONOMAC)
+
+	// Symbol in Xcode 13.2 from watchOS and tvOS
+
+	[Obsolete (Constants.UnavailableOnThisPlatform)]
+	[Native]
+	public enum CLLocationPushServiceError : long {
+		Unknown = 0,
+		MissingPushExtension = 1,
+		MissingPushServerEnvironment = 2,
+		MissingEntitlement = 3,
+	}
+
+	[Obsolete (Constants.UnavailableOnThisPlatform)]
+	public static class CLLocationPushServiceErrorExtensions {
+		public static NSString? GetDomain (this CLLocationPushServiceError self) => throw new PlatformNotSupportedException (Constants.UnavailableOnThisPlatform);
+	}
+
+	[Obsolete (Constants.UnavailableOnThisPlatform)]
+	public interface ICLLocationPushServiceExtension : INativeObject, IDisposable
+	{
+		void DidReceiveLocationPushPayload (NSDictionary<NSString, NSObject> payload, Action completion);
+	}
+
+	[Obsolete (Constants.UnavailableOnThisPlatform)]
+	public static partial class CLLocationPushServiceExtension_Extensions {
+		public static void ServiceExtensionWillTerminate (this ICLLocationPushServiceExtension This) => throw new PlatformNotSupportedException (Constants.UnavailableOnThisPlatform);
+	}
+
+#endif // !NET && (WATCH || TVOS)
 }

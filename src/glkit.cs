@@ -25,7 +25,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -33,30 +33,46 @@ using CoreGraphics;
 using CoreFoundation;
 using ModelIO;
 
-using Vector2 = global::OpenTK.Vector2;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using Matrix3 = global::CoreGraphics.RMatrix3;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+#else
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
-using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+#endif // NET 
 
 #if MONOMAC
+#if NET
+using pfloat = System.Runtime.InteropServices.NFloat;
+#else
 using pfloat = System.nfloat;
+#endif
 using AppKit;
+using EAGLSharegroup = Foundation.NSObject;
+using EAGLContext = Foundation.NSObject;
+using UIView = AppKit.NSView;
+using UIImage = AppKit.NSImage;
+using UIViewController = AppKit.NSViewController;
 #else
 using OpenGLES;
 using UIKit;
 using pfloat = System.Single;
+using NSOpenGLContext = Foundation.NSObject;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace GLKit {
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11)]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[Static]
 	interface GLKModelError {
 
@@ -67,185 +83,185 @@ namespace GLKit {
 		NSString Key { get; }
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface GLKBaseEffect : GLKNamedEffect {
 		[Export ("colorMaterialEnabled", ArgumentSemantic.Assign)]
-		bool ColorMaterialEnabled { get; set;  }
+		bool ColorMaterialEnabled { get; set; }
 
 		[Export ("useConstantColor", ArgumentSemantic.Assign)]
-		bool UseConstantColor { get; set;  }
+		bool UseConstantColor { get; set; }
 
 		[Export ("transform")]
-		GLKEffectPropertyTransform Transform { get;  }
+		GLKEffectPropertyTransform Transform { get; }
 
 		[Export ("light0")]
-		GLKEffectPropertyLight Light0 { get;  }
+		GLKEffectPropertyLight Light0 { get; }
 
 		[Export ("light1")]
-		GLKEffectPropertyLight Light1 { get;  }
+		GLKEffectPropertyLight Light1 { get; }
 
 		[Export ("light2")]
-		GLKEffectPropertyLight Light2 { get;  }
+		GLKEffectPropertyLight Light2 { get; }
 
 		[Export ("lightingType", ArgumentSemantic.Assign)]
-		GLKLightingType LightingType { get; set;  }
+		GLKLightingType LightingType { get; set; }
 
 		[Export ("lightModelAmbientColor", ArgumentSemantic.Assign)]
-		Vector4 LightModelAmbientColor { [Align (16)] get; set;  }
+		Vector4 LightModelAmbientColor { [Align (16)] get; set; }
 
 		[Export ("material")]
-		GLKEffectPropertyMaterial Material { get;  }
+		GLKEffectPropertyMaterial Material { get; }
 
 		[Export ("texture2d0")]
-		GLKEffectPropertyTexture Texture2d0 { get;  }
+		GLKEffectPropertyTexture Texture2d0 { get; }
 
 		[Export ("texture2d1")]
-		GLKEffectPropertyTexture Texture2d1 { get;  }
+		GLKEffectPropertyTexture Texture2d1 { get; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("textureOrder", ArgumentSemantic.Copy)]
-		GLKEffectPropertyTexture [] TextureOrder { get; set;  }
+		GLKEffectPropertyTexture [] TextureOrder { get; set; }
 
 		[Export ("constantColor", ArgumentSemantic.Assign)]
-		Vector4 ConstantColor { [Align (16)] get; set;  }
+		Vector4 ConstantColor { [Align (16)] get; set; }
 
 		[Export ("fog")]
-		GLKEffectPropertyFog Fog { get;  }
+		GLKEffectPropertyFog Fog { get; }
 
 		[Export ("label", ArgumentSemantic.Copy)]
 		[DisableZeroCopy]
 		[NullAllowed] // default is null on iOS 5.1.1
-		string Label { get; set;  }
+		string Label { get; set; }
 
 		[Export ("lightModelTwoSided", ArgumentSemantic.Assign)]
 		bool LightModelTwoSided { get; set; }
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface GLKEffectProperty {
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyFog {
 		[Export ("mode", ArgumentSemantic.Assign)]
-		GLKFogMode Mode { get; set;  }
+		GLKFogMode Mode { get; set; }
 
 		[Export ("color", ArgumentSemantic.Assign)]
-		Vector4 Color { [Align (16)] get; set;  }
+		Vector4 Color { [Align (16)] get; set; }
 
 		[Export ("density", ArgumentSemantic.Assign)]
-		float Density { get; set;  } /* GLfloat = float */
+		float Density { get; set; } /* GLfloat = float */
 
 		[Export ("start", ArgumentSemantic.Assign)]
-		float Start { get; set;  } /* GLfloat = float */
+		float Start { get; set; } /* GLfloat = float */
 
 		[Export ("end", ArgumentSemantic.Assign)]
-		float End { get; set;  } /* GLfloat = float */
+		float End { get; set; } /* GLfloat = float */
 
 		[Export ("enabled", ArgumentSemantic.Assign)]
 		bool Enabled { get; set; }
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyLight {
 		[Export ("position", ArgumentSemantic.Assign)]
-		Vector4 Position { [Align (16)] get; set;  }
+		Vector4 Position { [Align (16)] get; set; }
 
 		[Export ("ambientColor", ArgumentSemantic.Assign)]
-		Vector4 AmbientColor { [Align (16)] get; set;  }
+		Vector4 AmbientColor { [Align (16)] get; set; }
 
 		[Export ("diffuseColor", ArgumentSemantic.Assign)]
-		Vector4 DiffuseColor { [Align (16)] get; set;  }
+		Vector4 DiffuseColor { [Align (16)] get; set; }
 
 		[Export ("specularColor", ArgumentSemantic.Assign)]
-		Vector4 SpecularColor { [Align (16)] get; set;  }
+		Vector4 SpecularColor { [Align (16)] get; set; }
 
 		[Export ("spotDirection", ArgumentSemantic.Assign)]
-		Vector3 SpotDirection { get; set;  }
+		Vector3 SpotDirection { get; set; }
 
 		[Export ("spotExponent", ArgumentSemantic.Assign)]
-		float SpotExponent { get; set;  } /* GLfloat = float */
+		float SpotExponent { get; set; } /* GLfloat = float */
 
 		[Export ("spotCutoff", ArgumentSemantic.Assign)]
-		float SpotCutoff { get; set;  } /* GLfloat = float */
+		float SpotCutoff { get; set; } /* GLfloat = float */
 
 		[Export ("constantAttenuation", ArgumentSemantic.Assign)]
-		float ConstantAttenuation { get; set;  } /* GLfloat = float */
+		float ConstantAttenuation { get; set; } /* GLfloat = float */
 
 		[Export ("linearAttenuation", ArgumentSemantic.Assign)]
-		float LinearAttenuation { get; set;  } /* GLfloat = float */
+		float LinearAttenuation { get; set; } /* GLfloat = float */
 
 		[Export ("quadraticAttenuation", ArgumentSemantic.Assign)]
-		float QuadraticAttenuation { get; set;  } /* GLfloat = float */
+		float QuadraticAttenuation { get; set; } /* GLfloat = float */
 
 		[NullAllowed] // by default this property is null
 		[Export ("transform", ArgumentSemantic.Retain)]
-		GLKEffectPropertyTransform Transform { get; set;  }
+		GLKEffectPropertyTransform Transform { get; set; }
 
 		[Export ("enabled", ArgumentSemantic.Assign)]
 		bool Enabled { get; set; }
 
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyMaterial {
 		[Export ("diffuseColor", ArgumentSemantic.Assign)]
-		Vector4 DiffuseColor { [Align (16)] get; set;  }
+		Vector4 DiffuseColor { [Align (16)] get; set; }
 
 		[Export ("specularColor", ArgumentSemantic.Assign)]
-		Vector4 SpecularColor { [Align (16)] get; set;  }
+		Vector4 SpecularColor { [Align (16)] get; set; }
 
 		[Export ("emissiveColor", ArgumentSemantic.Assign)]
-		Vector4 EmissiveColor { [Align (16)] get; set;  }
+		Vector4 EmissiveColor { [Align (16)] get; set; }
 
 		[Export ("shininess", ArgumentSemantic.Assign)]
-		float Shininess { get; set;  } /* GLfloat = float */
+		float Shininess { get; set; } /* GLfloat = float */
 
 		[Export ("ambientColor", ArgumentSemantic.Assign)]
 		Vector4 AmbientColor { [Align (16)] get; set; }
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTexture {
 		[Export ("target", ArgumentSemantic.Assign)]
-		GLKTextureTarget Target { get; set;  }
+		GLKTextureTarget Target { get; set; }
 
 		[Export ("envMode", ArgumentSemantic.Assign)]
-		GLKTextureEnvMode EnvMode { get; set;  }
+		GLKTextureEnvMode EnvMode { get; set; }
 
 		[Export ("enabled", ArgumentSemantic.Assign)]
-		bool Enabled { get; set;  }
+		bool Enabled { get; set; }
 
 		[Export ("name", ArgumentSemantic.Assign)]
 		uint GLName { get; set; } /* GLuint = uint32_t */
 
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (GLKEffectProperty))]
 	interface GLKEffectPropertyTransform {
 		[Export ("normalMatrix")]
-		Matrix3 NormalMatrix { get;  }
+		Matrix3 NormalMatrix { get; }
 
 		[Export ("modelviewMatrix", ArgumentSemantic.Assign)]
 		Matrix4 ModelViewMatrix { [Align (16)] get; set; }
@@ -254,68 +270,62 @@ namespace GLKit {
 		Matrix4 ProjectionMatrix { [Align (16)] get; set; }
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11)]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // - (nullable instancetype)init NS_UNAVAILABLE;
-	interface GLKMesh
-	{
+	interface GLKMesh {
 		[Export ("initWithMesh:error:")]
-		IntPtr Constructor (MDLMesh mesh, out NSError error);
+		NativeHandle Constructor (MDLMesh mesh, out NSError error);
 
 		// generator does not like `out []` -> https://trello.com/c/sZYNalbB/524-generator-support-out
 		[Internal] // there's another, manual, public API exposed
 		[Static]
 		[Export ("newMeshesFromAsset:sourceMeshes:error:")]
 		[return: NullAllowed]
-		GLKMesh[] FromAsset (MDLAsset asset, out NSArray sourceMeshes, out NSError error);
+		GLKMesh [] FromAsset (MDLAsset asset, out NSArray sourceMeshes, out NSError error);
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
-	
+
 		[Export ("vertexBuffers")]
-		GLKMeshBuffer[] VertexBuffers { get; }
-	
+		GLKMeshBuffer [] VertexBuffers { get; }
+
 		[Export ("vertexDescriptor")]
 		MDLVertexDescriptor VertexDescriptor { get; }
-	
+
 		[Export ("submeshes")]
-		GLKSubmesh[] Submeshes { get; }
-	
+		GLKSubmesh [] Submeshes { get; }
+
 		[Export ("name")]
 		string Name { get; }
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11)]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GLKMeshBuffer : MDLMeshBuffer
-	{
+	interface GLKMeshBuffer : MDLMeshBuffer {
 		[Export ("glBufferName")]
 		uint GlBufferName { get; }
 
 		[Export ("offset")]
 		nuint Offset { get; }
 	}
-	
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11)]
-	[BaseType (typeof(NSObject))]
+
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GLKMeshBufferAllocator : MDLMeshBufferAllocator
-	{
+	interface GLKMeshBufferAllocator : MDLMeshBufferAllocator {
 	}
-		
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -325,58 +335,56 @@ namespace GLKit {
 		void PrepareToDraw ();
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (GLKBaseEffect))]
 	interface GLKReflectionMapEffect : GLKNamedEffect {
 		[Export ("textureCubeMap")]
-		GLKEffectPropertyTexture TextureCubeMap { get;  }
+		GLKEffectPropertyTexture TextureCubeMap { get; }
 
 		[Export ("matrix", ArgumentSemantic.Assign)]
-		Matrix3 Matrix { get; set;  }
+		Matrix3 Matrix { get; set; }
 	}
-	
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface GLKSkyboxEffect : GLKNamedEffect {
 		[Export ("center", ArgumentSemantic.Assign)]
-		Vector3 Center { get; set;  }
+		Vector3 Center { get; set; }
 
 		[Export ("xSize", ArgumentSemantic.Assign)]
-		float XSize { get; set;  } /* GLfloat = float */
+		float XSize { get; set; } /* GLfloat = float */
 
 		[Export ("ySize", ArgumentSemantic.Assign)]
-		float YSize { get; set;  } /* GLfloat = float */
+		float YSize { get; set; } /* GLfloat = float */
 
 		[Export ("zSize", ArgumentSemantic.Assign)]
-		float ZSize { get; set;  } /* GLfloat = float */
+		float ZSize { get; set; } /* GLfloat = float */
 
 		[Export ("textureCubeMap")]
-		GLKEffectPropertyTexture TextureCubeMap { get;  }
+		GLKEffectPropertyTexture TextureCubeMap { get; }
 
 		[Export ("transform")]
-		GLKEffectPropertyTransform Transform { get;  }
+		GLKEffectPropertyTransform Transform { get; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("label", ArgumentSemantic.Copy)]
 		[DisableZeroCopy]
-		string Label { get; set;  }
+		string Label { get; set; }
 
 		[Export ("draw")]
 		void Draw ();
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11)]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // (nullable instancetype)init NS_UNAVAILABLE;
-	interface GLKSubmesh
-	{
+	interface GLKSubmesh {
 		// Problematic, OpenTK has this define in 3 namespaces in:
 		// OpenTK.Graphics.ES11.DataType
 		// OpenTK.Graphics.ES20.DataType
@@ -390,111 +398,113 @@ namespace GLKit {
 		// OpenTK.Graphics.ES30.BeginMode
 		[Export ("mode")]
 		uint Mode { get; }
-	
+
 		[Export ("elementCount")]
 		int ElementCount { get; }
-	
+
 		[Export ("elementBuffer")]
 		GLKMeshBuffer ElementBuffer { get; }
-	
+
 		[NullAllowed, Export ("mesh", ArgumentSemantic.Weak)]
 		GLKMesh Mesh { get; }
-	
+
 		[Export ("name")]
 		string Name { get; }
 	}
-	
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureInfo : NSCopying {
 		[Export ("width")]
-		int Width { get;  } /* GLuint = uint32_t */
+		int Width { get; } /* GLuint = uint32_t */
 
 		[Export ("height")]
-		int Height { get;  } /* GLuint = uint32_t */
+		int Height { get; } /* GLuint = uint32_t */
 
 		[Export ("alphaState")]
-		GLKTextureInfoAlphaState AlphaState { get;  }
+		GLKTextureInfoAlphaState AlphaState { get; }
 
 		[Export ("textureOrigin")]
-		GLKTextureInfoOrigin TextureOrigin { get;  }
+		GLKTextureInfoOrigin TextureOrigin { get; }
 
 		[Export ("containsMipmaps")]
-		bool ContainsMipmaps { get;  }
+		bool ContainsMipmaps { get; }
 
 		[Export ("name")]
 		uint Name { get; } /* GLuint = uint32_t */
-		
+
 		[Export ("target")]
 		GLKTextureTarget Target { get; }
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
 		[Export ("mimapLevelCount")]
 		uint MimapLevelCount { get; }
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
 		[Export ("arrayLength")]
 		uint ArrayLength { get; }
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
 		[Export ("depth")]
 		uint Depth { get; }
 	}
 
 	delegate void GLKTextureLoaderCallback (GLKTextureInfo textureInfo, NSError error);
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	interface GLKTextureLoader {
 		[Static]
 		[Export ("textureWithContentsOfFile:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromFile (string path, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("textureWithContentsOfURL:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromUrl (NSUrl url, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("textureWithContentsOfData:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromData (NSData data, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("textureWithCGImage:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo FromImage (CGImage cgImage, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("cubeMapWithContentsOfFiles:options:error:"), Internal]
+		[return: NullAllowed]
 		GLKTextureInfo CubeMapFromFiles (NSArray paths, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("cubeMapWithContentsOfFile:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo CubeMapFromFile (string path, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
 		[Static]
 		[Export ("cubeMapWithContentsOfURL:options:error:")]
+		[return: NullAllowed]
 		GLKTextureInfo CubeMapFromUrl (NSUrl url, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
 		[Static]
 		[Export ("textureWithName:scaleFactor:bundle:options:error:")]
 		[return: NullAllowed]
 		GLKTextureInfo FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, out NSError outError);
 
-#if MONOMAC
+		[NoiOS]
+		[NoMacCatalyst]
+		[NoWatch]
+		[NoTV]
 		[Export ("initWithShareContext:")]
-		IntPtr Constructor (NSOpenGLContext context);
-#else
+		NativeHandle Constructor (NSOpenGLContext context);
+
+		[NoMac]
 		[Export ("initWithSharegroup:")]
-		IntPtr Constructor (EAGLSharegroup sharegroup);
-#endif
+		NativeHandle Constructor (EAGLSharegroup sharegroup);
 
 		[Export ("textureWithContentsOfFile:options:queue:completionHandler:")]
 		[Async]
@@ -524,28 +534,22 @@ namespace GLKit {
 		[Async]
 		void BeginLoadCubeMap (NSUrl filePath, [NullAllowed] NSDictionary textureOperations, [NullAllowed] DispatchQueue queue, GLKTextureLoaderCallback onComplete);
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
 		[Export ("textureWithName:scaleFactor:bundle:options:queue:completionHandler:")]
 		[Async]
 		void BeginTextureLoad (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, [NullAllowed] DispatchQueue queue, GLKTextureLoaderCallback block);
 
 		[Field ("GLKTextureLoaderApplyPremultiplication")]
 		NSString ApplyPremultiplication { get; }
-		
+
 		[Field ("GLKTextureLoaderGenerateMipmaps")]
 		NSString GenerateMipmaps { get; }
-		
+
 		[Field ("GLKTextureLoaderOriginBottomLeft")]
 		NSString OriginBottomLeft { get; }
-		
-#if XAMCORE_4_0 // Unavailable in macOS
-		[NoMac]
-#endif
+
 		[Field ("GLKTextureLoaderGrayscaleAsAlpha")]
 		NSString GrayscaleAsAlpha { get; }
 
-		[iOS (7,0)]
 		[Field ("GLKTextureLoaderSRGB")]
 		NSString SRGB { get; }
 
@@ -559,48 +563,48 @@ namespace GLKit {
 		NSString GLErrorKey { get; }
 	}
 
-#if !MONOMAC
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (GLKViewDelegate)})]
+	[NoMac]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[BaseType (typeof (UIView), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (GLKViewDelegate) })]
 	interface GLKView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
-		NSObject WeakDelegate { get; set;  }
+		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		GLKViewDelegate Delegate { get; set; }
-		
+
 		[NullAllowed] // by default this property is null
 		[Export ("context", ArgumentSemantic.Retain)]
-		EAGLContext Context { get; set;  }
+		EAGLContext Context { get; set; }
 
 		[Export ("drawableWidth")]
-		nint DrawableWidth { get;  }
+		nint DrawableWidth { get; }
 
 		[Export ("drawableHeight")]
-		nint DrawableHeight { get;  }
+		nint DrawableHeight { get; }
 
 		[Export ("drawableColorFormat")]
-		GLKViewDrawableColorFormat DrawableColorFormat { get; set;  }
+		GLKViewDrawableColorFormat DrawableColorFormat { get; set; }
 
 		[Export ("drawableDepthFormat")]
-		GLKViewDrawableDepthFormat DrawableDepthFormat { get; set;  }
+		GLKViewDrawableDepthFormat DrawableDepthFormat { get; set; }
 
 		[Export ("drawableStencilFormat")]
-		GLKViewDrawableStencilFormat DrawableStencilFormat { get; set;  }
+		GLKViewDrawableStencilFormat DrawableStencilFormat { get; set; }
 
 		[Export ("drawableMultisample")]
-		GLKViewDrawableMultisample DrawableMultisample { get; set;  }
+		GLKViewDrawableMultisample DrawableMultisample { get; set; }
 
 		[Export ("enableSetNeedsDisplay")]
-		bool EnableSetNeedsDisplay { get; set;  }
+		bool EnableSetNeedsDisplay { get; set; }
 
 		[Export ("initWithFrame:context:")]
-		IntPtr Constructor (CGRect frame, EAGLContext context);
+		NativeHandle Constructor (CGRect frame, EAGLContext context);
 
 		[Export ("bindDrawable")]
 		void BindDrawable ();
@@ -615,8 +619,9 @@ namespace GLKit {
 		void DeleteDrawable ();
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
+	[NoMac]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -626,43 +631,44 @@ namespace GLKit {
 		void DrawInRect (GLKView view, CGRect rect);
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
+	[NoMac]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface GLKViewController : GLKViewDelegate {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("preferredFramesPerSecond")]
-		nint PreferredFramesPerSecond { get; set;  }
+		nint PreferredFramesPerSecond { get; set; }
 
 		[Export ("framesPerSecond")]
-		nint FramesPerSecond { get;  }
+		nint FramesPerSecond { get; }
 
 		[Export ("paused")]
-		bool Paused { [Bind ("isPaused")] get; set;  }
+		bool Paused { [Bind ("isPaused")] get; set; }
 
 		[Export ("framesDisplayed")]
-		nint FramesDisplayed { get;  }
+		nint FramesDisplayed { get; }
 
 		[Export ("timeSinceFirstResume")]
-		double TimeSinceFirstResume { get;  }
+		double TimeSinceFirstResume { get; }
 
 		[Export ("timeSinceLastResume")]
-		double TimeSinceLastResume { get;  }
+		double TimeSinceLastResume { get; }
 
 		[Export ("timeSinceLastUpdate")]
-		double TimeSinceLastUpdate { get;  }
+		double TimeSinceLastUpdate { get; }
 
 		[Export ("timeSinceLastDraw")]
-		double TimeSinceLastDraw { get;  }
+		double TimeSinceLastDraw { get; }
 
 		[Export ("pauseOnWillResignActive")]
-		bool PauseOnWillResignActive { get; set;  }
+		bool PauseOnWillResignActive { get; set; }
 
 		[Export ("resumeOnDidBecomeActive")]
-		bool ResumeOnDidBecomeActive { get; set;  }
+		bool ResumeOnDidBecomeActive { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -676,8 +682,9 @@ namespace GLKit {
 		void Update ();
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
+	[NoMac]
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -689,6 +696,4 @@ namespace GLKit {
 		[Export ("glkViewController:willPause:")]
 		void WillPause (GLKViewController controller, bool pause);
 	}
-#endif
 }
-#endif

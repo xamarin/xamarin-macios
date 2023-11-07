@@ -1,0 +1,9 @@
+## Marked as available but do not make sense at all to be on Apple TV
+!missing-field! INSetMessageAttributeIntentIdentifier not bound
+!missing-selector! INDateComponentsRange::EKRecurrenceRule not bound
+!missing-selector! INDateComponentsRange::initWithEKRecurrenceRule: not bound
+!missing-selector! INDateComponentsRange::initWithStartDateComponents:endDateComponents:recurrenceRule: not bound
+!missing-selector! INDateComponentsRange::recurrenceRule not bound
+!unknown-native-enum! INCallRecordType bound
+!missing-field! INAnswerCallIntentIdentifier not bound
+!missing-field! INHangUpCallIntentIdentifier not bound

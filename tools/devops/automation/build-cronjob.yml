@@ -1,0 +1,93 @@
+# YAML pipeline build definition
+# https://devdiv.visualstudio.com/DevDiv/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=13947&view=Tab_Tasks
+#
+# YAML build pipeline based on the Jenkins multi-stage (main branch) build workflow
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
+#
+parameters:
+
+- name: runGovernanceTests
+  type: boolean
+  default: true
+
+- name: manuallyCreateLocPR
+  type: boolean
+  default: false
+
+variables:
+- template: templates/variables.yml
+- name: MaciosUploadPrefix
+  value: ''
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
+trigger:
+- main
+
+schedules:
+
+# Create the PR into main with the newest usable localization strings once a week on Sundays
+- cron: "0 12 * * 0"
+  displayName: Sunday Build
+  branches:
+    include:
+    - main
+  always: true
+
+stages:
+
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: 'Governance Checks'
+    jobs:
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: templates/governance-checks.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
+
+    - job: translations
+      displayName: 'Loc translations'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template:  templates/loc-translations.yml
+        parameters:
+          isPR: false
+          repositoryAlias: self
+          commit: HEAD
+          createLocPR: ${{ or(eq(parameters.manuallyCreateLocPR, true), eq(variables['Build.Reason'], 'Schedule')) }}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);MyXamarinFormsAppNS\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.617" GeneratePathProperty="true" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="MyXamarinFormsAppNS\MyXamarinFormsAppNS.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>%APPLICATION NAME%-watch</string>
+	<key>CFBundleIdentifier</key>
+	<string>%BUNDLE INDENTIFIER%-watch.watchkitapp</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.33</string>
+	<key>MinimumOSVersion</key>
+	<string>%MINOSVERSION%</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>WKCompanionAppBundleIdentifier</key>
+	<string>%BUNDLE INDENTIFIER%-watch</string>
+	<key>WKWatchKitApp</key>
+	<true/>
+	<key>XSAppIconAssets</key>
+	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
+</dict>
+</plist>

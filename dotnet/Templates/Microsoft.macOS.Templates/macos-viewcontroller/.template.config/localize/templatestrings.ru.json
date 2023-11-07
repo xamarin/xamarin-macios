@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Контроллер представления macOS",
+  "description": "Контроллер представления macOS с пользовательским интерфейсом, реализованным в Interface Builder Xcode (файл XIB)",
+  "symbols/namespace/description": "пространство имен для созданного кода"
+}

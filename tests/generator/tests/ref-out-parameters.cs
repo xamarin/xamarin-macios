@@ -3,11 +3,9 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-namespace BI1064
-{
+namespace BI1064 {
 	[BaseType (typeof (NSObject))]
-	interface RefOutParameters
-	{
+	interface RefOutParameters {
 		[Export ("testCFBundle:a:b:")]
 		void TestCFBundle (int action, ref CFBundle refValue, out CFBundle outValue);
 
@@ -23,8 +21,8 @@ namespace BI1064
 		[Export ("testString:a:b:")]
 		void TestString (int action, ref string refValue, out string outValue);
 
-		[Export ("testInt:a:b:")]
-		void TestInt (int action, ref int refValue, out int outValue);
+		[Export ("testInt:a:b:c:")]
+		unsafe void TestInt (int action, ref int refValue, out int outValue, int* ptrValue);
 
 		[Export ("testSelector:a:b:")]
 		void TestSelector (int action, ref Selector refValue, out Selector outValue);
@@ -33,16 +31,16 @@ namespace BI1064
 		void TestClass (int action, ref Class refValue, out Class outValue);
 
 		[Export ("testINSCodingArray:a:b:")]
-		void TestINSCodingArray (int action, ref INSCoding[] refValues, out INSCoding[] outValues);
+		void TestINSCodingArray (int action, ref INSCoding [] refValues, out INSCoding [] outValues);
 
 		[Export ("testNSObjectArray:a:b:")]
-		void TestNSObjectArray (int action, ref NSObject[] refValues, out NSObject[] outValues);
+		void TestNSObjectArray (int action, ref NSObject [] refValues, out NSObject [] outValues);
 
 		[Export ("testNSValueArray:a:b:")]
-		void TestNSValueArray (int action, ref NSValue[] refValues, out NSValue[] outValues);
+		void TestNSValueArray (int action, ref NSValue [] refValues, out NSValue [] outValues);
 
 		[Export ("testStringArray:a:b:")]
-		void TestStringArray (int action, ref string[] refStrings, out string[] outStrings);
+		void TestStringArray (int action, ref string [] refStrings, out string [] outStrings);
 
 		[Export ("testClassArray:a:b:")]
 		void TestClassArray (int action, ref Class [] refStrings, out Class [] outStrings);

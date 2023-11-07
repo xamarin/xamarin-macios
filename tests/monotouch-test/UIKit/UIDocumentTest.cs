@@ -13,36 +13,31 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-using MonoTouchException=ObjCRuntime.RuntimeException;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouchException=MonoTouch.RuntimeException;
-#endif
+using MonoTouchException = ObjCRuntime.RuntimeException;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
+#if !XAMCORE_3_0
 	class DocumentPoker : UIDocument {
-		
+
 		static FieldInfo bkFileUrl;
-		
+
 		static DocumentPoker ()
 		{
 			var t = typeof (UIDocument);
 			bkFileUrl = t.GetField ("__mt_FileUrl_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public DocumentPoker (NSUrl url) : base (url)
 		{
 		}
@@ -53,14 +48,15 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 	}
-	
+
+#endif // !XAMCORE_3_0
 	class MyUrl : NSUrl {
-		
+
 		public MyUrl (string url, string annotation) : base (url)
 		{
 			Annotation = annotation;
 		}
-		
+
 		public string Annotation { get; private set; }
 	}
 
@@ -91,7 +87,7 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		MyDocument doc;
-		
+
 		string GetFileName ()
 		{
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "mydocument.txt");
@@ -103,6 +99,10 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Save ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
 			using (NSUrl url = NSUrl.FromFilename (GetFileName ())) {
 				doc = new MyDocument (url);
 				doc.Save (url, UIDocumentSaveOperation.ForCreating, OperationHandler);
@@ -113,29 +113,29 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			Assert.True (success);
 		}
-		
+
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void PerformAsynchronousFileAccess_Null ()
 		{
 			using (NSUrl url = NSUrl.FromFilename (GetFileName ()))
 			using (var doc = new MyDocument (url)) {
 				// NULL value is not documented by Apple but adding a
 				// [NullAllowed] would throw an Objective-C exception (bad)
-				doc.PerformAsynchronousFileAccess (null);
+				Assert.Throws<ArgumentNullException> (() => doc.PerformAsynchronousFileAccess (null));
 			}
 		}
 
+#if !XAMCORE_3_0
 		[Test]
 		public void FileUrl_BackingField ()
 		{
 			if (DocumentPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);
-			
+
 			using (NSUrl url = NSUrl.FromFilename (file))
 			using (var doc = new DocumentPoker (url)) {
 				Assert.NotNull (doc.FileUrlBackingField, "1a");
@@ -148,26 +148,29 @@ namespace MonoTouchFixtures.UIKit {
 		[Ignore ("crash on the bots, run fines locally on sim")]
 		public void NSUrl_Subclass ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("will crash runner application after test execution");
-			
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);
-			
+
 			// interesting limitation
 			using (MyUrl url2 = new MyUrl (file, "my document")) {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: must pass a valid file URL to -[UIDocument initWithFileURL:]
-				Assert.Throws<MonoTouchException> (delegate { 
+#if NET
+				Assert.Throws<ObjCException> (delegate { 
+#else
+				Assert.Throws<MonoTouchException> (delegate
+				{
+#endif
 					new DocumentPoker (url2);
 				});
 			}
 		}
+#endif // !XAMCORE_3_0
 
 		[Test]
 		public void Fields ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			// just to confirm it's not an NSUrl but an NSString
 			Assert.That (UIDocument.UserActivityDocumentUrlKey.ToString (), Is.EqualTo ("NSUserActivityDocumentURL"), "NSUserActivityDocumentURLKey");
 		}

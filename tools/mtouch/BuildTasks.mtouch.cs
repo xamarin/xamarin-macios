@@ -1,33 +1,32 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using ClassRedirector;
 
-namespace Xamarin.Bundler
-{
-	public abstract class ProcessTask : BuildTask
-	{
-		public ProcessStartInfo ProcessStartInfo;
+namespace Xamarin.Bundler {
+	public abstract class ProcessTask : BuildTask {
+		public string FileName;
+		public IList<string> Arguments;
+		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 		protected StringBuilder Output;
 
 		protected string Command {
 			get {
 				var result = new StringBuilder ();
-				if (ProcessStartInfo.EnvironmentVariables.ContainsKey ("MONO_PATH")) {
+				if (Environment.TryGetValue ("MONO_PATH", out var mono_path)) {
 					result.Append ("MONO_PATH=");
-					result.Append (StringUtils.Quote (ProcessStartInfo.EnvironmentVariables ["MONO_PATH"]));
+					result.Append (StringUtils.Quote (mono_path));
 					result.Append (' ');
 				}
-				result.Append (ProcessStartInfo.FileName);
+				result.Append (FileName);
 				result.Append (' ');
-				result.Append (ProcessStartInfo.Arguments);
+				result.Append (StringUtils.FormatArguments (Arguments));
 				return result.ToString ();
 			}
 		}
@@ -42,7 +41,7 @@ namespace Xamarin.Bundler
 		// calls to this function will be synchronized (no need to lock in here).
 		protected virtual void OutputReceived (string line)
 		{
-			if (line != null)
+			if (line is not null)
 				Output.AppendLine (line);
 		}
 
@@ -51,56 +50,17 @@ namespace Xamarin.Bundler
 			if (Driver.Verbosity > 0)
 				Console.WriteLine (Command);
 
-			var info = ProcessStartInfo;
-			var stdout_completed = new ManualResetEvent (false);
-			var stderr_completed = new ManualResetEvent (false);
-			var lockobj = new object ();
-
 			Output = new StringBuilder ();
 
-			using (var p = Process.Start (info)) {
-				p.OutputDataReceived += (sender, e) =>
-				{
-					if (e.Data != null) {
-						lock (lockobj)
-							OutputReceived (e.Data);
-					} else {
-						stdout_completed.Set ();
-					}
-				};
+			var rv = Execution.RunWithCallbacksAsync (FileName, Arguments, environment: Environment, standardOutput: OutputReceived, standardError: OutputReceived).Result;
 
-				p.ErrorDataReceived += (sender, e) =>
-				{
-					if (e.Data != null) {
-						lock (lockobj)
-							OutputReceived (e.Data);
-					} else {
-						stderr_completed.Set ();
-					}
-				};
+			OutputReceived (null);
 
-				p.BeginOutputReadLine ();
-				p.BeginErrorReadLine ();
-
-				p.WaitForExit ();
-
-				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
-				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
-
-				OutputReceived (null);
-
-				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
-
-				if (Driver.Verbosity >= 2 && Output.Length > 0)
-					Console.Error.WriteLine (Output.ToString ());
-
-				return p.ExitCode;
-			}
+			return rv.ExitCode;
 		}
 	}
 
-	class GenerateMainTask : BuildTask
-	{
+	class GenerateMainTask : BuildTask {
 		public Target Target;
 		public Abi Abi;
 		public string MainM;
@@ -121,31 +81,29 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Driver.GenerateMain (Target, Target.Assemblies, Target.App.AssemblyName, Abi, MainM, RegistrationMethods);
+			Target.GenerateMain (Target.App.Platform, Abi, MainM, RegistrationMethods);
 		}
 	}
 
-	class CompileMainTask : CompileTask
-	{
+	class CompileMainTask : CompileTask {
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5103, "Failed to compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5103, Errors.MT5103_A, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 	}
 
-	class PinvokesTask : CompileTask
-	{
+	class PinvokesTask : CompileTask {
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (4002, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new");
+			throw ErrorHelper.CreateError (4002, Errors.MT4002);
 		}
 	}
 
-	class RunRegistrarTask : BuildTask
-	{
+	class RunRegistrarTask : BuildTask {
 		public Target Target;
 		public string RegistrarCodePath;
 		public string RegistrarHeaderPath;
+		public List<string> RegistrationMethods;
 
 		public override IEnumerable<string> Inputs {
 			get {
@@ -163,12 +121,13 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarHeaderPath, RegistrarCodePath);
+			var assemblies = Target.Assemblies.Select ((a) => a.AssemblyDefinition);
+			Target.StaticRegistrar.Generate (assemblies, RegistrarHeaderPath, RegistrarCodePath, out var initialization_name);
+			RegistrationMethods.Add (initialization_name);
 		}
 	}
 
-	class CompileRegistrarTask : CompileTask
-	{
+	class CompileRegistrarTask : CompileTask {
 		public string RegistrarCodePath;
 		public string RegistrarHeaderPath;
 
@@ -185,8 +144,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class AOTTask : ProcessTask
-	{
+	public class AOTTask : ProcessTask {
 		public Assembly Assembly;
 		public string AssemblyName;
 		public bool AddBitcodeMarkerSection;
@@ -213,7 +171,7 @@ namespace Xamarin.Bundler
 
 		public override IEnumerable<string> FileDependencies {
 			get {
-				if (inputs == null) {
+				if (inputs is null) {
 					inputs = new List<string> ();
 					if (Assembly.HasDependencyMap)
 						inputs.AddRange (Assembly.DependencyMap);
@@ -243,7 +201,7 @@ namespace Xamarin.Bundler
 
 		protected override void OutputReceived (string line)
 		{
-			if (line == null)
+			if (line is null)
 				return;
 
 			if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
@@ -271,7 +229,7 @@ namespace Xamarin.Bundler
 
 			WriteLimitedOutput ($"AOT Compilation exited with code {exit_code}, command:\n{Command}", output_lines, exceptions);
 
-			exceptions.Add (ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName));
+			exceptions.Add (ErrorHelper.CreateError (3001, Errors.MX3001, "AOT", AssemblyName));
 
 			throw new AggregateException (exceptions);
 		}
@@ -282,8 +240,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class NativeLinkTask : BuildTask
-	{
+	public class NativeLinkTask : BuildTask {
 		public Target Target;
 		public string OutputFile;
 		public CompilerFlags CompilerFlags;
@@ -307,50 +264,64 @@ namespace Xamarin.Bundler
 			// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 			var linker_errors = new List<Exception> ();
 			var output = new StringBuilder ();
-			var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), null, output, suppressPrintOnErrors: true);
+			var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
 
-			Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
+			try {
+				var code = await Driver.RunCommandAsync (Target.App.CompilerPath, CompilerFlags.ToArray (), output: output, suppressPrintOnErrors: true);
 
-			if (code != 0) {
-				Console.WriteLine ($"Process exited with code {code}, command:\n{Target.App.CompilerPath} {CompilerFlags.ToString ()}\n{output} ");
-				// if the build failed - it could be because of missing frameworks / libraries we identified earlier
-				foreach (var assembly in Target.Assemblies) {
-					if (assembly.UnresolvedModuleReferences == null)
-						continue;
+				Application.ProcessNativeLinkerOutput (Target, output.ToString (), CompilerFlags.AllLibraries, linker_errors, code != 0);
 
-					foreach (var mr in assembly.UnresolvedModuleReferences) {
-						// TODO: add more diagnose information on the warnings
-						var name = Path.GetFileNameWithoutExtension (mr.Name);
-						linker_errors.Add (new MonoTouchException (5215, false, "References to '{0}' might require additional -framework=XXX or -lXXX instructions to the native linker", name));
+				if (code != 0) {
+					Console.WriteLine ($"Process exited with code {code}, command:\n{Target.App.CompilerPath} {CompilerFlags.ToString ()}\n{output} ");
+					// if the build failed - it could be because of missing frameworks / libraries we identified earlier
+					foreach (var assembly in Target.Assemblies) {
+						if (assembly.UnresolvedModuleReferences is null)
+							continue;
+
+						foreach (var mr in assembly.UnresolvedModuleReferences) {
+							// TODO: add more diagnose information on the warnings
+							var name = Path.GetFileNameWithoutExtension (mr.Name);
+							linker_errors.Add (new ProductException (5215, false, Errors.MT5215, name));
+						}
 					}
-				}
-				// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
-				if (Target.App.UserGccFlags?.Count > 0)
-					linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", StringUtils.FormatArguments (Target.App.UserGccFlags)));
-				else
-					linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log."));
+					// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
+					if (Target.App.CustomLinkFlags?.Count > 0)
+						linker_errors.Add (new ProductException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.CustomLinkFlags)));
+					else
+						linker_errors.Add (new ProductException (5202, true, Errors.MT5202));
 
-				if (code == 255) {
-					// check command length
-					// getconf ARG_MAX
-					StringBuilder getconf_output = new StringBuilder ();
-					if (Driver.RunCommand ("getconf", new [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
-						int arg_max;
-						if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
-							var cmd_length = Target.App.CompilerPath.Length + 1 + CompilerFlags.ToString ().Length;
-							if (cmd_length > arg_max) {
-								linker_errors.Add (ErrorHelper.CreateWarning (5217, $"Native linking possibly failed because the linker command line was too long ({cmd_length} characters)."));
+					if (code == 255) {
+						// check command length
+						// getconf ARG_MAX
+						StringBuilder getconf_output = new StringBuilder ();
+						if (Driver.RunCommand ("getconf", new [] { "ARG_MAX" }, output: getconf_output, suppressPrintOnErrors: true) == 0) {
+							int arg_max;
+							if (int.TryParse (getconf_output.ToString ().Trim (' ', '\t', '\n', '\r'), out arg_max)) {
+								if (cmd_length > arg_max) {
+									linker_errors.Add (ErrorHelper.CreateError (5217, Errors.MT5217, cmd_length));
+								} else {
+									Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
+								}
 							} else {
-								Driver.Log (3, $"Linker failure is probably not due to command-line length (actual: {cmd_length} limit: {arg_max}");
+								Driver.Log (3, "Failed to parse 'getconf ARG_MAX' output: {0}", getconf_output);
 							}
 						} else {
-							Driver.Log (3, "Failed to parse 'getconf ARG_MAX' output: {0}", getconf_output);
+							Driver.Log (3, "Failed to execute 'getconf ARG_MAX'\n{0}", getconf_output);
 						}
-					} else {
-						Driver.Log (3, "Failed to execute 'getconf ARG_MAX'\n{0}", getconf_output);
 					}
 				}
+
+				if (code == 0 && Driver.XcodeVersion.Major >= 14 && Target.App.BitCodeMode != BitCodeMode.None)
+					Target.App.StripBitcode (OutputFile);
+			} catch (System.ComponentModel.Win32Exception wex) {
+				/* This means we failed to execute the linker, not that the linker itself returned with a failure */
+				if (wex.NativeErrorCode == 7 /* E2BIG = Too many arguments */ ) {
+					linker_errors.Add (ErrorHelper.CreateError (5217, wex, Errors.MT5217, cmd_length));
+				} else {
+					linker_errors.Add (ErrorHelper.CreateError (5222, wex, Errors.MX5222, wex.Message));
+				}
 			}
+
 			ErrorHelper.Show (linker_errors);
 
 			// the native linker can prefer private (and existing) over public (but non-existing) framework when weak_framework are used
@@ -369,24 +340,25 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class LinkTask : CompileTask
-	{
+	public class LinkTask : CompileTask {
 		protected override async Task ExecuteAsync ()
 		{
 			await base.ExecuteAsync ();
 			// we can't trust the native linker to pick the right (non private) framework when an older TargetVersion is used
 			if (CompilerFlags.WeakFrameworks.Count > 0)
 				Target.AdjustDylibs (OutputFile);
+			// Remove bitcode from the binary
+			if (Driver.XcodeVersion.Major >= 14 && App.BitCodeMode != BitCodeMode.None)
+				App.StripBitcode (OutputFile);
 		}
 
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5216, "Native linking failed for '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", OutputFile);
+			throw ErrorHelper.CreateError (5216, Errors.MT5216, OutputFile);
 		}
 	}
 
-	public class CompileTask : BuildTask
-	{
+	public class CompileTask : BuildTask {
 		public Target Target;
 		public Application App { get { return Target.App; } }
 		public bool SharedLibrary;
@@ -459,10 +431,20 @@ namespace Xamarin.Bundler
 					flags.AddOtherFlag ("-std=c++14");
 				}
 
-				flags.AddOtherFlag ($"-I{Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include")}");
+				flags.AddOtherFlag ($"-I{Driver.GetProductSdkIncludeDirectory (app)}");
 			}
 			flags.AddOtherFlag ($"-isysroot", Driver.GetFrameworkDirectory (app));
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).
+		}
+
+		public static void GetCatalystCompilerFlags (CompilerFlags flags, Abi abi, Application app)
+		{
+			GetCompilerFlags (app, flags, false);
+			flags.AddOtherFlag ($"-target", $"{abi.AsArchString ()}-apple-ios{app.DeploymentTarget}-macabi");
+			var isysroot = Driver.GetFrameworkDirectory (app);
+			flags.AddOtherFlag ($"-isystem", Path.Combine (isysroot, "System", "iOSSupport", "usr", "include"));
+			flags.AddOtherFlag ($"-iframework", Path.Combine (isysroot, "System", "iOSSupport", "System", "Library", "Frameworks"));
+			flags.AddOtherFlag ($"-L{Path.Combine (isysroot, "System", "iOSSupport", "usr", "lib")}");
 		}
 
 		public static void GetSimulatorCompilerFlags (CompilerFlags flags, bool is_assembler, Application app, string language = null)
@@ -537,13 +519,15 @@ namespace Xamarin.Bundler
 
 		protected virtual void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5106, "Could not compile the file(s) '{0}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
+			throw ErrorHelper.CreateError (5106, Errors.MT5106, string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 
 		protected async Task<int> CompileAsync ()
 		{
 			if (App.IsDeviceBuild) {
 				GetDeviceCompilerFlags (CompilerFlags, IsAssembler);
+			} else if (App.Platform == ApplePlatform.MacCatalyst) {
+				GetCatalystCompilerFlags (CompilerFlags, Abi, App);
 			} else {
 				GetSimulatorCompilerFlags (CompilerFlags, IsAssembler, App, Language);
 			}
@@ -572,13 +556,13 @@ namespace Xamarin.Bundler
 			var output = new List<string> ();
 			var assembly_name = Path.GetFileNameWithoutExtension (OutputFile);
 			var output_received = new Action<string> ((string line) => {
-				if (line == null)
+				if (line is null)
 					return;
 				output.Add (line);
 				CheckFor5107 (assembly_name, line, exceptions);
 			});
 
-			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToArray (), null, output_received, suppressPrintOnErrors: true);
+			var rv = await Driver.RunCommandAsync (App.CompilerPath, CompilerFlags.ToArray (), output_received: output_received, suppressPrintOnErrors: true);
 
 			WriteLimitedOutput (rv != 0 ? $"Compilation failed with code {rv}, command:\n{App.CompilerPath} {CompilerFlags.ToString ()}" : null, output, exceptions);
 
@@ -589,14 +573,13 @@ namespace Xamarin.Bundler
 
 		public override string ToString ()
 		{
-			if (compiler_flags == null || compiler_flags.SourceFiles == null)
+			if (compiler_flags is null || compiler_flags.SourceFiles is null)
 				return Path.GetFileName (OutputFile);
 			return string.Join (", ", compiler_flags.SourceFiles.Select ((arg) => Path.GetFileName (arg)).ToArray ());
 		}
 	}
 
-	public class BitCodeifyTask : BuildTask
-	{
+	public class BitCodeifyTask : BuildTask {
 		public string Input { get; set; }
 		public string OutputFile { get; set; }
 		public ApplePlatform Platform { get; set; }
@@ -626,8 +609,8 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class LipoTask : BuildTask
-	{
+	public class LipoTask : BuildTask {
+		public Application App;
 		public IEnumerable<string> InputFiles { get; set; }
 		public string OutputFile { get; set; }
 
@@ -645,7 +628,7 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			Application.Lipo (OutputFile, InputFiles.ToArray ());
+			Application.Lipo (App, OutputFile, InputFiles.ToArray ());
 		}
 
 		public override string ToString ()
@@ -655,8 +638,7 @@ namespace Xamarin.Bundler
 	}
 
 
-	public class FileCopyTask : BuildTask
-	{
+	public class FileCopyTask : BuildTask {
 		public string InputFile { get; set; }
 		public string OutputFile { get; set; }
 

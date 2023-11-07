@@ -1,0 +1,40 @@
+## unsorted
+
+## The API that uses the following is unavailable / API_UNAVAILABLE(macosx)
+!missing-enum! INBookRestaurantReservationIntentCode not bound
+!missing-enum! INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode not bound
+!missing-enum! INGetAvailableRestaurantReservationBookingsIntentCode not bound
+!missing-enum! INGetRestaurantGuestIntentResponseCode not bound
+!missing-enum! INGetUserCurrentRestaurantReservationBookingsIntentResponseCode not bound
+!missing-enum! INRestaurantReservationUserBookingStatus not bound
+
+## Do not make sense on macOS, we can bind later if asked
+!missing-selector! +INCurrencyAmountResolutionResult::confirmationRequiredWithCurrencyAmountToConfirm: not bound
+!missing-selector! +INCurrencyAmountResolutionResult::disambiguationWithCurrencyAmountsToDisambiguate: not bound
+!missing-selector! +INCurrencyAmountResolutionResult::successWithResolvedCurrencyAmount: not bound
+!missing-selector! +INDoubleResolutionResult::confirmationRequiredWithValueToConfirm: not bound
+!missing-selector! +INDoubleResolutionResult::successWithResolvedValue: not bound
+!missing-selector! INTicketedEvent::category not bound
+!missing-selector! INTicketedEvent::eventDuration not bound
+!missing-selector! INTicketedEvent::initWithCategory:name:eventDuration:location: not bound
+!missing-selector! INTicketedEvent::location not bound
+!missing-selector! INTicketedEvent::name not bound
+!missing-selector! INTicketedEventReservation::event not bound
+!missing-selector! INTicketedEventReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:reservedSeat:event: not bound
+!missing-selector! INTicketedEventReservation::initWithItemReference:reservationNumber:bookingTime:reservationStatus:reservationHolderName:actions:URL:reservedSeat:event: not bound
+!missing-selector! INTicketedEventReservation::reservedSeat not bound
+!missing-type! INCurrencyAmountResolutionResult not bound
+!missing-type! INDoubleResolutionResult not bound
+!missing-type! INTicketedEvent not bound
+!missing-type! INTicketedEventReservation not bound
+
+## Headers say Mac (12,0) but types used in properties are still NoMac
+!missing-protocol! INStartCallIntentHandling not bound
+
+## API that uses types that aren't available in macOS (even though the API itself supposedly is), so we can't (and shouldn't) bind those API.
+!missing-protocol-member! INSendMessageIntentHandling::resolveSpeakableGroupNameForSendMessage:withCompletion: not found
+!missing-selector! INDateComponentsRange::initWithStartDateComponents:endDateComponents:recurrenceRule: not bound
+!missing-selector! INDateComponentsRange::recurrenceRule not bound
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+!missing-selector! INSendMessageIntentResponse::sentMessages not bound
+!missing-selector! INSendMessageIntentResponse::setSentMessages: not bound

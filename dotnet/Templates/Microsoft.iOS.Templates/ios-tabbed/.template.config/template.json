@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "iOS", "Mobile" ],
+  "identity": "Microsoft.iOS.iOSTabbedApp",
+  "name": "iOS Tabbed Application",
+  "description": "A project for creating a .NET iOS tabbed application",
+  "shortName": "ios-tabbed",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "iOSTabbedApp1",
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "copyOnly": [ "**/*.png", "**/*.pdf" ]
+    }
+  ],
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "iOSTabbedApp1.csproj" }
+  ],
+  "symbols": {
+    "bundleId": {
+      "type": "parameter",
+      "description": "Overrides CFBundleIdentifier in the Info.plist",
+      "datatype": "string",
+      "replaces": "com.companyname.iOSTabbedApp1"
+    },
+    "minOSVersion": {
+      "type": "parameter",
+      "description": "Overrides SupportedOSPlatformVersion in the project file",
+      "replaces": "minOSVersion",
+      "datatype": "string",
+      "defaultValue": "15.0"
+    },
+    "deviceFamily": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "universal",
+      "choices": [
+        {
+          "choice": "universal",
+          "description": "Support both iPhone and iPad devices"
+        },
+        {
+          "choice": "iphone",
+          "description": "Support only iPhone devices"
+        },
+        {
+          "choice": "ipad",
+          "description": "Support only iPad devices"
+        }
+      ]
+    }
+  },
+  "defaultName": "iOSTabbedApp1"
+}

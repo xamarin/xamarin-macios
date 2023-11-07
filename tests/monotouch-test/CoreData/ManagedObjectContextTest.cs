@@ -8,28 +8,14 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreData;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreData {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ManagedObjectContextTest {
@@ -45,7 +31,7 @@ namespace MonoTouchFixtures.CoreData {
 			Assert.That (moc.RegisteredObjects.Count, Is.EqualTo ((nuint) 0), "RegisteredObjects");
 			Assert.False (moc.RetainsRegisteredObjects, "RetainsRegisteredObjects");
 			Assert.That (moc.StalenessInterval, Is.EqualTo (-1), "StalenessInterval");
-			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12, throwIfOtherPlatform: false))
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12, throwIfOtherPlatform: false))
 				Assert.Null (moc.UndoManager, "UndoManager");
 			else
 				Assert.NotNull (moc.UndoManager, "UndoManager");
@@ -72,22 +58,20 @@ namespace MonoTouchFixtures.CoreData {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Perform_Null ()
 		{
 			using (var moc = new NSManagedObjectContext (NSManagedObjectContextConcurrencyType.MainQueue)) {
 				// a NULL results in a native crash - but not immediate
-				moc.Perform (null);
+				Assert.Throws<ArgumentNullException> (() => moc.Perform (null));
 			}
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void PerformAndWait_Null ()
 		{
 			using (var moc = new NSManagedObjectContext (NSManagedObjectContextConcurrencyType.MainQueue)) {
 				// a NULL results in a *immediate* native crash
-				moc.PerformAndWait (null);
+				Assert.Throws<ArgumentNullException> (() => moc.PerformAndWait (null));
 			}
 		}
 

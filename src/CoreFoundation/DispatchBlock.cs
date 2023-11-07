@@ -7,19 +7,31 @@
 // Copyright 2019 Microsoft Corp.
 //
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 #if !COREBUILD
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public sealed class DispatchBlock : NativeObject {
-		internal DispatchBlock (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal DispatchBlock (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
@@ -41,22 +53,22 @@ namespace CoreFoundation {
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags = DispatchBlockFlags.None)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags);
 		}
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags, qosClass, relative_priority);
 		}
 
 		public static DispatchBlock Create (DispatchBlock block, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			return block.Create (flags, qosClass, relative_priority);
 		}
 
@@ -65,37 +77,34 @@ namespace CoreFoundation {
 			return new DispatchBlock (dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, GetCheckedHandle ()), true);
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			Handle = BlockLiteral._Block_copy (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			BlockLiteral._Block_release (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create (/*DispatchBlockFlags*/ nuint flags, ref BlockLiteral block);
+		unsafe extern static IntPtr dispatch_block_create (/*DispatchBlockFlags*/ nuint flags, BlockLiteral* block);
 
 		// Returns a retained heap-allocated block
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static IntPtr create (Action action, DispatchBlockFlags flags)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				return dispatch_block_create ((nuint) (ulong) flags, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (action);
+				return dispatch_block_create ((nuint) (ulong) flags, &block);
 			}
 		}
 
 		[DllImport (Constants.libcLibrary)]
-		extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, ref BlockLiteral dispatchBlock);
+		unsafe extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, BlockLiteral* dispatchBlock);
 
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_block_create_with_qos_class (/*DispatchBlockFlags*/ nuint flags, DispatchQualityOfService qosClass, int relative_priority, IntPtr dispatchBlock);
@@ -104,15 +113,12 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static IntPtr create (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
-			BlockLiteral block_handler = new BlockLiteral ();
-			try {
-				block_handler.SetupBlockUnsafe (BlockStaticDispatchClass.static_dispatch_block, action);
-				return dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, ref block_handler);
-			} finally {
-				block_handler.CleanupBlock ();
+			unsafe {
+				using var block = BlockStaticDispatchClass.CreateBlock (action);
+				return dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, &block);
 			}
 		}
 
@@ -129,18 +135,18 @@ namespace CoreFoundation {
 
 		public void Notify (DispatchQueue queue, Action notification)
 		{
-			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+			if (notification is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			using (var block = new DispatchBlock (notification))
 				Notify (queue, block);
 		}
 
 		public void Notify (DispatchQueue queue, DispatchBlock notification)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
-			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (notification is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			dispatch_block_notify (GetCheckedHandle (), queue.GetCheckedHandle (), notification.GetCheckedHandle ());
 		}
 
@@ -172,38 +178,21 @@ namespace CoreFoundation {
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 		delegate void DispatchBlockCallback (IntPtr block);
 
-		public static explicit operator Action (DispatchBlock block)
+		public static explicit operator Action? (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				return null;
 
 			unsafe {
-				BlockLiteral *handle = (BlockLiteral *) block.GetCheckedHandle ();
+				var handle = (BlockLiteral*) (IntPtr) block.GetCheckedHandle ();
 				var del = handle->GetDelegateForBlock<DispatchBlockCallback> ();
-				return new Action (() => del (block.GetCheckedHandle ()));
+				return new Action (() => del ((IntPtr) block.GetCheckedHandle ()));
 			}
 		}
 
 		public void Invoke ()
 		{
-			((Action) this) ();
-		}
-
-		//
-		// You must invoke ->CleanupBlock after you have transferred ownership to
-		// the unmanaged code to release the resources allocated on the managed side
-		//
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		internal static unsafe void Invoke (Action codeToRun, Action<IntPtr> invoker)
-		{
-			BlockLiteral *block_ptr;
-			BlockLiteral block;
-			block = new BlockLiteral ();
-			block_ptr = &block;
-
-			block.SetupBlockUnsafe (Trampolines.SDAction.Handler, codeToRun);
-			invoker ((IntPtr) block_ptr);
-			block_ptr->CleanupBlock ();
+			((Action) this!) ();
 		}
 	}
 

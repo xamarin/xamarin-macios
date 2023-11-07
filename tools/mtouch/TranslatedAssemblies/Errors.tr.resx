@@ -1,0 +1,1840 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="default" xml:space="preserve">
+		<value>{0} kodu için hata iletisi bulunamadı. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresindeki GitHub'da bu eksik iletiyi bildirin</value>
+		<comment>
+			This is the default message when an error code can not be found.
+		</comment>
+	</data>
+  <data name="MT0000" xml:space="preserve">
+		<value>Beklenmeyen hata. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT0001" xml:space="preserve">
+		<value>'-devname', cihaza özgü bir eylem olmadan sağlandı
+		</value>
+	</data>
+  <data name="MM0001" xml:space="preserve">
+		<value>Xamarin.Mac'in bu sürümü Mono {0} gerektirir (geçerli Mono sürümü {1}). Lütfen http://mono-project.com/Downloads adresinden Mono.framework'ü güncelleştirin
+		</value>
+	</data>
+  <data name="MT0002" xml:space="preserve">
+		<value>'{0}' ortam değişkeni ayrıştırılamadı
+		</value>
+	</data>
+  <data name="MX0003" xml:space="preserve">
+		<value>'{0}.exe' uygulama adı bir SDK veya ürün bütünleştirilmiş kodu (.dll) adıyla çakışıyor.
+		</value>
+	</data>
+  <data name="MT0004" xml:space="preserve">
+		<value>Yeni başvuru sayma mantığı, SGen'in de etkinleştirilmesini gerektiriyor.
+		</value>
+	</data>
+  <data name="MT0005" xml:space="preserve">
+		<value>* çıkış dizini yok.
+		</value>
+	</data>
+  <data name="MT0006" xml:space="preserve">
+		<value>{0} konumunda devel platformu yok, SDK'yı belirtmek için --platform=PLAT kullanın.
+		</value>
+	</data>
+  <data name="MX0007" xml:space="preserve">
+		<value>'{0}' kök bütünleştirilmiş kodu yok
+		</value>
+	</data>
+  <data name="MM0008" xml:space="preserve">
+		<value>Yalnızca bir kök bütünleştirilmiş kodu sağlamanız gerekir, {0} bütünleştirilmiş kod bulundu: '{1}'
+		</value>
+	</data>
+  <data name="MX0009" xml:space="preserve">
+		<value>Bütünleştirilmiş kodlar yüklenirken hata oluştu: {0}
+		</value>
+	</data>
+  <data name="MX0010" xml:space="preserve">
+		<value>Komut satırı bağımsız değişkenleri ayrıştırılamadı: {0}
+		</value>
+	</data>
+  <data name="MT0011" xml:space="preserve">
+		<value>{0}, Xamarin.iOS tarafından desteklenenden daha yeni bir çalışma zamanı ({1}) ile oluşturuldu.
+		</value>
+	</data>
+  <data name="MT0012" xml:space="preserve">
+		<value>* öğesini tamamlamak için tamamlanmamış veriler sağlandı.
+		</value>
+	</data>
+  <data name="MT0013" xml:space="preserve">
+		<value>Profil oluşturma desteği, sgen'in de etkinleştirilmesini gerektirir.
+		</value>
+	</data>
+  <data name="MT0014" xml:space="preserve">
+		<value>iOS {0} SDK'sı, {1} öğesini hedefleyen uygulamaları oluşturmayı desteklemiyor.
+		</value>
+	</data>
+  <data name="MT0015" xml:space="preserve">
+		<value>Geçersiz ABI: {0}. Desteklenen ABI'ler: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64, arm64+llvm, arm64_32 ve arm64_32+llvm.
+		</value>
+	</data>
+  <data name="MX0016" xml:space="preserve">
+		<value>'{0}' seçeneği kullanım dışı bırakıldı.
+		</value>
+	</data>
+  <data name="MX0017" xml:space="preserve">
+		<value>Kök bütünleştirilmiş kodu sağlamanız gerekir.
+		</value>
+	</data>
+  <data name="MX0018" xml:space="preserve">
+		<value>Bilinmeyen komut satırı bağımsız değişkeni: '{0}'
+		</value>
+	</data>
+  <data name="MT0019" xml:space="preserve">
+		<value>Yalnızca bir --[log|install|kill|launch]dev veya --[launch|debug]sim seçeneği kullanılabilir.
+		</value>
+	</data>
+  <data name="MX0020" xml:space="preserve">
+		<value>'{0}' için geçerli seçenekler: '{1}'.
+		</value>
+	</data>
+  <data name="MT0021" xml:space="preserve">
+		<value>Statik kaydedici kullanılırken (cihaz için derlenirken bu varsayılandır), gcc/g++ (--use-gcc) kullanılarak derlenemiyor. --use-gcc bayrağını kaldırın ya da dinamik kaydediciyi (--registrar:dynamic) kullanın.
+		</value>
+	</data>
+  <data name="MT0022" xml:space="preserve">
+		<value>'--unsupported--enable-generics-in-registrar' ve '--registrar' seçenekleri uyumlu değil.
+		</value>
+	</data>
+  <data name="MT0023" xml:space="preserve">
+		<value>{0} kök bütünleştirilmiş kodu başka bir bütünleştirilmiş kodla ({1}) çakışıyor.
+		</value>
+	</data>
+  <data name="MM0023" xml:space="preserve">
+		<value>'{0}.exe' uygulama adı başka bir kullanıcı bütünleştirilmiş kodu ile çakışıyor.
+		</value>
+	</data>
+  <data name="MT0024" xml:space="preserve">
+		<value>Gereken '{0}' dosyası bulunamadı.
+		</value>
+	</data>
+  <data name="MT0025" xml:space="preserve">
+		<value>SDK sürümü sağlanmadı. Uygulamanızı derlemek için kullanılacak {0} SDK'sını belirtmek için lütfen --sdk=X.Y ekleyin.
+		</value>
+	</data>
+  <data name="MX0026" xml:space="preserve">
+		<value>'-{0}' komut satırı bağımsız değişkeni ayrıştırılamadı: {1}
+		</value>
+	</data>
+  <data name="MT0027" xml:space="preserve">
+		<value>'\*' ve '\*' seçenekleri uyumlu değil.
+		</value>
+	</data>
+  <data name="MT0028" xml:space="preserve">
+		<value>iOS 4.1 veya önceki sürümleri hedeflerken PIE (-pie) etkinleştirilemiyor. Lütfen PIE seçeneğini devre dışı bırakın (-pie:false) veya dağıtım hedefini en az iOS 4.2 olarak ayarlayın
+		</value>
+	</data>
+  <data name="MT0029" xml:space="preserve">
+		<value>REPL (--enable-repl) yalnızca simülatörde (--sim) desteklenir.
+		</value>
+	</data>
+  <data name="MT0030" xml:space="preserve">
+		<value>Yürütülebilir dosya adı ({0}) ve uygulama adı ({1}) farklı, bu işlem kilitlenme günlüklerinin düzgün şekilde sembolleştirilmesini engelleyebilir.
+		</value>
+	</data>
+  <data name="MT0031" xml:space="preserve">
+		<value>'--enable-background-fetch' ve '--launch-for-background-fetch' komut satırı bağımsız değişkenleri de '--launchsim' gerektirir.
+		</value>
+	</data>
+  <data name="MT0032" xml:space="preserve">
+		<value>'--debug' seçeneği de belirtilmedikçe '--debugtrack' seçeneği yoksayılır.
+		</value>
+	</data>
+  <data name="MT0033" xml:space="preserve">
+		<value>Xamarin.iOS projesi, monotouch.dll'ye veya Xamarin.iOS.dll'ye başvurmalıdır
+		</value>
+	</data>
+  <data name="MT0034" xml:space="preserve">
+		<value>{1} projesinde '{0}.dll' dosyasına başvurulamaz; '{2}' tarafından örtük olarak başvuruluyor.
+		</value>
+	</data>
+  <data name="MT0036" xml:space="preserve">
+		<value>* uygulaması için * simülatörü başlatılamıyor. Lütfen projenizin iOS Derleme seçeneklerinde (Gelişmiş sayfası) doğru mimariyi etkinleştirin.
+		</value>
+	</data>
+  <data name="MT0037" xml:space="preserve">
+		<value>Monotouch.dll, 64 bit uyumlu değildir. Xamarin.iOS.dll'ye başvurun veya 64 bit mimari için derleme yapmayın (ARM64 ve/veya x86_64).
+		</value>
+	</data>
+  <data name="MT0038" xml:space="preserve">
+		<value>Xamarin.iOS.dll'ye başvururken eski kaydediciler (--registrar:oldstatic|olddynamic) desteklenmez.
+		</value>
+	</data>
+  <data name="MT0039" xml:space="preserve">
+		<value>ARMv6'yı hedefleyen uygulamalar Xamarin.iOS.dll dosyasına başvuramaz.
+		</value>
+	</data>
+  <data name="MT0040" xml:space="preserve">
+		<value>'\*' tarafından başvurulan '\*' bütünleştirilmiş kodu bulunamadı.
+		</value>
+	</data>
+  <data name="MT0041" xml:space="preserve">
+		<value>{1} uygulamasında '{0}' öğesine başvurulamaz.
+		</value>
+	</data>
+  <data name="MT0042" xml:space="preserve">
+		<value>Monotouch.dll veya Xamarin.iOS.dll'ye yönelik başvuru bulunamadı. Monotouch.dll başvurusu eklenecek.
+		</value>
+	</data>
+  <data name="MX0043" xml:space="preserve">
+		<value>Boehm atık toplayıcısı desteklenmiyor. Bunun yerine SGen atık toplayıcısı seçildi.
+		</value>
+	</data>
+  <data name="MT0044" xml:space="preserve">
+		<value>--listsim yalnızca Xcode 6.0 veya üzeri ile desteklenir.
+		</value>
+	</data>
+  <data name="MT0045" xml:space="preserve">
+		<value>--extension yalnızca iOS 8.0 (veya üstü) SDK kullanılırken desteklenir.
+		</value>
+	</data>
+  <data name="MT0047" xml:space="preserve">
+		<value>Unified uygulamaları için en düşük dağıtım hedefi 5.1.1, geçerli dağıtım hedefi: '*'. Lütfen projenizin iOS uygulama seçeneklerinde daha yeni bir dağıtım hedefi seçin.
+		</value>
+	</data>
+  <data name="MT0049" xml:space="preserve">
+		<value>{0}.framework yalnızca dağıtım hedefi 8.0 veya daha yeni bir sürüm olduğunda desteklenir. {0} özellikleri düzgün çalışmayabilir.
+		</value>
+	</data>
+  <data name="MM0050" xml:space="preserve">
+		<value>--no-root-assembly geçirildiğinde kök bütünleştirilmiş kodu sağlanamaz, {0} bütünleştirilmiş kod bulundu: '{1}'
+		</value>
+	</data>
+  <data name="MT0051" xml:space="preserve">
+		<value>{3} {0} Xcode {4} veya üstünü gerektiriyor. Geçerli Xcode sürümü ({2} içinde bulunan) {1}.
+		</value>
+	</data>
+  <data name="MM0051" xml:space="preserve">
+		<value>--no-root-assembly geçirildiğinde bir çıkış dizini (--output) gereklidir.
+		</value>
+	</data>
+  <data name="MT0052" xml:space="preserve">
+		<value>Komut belirtilmedi.
+		</value>
+	</data>
+  <data name="MT0054" xml:space="preserve">
+		<value>'{0}' yolu kurallaştırılamadı: {1} ({2}).
+		</value>
+	</data>
+  <data name="MT0055" xml:space="preserve">
+		<value>'{0}' Xcode yolu yok.
+		</value>
+	</data>
+  <data name="MX0056" xml:space="preserve">
+		<value>Varsayılan konumda (/Applications/Xcode.app) Xcode bulunamıyor. Lütfen Xcode'u yükleyin veya --sdkroot &lt;yol&gt; kullanarak özel bir yol geçirin.
+		</value>
+	</data>
+  <data name="MT0057" xml:space="preserve">
+		<value>'{0}' SDK kökünden Xcode.app yolu belirlenemiyor. Lütfen Xcode.app paket grubunun tam yolunu belirtin.
+		</value>
+	</data>
+  <data name="MT0058" xml:space="preserve">
+		<value>'{0}' Xcode.app geçersiz ('{1}' adlı dosya yok).
+		</value>
+	</data>
+  <data name="MX0059" xml:space="preserve">
+		<value>Şu anda sistemde seçili olan Xcode bulunamadı: {0}
+		</value>
+	</data>
+  <data name="MX0060" xml:space="preserve">
+		<value>Şu anda sistemde seçili olan Xcode bulunamadı. 'xcode-select --print-path' komutu '{0}' döndürdü, ancak bu dizin mevcut değil.
+		</value>
+	</data>
+  <data name="MT0061" xml:space="preserve">
+		<value>Xcode.app belirtilmedi (--sdkroot kullanılarak), bunun yerine 'xcode-select --print-path' tarafından bildirilen sistem Xcode'u kullanılıyor: {0}
+		</value>
+	</data>
+  <data name="MT0062" xml:space="preserve">
+		<value>Xcode.app belirtilmedi (--sdkroot veya 'xcode-select --print-path' kullanılarak), bunun yerine varsayılan Xcode kullanılıyor: {0}
+		</value>
+	</data>
+  <data name="MT0063" xml:space="preserve">
+		<value>* uzantısında çalıştırılabilir dosya bulunamıyor (Info.plist içinde bir CFBundleExecutable girdisi yok)
+		</value>
+	</data>
+  <data name="MT0064" xml:space="preserve">
+		<value>Xamarin.iOS yalnızca Unified projeleri ile eklenmiş çerçeveleri destekler.
+		</value>
+	</data>
+  <data name="MT0065" xml:space="preserve">
+		<value>Xamarin.iOS yalnızca dağıtım hedefi en az 8.0 olduğunda eklenmiş çerçeveleri destekler (geçerli dağıtım hedefi: '{0}'; eklenmiş çerçeveler: '{1}')
+		</value>
+	</data>
+  <data name="MT0065_A" xml:space="preserve">
+		<value>Xamarin.iOS yalnızca dağıtım hedefi en az 2.0 olduğunda eklenmiş çerçeveleri destekler (geçerli dağıtım hedefi: '{0}'; eklenmiş çerçeveler: '{1}')
+		</value>
+	</data>
+  <data name="MT0066" xml:space="preserve">
+		<value>Geçersiz derleme kaydedici bütünleştirilmiş kodu: *
+		</value>
+	</data>
+  <data name="MT0067" xml:space="preserve">
+		<value>Geçersiz kaydedici: {0}
+		</value>
+	</data>
+  <data name="MX0068" xml:space="preserve">
+		<value>Hedef çerçeve için {0} değeri geçersiz.
+		</value>
+	</data>
+  <data name="MX0070" xml:space="preserve">
+		<value>{0} hedef çerçevesi geçersiz. Geçerli hedef çerçeveler: {1}.
+		</value>
+	</data>
+  <data name="MX0071" xml:space="preserve">
+		<value>Bilinmeyen platform: {0}. Bu genellikle bir {1} hatasını gösterir; lütfen bir test çalışmasıyla birlikte https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun.
+		</value>
+	</data>
+  <data name="MT0072" xml:space="preserve">
+		<value>Uzantılar '{0}' platformu için desteklenmiyor.
+		</value>
+	</data>
+  <data name="MT0073" xml:space="preserve">
+		<value>{4} {0}, {3} için {1} dağıtım hedefini desteklemiyor (en düşük değer {2}). Lütfen projenizin Info.plist dosyasında daha yeni bir dağıtım hedefi seçin
+		</value>
+		<comment>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The minimum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+		</comment>
+	</data>
+  <data name="MX0074" xml:space="preserve">
+		<value>{4} {0}, {3} için {1} dağıtım hedefini desteklemiyor (en yüksek değer {2}). Lütfen projenizin Info.plist dosyasında daha eski bir dağıtım hedefi seçin veya daha yeni bir {4} sürümüne yükseltin.
+		</value>
+		<comment>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The maximum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+		</comment>
+	</data>
+  <data name="MT0075" xml:space="preserve">
+		<value>{1} projeleri için '{0}' mimarisi geçersiz. Geçerli mimariler: {2}
+		</value>
+	</data>
+  <data name="MT0076" xml:space="preserve">
+		<value>Mimari belirtilmedi (--abi bağımsız değişkeni kullanılarak). {0} projeleri için bir mimari gereklidir.
+		</value>
+	</data>
+  <data name="MT0077" xml:space="preserve">
+		<value>WatchOS projeleri uzantı olmalıdır.
+		</value>
+	</data>
+  <data name="MT0078" xml:space="preserve">
+		<value>Artımlı derlemeler 8.0'dan (şu anda {0}) küçük bir dağıtım hedefiyle etkinleştirildi. Bu desteklenmez (sonuçta elde edilen uygulama iOS 9'da başlatılmaz), bu nedenle dağıtım hedefi 8.0 olarak ayarlanacak.
+		</value>
+	</data>
+  <data name="MT0079" xml:space="preserve">
+		<value>{4} {0} için önerilen Xcode sürümü, Xcode {3} veya üstüdür. Geçerli Xcode sürümü ({2} içinde bulunan), {1}.
+		</value>
+	</data>
+  <data name="MM0079" xml:space="preserve">
+		<value>Uygulama paketi grubuna yürütülebilir öğe kopyalanmadı. Lütfen 'support@xamarin.com' ile iletişime geçin
+		</value>
+	</data>
+  <data name="MX0080" xml:space="preserve">
+		<value>Yeni refcount mantığını devre dışı bırakma kullanım dışı bırakıldı.
+		</value>
+	</data>
+  <data name="MT0081" xml:space="preserve">
+		<value>--download-crash-report komut satırı bağımsız değişkeni ayrıca --download-crash-report-to gerektirir.
+		</value>
+	</data>
+  <data name="MT0082" xml:space="preserve">
+		<value>REPL (--enable-repl) yalnızca bağlama kullanılmazsa (--nolink) desteklenir.
+		</value>
+	</data>
+  <data name="MT0083" xml:space="preserve">
+		<value>watchOS üzerinde yalnızca asm bitcode desteklenmez. --bitcode:marker veya --bitcode:full kullanın.
+		</value>
+	</data>
+  <data name="MT0084" xml:space="preserve">
+		<value>Bitcode, simülatörde desteklenmiyor. Simülatör için derleme sırasında --bitcode geçirmeyin.
+		</value>
+	</data>
+  <data name="MT0085" xml:space="preserve">
+		<value>'{0}' başvurusu bulunamadı. Otomatik olarak eklenecek.
+		</value>
+	</data>
+  <data name="MX0086" xml:space="preserve">
+		<value>Hedef çerçeve (--target-framework) belirtilmelidir.
+		</value>
+	</data>
+  <data name="MT0087" xml:space="preserve">
+		<value>Artımlı derlemeler (--fastdev) Boehm GC ile desteklenmiyor. Artımlı derlemeler devre dışı bırakılacak.
+		</value>
+	</data>
+  <data name="MT0088" xml:space="preserve">
+		<value>watchOS uygulamaları için GC'nin işbirliği modunda olması gerekir. Lütfen mtouch için --coop:false bağımsız değişkenini kaldırın.
+		</value>
+	</data>
+  <data name="MT0089" xml:space="preserve">
+		<value>'{0}' seçeneği, GC için işbirliği modu etkinleştirildiğinde '{1}' değerini alamaz.
+		</value>
+	</data>
+  <data name="MX0090" xml:space="preserve">
+		<value>' {0} ' hedef çatısı kullanım dışı. Bunun yerine ' {1} ' kullanın.
+		</value>
+	</data>
+  <!-- MX0091 has been used in the past -->
+  <!-- MT0092 has been used in the past -->
+  <data name="MT0093" xml:space="preserve">
+		<value>'mlaunch' bulunamadı.
+		</value>
+	</data>
+  <!-- MT0094 has been used in the past -->
+  <data name="MT0095" xml:space="preserve">
+		<value>Aot dosyaları {0} hedef dizinine kopyalanamadı: {1}
+		</value>
+	</data>
+  <data name="MT0095_A" xml:space="preserve">
+		<value>Aot dosyaları {0} hedef dizinine kopyalanamadı: İşlem başlatılamadı.
+		</value>
+	</data>
+  <data name="MT0095_B" xml:space="preserve">
+		<value>Aot dosyaları {0} hedef dizinine kopyalanamadı
+		</value>
+	</data>
+  <data name="MT0096" xml:space="preserve">
+		<value>Xamarin.iOS.dll için başvuru bulunamadı.
+		</value>
+	</data>
+  <data name="MM0097" xml:space="preserve">
+		<value>'{0}' adlı machine.config dosyası bulunamadı.
+		</value>
+	</data>
+  <!-- MM0098 has been used in the past -->
+  <data name="MX0099" xml:space="preserve">
+		<value>İç hata: {0}. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir sorun oluşturun.
+		</value>
+	</data>
+  <data name="MT0100" xml:space="preserve">
+		<value>Bütünleştirilmiş kod derleme hedefi geçersiz: '{0}'. Lütfen bir test çalışmasıyla birlikte bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0101" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu --assembly-build-target bağımsız değişkenlerinde birden çok kez belirtildi.
+		</value>
+	</data>
+  <data name="MT0102" xml:space="preserve">
+		<value>'{0}' ve '{1}' bütünleştirilmiş kodları aynı hedef adına ('{2}') ancak farklı hedeflere ('{3}' ve '{4}') sahip.
+		</value>
+	</data>
+  <data name="MT0103" xml:space="preserve">
+		<value>'{0}' statik nesnesi birden fazla bütünleştirilmiş kod ('{1}') içeriyor ancak her statik nesne tam olarak bir bütünleştirilmiş koda karşılık gelmelidir.
+		</value>
+	</data>
+  <data name="MT0105" xml:space="preserve">
+		<value>'{0}' için bütünleştirilmiş kod derleme hedefi belirtilmedi.
+		</value>
+	</data>
+  <data name="MT0106" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kod derleme hedefi adı geçersiz: '{1}' karakterine izin verilmiyor.
+		</value>
+	</data>
+  <data name="MT0107" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodları, tek bir ikiliye derlendiklerinde izin verilmeyen farklı özel LLVM iyileştirmelerine ('{1}') sahip.
+		</value>
+	</data>
+  <data name="MT0108" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kod derleme hedefi hiçbir bütünleştirilmiş kod ile eşleşmedi.
+		</value>
+	</data>
+  <data name="MT0109" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu, sağlanan yoldan farklı bir yoldan yüklemiş (sağlanan yol: {1}, gerçek yol: {2}).
+		</value>
+	</data>
+  <data name="MT0110" xml:space="preserve">
+		<value>Bu Xamarin.iOS sürümü üçüncü taraf bağlama kitaplıklarını içeren ve bitcode'a derlenen projelerde artımlı yapıları desteklemediğinden artımlı derlemeler devre dışı bırakıldı.
+		</value>
+	</data>
+  <data name="MT0111" xml:space="preserve">
+		<value>Bu Xamarin.iOS sürümü, bitcode'u etkinleştirmeden LLVM kullanarak watchOS projeleri oluşturmayı desteklemediğinden bitcode etkinleştirildi.
+		</value>
+	</data>
+  <data name="MT0112" xml:space="preserve">
+		<value>{0} nedeniyle yerel kod paylaşımı devre dışı bırakıldı
+		</value>
+	</data>
+  <data name="MT0112_a" xml:space="preserve">
+		<value>kapsayıcı uygulamasının dağıtım hedefi, iOS 8.0'dan eski ({0}).
+		</value>
+	</data>
+  <data name="MT0112_b" xml:space="preserve">
+		<value>kapsayıcı uygulaması I18N bütünleştirilmiş kodları içeriyor ({0}).
+		</value>
+	</data>
+  <data name="MT0112_c" xml:space="preserve">
+		<value>kapsayıcı uygulaması, yönetilen bağlayıcı ({0}) için özel XML tanımlarına sahip.
+		</value>
+		<comment>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
+		</comment>
+	</data>
+  <data name="MT0113" xml:space="preserve">
+		<value>{1} nedeniyle '{0}' uzantısı için yerel kod paylaşımı devre dışı bırakıldı
+		</value>
+	</data>
+  <data name="MT0113_a" xml:space="preserve">
+		<value>bitcode seçenekleri, kapsayıcı uygulama ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_b" xml:space="preserve">
+		<value>--assembly-build-target seçenekleri, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_c" xml:space="preserve">
+		<value>I18N bütünleştirilmiş kodları, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_d" xml:space="preserve">
+		<value>AOT derleyicisine yönelik bağımsız değişkenler, kapsayıcı uygulama ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_e" xml:space="preserve">
+		<value>AOT derleyicisinin diğer bağımsız değişkenleri, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_f" xml:space="preserve">
+		<value>LLVM, hem kapsayıcı uygulamasında ({0}) hem de uzantıda ({1}) etkinleştirilmemiş veya devre dışı bırakılmamış.
+		</value>
+	</data>
+  <data name="MT0113_g" xml:space="preserve">
+		<value>yönetilen bağlayıcı ayarları, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_h" xml:space="preserve">
+		<value>yönetilen bağlayıcı için atlanan bütünleştirilmiş kodlar, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_i" xml:space="preserve">
+		<value>uzantı, yönetilen bağlayıcı ({0}) için özel XML tanımlarına sahip.
+		</value>
+		<comment>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
+		</comment>
+	</data>
+  <data name="MT0113_j" xml:space="preserve">
+		<value>yorumlayıcı ayarları, kapsayıcı uygulama ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_k" xml:space="preserve">
+		<value>yorumlanan bütünleştirilmiş kodlar, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_l" xml:space="preserve">
+		<value>kapsayıcı uygulaması, ABI {0} için derleme yapmıyor (uzantı bu ABI için derleme yapıyor).
+		</value>
+	</data>
+  <data name="MT0113_m" xml:space="preserve">
+		<value>kapsayıcı uygulaması, uzantının ABI'sı ({1}) ile uyumlu olmayan ABI {0} için derleme yapıyor.
+		</value>
+	</data>
+  <data name="MT0113_n" xml:space="preserve">
+		<value>remove-dynamic-registrar iyileştirmesi, kapsayıcı uygulaması ({0}) ve uzantı ({1}) arasında farklı.
+		</value>
+	</data>
+  <data name="MT0113_o" xml:space="preserve">
+		<value>kapsayıcı uygulaması '{1}' içindeki '{0}' bütünleştirilmiş koduna başvuruyor ancak uzantı '{2}' sürümünden farklı bir sürüme başvuruyor.
+		</value>
+	</data>
+  <data name="MM0114" xml:space="preserve">
+		<value>Karma AOT derlemesi, tüm bütünleştirilmiş kodların AOT ile derlenmesini gerektirir
+		</value>
+	</data>
+  <data name="MT0115" xml:space="preserve">
+		<value>Bitcode etkinleştirildiğinde, kod (--dynamic-symbol-mode=code) kullanılarak dinamik sembollere başvuru yapmanız önerilir.
+		</value>
+	</data>
+  <data name="MT0116" xml:space="preserve">
+		<value>{0} mimarisi geçersiz. 32 bit mimariler, dağıtım hedefi 11 veya daha yeni bir sürüm olduğunda desteklenmez.
+		</value>
+	</data>
+  <data name="MT0117" xml:space="preserve">
+		<value>Yalnızca 64 bit destekleyen bir simülatör üzerinde 32 bit uygulama başlatılamaz.
+		</value>
+	</data>
+  <data name="MT0118" xml:space="preserve">
+		<value>Mono sembollerini içeren {0} dizini bulunamadı.
+		</value>
+	</data>
+  <data name="MT0123" xml:space="preserve">
+		<value>{0} yürütülebilir bütünleştirilmiş kodu {1}.dll dosyasına başvurmuyor.
+		</value>
+	</data>
+  <data name="MT0124" xml:space="preserve">
+		<value>Geçerli dil '{0}' olarak ayarlanamadı (LANG={1} değerine göre): {2}
+		</value>
+	</data>
+  <data name="MT0125" xml:space="preserve">
+		<value>--assembly-build-target komut satırı bağımsız değişkeni simülatörde yoksayılır.
+		</value>
+	</data>
+  <data name="MT0126" xml:space="preserve">
+		<value>Artımlı yapılar simülatörde desteklenmediğinden artımlı yapılar devre dışı bırakıldı.
+		</value>
+	</data>
+  <data name="MT0127" xml:space="preserve">
+		<value>Bu Xamarin.iOS sürümü birden fazla üçüncü taraf bağlama kitaplığı içeren projelerde artımlı yapıları desteklemediğinden artımlı derlemeler devre dışı bırakıldı.
+		</value>
+	</data>
+  <data name="MT0128" xml:space="preserve">
+		<value>'{0}' dosyasına dokunulamadı: {1}
+		</value>
+	</data>
+  <data name="MX0129" xml:space="preserve">
+		<value>'{0}' için hata ayıklama sembol dosyası bütünleştirilmiş kodla eşleşmiyor ve yoksayıldı.
+		</value>
+	</data>
+  <data name="MX0130" xml:space="preserve">
+		<value>Kök bütünleştirilmiş kodu bulunamadı. En az bir kök bütünleştirilmiş kodu sağlanmalıdır.
+		</value>
+	</data>
+  <data name="MX0131" xml:space="preserve">
+		<value>'{0}' ürün bütünleştirilmiş kodu, bütünleştirilmiş kod listesinde bulunamadı: '{1}'
+		</value>
+	</data>
+  <data name="MX0132" xml:space="preserve">
+		<value>Bilinmeyen iyileştirme: '{0}'. Geçerli iyileştirmeler: {1}.
+		</value>
+	</data>
+  <data name="MX0133" xml:space="preserve">
+		<value>'{0}' ile eşleşen 1'den fazla bütünleştirilmiş kod bulundu; önce şu seçiliyor: {1}{2}
+		</value>
+	</data>
+  <data name="MX0135" xml:space="preserve">
+		<value>'{0}' sistem çerçevesi ('{1}' bütünleştirilmiş kodu tarafından başvurulan), {2} {3} içinde sunulduğu ve {2} {4} SDK'sını kullandığımız için bağlanamadı.
+		</value>
+	</data>
+  <data name="MT0136" xml:space="preserve">
+		<value>'{1}' tarafından başvurulan '{0}' bütünleştirilmiş kodu bulunamıyor.
+		</value>
+	</data>
+  <data name="MT0137" xml:space="preserve">
+		<value>'{1}' içindeki bir {2} özniteliği tarafından başvurulan '{0}' bütünleştirilmiş kodu bulunamıyor.
+		</value>
+	</data>
+  <data name="MT0140" xml:space="preserve">
+		<value>'{0}' dosyası geçerli bir çerçeve değil.
+		</value>
+	</data>
+  <data name="MT0141" xml:space="preserve">
+		<value>Yorumlayıcı, simülatörde desteklenmiyor. Simülatörde aynı ek özellikleri sağlayan REPL'ye geçiliyor.
+		</value>
+	</data>
+  <data name="MT0142" xml:space="preserve">
+		<value>Bağımsız değişken olarak --interpreter öğesine geçirilen '{0}' bütünleştirilmiş kodu bulunamıyor.
+		</value>
+	</data>
+  <data name="MM0143" xml:space="preserve">
+		<value>Classic API kullanan projeler artık desteklenmiyor. Lütfen projeyi Unified API'ye geçirin.
+		</value>
+	</data>
+  <data name="MM0144" xml:space="preserve">
+		<value>32 bit uygulamalar oluşturma artık desteklenmiyor. Lütfen projenin Mac Derleme seçeneklerinde mimariyi 'x86_64' olarak değiştirin.
+		</value>
+	</data>
+  <data name="MT0145" xml:space="preserve">
+		<value>Lütfen Hata ayıklama için derlenirken WatchOS üzerinde cihaza özel derlemeler kullanın.
+		</value>
+	</data>
+  <data name="MT0146" xml:space="preserve">
+		<value>ARM64_32 Hata ayıklama modu,--interpreter[=all] gerektirir, zorlanıyor.
+		</value>
+	</data>
+  <data name="MM0147" xml:space="preserve">
+		<value>Pkg-config öğesinden cflags '{0}' ayrıştırılamıyor: {1}
+		</value>
+	</data>
+  <data name="MX0148" xml:space="preserve">
+		<value>{2} içindeki '{1}' kitaplığının LinkWith özniteliğinden '{0}' bağlayıcı bayrakları ayrıştırılamıyor: {3}
+		</value>
+	</data>
+  <data name="MT0150" xml:space="preserve">
+		<value>İç hata: Yorumlayıcı şu anda yalnızca 64 bit için kullanılabilir.
+		</value>
+	</data>
+  <data name="MT0156" xml:space="preserve">
+		<value>İç hata: byref dizisi bir dize, NSObject veya INativeObject değil.
+		</value>
+	</data>
+  <data name="MT0157" xml:space="preserve">
+		<value>İç hata: {2} içinde '{0}' öğesi '{1}' öğesine dönüştürülemiyor. Lütfen bir test çalışması içeren bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0158" xml:space="preserve">
+		<value>İç hata: Akıllı sabit listesi {0}, akıllı sabit listesi gibi görünmüyor. Lütfen bir test çalışmasıyla birlikte bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0159" xml:space="preserve">
+		<value>İç hata: {1} için tokentype ({0}) desteklenmiyor. Lütfen bir test çalışmasıyla birlikte bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0160" xml:space="preserve">
+		<value>İç hata: Bağlayıcı da yürütülmediyse (veya devre dışı bırakıldıysa) statik kaydedici yürütülmemelidir. Geçici bir çözüm olarak, tam derlemeyi zorlamak için ek bir {0} bağımsız değişkeni olarak '-f' geçirilebilir. Lütfen bir test çalışmasıyla birlikte bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0161" xml:space="preserve">
+		<value>İç hata: Adı olmayan sembol (tür: {0}). Lütfen bir test çalışmasıyla birlikte bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0168" xml:space="preserve">
+		<value>İç hata: 'çerçeveler, çerçevelere dönüştürülemiyor: {0}'. Lütfen bir test çalışmasıyla birlikte bir hata raporu oluşturun (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0174_a" xml:space="preserve">
+		<value>{0} bütünleştirilmiş koduna başka bir bütünleştirilmiş kod tarafından başvuruluyor ancak aynı zamanda bağlayıcı tarafından dışarı bağlantı oluşturulmuş.
+		</value>
+	</data>
+  <data name="MT0175_a" xml:space="preserve">
+		<value>Bağlayıcı çıkışı '{0}' adlı birden fazla bütünleştirilmiş kod içeriyor: \n\t{1}
+		</value>
+	</data>
+  <data name="MT0175_b" xml:space="preserve">
+		<value>{0} için tüm bütünleştirilmiş kodlar bağlantı görevleri içermiyor
+		</value>
+	</data>
+  <data name="MT0175_c" xml:space="preserve">
+		<value>{0} için bağlantı görevlerinin tümü aynı değil
+		</value>
+	</data>
+  <data name="MX0176" xml:space="preserve">
+        <value>'{0}' bütünleştirilmiş kodu, sistemin GAC'sinden ({1}) çözümlendi. Bu, gelecekte bir sorun oluşturabilir. Bu tür sorunlardan kaçınmak için lütfen yalnızca sistem GAC'sinde bulunan bütünleştirilmiş kodları kullanmadığınızdan emin olun.
+        </value>
+    </data>
+  <data name="MX0177" xml:space="preserve">
+		<value>Bilinmeyen platform: {0}. Bu genellikle bir hatayı gösterir. Lütfen test çalışmasıyla birlikte https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun.</value>
+	</data>
+  <data name="MX0178" xml:space="preserve">
+        <value>'{0}' için hata ayıklama sembolü dosyası geçerli olmadığından yoksayıldı.
+        </value>
+    </data>
+  <data name="MX0179" xml:space="preserve">
+		<value>Bu {0} sürümü {1} {2} SDK ({3} Xcode ile gönderilmiş) gerektirir. Gerekli üst bilgi dosyalarını almak için Xcode'u yükseltin, dinamik kaydediciyi kullanın veya projenizin Mac Derleme Seçenekleri &gt; Bağlayıcı Davranışı (yeni API'lerden kaçınmayı deneme amaçlı) bölümünde yönetilen bağlayıcı davranışını Bağlantı Platformu veya Yalnızca Bağlantı Çerçevesi SDK’larına ayarlayın.</value>
+	</data>
+  <data name="MX0180" xml:space="preserve">
+		<value>Bu {0} sürümü {1} {2} SDK ({3} Xcode ile gönderilmiş) gerektirir. Gerekli üst bilgi dosyalarını almak için Xcode'u yükseltin veya projenizin iOS Derleme Seçenekleri &gt; Bağlayıcı Davranışı (yeni API'lerden kaçınmayı deneme amaçlı) bölümünde yönetilen bağlayıcı davranışını Bağlantı Platformu veya Yalnızca Bağlantı Çerçevesi SDK’larına ayarlayın.</value>
+	</data>
+  <data name="MX0181" xml:space="preserve">
+		<value>{0} çerçevesi geçerli platformda ({2}) kullanılamadığından bu çerçeve ({1} türü tarafından kullanılıyor) ile bağlantı kurulamıyor.</value>
+	</data>
+  <data name="MX0182" xml:space="preserve">
+		<value>{0} çerçevesi ({1} içindeki bir modül tarafından başvuruluyor) geçerli platformda ({2}) kullanılamadığından bu çerçeveyle bağlantı kurulamıyor.</value>
+	</data>
+  <data name="MX0183" xml:space="preserve">
+        <value>Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}</value>
+    </data>
+  <data name="MX0184" xml:space="preserve">
+        <value>macOS {0} sürümü karşılık gelen bir Mac Catalyst sürümüne eşlenemedi. Geçerli macOS sürümleri şunlardır: {1}</value>
+    </data>
+  <data name="MX0185" xml:space="preserve">
+		<value>CoreCLR kullanılırken '{0}' seçeneği '{1}' değerini alamaz.</value>
+	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Bitcode etkinleştirildi, ancak bitcode Xcode 14+'ta desteklenmiyor ve devre dışı bırakıldı. Lütfen 'MtouchEnableBitcode' özelliğini proje dosyasından kaldırarak bitcode'ı devre dışı bırakın.</value>
+	</data>
+  <data name="MX1009" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu '{1}' konumuna kopyalanamadı: {2}
+		</value>
+	</data>
+  <data name="MT1010" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu yüklenemedi: {1}
+		</value>
+	</data>
+  <data name="MT1013" xml:space="preserve">
+		<value>Bağımlılık izleme hatası: Karşılaştırılacak dosya yok. Lütfen bir test çalışmasıyla birlikte https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun.
+		</value>
+	</data>
+  <data name="MT1014" xml:space="preserve">
+		<value>Önbelleğe alınmış '{0}' sürümü yeniden kullanılamadı: {1}.
+		</value>
+	</data>
+  <data name="MT1015" xml:space="preserve">
+		<value>'{0}' yürütülebilir dosyası oluşturulamadı: {1}
+		</value>
+	</data>
+  <data name="MT1022" xml:space="preserve">
+		<value>'{0}' dizini '{1}' konumuna kopyalanamadı: {2}
+		</value>
+	</data>
+  <data name="MM1034" xml:space="preserve">
+		<value>'{0}' -&gt; '{1}' sembolik bağlantısı oluşturulamadı: Hata {2}
+		</value>
+	</data>
+  <data name="MT1035" xml:space="preserve">
+		<value>'{0}' çerçevesinin farklı sürümleri eklenemez
+		</value>
+	</data>
+  <data name="MT1036" xml:space="preserve">
+		<value>'{0}' çerçevesi şuradan eklendi: {1} (Önceki hatayla ilgili)
+		</value>
+	</data>
+  <data name="MT1300" xml:space="preserve">
+		<value>Desteklenmeyen bitcode platformu: {0}.
+		</value>
+	</data>
+  <data name="MT1301" xml:space="preserve">
+		<value>Desteklenmeyen TvOS ABI: {0}.
+		</value>
+	</data>
+  <data name="MT1302" xml:space="preserve">
+		<value>'{0}' yerel kitaplığı '{1}' öğesinden ayıklanamadı. Lütfen yerel kitaplığın yönetilen bütünleştirilmiş koda doğru şekilde eklendiğinden emin olun (bütünleştirilmiş kod bir bağlama projesi kullanılarak oluşturulmuşsa, yerel kitaplığın projeye eklenmesi gerekir ve Derleme Eylemi 'ObjcBindingNativeLibrary' olmalıdır).
+		</value>
+	</data>
+  <data name="MT1302_A" xml:space="preserve">
+		<value>{0}:{1} içinde son karakter olarak \\ ile .s'yi .ll'ye dönüştürme sırasında geçersiz kaçış dizisi.
+		</value>
+	</data>
+  <data name="MT1302_B" xml:space="preserve">
+		<value>.s'yi .ll'ye dönüştürme sırasında geçersiz kaçış dizisi, {2} nedeniyle {0}:{1} içinde hatalı sekizli kaçış.
+		</value>
+	</data>
+  <data name="MT1303" xml:space="preserve">
+		<value>'{0}' yerel çerçevesinin sıkıştırması '{1}' öğesinden açılamadı. Yerel 'unzip' komutundan daha fazla bilgi için lütfen derleme günlüğünü gözden geçirin.
+		</value>
+	</data>
+  <data name="MT1305" xml:space="preserve">
+		<value>'{0}' bağlama kitaplığı bir kullanıcı çerçevesi ({0}) içeriyor ancak ekli kullanıcı çerçeveleri iOS 8.0 (dağıtım hedefi {1}) gerektirir. Lütfen Info.plist dosyasındaki dağıtım hedefini en az 8.0 olarak ayarlayın.
+		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>'{0}' dosyası açılamadı. Yerel 'unzip' komutundan daha fazla bilgi için lütfen derleme günlüğünü gözden geçirin.</value>
+	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>'{0}' yerel çerçevesi '{2}' kaynağını içermediğinden, '{1}' derlemesinden çıkarılamadı</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>'{0}' yerel kitaplığı '{2}' kaynağını içermediğinden, '{1}' derlemesinden çıkarılamadı</value>
+	</data>
+  <data name="MM1401" xml:space="preserve">
+		<value>Gerekli 'Xamarin.Mac.dll' bütünleştirilmiş kodu başvurularda eksik
+		</value>
+	</data>
+  <data name="MM1402" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu bu araç veya profille uyumlu değil
+		</value>
+	</data>
+  <data name="MM1403" xml:space="preserve">
+		<value>{0} {1} bulunamadı. '{2}' hedef çerçevesi, uygulamayı paketlemek için kullanılamaz.
+		</value>
+	</data>
+  <data name="MM1404" xml:space="preserve">
+		<value>'{0}' hedef çerçevesi geçersiz.
+		</value>
+	</data>
+  <data name="MM1405" xml:space="preserve">
+		<value>useFullXamMacFramework, geçersiz olan '{0}' çerçevesini değil, her zaman .NET 4.5 çerçevesini hedeflemelidir.
+		</value>
+	</data>
+  <data name="MM1407" xml:space="preserve">
+		<value>'{0}' Xamarin.Mac başvurusu ve seçili '{1}' hedef çerçevesi arasında uyuşmazlık var.
+		</value>
+	</data>
+  <data name="MM1501" xml:space="preserve">
+		<value>Başvuru çözümlenemedi: {0}
+		</value>
+	</data>
+  <data name="MX1502" xml:space="preserve">
+		<value>'{0}' türüne ilişkin bir veya daha çok başvuru, bağlanmadan önce '{1}' içinde zaten bulunuyordu
+		</value>
+	</data>
+  <data name="MX1503" xml:space="preserve">
+		<value>'{0}' türüne ilişkin bir veya daha çok başvuru, bağlandıktan sonra '{1}' içinde bulunmaya devam ediyor
+		</value>
+	</data>
+  <data name="MX1600" xml:space="preserve">
+		<value>Mach-O dinamik kitaplığı değil (bilinmeyen üst bilgi '0x{0}'): {1}.
+		</value>
+	</data>
+  <data name="MT1601" xml:space="preserve">
+		<value>Mach-O statik kitaplığı değil (bilinmeyen üst bilgi '{0}', beklenen '!&lt;arch&gt;').
+		</value>
+	</data>
+  <data name="MX1602" xml:space="preserve">
+		<value>Mach-O dinamik kitaplığı değil (bilinmeyen üst bilgi '0x{0}'): {1}.
+		</value>
+	</data>
+  <data name="MX1603" xml:space="preserve">
+		<value>{1} içinde {0} konumundaki FAT girdisi için bilinmeyen biçim.
+		</value>
+	</data>
+  <data name="MX1604" xml:space="preserve">
+		<value>{0} türündeki dosya, bir MachO dosyası ({1}) değil.
+		</value>
+	</data>
+  <data name="MT1605" xml:space="preserve">
+		<value>'{1}' statik kitaplığındaki '{0}' girişi geçersiz, giriş üst bilgisi 0x60 0x0A ile bitmiyor ('0x{2} 0x{3}' bulundu)
+		</value>
+	</data>
+  <data name="MX2001" xml:space="preserve">
+		<value>Bütünleştirilmiş kodlar bağlanamadı. {0}
+		</value>
+	</data>
+  <data name="MT2002" xml:space="preserve">
+		<value>Başvuru çözümlenemedi: {0}
+		</value>
+	</data>
+  <data name="MT2003" xml:space="preserve">
+		<value>Statik kaydedici etkin olmadığından '--optimize={0}{1}' seçeneği yoksayılacak
+		</value>
+	</data>
+  <!-- MT2003_A is not in use anymore -->
+  <data name="MT2003_B" xml:space="preserve">
+		<value>Bağlama devre dışı olduğundan '--optimize={0}{1}' seçeneği yoksayılacak
+		</value>
+	</data>
+  <data name="MT2003_C" xml:space="preserve">
+		<value>Yalnızca {1} için geçerli olduğundan '--optimize={0}' seçeneği yoksayılacak.</value>
+		<comment>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</comment>
+	</data>
+  <data name="MX2004" xml:space="preserve">
+		<value>'{0}' ek bağlayıcı tanımları dosyası bulunamadı.
+		</value>
+	</data>
+  <data name="MX2005" xml:space="preserve">
+		<value>'{0}' tanımları ayrıştırılamadı.
+		</value>
+	</data>
+  <data name="MT2006" xml:space="preserve">
+		<value>Mscorlib.dll, '{0}' konumundan yüklenemiyor. Lütfen Xamarin.iOS'yi yeniden yükleyin.
+		</value>
+	</data>
+  <data name="MM2006" xml:space="preserve">
+		<value>'{0}' yerel kitaplığına başvuruldu ancak kitaplık bulunamadı.
+		</value>
+	</data>
+  <data name="MT2007" xml:space="preserve">
+		<value>"{1}" içindeki "{0}" başvurusu çözümlenemedi
+		</value>
+	</data>
+  <data name="MM2007" xml:space="preserve">
+		<value>Tam .NET Framework için Xamarin.Mac Unified API, SDK veya Tüm bütünleştirilmiş kodların bağlanmasını desteklemez. `-nolink` veya `-linkplatform` bayrağını geçirin.
+		</value>
+		<comment>Using the linker is not supported in certain situations in Xamarin.Mac, see: https://docs.microsoft.com/xamarin/mac/deploy-test/linker. The following are literal names and should not be translated: Xamarin.Mac Unified API, .NET, SDK, All, `-nolink`, and `-linkplatform`.
+		</comment>
+	</data>
+  <data name="MM2009" xml:space="preserve">
+		<value>  {0}.{1} tarafından başvuruluyor
+		</value>
+	</data>
+  <data name="MT2010" xml:space="preserve">
+		<value>Bilinmeyen HttpMessageHandler `{0}`. Geçerli değerler: HttpClientHandler (varsayılan), CFNetworkHandler veya NSUrlSessionHandler
+		</value>
+	</data>
+  <data name="MM2012" xml:space="preserve">
+		<value> {1} \"Başvuran\" uyarısından yalnızca ilk {0} tanesi gösteriliyor.
+		</value>
+	</data>
+  <data name="MM2013" xml:space="preserve">
+		<value>\"{1}\" içinde başvurulan \"{0}\" başvurusu çözümlenemedi. Uygulama, başvurulan bütünleştirilmiş kodu içermeyeceğinden çalışma zamanında başarısız olabilir.
+		</value>
+	</data>
+  <data name="MT2014" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu karma modda olduğundan bağlanamıyor.
+		</value>
+	</data>
+  <data name="MT2015" xml:space="preserve">
+		<value>watchOS için geçersiz HttpMessageHandler `{0}`. Geçerli tek değer NSUrlSessionHandler.
+		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>NativeAOT kullanılırken dinamik kayıt şirketi desteklenmediğinden ( '--optimize=-remove-dynamic-registrar' geçirilerek) dinamik kayıt şirketi korunamaz. Dinamik kayıt desteği yine de kaldırılacak.</value>
+	</data>
+  <data name="MX2017" xml:space="preserve">
+		<value>XML açıklaması işlenemedi: {0}
+		</value>
+	</data>
+  <data name="MT2018" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş koduna iki farklı konumdan başvuruluyor: '{1}' ve '{2}'.
+		</value>
+	</data>
+  <data name="MT2019" xml:space="preserve">
+		<value>'{0}' kök bütünleştirilmiş kodu yüklenemiyor.
+		</value>
+	</data>
+  <!-- 2020 -> 2099 is used by ExceptionalSubStep subclasses in the linker -->
+  <data name="MX_ExceptionalSubSteps" xml:space="preserve">
+		<value>`{1}` işlenirken '{0}' bağlayıcı adımı başarısız oldu.</value>
+		<comment>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</comment>
+	</data>
+  <!-- 202x: OptimizeGeneratedCodeSubStep -->
+  <!-- 203x: RemoveUserResourcesSubStep -->
+  <!-- 204x: CoreHttpMessageHandler -->
+  <!-- 205x: RemoveCode -->
+  <!-- 206x: SealerSubStep -->
+  <!-- 207x: MetadataReducerSubStep -->
+  <!-- 208x: MarkNSObjects -->
+  <!-- 209x: InlinerSubStep -->
+  <data name="MT2101" xml:space="preserve">
+		<value>'{2}' içindeki '{1}' metodundan başvurulan '{0}' başvurusu çözümlenemiyor.
+		</value>
+	</data>
+  <data name="MT2102" xml:space="preserve">
+		<value>'{1}' bütünleştirilmiş kodundaki '{0}' metodu işlenirken hata oluştu: {2}
+		</value>
+	</data>
+  <data name="MT2102_A" xml:space="preserve">
+		<value>'{1}' bütünleştirilmiş kodundaki '{0}' metodu işlenirken hata oluştu
+		</value>
+	</data>
+  <data name="MX2103" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodunun işlenmesi sırasında hata oluştu: {1}
+		</value>
+	</data>
+  <data name="MT2105_A" xml:space="preserve">
+		<value>'{0}' üyesindeki [BindingImpl] özniteliği geçersiz: Alanlar beklenmiyordu.
+		</value>
+	</data>
+  <data name="MT2105_B" xml:space="preserve">
+		<value>'{0}' üyesindeki [BindingImpl] özniteliği geçersiz: Özellikler beklenmiyordu.
+		</value>
+	</data>
+  <data name="MT2105_C" xml:space="preserve">
+		<value>'{0}' üyesindeki [BindingImpl] özniteliği geçersiz: '{1}' parametre türüne sahip bir oluşturucu beklenmiyordu ('ObjCRuntime.BindingImplOptions' bekleniyordu).
+		</value>
+	</data>
+  <data name="MT2105_D" xml:space="preserve">
+		<value>'{0}' üyesindeki [BindingImpl] özniteliği geçersiz: {1} parametreye sahip bir oluşturucu beklenmiyordu (1 parametre bekleniyordu).
+		</value>
+	</data>
+  <data name="MT2105_E" xml:space="preserve">
+		<value>{0}.{1} özelliği, bitcode için derlenirken şu anda desteklenmeyen bir '{2}' özel durum yan tümcesi içeriyor. Bu özellik çağrılırsa bir özel durum oluşturur.
+		</value>
+	</data>
+  <data name="MT2105_F" xml:space="preserve">
+		<value>{0}.{1} metodu, bitcode için derlenirken şu anda desteklenmeyen bir '{2}' özel durum yan tümcesi içeriyor. Bu metot çağrılırsa bir özel durum oluşturur.
+		</value>
+	</data>
+  <data name="MM2106" xml:space="preserve">
+		<value>Önceki yönerge beklenmediğinden ({3}), BlockLiteral.{2} çağrısı {0} konumundaki {1} uzaklığında en iyi duruma getirilemedi
+		</value>
+	</data>
+  <data name="MM2106_A" xml:space="preserve">
+		<value>BlockLiteral.{2} çağrısı, ilk bağımsız değişkenin temsilci türünün türü belirlenemediğinden, {0} konumundaki {1} uzaklığında en iyi duruma getirilemedi (yönerge: {3})
+		</value>
+	</data>
+  <data name="MM2106_B" xml:space="preserve">
+		<value>İlk bağımsız değişken olarak geçirilen değerin (tramplen) türü, blok imzasının hesaplanmasını olanaksız hale getiren {1} olduğundan, BlockLiteral.{2} çağrısı {0} içinde en iyi duruma getirilemedi.
+		</value>
+	</data>
+  <data name="MM2106_D" xml:space="preserve">
+		<value>BlockLiteral.SetupBlock çağrısı {0} konumundaki {1} uzaklığında en iyi duruma getirilemedi: {2}.
+		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>'{4}' türünde '{3}' adında birden fazla metot bulunduğundan {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>'{3}' metodunda en az bir parametre olması gerektiğinden {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>'{3}' metodundaki ilk parametre, 'System.IntPtr', 'void*' veya 'ObjCRuntime.BlockLiteral*' (şu anki parametre: '{4}') olmadığından {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>'{3}' metodunda [UnmanagedCallersOnly] özniteliği olmadığından {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>'{3}' metodunda [UnmanagedCallersOnly] özniteliği olmadığından {0} konumundaki BlockLiteral.{2} çağrısı {1} uzaklığında en iyi duruma getirilemedi.</value>
+	</data>
+  <data name="MM2107" xml:space="preserve">
+		<value>{0}, '{1}.{2} ({3})' öğesine başvurduğundan dinamik kaydedicinin kaldırılması güvenli değil.
+		</value>
+	</data>
+  <data name="MM2108" xml:space="preserve">
+		<value>App Store kısıtlamalarına uymak için, {0} öğesinden {1} dışındaki mimariler kaldırıldı. Bu, mevcut kod imzalama imzalarını bozabilir. Kitaplığı lipo ile ayırmayı veya --optimize=-trim-architectures ile devre dışı bırakmayı düşünün
+		</value>
+	</data>
+  <data name="MM2110" xml:space="preserve">
+		<value>Xamarin.Mac 'Kısmi Statik' kaydedicisi bağlamayı desteklemiyor. Bağlamayı devre dışı bırakın veya başka bir kaydedici modunu kullanın.
+		</value>
+	</data>
+  <data name="MX2111" xml:space="preserve">
+		<value>'{0}' corlib bütünleştirilmiş kodu, yüklenen bütünleştirilmiş kodlar listesinde bulunamıyor.
+		</value>
+	</data>
+  <!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
+  <!-- 220x: PreserveSmartEnumConversionsSubStep -->
+  <!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
+  <!-- 222x: RemoveRejectedTypesStep -->
+  <!-- 223x: CollectUnmarkedMembersSubStep -->
+  <!-- 224x: PreserveBlockCodeSubStep -->
+  <!-- 2300 -> 2399 is used by/reserved for ConfigurationAwareStep subclasses in the linker -->
+  <data name="MX_ConfigurationAwareStep" xml:space="preserve">
+		<value>'{0}' bağlayıcı adımı işleme sırasında başarısız oldu: {1}</value>
+		<comment>This is a message when processing fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - A string describing what failed.
+		</comment>
+	</data>
+  <data name="MX_ConfigurationAwareStepWithAssembly" xml:space="preserve">
+		<value>{1} işlenirken '{0}' bağlayıcı adımı başarısız oldu: {2}</value>
+		<comment>This is a message when processing an assembly fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly that failed processing.
+			{1} - A string describing what failed
+		</comment>
+	</data>
+  <!-- 230x: SetupStep -->
+  <!-- 231x: GatherFrameworksStep -->
+  <!-- 232x: GenerateMainStep -->
+  <!-- 233x: CollectAssembliesStep -->
+  <!-- 234x: ExtractBindingLibrariesStep -->
+  <!-- 235x: LoadNonSkippedAssembliesStep -->
+  <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
+  <data name="MX3001" xml:space="preserve">
+		<value>'{1}' bütünleştirilmiş koduna {0} uygulanamadı
+		</value>
+	</data>
+  <data name="MT3003" xml:space="preserve">
+		<value>LLVM ile derlenirken hata ayıklama desteklenmez. Hata ayıklama devre dışı bırakıldı.
+		</value>
+	</data>
+  <data name="MT3004" xml:space="preserve">
+		<value>Mevcut olmadığından '{0}' bütünleştirilmiş koduna AOT uygulanamadı.
+		</value>
+	</data>
+  <data name="MT3005" xml:space="preserve">
+		<value>'{1}' bütünleştirilmiş kodunun '{0}' bağımlılığı bulunamadı. Lütfen projenin başvurularını gözden geçirin.
+		</value>
+	</data>
+  <data name="MT3006" xml:space="preserve">
+		<value>Proje için tam bir bağımlılık eşlemesi hesaplanamadı. Xamarin.iOS nelerin yeniden derlenmesi gerektiğini (ve nelerin yeniden derlenmesi gerekmediğini) düzgün algılayamadığından bu, daha yavaş derleme sürelerine neden olur. Daha fazla ayrıntı için lütfen önceki uyarıları gözden geçirin.
+		</value>
+	</data>
+  <data name="MX3007" xml:space="preserve">
+		<value>LLVM etkinleştirildiğinde hata ayıklama bilgi dosyaları (*.mdb/*.pdb) yüklenmez.
+		</value>
+	</data>
+  <data name="MT3008" xml:space="preserve">
+		<value>Bitcode desteği LLVM kullanımını gerektirir (--abi=arm64+llvm vb.)
+		</value>
+	</data>
+  <data name="MM3009" xml:space="preserve">
+		<value>'{0}' için AOT istendi ancak bulunamadı
+		</value>
+	</data>
+  <data name="MM3010" xml:space="preserve">
+		<value>'{0}' AOT öğesinin dışlanması istendi ancak öğe bulunamadı
+		</value>
+	</data>
+  <data name="MT4001" xml:space="preserve">
+		<value>Ana şablon `{0}` olarak genişletilemedi.
+		</value>
+	</data>
+  <data name="MT4002" xml:space="preserve">
+		<value>P/Invoke metotları için oluşturulan kod derlenemedi. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4101" xml:space="preserve">
+		<value>Kaydedici, `{0}` türü için imza oluşturamıyor.
+		</value>
+	</data>
+  <data name="MT4102" xml:space="preserve">
+		<value>Kaydedici, `{2}` metodunun imzasında geçersiz `{0}` türünü buldu. Bunun yerine `{1}` kullanın.
+		</value>
+	</data>
+  <data name="MT4103" xml:space="preserve">
+		<value>Kaydedici, `{1}` metodunun imzasında geçersiz `{0}` türünü buldu: Tür INativeObject uyguluyor ancak iki (IntPtr, bool) bağımsız değişken alan bir oluşturucuya sahip değil.
+		</value>
+	</data>
+  <data name="MT4104" xml:space="preserve">
+		<value>Kaydedici, `{1}` metodunun imzasındaki `{0}` türünün dönüş değerini hazırlayamıyor.
+		</value>
+	</data>
+  <data name="MT4104_A" xml:space="preserve">
+		<value>Kaydedici, `{1}.{2}` metodundaki `{0}` türünün dönüş değerini hazırlayamıyor.
+		</value>
+	</data>
+  <data name="MT4105" xml:space="preserve">
+		<value>Kaydedici, `{1}` metodunun imzasında `{0}` türündeki parametreyi hazırlayamıyor.
+		</value>
+	</data>
+  <data name="MT4108" xml:space="preserve">
+		<value>Kaydedici, `{0}` yönetilen türü için ObjectiveC türünü alamıyor.
+		</value>
+	</data>
+  <data name="MT4109" xml:space="preserve">
+		<value>Oluşturulan kaydedici kodu derlenemedi. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4110" xml:space="preserve">
+		<value>Kaydedici, `{1}` metodunun imzasında `{0}` türündeki çıkış parametresini hazırlayamıyor.
+		</value>
+	</data>
+  <data name="MT4111" xml:space="preserve">
+		<value>Kaydedici, `{1}` metodundaki `{0}` türü için imza oluşturamıyor.
+		</value>
+	</data>
+  <data name="MT4113" xml:space="preserve">
+		<value>Kaydedici genel bir metot buldu: '{0}'. Genel metotların dışarı aktarılması desteklenmiyor. Bu durum rastgele davranışa ve/veya kilitlenmelere neden olur
+		</value>
+	</data>
+  <data name="MT4114" xml:space="preserve">
+		<value>'{0}.{1}' metodunun kaydedicisinde beklenmeyen bir hata oluştu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4116" xml:space="preserve">
+		<value>'{0}' bütünleştirilmiş kodu kaydedilemedi: {1}
+		</value>
+	</data>
+  <data name="MT4117" xml:space="preserve">
+		<value>Kaydedici, '{0}.{1}' metodunda bir imza uyuşmazlığı buldu. '{4}' seçicisi, metodun {2} parametre aldığını gösteriyor ancak yönetilen metotta {3} parametre var.
+		</value>
+	</data>
+  <data name="MT4118" xml:space="preserve">
+		<value>Aynı yerel ada ('{2}') sahip iki yönetilen tür ('{0}' ve '{1}') kaydedilemez.
+		</value>
+	</data>
+  <data name="MT4119" xml:space="preserve">
+		<value>Seçici zaten '{3}' üyesinde kaydedildiğinden '{1}.{2}' üyesinin '{0}' seçicisi kaydedilemedi.
+		</value>
+	</data>
+  <data name="MT4120" xml:space="preserve">
+		<value>Kaydedici, '{1}.{2}' alanında bilinmeyen bir '{0}' alan türü buldu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4121" xml:space="preserve">
+		<value>Accounts çerçevesi kullanılırken (derleme sırasında kullanılan ve Apple tarafından sağlanan üst bilgi dosyaları Clang gerektirdiğinden), statik kaydedicideki oluşturulan kodu derlemek için GCC/G++ kullanılamaz. Clang (--compiler:clang) veya dinamik kaydediciyi (--registrar:dynamic) kullanın.
+		</value>
+	</data>
+  <data name="MT4123" xml:space="preserve">
+		<value>Değişen sayıda bağımsız değişken içeren '{0}' işlevindeki değişen sayıda bağımsız değişken içeren parametrenin türü System.IntPtr olmalıdır.
+		</value>
+	</data>
+  <data name="MT4124" xml:space="preserve">
+		<value>'{1}' üzerinde geçersiz {0} bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_A" xml:space="preserve">
+		<value>'{0}' üzerinde geçersiz RegisterAttribute özelliği ({1}) bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_B" xml:space="preserve">
+		<value>'{0}' üzerinde geçersiz AdoptsAttribute bulundu: 1 oluşturucu bağımsız değişkeni bekleniyordu, {1} alındı. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_C" xml:space="preserve">
+		<value>'{0}.{1}' üzerinde geçersiz BindAsAttribute bulundu: {2} alanı bilinmiyor. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_D" xml:space="preserve">
+		<value>'{1}.{2}' üzerinde geçersiz {0} bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_E" xml:space="preserve">
+		<value>'{0}' üzerinde geçersiz BindAsAttribute bulundu: 1 oluşturucu bağımsız değişkeni olmalıdır, {1} bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_H" xml:space="preserve">
+		<value>'{0}' üzerinde geçersiz BindAsAttribute bulundu: Temel alınan {1} sabit listesi türü bulunamadı. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>'{1}' üzerinde geçersiz {0} bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun</value>
+	</data>
+  <data name="MT4125" xml:space="preserve">
+		<value>Kaydedici, `{1}` metodunun imzasında geçersiz `{0}` türünü buldu: Arabirimin, sarmalayıcı türünü belirten bir Protocol özniteliği olmalıdır.
+		</value>
+	</data>
+  <data name="MT4126" xml:space="preserve">
+		<value>Aynı yerel ada ('{2}') sahip iki yönetilen protokol ('{0}' ve '{1}') kaydedilemez.
+		</value>
+	</data>
+  <data name="MT4127" xml:space="preserve">
+		<value>'{0}.{1}' metodu için birden fazla arabirim metodu kaydedilemez.
+		</value>
+	</data>
+  <data name="MT4128" xml:space="preserve">
+		<value>Kaydedici, '{1}' metodunun {2} parametresinde '{0}' geçersiz genel parametre türünü buldu. Genel parametrenin bir 'NSObject' kısıtlaması olmalıdır.
+		</value>
+	</data>
+  <data name="MT4129" xml:space="preserve">
+		<value>Kaydedici, '{1}' metodunda '{0}' geçersiz genel dönüş türünü buldu. Genel dönüş türünün bir 'NSObject' kısıtlaması olmalıdır.
+		</value>
+	</data>
+  <data name="MT4130" xml:space="preserve">
+		<value>Kaydedici, genel sınıflardaki statik metotları ('{0}') dışarı aktaramıyor.
+		</value>
+	</data>
+  <data name="MT4131" xml:space="preserve">
+		<value>Kaydedici, genel sınıflardaki statik özellikleri ('{0}.{1}') dışarı aktaramıyor.
+		</value>
+	</data>
+  <data name="MT4132" xml:space="preserve">
+		<value>Kaydedici, '{1}.{2}' özelliğinde '{0}' geçersiz genel dönüş türünü buldu. Dönüş türünün bir 'NSObject' kısıtlaması olmalıdır.
+		</value>
+	</data>
+  <data name="MT4134" xml:space="preserve">
+		<value>Uygulamanız, uygulamanızı derlemek için kullandığınız {3} SDK'ya dahil olmayan '{0}' çerçevesini kullanıyor (Bu çerçeve, {3} {2} sürümünde sunuldu ancak siz {3} {1} sürümüyle derleme yapıyorsunuz.) Lütfen uygulamanızın {3} Derleme seçeneklerinde daha yeni bir SDK seçin.
+		</value>
+	</data>
+  <data name="MM4134" xml:space="preserve">
+		<value>Uygulamanız, uygulamanızı derlemek için kullandığınız {3} SDK'ya dahil olmayan '{0}' çerçevesini kullanıyor (Bu çerçeve, {3} {2} sürümünde sunuldu ancak siz {3} {1} sürümüyle derleme yapıyorsunuz.) Bu yapılandırma, statik kaydedici ile desteklenmez. (Seçmek için projenizin Mac Derleme seçeneğinde --registrar:dynamic öğesini ek mmp bağımsız değişkeni olarak geçirin.) Alternatif olarak, uygulamanızın Mac Derleme seçeneklerinde daha yeni bir SDK seçin.	
+		</value>
+	</data>
+  <data name="MT4135" xml:space="preserve">
+		<value>'{0}' üyesinin seçici içermeyen bir Export özniteliği var. Seçici gereklidir.
+		</value>
+	</data>
+  <data name="MT4136" xml:space="preserve">
+		<value>Kaydedici, '{2}.{3}' metodunda '{1}' parametresinin '{0}' parametre türünü hazırlayamıyor
+		</value>
+	</data>
+  <data name="MT4137" xml:space="preserve">
+		<value>'{0}.{1}' metodu '{2}.{3}' öğesini uyguluyor.
+		</value>
+	</data>
+  <data name="MT4138" xml:space="preserve">
+		<value>Kaydedici, '{1}.{2}' özelliğinin '{0}' özellik türünü hazırlayamıyor.
+		</value>
+	</data>
+  <data name="MT4139" xml:space="preserve">
+		<value>Kaydedici, '{1}.{2}' özelliğinin '{0}' özellik türünü hazırlayamıyor. [Connect] özniteliğine sahip özellikler NSObject (veya NSObject'in bir alt sınıfı) özellik türüne sahip olmalıdır.
+		</value>
+	</data>
+  <data name="MT4140" xml:space="preserve">
+		<value>Kaydedici, '{0}.{1}' metodunda bir imza uyuşmazlığı buldu. '{4}' seçicisi, değişen sayıda bağımsız değişken içeren metodun {2} parametre aldığını gösteriyor ancak yönetilen metotta {3} parametre var.
+		</value>
+	</data>
+  <data name="MT4141" xml:space="preserve">
+		<value>Xamarin.iOS bu seçiciyi açıkça kaydettiğinden '{0}' seçicisi '{1}.{2}' üyesinde kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4145" xml:space="preserve">
+		<value>'{0}' sabit listesi geçersiz: [Native] özniteliğine sahip sabit listelerinin temel alınan sabit listesi türü 'long' veya 'ulong' olmalıdır.
+		</value>
+		<comment>The following are literal names and should not be translated: enum, [Native], long, ulong.
+{0} - The full name of the C# enum.
+		</comment>
+	</data>
+  <data name="MT4146" xml:space="preserve">
+		<value>'{0}' ('{3}') sınıfındaki Registrar özniteliğinin Name parametresi geçersiz bir karakter içeriyor: '{1}' (0x{2}).
+		</value>
+	</data>
+  <data name="MT4147" xml:space="preserve">
+		<value>'{1}' üzerinde geçersiz {0} bulundu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4148" xml:space="preserve">
+		<value>Kaydedici genel bir protokol buldu: '{0}'. Genel protokollerin dışarı aktarılması desteklenmiyor.
+		</value>
+	</data>
+  <data name="MT4149" xml:space="preserve">
+		<value>İlk parametrenin türü ('{2}') kategori türü ('{3}') ile eşleşmediğinden '{0}.{1}' genişletme yöntemi kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4150" xml:space="preserve">
+		<value>Kategori özniteliğindeki '{1}' kategori türü NSObject'ten devralınmadığından '{0}' türü kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4151" xml:space="preserve">
+		<value>Kategori özniteliğindeki Tür özelliği ayarlanmadığından '{0}' türü kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4152" xml:space="preserve">
+		<value>INativeObject uyguladığından veya NSObject'in alt sınıfını oluşturduğundan '{0}' türü kategori olarak kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4153" xml:space="preserve">
+		<value>'{0}' türü genel olduğundan kategori olarak kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4154" xml:space="preserve">
+		<value>'{0}.{1}' metodu genel olduğundan kategori metodu olarak kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4156" xml:space="preserve">
+		<value>Aynı yerel ada ('{2}') sahip iki kategori ('{0}' ve '{1}') kaydedilemez
+		</value>
+	</data>
+  <data name="MT4157" xml:space="preserve">
+		<value>Genişletme yöntemleri için en az bir parametre gerektiğinden (türü '{2}' kategori türüyle eşleşmelidir), '{0}.{1}' kategori metodu kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4158" xml:space="preserve">
+		<value>Kategorideki oluşturucular desteklenmediğinden {0}.{1} oluşturucusu {0} kategorisinde kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4159" xml:space="preserve">
+		<value>Kategori metotlarının statik olması gerektiğinden, '{0}.{1}' metodu kategori metodu olarak kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4160" xml:space="preserve">
+		<value>'{3}.{4}' için '{2}' seçicisinde geçersiz '{0}' karakteri (0x{1}) bulundu
+		</value>
+	</data>
+  <data name="MT4161" xml:space="preserve">
+		<value>Kaydedici desteklenmeyen bir yapı ('{0}') buldu: Yapıdaki tüm alanların da yapı olması gerekir ('{2}' türündeki '{1}' alanı bir yapı değil).
+		</value>
+	</data>
+  <!-- MT4162: split up into multiple messages -->
+  <data name="MT4162_A" xml:space="preserve">
+		<value>'{0}' türü, {3} {4} içinde kullanılamıyor ({3} {5} sürümünde sunulmuştu){6} Lütfen daha yeni bir {3} SDK'sı ile derleyin (genellikle Xcode'un en son sürümü kullanılarak yapılır).
+		</value>
+	</data>
+  <data name="MT4162_BaseType" xml:space="preserve">
+		<value>'{0}' türü ({1} öğesinin temel türü olarak kullanılır), {2} {3} içinde kullanılamıyor ({2} {4} sürümünde kullanıma sunulmuştu){5} Lütfen daha yeni bir {2} SDK'sı ile derleyin. (Genellikle Xcode'un en son sürümü kullanılarak yapılır.)
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the base type.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_Parameter" xml:space="preserve">
+		<value>'{0}' türü ({1} içinde parametre olarak kullanılır), {2} {3} içinde kullanılamıyor ({2} {4} sürümünde kullanıma sunulmuştu){5} Lütfen daha yeni bir {2} SDK'sı ile derleyin. (Genellikle Xcode'un en son sürümü kullanılarak yapılır.)
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_PropertyType" xml:space="preserve">
+		<value>'{0}' türü ({1} öğesinin özellik türü olarak kullanılır), {2} {3} içinde kullanılamıyor ({2} {4} sürümünde kullanıma sunulmuştu){5} Lütfen daha yeni bir {2} SDK'sı ile derleyin. (Genellikle Xcode'un en son sürümü kullanılarak yapılır.)
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the property.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_ReturnType" xml:space="preserve">
+		<value>'{0}' türü ({1} içinde dönüş türü olarak kullanılır), {2} {3} içinde kullanılamıyor ({2} {4} sürümünde kullanıma sunulmuştu){5} Lütfen daha yeni bir {2} SDK'sı ile derleyin. (Genellikle Xcode'un en son sürümü kullanılarak yapılır.)
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4163" xml:space="preserve">
+		<value>Kaydedicide iç hata ({1} bağımsız değişkenle {0} ctor). Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4163_A" xml:space="preserve">
+		<value>Kaydedicide iç hata (Bilinmeyen kullanılabilirlik türü: {0}). Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4163_B" xml:space="preserve">
+		<value>Kaydedicide iç hata (BindAs parametreleri başvuru/çıkış olamaz: {0}). Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4164" xml:space="preserve">
+		<value>'{1}' seçicisi bir Objective-C anahtar sözcüğü olduğundan '{0}' özelliği dışarı aktarılamıyor. Lütfen farklı bir ad kullanın.
+		</value>
+	</data>
+  <data name="MT4165" xml:space="preserve">
+		<value>Kaydedici, başvurulan bütünleştirilmiş kodların hiçbirinde 'System.Void' türünü bulamadı.
+		</value>
+	</data>
+  <data name="MT4166" xml:space="preserve">
+		<value>İmza, başvuru türü olmayan bir tür ({1}) içerdiğinden '{0}' metodu kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4167" xml:space="preserve">
+		<value>İmza, INativeObject ({2}) uygulamayan bir genel bağımsız değişken türü ile genel bir tür ({1}) içerdiğinden '{0}' metodu kaydedilemiyor.
+		</value>
+	</data>
+  <data name="MT4168" xml:space="preserve">
+		<value>Objective-C adı '{1}' bir Objective-C anahtar sözcüğü olduğundan '{0}' türü kaydedilemiyor. Lütfen farklı bir ad kullanın.
+		</value>
+	</data>
+  <data name="MT4169" xml:space="preserve">
+		<value>{0} için P/Invoke sarmalayıcısı oluşturulamadı: {1}
+		</value>
+	</data>
+  <data name="MT4170" xml:space="preserve">
+		<value>Kaydedici, {2} metodundaki dönüş değeri için '{0}' türünü '{1}' türüne dönüştüremiyor.
+		</value>
+	</data>
+  <data name="MT4171" xml:space="preserve">
+		<value>{0} metodunun dönüş değerindeki BindAs özniteliği geçersiz: {1} BindAs türü, {2} dönüş türünden farklı.
+		</value>
+	</data>
+  <data name="MT4171_A" xml:space="preserve">
+		<value>#{0} parametresi üzerindeki BindAs özniteliği geçersiz: {1} BindAs türü, {2} parametre türünden farklı.
+		</value>
+	</data>
+  <data name="MT4171_B" xml:space="preserve">
+		<value>{0}.{1} özelliğindeki BindAs özniteliği geçersiz: {2} BindAs türü, {1} özellik türünden farklı.
+		</value>
+	</data>
+  <data name="MT4172" xml:space="preserve">
+		<value>Kaydedici, {3} metodundaki '{2}' parametresi için '{0}' türünü '{1}' türüne dönüştüremiyor.
+		</value>
+	</data>
+  <data name="MT4173" xml:space="preserve">
+		<value>{0} belirli bir imzaya sahip olmadığından, kaydedici, {1} metodunda {0} türündeki temsilcinin blok imzasını hesaplayamıyor.
+		</value>
+	</data>
+  <data name="MT4173_A" xml:space="preserve">
+		<value>Kaydedici, temsilci türünün Invoke metodunu bulamadığından {1} metodunda {0} türü temsilcisinin blok imzasını hesaplayamıyor.
+		</value>
+	</data>
+  <data name="MT4174" xml:space="preserve">
+		<value>{0} metodunun {1}. parametresinin dönüştürme metoduna temsilci seçmek için blok bulunamıyor.
+		</value>
+	</data>
+  <data name="MT4175" xml:space="preserve">
+		<value>{0} metodunun {1}. parametresinin dönüştürme metoduna temsilci seçmek için blok bulunamıyor.
+		</value>
+	</data>
+  <data name="MT4176" xml:space="preserve">
+		<value>{0} metodunun dönüş değeri için blok dönüştürme türünü engellemek amacıyla temsilci bulunamıyor.
+		</value>
+	</data>
+  <data name="MT4177" xml:space="preserve">
+		<value>'{0}' sınıfında kullanılan 'Adopts' özniteliğinin 'ProtocolType' parametresi geçersiz bir karakter içeriyor. Kullanılan değer: '{1}' Geçersiz Karakter: '{2}'
+		</value>
+	</data>
+  <data name="MT4178" xml:space="preserve">
+		<value>{1} çerçevesi {2} SDK'sından kaldırıldığından '{0}' sınıfı kaydedilmeyecek.
+		</value>
+	</data>
+  <data name="MT4179" xml:space="preserve">
+		<value>Kaydedici, '{1}' imzasında '{0}' soyut türünü buldu. Soyut türler, Objective-C'ye aktarılan bir üyenin imzasında kullanılmamalıdır.
+		</value>
+	</data>
+  <data name="MT4184" xml:space="preserve">
+		<value>Kaydedicide iç hata (BindAs parametreleri başvuru/çıkış olamaz: {0}). Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT4185" xml:space="preserve">
+		<value>Kaydedici, temsilci türünün Invoke metodunu bulamadığından {1} metodunda {0} türü temsilcisinin blok imzasını hesaplayamıyor.
+		</value>
+	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Kaydedici uygun olmayan '{0}' türü buldu: Türün iki (ObjCRuntime.NativeHandle, bool) bağımsız değişkeni alan bir oluşturucusu yok. Ancak, iki (System.IntPtr, bool) bağımsız değişkeni alan bir oluşturucu bulundu (ve bunun yerine kullanılacak). (System.IntPtr, bool) oluşturucusunun imzasını (ObjCRuntime.NativeHandle, bool) olarak değiştirmeniz kesinlikle önerilir.</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>'{0}' türünde [UserDelegateType] özniteliği bulunamadı.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>'{0}' türü için blok imzası işleme alınamıyor: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>{1} SDK'sından kaldırıldığından '{0}' sınıfı kaydedilmeyecek.</value>
+	</data>
+  <data name="MT5101" xml:space="preserve">
+		<value>'{0}' derleyicisi eksik. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
+		</value>
+	</data>
+  <data name="MT5103" xml:space="preserve">
+		<value>Ne '{0}' ne de '{1}' derleyicisi bulundu. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
+		</value>
+	</data>
+  <data name="MM5103" xml:space="preserve">
+		<value>Derlenemedi. Hata kodu - {0}. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT5103_A" xml:space="preserve">
+		<value>'{0}' dosyaları derlenemedi. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT5106" xml:space="preserve">
+		<value>'{0}' dosyaları derlenemedi. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT5107" xml:space="preserve">
+		<value>Yerel kod, 32 bit ARM mimarisi için çok büyük olduğundan '{0}' bütünleştirilmiş kodu 32 bit mimariler için AOT ile derlenemez.
+		</value>
+	</data>
+  <data name="MT5108" xml:space="preserve">
+		<value>Derleyici çıkışı çok uzun, 1000 satırla sınırlandırıldı.
+		</value>
+	</data>
+  <data name="MM5109" xml:space="preserve">
+		<value>Yerel bağlama, 1 hata kodu ile başarısız oldu. Ayrıntılar için derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <data name="MT5201" xml:space="preserve">
+		<value>Yerel bağlama başarısız oldu. Lütfen derleme günlüğünü ve gcc: {0} için sağlanan kullanıcı bayraklarını gözden geçirin
+		</value>
+	</data>
+  <data name="MT5202" xml:space="preserve">
+		<value>Yerel bağlama başarısız oldu. Lütfen derleme günlüğünü gözden geçirin.
+		</value>
+	</data>
+  <data name="MM5202" xml:space="preserve">
+		<value>Mono.framework MDK eksik. Lütfen https://www.mono-project.com/download/ adresinde Mono.framework sürümünüz için MDK'yı yükleyin
+		</value>
+	</data>
+  <data name="MT5203" xml:space="preserve">
+		<value>Yerel bağlantı uyarısı: {0}
+		</value>
+	</data>
+  <data name="MM5203" xml:space="preserve">
+		<value>Büyük olasılıkla bozuk bir Xamarin.Mac yüklemesi nedeniyle {0} bulunamıyor. Lütfen Xamarin.Mac'i yeniden yükleyin.
+		</value>
+	</data>
+  <data name="MT5204" xml:space="preserve">
+		<value>Yerel bağlama başarısız oldu. Lütfen derleme günlüğünü gözden geçirin.
+		</value>
+	</data>
+  <data name="MM5205" xml:space="preserve">
+		<value>'{0}' mimarisi geçersiz. Yalnızca x86_64 mimarisi geçerlidir.
+		</value>
+	</data>
+  <data name="MT5209" xml:space="preserve">
+		<value>Yerel bağlama hatası: {0}
+		</value>
+	</data>
+  <data name="MT5210" xml:space="preserve">
+		<value>Yerel bağlama başarısız, {0} sembolü tanımsız. Lütfen gerekli tüm çerçevelere başvuruda bulunulduğunu ve yerel kitaplıkların bağlı olduğunu doğrulayın.
+		</value>
+	</data>
+  <data name="MT5211" xml:space="preserve">
+		<value>Yerel bağlama başarısız oldu, tanımsız Objective-C sınıfı: {0}. '{1}' sembolü, uygulamanızla bağlantılı kitaplıklar veya çerçeveler içinde bulunamadı.
+		</value>
+	</data>
+  <data name="MT5212" xml:space="preserve">
+		<value>Yerel bağlama başarısız oldu, yinelenen sembol: '{0}'.
+		</value>
+	</data>
+  <data name="MT5213" xml:space="preserve">
+		<value>Şu konumda yinelenen sembol: {0} (Önceki hatayla ilgili konum)
+		</value>
+	</data>
+  <data name="MT5214" xml:space="preserve">
+		<value>Yerel bağlama başarısız, {0} sembolü tanımsız. Bu sembole {1}.{2} yönetilen üyesi tarafından başvuruluyor. Lütfen gerekli tüm çerçevelere başvuruda bulunulduğunu ve yerel kitaplıkların bağlı olduğunu doğrulayın.
+		</value>
+	</data>
+  <data name="MT5215" xml:space="preserve">
+		<value>'{0}' başvuruları, yerel bağlayıcıya ek -framework=XXX veya -lXXX yönergeleri sağlanmasını gerektirebilir
+		</value>
+	</data>
+  <data name="MT5216" xml:space="preserve">
+		<value>'{0}' için yerel bağlama başarısız oldu. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun
+		</value>
+	</data>
+  <data name="MT5217" xml:space="preserve">
+		<value>Bağlayıcı komut satırı çok uzun ({0} karakter) olduğundan yerel bağlama işlemi başarısız oldu.
+		</value>
+	</data>
+  <data name="MT5218" xml:space="preserve">
+		<value>{0} dinamik sembolü (--ignore-dynamic-symbol={0}), dinamik sembol olarak algılanmadığından yoksayılamıyor.
+		</value>
+	</data>
+  <data name="MT5219" xml:space="preserve">
+		<value>iOS'den kaldırıldığından WatchKit ile bağlantı oluşturulamadı.
+		</value>
+	</data>
+  <data name="MM5220" xml:space="preserve">
+		<value>'{0}' çerçevesi atlanıyor. Mac App Store tarafından yasaklandı (reddedildi)
+		</value>
+	</data>
+  <data name="MM5221" xml:space="preserve">
+		<value>'{0}' çerçevesine bağlanma. Mac App Store tarafından yasaklandı (reddedildi)
+		</value>
+	</data>
+  <data name="MX5222" xml:space="preserve">
+		<value>Yerel bağlayıcı yürütülemedi: {0}. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinden bir hata raporu oluşturun
+ 		</value>
+	</data>
+  <data name="MX5223" xml:space="preserve">
+		<value>Geçerli {1} SDK’sı simülatördeki bu çerçeveyi desteklemediğinden '{0}' çerçevesiyle bağlantı kurulamadı.</value>
+		<comment>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</comment>
+	</data>
+  <data name="MT5301" xml:space="preserve">
+		<value>'Strip' aracı eksik. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
+		</value>
+	</data>
+  <data name="MT5302" xml:space="preserve">
+		<value>'Dsymutil' aracı eksik. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
+		</value>
+	</data>
+  <data name="MT5303" xml:space="preserve">
+		<value>Hata ayıklama sembolleri (dSYM dizini) oluşturulamadı. Lütfen derleme günlüğünü gözden geçirin.
+		</value>
+	</data>
+  <data name="MT5304" xml:space="preserve">
+		<value>Son ikili dosya ayrılamadı. Lütfen derleme günlüğünü gözden geçirin.
+		</value>
+	</data>
+  <data name="MX5305" xml:space="preserve">
+		<value>'Lipo' aracı eksik. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
+		</value>
+	</data>
+  <data name="MT5306" xml:space="preserve">
+		<value>Bir FAT kitaplığı oluşturulamadı. Lütfen derleme günlüğünü gözden geçirin.
+		</value>
+	</data>
+  <data name="MX5307" xml:space="preserve">
+		<value>'{0}' aracı eksik. Lütfen Xcode 'Komut Satırı Araçları' bileşenini yükleyin
+		</value>
+	</data>
+  <data name="MM5308" xml:space="preserve">
+		<value>Xcode lisans sözleşmesi kabul edilmemiş olabilir. Lütfen Xcode'u başlatın.
+		</value>
+	</data>
+  <data name="MX5309" xml:space="preserve">
+		<value>'{0}' aracı yürütülemedi, '{1}' hata koduyla başarısız oldu. Ayrıntılar için lütfen derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <data name="MM5310" xml:space="preserve">
+		<value>install_name_tool, '{0}' hata koduyla başarısız oldu. Ayrıntılar için derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <data name="MX5311" xml:space="preserve">
+		<value>lipo, '{0}' hata koduyla başarısız oldu. Ayrıntılar için derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <data name="MX5312" xml:space="preserve">
+		<value>pkg-config, '{0}' hata koduyla başarısız oldu. Ayrıntılar için derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <data name="MX5313" xml:space="preserve">
+		<value>{0} bulunamadı. Lütfen https://mono-project.com/Downloads adresinden Mono.framework'ü yükleyin
+		</value>
+	</data>
+  <data name="MX5314" xml:space="preserve">
+		<value>pkg-config yürütülemedi: '{0}'. Ayrıntılar için derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <data name="MX5315" xml:space="preserve">
+		<value>Xcrun aracı, '{0}' aracını ararken sonuç bulamadı ('{1}' dosyası yok). Ayrıntılar için derleme günlüğünü denetleyin.
+		</value>
+	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Özel bağlayıcı adımları yürütülürken bir hata oluştu. Daha fazla bilgi için lütfen derleme günlüğünü gözden geçirin.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
+  <data name="MT8018" xml:space="preserve">
+		<value>İç tutarlılık hatası. Lütfen https://github.com/xamarin/xamarin-macios/issues/new adresinde bir hata raporu oluşturun.
+		</value>
+	</data>
+  <!-- 8000 -> 8036 are missing here (except 8018), so skip to 8037 -->
+  <data name="MX8037" xml:space="preserve">
+		<value>{2} metoduna yönelik çağrıdaki {1} parametresi için {0} türündeki parametrenin nasıl hazırlanacağı bilinmiyor</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+  <data name="MX8038" xml:space="preserve">
+		<value>{2} metoduna yönelik çağrıdaki {1} parametresi için {0} türündeki parametrenin nasıl hazırlanacağı bilinmiyor</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+  <data name="MX8039" xml:space="preserve">
+		<value>{0} türünden bir Objective-C nesnesine hazırlanamıyor. Yönetilen sınıfın NSObject’ten devralınması veya INativeObject’i uygulaması gerekiyor.</value>
+		<comment>
+{0} - The name of a type.
+		</comment>
+	</data>
+  <data name="MX8040" xml:space="preserve">
+		<value>Parametrenin tür kodlaması geçersiz.</value>
+	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>{0} türünde örnek oluşturulamıyor.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>{0} işlevi çağrılmaya çalışılırken özel durum oluştu: {1}</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>{0} derlemesinin statik kaydedici kodu doğrulanırken bir özel durum oluştu: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>Derleme {0}, uygulama oluşturulduktan sonra değiştirildi ve bunun sonucunda, oluşturulan statik kaydedici kodu geçersiz kılındı. Yüklenen derlemenin MVID'si {1} iken oluşturulan statik kaydedici kodunun karşılık geldiği derlemenin MVID'si {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>{0} yayın türündeki bir örnek üzerinde sürüm çağrılamaz</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>'{1}' türünde '{0}' metodu bulunamadı</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>{0} tramplen metodu, trampolineMethod bağımsız değişkeni için 0x{1} işlev işaretçisi ile eşleşmiyor (bunlar aynı yönteme başvurmuyor).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>{0} tramplen metodunda en az bir parametre olmalıdır.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>{0} tramplen metodundaki ilk parametre 'System.IntPtr', 'void*' veya 'ObjCRuntime.BlockLiteral*' olmalıdır.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>Dinamik kayıt şirketi bağlı olmadığında BlockLiteral.GetBlockSignature desteklenmez.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>{0} tramplen metodunda [UnmanagedCallersOnly] özniteliği olmalıdır.</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>İmza, boş olmayan bir dize olmalıdır.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>{0} derlemesinde modül çözümlenemedi.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Yönetilen statik kaydedici kullanılırken metotlara ait meta veri belirteçleri çözümlenemedi (belirteç: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>'{0}' derlemesinde 'ObjCRuntime.__Registrar__' türü bulunamadı..</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Objective-C nesnesi 0x{0} hazırlanamadı (tür: {1}). Bu nesne için mevcut bir yönetilen örnek bulunamadı ve bu nesne için {2} genel türünde yeni bir yönetilen örnek oluşturulamadı</value>
+	</data>
+</root>

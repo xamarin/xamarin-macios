@@ -1,0 +1,124 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+
+// arguments are: <platform> <outputPath> <inputDirectory> <version>
+
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
+
+var args = Environment.GetCommandLineArgs ();
+var expectedArgumentCount = 4;
+if (args.Length != expectedArgumentCount + 2 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
+	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
+	// second arg the script itself
+	// then comes the ones we care about
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 2}");
+	Environment.Exit (1);
+	return;
+}
+
+var platform = args [2];
+var outputPath = args [3];
+var inputDirectory = args [4];
+var version = args [5];
+
+string upgradeGuid;
+
+switch (platform) {
+	case "iOS":
+		upgradeGuid = "e17c20f4-e9a6-445a-915a-dac336097012";
+		break;
+	case "tvOS":
+		upgradeGuid = "951a188f-e59a-4db1-bc42-b3ca47edb4c6";
+		break;
+	case "watchOS":
+		upgradeGuid = "b365f5c9-6bbf-4c66-957a-8868576b4ddc";
+		break;
+	case "macOS":
+		upgradeGuid = "b64a436b-db46-4467-953c-bdcfc592d4da";
+		break;
+	default:
+		Console.Error.WriteLine ($"Need to generate an upgradeGuid for {platform}");
+		break;
+}
+
+List<string> components = new List<string> ();
+
+Func<string, byte[]> GetHash = (string inputString) =>
+{
+	using (var algorithm = SHA256.Create ())
+		return algorithm.ComputeHash (Encoding.UTF8.GetBytes (inputString));
+};
+
+Func<string, string> GetHashString = (string inputString) =>
+{
+	var sb = new StringBuilder ("S", 65);
+	foreach (byte b in GetHash (inputString))
+		sb.Append (b.ToString ("X2"));
+		Console.WriteLine ($"{inputString} => {sb.ToString ()}");
+	return sb.ToString ();
+};
+
+Func<string, string> GetId = (string path) =>
+{
+	var top_dir = inputDirectory;
+	if (string.IsNullOrEmpty (path))
+		return path;
+	if (path.Length > top_dir.Length + 1) {
+		path = path.Substring (top_dir.Length + 1);
+	}
+	return GetHashString (path);
+};
+
+Action<TextWriter, string, string> process = new Action<TextWriter, string, string> ((TextWriter writer, string indent, string directory) =>
+{
+	var entries = Directory.GetFileSystemEntries (directory);
+	foreach (var entry in entries) {
+		var name = Path.GetFileName (entry);
+		var id = GetId (entry);
+		if (Directory.Exists (entry)) {
+			writer.WriteLine ($"{indent}  <Directory Id=\"{id}\" Name=\"{name}\">");
+			process (writer, indent + "  ", entry);
+			writer.WriteLine ($"{indent}  </Directory>");
+		} else {
+			components.Add (id);
+			writer.WriteLine ($"{indent}  <Component Id=\"{id}\" Guid=\"*\">");
+			writer.WriteLine ($"{indent}    <File Id=\"file_{id}\" Name=\"{name}\" KeyPath=\"yes\" Source=\"{entry}\" />");
+			writer.WriteLine ($"{indent}  </Component>");
+		}
+	}
+});
+
+using (TextWriter writer = new StreamWriter (outputPath)) {
+
+	writer.WriteLine ($"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+	writer.WriteLine ($"<Wix xmlns=\"http://schemas.microsoft.com/wix/2006/wi\">");
+	writer.WriteLine ($"  <Product Name=\"Microsoft.NET.Workload.{platform}\" Id=\"*\" Language=\"1033\" Version=\"{version}\" Manufacturer=\"Microsoft\" UpgradeCode=\"{upgradeGuid}\">");
+	writer.WriteLine ($"    <Package Id=\"*\" InstallerVersion=\"200\" Compressed=\"yes\" InstallScope=\"perMachine\" />");
+	writer.WriteLine ($"    <MajorUpgrade DowngradeErrorMessage=\"A newer version of [ProductName] is already installed.\"/>");
+	writer.WriteLine ($"    <MediaTemplate EmbedCab=\"yes\"/>");
+	writer.WriteLine ($"    <Feature Id=\"ProductFeature\" Title=\"Microsoft.NET.Workload.{platform}\">");
+	writer.WriteLine ($"      <ComponentGroupRef Id=\"ProductComponents\"/>");
+	writer.WriteLine ($"    </Feature>");
+	writer.WriteLine ($"  </Product>");
+	writer.WriteLine ($"  <Fragment>");
+	writer.WriteLine ($"    <Directory Id=\"TARGETDIR\" Name=\"SourceDir\">");
+	writer.WriteLine ($"      <Directory Id=\"ProgramFiles64Folder\">");
+	writer.WriteLine ($"        <Directory Id=\"dotnet\" Name=\"dotnet\">");
+	process (writer, "        ", inputDirectory);
+	writer.WriteLine ($"        </Directory>");
+	writer.WriteLine ($"      </Directory>");
+	writer.WriteLine ($"    </Directory>");
+	writer.WriteLine ($"  </Fragment>");
+	writer.WriteLine ($"  <Fragment>");
+	writer.WriteLine ($"    <ComponentGroup Id=\"ProductComponents\">");
+	foreach (var component in components)
+		writer.WriteLine ($"      <ComponentRef Id=\"{component}\"/>");
+	writer.WriteLine ($"    </ComponentGroup>");
+	writer.WriteLine ($"  </Fragment>");
+	writer.WriteLine ($"</Wix>");
+
+}
+
+Environment.Exit (0);

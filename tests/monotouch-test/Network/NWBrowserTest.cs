@@ -1,19 +1,10 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
-using System.Collections.Generic;
 using System.Threading;
-#if XAMCORE_2_0
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -29,14 +20,14 @@ namespace MonoTouchFixtures.Network {
 		string type = "_tictactoe._tcp";
 		string domain = "local.";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
 		public void SetUp ()
 		{
 			descriptor = NWBrowserDescriptor.CreateBonjourService (type, domain);
-			using (var parameters = new NWParameters { IncludePeerToPeer = true})
+			using (var parameters = new NWParameters { IncludePeerToPeer = true })
 				browser = new NWBrowser (descriptor);
 			browser.SetDispatchQueue (DispatchQueue.DefaultGlobalQueue);
 		}
@@ -72,7 +63,8 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestStartNoQ () {
+		public void TestStartNoQ ()
+		{
 			using (var newBrowser = new NWBrowser (descriptor))
 				Assert.Throws<InvalidOperationException> (() => newBrowser.Start ());
 		}
@@ -90,41 +82,52 @@ namespace MonoTouchFixtures.Network {
 			// 5. The browser is not yet canceled, so it picks up that the service/listener is not longer then and returns it.
 			// 
 			// The test will block until the different events are set by the callbacks that are executed in a diff thread.
-
-			bool firstRun = true;
+			bool didRun = false;
+			bool receivedNotNullChange = false;
 			bool eventsDone = false;
 			bool listeningDone = false;
+			Exception ex = null;
+			NWError? errorState = null;
 			var changesEvent = new AutoResetEvent (false);
 			var browserReady = new AutoResetEvent (false);
 			var finalEvent = new AutoResetEvent (false);
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				// start the browser, before the listener
 				browser.SetStateChangesHandler ((st, er) => {
-					Assert.IsNotNull (st, "State");
-					Assert.IsNull (er, "Error");
+					// assert here with a `st` of `Fail`
+					errorState ??= er;
 					if (st == NWBrowserState.Ready)
 						browserReady.Set ();
 				});
+#if NET
+				browser.IndividualChangesDelegate = (oldResult, newResult) => {
+#else
 				browser.SetChangesHandler ((oldResult, newResult) => {
-					// first time, listener appears, so we do not have an old result, second time
-					// listener goes, so we do not have a new result
-					if (firstRun) {
-						Assert.IsNull (oldResult, "oldResult first run.");
-						Assert.IsNotNull (newResult, "newResult first run");
-						firstRun = false;
-					} else {
-						Assert.IsNotNull (oldResult, "oldResult first run.");
-						Assert.IsNull (newResult, "newResult first run");
+#endif
+					didRun = true;
+					try {
+						receivedNotNullChange = oldResult is not null || newResult is not null;
+					} catch (Exception e) {
+						ex = e;
+					} finally {
+						changesEvent.Set ();
+						eventsDone = true;
 					}
-					changesEvent.Set ();
-					eventsDone = true;
-
+#if NET
+				};
+#else
 				});
+#endif
 				browser.Start ();
 				browserReady.WaitOne (30000);
 				using (var advertiser = NWAdvertiseDescriptor.CreateBonjourService ("MonoTouchFixtures.Network", type))
+#if NET
+				using (var tcpOptions = new NWProtocolTcpOptions ())
+				using (var tlsOptions = new NWProtocolTlsOptions ())
+#else
 				using (var tcpOptions = NWProtocolOptions.CreateTcp ())
 				using (var tlsOptions = NWProtocolOptions.CreateTls ())
+#endif
 				using (var paramenters = NWParameters.CreateTcp ()) {
 					paramenters.ProtocolStack.PrependApplicationProtocol (tlsOptions);
 					paramenters.ProtocolStack.PrependApplicationProtocol (tcpOptions);
@@ -135,7 +138,7 @@ namespace MonoTouchFixtures.Network {
 						// we need the connection handler, else we will get an exception
 						listener.SetNewConnectionHandler ((c) => { });
 						listener.SetStateChangedHandler ((s, e) => {
-							if (e != null) {
+							if (e is not null) {
 								Console.WriteLine ($"Got error {e.ErrorCode} {e.ErrorDomain} '{e.CFError.FailureReason}' {e.ToString ()}");
 							}
 						});
@@ -150,8 +153,12 @@ namespace MonoTouchFixtures.Network {
 			}, () => eventsDone);
 
 			finalEvent.WaitOne (30000);
-			Assert.IsTrue (eventsDone);
-			Assert.IsTrue (listeningDone);
+			Assert.IsNull (errorState, "Error");
+			Assert.IsTrue (eventsDone, "eventDone");
+			Assert.IsTrue (listeningDone, "listeningDone");
+			Assert.IsNull (ex, "Exception");
+			Assert.IsTrue (didRun, "didRan");
+			Assert.IsTrue (receivedNotNullChange, "receivedNotNullChange");
 			browser.Cancel ();
 		}
 	}

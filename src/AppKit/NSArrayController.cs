@@ -21,33 +21,38 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 using Foundation;
+
+#nullable enable
 
 namespace AppKit {
 
 	public partial class NSArrayController {
 
 		// note: if needed override the protected Get|Set methods
-		public NSIndexSet SelectionIndexes { 
+		public NSIndexSet SelectionIndexes {
 			get { return GetSelectionIndexes (); }
 			// ignore return value (bool)
 			set { SetSelectionIndexes (value); }
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public ulong SelectionIndex { 
+		public ulong SelectionIndex {
 			get { return (ulong) GetSelectionIndex (); }
 			// ignore return value (bool)
 			set { SetSelectionIndex ((nuint) value); }
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public NSObject [] SelectedObjects { 
+		public NSObject [] SelectedObjects {
 			get { return GetSelectedObjects (); }
 			// ignore return value (bool)
 			set { SetSelectedObjects (value); }
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSDecimalNumber
 //
 // Authors:
@@ -7,12 +7,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {

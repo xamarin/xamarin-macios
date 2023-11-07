@@ -9,17 +9,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ImageIO;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ImageIO;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.ImageIO {
@@ -135,11 +127,10 @@ namespace MonoTouchFixtures.ImageIO {
 			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var rc = name.RetainCount;
-			using (var tag = new CGImageMetadataTag (nspace, prefix, name,  CGImageMetadataType.Default, false)) {
-				using (var n = tag.Name) {
-					Assert.That (n.Handle, Is.EqualTo (name.Handle), "same");
-					Assert.That (n.ToString (), Is.EqualTo ("tagName"), "Name");
-				}
+			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, false)) {
+				var n = tag.Name;
+				Assert.That (n.Handle, Is.EqualTo (name.Handle), "same");
+				Assert.That (n.ToString (), Is.EqualTo ("tagName"), "Name");
 				Assert.That (tag.Namespace.ToString (), Is.EqualTo ("http://ns.adobe.com/exif/1.0/"), "Namespace");
 				Assert.That (tag.Prefix.ToString (), Is.EqualTo ("exif"), "Prefix");
 				Assert.That (tag.Type, Is.EqualTo (CGImageMetadataType.String), "Type");

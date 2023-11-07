@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,19 +37,35 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreText {
 
+#if !NET
 	public static class CTFontCollectionOptionKey {
-		public static readonly NSString RemoveDuplicates;
+		public static readonly NSString? RemoveDuplicates;
 
 		static CTFontCollectionOptionKey ()
 		{
 			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption");
 		}
 	}
+#endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontCollectionOptions {
 
 		public CTFontCollectionOptions ()
@@ -56,172 +75,180 @@ namespace CoreText {
 
 		public CTFontCollectionOptions (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		// The docs (and headers) only imply that this is a numeric value ('set to non-zero to ...')
 		// No mention of the expected type (int? NSNumber?)
 		public bool RemoveDuplicates {
 			get {
+				if (CTFontCollectionOptionKey.RemoveDuplicates is null)
+					return false;
 				var v = Adapter.GetInt32Value (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates);
 				return v.HasValue ? v.Value != 0 : false;
 			}
 			set {
+				if (CTFontCollectionOptionKey.RemoveDuplicates is null)
+					throw new ArgumentOutOfRangeException (nameof (CTFontCollectionOptionKey.RemoveDuplicates));
 				var v = value ? (int?) 1 : null;
-				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates, v);
+				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates!, v);
 			}
 		}
 	}
 
-	public class CTFontCollection : INativeObject, IDisposable {
-		internal IntPtr handle;
+	internal static class CTFontCollectionOptionsExtensions {
+		public static IntPtr GetHandle (this CTFontCollectionOptions? @self)
+		{
+			if (@self is null)
+				return IntPtr.Zero;
+			return self.Dictionary.GetHandle ();
+		}
+	}
 
-		internal CTFontCollection (IntPtr handle, bool owns)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CTFontCollection : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTFontCollection (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-
-		~CTFontCollection ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
-#region Collection Creation
+		#region Collection Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateFromAvailableFonts (IntPtr options);
-		public CTFontCollection (CTFontCollectionOptions options)
+		public CTFontCollection (CTFontCollectionOptions? options)
+			: base (CTFontCollectionCreateFromAvailableFonts (options.GetHandle ()), true, true)
 		{
-			handle = CTFontCollectionCreateFromAvailableFonts (
-					options == null ? IntPtr.Zero : options.Dictionary.Handle);
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateWithFontDescriptors (IntPtr queryDescriptors, IntPtr options);
-		public CTFontCollection (CTFontDescriptor[] queryDescriptors, CTFontCollectionOptions options)
+		static IntPtr Create (CTFontDescriptor []? queryDescriptors, CTFontCollectionOptions? options)
 		{
-			using (var descriptors = queryDescriptors == null
-					? null 
-					: CFArray.FromNativeObjects (queryDescriptors))
-				handle = CTFontCollectionCreateWithFontDescriptors (
-						descriptors == null ? IntPtr.Zero : descriptors.Handle,
-						options == null ? IntPtr.Zero : options.Dictionary.Handle);
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
+			using var descriptors = queryDescriptors is null ? null : CFArray.FromNativeObjects (queryDescriptors);
+			return CTFontCollectionCreateWithFontDescriptors (descriptors.GetHandle (), options.GetHandle ());
+		}
+		public CTFontCollection (CTFontDescriptor []? queryDescriptors, CTFontCollectionOptions? options)
+			: base (Create (queryDescriptors, options), true, true)
+		{
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateCopyWithFontDescriptors (IntPtr original, IntPtr queryDescriptors, IntPtr options);
-		public CTFontCollection WithFontDescriptors (CTFontDescriptor[] queryDescriptors, CTFontCollectionOptions options)
+		public CTFontCollection? WithFontDescriptors (CTFontDescriptor []? queryDescriptors, CTFontCollectionOptions? options)
 		{
-			IntPtr h;
-			using (var descriptors = queryDescriptors == null 
-					? null 
-					: CFArray.FromNativeObjects (queryDescriptors)) {
-				h = CTFontCollectionCreateCopyWithFontDescriptors (
-						handle,
-						descriptors == null ? IntPtr.Zero : descriptors.Handle,
-						options == null ? IntPtr.Zero : options.Dictionary.Handle);
-			}
+			using var descriptors = queryDescriptors is null ? null : CFArray.FromNativeObjects (queryDescriptors);
+			var h = CTFontCollectionCreateCopyWithFontDescriptors (Handle, descriptors.GetHandle (), options.GetHandle ());
 			if (h == IntPtr.Zero)
 				return null;
 			return new CTFontCollection (h, true);
 		}
-#endregion
+		#endregion
 
-#region Retrieving Matching Descriptors
+		#region Retrieving Matching Descriptors
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptors (IntPtr collection);
-		public CTFontDescriptor[] GetMatchingFontDescriptors ()
+		public CTFontDescriptor [] GetMatchingFontDescriptors ()
 		{
-			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptors (handle);
+			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptors (Handle);
 			if (cfArrayRef == IntPtr.Zero)
-				return Array.Empty <CTFontDescriptor> ();
-			var matches = NSArray.ArrayFromHandle (cfArrayRef,
-					fd => new CTFontDescriptor (fd, false));
-			CFObject.CFRelease (cfArrayRef);
-			return matches;
+				return Array.Empty<CTFontDescriptor> ();
+			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
 		}
 
-		[iOS (12,0), TV (12,0), Watch (5,0)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
 
-		[iOS (12,0), TV (12,0), Watch (5,0)]
-		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions options)
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+#endif
+		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions? options)
 		{
-			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);
+			var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsWithOptions (Handle, options.GetHandle ());
 			if (cfArrayRef == IntPtr.Zero)
-				return Array.Empty <CTFontDescriptor> ();
-			var matches = NSArray.ArrayFromHandle (cfArrayRef,
-					fd => new CTFontDescriptor (fd, false));
-			CFObject.CFRelease (cfArrayRef);
-			return matches;
+				return Array.Empty<CTFontDescriptor> ();
+			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
 		}
 
+#if NET
+		[DllImport (Constants.CoreTextLibrary)]
+		static unsafe extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
+				IntPtr collection, delegate* unmanaged<IntPtr, IntPtr, IntPtr, CFIndex> sortCallback, 
+				IntPtr refCon);
+#else
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
 				IntPtr collection, CTFontCollectionSortDescriptorsCallback sortCallback, IntPtr refCon);
 
 		delegate CFIndex CTFontCollectionSortDescriptorsCallback (IntPtr first, IntPtr second, IntPtr refCon);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (CTFontCollectionSortDescriptorsCallback))]
+#endif
 		static CFIndex CompareDescriptors (IntPtr first, IntPtr second, IntPtr context)
 		{
 			GCHandle c = GCHandle.FromIntPtr (context);
 			var comparer = c.Target as Comparison<CTFontDescriptor>;
-			if (comparer == null)
-				return 0;
-			return comparer (new CTFontDescriptor (first, false), new CTFontDescriptor (second, false));
+			if (comparer is null)
+				return default (CFIndex);
+			var rv = comparer (new CTFontDescriptor (first, false), new CTFontDescriptor (second, false));
+			return (CFIndex) rv;
 		}
 
-		public CTFontDescriptor[] GetMatchingFontDescriptors (Comparison<CTFontDescriptor> comparer)
+		public CTFontDescriptor? []? GetMatchingFontDescriptors (Comparison<CTFontDescriptor> comparer)
 		{
 			GCHandle comparison = GCHandle.Alloc (comparer);
 			try {
-				var cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
-						handle, 
+				IntPtr cfArrayRef;
+#if NET
+				unsafe {
+					cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
+						Handle,
+						&CompareDescriptors,
+						GCHandle.ToIntPtr (comparison));
+				}
+#else
+				cfArrayRef = CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback (
+						Handle,
 						new CTFontCollectionSortDescriptorsCallback (CompareDescriptors),
 						GCHandle.ToIntPtr (comparison));
+#endif
 				if (cfArrayRef == IntPtr.Zero)
-					return new CTFontDescriptor [0];
-				var matches = NSArray.ArrayFromHandle (cfArrayRef,
-						fd => new CTFontDescriptor (fd, false));
-				CFObject.CFRelease (cfArrayRef);
-				return matches;
-			}
-			finally {
+					return Array.Empty<CTFontDescriptor> ();
+				return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
+			} finally {
 				comparison.Free ();
 			}
 		}
-#endregion
+		#endregion
 	}
 }
-

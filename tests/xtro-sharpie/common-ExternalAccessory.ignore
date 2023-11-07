@@ -1,0 +1,2 @@
+## This is documented to be a designated initializer https://developer.apple.com/documentation/externalaccessory/eawifiunconfiguredaccessorybrowser/1613881-initwithdelegate
+## but the headers are not decorated

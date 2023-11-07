@@ -1,0 +1,41 @@
+#r "_provisionator/provisionator.dll"
+
+using System.IO;
+using System.Reflection;
+using System.Linq;
+
+using static Xamarin.Provisioning.ProvisioningScript;
+
+// provisionator knows how to deal with this items
+if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
+	Item ("@MONO_PACKAGE@");
+	if (!string.IsNullOrEmpty ("@INCLUDE_MAC@"))
+		Item ("@XM_PACKAGE@");
+}
+
+BrewPackages ("p7zip");
+
+var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Preferences", "Xamarin", "Settings.plist");
+Item ("Override Apple SDK Settings")
+	.Condition (item => !File.Exists (appleSdkOverride) || GetSettingValue (appleSdkOverride, "AppleSdkRoot") != GetSelectedXcodePath ())
+	.Action (item => {
+		DeleteSafe (appleSdkOverride);
+		CreateSetting (appleSdkOverride, "AppleSdkRoot", GetSelectedXcodePath ());
+		Console.WriteLine ($"New VSMac iOS SDK Location: {GetSelectedXcodePath ()}");
+	});
+
+void DeleteSafe (string file)
+{
+	if (File.Exists (file))
+		File.Delete (file);
+}
+
+void CreateSetting (string settingFile, string key, string value)
+{
+	Exec ("defaults", "write", settingFile, key, value);
+}
+
+string GetSettingValue (string settingFile, string keyName)
+{
+	return Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
+}

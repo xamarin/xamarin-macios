@@ -5,16 +5,8 @@ using System.Reflection;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 	[Preserve (AllMembers = true)]
@@ -27,10 +19,13 @@ namespace Introspection {
 		protected virtual bool Skip (Type type)
 		{
 			switch (type.Name) {
-				case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
+			case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
+				return true;
+			// Xcode 14, this properties have been added as a compat layer
+			case "GKPeerPickerController":
 				return true;
 			}
-			return false;
+			return SkipDueToRejectedTypes (type);
 		}
 
 		/// <summary>
@@ -46,6 +41,9 @@ namespace Introspection {
 			// this is a weakly typed API (not a weak reference) with a [NotImplemented] so there's no [Export]
 			case "WeakSignificantEvent":
 				return property.DeclaringType.Name == "HMSignificantTimeEvent";
+			case "WeakMeasurementUnits":
+				// this is a weakly typed API (not a weak reference), so there's no [Export]
+				return property.DeclaringType.Name == "NSRulerView";
 			}
 			return false;
 		}
@@ -98,7 +96,7 @@ namespace Introspection {
 		{
 			error = null;
 			var export = meth.GetCustomAttribute<ExportAttribute> ();
-			if (export == null) {
+			if (export is null) {
 				error = String.Format ("{0}.{1} has no [Export]", meth.DeclaringType.FullName, meth.Name);
 				return true;
 			}

@@ -9,7 +9,6 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -17,19 +16,14 @@ using AppKit;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UuidTest {
-		
+
 		[Test]
 		public void Constructors ()
 		{
@@ -49,22 +43,22 @@ namespace MonoTouchFixtures.Foundation {
 		public void ConstructorFailures ()
 		{
 			TestRuntime.AssertXcodeVersion (4, 5);
-			
+
 			try {
-				var uuid = new NSUuid ((byte[]) null);
+				var uuid = new NSUuid ((byte []) null);
 				Assert.Fail ("Should have t;hrown an exception");
 			} catch (ArgumentNullException) {
 				// good
-			} catch (Exception e){
+			} catch (Exception e) {
 				Assert.Fail ("Unexpected exception {0}", e);
 			}
-			
+
 			try {
 				var uuid = new NSUuid (new byte [] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
 				Assert.Fail ("Should have thrown an ArgumentException");
-			} catch (ArgumentException){
+			} catch (ArgumentException) {
 				// ok
-			} catch (Exception e){
+			} catch (Exception e) {
 				Assert.Fail ("Expected an ArgumentException {0}", e);
 			}
 		}

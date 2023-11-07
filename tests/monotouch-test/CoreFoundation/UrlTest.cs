@@ -8,34 +8,30 @@
 //
 
 using System;
-#if XAMCORE_2_0
+using System.IO;
+
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CFUrlTest {
-		
+
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromFile_Null ()
 		{
-			CFUrl.FromFile (null);
+			Assert.Throws<ArgumentNullException> (() => CFUrl.FromFile (null));
 		}
 
 		[Test]
 		public void RetainCountFromFile ()
 		{
-			var path = typeof (int).Assembly.Location;
+			var path = Path.Combine (Path.GetTempPath (), "placeholder.txt"); // the file doesn't have to exist, so just create any filename.
 
 			using (var url = CFUrl.FromFile (path)) {
 				Assert.That (TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
@@ -43,17 +39,16 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromUrlString_Null ()
 		{
-			CFUrl.FromUrlString (null, CFUrl.FromFile ("/"));
+			Assert.Throws<ArgumentNullException> (() => CFUrl.FromUrlString (null, CFUrl.FromFile ("/")));
 		}
 
 		[Test]
 		public void RetainCountFromUrl ()
 		{
 			using (var url = CFUrl.FromUrlString ("http://xamarin.com", null)) {
-				Assert.That(TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (url.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 
@@ -63,12 +58,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (CFUrl url = CFUrl.FromFile ("/")) {
 				string value = "file://localhost/";
 #if __IOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0))
 					value = "file:///";
 #elif __WATCHOS__ || __TVOS__
 				value = "file:///";
 #elif __MACOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 					value = "file:///";
 #endif
 

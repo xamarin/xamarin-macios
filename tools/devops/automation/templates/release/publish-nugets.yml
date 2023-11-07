@@ -1,0 +1,61 @@
+# all steps that are required to publish the nugets, the template takes the parameters to decide in which feed should the nugets
+# be published
+parameters:
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+# based on the build, decide if we are used a feed or the other and export it
+- bash: |
+    set -x
+    set -e
+    make
+    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=$VAR_NAME)
+    var=${var#*=}
+    echo "##vso[task.setvariable variable=nuget-feed;issecret=true]$var"
+  displayName: 'Retrieve nuget feed'
+  name: ConfigureNuget
+  env:
+    ${{ if not(contains(variables['Build.DefinitionName'], 'private')) }}:
+      VAR_NAME: 'NUGET_PUBLIC_FEED'
+    ${{ else }}:
+      VAR_NAME: 'NUGET_PRIVATE_FEED'
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+    sudo rm -Rf $(Build.SourcesDirectory)/vsi-msi-nugets
+  displayName: "Remove artifacts"
+  condition: always()
+
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifactName: '${{ parameters.uploadPrefix }}nuget-signed'
+    downloadPath: $(Build.SourcesDirectory)/package
+    patterns: |
+      *.nupkg
+
+- task: NuGetCommand@2
+  displayName: Publish Nugets to dotnet6
+  inputs:
+    command: push
+    packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+    nuGetFeedType: external
+    publishFeedCredentials: variables['nuget-feed']
+
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifactName: '${{ parameters.uploadPrefix }}vs-msi-nugets'
+    downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
+    patterns: |
+      *.nupkg
+
+- task: NuGetCommand@2
+  displayName: Publish Nugets to dotnet6
+  inputs:
+    command: push
+    packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+    nuGetFeedType: external
+    publishFeedCredentials: variables['nuget-feed']

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
+    <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyTVServicesExtension\MyTVServicesExtension.dotnet.csproj">
+      <IsAppExtension>true</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
+  </ItemGroup>
+</Project>

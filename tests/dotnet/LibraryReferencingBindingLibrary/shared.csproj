@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+		<ProjectReference Include="../../BindingWithDefaultCompileInclude/$(_PlatformName)/BindingWithDefaultCompileInclude.csproj" />
+		<ProjectReference Include="../../BindingWithUncompressedResourceBundle/$(_PlatformName)/BindingWithUncompressedResourceBundle.csproj" />
+		<ProjectReference Include="../../../bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
+	</ItemGroup>
+</Project>

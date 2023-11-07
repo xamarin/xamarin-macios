@@ -1,18 +1,17 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
 using System.Drawing;
 
-namespace bug42742
-{
+namespace bug42742 {
 	interface IFooProtocol { }
 
 	[Advice ("FooProtocol")]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
 	interface FooProtocol {
-		
+
 		[Advice ("doSomething:atIndex:")]
 		[Export ("doSomething:atIndex:")]
 		void DoSomething (NSObject @object, int index);
@@ -32,11 +31,11 @@ namespace bug42742
 		NSObject Center2 { get; set; }
 	}
 
-	
+
 	[BaseType (typeof (NSObject))]
 	[Advice ("Widget")]
 	interface Widget {
-		
+
 		[Advice ("initWithElmo:")]
 		[Export ("initWithElmo:")]
 		IntPtr Constructor (uint elmo);
@@ -49,7 +48,7 @@ namespace bug42742
 		[Export ("center")]
 		NSObject Center { get; set; }
 
-		[Export("noCenter")]
+		[Export ("noCenter")]
 		PointF NoCenter { [Advice ("noCenterGet")] get; [Advice ("noCenterSet")] set; }
 
 		[Advice ("FooField")]
@@ -68,4 +67,3 @@ namespace bug42742
 		IFooProtocol Delegate { get; set; }
 	}
 }
-

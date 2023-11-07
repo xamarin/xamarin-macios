@@ -33,24 +33,27 @@ using System.Runtime.InteropServices;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	// untyped enum -> CALayer.h
 	// note: edgeAntialiasingMask is an `unsigned int` @property
 	[Flags]
 	public enum CAEdgeAntialiasingMask : uint {
-		LeftEdge      = 1 << 0,
-		RightEdge     = 1 << 1,
-		BottomEdge    = 1 << 2,
-		TopEdge       = 1 << 3,
+		LeftEdge = 1 << 0,
+		RightEdge = 1 << 1,
+		BottomEdge = 1 << 2,
+		TopEdge = 1 << 3,
 		All = LeftEdge | RightEdge | BottomEdge | TopEdge,
 		LeftRightEdges = LeftEdge | RightEdge,
 		TopBottomEdges = TopEdge | BottomEdge
 	}
 
 	[NoWatch] // headers not updated
-	[iOS (11,0)][TV (11,0)][Mac (10,13)]
-	[Native][Flags]
+	[MacCatalyst (13, 1)]
+	[Native]
+	[Flags]
 	public enum CACornerMask : ulong {
 		MinXMinYCorner = 1 << 0,
 		MaxXMinYCorner = 1 << 1,
@@ -58,21 +61,28 @@ namespace CoreAnimation {
 		MaxXMaxYCorner = 1 << 3,
 	}
 
-#if MONOMAC
 	// untyped enum -> CALayer.h (only on OSX headers)
 	// note: autoresizingMask is an `unsigned int` @property
 	[Flags]
+	[NoiOS]
+	[NoTV]
+	[NoWatch]
+	[MacCatalyst (13, 1)]
 	public enum CAAutoresizingMask : uint {
-		NotSizable   = 0,
-		MinXMargin   = 1 << 0,
+		NotSizable = 0,
+		MinXMargin = 1 << 0,
 		WidthSizable = 1 << 1,
-		MaxXMargin   = 1 << 2,
-		MinYMargin   = 1 << 3,
+		MaxXMargin = 1 << 2,
+		MinYMargin = 1 << 3,
 		HeightSizable = 1 << 4,
-		MaxYMargin   = 1 << 5
+		MaxYMargin = 1 << 5
 	}
 
 	// typedef int -> CAConstraintLayoutManager.h
+	[NoiOS]
+	[NoTV]
+	[NoWatch]
+	[MacCatalyst (13, 1)]
 	public enum CAConstraintAttribute {
 		MinX,
 		MidX,
@@ -83,5 +93,4 @@ namespace CoreAnimation {
 		MaxY,
 		Height,
 	};
-#endif
 }

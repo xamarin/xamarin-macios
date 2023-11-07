@@ -34,7 +34,7 @@ public class ListSourceFiles {
 		}
 	}
 
-	public static string FixPathEnding(string path)
+	public static string FixPathEnding (string path)
 	{
 		if (!path.EndsWith (Path.DirectorySeparatorChar.ToString (), StringComparison.Ordinal))
 			return path + Path.DirectorySeparatorChar;
@@ -42,7 +42,7 @@ public class ListSourceFiles {
 	}
 
 	// returns a tuple with the pdb files as the first value and the mdb files as the second
-	public static Tuple <HashSet<String>, HashSet<String>> GetSplittedPaths (List<string> paths)
+	public static Tuple<HashSet<String>, HashSet<String>> GetSplittedPaths (List<string> paths)
 	{
 		var splittedPaths = new Tuple<HashSet<String>, HashSet<String>> (new HashSet<string> (), new HashSet<string> ());
 		foreach (var p in paths) {
@@ -65,11 +65,11 @@ public class ListSourceFiles {
 		MonoSymbolFile symfile;
 
 		try {
-			symfile = MonoSymbolFile.ReadSymbolFile(mdb_file);
+			symfile = MonoSymbolFile.ReadSymbolFile (mdb_file);
 			srcs.UnionWith (from src in symfile.Sources select src.FileName);
 
 		} catch (IOException ioe) {
-			Console.WriteLine("IO error while reading msb file '{0}': {1}", mdb_file, ioe.Message);
+			Console.WriteLine ("IO error while reading msb file '{0}': {1}", mdb_file, ioe.Message);
 		}
 
 		return srcs;
@@ -101,7 +101,7 @@ public class ListSourceFiles {
 		foreach (var type in mainModule.Types) {
 			foreach (var method in type.Methods) {
 				if (method.DebugInformation.SequencePoints.Any ()) {
-					var sequence_point = method.DebugInformation.SequencePoints[0];
+					var sequence_point = method.DebugInformation.SequencePoints [0];
 					var document = sequence_point.Document;
 					result.Add (document.Url);
 				}
@@ -110,7 +110,7 @@ public class ListSourceFiles {
 		return result;
 	}
 
-	public static int Main (string[] arguments)
+	public static int Main (string [] arguments)
 	{
 		bool link = false;
 		string monopath = null;
@@ -149,7 +149,7 @@ public class ListSourceFiles {
 			OpenTKSourcePath = opentkpath,
 		};
 
- 		// add the paths from the pdb files
+		// add the paths from the pdb files
 		foreach (string pdbFile in files.Item1) {
 			if (!File.Exists (pdbFile)) {
 				Console.WriteLine ("File does not exist: {0}", pdbFile);
@@ -157,13 +157,13 @@ public class ListSourceFiles {
 			}
 
 			try {
-				var assemblySrcs = GetFilePathsFromPdb(pdbFile);
+				var assemblySrcs = GetFilePathsFromPdb (pdbFile);
 				if (verbose) {
-					Console.WriteLine("Pdb file sources are:");
+					Console.WriteLine ("Pdb file sources are:");
 					foreach (var p in srcs)
-						Console.WriteLine($"\t{p}");
+						Console.WriteLine ($"\t{p}");
 				}
-				srcs.UnionWith(assemblySrcs);
+				srcs.UnionWith (assemblySrcs);
 			} catch (Exception) {
 				Console.WriteLine ("Error processing: {0}", pdbFile);
 				throw;
@@ -179,9 +179,9 @@ public class ListSourceFiles {
 			try {
 				var assemblySrcs = GetFilePathsFromMdb (mdbFile);
 				if (verbose) {
-					Console.WriteLine("Mdb file sources are:");
+					Console.WriteLine ("Mdb file sources are:");
 					foreach (var p in srcs)
-						Console.WriteLine($"\t{p}");
+						Console.WriteLine ($"\t{p}");
 				}
 				srcs.UnionWith (assemblySrcs);
 			} catch (Exception) {
@@ -200,7 +200,7 @@ public class ListSourceFiles {
 		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {
 			var mangler = manglerFactory.GetMangler (src);
-			if (mangler == null) { // we are ignoring this file
+			if (mangler is null) { // we are ignoring this file
 				if (verbose)
 					Console.WriteLine ($"Ignoring path {src}");
 				continue;
@@ -209,7 +209,7 @@ public class ListSourceFiles {
 				Console.WriteLine ($"Original source is {src}");
 			var fixedSource = mangler.GetSourcePath (src);
 
-			if (String.IsNullOrEmpty (fixedSource)) { 
+			if (String.IsNullOrEmpty (fixedSource)) {
 				Console.WriteLine ($"Skip path {src}");
 				continue;
 			}
@@ -227,7 +227,7 @@ public class ListSourceFiles {
 					Console.WriteLine ($"Got empty dir for {target}");
 				continue;
 			}
-			
+
 			if (verbose)
 				Console.WriteLine ($"Target direcotry is {targetDir}");
 
@@ -235,16 +235,16 @@ public class ListSourceFiles {
 				try {
 					if (verbose)
 						Console.WriteLine ($"Creating dir {targetDir}");
-					Directory.CreateDirectory(targetDir);
+					Directory.CreateDirectory (targetDir);
 				} catch (PathTooLongException e) {
-					Console.WriteLine("Could not create directory {0} because the path is too long: {1}", targetDir, e);
+					Console.WriteLine ("Could not create directory {0} because the path is too long: {1}", targetDir, e);
 					return 1;
 				}
 			} else if (File.Exists (target)) {
 				try {
-					File.Delete(target);
+					File.Delete (target);
 				} catch (PathTooLongException e) {
-					Console.WriteLine("Could not delete file {0} because the path is too long: {1}", target, e);
+					Console.WriteLine ("Could not delete file {0} because the path is too long: {1}", target, e);
 					return 1;
 				}
 			} // else 
@@ -255,15 +255,15 @@ public class ListSourceFiles {
 				try {
 					if (!alreadyLinked.Contains (fixedSource)) {
 						new UnixFileInfo (fixedSource).CreateSymbolicLink (target);
-						alreadyLinked.Add(fixedSource);
+						alreadyLinked.Add (fixedSource);
 					} else {
 						Console.WriteLine ("Src {0} was already linked.", src);
 					}
 				} catch (PathTooLongException e) {
-					Console.WriteLine("Could not link {0} to {1} because the path is too long: {2}", fixedSource, target, e);
+					Console.WriteLine ("Could not link {0} to {1} because the path is too long: {2}", fixedSource, target, e);
 					return 1;
 				} catch (UnixIOException e) {
-					Console.WriteLine("Could not link {0} to {1}: {2}", src, target, e);
+					Console.WriteLine ("Could not link {0} to {1}: {2}", src, target, e);
 					return 1;
 				} // try/catch
 			} else {

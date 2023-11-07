@@ -27,185 +27,245 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPDFDictionary.h
-	public class CGPDFDictionary : INativeObject {
-		internal IntPtr handle;
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		/* invoked by marshallers */
+	public class CGPDFDictionary : CGPDFObject {
+		// The lifetime management of CGPDFObject (and CGPDFArray, CGPDFDictionary and CGPDFStream) are tied to
+		// the containing CGPDFDocument, and not possible to handle independently, which is why this class
+		// does not subclass NativeObject (there's no way to retain/release CGPDFObject instances). It's
+		// also why this constructor doesn't have a 'bool owns' parameter: it's always owned by the containing CGPDFDocument.
+#if NET
+		internal CGPDFDictionary (NativeHandle handle)
+#else
 		public CGPDFDictionary (IntPtr handle)
+#endif
+			: base (handle)
 		{
-			this.handle = handle;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* size_t */ nint CGPDFDictionaryGetCount (/* CGPDFDictionaryRef */ IntPtr dict);
-		
+
 		public int Count {
 			get {
-				return (int) CGPDFDictionaryGetCount (handle);
+				return (int) CGPDFDictionaryGetCount (Handle);
 			}
 		}
 
 		// CGPDFBoolean -> unsigned char -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetBoolean (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFBoolean* */ out bool value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetBoolean (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFBoolean* */ [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public bool GetBoolean (string key, out bool result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			return CGPDFDictionaryGetBoolean (handle, key, out result);
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+			using var keyPtr = new TransientString (key);
+			return CGPDFDictionaryGetBoolean (Handle, keyPtr, out result);
 		}
 
 		// CGPDFInteger -> long int so 32/64 bits -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetInteger (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFInteger* */ out nint value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetInteger (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFInteger* */ out nint value);
 
 		public bool GetInt (string key, out nint result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			return CGPDFDictionaryGetInteger (handle, key, out result);
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+			using var keyPtr = new TransientString (key);
+			return CGPDFDictionaryGetInteger (Handle, keyPtr, out result);
 		}
 
 		// CGPDFReal -> CGFloat -> CGPDFObject.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetNumber (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFReal* */ out nfloat value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetNumber (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFReal* */ out nfloat value);
 
 		public bool GetFloat (string key, out nfloat result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			return CGPDFDictionaryGetNumber (handle, key, out result);
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			using var keyPtr = new TransientString (key);
+			return CGPDFDictionaryGetNumber (Handle, keyPtr, out result);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetName (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* const char ** */ out IntPtr value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetName (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* const char ** */ out IntPtr value);
 
-		public bool GetName (string key, out string result)
+		public bool GetName (string key, out string? result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			IntPtr res;
-			var r = CGPDFDictionaryGetName (handle, key, out res);
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+			using var keyPtr = new TransientString (key);
+			var r = CGPDFDictionaryGetName (Handle, keyPtr, out var res);
 			result = r ? Marshal.PtrToStringAnsi (res) : null;
 			return r;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetDictionary (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFDictionaryRef* */ out IntPtr result);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetDictionary (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFDictionaryRef* */ out IntPtr result);
 
-		public bool GetDictionary (string key, out CGPDFDictionary result)
+		public bool GetDictionary (string key, out CGPDFDictionary? result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			IntPtr res;
-			var r = CGPDFDictionaryGetDictionary (handle, key, out res);
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			using var keyPtr = new TransientString (key);
+			var r = CGPDFDictionaryGetDictionary (Handle, keyPtr, out var res);
 			result = r ? new CGPDFDictionary (res) : null;
 			return r;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetStream (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFStreamRef* */ out IntPtr value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetStream (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFStreamRef* */ out IntPtr value);
 
-		public bool GetStream (string key, out CGPDFStream result)
+		public bool GetStream (string key, out CGPDFStream? result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			IntPtr ptr;
-			var r = CGPDFDictionaryGetStream (handle, key, out ptr); 
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			using var keyPtr = new TransientString (key);
+			var r = CGPDFDictionaryGetStream (Handle, keyPtr, out var ptr);
 			result = r ? new CGPDFStream (ptr) : null;
 			return r;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetArray (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFArrayRef* */ out IntPtr value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetArray (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFArrayRef* */ out IntPtr value);
 
-		public bool GetArray (string key, out CGPDFArray array)
+		public bool GetArray (string key, out CGPDFArray? array)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
-			IntPtr ptr;
-			var r = CGPDFDictionaryGetArray (handle, key, out ptr);
+			using var keyPtr = new TransientString (key);
+			var r = CGPDFDictionaryGetArray (Handle, keyPtr, out var ptr);
 			array = r ? new CGPDFArray (ptr) : null;
 			return r;
 		}
 
+#if NET
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		unsafe extern static void CGPDFDictionaryApplyFunction (/* CGPDFDictionaryRef */ IntPtr dic, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> function, /* void* */ IntPtr info);
+#else
 		// CGPDFDictionaryApplierFunction
-		delegate void ApplierFunction (/* const char* */ string key, /* CGPDFObjectRef */ IntPtr value, /* void* */ IntPtr info);
-		
+		delegate void ApplierFunction (/* const char* */ IntPtr key, /* CGPDFObjectRef */ IntPtr value, /* void* */ IntPtr info);
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFDictionaryApplyFunction (/* CGPDFDictionaryRef */ IntPtr dic, ApplierFunction function, /* void* */ IntPtr info);
 
 		static readonly ApplierFunction applyblock_handler = ApplyBridge;
+#endif // NET
 
-		public delegate void ApplyCallback (string key, object value, object info);
+		public delegate void ApplyCallback (string? key, object? value, object? info);
+
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplierFunction))]
 #endif
-		static void ApplyBridge (string key, IntPtr pdfObject, IntPtr info)
+#endif // NET
+		static void ApplyBridge (IntPtr key, IntPtr pdfObject, IntPtr info)
 		{
-			var data = (Tuple<ApplyCallback, object>) GCHandle.FromIntPtr (info).Target;
-			var callback = data.Item1;
+			var data = GCHandle.FromIntPtr (info).Target as Tuple<ApplyCallback, object?>;
+			if (data is null)
+				return;
 
-			callback (key, CGPDFObject.FromHandle (pdfObject), data.Item2);
+			var callback = data.Item1;
+			if (callback is not null)
+				callback (Marshal.PtrToStringUTF8 (key), CGPDFObject.FromHandle (pdfObject), data.Item2);
 		}
 
-		public void Apply (ApplyCallback callback, object info = null)
+		public void Apply (ApplyCallback callback, object? info = null)
 		{
-			var data = new Tuple<ApplyCallback, object> (callback, info);
+			var data = new Tuple<ApplyCallback, object?> (callback, info);
 			var gch = GCHandle.Alloc (data);
 			try {
+#if NET
+				unsafe {
+					CGPDFDictionaryApplyFunction (Handle, &ApplyBridge, GCHandle.ToIntPtr (gch));
+				}
+#else
 				CGPDFDictionaryApplyFunction (Handle, applyblock_handler, GCHandle.ToIntPtr (gch));
+#endif
 			} finally {
 				gch.Free ();
 			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ApplierFunction))]
 #endif
-		static void ApplyBridge2 (string key, IntPtr pdfObject, IntPtr info)
+#endif // NET
+		static void ApplyBridge2 (IntPtr key, IntPtr pdfObject, IntPtr info)
 		{
-			var callback = (Action<string,CGPDFObject>) GCHandle.FromIntPtr (info).Target;
-
-			callback (key, new CGPDFObject (pdfObject));
+			var callback = GCHandle.FromIntPtr (info).Target as Action<string?, CGPDFObject>;
+			if (callback is not null)
+				callback (Marshal.PtrToStringUTF8 (key), new CGPDFObject (pdfObject));
 		}
 
-		public void Apply (Action<string,CGPDFObject> callback)
+		public void Apply (Action<string?, CGPDFObject> callback)
 		{
 			GCHandle gch = GCHandle.Alloc (callback);
+#if NET
+			unsafe {
+				CGPDFDictionaryApplyFunction (Handle, &ApplyBridge2, GCHandle.ToIntPtr (gch));
+			}
+#else
 			CGPDFDictionaryApplyFunction (Handle, ApplyBridge2, GCHandle.ToIntPtr (gch));
+#endif
 			gch.Free ();
 		}
 
 		// CGPDFDictionary.h
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDictionaryGetString (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ string key, /* CGPDFStringRef* */ out IntPtr value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDictionaryGetString (/* CGPDFDictionaryRef */ IntPtr dict, /* const char* */ IntPtr key, /* CGPDFStringRef* */ out IntPtr value);
 
-		public bool GetString (string key, out string result)
+		public bool GetString (string key, out string? result)
 		{
-			if (key == null)
-				throw new ArgumentNullException ("key");
-			IntPtr res;
-			var r = CGPDFDictionaryGetString (handle, key, out res);
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			using var keyPtr = new TransientString (key);
+			var r = CGPDFDictionaryGetString (Handle, keyPtr, out var res);
 			result = r ? CGPDFString.ToString (res) : null;
 			return r;
 		}

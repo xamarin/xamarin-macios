@@ -1,0 +1,12 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "levels" : [
+    {
+      "filename" : "universalPlusXjpeg.jpeg",
+      "mipmap-level" : "base"
+    }
+  ]
+}

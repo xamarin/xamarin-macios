@@ -1,0 +1,97 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
+
+// arguments are:
+//   --shorten long=short
+//   --platform <platform> <version>
+//   --windows-platform <platform>
+
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
+
+var shorten = new Dictionary<string, string> ();
+var platforms = new List<(string, string)> ();
+var windowsPlatforms = new List<string> ();
+var tfm = string.Empty;
+var outputPath = string.Empty;
+
+var args = new Queue<string> (Environment.GetCommandLineArgs ());
+
+// Skip first three arguments:
+string discard; // store the return value from Dequeue somewhere, otherwise it ends up being printed to stdout.
+discard = args.Dequeue (); // <executable>
+discard = args.Dequeue (); // -s
+discard = args.Dequeue (); // <script>
+GC.KeepAlive (discard); // avoid compiler warning
+
+while (args.Any ()) {
+	var arg = args.Dequeue ();
+	switch (arg) {
+	case "--shorten":
+		var values = args.Dequeue ().Split ('=');
+		shorten [values [0]] = values [1];
+		break;
+	case "--platform":
+		var platform = args.Dequeue ();
+		var version = args.Dequeue ();
+		platforms.Add ((platform, version));
+		break;
+	case "--windows-platform":
+		windowsPlatforms.Add (args.Dequeue ());
+		break;
+	case "--output":
+		outputPath = args.Dequeue ();
+		break;
+	case "--tfm":
+		tfm = args.Dequeue ();
+		break;
+	default:
+		Console.Error.WriteLine ($"Unknown argument: {arg}");
+		Environment.Exit (1);
+		break;
+	}
+}
+
+using (TextWriter writer = new StreamWriter (outputPath)) {
+	writer.WriteLine ($"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	writer.WriteLine ($"<Project>");
+	writer.WriteLine ($"  <PropertyGroup>");
+	var allPlatforms = string.Join (".", platforms.Select (v => v.Item1).OrderBy (v => v));
+	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload.{tfm}</TargetName>");
+	// Find the iOS version, otherwise use the version of the first platform listed.
+	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
+	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;
+	writer.WriteLine ($"    <ManifestBuildVersion>{manifestBuildVersion}</ManifestBuildVersion>");
+	writer.WriteLine ($"    <EnableSideBySideManifests>true</EnableSideBySideManifests>");
+	writer.WriteLine ($"  </PropertyGroup>");
+	writer.WriteLine ($"  <ItemGroup>");
+	writer.WriteLine ($"    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->");
+	foreach (var entry in shorten) {
+		var longName = entry.Key;
+		var shortName = entry.Value;
+		writer.WriteLine ($"    <ShortNames Include=\"{longName}\">");
+		writer.WriteLine ($"      <Replacement>{shortName}</Replacement>");
+		writer.WriteLine ($"    </ShortNames>");
+	}
+	foreach (var entry in platforms) {
+		var platform = entry.Item1;
+		var version = entry.Item2;
+		var longPlatform = platform;
+		var description = $".NET SDK Workload for building {platform} applications.";
+		if (platform == "MacCatalyst") {
+			longPlatform = "Mac Catalyst";
+			description = ".NET SDK Workload for building macOS applications with Mac Catalyst.";
+		}
+		writer.WriteLine ($"    <ComponentResources Include=\"{platform.ToLower ()}\" Version=\"{version}\" Category=\".NET\" Title=\".NET SDK for {longPlatform}\" Description=\"{description}\"/>");
+	}
+	foreach (var entry in platforms) {
+		var platform = entry.Item1;
+		var version = entry.Item2;
+		writer.WriteLine ($"    <WorkloadPackages Include=\"$(NuGetPackagePath)\\Microsoft.NET.Sdk.{platform}.Manifest*.nupkg\" Version=\"{version}\" SupportsMachineArch=\"true\" />");
+	}
+	writer.WriteLine ("  </ItemGroup>");
+	writer.WriteLine ("</Project>");
+}
+
+Environment.Exit (0);

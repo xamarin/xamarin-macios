@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CFNotificationCenter
 //
 // Authors:
@@ -8,28 +8,16 @@
 //
 
 using System;
-using System.Net;
+using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-#if MONOMAC
-using MonoMac.CoreFoundation;
-using MonoMac.Foundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
-#endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreFoundation
-{
+namespace MonoTouchFixtures.CoreFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CFNotificationCenterTest
-	{
+	public class CFNotificationCenterTest {
 		[Test]
 		public void TestObservers ()
 		{
@@ -38,19 +26,19 @@ namespace MonoTouchFixtures.CoreFoundation
 			int count = 0;
 			int count2 = 0;
 			CFNotificationObserverToken o2 = null;
-			var o1 = d.AddObserver ("hello", target, (x,dd)=>{
-				count++;	
-//				Console.WriteLine ("Here");
+			var o1 = d.AddObserver ("hello", target, (x, dd) => {
+				count++;
+				//				Console.WriteLine ("Here");
 
 				if (count == 1)
-					o2 = d.AddObserver ("hello", target, (y,ee)=> {
-//						Console.WriteLine ("There");
+					o2 = d.AddObserver ("hello", target, (y, ee) => {
+						//						Console.WriteLine ("There");
 						count2++;
 					});
 			});
-			d.PostNotification ("hello", target, null, deliverImmediately:true);
+			d.PostNotification ("hello", target, null, deliverImmediately: true);
 			Assert.AreEqual (1, count);
-			d.PostNotification ("hello", target, null, deliverImmediately:true);
+			d.PostNotification ("hello", target, null, deliverImmediately: true);
 			Assert.AreEqual (2, count);
 			Assert.AreEqual (1, count2);
 
@@ -68,18 +56,18 @@ namespace MonoTouchFixtures.CoreFoundation
 
 			// Test removing all observers
 			count = 0;
-			o1 = d.AddObserver ("hello", target, (x,dd)=>{
-				count++;	
+			o1 = d.AddObserver ("hello", target, (x, dd) => {
+				count++;
 				Console.WriteLine ("Here");
 			});
-			o2 = d.AddObserver ("hello", target, (y,ee)=> {count++;});
+			o2 = d.AddObserver ("hello", target, (y, ee) => { count++; });
 			d.RemoveEveryObserver ();
 			d.PostNotification ("hello", target, null);
 			Assert.AreEqual (0, count);
 
 			// Test removing from a callback
 			count = 0;
-			o2 = d.AddObserver ("hello", target, (y,ee)=> {count++; d.RemoveObserver (o2); });
+			o2 = d.AddObserver ("hello", target, (y, ee) => { count++; d.RemoveObserver (o2); });
 			d.PostNotification ("hello", target, null);
 			Assert.AreEqual (1, count);
 			d.PostNotification ("hello", target, null);
@@ -90,16 +78,19 @@ namespace MonoTouchFixtures.CoreFoundation
 		public void TestNullNameAndObserver ()
 		{
 			var d = CFNotificationCenter.Local;
-			bool mornNotification = false;
+			var mornNotification = new ManualResetEvent (false);
 
-			var token = d.AddObserver (null, null, (n, i) => mornNotification = n == "MornNotification");
+			var token = d.AddObserver (null, null, (n, i) => {
+				if (n == "MornNotification")
+					mornNotification.Set ();
+			});
 
 			// When not listening for a specific name nor observing an specific object
 			// we will get all notifications posted to NSNotificationCenter/Local CFNotificationCenter
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("MornNotification", null);
 
 			d.RemoveObserver (token);
-			Assert.IsTrue (mornNotification);
+			Assert.IsTrue (mornNotification.WaitOne (TimeSpan.FromSeconds (10)), "Didn't get a notification after waiting 10 seconds.");
 		}
 
 		[Test]
@@ -146,7 +137,7 @@ namespace MonoTouchFixtures.CoreFoundation
 
 			// Test removing from a callback
 			count = 0;
-			o2 = d.AddObserver (null , null, (y, ee) => { count++; d.RemoveObserver (o2); });
+			o2 = d.AddObserver (null, null, (y, ee) => { count++; d.RemoveObserver (o2); });
 			d.PostNotification ("hello", null, null);
 			Assert.AreEqual (1, count);
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("hello", null);
@@ -154,4 +145,3 @@ namespace MonoTouchFixtures.CoreFoundation
 		}
 	}
 }
-

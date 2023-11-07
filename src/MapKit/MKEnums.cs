@@ -7,7 +7,7 @@
 // Copyright 2009 Novell, Inc.
 // Copyright 2014-2016 Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -15,23 +15,24 @@ using CoreLocation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 	// NSUInteger -> MKDirectionsTypes.h
 	[NoWatch]
 	[Native]
-	[TV (9,2)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	public enum MKDirectionsTransportType : ulong {
 		Automobile = 1 << 0,
-		Walking    = 1 << 1,
-		Transit    = 1 << 2, 
-		Any        = 0x0FFFFFFF,
+		Walking = 1 << 1,
+		Transit = 1 << 2,
+		Any = 0x0FFFFFFF,
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9,2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKMapType : ulong {
 		Standard = 0,
@@ -39,14 +40,13 @@ namespace MapKit {
 		Hybrid,
 		SatelliteFlyover,
 		HybridFlyover,
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
+		[MacCatalyst (13, 1)]
 		MutedStandard,
 	}
 
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
-	[TV (9,2)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	public enum MKDistanceFormatterUnits : ulong {
 		Default,
 		Metric,
@@ -56,8 +56,7 @@ namespace MapKit {
 
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
-	[TV (9,2)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	public enum MKDistanceFormatterUnitStyle : ulong {
 		Default = 0,
 		Abbreviated,
@@ -65,18 +64,17 @@ namespace MapKit {
 	}
 
 	// NSInteger -> MKMapView.h
-	[TV (9,2)]
-	[NoWatch]
+	[Watch (10, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	[iOS (7,0)]
 	public enum MKOverlayLevel : long {
 		AboveRoads = 0,
 		AboveLabels,
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9,2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("MKErrorDomain")]
 	public enum MKErrorCode : ulong {
@@ -85,58 +83,81 @@ namespace MapKit {
 		LoadingThrottled,
 		PlacemarkNotFound,
 		DirectionsNotFound,
+		DecodingFailed,
+	}
+
+	// NSUInteger -> MKTypes.h
+	[NoTV]
+	[NoWatch]
+	[MacCatalyst (13, 1)]
+	[Native]
+	public enum MKAnnotationViewDragState : ulong {
+		None, Starting, Dragging, Canceling, Ending
 	}
 
 	// NSUInteger -> MKTypes.h
 	[NoTV]
 	[NoWatch]
 	[Native]
-	public enum MKAnnotationViewDragState : ulong {
-		None, Starting, Dragging, Canceling, Ending
-	}
-	
-	// NSUInteger -> MKTypes.h
-	[NoTV]
-	[NoWatch]
-	[Native]
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'MKPinAnnotationView.PinTintColor' instead.")]
 	public enum MKPinAnnotationColor : ulong {
 		Red, Green, Purple
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9,2)]
 	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKUserTrackingMode : ulong {
-		None, Follow, FollowWithHeading
+		None,
+		Follow,
+#if !XAMCORE_5_0 && !(IOS || MACCATALYST)
+		[Obsolete ("This is only available on iOS and MacCatalyst.")]
+		FollowWithHeading,
+#elif IOS || MACCATALYST
+		FollowWithHeading,
+#endif
 	}
 
-	[TV (9,2)][NoWatch][iOS (9,3)]
+	[NoWatch]
 	[Native]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
+	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	public enum MKSearchCompletionFilterType : long {
 		AndQueries = 0,
 		Only
 	}
 
-	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
+	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKAnnotationViewCollisionMode : long {
 		Rectangle,
 		Circle,
+		[TV (14, 0)]
+		[iOS (14, 0)]
+		[Mac (11, 0)]
+		[MacCatalyst (14, 0)]
+		None,
 	}
 
-	[TV (11,0)][NoWatch][iOS (11,0)][NoMac]
+	[NoWatch]
+	[NoMac]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKScaleViewAlignment : long {
 		Leading,
 		Trailing,
 	}
 
-	[TV (11,0)][NoWatch][iOS (11,0)][Mac (10,13)]
+	[NoWatch]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKFeatureVisibility : long {
 		Adaptive,
@@ -145,26 +166,73 @@ namespace MapKit {
 	}
 
 	[Flags]
-	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	public enum MKLocalSearchCompleterResultType : ulong
-	{
+	public enum MKLocalSearchCompleterResultType : ulong {
 		Address = 1 << 0,
 		PointOfInterest = 1 << 1,
 		Query = 1 << 2,
 	}
 
 	[Flags]
-	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
-	public enum MKLocalSearchResultType : ulong
-	{
+	public enum MKLocalSearchResultType : ulong {
 		Address = 1 << 0,
 		PointOfInterest = 1 << 1,
 	}
 
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
+	[Native]
+	public enum MKDirectionsRoutePreference : long {
+		Any = 0,
+		Avoid,
+	}
+
+	[Flags]
+	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[Native]
+	public enum MKMapFeatureOptions : long {
+		PointsOfInterest = 1 << (int) MKMapFeatureType.PointOfInterest,
+		Territories = 1 << (int) MKMapFeatureType.Territory,
+		PhysicalFeatures = 1 << (int) MKMapFeatureType.PhysicalFeature,
+	}
+
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[Native]
+	public enum MKLookAroundBadgePosition : long {
+		TopLeading = 0,
+		TopTrailing,
+		BottomTrailing,
+	}
+
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
+	[Native]
+	public enum MKMapElevationStyle : long {
+		Flat = 0,
+		Realistic,
+	}
+
+	[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+	[Native]
+	public enum MKMapFeatureType : long {
+		PointOfInterest = 0,
+		Territory,
+		PhysicalFeature,
+	}
+
+	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
+	[Native]
+	public enum MKStandardMapEmphasisStyle : long {
+		Default = 0,
+		Muted,
+	}
+
 #if !WATCH
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum MKPointOfInterestCategory {
 
 		[Field ("MKPointOfInterestCategoryAirport")]
@@ -290,5 +358,3 @@ namespace MapKit {
 
 #endif
 }
-
-#endif

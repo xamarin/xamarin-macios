@@ -1,0 +1,54 @@
+## there's a type of the same name (like NSObject, check what Swift did)
+!missing-protocol! AVVideoCompositionInstruction not bound
+
+## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
+!missing-selector! AVMutableComposition::tracks not bound
+
+## type and protocol are named identically (check the swift name, it's a similar situation to NSObject)
+!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
+
+## unsorted
+
+!missing-field! AVCoreAnimationBeginTimeAtZero not bound
+!missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
+!missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
+!missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
+!missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
+!missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
+!missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
+!missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
+!missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
+!missing-selector! NSCoder::decodeCMTimeForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
+!missing-selector! NSCoder::decodeCMTimeRangeForKey: not bound
+!missing-selector! NSCoder::encodeCMTime:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
+!missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
+
+!missing-release-attribute-on-return-value! CoreMedia.CMFormatDescription AVFoundation.AVTimedMetadataGroup::CopyFormatDescription()'s selector's ('copyFormatDescription') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+# Initial result from new rule extra-null-allowed
+!extra-null-allowed! 'AVFoundation.AVAudioTime AVFoundation.AVAudioTime::FromAudioTimeStamp(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioFormat::.ctor(AudioToolbox.AudioStreamBasicDescription&,AVFoundation.AVAudioChannelLayout)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void AVFoundation.AVAudioTime::.ctor(AudioToolbox.AudioTimeStamp&,System.Double)' has a extraneous [NullAllowed] on parameter #0
+
+# Swift Docs and Obj-C are out of sync
+# https://developer.apple.com/documentation/avfoundation/avvideocompositioninstructionprotocol/1388661-requiredsourcetrackids
+# https://developer.apple.com/documentation/avfoundation/1386654-avvideocompositioninstruction/1388661-requiredsourcetrackids?language=objc
+!extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
+
+# Keep [NullAllowed] on FromAsset to keep existing tests passing and allow backwards compatibility
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'AVFoundation.AVPlayerItem AVFoundation.AVPlayerItem::FromAsset(AVFoundation.AVAsset,Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'System.Boolean AVFoundation.AVPlayerItem::Seek(Foundation.NSDate,AVFoundation.AVCompletion)' is missing an [NullAllowed] on parameter #1
+
+# intro says that this is not true
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderReading (defined in 'AVURLAssetNSItemProvider' category)
+!missing-protocol-conformance! AVURLAsset should conform to NSItemProviderWriting (defined in 'AVURLAssetNSItemProvider' category)
+
+# no tests/samples
+!missing-pinvoke! AVSampleBufferAttachContentKey is not bound

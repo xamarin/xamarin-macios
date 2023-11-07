@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -6,18 +6,12 @@ using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-#if MTOUCH
-using ProductException=Xamarin.Bundler.MonoTouchException;
-#else
-using ProductException=Xamarin.Bundler.MonoMacException;
-#endif
-
 namespace Xamarin.Bundler {
 
 	public abstract class CoreResolver : IAssemblyResolver {
 
 		internal Dictionary<string, AssemblyDefinition> cache;
-		Dictionary<string,ReaderParameters> params_cache;
+		Dictionary<string, ReaderParameters> params_cache;
 
 		public string FrameworkDirectory { get; set; }
 		public string RootDirectory { get; set; }
@@ -91,24 +85,37 @@ namespace Xamarin.Bundler {
 				try {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					params_cache [assembly.Name.ToString ()] = parameters;
-				}
-				catch (SymbolsNotMatchingException) {
+					if (!assembly.MainModule.HasSymbols) {
+						// We Cecil didn't load symbols, but there's a pdb, then something went wrong loading it (maybe an old-style pdb?).
+						// Warn about this.
+						var pdb = Path.ChangeExtension (fileName, "pdb");
+						if (File.Exists (pdb))
+							ErrorHelper.Show (ErrorHelper.CreateWarning (178, Errors.MX0178, fileName));
+					}
+				} catch (SymbolsNotMatchingException) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					// only report the warning (on symbols) if we can actually load the assembly itself (otherwise it's more confusing than helpful)
-					ErrorHelper.Show (ErrorHelper.CreateWarning (129, $"Debugging symbol file for '{fileName}' does not match the assembly and is ignored."));
+					ErrorHelper.Show (ErrorHelper.CreateWarning (129, Errors.MX0129, fileName));
 				}
+			} catch (Exception e) {
+				throw new ProductException (9, true, e, Errors.MX0009, fileName);
 			}
-			catch (Exception e) {
-				throw new ProductException (9, true, e, "Error while loading assemblies: {0}", fileName);
-			}
-			cache.Add (name, assembly);
+			return CacheAssembly (assembly);
+		}
+
+		public AssemblyDefinition CacheAssembly (AssemblyDefinition assembly)
+		{
+			cache [assembly.Name.Name] = assembly;
 			return assembly;
 		}
 
 		protected AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
 		{
+			if (!Directory.Exists (directory))
+				return null;
+
 			var file = DirectoryGetFile (directory, name + extension);
 			if (file.Length > 0)
 				return Load (file);
@@ -118,14 +125,18 @@ namespace Xamarin.Bundler {
 		static string DirectoryGetFile (string directory, string file)
 		{
 			var files = Directory.GetFiles (directory, file);
-			if (files != null && files.Length > 0) {
+			if (files is not null && files.Length > 0) {
 				if (files.Length > 1) {
-					ErrorHelper.Warning (133, "Found more than 1 assembly matching '{0}', choosing first:{1}{2}", file, Environment.NewLine, string.Join ("\n", files));
+					ErrorHelper.Warning (133, Errors.MX0133, file, Environment.NewLine, string.Join ("\n", files));
 				}
 				return files [0];
 			}
 
 			return String.Empty;
+		}
+
+		public virtual void Configure ()
+		{
 		}
 	}
 }

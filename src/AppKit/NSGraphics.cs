@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -27,27 +30,37 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public static class NSGraphics {
 		public static readonly float White = 1;
 		public static readonly float Black = 0;
-		public static readonly float LightGray = (float) 2/3.0f;
-		public static readonly float DarkGray = (float) 1/3.0f;
-		
+		public static readonly float LightGray = (float) 2 / 3.0f;
+		public static readonly float DarkGray = (float) 1 / 3.0f;
+
 		[DllImport (Constants.AppKitLibrary)]
-		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch);
-		
-		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch)
+		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch);
+
+		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch)
 		{
-			if (colorspace == null)
+			if (colorspace is null)
 				throw new ArgumentNullException ("colorspace");
-			
+
 			return NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, planar, ref exactMatch);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool NSPlanarFromDepth (NSWindowDepth depth);
-		
+
 		public static bool PlanarFromDepth (NSWindowDepth depth)
 		{
 			return NSPlanarFromDepth (depth);
@@ -72,7 +85,7 @@ namespace AppKit {
 
 		public static nint NumberOfColorComponents (NSString colorspaceName)
 		{
-			if (colorspaceName == null)
+			if (colorspaceName is null)
 				throw new ArgumentNullException ("colorspaceName");
 			return NSNumberOfColorComponents (colorspaceName.Handle);
 		}
@@ -99,55 +112,55 @@ namespace AppKit {
 			}
 		}
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSRectFill")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSRectFill")]
 		public extern static void RectFill (CGRect rect);
 
 		[DllImport (Constants.AppKitLibrary)]
 		extern static void NSRectFillUsingOperation (CGRect rect, nuint op);
-		public static void RectFill (CGRect rect, NSCompositingOperation op) 
+		public static void RectFill (CGRect rect, NSCompositingOperation op)
 		{
-			NSRectFillUsingOperation (rect, (nuint)(ulong)op);
+			NSRectFillUsingOperation (rect, (nuint) (ulong) op);
 		}
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSRectFillList")]
-		unsafe extern static void RectFillList (CGRect *rects, nint count);
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSRectFillList")]
+		unsafe extern static void RectFillList (CGRect* rects, nint count);
 
 		public static void RectFill (CGRect [] rects)
 		{
-			if (rects == null)
+			if (rects is null)
 				throw new ArgumentNullException ("rects");
 			unsafe {
-				fixed (CGRect *ptr = &rects [0])
+				fixed (CGRect* ptr = &rects [0])
 					RectFillList (ptr, rects.Length);
 			}
 		}
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSRectClip")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSRectClip")]
 		public extern static void RectClip (CGRect rect);
-		
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSFrameRect")]
-		public extern static void FrameRect (CGRect rect);		
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSFrameRectWithWidth")]
-		public extern static void FrameRect (CGRect rect, nfloat frameWidth);		
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSFrameRect")]
+		public extern static void FrameRect (CGRect rect);
+
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSFrameRectWithWidth")]
+		public extern static void FrameRect (CGRect rect, nfloat frameWidth);
 
 		// Bad naming, added the overload above
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSFrameRectWithWidth")]
-		public extern static void FrameRectWithWidth (CGRect rect, nfloat frameWidth);		
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSFrameRectWithWidth")]
+		public extern static void FrameRectWithWidth (CGRect rect, nfloat frameWidth);
 
 		[DllImport (Constants.AppKitLibrary)]
 		extern static void NSFrameRectWithWidthUsingOperation (CGRect rect, nfloat frameWidth, nuint operation);
 		public static void FrameRect (CGRect rect, nfloat frameWidth, NSCompositingOperation operation)
 		{
-			NSFrameRectWithWidthUsingOperation (rect, frameWidth, (nuint)(ulong)operation);
+			NSFrameRectWithWidthUsingOperation (rect, frameWidth, (nuint) (ulong) operation);
 		}
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSShowAnimationEffect")]
-		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo);
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSShowAnimationEffect")]
+		extern static void NSShowAnimationEffect (nuint animationEffect, CGPoint centerLocation, CGSize size, NativeHandle animationDelegate, NativeHandle didEndSelector, IntPtr contextInfo);
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, NSObject animationDelegate, Selector didEndSelector, IntPtr contextInfo)
 		{
-			NSShowAnimationEffect ((nuint)(ulong)animationEffect, centerLocation, size, animationDelegate, didEndSelector, contextInfo);
+			NSShowAnimationEffect ((nuint) (ulong) animationEffect, centerLocation, size, animationDelegate.GetHandle (), didEndSelector.Handle, contextInfo);
 		}
 
 		public static void ShowAnimationEffect (NSAnimationEffect animationEffect, CGPoint centerLocation, CGSize size, Action endedCallback)
@@ -159,55 +172,66 @@ namespace AppKit {
 
 		public static void SetFocusRingStyle (NSFocusRingPlacement placement)
 		{
-			SetFocusRingStyle ((nuint)(ulong)placement);
+			SetFocusRingStyle ((nuint) (ulong) placement);
 		}
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSSetFocusRingStyle")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSSetFocusRingStyle")]
 		extern static void SetFocusRingStyle (nuint placement);
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawWhiteBezel")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawWhiteBezel")]
 		public extern static void DrawWhiteBezel (CGRect aRect, CGRect clipRect);
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawLightBezel")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawLightBezel")]
 		public extern static void DrawLightBezel (CGRect aRect, CGRect clipRect);
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawGrayBezel")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawGrayBezel")]
 		public extern static void DrawGrayBezel (CGRect aRect, CGRect clipRect);
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawDarkBezel")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawDarkBezel")]
 		public extern static void DrawDarkBezel (CGRect aRect, CGRect clipRect);
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawGroove")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawGroove")]
 		public extern static void DrawGroove (CGRect aRect, CGRect clipRect);
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawTiledRects")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawTiledRects")]
 		unsafe extern static CGRect DrawTiledRects (CGRect aRect, CGRect clipRect, NSRectEdge* sides, nfloat* grays, nint count);
 
-		public static CGRect DrawTiledRects (CGRect aRect, CGRect clipRect, NSRectEdge[] sides, nfloat[] grays)
+		public static CGRect DrawTiledRects (CGRect aRect, CGRect clipRect, NSRectEdge [] sides, nfloat [] grays)
 		{
-			if (sides == null)
+			if (sides is null)
 				throw new ArgumentNullException ("sides");
-			if (grays == null)
+			if (grays is null)
 				throw new ArgumentNullException ("grays");
 			if (sides.Length != grays.Length)
 				throw new ArgumentOutOfRangeException ("grays", "Both array parameters must have the same length");
 			unsafe {
-				fixed (NSRectEdge *ptr = &sides [0])
-				fixed (nfloat *ptr2 = &grays [0])
+				fixed (NSRectEdge* ptr = &sides [0])
+				fixed (nfloat* ptr2 = &grays [0])
 					return DrawTiledRects (aRect, clipRect, ptr, ptr2, sides.Length);
 			}
 		}
 
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawWindowBackground")]
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDrawWindowBackground")]
 		public extern static void DrawWindowBackground (CGRect aRect);
-		
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDisableScreenUpdates")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+#endif
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSDisableScreenUpdates")]
 		public extern static void DisableScreenUpdates ();
-		
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSEnableScreenUpdates")]
-		[Deprecated (PlatformName.MacOSX, 10, 14, message : "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[ObsoletedOSPlatform ("macos10.11", "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+#endif
+		[DllImport (Constants.AppKitLibrary, EntryPoint = "NSEnableScreenUpdates")]
 		public extern static void EnableScreenUpdates ();
-		
+
 	}
 }
+#endif // !__MACCATALYST__

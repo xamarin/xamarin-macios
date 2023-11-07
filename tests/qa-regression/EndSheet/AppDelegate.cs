@@ -4,10 +4,8 @@ using MonoMac.Foundation;
 using MonoMac.AppKit;
 using MonoMac.ObjCRuntime;
 
-namespace EndSheet
-{
-	public partial class AppDelegate : NSApplicationDelegate
-	{
+namespace EndSheet {
+	public partial class AppDelegate : NSApplicationDelegate {
 		MainWindowController mainWindowController;
 
 		public AppDelegate ()
@@ -21,4 +19,3 @@ namespace EndSheet
 		}
 	}
 }
-

@@ -2,27 +2,14 @@
 
 #if !MONOMAC
 using System;
+using System.IO;
 #if !__WATCHOS__
 using System.Drawing;
 #endif
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
+using ObjCRuntime;
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -92,9 +79,9 @@ namespace MonoTouchFixtures.UIKit {
 		}
 
 		[Test]
+		[DefaultFloatingPointTolerance (0.00001)]
 		public void HSBA ()
 		{
-			GlobalSettings.DefaultFloatingPointTolerance = 0.00001;
 			RoundtripHSBA (UIColor.Black);
 			RoundtripHSBA (UIColor.Blue);
 			RoundtripHSBA (UIColor.Brown);
@@ -111,12 +98,12 @@ namespace MonoTouchFixtures.UIKit {
 			RoundtripHSBA (UIColor.White);
 			RoundtripHSBA (UIColor.Yellow);
 #if !__TVOS__ && !__WATCHOS__
-			RoundtripHSBA (UIColor.DarkTextColor);
-			RoundtripHSBA (UIColor.GroupTableViewBackgroundColor, false);           // unsupported color space
-			RoundtripHSBA (UIColor.LightTextColor);
-			RoundtripHSBA (UIColor.ScrollViewTexturedBackgroundColor, false);       // unsupported color space
-			RoundtripHSBA (UIColor.UnderPageBackgroundColor, false);                        // unsupported color space
-			RoundtripHSBA (UIColor.ViewFlipsideBackgroundColor, false);                     // unsupported color space
+			RoundtripHSBA (UIColor.DarkText);
+			RoundtripHSBA (UIColor.GroupTableViewBackground, false);           // unsupported color space
+			RoundtripHSBA (UIColor.LightText);
+			RoundtripHSBA (UIColor.ScrollViewTexturedBackground, false);       // unsupported color space
+			RoundtripHSBA (UIColor.UnderPageBackground, false);                        // unsupported color space
+			RoundtripHSBA (UIColor.ViewFlipsideBackground, false);                     // unsupported color space
 #endif
 #if false
 			for (int r = 0; r < 256; r++) {
@@ -165,7 +152,7 @@ namespace MonoTouchFixtures.UIKit {
 			RoundtripHSB (UIColor.Cyan);
 			RoundtripHSB (UIColor.DarkGray);
 #if !__TVOS__ && !__WATCHOS__
-			RoundtripHSB (UIColor.DarkTextColor);
+			RoundtripHSB (UIColor.DarkText);
 #endif
 			RoundtripHSB (UIColor.Gray);
 			RoundtripHSB (UIColor.Green);
@@ -201,7 +188,7 @@ namespace MonoTouchFixtures.UIKit {
 			RoundtripRGBA (UIColor.Cyan);
 			RoundtripRGBA (UIColor.DarkGray);
 #if !__TVOS__ && !__WATCHOS__
-			RoundtripRGBA (UIColor.DarkTextColor);
+			RoundtripRGBA (UIColor.DarkText);
 #endif
 			RoundtripRGBA (UIColor.Gray);
 			RoundtripRGBA (UIColor.Green);
@@ -238,7 +225,7 @@ namespace MonoTouchFixtures.UIKit {
 			RoundtripRGB (UIColor.Cyan);
 			RoundtripRGB (UIColor.DarkGray);
 #if !__TVOS__ && !__WATCHOS__
-			RoundtripRGB (UIColor.DarkTextColor);
+			RoundtripRGB (UIColor.DarkText);
 #endif
 			RoundtripRGB (UIColor.Gray);
 			RoundtripRGB (UIColor.Green);
@@ -259,7 +246,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Pattern_7362 ()
 		{
-			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (var img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")))
 			using (var color = UIColor.FromPatternImage (img)) {
 				Assert.That (color.ToString (), Is.EqualTo (color.Description), "not an RGBA color");
 			}
@@ -282,7 +269,7 @@ namespace MonoTouchFixtures.UIKit {
 			RoundtripConstructorRGB (UIColor.Cyan);
 			RoundtripConstructorRGB (UIColor.DarkGray);
 #if !__TVOS__ && !__WATCHOS__
-			RoundtripConstructorRGB (UIColor.DarkTextColor);
+			RoundtripConstructorRGB (UIColor.DarkText);
 #endif
 			RoundtripConstructorRGB (UIColor.Gray);
 			RoundtripConstructorRGB (UIColor.Green);
@@ -307,6 +294,18 @@ namespace MonoTouchFixtures.UIKit {
 			var r = new UIColor (nw, na);
 			Assert.That (r.ToString (), Is.EqualTo (c.ToString ()), c.ToString ());
 		}
+
+#if !__WATCHOS__
+		[Test]
+		public void UIConfigurationColorTransformerTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
+			var redColor = UIColor.Red;
+			var transformer = UIConfigurationColorTransformer.Grayscale;
+			var grayColor = transformer (redColor);
+			Assert.NotNull (grayColor, "Not null");
+		}
+#endif
 	}
 }
 #endif

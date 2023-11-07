@@ -15,23 +15,23 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
-namespace UIKit {
-	public partial class UIAppearance {
-#if !XAMCORE_2_0
-		public readonly static IntPtr SelectorAppearance = Selector.GetHandle ("appearance");
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
+namespace UIKit {
+	public partial class UIAppearance {
 		public override bool Equals (object other)
 		{
 			UIAppearance ao = other as UIAppearance;
-			if (ao == null)
+			if (ao is null)
 				return false;
 			return ao.Handle == Handle;
 		}
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return Handle.GetHashCode ();
 		}
 
 		public static bool operator == (UIAppearance a, UIAppearance b)
@@ -49,25 +49,25 @@ namespace UIKit {
 			return !(a == b);
 		}
 
-		static IntPtr[] TypesToPointers (Type[] whenFoundIn)
+		static NativeHandle [] TypesToPointers (Type [] whenFoundIn)
 		{
 #if TVOS
-			IntPtr [] ptrs = new IntPtr [whenFoundIn.Length];
+			var ptrs = new NativeHandle [whenFoundIn.Length];
 #else
 			if (whenFoundIn.Length > 4)
 				throw new ArgumentException ("Only 4 parameters supported currently");
 
-			IntPtr [] ptrs = new IntPtr [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
+			var ptrs = new NativeHandle [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
 #endif
-			for (int i = 0; i < whenFoundIn.Length; i++){
-				if (whenFoundIn [i] == null)
+			for (int i = 0; i < whenFoundIn.Length; i++) {
+				if (whenFoundIn [i] is null)
 					throw new ArgumentException (String.Format ("Parameter {0} was null, must specify a valid type", i));
 				if (!typeof (NSObject).IsAssignableFrom (whenFoundIn [i]))
 					throw new ArgumentException (String.Format ("Type {0} does not derive from NSObject", whenFoundIn [i]));
 
 				var classHandle = Class.GetHandle (whenFoundIn [i]);
-				if (classHandle == IntPtr.Zero)
-					throw new ArgumentException (string.Format ("Could not find the Objective-C class for {0}", whenFoundIn[i].FullName));
+				if (classHandle == NativeHandle.Zero)
+					throw new ArgumentException (string.Format ("Could not find the Objective-C class for {0}", whenFoundIn [i].FullName));
 
 				ptrs [i] = classHandle;
 			}
@@ -92,7 +92,7 @@ namespace UIKit {
 		// new in iOS9 but the only option for tvOS
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits, params Type [] whenFoundIn)
 		{
-			if (traits == null)
+			if (traits is null)
 				throw new ArgumentNullException ("traits");
 
 			using (var array = NSArray.FromIntPtrs (TypesToPointers (whenFoundIn))) {
@@ -108,7 +108,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, params Type [] whenFoundIn)
 		{
-			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
+			var ptrs = TypesToPointers (whenFoundIn);
 
 			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
@@ -129,18 +129,23 @@ namespace UIKit {
 					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
 			} else {
-				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn), 
+#if NET
+				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
 					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
+#else
+				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
+					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
+#endif
 			}
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits, params Type [] whenFoundIn)
 		{
-			if (traits == null)
+			if (traits is null)
 				throw new ArgumentNullException ("traits");
 
-			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
+			var ptrs = TypesToPointers (whenFoundIn);
 
 			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
@@ -161,12 +166,16 @@ namespace UIKit {
 					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
 			} else {
-				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn), 
+#if NET
+				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
+#else
+				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
+#endif
 													 traits.Handle, ptrs [0], ptrs [1], ptrs [2], ptrs [3]);
 			}
 		}
 
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		extern static IntPtr IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr arg2, IntPtr arg3, IntPtr arg4, System.IntPtr arg5, System.IntPtr arg6, System.IntPtr arg7, System.IntPtr arg8, System.IntPtr arg9, System.IntPtr arg10, System.IntPtr arg11);
 #endif
 
@@ -174,7 +183,7 @@ namespace UIKit {
 
 		public static IntPtr GetAppearance (IntPtr class_ptr, UITraitCollection traits)
 		{
-			if (traits == null)
+			if (traits is null)
 				throw new ArgumentNullException ("traits");
 
 			return Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollection), traits.Handle);

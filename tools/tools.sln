@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouch", "mtouch\mtouch.csproj", "{A737EFCC-4348-4EB1-9C14-4FDC0975388D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmp", "mmp\mmp.csproj", "{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A737EFCC-4348-4EB1-9C14-4FDC0975388D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A737EFCC-4348-4EB1-9C14-4FDC0975388D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A737EFCC-4348-4EB1-9C14-4FDC0975388D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A737EFCC-4348-4EB1-9C14-4FDC0975388D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3232882-0FA0-4BB6-9D9C-E2CC779EAF0D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -23,6 +23,12 @@ void x_call_block (x_block_callback block)
 	block ();
 }
 
+void *
+x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3)
+{
+	return fptr (p1, p2, p3);
+}
+
 typedef matrix_float2x2 (*func_x_get_matrix_float2x2_msgSend) (id self, SEL sel);
 void
 x_get_matrix_float2x2 (id self, const char *sel,
@@ -250,6 +256,24 @@ x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time,
 }
 #endif // !TARGET_OS_WATCH
 
+SCNMatrix4
+x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4MakeTranslation (tx, ty, tz);
+}
+
+SCNMatrix4
+x_SCNMatrix4MakeScale (pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4MakeScale (tx, ty, tz);
+}
+
+SCNMatrix4
+x_SCNMatrix4Translate (SCNMatrix4 m, pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4Translate (m, tx, ty, tz);
+}
+
 @interface UltimateMachine : NSObject {
 
 }
@@ -301,6 +325,38 @@ static UltimateMachine *shared;
 }
 	-(void) V
 	{
+	}
+
+	+(void) staticV
+	{
+	}
+
+	-(NSString *) getEmptyString
+	{
+		return [NSString string];
+	}
+
+	-(NSString *) getShortString
+	{
+		return @"this is a short string";
+	}
+
+	-(NSString *) getLongString
+	{
+		return @"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times";
 	}
 
 	-(float) F
@@ -983,7 +1039,7 @@ static void block_called ()
 
 -(void) testString: (int) action a:(NSString **) refValue b:(NSString **) outValue
 {
-	NSString *obj = NULL;
+	NSString *obj __attribute__((unused)) = NULL;
 
 	// We should never get null pointers.
 	assert (refValue != NULL);
@@ -1014,9 +1070,9 @@ static void block_called ()
 	}
 }
 
--(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue
+-(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue c:(int32_t *) pointerValue
 {
-	NSString *obj = NULL;
+	NSString *obj __attribute__((unused)) = NULL;
 
 	// We should never get null pointers.
 	assert (refValue != NULL);
@@ -1026,15 +1082,18 @@ static void block_called ()
 	case 1: // Set both to 0
 		*refValue = 0;
 		*outValue = 0;
+		*pointerValue = 0;
 		break;
 	case 3: // set both parameteres to the same value
 		obj = @"A constant native string";
 		*refValue = 314159;
 		*outValue = 314159;
+		*pointerValue = 314159;
 		return;
 	case 4: // set both parameteres to different objects
 		*refValue = 3141592;
 		*outValue = 2718282;
+		*pointerValue = 5772156;
 		break;
 	default:
 		abort ();

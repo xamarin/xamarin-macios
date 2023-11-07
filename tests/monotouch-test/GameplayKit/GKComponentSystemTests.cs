@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKComponentSystem
 //
 // Authors:
@@ -9,18 +9,11 @@
 //
 
 #if !__WATCHOS__
-#if XAMCORE_2_0 // The GKComponentSystem framework is Unified only
 
 using System;
-using OpenTK;
 
-#if XAMCORE_2_0
 using Foundation;
 using GameplayKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameplayKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GamePlayKit {
@@ -40,7 +33,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		{
 			var componentSystem = new GKComponentSystem<MySubcomponent> ();
 			Assert.NotNull (componentSystem, "GKComponentSystem type ctor must not be null");
-			Assert.AreEqual (typeof(MySubcomponent), componentSystem.ComponentType);
+			Assert.AreEqual (typeof (MySubcomponent), componentSystem.ComponentType);
 		}
 
 		[Test]
@@ -48,7 +41,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		{
 			var componentSystem = new GKComponentSystem<MySubcomponent> ();
 			Assert.NotNull (componentSystem, "GKComponentSystem type ctor must not be null");
-			Assert.AreEqual (typeof(MySubcomponent), componentSystem.ComponentType);
+			Assert.AreEqual (typeof (MySubcomponent), componentSystem.ComponentType);
 
 			componentSystem.AddComponent (new MySubcomponent (0));
 			componentSystem.AddComponent (new MySubcomponent (1));
@@ -62,8 +55,8 @@ namespace MonoTouchFixtures.GamePlayKit {
 	}
 
 	[Preserve (AllMembers = true)]
-	class MySubcomponent : GKComponent { 
-	
+	class MySubcomponent : GKComponent {
+
 		public int Id { get; private set; }
 
 		public MySubcomponent (int id)
@@ -75,5 +68,4 @@ namespace MonoTouchFixtures.GamePlayKit {
 	}
 }
 
-#endif // XAMCORE_2_0
 #endif // !__WATCHOS__

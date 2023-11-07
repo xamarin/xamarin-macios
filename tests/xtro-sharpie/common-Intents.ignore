@@ -6,28 +6,10 @@
 !incorrect-protocol-member! INSpeakable::alternativeSpeakableMatches is REQUIRED and should be abstract
 !incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
 
-## new types that has deprecated members (likely to be removed from headers at some point)
-!missing-selector! +INCallRecordTypeOptionsResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INCallRecordTypeOptionsResolutionResult::successWithResolvedValue: not bound
-!missing-selector! +INAccountTypeResolutionResult::confirmationRequiredWithValueToConfirm: not bound
-!missing-selector! +INAccountTypeResolutionResult::successWithResolvedValue: not bound
-
 ## The following were deprecated in ios(10.0, 10.0)
-!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
-!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
-!missing-selector! INRideOption::identifier not bound
-!missing-selector! INRideOption::setIdentifier: not bound
 
 ## INPayBillIntentHandling && INSearchForBillsIntentHandling are new protocols added in iOS 10.3. This two protocols
 ## were added to the existing Protocol INPaymentsDomainHandling so making this two required would be a breaking change
-!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
-!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
-
-## NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / Designated init instead
-!missing-selector! INPerson::handle not bound
-!missing-selector! INPerson::initWithHandle:displayName:contactIdentifier: not bound
-!missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
-!missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound
 
 ## Apple made this @optional in iOS 11 but this is a breaking change
 !incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
@@ -36,14 +18,11 @@
 !missing-selector! +INIntentResolutionResult::needsValue not bound
 !missing-selector! +INIntentResolutionResult::notRequired not bound
 !missing-selector! +INIntentResolutionResult::unsupported not bound
-
+!missing-selector! +INIntentResolutionResult::confirmationRequiredWithItemToConfirm:forReason: not bound
+!missing-selector! +INIntentResolutionResult::unsupportedWithReason: not bound
 
 ## unsorted
 
-!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
-
-## Deprecated so no need to be bound
-!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
 
 ## Research required before we can bind the following ones
 !missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound

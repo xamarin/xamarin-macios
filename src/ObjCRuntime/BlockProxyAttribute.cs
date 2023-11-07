@@ -15,16 +15,13 @@ using ObjCRuntime;
 using Foundation;
 
 namespace ObjCRuntime {
-	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple=false)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class BlockProxyAttribute : Attribute {
+	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false)]
+	public sealed class BlockProxyAttribute : Attribute {
 		public BlockProxyAttribute (Type t) { Type = t; }
 		public Type Type { get; set; }
 	}
 
-	[AttributeUsage (AttributeTargets.ReturnValue, AllowMultiple=false)]
+	[AttributeUsage (AttributeTargets.ReturnValue, AllowMultiple = false)]
 	public sealed class DelegateProxyAttribute : Attribute {
 		public DelegateProxyAttribute (Type delegateType)
 		{

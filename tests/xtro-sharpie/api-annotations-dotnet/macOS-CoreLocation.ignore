@@ -1,0 +1,3 @@
+# Added but deprecated, so there is not point to add them
+!missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: not found
+!missing-protocol-member! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: not found

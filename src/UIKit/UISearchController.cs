@@ -12,7 +12,7 @@ namespace UIKit {
 	public partial class UISearchController {
 		class __Xamarin_UISearchResultsUpdating : UISearchResultsUpdating {
 			Action<UISearchController> cback;
-			
+
 			public __Xamarin_UISearchResultsUpdating (Action<UISearchController> cback)
 			{
 				this.cback = cback;
@@ -25,10 +25,10 @@ namespace UIKit {
 				cback (searchController);
 			}
 		}
-		
+
 		public void SetSearchResultsUpdater (Action<UISearchController> updateSearchResults)
 		{
-			if (updateSearchResults == null){
+			if (updateSearchResults is null) {
 				WeakSearchResultsUpdater = null;
 				return;
 			}

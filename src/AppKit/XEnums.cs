@@ -9,35 +9,18 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AppKit {
 
-	[Native]
-	public enum NSTextLayoutOrientation : long {
-		Horizontal,
-		Vertical
-	}
-
-#if !XAMCORE_2_0
-	[Flags]
-	[Native]
-	public enum NSTableViewAnimationOptions : ulong {
-		EffectFade = 0x1,
-		EffectGap = 0x2,
-
-		// these cannot be combined
-		SlideUp = 0x10,
-		SlideDown = 0x20,
-		SlideLeft = 0x30,
-		SlideRight = 0x40,
-	}
-#endif
-
+	[NoMacCatalyst]
 	[Native]
 	public enum NSPrintRenderingQuality : long {
 		Best,
 		Responsive
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum NSCorrectionIndicatorType : long {
 		Default = 0,
@@ -45,6 +28,7 @@ namespace AppKit {
 		Guesses
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum NSCorrectionResponse : long {
 		None,
@@ -55,6 +39,7 @@ namespace AppKit {
 		Reverted
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum NSTextFinderMatchingType : long {
 		Contains = 0,
@@ -63,6 +48,7 @@ namespace AppKit {
 		EndsWith = 3
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum NSCharacterCollection : ulong {
 		/// <summary>Identity mapping (CID == NSGlyph)</summary>
@@ -84,13 +70,13 @@ namespace AppKit {
 		AdobeKorea1 = 5
 	}
 
-	// Untyped enum (NSAttributedString.h). Only used as a convience enum in our API.
+	[NoMacCatalyst]
 	[Flags]
-	public enum NSSpellingState :
-#if XAMCORE_4_0
-		nint
+#if NET
+	[Native]
+	public enum NSSpellingState : long
 #else
-		int
+	public enum NSSpellingState : int
 #endif
 	{
 		None = 0x0,
@@ -98,4 +84,3 @@ namespace AppKit {
 		Grammar = 0x2
 	}
 }
-

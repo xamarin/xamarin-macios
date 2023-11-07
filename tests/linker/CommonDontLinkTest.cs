@@ -4,28 +4,29 @@ using System.Reflection;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
-#elif MONOMAC
-using MonoMac.Foundation;
-#endif
 
 namespace DontLink {
 
 	[TestFixture]
 	public class CommonDontLinkTest {
 
+#if NET
+		[Ignore ("This test accesses internal implementation details for TypeConverters, which has changed in .NET.")]
+#endif
 		[Test]
 		public void TypeDescriptorCanary ()
 		{
 			// this will fail is ReflectTypeDescriptionProvider.cs is modified
-			var rtdp = Type.GetType ("System.ComponentModel.ReflectTypeDescriptionProvider, System");
+			var rtdp = typeof (System.ComponentModel.BooleanConverter).Assembly.GetType ("System.ComponentModel.ReflectTypeDescriptionProvider");
 			Assert.NotNull (rtdp, "type");
 			var p = rtdp.GetProperty ("IntrinsicTypeConverters", BindingFlags.Static | BindingFlags.NonPublic);
 			Assert.NotNull (p, "property");
 			var ht = (Hashtable) p.GetGetMethod (true).Invoke (null, null);
 			Assert.NotNull (ht, "Hashtable");
+
 			Assert.That (ht.Count, Is.EqualTo (26), "Count");
+
 			foreach (var item in ht.Values) {
 				var name = item.ToString ();
 				switch (name) {

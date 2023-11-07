@@ -1,5 +1,8 @@
+#if !__MACCATALYST__
 using System;
 using PrintCore;
+
+#nullable enable
 
 namespace AppKit {
 	public partial class NSPrintInfo {
@@ -22,3 +25,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

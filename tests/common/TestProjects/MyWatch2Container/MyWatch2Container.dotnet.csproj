@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyWatchApp2\MyWatchApp2.dotnet.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <IsWatchApp>True</IsWatchApp>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

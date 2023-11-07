@@ -7,44 +7,38 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !XAMCORE_3_0 && !MONOMAC
 
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	class UserTrackingBarButtonItemPoker : MKUserTrackingBarButtonItem {
-		
+
 		static FieldInfo bkMapView;
-		
+
 		static UserTrackingBarButtonItemPoker ()
 		{
 			var t = typeof (MKUserTrackingBarButtonItem);
 			bkMapView = t.GetField ("__mt_MapView_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public UserTrackingBarButtonItemPoker (MKMapView view) : base (view)
 		{
 		}
-		
+
 		public MKMapView MapViewBackingField {
 			get {
 				return (MKMapView) bkMapView.GetValue (this);
@@ -55,7 +49,7 @@ namespace MonoTouchFixtures.MapKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UserTrackingBarButtonItemTest {
-		
+
 		[Test]
 		public void Ctor_Defaults ()
 		{
@@ -79,7 +73,7 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (UserTrackingBarButtonItemPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var mv = new MKMapView ())
 			using (var ut = new UserTrackingBarButtonItemPoker (mv)) {
 				Assert.AreSame (mv, ut.MapViewBackingField, "1a");
@@ -89,4 +83,4 @@ namespace MonoTouchFixtures.MapKit {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !XAMCORE_3_0 && !MONOMAC

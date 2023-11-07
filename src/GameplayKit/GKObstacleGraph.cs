@@ -1,4 +1,4 @@
-﻿//
+//
 // GKObstacleGraph.cs: Implements Generic variant of GKObstacleGraph
 //
 // Authors:
@@ -7,32 +7,40 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
+#nullable enable
 
 using System;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace GameplayKit {
 
 	public partial class GKObstacleGraph {
-		public
-#if !XAMCORE_4_0
-		virtual
+#if !NET
+		public virtual GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
+#else
+		public GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
 #endif
-		GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle)
 		{
 			return NSArray.ArrayFromHandle<GKGraphNode2D> (_GetNodes (obstacle));
 		}
 	}
 
-#if XAMCORE_2_0
-	[iOS (10,0), TV (10,0), Mac (10,12)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {
 
 		[Preserve (Conditional = true)]
-		internal GKObstacleGraph (IntPtr handle) : base (handle)
+		internal GKObstacleGraph (NativeHandle handle) : base (handle)
 		{
 		}
 
@@ -44,16 +52,14 @@ namespace GameplayKit {
 		{
 		}
 
-		public static GKObstacleGraph<NodeType> FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
+		public static new GKObstacleGraph<NodeType>? FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
 		{
-			return Runtime.GetNSObject <GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
+			return Runtime.GetNSObject<GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
 		}
 
-		public NodeType [] GetNodes (GKPolygonObstacle obstacle)
+		public new NodeType [] GetNodes (GKPolygonObstacle obstacle)
 		{
 			return NSArray.ArrayFromHandle<NodeType> (_GetNodes (obstacle));
 		}
 	}
-#endif
 }
-#endif

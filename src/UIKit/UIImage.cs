@@ -18,6 +18,8 @@ using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace UIKit {
 
 	partial class UIImage {
@@ -29,38 +31,38 @@ namespace UIKit {
 
 		public void SaveToPhotosAlbum (SaveStatus status)
 		{
-			UIImageStatusDispatcher dis = null;
+			UIImageStatusDispatcher? dis = null;
 			UIApplication.EnsureUIThread ();			
 
-			if (status != null)
+			if (status is not null)
 				dis = new UIImageStatusDispatcher (status);
 			
-			UIImageWriteToSavedPhotosAlbum (Handle, dis != null ? dis.Handle : IntPtr.Zero, dis != null ? Selector.GetHandle (UIImageStatusDispatcher.callbackSelector) : IntPtr.Zero, IntPtr.Zero);
+			UIImageWriteToSavedPhotosAlbum (Handle, dis is not null ? dis.Handle : IntPtr.Zero, dis is not null ? Selector.GetHandle (UIImageStatusDispatcher.callbackSelector) : IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
 
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSData */ IntPtr UIImagePNGRepresentation (/* UIImage */ IntPtr image);
 
-		public NSData AsPNG ()
+		public NSData? AsPNG ()
 		{
 			using (var pool = new NSAutoreleasePool ())
-				return (NSData) Runtime.GetNSObject (UIImagePNGRepresentation (Handle));
+				return Runtime.GetNSObject<NSData> (UIImagePNGRepresentation (Handle));
 		}
-		
+
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSData */ IntPtr UIImageJPEGRepresentation (/* UIImage */ IntPtr image, /* CGFloat */ nfloat compressionQuality);
 
-		public NSData AsJPEG ()
+		public NSData? AsJPEG ()
 		{
 			using (var pool = new NSAutoreleasePool ())
-				return (NSData) Runtime.GetNSObject (UIImageJPEGRepresentation (Handle, 1.0f));
+				return Runtime.GetNSObject<NSData> (UIImageJPEGRepresentation (Handle, 1.0f));
 		}
 
-		public NSData AsJPEG (nfloat compressionQuality)
+		public NSData? AsJPEG (nfloat compressionQuality)
 		{
 			using (var pool = new NSAutoreleasePool ())
-				return (NSData) Runtime.GetNSObject (UIImageJPEGRepresentation (Handle, compressionQuality));
+				return Runtime.GetNSObject<NSData> (UIImageJPEGRepresentation (Handle, compressionQuality));
 		}
 
 		public UIImage Scale (CGSize newSize, nfloat scaleFactor)
@@ -69,8 +71,8 @@ namespace UIKit {
 
 			Draw (new CGRect (0, 0, newSize.Width, newSize.Height));
 
-			var scaledImage = UIGraphics.GetImageFromCurrentImageContext();
-			UIGraphics.EndImageContext();
+			var scaledImage = UIGraphics.GetImageFromCurrentImageContext ();
+			UIGraphics.EndImageContext ();
 
 			return scaledImage;
 		}
@@ -80,51 +82,57 @@ namespace UIKit {
 			UIGraphics.BeginImageContext (newSize);
 
 			Draw (new CGRect (0, 0, newSize.Width, newSize.Height));
-	
-			var scaledImage = UIGraphics.GetImageFromCurrentImageContext();
-			UIGraphics.EndImageContext();
 
-			return scaledImage;			
-		}
+			var scaledImage = UIGraphics.GetImageFromCurrentImageContext ();
+			UIGraphics.EndImageContext ();
 
-#if !XAMCORE_2_0
-		[Obsolete ("This is identical to FromFile. Caching is done when using FromBundle")]
-		public static UIImage FromFileUncached (string filename)
-		{
-			return FromFile (filename);
+			return scaledImage;
 		}
-
-		[Obsolete ("This always returns null. Use the overload that accept a System.String 'name' instead.")]
-		public static UIImage CreateAnimatedImage (UIImage [] images, UIEdgeInsets capInsets, double duration)
-		{
-			return null;
-		}
-#endif
 
 		// required because of GetCallingAssembly (if we ever inline across assemblies)
 		[MethodImpl (MethodImplOptions.NoInlining)]
-		public static UIImage FromResource (Assembly assembly, string name)
+		public static UIImage? FromResource (Assembly assembly, string name)
 		{
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
-			if (assembly == null)
+			if (assembly is null)
 				assembly = Assembly.GetCallingAssembly ();
 			var stream = assembly.GetManifestResourceStream (name);
-			if (stream == null)
+			if (stream is null)
 				throw new ArgumentException (String.Format ("No resource named `{0}' found", name));
 
 			byte [] buffer = new byte [stream.Length];
 			stream.Read (buffer, 0, buffer.Length);
 			unsafe {
-				fixed (byte *p = &buffer [0]){
+				fixed (byte* p = &buffer [0]) {
 					var data = NSData.FromBytes ((IntPtr) p, (uint) stream.Length);
 					return LoadFromData (data);
 				}
 			}
 		}
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Watch (10, 0), TV (17, 0), iOS (17, 0)]
+#endif
+		[DllImport (Constants.UIKitLibrary)]
+		static extern /* NSData */ IntPtr UIImageHEICRepresentation (/* UIImage */ IntPtr image);
 
-// that was used (03be3e0d43085dfef2e732494216d9b2bf8fc079) to implement FromResource but that code 
-// was changed later (d485b61793b0d986f416c8d6154fb92c7a57d79d) making it unused AFAICS
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Watch (10, 0), TV (17, 0), iOS (17, 0)]
+#endif
+		public NSData? HeicRepresentation
+			=> Runtime.GetNSObject<NSData> (UIImageHEICRepresentation (Handle));
+
+
+		// that was used (03be3e0d43085dfef2e732494216d9b2bf8fc079) to implement FromResource but that code 
+		// was changed later (d485b61793b0d986f416c8d6154fb92c7a57d79d) making it unused AFAICS
 #if false
 		internal class DataWrapper : NSData {
 			IntPtr buffer;
@@ -141,7 +149,7 @@ namespace UIKit {
 		}
 #endif
 	}
-	
+
 #if IOS
 	[Register ("__MonoTouch_UIImageStatusDispatcher")]
 	internal class UIImageStatusDispatcher : NSObject {

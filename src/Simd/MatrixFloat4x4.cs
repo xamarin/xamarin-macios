@@ -10,14 +10,32 @@
 // (as opposed to OpenTK.Matrix4, which has a row-major layout).
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+#if NET
+using VectorFloat4 = global::System.Numerics.Vector4;
+#else
+using VectorFloat4 = global::OpenTK.Vector4;
+#endif
+
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix4 : IEquatable<NMatrix4>
-	{
+	public struct NMatrix4 : IEquatable<NMatrix4> {
 		public float M11;
 		public float M21;
 		public float M31;
@@ -45,7 +63,7 @@ namespace OpenTK
 			M44 = 1f,
 		};
 
-		public NMatrix4 (global::OpenTK.Vector4 row0, global::OpenTK.Vector4 row1, global::OpenTK.Vector4 row2, global::OpenTK.Vector4 row3)
+		public NMatrix4 (VectorFloat4 row0, VectorFloat4 row1, VectorFloat4 row2, VectorFloat4 row3)
 		{
 			M11 = row0.X;
 			M21 = row1.X;
@@ -89,9 +107,9 @@ namespace OpenTK
 			M44 = m44;
 		}
 
-		public Vector4 Column0 {
+		public VectorFloat4 Column0 {
 			get {
-				return new Vector4 (M11, M21, M31, M41);
+				return new VectorFloat4 (M11, M21, M31, M41);
 			}
 			set {
 				M11 = value.X;
@@ -101,9 +119,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Column1 {
+		public VectorFloat4 Column1 {
 			get {
-				return new Vector4 (M12, M22, M32, M42);
+				return new VectorFloat4 (M12, M22, M32, M42);
 			}
 			set {
 				M12 = value.X;
@@ -113,9 +131,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Column2 {
+		public VectorFloat4 Column2 {
 			get {
-				return new Vector4 (M13, M23, M33, M43);
+				return new VectorFloat4 (M13, M23, M33, M43);
 			}
 			set {
 				M13 = value.X;
@@ -125,9 +143,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Column3 {
+		public VectorFloat4 Column3 {
 			get {
-				return new Vector4 (M14, M24, M34, M44);
+				return new VectorFloat4 (M14, M24, M34, M44);
 			}
 			set {
 				M14 = value.X;
@@ -137,9 +155,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row0 {
+		public VectorFloat4 Row0 {
 			get {
-				return new Vector4 (M11, M12, M13, M14);
+				return new VectorFloat4 (M11, M12, M13, M14);
 			}
 			set {
 				M11 = value.X;
@@ -149,9 +167,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row1 {
+		public VectorFloat4 Row1 {
 			get {
-				return new Vector4 (M21, M22, M23, M24);
+				return new VectorFloat4 (M21, M22, M23, M24);
 			}
 			set {
 				M21 = value.X;
@@ -161,9 +179,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row2 {
+		public VectorFloat4 Row2 {
 			get {
-				return new Vector4 (M31, M32, M33, M34);
+				return new VectorFloat4 (M31, M32, M33, M34);
 			}
 			set {
 				M31 = value.X;
@@ -173,9 +191,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row3 {
+		public VectorFloat4 Row3 {
 			get {
-				return new Vector4 (M41, M42, M43, M44);
+				return new VectorFloat4 (M41, M42, M43, M44);
 			}
 			set {
 				M41 = value.X;
@@ -282,6 +300,26 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if NET
+		public static explicit operator global::System.Numerics.Matrix4x4 (NMatrix4 value)
+		{
+			return new global::System.Numerics.Matrix4x4 (
+				value.M11, value.M12, value.M13, value.M14,
+				value.M21, value.M22, value.M23, value.M24,
+				value.M31, value.M32, value.M33, value.M34,
+				value.M41, value.M42, value.M43, value.M44);
+		}
+
+		public static explicit operator NMatrix4 (global::System.Numerics.Matrix4x4 value)
+		{
+			return new NMatrix4 (
+				value.M11, value.M12, value.M13, value.M14,
+				value.M21, value.M22, value.M23, value.M24,
+				value.M31, value.M32, value.M33, value.M34,
+				value.M41, value.M42, value.M43, value.M44);
+		}
+
+#else
 		public static explicit operator global::OpenTK.Matrix4 (NMatrix4 value)
 		{
 			return new global::OpenTK.Matrix4 (
@@ -295,6 +333,7 @@ namespace OpenTK
 		{
 			return new NMatrix4 (value.Row0, value.Row1, value.Row2, value.Row3);
 		}
+#endif
 
 		public override string ToString ()
 		{
@@ -307,19 +346,32 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return
-				M11.GetHashCode () ^ M12.GetHashCode () ^ M13.GetHashCode () ^ M14.GetHashCode () ^
-				M21.GetHashCode () ^ M22.GetHashCode () ^ M23.GetHashCode () ^ M24.GetHashCode () ^
-				M31.GetHashCode () ^ M32.GetHashCode () ^ M33.GetHashCode () ^ M34.GetHashCode () ^
-				M41.GetHashCode () ^ M42.GetHashCode () ^ M43.GetHashCode () ^ M44.GetHashCode ();
+			var hash = new HashCode ();
+			hash.Add (M11);
+			hash.Add (M12);
+			hash.Add (M13);
+			hash.Add (M14);
+			hash.Add (M21);
+			hash.Add (M22);
+			hash.Add (M23);
+			hash.Add (M24);
+			hash.Add (M31);
+			hash.Add (M32);
+			hash.Add (M33);
+			hash.Add (M34);
+			hash.Add (M41);
+			hash.Add (M42);
+			hash.Add (M43);
+			hash.Add (M44);
+			return hash.ToHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix4))
+			if (!(obj is NMatrix4 matrix))
 				return false;
 
-			return Equals ((NMatrix4) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix4 other)

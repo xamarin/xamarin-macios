@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SecStatusCodeTest.cs
 //
 // Authors:
@@ -10,13 +10,8 @@
 using System;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using Security;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-#endif
 
 namespace MonoTouchFixtures.Security {
 

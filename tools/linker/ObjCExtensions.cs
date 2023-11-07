@@ -1,8 +1,5 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 
-using System;
-using System.Collections.Generic;
-
 using Mono.Cecil;
 using Mono.Tuner;
 
@@ -11,217 +8,115 @@ using Xamarin.Tuner;
 namespace Xamarin.Linker {
 
 	static class Namespaces {
-
-		internal static void Initialize ()
-		{
-			if (AddressBook != null)
-				return;
-
-			var profile = (Profile.Current as BaseProfile);
-			AddressBook = profile.GetNamespace ("AddressBook");
-			AVFoundation = profile.GetNamespace ("AVFoundation");
-			CoreAnimation = profile.GetNamespace ("CoreAnimation");
-			CoreBluetooth = profile.GetNamespace ("CoreBluetooth");
-			CoreFoundation = profile.GetNamespace ("CoreFoundation");
-			CoreLocation = profile.GetNamespace ("CoreLocation");
-			CoreText = profile.GetNamespace ("CoreText");
-			Foundation = profile.GetNamespace ("Foundation");
-			GameKit = profile.GetNamespace ("GameKit");
-			ObjCRuntime = profile.GetNamespace ("ObjCRuntime");
-			Security = profile.GetNamespace ("Security");
-			StoreKit = profile.GetNamespace ("StoreKit");
-			GameController = profile.GetNamespace ("GameController");
-			JavaScriptCore = profile.GetNamespace ("JavaScriptCore");
-			CoreAudioKit = profile.GetNamespace ("CoreAudioKit");
-			InputMethodKit = profile.GetNamespace ("InputMethodKit");
-			OpenAL = profile.GetNamespace ("OpenAL");
-			MediaAccessibility = profile.GetNamespace ("MediaAccessibility");
-			CoreMIDI = profile.GetNamespace ("CoreMIDI");
-			MediaLibrary = profile.GetNamespace ("MediaLibrary");
-			GLKit = profile.GetNamespace ("GLKit");
-			SpriteKit = profile.GetNamespace ("SpriteKit");
-			CloudKit = profile.GetNamespace ("CloudKit");
-			LocalAuthentication = profile.GetNamespace ("LocalAuthentication");
-			Accounts = profile.GetNamespace ("Accounts");
-			Contacts = profile.GetNamespace ("Contacts");
-			ContactsUI = profile.GetNamespace ("ContactsUI");
-			MapKit = profile.GetNamespace ("MapKit");
-			EventKit = profile.GetNamespace ("EventKit");
-			Social = profile.GetNamespace ("Social");
-			AVKit = profile.GetNamespace ("AVKit");
-			VideoToolbox = profile.GetNamespace ("VideoToolbox");
-			GameplayKit = profile.GetNamespace ("GameplayKit");
-			NetworkExtension = profile.GetNamespace ("NetworkExtension");
-			MultipeerConnectivity = profile.GetNamespace ("MultipeerConnectivity");
-			MetalKit = profile.GetNamespace ("MetalKit");
-			MetalPerformanceShaders = profile.GetNamespace ("MetalPerformanceShaders");
-			ModelIO = profile.GetNamespace ("ModelIO");
-			Intents = profile.GetNamespace ("Intents");
-			Photos = profile.GetNamespace ("Photos");
-			CoreML = profile.GetNamespace ("CoreML");
-			Vision = profile.GetNamespace ("Vision");
-			IOSurface = profile.GetNamespace ("IOSurface");
-			PdfKit = profile.GetNamespace ("PdfKit");
-			CoreImage = profile.GetNamespace ("CoreImage");
-			AdSupport = profile.GetNamespace ("AdSupport");
-			NaturalLanguage = profile.GetNamespace ("NaturalLanguage");
-			Network = profile.GetNamespace ("Network");
-			VideoSubscriberAccount = profile.GetNamespace ("VideoSubscriberAccount");
-#if MONOMAC
-			PhotosUI = profile.GetNamespace ("PhotosUI");
-			IOBluetooth = profile.GetNamespace ("IOBluetooth");
-			IOBluetoothUI = profile.GetNamespace ("IOBluetoothUI");
-			FinderSync = profile.GetNamespace ("FinderSync");
-			NotificationCenter = profile.GetNamespace ("NotificationCenter");
-			AppKit = profile.GetNamespace ("AppKit");
-			CoreWlan = profile.GetNamespace ("CoreWlan");
-			ImageKit = profile.GetNamespace ("ImageKit");
-			QTKit = profile.GetNamespace ("QTKit");
-			QuartzComposer = profile.GetNamespace ("QuartzComposer");
-			SceneKit = profile.GetNamespace ("SceneKit");
-			ScriptingBridge = profile.GetNamespace ("ScriptingBridge");
-			WebKit = profile.GetNamespace ("WebKit");
-			MediaPlayer = profile.GetNamespace ("MediaPlayer");
-			PrintCore = profile.GetNamespace ("PrintCore");
-			ExternalAccessory = profile.GetNamespace ("ExternalAccessory");
-			ImageCaptureCore = profile.GetNamespace ("ImageCaptureCore");
-			iTunesLibrary= profile.GetNamespace ("iTunesLibrary");
-#else
-			Registrar = profile.GetNamespace ("Registrar");
-			UIKit = profile.GetNamespace ("UIKit");
+		public const string Accounts = nameof (Accounts);
+		public const string AddressBook = nameof (AddressBook);
+		public const string AdSupport = nameof (AdSupport);
+		public const string AppKit = nameof (AppKit);
+		public const string AVFoundation = nameof (AVFoundation);
+		public const string AVKit = nameof (AVKit);
+		public const string AVRouting = nameof (AVRouting);
+#if !NET
+		public const string Chip = nameof (Chip);
 #endif
-		}
-
-		public static string JavaScriptCore { get; private set; }
-		public static string CoreAudioKit { get; private set; }
-		public static string InputMethodKit { get; private set; }
-		public static string OpenAL { get; private set; }
-		public static string MediaAccessibility { get; private set; }
-		public static string CoreMIDI { get; private set; }
-		public static string MediaLibrary { get; private set; }
-		public static string GLKit { get; private set; }
-		public static string SpriteKit { get; private set; }
-		public static string CloudKit { get; private set; }
-		public static string LocalAuthentication { get; private set; }
-		public static string Accounts { get; private set; }
-		public static string Contacts { get; private set; }
-		public static string ContactsUI { get; private set; }
-		public static string MapKit { get; private set; }
-		public static string EventKit { get; private set; }
-		public static string Social { get; private set; }
-		public static string AVKit { get; private set; }
-		public static string VideoToolbox { get; private set; }
-		public static string GameplayKit { get; private set; }
-		public static string NetworkExtension { get; private set; }
-		public static string MultipeerConnectivity { get; private set; }
-		public static string MetalKit { get; private set; }
-		public static string MetalPerformanceShaders { get; private set; }
-		public static string ModelIO { get; private set; }
-
-		public static string AddressBook { get; private set; }
-
-		public static string AVFoundation { get; private set; }
-
-		public static string CoreAnimation { get; private set; }
-
-		public static string CoreBluetooth { get; private set; }
-
-		public static string CoreFoundation { get; private set; }
-
-		public static string CoreLocation { get; private set; }
-
-		public static string CoreText { get; private set; }
-
-		public static string Foundation { get; private set; }
-
-		public static string GameKit { get; private set; }
-		
-		public static string GameController { get; private set; }
-
-		public static string ObjCRuntime { get; private set; }
-
-		public static string Security { get; private set; }
-
-		public static string StoreKit { get; private set; }
-
-		public static string Intents { get; private set; }
-
-		public static string Photos { get; private set; }
-
-		public static string CoreML { get; private set; }
-
-		public static string Vision { get; private set; }
-
-		public static string IOSurface { get; private set; }
-
-		public static string PdfKit { get; private set; }
-
-		public static string CoreImage { get; private set; }
-
-		public static string AdSupport { get; private set; }
-
-		public static string NaturalLanguage { get; private set; }
-		public static string Network { get; private set; }
-
-		public static string VideoSubscriberAccount { get; private set; }
-#if MONOMAC
-		public static string PhotosUI { get; private set; }
-		public static string IOBluetooth { get; private set; }
-		public static string IOBluetoothUI { get; private set; }
-		public static string FinderSync { get; private set; }
-		public static string NotificationCenter { get; private set; }
-
-		public static string AppKit { get; private set; }
-
-		public static string CoreWlan { get; private set; }
-
-		public static string ImageKit { get; private set; }
-
-		public static string QTKit { get; private set; }
-
-		public static string QuartzComposer { get; private set; }
-
-		public static string SceneKit { get; private set; }
-
-		public static string ScriptingBridge { get; private set; }
-
-		public static string WebKit { get; private set; }
-		public static string MediaPlayer { get; private set; }
-		public static string PrintCore { get; private set; }
-		public static string ExternalAccessory { get; private set; }
-		public static string ImageCaptureCore { get; private set; }
-		public static string iTunesLibrary { get; private set; }
-#else
-		public static string Registrar { get; private set; }
-
-		public static string UIKit { get; private set; }
+		public const string Cinematic = nameof (Cinematic);
+		public const string CloudKit = nameof (CloudKit);
+		public const string Contacts = nameof (Contacts);
+		public const string ContactsUI = nameof (ContactsUI);
+		public const string CoreAnimation = nameof (CoreAnimation);
+		public const string CoreAudioKit = nameof (CoreAudioKit);
+		public const string CoreBluetooth = nameof (CoreBluetooth);
+		public const string CoreFoundation = nameof (CoreFoundation);
+		public const string CoreImage = nameof (CoreImage);
+		public const string CoreLocation = nameof (CoreLocation);
+		public const string CoreMIDI = nameof (CoreMIDI);
+		public const string CoreML = nameof (CoreML);
+		public const string CoreText = nameof (CoreText);
+		public const string CoreWlan = nameof (CoreWlan);
+		public const string EventKit = nameof (EventKit);
+		public const string ExternalAccessory = nameof (ExternalAccessory);
+		public const string FinderSync = nameof (FinderSync);
+		public const string Foundation = nameof (Foundation);
+		public const string GameController = nameof (GameController);
+		public const string GameKit = nameof (GameKit);
+		public const string GameplayKit = nameof (GameplayKit);
+		public const string GLKit = nameof (GLKit);
+		public const string HealthKit = nameof (HealthKit);
+		public const string ImageCaptureCore = nameof (ImageCaptureCore);
+		public const string ImageKit = nameof (ImageKit);
+		public const string InputMethodKit = nameof (InputMethodKit);
+		public const string Intents = nameof (Intents);
+		public const string IOBluetooth = nameof (IOBluetooth);
+		public const string IOBluetoothUI = nameof (IOBluetoothUI);
+		public const string IOSurface = nameof (IOSurface);
+		public const string iTunesLibrary = nameof (iTunesLibrary);
+		public const string JavaScriptCore = nameof (JavaScriptCore);
+		public const string LocalAuthentication = nameof (LocalAuthentication);
+		public const string MapKit = nameof (MapKit);
+		public const string MediaAccessibility = nameof (MediaAccessibility);
+		public const string MediaLibrary = nameof (MediaLibrary);
+		public const string MediaPlayer = nameof (MediaPlayer);
+		public const string MetalFX = nameof (MetalFX);
+		public const string MetalKit = nameof (MetalKit);
+		public const string MetalPerformanceShaders = nameof (MetalPerformanceShaders);
+		public const string MetalPerformanceShadersGraph = nameof (MetalPerformanceShadersGraph);
+		public const string ModelIO = nameof (ModelIO);
+		public const string MultipeerConnectivity = nameof (MultipeerConnectivity);
+		public const string NaturalLanguage = nameof (NaturalLanguage);
+		public const string Network = nameof (Network);
+		public const string NetworkExtension = nameof (NetworkExtension);
+		public const string NotificationCenter = nameof (NotificationCenter);
+		public const string ObjCRuntime = nameof (ObjCRuntime);
+		public const string OpenAL = nameof (OpenAL);
+		public const string PdfKit = nameof (PdfKit);
+		public const string Photos = nameof (Photos);
+		public const string PhotosUI = nameof (PhotosUI);
+		public const string PrintCore = nameof (PrintCore);
+#if !NET
+		public const string QTKit = nameof (QTKit);
 #endif
+		public const string QuartzComposer = nameof (QuartzComposer);
+		public const string Registrar = nameof (Registrar);
+		public const string SceneKit = nameof (SceneKit);
+		public const string ScriptingBridge = nameof (ScriptingBridge);
+		public const string Security = nameof (Security);
+		public const string SensitiveContentAnalysis = nameof (SensitiveContentAnalysis);
+		public const string Social = nameof (Social);
+		public const string SpriteKit = nameof (SpriteKit);
+		public const string StoreKit = nameof (StoreKit);
+		public const string Symbols = nameof (Symbols);
+		public const string ThreadNetwork = nameof (ThreadNetwork);
+		public const string UIKit = nameof (UIKit);
+		public const string VideoSubscriberAccount = nameof (VideoSubscriberAccount);
+		public const string VideoToolbox = nameof (VideoToolbox);
+		public const string Vision = nameof (Vision);
+		public const string WebKit = nameof (WebKit);
 	}
 
 	static class ObjCExtensions {
 
-		static string inativeobject;
-
-		static string INativeObject {
-			get {
-				if (inativeobject == null)
-					inativeobject = Namespaces.ObjCRuntime + ".INativeObject";
-				return inativeobject;
-			}
-		}
-
+		const string INativeObject = Namespaces.ObjCRuntime + ".INativeObject";
 		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
-			return type.Resolve ().IsNSObject (link_context);
+			return
+#if NET
+				link_context.LinkerConfiguration.Context.Resolve (type)
+#else
+				type.Resolve ()
+#endif
+				.IsNSObject (link_context);
 		}
 
 		// warning: *Is* means does 'type' inherits from MonoTouch.Foundation.NSObject ?
 		public static bool IsNSObject (this TypeDefinition type, DerivedLinkContext link_context)
 		{
-			if (link_context?.CachedIsNSObject != null)
+			if (link_context?.CachedIsNSObject is not null)
 				return link_context.CachedIsNSObject.Contains (type);
 
-			return type.Inherits (Namespaces.Foundation, "NSObject");
+			return type.Inherits (Namespaces.Foundation, "NSObject"
+#if NET
+				, link_context.LinkerConfiguration.Context
+#endif
+			);
 		}
 
 		public static bool IsNativeObject (this TypeDefinition type)

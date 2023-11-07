@@ -10,5 +10,7 @@ ls -lad /Applications/Xcode*
 xcode-select -p
 mono --version
 env | sort
+uptime
+ps aux
 
 exit 0

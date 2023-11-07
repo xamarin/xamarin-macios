@@ -1,0 +1,4 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="..\targets\Microsoft.@PLATFORM@.Sdk.DefaultItems.props" />
+	<Import Project="..\targets\Microsoft.@PLATFORM@.Sdk.ImplicitNamespaceImports.props" />
+</Project>

@@ -5,9 +5,8 @@ using Foundation;
 using UIKit;
 using System.Runtime.InteropServices;
 
-namespace BindingTests
-{
-	delegate NSObject MyBlockToBind (NSObject[] keys);
+namespace BindingTests {
+	delegate NSObject MyBlockToBind (NSObject [] keys);
 
 	[BaseType (typeof (NSObject))]
 	interface TestInterface {
@@ -15,4 +14,3 @@ namespace BindingTests
 		void TestMethod (MyBlockToBind myBlockToBind);
 	}
 }
-

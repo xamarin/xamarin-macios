@@ -29,11 +29,13 @@
 using System;
 
 using ObjCRuntime;
-#if MONOMAC || (IOS && XAMCORE_2_0)
+
+#nullable enable
+
+#if MONOMAC || IOS
 
 namespace PdfKit {
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfActionNamedName : long {
 		None         = 0,
@@ -50,7 +52,6 @@ namespace PdfKit {
 		ZoomOut      = 11
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfWidgetControlType : long {
 		Unknown    = -1,
@@ -59,7 +60,6 @@ namespace PdfKit {
 		CheckBox    = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfLineStyle : long {
 		None        = 0,
@@ -70,15 +70,14 @@ namespace PdfKit {
 		ClosedArrow = 5
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfMarkupType : long {
 		Highlight = 0,
 		StrikeOut = 1,
-		Underline = 2
+		Underline = 2,
+		Redact    = 3,
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfTextAnnotationIconType : long {
 		Comment      = 0,
@@ -90,7 +89,6 @@ namespace PdfKit {
 		Insert       = 6
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfBorderStyle : long {
 		Solid     = 0,
@@ -100,7 +98,12 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-	[iOS (11,0)]
+#if NET
+	[NoiOS]
+#elif IOS
+	[Obsolete (Constants.UnavailableOniOS)]
+#endif
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
 		None      = 0,
@@ -108,7 +111,6 @@ namespace PdfKit {
 		DownToFit = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDocumentPermissions : long {
 		None  = 0,
@@ -116,7 +118,6 @@ namespace PdfKit {
 		Owner = 2
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDisplayBox : long {
 		Media = 0,
@@ -126,7 +127,6 @@ namespace PdfKit {
 		Art   = 4
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDisplayMode : long {
 		SinglePage           = 0,
@@ -135,7 +135,6 @@ namespace PdfKit {
 		TwoUpContinuous      = 3
 	}
 
-	[iOS (11,0)]
 	[Flags]
 	[Native]
 	public enum PdfAreaOfInterest : long {
@@ -148,18 +147,17 @@ namespace PdfKit {
 		TextFieldArea  = 1 << 5,
 		IconArea       = 1 << 6,
 		PopupArea      = 1 << 7,
-		ImageArea      = 1 << 8
+		ImageArea      = 1 << 8,
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		AnyArea = Int64.MaxValue,
 	}
 
-	[Mac (10,13)]
-	[iOS (11,0)]
 	[Native]
 	public enum PdfDisplayDirection : long {
 		Vertical = 0,
 		Horizontal = 1,
 	}
 
-	[iOS (11,0)]
 	[Native]
 	public enum PdfInterpolationQuality : long {
 		None = 0,
@@ -168,14 +166,12 @@ namespace PdfKit {
 	}
 
 	[NoMac]
-	[iOS (11,0)]
 	[Native]
 	public enum PdfThumbnailLayoutMode : long {
 		Vertical = 0,
 		Horizontal = 1,
 	}
 
-	[iOS (11,0), Mac (10,12)]
 	[Native]
 	public enum PdfWidgetCellState : long {
 		Mixed = -1,

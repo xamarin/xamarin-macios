@@ -12,23 +12,15 @@ using System;
 using System.Runtime.InteropServices;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using AudioUnit;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.AudioUnit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace MonoTouchFixtures.AudioUnit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUGraphTest
-	{
+	public class AUGraphTest {
 		[Test]
 		public void BasicOperations ()
 		{
@@ -106,7 +98,7 @@ namespace MonoTouchFixtures.AudioUnit {
 
 			using (var aug = Runtime.GetINativeObject<AUGraph> (ret, true)) {
 				Assert.NotNull (aug, "CreateTest");
-				Assert.That (aug.Handle, Is.EqualTo (ret), "Handle");
+				Assert.That ((IntPtr) aug.Handle, Is.EqualTo (ret), "Handle");
 
 				// Make sure it is a working instance
 				aug.Open ();

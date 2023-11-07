@@ -1,19 +1,7 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
-using System.Collections.Generic;
-using System.Threading;
-#if XAMCORE_2_0
-using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -26,7 +14,7 @@ namespace MonoTouchFixtures.Network {
 		string type = "_ftp._tcp";
 		string domain = "MonoTouchFixtures.Network";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
@@ -52,8 +40,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void TestCreateNullDomain ()
 		{
-			using (var newDescriptor = NWBrowserDescriptor.CreateBonjourService (type))
-			{
+			using (var newDescriptor = NWBrowserDescriptor.CreateBonjourService (type)) {
 				Assert.AreEqual (type, descriptor.BonjourType, "service type");
 				Assert.IsNull (newDescriptor.BonjourDomain);
 			}
@@ -64,6 +51,19 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void TestBonjourDomainProperty () => Assert.AreEqual (domain, descriptor.BonjourDomain);
+
+		[Test]
+		public void TestApplicationServiceConstructor ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			Assert.Throws<ArgumentNullException> (() => {
+				using var appServiceDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (null);
+			}, "App service is null");
+
+			var appName = "myService";
+			using var appServiceDescriptor = NWBrowserDescriptor.CreateApplicationServiceName (appName);
+			Assert.AreEqual (appName, appServiceDescriptor.ApplicationServiceName);
+		}
 	}
 }
 #endif

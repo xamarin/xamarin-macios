@@ -1,20 +1,9 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Text;
-#if XAMCORE_2_0
-using CoreFoundation;
+
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -28,7 +17,7 @@ namespace MonoTouchFixtures.Network {
 
 		string identifier = "TestFramer";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		NWFramerStartResult StartCallback (NWFramer nWFramer)

@@ -8,7 +8,7 @@
 //
 //
 
-#if !WATCH
+#if HAS_OPENGLES
 
 using System;
 using System.Runtime.InteropServices;
@@ -16,25 +16,25 @@ using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using OpenGLES;
 
-namespace CoreVideo {
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.OpenGLES;
+#nullable enable
 
-namespace MonoTouch.CoreVideo {
-#endif
+namespace CoreVideo {
 
 	// CVOpenGLESTextureCache.h
+#if NET
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("tvos12.0", "Use 'CVMetalTextureCache' instead.")]
+	[ObsoletedOSPlatform ("ios12.0", "Use 'CVMetalTextureCache' instead.")]
+#else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'CVMetalTextureCache' instead.")]
+#endif
 	public class CVOpenGLESTextureCache : INativeObject, IDisposable {
 		internal IntPtr handle;
 
@@ -53,12 +53,7 @@ namespace MonoTouch.CoreVideo {
 			GC.SuppressFinalize (this);
 		}
 
-#if XAMCORE_2_0
-		protected
-#else
-		public
-#endif
-		virtual void Dispose (bool disposing)
+		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
 				CVOpenGLESTexture.CFRelease (handle);
@@ -81,8 +76,8 @@ namespace MonoTouch.CoreVideo {
 		
 		public CVOpenGLESTextureCache (EAGLContext context)
 		{
-			if (context == null)
-				throw new ArgumentNullException ("context");
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			
 			if (CVOpenGLESTextureCacheCreate (IntPtr.Zero,
 							  IntPtr.Zero, /* change one day to support cache attributes */
@@ -96,8 +91,8 @@ namespace MonoTouch.CoreVideo {
 
 		public static CVOpenGLESTextureCache FromEAGLContext (EAGLContext context)
 		{
-			if (context == null)
-				throw new ArgumentNullException ("context");
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			IntPtr handle;
 			if (CVOpenGLESTextureCacheCreate (IntPtr.Zero,
 							  IntPtr.Zero, /* change one day to support cache attributes */
@@ -110,8 +105,8 @@ namespace MonoTouch.CoreVideo {
 
 		public CVOpenGLESTexture TextureFromImage (CVImageBuffer imageBuffer, bool isTexture2d, OpenTK.Graphics.ES20.All internalFormat, int width, int height, OpenTK.Graphics.ES20.All pixelFormat, OpenTK.Graphics.ES20.DataType pixelType, int planeIndex, out CVReturn errorCode)
 		{
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+			if (imageBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			
 			int target = isTexture2d ? 0x0DE1 /* GL_TEXTURE_2D */ : 0x8D41 /* GL_RENDERBUFFER */;
 			IntPtr texture;

@@ -27,20 +27,21 @@
 // NSString keys to an enum value for better API. An 'Unknown' value
 // exists on these enums for when a key cannot be mapped.
 
+#if !__MACCATALYST__
+
 using Foundation;
 
-namespace AppKit
-{
-	public enum NSFontCollectionAction
-	{
+#nullable enable
+
+namespace AppKit {
+	public enum NSFontCollectionAction {
 		Unknown,
 		Shown,
 		Hidden,
 		Renamed
 	}
 
-	public partial class NSFontCollectionChangedEventArgs
-	{
+	public partial class NSFontCollectionChangedEventArgs {
 		public NSFontCollectionAction Action {
 			get {
 				if (_Action == NSFontCollection.ActionWasShown) {
@@ -56,19 +57,17 @@ namespace AppKit
 		}
 
 		public NSFontCollectionVisibility Visibility {
-			get { return (NSFontCollectionVisibility)(int)_Visibility; }
+			get { return (NSFontCollectionVisibility) (int) _Visibility; }
 		}
 	}
 
-	public enum NSPopoverCloseReason
-	{
+	public enum NSPopoverCloseReason {
 		Unknown,
 		Standard,
 		DetachToWindow
 	}
 
-	public partial class NSPopoverCloseEventArgs
-	{
+	public partial class NSPopoverCloseEventArgs {
 		public NSPopoverCloseReason Reason {
 			get {
 				if (_Reason == NSPopover.CloseReasonStandard) {
@@ -82,3 +81,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // !__MACCATALYST__

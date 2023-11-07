@@ -1,0 +1,11 @@
+## The DesignatedInitializer is now deprecated in favor of a new one
+!missing-designated-initializer! MPSCNNNeuronELU::initWithDevice:a: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronExponential::initWithDevice:a:b:c: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronLinear::initWithDevice:a:b: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronLogarithm::initWithDevice:a:b:c: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronPower::initWithDevice:a:b:c: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronReLU::initWithDevice:a: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronReLUN::initWithDevice:a:b: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronSigmoid::initWithDevice: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronSoftPlus::initWithDevice:a:b: is missing an [DesignatedInitializer] attribute
+!missing-designated-initializer! MPSCNNNeuronTanH::initWithDevice:a:b: is missing an [DesignatedInitializer] attribute

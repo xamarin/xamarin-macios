@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Text;
 using Foundation;
@@ -15,7 +15,7 @@ namespace LinkSdk {
 		void AssertAbsentType (string typeName)
 		{
 			var t = Type.GetType (typeName);
-			if (t == null)
+			if (t is null)
 				return;
 			var members = t.GetMethods (BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			var sb = new StringBuilder (t.FullName);
@@ -23,7 +23,7 @@ namespace LinkSdk {
 				sb.AppendLine ().Append ("* ").Append (m);
 			Assert.Fail (sb.ToString ());
 		}
-		
+
 		[Test]
 		public void Mscorlib ()
 		{

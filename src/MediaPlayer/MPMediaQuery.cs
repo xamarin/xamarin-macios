@@ -12,32 +12,27 @@
 #if !TVOS && !MONOMAC && !WATCH
 
 using System;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
-using xint = System.nuint;
-#else
-using xint = System.Int32;
-#endif
+#nullable enable
 
 namespace MediaPlayer {
 
-	public partial class MPMediaQuery
-	{
-		public MPMediaItem GetItem (xint index)
+	public partial class MPMediaQuery {
+		public MPMediaItem GetItem (nuint index)
 		{
 			using (var array = new NSArray (Messaging.IntPtr_objc_msgSend (Handle, Selector.GetHandle ("items"))))
 				return array.GetItem<MPMediaItem> (index);
 		}
 
-		public MPMediaQuerySection GetSection (xint index)
+		public MPMediaQuerySection GetSection (nuint index)
 		{
 			using (var array = new NSArray (Messaging.IntPtr_objc_msgSend (Handle, Selector.GetHandle ("itemSections"))))
 				return array.GetItem<MPMediaQuerySection> (index);
 		}
 
-		public MPMediaItemCollection GetCollection (xint index)
+		public MPMediaItemCollection GetCollection (nuint index)
 		{
 			using (var array = new NSArray (Messaging.IntPtr_objc_msgSend (Handle, Selector.GetHandle ("collections"))))
 				return array.GetItem<MPMediaItemCollection> (index);

@@ -8,21 +8,16 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreData;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AttributeDescription {
-		
+
 		[Test]
 		public void WeakFramework ()
 		{
@@ -36,11 +31,7 @@ namespace MonoTouchFixtures.CoreData {
 		{
 			using (var ad = new NSAttributeDescription ())
 			using (var o = new NSObject ()) {
-#if XAMCORE_2_0
 				ad.DefaultValue = o;
-#else
-				ad.SetDefaultValue (o);
-#endif
 				Assert.AreSame (o, ad.DefaultValue, "DefaultValue");
 			}
 		}
@@ -52,7 +43,7 @@ namespace MonoTouchFixtures.CoreData {
 				Assert.IsNull (ad.RenamingIdentifier, "An unset RenamingIdentifier should be null.");
 				ad.RenamingIdentifier = "Foo";
 				Assert.AreEqual ("Foo", ad.RenamingIdentifier,
-				                 "RenamingIndentifier was not corrently set.");
+								 "RenamingIndentifier was not corrently set.");
 			}
 		}
 	}

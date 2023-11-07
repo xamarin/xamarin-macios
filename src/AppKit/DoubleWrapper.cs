@@ -22,8 +22,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using Foundation;
+
+#nullable enable
 
 namespace AppKit {
 
@@ -86,7 +91,7 @@ namespace AppKit {
 			}
 		}
 	}
-	
+
 	public partial class NSTableView {
 		public event EventHandler DoubleClick {
 			add {
@@ -99,3 +104,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 using System;
 using System.Drawing;
 using System.Diagnostics;
@@ -19,42 +19,42 @@ using CoreFoundation;
 
 namespace Intents {
 	[Register("INCarAirCirculationModeResolutionResult", true)]
-	[Obsolete ("This class is not available on watchOS")]
+	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarAirCirculationModeResolutionResult : INIntentResolutionResult {
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("This class is not supported on watchOS"); } }
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
 
 		protected INCarAirCirculationModeResolutionResult (NSObjectFlag t) : base (t)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		protected internal INCarAirCirculationModeResolutionResult (IntPtr handle) : base (handle)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		public static INCarAirCirculationModeResolutionResult ConfirmationRequiredWithCarAirCirculationModeToConfirm (INCarAirCirculationMode carAirCirculationModeToConfirm)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		public new static INCarAirCirculationModeResolutionResult NeedsValue {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INCarAirCirculationModeResolutionResult NotRequired {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INCarAirCirculationModeResolutionResult Unsupported {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 	} /* class INCarAirCirculationModeResolutionResult */
 }
-#endif // __WATCHOS__ && !XAMCORE_4_0
+#endif // __WATCHOS__ && !NET

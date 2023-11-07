@@ -1,4 +1,4 @@
-## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
+## new Apple abstract member (breaking change) fixed in .NET
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
 
 # fixed in XAMCORE_3_0 - API break
@@ -11,7 +11,7 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices: is REQUIRED and should be abstract
 
-# fixed in XAMCORE_4_0 - API Break
+# fixed in .NET - API Break
 !incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract
@@ -36,7 +36,6 @@
 !incorrect-protocol-member! MTLDevice::getDefaultSamplePositions:count: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::isRemovable is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::maxThreadgroupMemoryLength is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::minimumLinearTextureAlignmentForPixelFormat: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newArgumentEncoderWithArguments: is REQUIRED and should be abstract
@@ -75,7 +74,6 @@
 !incorrect-protocol-member! MTLHeap::resourceOptions is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::type is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectCommandBuffer::indirectComputeCommandAtIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectRenderCommand::setRenderPipelineState: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::hazardTrackingMode is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::heapOffset is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::resourceOptions is REQUIRED and should be abstract
@@ -140,3 +138,36 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorBuffer:offset:instanceStride: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setTessellationFactorScale: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResource::storageMode is REQUIRED and should be abstract
+
+!incorrect-protocol-member! MTLComputeCommandEncoder::setImageblockWidth:height: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithTileDescriptor:options:reflection:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::dispatchThreadsPerTile: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setThreadgroupMemoryLength:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffer:offset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBufferOffset:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBuffers:offsets:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileBytes:length:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerState:lodMinClamp:lodMaxClamp:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:lodMinClamps:lodMaxClamps:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileSamplerStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTexture:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileTextures:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::tileHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::tileWidth is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::imageblockMemoryLengthForDimensions: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::imageblockSampleLength is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerThreadgroup is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::threadgroupSizeMatchesTileSize is REQUIRED and should be abstract
+
+!incorrect-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsRenderDynamicLibraries is REQUIRED and should be abstract
+
+# MTLFunctionStitchingAttributeAlwaysInline is not documented and has no exposure
+!missing-type! MTLFunctionStitchingAttributeAlwaysInline not bound

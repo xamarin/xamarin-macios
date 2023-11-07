@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "tvOS", "Mobile" ],
+  "name": "tvOS View",
+  "description": "A tvOS View",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Microsoft.tvOS.View",
+  "shortName": "tvos-view",
+  "sourceName": "View1",
+  "primaryOutputs": [
+    { "path": "View1.cs" }
+  ],
+  "defaultName": "View1",
+  "symbols": {
+    "namespace": {
+      "description": "namespace for the generated code",
+      "replaces": "tvOSApp1",
+      "type": "parameter"
+    }
+  }
+}

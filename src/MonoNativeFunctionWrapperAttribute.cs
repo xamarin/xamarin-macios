@@ -23,15 +23,8 @@
 //
 using System;
 
-#if XAMCORE_2_0
 namespace ObjCRuntime {
-#endif
 	[AttributeUsage (AttributeTargets.Delegate)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class MonoNativeFunctionWrapperAttribute : Attribute {
+	public sealed class MonoNativeFunctionWrapperAttribute : Attribute {
 	}
-#if XAMCORE_2_0
 }
-#endif

@@ -1,28 +1,20 @@
-#if !XAMCORE_2_0
 using Foundation;
-#else
-using Foundation;
-#endif
 
-namespace Test
-{
+namespace Test {
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
-	public interface NSTextInputClient
-	{
+	public interface NSTextInputClient {
 		[Export ("selectedRange")]
 		NSRange SelectedRange { get; }
 	}
-	
+
 	[BaseType (typeof (NSObject))]
-	interface NSText
-	{
+	interface NSText {
 		[Export ("selectedRange")]
 		NSRange SelectedRange { get; set; }
 	}
 
 	[BaseType (typeof (NSText))]
-	interface NSTextView : NSTextInputClient
-	{
+	interface NSTextView : NSTextInputClient {
 	}
 }

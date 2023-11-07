@@ -9,8 +9,6 @@
 
 #if !__WATCHOS__
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreAnimation;
 using CoreGraphics;
@@ -20,16 +18,10 @@ using UIColor = AppKit.NSColor;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.CoreAnimation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ShapeLayerTest {

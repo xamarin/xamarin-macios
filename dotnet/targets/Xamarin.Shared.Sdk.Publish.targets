@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="_PrePublish">
+		<PropertyGroup>
+			<BuildIpa Condition="'$(BuildIpa)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">true</BuildIpa>
+			<CreatePackage Condition="'$(CreatePackage)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">true</CreatePackage>
+
+			<!-- Put packages in the publish directory unless asked to do otherwise -->
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == '' And '$(IpaPackagePath)' == ''">$(PublishDir)</IpaPackageDir>
+			<PkgPackageDir Condition="'$(PkgPackageDir)' == '' And '$(PkgPackagePath)' == ''">$(PublishDir)</PkgPackageDir>
+		</PropertyGroup>
+
+		<!-- It's mandatory to specify a runtime identifier for device when publishing for a mobile platform (iOS, tvOS). -->
+		<Error
+			Text="A runtime identifier for a device architecture must be specified in order to publish this project. '$(RuntimeIdentifier)' is a simulator architecture."
+			Condition="$(RuntimeIdentifier.StartsWith('iossimulator-')) Or $(RuntimeIdentifier.StartsWith('tvossimulator-'))"
+		/>
+		<Error
+			Text="A runtime identifier for a device architecture must be specified in order to publish this project. '$(RuntimeIdentifiers)' are simulator architectures."
+			Condition="$(RuntimeIdentifiers.Contains('iossimulator-')) Or $(RuntimeIdentifiers.Contains('tvossimulator-'))"
+		/>
+	</Target>
+	<Target Name="Publish" DependsOnTargets="_PrePublish;Build">
+		<Message Importance="high" Text="Created the package: $(IpaPackagePath)" Condition="'$(BuildIpa)' == 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')" />
+		<Message Importance="high" Text="Created the package: $(PkgPackagePath)" Condition="'$(CreatePackage)' == 'true' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')" />
+	</Target>
+</Project>

@@ -1,31 +1,16 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
-namespace monotouchtest
-{
+namespace monotouchtest {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableDictionaryTest {
-		
+
 		[Test]
 		public void IndexerTest ()
 		{
@@ -99,16 +84,16 @@ namespace monotouchtest
 		{
 			using (var dic1 = new NSMutableDictionary ()) {
 				using (var dic2 = NSDictionary.FromObjectAndKey ((NSString) "value", (NSString) "key")) {
-					Assert.AreEqual (0, dic1.Count, "Count 0");
+					Assert.AreEqual ((nuint) 0, dic1.Count, "Count 0");
 
 					dic1.AddEntries (dic2);
 
-					Assert.AreEqual (1, dic1.Count, "Count 1");
+					Assert.AreEqual ((nuint) 1, dic1.Count, "Count 1");
 					Assert.AreEqual ("value", dic1 ["key"].ToString (), "Value 1");
 
 					dic1.AddEntries (dic2);
-					
-					Assert.AreEqual (1, dic1.Count, "Count 2");
+
+					Assert.AreEqual ((nuint) 1, dic1.Count, "Count 2");
 					Assert.AreEqual ("value", dic1 ["key"].ToString (), "Value 2");
 				}
 			}

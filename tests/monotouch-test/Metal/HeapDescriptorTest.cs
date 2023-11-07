@@ -1,27 +1,24 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using ObjCRuntime;
 using Metal;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class HeapDescriptorTest {
 		MTLHeapDescriptor hd = null;
 
 		[SetUp]
 		public void SetUp ()
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			TestRuntime.AssertXcodeVersion (8, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR)
@@ -35,7 +32,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (hd != null)
+			if (hd is not null)
 				hd.Dispose ();
 			hd = null;
 		}
@@ -47,13 +44,13 @@ namespace MonoTouchFixtures.Metal {
 			hd.CpuCacheMode = MTLCpuCacheMode.WriteCombined;
 			Assert.That (hd.StorageMode, Is.EqualTo (MTLStorageMode.Private), "StorageMode");
 			hd.StorageMode = MTLStorageMode.Memoryless;
-			Assert.That (hd.Size, Is.EqualTo (0), "Size");
+			Assert.That (hd.Size, Is.EqualTo ((nuint) 0), "Size");
 			hd.Size = 16;
 
 			using (var hd2 = (MTLHeapDescriptor) hd.Copy ()) {
 				Assert.That (hd2.CpuCacheMode, Is.EqualTo (MTLCpuCacheMode.WriteCombined), "CpuCacheMode");
 				Assert.That (hd2.StorageMode, Is.EqualTo (MTLStorageMode.Memoryless), "StorageMode");
-				Assert.That (hd2.Size, Is.EqualTo (16), "Size");
+				Assert.That (hd2.Size, Is.EqualTo ((nuint) 16), "Size");
 
 				// NSCopying
 				Assert.That (hd2.Handle, Is.Not.EqualTo (hd.Handle), "Handle");
@@ -75,7 +72,7 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (9, 0);
 
 			hd.Size = 2;
-			Assert.AreEqual (2, hd.Size);
+			Assert.AreEqual ((nuint) 2, hd.Size);
 		}
 
 		[Test]
@@ -85,6 +82,61 @@ namespace MonoTouchFixtures.Metal {
 
 			hd.StorageMode = MTLStorageMode.Private;
 			Assert.AreEqual (MTLStorageMode.Private, hd.StorageMode);
+		}
+
+		[Test]
+		public void SizeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var s = hd.Size;
+			});
+		}
+
+		[Test]
+		public void StorageModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var m = hd.StorageMode;
+			});
+		}
+
+		[Test]
+		public void CpuCacheModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var m = hd.CpuCacheMode;
+			});
+		}
+
+
+		[Test]
+		public void HazardTrackingModeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var mode = hd.HazardTrackingMode;
+			});
+		}
+
+		[Test]
+		public void ResourceOptionsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var optiosn = hd.ResourceOptions;
+			});
+		}
+
+		[Test]
+		public void TypeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				var t = hd.Type;
+			});
 		}
 	}
 }

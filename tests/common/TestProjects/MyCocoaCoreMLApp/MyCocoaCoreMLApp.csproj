@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{31736B90-75F4-46C5-AF74-AD98E34C22F2}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyCocoaCoreMLApp</RootNamespace>
+    <AssemblyName>MyCocoaCoreMLApp</AssemblyName>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <UseSGen>false</UseSGen>
+    <LinkMode>None</LinkMode>
+    <AOTMode>None</AOTMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <UseSGen>false</UseSGen>
+    <LinkMode>None</LinkMode>
+    <AOTMode>None</AOTMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="SqueezeNet.cs">
+      <DependentUpon>SqueezeNet.mlmodel</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <CoreMLModel Include="SqueezeNet.mlmodel" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

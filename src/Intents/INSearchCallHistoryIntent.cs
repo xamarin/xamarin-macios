@@ -1,4 +1,4 @@
-﻿//
+//
 // INSearchCallHistoryIntent.cs
 //
 // Authors:
@@ -7,7 +7,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
+#if !(NET && __MACOS__)
+#if !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -21,3 +22,4 @@ namespace Intents {
 	}
 }
 #endif
+#endif // !(NET && __MACOS__)

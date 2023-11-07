@@ -11,7 +11,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -20,26 +19,11 @@ using UIKit;
 #endif
 using Security;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
@@ -126,7 +110,7 @@ namespace MonoTouchFixtures.Security {
 		public void RevocationPolicy ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var policy = SecPolicy.CreateRevocationPolicy (SecRevocation.UseAnyAvailableMethod | SecRevocation.RequirePositiveResponse)) {
 				Assert.That (policy.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -137,7 +121,7 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (CFGetRetainCount (properties.Handle), Is.EqualTo ((nint) 1), "Properties.RetainCount");
 					var expectedCount = (nuint) 1;
 #if __MACOS__
-					if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12))
+					if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 11) && !TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12))
 						expectedCount = 2;
 #endif
 					Assert.That (properties.Count, Is.EqualTo (expectedCount), "Count");
@@ -159,7 +143,7 @@ namespace MonoTouchFixtures.Security {
 		public void CreateWellKnownPolicies ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			CreatePolicy (SecPolicyIdentifier.AppleX509Basic);
 			CreatePolicy (SecPolicyIdentifier.AppleSSL);
@@ -168,13 +152,13 @@ namespace MonoTouchFixtures.Security {
 			// CreatePolicy (SecPolicyIdentifier.AppleEAP);
 			CreatePolicy (SecPolicyIdentifier.AppleIPsec);
 			CreatePolicy (SecPolicyIdentifier.AppleCodeSigning);
-			var oid = TestRuntime.CheckXcodeVersion (8, 0) ? "1.2.840.113635.100.1.61" : null; 
+			var oid = TestRuntime.CheckXcodeVersion (8, 0) ? "1.2.840.113635.100.1.61" : null;
 			CreatePolicy (SecPolicyIdentifier.AppleIDValidation, (NSString) oid);
 			// invalid handle ? not yet supported ?!?
 			// CreatePolicy (SecPolicyIdentifier.AppleTimeStamping);
 			oid = null;
 #if __MACOS__
-			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11) && !TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12))
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 11) && !TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12))
 				oid = "3";
 #endif
 			CreatePolicy (SecPolicyIdentifier.AppleRevocation, (NSString) oid);
@@ -184,10 +168,11 @@ namespace MonoTouchFixtures.Security {
 		public void CreateUnknownPolicy ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var oid = new NSString ("1.2.3.4")) {
-				Assert.Throws<ArgumentException> (delegate {
+				Assert.Throws<ArgumentException> (delegate
+				{
 					SecPolicy.CreatePolicy (oid, null);
 				});
 			}

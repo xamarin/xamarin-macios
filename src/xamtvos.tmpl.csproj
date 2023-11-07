@@ -13,13 +13,14 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
     <IntermediateOutputPath>build\IDE\obj\tvOS\$(Configuration)</IntermediateOutputPath>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>build\IDE\bin\tvOS\Debug</OutputPath>
-    <DefineConstants>MONOTOUCH;IPHONE;TVOS;XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
+    <DefineConstants>MONOTOUCH;IPHONE;TVOS;XAMCORE_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

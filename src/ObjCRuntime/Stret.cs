@@ -22,28 +22,16 @@
 
 using System;
 using System.Collections.Generic;
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#else
 using System.Reflection;
+#if !BGENERATOR
 using Generator = System.Object;
 #endif
 using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace ObjCRuntime
-{
-	class Stret
-	{
-#if BGENERATOR
-#elif __UNIFIED__
-		const bool isUnified = true;
-#else
-		const bool isUnified = false;
-#endif
-
+namespace ObjCRuntime {
+	class Stret {
 		static bool IsHomogeneousAggregateSmallEnough_Armv7k (Type t, int members)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5516-L5519
@@ -86,28 +74,6 @@ namespace ObjCRuntime
 			return true;
 		}
 
-		static bool IsMagicTypeOrCorlibType (Type t, Generator generator)
-		{
-			switch (t.Name) {
-			case "nint":
-			case "nuint":
-			case "nfloat":
-				if (t.Namespace != "System")
-					return false;
-#if BGENERATOR
-				return t.Assembly == generator.TypeManager.PlatformAssembly;
-#else
-				return t.Assembly == typeof (NSObject).Assembly;
-#endif
-			default:
-#if BGENERATOR
-				return t.Assembly == generator.TypeManager.CorlibAssembly;
-#else
-				return t.Assembly == typeof (object).Assembly;
-#endif
-			}
-		}
-
 		public static bool ArmNeedStret (Type returnType, Generator generator)
 		{
 			bool has32bitArm;
@@ -123,7 +89,7 @@ namespace ObjCRuntime
 
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
+			if (!t.IsValueType || t.IsEnum || IsBuiltInType (t))
 				return false;
 
 			var fieldTypes = new List<Type> ();
@@ -170,10 +136,11 @@ namespace ObjCRuntime
 					case "System.UInt32":
 					case "System.Int32":
 					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nuint":
-					case "System.uint":
+					case "System.nint":
 						return false;
-					// floating-point types are stret
+						// floating-point types are stret
 					}
 				}
 			}
@@ -185,7 +152,7 @@ namespace ObjCRuntime
 		{
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
+			if (!t.IsValueType || t.IsEnum || IsBuiltInType (t))
 				return false;
 
 			var fieldTypes = new List<Type> ();
@@ -204,7 +171,7 @@ namespace ObjCRuntime
 		{
 			Type t = returnType;
 
-			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t, generator))
+			if (!t.IsValueType || t.IsEnum || IsBuiltInType (t))
 				return false;
 
 			var fieldTypes = new List<Type> ();
@@ -246,6 +213,76 @@ namespace ObjCRuntime
 			return size += add;
 		}
 
+		static bool IsBuiltInType (Type type)
+		{
+			return IsBuiltInType (type, true /* doesn't matter */, out var _);
+		}
+
+		static bool IsBuiltInType (Type type, bool is_64_bits, out int type_size)
+		{
+			type_size = 0;
+
+			if (type.IsNested)
+				return false;
+
+#if NET
+			if (type.Namespace == "ObjCRuntime") {
+				switch (type.Name) {
+				case "NativeHandle":
+					type_size = is_64_bits ? 8 : 4;
+					return true;
+				}
+				return false;
+			} else if (type.Namespace == "System.Runtime.InteropServices") {
+				switch (type.Name) {
+				case "NFloat":
+					type_size = is_64_bits ? 8 : 4;
+					return true;
+				}
+				return false;
+			}
+#endif
+
+			if (type.Namespace != "System")
+				return false;
+
+			switch (type.Name) {
+			case "Char":
+			case "Boolean":
+			case "SByte":
+			case "Byte":
+				type_size = 1;
+				return true;
+			case "Int16":
+			case "UInt16":
+				type_size = 2;
+				return true;
+			case "Single":
+			case "Int32":
+			case "UInt32":
+				type_size = 4;
+				return true;
+			case "Double":
+			case "Int64":
+			case "UInt64":
+				type_size = 8;
+				return true;
+			case "IntPtr":
+			case "UIntPtr":
+#if !NET
+			case "nfloat":
+#endif
+			case "nuint":
+			case "nint":
+				type_size = is_64_bits ? 8 : 4;
+				return true;
+			case "Void":
+				return true;
+			}
+
+			return false;
+		}
+
 		static void GetValueTypeSize (Type original_type, Type type, List<Type> field_types, bool is_64_bits, ref int size, ref int max_element_size, Generator generator)
 		{
 			// FIXME:
@@ -253,37 +290,7 @@ namespace ObjCRuntime
 			// However we don't annotate those types in any way currently, so first we'd need to 
 			// add the proper attributes so that the generator can distinguish those types from other types.
 
-			var type_size = 0;
-			switch (type.FullName) {
-			case "System.Char":
-			case "System.Boolean":
-			case "System.SByte":
-			case "System.Byte":
-				type_size = 1;
-				break;
-			case "System.Int16":
-			case "System.UInt16":
-				type_size = 2;
-				break;
-			case "System.Single":
-			case "System.Int32":
-			case "System.UInt32":
-				type_size = 4;
-				break;
-			case "System.Double":
-			case "System.Int64":
-			case "System.UInt64":
-				type_size = 8;
-				break;
-			case "System.IntPtr":
-			case "System.nfloat":
-			case "System.nuint":
-			case "System.nint":
-				type_size = is_64_bits ? 8 : 4;
-				break;
-			}
-
-			if (type_size != 0) {
+			if (IsBuiltInType (type, is_64_bits, out var type_size) && type_size > 0) {
 				field_types.Add (type);
 				size = AlignAndAdd (original_type, size, type_size, ref max_element_size);
 				return;
@@ -296,7 +303,7 @@ namespace ObjCRuntime
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif
-				if (marshalAs == null) {
+				if (marshalAs is null) {
 					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size, generator);
 					continue;
 				}

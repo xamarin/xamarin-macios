@@ -1,2 +1,4 @@
 ## OSX-only enums (removed in XAMCORE_3_0)
 !unknown-native-enum! AVPlayerViewControlsStyle bound
+
+## not available on iOS - but we don't put availability attributes on error codes

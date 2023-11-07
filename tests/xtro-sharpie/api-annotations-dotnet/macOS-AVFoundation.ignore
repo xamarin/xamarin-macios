@@ -1,0 +1,45 @@
+
+## from iOS 4.0 to 5.1
+
+## iOS Only. Available on OSX but probably private selector mostly decorated with NS_AVAILABLE_IOS
+!missing-field! AVMediaCharacteristicEasyToRead not bound
+!missing-field! AVVideoDecompressionPropertiesKey not bound
+
+## unsorted
+!unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
+!unknown-native-enum! AVCaptureLensStabilizationStatus bound
+!unknown-native-enum! AVCaptureVideoStabilizationMode bound
+!unknown-type! AVCaptureSynchronizedData bound
+!unknown-type! AVCaptureSynchronizedDataCollection bound
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# AVFoundation differs between IOS and macOS. Fields not availble in macOS 10.15.
+!missing-field! AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedCatBody not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedDogBody not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedHumanBody not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataDetectedSalientObject not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScore not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataLivePhotoVitalityScoringVersion not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScore not bound
+!missing-field! AVMetadataIdentifierQuickTimeMetadataSpatialOverCaptureQualityScoringVersion not bound
+
+
+# This fields are use for a notifications that returns a AVAudioSessionRouteDescription
+# which cannot be found on macOS
+
+# not applicable to macOS
+!extra-enum-value! Managed value -11818 for AVError.SessionWasInterrupted not found in native headers
+!extra-enum-value! Managed value -11819 for AVError.MediaServicesWereReset not found in native headers
+!extra-enum-value! Managed value -11837 for AVError.DeviceIsNotAvailableInBackground not found in native headers
+!extra-enum-value! Managed value -11847 for AVError.OperationInterrupted not found in native headers
+
+# not used on macOS
+!missing-enum! AVAudioSessionInterruptionReason not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound

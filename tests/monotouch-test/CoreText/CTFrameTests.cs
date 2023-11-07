@@ -8,24 +8,18 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreText;
 using CoreGraphics;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreText;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreText {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CTFrameTests {
-		
+
 		[Test] // #4677
 		public void GetPathTest ()
 		{

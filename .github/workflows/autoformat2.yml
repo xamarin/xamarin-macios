@@ -1,0 +1,27 @@
+name: Autoformat code - push results
+on:
+  workflow_run:
+    workflows: ["Autoformat code"]
+    types:
+      - completed
+
+# This action needs the following permissions in order to push the results back to the original branch.
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  push-and-notify:
+    name: Push autoformatted code and notify user
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: 'Push autoformatted patch'
+        uses: rolfbjarne/autoformat-push@v0.2
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          git_user_email: 'github-actions-autoformatter@xamarin.com'
+          git_user_name: 'GitHub Actions Autoformatter'
+          commentContents: '# :warning: Your code has been reformatted. :warning:\n\nIf this is not desired, add the `actions-disable-autoformat` label, and revert the reformatting commit.\n\nIf files unrelated to your change were modified, try reverting the reformatting commit + merging with the target branch (and push those changes).'

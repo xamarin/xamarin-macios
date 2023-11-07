@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\xunit.core.2.4.0\build\xunit.core.props" Condition="Exists('..\..\..\packages\xunit.core.2.4.0\build\xunit.core.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProjectGuid>{C459A4DD-0AFF-4B2C-9DEC-4B62CE04F4E2}</ProjectGuid>
+    <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>com.xamarin.bcltests.%NAME%</RootNamespace>
+    <AssemblyName>com.xamarin.bcltests.%NAME%</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkIdentifier>Xamarin.TVOS</TargetFrameworkIdentifier>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <DefineConstants>XAMCORE_3_0;</DefineConstants>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\%NAME%\iPhoneSimulator\Debug-tvos</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\%NAME%\iPhoneSimulator\Release-tvos</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\%NAME%\iPhone\Debug-tvos</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\%NAME%\iPhone\Release-tvos</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchExtraArgs>--bitcode:asmonly</MtouchExtraArgs>
+    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+    <PackageReference Include="System.Buffers" Version="4.5.0" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.analyzers" Version="0.10.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.TVOS" />
+    %TESTING FRAMEWORKS%
+  </ItemGroup>
+  <ItemGroup>
+%REFERENCES%
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="%TEMPLATESPATH%\tvOSApp\Assets.xcassets\AppIcon.appiconset\Contents.json" />
+    <ImageAsset Include="%TEMPLATESPATH%\tvOSApp\Assets.xcassets\Contents.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="%PLIST PATH%">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+    <None Include="%TEMPLATESPATH%\tvOSApp\Entitlements.plist">
+      <Link>Entitlements.plist</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\NUnit\NUnitTestRunner.cs">
+      <Link>TestRunner\NUnit\NUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\NUnit\ClassOrNamespaceFilter.cs">
+      <Link>TestRunner\NUnit\ClassOrNamespaceFilter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\NUnit\TestMethodFilter.cs">
+      <Link>TestRunner\NUnit\TestMethodFilter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\Extensions.cs">
+      <Link>TestRunner\Core\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\LogWriter.cs">
+      <Link>TestRunner\Core\LogWriter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\MinimumLogLevel.cs">
+      <Link>TestRunner\Core\MinimumLogLevel.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TcpTextWriter.cs">
+      <Link>TestRunner\Core\TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestAssemblyInfo.cs">
+      <Link>TestRunner\Core\TestAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestCompletionStatus.cs">
+      <Link>TestRunner\Core\TestCompletionStatus.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestExecutionState.cs">
+      <Link>TestRunner\Core\TestExecutionState.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestFailureInfo.cs">
+      <Link>TestRunner\Core\TestFailureInfo.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestRunner.cs">
+      <Link>TestRunner\Core\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestRunSelector.cs">
+      <Link>TestRunner\Core\TestRunSelector.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestRunSelectorType.cs">
+      <Link>TestRunner\Core\TestRunSelectorType.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\xUnit\XUnitFilter.cs">
+      <Link>TestRunner\xUnit\XUnitFilter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\xUnit\XUnitFilterType.cs">
+      <Link>TestRunner\xUnit\XUnitFilterType.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\xUnit\XUnitTestRunner.cs">
+      <Link>TestRunner\xUnit\XUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\ApplicationOptions.cs">
+      <Link>ApplicationOptions.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\tvOSApp\AppDelegate.cs">
+      <Link>AppDelegate.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\tvOSApp\Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\tvOSApp\ViewController.cs">
+      <Link>ViewController.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\tvOSApp\ViewController.designer.cs">
+      <Link>ViewController.designer.cs</Link>
+      <DependentUpon>ViewController.cs</DependentUpon>
+    </Compile>
+    %REGISTER TYPE%
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="%TEMPLATESPATH%\common\TestRunner\xUnit\NUnitXml.xslt">
+      <Link>TestRunner\xUnit\NUnitXml.xslt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="%TEMPLATESPATH%\common\TestRunner\xUnit\NUnit3Xml.xslt">
+      <Link>TestRunner\xUnit\NUnit3Xml.xslt</Link>
+    </EmbeddedResource>
+    %CONTENT RESOURCES%
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
+</Project>

@@ -25,7 +25,9 @@
 //
 #endregion
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+
+#if OPENTK_DLL
 
 using System;
 using System.Collections.Generic;
@@ -36,7 +38,7 @@ using System.Reflection;
 
 namespace OpenTK.Audio
 {
-    #region BlittableValueType<T>
+#region BlittableValueType<T>
 
     /// <summary>
     /// Checks whether the specified type parameter is a blittable value type.
@@ -47,14 +49,14 @@ namespace OpenTK.Audio
     /// </remarks>
     public static class BlittableValueType<T>
     {
-        #region Fields
+#region Fields
 
         static readonly Type Type;
         static readonly int stride;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         static BlittableValueType()
         {
@@ -68,9 +70,9 @@ namespace OpenTK.Audio
             }
         }
 
-        #endregion
+#endregion
 
-        #region Public Members
+#region Public Members
 
         /// <summary>
         /// Gets the size of the type in bytes or 0 for non-blittable types.
@@ -80,7 +82,7 @@ namespace OpenTK.Audio
         /// </remarks>
         public static int Stride { get { return stride; } }
 
-        #region Check
+#region Check
 
         /// <summary>
         /// Checks whether the current typename T is blittable.
@@ -104,11 +106,11 @@ namespace OpenTK.Audio
             return CheckType(type);
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Private Members
+#region Private Members
 
         // Checks whether the parameter is a primitive type or consists of primitive types recursively.
         // Throws a NotSupportedException if it is not.
@@ -140,19 +142,19 @@ namespace OpenTK.Audio
             StructLayoutAttribute[] attr = (StructLayoutAttribute[])
                 type.GetCustomAttributes(typeof(StructLayoutAttribute), true);
 
-            if ((attr == null) ||
-                (attr != null && attr.Length > 0 && attr[0].Value != LayoutKind.Explicit && attr[0].Pack != 1))
+            if ((attr is null) ||
+                (attr is not null && attr.Length > 0 && attr[0].Value != LayoutKind.Explicit && attr[0].Pack != 1))
                 return false;
 
             return true;
         }
 
-        #endregion
+#endregion
     }
 
-    #endregion
+#endregion
 
-    #region BlittableValueType
+#region BlittableValueType
 
     /// <summary>
     /// Checks whether the specified type parameter is a blittable value type.
@@ -163,7 +165,7 @@ namespace OpenTK.Audio
     /// </remarks>
     public static class BlittableValueType
     {
-        #region Check
+#region Check
 
         /// <summary>
         /// Checks whether type is a blittable value type.
@@ -216,9 +218,9 @@ namespace OpenTK.Audio
             return BlittableValueType<T>.Check();
         }
 
-        #endregion
+#endregion
 
-        #region StrideOf
+#region StrideOf
 
         /// <summary>
         /// Returns the size of the specified value type in bytes or 0 if the type is not blittable.
@@ -280,10 +282,10 @@ namespace OpenTK.Audio
             return BlittableValueType<T>.Stride;
         }
 
-        #endregion
+#endregion
     }
 
-    #endregion
+#endregion
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

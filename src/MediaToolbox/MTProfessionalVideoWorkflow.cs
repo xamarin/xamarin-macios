@@ -1,3 +1,5 @@
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -7,9 +9,14 @@ using ObjCRuntime;
 
 namespace MediaToolbox {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	static public class MTProfessionalVideoWorkflow {
 
-		[Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+#endif
 		[DllImport (Constants.MediaToolboxLibrary, EntryPoint = "MTRegisterProfessionalVideoWorkflowFormatReaders")]
 		public static extern void RegisterFormatReaders ();
 	}

@@ -33,26 +33,19 @@ using System.IO;
 using System.Collections.Generic;
 using System.Net;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
 using CF=CoreFoundation;
-#elif XAMCORE_2_0
+#else
 using CoreServices;
 using CoreFoundation;
-using CF=CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
-using CF=MonoTouch.CoreFoundation;
+using CF = CoreFoundation;
 #endif
 
-namespace System.Net.Http
-{
-	public class CFNetworkHandler : HttpMessageHandler
-	{
-		class StreamBucket
-		{
+namespace System.Net.Http {
+	public class CFNetworkHandler : HttpMessageHandler {
+		class StreamBucket {
 			public TaskCompletionSource<HttpResponseMessage> Response;
 			public HttpRequestMessage Request;
 			public CancellationTokenRegistration CancellationTokenRegistration;
@@ -62,7 +55,7 @@ namespace System.Net.Http
 			public void Close ()
 			{
 				CancellationTokenRegistration.Dispose ();
-				if (ContentStream != null) {
+				if (ContentStream is not null) {
 					// The Close method of the CFContentStream blocks as you can see:
 					// public void Close ()
 					// {
@@ -154,24 +147,24 @@ namespace System.Net.Http
 			var req = CFHTTPMessage.CreateRequest (request.RequestUri, request.Method.Method, request.Version);
 
 			// TODO:
-/*
-			if (wr.ProtocolVersion == HttpVersion.Version10) {
-				wr.KeepAlive = request.Headers.ConnectionKeepAlive;
-			} else {
-				wr.KeepAlive = request.Headers.ConnectionClose != true;
-			}
+			/*
+						if (wr.ProtocolVersion == HttpVersion.Version10) {
+							wr.KeepAlive = request.Headers.ConnectionKeepAlive;
+						} else {
+							wr.KeepAlive = request.Headers.ConnectionClose != true;
+						}
 
-			if (useDefaultCredentials) {
-				wr.UseDefaultCredentials = true;
-			} else {
-				wr.Credentials = credentials;
-			}
+						if (useDefaultCredentials) {
+							wr.UseDefaultCredentials = true;
+						} else {
+							wr.Credentials = credentials;
+						}
 
-			if (useProxy) {
-				wr.Proxy = proxy;
-			}
-*/
-			if (cookies != null) {
+						if (useProxy) {
+							wr.Proxy = proxy;
+						}
+			*/
+			if (cookies is not null) {
 				string cookieHeader = cookies.GetCookieHeader (request.RequestUri);
 				if (cookieHeader != "")
 					req.SetHeaderFieldValue ("Cookie", cookieHeader);
@@ -183,7 +176,7 @@ namespace System.Net.Http
 				}
 			}
 
-			if (request.Content != null) {
+			if (request.Content is not null) {
 				foreach (var header in request.Content.Headers) {
 					foreach (var value in header.Value) {
 						req.SetHeaderFieldValue (header.Key, value);
@@ -194,19 +187,21 @@ namespace System.Net.Http
 			return req;
 		}
 
-		protected internal override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
+#if !NET
+		internal
+#endif
+		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			return await SendAsync (request, cancellationToken, true).ConfigureAwait (false);
 		}
-		
+
 		internal async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken, bool isFirstRequest)
 		{
 			sentRequest = true;
 
 			CFHTTPStream stream;
-			using (var message = CreateWebRequestAsync (request))
-			{
-				if (request.Content != null) {
+			using (var message = CreateWebRequestAsync (request)) {
+				if (request.Content is not null) {
 					var data = await request.Content.ReadAsByteArrayAsync ().ConfigureAwait (false);
 					message.SetBody (data);
 				}
@@ -245,11 +240,7 @@ namespace System.Net.Http
 			// Always schedule stream events handling on main-loop. Due to ConfigureAwait (false) we may end up
 			// on any thread-pool thread which may not have run-loop running
 			//
-#if XAMCORE_2_0
 			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.ModeCommon);
-#else
-			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.CFRunLoopCommonModes);
-#endif
 
 			stream.Open ();
 
@@ -264,19 +255,19 @@ namespace System.Net.Http
 
 			if (isFirstRequest) {
 				var initialRequest = await response.Task;
- 				var status = initialRequest.StatusCode;
- 				if (IsRedirect (status) && allowAutoRedirect) {
- 					bucket.StreamCanBeDisposed = true;
- 					// we do not care about the first stream cbs
+				var status = initialRequest.StatusCode;
+				if (IsRedirect (status) && allowAutoRedirect) {
+					bucket.StreamCanBeDisposed = true;
+					// we do not care about the first stream cbs
 					stream.HasBytesAvailableEvent -= HandleHasBytesAvailableEvent;
 					stream.ErrorEvent -= HandleErrorEvent;
 					stream.ClosedEvent -= HandleClosedEvent;
 					// remove headers in a redirect for Authentication.
 					request.Headers.Authorization = null;
- 					return await SendAsync (request, cancellationToken, false).ConfigureAwait (false);
- 				}
- 				return initialRequest;
- 			} 
+					return await SendAsync (request, cancellationToken, false).ConfigureAwait (false);
+				}
+				return initialRequest;
+			}
 			return await response.Task;
 		}
 
@@ -290,10 +281,10 @@ namespace System.Net.Http
 				status == HttpStatusCode.RedirectMethod || // 303
 				status == HttpStatusCode.RedirectKeepVerb; // 307
 		}
-		
+
 		void HandleErrorEvent (object sender, CFStream.StreamEventArgs e)
 		{
-			var stream = (CFHTTPStream)sender;
+			var stream = (CFHTTPStream) sender;
 
 			StreamBucket bucket;
 			if (!streamBuckets.TryGetValue (stream.Handle, out bucket))
@@ -306,7 +297,7 @@ namespace System.Net.Http
 
 		void HandleClosedEvent (object sender, CFStream.StreamEventArgs e)
 		{
-			var stream = (CFHTTPStream)sender;
+			var stream = (CFHTTPStream) sender;
 			// might not have been called (e.g. no data) but initialize critical data
 			HandleHasBytesAvailableEvent (sender, e);
 			CloseStream (stream);
@@ -315,10 +306,10 @@ namespace System.Net.Http
 		void CloseStream (CFHTTPStream stream)
 		{
 			lock (streamBuckets) {
-			    if (streamBuckets.TryGetValue (stream.Handle, out var bucket)) {
-				    bucket.Close ();
-				    streamBuckets.Remove (stream.Handle);
-			    }
+				if (streamBuckets.TryGetValue (stream.Handle, out var bucket)) {
+					bucket.Close ();
+					streamBuckets.Remove (stream.Handle);
+				}
 			}
 			stream.Close ();
 		}
@@ -343,27 +334,27 @@ namespace System.Net.Http
 				throw new NotImplementedException ();
 
 			bucket.ContentStream = new CFContentStream (stream);
-				
+
 			var response_msg = new HttpResponseMessage (header.ResponseStatusCode);
 			response_msg.RequestMessage = bucket.Request;
 			response_msg.ReasonPhrase = header.ResponseStatusLine;
 			response_msg.Content = bucket.ContentStream;
 
 			var fields = header.GetAllHeaderFields ();
-			if (fields != null) {
+			if (fields is not null) {
 				foreach (var entry in fields) {
-					if (entry.Key == null)
+					if (entry.Key is null)
 						continue;
 
 					var key = entry.Key.ToString ();
-					var value = entry.Value == null ? string.Empty : entry.Value.ToString ();
+					var value = entry.Value is null ? string.Empty : entry.Value.ToString ();
 					HttpHeaders item_headers;
-					if (HttpHeaders.GetKnownHeaderKind (key) == Headers.HttpHeaderKind.Content) {
+					if (IsContentHeader (key)) {
 						item_headers = response_msg.Content.Headers;
 					} else {
 						item_headers = response_msg.Headers;
 
-						if (cookies != null && (key == "Set-Cookie" || key == "Set-Cookie2"))
+						if (cookies is not null && (key == "Set-Cookie" || key == "Set-Cookie2"))
 							AddCookie (value, bucket.Request.RequestUri, key);
 					}
 
@@ -381,14 +372,45 @@ namespace System.Net.Http
 
 		void AddCookie (string value, Uri uri, string header)
 		{
+#if NET
+			// .NET: CookieCollection.CookieCutter is internal to mscorlib:
+			// https://github.com/microsoft/referencesource/blob/a7bd3242bd7732dec4aebb21fbc0f6de61c2545e/System/net/System/Net/cookiecontainer.cs#L632
+			// https://github.com/xamarin/xamarin-macios/issues/8072
+			// so use the public CookieContainer.SetCookies instead.
+			try {
+				cookies.SetCookies (uri, value);
+			} catch {
+			}
+#else
 			CookieCollection cookies1 = null;
 			try {
 				cookies1 = cookies.CookieCutter (uri, header, value, false);
 			} catch {
 			}
 
-			if (cookies1 != null && cookies1.Count != 0) 
+			if (cookies1 is not null && cookies1.Count != 0)
 				cookies.Add (cookies1);
+#endif
+		}
+
+		static bool IsContentHeader (string header)
+		{
+			// The headers here which have HttpHeaderType.Content: https://github.com/dotnet/runtime/blob/e9853d4baa4c9510dc62ed5852f8381141f3c87e/src/libraries/System.Net.Http/src/System/Net/Http/Headers/KnownHeaders.cs#L15-L101
+			switch (header) {
+			case "Allow":
+			case "ContentDisposition":
+			case "ContentEncoding":
+			case "ContentLanguage":
+			case "ContentLength":
+			case "ContentLocation":
+			case "ContentMD5":
+			case "ContentRange":
+			case "ContentType":
+			case "Expires":
+			case "LastModified":
+				return true;
+			}
+			return false;
 		}
 	}
 }

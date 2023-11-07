@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVPlayerViewController
 //
 // Authors:
@@ -7,22 +7,16 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_IAD
 
 using System;
-#if XAMCORE_2_0
 using AVKit;
 using Foundation;
 using UIKit;
 using iAd;
 using ObjCRuntime;
-#else
-using MonoTouch.AVKit;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.iAd;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVKit {
 
@@ -33,11 +27,11 @@ namespace MonoTouchFixtures.AVKit {
 		[Test]
 		public void PreparePrerollAds_New ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			AVPlayerViewController.PrepareForPrerollAds ();
 		}
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_IAD

@@ -71,15 +71,19 @@ fi
 
 JSONFILE=$(mktemp)
 LOGFILE=$(mktemp)
+TMPFILE=$(mktemp)
 cleanup ()
 {
-	rm -f "$JSONFILE" "$LOGFILE"
+	rm -f "$JSONFILE" "$LOGFILE" "$TMPFILE"
 }
 trap cleanup ERR
 trap cleanup EXIT
 
+# Cap comment at 32768 characters, to avoid running into GitHub limits.
+head -c 32768 "$FILE" > "$TMPFILE"
+
 printf '{\n"body": ' > "$JSONFILE"
-python -c 'import json,sys; print(json.dumps(sys.stdin.read()))' < "$FILE" >> "$JSONFILE"
+python -c 'import json,sys; print(json.dumps(sys.stdin.read()))' < "$TMPFILE" >> "$JSONFILE"
 printf '}\n' >> "$JSONFILE"
 
 if test -n "$VERBOSE"; then

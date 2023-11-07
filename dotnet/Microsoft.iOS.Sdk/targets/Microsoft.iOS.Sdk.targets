@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Xamarin.Shared.Sdk.targets" />
+
+  <!--
+       There's no way to execute a task (for instance to calculate the arguments to mlaunch) in "dotnet run",
+       so we rely on the 'Run' target instead. Quite ugly, but it seems to work, even though it won't support
+       "dotnet run" flags such as /no-build. OTOH we try to support /configuration and /runtime.
+       Ref: https://github.com/dotnet/sdk/issues/18436
+  -->
+  <PropertyGroup>
+    <RunCommand>$(NetCoreRoot)/dotnet</RunCommand>
+    <RunArguments>build "$(MSBuildProjectFullPath)" /t:Run /p:RuntimeIdentifier=$(RuntimeIdentifier) /p:Configuration=$(Configuration)</RunArguments>
+  </PropertyGroup>
+</Project>

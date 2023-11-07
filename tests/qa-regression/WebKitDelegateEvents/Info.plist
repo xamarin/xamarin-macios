@@ -5,13 +5,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>WebKitDelegateEvents</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.WebKitDelegateEvents</string>
+	<string>com.xamarin.WebKitDelegateEvents</string>
 	<key>CFBundleName</key>
 	<string>WebKitDelegateEvents</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.9</string>
+	<string>10.15</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

@@ -5,6 +5,7 @@ using System;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+using UniformTypeIdentifiers;
 
 #if MONOMAC
 using AppKit;
@@ -14,9 +15,14 @@ using UIKit;
 using NSImage = Foundation.NSObject;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuickLookThumbnailing {
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("QLThumbnailErrorDomain")]
 	enum QLThumbnailError : long {
@@ -28,7 +34,8 @@ namespace QuickLookThumbnailing {
 		RequestCancelled,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
 	enum QLThumbnailGenerationRequestRepresentationTypes : ulong {
@@ -39,7 +46,8 @@ namespace QuickLookThumbnailing {
 		All = UInt64.MaxValue,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum QLThumbnailRepresentationType : long {
 		Icon = 0,
@@ -47,7 +55,8 @@ namespace QuickLookThumbnailing {
 		Thumbnail = 2,
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLThumbnailGenerator {
@@ -72,13 +81,14 @@ namespace QuickLookThumbnailing {
 		void SaveBestRepresentation (QLThumbnailGenerationRequest request, NSUrl fileUrl, string contentType, Action<NSError> completionHandler);
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLThumbnailGenerationRequest : NSCopying, NSSecureCoding {
 
 		[Export ("initWithFileAtURL:size:scale:representationTypes:")]
-		IntPtr Constructor (NSUrl url, CGSize size, nfloat scale, QLThumbnailGenerationRequestRepresentationTypes representationTypes);
+		NativeHandle Constructor (NSUrl url, CGSize size, nfloat scale, QLThumbnailGenerationRequestRepresentationTypes representationTypes);
 
 		[Export ("minimumDimension")]
 		nfloat MinimumDimension { get; set; }
@@ -94,9 +104,15 @@ namespace QuickLookThumbnailing {
 
 		[Export ("representationTypes")]
 		QLThumbnailGenerationRequestRepresentationTypes RepresentationTypes { get; }
+
+		[Mac (11, 0)]
+		[iOS (14, 0)]
+		[MacCatalyst (14, 0)]
+		[NullAllowed, Export ("contentType", ArgumentSemantic.Copy)]
+		UTType ContentType { get; set; }
 	}
 
-	[Mac (10,15), iOS (13,0)]
+	[iOS (13, 0), MacCatalyst (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface QLThumbnailRepresentation {
 
@@ -107,23 +123,28 @@ namespace QuickLookThumbnailing {
 		CGImage CGImage { get; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Export ("UIImage", ArgumentSemantic.Strong)]
 		UIImage UIImage { get; }
 
 		[NoiOS]
+		[NoMacCatalyst]
 		[Export ("NSImage", ArgumentSemantic.Strong)]
 		NSImage NSImage { get; }
+
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("contentRect")]
+		CGRect ContentRect { get; }
 	}
 }
 
-#if IOS && !XAMCORE_4_0
+#if IOS && !NET
 namespace QuickLook {
 #else
 namespace QuickLookThumbnailing {
 #endif
 
-	[Mac (10,15)]
-	[iOS (11,0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface QLThumbnailProvider {
 		[Export ("provideThumbnailForFileRequest:completionHandler:")]
@@ -131,11 +152,15 @@ namespace QuickLookThumbnailing {
 	}
 
 	[ThreadSafe] // Members get called inside 'QLThumbnailProvider.ProvideThumbnail' which runs on a background thread.
-	[iOS (11,0)]
-	[Mac (10,15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface QLThumbnailReply {
+
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Export ("extensionBadge")]
+		string ExtensionBadge { get; set; }
+
 		[Static]
 		[Export ("replyWithContextSize:drawingBlock:")]
 		QLThumbnailReply CreateReply (CGSize contextSize, Func<CGContext, bool> drawingBlock);
@@ -150,8 +175,7 @@ namespace QuickLookThumbnailing {
 	}
 
 	[ThreadSafe]
-	[iOS (11,0)]
-	[Mac (10,15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface QLFileThumbnailRequest {
 		[Export ("maximumSize")]

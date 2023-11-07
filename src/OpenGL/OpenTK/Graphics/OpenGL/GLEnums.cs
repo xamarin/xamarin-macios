@@ -23,13 +23,15 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+
+#if OPENTK_DLL
 
 using System;
 
 namespace OpenTK.Graphics.OpenGL
 {
-    #pragma warning disable 1591
+#pragma warning disable 1591
 
     public enum AccumOp : int
     {
@@ -14553,4 +14555,4 @@ namespace OpenTK.Graphics.OpenGL
 
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

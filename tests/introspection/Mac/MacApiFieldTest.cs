@@ -24,12 +24,6 @@ namespace Introspection {
 			ContinueOnFailure = true;
 		}
 
-		static bool IsUnified {
-			get {
-				return AppDomain.CurrentDomain.GetAssemblies ().Any (x => x.FullName.Contains ("Xamarin.Mac"));
-			}
-		}
-
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
@@ -58,30 +52,19 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 12) || IntPtr.Size != 8)
 					return true;
 				break;
+			case "MonoMac.QTKit": // QTKit has been removed from macOS
+			case "QTKit":
+				return true;
 			}
 			return false;
 		}
 
 		protected override bool Skip (PropertyInfo p)
 		{
-			switch (p.DeclaringType.Name) {
-			case "NSUrlSessionDownloadDelegate":
-				switch (p.Name) {
-				case "TaskResumeDataKey":
-					// This field was introduced as 64-bit only in Mavericks, and 32+64bits in Yosemite. We can't
-					// express that with our AvailabilityAttribute, we set it as available (for all architectures, since
-					// we can't distinguish them) starting with Mavericks.
-					if (Mac.Is32BitMavericks)
-						return true;
-					break;
-				}
-				break;
-			}
-
 			switch (p.Name) {
 			case "CharacteristicValidRangeString":
 				return Mac.CheckSystemVersion (10, 13); // radar 32858911 
-			// NSTableView
+														// NSTableView
 			case "RowViewKey":
 				return true;
 			// NSBitmapImageRep
@@ -90,7 +73,7 @@ namespace Introspection {
 			case "DitherTransparency":
 				return true;
 			// CIImage 10.8+
-			case "AutoAdjustFeaturesKey":	// kCIImageAutoAdjustFeatures - documented in 10.8
+			case "AutoAdjustFeaturesKey":   // kCIImageAutoAdjustFeatures - documented in 10.8
 			case "AutoAdjustRedEyeKey":
 			case "AutoAdjustEnhanceKey":
 			case "CIImagePropertiesKey":
@@ -98,8 +81,8 @@ namespace Introspection {
 			// CIImage
 			case "CIImageColorSpaceKey":
 				return true; // returns null but documented prior to 10.8
-			// CLLocation 10.8+
-			case "ErrorUserInfoAlternateRegionKey":		// kCLErrorUserInfoAlternateRegionKey also returns null on iOS
+							 // CLLocation 10.8+
+			case "ErrorUserInfoAlternateRegionKey":     // kCLErrorUserInfoAlternateRegionKey also returns null on iOS
 				return true;
 			// NSUrl 10.8+
 			case "PathKey":
@@ -119,38 +102,38 @@ namespace Introspection {
 			case "QuickTimeUserDataKeyTaggedCharacteristic":
 				return !Mac.CheckSystemVersion (10, 8);
 			// CIDetector
-			case "TypeFace":	// CIDetectorTypeFace - documented as available in 10.7
-			case "Accuracy":	// CIDetectorAccuracy 10.7
-			case "AccuracyLow":	// CIDetectorAccuracyLow 10.7
-			case "AccuracyHigh":	// CIDetectorAccuracyHigh 10.7
-				return true; 
+			case "TypeFace":    // CIDetectorTypeFace - documented as available in 10.7
+			case "Accuracy":    // CIDetectorAccuracy 10.7
+			case "AccuracyLow": // CIDetectorAccuracyLow 10.7
+			case "AccuracyHigh":    // CIDetectorAccuracyHigh 10.7
+				return true;
 			// CIDetector
-			case "ImageOrientation":		// documented in 10.8
+			case "ImageOrientation":        // documented in 10.8
 			case "Tracking":
 			case "MinFeatureSize":
-				return true; 
+				return true;
 			// CGImageProperties - all new (10.7) values are missing (from pre-6 iOS too iirc)
-			case "ExifCameraOwnerName":	// kCGImagePropertyExifCameraOwnerName
-			case "ExifBodySerialNumber":	// kCGImagePropertyExifBodySerialNumber
-			case "ExifLensSpecification":	// kCGImagePropertyExifLensSpecification
-			case "ExifLensMake":		// kCGImagePropertyExifLensMake
-			case "ExifLensModel":		// kCGImagePropertyExifLensModel
-			case "ExifLensSerialNumber":	// kCGImagePropertyExifLensSerialNumber
+			case "ExifCameraOwnerName": // kCGImagePropertyExifCameraOwnerName
+			case "ExifBodySerialNumber":    // kCGImagePropertyExifBodySerialNumber
+			case "ExifLensSpecification":   // kCGImagePropertyExifLensSpecification
+			case "ExifLensMake":        // kCGImagePropertyExifLensMake
+			case "ExifLensModel":       // kCGImagePropertyExifLensModel
+			case "ExifLensSerialNumber":    // kCGImagePropertyExifLensSerialNumber
 				return true;
 			// ACErrorDomain is _listed_ in the 10.8 Accounts Changes but like iOS it's not documented anywhere else (and does not seems to exists)
 			case "ErrorDomain":
 			// ACAccountStoreDidChangeNotification - documented in 10.8
 			case "ChangeNotification":
 			// ACAccountType - documented in 10.8
-			case "Twitter":				// ACAccountTypeIdentifierTwitter
+			case "Twitter":             // ACAccountTypeIdentifierTwitter
 			case "SinaWeibo":
 			case "Facebook":
-			case "AppId":				// ACFacebookAppIdKey
-			case "Permissions":			// ACFacebookPermissionsKey
-			case "Audience":			// *** NOT documented in 10.8 - but part of our API enhancement
-			case "Everyone":			// ^ MonoMac.Accounts.ACFacebookAudienceValue.Everyone
-			case "Friends":				// ^ MonoMac.Accounts.ACFacebookAudienceValue.Friends
-			case "OnlyMe":				// ^ MonoMac.Accounts.ACFacebookAudienceValue.OnlyMe
+			case "AppId":               // ACFacebookAppIdKey
+			case "Permissions":         // ACFacebookPermissionsKey
+			case "Audience":            // *** NOT documented in 10.8 - but part of our API enhancement
+			case "Everyone":            // ^ MonoMac.Accounts.ACFacebookAudienceValue.Everyone
+			case "Friends":             // ^ MonoMac.Accounts.ACFacebookAudienceValue.Friends
+			case "OnlyMe":              // ^ MonoMac.Accounts.ACFacebookAudienceValue.OnlyMe
 				return true;
 			// MonoMac.CoreServices.CFHTTPMessage - document in 10.9 but returns null
 			case "_AuthenticationSchemeOAuth1":
@@ -159,14 +142,6 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 13)) // radar 32858911
 					return true;
 				goto default;
-#if !UNIFIED
-			case "InputRSSArticleDurationKey":
-			case "InputRSSFeedURLKey":
-			case "ProtocolRSSVisualizer":
-				if (Mac.CheckSystemVersion (10, 14))
-					return true;
-				goto default;
-#endif
 			default:
 				return base.Skip (p);
 			}
@@ -182,26 +157,19 @@ namespace Introspection {
 			// Only there for API compat
 			case "kSecUseNoAuthenticationUI":
 			case "kSecUseOperationPrompt":
-				return !IsUnified;
+				return false;
 			// MonoMac.CoreServices.CFHTTPMessage - document in 10.9 but returns null
 			case "kCFHTTPAuthenticationSchemeOAuth1":
 				return true;
 			// kCLErrorUserInfoAlternateRegionKey also returns null on iOS
 			case "kCLErrorUserInfoAlternateRegionKey":
 				return true;
-			case "NSURLSessionTransferSizeUnknown":
-			case "NSURLSessionDownloadTaskResumeData":
-				if (Mac.Is32BitMavericks)
-					return true;
-				goto default;
-#if !UNIFIED
 			case "QCCompositionInputRSSArticleDurationKey":
 			case "QCCompositionInputRSSFeedURLKey":
 			case "QCCompositionProtocolRSSVisualizer":
 				if (Mac.CheckSystemVersion (10, 14))
 					return true;
 				goto default;
-#endif
 			default:
 				return base.Skip (constantName, libraryName);
 			}
@@ -209,8 +177,8 @@ namespace Introspection {
 
 		protected override bool SkipNotification (Type declaredType, string notificationName)
 		{
-			switch (declaredType.Name){
-#if !XAMCORE_4_0
+			switch (declaredType.Name) {
+#if !NET
 			case "NSWorkspaceAccessibilityNotifications":
 			case "NSAccessibilityNotifications":
 				return true;
@@ -232,16 +200,16 @@ namespace Introspection {
 		{
 			switch (libraryName) {
 			case "CFNetwork":
-				if (Mac.IsAtLeast (10,8))
+				if (Mac.IsAtLeast (10, 8))
 					break;
 				return "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CFNetwork.framework/CFNetwork";
 			case "CoreText":
 			case "CoreGraphics":
-				if (Mac.IsAtLeast (10,8))
+				if (Mac.IsAtLeast (10, 8))
 					break;
 				return string.Format ("/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/{0}.framework/{0}", libraryName);
 			case "ImageIO":
-				if (Mac.IsAtLeast (10,9))
+				if (Mac.IsAtLeast (10, 9))
 					break;
 				return "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/ImageIO";
 			case "CoreImage":

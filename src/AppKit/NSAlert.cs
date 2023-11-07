@@ -26,21 +26,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__ // Mac Catalyst doesn't have NSAlert
+
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
 
-namespace AppKit
-{
+#nullable enable
+
+namespace AppKit {
 	[Register ("__MonoMac_NSAlertDidEndDispatcher")]
-	internal class NSAlertDidEndDispatcher : NSObject
-	{
+	internal class NSAlertDidEndDispatcher : NSObject {
 		const string selector = "alertDidEnd:returnCode:contextInfo:";
 		public static readonly Selector Selector = new Selector (selector);
 
-		Action<nint> action;
+		Action<nint>? action;
 
 		public NSAlertDidEndDispatcher (Action<nint> action)
 		{
@@ -54,7 +57,7 @@ namespace AppKit
 		public void OnAlertDidEnd (NSAlert alert, nint returnCode, IntPtr context)
 		{
 			try {
-				if (action != null)
+				if (action is not null)
 					action (returnCode);
 			} finally {
 				action = null;
@@ -63,17 +66,16 @@ namespace AppKit
 		}
 	}
 
-	public partial class NSAlert
-	{
+	public partial class NSAlert {
 		public void BeginSheet (NSWindow window)
 		{
 			BeginSheet (window, null, null, IntPtr.Zero);
 		}
 
-		public void BeginSheet (NSWindow window, Action onEnded)
+		public void BeginSheet (NSWindow window, Action? onEnded)
 		{
 			BeginSheetForResponse (window, r => {
-				if (onEnded != null)
+				if (onEnded is not null)
 					onEnded ();
 			});
 		}
@@ -88,13 +90,13 @@ namespace AppKit
 			return RunSheetModal (window, NSApplication.SharedApplication);
 		}
 
-		public nint RunSheetModal (NSWindow window, NSApplication application)
+		public nint RunSheetModal (NSWindow? window, NSApplication application)
 		{
-			if (application == null)
+			if (application is null)
 				throw new ArgumentNullException ("application");
 
 			// same behavior as BeginSheet with a null window
-			if (window == null)
+			if (window is null)
 				return RunModal ();
 
 			nint returnCode = -1000;
@@ -110,3 +112,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // __MACCATALYST__

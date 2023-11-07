@@ -1,16 +1,13 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Xml;
 
-namespace Xamarin
-{
-	static class PListExtensions
-	{
+namespace Xamarin {
+	static class PListExtensions {
 		public static void LoadWithoutNetworkAccess (this XmlDocument doc, string filename)
 		{
 			using (var fs = new FileStream (filename, FileMode.Open, FileAccess.Read)) {
-				var settings = new XmlReaderSettings ()
-				{
+				var settings = new XmlReaderSettings () {
 					XmlResolver = null,
 					DtdProcessing = DtdProcessing.Parse,
 				};
@@ -67,7 +64,7 @@ namespace Xamarin
 			SetPListStringValue (plist, "CFBundleName", value);
 		}
 
-		public static void SetUIDeviceFamily (this XmlDocument plist, params int[] families)
+		public static void SetUIDeviceFamily (this XmlDocument plist, params int [] families)
 		{
 			SetPListArrayOfIntegerValues (plist, "UIDeviceFamily", families);
 		}
@@ -90,7 +87,7 @@ namespace Xamarin
 		public static void SetPListStringValue (this XmlDocument plist, string node, string value)
 		{
 			var element = plist.SelectSingleNode ("//dict/key[text()='" + node + "']");
-			if (element == null) {
+			if (element is null) {
 				AddPListStringValue (plist, node, value);
 			} else {
 				element.NextSibling.InnerText = value;
@@ -119,7 +116,7 @@ namespace Xamarin
 			root.AppendChild (valueElement);
 		}
 
-		public static void SetPListArrayOfIntegerValues (this XmlDocument plist, string node, params int[] values)
+		public static void SetPListArrayOfIntegerValues (this XmlDocument plist, string node, params int [] values)
 		{
 			var key = plist.SelectSingleNode ("//dict/key[text()='" + node + "']");
 			key.ParentNode.RemoveChild (key.NextSibling);
@@ -141,7 +138,7 @@ namespace Xamarin
 
 		public static bool ContainsKey (this XmlDocument plist, string key)
 		{
-			return plist.SelectSingleNode ("//dict/key[text()='" + key + "']") != null;
+			return plist.SelectSingleNode ("//dict/key[text()='" + key + "']") is not null;
 		}
 	}
 }

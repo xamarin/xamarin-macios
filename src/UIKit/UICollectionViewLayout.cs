@@ -19,7 +19,7 @@ namespace UIKit {
 
 		public void RegisterClassForDecorationView (Type viewType, NSString kind)
 		{
-			RegisterClassForDecorationView (viewType == null ? IntPtr.Zero : Class.GetHandle (viewType), kind);
+			RegisterClassForDecorationView (viewType is null ? IntPtr.Zero : Class.GetHandle (viewType), kind);
 		}
 
 		public UICollectionViewLayoutAttributes LayoutAttributesForSupplementaryView (UICollectionElementKindSection section, NSIndexPath indexPath)
@@ -36,7 +36,7 @@ namespace UIKit {
 				throw new ArgumentOutOfRangeException ("section");
 			}
 
-			return LayoutAttributesForSupplementaryView (kind, indexPath);			
+			return LayoutAttributesForSupplementaryView (kind, indexPath);
 		}
 	}
 }

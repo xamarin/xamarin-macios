@@ -1,19 +1,14 @@
-﻿using System;
-#if XAMCORE_2_0
+using System;
 using Foundation;
 using CoreData;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PropertyDescriptionTest {
-		
+
 		[Test]
 		public void WeakFramework ()
 		{
@@ -38,7 +33,7 @@ namespace MonoTouchFixtures.CoreData {
 			using (var pd = new NSPropertyDescription ()) {
 				Assert.IsTrue (pd.Optional, "A property should be Optional as default.");
 				pd.Optional = false;
-				Assert.IsFalse (pd.Optional , "Optional was not correctly set.");
+				Assert.IsFalse (pd.Optional, "Optional was not correctly set.");
 			}
 		}
 
@@ -57,10 +52,10 @@ namespace MonoTouchFixtures.CoreData {
 		{
 			using (var pd = new NSPropertyDescription ()) {
 				Assert.IsNull (pd.RenamingIdentifier,
-				               "A property by default should have the RenamingIndentifier set to null");
+							   "A property by default should have the RenamingIndentifier set to null");
 				pd.RenamingIdentifier = "Foo";
 				Assert.AreEqual ("Foo", pd.RenamingIdentifier,
-				                 "RenamingIdentifier was not correctly set.");
+								 "RenamingIdentifier was not correctly set.");
 			}
 		}
 	}

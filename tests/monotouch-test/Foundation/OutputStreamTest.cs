@@ -10,17 +10,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class OutputStreamTest {
 
 		[Test]
@@ -46,7 +43,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var s = (NSOutputStream) NSOutputStream.OutputStreamToMemory ()) {
 				s.Open ();
-				s.Write (new byte[] { 1, 2, 3 }, 3);
+				s.Write (new byte [] { 1, 2, 3 }, 3);
 				using (var obj = s [NSStream.DataWrittenToMemoryStreamKey] as NSData) {
 					Assert.IsNotNull (obj, "a");
 					Assert.AreEqual (1, Marshal.ReadByte (obj.Bytes, 0), "a[0]");
@@ -57,7 +54,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var s = new NSOutputStream ()) {
 				s.Open ();
-				s.Write (new byte[] { 1, 2, 3 });
+				s.Write (new byte [] { 1, 2, 3 });
 				using (var obj = s [NSStream.DataWrittenToMemoryStreamKey] as NSData) {
 					Assert.IsNotNull (obj, "a");
 					Assert.AreEqual (1, Marshal.ReadByte (obj.Bytes, 0), "b[0]");
@@ -68,7 +65,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			using (var s = (NSOutputStream) NSOutputStream.OutputStreamToMemory ()) {
 				s.Open ();
-				s.Write (new byte[] { 1, 2, 3 }, 2, 1);
+				s.Write (new byte [] { 1, 2, 3 }, 2, 1);
 				using (var obj = s [NSStream.DataWrittenToMemoryStreamKey] as NSData) {
 					Assert.IsNotNull (obj, "a");
 					Assert.AreEqual (3, Marshal.ReadByte (obj.Bytes, 0), "c[0]");

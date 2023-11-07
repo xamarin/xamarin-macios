@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSMutableOrderedSet Generic support
 //
 // Authors:
@@ -7,8 +7,6 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-
-#if XAMCORE_2_0
 
 using System;
 using System.Collections;
@@ -21,6 +19,7 @@ using Foundation;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSMutableOrderedSet1Test {
 
 		[Test]
@@ -28,7 +27,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var oset = new NSMutableOrderedSet<NSData> ();
 
-			Assert.AreEqual (0, oset.Count, "NSMutableOrderedSet Count");
+			Assert.AreEqual ((nint) 0, oset.Count, "NSMutableOrderedSet Count");
 		}
 
 		[Test]
@@ -36,7 +35,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var oset = new NSMutableOrderedSet<NSData> (10);
 
-			Assert.AreEqual (0, oset.Count, "NSMutableOrderedSet Count");
+			Assert.AreEqual ((nint) 0, oset.Count, "NSMutableOrderedSet Count");
 		}
 
 		[Test]
@@ -44,7 +43,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var oSet = new NSMutableOrderedSet<NSString> (start: (NSString) "foo");
 
-			Assert.AreEqual (1, oSet.Count, "NSMutableOrderedSet Count");
+			Assert.AreEqual ((nint) 1, oSet.Count, "NSMutableOrderedSet Count");
 		}
 
 		[Test]
@@ -52,7 +51,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			var oSet = new NSMutableOrderedSet<NSString> ((NSString) "foo", (NSString) "bar", (NSString) "xyz");
 
-			Assert.AreEqual (3, oSet.Count, "NSMutableOrderedSet Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "NSMutableOrderedSet Count");
 		}
 
 		[Test]
@@ -61,7 +60,7 @@ namespace MonoTouchFixtures.Foundation {
 			var set = new NSSet<NSString> ((NSString) "foo", (NSString) "bar", (NSString) "xyz");
 			var oSet = new NSMutableOrderedSet<NSString> (set);
 
-			Assert.AreEqual (set.Count, oSet.Count, "NSMutableOrderedSet Count");
+			Assert.AreEqual ((nint) set.Count, oSet.Count, "NSMutableOrderedSet Count");
 		}
 
 		[Test]
@@ -90,9 +89,9 @@ namespace MonoTouchFixtures.Foundation {
 			var str3 = (NSString) "3";
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2, str3);
 
-			Assert.AreEqual (3, oSet.Count, "NSOrderedSet1Test Count");
-			Assert.AreSame (str2, oSet[1], "NSOrderedSet1Test IndexOf");
-			Assert.Throws<ArgumentNullException> (()=> oSet[1] = null);
+			Assert.AreEqual ((nint) 3, oSet.Count, "NSOrderedSet1Test Count");
+			Assert.AreSame (str2, oSet [1], "NSOrderedSet1Test IndexOf");
+			Assert.Throws<ArgumentNullException> (() => oSet [1] = null);
 		}
 
 		[Test]
@@ -104,8 +103,8 @@ namespace MonoTouchFixtures.Foundation {
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2, str3);
 			NSSet<NSString> set = oSet.AsSet ();
 
-			Assert.AreEqual (3, oSet.Count, "NSOrderedSet1Test Count");
-			Assert.AreEqual (3, set.Count, "NSOrderedSet1Test Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "NSOrderedSet1Test Count");
+			Assert.AreEqual ((nuint) 3, set.Count, "NSOrderedSet1Test Count");
 			Assert.AreSame (str3, set.LookupMember (str3), "NSOrderedSet1Test IndexOf");
 		}
 
@@ -116,12 +115,12 @@ namespace MonoTouchFixtures.Foundation {
 			var str2 = (NSString) "2";
 			var str3 = (NSString) "3";
 			var oSet = new NSMutableOrderedSet<NSString> ();
-			Assert.AreEqual (0, oSet.Count, "InsertTest Count");
+			Assert.AreEqual ((nint) 0, oSet.Count, "InsertTest Count");
 
 			oSet.Insert (str1, 0);
 			oSet.Insert (str2, 1);
 			oSet.Insert (str3, 2);
-			Assert.AreEqual (3, oSet.Count, "InsertTest Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "InsertTest Count");
 		}
 
 		[Test]
@@ -149,7 +148,7 @@ namespace MonoTouchFixtures.Foundation {
 				str1, str2, str3
 			};
 
-			Assert.AreEqual (3, oSet.Count, "AddTest Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "AddTest Count");
 			Assert.IsTrue (oSet.Contains (str1), "AddTest Contains 1");
 			Assert.IsTrue (oSet.Contains (str2), "AddTest Contains 2");
 			Assert.IsTrue (oSet.Contains (str3), "AddTest Contains 3");
@@ -164,7 +163,7 @@ namespace MonoTouchFixtures.Foundation {
 			var oSet = new NSMutableOrderedSet<NSString> ();
 			oSet.AddObjects (str1, str2, str3);
 
-			Assert.AreEqual (3, oSet.Count, "AddObjectsTest Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "AddObjectsTest Count");
 			Assert.IsTrue (oSet.Contains (str1), "AddObjectsTest Contains 1");
 			Assert.IsTrue (oSet.Contains (str2), "AddObjectsTest Contains 2");
 			Assert.IsTrue (oSet.Contains (str3), "AddObjectsTest Contains 3");
@@ -178,15 +177,15 @@ namespace MonoTouchFixtures.Foundation {
 			var str3 = (NSString) "3";
 			var str4 = (NSString) "4";
 			var oSet = new NSMutableOrderedSet<NSString> (str4);
-			oSet.InsertObjects (new[] {str1, str2, str3}, NSIndexSet.FromNSRange (new NSRange (0, 3)));
+			oSet.InsertObjects (new [] { str1, str2, str3 }, NSIndexSet.FromNSRange (new NSRange (0, 3)));
 
-			Assert.AreEqual (4, oSet.Count, "InsertObjectsTest Count");
+			Assert.AreEqual ((nint) 4, oSet.Count, "InsertObjectsTest Count");
 			Assert.IsTrue (oSet.Contains (str1), "InsertObjectsTest Contains 1");
 			Assert.IsTrue (oSet.Contains (str2), "InsertObjectsTest Contains 2");
 			Assert.IsTrue (oSet.Contains (str3), "InsertObjectsTest Contains 3");
 			Assert.IsTrue (oSet.Contains (str4), "InsertObjectsTest Contains 4");
-			Assert.AreSame (str1, oSet[0], "InsertObjectsTest 1 == 1");
-			Assert.AreSame (str4, oSet[3], "InsertObjectsTest 4 == 4");
+			Assert.AreSame (str1, oSet [0], "InsertObjectsTest 1 == 1");
+			Assert.AreSame (str4, oSet [3], "InsertObjectsTest 4 == 4");
 		}
 
 		[Test]
@@ -198,13 +197,13 @@ namespace MonoTouchFixtures.Foundation {
 			var str4 = (NSString) "4";
 
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2);
-			Assert.AreEqual (2, oSet.Count, "ReplaceObjectsTest Count");
-			Assert.AreSame (str1, oSet[0], "ReplaceObjectsTest 1 == 1");
-			Assert.AreSame (str2, oSet[1], "ReplaceObjectsTest 2 == 2");
+			Assert.AreEqual ((nint) 2, oSet.Count, "ReplaceObjectsTest Count");
+			Assert.AreSame (str1, oSet [0], "ReplaceObjectsTest 1 == 1");
+			Assert.AreSame (str2, oSet [1], "ReplaceObjectsTest 2 == 2");
 
 			oSet.ReplaceObjects (NSIndexSet.FromNSRange (new NSRange (0, 2)), str3, str4);
-			Assert.AreSame (str3, oSet[0], "ReplaceObjectsTest 3 == 3");
-			Assert.AreSame (str4, oSet[1], "ReplaceObjectsTest 4 == 4");
+			Assert.AreSame (str3, oSet [0], "ReplaceObjectsTest 3 == 3");
+			Assert.AreSame (str4, oSet [1], "ReplaceObjectsTest 4 == 4");
 		}
 
 		[Test]
@@ -214,10 +213,10 @@ namespace MonoTouchFixtures.Foundation {
 			var str2 = (NSString) "2";
 			var str3 = (NSString) "3";
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2, str3);
-			Assert.AreEqual (3, oSet.Count, "RemoveObjectTest Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "RemoveObjectTest Count");
 
 			oSet.RemoveObject (str2);
-			Assert.AreEqual (2, oSet.Count, "RemoveObjectTest Count");
+			Assert.AreEqual ((nint) 2, oSet.Count, "RemoveObjectTest Count");
 			Assert.IsFalse (oSet.Contains (str2), "RemoveObjectTest must not contain 2");
 			Assert.IsTrue (oSet.Contains (str1), "RemoveObjectTest Contains 1");
 			Assert.IsTrue (oSet.Contains (str3), "RemoveObjectTest Contains 3");
@@ -230,10 +229,10 @@ namespace MonoTouchFixtures.Foundation {
 			var str2 = (NSString) "2";
 			var str3 = (NSString) "3";
 			var oSet = new NSMutableOrderedSet<NSString> (str1, str2, str3);
-			Assert.AreEqual (3, oSet.Count, "RemoveObjectsTest Count");
+			Assert.AreEqual ((nint) 3, oSet.Count, "RemoveObjectsTest Count");
 
 			oSet.RemoveObjects (str1, str2);
-			Assert.AreEqual (1, oSet.Count, "RemoveObjectsTest Count");
+			Assert.AreEqual ((nint) 1, oSet.Count, "RemoveObjectsTest Count");
 			Assert.IsFalse (oSet.Contains (str1), "RemoveObjectsTest must not contain 1");
 			Assert.IsFalse (oSet.Contains (str2), "RemoveObjectsTest must not contain 2");
 			Assert.IsTrue (oSet.Contains (str3), "RemoveObjectsTest Contains 3");
@@ -248,7 +247,7 @@ namespace MonoTouchFixtures.Foundation {
 				values [i] = (NSString) i.ToString ();
 
 			var st = new NSMutableOrderedSet<NSString> (values);
-			Assert.AreEqual (C, st.Count, "Count 1");
+			Assert.AreEqual ((nint) C, st.Count, "Count 1");
 
 			var lst = new List<NSString> ();
 			foreach (var a in (IEnumerable<NSString>) st) {
@@ -269,7 +268,7 @@ namespace MonoTouchFixtures.Foundation {
 				values [i] = (NSString) i.ToString ();
 
 			var st = new NSMutableOrderedSet<NSString> (values);
-			Assert.AreEqual (C, st.Count, "Count 1");
+			Assert.AreEqual ((nint) C, st.Count, "Count 1");
 
 			var lst = new List<NSString> ();
 			foreach (NSString a in (IEnumerable) st) {
@@ -292,7 +291,7 @@ namespace MonoTouchFixtures.Foundation {
 			var first = new NSMutableOrderedSet<NSString> (str1, str2);
 			var second = new NSMutableOrderedSet<NSString> (str3, str4);
 			var third = first + second;
-			Assert.AreEqual (4, third.Count, "OperatorAdd Count");
+			Assert.AreEqual ((nint) 4, third.Count, "OperatorAdd Count");
 			Assert.IsTrue (third.Contains (str1), "OperatorAdd 1");
 			Assert.IsTrue (third.Contains (str2), "OperatorAdd 2");
 			Assert.IsTrue (third.Contains (str3), "OperatorAdd 3");
@@ -310,7 +309,7 @@ namespace MonoTouchFixtures.Foundation {
 			var first = new NSMutableOrderedSet<NSString> (str1, str2);
 			var second = new NSSet<NSString> (str3, str4);
 			var third = first + second;
-			Assert.AreEqual (4, third.Count, "OperatorAdd Count");
+			Assert.AreEqual ((nint) 4, third.Count, "OperatorAdd Count");
 			Assert.IsTrue (third.Contains (str1), "OperatorAdd 1");
 			Assert.IsTrue (third.Contains (str2), "OperatorAdd 2");
 			Assert.IsTrue (third.Contains (str3), "OperatorAdd 3");
@@ -328,7 +327,7 @@ namespace MonoTouchFixtures.Foundation {
 			var first = new NSMutableOrderedSet<NSString> (str1, str2);
 			var second = new NSOrderedSet<NSString> (str3, str4);
 			var third = first + second;
-			Assert.AreEqual (4, third.Count, "OperatorAdd Count");
+			Assert.AreEqual ((nint) 4, third.Count, "OperatorAdd Count");
 			Assert.IsTrue (third.Contains (str1), "OperatorAdd 1");
 			Assert.IsTrue (third.Contains (str2), "OperatorAdd 2");
 			Assert.IsTrue (third.Contains (str3), "OperatorAdd 3");
@@ -347,7 +346,7 @@ namespace MonoTouchFixtures.Foundation {
 			var second = new NSMutableOrderedSet<NSString> (str3, str4);
 			var third = first - second;
 
-			Assert.AreEqual (2, third.Count, "OperatorSubtract Count");
+			Assert.AreEqual ((nint) 2, third.Count, "OperatorSubtract Count");
 			Assert.IsTrue (third.Contains (str1), "OperatorSubtract 1");
 			Assert.IsTrue (third.Contains (str2), "OperatorSubtract 2");
 			Assert.IsFalse (third.Contains (str3), "OperatorSubtract 3");
@@ -366,7 +365,7 @@ namespace MonoTouchFixtures.Foundation {
 			var second = new NSSet<NSString> (str3, str4);
 			var third = first - second;
 
-			Assert.AreEqual (2, third.Count, "OperatorSubtract Count");
+			Assert.AreEqual ((nint) 2, third.Count, "OperatorSubtract Count");
 			Assert.IsTrue (third.Contains (str1), "OperatorSubtract 1");
 			Assert.IsTrue (third.Contains (str2), "OperatorSubtract 2");
 			Assert.IsFalse (third.Contains (str3), "OperatorSubtract 3");
@@ -385,7 +384,7 @@ namespace MonoTouchFixtures.Foundation {
 			var second = new NSOrderedSet<NSString> (str3, str4);
 			var third = first - second;
 
-			Assert.AreEqual (2, third.Count, "OperatorSubtract Count");
+			Assert.AreEqual ((nint) 2, third.Count, "OperatorSubtract Count");
 			Assert.IsTrue (third.Contains (str1), "OperatorSubtract 1");
 			Assert.IsTrue (third.Contains (str2), "OperatorSubtract 2");
 			Assert.IsFalse (third.Contains (str3), "OperatorSubtract 3");
@@ -415,5 +414,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-
-#endif // XAMCORE_2_0

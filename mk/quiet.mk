@@ -25,11 +25,19 @@ Q_LIPO= $(if $(V),,@echo "LIPO     $(@F)";)
 QT_LIPO= $(if $(V),,@echo "LIPO    $$(@F)";)
 Q_MDB=  $(if $(V),,@echo "MDB      $(@F)";)
 Q_NUNIT= $(if $(V),,@echo "NUNIT     $(@F)";)
+Q_PACK     =$(if $(V),,@echo "PACK      $(@F)";)
+Q_NUGET_ADD=$(if $(V),,@echo "NUGET ADD $(@F)";)
+Q_NUGET_DEL=$(if $(V),,@echo "NUGET DEL $(@F)";)
 
 Q_SN=   $(if $(V),,@echo "SN       $(@F)";)
 Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)
 Q_TT=   $(if $(V),,@echo "TT       $(@F)";)
 Q_BUILD=$(if $(V),,@echo "BUILD    $(@F)";)
+Q_CURL=$(if $(V),,@echo "CURL     $(@F)";)
+Q_ZIP=$(if $(V),,@echo "ZIP      $(@F)";)
+
+Q_DOTNET_BUILD=$(if $(V),,@echo "CSC      [dotnet] $(@F)";)
+Q_DOTNET_GEN  =$(if $(V),,@echo "GEN      [dotnet] $(@F)";)
 
 Q_PROF_MCS =  $(if $(V),,@echo "MCS      [$(1)] $(@F)";)
 Q_PROF_CSC =  $(if $(V),,@echo "CSC      [$(1)] $(@F)";)
@@ -62,14 +70,24 @@ XBUILD_VERBOSITY=/nologo /verbosity:quiet
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
-MDTOOL_VERBOSITY=
+DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
+DOTNET_BUILD_VERBOSITY=--verbosity quiet --nologo -consoleLoggerParameters:NoSummary
+DOTNET_WORKLOAD_VERBOSITY=--verbosity quiet
+NUGET_VERBOSITY=-verbosity quiet
+INSTALLER_VERBOSITY=
+ZIP_VERBOSITY=--quiet
 else
-# wrench build
+# CI build
 XBUILD_VERBOSITY=/nologo /verbosity:normal
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
-MDTOOL_VERBOSITY=-v -v -v -v
+DOTNET_PACK_VERBOSITY=
+DOTNET_BUILD_VERBOSITY=
+DOTNET_WORKLOAD_VERBOSITY=
+NUGET_VERBOSITY=
+INSTALLER_VERBOSITY=
+ZIP_VERBOSITY=
 endif
 else
 # verbose build
@@ -77,7 +95,12 @@ XBUILD_VERBOSITY=/verbosity:diagnostic
 XBUILD_VERBOSITY_QUIET=/verbosity:diagnostic
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
-MDTOOL_VERBOSITY=-v -v -v -v
+DOTNET_PACK_VERBOSITY=--verbosity:detailed
+DOTNET_BUILD_VERBOSITY=--verbosity detailed
+DOTNET_WORKLOAD_VERBOSITY=--verbosity diagnostic
+NUGET_VERBOSITY=-verbosity detailed
+INSTALLER_VERBOSITY=-verbose -dumplog
+ZIP_VERBOSITY=--verbose
 endif
 MSBUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 MSBUILD_VERBOSITY_QUIET=$(XBUILD_VERBOSITY_QUIET)

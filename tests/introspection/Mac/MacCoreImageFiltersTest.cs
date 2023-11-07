@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API for all Mac CoreImage filters
 //
 // Authors:
@@ -28,8 +28,7 @@ using Xamarin.Tests;
 namespace Introspection {
 
 	[TestFixture]
-	public class MacCoreImageFiltersTest : ApiCoreImageFiltersTest
-	{
+	public class MacCoreImageFiltersTest : ApiCoreImageFiltersTest {
 		protected override bool Skip (string nativeName)
 		{
 			switch (nativeName) {
@@ -40,26 +39,6 @@ namespace Introspection {
 				break;
 			case "CICMYKHalftone": // Renamed as CICmykHalftone
 				return true;
-#if !__UNIFIED__
-			case "CIAreaMinMaxRed": 
-			case "CIAttributedTextImageGenerator":
-			case "CIBarcodeGenerator":
-			case "CIBicubicScaleTransform":
-			case "CIBlendWithBlueMask":
-			case "CIBlendWithRedMask":
-			case "CIBokehBlur":
-			case "CIColorCubesMixedWithMask":
-			case "CIColorCurves":
-			case "CIDepthBlurEffect":
-			case "CIDepthToDisparity":
-			case "CIDisparityToDepth":
-			case "CILabDeltaE":
-			case "CIMorphologyGradient":
-			case "CIMorphologyMaximum":
-			case "CIMorphologyMinimum":
-			case "CITextImageGenerator":
-				return true;
-#endif
 			case "CIAreaMinMax":
 			case "CICameraCalibrationLensCorrection":
 			case "CIDither":
@@ -75,4 +54,3 @@ namespace Introspection {
 		}
 	}
 }
-

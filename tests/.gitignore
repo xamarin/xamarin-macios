@@ -1,6 +1,7 @@
+generated-projects
 *index.html
 *.log
-*TestResult.xml
+*TestResult*.xml
 build
 *-tvos.?sproj
 *-tvos.sln
@@ -17,7 +18,6 @@ build
 *-today.sln
 *-system.csproj
 *-unified*.csproj
-Makefile-mac.inc
 .stamp*
 Info-*.plist
 *.zip
@@ -26,9 +26,11 @@ Makefile.inc
 test.config
 test-system.config
 mac-test-package
+dotnet-test-package
 .nuget
 logs
 *.mSYM
 *.generated.cs
 x86
-
+bcl-test/templates
+*.7z

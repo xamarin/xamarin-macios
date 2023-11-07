@@ -1,0 +1,32 @@
+# Template that does all the boiler plate needed after building tests or the project
+
+parameters:
+
+- name: keyringPass
+  type: string
+
+steps:
+
+- pwsh: |
+    # should we need sudo, no, but someone did something wrong in the images..
+    sudo rm -Rf "$HOME/.git-credentials"
+  displayName: 'Remove git creds store'
+  condition: always()
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
+- template: uninstall-certificates/v1.yml@yaml-templates
+  parameters:
+    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
+
+# this will always be executed, is the default condition in the template
+- template: uninstall-certificates/v1.yml@yaml-templates
+  parameters:
+    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
+
+- template: mac-agent-logs.yml
+  parameters:
+    outputPath: agent-logs.log

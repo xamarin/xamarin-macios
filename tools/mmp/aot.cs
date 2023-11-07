@@ -36,14 +36,12 @@ using Profile = Mono.Tuner.Profile;
 
 namespace Xamarin.Bundler {
 
-	public interface IFileEnumerator
-	{
+	public interface IFileEnumerator {
 		IEnumerable<string> Files { get; }
 		string RootDir { get; }
 	}
 
-	public class FileSystemEnumerator : IFileEnumerator
-	{
+	public class FileSystemEnumerator : IFileEnumerator {
 		DirectoryInfo Info;
 		public IEnumerable<string> Files => Info.GetFiles ().Select (x => x.FullName);
 		public string RootDir { get; private set; }
@@ -55,7 +53,7 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public delegate int RunCommandDelegate (string path, IList<string> args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
+	public delegate int RunCommandDelegate (string path, IList<string> args, Dictionary<string, string> env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
 
 	public enum AOTCompilerType {
 		Invalid,
@@ -78,23 +76,22 @@ namespace Xamarin.Bundler {
 		Hybrid
 	}
 
-	public class AOTOptions
-	{
+	public class AOTOptions {
 		public bool IsAOT => CompilationType != AOTCompilationType.Default && CompilationType != AOTCompilationType.None;
 		public bool IsHybridAOT => IsAOT && Kind == AOTKind.Hybrid;
 
 		public AOTCompilationType CompilationType { get; private set; } = AOTCompilationType.Default;
 		public AOTKind Kind { get; private set; } = AOTKind.Standard;
 
-		public List <string> IncludedAssemblies { get; private set; } = new List <string> ();
-		public List <string> ExcludedAssemblies { get; private set; } = new List <string> ();
+		public List<string> IncludedAssemblies { get; private set; } = new List<string> ();
+		public List<string> ExcludedAssemblies { get; private set; } = new List<string> ();
 
 		public AOTOptions (string options)
 		{
 			// Syntax - all,core,sdk,none or "" if explicit then optional list of +/-'ed assemblies
 			// Sections seperated by ,
 			string [] optionParts = options.Split (',');
-			for (int i = 0 ; i < optionParts.Length ; ++i) {
+			for (int i = 0; i < optionParts.Length; ++i) {
 				string option = optionParts [i];
 
 				AOTKind kind = AOTKind.Default;
@@ -103,7 +100,7 @@ namespace Xamarin.Bundler {
 				if (option.Contains ("|")) {
 					string [] optionTypeParts = option.Split ('|');
 					if (optionTypeParts.Length != 2)
-						throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+						throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 					switch (optionTypeParts [0]) {
 					case "none":
 					case "core":
@@ -113,14 +110,14 @@ namespace Xamarin.Bundler {
 						switch (optionTypeParts [1]) {
 						case "hybrid":
 							if (option != "all")
-								throw new MonoMacException (114, true, "Hybrid AOT compilation requires all assemblies to be AOT compiled");
+								throw new ProductException (114, true, Errors.MM0114);
 							kind = AOTKind.Hybrid;
 							break;
 						case "standard":
 							kind = AOTKind.Standard;
 							break;
 						default:
-							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+							throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 						}
 						break;
 					}
@@ -164,29 +161,41 @@ namespace Xamarin.Bundler {
 					ExcludedAssemblies.Add (option.Substring (1));
 					continue;
 				}
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+				throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 			}
 			if (CompilationType == AOTCompilationType.Default)
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+				throw new ProductException (20, true, Errors.MX0020, "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 
 		}
 	}
 
-	public class AOTCompiler
-	{
+	public class AOTCompiler {
 		// Allows tests to stub out actual compilation and parallelism
-		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
+		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand;
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
-		public string XamarinMacPrefix { get; set; } = Driver.GetXamMacPrefix (); // GetXamMacPrefix assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
+
+		string xamarin_mac_prefix;
+		public string XamarinMacPrefix {
+			get {
+				if (xamarin_mac_prefix is null)
+					xamarin_mac_prefix = Driver.GetFrameworkCurrentDirectory (Driver.App);
+				return xamarin_mac_prefix;
+			}
+			set {
+				xamarin_mac_prefix = value;
+			}
+		}
 
 		AOTOptions options;
+		Abi [] abis;
 		AOTCompilerType compilerType;
 		bool IsRelease;
 		bool IsModern;
 
-		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType, bool isModern, bool isRelease)
+		public AOTCompiler (AOTOptions options, IEnumerable<Abi> abis, AOTCompilerType compilerType, bool isModern, bool isRelease)
 		{
 			this.options = options;
+			this.abis = abis.ToArray ();
 			this.compilerType = compilerType;
 			this.IsModern = isModern;
 			this.IsRelease = isRelease;
@@ -200,46 +209,89 @@ namespace Xamarin.Bundler {
 		public void Compile (IFileEnumerator files)
 		{
 			if (!options.IsAOT)
-				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", options.CompilationType);
+				throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"AOTBundle with aot: {options.CompilationType}\" ");
 
-			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
-
+			var monoEnv = new Dictionary<string, string> { { "MONO_PATH", files.RootDir } };
 			List<string> filesToAOT = GetFilesToAOT (files);
-			Parallel.ForEach (filesToAOT, ParallelOptions, file => {
+
+			bool needsLipo = abis.Length > 1 && filesToAOT.Count > 0;
+			string tempAotDir = needsLipo ? Path.GetDirectoryName (filesToAOT [0]) : null;
+			if (needsLipo && Directory.Exists (tempAotDir)) {
+				foreach (var abi in abis) {
+					Directory.CreateDirectory (Path.Combine (tempAotDir, "aot", abi.AsArchString ()));
+				}
+			}
+
+			Parallel.ForEach (filesToAOT.SelectMany (f => abis, (file, abi) => new Tuple<string, Abi> (file, abi)), ParallelOptions, tuple => {
+				var file = tuple.Item1;
+				var abi = tuple.Item2;
+
 				var cmd = new List<string> ();
-				cmd.Add (options.IsHybridAOT ? "--aot=hybrid" : "--aot");
+				var aotArgs = new List<string> ();
+				aotArgs.Add ($"mtriple={abi.AsArchString ()}");
+				if (options.IsHybridAOT)
+					aotArgs.Add ("hybrid");
+				if (needsLipo)
+					aotArgs.Add ($"outfile={Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")}");
+
+				// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+				if (Driver.XcodeVersion.Major >= 15 && !Driver.App.DisableAutomaticLinkerSelection)
+					aotArgs.Add ("ld-flags=-Xlinker -ld_classic");
+
+				cmd.Add ($"--aot={string.Join (",", aotArgs)}");
 				if (IsModern)
 					cmd.Add ("--runtime=mobile");
 				cmd.Add (file);
-				if (RunCommand (MonoPath, cmd, monoEnv) != 0)
-					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
+				if (RunCommand (GetMonoPath (abi), cmd, monoEnv) != 0)
+					throw ErrorHelper.CreateError (3001, Errors.MX3001, "AOT", file);
 			});
+
+			// Lipo the result
+			if (needsLipo) {
+				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
+					string [] inputs = abis.Select (abi => Path.Combine (tempAotDir, "aot", abi.AsArchString (), Path.GetFileName (file) + ".dylib")).Where (File.Exists).ToArray ();
+					string output = file + ".dylib";
+
+					if (inputs.Length > 0)
+						Driver.RunLipoAndCreateDsym (Driver.App, output, inputs);
+				});
+			}
+
+			if (needsLipo && Directory.Exists (tempAotDir)) {
+				Directory.Delete (Path.Combine (tempAotDir, "aot"), true);
+			}
 
 			if (IsRelease && options.IsHybridAOT) {
 				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
 					if (RunCommand (StripCommand, new [] { file }) != 0)
-						throw ErrorHelper.CreateError (3001, "Could not strip the assembly '{0}'", file);
+						throw ErrorHelper.CreateError (3001, Errors.MX3001, "strip", file);
 				});
 			}
 
 			if (IsRelease) {
 				// mono --aot creates .dll.dylib.dSYM directories for each assembly AOTed
-				// There isn't an easy was to disable this behavior, so clean up under release
-				Parallel.ForEach (filesToAOT, ParallelOptions, file => {
-					if (RunCommand (DeleteDebugSymbolCommand, new [] { "-r", file + ".dylib.dSYM/" }, monoEnv) != 0)
-						throw ErrorHelper.CreateError (3001, "Could not delete debug info from assembly '{0}'", file);
-				});
+				// There isn't an easy was to disable this behavior
+				// We move them (cheap) so they can be archived for release builds
+				foreach (var file in filesToAOT) {
+					var source = file + ".dylib.dSYM/";
+					if (Directory.Exists (source)) {
+						var dest = Path.GetFullPath (Path.Combine (source, "..", "..", "..", "..", Path.GetFileName (file) + ".dylib.dSYM/"));
+						if (Directory.Exists (dest))
+							Directory.Delete (dest, true);
+						Directory.Move (source, dest);
+					}
+				}
 			}
 		}
 
 		List<string> GetFilesToAOT (IFileEnumerator files)
 		{
 			// Make a dictionary of included/excluded files to track if we've missed some at the end
-			Dictionary <string, bool> includedAssemblies = new Dictionary <string, bool> ();
+			Dictionary<string, bool> includedAssemblies = new Dictionary<string, bool> ();
 			foreach (var item in options.IncludedAssemblies)
 				includedAssemblies [item] = false;
 
-			Dictionary <string, bool> excludedAssemblies = new Dictionary <string, bool> ();
+			Dictionary<string, bool> excludedAssemblies = new Dictionary<string, bool> ();
 			foreach (var item in options.ExcludedAssemblies)
 				excludedAssemblies [item] = false;
 
@@ -278,35 +330,38 @@ namespace Xamarin.Bundler {
 				case AOTCompilationType.Explicit:
 					break; // In explicit, only included includedAssemblies included
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"GetFilesToAOT with aot: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", options.CompilationType);
+					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"GetFilesToAOT with aot: {options.CompilationType}\"");
 				}
 			}
 
 			var unusedIncludes = includedAssemblies.Where (pair => !pair.Value).Select (pair => pair.Key).ToList ();
 			if (unusedIncludes.Count > 0)
-				throw ErrorHelper.CreateError (3009, "AOT of '{0}' was requested but was not found", String.Join (" ", unusedIncludes));
+				throw ErrorHelper.CreateError (3009, Errors.MM3009, String.Join (" ", unusedIncludes));
 
 			var unusedExcludes = excludedAssemblies.Where (pair => !pair.Value).Select (pair => pair.Key).ToList ();
 			if (unusedExcludes.Count > 0)
-				throw ErrorHelper.CreateError (3010, "Exclusion of AOT of '{0}' was requested but was not found", String.Join (" ", unusedExcludes));
+				throw ErrorHelper.CreateError (3010, Errors.MM3010, String.Join (" ", unusedExcludes));
 
 			return aotFiles;
 		}
 
 		public const string StripCommand = "/Library/Frameworks/Mono.framework/Commands/mono-cil-strip";
-		public const string DeleteDebugSymbolCommand = "/bin/rm";
 
-		string MonoPath
+		string GetMonoPath (Abi abi)
 		{
-			get {
-				switch (compilerType) {
-				case AOTCompilerType.Bundled64:
-					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
-				case AOTCompilerType.System64:
-					return "/Library/Frameworks/Mono.framework/Commands/mono64";
+			if (compilerType == AOTCompilerType.Bundled64) {
+				switch (abi) {
+				case Abi.ARM64:
+					return Path.Combine (XamarinMacPrefix, "bin", "aarch64-darwin-mono-sgen");
+				case Abi.x86_64:
+					return Path.Combine (XamarinMacPrefix, "bin", "mono-sgen");
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"MonoPath with compilerType: {0}\" Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).", compilerType);
+					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"MonoPath with compilerType: {compilerType}\"");
 				}
+			} else if (compilerType == AOTCompilerType.System64 && abi == Abi.x86_64) {
+				return "/Library/Frameworks/Mono.framework/Commands/mono64";
+			} else {
+				throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"MonoPath with compilerType: {compilerType}\"");
 			}
 		}
 	}

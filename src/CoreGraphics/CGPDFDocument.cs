@@ -25,96 +25,86 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
-	public class CGPDFDocument : INativeObject
-#if !COREBUILD
-		, IDisposable
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
-	{
+	public class CGPDFDocument : NativeObject {
 #if !COREBUILD
-		internal IntPtr handle;
-
-		~CGPDFDocument ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFDocumentRelease (/* CGPDFDocumentRef */ IntPtr document);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDocumentRef */ IntPtr CGPDFDocumentRetain (/* CGPDFDocumentRef */ IntPtr document);
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CGPDFDocumentRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
 
-		/* invoked by marshallers */
-		public CGPDFDocument (IntPtr handle)
+#if !NET
+		public CGPDFDocument (NativeHandle handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			CGPDFDocumentRetain (handle);
 		}
+#endif
 
-		[Preserve (Conditional=true)]
-		internal CGPDFDocument (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CGPDFDocument (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CGPDFDocumentRetain (handle);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDocumentRef */ IntPtr CGPDFDocumentCreateWithProvider (/* CGDataProviderRef */ IntPtr provider);
-		
+
 		public CGPDFDocument (CGDataProvider provider)
+			: base (CGPDFDocumentCreateWithProvider (Runtime.ThrowOnNull (provider, nameof (provider)).Handle), true)
 		{
-			if (provider == null)
-				throw new ArgumentNullException ("provider");
-			handle = CGPDFDocumentCreateWithProvider (provider.Handle);
 		}
-		
+
+		protected internal override void Retain ()
+		{
+			CGPDFDocumentRetain (GetCheckedHandle ());
+		}
+
+		protected internal override void Release ()
+		{
+			CGPDFDocumentRelease (GetCheckedHandle ());
+		}
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDocumentRef */ IntPtr CGPDFDocumentCreateWithURL (/* CFURLRef */ IntPtr url);
 
-		public static CGPDFDocument FromFile (string str)
+		public static CGPDFDocument? FromFile (string str)
 		{
-			using (var url = CFUrl.FromFile (str)){
-				if (url == null)
+			using (var url = CFUrl.FromFile (str)) {
+				if (url is null)
 					return null;
 				IntPtr handle = CGPDFDocumentCreateWithURL (url.Handle);
 				if (handle == IntPtr.Zero)
 					return null;
 				return new CGPDFDocument (handle, true);
 			}
-			
+
 		}
-			
-		public static CGPDFDocument FromUrl (string str)
+
+		public static CGPDFDocument? FromUrl (string str)
 		{
-			using (var url = CFUrl.FromUrlString (str, null)){
-				if (url == null)
+			using (var url = CFUrl.FromUrlString (str, null)) {
+				if (url is null)
 					return null;
 				IntPtr handle = CGPDFDocumentCreateWithURL (url.Handle);
 				if (handle == IntPtr.Zero)
@@ -128,17 +118,17 @@ namespace CoreGraphics {
 
 		public nint Pages {
 			get {
-				return CGPDFDocumentGetNumberOfPages (handle);
+				return CGPDFDocumentGetNumberOfPages (Handle);
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFPageRef */ IntPtr CGPDFDocumentGetPage (/* CGPDFDocumentRef */ IntPtr document, /* size_t */ nint page);
-		
-		public CGPDFPage GetPage (nint page)
+
+		public CGPDFPage? GetPage (nint page)
 		{
-			var h = CGPDFDocumentGetPage (handle, page);
-			return h == IntPtr.Zero ? null : new CGPDFPage (h);
+			var h = CGPDFDocumentGetPage (Handle, page);
+			return h == IntPtr.Zero ? null : new CGPDFPage (h, false);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -146,109 +136,64 @@ namespace CoreGraphics {
 
 		public void GetVersion (out int major, out int minor)
 		{
-			CGPDFDocumentGetVersion (handle, out major, out minor);
+			CGPDFDocumentGetVersion (Handle, out major, out minor);
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentIsEncrypted (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool IsEncrypted {
 			get {
-				return CGPDFDocumentIsEncrypted (handle);
+				return CGPDFDocumentIsEncrypted (Handle);
 			}
 		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ string password);
 
-#if XAMCORE_2_0
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ IntPtr password);
+
 		public bool Unlock (string password)
 		{
-			return CGPDFDocumentUnlockWithPassword (handle, password);
+			using var passwordPtr = new TransientString (password);
+			return CGPDFDocumentUnlockWithPassword (Handle, passwordPtr);
 		}
-#else
-		public bool UnlockWithPassword (string pass)
-		{
-			return CGPDFDocumentUnlockWithPassword (handle, pass);
-		}
-#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentIsUnlocked (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool IsUnlocked {
 			get {
-				return CGPDFDocumentIsUnlocked (handle);
+				return CGPDFDocumentIsUnlocked (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentAllowsPrinting (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool AllowsPrinting {
 			get {
-				return CGPDFDocumentAllowsPrinting (handle);
+				return CGPDFDocumentAllowsPrinting (Handle);
 			}
 		}
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFDocumentAllowsCopying (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool AllowsCopying {
 			get {
-				return CGPDFDocumentAllowsCopying (handle);
+				return CGPDFDocumentAllowsCopying (Handle);
 			}
 		}
 
-#if !XAMCORE_2_0
-		// deprecated in OSX 10.5 in favor of CGPDFPage API and never part of iOS
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetMediaBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetMediaBox (int page)
-		{
-			return CGPDFDocumentGetMediaBox (handle, page);
-		}
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetCropBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetCropBox (int page)
-		{
-			return CGPDFDocumentGetCropBox (handle, page);
-		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetBleedBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetBleedBox (int page)
-		{
-			return CGPDFDocumentGetBleedBox (handle, page);
-		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetTrimBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetTrimBox (int page)
-		{
-			return CGPDFDocumentGetTrimBox (handle, page);
-		}
-		
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static CGRect CGPDFDocumentGetArtBox (/* CGPDFDocumentRef */ IntPtr document, /* int */ int page);
-
-		public CGRect GetArtBox (int page)
-		{
-			return CGPDFDocumentGetArtBox (handle, page);
-		}
-#endif
-		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFDictionaryRef */ IntPtr CGPDFDocumentGetCatalog (/* CGPDFDocumentRef */ IntPtr document);
 		public CGPDFDictionary GetCatalog ()
 		{
-			return new CGPDFDictionary (CGPDFDocumentGetCatalog (handle));
+			return new CGPDFDictionary (CGPDFDocumentGetCatalog (Handle));
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -256,40 +201,70 @@ namespace CoreGraphics {
 
 		public CGPDFDictionary GetInfo ()
 		{
-			return new CGPDFDictionary (CGPDFDocumentGetInfo (handle));
+			return new CGPDFDictionary (CGPDFDocumentGetInfo (Handle));
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		extern static void CGPDFContextSetOutline (/* CGPDFDocumentRef */ IntPtr document, IntPtr /* dictionary */ outline);
 
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
-		public void SetOutline (CGPDFOutlineOptions options)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
+		public void SetOutline (CGPDFOutlineOptions? options)
 		{
-			CGPDFContextSetOutline (handle, options == null ? IntPtr.Zero : options.Dictionary.Handle);
+			CGPDFContextSetOutline (Handle, options.GetHandle ());
 		}
-					
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
 		extern static /* CFDictionaryPtry */ IntPtr CGPDFDocumentGetOutline (/* CGPDFDocumentRef */ IntPtr document);
 
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		public CGPDFOutlineOptions GetOutline ()
 		{
-			var ptr = CGPDFDocumentGetOutline (handle);
+			var ptr = CGPDFDocumentGetOutline (Handle);
 			return new CGPDFOutlineOptions (Runtime.GetNSObject<NSDictionary> (ptr));
 		}
 
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static CGPDFAccessPermissions CGPDFDocumentGetAccessPermissions (IntPtr document);
 
-		[iOS (11,0), Mac(10,13), TV(11,0), Watch(4,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		public CGPDFAccessPermissions GetAccessPermissions ()
 		{
-			return CGPDFDocumentGetAccessPermissions (handle);
+			return CGPDFDocumentGetAccessPermissions (Handle);
 		}
-		
+
 #endif // !COREBUILD
 	}
 }

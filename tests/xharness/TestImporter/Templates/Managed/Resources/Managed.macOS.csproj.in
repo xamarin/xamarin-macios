@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{%PROJECT GUID%}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>com.xamarin.bcltests.%NAME%</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>com.xamarin.bcltests.%NAME%</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkVersion>%TARGET FRAMEWORK VERSION%</TargetFrameworkVersion>
+    %TARGET EXTRA INFO%
+    <DefineConstants>%DEFINE CONSTANTS%</DefineConstants>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+ <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\AnyCPU\%NAME%\Debug</OutputPath>
+    <DefineConstants>DEBUG;MONOMAC;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <LinkMode>None</LinkMode>
+    <XamMacArch>x86_64</XamMacArch>
+    <I18n>cjk,mideast,other,rare,west</I18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\AnyCPU\%NAME%\Release</OutputPath>
+    <DefineConstants>MONOMAC;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>None</LinkMode>
+    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <I18n>cjk,mideast,other,rare,west</I18n>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="5.3.0.1" />
+    <PackageReference Include="System.Buffers" Version="4.4.0" />
+    <PackageReference Include="System.Memory" Version="4.5.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.analyzers" Version="0.10.0" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.4.0" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.utility" Version="2.4.0" />
+
+
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>%DOWNLOAD PATH%\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>%DOWNLOAD PATH%\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>%DOWNLOAD PATH%\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>%DOWNLOAD PATH%\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Mac" />
+    %TESTING FRAMEWORKS%
+  </ItemGroup>
+  <ItemGroup>
+%REFERENCES%
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="%PLIST PATH%">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\NUnit\NUnitTestRunner.cs">
+      <Link>TestRunner\NUnit\NUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\NUnit\ClassOrNamespaceFilter.cs">
+      <Link>TestRunner\NUnit\ClassOrNamespaceFilter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\NUnit\TestMethodFilter.cs">
+      <Link>TestRunner\NUnit\TestMethodFilter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\Extensions.cs">
+      <Link>TestRunner\Core\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\LogWriter.cs">
+      <Link>TestRunner\Core\LogWriter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\MinimumLogLevel.cs">
+      <Link>TestRunner\Core\MinimumLogLevel.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TcpTextWriter.cs">
+      <Link>TestRunner\Core\TcpTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestAssemblyInfo.cs">
+      <Link>TestRunner\Core\TestAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestCompletionStatus.cs">
+      <Link>TestRunner\Core\TestCompletionStatus.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestExecutionState.cs">
+      <Link>TestRunner\Core\TestExecutionState.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestFailureInfo.cs">
+      <Link>TestRunner\Core\TestFailureInfo.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestRunner.cs">
+      <Link>TestRunner\Core\TestRunner.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestRunSelector.cs">
+      <Link>TestRunner\Core\TestRunSelector.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\Core\TestRunSelectorType.cs">
+      <Link>TestRunner\Core\TestRunSelectorType.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\xUnit\XUnitFilter.cs">
+      <Link>TestRunner\xUnit\XUnitFilter.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\xUnit\XUnitFilterType.cs">
+      <Link>TestRunner\xUnit\XUnitFilterType.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\TestRunner\xUnit\XUnitTestRunner.cs">
+      <Link>TestRunner\xUnit\XUnitTestRunner.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\ApplicationOptions.cs">
+      <Link>ApplicationOptions.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\common\IgnoreFileParser.cs">
+      <Link>IgnoreFileParser.cs</Link>
+    </Compile>
+    %REGISTER TYPE%
+    <Compile Include="%TEMPLATESPATH%\macOS\MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="%TEMPLATESPATH%\macOS\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="%TEMPLATESPATH%\common\TestRunner\xUnit\NUnitXml.xslt">
+      <Link>TestRunner\xUnit\NUnitXml.xslt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="%TEMPLATESPATH%\common\TestRunner\xUnit\NUnit3Xml.xslt">
+      <Link>TestRunner\xUnit\NUnit3Xml.xslt</Link>
+    </EmbeddedResource>
+    %CONTENT RESOURCES%
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

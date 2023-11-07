@@ -1,6 +1,3 @@
-﻿
-#if XAMCORE_2_0
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,13 +11,14 @@ using ObjCRuntime;
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSDictionary2Test {
 
 		[Test]
 		public void Ctor ()
 		{
 			var dict = new NSDictionary<NSDate, NSSet> ();
-			Assert.AreEqual (0, dict.Count, "Count");
+			Assert.AreEqual ((nuint) 0, dict.Count, "Count");
 		}
 
 		//
@@ -33,7 +31,7 @@ namespace MonoTouchFixtures.Foundation {
 			var value = new NSString ("value");
 
 			var j = new NSDictionary<NSString, NSString> (key, value);
-			Assert.AreEqual (j.Count, 1, "count");
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
 			Assert.AreEqual (j [key], value, "key lookup");
 		}
 
@@ -41,12 +39,12 @@ namespace MonoTouchFixtures.Foundation {
 		public void Ctor_Arrays ()
 		{
 			var j = new NSDictionary<NSString, NSString> (
-				new NSString[] { new NSString ("first-k"), new NSString ("second-k") },
-				new NSString[] { new NSString ("first"), new NSString ("second") }
+				new NSString [] { new NSString ("first-k"), new NSString ("second-k") },
+				new NSString [] { new NSString ("first"), new NSString ("second") }
 			);
-			Assert.AreEqual (j.Count, 2, "count");
-			Assert.AreEqual ((string)(j [(NSString) "first-k"]), "first", "lookup1");
-			Assert.AreEqual ((string)(j [(NSString) "second-k"]), "second", "lookup2");
+			Assert.AreEqual (j.Count, (nuint) 2, "count");
+			Assert.AreEqual ((string) (j [(NSString) "first-k"]), "first", "lookup1");
+			Assert.AreEqual ((string) (j [(NSString) "second-k"]), "second", "lookup2");
 		}
 
 		[Test]
@@ -55,17 +53,17 @@ namespace MonoTouchFixtures.Foundation {
 			var other = new NSDictionary<NSString, NSString> ((NSString) "key", (NSString) "value");
 			var j = new NSDictionary<NSString, NSString> (other);
 
-			Assert.AreEqual (j.Count, 1, "count");
-			Assert.AreEqual ((string)(NSString)(j ["key"]), "value", "key lookup");
+			Assert.AreEqual (j.Count, (nuint) 1, "count");
+			Assert.AreEqual ((string) (NSString) (j ["key"]), "value", "key lookup");
 		}
 
 		[Test]
-		public void InbalancedCtor()
+		public void InbalancedCtor ()
 		{
 			Assert.Throws<ArgumentException> (() => {
 				new NSDictionary<NSString, NSString> (
-					new NSString[] { new NSString ("key") },
-					new NSString[] { new NSString ("value"), new NSString ("other") });
+					new NSString [] { new NSString ("key") },
+					new NSString [] { new NSString ("value"), new NSString ("other") });
 			});
 		}
 
@@ -88,7 +86,7 @@ namespace MonoTouchFixtures.Foundation {
 			};
 
 			var dict = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (values, keys, values.Length);
-			Assert.AreEqual (dict.Count, 5, "count");
+			Assert.AreEqual (dict.Count, (nuint) 5, "count");
 			for (int i = 0; i < values.Length; i++)
 				Assert.AreEqual (dict [keys [i]], values [i], $"key lookup, Iteration: {i}");
 		}
@@ -96,122 +94,122 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void KeyValue_Autorelease ()
 		{
-			using (var k = new NSString ("keyz")) 
-				using (var v = new NSString ("valuez")) {
-					var k1 = k.RetainCount;
-					if (k1 >= int.MaxValue)
-						Assert.Ignore ("RetainCount unusable for testing");
-					var k2 = k1;
-					Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
-					var v1 = v.RetainCount;
-					var v2 = v1;
-					Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
-					using (var d = new NSDictionary<NSString, NSString> (k, v)) {
-						k2 = k.RetainCount;
-						Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
-						v2 = v.RetainCount;
-						Assert.That (v2, Is.GreaterThan (v1), "Value.RetainCount-b");
+			using (var k = new NSString ("keyz"))
+			using (var v = new NSString ("valuez")) {
+				var k1 = k.RetainCount;
+				if (k1 >= int.MaxValue)
+					Assert.Ignore ("RetainCount unusable for testing");
+				var k2 = k1;
+				Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
+				var v1 = v.RetainCount;
+				var v2 = v1;
+				Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
+				using (var d = new NSDictionary<NSString, NSString> (k, v)) {
+					k2 = k.RetainCount;
+					Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
+					v2 = v.RetainCount;
+					Assert.That (v2, Is.GreaterThan (v1), "Value.RetainCount-b");
 
-						Assert.NotNull (d.Keys, "Keys");
-						// accessing `allKeys` should *NOT* change the retainCount
-						// that would happen without an [Autorelease] and can lead to memory exhaustion
-						// https://bugzilla.xamarin.com/show_bug.cgi?id=7723
-						Assert.That (k.RetainCount, Is.EqualTo (k2), "Key.RetainCount-c");
+					Assert.NotNull (d.Keys, "Keys");
+					// accessing `allKeys` should *NOT* change the retainCount
+					// that would happen without an [Autorelease] and can lead to memory exhaustion
+					// https://bugzilla.xamarin.com/show_bug.cgi?id=7723
+					Assert.That (k.RetainCount, Is.EqualTo (k2), "Key.RetainCount-c");
 
-						Assert.NotNull (d.Values, "Values");
-						Assert.That (v.RetainCount, Is.EqualTo (v2), "Value.RetainCount-c");
-					}
-					Assert.That (k.RetainCount, Is.LessThan (k2), "Key.RetainCount-d");
-					Assert.That (v.RetainCount, Is.LessThan (v2), "Value.RetainCount-d");
+					Assert.NotNull (d.Values, "Values");
+					Assert.That (v.RetainCount, Is.EqualTo (v2), "Value.RetainCount-c");
 				}
+				Assert.That (k.RetainCount, Is.LessThan (k2), "Key.RetainCount-d");
+				Assert.That (v.RetainCount, Is.LessThan (v2), "Value.RetainCount-d");
+			}
 		}
 
 		[Test]
 		public void XForY_Autorelease ()
 		{
-			using (var k = new NSString ("keyz")) 
-				using (var v = new NSString ("valuez")) {
-					var k1 = k.RetainCount;
-					if (k1 >= int.MaxValue)
-						Assert.Ignore ("RetainCount unusable for testing");
-					var k2 = k1;
-					Assert.That (k.RetainCount, Is.EqualTo ((nint) 1), "Key.RetainCount-a");
-					var v1 = v.RetainCount;
-					var v2 = v1;
-					Assert.That (v.RetainCount, Is.EqualTo ((nint) 1), "Value.RetainCount-a");
-					using (var d = new NSDictionary<NSString, NSString> (k, v)) {
-						k2 = k.RetainCount;
-						Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
-						v2 = v.RetainCount;
-						Assert.That (v2, Is.GreaterThan (v1), "Value.RetainCount-b");
+			using (var k = new NSString ("keyz"))
+			using (var v = new NSString ("valuez")) {
+				var k1 = k.RetainCount;
+				if (k1 >= int.MaxValue)
+					Assert.Ignore ("RetainCount unusable for testing");
+				var k2 = k1;
+				Assert.That (k.RetainCount, Is.EqualTo ((nuint) 1), "Key.RetainCount-a");
+				var v1 = v.RetainCount;
+				var v2 = v1;
+				Assert.That (v.RetainCount, Is.EqualTo ((nuint) 1), "Value.RetainCount-a");
+				using (var d = new NSDictionary<NSString, NSString> (k, v)) {
+					k2 = k.RetainCount;
+					Assert.That (k2, Is.GreaterThan (k1), "Key.RetainCount-b");
+					v2 = v.RetainCount;
+					Assert.That (v2, Is.GreaterThan (v1), "Value.RetainCount-b");
 
-						var x = d.KeysForObject (v);
-						Assert.That (x [0], Is.SameAs (k), "KeysForObject");
+					var x = d.KeysForObject (v);
+					Assert.That (x [0], Is.SameAs (k), "KeysForObject");
 
-						var y = d.ObjectForKey (k);
-						Assert.NotNull (y, "ObjectForKey");
+					var y = d.ObjectForKey (k);
+					Assert.NotNull (y, "ObjectForKey");
 
-						using (var a = new NSMutableArray ()) {
-							a.Add (k);
-							var z = d.ObjectsForKeys (a, k);
-							Assert.That (z [0], Is.SameAs (v), "ObjectsForKeys");
-						}
-
-						Assert.That (k.RetainCount, Is.EqualTo (k2), "Key.RetainCount-c");
-						Assert.That (v.RetainCount, Is.EqualTo (v2), "Value.RetainCount-c");
+					using (var a = new NSMutableArray ()) {
+						a.Add (k);
+						var z = d.ObjectsForKeys (a, k);
+						Assert.That (z [0], Is.SameAs (v), "ObjectsForKeys");
 					}
-					Assert.That (k.RetainCount, Is.LessThan (k2), "Key.RetainCount-d");
-					Assert.That (v.RetainCount, Is.LessThan (v2), "Value.RetainCount-d");
+
+					Assert.That (k.RetainCount, Is.EqualTo (k2), "Key.RetainCount-c");
+					Assert.That (v.RetainCount, Is.EqualTo (v2), "Value.RetainCount-c");
 				}
+				Assert.That (k.RetainCount, Is.LessThan (k2), "Key.RetainCount-d");
+				Assert.That (v.RetainCount, Is.LessThan (v2), "Value.RetainCount-d");
+			}
 		}
 
 		[Test]
 		public void Copy ()
 		{
-			using (var k = new NSString ("key")) 
-				using (var v = new NSString ("value"))
-					using (var d = new NSDictionary <NSString, NSString> (k, v)) {
-						// NSObject.Copy works because NSDictionary conforms to NSCopying
-						// note: we do not Dispose the "copies" because it's the same instance being returned
-						var copy1 = (NSDictionary) d.Copy ();
-						Assert.AreSame (d, copy1, "1");
-						Assert.That (copy1, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-1");
-						Assert.That (copy1.Count, Is.EqualTo ((nuint) 1), "Count-1");
+			using (var k = new NSString ("key"))
+			using (var v = new NSString ("value"))
+			using (var d = new NSDictionary<NSString, NSString> (k, v)) {
+				// NSObject.Copy works because NSDictionary conforms to NSCopying
+				// note: we do not Dispose the "copies" because it's the same instance being returned
+				var copy1 = (NSDictionary) d.Copy ();
+				Assert.AreSame (d, copy1, "1");
+				Assert.That (copy1, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-1");
+				Assert.That (copy1.Count, Is.EqualTo ((nuint) 1), "Count-1");
 
-						var copy2 = (NSDictionary) d.Copy (null);
-						Assert.AreSame (d, copy2, "2");
-						Assert.That (copy2, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-2");
-						Assert.That (copy2.Count, Is.EqualTo ((nuint) 1), "Count-2");
+				var copy2 = (NSDictionary) d.Copy (null);
+				Assert.AreSame (d, copy2, "2");
+				Assert.That (copy2, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-2");
+				Assert.That (copy2.Count, Is.EqualTo ((nuint) 1), "Count-2");
 
-						var copy3 = (NSDictionary) d.Copy (NSZone.Default);
-						Assert.AreSame (d, copy3, "3");
-						Assert.That (copy3, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-3");
-						Assert.That (copy3.Count, Is.EqualTo ((nuint) 1), "Count-3");
-					}
+				var copy3 = (NSDictionary) d.Copy (NSZone.Default);
+				Assert.AreSame (d, copy3, "3");
+				Assert.That (copy3, Is.Not.TypeOf<NSMutableDictionary> (), "NSDictionary-3");
+				Assert.That (copy3.Count, Is.EqualTo ((nuint) 1), "Count-3");
+			}
 		}
 
 		[Test]
 		public void MutableCopy ()
 		{
-			using (var k = new NSString ("key")) 
-				using (var v = new NSString ("value"))
-					using (var d = new NSDictionary<NSString, NSString> (k, v)) {
-						// NSObject.Copy works because NSDictionary conforms to NSMutableCopying
-						using (var copy = (NSDictionary) d.MutableCopy ()) {
-							Assert.That (copy, Is.TypeOf<NSMutableDictionary> (), "NSMutableDictionary");
-							Assert.That (copy.Count, Is.EqualTo ((nuint) 1), "Count");
-						}
+			using (var k = new NSString ("key"))
+			using (var v = new NSString ("value"))
+			using (var d = new NSDictionary<NSString, NSString> (k, v)) {
+				// NSObject.Copy works because NSDictionary conforms to NSMutableCopying
+				using (var copy = (NSDictionary) d.MutableCopy ()) {
+					Assert.That (copy, Is.TypeOf<NSMutableDictionary> (), "NSMutableDictionary");
+					Assert.That (copy.Count, Is.EqualTo ((nuint) 1), "Count");
+				}
 
-						using (var copy = (NSDictionary) d.MutableCopy (null)) {
-							Assert.That (copy, Is.TypeOf<NSMutableDictionary> (), "NSMutableDictionary-2");
-							Assert.That (copy.Count, Is.EqualTo ((nuint) 1), "Count-2");
-						}
+				using (var copy = (NSDictionary) d.MutableCopy (null)) {
+					Assert.That (copy, Is.TypeOf<NSMutableDictionary> (), "NSMutableDictionary-2");
+					Assert.That (copy.Count, Is.EqualTo ((nuint) 1), "Count-2");
+				}
 
-						using (var copy = (NSDictionary) d.MutableCopy (NSZone.Default)) {
-							Assert.That (copy, Is.TypeOf<NSMutableDictionary> (), "NSMutableDictionary-3");
-							Assert.That (copy.Count, Is.EqualTo ((nuint) 1), "Count-3");
-						}
-					}
+				using (var copy = (NSDictionary) d.MutableCopy (NSZone.Default)) {
+					Assert.That (copy, Is.TypeOf<NSMutableDictionary> (), "NSMutableDictionary-3");
+					Assert.That (copy.Count, Is.EqualTo ((nuint) 1), "Count-3");
+				}
+			}
 		}
 
 		[Test]
@@ -250,7 +248,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dict = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2, key3 },
-				new NSDate[] { value1, value1, value2 }
+				new NSDate [] { value1, value1, value2 }
 			);
 
 			var rv = dict.KeysForObject (value1);
@@ -291,7 +289,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dict = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2, key3 },
-				new NSDate[] { value1, value1, value2 }
+				new NSDate [] { value1, value1, value2 }
 			);
 
 			var rv = dict.ObjectsForKeys (new NSString [] { key1, key4 }, value3);
@@ -318,7 +316,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dict = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			Assert.True (dict.ContainsKey (key1), "a");
@@ -338,7 +336,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dict = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			NSDate value;
@@ -362,7 +360,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dict = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			Assert.AreSame (value1, dict [key1], "a");
@@ -382,14 +380,14 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dictobj = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			var dict = (IDictionary<NSString, NSDate>) dictobj;
 
 			// Add
 			Assert.Throws<NotSupportedException> (() => dict.Add (new KeyValuePair<NSString, NSDate> (null, null)), "Add");
-		
+
 			// Clear
 			Assert.Throws<NotSupportedException> (() => dict.Clear (), "Clear");
 
@@ -451,7 +449,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			Assert.Throws<NotSupportedException> (() => dict [key3] = value3, "this [1] = 1");
 		}
-			
+
 		[Test]
 		public void ICollection2Test ()
 		{
@@ -464,7 +462,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dictobj = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			var dict = (ICollection<KeyValuePair<NSString, NSDate>>) dictobj;
@@ -523,7 +521,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dictobj = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			var dict = (IEnumerable<KeyValuePair<NSString, NSDate>>) dictobj;
@@ -545,7 +543,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var dictobj = new NSDictionary<NSString, NSDate> (
 				new NSString [] { key1, key2 },
-				new NSDate[] { value1, value1 }
+				new NSDate [] { value1, value1 }
 			);
 
 			var dict = (IEnumerable) dictobj;
@@ -580,5 +578,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-
-#endif // XAMCORE_2_0

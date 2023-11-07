@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,57 +36,16 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using AudioToolbox;
 using Foundation;
+using System.Runtime.Versioning;
 
-namespace AudioUnit
-{
-    public static class AudioUnitUtils
-    {
-        public const int SampleFractionBits = 24;
-
-#if !XAMCORE_2_0
-        [Advice ("Use 'AudioStreamBasicDescription::CreateLinearPCM' instead.")]
-        public static AudioStreamBasicDescription AUCanonicalASBD(double sampleRate, int channel)
-        {
-            // setting AudioStreamBasicDescription
-            int AudioUnitSampleTypeSize = 		
-#if !MONOMAC
-            (ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.SIMULATOR) ? sizeof(float) : sizeof(int);
-#else
-		sizeof (float);
+namespace AudioUnit {
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
 #endif
-            AudioStreamBasicDescription audioFormat = new AudioStreamBasicDescription()
-            {
-                SampleRate = sampleRate,
-                Format = AudioFormatType.LinearPCM,
-                //kAudioFormatFlagsAudioUnitCanonical = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved | (SampleFractionBits << kLinearPCMFormatFlagsSampleFractionShift),
-                FormatFlags      = (AudioFormatFlags)((int)AudioFormatFlags.IsSignedInteger | (int)AudioFormatFlags.IsPacked | (int)AudioFormatFlags.IsNonInterleaved | (int)(SampleFractionBits << (int)AudioFormatFlags.LinearPCMSampleFractionShift)),
-                ChannelsPerFrame = channel,
-                BytesPerPacket   = AudioUnitSampleTypeSize,
-                BytesPerFrame    = AudioUnitSampleTypeSize,
-                FramesPerPacket  = 1,
-                BitsPerChannel   = 8 * AudioUnitSampleTypeSize,
-                Reserved = 0
-            };
-            return audioFormat;
-        }
-
-        [Advice ("Use 'AudioSession::OverrideCategoryDefaultToSpeaker' instead.")]
-        public static void SetOverrideCategoryDefaultToSpeaker(bool isSpeaker)
-        {
-		int val = isSpeaker ? 1 : 0;
-		int err = AudioSessionSetProperty(
-			0x6373706b, //'cspk'
-			(UInt32)sizeof(UInt32),
-			ref val);
-		if (err != 0)
-			throw new ArgumentException();            
-        }
-
-	    [DllImport(Constants.AudioToolboxLibrary, EntryPoint = "AudioSessionSetProperty")]
-	    static extern int AudioSessionSetProperty(
-		    UInt32 inID,
-		    UInt32 inDataSize,
-		    ref int inData);
-#endif
-    }
+	public static class AudioUnitUtils {
+		public const int SampleFractionBits = 24;
+	}
 }

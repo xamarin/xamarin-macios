@@ -45,7 +45,7 @@ namespace Xamarin.Bundler {
 					//not 100% of this one (below)
 					writer.Write ("target triple = \"x86_64-apple-tvos");
 				} else {
-					throw ErrorHelper.CreateError (1301, "Unsupported TvOS ABI: {0}.", abi);
+					throw ErrorHelper.CreateError (1301, Errors.MT1301, abi);
 				}
 				writer.Write (deployment_target.Major);
 				writer.Write ('.');
@@ -55,7 +55,7 @@ namespace Xamarin.Bundler {
 				writer.WriteLine ('"');
 				break;
 			default:
-				throw ErrorHelper.CreateError (1300, "Unsupported bitcode platform: {0}.", platform);
+				throw ErrorHelper.CreateError (1300, Errors.MT1300, platform);
 			}
 
 
@@ -67,7 +67,7 @@ namespace Xamarin.Bundler {
 
 			string s;
 			int line = 0;
-			while ((s = reader.ReadLine ()) != null) {
+			while ((s = reader.ReadLine ()) is not null) {
 				++line;
 				s = s.Trim ();
 				if (s.Length == 0)
@@ -84,18 +84,20 @@ namespace Xamarin.Bundler {
 			}
 			reader.Close ();
 			writer.Close ();
-			
+
 		}
 
-		static bool IsDigit (byte c) {
+		static bool IsDigit (byte c)
+		{
 			return (c >= '0' && c <= '9');
 		}
 
-		static bool IsHex (byte c) {
+		static bool IsHex (byte c)
+		{
 			return IsDigit (c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 		}
 
-		static bool ParseHex (byte[] str, ref int start_index, ref byte result)
+		static bool ParseHex (byte [] str, ref int start_index, ref byte result)
 		{
 			int i = 0;
 			var sb = new StringBuilder ();
@@ -115,13 +117,13 @@ namespace Xamarin.Bundler {
 			return true;
 		}
 
-		static bool ParseOctal (byte[] str, ref int start_index, ref byte result, ref string error_msg)
+		static bool ParseOctal (byte [] str, ref int start_index, ref byte result, ref string error_msg)
 		{
 			int i = 0;
 			var sb = new StringBuilder ();
 			while (start_index + i < str.Length && i < 3) {
 				if (IsDigit (str [start_index + i])) {
-					sb.Append ((char)str [start_index + i]);
+					sb.Append ((char) str [start_index + i]);
 					++i;
 				} else
 					break;
@@ -137,7 +139,8 @@ namespace Xamarin.Bundler {
 			return true;
 		}
 
-		string FixAsciz (string s, int line) {
+		string FixAsciz (string s, int line)
+		{
 			bool first = true;
 			var m = Regex.Match (s, "^.asci(i|z)\\s*\"(.*)\"$");
 			if (!m.Success)
@@ -153,39 +156,39 @@ namespace Xamarin.Bundler {
 				if (utf8 [i] == '\\') {
 					++i;
 					if (i >= utf8.Length)
-						throw ErrorHelper.CreateError (1302, "Invalid escape sequence when converting .s to .ll, \\ as the last characted in {0}:{1}.", input, line);
+						throw ErrorHelper.CreateError (1302, Errors.MT1302_A, input, line);
 					switch (utf8 [i]) {
 					case (byte) 'b':
 						to_append = 0x8;
 						break;
-					case (byte)'f':
+					case (byte) 'f':
 						to_append = 0xc;
 						break;
-					case (byte)'n':
+					case (byte) 'n':
 						to_append = 0xa;
 						break;
-					case (byte)'r':
+					case (byte) 'r':
 						to_append = 0xd;
 						break;
-					case (byte)'t':
+					case (byte) 't':
 						to_append = 9;
 						break;
-					case (byte)'\"':
-					case (byte)'\\':
+					case (byte) '\"':
+					case (byte) '\\':
 						to_append = utf8 [i];
 						break;
-					case (byte)'x':
-					case (byte)'X':
+					case (byte) 'x':
+					case (byte) 'X':
 						++i;
 						if (!ParseHex (utf8, ref i, ref to_append))
-							throw ErrorHelper.CreateError (1302, "Invalid escape sequence when converting .s to .ll, bad hex escape in {0}:{1}.", input, line);
+							throw ErrorHelper.CreateError (1302, Errors.MT1302_A, input, line);
 
 						break;
 					default:
 						if (IsDigit (utf8 [i])) {
 							string error_msg = null;
 							if (!ParseOctal (utf8, ref i, ref to_append, ref error_msg))
-								throw ErrorHelper.CreateError (1302, "Invalid escape sequence when converting .s to .ll, bad octal escape in {0}:{1} due to {2}.", input, line, error_msg);
+								throw ErrorHelper.CreateError (1302, Errors.MT1302_B, input, line, error_msg);
 						} else
 							to_append = utf8 [i]; // "\K" is the same as "K"
 						break;
@@ -208,7 +211,8 @@ namespace Xamarin.Bundler {
 			return res.ToString ();
 		}
 
-		string FixFile (string s, int line) {
+		string FixFile (string s, int line)
+		{
 			var m = Regex.Match (s, "^.file\\s*(\\d+)\\s*\"(.*)\"$");
 			if (!m.Success)
 				return s;
@@ -220,7 +224,7 @@ namespace Xamarin.Bundler {
 
 			for (int i = 0; i < str.Length; ++i) {
 				if (str [i] == '\\' && i + 1 < str.Length && str [i + 1] == '\\') {
-					i ++;
+					i++;
 					res.Append ("\\5c\\5c");
 				} else {
 					res.Append (str [i]);
@@ -232,4 +236,3 @@ namespace Xamarin.Bundler {
 		}
 	}
 }
-

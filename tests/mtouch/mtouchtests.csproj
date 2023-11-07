@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MTouchTests</RootNamespace>
+    <AssemblyName>mtouchtests</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>True</DebugSymbols>
+    <DefineConstants>MONOTOUCH;MTOUCH_TESTS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.12.0" />
+    <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MTouch.cs" />
+    <Compile Include="RegistrarTest.cs" />
+    <Compile Include="..\common\AssertHelpers.cs">
+      <Link>AssertHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tests\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="MiscTests.cs" />
+    <Compile Include="SdkTest.cs" />
+    <Compile Include="MTouchTool.cs" />
+    <Compile Include="TimingTests.cs" />
+    <Compile Include="MLaunchTool.cs" />
+    <Compile Include="Cache.cs" />
+    <Compile Include="InlinerTest.cs" />
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
+    <Compile Include="LinkerTests.cs" />
+    <Compile Include="..\common\ProductTests.cs">
+      <Link>ProductTests.cs</Link>
+    </Compile>
+    <Compile Include="StringUtilsTest.cs" />
+    <Compile Include="..\common\ApiTest.cs">
+      <Link>ApiTest.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BundlerTest.cs">
+      <Link>BundlerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Profile.cs">
+      <Link>Profile.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BundlerTool.cs">
+      <Link>BundlerTool.cs</Link>
+    </Compile>
+    <Compile Include="MonoNativeTests.cs" />
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\ProductConstants.cs">
+      <Link>ProductConstants.cs</Link>
+    </Compile>
+    <Compile Include="ErrorTest.cs" />
+    <Compile Include="Setup.cs" />
+    <Compile Include="Compat.cs" />
+    <Compile Include="..\common\Tool.cs">
+      <Link>Tool.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BinLog.cs">
+      <Link>BinLog.cs</Link>
+    </Compile>
+    <Compile Include="LocalizationTests.cs" />
+    <Compile Include="..\common\DotNet.cs">
+      <Link>DotNet.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\tools\mtouch\mtouch.csproj">
+      <Project>{A737EFCC-4348-4EB1-9C14-4FDC0975388D}</Project>
+      <Name>mtouch</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

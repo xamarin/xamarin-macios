@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CNContact
 //
 // Authors:
@@ -9,19 +9,9 @@
 
 #if !__TVOS__
 
-#if XAMCORE_2_0
-
 using System;
-#if XAMCORE_2_0
 using Contacts;
 using Foundation;
-using ObjCRuntime;
-#else
-using MonoTouch.Contacts;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Contacts {
@@ -73,7 +63,7 @@ namespace MonoTouchFixtures.Contacts {
 				contact.Birthday = new NSDateComponents () {
 					Year = 1980
 				};
-				Assert.AreEqual (1980, contact.Birthday.Year, "Birthday");
+				Assert.AreEqual ((nint) 1980, contact.Birthday.Year, "Birthday");
 
 				contact.ContactRelations = new CNLabeledValue<CNContactRelation> [] {
 					new CNLabeledValue<CNContactRelation> ("label", new CNContactRelation ("relation"))
@@ -119,7 +109,7 @@ namespace MonoTouchFixtures.Contacts {
 
 				contact.JobTitle = "title";
 				Assert.AreEqual ("title", contact.JobTitle, "JobTitle");
-			
+
 				contact.MiddleName = "middleName";
 				Assert.AreEqual ("middleName", contact.MiddleName, "MiddleName");
 
@@ -135,7 +125,7 @@ namespace MonoTouchFixtures.Contacts {
 				contact.NonGregorianBirthday = new NSDateComponents () {
 					Year = 2099,
 				};
-				Assert.AreEqual (2099, contact.NonGregorianBirthday.Year, "NonGregorianBirthday");
+				Assert.AreEqual ((nint) 2099, contact.NonGregorianBirthday.Year, "NonGregorianBirthday");
 
 				contact.Note = "note";
 				Assert.AreEqual ("note", contact.Note, "Note");
@@ -156,7 +146,7 @@ namespace MonoTouchFixtures.Contacts {
 
 				contact.PhoneticMiddleName = "phoneticMiddleName";
 				Assert.AreEqual ("phoneticMiddleName", contact.PhoneticMiddleName, "PhoneticMiddleName");
-			
+
 				contact.PostalAddresses = new CNLabeledValue<CNPostalAddress> [] {
 					new CNLabeledValue<CNPostalAddress> ("label", new CNMutablePostalAddress ()
 						{
@@ -182,5 +172,4 @@ namespace MonoTouchFixtures.Contacts {
 	}
 }
 
-#endif // XAMCORE_2_0
 #endif // !__TVOS__

@@ -30,3 +30,16 @@ it ensure our tool chain can cope with them.
 * regression testing using the linker on the **SDK** assemblies
 
 * "Link SDK assemblies only" for both simulator/devices
+
+## trimmode copy
+
+* regression testing **without** using the linker
+* .NET only - select to not use the linker by using the TrimMode property
+* otherwise identical to the "dont link" test
+
+## trimmode link
+
+* regression testing by using the linker on those assemblies that opt in to being trimmed
+* .NET only - select the linker mode by using the TrimMode property
+* otherwise identical to the "link sdk" test
+

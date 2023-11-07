@@ -26,57 +26,38 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
-	// CFNumber.h
-	partial class CFBoolean : INativeObject, IDisposable {
-		IntPtr handle;
 
-		[Preserve (Conditional = true)]
-		internal CFBoolean (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-
-		~CFBoolean ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFBooleanGetTypeID")]
-		public extern static /* CFTypeID */ nint GetTypeID ();
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-#if XAMCORE_2_0
-		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
+	// CFNumber.h
+	partial class CFBoolean : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CFBoolean (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
+
+		[DllImport (Constants.CoreFoundationLibrary, EntryPoint = "CFBooleanGetTypeID")]
+		public extern static /* CFTypeID */ nint GetTypeID ();
 
 		public static implicit operator bool (CFBoolean value)
 		{
@@ -103,7 +84,7 @@ namespace CoreFoundation {
 		extern static /* Boolean */ bool CFBooleanGetValue (/* CFBooleanRef */ IntPtr boolean);
 
 		public bool Value {
-			get {return CFBooleanGetValue (handle);}
+			get { return CFBooleanGetValue (Handle); }
 		}
 
 		public static bool GetValue (IntPtr boolean)

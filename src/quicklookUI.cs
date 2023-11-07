@@ -5,6 +5,11 @@ using AppKit;
 
 using System;
 using System.ComponentModel;
+using UniformTypeIdentifiers;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace QuickLookUI {
 
@@ -23,10 +28,10 @@ namespace QuickLookUI {
 
 		[Export ("previewPanel:previewItemAtIndex:")]
 		[Abstract]
-		[return:Protocolize]
+		[return: Protocolize]
 		QLPreviewItem PreviewItemAtIndex (QLPreviewPanel panel, nint index);
 	}
-	
+
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface QLPreviewPanelDelegate : NSWindowDelegate {
@@ -39,17 +44,17 @@ namespace QuickLookUI {
 		[Export ("previewPanel:transitionImageForPreviewItem:contentRect:")]
 		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item, CGRect contentRect);
 	}
-	
-	interface IQLPreviewItem {}
+
+	interface IQLPreviewItem { }
 
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewItem {
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[Export ("previewItemURL")]
-#if XAMCORE_4_0
+#if NET
 		NSUrl PreviewItemUrl { get; }
 #else
 		NSUrl PreviewItemURL { get; }
@@ -61,7 +66,7 @@ namespace QuickLookUI {
 		[Export ("previewItemDisplayState")]
 		NSObject PreviewItemDisplayState { get; }
 	}
-	
+
 	[Category]
 	[BaseType (typeof (NSObject))]
 	interface QLPreviewPanelController {
@@ -80,13 +85,15 @@ namespace QuickLookUI {
 	interface QLPreviewPanel {
 		[Export ("currentController")]
 		NSObject CurrentController { get; }
-		
-		[Export ("dataSource", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDataSource  { get; set; }
-		
-		[Wrap ("WeakDataSource")][NullAllowed]
+
+		[Export ("dataSource", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		NSObject WeakDataSource { get; set; }
+
+		[Wrap ("WeakDataSource")]
+		[NullAllowed]
 		[Protocolize]
-		QLPreviewPanelDataSource DataSource  { get; set; }
+		QLPreviewPanelDataSource DataSource { get; set; }
 
 		[Export ("currentPreviewItemIndex")]
 		nint CurrentPreviewItemIndex { get; set; }
@@ -98,10 +105,12 @@ namespace QuickLookUI {
 		[Export ("displayState", ArgumentSemantic.Retain)]
 		NSObject DisplayState { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
-		[Wrap ("WeakDelegate")][NullAllowed]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
 		[Protocolize]
 		QLPreviewPanelDelegate Delegate { get; set; }
 
@@ -125,21 +134,21 @@ namespace QuickLookUI {
 
 		// @required - (BOOL)enterFullScreenMode:(NSScreen *)screen withOptions:(NSDictionary *)options;
 		[Export ("enterFullScreenMode:withOptions:")]
-		bool EnterFullScreenMode ([NullAllowed]NSScreen screen, [NullAllowed]NSDictionary options);
+		bool EnterFullScreenMode ([NullAllowed] NSScreen screen, [NullAllowed] NSDictionary options);
 
 		// @required - (void)exitFullScreenModeWithOptions:(NSDictionary *)options;
 		[Export ("exitFullScreenModeWithOptions:")]
-		void ExitFullScreenModeWithOptions ([NullAllowed]NSDictionary options);
+		void ExitFullScreenModeWithOptions ([NullAllowed] NSDictionary options);
 	}
 
 	[BaseType (typeof (NSView))] // Mac 10.6
 	interface QLPreviewView {
 
 		[Export ("initWithFrame:style:")]
-		IntPtr Constructor (CGRect frame, QLPreviewViewStyle style);
+		NativeHandle Constructor (CGRect frame, QLPreviewViewStyle style);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("previewItem", ArgumentSemantic.Retain)]
 		IQLPreviewItem PreviewItem { get; set; }
@@ -160,17 +169,77 @@ namespace QuickLookUI {
 		bool Autostarts { get; set; }
 	}
 
-	[Mac (10,13)]
 	[Protocol]
 	interface QLPreviewingController {
-#if !XAMCORE_4_0 // This is optional in headers
+#if !NET
 		[Abstract]
 #endif
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
 
-		[Mac (10,15)]
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
+
+		[iOS (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[Export ("providePreviewForFileRequest:completionHandler:")]
+		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
+	}
+
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface QLFilePreviewRequest {
+		[Export ("fileURL")]
+		NSUrl FileUrl { get; }
+	}
+
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewProvider : NSExtensionRequestHandling {
+	}
+
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface QLPreviewReplyAttachment {
+		[Export ("data")]
+		NSData Data { get; }
+
+		[Export ("contentType")]
+		UTType ContentType { get; }
+
+		[Export ("initWithData:contentType:")]
+		NativeHandle Constructor (NSData data, UTType contentType);
+	}
+
+	delegate bool QLPreviewReplyDrawingHandler (CGContext context, QLPreviewReply reply, out NSError error);
+	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
+	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
+
+	[NoWatch, NoTV, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface QLPreviewReply {
+		[Export ("stringEncoding")]
+		NSStringEncoding StringEncoding { get; set; }
+
+		[Export ("attachments", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, QLPreviewReplyAttachment> Attachments { get; set; }
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[Export ("initWithContextSize:isBitmap:drawingBlock:")]
+		NativeHandle Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
+
+		[Export ("initWithFileURL:")]
+		NativeHandle Constructor (NSUrl fileUrl);
+
+		[Export ("initWithDataOfContentType:contentSize:dataCreationBlock:")]
+		NativeHandle Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
+
+		// QLPreviewReply_UI
+		[Export ("initForPDFWithPageSize:documentCreationBlock:")]
+		NativeHandle Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 }

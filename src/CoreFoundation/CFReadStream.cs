@@ -27,33 +27,54 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
-using System.IO;
-using System.Text;
-using System.Reflection;
-using System.Threading;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreFoundation {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CFStream.h
 	public class CFReadStream : CFStream {
-		public CFReadStream (IntPtr handle)
-			: base (handle)
+#if !NET
+		public CFReadStream (NativeHandle handle)
+			: base (handle, true)
+		{
+		}
+#endif
+
+		[Preserve (Conditional = true)]
+		internal CFReadStream (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFErrorRef */ IntPtr CFReadStreamCopyError (/* CFReadStreamRef */ IntPtr stream);
 
-		public override CFException GetError ()
+		public override CFException? GetError ()
 		{
 			var error = CFReadStreamCopyError (Handle);
 			if (error == IntPtr.Zero)
@@ -98,53 +119,75 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFReadStreamScheduleWithRunLoop (/* CFReadStreamRef */ IntPtr stream, /* CFRunLoopRef */ IntPtr runLoop, /* CFStringRef */ IntPtr runLoopMode);
 
-		protected override void ScheduleWithRunLoop (CFRunLoop loop, NSString mode)
+		protected override void ScheduleWithRunLoop (CFRunLoop loop, NSString? mode)
 		{
-			if (loop == null)
-				throw new ArgumentNullException ("loop");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (loop is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (loop));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 			CFReadStreamScheduleWithRunLoop (Handle, loop.Handle, mode.Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static void CFReadStreamUnscheduleFromRunLoop (/* CFReadStreamRef */ IntPtr stream, /* CFRunLoopRef */ IntPtr runLoop, /* CFStringRef */ IntPtr runLoopMode);
 
-		protected override void UnscheduleFromRunLoop (CFRunLoop loop, NSString mode)
+		protected override void UnscheduleFromRunLoop (CFRunLoop loop, NSString? mode)
 		{
-			if (loop == null)
-				throw new ArgumentNullException ("loop");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (loop is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (loop));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 			CFReadStreamUnscheduleFromRunLoop (Handle, loop.Handle, mode.Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+#if NET8_0_OR_GREATER
+		unsafe static extern byte CFReadStreamSetClient (/* CFReadStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
+			/* CFReadStreamClientCallBack */ delegate* unmanaged<IntPtr, nint, IntPtr, void> clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+#else
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CFReadStreamSetClient (/* CFReadStreamRef */ IntPtr stream, /* CFOptionFlags */ nint streamEvents,
-			/* CFReadStreamClientCallBack */ CFStreamCallback clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+			/* CFReadStreamClientCallBack */ CFStreamCallback? clientCB, /* CFStreamClientContext* */ IntPtr clientContext);
+#endif
 
-		protected override bool DoSetClient (CFStreamCallback callback, CFIndex eventTypes,
-		                                     IntPtr context)
+#if !XAMCORE_5_0
+#if NET8_0_OR_GREATER
+		[Obsolete ("Use the other overload.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+#endif
+		protected override bool DoSetClient (CFStreamCallback? callback, CFIndex eventTypes,
+											 IntPtr context)
 		{
-			return CFReadStreamSetClient (Handle, eventTypes, callback, context);
+#if NET8_0_OR_GREATER
+			throw new InvalidOperationException ($"Use the other overload.");
+#else
+			return CFReadStreamSetClient (Handle, (nint) eventTypes, callback, context);
+#endif
 		}
+#endif // !XAMCORE_5_0
+
+#if NET8_0_OR_GREATER
+		unsafe protected override byte DoSetClient (delegate* unmanaged<IntPtr, nint, IntPtr, void> callback, CFIndex eventTypes, IntPtr context)
+		{
+			return CFReadStreamSetClient (Handle, (nint) eventTypes, callback, context);
+		}
+#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFIndex */ nint CFReadStreamRead (/* CFReadStreamRef */ IntPtr handle, /* UInt8* */ IntPtr buffer, /* CFIndex */ nint count);
 
-		public nint Read (byte[] buffer)
+		public nint Read (byte [] buffer)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			return Read (buffer, 0, buffer.Length);
 		}
 
-		public unsafe nint Read (byte[] buffer, int offset, int count)
+		public unsafe nint Read (byte [] buffer, int offset, int count)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException ("buffer");
-			CheckHandle ();
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
+			GetCheckedHandle ();
 			if (offset < 0)
 				throw new ArgumentException ();
 			if (count < 1)
@@ -160,8 +203,8 @@ namespace CoreFoundation {
 
 		protected override IntPtr DoGetProperty (NSString name)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			return CFReadStreamCopyProperty (Handle, name.Handle);
 		}
 
@@ -169,11 +212,11 @@ namespace CoreFoundation {
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* Boolean */ bool CFReadStreamSetProperty (/* CFReadStreamRef */ IntPtr stream, /* CFStreamRef */ IntPtr propertyName, /* CFTypeRef */ IntPtr propertyValue);
 
-		protected override bool DoSetProperty (NSString name, INativeObject value)
+		protected override bool DoSetProperty (NSString name, INativeObject? value)
 		{
-			if (name == null)
-				throw new ArgumentNullException ("name");
-			return CFReadStreamSetProperty (Handle, name.Handle, value == null ? IntPtr.Zero : value.Handle);
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
+			return CFReadStreamSetProperty (Handle, name.Handle, value.GetHandle ());
 		}
 	}
 }

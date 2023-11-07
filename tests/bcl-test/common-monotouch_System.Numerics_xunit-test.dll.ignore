@@ -77,3 +77,6 @@ Platform32:System.Numerics.Tests.cast_fromTest.RunInt16ExplicitCastFromBigIntege
 Platform32:System.Numerics.Tests.cast_fromTest.RunSByteExplicitCastFromBigIntegerTests
 Platform32:System.Numerics.Tests.GenericVectorTests.DotProductSByte
 
+# 32bits device failures / https://github.com/mono/mono/issues/18542
+Platform32:System.Numerics.Tests.Matrix4x4Tests.Matrix4x4InvertTest1
+Platform32:System.Numerics.Tests.Matrix3x2Tests.Matrix3x2InvertTest1

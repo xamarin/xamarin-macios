@@ -1,0 +1,16 @@
+# Deprecated
+
+# Also ignored on macOS
+!missing-selector! CARemoteLayerClient::clientId not bound
+!missing-selector! CARemoteLayerClient::initWithServerPort: not bound
+!missing-selector! CARemoteLayerClient::layer not bound
+!missing-selector! CARemoteLayerClient::setLayer: not bound
+!missing-selector! CARemoteLayerClient::invalidate not bound
+!missing-type! CARemoteLayerClient not bound
+!missing-selector! CARemoteLayerServer::serverPort not bound
+!missing-type! CARemoteLayerServer not bound
+!missing-protocol! CALayoutManager not bound
+!missing-protocol-conformance! CAConstraintLayoutManager should conform to CALayoutManager
+!missing-selector! CAConstraint::offset not bound
+!missing-selector! +CALayer::layerWithRemoteClientId: not bound
+!missing-selector! +CARemoteLayerServer::sharedServer not bound

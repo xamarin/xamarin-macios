@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <PackageId>Microsoft.$(_PlatformName).Sdk</PackageId>
+    <PackageId Condition="'$(IsWindowsPack)' == 'true'">Microsoft.$(_PlatformName).Windows.Sdk</PackageId>
+    <Description>Managed Tools and Bindings for the $(_PlatformName) SDK</Description>
+  </PropertyGroup>
+  <Import Project="common.csproj" />
+</Project>

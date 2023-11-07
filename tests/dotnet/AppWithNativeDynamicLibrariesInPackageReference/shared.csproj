@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<ApplicationTitle>AppWithNativeDynamicLibrariesInPackageReference</ApplicationTitle>
+		<ApplicationId>com.xamarin.appwithnativedynamiclibrariesinpackagereference</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<PackageReference Include="Xamarin.Tests.DynamicLibrariesInRuntimesNativeDirectory" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

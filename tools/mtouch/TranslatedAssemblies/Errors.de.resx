@@ -1,0 +1,1840 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="default" xml:space="preserve">
+		<value>Die Fehlermeldung für den Code {0} wurde nicht gefunden. Melden Sie diese fehlende Meldung auf GitHub unter https://github.com/xamarin/xamarin-macios/issues/new.</value>
+		<comment>
+			This is the default message when an error code can not be found.
+		</comment>
+	</data>
+  <data name="MT0000" xml:space="preserve">
+		<value>Unerwarteter Fehler. Füllen Sie unter https://github.com/xamarin/xamarin-macios/issues/new einen Fehlerbericht aus.
+		</value>
+	</data>
+  <data name="MT0001" xml:space="preserve">
+		<value>"-devname" wurde ohne gerätespezifische Aktion bereitgestellt.
+		</value>
+	</data>
+  <data name="MM0001" xml:space="preserve">
+		<value>Für diese Version von Xamarin.Mac ist Mono {0} erforderlich (aktuelle Mono-Version: {1}). Aktualisieren Sie Mono.framework über http://mono-project.com/Downloads.
+		</value>
+	</data>
+  <data name="MT0002" xml:space="preserve">
+		<value>Die Umgebungsvariable "{0}" konnte nicht analysiert werden.
+		</value>
+	</data>
+  <data name="MX0003" xml:space="preserve">
+		<value>Der Anwendungsname "{0}.exe" steht in Konflikt mit dem Namen eines SDK oder einer Produktassembly (DLL).
+		</value>
+	</data>
+  <data name="MT0004" xml:space="preserve">
+		<value>Für die neue Logik zur Referenzzählung muss SGen ebenfalls aktiviert sein.
+		</value>
+	</data>
+  <data name="MT0005" xml:space="preserve">
+		<value>Das Ausgabeverzeichnis * ist nicht vorhanden.
+		</value>
+	</data>
+  <data name="MT0006" xml:space="preserve">
+		<value>Unter "{0}" ist keine Entwicklungsplattform vorhanden, verwenden Sie --platform=PLAT, um das SDK anzugeben.
+		</value>
+	</data>
+  <data name="MX0007" xml:space="preserve">
+		<value>Die Stammassembly "{0}" ist nicht vorhanden.
+		</value>
+	</data>
+  <data name="MM0008" xml:space="preserve">
+		<value>Sie dürfen nur eine Stammassembly angeben, {0} Assemblys gefunden: "{1}"
+		</value>
+	</data>
+  <data name="MX0009" xml:space="preserve">
+		<value>Fehler beim Laden von Assemblys: {0}.
+		</value>
+	</data>
+  <data name="MX0010" xml:space="preserve">
+		<value>Die Befehlszeilenargumente konnten nicht analysiert werden: {0}
+		</value>
+	</data>
+  <data name="MT0011" xml:space="preserve">
+		<value>"{0}" wurde mit einer neueren Runtime ({1}) erstellt, als von Xamarin.iOS unterstützt wird.
+		</value>
+	</data>
+  <data name="MT0012" xml:space="preserve">
+		<value>Zum Abschließen von * wurden unvollständige Daten bereitgestellt.
+		</value>
+	</data>
+  <data name="MT0013" xml:space="preserve">
+		<value>Zur Unterstützung der Profilerstellung muss sgen ebenfalls aktiviert werden.
+		</value>
+	</data>
+  <data name="MT0014" xml:space="preserve">
+		<value>Das iOS {0} SDK bietet keine Unterstützung für das Erstellen von Anwendungen, die auf {1} ausgerichtet sind.
+		</value>
+	</data>
+  <data name="MT0015" xml:space="preserve">
+		<value>Ungültige ABI: {0}. Unterstützte ABIs: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64, arm64+llvm, arm64_32 und arm64_32+llvm.
+		</value>
+	</data>
+  <data name="MX0016" xml:space="preserve">
+		<value>Die Option "{0}" ist veraltet.
+		</value>
+	</data>
+  <data name="MX0017" xml:space="preserve">
+		<value>Geben Sie eine Stammassembly an.
+		</value>
+	</data>
+  <data name="MX0018" xml:space="preserve">
+		<value>Unbekanntes Befehlszeilenargument: {0}.
+		</value>
+	</data>
+  <data name="MT0019" xml:space="preserve">
+		<value>Es kann nur eine Option "--[log|install|kill|launch]dev" oder "--[launch|debug]sim" verwendet werden.
+		</value>
+	</data>
+  <data name="MX0020" xml:space="preserve">
+		<value>Gültige Optionen für "{0}": {1}.
+		</value>
+	</data>
+  <data name="MT0021" xml:space="preserve">
+		<value>Mit gcc/g++ (--use-gcc) kann nicht kompiliert werden, wenn die statische Registrierungsstelle verwendet wird. (Dies ist beim Kompilieren für das Gerät der Standardwert.) Entfernen Sie entweder das Flag "--use-gcc", oder verwenden Sie die dynamische Registrierungsstelle (--registrar:dynamic).
+		</value>
+	</data>
+  <data name="MT0022" xml:space="preserve">
+		<value>Die Optionen "--unsupported--enable-generics-in-registrar" und "--registrar" sind nicht kompatibel.
+		</value>
+	</data>
+  <data name="MT0023" xml:space="preserve">
+		<value>Die Stammassembly "{0}" steht in Konflikt mit einer anderen Assembly ({1}).
+		</value>
+	</data>
+  <data name="MM0023" xml:space="preserve">
+		<value>Der Anwendungsname "{0}.exe" steht in Konflikt mit einer anderen Benutzerassembly.
+		</value>
+	</data>
+  <data name="MT0024" xml:space="preserve">
+		<value>Die erforderliche Datei "{0}" wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT0025" xml:space="preserve">
+		<value>Es wurde keine SDK-Version angegeben. Fügen Sie --sdk=X.Y hinzu, um anzugeben, welches {0} SDK zum Erstellen Ihrer Anwendung verwendet werden soll.
+		</value>
+	</data>
+  <data name="MX0026" xml:space="preserve">
+		<value>Das Befehlszeilenargument "-{0}" konnte nicht analysiert werden: {1}
+		</value>
+	</data>
+  <data name="MT0027" xml:space="preserve">
+		<value>Die Optionen "\*" und "\*" sind nicht kompatibel.
+		</value>
+	</data>
+  <data name="MT0028" xml:space="preserve">
+		<value>PIE (-pie) kann nicht aktiviert werden, wenn iOS 4.1 oder früher als Ziel verwendet wird. Deaktivieren Sie PIE (-pie:false), oder legen Sie das Bereitstellungsziel auf iOS 4.2 oder höher fest.
+		</value>
+	</data>
+  <data name="MT0029" xml:space="preserve">
+		<value>REPL (--enable-repl) wird nur im Simulator (--sim) unterstützt.
+		</value>
+	</data>
+  <data name="MT0030" xml:space="preserve">
+		<value>Der Name der ausführbaren Datei ({0}) und der App-Name ({1}) sind nicht identisch. Dies kann dazu führen, dass Absturzprotokolle nicht die richtigen Symbole enthalten.
+		</value>
+	</data>
+  <data name="MT0031" xml:space="preserve">
+		<value>Die Befehlszeilenargumente "--enable-background-fetch" und "--launch-for-background-fetch" erfordern auch "--launchsim".
+		</value>
+	</data>
+  <data name="MT0032" xml:space="preserve">
+		<value>Die Option "--debugtrack" wird ignoriert, sofern "--debug" nicht ebenfalls angegeben wird.
+		</value>
+	</data>
+  <data name="MT0033" xml:space="preserve">
+		<value>Ein Xamarin.iOS-Projekt muss entweder auf "monotouch.dll" oder auf "Xamarin.iOS.dll" verweisen.
+		</value>
+	</data>
+  <data name="MT0034" xml:space="preserve">
+		<value>In einem {1}-Projekt kann nicht auf "{0}.dll" verwiesen werden. Diese Datei wird implizit von "{2}" referenziert.
+		</value>
+	</data>
+  <data name="MT0036" xml:space="preserve">
+		<value>Für eine *-App kann kein *-Simulator gestartet werden. Aktivieren Sie die korrekte(n) Architektur(en) in den iOS-Buildoptionen Ihres Projekts (Seite "Erweitert").
+		</value>
+	</data>
+  <data name="MT0037" xml:space="preserve">
+		<value>"monotouch.dll" ist nicht 64-Bit-kompatibel. Verweisen Sie entweder auf "Xamarin.iOS.dll", oder erstellen Sie den Build nicht für eine 64-Bit-Architektur (ARM64 und/oder x86_64).
+		</value>
+	</data>
+  <data name="MT0038" xml:space="preserve">
+		<value>Die alten Registrierungsstellen (--registrar:oldstatic|olddynamic) werden beim Verweis auf "Xamarin.iOS.dll" nicht unterstützt.
+		</value>
+	</data>
+  <data name="MT0039" xml:space="preserve">
+		<value>Anwendungen, die auf ARMv6 ausgerichtet sind, können nicht auf "Xamarin.iOS.dll" verweisen.
+		</value>
+	</data>
+  <data name="MT0040" xml:space="preserve">
+		<value>Die Assembly "\*", auf die durch "\*" verwiesen wird, wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT0041" xml:space="preserve">
+		<value>In einer {1}-App kann nicht auf "{0}" verwiesen werden.
+		</value>
+	</data>
+  <data name="MT0042" xml:space="preserve">
+		<value>Es wurde kein Verweis auf "monotouch.dll" oder "Xamarin.iOS.dll" gefunden. Ein Verweis auf "monotouch.dll" wird hinzugefügt.
+		</value>
+	</data>
+  <data name="MX0043" xml:space="preserve">
+		<value>Der Boehm-Garbage Collector wird nicht unterstützt. Stattdessen wurde der SGen-Garbage Collector ausgewählt.
+		</value>
+	</data>
+  <data name="MT0044" xml:space="preserve">
+		<value>--listsim wird nur mit Xcode 6.0 oder höher unterstützt.
+		</value>
+	</data>
+  <data name="MT0045" xml:space="preserve">
+		<value>--extension wird nur bei Verwendung des iOS 8.0 SDK (oder höher) unterstützt.
+		</value>
+	</data>
+  <data name="MT0047" xml:space="preserve">
+		<value>Das Mindestbereitstellungsziel für Unified-Anwendungen ist 5.1.1. Aktuelles Bereitstellungsziel: "*". Wählen Sie ein neueres Bereitstellungsziel in den iOS-Anwendungsoptionen Ihres Projekts aus.
+		</value>
+	</data>
+  <data name="MT0049" xml:space="preserve">
+		<value>"{0}.framework" wird nur bei einem Bereitstellungsziel von 8.0 oder höher unterstützt. {0}-Features funktionieren möglicherweise nicht ordnungsgemäß.
+		</value>
+	</data>
+  <data name="MM0050" xml:space="preserve">
+		<value>Sie können keine Stammassembly bereitstellen, wenn --no-root-assembly übergeben wird, {0} Assemblys gefunden: {1}
+		</value>
+	</data>
+  <data name="MT0051" xml:space="preserve">
+		<value>Für {3} {0} ist Xcode {4} oder höher erforderlich. Die aktuelle Xcode-Version (gefunden in {2}) ist {1}.
+		</value>
+	</data>
+  <data name="MM0051" xml:space="preserve">
+		<value>Ein Ausgabeverzeichnis (--output) ist erforderlich, wenn --no-root-assembly übergeben wird.
+		</value>
+	</data>
+  <data name="MT0052" xml:space="preserve">
+		<value>Es wurde kein Befehl angegeben.
+		</value>
+	</data>
+  <data name="MT0054" xml:space="preserve">
+		<value>Der Pfad "{0}" kann nicht in eine kanonische Form umgewandelt werden: {1} ({2}).
+		</value>
+	</data>
+  <data name="MT0055" xml:space="preserve">
+		<value>Der Xcode-Pfad "{0}" ist nicht vorhanden.
+		</value>
+	</data>
+  <data name="MX0056" xml:space="preserve">
+		<value>Xcode wurde am Standardspeicherort (/Applications/Xcode.app) nicht gefunden. Installieren Sie Xcode, oder übergeben Sie einen benutzerdefinierten Pfad über "--sdkroot &lt;pfad&gt;".
+		</value>
+	</data>
+  <data name="MT0057" xml:space="preserve">
+		<value>Der Pfad zu Xcode.app kann vom SDK-Stamm "{0}" aus nicht ermittelt werden. Geben Sie den vollständigen Pfad zum Xcode.app-Bundle an.
+		</value>
+	</data>
+  <data name="MT0058" xml:space="preserve">
+		<value>Die Xcode.app "{0}" ist ungültig. (Die Datei "{1}" ist nicht vorhanden.)
+		</value>
+	</data>
+  <data name="MX0059" xml:space="preserve">
+		<value>Der aktuell ausgewählte Xcode wurde auf dem System nicht gefunden: {0}
+		</value>
+	</data>
+  <data name="MX0060" xml:space="preserve">
+		<value>Der aktuell ausgewählte Xcode wurde auf dem System nicht gefunden. "xcode-select --print-path" hat "{0}" zurückgegeben, dieses Verzeichnis ist jedoch nicht vorhanden.
+		</value>
+	</data>
+  <data name="MT0061" xml:space="preserve">
+		<value>Es wurde keine Xcode.app angegeben (über --sdkroot). System-Xcode wird verwendet, wie von "xcode-select --print-path" gemeldet: {0}
+		</value>
+	</data>
+  <data name="MT0062" xml:space="preserve">
+		<value>Es wurde keine Xcode.app angegeben (über --sdkroot oder "xcode-select --print-path"). Stattdessen wird Standard-Xcode verwendet: {0}
+		</value>
+	</data>
+  <data name="MT0063" xml:space="preserve">
+		<value>Die ausführbare Datei wurde in der Erweiterung * nicht gefunden (kein CFBundleExecutable-Eintrag in "Info.plist").
+		</value>
+	</data>
+  <data name="MT0064" xml:space="preserve">
+		<value>Xamarin.iOS unterstützt eingebettete Frameworks nur bei Unified-Projekten.
+		</value>
+	</data>
+  <data name="MT0065" xml:space="preserve">
+		<value>Xamarin.iOS unterstützt eingebettete Frameworks nur, wenn als Bereitstellungsziel mindestens 8.0 verwendet wird. (Aktuelles Bereitstellungsziel: {0}; eingebettete Frameworks: {1})
+		</value>
+	</data>
+  <data name="MT0065_A" xml:space="preserve">
+		<value>Xamarin.iOS unterstützt eingebettete Frameworks nur, wenn als Bereitstellungsziel mindestens 2.0 verwendet wird. (Aktuelles Bereitstellungsziel: {0}; eingebettete Frameworks: {1})
+		</value>
+	</data>
+  <data name="MT0066" xml:space="preserve">
+		<value>Ungültige Assembly für Buildregistrars: *
+		</value>
+	</data>
+  <data name="MT0067" xml:space="preserve">
+		<value>Ungültiger Registrar: {0}
+		</value>
+	</data>
+  <data name="MX0068" xml:space="preserve">
+		<value>Ungültiger Wert für Zielframework: {0}.
+		</value>
+	</data>
+  <data name="MX0070" xml:space="preserve">
+		<value>Ungültiges Zielframework: {0}. Gültige Zielframeworks: {1}.
+		</value>
+	</data>
+  <data name="MX0071" xml:space="preserve">
+		<value>Unbekannte Plattform: {0}. Dies weist in der Regel auf einen Fehler in "{1}" hin. Erstellen Sie einen Fehlerbericht mit einem Testfall unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT0072" xml:space="preserve">
+		<value>Erweiterungen werden für die Plattform "{0}" nicht unterstützt.
+		</value>
+	</data>
+  <data name="MT0073" xml:space="preserve">
+		<value>{4} {0} unterstützt "{1}" nicht als Bereitstellungsziel für {3} (Mindestversion: {2}). Wählen Sie ein neueres Bereitstellungsziel in der Datei "Info.plist" Ihres Projekts aus.
+		</value>
+		<comment>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The minimum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+		</comment>
+	</data>
+  <data name="MX0074" xml:space="preserve">
+		<value>{4} {0} unterstützt "{1}" nicht als Bereitstellungsziel für {3} (der Höchstwert ist {2}). Wählen Sie ein älteres Bereitstellungsziel in der "Info.plist" Ihres Projekts aus, oder führen Sie ein Upgrade auf eine neuere Version von {4} durch.
+		</value>
+		<comment>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The maximum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+		</comment>
+	</data>
+  <data name="MT0075" xml:space="preserve">
+		<value>Ungültige Architektur "{0}" für {1}-Projekte. Gültige Architekturen: {2}
+		</value>
+	</data>
+  <data name="MT0076" xml:space="preserve">
+		<value>Es wurde keine Architektur angegeben (mit dem --abi-Argument). Für {0}-Projekte ist eine Architektur erforderlich.
+		</value>
+	</data>
+  <data name="MT0077" xml:space="preserve">
+		<value>WatchOS-Projekte müssen Erweiterungen sein.
+		</value>
+	</data>
+  <data name="MT0078" xml:space="preserve">
+		<value>Inkrementelle Builds werden mit einem Bereitstellungsziel von vor 8.0 (aktuell {0}) aktiviert. Dies wird nicht unterstützt. (Die daraus resultierende Anwendung wird unter iOS 9 nicht gestartet.) Das Bereitstellungsziel wird daher auf 8.0 festgelegt.
+		</value>
+	</data>
+  <data name="MT0079" xml:space="preserve">
+		<value>Die empfohlene Xcode-Version für {4} {0} ist Xcode {3} oder höher. Aktuelle Xcode-Version (gefunden in {2}): {1}.
+		</value>
+	</data>
+  <data name="MM0079" xml:space="preserve">
+		<value>Es wurde keine ausführbare Datei in das App-Bundle kopiert. Wenden Sie sich an "support@xamarin.com".
+		</value>
+	</data>
+  <data name="MX0080" xml:space="preserve">
+		<value>Das Deaktivieren der neuen refcount-Logik ist veraltet.
+		</value>
+	</data>
+  <data name="MT0081" xml:space="preserve">
+		<value>Das Befehlszeilenargument "--download-crash-report" erfordert auch "--download-crash-report-to".
+		</value>
+	</data>
+  <data name="MT0082" xml:space="preserve">
+		<value>REPL (--enable-repl) wird nur unterstützt, wenn keine Verknüpfung verwendet wird (--nolink).
+		</value>
+	</data>
+  <data name="MT0083" xml:space="preserve">
+		<value>Reiner ASM-Bitcode wird in watchOS nicht unterstützt. Verwenden Sie entweder --bitcode:marker oder --bitcode:full.
+		</value>
+	</data>
+  <data name="MT0084" xml:space="preserve">
+		<value>Bitcode wird im Simulator nicht unterstützt. Übergeben Sie --bitcode nicht beim Erstellen von Builds für den Simulator.
+		</value>
+	</data>
+  <data name="MT0085" xml:space="preserve">
+		<value>Es wurde kein Verweis auf "{0}" gefunden. Er wird automatisch hinzugefügt.
+		</value>
+	</data>
+  <data name="MX0086" xml:space="preserve">
+		<value>Es muss ein Zielframework (--target-framework) angegeben werden.
+		</value>
+	</data>
+  <data name="MT0087" xml:space="preserve">
+		<value>Inkrementelle Builds (--fastdev) werden bei der Boehm-GC nicht unterstützt. Inkrementelle Builds werden deaktiviert.
+		</value>
+	</data>
+  <data name="MT0088" xml:space="preserve">
+		<value>Die GC muss sich für watchOS-Apps im kooperativen Modus befinden. Entfernen Sie das --coop:false-Argument für mTouch.
+		</value>
+	</data>
+  <data name="MT0089" xml:space="preserve">
+		<value>Die Option "{0}" kann den Wert "{1}" nicht übernehmen, wenn der kooperative Modus für die GC aktiviert ist.
+		</value>
+	</data>
+  <data name="MX0090" xml:space="preserve">
+		<value>Das Zielframework "{0}" ist veraltet. Verwenden Sie stattdessen "{1}".
+		</value>
+	</data>
+  <!-- MX0091 has been used in the past -->
+  <!-- MT0092 has been used in the past -->
+  <data name="MT0093" xml:space="preserve">
+		<value>"mlaunch" wurde nicht gefunden.
+		</value>
+	</data>
+  <!-- MT0094 has been used in the past -->
+  <data name="MT0095" xml:space="preserve">
+		<value>AOT-Dateien konnten nicht in das Zielverzeichnis "{0}" kopiert werden: {1}
+		</value>
+	</data>
+  <data name="MT0095_A" xml:space="preserve">
+		<value>AOT-Dateien konnten nicht in das Zielverzeichnis "{0}" kopiert werden: Der Prozess konnte nicht gestartet werden.
+		</value>
+	</data>
+  <data name="MT0095_B" xml:space="preserve">
+		<value>AOT-Dateien konnten nicht in das Zielverzeichnis "{0}" kopiert werden.
+		</value>
+	</data>
+  <data name="MT0096" xml:space="preserve">
+		<value>Es wurde kein Verweis auf "Xamarin.iOS.dll" gefunden.
+		</value>
+	</data>
+  <data name="MM0097" xml:space="preserve">
+		<value>Die machine.config-Datei "{0}" wurde nicht gefunden.
+		</value>
+	</data>
+  <!-- MM0098 has been used in the past -->
+  <data name="MX0099" xml:space="preserve">
+		<value>Interner Fehler: {0}. Melden Sie ein Problem unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT0100" xml:space="preserve">
+		<value>Ungültiges Assemblybuildziel: {0}. Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0101" xml:space="preserve">
+		<value>Die Assembly "{0}" wurde in --assembly-build-target-Argumenten mehrmals angegeben.
+		</value>
+	</data>
+  <data name="MT0102" xml:space="preserve">
+		<value>Die Assemblys "{0}" und "{1}" weisen denselben Zielnamen ("{2}"), aber unterschiedliche Ziele auf ("{3}" und "{4}").
+		</value>
+	</data>
+  <data name="MT0103" xml:space="preserve">
+		<value>Das statische Objekt "{0}" enthält mehrere Assemblys ("{1}"). Jedes statische Objekt muss jedoch genau einer Assembly entsprechen.
+		</value>
+	</data>
+  <data name="MT0105" xml:space="preserve">
+		<value>Für "{0}" wurde kein Assemblybuildziel angegeben.
+		</value>
+	</data>
+  <data name="MT0106" xml:space="preserve">
+		<value>Der Name des Assemblybuildziels "{0}" ist ungültig: Das Zeichen "{1}" ist unzulässig.
+		</value>
+	</data>
+  <data name="MT0107" xml:space="preserve">
+		<value>Die Assemblys "{0}" weisen unterschiedliche benutzerdefinierte LLVM-Optimierungen ("{1}") auf. Dies ist nicht zulässig, wenn alle in eine einzige Binärdatei kompiliert werden.
+		</value>
+	</data>
+  <data name="MT0108" xml:space="preserve">
+		<value>Das Assemblybuildziel "{0}" stimmte mit keiner Assembly überein.
+		</value>
+	</data>
+  <data name="MT0109" xml:space="preserve">
+		<value>Die Assembly "{0}" wurde aus einem anderen Pfad als dem angegebenen Pfad geladen (bereitgestellter Pfad: {1}, tatsächlicher Pfad: {2}).
+		</value>
+	</data>
+  <data name="MT0110" xml:space="preserve">
+		<value>Inkrementelle Builds wurden deaktiviert, weil diese Version von Xamarin.iOS keine inkrementellen Builds in Projekten unterstützt, die Bindungsbibliotheken von Drittanbietern enthalten und in Bitcode kompiliert werden.
+		</value>
+	</data>
+  <data name="MT0111" xml:space="preserve">
+		<value>Bitcode wurde aktiviert, weil diese Version von Xamarin.iOS das Erstellen von watchOS-Projekten mit LLVM ohne Aktivierung von Bitcode nicht unterstützt.
+		</value>
+	</data>
+  <data name="MT0112" xml:space="preserve">
+		<value>Die native Codefreigabe wurde aus folgenden Gründen deaktiviert: {0}
+		</value>
+	</data>
+  <data name="MT0112_a" xml:space="preserve">
+		<value>Das Bereitstellungsziel der Container-App liegt vor iOS 8.0 ({0}).
+		</value>
+	</data>
+  <data name="MT0112_b" xml:space="preserve">
+		<value>Die Container-App enthält I18N-Assemblys ({0}).
+		</value>
+	</data>
+  <data name="MT0112_c" xml:space="preserve">
+		<value>Die Container-App umfasst benutzerdefinierte XML-Definitionen für den verwalteten Linker ({0}).
+		</value>
+		<comment>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
+		</comment>
+	</data>
+  <data name="MT0113" xml:space="preserve">
+		<value>Die native Codefreigabe wurde für die Erweiterung "{0}" aus folgenden Gründen deaktiviert: {1}
+		</value>
+	</data>
+  <data name="MT0113_a" xml:space="preserve">
+		<value>Die Bitcode-Optionen unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_b" xml:space="preserve">
+		<value>Die --assembly-build-target-Optionen unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_c" xml:space="preserve">
+		<value>Die I18N-Assemblys unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_d" xml:space="preserve">
+		<value>Die Argumente für den AOT-Compiler unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_e" xml:space="preserve">
+		<value>Die anderen Argumente für den AOT-Compiler unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_f" xml:space="preserve">
+		<value>LLVM ist nicht sowohl in der Container-App ({0}) als auch in der Erweiterung ({1}) aktiviert bzw. deaktiviert.
+		</value>
+	</data>
+  <data name="MT0113_g" xml:space="preserve">
+		<value>Die Einstellungen für den verwalteten Linker unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_h" xml:space="preserve">
+		<value>Die übersprungenen Assemblys für den verwalteten Linker unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_i" xml:space="preserve">
+		<value>Die Erweiterung enthält benutzerdefinierte XML-Definitionen für den verwalteten Linker ({0}).
+		</value>
+		<comment>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
+		</comment>
+	</data>
+  <data name="MT0113_j" xml:space="preserve">
+		<value>Die Interpretereinstellungen unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_k" xml:space="preserve">
+		<value>Die interpretierten Assemblys unterscheiden sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_l" xml:space="preserve">
+		<value>Die Container-App erstellt keine Builds für die ABI "{0}" (während die Erweiterung Builds für diese ABI erstellt).
+		</value>
+	</data>
+  <data name="MT0113_m" xml:space="preserve">
+		<value>Die Container-App erstellt Builds für die ABI "{0}". Dies ist mit der ABI der Erweiterung ({1}) nicht kompatibel.
+		</value>
+	</data>
+  <data name="MT0113_n" xml:space="preserve">
+		<value>Die remove-dynamic-registrar-Optimierung unterscheidet sich zwischen der Container-App ({0}) und der Erweiterung ({1}).
+		</value>
+	</data>
+  <data name="MT0113_o" xml:space="preserve">
+		<value>Die Container-App verweist über "{1}" auf die Assembly "{0}", während die Erweiterung von "{2}" aus auf eine andere Version verweist.
+		</value>
+	</data>
+  <data name="MM0114" xml:space="preserve">
+		<value>Für die Hybrid-AOT-Kompilierung müssen alle Assemblys vorzeitig kompiliert werden.
+		</value>
+	</data>
+  <data name="MT0115" xml:space="preserve">
+		<value>Es wird empfohlen, mit Code (--dynamic-symbol-mode=code) auf dynamische Symbole zu verweisen, wenn Bitcode aktiviert ist.
+		</value>
+	</data>
+  <data name="MT0116" xml:space="preserve">
+		<value>Ungültige Architektur: {0}. 32-Bit-Architekturen werden nicht unterstützt, wenn als Bereitstellungsziel 11 oder höher verwendet wird.
+		</value>
+	</data>
+  <data name="MT0117" xml:space="preserve">
+		<value>Eine 32-Bit-App kann nicht auf einem Simulator gestartet werden, der nur 64 Bit unterstützt.
+		</value>
+	</data>
+  <data name="MT0118" xml:space="preserve">
+		<value>Das Verzeichnis "{0}", das die Mono-Symbole enthält, wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT0123" xml:space="preserve">
+		<value>Die ausführbare Assembly "{0}" verweist nicht auf "{1}.dll".
+		</value>
+	</data>
+  <data name="MT0124" xml:space="preserve">
+		<value>Die aktuelle Sprache konnte nicht auf "{0}" festgelegt werden (gemäß LANG={1}): {2}
+		</value>
+	</data>
+  <data name="MT0125" xml:space="preserve">
+		<value>Das Befehlszeilenargument "--assembly-build-target" wird im Simulator ignoriert.
+		</value>
+	</data>
+  <data name="MT0126" xml:space="preserve">
+		<value>Inkrementelle Builds wurden deaktiviert, weil inkrementelle Builds im Simulator nicht unterstützt werden.
+		</value>
+	</data>
+  <data name="MT0127" xml:space="preserve">
+		<value>Inkrementelle Builds wurden deaktiviert, weil diese Version von Xamarin.iOS inkrementelle Builds nicht in Projekten unterstützt, die mehrere Bindungsbibliotheken von Drittanbietern enthalten.
+		</value>
+	</data>
+  <data name="MT0128" xml:space="preserve">
+		<value>Die Datei "{0}" konnte nicht bearbeitet werden: {1}
+		</value>
+	</data>
+  <data name="MX0129" xml:space="preserve">
+		<value>Die Debugsymboldatei für "{0}" stimmt nicht mit der Assembly überein und wird ignoriert.
+		</value>
+	</data>
+  <data name="MX0130" xml:space="preserve">
+		<value>Keine Stammassemblys gefunden. Sie müssen mindestens eine Stammassembly angeben.
+		</value>
+	</data>
+  <data name="MX0131" xml:space="preserve">
+		<value>Die Produktassembly "{0}" wurde nicht in der Assemblyliste gefunden: {1}
+		</value>
+	</data>
+  <data name="MX0132" xml:space="preserve">
+		<value>Unbekannte Optimierung: {0}. Gültige Optimierungen: {1}.
+		</value>
+	</data>
+  <data name="MX0133" xml:space="preserve">
+		<value>Es wurden mehrere Assemblys gefunden, die mit "{0}" übereinstimmen. Die erste wird ausgewählt: {1}{2}
+		</value>
+	</data>
+  <data name="MX0135" xml:space="preserve">
+		<value>Das Systemframework "{0}" (auf das von der Assembly "{1}" verwiesen wird) wurde nicht verknüpft, weil es in {2} {3} eingeführt wurde und das {2} {4} SDK verwendet wird.
+		</value>
+	</data>
+  <data name="MT0136" xml:space="preserve">
+		<value>Die Assembly "{0}", auf die über "{1}" verwiesen wird, wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT0137" xml:space="preserve">
+		<value>Die Assembly "{0}", auf die durch ein {2}-Attribut in "{1}" verwiesen wird, wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT0140" xml:space="preserve">
+		<value>Die Datei "{0}" ist kein gültiges Framework.
+		</value>
+	</data>
+  <data name="MT0141" xml:space="preserve">
+		<value>Der Interpreter wird im Simulator nicht unterstützt. Es wird zur REPL gewechselt, die die gleichen zusätzlichen Features im Simulator bereitstellt.
+		</value>
+	</data>
+  <data name="MT0142" xml:space="preserve">
+		<value>Die Assembly "{0}", die als Argument für --interpreter übergeben wird, wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MM0143" xml:space="preserve">
+		<value>Projekte, die die Classic API verwenden, werden nicht mehr unterstützt. Migrieren Sie das Projekt zur Unified API.
+		</value>
+	</data>
+  <data name="MM0144" xml:space="preserve">
+		<value>Das Erstellen von 32-Bit-Apps wird nicht mehr unterstützt. Ändern Sie die Architektur in den Mac-Buildoptionen des Projekts in "x86_64".
+		</value>
+	</data>
+  <data name="MT0145" xml:space="preserve">
+		<value>Verwenden Sie gerätespezifische Builds in WatchOS beim Erstellen von Builds für Debug.
+		</value>
+	</data>
+  <data name="MT0146" xml:space="preserve">
+		<value>Für den ARM64_32-Debugmodus ist --interpreter[=all] erforderlich und wird erzwungen.
+		</value>
+	</data>
+  <data name="MM0147" xml:space="preserve">
+		<value>CFLAGS "{0}" können nicht über pkg-config analysiert werden: {1}
+		</value>
+	</data>
+  <data name="MX0148" xml:space="preserve">
+		<value>Die Linker-Flags "{0}" aus dem LinkWith-Attribut können nicht für die Bibliothek "{1}" in {2} analysiert werden: {3}
+		</value>
+	</data>
+  <data name="MT0150" xml:space="preserve">
+		<value>Interner Fehler: Der Interpreter ist zurzeit nur für 64 Bit verfügbar.
+		</value>
+	</data>
+  <data name="MT0156" xml:space="preserve">
+		<value>Interner Fehler: Das byref-Array ist weder eine Zeichenfolge noch NSObject oder INativeObject.
+		</value>
+	</data>
+  <data name="MT0157" xml:space="preserve">
+		<value>Interner Fehler: Die Konvertierung von "{0}" in "{1}" ist in {2} nicht möglich. Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0158" xml:space="preserve">
+		<value>Interner Fehler: Die intelligente Enumeration "{0}" ist möglicherweise keine intelligente Enumeration. Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0159" xml:space="preserve">
+		<value>Interner Fehler: Nicht unterstützter Tokentyp ({0}) für "{1}". Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0160" xml:space="preserve">
+		<value>Interner Fehler: Der statische Registrar darf nur ausgeführt werden, wenn der Linker ebenfalls ausgeführt wird (oder deaktiviert wurde). Eine mögliche Problemumgehung besteht darin, "-f" als zusätzliches {0}-Argument zu übergeben, um einen vollständigen Buildvorgang zu erzwingen. Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0161" xml:space="preserve">
+		<value>Interner Fehler: Symbol ohne Name (Typ: {0}). Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0168" xml:space="preserve">
+		<value>Interner Fehler: Frameworks können nicht in Frameworks konvertiert werden: {0}. Erstellen Sie einen Fehlerbericht mit einem Testfall (https://github.com/xamarin/xamarin-macios/issues/new).
+		</value>
+	</data>
+  <data name="MT0174_a" xml:space="preserve">
+		<value>Auf die Assembly "{0}" wurde von einer anderen Assembly verwiesen, die Verknüpfung wurde jedoch gleichzeitig durch den Linker aufgehoben.
+		</value>
+	</data>
+  <data name="MT0175_a" xml:space="preserve">
+		<value>Die Linker-Ausgabe enthält mehrere Assemblys namens "{0}": \n\t{1}
+		</value>
+	</data>
+  <data name="MT0175_b" xml:space="preserve">
+		<value>Nicht alle Assemblys für "{0}" weisen Verknüpfungsaufgaben auf.
+		</value>
+	</data>
+  <data name="MT0175_c" xml:space="preserve">
+		<value>Verknüpfungsaufgaben für "{0}" sind nicht alle gleich.
+		</value>
+	</data>
+  <data name="MX0176" xml:space="preserve">
+        <value>Die Assembly "{0}" wurde über den globalen Assemblycache des Systems aufgelöst: {1}. Dies kann in der Zukunft zu Problemen führen. Um solche Probleme zu vermeiden, verwenden Sie keine Assemblys, die nur im globalen Assemblycache des Systems verfügbar sind.
+        </value>
+    </data>
+  <data name="MX0177" xml:space="preserve">
+		<value>Unbekannte Plattform: {0}. Dies weist in der Regel auf einen Fehler hin. Erstellen Sie einen Fehlerbericht mit einem Testfall unter https://github.com/xamarin/xamarin-macios/issues/new.</value>
+	</data>
+  <data name="MX0178" xml:space="preserve">
+        <value>Die Debuggen-Symboldatei für '{0}' ist ungültig und wurde ignoriert.
+        </value>
+    </data>
+  <data name="MX0179" xml:space="preserve">
+		<value>Diese Version von {0} erfordert das {1} {2} SDK (ausgeliefert mit Xcode {3}). Aktualisieren Sie Xcode, um die erforderlichen Headerdateien abzurufen, oder verwenden Sie die dynamische Registrierungsstelle oder legen Sie das Verhalten von verwaltetem Linker zum Verknüpfen von Plattform- oder Framework-SDKs nur in den Mac-Buildoptionen Ihres Projekts &gt; Linkerverhalten fest) (um zu versuchen, die neuen APIs zu vermeiden).</value>
+	</data>
+  <data name="MX0180" xml:space="preserve">
+		<value>Diese Version von {0} erfordert das {1} {2} SDK (ausgeliefert mit Xcode {3}). Aktualisieren Sie Xcode, um die erforderlichen Headerdateien abzurufen, oder legen Sie das Verhalten von verwaltetem Linker zum Verknüpfen von Plattform- oder Framework-SDKs nur in den iOS-Buildoptionen Ihres Projekts &gt; Linkerverhalten fest (um zu versuchen, die neuen APIs zu vermeiden).</value>
+	</data>
+  <data name="MX0181" xml:space="preserve">
+		<value>Keine Verknüpfung mit dem Framework {0} (vom Typ "{1}" verwendet), da es auf der aktuellen Plattform ({2}) nicht verfügbar ist.</value>
+	</data>
+  <data name="MX0182" xml:space="preserve">
+		<value>Das Framework {0} wird nicht verknüpft (referenziert durch einen Modulverweis in {1}), weil es auf der aktuellen Plattform ({2}) nicht verfügbar ist.</value>
+	</data>
+  <data name="MX0183" xml:space="preserve">
+        <value>Die Mac Catalyst-Version {0} konnte keiner entsprechenden macOS-Version zugeordnet werden. Gültige Mac Catalyst-Versionen sind: {1}</value>
+    </data>
+  <data name="MX0184" xml:space="preserve">
+        <value>Die macOS-Version {0} konnte keiner entsprechenden Mac Catalyst-Version zugeordnet werden. Gültige macOS-Versionen sind: {1}</value>
+    </data>
+  <data name="MX0185" xml:space="preserve">
+		<value>Bei Verwendung von CoreCLR kann die Option "{0}" nicht den Wert "{1}" annehmen.</value>
+	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>Bitcode ist aktiviert, Bitcode wird jedoch in Xcode 14 und höher nicht unterstützt und wurde deaktiviert. Deaktivieren Sie Bitcode, indem Sie die Eigenschaft "MtouchEnableBitcode" aus der Projektdatei entfernen.</value>
+	</data>
+  <data name="MX1009" xml:space="preserve">
+		<value>Die Assembly "{0}" konnte nicht in "{1}" kopiert werden: {2}
+		</value>
+	</data>
+  <data name="MT1010" xml:space="preserve">
+		<value>Die Assembly "{0}" konnte nicht geladen werden: {1}
+		</value>
+	</data>
+  <data name="MT1013" xml:space="preserve">
+		<value>Fehler bei der Abhängigkeitsverfolgung: keine zu vergleichenden Dateien. Erstellen Sie einen Fehlerbericht mit einem Testfall unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT1014" xml:space="preserve">
+		<value>Fehler beim erneuten Verwenden der zwischengespeicherten Version von "{0}": {1}.
+		</value>
+	</data>
+  <data name="MT1015" xml:space="preserve">
+		<value>Fehler beim Erstellen der ausführbaren Datei "{0}": {1}
+		</value>
+	</data>
+  <data name="MT1022" xml:space="preserve">
+		<value>Das Verzeichnis "{0}" konnte nicht in "{1}" kopiert werden: {2}
+		</value>
+	</data>
+  <data name="MM1034" xml:space="preserve">
+		<value>Symlink "{0}" konnte nicht erstellt werden &gt; "{1}": Fehler {2}
+		</value>
+	</data>
+  <data name="MT1035" xml:space="preserve">
+		<value>Es können keine unterschiedlichen Versionen des Frameworks "{0}" hinzugefügt werden.
+		</value>
+	</data>
+  <data name="MT1036" xml:space="preserve">
+		<value>Framework "{0}" eingeschlossen über "{1}" (auf vorherigen Fehler bezogen)
+		</value>
+	</data>
+  <data name="MT1300" xml:space="preserve">
+		<value>Nicht unterstützte Bitcodeplattform: {0}.
+		</value>
+	</data>
+  <data name="MT1301" xml:space="preserve">
+		<value>Nicht unterstützte TvOS-ABI: {0}.
+		</value>
+	</data>
+  <data name="MT1302" xml:space="preserve">
+		<value>Die native Bibliothek "{0}" konnte nicht aus "{1}" extrahiert werden. Stellen Sie sicher, dass die native Bibliothek ordnungsgemäß in die verwaltete Assembly eingebettet wurde. (Wenn die Assembly mithilfe eines Bindungsprojekts erstellt wurde, muss die native Bibliothek in das Projekt eingeschlossen werden, und die zugehörige Buildaktion muss "ObjcBindingNativeLibrary" lauten.)
+		</value>
+	</data>
+  <data name="MT1302_A" xml:space="preserve">
+		<value>Ungültige Escapesequenz beim Konvertieren von S in LL, \\ als letztes Zeichen in "{0}:{1}".
+		</value>
+	</data>
+  <data name="MT1302_B" xml:space="preserve">
+		<value>Ungültige Escapesequenz beim Konvertieren von S in LL, fehlerhafte Escapesequenz für Oktalzahlen in "{0}:{1}". Ursache: {2}.
+		</value>
+	</data>
+  <data name="MT1303" xml:space="preserve">
+		<value>Das native Framework "{0}" konnte nicht aus "{1}" dekomprimiert werden. Überprüfen Sie das Buildprotokoll auf weitere Informationen aus dem nativen Befehl "unzip".
+		</value>
+	</data>
+  <data name="MT1305" xml:space="preserve">
+		<value>Die Bindungsbibliothek "{0}" enthält ein Benutzerframework ({0}), für eingebettete Benutzerframeworks ist jedoch iOS 8.0 erforderlich (Bereitstellungsziel: {1}). Legen Sie das Bereitstellungsziel in der Datei "Info.plist" auf 8.0 oder höher fest.
+		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>Die Datei „{0}“ konnte nicht dekomprimiert werden. Überprüfen Sie das Buildprotokoll auf weitere Informationen aus dem nativen Befehl „unzip“.</value>
+	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Das systemeigene Framework "{0}" konnte nicht aus der Assembly "{1}" extrahiert werden, da es die Ressource "{2}" nicht enthält.</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Die systemeigene Bibliothek "{0}" konnte nicht aus der Assembly "{1}" extrahiert werden, da sie die Ressource "{2}" nicht enthält.</value>
+	</data>
+  <data name="MM1401" xml:space="preserve">
+		<value>Die erforderliche Assembly "Xamarin.Mac.dll" fehlt in den Verweisen.
+		</value>
+	</data>
+  <data name="MM1402" xml:space="preserve">
+		<value>Die Assembly "{0}" ist mit diesem Tool oder Profil nicht kompatibel.
+		</value>
+	</data>
+  <data name="MM1403" xml:space="preserve">
+		<value>{0} "{1}" wurde nicht gefunden. Das Zielframework "{2}" kann nicht zum Paketieren der Anwendung verwendet werden.
+		</value>
+	</data>
+  <data name="MM1404" xml:space="preserve">
+		<value>Das Zielframework "{0}" ist ungültig.
+		</value>
+	</data>
+  <data name="MM1405" xml:space="preserve">
+		<value>useFullXamMacFramework muss immer auf Framework .NET 4.5 und nicht auf "{0}" (ungültig) ausgerichtet sein.
+		</value>
+	</data>
+  <data name="MM1407" xml:space="preserve">
+		<value>Konflikt zwischen dem Xamarin.Mac-Verweis "{0}" und dem ausgewählten Zielframework "{1}".
+		</value>
+	</data>
+  <data name="MM1501" xml:space="preserve">
+		<value>Der Verweis kann nicht aufgelöst werden: {0}.
+		</value>
+	</data>
+  <data name="MX1502" xml:space="preserve">
+		<value>Mindestens ein Verweis auf den Typ "{0}" ist vor dem Verknüpfen bereits in "{1}" vorhanden.
+		</value>
+	</data>
+  <data name="MX1503" xml:space="preserve">
+		<value>Mindestens ein Verweis auf den Typ "{0}" ist nach dem Verknüpfen noch immer in "{1}" vorhanden.
+		</value>
+	</data>
+  <data name="MX1600" xml:space="preserve">
+		<value>Keine dynamische Mach-O-Bibliothek (unbekannter Header "0x{0}"): {1}.
+		</value>
+	</data>
+  <data name="MT1601" xml:space="preserve">
+		<value>Keine statische Mach-O-Bibliothek (unbekannter Header "{0}", erwartet: !&lt;arch&gt;).
+		</value>
+	</data>
+  <data name="MX1602" xml:space="preserve">
+		<value>Keine dynamische Mach-O-Bibliothek (unbekannter Header "0x{0}"): {1}.
+		</value>
+	</data>
+  <data name="MX1603" xml:space="preserve">
+		<value>Unbekanntes Format für FAT-Eintrag an Position {0} in "{1}".
+		</value>
+	</data>
+  <data name="MX1604" xml:space="preserve">
+		<value>Die Datei vom Typ "{0}" ist keine Mach-O-Datei ({1}).
+		</value>
+	</data>
+  <data name="MT1605" xml:space="preserve">
+		<value>Ungültiger Eintrag "{0}" in der statischen Bibliothek "{1}". Der Eintragsheader endet nicht mit 0x60 0x0A (gefunden: 0x{2} 0x{3}).
+		</value>
+	</data>
+  <data name="MX2001" xml:space="preserve">
+		<value>Assemblys konnten nicht verknüpft werden. {0}
+		</value>
+	</data>
+  <data name="MT2002" xml:space="preserve">
+		<value>Der Verweis kann nicht aufgelöst werden: {0}.
+		</value>
+	</data>
+  <data name="MT2003" xml:space="preserve">
+		<value>Die Option "--optimize={0}{1}" wird ignoriert, weil der statische Registrar nicht aktiviert ist.
+		</value>
+	</data>
+  <!-- MT2003_A is not in use anymore -->
+  <data name="MT2003_B" xml:space="preserve">
+		<value>Die Option "--optimize={0}{1}" wird ignoriert, weil Verknüpfungen deaktiviert sind.
+		</value>
+	</data>
+  <data name="MT2003_C" xml:space="preserve">
+		<value>Die Option "--optimize={0}" wird ignoriert, weil sie nur auf {1} anwendbar ist.</value>
+		<comment>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</comment>
+	</data>
+  <data name="MX2004" xml:space="preserve">
+		<value>Die zusätzliche Linker-Definitionsdatei "{0}" wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MX2005" xml:space="preserve">
+		<value>Definitionen aus "{0}" konnten nicht analysiert werden.
+		</value>
+	</data>
+  <data name="MT2006" xml:space="preserve">
+		<value>"mscorlib.dll" kann nicht aus "{0}" geladen werden. Installieren Sie Xamarin.iOS neu.
+		</value>
+	</data>
+  <data name="MM2006" xml:space="preserve">
+		<value>Auf die native Bibliothek "{0}" wurde verwiesen, sie wurde jedoch nicht gefunden.
+		</value>
+	</data>
+  <data name="MT2007" xml:space="preserve">
+		<value>Fehler beim Auflösen von "{0}"-Verweis über "{1}".
+		</value>
+	</data>
+  <data name="MM2007" xml:space="preserve">
+		<value>Xamarin.Mac Unified API für ein vollständiges .NET Framework unterstützt keine Verknüpfungen von SDK- oder allen Assemblys. Übergeben Sie entweder das Flag "-nolink" oder das Flag "-linkplatform".
+		</value>
+		<comment>Using the linker is not supported in certain situations in Xamarin.Mac, see: https://docs.microsoft.com/xamarin/mac/deploy-test/linker. The following are literal names and should not be translated: Xamarin.Mac Unified API, .NET, SDK, All, `-nolink`, and `-linkplatform`.
+		</comment>
+	</data>
+  <data name="MM2009" xml:space="preserve">
+		<value>  Referenziert durch "{0}.{1}"
+		</value>
+	</data>
+  <data name="MT2010" xml:space="preserve">
+		<value>Unbekannter HttpMessageHandler "{0}". Gültige Werte: HttpClientHandler (Standard), CFNetworkHandler oder NSUrlSessionHandler.
+		</value>
+	</data>
+  <data name="MM2012" xml:space="preserve">
+		<value> Es werden nur die ersten {0} von {1} \"Referenziert durch\"-Warnungen angezeigt.
+		</value>
+	</data>
+  <data name="MM2013" xml:space="preserve">
+		<value>Fehler beim Auflösen des Verweises in \"{0}\", auf den in \"{1}\" verwiesen wird. Die referenzierte Assembly wird nicht in die App eingeschlossen, weswegen die App zur Laufzeit möglicherweise nicht ausgeführt werden kann.
+		</value>
+	</data>
+  <data name="MT2014" xml:space="preserve">
+		<value>Die Assembly "{0}" kann nicht verknüpft werden, weil sie im gemischten Modus vorliegt.
+		</value>
+	</data>
+  <data name="MT2015" xml:space="preserve">
+		<value>Ungültiger HttpMessageHandler "{0}" für watchOS. Der einzige gültige Wert ist "NSUrlSessionHandler".
+		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Das Beibehalten der dynamischen Registrierungsstelle (durch Übergabe von "--optimize=-remove-dynamic-registrar") ist nicht möglich, weil die dynamische Registrierungsstelle bei Verwendung von NativeAOT nicht unterstützt wird. Die Unterstützung für die dynamische Registrierung wird trotzdem entfernt.</value>
+	</data>
+  <data name="MX2017" xml:space="preserve">
+		<value>XML-Beschreibung konnte nicht verarbeitet werden: {0}
+		</value>
+	</data>
+  <data name="MT2018" xml:space="preserve">
+		<value>Auf die Assembly "{0}" wird von zwei verschiedenen Speicherorten verwiesen: "{1}" und "{2}".
+		</value>
+	</data>
+  <data name="MT2019" xml:space="preserve">
+		<value>Die Stammassembly "{0}" kann nicht geladen werden.
+		</value>
+	</data>
+  <!-- 2020 -> 2099 is used by ExceptionalSubStep subclasses in the linker -->
+  <data name="MX_ExceptionalSubSteps" xml:space="preserve">
+		<value>Linkerschritt '{0}' konnte „{1}“ nicht verarbeiten.</value>
+		<comment>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</comment>
+	</data>
+  <!-- 202x: OptimizeGeneratedCodeSubStep -->
+  <!-- 203x: RemoveUserResourcesSubStep -->
+  <!-- 204x: CoreHttpMessageHandler -->
+  <!-- 205x: RemoveCode -->
+  <!-- 206x: SealerSubStep -->
+  <!-- 207x: MetadataReducerSubStep -->
+  <!-- 208x: MarkNSObjects -->
+  <!-- 209x: InlinerSubStep -->
+  <data name="MT2101" xml:space="preserve">
+		<value>Der Verweis "{0}", auf den über die Methode "{1}" in "{2}" verwiesen wird, kann nicht aufgelöst werden.
+		</value>
+	</data>
+  <data name="MT2102" xml:space="preserve">
+		<value>Fehler beim Verarbeiten der Methode "{0}" in der Assembly "{1}": {2}
+		</value>
+	</data>
+  <data name="MT2102_A" xml:space="preserve">
+		<value>Fehler beim Verarbeiten der Methode "{0}" in der Assembly "{1}".
+		</value>
+	</data>
+  <data name="MX2103" xml:space="preserve">
+		<value>Fehler beim Verarbeiten der Assembly "{0}": {1}
+		</value>
+	</data>
+  <data name="MT2105_A" xml:space="preserve">
+		<value>Das [BindingImpl]-Attribut für den Member "{0}" ist ungültig: Es wurden keine Felder erwartet.
+		</value>
+	</data>
+  <data name="MT2105_B" xml:space="preserve">
+		<value>Das [BindingImpl]-Attribut für den Member "{0}" ist ungültig: Es wurden keine Eigenschaften erwartet.
+		</value>
+	</data>
+  <data name="MT2105_C" xml:space="preserve">
+		<value>Das [BindingImpl]-Attribut für den Member "{0}" ist ungültig: Es wurde kein Konstruktor mit dem Parametertyp "{1}" erwartet ("ObjCRuntime.BindingImplOptions" erwartet).
+		</value>
+	</data>
+  <data name="MT2105_D" xml:space="preserve">
+		<value>Das [BindingImpl]-Attribut für den Member "{0}" ist ungültig: Es wurde kein Konstruktor mit {1} Parametern erwartet (1 Parameter erwartet).
+		</value>
+	</data>
+  <data name="MT2105_E" xml:space="preserve">
+		<value>Die Eigenschaft "{0}.{1}" enthält eine Ausnahmeklausel "{2}", die beim Kompilieren für Bitcode derzeit nicht unterstützt wird. Diese Eigenschaft löst bei Aufruf eine Ausnahme aus.
+		</value>
+	</data>
+  <data name="MT2105_F" xml:space="preserve">
+		<value>Die Methode "{0}.{1}" enthält eine Ausnahmeklausel "{2}", die beim Kompilieren für Bitcode derzeit nicht unterstützt wird. Diese Methode löst bei Aufruf eine Ausnahme aus.
+		</value>
+	</data>
+  <data name="MM2106" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, weil die vorherige Anweisung unerwartet war ({3}).
+		</value>
+	</data>
+  <data name="MM2106_A" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, weil der Typ des Delegats des ersten Arguments nicht ermittelt werden konnte (Anweisung: {3}).
+		</value>
+	</data>
+  <data name="MM2106_B" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} konnte nicht optimiert werden, weil der Typ des Werts, der als erstes Argument (Trampolin) übergeben wurde, "{1}" lautet. Ein Berechnen der Blocksignatur ist daher nicht möglich.
+		</value>
+	</data>
+  <data name="MM2106_D" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.SetupBlock in {0} bei Offset {1} konnte nicht optimiert werden: {2}.
+		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da mehrere Methoden mit dem Namen „{3}“ im Typ „{4}“ gefunden wurden.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da die Methode „{3}“ mindestens einen Parameter aufweisen muss.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da der erste Parameter in der Methode „{3}“ nicht „System.IntPtr“, „void*“ oder „ObjCRuntime.BlockLiteral*“ ist (sondern „{4}“).</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da die Methode „{3}“ kein [UnmanagedCallersOnly]-Attribut aufweist.</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Der Aufruf von BlockLiteral.{2} in {0} bei Offset {1} konnte nicht optimiert werden, da die Methode „{3}“ kein [UnmanagedCallersOnly]-Attribut aufweist.</value>
+	</data>
+  <data name="MM2107" xml:space="preserve">
+		<value>Das Entfernen des dynamischen Registrars ist nicht sicher, weil "{0}" auf "{1}.{2} ({3})" verweist.
+		</value>
+	</data>
+  <data name="MM2108" xml:space="preserve">
+		<value>Architekturen wurden aus {0} entfernt mit Ausnahme von {1} zur Einhaltung von App Store-Einschränkungen. Hierdurch können vorhandene Signaturen zum Codesignieren beschädigt werden. Erwägen Sie eine Bereinigung der Bibliothek mit lipo oder eine Deaktivierung mit --optimize=-trim-architectures.
+		</value>
+	</data>
+  <data name="MM2110" xml:space="preserve">
+		<value>Der Xamarin.Mac-Registrar "Partial Static" unterstützt keine Verknüpfung. Deaktivieren Sie Verknüpfungen, oder verwenden Sie einen anderen Registrarmodus.
+		</value>
+	</data>
+  <data name="MX2111" xml:space="preserve">
+		<value>Die corlib-Assembly "{0}" wurde in der Liste geladener Assemblys nicht gefunden.
+		</value>
+	</data>
+  <!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
+  <!-- 220x: PreserveSmartEnumConversionsSubStep -->
+  <!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
+  <!-- 222x: RemoveRejectedTypesStep -->
+  <!-- 223x: CollectUnmarkedMembersSubStep -->
+  <!-- 224x: PreserveBlockCodeSubStep -->
+  <!-- 2300 -> 2399 is used by/reserved for ConfigurationAwareStep subclasses in the linker -->
+  <data name="MX_ConfigurationAwareStep" xml:space="preserve">
+		<value>Linkerschritt '{0}' ist bei der Verarbeitung von {1} fehlgeschlagen</value>
+		<comment>This is a message when processing fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - A string describing what failed.
+		</comment>
+	</data>
+  <data name="MX_ConfigurationAwareStepWithAssembly" xml:space="preserve">
+		<value>Linkerschritt '{0}' ist während der Verarbeitung von {1}: {2} fehlgeschlagen</value>
+		<comment>This is a message when processing an assembly fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly that failed processing.
+			{1} - A string describing what failed
+		</comment>
+	</data>
+  <!-- 230x: SetupStep -->
+  <!-- 231x: GatherFrameworksStep -->
+  <!-- 232x: GenerateMainStep -->
+  <!-- 233x: CollectAssembliesStep -->
+  <!-- 234x: ExtractBindingLibrariesStep -->
+  <!-- 235x: LoadNonSkippedAssembliesStep -->
+  <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
+  <data name="MX3001" xml:space="preserve">
+		<value>{1} der Assembly "{0}" nicht möglich.
+		</value>
+	</data>
+  <data name="MT3003" xml:space="preserve">
+		<value>Debuggen wird beim Erstellen von Builds mit LLVM nicht unterstützt. Das Debuggen wurde deaktiviert.
+		</value>
+	</data>
+  <data name="MT3004" xml:space="preserve">
+		<value>AOT war für die Assembly "{0}" nicht möglich, weil diese nicht vorhanden ist.
+		</value>
+	</data>
+  <data name="MT3005" xml:space="preserve">
+		<value>Die Abhängigkeit "{0}" der Assembly "{1}" wurde nicht gefunden. Überprüfen Sie die Verweise des Projekts.
+		</value>
+	</data>
+  <data name="MT3006" xml:space="preserve">
+		<value>Für das Projekt konnte keine vollständige Abhängigkeitszuordnung berechnet werden. Dies führt zu langsameren Buildzeiten, weil Xamarin.iOS nicht ordnungsgemäß ermitteln kann, welche Komponenten neu erstellt werden müssen (und welche nicht). Überprüfen Sie vorherige Warnungen, um weitere Informationen zu erhalten.
+		</value>
+	</data>
+  <data name="MX3007" xml:space="preserve">
+		<value>Debuginformationsdateien (MDB/PDB) werden nicht geladen, wenn LLVM aktiviert ist.
+		</value>
+	</data>
+  <data name="MT3008" xml:space="preserve">
+		<value>Für die Bitcodeunterstützung ist die Verwendung von LLVM erforderlich (--abi=arm64+llvm usw.).
+		</value>
+	</data>
+  <data name="MM3009" xml:space="preserve">
+		<value>AOT von "{0}" wurde angefordert, aber nicht gefunden.
+		</value>
+	</data>
+  <data name="MM3010" xml:space="preserve">
+		<value>Der Ausschluss der AOT von "{0}" wurde angefordert, jedoch nicht gefunden.
+		</value>
+	</data>
+  <data name="MT4001" xml:space="preserve">
+		<value>Die Hauptvorlage konnte nicht auf "{0}" erweitert werden.
+		</value>
+	</data>
+  <data name="MT4002" xml:space="preserve">
+		<value>Fehler beim Kompilieren des generierten Codes für P/Invoke-Methoden. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4101" xml:space="preserve">
+		<value>Der Registrar kann keine Signatur für den Typ "{0}" erstellen.
+		</value>
+	</data>
+  <data name="MT4102" xml:space="preserve">
+		<value>Der Registrar hat einen ungültigen Typ "{0}" in der Signatur für die Methode "{2}" gefunden. Verwenden Sie stattdessen "{1}".
+		</value>
+	</data>
+  <data name="MT4103" xml:space="preserve">
+		<value>Der Registrar hat einen ungültigen Typ "{0}" in der Signatur für die Methode "{1}" gefunden: Der Typ implementiert INativeObject, verfügt jedoch über keinen Konstruktor, der zwei Argumente (IntPtr, bool) akzeptiert.
+		</value>
+	</data>
+  <data name="MT4104" xml:space="preserve">
+		<value>Der Registrar kann den Rückgabewert für den Typ "{0}" in der Signatur für die Methode "{1}" nicht marshallen.
+		</value>
+	</data>
+  <data name="MT4104_A" xml:space="preserve">
+		<value>Der Registrar kann den Rückgabewert des Typs "{0}" in der Methode "{1}.{2}" nicht marshallen.
+		</value>
+	</data>
+  <data name="MT4105" xml:space="preserve">
+		<value>Der Registrar kann den Parameter vom Typ "{0}" in der Signatur für die Methode "{1}" nicht marshallen.
+		</value>
+	</data>
+  <data name="MT4108" xml:space="preserve">
+		<value>Der Registrar kann den Objective-Typ für den verwalteten Typ "{0}" nicht abrufen.
+		</value>
+	</data>
+  <data name="MT4109" xml:space="preserve">
+		<value>Fehler beim Kompilieren des generierten Registrarcodes. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4110" xml:space="preserve">
+		<value>Der Registrar kann den out-Parameter vom Typ "{0}" in der Signatur für die Methode "{1}" nicht marshallen.
+		</value>
+	</data>
+  <data name="MT4111" xml:space="preserve">
+		<value>Der Registrar kann keine Signatur für den Typ "{0}" in der Methode "{1}" erstellen.
+		</value>
+	</data>
+  <data name="MT4113" xml:space="preserve">
+		<value>Der Registrar hat eine generische Methode gefunden: {0}. Das Exportieren generischer Methoden wird nicht unterstützt und führt zu unberechenbarem Verhalten und/oder Abstürzen.
+		</value>
+	</data>
+  <data name="MT4114" xml:space="preserve">
+		<value>Unerwarteter Fehler im Registrar für die Methode "{0}.{1}". Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4116" xml:space="preserve">
+		<value>Die Assembly "{0}" konnte nicht registriert werden: {1}
+		</value>
+	</data>
+  <data name="MT4117" xml:space="preserve">
+		<value>Der Registrar hat in der Methode "{0}.{1}" einen Signaturkonflikt festgestellt. Der Selektor "{4}" gibt an, dass die Methode {2} Parameter verwendet, während die verwaltete Methode {3} Parameter enthält.
+		</value>
+	</data>
+  <data name="MT4118" xml:space="preserve">
+		<value>Die Registrierung von zwei verwalteten Typen ("{0}" und "{1}") mit demselben nativen Namen ("{2}") ist nicht möglich.
+		</value>
+	</data>
+  <data name="MT4119" xml:space="preserve">
+		<value>Der Selektor "{0}" des Members "{1}.{2}" konnte nicht registriert werden, weil der Selektor bereits für den Member "{3}" registriert ist.
+		</value>
+	</data>
+  <data name="MT4120" xml:space="preserve">
+		<value>Der Registrar hat im Feld "{1}.{2}" einen unbekannten Feldtyp "{0}" gefunden. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4121" xml:space="preserve">
+		<value>GCC/G++ kann bei Verwendung des Accounts-Frameworks nicht zum Kompilieren des generierten Codes über die statische Registrierungsstelle verwendet werden. (Die von Apple bereitgestellten und bei der Kompilierung verwendeten Headerdateien erfordern Clang.) Verwenden Sie entweder Clang (--compiler:clang) oder die dynamische Registrierungsstelle (--registrar:dynamic).
+		</value>
+	</data>
+  <data name="MT4123" xml:space="preserve">
+		<value>Der Typ des variadischen Parameters in der variadischen Funktion "{0}" muss "System.IntPtr" sein.
+		</value>
+	</data>
+  <data name="MT4124" xml:space="preserve">
+		<value>Auf "{1}" wurde ein ungültiger {0} gefunden. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_A" xml:space="preserve">
+		<value>Ungültige RegisterAttribute-Eigenschaft "{1}" für "{0}" gefunden. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_B" xml:space="preserve">
+		<value>Für "{0}" wurde ein ungültiges AdoptsAttribute gefunden: Es wurde 1 Konstruktorargument erwartet, aber {1} wurden erhalten. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_C" xml:space="preserve">
+		<value>Für "{0}.{1}" wurde ein ungültiges BindAsAttribute gefunden: unbekanntes Feld "{2}". Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_D" xml:space="preserve">
+		<value>Ungültig: {0} für "{1}.{2}". Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_E" xml:space="preserve">
+		<value>Für "{0}" wurde ein ungültiges BindAsAttribute gefunden: 1 Konstruktorargument ist erforderlich, es wurden jedoch {1} gefunden. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_H" xml:space="preserve">
+		<value>Für "{0}" wurde ein ungültiges BindAsAttribute gefunden: Der zugrunde liegende Enumerationstyp "{1}" wurde nicht gefunden. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Ungültig {0} auf '{1}' gefunden. Bitte reichen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new ein</value>
+	</data>
+  <data name="MT4125" xml:space="preserve">
+		<value>Der Registrar hat einen ungültigen Typ "{0}" in der Signatur für die Methode "{1}" gefunden: Die Schnittstelle muss ein Protokollattribut aufweisen, das den zugehörigen Wrappertyp angibt.
+		</value>
+	</data>
+  <data name="MT4126" xml:space="preserve">
+		<value>Die Registrierung von zwei verwalteten Protokollen ("{0}" und "{1}") mit demselben nativen Namen ("{2}") ist nicht möglich.
+		</value>
+	</data>
+  <data name="MT4127" xml:space="preserve">
+		<value>Für die Methode "{0}.{1}" kann nur eine Schnittstellenmethode registriert werden.
+		</value>
+	</data>
+  <data name="MT4128" xml:space="preserve">
+		<value>Der Registrar hat im Parameter "{2}" der Methode "{1}" einen ungültigen generischen Parametertyp "{0}" gefunden. Der generische Parameter muss eine NSObject-Einschränkung aufweisen.
+		</value>
+	</data>
+  <data name="MT4129" xml:space="preserve">
+		<value>Der Registrar hat in der Methode "{1}" einen ungültigen generischen Rückgabetyp "{0}" gefunden. Der generische Rückgabetyp muss eine NSObject-Einschränkung aufweisen.
+		</value>
+	</data>
+  <data name="MT4130" xml:space="preserve">
+		<value>Der Registrar kann keine statischen Methoden in generische Klassen ({0}) exportieren.
+		</value>
+	</data>
+  <data name="MT4131" xml:space="preserve">
+		<value>Der Registrar kann keine statischen Eigenschaften in generische Klassen exportieren ({0}.{1}).
+		</value>
+	</data>
+  <data name="MT4132" xml:space="preserve">
+		<value>Der Registrar hat einen ungültigen generischen Rückgabetyp "{0}" in der Eigenschaft "{1}.{2}" gefunden. Der Rückgabetyp muss eine NSObject-Einschränkung aufweisen.
+		</value>
+	</data>
+  <data name="MT4134" xml:space="preserve">
+		<value>Ihre Anwendung verwendet das Framework "{0}", das nicht in dem {3} SDK enthalten ist, das Sie zum Erstellen Ihrer App verwenden. (Dieses Framework wurde in {3} {2} eingeführt, während Sie Ihre Builds mit dem {3} {1} SDK erstellen.) Wählen Sie in den {3}-Buildoptionen Ihrer App ein neueres SDK aus.
+		</value>
+	</data>
+  <data name="MM4134" xml:space="preserve">
+		<value>Ihre Anwendung verwendet das Framework "{0}", das nicht in dem {3} SDK enthalten ist, das Sie zum Erstellen Ihrer App verwenden. (Dieses Framework wurde in {3} {2} eingeführt, während Sie Ihren Build mit dem {3} {1} SDK erstellen.) Diese Konfiguration wird für die statische Registrierungsstelle nicht unterstützt. (Zur Auswahl übergeben Sie --registrar:dynamic als zusätzliches MMP-Argument in der Mac-Buildoption Ihres Projekts). Wählen Sie alternativ ein neueres SDK in den Mac-Buildoptionen Ihrer App aus.	
+		</value>
+	</data>
+  <data name="MT4135" xml:space="preserve">
+		<value>Der Member "{0}" weist ein Exportattribut ohne Selektor auf. Ein Selektor ist erforderlich.
+		</value>
+	</data>
+  <data name="MT4136" xml:space="preserve">
+		<value>Der Registrar kann den Parametertyp "{0}" des Parameters "{1}" in der Methode "{2}.{3}" nicht marshallen.
+		</value>
+	</data>
+  <data name="MT4137" xml:space="preserve">
+		<value>Die Methode "{0}.{1}" implementiert "{2}.{3}".
+		</value>
+	</data>
+  <data name="MT4138" xml:space="preserve">
+		<value>Der Registrar kann den Eigenschaftstyp "{0}" der Eigenschaft "{1}.{2}" nicht marshallen.
+		</value>
+	</data>
+  <data name="MT4139" xml:space="preserve">
+		<value>Der Registrar kann den Eigenschaftstyp "{0}" der Eigenschaft "{1}.{2}" nicht marshallen. Eigenschaften mit dem [Connect]-Attribut müssen den Eigenschaftstyp "NSObject" (oder eine Unterklasse von NSObject) aufweisen.
+		</value>
+	</data>
+  <data name="MT4140" xml:space="preserve">
+		<value>Der Registrar hat in der Methode "{0}.{1}" einen Signaturkonflikt festgestellt. Der Selektor "{4}" gibt an, dass die variadische Methode {2} Parameter verwendet, während die verwaltete Methode {3} Parameter enthält.
+		</value>
+	</data>
+  <data name="MT4141" xml:space="preserve">
+		<value>Der Selektor "{0}" kann für den Member "{1}.{2}" nicht registriert werden, weil Xamarin.iOS diesen Selektor implizit registriert.
+		</value>
+	</data>
+  <data name="MT4145" xml:space="preserve">
+		<value>Ungültige Enumeration "{0}": Enumerationen mit dem [Native]-Attribut muss der Enumerationstyp "long" oder "ulong" zugrunde liegen.
+		</value>
+		<comment>The following are literal names and should not be translated: enum, [Native], long, ulong.
+{0} - The full name of the C# enum.
+		</comment>
+	</data>
+  <data name="MT4146" xml:space="preserve">
+		<value>Der Name-Parameter des Registrar-Attributs für die Klasse "{0}" ({3}) enthält ein ungültiges Zeichen: "{1}" (0x{2}).
+		</value>
+	</data>
+  <data name="MT4147" xml:space="preserve">
+		<value>Ungültig: {0} für "{1}". Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4148" xml:space="preserve">
+		<value>Der Registrar hat ein generisches Protokoll gefunden: {0}. Das Exportieren generischer Protokolle wird nicht unterstützt.
+		</value>
+	</data>
+  <data name="MT4149" xml:space="preserve">
+		<value>Die Erweiterungsmethode "{0}.{1}" kann nicht registriert werden, weil der Typ des ersten Parameters ({2}) nicht dem Kategorietyp ({3}) entspricht.
+		</value>
+	</data>
+  <data name="MT4150" xml:space="preserve">
+		<value>Der Typ "{0}" kann nicht registriert werden, weil der Kategorietyp "{1}" im zugehörigen Category-Attribut nicht von NSObject erbt.
+		</value>
+	</data>
+  <data name="MT4151" xml:space="preserve">
+		<value>Der Typ "{0}" kann nicht registriert werden, weil die Type-Eigenschaft im zugehörigen Category-Attribut nicht festgelegt ist.
+		</value>
+	</data>
+  <data name="MT4152" xml:space="preserve">
+		<value>Der Typ "{0}" kann nicht als Kategorie registriert werden, weil er INativeObject oder NSObject von Unterklassen implementiert.
+		</value>
+	</data>
+  <data name="MT4153" xml:space="preserve">
+		<value>Der Typ "{0}" kann nicht als Kategorie registriert werden, weil er generisch ist.
+		</value>
+	</data>
+  <data name="MT4154" xml:space="preserve">
+		<value>Die Methode "{0}.{1}" kann nicht als Kategoriemethode registriert werden, weil sie generisch ist.
+		</value>
+	</data>
+  <data name="MT4156" xml:space="preserve">
+		<value>Zwei Kategorien ("{0}" und "{1}") können nicht mit demselben nativen Namen ("{2}") registriert werden.
+		</value>
+	</data>
+  <data name="MT4157" xml:space="preserve">
+		<value>Die Kategoriemethode "{0}.{1}" kann nicht registriert werden, weil mindestens ein Parameter für Erweiterungsmethoden erforderlich ist (und dessen Typ mit dem Kategorietyp "{2}" übereinstimmen muss).
+		</value>
+	</data>
+  <data name="MT4158" xml:space="preserve">
+		<value>Der Konstruktor "{0}.{1}" kann nicht in der Kategorie "{0}" registriert werden, weil Konstruktoren in Kategorien nicht unterstützt werden.
+		</value>
+	</data>
+  <data name="MT4159" xml:space="preserve">
+		<value>Die Methode "{0}.{1}" kann nicht als Kategoriemethode registriert werden, weil Kategoriemethoden statisch sein müssen.
+		</value>
+	</data>
+  <data name="MT4160" xml:space="preserve">
+		<value>Im Selektor "{2}" für "{3}.{4}" wurde ein ungültiges Zeichen "{0}" (0x{1}) gefunden.
+		</value>
+	</data>
+  <data name="MT4161" xml:space="preserve">
+		<value>Der Registrar hat eine nicht unterstützte Struktur "{0}" gefunden: Alle Felder in einer Struktur müssen ebenfalls Strukturen sein. (Das Feld "{1}" mit dem Typ "{2}" ist keine Struktur.)
+		</value>
+	</data>
+  <!-- MT4162: split up into multiple messages -->
+  <data name="MT4162_A" xml:space="preserve">
+		<value>Der Typ "{0}" ist in {3} {4} nicht verfügbar. (Er wurde in {3} {5} eingeführt.){6} Erstellen Sie Ihren Build mit einem neueren {3} SDK (normalerweise mit der neuesten Version von Xcode).
+		</value>
+	</data>
+  <data name="MT4162_BaseType" xml:space="preserve">
+		<value>Der Typ "{0}" (wird als Basistyp "{1}" verwendet) ist in {2} {3} nicht verfügbar. (Er wurde in {2} {4} eingeführt.){5} Erstellen Sie Ihren Build mit einem neueren {2} SDK (normalerweise mit der neuesten Version von Xcode).
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the base type.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_Parameter" xml:space="preserve">
+		<value>Der Typ "{0}" (wird als Parameter in "{1}" verwendet) ist in {2} {3} nicht verfügbar. (Er wurde in {2} {4} eingeführt.){5} Erstellen Sie Ihren Build mit einem neueren {2} SDK (normalerweise mit der neuesten Version von Xcode).
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_PropertyType" xml:space="preserve">
+		<value>Der Typ "{0}" (wird als Eigenschaftyp von "{1}" verwendet) ist in {2} {3} nicht verfügbar. (Er wurde in {2} {4} eingeführt.){5} Erstellen Sie Ihren Build mit einem neueren {2} SDK (normalerweise mit der neuesten Version von Xcode).
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the property.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_ReturnType" xml:space="preserve">
+		<value>Der Typ "{0}" (wird als Rückgabetyp in "{1}" verwendet) ist in {2} {3} nicht verfügbar. (Er wurde in {2} {4} eingeführt.){5} Erstellen Sie Ihren Build mit einem neueren {2} SDK (normalerweise mit der neuesten Version von Xcode).
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4163" xml:space="preserve">
+		<value>Interner Fehler im Registrar ({0} ctor mit {1} Argumenten). Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4163_A" xml:space="preserve">
+		<value>Interner Fehler im Registrar (unbekannte Verfügbarkeitsart: {0}). Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4163_B" xml:space="preserve">
+		<value>Interner Fehler im Registrar (BindAs-Parameter können nicht ref/out sein: {0}). Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4164" xml:space="preserve">
+		<value>Die Eigenschaft "{0}" kann nicht exportiert werden, weil der zugehörige Selektor "{1}" ein Objective-C-Schlüsselwort ist. Verwenden Sie einen anderen Namen.
+		</value>
+	</data>
+  <data name="MT4165" xml:space="preserve">
+		<value>Der Registrar hat den Typ "System.void" in keiner der referenzierten Assemblys gefunden.
+		</value>
+	</data>
+  <data name="MT4166" xml:space="preserve">
+		<value>Die Methode "{0}" kann nicht registriert werden, weil die Signatur einen Typ ({1}) enthält, der kein Verweistyp ist.
+		</value>
+	</data>
+  <data name="MT4167" xml:space="preserve">
+		<value>Die Methode "{0}" kann nicht registriert werden, weil die Signatur einen generischen Typ ({1}) mit einem generischen Argumenttyp enthält, der INativeObject ({2}) nicht implementiert.
+		</value>
+	</data>
+  <data name="MT4168" xml:space="preserve">
+		<value>Der Typ "{0}" kann nicht registriert werden, weil sein Objective-C-Name "{1}" ein Objective-C-Schlüsselwort ist. Verwenden Sie einen anderen Namen.
+		</value>
+	</data>
+  <data name="MT4169" xml:space="preserve">
+		<value>Fehler beim Generieren eines P/Invoke-Wrappers für {0}: {1}
+		</value>
+	</data>
+  <data name="MT4170" xml:space="preserve">
+		<value>Der Registrar kann für den Rückgabewert in der Methode "{2}" nicht von "{0}" in "{1}" konvertieren.
+		</value>
+	</data>
+  <data name="MT4171" xml:space="preserve">
+		<value>Das BindAs-Attribut für den Rückgabewert der Methode "{0}" ist ungültig: Der BindAs-Typ "{1}" unterscheidet sich vom Rückgabetyp "{2}".
+		</value>
+	</data>
+  <data name="MT4171_A" xml:space="preserve">
+		<value>Das BindAs-Attribut für den Parameter Nr. {0} ist ungültig: Der BindAs-Typ "{1}" unterscheidet sich vom Parametertyp "{2}".
+		</value>
+	</data>
+  <data name="MT4171_B" xml:space="preserve">
+		<value>Das BindAs-Attribut für die Eigenschaft "{0}.{1}" ist ungültig: Der BindAs-Typ "{2}" unterscheidet sich vom Eigenschaftstyp "{1}".
+		</value>
+	</data>
+  <data name="MT4172" xml:space="preserve">
+		<value>Der Registrar kann für den Parameter "{2}" in der Methode "{3}" nicht von "{0}" in "{1}" konvertieren.
+		</value>
+	</data>
+  <data name="MT4173" xml:space="preserve">
+		<value>Der Registrar kann die Blocksignatur für den Delegaten des Typs "{0}" in der Methode "{1}" nicht berechnen, weil "{0}" keine bestimmte Signatur aufweist.
+		</value>
+	</data>
+  <data name="MT4173_A" xml:space="preserve">
+		<value>Der Registrar kann die Blocksignatur für den Delegaten des Typs "{0}" in der Methode "{1}" nicht berechnen, weil die Invoke-Methode des Delegattyps nicht gefunden wurde.
+		</value>
+	</data>
+  <data name="MT4174" xml:space="preserve">
+		<value>Der Block zum Delegieren der Konvertierungsmethode für den Parameter Nr. {1} der Methode "{0}" wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT4175" xml:space="preserve">
+		<value>Der Block zum Delegieren der Konvertierungsmethode für den Parameter Nr. {1} der Methode "{0}" wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT4176" xml:space="preserve">
+		<value>Der Delegat zum Blockieren des Konvertierungstyps für den Rückgabewert der Methode "{0}" wurde nicht gefunden.
+		</value>
+	</data>
+  <data name="MT4177" xml:space="preserve">
+		<value>Der Parameter "ProtocolType" des in der Klasse "{0}" verwendeten Attributs "Adopts" enthält ein ungültiges Zeichen. Verwendeter Wert: {1}, ungültiges Zeichen: {2}
+		</value>
+	</data>
+  <data name="MT4178" xml:space="preserve">
+		<value>Die Klasse "{0}" wird nicht registriert, da das Framework "{1}" aus dem SDK "{2}" entfernt wurde.
+		</value>
+	</data>
+  <data name="MT4179" xml:space="preserve">
+		<value>Der Registrar hat den abstrakten Typ "{0}" in der Signatur für "{1}" gefunden. Abstrakte Typen dürfen nicht in der Signatur für einen Member verwendet werden, der in Objective-C exportiert wird.
+		</value>
+	</data>
+  <data name="MT4184" xml:space="preserve">
+		<value>Interner Fehler im Registrar (BindAs-Parameter können nicht ref/out sein: {0}). Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT4185" xml:space="preserve">
+		<value>Der Registrar kann die Blocksignatur für den Delegaten des Typs "{0}" in der Methode "{1}" nicht berechnen, weil die Invoke-Methode des Delegattyps nicht gefunden wurde.
+		</value>
+	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Die Registrierungsstelle hat einen nicht optimalen Typ "{0}" gefunden: Der Typ verfügt nicht über einen Konstruktor, der zwei Argumente (ObjCRuntime.NativeHandle, bool) akzeptiert. Es wurde jedoch ein Konstruktor gefunden, der zwei Argumente (System.IntPtr, bool) akzeptiert (und stattdessen verwendet wird). Es wird dringend empfohlen, die Signatur des (System.IntPtr, bool)-Konstruktors in (ObjCRuntime.NativeHandle, bool) zu ändern.</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Für den Typ „{0}“ wurde kein [UserDelegateType]-Attribut gefunden.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Die Blocksignatur für den Typ „{0}“ kann nicht berechnet werden: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>Die Klasse "{0}" wird nicht registriert, da sie aus dem SDK "{1}" entfernt wurde.</value>
+	</data>
+  <data name="MT5101" xml:space="preserve">
+		<value>Der Compiler "{0}" fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
+		</value>
+	</data>
+  <data name="MT5103" xml:space="preserve">
+		<value>Weder der Compiler "{0}" noch der Compiler "{1}" konnten gefunden werden. Installieren Sie die Xcode-Komponente "Befehlszeilen Tools".
+		</value>
+	</data>
+  <data name="MM5103" xml:space="preserve">
+		<value>Fehler beim Kompilieren. Fehlercode: {0}. Melden Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT5103_A" xml:space="preserve">
+		<value>Fehler beim Kompilieren der Datei(en) "{0}". Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT5106" xml:space="preserve">
+		<value>Das Kompilieren der Datei(en) "{0}" war nicht möglich. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT5107" xml:space="preserve">
+		<value>Die AOT-Kompilierung der Assembly "{0}" ist für 32-Bit-Architekturen nicht möglich, weil der native Code für die 32-Bit-ARM-Architektur zu umfangreich ist.
+		</value>
+	</data>
+  <data name="MT5108" xml:space="preserve">
+		<value>Die Ausgabe des Compilers ist zu lang und wurde auf 1000 Zeilen begrenzt.
+		</value>
+	</data>
+  <data name="MM5109" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung, Fehlercode 1. Details finden Sie im Buildprotokoll.
+		</value>
+	</data>
+  <data name="MT5201" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung. Überprüfen Sie das Buildprotokoll und die für gcc bereitgestellten Benutzerkennzeichen: {0}
+		</value>
+	</data>
+  <data name="MT5202" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung. Überprüfen Sie das Buildprotokoll.
+		</value>
+	</data>
+  <data name="MM5202" xml:space="preserve">
+		<value>Das Mono.framework-MDK fehlt. Installieren Sie das MDK für Ihre Mono.framework-Version über https://www.mono-project.com/download/.
+		</value>
+	</data>
+  <data name="MT5203" xml:space="preserve">
+		<value>Warnung zur nativen Verknüpfung: {0}
+		</value>
+	</data>
+  <data name="MM5203" xml:space="preserve">
+		<value>"{0}" wurde aufgrund einer beschädigten Xamarin.Mac-Installation nicht gefunden. Installieren Sie Xamarin.Mac neu.
+		</value>
+	</data>
+  <data name="MT5204" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung. Überprüfen Sie das Buildprotokoll.
+		</value>
+	</data>
+  <data name="MM5205" xml:space="preserve">
+		<value>Ungültige Architektur "{0}". Die einzige gültige Architektur ist x86_64.
+		</value>
+	</data>
+  <data name="MT5209" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung: {0}
+		</value>
+	</data>
+  <data name="MT5210" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung, nicht definiertes Symbol: {0}. Stellen Sie sicher, dass auf alle erforderlichen Frameworks verwiesen wird und dass die nativen Bibliotheken ordnungsgemäß verknüpft sind.
+		</value>
+	</data>
+  <data name="MT5211" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung, nicht definierte Objective-C-Klasse: {0}. Das Symbol "{1}" wurde in keiner der Bibliotheken und in keinem der Frameworks gefunden, die mit Ihrer Anwendung verknüpft sind.
+		</value>
+	</data>
+  <data name="MT5212" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung, doppeltes Symbol: {0}.
+		</value>
+	</data>
+  <data name="MT5213" xml:space="preserve">
+		<value>Doppeltes Symbol in: {0} (Standort bezogen auf vorherigen Fehler)
+		</value>
+	</data>
+  <data name="MT5214" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung, nicht definiertes Symbol: {0}. Dieses Symbol wurde von dem verwalteten Member "{1}.{2}" referenziert. Stellen Sie sicher, dass auf alle erforderlichen Frameworks verwiesen wird und dass die nativen Bibliotheken ordnungsgemäß verknüpft sind.
+		</value>
+	</data>
+  <data name="MT5215" xml:space="preserve">
+		<value>Verweise auf "{0}" erfordern möglicherweise zusätzliche -framework=XXX- oder -lXXX-Anweisungen für den nativen Linker.
+		</value>
+	</data>
+  <data name="MT5216" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung für "{0}". Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <data name="MT5217" xml:space="preserve">
+		<value>Fehler bei der nativen Verknüpfung, weil die Linkerbefehlszeile zu lang war ({0} Zeichen).
+		</value>
+	</data>
+  <data name="MT5218" xml:space="preserve">
+		<value>Das dynamische Symbol "{0}" kann nicht ignoriert werden (--ignore-dynamic-symbol={0}), weil es nicht als dynamisches Symbol erkannt wurde.
+		</value>
+	</data>
+  <data name="MT5219" xml:space="preserve">
+		<value>Es wird keine Verknüpfung mit WatchKit hergestellt, weil es aus iOS entfernt wurde.
+		</value>
+	</data>
+  <data name="MM5220" xml:space="preserve">
+		<value>Das Framework "{0}" wird übersprungen. Es wird vom Mac App Store nicht zugelassen (abgelehnt).
+		</value>
+	</data>
+  <data name="MM5221" xml:space="preserve">
+		<value>Die Verknüpfung wird für das Framework "{0}" durchgeführt. Dieses wird vom Mac App Store nicht zugelassen (abgelehnt).
+		</value>
+	</data>
+  <data name="MX5222" xml:space="preserve">
+		<value>Der native Linker konnte nicht ausgeführt werden: {0}. Melden Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new
+ 		</value>
+	</data>
+  <data name="MX5223" xml:space="preserve">
+		<value>Das Framework "{0}" konnte nicht verknüpft werden, da das aktuelle {1} SDK keine Unterstützung für dieses Framework im Simulator enthält.</value>
+		<comment>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</comment>
+	</data>
+  <data name="MT5301" xml:space="preserve">
+		<value>Das strip-Tool fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
+		</value>
+	</data>
+  <data name="MT5302" xml:space="preserve">
+		<value>Das dsymutil-Tool fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
+		</value>
+	</data>
+  <data name="MT5303" xml:space="preserve">
+		<value>Fehler beim Generieren der Debugsymbole (Verzeichnis "dSYM"). Überprüfen Sie das Buildprotokoll.
+		</value>
+	</data>
+  <data name="MT5304" xml:space="preserve">
+		<value>Fehler beim Entfernen der endgültigen Binärdatei. Überprüfen Sie das Buildprotokoll.
+		</value>
+	</data>
+  <data name="MX5305" xml:space="preserve">
+		<value>Das lipo-Tool fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
+		</value>
+	</data>
+  <data name="MT5306" xml:space="preserve">
+		<value>Fehler beim Erstellen der FAT-Bibliothek. Überprüfen Sie das Buildprotokoll.
+		</value>
+	</data>
+  <data name="MX5307" xml:space="preserve">
+		<value>Das Tool "{0}" fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
+		</value>
+	</data>
+  <data name="MM5308" xml:space="preserve">
+		<value>Der Xcode-Lizenzvertrag wurde möglicherweise nicht akzeptiert. Starten Sie Xcode.
+		</value>
+	</data>
+  <data name="MX5309" xml:space="preserve">
+		<value>Fehler beim Ausführen des Tools "{0}" mit Fehlercode "{1}". Weitere Informationen finden Sie im Buildprotokoll.
+		</value>
+	</data>
+  <data name="MM5310" xml:space="preserve">
+		<value>Fehler bei install_name_tool, Fehlercode "{0}". Details finden Sie im Buildprotokoll.
+		</value>
+	</data>
+  <data name="MX5311" xml:space="preserve">
+		<value>Fehler bei lipo, Fehlercode "{0}". Details finden Sie im Buildprotokoll.
+		</value>
+	</data>
+  <data name="MX5312" xml:space="preserve">
+		<value>Fehler bei "pkg-config", Fehlercode "{0}". Ausführliche Informationen finden Sie im Buildprotokoll.
+		</value>
+	</data>
+  <data name="MX5313" xml:space="preserve">
+		<value>"{0}" wurde nicht gefunden. Installieren Sie das Mono-Framework über https://mono-project.com/Downloads.
+		</value>
+	</data>
+  <data name="MX5314" xml:space="preserve">
+		<value>Fehler beim Ausführen von "pkg-config": "{0}". Ausführliche Informationen finden Sie im Buildprotokoll.
+		</value>
+	</data>
+  <data name="MX5315" xml:space="preserve">
+		<value>Das Tool "xcrun" hat bei der Suche nach dem Tool "{0}" kein Ergebnis gefunden. (Die Datei "{1}" ist nicht vorhanden.) Überprüfen Sie das Buildprotokoll auf Details.
+		</value>
+	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Fehler beim Ausführen der Benutzerdefinierten Linkerschritte. Weitere Informationen finden Sie im Buildprotokoll.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
+  <data name="MT8018" xml:space="preserve">
+		<value>Interner Konsistenzfehler. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
+		</value>
+	</data>
+  <!-- 8000 -> 8036 are missing here (except 8018), so skip to 8037 -->
+  <data name="MX8037" xml:space="preserve">
+		<value>Es ist nicht bekannt, wie der Parameter vom Typ {0} für den Parameter {1} im Aufruf von {2} gemarshallt wird.</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+  <data name="MX8038" xml:space="preserve">
+		<value>Es ist nicht bekannt, wie der Parameter vom Typ {0} für den Parameter {1} im Aufruf von {2} zurückgemarshallt wird.</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+  <data name="MX8039" xml:space="preserve">
+		<value>Das Marshalling von "{0}" in ein Objective-C-Objekt ist nicht möglich. Die verwaltete Klasse muss entweder von NSObject erben oder INativeObject implementieren.</value>
+		<comment>
+{0} - The name of a type.
+		</comment>
+	</data>
+  <data name="MX8040" xml:space="preserve">
+		<value>Ungültiger Typ der Codierung für Parameter.</value>
+	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>Es kann keine Instanz des Typs {0}erstellt werden.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>Ausnahme beim Aufrufen der Funktion {0}: {1}</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>Beim Überprüfen des statischen Registrierungscodes ist eine Ausnahme aufgetreten für: {0}:{1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>Die Assembly {0} wurde geändert, seit die App erstellt wurde, wodurch der generierte statische Registrierungscode ungültig wird. Die MVID für die geladene Assembly ist {1}, während die MVID für die Assembly, der der generierte statische Registrierungscode entspricht, {2}ist.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Release kann für eine Instanz des Typs „{0}“ nicht aufgerufen werden.</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Die Methode „{0}“ wurde im Typ „{1}“ nicht gefunden.</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Die Trampolinmethode {0} entspricht nicht dem Funktionszeiger 0x{1} für das „trampolineMethod“-Argument (sie verweisen nicht auf dieselbe Methode).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Die Trampolinmethode {0} muss mindestens einen Parameter aufweisen.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Der erste Parameter in der Trampolinmethode {0} muss entweder „System.IntPtr“, „void*“ oder „ObjCRuntime.BlockLiteral*“ sein.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature wird nicht unterstützt, wenn die dynamische Registrierungsstelle nicht verknüpft ist.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Die Trampolinmethode {0} muss über ein [UnmanagedCallersOnly]-Attribut verfügen.</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Die Signatur darf keine leere Zeichenfolge sein.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Das Modul in der Assembly {0} konnte nicht aufgelöst werden.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Metadatentoken für Methoden können nicht aufgelöst werden, wenn die verwaltete statische Registrierungsstelle verwendet wird (Token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Der Typ „ObjCRuntime.__Registrar__“ wurde in der Assembly „{0}“ nicht gefunden.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Fehler beim Marshallen des Objective-C-Objekts 0x{0} (Typ: {1}). Für dieses Objekt wurde keine vorhandene verwaltete Instanz gefunden, und es war auch nicht möglich, eine neue verwaltete Instanz des generischen Typs "{2}" zu erstellen.</value>
+	</data>
+</root>

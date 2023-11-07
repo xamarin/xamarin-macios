@@ -1,93 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Xamarin.MacDev.Tasks</RootNamespace>
-    <AssemblyName>Xamarin.MacDev.Tasks</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONO_DATACONVERTER_PUBLIC</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>MONO_DATACONVERTER_PUBLIC</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
+    <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.Build.Framework" HintPath="$(MSBuildBinPath)\Microsoft.Build.Framework.dll" />
-    <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
-    <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
-      <Private>True</Private>
-      <HintPath Condition=" Exists('..\..\packages\Mono.Cecil.0.9.5.0\lib\net40\Mono.Cecil.dll') ">..\..\packages\Mono.Cecil.0.9.5.0\lib\net40\Mono.Cecil.dll</HintPath>
-    </Reference>
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="compile" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="compile" Aliases="Microsoft_Build_Tasks_Core" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="compile" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
-      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
-      <Name>Xamarin.MacDev</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
-      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
-      <Name>Xamarin.MacDev.Tasks.Core</Name>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+    <ProjectReference Include="..\Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj">
+      <ReferenceSourceTarget>ProjectReference</ReferenceSourceTarget>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MsBuildTasks\Copy.cs" />
-    <Compile Include="MsBuildTasks\Delete.cs" />
-    <Compile Include="MsBuildTasks\Exec.cs" />
-    <Compile Include="MsBuildTasks\MakeDir.cs" />
-    <Compile Include="MsBuildTasks\Move.cs" />
-    <Compile Include="MsBuildTasks\RemoveDir.cs" />
-    <Compile Include="MsBuildTasks\Touch.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\ArTool.cs" />
-    <Compile Include="Tasks\Codesign.cs" />
-    <Compile Include="Tasks\CollectBundleResources.cs" />
-    <Compile Include="Tasks\ComputeBundleResourceOutputPaths.cs" />
-    <Compile Include="Tasks\CoreMLCompiler.cs" />
-    <Compile Include="Tasks\CreateAssetPackManifest.cs" />
-    <Compile Include="Tasks\CreateInstallerPackage.cs" />
-    <Compile Include="Tasks\CreatePkgInfo.cs" />
-    <Compile Include="Tasks\Ditto.cs" />
-    <Compile Include="Tasks\DSymUtil.cs" />
-    <Compile Include="Tasks\FindItemWithLogicalName.cs" />
-    <Compile Include="Tasks\GenerateBundleName.cs" />
-    <Compile Include="Tasks\GetNativeExecutableName.cs" />
-    <Compile Include="Tasks\GetPropertyListValue.cs" />
-    <Compile Include="Tasks\PackLibraryResources.cs" />
-    <Compile Include="Tasks\PropertyListEditor.cs" />
-    <Compile Include="Tasks\ReadItemsFromFile.cs" />
-    <Compile Include="Tasks\SmartCopy.cs" />
-    <Compile Include="Tasks\SpotlightIndexer.cs" />
-    <Compile Include="Tasks\SymbolStrip.cs" />
-    <Compile Include="Tasks\UnpackLibraryResources.cs" />
-    <Compile Include="Tasks\WriteItemsToFile.cs" />
-    <Compile Include="Tasks\Zip.cs" />
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\FileCopier.cs">
+        <Link>FileCopier.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\PathUtils.cs">
+      <Link>PathUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\PListExtensions.cs">
+      <Link>PListExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\MachO.cs">
+      <Link>MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\error.cs">
+      <Link>error.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
+      <Link>external\RuntimeException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\FileUtils.cs">
+      <Link>external\FileUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>external\NullableAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\Versions.dotnet.g.cs">
+      <Link>Versions.dotnet.g.cs</Link>
+    </Compile>
+    <Compile Remove="Errors.designer.cs" /> <!-- The 'CoreResGen' target will add it again from the EmbeddedResource item, this avoids a warning about the file being compiled twice -->
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>external\SdkVersions.cs</Link>
+    </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="../../tools/mtouch/Errors.resx">
+
+    <!--
+
+      The Xamarin.MacDev.Tasks.sln solution is build with dotnet, while other
+      projects are still built with msbuild. This becomes a problem when
+      generating Errors.designer.cs, because depending on the runtime the
+      output is different.
+
+      This means that the Errors.designer.cs will sometimes randomly change
+      (depending on which project re-generated the file), leaving the file
+      modified in git. This is quite annoying, but it also breaks the api
+      comparison, which depends on the build not leaving modified files
+      behind. So for now, we generate Errors.designer.cs separately
+      for Xamarin.MacDev.Tasks.sln to not conflict with the mtouch version.
+
+    -->
+
+      <Type>Resx</Type>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
+      <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
+      <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
+      <StronglyTypedFileName>Errors.designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Xamarin.Bundler</StronglyTypedNamespace>
+      <StronglyTypedClassName>Errors</StronglyTypedClassName>
+      <GenerateResource>true</GenerateResource>
+      <PublicClass>true</PublicClass>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.cs.resx">
+      <Link>Errors.cs.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.cs</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.de.resx">
+      <Link>Errors.de.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.de</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.es.resx">
+      <Link>Errors.es.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.es</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.fr.resx">
+      <Link>Errors.fr.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.fr</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.it.resx">
+      <Link>Errors.it.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.it</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.ja.resx">
+      <Link>Errors.ja.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.ja</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.ko.resx">
+      <Link>Errors.ko.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.ko</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.pl.resx">
+      <Link>Errors.pl.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.pl</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.pt-BR.resx">
+      <Link>Errors.pt-BR.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.pt-BR</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.ru.resx">
+      <Link>Errors.ru.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.ru</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.tr.resx">
+      <Link>Errors.tr.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.tr</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.zh-Hans.resx">
+      <Link>Errors.zh-Hans.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hans</ManifestResourceName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="../../tools/mtouch/TranslatedAssemblies\Errors.zh-Hant.resx">
+      <Link>Errors.zh-Hant.resx</Link>
+      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
+    </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "macOS 控制器",
+  "description": "在程式碼中執行 UI 的 macOS 檢視控制器",
+  "symbols/namespace/description": "適用於產生之程式碼的命名空間"
+}

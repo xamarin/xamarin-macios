@@ -23,7 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 using Foundation;
 using ObjCRuntime;
 using System;
@@ -31,17 +31,19 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	public partial class AVCaptureMetadataOutput {
 	
 		public AVMetadataObjectType AvailableMetadataObjectTypes {
-			get { return AVMetadataObject.ArrayToEnum (WeakAvailableMetadataObjectTypes); }
+			get { return AVMetadataObjectTypeExtensions.ToFlags (WeakAvailableMetadataObjectTypes); }
 		}
 
 		public AVMetadataObjectType MetadataObjectTypes { 
-			get { return AVMetadataObject.ArrayToEnum (WeakMetadataObjectTypes); }
-			set { WeakMetadataObjectTypes = AVMetadataObject.EnumToArray (value); }
+			get { return AVMetadataObjectTypeExtensions.ToFlags (WeakMetadataObjectTypes); }
+			set { WeakMetadataObjectTypes = value.ToArray (); }
 		}
 
 	}

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for 4cc-based enums
 //
 // Authors:
@@ -7,14 +7,8 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
-#else
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMedia {
@@ -25,10 +19,10 @@ namespace MonoTouchFixtures.CoreMedia {
 
 		string FourCC (int value)
 		{
-			return new string (new char [] { 
-				(char) (byte) (value >> 24), 
-				(char) (byte) (value >> 16), 
-				(char) (byte) (value >> 8), 
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
 				(char) (byte) value });
 		}
 
@@ -42,9 +36,6 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (FourCC ((int) CMMediaType.Subtitle), Is.EqualTo ("sbtl"), "Subtitle");
 			Assert.That (FourCC ((int) CMMediaType.Text), Is.EqualTo ("text"), "Text");
 			Assert.That (FourCC ((int) CMMediaType.TimeCode), Is.EqualTo ("tmcd"), "TimeCode");
-#if !XAMCORE_2_0
-			Assert.That (FourCC ((int) CMMediaType.TimedMetadata), Is.EqualTo ("tmet"), "TimedMetadata");
-#endif
 			Assert.That (FourCC ((int) CMMediaType.Video), Is.EqualTo ("vide"), "Video");
 		}
 
@@ -121,6 +112,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.That (FourCC ((int) CMVideoCodecType.SorensonVideo), Is.EqualTo ("SVQ1"), "SorensonVideo");
 			Assert.That (FourCC ((int) CMVideoCodecType.SorensonVideo3), Is.EqualTo ("SVQ3"), "SorensonVideo3");
 			Assert.That (FourCC ((int) CMVideoCodecType.YUV422YpCbCr8), Is.EqualTo ("2vuy"), "YUV422YpCbCr8");
+			Assert.That (FourCC ((int) CMVideoCodecType.DolbyVisionHevc), Is.EqualTo ("dvh1"), "DolbyVisionHevc");
 		}
 
 		[Test]

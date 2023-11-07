@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSCoder
 //
 // Authors:
@@ -8,16 +8,9 @@
 //
 
 using System;
-using System.IO;
-using System.Net;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -28,9 +21,9 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void EncodeDecodeTest ()
 		{
-			var buffer = new byte[] { 3, 14, 15 };
+			var buffer = new byte [] { 3, 14, 15 };
 			var obj = new NSString ();
-			byte[] data;
+			byte [] data;
 			var ptr = Marshal.AllocHGlobal (buffer.Length);
 
 			for (int i = 0; i < buffer.Length; i++)
@@ -46,9 +39,7 @@ namespace MonoTouchFixtures.Foundation {
 					coder.Encode (true, "bool");
 					coder.Encode (long.MaxValue, "long");
 					coder.Encode (buffer, 2, 1, "buffer2");
-#if XAMCORE_2_0
 					coder.Encode (nint.MaxValue, "nint");
-#endif
 					coder.EncodeBlock (ptr, buffer.Length, "block");
 					coder.FinishEncoding ();
 				}
@@ -67,9 +58,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.AreEqual (buf.Length, buffer.Length, "buffer2.length");
 					for (int i = 0; i < buf.Length; i++)
 						Assert.AreEqual (buf [i], buffer [i], "buffer2 [" + i.ToString () + "]");
-#if XAMCORE_2_0
 					Assert.AreEqual (nint.MaxValue, decoder.DecodeNInt ("nint"));
-#endif
 
 					buf = decoder.DecodeBytes ("block");
 					Assert.AreEqual (buf.Length, buffer.Length, "block.length");

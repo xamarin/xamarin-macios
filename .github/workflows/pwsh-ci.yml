@@ -1,0 +1,22 @@
+name: CI for pwsh
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+permissions:
+  contents: read
+
+jobs:
+  test-pwsh:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run Pester tests
+      run: |
+        Set-PSRepository psgallery -InstallationPolicy trusted
+        Install-Module -Name Pester -Confirm:$false -Force
+
+        Invoke-Pester -Path *.Tests.ps1
+        if ($Error[0].Fullyqualifiederrorid -eq 'PesterAssertionFailed') {exit 1}
+      working-directory: ./tools/devops/automation/scripts
+      shell: pwsh

@@ -1,0 +1,31 @@
+name: Bump global.json for dotnet/installer bumps
+on: pull_request_target
+
+jobs:
+  bump-global-json:
+    name: Bump global.json
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/installer') && github.actor == 'dotnet-maestro[bot]'
+    steps:
+    - name: 'Checkout repo'
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: 'Update global.json'
+      run: |
+        set -exo pipefail
+        touch Make.config.inc # create a dummy file to avoid logic we don't need executed here
+        make global.json
+        if git diff --exit-code -- global.json; then
+          echo "No global.json update necessary"
+          exit 0
+        fi
+        git add -- global.json
+        git config --global user.email "github-actions@xamarin.com"
+        git config --global user.name "GitHub Actions"
+        git checkout "$GITHUB_HEAD_REF"
+        git commit -m "Re-generate global.json"
+        git push

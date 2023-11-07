@@ -9,37 +9,22 @@
 // Copyright 2011-2012 Xamarin, Inc
 //
 
-#if !TVOS && !MONOMAC && !WATCH
+#if !MONOMAC && !WATCH
 
 using System;
 using System.Collections;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 
+#nullable enable
+
 namespace MediaPlayer {
 	public partial class MPMediaItem {
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'CanFilterByProperty (NSString)' instead.")]
-		public static bool CanFilterByProperty (string property)
-		{
-			using (NSString ns = new NSString (property))
-				return CanFilterByProperty (ns);
-		}
-
-		[Obsolete ("Use 'ValueForProperty (NSString)' instead.")]
-		public virtual NSObject ValueForProperty (string property)
-		{
-			using (NSString ns = new NSString (property))
-				return ValueForProperty (ns);
-		}
-#endif
-
 		ulong UInt64ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.UInt64Value;
 		}
@@ -47,7 +32,7 @@ namespace MediaPlayer {
 		uint UInt32ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.UInt32Value;
 		}
@@ -55,7 +40,7 @@ namespace MediaPlayer {
 		int Int32ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.Int32Value;
 		}
@@ -63,9 +48,17 @@ namespace MediaPlayer {
 		double DoubleForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.DoubleValue;
+		}
+
+		bool BoolForProperty (NSString property)
+		{
+			var prop = ValueForProperty (property) as NSNumber;
+			if (prop is null)
+				return false;
+			return prop.BoolValue;
 		}
 
 		public ulong PersistentID {
@@ -79,7 +72,7 @@ namespace MediaPlayer {
 				return UInt64ForProperty (AlbumPersistentIDProperty);
 			}
 		}
-		
+
 		public ulong ArtistPersistentID {
 			get {
 				return UInt64ForProperty (ArtistPersistentIDProperty);
@@ -116,37 +109,37 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSString Title {
+		public NSString? Title {
 			get {
 				return ValueForProperty (TitleProperty) as NSString;
 			}
 		}
 
-		public NSString AlbumTitle {
+		public NSString? AlbumTitle {
 			get {
 				return ValueForProperty (AlbumTitleProperty) as NSString;
 			}
 		}
 
-		public NSString Artist {
+		public NSString? Artist {
 			get {
 				return ValueForProperty (ArtistProperty) as NSString;
 			}
 		}
 
-		public NSString AlbumArtist {
+		public NSString? AlbumArtist {
 			get {
 				return ValueForProperty (AlbumArtistProperty) as NSString;
 			}
 		}
 
-		public NSString Genre {
+		public NSString? Genre {
 			get {
 				return ValueForProperty (GenreProperty) as NSString;
 			}
 		}
 
-		public NSString Composer {
+		public NSString? Composer {
 			get {
 				return ValueForProperty (ComposerProperty) as NSString;
 			}
@@ -182,13 +175,13 @@ namespace MediaPlayer {
 			}
 		}
 
-		public MPMediaItemArtwork Artwork {
+		public MPMediaItemArtwork? Artwork {
 			get {
 				return (ValueForProperty (ArtworkProperty) as MPMediaItemArtwork);
 			}
 		}
 
-		public NSString Lyrics {
+		public NSString? Lyrics {
 			get {
 				return ValueForProperty (LyricsProperty) as NSString;
 			}
@@ -200,7 +193,7 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSDate ReleaseDate {
+		public NSDate? ReleaseDate {
 			get {
 				return (ValueForProperty (ReleaseDateProperty) as NSDate);
 			}
@@ -212,13 +205,13 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSString Comments {
+		public NSString? Comments {
 			get {
 				return ValueForProperty (CommentsProperty) as NSString;
 			}
 		}
 
-		public NSUrl AssetURL {
+		public NSUrl? AssetURL {
 			get {
 				return ValueForProperty (AssetURLProperty) as NSUrl;
 			}
@@ -242,19 +235,19 @@ namespace MediaPlayer {
 			}
 		}
 
-		public NSDate LastPlayedDate {
+		public NSDate? LastPlayedDate {
 			get {
 				return (ValueForProperty (LastPlayedDateProperty) as NSDate);
 			}
 		}
 
-		public NSString UserGrouping {
+		public NSString? UserGrouping {
 			get {
 				return ValueForProperty (UserGroupingProperty) as NSString;
 			}
 		}
 
-		public NSString PodcastTitle {
+		public NSString? PodcastTitle {
 			get {
 				return ValueForProperty (PodcastTitleProperty) as NSString;
 			}
@@ -271,32 +264,69 @@ namespace MediaPlayer {
 				return Int32ForProperty (IsCloudItemProperty) != 0;
 			}
 		}
-		
-		[iOS (9,2)]
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public bool HasProtectedAsset {
 			get {
 				return Int32ForProperty (HasProtectedAssetProperty) != 0;
 			}
 		}
 
-		[iOS (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public bool IsExplicitItem {
 			get {
 				return Int32ForProperty (IsExplicitProperty) != 0;
 			}
 		}
 
-		[iOS (10,0)]
-		public NSDate DateAdded {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSDate? DateAdded {
 			get {
 				return (ValueForProperty (DateAddedProperty) as NSDate);
 			}
 		}
 
-		[iOS (10,3)]
-		public NSString PlaybackStoreID {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSString? PlaybackStoreID {
 			get {
 				return (ValueForProperty (PlaybackStoreIDProperty) as NSString);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (7, 4)]
+		[TV (14, 5)]
+		[Mac (11, 3)]
+		[iOS (14, 5)]
+#endif
+		public bool IsPreorder {
+			get {
+				return BoolForProperty (IsPreorderProperty);
 			}
 		}
 	}

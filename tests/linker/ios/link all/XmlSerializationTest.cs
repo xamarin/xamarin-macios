@@ -12,11 +12,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
@@ -41,6 +37,9 @@ namespace LinkAll.Serialization.Xml {
 		public T Result;
 	}
 
+#if NET
+	[Ignore ("https://github.com/dotnet/runtime/issues/41389")]
+#endif
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
@@ -76,4 +75,3 @@ namespace LinkAll.Serialization.Xml {
 		}
 	}
 }
-

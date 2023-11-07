@@ -6,12 +6,19 @@
 // Authors:
 //   Miguel de Icaza 
 //
+
+#nullable enable
+
 using System.Runtime.InteropServices;
 
 namespace CoreMotion {
 
 	// CMMagnetometer.h
-	[Mac (10,15)]
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMMagneticField {
 		public double X, Y, Z;

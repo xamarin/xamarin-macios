@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVCaptureDeviceDiscoverySession.cs
 //
 // Authors:
@@ -11,15 +11,18 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
-#if IOS
+#if IOS && !NET
 	public partial class AVCaptureDeviceDiscoverySession {
-		[iOS (10,0)]
+
 		public static AVCaptureDeviceDiscoverySession Create (AVCaptureDeviceType [] deviceTypes, string mediaType, AVCaptureDevicePosition position)
 		{
 			var arr = new NSMutableArray ();
 			foreach (var device in deviceTypes)
-				arr.Add (device.GetConstant ());
+				if (device.GetConstant () is NSString s)
+					arr.Add (s);
 
 			return _Create (arr, mediaType, position);
 		}

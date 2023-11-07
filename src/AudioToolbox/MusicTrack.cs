@@ -11,6 +11,8 @@
 //       MusicTrackNewAUPresetEvent
 //
 
+#nullable enable
+
 #if !WATCH
 
 using System;
@@ -23,10 +25,17 @@ using CoreMidi;
 #endif
 
 using MidiEndpointRef = System.Int32;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiNoteMessage {
 		public byte Channel;
@@ -44,8 +53,14 @@ namespace AudioToolbox {
 			Duration = duration;
 		}
 	}
-	
+
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiChannelMessage {
 		public byte Status;
@@ -67,9 +82,17 @@ namespace AudioToolbox {
 	// high level API, and we provide a ToUnmanaged that returns an allocated
 	// IntPtr buffer with the data
 	//
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	public abstract class MidiData {
+#else
 	public abstract class _MidiData {
+#endif
 		protected int len, start;
-		protected byte [] data;
+		protected byte []? data;
 		protected IntPtr buffer;
 
 		public void SetData (byte [] Data)
@@ -79,7 +102,7 @@ namespace AudioToolbox {
 			data = Data;
 			buffer = IntPtr.Zero;
 		}
-		
+
 		public void SetData (int len, int start, byte [] Data)
 		{
 			if (len + start > Data.Length)
@@ -98,7 +121,7 @@ namespace AudioToolbox {
 			this.buffer = buffer;
 			this.data = null;
 		}
-		
+
 		//
 		// Converts our high-level representations to a buffer that
 		// we can pass to unmanaged functions that take a MidiRawData
@@ -107,33 +130,47 @@ namespace AudioToolbox {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	public class MidiRawData : MidiData {
+#else
 	public class MidiRawData : _MidiData {
-		public MidiRawData () {}
+#endif
+		public MidiRawData () { }
 
 		internal override IntPtr ToUnmanaged ()
 		{
 			unsafe {
 				// Length (UInt32) + length (UInt8 for each)
-				var target = (byte *) Marshal.AllocHGlobal (4 + len);
-				*((int *) target) = len;
+				var target = (byte*) Marshal.AllocHGlobal (4 + len);
+				*((int*) target) = len;
 				var rdata = target + 4;
-				
-				if (data != null)
+
+				if (data is not null)
 					Marshal.Copy (data, start, (IntPtr) rdata, len);
 				else
-					Runtime.memcpy (rdata, (byte *) buffer, len);
+					Buffer.MemoryCopy ((void*) buffer, (void*) rdata, len, len);
 				return (IntPtr) target;
 			}
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class MusicEventUserData : MidiRawData {
-		public MusicEventUserData () {}
+		public MusicEventUserData () { }
 
 		internal MusicEventUserData (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (handle));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handle));
 
 			int length = Marshal.ReadInt32 (handle);
 
@@ -150,29 +187,43 @@ namespace AudioToolbox {
 	// high level API, and we provide a ToUnmanaged that returns an allocated
 	// IntPtr buffer with the data
 	//
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	public class MidiMetaEvent : MidiData {
+#else
 	public class MidiMetaEvent : _MidiData {
+#endif
 		public byte MetaEventType;
-		
+
 		internal override IntPtr ToUnmanaged ()
 		{
 			unsafe {
 				// MetaEventType (UInt8) + 3 x unused (UInt8) + length (UInt32) + length (UInt8 for each)
-				var target = (byte *) Marshal.AllocHGlobal (8 + len);
+				var target = (byte*) Marshal.AllocHGlobal (8 + len);
 				*target = MetaEventType;
-				var plen = (int *)(target + 4);
+				var plen = (int*) (target + 4);
 				*plen = len;
 				var rdata = target + 8;
-				
-				if (data != null)
+
+				if (data is not null)
 					Marshal.Copy (data, start, (IntPtr) rdata, len);
 				else
-					Runtime.memcpy (rdata, (byte *) buffer, len);
+					Buffer.MemoryCopy ((void*) buffer, (void*) rdata, len, len);
 				return (IntPtr) target;
 			}
 		}
 	}
 
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct ExtendedNoteOnEvent {
 		public /* MusicDeviceInstrumentID */ uint InstrumentID;
@@ -189,88 +240,69 @@ namespace AudioToolbox {
 		public float Velocity;
 	}
 #endif
-	
-	public class MusicTrack : INativeObject
-#if !COREBUILD
-	, IDisposable
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
-	{
+	public class MusicTrack : DisposableObject {
 #if !COREBUILD
-		MusicSequence sequence;
-		IntPtr handle;
-		bool owns;
+		MusicSequence? sequence;
 
 		internal MusicTrack (MusicSequence sequence, IntPtr handle, bool owns)
+			: base (handle, owns)
 		{
 			this.sequence = sequence;
-			this.handle = handle;
-			this.owns = owns;
 		}
 
-		~MusicTrack ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				if (owns)
-					MusicSequenceDisposeTrack (sequence.Handle, handle);
-				handle = IntPtr.Zero;
+			if (Handle != IntPtr.Zero && Owns) {
+				if (sequence is not null)
+					MusicSequenceDisposeTrack (sequence.Handle, Handle);
 			}
 			sequence = null;
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceDisposeTrack (/* MusicSequence */ IntPtr inSequence, /* MusicTrack */ IntPtr inTrack);
 
-		public static MusicTrack FromSequence (MusicSequence sequence)
+		public static MusicTrack? FromSequence (MusicSequence sequence)
 		{
-			if (sequence == null)
-				throw new ArgumentNullException ("sequence");
+			if (sequence is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sequence));
 			return sequence.CreateTrack ();
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetSequence (/* MusicTrack */ IntPtr inTrack, /* MusicSequence* */ out IntPtr outSequence);
 
-		public MusicSequence Sequence {
+		public MusicSequence? Sequence {
 			get {
-				IntPtr seqHandle;
-				
-				if (MusicTrackGetSequence (handle, out seqHandle) == MusicPlayerStatus.Success)
+				if (MusicTrackGetSequence (Handle, out var seqHandle) == MusicPlayerStatus.Success)
 					return MusicSequence.Lookup (seqHandle);
 				return null;
 			}
 		}
- 
+
 #if IOS
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, MidiEndpointRef inEndpoint);
 
 		public MusicPlayerStatus SetDestMidiEndpoint (MidiEndpoint endpoint)
 		{
-			return MusicTrackSetDestMIDIEndpoint (handle, endpoint == null ? MidiObject.InvalidRef : endpoint.MidiHandle);
+			return MusicTrackSetDestMIDIEndpoint (Handle, endpoint is null ? MidiObject.InvalidRef : endpoint.MidiHandle);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, out MidiEndpointRef outEndpoint);
 
-		public MusicPlayerStatus GetDestMidiEndpoint (out MidiEndpoint outEndpoint)
+		public MusicPlayerStatus GetDestMidiEndpoint (out MidiEndpoint? outEndpoint)
 		{
-			MidiEndpointRef midiHandle; 
-			var result = MusicTrackGetDestMIDIEndpoint (handle, out midiHandle);
+			var result = MusicTrackGetDestMIDIEndpoint (Handle, out var midiHandle);
 			outEndpoint = (result == MusicPlayerStatus.Success)? new MidiEndpoint (midiHandle): null;
 			return result;
 		}
@@ -281,17 +313,17 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus SetDestNode (int node)
 		{
-			return MusicTrackSetDestNode (handle, node);
+			return MusicTrackSetDestNode (Handle, node);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void *inData, /* UInt32 */ int inLength);
+		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void* inData, /* UInt32 */ int inLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, ref double inData, /* UInt32 */ int inLength);
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void *outData, /* UInt32* */ ref int ioLength);
+		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void* outData, /* UInt32* */ ref int ioLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, ref double outData, /* UInt32* */ ref int ioLength);
@@ -306,19 +338,19 @@ namespace AudioToolbox {
 			TrackLength,
 			TimeResolution
 		}
-	
+
 		public bool MuteStatus {
 			get {
 				byte val;
 				unsafe {
 					int len = 1;
-					MusicTrackGetProperty (handle, SequenceTrackProperty.MuteStatus, &val, ref len);
+					MusicTrackGetProperty (Handle, SequenceTrackProperty.MuteStatus, &val, ref len);
 					return val != 0;
 				}
 			}
 			set {
 				unsafe {
-					MusicTrackSetProperty (handle, SequenceTrackProperty.MuteStatus, &value, 1);
+					MusicTrackSetProperty (Handle, SequenceTrackProperty.MuteStatus, &value, 1);
 				}
 			}
 		}
@@ -328,13 +360,13 @@ namespace AudioToolbox {
 				byte val;
 				unsafe {
 					int len = 1;
-					MusicTrackGetProperty (handle, SequenceTrackProperty.SoloStatus, &val, ref len);
+					MusicTrackGetProperty (Handle, SequenceTrackProperty.SoloStatus, &val, ref len);
 					return val != 0;
 				}
 			}
 			set {
 				unsafe {
-					MusicTrackSetProperty (handle, SequenceTrackProperty.SoloStatus, &value, 1);
+					MusicTrackSetProperty (Handle, SequenceTrackProperty.SoloStatus, &value, 1);
 				}
 			}
 		}
@@ -343,51 +375,51 @@ namespace AudioToolbox {
 			get {
 				double value = 0;
 				int len = sizeof (double);
-				MusicTrackGetProperty (handle, SequenceTrackProperty.TrackLength, ref value, ref len);
+				MusicTrackGetProperty (Handle, SequenceTrackProperty.TrackLength, ref value, ref len);
 				return value;
 			}
 			set {
-				MusicTrackSetProperty (handle, SequenceTrackProperty.TrackLength, ref value, sizeof (double));	
+				MusicTrackSetProperty (Handle, SequenceTrackProperty.TrackLength, ref value, sizeof (double));
 			}
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDINoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiNoteMessage *inMessage);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDINoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiNoteMessage* inMessage);
 
 		public unsafe MusicPlayerStatus AddMidiNoteEvent (double timeStamp, MidiNoteMessage message)
 		{
-			return MusicTrackNewMIDINoteEvent (handle, timeStamp, &message);
+			return MusicTrackNewMIDINoteEvent (Handle, timeStamp, &message);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDIChannelEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiChannelMessage *inMessage);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDIChannelEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiChannelMessage* inMessage);
 
 		public unsafe MusicPlayerStatus AddMidiChannelEvent (double timestamp, MidiChannelMessage channelMessage)
 		{
-			return MusicTrackNewMIDIChannelEvent (handle, timestamp, &channelMessage);
+			return MusicTrackNewMIDIChannelEvent (Handle, timestamp, &channelMessage);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDIRawDataEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimestamp, /* MIDIRawData* */ IntPtr inRawData);
 
 		public MusicPlayerStatus AddMidiRawDataEvent (double timestamp, MidiRawData rawData)
 		{
-			if (rawData == null)
-				throw new ArgumentNullException ("rawData");
-			
+			if (rawData is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rawData));
+
 			var native = rawData.ToUnmanaged ();
-			var r = MusicTrackNewMIDIRawDataEvent (handle, timestamp, native);
+			var r = MusicTrackNewMIDIRawDataEvent (Handle, timestamp, native);
 			Marshal.FreeHGlobal (native);
 			return r;
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewExtendedNoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, ExtendedNoteOnEvent *inInfo);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewExtendedNoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, ExtendedNoteOnEvent* inInfo);
 
 		public MusicPlayerStatus AddNewExtendedNoteEvent (double timestamp, ExtendedNoteOnEvent evt)
 		{
 			unsafe {
-				return MusicTrackNewExtendedNoteEvent (handle, timestamp, &evt);
+				return MusicTrackNewExtendedNoteEvent (Handle, timestamp, &evt);
 			}
 		}
 
@@ -396,19 +428,19 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus AddExtendedTempoEvent (double timestamp, double bmp)
 		{
-			return MusicTrackNewExtendedTempoEvent (handle, timestamp, bmp);
+			return MusicTrackNewExtendedTempoEvent (Handle, timestamp, bmp);
 		}
-			      
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMetaEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, /* MIDIMetaEvent* */ IntPtr inMetaEvent);
 
 		public MusicPlayerStatus AddMetaEvent (double timestamp, MidiMetaEvent metaEvent)
 		{
-			if (metaEvent == null)
-				throw new ArgumentNullException ("metaEvent");
-			
+			if (metaEvent is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metaEvent));
+
 			var ptr = metaEvent.ToUnmanaged ();
-			var ret = MusicTrackNewMetaEvent (handle, timestamp, ptr);
+			var ret = MusicTrackNewMetaEvent (Handle, timestamp, ptr);
 			Marshal.FreeHGlobal (ptr);
 			return ret;
 		}
@@ -418,10 +450,10 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus AddUserEvent (double timestamp, MusicEventUserData userData)
 		{
-			if (userData == null)
-				throw new ArgumentNullException ("userData");
+			if (userData is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (userData));
 			var ptr = userData.ToUnmanaged ();
-			var ret = MusicTrackNewUserEvent (handle, timestamp, ptr);
+			var ret = MusicTrackNewUserEvent (Handle, timestamp, ptr);
 			Marshal.FreeHGlobal (ptr);
 			return ret;
 		}
@@ -431,7 +463,7 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus MoveEvents (double startTime, double endTime, double moveTime)
 		{
-			return MusicTrackMoveEvents (handle, startTime, endTime, moveTime);
+			return MusicTrackMoveEvents (Handle, startTime, endTime, moveTime);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -439,7 +471,7 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus Clear (double startTime, double endTime)
 		{
-			return MusicTrackClear (handle, startTime, endTime);
+			return MusicTrackClear (Handle, startTime, endTime);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -447,7 +479,7 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus Cut (double startTime, double endTime)
 		{
-			return MusicTrackCut (handle, startTime, endTime);
+			return MusicTrackCut (Handle, startTime, endTime);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -455,9 +487,9 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus CopyInsert (double sourceStartTime, double sourceEndTime, MusicTrack targetTrack, double targetInsertTime)
 		{
-			if (targetTrack == null)
-				throw new ArgumentNullException ("targetTrack");
-			return MusicTrackCopyInsert (handle, sourceStartTime, sourceEndTime, targetTrack.Handle, targetInsertTime);
+			if (targetTrack is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetTrack));
+			return MusicTrackCopyInsert (Handle, sourceStartTime, sourceEndTime, targetTrack.Handle, targetInsertTime);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -465,26 +497,11 @@ namespace AudioToolbox {
 
 		public MusicPlayerStatus Merge (double sourceStartTime, double sourceEndTime, MusicTrack targetTrack, double targetInsertTime)
 		{
-			if (targetTrack == null)
-				throw new ArgumentNullException ("targetTrack");
-			return MusicTrackMerge (handle, sourceStartTime, sourceEndTime, targetTrack.Handle, targetInsertTime);
+			if (targetTrack is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetTrack));
+			return MusicTrackMerge (Handle, sourceStartTime, sourceEndTime, targetTrack.Handle, targetInsertTime);
 		}
 #endif // !COREBUILD
-
-#if false
-		
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static MusicPlayerStatus
-		
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static MusicPlayerStatus
-		
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static MusicPlayerStatus
-		
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static MusicPlayerStatus
-#endif
 	}
 }
 

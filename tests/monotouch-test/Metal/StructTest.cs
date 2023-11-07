@@ -3,19 +3,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class StructTest {
-		
+
 		[Test]
 		public void MTLQuadTessellationFactorsHalfStructSize ()
 		{
@@ -33,4 +31,3 @@ namespace MonoTouchFixtures.Metal {
 }
 
 #endif // !__WATCHOS__
-

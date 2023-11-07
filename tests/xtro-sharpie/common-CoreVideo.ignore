@@ -34,22 +34,14 @@
 !missing-field! kCVPixelFormatPlanes not bound
 !missing-field! kCVPixelFormatQDCompatibility not bound
 !missing-field! kCVPixelFormatVerticalSubsampling not bound
+!missing-field! kCVPixelFormatContainsSenselArray not bound
 
 !missing-field! kCVZeroTime not bound
-!missing-pinvoke! CVImageBufferCreateColorSpaceFromAttachments is not bound
 !missing-pinvoke! CVPixelBufferRelease is not bound
 !missing-pinvoke! CVPixelBufferRetain is not bound
 
 # iOS and tvOS
 
-!missing-field! kCVOpenGLESTextureCacheMaximumTextureAgeKey not bound
 !missing-field! kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey not bound
-!missing-field! kCVPixelBufferIOSurfaceOpenGLESFBOCompatibilityKey not bound
-!missing-field! kCVPixelBufferIOSurfaceOpenGLESTextureCompatibilityKey not bound
-!missing-field! kCVPixelFormatOpenGLESCompatibility not bound
 
 ## *GetTypeID are generally not bound
-!missing-pinvoke! CVMetalTextureCacheGetTypeID is not bound
-!missing-pinvoke! CVMetalTextureGetTypeID is not bound
-!missing-pinvoke! CVOpenGLESTextureCacheGetTypeID is not bound
-!missing-pinvoke! CVOpenGLESTextureGetTypeID is not bound

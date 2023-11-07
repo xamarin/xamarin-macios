@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+# delete every directory in /Library/Frameworks/Xamarin.Mac.framework/Versions 
+# except Current and what Current symlinks to.
+
+if ! test -d /Library/Frameworks/Xamarin.Mac.framework/Versions; then
+	exit 0;
+fi
+
+cd /Library/Frameworks/Xamarin.Mac.framework/Versions
+
+if ! test -d Current; then
+	exit 0
+fi
+
+# Delete
+for d in `ls -1`; do
+	if [[ "x$d" != "xCurrent" && "x$d" != "x@PACKAGE_VERSION@" ]]; then
+		rm -R /Library/Frameworks/Xamarin.Mac.framework/Versions/$d 2>&1 >> /tmp/log
+	fi
+done

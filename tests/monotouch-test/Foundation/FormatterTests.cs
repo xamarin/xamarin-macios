@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-#if XAMCORE_2_0
+using System;
+using System.Drawing;
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -7,27 +7,13 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
-namespace MonoTouchFixtures.Foundation
-{
+namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FormatterTests	{
+	public class FormatterTests {
 
 		NSDateComponentsFormatter dateComponentsFormatter;
 		NSEnergyFormatter energyFormatter;
@@ -35,11 +21,11 @@ namespace MonoTouchFixtures.Foundation
 		void RequiresIos8 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
-			if (dateComponentsFormatter == null)
+			if (dateComponentsFormatter is null)
 				dateComponentsFormatter = new NSDateComponentsFormatter ();
-			if (energyFormatter == null)
+			if (energyFormatter is null)
 				energyFormatter = new NSEnergyFormatter ();
 		}
 
@@ -49,10 +35,8 @@ namespace MonoTouchFixtures.Foundation
 			Assert.IsTrue (formattedString.Length > 0, testName + " length");
 		}
 
-		public NSDateComponents NowComponents
-		{
-			get
-			{
+		public NSDateComponents NowComponents {
+			get {
 				return NSCalendar.CurrentCalendar.Components (NSCalendarUnit.Era | NSCalendarUnit.Day | NSCalendarUnit.Month | NSCalendarUnit.Year | NSCalendarUnit.WeekOfMonth, NSDate.Now);
 			}
 		}
@@ -82,7 +66,7 @@ namespace MonoTouchFixtures.Foundation
 			Assert.IsTrue (dateComponentsFormatter.AllowsFractionalUnits, "AllowsFractionalUnits");
 
 			dateComponentsFormatter.MaximumUnitCount = 50;
-			Assert.AreEqual (50, dateComponentsFormatter.MaximumUnitCount, "MaximumUnitCount");
+			Assert.AreEqual ((nint) 50, dateComponentsFormatter.MaximumUnitCount, "MaximumUnitCount");
 
 			dateComponentsFormatter.CollapsesLargestUnit = true;
 			Assert.IsTrue (dateComponentsFormatter.CollapsesLargestUnit, "CollapsesLargestUnit");
@@ -195,7 +179,7 @@ namespace MonoTouchFixtures.Foundation
 			NSEnergyFormatterUnit unit;
 			string formattedString = energyFormatter.UnitStringFromJoules (2.0, out unit);
 			TestFormattedString (formattedString, "UnitStringFromJoules");
-			Assert.IsTrue ((int)unit > 0); // We got some value from the API
+			Assert.IsTrue ((int) unit > 0); // We got some value from the API
 		}
 
 		[Test]
@@ -228,4 +212,4 @@ namespace MonoTouchFixtures.Foundation
 		#endregion
 	}
 }
-	
+

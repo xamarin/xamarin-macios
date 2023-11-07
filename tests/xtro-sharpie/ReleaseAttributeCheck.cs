@@ -63,7 +63,7 @@ namespace Extrospection {
 						if (firstLetter == i && c == '_') {
 							// ... ignoring any leading underscores ...
 							firstLetter++;
-						}  else if (c < 'a' || c > 'z') {
+						} else if (c < 'a' || c > 'z') {
 							firstNonLowercaseLetter = i;
 							break;
 						}
@@ -105,7 +105,7 @@ namespace Extrospection {
 		//		return;
 
 		//	var framework = Helpers.GetFramework (decl);
-		//	if (framework == null)
+		//	if (framework is null)
 		//		return;
 
 		//	string selector = decl.GetSelector ();

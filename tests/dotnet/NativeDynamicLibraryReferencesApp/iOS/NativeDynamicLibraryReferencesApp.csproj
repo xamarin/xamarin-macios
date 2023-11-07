@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+		<RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+		<FatName>ios-fat</FatName>
+	</PropertyGroup>
+	<Import Project="..\shared.csproj" />
+</Project>
+

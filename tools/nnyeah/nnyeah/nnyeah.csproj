@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <RootNamespace>Microsoft.MaciOS.Nnyeah</RootNamespace>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dotnet-nnyeah</ToolCommandName>
+    <Authors>Microsoft</Authors>
+    <PackageVersion>0.1.0</PackageVersion>
+    <PackageDescription>Attempt to convert Xamarin nugets using nint and nfloat types to NET6.</PackageDescription>
+    <!-- We are adding .dll files to context/ for a reason -->
+    <NoWarn>NU5100;</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Mono.Cecil" />
+    <None Remove="Mono.Options" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Errors.designer.cs">
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <Target Name="IncludeLegacy" BeforeTargets="_GetPackageFiles">
+    <PropertyGroup>
+      <ProjectRoot>$(MSBuildProjectDirectory)/../../..</ProjectRoot>
+      <LegacyiOSRoot>$(ProjectRoot)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono</LegacyiOSRoot>
+      <LegacyMacRoot>$(ProjectRoot)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono</LegacyMacRoot>
+      <NetRoot>$(MSBuildProjectDirectory)/../../../_build</NetRoot>
+    </PropertyGroup>
+    <ItemGroup>
+      <Content Include="$(LegacyiOSRoot)/Xamarin.iOS/Xamarin.iOS.dll;$(LegacyMacRoot)/Xamarin.Mac/Xamarin.Mac.dll">
+        <Pack>true</Pack>
+        <PackagePath>content/legacy</PackagePath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="$(NetRoot)/Microsoft.iOS.Ref/ref/net$(BundledNETCoreAppTargetFrameworkVersion)/Microsoft.iOS.dll;$(NetRoot)/Microsoft.macOS.Ref/ref/net$(BundledNETCoreAppTargetFrameworkVersion)/Microsoft.macOS.dll">
+        <Pack>true</Pack>
+        <PackagePath>content/net</PackagePath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,2 @@
+# framework is not present on tvOS as of xcode 14.0
+!missing-enum! CSSuggestionKind not bound

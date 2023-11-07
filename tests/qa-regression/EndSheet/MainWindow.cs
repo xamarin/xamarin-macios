@@ -4,12 +4,10 @@ using System.Linq;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
 
-namespace EndSheet
-{
-	public partial class MainWindow : MonoMac.AppKit.NSWindow
-	{
+namespace EndSheet {
+	public partial class MainWindow : MonoMac.AppKit.NSWindow {
 		#region Constructors
-		
+
 		// Called when created from unmanaged code
 		public MainWindow (IntPtr handle) : base (handle)
 		{
@@ -28,4 +26,3 @@ namespace EndSheet
 		#endregion
 	}
 }
-

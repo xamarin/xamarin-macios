@@ -1,0 +1,17 @@
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Normalize the casing of TargetPlatformIdentifier to Apple's casing -->
+  <!-- Ref: https://github.com/dotnet/designs/blob/8e6394406d44f75f30ea2259a425cb9e38d75b69/accepted/2020/net5/net5.md#valid-platforms -->
+  <PropertyGroup>
+    <TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == 'ios'">iOS</TargetPlatformIdentifier>
+    <TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == 'tvos'">tvOS</TargetPlatformIdentifier>
+    <TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == 'watchos'">watchOS</TargetPlatformIdentifier>
+    <TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == 'macos'">macOS</TargetPlatformIdentifier>
+    <TargetPlatformIdentifier Condition="'$(TargetPlatformIdentifier)' == 'maccatalyst'">MacCatalyst</TargetPlatformIdentifier>
+  </PropertyGroup>
+
+  <!-- Set the default TargetPlatformVersion if it wasn't specified in the TargetFramework variable. This must be set after importing Sdk.targets (in Xamarin.Shared.Sdk.targets) -->
+  <PropertyGroup>
+    <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">$(_DefaultTargetPlatformVersion)</TargetPlatformVersion>
+  </PropertyGroup>
+</Project>

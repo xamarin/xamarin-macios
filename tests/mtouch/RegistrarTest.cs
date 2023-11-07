@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
@@ -12,11 +12,9 @@ using NUnit.Framework;
 using MTouchLinker = Xamarin.Tests.LinkerOption;
 using MTouchRegistrar = Xamarin.Tests.RegistrarOption;
 
-namespace Xamarin
-{
+namespace Xamarin {
 	[TestFixture]
-	public class Registrar
-	{
+	public class Registrar {
 		enum R {
 			Static = 4,
 			Dynamic = 8,
@@ -276,8 +274,10 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecuteFailure ();
-				mtouch.AssertError (4127, "Cannot register more than one interface method for the method 'MyObjectErr.GetFoo' (which is implementing 'IFoo1.GetFoo' and 'IFoo2.GetFoo').");
-				mtouch.AssertErrorCount (1);
+				mtouch.AssertError (4127, "Cannot register more than one interface method for the method 'MyObjectErr.GetFoo'.");
+				mtouch.AssertError (4137, "The method 'MyObjectErr.GetFoo' is implementing 'IFoo1.GetFoo'.");
+				mtouch.AssertError (4137, "The method 'MyObjectErr.GetFoo' is implementing 'IFoo2.GetFoo'.");
+				mtouch.AssertErrorCount (3);
 				mtouch.AssertNoWarnings ();
 			}
 		}
@@ -288,7 +288,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 			var xcodeRoot = Configuration.xcode83_root;
 			if (!Directory.Exists (xcodeRoot))
 				Assert.Ignore ("Xcode 8 ({0}) is required for this test.", xcodeRoot);
-			
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.SdkRoot = xcodeRoot;
@@ -318,6 +318,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Registrar = MTouchRegistrar.Static;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev);
+				// the above MUST be kept in sync with new frameworks or it will fail.
 				var invalidFrameworks = new [] {
 					new { Framework = "IdentityLookup", Version = "11.0" },
 					new { Framework = "FileProviderUI", Version = "11.0" },
@@ -334,6 +335,26 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "CarPlay", Version = "12.0" },
 					new { Framework = "IdentityLookupUI", Version = "12.0" },
 					new { Framework = "NaturalLanguage", Version = "12.0" },
+					new { Framework = "VisionKit", Version = "13.0" },
+					new { Framework = "SoundAnalysis", Version = "13.0" },
+					new { Framework = "PencilKit", Version = "13.0" },
+					new { Framework = "MetricKit", Version = "13.0" },
+					new { Framework = "LinkPresentation", Version = "13.0" },
+					new { Framework = "CoreHaptics", Version = "13.0" },
+					new { Framework = "BackgroundTasks", Version = "13.0" },
+					new { Framework = "QuickLookThumbnailing", Version = "13.0" },
+					new { Framework = "AutomaticAssessmentConfiguration", Version = "13.4" },
+					new { Framework = "CoreLocationUI", Version = "15.0" },
+					new { Framework = "Chip", Version = "15.0" },
+					new { Framework = "ThreadNetwork", Version = "15.0" },
+					new { Framework = "BackgroundAssets", Version = "16.0" },
+					new { Framework = "MetalFX", Version = "16.0" },
+					new { Framework = "PushToTalk", Version = "16.0" },
+					new { Framework = "SharedWithYou", Version = "16.0" },
+					new { Framework = "SharedWithYouCore", Version = "16.0" },
+					new { Framework = "Cinematic", Version = "17.0" },
+					new { Framework = "Symbols", Version = "17.0" },
+					new { Framework = "SensitiveContentAnalysis", Version = "17.0" },
 				};
 				foreach (var framework in invalidFrameworks)
 					mtouch.AssertError (4134, $"Your application is using the '{framework.Framework}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {framework.Version}, while you're building with the iOS {mtouch.Sdk} SDK.) Please select a newer SDK in your app's iOS Build options.");
@@ -368,7 +389,7 @@ class C : NSObject {
 				mtouch.AssertNoWarnings ();
 			}
 		}
-			
+
 		[Test]
 		public void MT4138 ()
 		{
@@ -721,7 +742,7 @@ public class Category
 				mtouch.AssertNoWarnings ();
 			}
 		}
-			
+
 		[Test]
 		public void MT4159 ()
 		{
@@ -746,7 +767,7 @@ public class Category
 		}
 
 		// This list is duplicated in src/ObjCRuntime/Registrar.cs
-		static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
+		static readonly char [] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 
 		[Test]
 		public void MT4160 ()
@@ -774,7 +795,7 @@ public class Category
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				for (int i = 0; i < testInvalidCharacters.Length; i++) {
 					var c = testInvalidCharacters [i];
-					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int)c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
+					mtouch.AssertError (4160, $"Invalid character '{c}' (0x{((int) c).ToString ("x")}) found in selector 'X{c}' for 'TestInvalidChar.X{i}()'", "testApp.cs", 3 + i * 2);
 				}
 			}
 		}
@@ -827,21 +848,17 @@ public struct FooF { public NSObject Obj; }
 			}
 		}
 
-
 		[Test]
 		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
 		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
 		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
 		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
-		public void MT4162 (Profile profile, string name, MTouchLinker linker)
+		public void MT4162_msg (Profile profile, string name, MTouchLinker linker)
 		{
 			var code = @"
 	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
 	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
 	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All, ""use Z instead"")]
-	[Introduced (PlatformName.iOS, 89, 0, 0, PlatformArchitecture.All)]
-	[Introduced (PlatformName.TvOS, 89, 0, 0, PlatformArchitecture.All)]
-	[Introduced (PlatformName.WatchOS, 89, 0, 0, PlatformArchitecture.All)]
 	[Register (IsWrapper = true)]
 	class FutureType : NSObject
 	{
@@ -882,7 +899,7 @@ public struct FooF { public NSObject Obj; }
 	public enum FutureEnum {
 	}
 ";
-			
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = profile;
 				mtouch.Linker = linker;
@@ -890,13 +907,142 @@ public struct FooF { public NSObject Obj; }
 				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" }, usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\n");
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
 				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0): 'use Z instead'. Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
-				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 89.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
+		//[TestCase (Profile.WatchOS, "watchOS")] // MT0077 interferes
+		public void MT4162 (Profile profile, string name, MTouchLinker linker)
+		{
+			var code = @"
+	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Register (IsWrapper = true)]
+	class FutureType : NSObject
+	{
+		public FutureType () {}
+	}
+
+	class CurrentType : FutureType
+	{
+		[Export (""foo:"")]
+		public void Foo (FutureType ft)
+		{
+		}
+
+		[Export (""bar"")]
+		public FutureType Bar ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Export (""zap"")]
+		public FutureType Zap { get; set; }
+
+		// This is actually working now, but only because we erase the generic argument when converting to ObjC.
+		[Export (""zaps"")]
+		public NSSet<FutureType> Zaps { get; set; }
+	}
+
+	[Protocol (Name = ""FutureProtocol"")]
+	[ProtocolMember (IsRequired = false, IsProperty = true, IsStatic = false, Name = ""FutureProperty"", Selector = ""futureProperty"", PropertyType = typeof (FutureEnum), GetterSelector = ""futureProperty"", SetterSelector = ""setFutureProperty:"", ArgumentSemantic = ArgumentSemantic.UnsafeUnretained)]
+	[ProtocolMember (IsRequired = true, IsProperty = false, IsStatic = false, Name = ""FutureMethod"", Selector = ""futureMethod"", ReturnType = typeof (FutureEnum), ParameterType = new Type [] { typeof (FutureEnum) }, ParameterByRef = new bool [] { false })]
+	public interface IFutureProtocol : INativeObject, IDisposable
+	{
+	}
+
+	[Introduced (PlatformName.iOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.TvOS, 99, 0, 0, PlatformArchitecture.All)]
+	[Introduced (PlatformName.WatchOS, 99, 0, 0, PlatformArchitecture.All)]
+	public enum FutureEnum {
+	}
+";
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.Linker = linker;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" }, usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\n");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 99.0.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+			}
+		}
+
+		[Test]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.tvOS, "tvOS", MTouchLinker.DontLink)]
+		[TestCase (Profile.iOS, "iOS", MTouchLinker.LinkAll)]
+		public void MT4162_dotnet (Profile profile, string name, MTouchLinker linker)
+		{
+			Configuration.AssertDotNetAvailable ();
+			var code = @"
+	[SupportedOSPlatform (""ios77.0"")]
+	[SupportedOSPlatform (""tvos77.0"")]
+	[SupportedOSPlatform (""macos77.0"")]
+	[SupportedOSPlatform (""maccatalyst77.0"")]
+	[Register (IsWrapper = true)]
+	class FutureType : NSObject
+	{
+		public FutureType () {}
+	}
+
+	class CurrentType : FutureType
+	{
+		[Export (""foo:"")]
+		public void Foo (FutureType ft)
+		{
+		}
+
+		[Export (""bar"")]
+		public FutureType Bar ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Export (""zap"")]
+		public FutureType Zap { get; set; }
+
+		// This is actually working now, but only because we erase the generic argument when converting to ObjC.
+		[Export (""zaps"")]
+		public NSSet<FutureType> Zaps { get; set; }
+	}
+
+	[Protocol (Name = ""FutureProtocol"")]
+	[ProtocolMember (IsRequired = false, IsProperty = true, IsStatic = false, Name = ""FutureProperty"", Selector = ""futureProperty"", PropertyType = typeof (FutureEnum), GetterSelector = ""futureProperty"", SetterSelector = ""setFutureProperty:"", ArgumentSemantic = ArgumentSemantic.UnsafeUnretained)]
+	[ProtocolMember (IsRequired = true, IsProperty = false, IsStatic = false, Name = ""FutureMethod"", Selector = ""futureMethod"", ReturnType = typeof (FutureEnum), ParameterType = new Type [] { typeof (FutureEnum) }, ParameterByRef = new bool [] { false })]
+	public interface IFutureProtocol : INativeObject, IDisposable
+	{
+	}
+
+	[SupportedOSPlatform (""ios99.0"")]
+	[SupportedOSPlatform (""tvos99.0"")]
+	[SupportedOSPlatform (""macos99.0"")]
+	[SupportedOSPlatform (""maccatalyst99.0"")]
+	public enum FutureEnum {
+	}
+";
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.IsDotNet = true;
+				mtouch.Profile = profile;
+				mtouch.Linker = linker;
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" }, usings: "using System;\nusing Foundation;\nusing ObjCRuntime;\nusing System.Runtime.Versioning;\n");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a base type of CurrentType) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as the property type of CurrentType.Zap) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a parameter in CurrentType.Foo) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
+				mtouch.AssertErrorPattern (4162, $"The type 'FutureType' (used as a return type in CurrentType.Bar) is not available in {name} .* (it was introduced in {name} 77.0). Please build with a newer {name} SDK (usually done by using the most recent version of Xcode).", "testApp.cs", custom_pattern_syntax: true);
 			}
 		}
 
@@ -1843,6 +1989,171 @@ class C : NSObject {
 				mtouch.AssertWarning (4179, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.M2'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 21);
 			}
 		}
+
+		[Test]
+		public void OptionalProtocolMemberLookup ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+namespace NS {
+	using System;
+	using Foundation;
+	using ObjCRuntime;
+
+	// Old style, where we look up the block proxy attribute on the extension method
+	public class Subclassable1Consumer : NSObject, IProtocolWithOptionalMembers1
+	{
+	}
+
+	public class Subclassed1Consumer1 : Subclassable1Consumer
+	{
+		[Export (""doActionWithCompletion:"")]
+		public void DoAction (Action<bool> completion)
+		{
+		}
+	}
+
+	public class Subclassed1Consumer2 : Subclassable1Consumer, IProtocolWithOptionalMembers1
+	{
+		[Export (""doActionWithCompletion:"")]
+		public void DoAction (Action<bool> completion)
+		{
+		}
+	}
+
+	public class DirectConsumer1 : NSObject, IProtocolWithOptionalMembers1
+	{
+		[Export (""doActionWithCompletion:"")]
+		public void DoAction (Action<bool> completion)
+		{
+		}
+	}
+
+	[Protocol (Name = ""IProtocolWithOptionalMembers1"", WrapperType = typeof (IProtocolWithOptionalMembers1Wrapper))]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = ""DoAction"", Selector = ""doActionWithCompletion:"", ParameterType = new Type [] { typeof (global::System.Action<bool>) }, ParameterByRef = new bool [] { false })]
+	public interface IProtocolWithOptionalMembers1 : INativeObject, IDisposable
+	{
+	}
+
+	public static partial class ProtocolWithOptionalMembers1_Extensions {
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static void DoAction (this IProtocolWithOptionalMembers1 This, [BlockProxy (typeof (NIDActionArity1V89))]global::System.Action<bool> completion)
+		{
+		}
+	}
+
+	internal sealed class IProtocolWithOptionalMembers1Wrapper : BaseWrapper, IProtocolWithOptionalMembers1 {
+		[Preserve (Conditional = true)]
+		public IProtocolWithOptionalMembers1Wrapper (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+	}
+
+	// New style, where we find the block proxy attribute in the ProtocolMember attribute
+	public class Subclassable2Consumer : NSObject, IProtocolWithOptionalMembers2
+	{
+	}
+
+	public class Subclassed2Consumer1 : Subclassable2Consumer
+	{
+		[Export (""doAction2WithCompletion:"")]
+		public void DoAction2 (Action<bool> completion)
+		{
+		}
+	}
+
+	public class Subclassed2Consumer2 : Subclassable2Consumer, IProtocolWithOptionalMembers2
+	{
+		[Export (""doAction2WithCompletion:"")]
+		public void DoAction2 (Action<bool> completion)
+		{
+		}
+	}
+
+	public class DirectConsumer2: NSObject, IProtocolWithOptionalMembers2
+	{
+		[Export (""doAction2WithCompletion:"")]
+		public void DoAction2 (Action<bool> completion)
+		{
+		}
+	}
+
+	[Protocol (Name = ""IProtocolWithOptionalMembers2"", WrapperType = typeof (IProtocolWithOptionalMembers2Wrapper))]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = ""DoAction2"", Selector = ""doAction2WithCompletion:"", ParameterType = new Type [] { typeof (global::System.Action<bool>) }, ParameterByRef = new bool [] { false }, ParameterBlockProxy = new Type [] {typeof (NIDActionArity1V89)})]
+	public interface IProtocolWithOptionalMembers2 : INativeObject, IDisposable
+	{
+	}
+
+	public static partial class ProtocolWithOptionalMembers2_Extensions {
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static void DoAction (this IProtocolWithOptionalMembers2 This, [BlockProxy (typeof (NIDActionArity1V89))]global::System.Action<bool> completion)
+		{
+		}
+	}
+
+	internal sealed class IProtocolWithOptionalMembers2Wrapper : BaseWrapper, IProtocolWithOptionalMembers2 {
+		[Preserve (Conditional = true)]
+		public IProtocolWithOptionalMembers2Wrapper (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+	}
+
+	// Supporting block classes
+	[UserDelegateType (typeof (global::System.Action<bool>))]
+	internal delegate void DActionArity1V89 (IntPtr block, IntPtr obj);
+
+	static internal class SDActionArity1V89 {
+		static internal readonly DActionArity1V89 Handler = Invoke;
+
+		[MonoPInvokeCallback (typeof (DActionArity1V89))]
+		static void Invoke (IntPtr block, IntPtr obj) {
+			throw new NotImplementedException ();
+		}
+	}
+
+	internal class NIDActionArity1V89 {
+		IntPtr blockPtr;
+		DActionArity1V89 invoker;
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public NIDActionArity1V89 (ref BlockLiteral block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		~NIDActionArity1V89 ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static global::System.Action<bool> Create (IntPtr block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		void Invoke (bool arg1)
+		{
+		}
 	}
 }
 
+";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" });
+				mtouch.AssertExecute ("build");
+				mtouch.AssertErrorCount (0);
+				mtouch.AssertWarningCount (0);
+			}
+		}
+	}
+}

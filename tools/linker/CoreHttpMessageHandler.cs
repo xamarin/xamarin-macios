@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2017 Xamarin Inc. All rights reserved.
+// Copyright 2015-2017 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Linq;
@@ -22,13 +22,10 @@ using ObjCRuntime;
 namespace Xamarin.Linker.Steps {
 
 	public class CoreHttpMessageHandler : ExceptionalSubStep {
-		
-		public CoreHttpMessageHandler (LinkerOptions options)
-		{
-			Options = options;
-		}
 
-		public LinkerOptions Options { get; private set; }
+		public CoreHttpMessageHandler ()
+		{
+		}
 
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Type; }
@@ -39,11 +36,7 @@ namespace Xamarin.Linker.Steps {
 
 		Application App {
 			get {
-#if MONOMAC
-				return Driver.App;
-#else
-				return Options.Application;
-#endif
+				return LinkContext.App;
 			}
 		}
 
@@ -72,7 +65,7 @@ namespace Xamarin.Linker.Steps {
 			MethodDefinition method = type.Methods.First (x => x.Name == "GetHttpMessageHandler" && !x.HasParameters);
 
 			AssemblyDefinition systemNetHTTPAssembly = context.GetAssemblies ().First (x => x.Name.Name == "System.Net.Http");
-			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (App, Options.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
+			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (App, LinkContext.Target.LinkerOptions.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
 			MethodReference handler_ctor = handler.Methods.First (x => x.IsConstructor && !x.HasParameters && !x.IsStatic);
 
 			// HttpClientHandler is defined in System.Net.Http.dll so we need to import

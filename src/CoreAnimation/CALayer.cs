@@ -28,12 +28,14 @@
 //
 using System;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 #if MONOMAC
 using AppKit;
 #endif
 using CoreGraphics;
+
+#nullable enable
 
 namespace CoreAnimation {
 
@@ -43,7 +45,10 @@ namespace CoreAnimation {
 		[Export ("initWithLayer:")]
 		public CALayer (CALayer other)
 		{
-			if (this.GetType () == typeof (CALayer)){
+			if (other is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
+
+			if (this.GetType () == typeof (CALayer)) {
 				Messaging.IntPtr_objc_msgSend_IntPtr (Handle, Selector.GetHandle (selInitWithLayer), other.Handle);
 			} else {
 				Messaging.IntPtr_objc_msgSendSuper_IntPtr (SuperHandle, Selector.GetHandle (selInitWithLayer), other.Handle);
@@ -79,18 +84,18 @@ namespace CoreAnimation {
 		//    The workaround will ensure that UIView.Layer.Delegate is nulled out when
 		//    the CALayerDelegate is disposed, which will prevent the UIView from
 		//    having a pointer to a freed object.
-		WeakReference calayerdelegate;
-		void SetCALayerDelegate (CALayerDelegate value)
+		WeakReference? calayerdelegate;
+		void SetCALayerDelegate (CALayerDelegate? value)
 		{
 			// Remove ourselves from any existing CALayerDelegate.
-			if (calayerdelegate != null) {
-				var del = (CALayerDelegate) calayerdelegate.Target;
+			if (calayerdelegate is not null) {
+				var del = (CALayerDelegate?) calayerdelegate.Target;
 				if (del == value)
 					return;
-				del.SetCALayer (null);
+				del?.SetCALayer (null);
 			}
 			// Tell the new CALayerDelegate about ourselves
-			if (value == null) {
+			if (value is null) {
 				calayerdelegate = null;
 			} else {
 				calayerdelegate = new WeakReference (value);
@@ -98,40 +103,28 @@ namespace CoreAnimation {
 			}
 		}
 
+		// Note: preserving this member allows us to re-enable the `Optimizable` binding flag
+		[Preserve (Conditional = true)]
 		void OnDispose ()
 		{
-			if (calayerdelegate != null) {
-				var del = (CALayerDelegate) calayerdelegate.Target;
-				if (del != null)
+			if (calayerdelegate is not null) {
+				var del = (CALayerDelegate?) calayerdelegate.Target;
+				if (del is not null)
 					WeakDelegate = null;
 			}
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'BeginTime' instead.")]
-		public double CFTimeInterval {
-			get { return BeginTime; }
-			set { BeginTime = value; }
-		}
-		
-		[Obsolete ("Use 'ConvertRectFromLayer' instead.")]
-		public CGRect ConvertRectfromLayer (CGRect rect, CALayer layer)
-		{
-			return ConvertRectFromLayer (rect, layer);
-		}
-#endif
-
-		public T GetContentsAs <T> () where T : NSObject
+		public T? GetContentsAs<T> () where T : NSObject
 		{
 			return Runtime.GetNSObject<T> (_Contents);
 		}
 
 		public void SetContents (NSObject value)
 		{
-			_Contents = value == null ? IntPtr.Zero : value.Handle;
+			_Contents = value.GetHandle ();
 		}
 
-#if MONOMAC
+#if MONOMAC && !NET
 		[Obsolete ("Use 'AutoresizingMask' instead.")]
 		public virtual CAAutoresizingMask AutoresizinMask { 
 			get {
@@ -142,16 +135,21 @@ namespace CoreAnimation {
 			}
 		}
 #endif
-		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+#if NET
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		public CAContentsFormat ContentsFormat {
 			get { return CAContentsFormatExtensions.GetValue (_ContentsFormat); }
-			set { _ContentsFormat = value.GetConstant (); }
+			set { _ContentsFormat = value.GetConstant ()!; }
 		}
 	}
 
 #if !MONOMAC
 	public partial class CADisplayLink {
-		NSActionDispatcher dispatcher;
+		NSActionDispatcher? dispatcher;
 
 		public static CADisplayLink Create (Action action)
 		{
@@ -159,16 +157,6 @@ namespace CoreAnimation {
 			var rv = Create (dispatcher, NSActionDispatcher.Selector);
 			rv.dispatcher = dispatcher;
 			return rv;
-		}
-	}
-#endif
-
-#if !XAMCORE_2_0
-	public partial class CAAnimation {
-		[Obsolete ("Use 'BeginTime' instead.")]
-		public double CFTimeInterval {
-			get { return BeginTime; }
-			set { BeginTime = value; }
 		}
 	}
 #endif

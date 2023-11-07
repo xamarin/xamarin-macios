@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "macOS Görünümü",
+  "description": "Xcode'un Interface Builder’ında (XIB dosyası) uygulanan kullanıcı arabirimine sahip macOS Görünümü",
+  "symbols/namespace/description": "oluşturulan kod için ad alanı"
+}

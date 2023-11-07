@@ -1,3 +1,1 @@
-## This is documented to be a designated initializer https://developer.apple.com/documentation/externalaccessory/eawifiunconfiguredaccessorybrowser/1613881-initwithdelegate
-## but the headers are not decorated
 !extra-designated-initializer! EAWiFiUnconfiguredAccessoryBrowser::initWithDelegate:queue: is incorrectly decorated with an [DesignatedInitializer] attribute

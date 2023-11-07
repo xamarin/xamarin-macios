@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Codesign_MissingPasswordFile" xml:space="preserve">
+		<value>Could not find the password for the selected Signing Identity, please create a new Certificate from Tools -&gt; Options -&gt; Apple Accounts -&gt; View Team Details.</value>
+	</data>
+	<data name="CompileAppManifest_MissinInfoPList" xml:space="preserve">
+		<value>Info.plist file does not exist under {0}, please rebuild your project</value>
+		<comment>0: path</comment>
+    </data>
+	<data name="HotRestartStaticLibraryNotSupported" xml:space="preserve">
+		<value>Linking with a static library is not supported when using Hot Restart.</value>
+	</data>
+</root>

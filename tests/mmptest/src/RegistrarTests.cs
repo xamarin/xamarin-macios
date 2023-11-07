@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class RegistrarTests
-	{
+	public class RegistrarTests {
 		[TestCase (false, "x86_64")]
 		[TestCase (true, "x86_64")]
 		public void SmokeTest (bool full, string arch)

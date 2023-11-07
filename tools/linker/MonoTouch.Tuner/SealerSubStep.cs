@@ -80,7 +80,7 @@ namespace Xamarin.Linker.Steps {
 
 				var overrides = Annotations.GetOverrides (method);
 				// we cannot de-virtualize nor seal methods if something overrides them
-				if (overrides != null) {
+				if (overrides is not null) {
 					// sanity (disable IsSealed == true above)
 					//if (type.IsSealed)
 					//	Console.WriteLine ();
@@ -102,6 +102,7 @@ namespace Xamarin.Linker.Steps {
 				// look if this method is an override to existing _marked_ methods
 				if (!AreMarked (bases)) {
 					method.IsVirtual = false;
+					method.IsFinal = false; // since it's not virtual anymore
 #if DEBUG
 					Console.WriteLine ("Devirtualize {0} ({1})", method, ++devirtualize);
 #endif
@@ -111,7 +112,7 @@ namespace Xamarin.Linker.Steps {
 
 		bool AreMarked (List<OverrideInformation> list)
 		{
-			if (list == null)
+			if (list is null)
 				return false;
 			foreach (var m in list) {
 				if (Annotations.IsMarked (m.Override))
@@ -122,7 +123,7 @@ namespace Xamarin.Linker.Steps {
 
 		bool AreMarked (List<MethodDefinition> list)
 		{
-			if (list == null)
+			if (list is null)
 				return false;
 			foreach (var m in list) {
 				if (Annotations.IsMarked (m))

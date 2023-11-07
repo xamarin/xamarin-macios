@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<!-- The point is to have netstandard2.1 + another which isn't the TargetFramework we're building for -->
+		<TargetFrameworks>net$(BundledNETCoreAppTargetFrameworkVersion)-ios;netstandard2.1</TargetFrameworks>
+	</PropertyGroup>
+	<Import Project="..\shared.csproj" />
+</Project>

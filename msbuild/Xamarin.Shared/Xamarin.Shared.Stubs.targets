@@ -1,0 +1,33 @@
+<!--
+***********************************************************************************************
+Xamarin.Shared.Stubs.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- These "stub" targets are declared to prevent other (Windows specific) external targets from firing.
+	     They are required as we share use of @(NativeReference) with ClickOnce, and if we don't stub then it can do the wrong thing.
+	     Example: https://github.com/xamarin/xamarin-macios/issues/3876
+	-->
+	<Target Name="GenerateManifests"
+	      Condition="'$(GenerateClickOnceManifests)'=='true' or '@(NativeReference)'!='' or '@(ResolvedIsolatedComModules)'!='' or '$(GenerateAppxManifest)' == 'true'"
+	/>
+
+	<Target Name="GenerateApplicationManifest" 
+		Inputs="$(MSBuildAllProjects);@(AppConfigWithTargetPath);$(_DeploymentBaseManifest);@(ResolvedIsolatedComModules);@(_DeploymentManifestDependencies);@(_DeploymentResolvedManifestEntryPoint);@(_DeploymentManifestFiles)"
+		Outputs="@(ApplicationManifest)" />
+
+	<Target Name="ResolveNativeReferences"
+		Condition="'@(NativeReference)'!=''" />
+</Project>

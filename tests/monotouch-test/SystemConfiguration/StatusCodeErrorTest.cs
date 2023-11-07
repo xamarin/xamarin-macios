@@ -10,13 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using SystemConfiguration;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SystemConfiguration;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.SystemConfiguration {
@@ -32,7 +27,14 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			// "Operation not permitted" (might be localized so we just check non-null)
 			Assert.NotNull (s, "1");
 			s = StatusCodeError.GetErrorDescription ((StatusCode) Int32.MinValue);
-			Assert.Null (s, "MinValue");
+			// in previous version of xcode, if the error was not known you would get a null ptr, in Xcode 13 and later you
+			// get a message stating that the error is not knwon.
+			if (TestRuntime.CheckXcodeVersion (13, 0, 0)) {
+				Assert.NotNull (s, "MinValue null");
+				Assert.True (s.StartsWith ("Unknown error:"), "MinValue value");
+			} else {
+				Assert.Null (s, "MinValue");
+			}
 		}
 	}
 }

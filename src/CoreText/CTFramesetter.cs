@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -32,66 +35,42 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreText {
 
-	public class CTFramesetter : INativeObject, IDisposable {
-
-		internal IntPtr handle;
-
-		internal CTFramesetter (IntPtr handle, bool owns)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CTFramesetter : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTFramesetter (NativeHandle handle, bool owns)
+			: base (handle, owns, true)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-		
-		public IntPtr Handle {
-			get {return handle;}
 		}
 
-		~CTFramesetter ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-#region Framesetter Creation
+		#region Framesetter Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithAttributedString (IntPtr @string);
 		public CTFramesetter (NSAttributedString value)
+			: base (CTFramesetterCreateWithAttributedString (Runtime.ThrowOnNull (value, nameof (value)).Handle), true, true)
 		{
-			if (value == null)
-				throw ConstructorError.ArgumentNull (this, "value");
-			handle = CTFramesetterCreateWithAttributedString (value.Handle);
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
-#endregion
+		#endregion
 
-#region Frame Creation
+		#region Frame Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateFrame (IntPtr framesetter, NSRange stringRange, IntPtr path, IntPtr frameAttributes);
-		public CTFrame GetFrame (NSRange stringRange, CGPath path, CTFrameAttributes frameAttributes)
+		public CTFrame? GetFrame (NSRange stringRange, CGPath path, CTFrameAttributes? frameAttributes)
 		{
-			if (path == null)
-				throw new ArgumentNullException ("path");
-			var frame = CTFramesetterCreateFrame (handle, stringRange, path.Handle,
-					frameAttributes == null ? IntPtr.Zero : frameAttributes.Dictionary.Handle);
+			if (path is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
+			var frame = CTFramesetterCreateFrame (Handle, stringRange, path.Handle, frameAttributes.GetHandle ());
 			if (frame == IntPtr.Zero)
 				return null;
 			return new CTFrame (frame, true);
@@ -99,37 +78,55 @@ namespace CoreText {
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterGetTypesetter (IntPtr framesetter);
-		public CTTypesetter GetTypesetter ()
+		public CTTypesetter? GetTypesetter ()
 		{
-			var h = CTFramesetterGetTypesetter (handle);
+			var h = CTFramesetterGetTypesetter (Handle);
 
 			if (h == IntPtr.Zero)
 				return null;
 			return new CTTypesetter (h, false);
 		}
-#endregion
+		#endregion
 
-#region Frame Sizing
+		#region Frame Sizing
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CGSize CTFramesetterSuggestFrameSizeWithConstraints (
 				IntPtr framesetter, NSRange stringRange, IntPtr frameAttributes, CGSize constraints, out NSRange fitRange);
-		public CGSize SuggestFrameSize (NSRange stringRange, CTFrameAttributes frameAttributes, CGSize constraints, out NSRange fitRange)
+		public CGSize SuggestFrameSize (NSRange stringRange, CTFrameAttributes? frameAttributes, CGSize constraints, out NSRange fitRange)
 		{
 			return CTFramesetterSuggestFrameSizeWithConstraints (
-					handle, stringRange,
-					frameAttributes == null ? IntPtr.Zero : frameAttributes.Dictionary.Handle,
+					Handle, stringRange,
+					frameAttributes.GetHandle (),
 					constraints, out fitRange);
 		}
-#endregion
-		[Mac (10,14), iOS (12,0), TV (12,0), Watch (5,0)]
+		#endregion
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+#endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFramesetterCreateWithTypesetter (IntPtr typesetter);
 
-		[Mac (10,14), iOS (12,0), TV (12,0), Watch (5,0)]
-		public static CTFramesetter Create (CTTypesetter typesetter)
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (12, 0)]
+		[TV (12, 0)]
+		[Watch (5, 0)]
+#endif
+		public static CTFramesetter? Create (CTTypesetter typesetter)
 		{
-			if (typesetter == null)
-				throw new ArgumentNullException (nameof (typesetter));
+			if (typesetter is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typesetter));
 
 			var ret = CTFramesetterCreateWithTypesetter (typesetter.Handle);
 			if (ret == IntPtr.Zero)
@@ -139,4 +136,3 @@ namespace CoreText {
 		}
 	}
 }
-

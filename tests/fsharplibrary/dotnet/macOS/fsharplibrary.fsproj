@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Imports of the form '../shared.fsproj' will be processed by xharness -->
+  <Import Project="../shared.fsproj" />
+
+  <ItemGroup>
+    <!-- this empty item group is here for xharness -->
+  </ItemGroup>
+</Project>

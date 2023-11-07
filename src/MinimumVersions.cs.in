@@ -1,0 +1,35 @@
+using System.Runtime.Versioning;
+using ObjCRuntime;
+
+#if NET
+#if __IOS__ && !__MACCATALYST__
+[assembly: TargetPlatform ("ios")]
+#elif __TVOS__
+[assembly: TargetPlatform ("tvos")]
+#elif __MACCATALYST__
+[assembly: TargetPlatform ("maccatalyst")]
+#elif MONOMAC
+[assembly: TargetPlatform ("macos")]
+#elif __WATCHOS__
+// unsupported on dotnet but we're still building it right now
+[assembly: TargetPlatform ("watchos")]
+#else
+	#error Unsupported Platform
+#endif
+
+// undecorated API availability falls back to those minimum versions, per platform
+[assembly: SupportedOSPlatform ("ios@DOTNET_MIN_IOS_SDK_VERSION@")]
+[assembly: SupportedOSPlatform ("tvos@DOTNET_MIN_TVOS_SDK_VERSION@")]
+[assembly: SupportedOSPlatform ("macos@DOTNET_MIN_MACOS_SDK_VERSION@")]
+[assembly: SupportedOSPlatform ("maccatalyst@DOTNET_MIN_MACCATALYST_SDK_VERSION@")]
+[assembly: UnsupportedOSPlatform ("watchos")]
+
+#else 
+
+[assembly: Introduced (PlatformName.iOS, @MIN_IOS_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.TvOS, @MIN_TVOS_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.WatchOS, @MIN_WATCHOS_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.MacCatalyst, @MIN_MACCATALYST_SDK_VERSION@)]
+[assembly: Introduced (PlatformName.MacOSX, @MIN_MACOS_SDK_VERSION@)]
+
+#endif // NET

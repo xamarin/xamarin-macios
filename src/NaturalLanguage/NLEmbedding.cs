@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 
 using CoreFoundation;
@@ -7,11 +9,11 @@ namespace NaturalLanguage {
 
 	public partial class NLEmbedding {
 
-		unsafe public bool TryGetVector (string @string, out float[] vector)
+		unsafe public bool TryGetVector (string @string, out float []? vector)
 		{
 			var result = false;
 			vector = new float [Dimension];
-			fixed (float *ptr = vector) {
+			fixed (float* ptr = vector) {
 				result = GetVector ((IntPtr) ptr, @string);
 			}
 			if (!result)

@@ -1,0 +1,7 @@
+# There are issues with the Generic Types listed here: https://github.com/xamarin/xamarin-macios/issues/15725
+
+# After GCPhysicalInputElementCollection is fixed, we can uncomment the below
+# !missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration
+
+# Ignore these protocols since they are marked with 'objc_non_runtime_protocol'
+# and are being used as NSStrings

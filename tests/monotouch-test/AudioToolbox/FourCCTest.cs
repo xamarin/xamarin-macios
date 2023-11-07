@@ -9,16 +9,9 @@
 
 #if !__WATCHOS__
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
 using ObjCRuntime;
-#else
-using MonoTouch.AudioToolbox;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
@@ -29,19 +22,19 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 		public static string FourCC (int value)
 		{
-			return new string (new char [] { 
-				(char) (byte) (value >> 24), 
-				(char) (byte) (value >> 16), 
-				(char) (byte) (value >> 8), 
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
 				(char) (byte) value });
 		}
 
 		public static int FourCC (string s)
 		{
-			return (((int)s [0]) << 24 |
-			        ((int)s [1]) << 16 |
-			        ((int)s [2]) << 8 |
-			        ((int)s [3]));
+			return (((int) s [0]) << 24 |
+					((int) s [1]) << 16 |
+					((int) s [2]) << 8 |
+					((int) s [3]));
 		}
 
 		[Test]

@@ -1,0 +1,56 @@
+# Template that does all the boiler plate needed to build and execute tests on macOS bots
+
+parameters:
+
+- name: keyringPass
+  type: string
+
+steps:
+- template: agent-cleanser/v1.yml@yaml-templates # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+  parameters:
+    CleanseProcesses: true
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/fix-github-ssh-key.sh
+  displayName: 'Fix GitHub SSH host key'
+
+- bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
+  displayName: 'Clean workspace'
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-bot.sh
+  displayName: 'Clean bot'
+  continueOnError: true
+  timeoutInMinutes: 60
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_python_env.ps1
+  displayName: 'Show Python information'
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/delete-library-dirs.sh
+  displayName: 'Delete library folders'
+  timeoutInMinutes: 5
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/clean-results-dir.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)
+  displayName: 'Clear results directory'
+  timeoutInMinutes: 5
+  continueOnError: true
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/remove-ui-prompt.sh
+  env:
+    OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
+  displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
+  continueOnError: true
+
+# was the current xcode deleted (has happened due to a bug in the clean step)? then set the default so 
+# that we can call make and generated the provisionator config files.
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/ensure-xcode-select.sh
+  displayName: 'Ensure Xcode is selected.'
+
+- pwsh: |
+    # some steps expect this to be set to be able to get the correct nuget name
+    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$Env:BRANCH_NAME"
+  displayName: 'Set Jenkins variables'
+  env:
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]

@@ -1,0 +1,6 @@
+<pkg-info format-version="2" identifier="@INSTALL_PKG@" version="1" install-location="/" auth="root">
+    <payload installKBytes="@INSTALLKBYTES@" numberOfFiles="@NUMFILES@"/>
+    <scripts>
+        <postinstall  file="./postflight-mac"/>
+    </scripts>
+</pkg-info>

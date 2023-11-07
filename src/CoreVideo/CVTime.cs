@@ -30,65 +30,64 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	// CVBase.h
-	[Watch (4,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;
 		public /* int64_t */ long TimeScale;
 		public /* int32_t */ CVTimeFlags TimeFlags;
 
-		public int Flags { get { return (int) TimeFlags; } set { TimeFlags = (CVTimeFlags) value; }}
+		public int Flags { get { return (int) TimeFlags; } set { TimeFlags = (CVTimeFlags) value; } }
 
 #if !COREBUILD
 		public static CVTime ZeroTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime));
+				return Marshal.PtrToStructure<CVTime> (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"))!;
 			}
 		}
 
 		public static CVTime IndefiniteTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime));
+				return Marshal.PtrToStructure<CVTime> (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"))!;
 			}
 		}
 #endif
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CVTime))
 				return false;
-			
+
 			CVTime b = (CVTime) other;
-			
+
 			return (TimeValue == b.TimeValue) && (TimeScale == b.TimeScale) && (TimeFlags == b.TimeFlags);
 		}
-		
+
 		public override int GetHashCode ()
 		{
-			return TimeValue.GetHashCode () ^ TimeScale.GetHashCode () ^ Flags;
+			return HashCode.Combine (TimeValue, TimeScale, Flags);
 		}
 
 		// CVHostTime.h
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetCurrentHostTime")]
-#if XAMCORE_2_0
 		public static extern /* uint64_t */ ulong GetCurrentHostTime ();
-#else
-		public static extern /* uint64_t */ long GetCurrentHostTime ();
-#endif
 
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetHostClockFrequency")]
 		public static extern /* double */ double GetHostClockFrequency ();
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetHostClockMinimumTimeDelta")]
-#if XAMCORE_2_0
 		public static extern /* uint32_t */ uint GetHostClockMinimumTimeDelta ();
-#else
-		public static extern /* uint32_t */ int GetHostClockMinimumTimeDelta ();
-#endif
 	}
 }

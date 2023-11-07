@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagedContainer", "ManagedContainer.csproj", "{9DD07D7E-F161-4519-BB75-B66E93322257}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Debug|iPhone.Build.0 = Debug|iPhone
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Release|iPhone.ActiveCfg = Release|iPhone
+		{9DD07D7E-F161-4519-BB75-B66E93322257}.Release|iPhone.Build.0 = Release|iPhone
+	EndGlobalSection
+EndGlobal

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MidiThruConnection
 //
 // Authors:
@@ -11,13 +11,8 @@
 #if !__TVOS__ && !__WATCHOS__
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreMidi;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMidi;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMidi {
@@ -31,12 +26,12 @@ namespace MonoTouchFixtures.CoreMidi {
 		public void ConnectionCreateTest ()
 		{
 			var cnnParams = new MidiThruConnectionParams {
-				Controls = new MidiControlTransform[] {
+				Controls = new MidiControlTransform [] {
 					new MidiControlTransform (),
 					new MidiControlTransform (),
 					new MidiControlTransform ()
 				},
-				Maps = new MidiValueMap[] {
+				Maps = new MidiValueMap [] {
 					new MidiValueMap (),
 					new MidiValueMap ()
 				},
@@ -61,12 +56,12 @@ namespace MonoTouchFixtures.CoreMidi {
 		public void GetSetParamsTest ()
 		{
 			var cnnParams = new MidiThruConnectionParams {
-				Controls = new MidiControlTransform[] {
+				Controls = new MidiControlTransform [] {
 					new MidiControlTransform (),
 					new MidiControlTransform (),
 					new MidiControlTransform ()
 				},
-				Maps = new MidiValueMap[] {
+				Maps = new MidiValueMap [] {
 					new MidiValueMap (),
 					new MidiValueMap ()
 				},
@@ -101,7 +96,7 @@ namespace MonoTouchFixtures.CoreMidi {
 				for (var i = 0; i < gotParams.Maps.Length; i++) {
 					Assert.That (cnnParams.Maps [i].Value, Is.EqualTo (gotParams.Maps [i].Value), $"Maps [{i}]");
 				}
-				
+
 				var newParams = new MidiThruConnectionParams {
 					FilterOutAllControls = false,
 					FilterOutBeatClock = true,
@@ -123,7 +118,7 @@ namespace MonoTouchFixtures.CoreMidi {
 		}
 
 		[Test]
-		public void FindTest()
+		public void FindTest ()
 		{
 			var cnnParams1 = new MidiThruConnectionParams {
 				FilterOutAllControls = true,

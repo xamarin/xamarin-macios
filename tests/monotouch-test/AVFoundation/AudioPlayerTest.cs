@@ -9,16 +9,11 @@
 
 #if !__WATCHOS__
 
-using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using AVFoundation;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
+using System;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -31,12 +26,43 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand.wav");
 			Assert.True (File.Exists (file), file);
-			NSError error;
-			using (var url = new NSUrl (file, false))
-			using (var ap = AVAudioPlayer.FromUrl (url, out error)) {
+			using (NSUrl url = new (file, false))
+			using (AVAudioPlayer ap = AVAudioPlayer.FromUrl (url, out NSError error)) {
 				Assert.NotNull (ap, "AVAudioPlayer");
 				Assert.Null (error, "NSError");
 			}
+		}
+
+		[Test]
+		public void FromUrlWithInvalidUrl ()
+		{
+			Assert.DoesNotThrow (() => {
+				using (AVAudioPlayer player = AVAudioPlayer.FromUrl (NSUrl.FromString ("sdf"), out NSError error)) {
+					Assert.Null (player, "AVAudioPlayer");
+					Assert.NotNull (error, "NSError");
+				}
+			});
+		}
+
+		[Test]
+		public void FromData ()
+		{
+			using (NSData data = NSData.FromFile (NSBundle.MainBundle.PathForResource ("Hand", "wav")))
+			using (AVAudioPlayer player = AVAudioPlayer.FromData (data, out NSError error)) {
+				Assert.NotNull (player, "AVAudioPlayer");
+				Assert.Null (error, "NSError");
+			}
+		}
+
+		[Test]
+		public void FromDataWithNullData ()
+		{
+			Assert.Throws<ArgumentNullException> (() => {
+				using (var player = AVAudioPlayer.FromData (null, out NSError error)) {
+					Assert.Null (player, "AVAudioPlayer");
+					Assert.NotNull (error, "NSError");
+				}
+			});
 		}
 	}
 }

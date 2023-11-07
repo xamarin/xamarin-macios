@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+***********************************************************************************************
+Xamarin.iOS.Common.After.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) 2010-2011 Novell. All rights reserved.
+Copyright (C) 2011-2013 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<CopyDSYM Condition="'$(CopyDSYM)' == ''">true</CopyDSYM>
+		<CopyAppBundle Condition="'$(CopyAppBundle)' == ''">false</CopyAppBundle>
+		<ArchiveBasePath Condition="'$(ArchiveBasePath)' == ''">%LocalAppData%\Xamarin\iOS\Archives</ArchiveBasePath>
+	</PropertyGroup>
+	<ItemGroup>
+		<AvailableItemName Include="AtlasTexture" />
+		<AvailableItemName Include="ImageAsset" />
+		<AvailableItemName Include="SceneKitAsset" />
+		<AvailableItemName Include="Collada" />
+		<AvailableItemName Include="Metal" />
+		<AvailableItemName Include="ITunesArtwork" />
+		<AvailableItemName Include="LinkDescription" />
+	</ItemGroup>
+</Project>

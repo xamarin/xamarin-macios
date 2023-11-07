@@ -1,0 +1,68 @@
+# YAML pipeline use to create the vs insertion to create the vs insertionn
+
+trigger: none
+pr: none
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: false  # no need
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/sign-and-notarized
+    endpoint: xamarin
+
+  # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
+  # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
+  pipelines:
+  - pipeline: macios
+    source: xamarin-macios
+
+variables:
+- group: xamops-azdev-secrets
+- group: Xamarin-Secrets
+- group: Xamarin Release
+- name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
+  value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
+- name: system.debug
+  value: true
+
+# this pipeline is triggered when we want to do a release and uses a release trigger, this means that it does not have conditions (a human accepted it)
+# or dependencies (the release pipeline was triggered accordingly.
+#
+jobs:
+- job: create_insert_drop
+  displayName: Create VS Drop and Open PR
+  timeoutInMinutes: 120
+  variables:
+  - name: skipComponentGovernanceDetection
+    value: true
+  - name: skipNugetSecurityAnalysis
+    value: true
+  - group: Xamarin-Secrets
+  pool: VSEng-ReleasePool-1ES
+  steps:
+  - template: vs-insertion/jobs/create_insert_drop/v1.yml@yaml-templates
+    parameters:
+      symbolArtifactName: nuget-signed
+      symbolConversionFilters: '*mlaunch.app*'
+      pushToShippingFeed: true
+      nupkgArtifactName: nuget-signed
+      msiNupkgArtifactName: vs-msi-nugets

@@ -1,7 +1,8 @@
-## Breaking changes fixed in XAMCORE_4_0
+## Breaking changes fixed in .NET
 ## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
 !incorrect-protocol-member! SCNAnimatable::addAnimationPlayer:forKey: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::animationPlayerForKey: is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::removeAllAnimationsWithBlendOutDuration: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::removeAnimationForKey:blendOutDuration: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::audioEngine is REQUIRED and should be abstract
@@ -12,20 +13,14 @@
 !incorrect-protocol-member! SCNSceneRenderer::renderingAPI is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::setAudioListener: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::setDebugOptions: is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::audioEnvironmentNode is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::colorPixelFormat is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::commandQueue is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::currentRenderCommandEncoder is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::depthPixelFormat is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::device is REQUIRED and should be abstract
-!incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::currentViewport is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::isTemporalAntialiasingEnabled is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::setTemporalAntialiasingEnabled: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::setUsesReverseZ: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::usesReverseZ is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::workingColorSpace is REQUIRED and should be abstract
 
-## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
+## same for SCNActionable, it is required member of a protocol added to .NET
 !incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
 
 ## We have managed counterparts that comes from OpenTK code
@@ -41,8 +36,6 @@
 !missing-pinvoke! SCNMatrix4Scale is not bound
 !missing-pinvoke! SCNVector3EqualToVector3 is not bound
 !missing-pinvoke! SCNVector4EqualToVector4 is not bound
-!missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
-!missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound
 
 !missing-selector! +SCNNode::simdLocalFront not bound
 !missing-selector! +SCNNode::simdLocalRight not bound
@@ -93,3 +86,6 @@
 
 ## untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 !unknown-native-enum! SCNErrorCode bound
+
+# normal pattern accept null delegate and unit tests shows it works just fine
+!extra-null-allowed! 'System.Void SceneKit.SCNAvoidOccluderConstraint::set_Delegate(SceneKit.ISCNAvoidOccluderConstraintDelegate)' has a extraneous [NullAllowed] on parameter #0

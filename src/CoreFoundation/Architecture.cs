@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -16,12 +18,12 @@ namespace CoreFoundation {
 		// #define CPU_TYPE_POWERPC    ((cpu_type_t) 18)
 		// #define CPU_TYPE_POWERPC64  (CPU_TYPE_POWERPC | CPU_ARCH_ABI64)
 		public enum Architecture {
-			I386     = 0x00000007,
-			X86_64   = 0x01000007,
-			ARM      = 0x00000012,
-			ARM64    = 0x01000012,
-			PPC      = 0x00000018,
-			PPC64    = 0x01000018,
+			I386 = 0x00000007,
+			X86_64 = 0x01000007,
+			ARM = 0x0000000c,
+			ARM64 = 0x01000000 | ARM,
+			PPC = 0x00000012,
+			PPC64 = 0x01000000 | PPC,
 		}
-    }
+	}
 }

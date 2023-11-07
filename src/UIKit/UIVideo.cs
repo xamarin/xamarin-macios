@@ -43,6 +43,7 @@ namespace UIKit {
 		public delegate void SaveStatus (string path, NSError error);
 		
 		[DllImport (Constants.UIKitLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIVideoAtPathIsCompatibleWithSavedPhotosAlbum (/* NSString* */ IntPtr videoPath);
 		
 		public static bool IsCompatibleWithSavedPhotosAlbum (string path)
@@ -57,9 +58,9 @@ namespace UIKit {
 
 		public static void SaveToPhotosAlbum (string path, SaveStatus status)
 		{
-			if (path == null)
+			if (path is null)
 				throw new ArgumentNullException ("path");
-			if (status == null)
+			if (status is null)
 				throw new ArgumentNullException ("status");
 			UIApplication.EnsureUIThread ();
 			var dis = new UIVideoStatusDispatcher (status);

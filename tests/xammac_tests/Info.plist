@@ -9,7 +9,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.9</string>
+	<string>10.15</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>LSUIElement</key>
@@ -23,5 +23,7 @@
 	</dict>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Testing world domination through blue teeth coloring</string>
 </dict>
 </plist>

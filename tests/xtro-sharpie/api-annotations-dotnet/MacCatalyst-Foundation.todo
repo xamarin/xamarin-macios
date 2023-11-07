@@ -1,0 +1,6 @@
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:arguments: not bound
+!missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
+!extra-enum-value! Managed value 2 for NSItemProviderRepresentationVisibility.Group is available for the current platform while the value in the native header is not

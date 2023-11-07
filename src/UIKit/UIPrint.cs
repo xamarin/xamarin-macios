@@ -12,12 +12,12 @@ namespace UIKit {
 		static NSString _ErrorDomain;
 		public static NSString ErrorDomain {
 			get {
-				if (_ErrorDomain == null)
+				if (_ErrorDomain is null)
 					_ErrorDomain = Dlfcn.GetStringConstant (Libraries.UIKit.Handle, "UIPrintErrorDomain");
 				return _ErrorDomain;
 			}
 		}
-	
+
 	}
 }
 

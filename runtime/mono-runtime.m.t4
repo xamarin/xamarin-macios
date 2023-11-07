@@ -26,37 +26,12 @@
 #include "runtime-internal.h"
 
 <# foreach (var export in exports) { #>
-typedef <#= export.ReturnType #> (* <#= export.EntryPoint #>_def) (<#= export.ArgumentSignature #>);
-<# } #>
+<#= export.DotNetIf #>typedef <#= export.ReturnType #> (* <#= export.EntryPoint #>_def) (<#= export.ArgumentSignature #>);
+<#= export.DotNetEndIf #><# } #>
 
 <# foreach (var export in exports) { #>
-<#= export.EntryPoint #>_def <#= export.EntryPoint #>_func = NULL;
-<# } #>
-
-static char *
-_strdup_cat (const char *a, const char *b, int *total_length)
-{
-	int a_len, b_len;
-	char *result;
-
-	*total_length = 0;
-
-	if (a == NULL || b == NULL)
-		return NULL;
-
-	a_len = strlen (a);
-	b_len = strlen (b);
-	*total_length = a_len + b_len;
-	if (*total_length <= 0)
-		return NULL;
-
-	result = (char *)malloc (*total_length + 1);
-	memcpy (result, a, a_len);
-	memcpy (result + a_len, b, b_len);
-	result [*total_length] = 0;
-
-	return result;
-}
+<#= export.DotNetIf #><#= export.EntryPoint #>_def <#= export.EntryPoint #>_func = NULL;
+<#= export.DotNetEndIf #><# } #>
 
 char *
 xamarin_get_mono_runtime_build_info ()
@@ -87,13 +62,8 @@ xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
 	} else if (dlsym (RTLD_DEFAULT, "mono_get_runtime_build_info")) {
 		libmono = RTLD_DEFAULT;
 	} else if (mono_runtime_prefix != NULL) {
-		int dylib_length;
-		char *dylib = _strdup_cat (mono_runtime_prefix, "/lib/libmonosgen-2.0.dylib", &dylib_length);
-		if (dylib == NULL || dylib_length <= 0 || *dylib == 0)
-			return "Unable to construct path to Mono framework runtime library";
-
-		libmono = dlopen (dylib, RTLD_LAZY);
-		free (dylib);
+		NSString *dylib = [[NSString stringWithUTF8String: mono_runtime_prefix] stringByAppendingPathComponent: @"/lib/libmonosgen-2.0.dylib"];
+		libmono = dlopen ([dylib UTF8String], RTLD_LAZY);
 	}
 
 	if (libmono == NULL) {
@@ -105,14 +75,14 @@ xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
 
 
 <# foreach (var export in exports) { #>
-	<#= export.EntryPoint #>_func = (<#= export.EntryPoint #>_def) dlsym (libmono, "<#= export.EntryPoint #>");
+<#= export.DotNetIf #><#= export.RuntimeIf #>	<#= export.EntryPoint #>_func = (<#= export.EntryPoint #>_def) dlsym (libmono, "<#= export.EntryPoint #>");
 <# if (!export.Optional) { #>
 	if (<#= export.EntryPoint #>_func == NULL) {
 		fprintf (stderr, "Could not load <#= export.EntryPoint #>\n");
 		errmsg = "Failed to load the Mono framework.";
 	}
 <# } #>
-
+<#= export.DotNetEndIf #><#= export.RuntimeEndIf #>
 <# } #>
 	xamarin_dynamic_runtime_initialized = 1;
 
@@ -120,7 +90,7 @@ xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
 }
 
 <# foreach (var export in exports) { #>
-MONO_API <#= export.ReturnType #>
+<#= export.DotNetIf #>MONO_API <#= export.ReturnType #>
 <#= export.EntryPoint #> (<#= export.ArgumentSignature #>)
 {
 <# if (export.Optional) { #>
@@ -134,7 +104,7 @@ MONO_API <#= export.ReturnType #>
 <# } #>
 	return <#= export.EntryPoint #>_func (<#= export.ArgumentNames #>);
 }
-<# } #>
+<#= export.DotNetEndIf #><# } #>
 
 <# foreach (var export in exports) {
 	if (!export.Optional)

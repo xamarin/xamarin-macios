@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,24 +7,22 @@ using System.Text;
 using NUnit.Framework;
 using System.Reflection;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class FrameworkLinkTests
-	{
+	public class FrameworkLinkTests {
 		const string LinkerEnabledConfig = "<LinkMode>Full</LinkMode>";
 		const string StaticRegistrarConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs>";
 
 		enum LinkStatus { Strong, Weak }
 
-		Dictionary <string, LinkStatus> CalculateFrameworkLinkStatus (string[] clangParts)
+		Dictionary<string, LinkStatus> CalculateFrameworkLinkStatus (string [] clangParts)
 		{
 			var status = new Dictionary<string, LinkStatus> ();
 			for (int i = 0; i < clangParts.Length; ++i) {
-				string currentPart = clangParts[i];
+				string currentPart = clangParts [i];
 				if (currentPart == "-weak_framework" || currentPart == "-framework") {
-					string name = clangParts[i + 1];
-					status[name] = currentPart == "-framework" ? LinkStatus.Strong : LinkStatus.Weak;
+					string name = clangParts [i + 1];
+					status [name] = currentPart == "-framework" ? LinkStatus.Strong : LinkStatus.Weak;
 				}
 			}
 			return status;
@@ -33,31 +31,30 @@ namespace Xamarin.MMP.Tests
 		void AssertAppKitLinkage (Dictionary<string, LinkStatus> status)
 		{
 			Assert.IsTrue (status.ContainsKey ("AppKit"), "AppKit must have framework reference in clang invocation");
-			Assert.AreEqual (LinkStatus.Strong, status["AppKit"], "AppKit must be strong linked");
+			Assert.AreEqual (LinkStatus.Strong, status ["AppKit"], "AppKit must be strong linked");
 		}
 
-		void AssertFrameworkMinOSRespected (Dictionary <string, LinkStatus> status)
+		void AssertFrameworkMinOSRespected (Dictionary<string, LinkStatus> status)
 		{
 			// Walk rest of frameworks and verify they are weak_framework if newer than 10.9, which is defined in tests/common/mac/Info-Unified.plist
 			foreach (var entry in status) {
 				LinkStatus linkStatus;
 				Framework currentFramework = Frameworks.MacFrameworks.Find (entry.Key);
-				if (currentFramework == null) {
+				if (currentFramework is null) {
 					// There are a few entries not in Framesworks.cs that we know about
 					switch (entry.Key) {
-						case "Carbon":
-						case "CoreGraphics":
-						case "CoreFoundation":
-						case "ApplicationServices":
-						case "GSS":
-							linkStatus = LinkStatus.Strong;
-							break;
-						default:
-							Assert.Fail ("Unknown entry in AssertFrameworkMinOSRespected - " + entry.Key);
-							return;
+					case "Carbon":
+					case "CoreGraphics":
+					case "CoreFoundation":
+					case "ApplicationServices":
+					case "GSS":
+						linkStatus = LinkStatus.Strong;
+						break;
+					default:
+						Assert.Fail ("Unknown entry in AssertFrameworkMinOSRespected - " + entry.Key);
+						return;
 					}
-				}
-				else {
+				} else {
 					linkStatus = currentFramework.Version > SdkVersions.MinOSXVersion ? LinkStatus.Weak : LinkStatus.Strong;
 				}
 				Assert.AreEqual (linkStatus, entry.Value, $"Framework link status of {entry.Key} was {entry.Value} but expected to be {linkStatus}");
@@ -78,11 +75,11 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		void AssertUnlinkedFrameworkStatus (string[] clangParts)
+		void AssertUnlinkedFrameworkStatus (string [] clangParts)
 		{
 			Dictionary<string, LinkStatus> status = CalculateFrameworkLinkStatus (clangParts);
 
-			AssertAppKitLinkage (status);	
+			AssertAppKitLinkage (status);
 
 			// We expect a large number of entires, which will grow as we add more bindings
 			Assert.Greater (status.Count, 20, "Did not found as many framework entries in clang invocation as expected - {0}\n{1}", status.Count, string.Join (" ", clangParts));
@@ -95,7 +92,7 @@ namespace Xamarin.MMP.Tests
 		{
 			MMPTests.RunMMPTest (tmpDir => {
 				// When we link, we should throw away pretty much everything that isn't AppKit. 
-				string[] clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig);
+				string [] clangParts = MMPTests.GetUnifiedProjectClangInvocation (tmpDir, LinkerEnabledConfig);
 				AssertLinkedFrameworkStatus (clangParts);
 
 				// Even with static registrar
@@ -104,7 +101,7 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-		void AssertLinkedFrameworkStatus (string[] clangParts)
+		void AssertLinkedFrameworkStatus (string [] clangParts)
 		{
 			Dictionary<string, LinkStatus> status = CalculateFrameworkLinkStatus (clangParts);
 

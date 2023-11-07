@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+    <LangVersion>latest</LangVersion>
+    <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../../product.snk</AssemblyOriginatorKeyFile>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <!--
+
+    The task assembly (Xamarin.iOS.Tasks.dll) is ILMerged, which really
+    confuses VSfM when using a project reference to the task assembly project
+    file, so instead use a reference to the final Xamarin.iOS.Tasks.dll
+    assembly instead. This approach requires us to manually build the task
+    assembly before building the test assembly (the BuildTasksAssembly
+    target).
+
+  -->
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Build" HintPath="$(MSBuildBinPath)\Microsoft.Build.dll" />
+    <Reference Include="Microsoft.Build.Framework" HintPath="$(MSBuildBinPath)\Microsoft.Build.Framework.dll" />
+    <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
+    <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
+    <Reference Include="Xamarin.iOS.Tasks" HintPath="..\..\..\msbuild\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll" />
+    <Reference Include="Xamarin.Localization.MSBuild" HintPath="..\..\..\msbuild\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.Localization.MSBuild.dll" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
+    <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
+  </ItemGroup>
+
+  <Target Name="BuildTasksAssembly" AfterTargets="BeforeBuild">
+    <MSBuild Projects="..\..\..\msbuild\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" Targets="Restore" Properties="SomeGlobalPropertyToMakeThisUnique=RestoreMe" />
+    <MSBuild Projects="..\..\..\msbuild\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj" />
+  </Target>
+
+  <ItemGroup>
+    <Compile Include="..\..\mtouch\Cache.cs">
+      <Link>external\Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Configuration.cs">
+      <Link>external\Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\DotNet.cs">
+      <Link>external\DotNet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ExecutionHelper.cs">
+      <Link>external\ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Profile.cs">
+      <Link>external\Profile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ErrorHelper.tests.cs">
+      <Link>external\ErrorHelper.tests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Entitlements.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\profile.mobileprovision">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\iTunesArtwork.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\iTunesArtwork%402x.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\iTunesArtwork%402x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\iTunesArtwork.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\iTunesArtwork-invalid-size.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\iTunesArtwork-invalid-size.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Resources\xcf-xcode12.2.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\xcf-prexcode12.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

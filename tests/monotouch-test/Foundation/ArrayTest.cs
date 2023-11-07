@@ -8,41 +8,30 @@
 //
 
 using System;
-#if XAMCORE_2_0
+using System.Linq;
 using Foundation;
 using ObjCRuntime;
 using Security;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSArrayTest {
-		
+
 		[Test]
 		public void FromStrings_Null ()
 		{
-			Assert.Throws <ArgumentNullException> (() => NSArray.FromStrings (null), "null");
+			Assert.Throws<ArgumentNullException> (() => NSArray.FromStrings (null), "null");
 
 			using (var a = NSArray.FromStrings (new string [1])) {
-				Assert.That (a.Count, Is.EqualTo (1), "null item");
-				Assert.IsNull (a.GetItem <NSString> (0), "0");
+				Assert.That (a.Count, Is.EqualTo ((nuint) 1), "null item");
+				Assert.IsNull (a.GetItem<NSString> (0), "0");
 			}
 		}
 
@@ -50,7 +39,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Null ()
 		{
 			using (var a = NSArray.FromNSObjects (NSNull.Null)) {
-				Assert.That (a.Count, Is.EqualTo (1), "Count");
+				Assert.That (a.Count, Is.EqualTo ((nuint) 1), "Count");
 				Assert.IsNull (a.GetItem<NSNull> (0), "0");
 			}
 		}
@@ -59,23 +48,16 @@ namespace MonoTouchFixtures.Foundation {
 
 		// the new NSObject are often, but not always, in ascending order 
 		// (because of how we allocate them) so we sort the other way
-#if XAMCORE_2_0
-		NSComparisonResult
-#else
-		int 
-#endif
-		Comparator (NSObject obj1, NSObject obj2)
+		NSComparisonResult Comparator (NSObject obj1, NSObject obj2)
 		{
 			comparator_count++;
-			return 
-#if XAMCORE_2_0
-				(NSComparisonResult) (long)
+#if NET
+			return (NSComparisonResult) (((long) (IntPtr) obj2.Handle - (long) (IntPtr) obj1.Handle));
 #else
-				(int)
+			return (NSComparisonResult) (long) ((nint) obj2.Handle - (nint) obj1.Handle);
 #endif
-				((nint) obj2.Handle - (nint) obj1.Handle);
 		}
-		
+
 		[Test]
 		public void Sort ()
 		{
@@ -87,21 +69,21 @@ namespace MonoTouchFixtures.Foundation {
 				a.Add (a);
 				a.Add (obj2);
 				using (var s = a.Sort (Comparator)) {
-					Assert.That ((nuint) s.ValueAt (0), Is.GreaterThan ((nuint) s.ValueAt (1)), "0");
-					Assert.That ((nuint) s.ValueAt (1), Is.GreaterThan ((nuint) s.ValueAt (2)), "1");
+					Assert.That ((long) (IntPtr) s.ValueAt (0), Is.GreaterThan ((long) (IntPtr) s.ValueAt (1)), "0");
+					Assert.That ((long) (IntPtr) s.ValueAt (1), Is.GreaterThan ((long) (IntPtr) s.ValueAt (2)), "1");
 				}
 			}
 			Assert.That (comparator_count, Is.GreaterThanOrEqualTo (2), "2+");
 		}
-		
+
 		int evaluator_count;
-		
+
 		bool Evaluator (NSObject evaluatedObject, NSDictionary bindings)
 		{
 			evaluator_count++;
 			return (evaluatedObject is NSMutableArray);
 		}
-		
+
 		[Test]
 		public void Filter ()
 		{
@@ -140,6 +122,38 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (a.Count, Is.EqualTo ((nuint) 0), "Count");
 				// and a valid native instance (or some other API might fail)
 				Assert.That (a.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+			}
+		}
+
+		[Test]
+		public void ToArray ()
+		{
+			using (var a = NSArray.FromStrings (new string [1] { "abc" })) {
+				var arr = a.ToArray ();
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+			}
+		}
+
+		[Test]
+		public void ToArray_T ()
+		{
+			using (var a = NSArray.FromStrings (new string [1] { "abc" })) {
+				var arr = a.ToArray<NSString> ();
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+			}
+		}
+
+		[Test]
+		public void Enumerator ()
+		{
+			using (var a = NSArray.FromStrings (new string [1] { "abc" })) {
+				foreach (var item in a)
+					Assert.AreEqual ("abc", item.ToString (), "Value");
+				var list = a.ToList ();
+				Assert.AreEqual (1, list.Count (), "Length");
+				Assert.AreEqual ("abc", list [0].ToString (), "Value");
 			}
 		}
 	}

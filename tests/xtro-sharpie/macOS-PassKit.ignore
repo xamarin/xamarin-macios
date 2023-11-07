@@ -1,0 +1,30 @@
+## no point in adding API that are already deprecated to a new platform
+!missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didSelectPaymentMethod:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didSelectShippingContact:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didSelectShippingMethod:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didAuthorizePayment:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didSelectPaymentMethod:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didSelectShippingContact:completion: not found
+!missing-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewController:didSelectShippingMethod:completion: not found
+!missing-selector! +PKPassLibrary::isPaymentPassActivationAvailable not bound
+!missing-selector! PKContact::setSupplementarySubLocality: not bound
+!missing-selector! PKContact::supplementarySubLocality not bound
+!missing-selector! PKPassLibrary::activatePaymentPass:withActivationCode:completion: not bound
+!missing-selector! PKPassLibrary::activatePaymentPass:withActivationData:completion: not bound
+!missing-selector! PKPassLibrary::canAddPaymentPassWithPrimaryAccountIdentifier: not bound
+!missing-selector! PKPassLibrary::isPaymentPassActivationAvailable not bound
+!missing-selector! PKPassLibrary::presentPaymentPass: not bound
+!missing-selector! PKPassLibrary::remotePaymentPasses not bound
+!missing-selector! PKPaymentRequest::requiredBillingAddressFields not bound
+!missing-selector! PKPaymentRequest::requiredShippingAddressFields not bound
+!missing-selector! PKPaymentRequest::setRequiredBillingAddressFields: not bound
+!missing-selector! PKPaymentRequest::setRequiredShippingAddressFields: not bound
+!missing-selector! PKPaymentToken::paymentInstrumentName not bound
+!missing-selector! PKPaymentToken::paymentNetwork not bound
+
+## enum only used in API not available on macOS
+!missing-enum! PKAddressField not bound
+
+## all members are decorated but not the type themselves
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract

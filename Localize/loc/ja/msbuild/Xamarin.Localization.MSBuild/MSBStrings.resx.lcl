@@ -1,0 +1,2625 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LCX SchemaVersion="6.0" Name="D:\a\1\s\msbuild\Xamarin.Localization.MSBuild\MSBStrings.resx" PsrId="211" FileType="1" SrcCul="en-US" TgtCul="ja-JP" xmlns="http://schemas.microsoft.com/locstudio/2006/6/lcx">
+  <OwnedComments>
+    <Cmt Name="Dev" />
+    <Cmt Name="LcxAdmin" />
+    <Cmt Name="Rccx" />
+  </OwnedComments>
+  <Settings Name="@vsLocTools@\default.lss" Type="Lss" />
+  <Item ItemId=";MSBStrings.resx" ItemType="0" PsrId="211" Leaf="false">
+    <Disp Icon="Expand" Expand="true" Disp="true" LocTbl="false" />
+    <Item ItemId=";Strings" ItemType="0" PsrId="211" Leaf="false">
+      <Disp Icon="Str" Disp="true" LocTbl="false" />
+      <Item ItemId=";E0003" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error executing tool '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ツール '{0}' の実行でエラーが発生しました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0004" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to codesign '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' の codesign に失敗しました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0005" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to codesign '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' の codesign に失敗しました]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0006" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[  '{0}' not found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[  '{0}' が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0007" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error loading '{0}': Unknown image format.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' の読み込みでエラーが発生しました: 画像の形式が不明です。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0008" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{2}' に対して iTunesArtwork の大きさ ({0}x{1}) が無効です。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0009" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{2}' に対して同じ大きさ ({0}x{1}) の iTunesArtwork ファイルが複数検出されました。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0010" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error loading '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' の読み込みエラーです: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0011" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse MinimumOSVersion value '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[MinimumOSVersion 値 '{0}' を解析できませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0012" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse TargetArchitectures '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[TargetArchitectures'{0}' を解析できませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0013" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} SDK for '{1}' is not installed.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{1}' の {0} SDK がインストールされていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0014" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[iOS でアプリの起動に失敗する可能性があるため、実行可能ファイル (CFBundleExecutable) の名前 ({0}) の末尾に '.app' を使用することはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0023" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot have more than 1 iTunesMetadata.plist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[複数の iTunesMetadata.plist を持つことはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0024" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設定 plist ファイル '{0}/Settings.bundle/Root.plist' の読み込みでエラーが発生しました: {1}。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0025" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse the SDK version '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[SDK バージョン '{0}' を解析できませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0032" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not locate SDK bin directory]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[SDK bin ディレクトリが見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0044" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' に、有効な Xcode アプリ バンドルが見つかりませんでした。Visual Studio の設定 {1} で、Apple SDK の場所を更新してください。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0045" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find valid a usable Xcode developer path]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[有効で使用可能な Xcode Developer パスが見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0046" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' が見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0048" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown SDK platform: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[不明な SDK プラットフォームです: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0049" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not locate the provisioning profile with a Name or UUID of {0}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[名前または UUID が {0} のプロビジョニング プロファイルが見つかりませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0050" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown search option: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[不明な検索オプションです: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0053" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ターゲット アーキテクチャ ARMv6 は、Xamarin.iOS ではサポートされなくなりました。サポートされているアーキテクチャを選択してください。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0055" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not load Info.plist: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Info.plist を読み込めませんでした: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0057" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid architectures: '{0}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なアーキテクチャです: '{0}'。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0058" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to parse the target device information.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ターゲット デバイス情報を解析できませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0059" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No target device found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ターゲット デバイスが見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0060" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No device architecture information found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバイス アーキテクチャ情報が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0061" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid target architecture: '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なターゲット アーキテクチャです: '{0}']D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0062" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No device operating system information found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバイスのオペレーティング システム情報が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0063" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No device model information found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバイスのモデル情報が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0064" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No iOS version information found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[iOS のバージョン情報が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0065" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resources rules file '{0}' not found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[リソース ルール ファイル '{0}' が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0066" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to parse SdkVersion '{0}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[SdkVersion '{0}' を解析できませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0067" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xcode 10 では、watchOS 1 アプリはサポートされていません。watchOS 2 アプリにアップグレードするか、以前のバージョンの Xcode を使用してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0068" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An installation of Xcode >= 6.2 is required to build WatchKit applications.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[WatchKit アプリケーションをビルドするには、Xcode 6.2 以上をインストールする必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0069" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[iOS {0} does not support WatchKit.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[iOS {0} では、WatchKit はサポートされていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0070" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to locate the WatchKit launcher in the Xcode app bundle.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xcode アプリ バンドルに WatchKit ランチャーが見つかりませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0084" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not locate the {0} '{1}' SDK at path '{}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パス '{}' に {0} '{1}' SDK が見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0085" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not locate the {0} '{1}' SDK usr path at '{2}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{2}' に {0} '{1}' SDK usr パスが見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0086" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find a valid Xcode developer path]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[有効な Xcode Developer パスが見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0089" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unrecognized platform: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[認識されないプラットフォームです: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0091" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[File not found: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイルが見つかりません: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0092" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid json: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効な JSON です: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0093" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Partial Info.plist file was not generated: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[部分的な Info.plist ファイルは生成されませんでした: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0094" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to load {0} log file `{1}`: {2}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} ログ ファイル '{1}' を読み込めませんでした: {2}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0097" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No API definition file specified.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[API 定義ファイルが指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0098" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} failed.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} が失敗しました。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0099" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[  Bundle Resource '{0}' not found on disk (should be at '{1}')]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[  バンドル リソース '{0}' がディスク上に見つかりません ('{1}' にあるはずです)]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0100" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The path '{0}' would result in a file outside of the app bundle and cannot be used.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パス '{0}' は、アプリ バンドル外のファイルを指しているため、使用できません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0101" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Info.plist files should have a Build Action of 'None'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Info.plist ファイルのビルド アクションは 'None' である必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0102" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The name '{0}' is reserved and cannot be used.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[名前 '{0}' は予約されているため、使用できません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0107" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error loading partial Info.plist template file '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[部分的な Info.plist テンプレート ファイル '{0}' の読み込みでエラーが発生しました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0112" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Entitlements.plist template '{0}' not found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entitlements.plist テンプレート '{0}' が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0113" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error loading Entitlements.plist template '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Entitlements.plist テンプレート '{0}' の読み込みでエラーが発生しました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0114" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error writing xcent file '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[xcent ファイル '{0}' の作成でエラーが発生しました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0115" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error writing archived-expanded-entitlements.xcent file: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[archived-expanded-entitlements.xcent ファイルの書き込みでエラーが発生しました: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0117" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} exited with code {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} がコード {1} で終了しました]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0118" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} exited with code {1}:]D;]A;{2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} がコード {1}で終了しました :]D;]A;{2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0120" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error saving `{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' の保存でエラーが発生しました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0122" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Error loading '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' の読み込みでエラーが発生しました]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0123" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Package creation failed. Could not parse extra arguments.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パッケージの作成に失敗しました。追加の引数を解析できませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0124" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ID '{0}' は、既定のキーチェーンにある証明書および秘密キーのどの有効なペアにも一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0128" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[キーチェーンに有効な {0} コード署名キーが見つかりません。https://developer.apple.com からコード署名証明書を依頼する必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0130" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} code signing key '{1}' not found in keychain.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[キーチェーンに {0} コード署名キー '{1}' が見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0131" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find any available provisioning profiles for {0} on {1}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{1} で {0} に対して利用可能なプロビジョニング プロファイルが見つかりませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0133" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No installed provisioning profiles match the installed {0} {1} signing identities.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[インストールされている {0} {1} 署名 ID と一致するプロビジョニング プロファイルがインストールされていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0139" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not define CFBundleIdentifier]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} で CFBundleIdentifier が定義されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0140" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified {0} provisioning profile '{1}' could not be found]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0141" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Project bundle identifier '{0}' does not match specified provisioning profile '{1}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[プロジェクトのバンドル識別子 '{0}' は指定されたプロビジョニング プロファイル '{1}' と一致しません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0144" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The specified {0} provisioning profile '{1}' could not be found]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0145" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No {0} signing identities match the specified provisioning profile '{1}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定されたプロビジョニング プロファイル '{1}' と一致する {0} 署名 ID がありません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0146" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0147" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0148" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Bundle identifier '{0}' does not match any installed provisioning profile.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バンドル識別子 '{0}' は、どのインストール済みプロビジョニング プロファイルとも一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0150" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[  AssemblyPath cannot be null or empty]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[  AssemblyPath を null または空にすることはできません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0152" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No property specified.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[プロパティが指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0153" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The dictionary at '{0}' did not contain the key: {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' にあるディクショナリにキーが含まれていませんでした: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0154" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse array index: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[配列インデックスを解析できませんでした: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0155" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Array index out of range for item '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[項目 '{0}' の配列インデックスが範囲外です]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0156" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} values do not support child properties.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 値は、子プロパティをサポートしていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0157" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Getting {0} values is not supported.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 値の取得はサポートされていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0158" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The file '{0}' does not exist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' は存在しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0159" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The file '{0}' conflicts with '{1}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' が '{1}' と競合しています。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0160" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App および Extension には Xcode 6.2 以降が必要です。現在の Xcode バージョンは {0} です]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0161" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Items must have logical names computed.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[項目には論理名を計算する必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0166" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[You must specify a DestinationFolder or the DestinationFiles, but not both.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[DestinationFolder または DestinationFiles のいずれかを指定する必要があります。両方は指定できません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0167" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The number of DestinationFiles must match the number of SourceFiles.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[DestinationFiles の数は、SourceFiles の数と一致する必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0169" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown target framework identifier: {0}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[不明なターゲット フレームワーク識別子です: {0}。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0170" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find {0} in {1}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{1} に {0} が見つかりませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0171" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} SDK is not installed.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} SDK がインストールされていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0172" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} SDK version '{1}' is not installed, and no newer version was found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} SDK バージョン '{1}' がインストールされていません。また、それより新しいバージョンも見つかりませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0173" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} SDK バージョン '{1}' がインストールされていません。代わりに、それより新しいバージョン '{2}' を使用します。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0174" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The xcframework {0} has an incorrect or unknown format and cannot be processed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[xcframework {0} の形式が正しくないか、不明なため、処理できません。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[{0} has an incorrect or unknown format and cannot be processed.]D;]A;        ]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0175" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No matching framework found inside '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' 内に一致するフレームワークが見つかりません。SupportedPlatform: '{0}'、SupportedPlatformVariant: '{1}'、SupportedArchitectures: '{2}'。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[No matching framework found inside '{0}'.]D;]A;        ]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0177" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ISshCommands インスタンスを取得できません。Mac への有効な接続が確立されていることを確認してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0178" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アーカイブ '{0}' を '{1}' にコピーしようとしているときにエラーが発生しました。詳細: {2}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0179" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[There is no available connection to the Mac. Task '{0}' will not be executed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Mac への使用可能な接続がありません。タスク '{0}' は実行されません]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0180" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not deserialize DataSet {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[DataSet {0} を逆シリアル化できませんでした]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0181" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The file {0} does not have ImageAsset as build action.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル {0} で ImageAsset がビルド アクションとして設定されていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0182" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not resolve UTI for {0} in catalog {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[カタログ {1} で {0} の UTI を解決できませんでした]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0183" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xcode と Xamarin.iOS の互換性を確認しようとして、エラーが発生しました]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0184" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このプロジェクトは互換性のないバージョンの Xcode ({0}) でビルドされており、予期しない警告やエラーが発生する可能性があります。Xcode '{1}' をインストールするか、ドキュメントで詳細をご確認ください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0185" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xcode と Xamarin.iOS の互換性を確認しようとして、エラーが発生しました。詳細: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[指定されたアーカイブ パスは、有効なアーカイブ ファイル (.xcarchive) からのものではありません。アーカイブ パス: '{0}']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0187" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[macOS バージョン {0} を対応する Mac Catalyst のバージョンにマップできませんでした。有効な macOS バージョンは次のとおりです: {1}]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the macOS version {0} to a corresponding iOS version]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0188" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Mac Catalyst のバージョン {0} を対応する macOS バージョンにマップできませんでした。有効な Mac Catalyst のバージョンは次のとおりです: {1}]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Could not map the iOS version {0} to a corresponding macOS version]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0189" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not parse the custom linker argument(s) '-{0}': {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[カスタム リンカー引数 '-{0}' を解析できませんでした: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E0190" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The NativeResource item '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[NativeResource アイテム '{0}' が存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7001" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not resolve host IPs for WiFi debugger settings.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[WiFi デバッガー設定のホスト IP を解決できませんでした。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7002" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このマシンにはネットワーク アダプターがありません。これは、WiFi を使用してデバイス上でデバッグまたはプロファイルを行うときに必要です。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7003" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' does not contain an Info.plist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に Info.plist が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7004" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' does not specify a CFBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' で CFBundleIdentifier が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7005" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' does not specify a CFBundleExecutable.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' で CFBundleExecutable が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7006" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7007" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7008" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' does not specify a CFBundleShortVersionString.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' で CFBundleShortVersionString が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7009" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7010" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier 値が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7014" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not contain an Info.plist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に Info.plist が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7015" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not specify a CFBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' で CFBundleIdentifier が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7016" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7017" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'Watch (4)' が必要ですが、'{1} ({2})' が見つかりました。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7018" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{name}' does not specify a CFBundleExecutable]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{name}' で CFBundleExecutable が指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7019" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7020" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な Info.plist があります。WKWatchKitApp キーを指定し、'true' の値を設定する必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7021" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7022" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not contain any Watch Extensions.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に Watch Extension が 1 つも含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7022_A" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not contain a Watch Extension.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に Watch Extension が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7023" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' does not contain an Info.plist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に Info.plist が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7024" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' does not specify a CFBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' で CFBundleIdentifier が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7025" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' does not specify a CFBundleExecutable.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' で CFBundleExecutable が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7026" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7027" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7028" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7029" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な Info.plist があります。NSExtensionPointIdentifier は "com.apple.watchkit" でなければなりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7029_A" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier を含める必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7030" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionAttributes を含める必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7031" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、親 Watch アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7031_A" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に無効な Info.plist があります。NSExtensionAttributes ディクショナリに WKAppBundleIdentifier を含める必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7032" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities ディクショナリに 'watch-companion' 機能を含めることはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7032_A" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities 配列に 'watch-companion' 機能を含めることはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7033" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not contain an Info.plist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に Info.plist が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7034" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not specify a CFBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' で CFBundleIdentifier が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7035" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'{1}' が必要ですが、'{2} ({3})' が見つかりました。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7036" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not specify a CFBundleExecutable.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' で CFBundleExecutable が指定されていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7037" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[WatchKit 拡張機能 '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、Watch App の CFBundleIdentifier ('{2}') と一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7038" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7038_A" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な Info.plist があります。WKCompanionAppBundleIdentifier が存在し、メイン アプリ バンドルの CFBundleIdentifier と一致している必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7039" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7040" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The app bundle {0} does not contain an Info.plist.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ バンドル {0} に Info.plist が含まれていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7041" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not specify a CFBundleIdentifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} は CFBundleIdentifier を指定していません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7042" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not specify a CFBundleExecutable.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} は CFBundleExecutable を指定していません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7043" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not specify a CFBundleSupportedPlatforms.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} は CFBundleSupportedPlatforms を指定していません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7044" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} does not specify a UIDeviceFamily.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} は UIDeviceFamily を指定していません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7044_A" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} が無効です。UIDeviceFamily キーに '{1}' の値を含める必要があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7045" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unrecognized Type: {Type}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[認識されない型です: {Type}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7046" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add: Entry, "{0}", Incorrectly Specified]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[追加: エントリ "{0}" は正しく指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7047" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add: Entry, "{0}", Contains Invalid Array Index]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[追加: エントリ "{0}" に無効な配列インデックスが含まれています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7048" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add: "{0}" Entry Already Exists]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[追加: "{0}" エントリは既に存在します]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7049" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Add: Can't Add Entry, "{0}", to Parent]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[追加: エントリ "{0}" を親に追加できません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7050" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete: Can't Delete Entry, "{0}", from Parent]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[削除: 親からエントリ "{0}" を削除できません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7051" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete: Entry, "{0}", Contains Invalid Array Index]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[削除: エントリ "{0}" に無効な配列インデックスが含まれています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7052" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Delete: Entry, "{0}", Does Not Exist]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[削除: エントリ "{0}" が存在しません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7053" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Import: Entry, "{0}", Incorrectly Specified]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[インポート: エントリ "{0}" は正しく指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7054" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Import: Entry, "{0}", Contains Invalid Array Index]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[インポート: エントリ "{0}" に無効な配列インデックスが含まれています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7055" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Import: Error Reading File: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[インポート: ファイルの読み取りでエラーが発生しました: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7056" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Import: Can't Add Entry, "{0}", to Parent]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[インポート: エントリ "{0}" を親に追加できません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7057" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merge: Can't Add array Entries to dict]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[マージ: 配列エントリをディクショナリに追加できません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7058" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merge: Specified Entry Must Be a Container]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[マージ: 指定されたエントリはコンテナーである必要があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7059" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merge: Entry, "{0}", Contains Invalid Array Index]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[マージ: エントリ "{0}" に無効な配列インデックスが含まれています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7060" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merge: Entry, "{0}", Does Not Exist]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[マージ: エントリ "{0}" が存在しません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7061" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Merge: Error Reading File: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[マージ: ファイルの読み取りでエラーが発生しました: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7062" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set: Entry, "{0}", Incorrectly Specified]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設定: エントリ "{0}" は正しく指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7063" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set: Entry, "{0}", Contains Invalid Array Index]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設定: エントリ "{0}" に無効な配列インデックスが含まれています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7064" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Set: Entry, "{0}", Does Not Exist]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[設定: エントリ "{0}" が存在しません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7069" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Xamarin.iOS 14 以降では watchOS 1 アプリがサポートされていません。プロジェクトを watchOS 2 以降に移行してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7070" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid architecture ({0}): can't link more than one architecture at a time.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なアーキテクチャです ({0}): 一度に複数のアーキテクチャをリンクすることはできません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7071" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to parse the AOT compiler arguments: {0} ({1})]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AOT コンパイラの引数を解析できません: {0} ({1})]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7072" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[パッケージの製品要件ファイルに、ターゲット アーキテクチャ ({1}) と一致しないアーキテクチャ ({0}) が含まれています]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7073" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[At least one app bundle must be specified.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[少なくとも 1 つのアプリ バンドルを指定する必要があります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7074" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The app bundle {0} does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ バンドル {0} が存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7075" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ バンドル {0} に対して、'SpecificSubDirectory' メタデータが指定されていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7076" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Can't merge the symlink '{0}', it has different targets.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[シンボリックリンク '{0}' をマージできません。ターゲットが異なります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7077" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to merge the file '{0}', it's different between the input app bundles.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' をマージできません。入力アプリ バンドル間で異なります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7078" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid app bundle: the Mach-O file {0} has dependent files.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なアプリ バンドル: Mach-O ファイル {0} に依存ファイルがあります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7079" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid app bundle: the file {0} has different types between the input app bundles.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なアプリ バンドル: ファイル {0} の入力アプリ バンドル間の種類が異なります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7080" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[App bundle file #{0}: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ バンドル ファイル #{0}: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7081" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The AOT compiler '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AOT コンパイラ '{0}' が存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7082" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Info.plist ({1}) の {0} 値がプロジェクトファイルのSupportedOSPlatformVersion の値 ({2}) と一致しません (プロジェクトファイルに SupportedOSPlatformVersion 値が存在しない場合は、既定値を仮定します)。SupportedOSPlatformVersion 値に一致するようにInfo.plist の値を変更するか、 Info.plist の値を削除します (そして変数が存在しない場合は、SupportedOSPlatformVersion 値をプロジェクトファイルに追加してください)。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7083" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[すべてのフォント ファイルは、アプリ バンドル内の同じディレクトリに配置する必要があります。次のフォント ファイルには、アプリ バンドルで異なるターゲット ディレクトリがあります。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7084" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The target directory is {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ターゲット ディレクトリは {0} です]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7085" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA["{0}" タスクに必要なパラメーター "{1}" の値が指定されなかったか、リソース "{3}" に "{2}" メタデータがありませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7086" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[圧縮プロパティでは、値 '{0}' は無効です。有効な値: 'true'、'false'、'auto'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7088" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[項目 "{1}" の "PublishFolderType" メタデータ値 '{0}' が認識されません。ファイルはアプリ バンドルにコピーされません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7089" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' で "PublishFolderType" メタデータが指定されていないため、既定値を計算できませんでした。ファイルはアプリ バンドルにコピーされません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7090" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[項目 "{1}" の "PublishFolderType" メタデータ値 '{0}' が認識されません。ファイルはアプリ バンドルにコピーされません。ファイルをアプリ バンドルにコピーしない場合は、項目のメタデータ "{2}" を削除します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7092" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[File '{0}' is not a valid framework: {1}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' は有効なフレームワークではありません: {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7094" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The file or directory '{0}' is not a framework nor a file within a framework.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイルまたはディレクトリ '{0}' は、フレームワークや、フレームワーク内におけるファイルとはみなされません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7098" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UIDeviceFamily value '6' is not valid for this platform. It's only valid for Mac Catalyst.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このプラットフォームでは、UIDeviceFamily 値 '6' は無効です。Mac Catalyst でのみ有効です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7099" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[UIDeviceFamily 値 '6' には macOS 11.0 が必要です。プロジェクト ファイルの 「SupportedOSPlatformVersion」 を 14.0 (macOS 11.0 と同等の Mac Catalyst バージョン) 以上に設定してください。現在の値は {0} (macOS {1}と同等)です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7101" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown property '{0}' with value '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[値 '{1}' のプロパティ '{0}' が不明です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7102" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。値がないことが必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7103" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。'true' または 'false' であることが必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7104" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[CustomEntitlements アイテム グループで指定されたエンタイトルメント '{1}' の不明な種類 '{0}'。'Remove'、'Boolean'、'String'、または 'StringArray' が必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7110" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not load Info.plist '{0}' from the xcframework '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[xcframework '{1}' から Info.plist '{0}' を読み込めませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7112" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the file or directory '{0}' in the zip file '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[zip ファイル '{1}' にファイルまたはディレクトリ '{0}' が見つかりませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7113" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Can't process the zip file '{0}' on this platform: the file '{1}' is a symlink.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[このプラットフォームで zip ファイル '{0}' を処理できません: ファイル '{1}' は symlink です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7114" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA["{0}" タスクにパラメーター "{1}" の値が指定されませんでした。これは、このプラットフォームでビルドするときに必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7115" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The illink assembly doesn't exist: '{0}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[illink アセンブリが存在しません: '{0}'。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7116" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The assembly {0} does not provide an 'ObjectFile' metadata.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アセンブリ {0} では 'ObjectFile' メタデータが提供されません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7117" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The assembly {0} was passed multiple times as an input assembly (referenced from {1}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アセンブリ {0} が入力アセンブリとして複数回渡されました ({1} から参照)。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7118" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to AOT compile {0}, the AOT compiler exited with code {1}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AOT コンパイル {0} に失敗しました。AOT コンパイラはコード {1} を表示して終了しました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7119" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Encountered an assembly reference cycle related to the assembly {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アセンブリ {0} に関連するアセンブリ参照サイクルが発生しました。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid framework: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なフレームワークです: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";InvalidPlatform" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid platform: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無効なプラットフォームです: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0001" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tool {0} execution started with arguments: {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ツール {0} の実行が開始されました。引数: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0002" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tool {0} execution finished (exit code = {1}).]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ツール {0} の実行が完了しました (終了コード = {1})。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0017" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[All http loads are already allowed.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[すべての http 読み込みは既に許可されています。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0018" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Allowed arbitrary HTTP loads to support debugging.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[デバッグをサポートするための任意の HTTP 読み込みが許可されました。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0047" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Searching for '{0}' in '{1}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{1}' で '{0}' を検索しています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0105" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No Frameworks directory found.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[フレームワーク ディレクトリが見つかりません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0116" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Tool {0} execution finished.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ツール {0} の実行が完了しました。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0119" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping `{0}' as the output file, `{1}', is newer.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[出力ファイル '{1}' のほうが新しいため、'{0}' をスキップしています。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0121" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Creating binding resource package: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バインド リソース パッケージを作成しています: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0125" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Detected signing identity:]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[署名 ID が検出されました:]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0126" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The certificate '{0}' does not match any of the prefixes '{1}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[証明書 '{0}' が、プレフィックス '{1}' のうちどれとも一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0127" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The certificate '{0}' has expired ({1})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[証明書 '{0}' の有効期限が切れています ({1})]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0129" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The certificate '{0}' does not match '{1}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[証明書 '{0}' が '{1}' と一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0132" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA['{0}' doesn't match '{1}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' が '{1}' と一致しません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0134" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[互換性のある AppID を持つ、一致するプロビジョニング プロファイルを検索し、最長一致 (ワイルドカード) の ID を持つもののみを保持しています。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0135" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AppID: {0} was ruled out because we found a better match: {1}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AppID: よりマッチ率の高いものが見つかったため、{0} を除外しました: {1}。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0136" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[AppID: {0} was ruled out because we already found better matches: {1}.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[AppID: よりマッチ率の高いものが既に見つかっているため、{0} を除外しました: {1}。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0138" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple provisioning profiles match the bundle identifier; using the first match.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[複数のプロビジョニング プロファイルがバンドル識別子と一致しています。最初に一致したものを使用します。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0142" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple signing identities match '{0}'; using the first match.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[複数の署名 ID が '{0}' と一致します。最初の一致を使用します。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0143" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Multiple signing identities found; using the first identity.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[複数の署名 ID が見つかりました。最初の ID を使用します。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0149" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[  {0} found at: {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[  {0} が次の場所に見つかりました: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0151" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Generated bundle name: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[生成されたバンドル名: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0162" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Duplicate Entry Was Skipped: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[重複するエントリがスキップされました: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0163" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[File Doesn't Exist, Will Create: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイルが存在しないため、作成されます: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0164" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Creating directory '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ディレクトリ '{0}' を作成しています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0165" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Copying file from '{0}' to '{1}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' から '{1}' へファイルをコピーしています]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";M0168" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[  Skipping framework assembly: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[  フレームワーク アセンブリをスキップしています: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0016" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Can only fake the watchOS 4.3 SDK when building for watchOS.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[watchOS 向けのビルド時に、watchOS 4.3 SDK に対してのみフェイクを作成できます。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0019" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Supported iPhone orientations have not been set]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サポートされている iPhone の向きが設定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0020" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Supported iPhone orientations are not matched pairs]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サポートされている iPhone の向きが一致するペアになっていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0021" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Supported iPad orientations have not been set]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サポートされている iPad の向きが設定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0022" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Supported iPad orientations are not matched pairs]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[サポートされている iPad の向きがペアになっていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0051" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown native reference type for '{0}'.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' のネイティブ参照型が不明です。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0052" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Dynamic native references are not supported: '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[動的なネイティブ参照はサポートされていません: '{0}']D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0054" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to create response file '{0}': {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[応答ファイル '{0}' を作成できませんでした: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0071" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0072" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' does not specify a CFBundleVersion]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' で CFBundleVersion が指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0073" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0074" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アプリ拡張機能 '{0}' に、認識されない NSExtensionPointIdentifier 値 ('{1}') があります。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0075" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not specify a CFBundleShortVersionString]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' で CFBundleShortVersionString が指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0076" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0077" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' does not specify a CFBundleVersion]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' で CFBundleVersion が指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0078" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch App '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0079" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' does not specify a CFBundleShortVersionString)]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' で CFBundleShortVersionString が指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0080" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0081" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' does not specify a CFBundleVersion]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' で CFBundleVersion が指定されていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0082" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0090" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Asset not part of an asset catalog: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[資産は資産カタログの一部ではありません: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0095" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to parse altool output: {0}.]D;]A;            Output: {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[altool の出力を解析できませんでした: {0}。]D;]A;            出力: {1}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0103" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Found a directory within the Frameworks directory which is not a framework: {0}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[フレームワーク ディレクトリ内にフレームワークではないディレクトリが見つかりました: {0}]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0104" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The framework {0} does not contain a binary named {1}]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[フレームワーク {0} には、{1} という名前のバイナリが含まれていません]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0106" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not determine value for manifest key '{0}']D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[マニフェスト キー '{0}' の値を特定できませんでした]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0108" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[プロビジョニング プロファイルなしで Entitlements.plist 内の $(TeamIdentifierPrefix) を展開することはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0109" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[プロビジョニング プロファイルなしで Entitlements.plist 内の $(AppIdentifierPrefix) を展開することはできません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0110" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[iCloud entitlements such as '{0}' require a Provisioning Profile.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[iCloud エンタイトルメント ('{0}' など) にはプロビジョニング プロファイルが必要です。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0111" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The iCloud entitlement '{0}' is not supported by the Provisioning Profile.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[iCloud エンタイトルメント '{0}' は、プロビジョニング プロファイルでサポートされていません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0137" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No installed provisioning profiles match the bundle identifier.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バンドル識別子と一致するインストールされたプロビジョニング プロファイルがありません。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W0176" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Conflicting '{0}' and '{1}' options. '{1}' will be ignored.]D;]A;        ]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' と '{1}' のオプションが競合しています。'{1}' は無視されます。]D;]A;        ]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7085" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Creating a compressed binding resource package because there are symlinks in the input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[入力にシンボリックリンクが含まれているため、圧縮バインド リソース パッケージを作成しています。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7087" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expected a 'manifest' file in the directory {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ディレクトリ {0} に 'manifest' ファイルが必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7091" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The framework {0} is a framework of static libraries, and will not be copied to the app.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[フレームワーク {0} はスタティック ライブラリのフレームワークであり、アプリにはコピーされません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7093" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The binding resource package {0} does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バインドしているリソース パッケージ {0} は存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7095" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata for one are: '{1}', while the metadata for the other are: '{2}']]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。一方のメタデータは '{1}' ですが、もう一方のメタデータは '{2}' です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7096" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}={2}' has been set for one item, but not the other.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}={2}' が 1 つの項目に設定されていますが、もう一方の項目には設定されていません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7097" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}' は項目ごとに異なる値を持ちます ('{2}' になったり、'{3}' になったりします)。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has been values for each item (once it's '{2}', another time it's '{3}').]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7100" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the binding resource package: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バインド リソース パッケージが見つかりませんでした: {0}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7105" ItemType="0;.resx" PsrId="211" InstFlg="true" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unexpected extension '{0}' for native reference '{1}' in binding resource package '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[バインド リソース パッケージ '{2}' のネイティブ参照 '{1}' に対して、予期しない拡張機能 '{0}'。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7106" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Expected a file named '{1}' in the zip file {0}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[zip ファイル {0} に '{1}' という名前のファイルが必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7107" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The zip file '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[zip ファイル '{0}' が存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7108" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The file '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル '{0}' が存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7109" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to process the item '{0}' as a native reference: unknown type.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[項目'{0}' をネイティブ参照として処理できません: 不明な型です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7111" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The directory '{0}' does not exist.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ディレクトリ '{0}' は存在しません。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+    </Item>
+  </Item>
+</LCX>

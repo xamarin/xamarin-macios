@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>CustomizedCodeSigning</ApplicationTitle>
+		<ApplicationId>com.xamarin.customizedcodesigning</ApplicationId>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+
+	<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/15594 -->
+	<PropertyGroup>
+		<CreateAppBundleDependsOn>$(CreateAppBundleDependsOn);CopyCustomFiles;</CreateAppBundleDependsOn>
+	</PropertyGroup>
+	<Target Name="CopyCustomFiles">
+		<PropertyGroup Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">
+			<SharedSupportDir>Contents/SharedSupport</SharedSupportDir>
+			<AppExecutableDir>Contents/MacOS</AppExecutableDir>
+			<DylibDir>Contents/MonoBundle</DylibDir>
+		</PropertyGroup>
+		<PropertyGroup Condition="!('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">
+			<SharedSupportDir>SharedSupport</SharedSupportDir>
+			<AppExecutableDir></AppExecutableDir>
+			<DylibDir></DylibDir>
+		</PropertyGroup>
+
+		<Copy
+			Condition="'$(RuntimeIdentifiers)' ==''"
+			SourceFiles="$(MSBuildThisFileDirectory)/../../test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneE.dylib"
+			DestinationFiles="$(AppBundleDir)/$(SharedSupportDir)/app2.app/$(DylibDir)/lib2.dylib">
+		</Copy>
+
+		<Copy
+			Condition="'$(RuntimeIdentifiers)' ==''"
+			SourceFiles="$(MSBuildThisFileDirectory)/../../test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneE.dylib"
+			DestinationFiles="$(AppBundleDir)/$(SharedSupportDir)/lib3.dylib">
+		</Copy>
+
+		<WriteLinesToFile File="$(AppBundleDir)/$(SharedSupportDir)/app1.app/$(AppExecutableDir)/app1" Lines="app1" Overwrite="true" />
+		<WriteLinesToFile File="$(AppBundleDir)/$(SharedSupportDir)/app2.app/$(AppExecutableDir)/app2" Lines="app2" Overwrite="true" />
+
+		<ItemGroup>
+			<!-- Sign the first bundle -->
+			<CodesignBundle Include="$(AssemblyName).app/$(SharedSupportDir)/app1.app" />
+			<!-- But not the second, and that includes the *.dylib inside too -->
+			<SkipCodesignItems Include="$(SharedSupportDir)/app2.app" />
+			<!-- Don't sign this dylib located outside an app bundle either -->
+			<SkipCodesignItems Include="$(SharedSupportDir)/lib3.dylib" />
+		</ItemGroup>
+	</Target>
+</Project>

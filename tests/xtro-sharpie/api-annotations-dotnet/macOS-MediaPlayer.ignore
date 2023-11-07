@@ -1,0 +1,13 @@
+## deprecated in iOS 10, not on macOS
+!missing-selector! MPMediaItemArtwork::imageCropRect not bound
+
+## protocol without availability - the only member is marked as not available to macOS
+!missing-protocol! MPSystemMusicPlayerController not bound
+
+## field added in xcode 12 b1 - but not marked as available on macOS and already deprecated on iOS
+!missing-field! MPMediaPlaybackIsPreparedToPlayDidChangeNotification not bound
+
+
+## unsorted
+
+!unknown-type! MPMediaItem bound

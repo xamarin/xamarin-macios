@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSDiffableDataSourceSnapshot
 //
 // Authors:
@@ -44,8 +44,8 @@ namespace MonoTouchFixtures.UIKit {
 			var diff = new NSDiffableDataSourceSnapshot<NSNumber, NSUuid> ();
 			diff.AppendSections (new NSNumber [] { NSNumber.FromNInt (1) });
 			diff.AppendItems (new NSUuid [] { new NSUuid () }, NSNumber.FromNInt (1));
-			Assert.That (diff.NumberOfSections, Is.GreaterThan (0), "Sections");
-			Assert.That (diff.GetNumberOfItems (NSNumber.FromNInt (1)), Is.GreaterThan (0), "Items");
+			Assert.That (diff.NumberOfSections, Is.GreaterThan ((nint) 0), "Sections");
+			Assert.That (diff.GetNumberOfItems (NSNumber.FromNInt (1)), Is.GreaterThan ((nint) 0), "Items");
 		}
 	}
 }

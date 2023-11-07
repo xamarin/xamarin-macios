@@ -1,0 +1,43 @@
+# Template that performs the checkout and fixes a number of small issues we have found between the vsts <-> github integration
+
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+steps:
+- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
+
+- pwsh: ./undo_github_merge.ps1 -SourceBranch "$(Build.SourceBranch)" -IsPr "${{ parameters.isPR }}"
+  name: fix_commit
+  displayName: "Undo Github merge"
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+
+- checkout: maccore
+  clean: true
+  fetchDepth: 0
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- checkout: yaml-templates
+  clean: true
+
+- checkout: release-scripts
+  clean: true
+
+- pwsh: ./clean_git_vsts.ps1 -GithubToken "$(GitHub.Token)" -MaccorePath "$(System.DefaultWorkingDirectory)/maccore"
+  displayName: 'Clean git mess from VSTS'
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts

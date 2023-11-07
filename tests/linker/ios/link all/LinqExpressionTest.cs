@@ -1,10 +1,6 @@
 using System;
 using System.Linq.Expressions;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkAll.Linq {
@@ -24,7 +20,7 @@ namespace LinkAll.Linq {
 		{
 			var ctor = typeof (LinqExpressionTest).GetConstructor (Type.EmptyTypes);
 			var expr = Expression.New (ctor, new Expression [0]);
-			Assert.NotNull (Expression.Lambda (typeof(Bug14863Delegate), expr, null), "Lambda");
+			Assert.NotNull (Expression.Lambda (typeof (Bug14863Delegate), expr, null), "Lambda");
 			// note: reflection is used to create an instance of Expression<TDelegate> using an internal ctor
 			// it can be indirectly "preserved" by other code (in Expression) but it can fail in other cases
 			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=14863

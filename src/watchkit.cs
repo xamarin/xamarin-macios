@@ -10,6 +10,7 @@
 //
 using ObjCRuntime;
 using Foundation;
+using CloudKit;
 using CoreGraphics;
 using CoreLocation;
 using HealthKit;
@@ -24,8 +25,11 @@ using UserNotifications;
 using System;
 using System.ComponentModel;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace WatchKit {
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>To use this class, subclass it</quote> 
@@ -34,7 +38,7 @@ namespace WatchKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("awakeWithContext:")]
 		void Awake ([NullAllowed] NSObject context);
@@ -50,33 +54,28 @@ namespace WatchKit {
 		[Export ("didDeactivate")]
 		void DidDeactivate ();
 
-#if WATCH
 		[Export ("didAppear")]
 		void DidAppear ();
 
 		[Export ("willDisappear")]
 		void WillDisappear ();
-#endif
 
 		[Export ("table:didSelectRowAtIndex:")]
 		void DidSelectRow (WKInterfaceTable table, nint rowIndex);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:")]
 		void HandleRemoteNotificationAction ([NullAllowed] string identifier, NSDictionary remoteNotification);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:")]
 		void HandleLocalNotificationAction ([NullAllowed] string identifier, UILocalNotification localNotification);
 
-		[iOS (10,0)]
 		[NoWatch]
 		[Export ("handleActionWithIdentifier:forNotification:")]
 		void HandleAction ([NullAllowed] string identifier, UNNotification notification);
 
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'WKExtensionDelegate.HandleUserActivity' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'WKExtensionDelegate.HandleUserActivity' instead.")]
 		[Export ("handleUserActivity:")]
 		// This NSDictionary is OK, it is arbitrary and user specific
 		void HandleUserActivity ([NullAllowed] NSDictionary userActivity);
@@ -115,39 +114,47 @@ namespace WatchKit {
 		[Export ("dismissTextInputController")]
 		void DismissTextInputController ();
 
+		[return: NullAllowed]
 		[Export ("contextForSegueWithIdentifier:")]
 		NSObject GetContextForSegue (string segueIdentifier);
 
+		[return: NullAllowed]
 		[Export ("contextsForSegueWithIdentifier:")]
 		NSObject [] GetContextsForSegue (string segueIdentifier);
 
+		[return: NullAllowed]
 		[Export ("contextForSegueWithIdentifier:inTable:rowIndex:")]
 		NSObject GetContextForSegue (string segueIdentifier, WKInterfaceTable table, nint rowIndex);
 
+		[return: NullAllowed]
 		[Export ("contextsForSegueWithIdentifier:inTable:rowIndex:")]
 		NSObject [] GetContextsForSegue (string segueIdentifier, WKInterfaceTable table, nint rowIndex);
 
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("addMenuItemWithImage:title:action:")]
 		void AddMenuItem (UIImage image, string title, Selector action);
 
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("addMenuItemWithImageNamed:title:action:")]
 		void AddMenuItem (string imageName, string title, Selector action);
 
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("addMenuItemWithItemIcon:title:action:")]
 		void AddMenuItem (WKMenuItemIcon itemIcon, string title, Selector action);
 
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Export ("clearAllMenuItems")]
 		void ClearAllMenuItems ();
 
-		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'UpdateUserActivity(NSUserActivity)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'UpdateUserActivity(NSUserActivity)' instead.")]
 		[Export ("updateUserActivity:userInfo:webpageURL:")]
 		// This NSDictionary is OK, it is arbitrary and user specific
 		void UpdateUserActivity (string type, [NullAllowed] NSDictionary userInfo, [NullAllowed] NSUrl webpageURL);
 
-		[Watch (5,0)][ NoiOS]
+		[Watch (5, 0)]
 		[Export ("updateUserActivity:")]
 		void UpdateUserActivity (NSUserActivity userActivity);
 
@@ -159,7 +166,6 @@ namespace WatchKit {
 		[Async]
 		void PresentTextInputController ([NullAllowed] string [] suggestions, WKTextInputMode inputMode, Action<NSArray> completion);
 
-		[iOS (9,0)]
 		[Export ("presentTextInputControllerWithSuggestionsForLanguage:allowedInputMode:completion:")]
 		[Async]
 		void PresentTextInputController ([NullAllowed] Func<NSString, NSArray> suggestionsHandler, WKTextInputMode inputMode, Action<NSArray> completion);
@@ -168,31 +174,27 @@ namespace WatchKit {
 		[Static, Export ("openParentApplication:reply:")]
 		bool OpenParentApplication (NSDictionary userInfo, [NullAllowed] Action<NSDictionary, NSError> reply);
 
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'ReloadRootPageControllers' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ReloadRootPageControllers' instead.")]
 		[Static, Export ("reloadRootControllersWithNames:contexts:")]
 		void ReloadRootControllers (string [] names, [NullAllowed] NSObject [] contexts);
 
-		[Watch (4,0)][NoiOS]
 		[Static]
 		[Export ("reloadRootPageControllersWithNames:contexts:orientation:pageIndex:")]
-		void ReloadRootPageControllers (string[] names, [NullAllowed] NSObject[] contexts, WKPageOrientation orientation, nint pageIndex);
+		void ReloadRootPageControllers (string [] names, [NullAllowed] NSObject [] contexts, WKPageOrientation orientation, nint pageIndex);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		// now exposed with the corresponding WKErrorCode enum
 		[Field ("WatchKitErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
 
-#if WATCH
 		[Export ("dismissMediaPlayerController")]
 		void DismissMediaPlayerController ();
 
-		[Watch (2,0)]
 		[Export ("presentAudioRecorderControllerWithOutputURL:preset:options:completion:")]
 		[Async]
 		void PresentAudioRecorderController (NSUrl outputUrl, WKAudioRecorderPreset preset, [NullAllowed] NSDictionary options, Action<bool, NSError> completion);
 
-		[Watch (2,0)]
 		[Export ("dismissAudioRecorderController")]
 		void DismissAudioRecorderController ();
 
@@ -200,20 +202,20 @@ namespace WatchKit {
 		void AnimateWithDuration (double duration, Action animations);
 
 		[Export ("presentAlertControllerWithTitle:message:preferredStyle:actions:")]
-		void PresentAlertController ([NullAllowed] string title, [NullAllowed] string message, WKAlertControllerStyle preferredStyle, WKAlertAction[] actions);
+		void PresentAlertController ([NullAllowed] string title, [NullAllowed] string message, WKAlertControllerStyle preferredStyle, WKAlertAction [] actions);
 
 		[Export ("presentAddPassesControllerWithPasses:completion:")]
 		[Async]
-		void PresentAddPassesController (PKPass[] passes, Action completion);
+		void PresentAddPassesController (PKPass [] passes, Action completion);
 
 		[Export ("dismissAddPassesController")]
 		void DismissAddPassesController ();
 
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Glances support was removed.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Glances support was removed.")]
 		[Export ("beginGlanceUpdates")]
 		void BeginGlanceUpdates ();
 
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Glances support was removed.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Glances support was removed.")]
 		[Export ("endGlanceUpdates")]
 		void EndGlanceUpdates ();
 
@@ -226,46 +228,40 @@ namespace WatchKit {
 		[Export ("pickerDidSettle:")]
 		void PickerDidSettle (WKInterfacePicker picker);
 
-		[NoiOS]
+#if WATCH
 		[Export ("presentMediaPlayerControllerWithURL:options:completion:")]
 		[Async (ResultType = typeof (WKPresentMediaPlayerResult))]
 		void PresentMediaPlayerController (NSUrl url, [NullAllowed] NSDictionary options, Action<bool, double, NSError> completion);
 #endif
 
-		[Watch (3,0)][NoiOS]
 		[Export ("crownSequencer", ArgumentSemantic.Strong)]
 		WKCrownSequencer CrownSequencer { get; }
 
-		[Watch (4,0)][NoiOS]
 		[Export ("scrollToObject:atScrollPosition:animated:")]
 		void ScrollTo (WKInterfaceObject @object, WKInterfaceScrollPosition scrollPosition, bool animated);
 
-		[Watch (4,0)][NoiOS]
 		[Export ("interfaceDidScrollToTop")]
 		void InterfaceDidScrollToTop ();
 
-		[Watch (4,0)][NoiOS]
 		[Export ("interfaceOffsetDidScrollToTop")]
 		void InterfaceOffsetDidScrollToTop ();
 
-		[Watch (4,0)][NoiOS]
 		[Export ("interfaceOffsetDidScrollToBottom")]
 		void InterfaceOffsetDidScrollToBottom ();
 
-		[Watch (5,0), NoiOS]
+		[Watch (5, 0)]
 		[Export ("contentSafeAreaInsets")]
 		UIEdgeInsets ContentSafeAreaInsets { get; }
 
-		[Watch (5,0), NoiOS]
+		[Watch (5, 0)]
 		[Export ("systemMinimumLayoutMargins")]
 		NSDirectionalEdgeInsets SystemMinimumLayoutMargins { get; }
 
-		[Watch (5,0), NoiOS]
+		[Watch (5, 0)]
 		[Export ("tableScrollingHapticFeedbackEnabled")]
 		bool TableScrollingHapticFeedbackEnabled { [Bind ("isTableScrollingHapticFeedbackEnabled")] get; set; }
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (WKInterfaceController))]
 	[DisableDefaultCtor] // DesignatedInitializer below
@@ -273,61 +269,53 @@ namespace WatchKit {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'DidReceiveNotification' instead.")]
 		[Export ("didReceiveRemoteNotification:withCompletion:")]
 		void DidReceiveRemoteNotification (NSDictionary remoteNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
-		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'DidReceiveNotification' instead.")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use 'DidReceiveNotification' instead.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'DidReceiveNotification' instead.")]
 		[Export ("didReceiveLocalNotification:withCompletion:")]
 		void DidReceiveLocalNotification (UILocalNotification localNotification, Action<WKUserNotificationInterfaceType> completionHandler);
 
-		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'DidReceiveNotification(UNNotification)' instead.")]
-		[Watch (3,0)][iOS (10,0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'DidReceiveNotification(UNNotification)' instead.")]
 		[Export ("didReceiveNotification:withCompletion:")]
 		void DidReceiveNotification (UNNotification notification, Action<WKUserNotificationInterfaceType> completionHandler);
 
-		[NoiOS]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an 'UNNotification' parameter.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use overload accepting an 'UNNotification' parameter.")]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forRemoteNotification:inputLanguage:")]
-		string[] GetSuggestionsForResponseToAction (string identifier, NSDictionary remoteNotification, string inputLanguage);
+		string [] GetSuggestionsForResponseToAction (string identifier, NSDictionary remoteNotification, string inputLanguage);
 
-		[NoiOS]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use overload accepting an 'UNNotification' parameter.")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use overload accepting an 'UNNotification' parameter.")]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forLocalNotification:inputLanguage:")]
-		string[] GetSuggestionsForResponseToAction (string identifier, UILocalNotification localNotification, string inputLanguage);
+		string [] GetSuggestionsForResponseToAction (string identifier, UILocalNotification localNotification, string inputLanguage);
 
-		[Watch (3,0)][NoiOS]
 		[Export ("suggestionsForResponseToActionWithIdentifier:forNotification:inputLanguage:")]
-		string[] GetSuggestionsForResponseToAction (string identifier, UNNotification notification, string inputLanguage);
+		string [] GetSuggestionsForResponseToAction (string identifier, UNNotification notification, string inputLanguage);
 
-		[Watch (5,0)][NoiOS]
+		[Watch (5, 0)]
 		[Export ("notificationActions", ArgumentSemantic.Copy)]
-		UNNotificationAction[] NotificationActions { get; set; }
+		UNNotificationAction [] NotificationActions { get; set; }
 
-		[Watch (5,0)][NoiOS]
+		[Watch (5, 0)]
 		[Export ("didReceiveNotification:")]
 		void DidReceiveNotification (UNNotification notification);
 
-		[Watch (5,0)][NoiOS]
+		[Watch (5, 0)]
 		[Export ("performNotificationDefaultAction")]
 		void PerformNotificationDefaultAction ();
 
-		[Watch (5,0)][NoiOS]
+		[Watch (5, 0)]
 		[Export ("performDismissAction")]
 		void PerformDismissAction ();
 
-		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use 'PerformDismissAction' instead.")]
-		[Watch (2,0)]
+		[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'PerformDismissAction' instead.")]
 		[Export ("dismissController")]
 		void DismissController ();
 
 	}
-	
-	[iOS (8,2)]
+
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -348,38 +336,28 @@ namespace WatchKit {
 		[Export ("setHeight:")]
 		void SetHeight (nfloat height);
 
-		[Watch (2,1), NoiOS]
 		[Export ("setSemanticContentAttribute:")]
 		void SetSemanticContentAttribute (WKInterfaceSemanticContentAttribute semanticContentAttribute);
 
-#if WATCH
-		[NoiOS]
 		[Export ("setHorizontalAlignment:")]
 		void SetHorizontalAlignment (WKInterfaceObjectHorizontalAlignment horizontalAlignment);
 
-		[NoiOS]
 		[Export ("setVerticalAlignment:")]
 		void SetVerticalAlignment (WKInterfaceObjectVerticalAlignment verticalAlignment);
-#endif
 
-		[NoiOS]
 		[Export ("setRelativeWidth:withAdjustment:")]
 		void SetRelativeWidth (nfloat width, nfloat adjustment);
 
-		[NoiOS]
 		[Export ("setRelativeHeight:withAdjustment:")]
 		void SetRelativeHeight (nfloat height, nfloat adjustment);
 
-		[NoiOS]
 		[Export ("sizeToFitWidth")]
 		void SizeToFitWidth ();
 
-		[NoiOS]
 		[Export ("sizeToFitHeight")]
 		void SizeToFitHeight ();
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[Category]
 	[BaseType (typeof (WKInterfaceObject))]
@@ -394,7 +372,7 @@ namespace WatchKit {
 		void SetAccessibilityValue ([NullAllowed] string accessibilityValue);
 
 		[Export ("setAccessibilityImageRegions:")]
-		void SetAccessibilityImageRegions (WKAccessibilityImageRegion[] accessibilityImageRegions);
+		void SetAccessibilityImageRegions (WKAccessibilityImageRegion [] accessibilityImageRegions);
 
 		[Export ("setAccessibilityTraits:")]
 		void SetAccessibilityTraits (UIAccessibilityTrait accessibilityTraits);
@@ -405,18 +383,15 @@ namespace WatchKit {
 		[Export ("setAccessibilityIdentifier:")]
 		void SetAccessibilityIdentifier ([NullAllowed] string accessibilityIdentifier);
 
-		[Watch (2,0)][NoiOS]
 		[Notification]
 		[Field ("WKAccessibilityVoiceOverStatusChanged")]
 		NSString VoiceOverStatusChanged { get; }
 
-		[Watch (4,0)][NoiOS]
 		[Notification]
 		[Field ("WKAccessibilityReduceMotionStatusDidChangeNotification")]
 		NSString ReduceMotionStatusDidChangeNotification { get; }
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // does not make sense to create, it should only be used thru the singleton
@@ -455,77 +430,66 @@ namespace WatchKit {
 		[Export ("removeAllCachedImages")]
 		void RemoveAllCachedImages ();
 
-		[iOS (9,0), Watch (2,0)]
 		[Export ("systemVersion")]
 		string SystemVersion { get; }
 
-		[iOS (9,0), Watch (2,0)]
 		[Export ("name")]
 		string Name { get; }
 
-		[iOS (9,0), Watch (2,0)]
 		[Export ("model")]
 		string Model { get; }
 
-		[iOS (9,0), Watch (2,0)]
 		[Export ("localizedModel")]
 		string LocalizedModel { get; }
 
-		[iOS (9,0)][Watch (2,0)]
 		[Export ("systemName")]
 		string SystemName { get; }
 
-		[Watch (3,0)][NoiOS]
 		[Export ("waterResistanceRating")]
 		WKWaterResistanceRating WaterResistanceRating { get; }
 
-		[Watch (2,0), NoiOS]
 		[Export ("playHaptic:")]
 		void PlayHaptic (WKHapticType type);
 
-		[Watch (2,1), NoiOS]
 		[Export ("layoutDirection")]
 		WKInterfaceLayoutDirection LayoutDirection { get; }
 
-		[Watch (2,1), NoiOS]
 		[Static]
 		[Export ("interfaceLayoutDirectionForSemanticContentAttribute:")]
 		WKInterfaceLayoutDirection GetInterfaceLayoutDirection (WKInterfaceSemanticContentAttribute semanticContentAttribute);
 
-		[Watch (3,0)][NoiOS]
 		[Export ("wristLocation")]
 		WKInterfaceDeviceWristLocation WristLocation { get; }
 
-		[Watch (3,0)][NoiOS]
 		[Export ("crownOrientation")]
 		WKInterfaceDeviceCrownOrientation CrownOrientation { get; }
 
-		[Watch (4,0)][NoiOS]
 		[Export ("batteryMonitoringEnabled")]
 		bool BatteryMonitoringEnabled { [Bind ("isBatteryMonitoringEnabled")] get; set; }
 
-		[Watch (4,0)][NoiOS]
 		[Export ("batteryLevel")]
 		float BatteryLevel { get; }
 
-		[Watch (4,0)][NoiOS]
 		[Export ("batteryState")]
 		WKInterfaceDeviceBatteryState BatteryState { get; }
 
-		[Watch (6,0)][NoiOS]
+		[Watch (6, 0)]
 		[Export ("supportsAudioStreaming")]
 		bool SupportsAudioStreaming { get; }
-        
-		[Watch (6,1)][NoiOS]
+
+		[Watch (6, 2)]
+		[NullAllowed, Export ("identifierForVendor", ArgumentSemantic.Strong)]
+		NSUuid IdentifierForVendor { get; }
+
+		[Watch (6, 1)]
 		[Export ("enableWaterLock")]
 		void EnableWaterLock ();
 
-		[Watch (6,1)][NoiOS]
+		[Watch (6, 1)]
 		[Export ("isWaterLockEnabled")]
 		bool IsWaterLockEnabled { get; }
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -552,7 +516,6 @@ namespace WatchKit {
 		void SetEnabled (bool enabled);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
@@ -572,12 +535,10 @@ namespace WatchKit {
 		[Export ("setCornerRadius:")]
 		void SetCornerRadius (nfloat cornerRadius);
 
-		[NoiOS]
 		[Export ("setContentInset:")]
 		void SetContentInset (UIEdgeInsets contentInset);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
@@ -595,7 +556,6 @@ namespace WatchKit {
 		void SetTintColor ([NullAllowed] UIColor color);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -611,7 +571,6 @@ namespace WatchKit {
 		void SetText ([NullAllowed] NSAttributedString attributedText);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -626,7 +585,6 @@ namespace WatchKit {
 		void SetCalendar ([NullAllowed] NSCalendar calendar);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -645,7 +603,6 @@ namespace WatchKit {
 		void Stop ();
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -659,6 +616,7 @@ namespace WatchKit {
 		[Export ("setNumberOfRows:withRowType:")]
 		void SetNumberOfRows (nint numberOfRows, string rowType);
 
+		[return: NullAllowed]
 		[Export ("rowControllerAtIndex:")]
 		NSObject GetRowController (nint index);
 
@@ -671,29 +629,29 @@ namespace WatchKit {
 		[Export ("scrollToRowAtIndex:")]
 		void ScrollToRow (nint index);
 
-		[Watch (3,0)][NoiOS]
 		[Export ("performSegueForRow:")]
 		void PerformSegue (nint row);
 
-		[Watch (5,1), NoiOS]
+		[Watch (5, 1)]
 		[Export ("curvesAtTop")]
 		bool CurvesAtTop { get; set; }
 
-		[Watch (5,1), NoiOS]
+		[Watch (5, 1)]
 		[Export ("curvesAtBottom")]
 		bool CurvesAtBottom { get; set; }
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
 	interface WKInterfaceMap {
 
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'MKMapView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("addAnnotation:withImage:centerOffset:")]
 		void AddAnnotation (CLLocationCoordinate2D location, [NullAllowed] UIImage image, CGPoint offset);
@@ -713,20 +671,19 @@ namespace WatchKit {
 		[Export ("removeAllAnnotations")]
 		void RemoveAllAnnotations ();
 
-		[Watch (6,1)]
+		[Watch (6, 1)]
 		[Export ("setShowsUserHeading:")]
 		void SetShowsUserHeading (bool showsUserHeading);
 
-		[Watch (6,1)]
+		[Watch (6, 1)]
 		[Export ("setShowsUserLocation:")]
 		void SetShowsUserLocation (bool showsUserLocation);
 
-		[Watch (6,1)]
+		[Watch (6, 1)]
 		[Export ("setUserTrackingMode:animated:")]
 		void SetUserTrackingMode (WKInterfaceMapUserTrackingMode mode, bool animated);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -734,8 +691,7 @@ namespace WatchKit {
 		[Export ("setColor:")]
 		void SetColor ([NullAllowed] UIColor color);
 	}
-	
-	[iOS (8,2)]
+
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -753,7 +709,6 @@ namespace WatchKit {
 		void SetNumberOfSteps (nint numberOfSteps);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	[BaseType (typeof (WKInterfaceObject))]
@@ -775,7 +730,6 @@ namespace WatchKit {
 		void SetTitle ([NullAllowed] NSAttributedString attributedTitle);
 	}
 
-	[iOS (8,2)]
 	[Unavailable (PlatformName.iOS)]
 	[BaseType (typeof (NSObject))]
 	interface WKAccessibilityImageRegion {
@@ -783,28 +737,24 @@ namespace WatchKit {
 		[Export ("frame")]
 		CGRect Frame { get; set; }
 
-		[NullAllowed]
 		[Export ("label")]
 		string Label { get; set; }
 	}
 
-	interface IWKImageAnimatable {}
+	interface IWKImageAnimatable { }
 
-	[iOS (9,0)]
 	[Unavailable (PlatformName.iOS)]
 	[Protocol]
 	interface WKImageAnimatable {
-		[iOS (8,2)]
+
 		[Abstract]
 		[Export ("startAnimating")]
 		void StartAnimating ();
 
-		[iOS (8,2)]
 		[Abstract]
 		[Export ("startAnimatingWithImagesInRange:duration:repeatCount:")]
 		void StartAnimating (NSRange imageRange, double duration, nint repeatCount);
 
-		[iOS (8,2)]
 		[Abstract]
 		[Export ("stopAnimating")]
 		void StopAnimating ();
@@ -846,7 +796,7 @@ namespace WatchKit {
 	}
 
 	[NoiOS]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WKAudioFileAsset {
@@ -875,8 +825,8 @@ namespace WatchKit {
 	}
 
 	[NoiOS]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
-	[BaseType (typeof(NSObject))]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WKAudioFilePlayer {
 		[Static]
@@ -909,7 +859,7 @@ namespace WatchKit {
 	}
 
 	[NoiOS]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WKAudioFilePlayerItem {
@@ -929,28 +879,23 @@ namespace WatchKit {
 		[Export ("currentTime")]
 		double CurrentTime {
 			get;
-#if XAMCORE_4_0
-			[Watch (3,2)]
+#if NET
 			set;
 		}
 #else
 		}
-		[Watch (3,2)]
 		[Export ("setCurrentTime:")]
 		void SetCurrentTime (double time);
 #endif
 
-		[Watch (2,0), NoiOS]
 		[Notification]
 		[Field ("WKAudioFilePlayerItemTimeJumpedNotification")]
 		NSString TimeJumpedNotification { get; }
 
-		[Watch (2,0), NoiOS]
 		[Notification]
 		[Field ("WKAudioFilePlayerItemDidPlayToEndTimeNotification")]
 		NSString DidPlayToEndTimeNotification { get; }
 
-		[Watch (2,0), NoiOS]
 		[Notification]
 		[Field ("WKAudioFilePlayerItemFailedToPlayToEndTimeNotification")]
 		NSString FailedToPlayToEndTimeNotification { get; }
@@ -977,46 +922,65 @@ namespace WatchKit {
 		[NullAllowed, Export ("rootInterfaceController")]
 		WKInterfaceController RootInterfaceController { get; }
 
-		[Watch (3,0)]
 		[Export ("applicationState")]
 		WKApplicationState ApplicationState { get; }
 
-		[Watch (4,0)]
 		[NullAllowed, Export ("visibleInterfaceController")]
 		WKInterfaceController VisibleInterfaceController { get; }
 
-		[Watch (4,0)]
 		[Export ("isApplicationRunningInDock")]
 		bool IsApplicationRunningInDock { get; }
 
-		[Watch (4,0)]
 		[Export ("autorotating")]
 		bool Autorotating { [Bind ("isAutorotating")] get; set; }
 
-		[Watch (4,2)]
+		[Watch (4, 2)]
 		[Export ("autorotated")]
 		bool Autorotated { [Bind ("isAutorotated")] get; }
 
-		[Watch (4,0)]
+		[Deprecated (PlatformName.WatchOS, 7, 0)]
 		[Export ("frontmostTimeoutExtended")]
 		bool FrontmostTimeoutExtended { [Bind ("isFrontmostTimeoutExtended")] get; set; }
 
-		[Watch (4,0)]
 		[Export ("enableWaterLock")]
-		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use WKInterfaceDevice.EnableWaterLock ()")]
+		[Deprecated (PlatformName.WatchOS, 6, 1, message: "Use 'WKInterfaceDevice.EnableWaterLock' instead.")]
 		void EnableWaterLock ();
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("registerForRemoteNotifications")]
 		void RegisterForRemoteNotifications ();
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("unregisterForRemoteNotifications")]
 		void UnregisterForRemoteNotifications ();
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("registeredForRemoteNotifications")]
 		bool RegisteredForRemoteNotifications { [Bind ("isRegisteredForRemoteNotifications")] get; }
+
+		[Watch (7, 0)]
+		[Export ("globalTintColor")]
+		UIColor GlobalTintColor { get; }
+
+		[Watch (7, 0)]
+		[Notification, Field ("WKApplicationDidFinishLaunchingNotification")]
+		NSString DidFinishLaunchingNotification { get; }
+
+		[Watch (7, 0)]
+		[Notification, Field ("WKApplicationDidBecomeActiveNotification")]
+		NSString DidBecomeActiveNotification { get; }
+
+		[Watch (7, 0)]
+		[Notification, Field ("WKApplicationWillResignActiveNotification")]
+		NSString WillResignActiveNotification { get; }
+
+		[Watch (7, 0)]
+		[Notification, Field ("WKApplicationWillEnterForegroundNotification")]
+		NSString WillEnterForegroundNotification { get; }
+
+		[Watch (7, 0)]
+		[Notification, Field ("WKApplicationDidEnterBackgroundNotification")]
+		NSString DidEnterBackgroundNotification { get; }
 	}
 
 	[NoiOS]
@@ -1033,95 +997,93 @@ namespace WatchKit {
 		[Export ("applicationWillResignActive")]
 		void ApplicationWillResignActive ();
 
-		[Watch (3,0)]
 		[Export ("applicationWillEnterForeground")]
 		void ApplicationWillEnterForeground ();
 
-		[Watch (3,0)]
 		[Export ("applicationDidEnterBackground")]
 		void ApplicationDidEnterBackground ();
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:")]
 		void HandleAction ([NullAllowed] string identifier, NSDictionary remoteNotification);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:")]
 		void HandleAction ([NullAllowed] string identifier, UILocalNotification localNotification);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forRemoteNotification:withResponseInfo:")]
 		void HandleAction ([NullAllowed] string identifier, NSDictionary remoteNotification, NSDictionary responseInfo);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("handleActionWithIdentifier:forLocalNotification:withResponseInfo:")]
 		void HandleAction ([NullAllowed] string identifier, UILocalNotification localNotification, NSDictionary responseInfo);
 
 		[Export ("handleUserActivity:")]
 		void HandleUserActivity ([NullAllowed] NSDictionary userInfo);
 
-		[Watch (3,2)] // TODO: Check if this is equal/similar to HandleUserActivity once docs are available
 		[Export ("handleActivity:")]
 		void HandleUserActivity (NSUserActivity userActivity);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("didReceiveRemoteNotification:")]
 		void DidReceiveRemoteNotification (NSDictionary userInfo);
 
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use UNUserNotificationCenterDelegate")]
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use 'UNUserNotificationCenterDelegate' instead.")]
 		[Export ("didReceiveLocalNotification:")]
 		void DidReceiveLocalNotification (UILocalNotification notification);
 
-		[Watch (3,0)]
 		[Export ("handleBackgroundTasks:")]
 		void HandleBackgroundTasks (NSSet<WKRefreshBackgroundTask> backgroundTasks);
 
-		[Watch (3,0)]
 		[Export ("handleWorkoutConfiguration:")]
 		void HandleWorkoutConfiguration (HKWorkoutConfiguration workoutConfiguration);
 
-		[Watch (4,0)]
 		[Export ("deviceOrientationDidChange")]
 		void DeviceOrientationDidChange ();
 
-		[Watch (5,0)]
+		[Watch (5, 0)]
 		[Export ("handleActiveWorkoutRecovery")]
 		void HandleActiveWorkoutRecovery ();
 
-		[Watch (5,0)]
+		[Watch (5, 0)]
 		[Export ("handleRemoteNowPlayingActivity")]
 		void HandleRemoteNowPlayingActivity ();
 
-		[Watch (5,0)]
+		[Watch (5, 0)]
 		[Export ("handleIntent:completionHandler:")]
 		void HandleIntent (INIntent intent, Action<INIntentResponse> completionHandler);
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("handleExtendedRuntimeSession:")]
 		void HandleExtendedRuntimeSession (WKExtendedRuntimeSession extendedRuntimeSession);
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("didRegisterForRemoteNotificationsWithDeviceToken:")]
 		void DidRegisterForRemoteNotifications (NSData deviceToken);
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("didFailToRegisterForRemoteNotificationsWithError:")]
 		void DidFailToRegisterForRemoteNotifications (NSError error);
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("didReceiveRemoteNotification:fetchCompletionHandler:")]
 		void DidReceiveRemoteNotification (NSDictionary userInfo, Action<WKBackgroundFetchResult> completionHandler);
+
+		[Watch (7, 0)]
+		[Export ("userDidAcceptCloudKitShareWithMetadata:")]
+		void UserDidAcceptCloudKitShare (CKShareMetadata cloudKitShareMetadata);
 	}
 
-	[Watch (2,2), NoiOS]
-	[BaseType (typeof(WKInterfaceObject))]
+	[NoiOS]
+	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // The super class' init method is unavailable.
-	interface WKInterfaceActivityRing
-	{
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+	interface WKInterfaceActivityRing {
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("setActivitySummary:animated:")]
 		void SetActivitySummary ([NullAllowed] HKActivitySummary activitySummary, bool animated);
@@ -1132,10 +1094,12 @@ namespace WatchKit {
 	[DisableDefaultCtor] // The super class' init method is unavailable.
 	interface WKInterfaceMovie {
 
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'AVVideoPlayer' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("setMovieURL:")]
 		void SetMovieUrl (NSUrl url);
@@ -1164,7 +1128,7 @@ namespace WatchKit {
 		void SetSelectedItem (nint itemIndex);
 
 		[Export ("setItems:")]
-		void SetItems ([NullAllowed] WKPickerItem[] items);
+		void SetItems ([NullAllowed] WKPickerItem [] items);
 
 		[Export ("setCoordinatedAnimations:")]
 		void SetCoordinatedAnimations ([NullAllowed] IWKImageAnimatable [] coordinatedAnimations);
@@ -1190,13 +1154,13 @@ namespace WatchKit {
 	}
 
 	[NoiOS]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AVPlayer' or 'AVQueuePlayer' instead.")]
 	[BaseType (typeof (WKAudioFilePlayer))]
 	[DisableDefaultCtor]
 	interface WKAudioFileQueuePlayer {
 		[Static]
 		[Export ("queuePlayerWithItems:")]
-		WKAudioFileQueuePlayer FromItems (WKAudioFilePlayerItem[] items);
+		WKAudioFileQueuePlayer FromItems (WKAudioFilePlayerItem [] items);
 
 		[Export ("advanceToNextItem")]
 		void AdvanceToNextItem ();
@@ -1211,12 +1175,12 @@ namespace WatchKit {
 		void RemoveAllItems ();
 
 		[Export ("items")]
-		WKAudioFilePlayerItem[] Items { get; }
+		WKAudioFilePlayerItem [] Items { get; }
 	}
 
 	// to be made [Internal] once #34656 is fixed
 	[Static]
-	[Watch (2,0)][NoiOS]
+	[NoiOS]
 	interface WKMediaPlayerControllerOptionsKeys {
 		[Field ("WKMediaPlayerControllerOptionsAutoplayKey")]
 		NSString AutoplayKey { get; }
@@ -1233,7 +1197,7 @@ namespace WatchKit {
 
 	// to be made [Internal] once #34656 is fixed
 	[Static]
-	[Watch (2,0)][NoiOS]
+	[NoiOS]
 	interface WKAudioRecorderControllerOptionsKey {
 		[Field ("WKAudioRecorderControllerOptionsActionTitleKey")]
 		NSString ActionTitleKey { get; }
@@ -1248,36 +1212,38 @@ namespace WatchKit {
 		NSString MaximumDurationKey { get; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (NSObject))]
 	interface WKRefreshBackgroundTask {
-		
+
 		[NullAllowed, Export ("userInfo")]
 		INSSecureCoding UserInfo { get; }
 
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'SetTaskCompleted (false)' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'SetTaskCompleted (false)' instead.")]
 		[Export ("setTaskCompleted")]
 		void SetTaskCompleted ();
 
-		[Watch (4,0)]
 		[Export ("setTaskCompletedWithSnapshot:")]
 		void SetTaskCompleted (bool refreshSnapshot);
+
+		[Watch (8, 0)]
+		[NullAllowed, Export ("expirationHandler", ArgumentSemantic.Strong)]
+		Action ExpirationHandler { get; set; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKApplicationRefreshBackgroundTask {
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKSnapshotRefreshBackgroundTask {
 
-		[Deprecated (PlatformName.WatchOS, 4,0, message: "Use 'ReasonForSnapshot' instead.")]
+		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'ReasonForSnapshot' instead.")]
 		[Export ("returnToDefaultState")]
 		bool ReturnToDefaultState { get; }
 
-		[Watch (4,0)]
 		[Export ("reasonForSnapshot")]
 		WKSnapshotReason ReasonForSnapshot { get; }
 
@@ -1285,7 +1251,7 @@ namespace WatchKit {
 		void SetTaskCompleted (bool restoredDefaultState, [NullAllowed] NSDate estimatedSnapshotExpiration, [NullAllowed] INSSecureCoding userInfo);
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask), Name = "WKURLSessionRefreshBackgroundTask")]
 	interface WKUrlSessionRefreshBackgroundTask {
 
@@ -1293,22 +1259,24 @@ namespace WatchKit {
 		string SessionIdentifier { get; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKWatchConnectivityRefreshBackgroundTask {
 	}
 
-	[Watch (5,0)][NoiOS]
+	[Watch (5, 0)]
+	[NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKRelevantShortcutRefreshBackgroundTask {
 	}
 
-	[Watch (5,0)][NoiOS]
+	[Watch (5, 0)]
+	[NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKIntentDidRunRefreshBackgroundTask {
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[Category]
 	[BaseType (typeof (WKExtension))]
 	interface WKExtension_WKBackgroundTasks {
@@ -1320,7 +1288,7 @@ namespace WatchKit {
 		void ScheduleSnapshotRefresh (NSDate preferredFireDate, [NullAllowed] INSSecureCoding userInfo, Action<NSError> scheduledCompletion);
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface WKCrownSequencer {
@@ -1340,15 +1308,16 @@ namespace WatchKit {
 		[Export ("resignFocus")]
 		void ResignFocus ();
 
-		[Watch (5,0)]
+		[Watch (5, 0)]
 		[Export ("hapticFeedbackEnabled")]
 		bool HapticFeedbackEnabled { [Bind ("isHapticFeedbackEnabled")] get; set; }
 	}
 
-	interface IWKCrownDelegate {}
+	interface IWKCrownDelegate { }
 
-	[Watch (3,0)][NoiOS]
-	[Protocol][Model]
+	[NoiOS]
+	[Protocol]
+	[Model]
 	[BaseType (typeof (NSObject))]
 	interface WKCrownDelegate {
 		[Export ("crownDidRotate:rotationalDelta:")]
@@ -1358,7 +1327,7 @@ namespace WatchKit {
 		void CrownDidBecomeIdle ([NullAllowed] WKCrownSequencer crownSequencer);
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[Abstract]
 	[BaseType (typeof (NSObject))]
 	interface WKGestureRecognizer {
@@ -1376,7 +1345,7 @@ namespace WatchKit {
 		CGRect ObjectBounds { get; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKGestureRecognizer))]
 	interface WKTapGestureRecognizer {
 
@@ -1384,7 +1353,7 @@ namespace WatchKit {
 		nuint NumberOfTapsRequired { get; set; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKGestureRecognizer))]
 	interface WKLongPressGestureRecognizer {
 
@@ -1398,7 +1367,7 @@ namespace WatchKit {
 		nfloat AllowableMovement { get; set; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKGestureRecognizer))]
 	interface WKSwipeGestureRecognizer {
 
@@ -1406,7 +1375,7 @@ namespace WatchKit {
 		WKSwipeGestureRecognizerDirection Direction { get; set; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKGestureRecognizer))]
 	interface WKPanGestureRecognizer {
 		[Export ("translationInObject")]
@@ -1416,29 +1385,32 @@ namespace WatchKit {
 		CGPoint VelocityInObject { get; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceHMCamera {
 
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'HMCameraView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("setCameraSource:")]
 		void SetCameraSource ([NullAllowed] HMCameraSource cameraSource);
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceInlineMovie {
 
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("setMovieURL:")]
 		void SetMovieUrl (NSUrl url);
@@ -1465,25 +1437,27 @@ namespace WatchKit {
 		void Pause ();
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfacePaymentButton {
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("initWithTarget:action:")]
-		IntPtr Constructor ([NullAllowed] NSObject target, Selector action);
+		NativeHandle Constructor ([NullAllowed] NSObject target, Selector action);
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceSCNScene : SCNSceneRenderer {
 
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'SCNSceneView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("snapshot")]
 		UIImage GetSnapshot ();
@@ -1495,15 +1469,17 @@ namespace WatchKit {
 		SCNAntialiasingMode AntialiasingMode { get; set; }
 	}
 
-	[Watch (3,0)][NoiOS]
+	[NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceSKScene {
 
-		[Watch (6,0)][Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Watch (6, 0)]
+		[Advice ("This API exists for SwiftUI and is not generally needed.")]
+		[Deprecated (PlatformName.WatchOS, 7, 0, message: "Use 'SKSpriteView' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
@@ -1529,27 +1505,28 @@ namespace WatchKit {
 		SKTexture CreateTexture (SKNode node, CGRect crop);
 	}
 
-	[Watch (5,0)][NoiOS]
+	[Watch (5, 0)]
+	[NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor]
 	interface WKInterfaceVolumeControl {
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("initWithOrigin:")]
-		IntPtr Constructor (WKInterfaceVolumeControlOrigin origin);
+		NativeHandle Constructor (WKInterfaceVolumeControlOrigin origin);
 
 		[Export ("setTintColor:")]
 		void SetTintColor ([NullAllowed] UIColor tintColor);
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("focus")]
 		void Focus ();
 
-		[Watch (6,0)]
+		[Watch (6, 0)]
 		[Export ("resignFocus")]
 		void ResignFocus ();
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[Native]
 	enum WKBackgroundFetchResult : ulong {
 		NewData,
@@ -1557,7 +1534,7 @@ namespace WatchKit {
 		Failed,
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[Native]
 	[ErrorDomain ("WKExtendedRuntimeSessionErrorDomain")]
 	enum WKExtendedRuntimeSessionErrorCode : long {
@@ -1569,19 +1546,22 @@ namespace WatchKit {
 		BARDisabled = 6,
 		NotApprovedToStartSession = 7,
 		NotApprovedToSchedule = 8,
+		MustBeActiveToPrompt = 9,
+		UnsupportedSessionType = 10,
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[Native]
 	enum WKExtendedRuntimeSessionInvalidationReason : long {
 		None,
 		SessionInProgress,
 		Expired,
 		ResignedFrontmost,
+		SuppressedBySystem,
 		Error = -1,
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[Native]
 	enum WKExtendedRuntimeSessionState : long {
 		NotStarted,
@@ -1590,31 +1570,35 @@ namespace WatchKit {
 		Invalid,
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[Native]
 	enum WKInterfaceVolumeControlOrigin : long {
 		Local,
 		Companion,
 	}
 
-	[Watch (6,1), NoiOS]
+	[Watch (6, 1), NoiOS]
 	[Native]
-	enum WKInterfaceAuthorizationAppleIdButtonStyle: long {
+	enum WKInterfaceAuthorizationAppleIdButtonStyle : long {
 		Default,
 		White,
 	}
 
-	[Watch (6,1), NoiOS]
+	[Watch (6, 1), NoiOS]
 	[Native]
-	enum WKInterfaceMapUserTrackingMode: long {
+	enum WKInterfaceMapUserTrackingMode : long {
 		None,
 		Follow,
 	}
 
-	interface IWKExtendedRuntimeSessionDelegate {}
+	interface IWKExtendedRuntimeSessionDelegate { }
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface WKExtendedRuntimeSessionDelegate {
 
@@ -1631,7 +1615,7 @@ namespace WatchKit {
 		void WillExpire (WKExtendedRuntimeSession extendedRuntimeSession);
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Create method exists and `NSInvalidArgumentException Reason: *** -[__NSSetM addObject:]: object cannot be nil`
 	interface WKExtendedRuntimeSession {
@@ -1639,6 +1623,12 @@ namespace WatchKit {
 		[Static]
 		[Export ("session")]
 		WKExtendedRuntimeSession Create ();
+
+		[Watch (9, 0), NoiOS]
+		[Static]
+		[Async]
+		[Export ("requestAutoLaunchAuthorizationStatusWithCompletion:")]
+		void RequestAutoLaunchAuthorizationStatus (WKRequestAutoLaunchAuthorizationStatusCompletionHandler completion);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -1667,21 +1657,22 @@ namespace WatchKit {
 	}
 
 	delegate double WKNofityUserIntervalHandler (WKHapticType type);
+	delegate void WKRequestAutoLaunchAuthorizationStatusCompletionHandler (WKExtendedRuntimeSessionAutoLaunchAuthorizationStatus authorizationStatus, [NullAllowed] NSError error);
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[BaseType (typeof (WKInterfaceObject), Name = "WKInterfaceAuthorizationAppleIDButton")]
 	[DisableDefaultCtor] // Handle is `nil`
 	interface WKInterfaceAuthorizationAppleIdButton {
 		[Export ("initWithTarget:action:")]
-		[Deprecated (PlatformName.WatchOS, 6,1, message: "Use 'new WKInterfaceAuthorizationAppleIdButton (WKInterfaceVolumeControlOrigin,NSObject,Selector)' instead.")]
-		IntPtr Constructor ([NullAllowed] NSObject target, Selector action);
+		[Deprecated (PlatformName.WatchOS, 6, 1, message: "Use 'new WKInterfaceAuthorizationAppleIdButton (WKInterfaceVolumeControlOrigin,NSObject,Selector)' instead.")]
+		NativeHandle Constructor ([NullAllowed] NSObject target, Selector action);
 
-		[Watch (6,1)]
+		[Watch (6, 1)]
 		[Export ("initWithStyle:target:action:")]
-		IntPtr Constructor (WKInterfaceAuthorizationAppleIdButtonStyle style, [NullAllowed] NSObject target, Selector action);
+		NativeHandle Constructor (WKInterfaceAuthorizationAppleIdButtonStyle style, [NullAllowed] NSObject target, Selector action);
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	enum WKTextContentType {
 		[DefaultEnumValue]
 		[Field (null)] // API using fields accept `nil`
@@ -1742,7 +1733,7 @@ namespace WatchKit {
 		OneTimeCode,
 	}
 
-	[Watch (6,0), NoiOS]
+	[Watch (6, 0), NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Handle is `nil`
 	interface WKInterfaceTextField {
@@ -1766,9 +1757,136 @@ namespace WatchKit {
 		void SetEnabled (bool enabled);
 
 		[Export ("setTextContentType:")]
-		void SetTextContentType ([BindAs (typeof (WKTextContentType?))] [NullAllowed] NSString textContentType);
+		void SetTextContentType ([BindAs (typeof (WKTextContentType?))][NullAllowed] NSString textContentType);
 
 		[Export ("setSecureTextEntry:")]
 		void SetSecureTextEntry (bool secureTextEntry);
 	}
+
+	[Watch (7, 0), NoiOS]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface WKApplication {
+		[Static]
+		[Export ("sharedApplication")]
+		WKApplication SharedApplication { get; }
+
+		[Export ("openSystemURL:")]
+		void OpenSystemUrl (NSUrl url);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IWKApplicationDelegate Delegate { get; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; }
+
+		[NullAllowed, Export ("rootInterfaceController")]
+		WKInterfaceController RootInterfaceController { get; }
+
+		[NullAllowed, Export ("visibleInterfaceController")]
+		WKInterfaceController VisibleInterfaceController { get; }
+
+		[Export ("applicationState")]
+		WKApplicationState ApplicationState { get; }
+
+		[Export ("isApplicationRunningInDock")]
+		bool IsApplicationRunningInDock { get; }
+
+		[Export ("autorotating")]
+		bool IsAutorotating { [Bind ("isAutorotating")] get; set; }
+
+		[Export ("autorotated")]
+		bool Autorotated { [Bind ("isAutorotated")] get; }
+
+		[Export ("registerForRemoteNotifications")]
+		void RegisterForRemoteNotifications ();
+
+		[Export ("unregisterForRemoteNotifications")]
+		void UnregisterForRemoteNotifications ();
+
+		[Export ("registeredForRemoteNotifications")]
+		bool RegisteredForRemoteNotifications { [Bind ("isRegisteredForRemoteNotifications")] get; }
+
+		[Export ("globalTintColor")]
+		UIColor GlobalTintColor { get; }
+
+		// from interface WKBackgroundTasks (WKApplication)
+		[Async]
+		[Export ("scheduleBackgroundRefreshWithPreferredDate:userInfo:scheduledCompletion:")]
+		void ScheduleBackgroundRefresh (NSDate preferredFireDate, [NullAllowed] NSObject userInfo, Action<NSError> scheduledCompletion);
+
+		[Async]
+		[Export ("scheduleSnapshotRefreshWithPreferredDate:userInfo:scheduledCompletion:")]
+		void ScheduleSnapshotRefresh (NSDate preferredFireDate, [NullAllowed] NSObject userInfo, Action<NSError> scheduledCompletion);
+	}
+
+	interface IWKApplicationDelegate { }
+
+	[Watch (7, 0), NoiOS]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface WKApplicationDelegate {
+		[Export ("applicationDidFinishLaunching")]
+		void ApplicationDidFinishLaunching ();
+
+		[Export ("applicationDidBecomeActive")]
+		void ApplicationDidBecomeActive ();
+
+		[Export ("applicationWillResignActive")]
+		void ApplicationWillResignActive ();
+
+		[Export ("applicationWillEnterForeground")]
+		void ApplicationWillEnterForeground ();
+
+		[Export ("applicationDidEnterBackground")]
+		void ApplicationDidEnterBackground ();
+
+		[Export ("handleWorkoutConfiguration:")]
+		void HandleWorkoutConfiguration (HKWorkoutConfiguration workoutConfiguration);
+
+		[Export ("handleActiveWorkoutRecovery")]
+		void HandleActiveWorkoutRecovery ();
+
+		[Export ("handleExtendedRuntimeSession:")]
+		void HandleExtendedRuntimeSession (WKExtendedRuntimeSession extendedRuntimeSession);
+
+		[Export ("handleRemoteNowPlayingActivity")]
+		void HandleRemoteNowPlayingActivity ();
+
+		[Export ("handleUserActivity:")]
+		void HandleUserActivity ([NullAllowed] NSDictionary userInfo);
+
+		[Export ("handleActivity:")]
+		void HandleActivity (NSUserActivity userActivity);
+
+		[Export ("handleIntent:completionHandler:")]
+		void HandleIntent (INIntent intent, Action<INIntentResponse> completionHandler);
+
+		[Export ("handleBackgroundTasks:")]
+		void HandleBackgroundTasks (NSSet<WKRefreshBackgroundTask> backgroundTasks);
+
+		[Export ("deviceOrientationDidChange")]
+		void DeviceOrientationDidChange ();
+
+		[Export ("didRegisterForRemoteNotificationsWithDeviceToken:")]
+		void DidRegisterForRemoteNotifications (NSData deviceToken);
+
+		[Export ("didFailToRegisterForRemoteNotificationsWithError:")]
+		void DidFailToRegisterForRemoteNotifications (NSError error);
+
+		[Export ("didReceiveRemoteNotification:fetchCompletionHandler:")]
+		void DidReceiveRemoteNotification (NSDictionary userInfo, Action<WKBackgroundFetchResult> completionHandler);
+
+		[Export ("userDidAcceptCloudKitShareWithMetadata:")]
+		void UserDidAcceptCloudKitShare (CKShareMetadata cloudKitShareMetadata);
+	}
+
+	[Watch (9, 0), NoiOS]
+	[BaseType (typeof (WKRefreshBackgroundTask))]
+	interface WKBluetoothAlertRefreshBackgroundTask { }
 }

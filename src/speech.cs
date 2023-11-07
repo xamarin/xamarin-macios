@@ -1,4 +1,4 @@
-﻿//
+//
 // Speech bindings
 //
 // Authors:
@@ -15,10 +15,14 @@ using CoreMedia;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Speech {
 
 	[Native]
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognitionTaskState : long {
 		Starting = 0,
 		Running = 1,
@@ -28,7 +32,7 @@ namespace Speech {
 	}
 
 	[Native]
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognitionTaskHint : long {
 		Unspecified = 0,
 		Dictation = 1,
@@ -37,7 +41,7 @@ namespace Speech {
 	}
 
 	[Native]
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	public enum SFSpeechRecognizerAuthorizationStatus : long {
 		NotDetermined,
 		Denied,
@@ -45,7 +49,16 @@ namespace Speech {
 		Authorized,
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	[ErrorDomain ("SFSpeechErrorDomain")]
+	public enum SFSpeechErrorCode : long {
+		InternalServiceError = 1,
+		UndefinedTemplateClassName = 7,
+		MalformedSupplementalModel = 8,
+	}
+
+	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
 	[BaseType (typeof (NSObject))]
@@ -60,28 +73,39 @@ namespace Speech {
 		[Export ("contextualStrings", ArgumentSemantic.Copy)]
 		string [] ContextualStrings { get; set; }
 
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0)]
 		[NullAllowed, Export ("interactionIdentifier")]
 		string InteractionIdentifier { get; set; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("requiresOnDeviceRecognition")]
 		bool RequiresOnDeviceRecognition { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Export ("addsPunctuation")]
+		bool AddsPunctuation { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("customizedLanguageModel", ArgumentSemantic.Copy)]
+		SFSpeechLanguageModelConfiguration CustomizedLanguageModel { get; set; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SFSpeechRecognitionRequest), Name = "SFSpeechURLRecognitionRequest")]
 	[DisableDefaultCtor]
 	interface SFSpeechUrlRecognitionRequest {
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SFSpeechRecognitionRequest))]
 	interface SFSpeechAudioBufferRecognitionRequest {
 
@@ -98,7 +122,7 @@ namespace Speech {
 		void EndAudio ();
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionResult : NSCopying, NSSecureCoding {
 
@@ -110,9 +134,14 @@ namespace Speech {
 
 		[Export ("final")]
 		bool Final { [Bind ("isFinal")] get; }
+
+		[iOS (14, 5), Mac (11, 3)]
+		[MacCatalyst (14, 5)]
+		[NullAllowed, Export ("speechRecognitionMetadata")]
+		SFSpeechRecognitionMetadata SpeechRecognitionMetadata { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTask {
 
@@ -135,9 +164,9 @@ namespace Speech {
 		NSError Error { get; }
 	}
 
-	interface ISFSpeechRecognitionTaskDelegate {}
+	interface ISFSpeechRecognitionTaskDelegate { }
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionTaskDelegate {
@@ -161,9 +190,9 @@ namespace Speech {
 		void DidFinishSuccessfully (SFSpeechRecognitionTask task, bool successfully);
 	}
 
-	interface ISFSpeechRecognizerDelegate {}
+	interface ISFSpeechRecognizerDelegate { }
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizerDelegate {
@@ -172,7 +201,7 @@ namespace Speech {
 		void AvailabilityDidChange (SFSpeechRecognizer speechRecognizer, bool available);
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognizer {
 
@@ -190,7 +219,7 @@ namespace Speech {
 
 		[Export ("initWithLocale:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSLocale locale);
+		NativeHandle Constructor (NSLocale locale);
 
 		[Export ("available")]
 		bool Available { [Bind ("isAvailable")] get; }
@@ -199,6 +228,7 @@ namespace Speech {
 		NSLocale Locale { get; }
 
 		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("supportsOnDeviceRecognition")]
 		bool SupportsOnDeviceRecognition { get; set; }
 
@@ -219,7 +249,29 @@ namespace Speech {
 		NSOperationQueue Queue { get; set; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[iOS (14, 5), Mac (11, 3)]
+	[MacCatalyst (14, 5)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSpeechRecognitionMetadata : NSCopying, NSSecureCoding {
+
+		[Export ("speakingRate")]
+		double SpeakingRate { get; }
+
+		[Export ("averagePauseDuration")]
+		double AveragePauseDuration { get; }
+
+		[Export ("speechStartTimestamp")]
+		double SpeechStartTimestamp { get; }
+
+		[Export ("speechDuration")]
+		double SpeechDuration { get; }
+
+		[NullAllowed, Export ("voiceAnalytics")]
+		SFVoiceAnalytics VoiceAnalytics { get; }
+	}
+
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscription : NSCopying, NSSecureCoding {
 
@@ -231,14 +283,22 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[Export ("speakingRate")]
+		[Deprecated (PlatformName.iOS, 14, 5)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 5)]
+		[Advice ("Use 'SpeakingRate' from 'SFSpeechRecognitionMetadata' instead.")]
 		double SpeakingRate { get; }
 
 		[iOS (13, 0)]
 		[Export ("averagePauseDuration")]
+		[Deprecated (PlatformName.iOS, 14, 5)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 5)]
+		[Advice ("Use 'AveragePauseDuration' from 'SFSpeechRecognitionMetadata' instead.")]
 		double AveragePauseDuration { get; }
 	}
 
-	[iOS (10, 0), Mac (10, 15)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SFTranscriptionSegment : NSCopying, NSSecureCoding {
 
@@ -262,22 +322,28 @@ namespace Speech {
 
 		[iOS (13, 0)]
 		[NullAllowed, Export ("voiceAnalytics")]
+		[Deprecated (PlatformName.iOS, 14, 5)]
+		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 5)]
+		[Advice ("Use 'VoiceAnalytics' from 'SFSpeechRecognitionMetadata' instead.")]
 		SFVoiceAnalytics VoiceAnalytics { get; }
 	}
 
-	[iOS (13, 0), Mac (10, 15)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFAcousticFeature : NSCopying, NSSecureCoding {
 
 		[Export ("acousticFeatureValuePerFrame", ArgumentSemantic.Copy)]
-		NSNumber[] AcousticFeatureValuePerFrame { get; }
+		NSNumber [] AcousticFeatureValuePerFrame { get; }
 
 		[Export ("frameDuration")]
 		double FrameDuration { get; }
 	}
 
-	[iOS (13, 0), Mac (10, 15)]
+	[iOS (13, 0)]
+	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFVoiceAnalytics : NSCopying, NSSecureCoding {
@@ -294,5 +360,48 @@ namespace Speech {
 		[Export ("voicing", ArgumentSemantic.Copy)]
 		SFAcousticFeature Voicing { get; }
 	}
-}
 
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface SFSpeechLanguageModelConfiguration : NSCopying {
+		[Export ("initWithLanguageModel:")]
+		NativeHandle Constructor (NSUrl languageModel);
+
+		[Export ("initWithLanguageModel:vocabulary:")]
+		NativeHandle Constructor (NSUrl languageModel, [NullAllowed] NSUrl vocabulary);
+
+		[Export ("languageModel", ArgumentSemantic.Copy)]
+		NSUrl LanguageModel { get; }
+
+		[NullAllowed, Export ("vocabulary", ArgumentSemantic.Copy)]
+		NSUrl Vocabulary { get; }
+	}
+
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSpeechLanguageModel {
+		[Static]
+		[Export ("prepareCustomLanguageModelForUrl:clientIdentifier:configuration:completion:")]
+		[Async]
+		void PrepareCustomModel (NSUrl asset, string clientIdentifier, SFSpeechLanguageModelConfiguration configuration, Action<NSError> completion);
+
+		[Static]
+		[Export ("prepareCustomLanguageModelForUrl:clientIdentifier:configuration:ignoresCache:completion:")]
+		[Async]
+		void PrepareCustomModel (NSUrl asset, string clientIdentifier, SFSpeechLanguageModelConfiguration configuration, bool ignoresCache, Action<NSError> completion);
+	}
+
+	[Partial]
+	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	interface SFAnalysisContextTag {
+		[Field ("SFAnalysisContextTagLeftContext")]
+		NSString LeftContext { get; }
+
+		[Field ("SFAnalysisContextTagRightContext")]
+		NSString RightContext { get; }
+
+		[Field ("SFAnalysisContextTagSelectedText")]
+		NSString SelectedText { get; }
+	}
+}

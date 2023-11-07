@@ -30,7 +30,7 @@
 
 using System;
 
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
 using CoreFoundation;
@@ -39,102 +39,101 @@ using CoreText;
 using AppKit;
 #endif
 
+#nullable enable
+
 namespace CoreAnimation {
 
 	public partial class CATextLayer {
 
-#if !XAMCORE_2_0
-		virtual
-#endif
-		public NSAttributedString AttributedString {
+		public NSAttributedString? AttributedString {
 			get {
 				return Runtime.GetNSObject (_AttributedString) as NSAttributedString;
 			}
 			set {
-				_AttributedString = value == null ? IntPtr.Zero : value.Handle;
+				_AttributedString = value.GetHandle ();
 			}
 		}
-		
+
 		public void SetFont (string fontName)
 		{
-			if (fontName == null)
-				throw new ArgumentNullException ("fontName");
+			if (fontName is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fontName));
 			using (var nss = new NSString (fontName))
 				_Font = nss.Handle;
 		}
-		
+
 		public void SetFont (CGFont font)
 		{
-			if (font == null)
-				throw new ArgumentNullException ("font");
+			if (font is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 
 		public void SetFont (CTFont font)
 		{
-			if (font == null)
-				throw new ArgumentNullException ("font");
+			if (font is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 
 #if MONOMAC
 		public void SetFont (NSFont font)
 		{
-			if (font == null)
-				throw new ArgumentNullException ("font");
+			if (font is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			_Font = font.Handle;
 		}
 #endif
 
-		public object WeakFont {
+		public object? WeakFont {
 			get {
 				var handle = _Font;
 				nint type = CFType.GetTypeID (handle);
 				if (type == CTFont.GetTypeID ())
-					return new CTFont (handle);
+					return new CTFont (handle, false);
 				else if (type == CGFont.GetTypeID ())
 					return new CGFont (handle, false);
 				else if (type == CFString.GetTypeID ())
-					return CFString.FetchString (handle);
+					return CFString.FromHandle (handle);
 #if MONOMAC
-				else return (NSFont) Runtime.GetNSObject (handle);
+				else return Runtime.GetNSObject<NSFont> (handle);
 #else
 				return null;
 #endif
-			} 
+			}
 
 			// Allows CTFont, CGFont, string and in OSX NSFont settings
 			set {
 #if MONOMAC
 				var ns = value as NSFont;
-				if (ns != null){
+				if (ns is not null){
 					_Font = ns.Handle;
 					return;
 				}
 #endif
 				var ct = value as CTFont;
-				if (ct != null){
+				if (ct is not null) {
 					_Font = ct.Handle;
 					return;
 				}
 				var cg = value as CGFont;
-				if (cg != null){
+				if (cg is not null) {
 					_Font = cg.Handle;
 					return;
 				}
 				var nss = value as NSString;
-				if (nss != null){
+				if (nss is not null) {
 					_Font = nss.Handle;
 					return;
 				}
 				var str = value as string;
-				if (str != null){
+				if (str is not null) {
 					nss = new NSString (str);
 					_Font = nss.Handle;
 				}
 			}
 		}
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TextTruncationMode' instead.")]
 		public virtual string TruncationMode {
 			get { return (string) WeakTruncationMode; }
@@ -146,17 +145,15 @@ namespace CoreAnimation {
 			get { return (string) WeakAlignmentMode; }
 			set { WeakAlignmentMode = (NSString) value; }
 		}
-#endif // !XAMCORE_4_0
+#endif // !NET
 		public CATextLayerTruncationMode TextTruncationMode {
 			get { return CATextLayerTruncationModeExtensions.GetValue (WeakTruncationMode); }
-			set { WeakTruncationMode = value.GetConstant (); }
+			set { WeakTruncationMode = value.GetConstant ()!; }
 		}
 
 		public CATextLayerAlignmentMode TextAlignmentMode {
 			get { return CATextLayerAlignmentModeExtensions.GetValue (WeakAlignmentMode); }
-			set { WeakAlignmentMode = value.GetConstant (); }
+			set { WeakAlignmentMode = value.GetConstant ()!; }
 		}
 	}
 }
-
-

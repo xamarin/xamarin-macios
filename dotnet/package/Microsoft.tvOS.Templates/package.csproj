@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <_PlatformName>tvOS</_PlatformName>
+  </PropertyGroup>
+
+  <Import Project="../microsoft.templates.csproj" />
+</Project>

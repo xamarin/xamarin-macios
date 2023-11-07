@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <OutputType>Library</OutputType>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BundleResource Include="..\LinkedBundleResource.txt">
+      <Link>MyLibraryFolder\LibraryLinkedBundleResource.txt</Link>
+    </BundleResource>
+    <BundleResource Include="MyLibraryFolder\LibraryBundleResource.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LinkedContent.txt">
+      <Link>MyLibraryFolder\LibraryLinkedContent.txt</Link>
+    </Content>
+    <Content Include="MyLibraryFolder\LibraryContent.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\LinkedEmbeddedResource.txt">
+      <Link>MyLibraryFolder\LibraryLinkedEmbeddedResource.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyLibraryFolder\LibraryEmbeddedResource.txt" />
+  </ItemGroup>
+</Project>

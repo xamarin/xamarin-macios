@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Kontroler zobrazení macOS",
+  "description": "Zobrazení ovladače macOS s uživatelským rozhraním implementované v Interface Builder Xcode (soubor XIB)",
+  "symbols/namespace/description": "obor názvů pro vygenerovaný kód"
+}

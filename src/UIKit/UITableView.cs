@@ -18,10 +18,10 @@ namespace UIKit {
 		public UITableViewSource Source {
 			get {
 				var d = WeakDelegate as UITableViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				d = WeakDataSource as UITableViewSource;
-				if (d != null)
+				if (d is not null)
 					return d;
 				return null;
 			}
@@ -34,49 +34,34 @@ namespace UIKit {
 
 		public void RegisterClassForCellReuse (Type cellType, NSString reuseIdentifier)
 		{
-			RegisterClassForCellReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
+			RegisterClassForCellReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
 		}
 
 		public void RegisterClassForCellReuse (Type cellType, string reuseIdentifier)
 		{
 			using (var str = (NSString) reuseIdentifier)
-				RegisterClassForCellReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), str);
+				RegisterClassForCellReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), str);
 		}
 
 		public void RegisterClassForHeaderFooterViewReuse (Type cellType, string reuseIdentifier)
 		{
 			using (var str = (NSString) reuseIdentifier)
-				RegisterClassForHeaderFooterViewReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), str);
+				RegisterClassForHeaderFooterViewReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), str);
 		}
 
 		public void RegisterClassForHeaderFooterViewReuse (Type cellType, NSString reuseIdentifier)
 		{
-			RegisterClassForHeaderFooterViewReuse (cellType == null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
+			RegisterClassForHeaderFooterViewReuse (cellType is null ? IntPtr.Zero : Class.GetHandle (cellType), reuseIdentifier);
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use RegisterNibForCellReuse")]
-		public void RegisterNibforCellReuse (UINib nib, string reuseIdentifier)
-		{
-			RegisterNibForCellReuse (nib, reuseIdentifier);
-		}
-#endif
 
 		// This is not obsolete, we provide both a (UINib,string) overload and a (UINib,NSString) overload.
 		// The difference is that in Unified the overridable method is the (UINib,NSString) overload to
 		// be consistent with other API taking a reuseIdentifier.
-#if XAMCORE_2_0
 		public void RegisterNibForCellReuse (UINib nib, string reuseIdentifier)
 		{
 			using (var str = (NSString) reuseIdentifier)
 				RegisterNibForCellReuse (nib, str);
 		}
-#else
-		public void RegisterNibForCellReuse (UINib nib, NSString reuseIdentifier)
-		{
-			RegisterNibForCellReuse (nib, (string) reuseIdentifier);
-		}
-#endif
 
 		public UITableViewCell DequeueReusableCell (string reuseIdentifier, NSIndexPath indexPath)
 		{
@@ -93,18 +78,11 @@ namespace UIKit {
 		// This is not obsolete, we provide both a (UINib,string) overload and a (UINib,NSString) overload.
 		// The difference is that in Unified the overridable method is the (UINib,NSString) overload to
 		// be consistent with other API taking a reuseIdentifier.
-#if XAMCORE_2_0
 		public void RegisterNibForHeaderFooterViewReuse (UINib nib, string reuseIdentifier)
 		{
 			using (var str = (NSString) reuseIdentifier)
 				RegisterNibForHeaderFooterViewReuse (nib, str);
 		}
-#else
-		public virtual void RegisterNibForHeaderFooterViewReuse (UINib nib, NSString reuseIdentifier)
-		{
-			RegisterNibForHeaderFooterViewReuse (nib, (string) reuseIdentifier);
-		}
-#endif
 	}
 }
 #endif // !WATCH

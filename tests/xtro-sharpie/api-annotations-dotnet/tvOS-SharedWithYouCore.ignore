@@ -1,0 +1,2 @@
+# This framework is not available on tvOS
+!missing-protocol! SWCollaborationActionHandler not bound

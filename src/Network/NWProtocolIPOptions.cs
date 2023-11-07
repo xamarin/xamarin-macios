@@ -6,6 +6,9 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -13,28 +16,29 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
-using OS_nw_protocol_definition=System.IntPtr;
-using IntPtr=System.IntPtr;
+using OS_nw_protocol_definition = System.IntPtr;
+using OS_nw_protocol_options = System.IntPtr;
+using IntPtr = System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
-	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-	public enum NWIPLocalAddressPreference {
-		Default = 0,
-		Temporary = 1,
-		Stable = 2,
-	}
-
-	[Watch (6,0), TV (12,0), Mac (10,14), iOS (12,0)]
-	public enum NWIPVersion {
-		Any = 0,
-		Version4 = 1,
-		Version6 = 2,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13, 0)]
+	[iOS (13, 0)]
+	[Watch (6, 0)]
+#endif
 	public class NWProtocolIPOptions : NWProtocolOptions {
-		internal NWProtocolIPOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolIPOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		public void SetVersion (NWIPVersion version)
 			=> nw_ip_options_set_version (GetCheckedHandle (), version);
@@ -51,8 +55,37 @@ namespace Network {
 		public void SetCalculateReceiveTime (bool shouldCalculateReceiveTime)
 			=> nw_ip_options_set_calculate_receive_time (GetCheckedHandle (), shouldCalculateReceiveTime);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
 		public void SetIPLocalAddressPreference (NWIPLocalAddressPreference localAddressPreference)
 			=> nw_ip_options_set_local_address_preference (GetCheckedHandle (), localAddressPreference);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_ip_options_set_disable_multicast_loopback (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool disableMulticastLoopback);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8, 0)]
+		[TV (15, 0)]
+		[Mac (12, 0)]
+		[iOS (15, 0)]
+		[MacCatalyst (15, 0)]
+#endif
+		public void DisableMulticastLoopback (bool disable)
+			=> nw_ip_options_set_disable_multicast_loopback (GetCheckedHandle (), disable);
 	}
 }

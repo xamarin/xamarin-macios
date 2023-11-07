@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CVMetalTextureAttributes.cs
 //
 // Authors: Alex Soto (alexsoto@microsoft.com)
@@ -6,10 +6,12 @@
 // Copyright 2017 Xamarin Inc.
 //
 
-#if XAMCORE_2_0 && !WATCH
+#if !WATCH
 using System;
 using Foundation;
 using Metal;
+
+#nullable enable
 
 namespace CoreVideo {
 	public partial class CVMetalTextureAttributes : DictionaryContainer {

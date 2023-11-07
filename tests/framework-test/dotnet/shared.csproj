@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <RootNamespace>frameworktest</RootNamespace>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+    <FrameworkTestDirectory>$(RootTestsDirectory)\framework-test</FrameworkTestDirectory>
+
+    <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-framework-test\dotnet\$(_PlatformName)\bindings-framework-test.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="$(FrameworkTestDirectory)\iOS\Resources\Default-568h%402x.png">
+      <Link>Resources\Default-568h%402x.png</Link>
+    </BundleResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(FrameworkTestDirectory)\iOS\FrameworkTests.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

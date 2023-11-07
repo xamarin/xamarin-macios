@@ -1,0 +1,19 @@
+## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+## deprecated in all iOS versions we support, and there's a viable alternative to use instead.
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withFlags: not found
+
+## this API is to have cute Objective-C syntax for something that's (according to the docs) identical to what another method does (which we've bound).
+!missing-selector! AVCaptureSynchronizedDataCollection::objectForKeyedSubscript: not bound
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound

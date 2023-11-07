@@ -1,0 +1,8 @@
+# In the compat file as obsoleted in iOS 14
+!missing-protocol! NSFileProviderItemDecorating not bound
+
+## this was _demoted_ to `@optional` when the property was deprecated in iOS 14 SDK
+!incorrect-protocol-member! NSFileProviderItem::typeIdentifier is OPTIONAL and should NOT be abstract
+
+# Not found in the headers or web docs
+!missing-selector! NSFileProviderManager::waitForNSFileProviderManagerWithCompletionHandler: not bound

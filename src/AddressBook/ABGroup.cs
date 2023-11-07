@@ -28,6 +28,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -39,10 +41,14 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 	static class ABGroupProperty {
 
-		public static int Name {get; private set;}
+		public static int Name { get; private set; }
 
 		static ABGroupProperty ()
 		{
@@ -55,7 +61,16 @@ namespace AddressBook {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
 	public class ABGroup : ABRecord, IEnumerable<ABRecord> {
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -73,32 +88,33 @@ namespace AddressBook {
 		public ABGroup (ABRecord source)
 			: base (IntPtr.Zero, true)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+			if (source is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 
 			Handle = ABGroupCreateInSource (source.Handle);
 		}
 
-		internal ABGroup (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal ABGroup (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABGroup (IntPtr handle, ABAddressBook addressbook)
-        	: base (handle, false)
+		internal ABGroup (NativeHandle handle, ABAddressBook addressbook)
+			: base (handle, false)
 		{
 			AddressBook = addressbook;
 		}
 
-		public string Name {
-			get {return PropertyToString (ABGroupProperty.Name);}
-			set {SetValue (ABGroupProperty.Name, value);}
+		public string? Name {
+			get { return PropertyToString (ABGroupProperty.Name); }
+			set { SetValue (ABGroupProperty.Name, value); }
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABGroupCopySource (IntPtr group);
 
-		public ABRecord Source {
+		public ABRecord? Source {
 			get {
 				var h = ABGroupCopySource (Handle);
 				if (h == IntPtr.Zero)
@@ -109,11 +125,12 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABGroupAddMember (IntPtr group, IntPtr person, out IntPtr error);
 		public void Add (ABRecord person)
 		{
-			if (person == null)
-				throw new ArgumentNullException ("person");
+			if (person is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (person));
 			IntPtr error;
 			if (!ABGroupAddMember (Handle, person.Handle, out error))
 				throw CFException.FromCFError (error);
@@ -130,7 +147,7 @@ namespace AddressBook {
 		public IEnumerator<ABRecord> GetEnumerator ()
 		{
 			var cfArrayRef = ABGroupCopyArrayOfAllMembers (Handle);
-			IEnumerable<ABRecord> e = null;
+			IEnumerable<ABRecord>? e = null;
 			if (cfArrayRef == IntPtr.Zero)
 				e = new ABRecord [0];
 			else
@@ -150,11 +167,12 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool ABGroupRemoveMember (IntPtr group, IntPtr member, out IntPtr error);
 		public void Remove (ABRecord member)
 		{
-			if (member == null)
-				throw new ArgumentNullException ("member");
+			if (member is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (member));
 			IntPtr error;
 			if (!ABGroupRemoveMember (Handle, member.Handle, out error))
 				throw CFException.FromCFError (error);

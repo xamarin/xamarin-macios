@@ -11,7 +11,7 @@ namespace Introspection {
 	public class MacApiPInvokeTest : ApiPInvokeTest {
 		protected override bool SkipLibrary (string libraryName)
 		{
-			switch (libraryName){
+			switch (libraryName) {
 			case "/System/Library/Frameworks/OpenGL.framework/OpenGL":
 				return true;
 			}
@@ -19,9 +19,8 @@ namespace Introspection {
 		}
 
 		static bool IsUnified {
-			get
-			{
-				return AppDomain.CurrentDomain.GetAssemblies().Any(x => x.FullName.Contains("Xamarin.Mac"));
+			get {
+				return AppDomain.CurrentDomain.GetAssemblies ().Any (x => x.FullName.Contains ("Xamarin.Mac"));
 			}
 		}
 
@@ -54,23 +53,23 @@ namespace Introspection {
 				return !IsUnified; // If these are in unified, don't skip, we want to scream
 			}
 
-			return base.Skip(type);
+			return base.Skip (type);
 		}
 
 		protected override bool Skip (string symbolName)
 		{
 			switch (symbolName) {
-				case "SKTerminateForInvalidReceipt": // Only there for API compat
-					return !IsUnified;
+			case "SKTerminateForInvalidReceipt": // Only there for API compat
+				return !IsUnified;
 			}
-			return false;
+			return base.Skip (symbolName);
 		}
 
 		protected override bool SkipAssembly (Assembly a)
 		{
 			// too many things are missing from XM 32bits bindings
 			// and the BCL is identical for 64 bits (no need to test it 3 times)
-//			return IntPtr.Size == 4;
+			//			return IntPtr.Size == 4;
 			return true; // skip everything until fixed
 		}
 	}

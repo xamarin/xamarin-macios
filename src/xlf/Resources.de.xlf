@@ -1,0 +1,588 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en" target-language="de" original="../Resources.resx">
+    <body>
+      <trans-unit id="BI0000">
+        <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</source>
+        <target state="new">Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</target>
+        <note></note>
+      </trans-unit>
+      <trans-unit id="BI0001">
+        <source>The .NET runtime could not load the {0} type. Message: {1}</source>
+        <target state="new">The .NET runtime could not load the {0} type. Message: {1}</target>
+        <note></note>
+      </trans-unit>
+      <trans-unit id="BI0002">
+        <source>Could not compile the API bindings.
+		{0}
+		</source>
+        <target state="new">Could not compile the API bindings.
+		{0}
+		</target>
+        <note></note>
+      </trans-unit>
+      <trans-unit id="BI0026">
+        <source>Could not parse the command line argument '--warnaserror': {0}</source>
+        <target state="new">Could not parse the command line argument '--warnaserror': {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0068">
+        <source>Invalid value for target framework: {0}.</source>
+        <target state="new">Invalid value for target framework: {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0070">
+        <source>Invalid target framework: {0}. Valid target frameworks are: {1}.</source>
+        <target state="new">Invalid target framework: {0}. Valid target frameworks are: {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0086">
+        <source>A target framework (--target-framework) must be specified.</source>
+        <target state="new">A target framework (--target-framework) must be specified.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0087">
+        <source>Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.</source>
+        <target state="new">Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0088">
+        <source>Internal error: don't know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</source>
+        <target state="new">Internal error: don't know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0089">
+        <source>Internal error: property {0} doesn't have neither a getter nor a setter.</source>
+        <target state="new">Internal error: property {0} doesn't have neither a getter nor a setter.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0099">
+        <source>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</source>
+        <target state="new">Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1000">
+        <source>Could not compile the generated API bindings.	
+		{0}
+		</source>
+        <target state="new">Could not compile the generated API bindings.	
+		{0}
+		</target>
+        <note></note>
+      </trans-unit>
+      <trans-unit id="BI1001">
+        <source>Do not know how to make a trampoline for {0}</source>
+        <target state="new">Do not know how to make a trampoline for {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1002">
+        <source>Unknown kind {0} in method '{1}.{2}'</source>
+        <target state="new">Unknown kind {0} in method '{1}.{2}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1003">
+        <source>The delegate method {0}.{1} needs to take at least one parameter</source>
+        <target state="new">The delegate method {0}.{1} needs to take at least one parameter</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1004">
+        <source>The delegate method {0}.{1} is missing the [EventArgs] attribute (has {2} parameters)</source>
+        <target state="new">The delegate method {0}.{1} is missing the [EventArgs] attribute (has {2} parameters)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1005">
+        <source>EventArgs in {0}.{1} attribute should not include the text `EventArgs' at the end</source>
+        <target state="new">EventArgs in {0}.{1} attribute should not include the text `EventArgs' at the end</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1006">
+        <source>The delegate method {0}.{1} is missing the [DelegateName] attribute (or EventArgs)</source>
+        <target state="new">The delegate method {0}.{1} is missing the [DelegateName] attribute (or EventArgs)</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1007">
+        <source>Unknown attribute {0} on {1}.{2}</source>
+        <target state="new">Unknown attribute {0} on {1}.{2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1008">
+        <source>[IsThreadStatic] is only valid on properties that are also [Static]</source>
+        <target state="new">[IsThreadStatic] is only valid on properties that are also [Static]</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1009">
+        <source>No selector specified for method `{0}.{1}'</source>
+        <target state="new">No selector specified for method `{0}.{1}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1010">
+        <source>No Export attribute on {0}.{1} property</source>
+        <target state="new">No Export attribute on {0}.{1} property</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1011">
+        <source>Do not know how to extract type {0}/{1} from an NSDictionary</source>
+        <target state="new">Do not know how to extract type {0}/{1} from an NSDictionary</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1012">
+        <source>No Export or Bind attribute defined on {0}.{1}</source>
+        <target state="new">No Export or Bind attribute defined on {0}.{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1013">
+        <source>Unsupported type for Fields (string), you probably meant NSString</source>
+        <target state="new">Unsupported type for Fields (string), you probably meant NSString</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1014">
+        <source>Unsupported type for Fields: {0} for '{1}'.</source>
+        <target state="new">Unsupported type for Fields: {0} for '{1}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1015">
+        <source>In class {0} You specified the Events property, but did not bind those to names with Delegates</source>
+        <target state="new">In class {0} You specified the Events property, but did not bind those to names with Delegates</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1016">
+        <source>The delegate method {0}.{1} is missing the [DefaultValue] attribute</source>
+        <target state="new">The delegate method {0}.{1} is missing the [DefaultValue] attribute</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1017">
+        <source>Do not know how to make a signature for {0}</source>
+        <target state="new">Do not know how to make a signature for {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1018">
+        <source>No [Export] attribute on property {0}.{1}</source>
+        <target state="new">No [Export] attribute on property {0}.{1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1019">
+        <source>Invalid [NoDefaultValue] attribute on method '{0}.{1}'</source>
+        <target state="new">Invalid [NoDefaultValue] attribute on method '{0}.{1}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1020">
+        <source>Unsupported type {0} used on exported method {1}.{2} -&gt; {3}</source>
+        <target state="new">Unsupported type {0} used on exported method {1}.{2} -&gt; {3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1021">
+        <source>Unsupported type for read/write Fields: {0} for {1}.{2}</source>
+        <target state="new">Unsupported type for read/write Fields: {0} for {1}.{2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1022">
+        <source>Model classes can not be categories</source>
+        <target state="new">Model classes can not be categories</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1023">
+        <source>The number of Events (Type) and Delegates (string) must match for `{0}`</source>
+        <target state="new">The number of Events (Type) and Delegates (string) must match for `{0}`</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1024">
+        <source>No selector specified for property '{0}.{1}'</source>
+        <target state="new">No selector specified for property '{0}.{1}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1025">
+        <source>[Static] and [Protocol] are mutually exclusive ({0})</source>
+        <target state="new">[Static] and [Protocol] are mutually exclusive ({0})</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1026">
+        <source>`{0}`: Enums attributed with [{1}] must have an underlying type of `long` or `ulong`</source>
+        <target state="new">`{0}`: Enums attributed with [{1}] must have an underlying type of `long` or `ulong`</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1027">
+        <source>Support for ZeroCopy strings is not implemented. Strings will be marshalled as NSStrings.</source>
+        <target state="new">Support for ZeroCopy strings is not implemented. Strings will be marshalled as NSStrings.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1028">
+        <source>Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1029">
+        <source>Internal error: invalid enum mode for type '{0}'</source>
+        <target state="new">Internal error: invalid enum mode for type '{0}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1030">
+        <source>{0} cannot have [BaseType(typeof({1}))] as it creates a circular dependency</source>
+        <target state="new">{0} cannot have [BaseType(typeof({1}))] as it creates a circular dependency</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1031">
+        <source>The [Target] attribute is not supported for the Unified API (found on the member '{0}.{1}'). For Objective-C categories, create an api definition interface with the [Category] attribute instead.</source>
+        <target state="new">The [Target] attribute is not supported for the Unified API (found on the member '{0}.{1}'). For Objective-C categories, create an api definition interface with the [Category] attribute instead.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1032">
+        <source>No support for setters in StrongDictionary classes for type {0} in {1}.{2}</source>
+        <target state="new">No support for setters in StrongDictionary classes for type {0} in {1}.{2}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1033">
+        <source>Limitation: can not automatically create strongly typed dictionary for ({0}) the value type of the {1}.{2} property</source>
+        <target state="new">Limitation: can not automatically create strongly typed dictionary for ({0}) the value type of the {1}.{2} property</target>
+        <note>Generating a strongly typed dictionary for type '{0}' is not supported.
+{0} - the property type.
+{1} - the dictionary type.
+{2} - the property name.
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1034">
+        <source>The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.</source>
+        <target state="new">The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1035">
+        <source>The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.</source>
+        <target state="new">The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1036">
+        <source>The last parameter in the method '{0}.{1}' must be a delegate (it's '{2}').</source>
+        <target state="new">The last parameter in the method '{0}.{1}' must be a delegate (it's '{2}').</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1037">
+        <source>The selector {0} on type {1} is found multiple times with both read only and write only versions, with no read/write version.</source>
+        <target state="new">The selector {0} on type {1} is found multiple times with both read only and write only versions, with no read/write version.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1038">
+        <source>The selector {0} on type {1} is found multiple times with different return types.</source>
+        <target state="new">The selector {0} on type {1} is found multiple times with different return types.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1039">
+        <source>The selector {0} on type {1} is found multiple times with different argument length {2} : {3}.</source>
+        <target state="new">The selector {0} on type {1} is found multiple times with different argument length {2} : {3}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1040">
+        <source>The selector {0} on type {1} is found multiple times with different argument out states on argument {2}.</source>
+        <target state="new">The selector {0} on type {1} is found multiple times with different argument out states on argument {2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1041">
+        <source>The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.		</source>
+        <target state="new">The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.		</target>
+        <note></note>
+      </trans-unit>
+      <trans-unit id="BI1042">
+        <source>Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal")</source>
+        <target state="new">Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal")</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1043">
+        <source>Repeated overload {0} and no [DelegateApiNameAttribute] provided to generate property name on host class.</source>
+        <target state="new">Repeated overload {0} and no [DelegateApiNameAttribute] provided to generate property name on host class.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1044">
+        <source>Repeated name '{0}' provided in [DelegateApiNameAttribute].</source>
+        <target state="new">Repeated name '{0}' provided in [DelegateApiNameAttribute].</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1045">
+        <source>Only a single [DefaultEnumValue] attribute can be used inside enum {0}.</source>
+        <target state="new">Only a single [DefaultEnumValue] attribute can be used inside enum {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1046">
+        <source>The [Field] constant {0} cannot only be used once inside enum {1}.</source>
+        <target state="new">The [Field] constant {0} cannot only be used once inside enum {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1047">
+        <source>Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1048">
+        <source>Unsupported type {0} decorated with [BindAs]</source>
+        <target state="new">Unsupported type {0} decorated with [BindAs]</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1049">
+        <source>Could not {0} type {1} from {2} {3} used on member {4} decorated with [BindAs].</source>
+        <target state="new">Could not {0} type {1} from {2} {3} used on member {4} decorated with [BindAs].</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1050">
+        <source>[BindAs] cannot be used inside Protocol or Model types. Type: {0}</source>
+        <target state="new">[BindAs] cannot be used inside Protocol or Model types. Type: {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1051">
+        <source>Internal error: Don't know how to get attributes for {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: Don't know how to get attributes for {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1052">
+        <source>Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1053">
+        <source>Internal error: unknown target framework '{0}'.</source>
+        <target state="new">Internal error: unknown target framework '{0}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1054">
+        <source>Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1055">
+        <source>Internal error: failed to convert type '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: failed to convert type '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1056">
+        <source>Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1057">
+        <source>Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1058">
+        <source>Internal error: could not find a constructor for the mock attribute '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: could not find a constructor for the mock attribute '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1059">
+        <source>Found {0} {1} attributes on the member {2}. At most one was expected.</source>
+        <target state="new">Found {0} {1} attributes on the member {2}. At most one was expected.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1060">
+        <source>The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].</source>
+        <target state="new">The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1061">
+        <source>The attribute '{0}' found on '{1}' is not a valid binding attribute. Please remove this attribute.</source>
+        <target state="new">The attribute '{0}' found on '{1}' is not a valid binding attribute. Please remove this attribute.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1062">
+        <source>The member '{0}.{1}' contains ref/out parameters and must not be decorated with [Async].</source>
+        <target state="new">The member '{0}.{1}' contains ref/out parameters and must not be decorated with [Async].</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1063">
+        <source>The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{0}.{1}'</source>
+        <target state="new">The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{0}.{1}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1064">
+        <source>Unsupported ref/out parameter type '{0}' for the parameter '{1}' in {2}.{3}.</source>
+        <target state="new">Unsupported ref/out parameter type '{0}' for the parameter '{1}' in {2}.{3}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1065">
+        <source>Unsupported parameter type '{0}' for the parameter '{1}' in {2}.{3}.</source>
+        <target state="new">Unsupported parameter type '{0}' for the parameter '{1}' in {2}.{3}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1066">
+        <source>Unsupported return type '{0}' in {1}.{2}.</source>
+        <target state="new">Unsupported return type '{0}' in {1}.{2}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1067">
+        <source>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', but the inlined properties don't share the same accessors ('{4}' is read-only, while '${5}' is write-only).</source>
+        <target state="new">The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', but the inlined properties don't share the same accessors ('{4}' is read-only, while '${5}' is write-only).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1068">
+        <source>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{6}', and {7}.{8} uses '{9}'.</source>
+        <target state="new">The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{6}', and {7}.{8} uses '{9}'.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1069">
+        <source>The type '{0}' is trying to inline the methods binding the selector '{1}' from the protocols '{2}' and '{3}', using methods with different signatures ('{4}' vs '{5}').</source>
+        <target state="new">The type '{0}' is trying to inline the methods binding the selector '{1}' from the protocols '{2}' and '{3}', using methods with different signatures ('{4}' vs '{5}').</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1070">
+        <source>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', but the inlined properties are of different types ('{4}' is {5}, while '{6}' is {7}).</source>
+        <target state="new">The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', but the inlined properties are of different types ('{4}' is {5}, while '{6}' is {7}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1071">
+        <source>The BindAs type for the member "{0}.{1}" must be an array when the member's type is an array.</source>
+        <target state="new">The BindAs type for the member "{0}.{1}" must be an array when the member's type is an array.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1072">
+        <source>The BindAs type for the parameter "{0}" in the method "{1}.{2}" must be an array when the parameter's type is an array.</source>
+        <target state="new">The BindAs type for the parameter "{0}" in the method "{1}.{2}" must be an array when the parameter's type is an array.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1073">
+        <source>Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1074">
+        <source> Missing [CoreImageFilterProperty] attribute on {0} property {1}</source>
+        <target state="new"> Missing [CoreImageFilterProperty] attribute on {0} property {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1075">
+        <source>Unimplemented CoreImage property type {0}</source>
+        <target state="new">Unimplemented CoreImage property type {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1076">
+        <source>Unable to find selector for {0} on {1} on self or base class</source>
+        <target state="new">Unable to find selector for {0} on {1} on self or base class</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1077">
+        <source>Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType</source>
+        <target state="new">Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType</target>
+        <note>A message for an asynchronous method with more than one result parameter. The following are literal names and should not be translated: ResultTypeName, ResultType
+{0} - The method name.
+		</note>
+      </trans-unit>
+      <trans-unit id="BI1078">
+        <source>{0} in method `{1}'</source>
+        <target state="new">{0} in method `{1}'</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1079">
+        <source>{0} in parameter `{1}' from {2}.{3}</source>
+        <target state="new">{0} in parameter `{1}' from {2}.{3}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1080">
+        <source>Unsupported type 'ref/out {0}' decorated with [BindAs]</source>
+        <target state="new">Unsupported type 'ref/out {0}' decorated with [BindAs]</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1081">
+        <source>Unable to find the assembly '{0}'. Add it as a reference using its full path.</source>
+        <target state="new">Unable to find the assembly '{0}'. Add it as a reference using its full path.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1101">
+        <source>Trying to use a string as a [Target]</source>
+        <target state="new">Trying to use a string as a [Target]</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1102">
+        <source>Using the deprecated 'EventArgs' for a delegate signature in {0}.{1}, please use 'DelegateName' instead.</source>
+        <target state="new">Using the deprecated 'EventArgs' for a delegate signature in {0}.{1}, please use 'DelegateName' instead.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1103">
+        <source>'{0}' does not live under a namespace; namespaces are a highly recommended .NET best practice</source>
+        <target state="new">'{0}' does not live under a namespace; namespaces are a highly recommended .NET best practice</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1104">
+        <source>Could not load the referenced library '{0}': {1}.</source>
+        <target state="new">Could not load the referenced library '{0}': {1}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1105">
+        <source>Potential selector/argument mismatch [Export ("{0}")] has {1} arguments and {2} has {3} arguments</source>
+        <target state="new">Potential selector/argument mismatch [Export ("{0}")] has {1} arguments and {2} has {3} arguments</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1106">
+        <source>The parameter {2} in the method {0}.{1} exposes a model ({3}). Please expose the corresponding protocol type instead ({4}.I{5}).</source>
+        <target state="new">The parameter {2} in the method {0}.{1} exposes a model ({3}). Please expose the corresponding protocol type instead ({4}.I{5}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1107">
+        <source>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</source>
+        <target state="new">The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1108">
+        <source>The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.</source>
+        <target state="new">The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1109">
+        <source>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</source>
+        <target state="new">The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1110">
+        <source>The property {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</source>
+        <target state="new">The property {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1111">
+        <source>Interface '{0}' on '{1}' is being ignored as it is not a protocol. Did you mean '{2}' instead?</source>
+        <target state="new">Interface '{0}' on '{1}' is being ignored as it is not a protocol. Did you mean '{2}' instead?</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1112">
+        <source>Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.</source>
+        <target state="new">Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1113">
+        <source>BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.</source>
+        <target state="new">BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1114">
+        <source>Binding error: test unable to find property: {0} on {1}</source>
+        <target state="new">Binding error: test unable to find property: {0} on {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1115">
+        <source>The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].</source>
+        <target state="new">The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1116">
+        <source>The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.</source>
+        <target state="new">The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1117">
+        <source>The member '{0}' is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.</source>
+        <target state="new">The member '{0}' is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1118">
+        <source>[NullAllowed] should not be used on methods, like '{0}', but only on properties, parameters and return values.</source>
+        <target state="new">[NullAllowed] should not be used on methods, like '{0}', but only on properties, parameters and return values.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1119">
+        <source>Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</source>
+        <target state="new">Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="default">
+        <source>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</source>
+        <target state="new">The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</target>
+        <note>
+			This is the default message when an error code can not be found.
+		</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="../Common.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CD172548-2120-4FDA-9323-534F7EB019E3}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MySpacedApp</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>MySpacedApp</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>None</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>None</MtouchLink>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchArch>ARM64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchArch>ARM64</MtouchArch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Folder\" />
+    <Folder Include="Resources\Archer\" />
+    <Folder Include="Resources\Archer\Archer_Attack.atlas\" />
+    <Folder Include="en.lproj\" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\libtest2.a">
+      <Kind>Static</Kind>
+      <Link>libtest2.a</Link>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="MySpacedAppViewController.cs" />
+    <Compile Include="MySpacedAppViewController.designer.cs">
+      <DependentUpon>MySpacedAppViewController.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="LinkedBundleResource.txt">
+      <Link>Folder\LinkedBundleResource.txt</Link>
+    </BundleResource>
+    <BundleResource Include="Folder\BundleResource.txt" />
+    <BundleResource Include="Resources\image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LinkedEmbeddedResource.txt">
+      <Link>Folder\LinkedEmbeddedResource.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Folder\EmbeddedResource.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Folder\Content.txt" />
+    <Content Include="LinkedContent.txt">
+      <Link>Folder\LinkedContent.txt</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="MainStoryboard.storyboard" />
+    <InterfaceDefinition Include="iPhoneView.xib" />
+    <InterfaceDefinition Include="en.lproj\TranslatedView.xib" />
+    <InterfaceDefinition Include="Folder\FolderView.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="iTunesArtwork" />
+    <ITunesArtwork Include="iTunesArtwork%402x" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small-40%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-568h%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0001.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0002.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0003.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0004.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0005.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0006.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0007.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0008.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0009.png" />
+    <AtlasTexture Include="Resources\Archer\Archer_Attack.atlas\archer_attack_0010.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

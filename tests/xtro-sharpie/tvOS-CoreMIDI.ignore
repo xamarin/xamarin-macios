@@ -1,0 +1,17 @@
+# CoreMIDI not supported for TV in Xcode14
+!missing-enum! MIDICVStatus not bound
+!missing-enum! MIDIMessageType not bound
+!missing-enum! MIDINetworkConnectionPolicy not bound
+!missing-enum! MIDINoteAttribute not bound
+!missing-enum! MIDINotificationMessageID not bound
+!missing-enum! MIDIObjectType not bound
+!missing-enum! MIDIPerNoteManagementOptions not bound
+!missing-enum! MIDIProgramChangeOptions not bound
+!missing-enum! MIDIProtocolID not bound
+!missing-enum! MIDISysExStatus not bound
+!missing-enum! MIDISystemStatus not bound
+!missing-enum! MIDITransformControlType not bound
+!missing-enum! MIDITransformType not bound
+!missing-enum! MIDIUtilityStatus not bound
+!missing-pinvoke! MIDIBluetoothDriverActivateAllConnections is not bound
+!missing-pinvoke! MIDIBluetoothDriverDisconnect is not bound

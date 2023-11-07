@@ -13,7 +13,10 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
     <XamMacArch>x86_64</XamMacArch>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,17 +68,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Stub.cs" />
-    <Compile Include="..\..\..\common\mac\MacTestMain.cs">
-      <Link>MacTestMain.cs</Link>
+    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\mac\MacMain.cs">
+      <Link>MacMain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
     </Compile>
     <Compile Include="..\..\CommonDontLinkTest.cs">
       <Link>CommonDontLinkTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\external\guiunit\src\framework\GuiUnit_NET_4_5.csproj">
-      <Project>{D12F0F7B-8DE3-43EC-BA49-41052D065A9B}</Project>
-      <Name>GuiUnit_NET_4_5</Name>
+    <ProjectReference Include="..\..\..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">
+      <Project>{88A8A1AC-0829-4C98-8F4A-9FC23DC42A06}</Project>
+      <Name>Touch.Client-macOS-mobile</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

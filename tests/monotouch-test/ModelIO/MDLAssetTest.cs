@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLAssert Unit Tests
 //
 // Authors:
@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 #if !MONOMAC
@@ -21,28 +20,21 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#if !__TVOS__
-using MonoTouch.MultipeerConnectivity;
-#endif
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
-using OpenTK;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO
-{
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
+
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLAssetTest
-	{
-		[TestFixtureSetUp]
+	public class MDLAssetTest {
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

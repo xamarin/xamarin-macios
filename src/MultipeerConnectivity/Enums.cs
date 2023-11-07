@@ -7,14 +7,12 @@
 //
 // Copyright 2013-2014, 2016 Xamarin, Inc.
 
-#if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
 using ObjCRuntime;
 
 namespace MultipeerConnectivity {
 
 	// NSInteger -> MCSession.h
-	[TV (10,0)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCSessionSendDataMode : long {
 		Reliable,
@@ -22,8 +20,7 @@ namespace MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCSession.h
-	[TV (10,0)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCSessionState : long {
 		NotConnected,
@@ -32,8 +29,7 @@ namespace MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCSession.h
-	[TV (10,0)]
-	[iOS (7,0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCEncryptionPreference : long {
 		Optional = 0,
@@ -42,12 +38,11 @@ namespace MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCError.h
-	[TV (10,0)]
-	[iOS (7,0)]
-	[Native]
+	[MacCatalyst (13, 1)]
+	[Native ("MCErrorCode")]
 	[ErrorDomain ("MCErrorDomain")]
 	public enum MCError : long {
-		Unknown ,
+		Unknown,
 		NotConnected,
 		InvalidParameter,
 		Unsupported,
@@ -56,4 +51,3 @@ namespace MultipeerConnectivity {
 		Unavailable
 	}
 }
-#endif

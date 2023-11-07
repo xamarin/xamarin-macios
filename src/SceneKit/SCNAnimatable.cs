@@ -14,17 +14,17 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreAnimation;
 
-namespace SceneKit
-{
+#nullable enable
+
+namespace SceneKit {
 	public partial class SCNAnimatable {
-		
-		public void AddAnimation (CAAnimation animation, string key = null)
+
+		public void AddAnimation (CAAnimation animation, string? key = null)
 		{
-			NSString nskey = key == null ? null : new NSString (key);
-			
+			var nskey = key is null ? null : new NSString (key);
+
 			AddAnimation (animation, nskey);
-			if (nskey != null)
-				nskey.Dispose ();
+			nskey?.Dispose ();
 		}
 	}
 }

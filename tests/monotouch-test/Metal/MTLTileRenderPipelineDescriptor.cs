@@ -1,18 +1,18 @@
-﻿#if __IOS__
+#if __IOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
+using ObjCRuntime;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLTileRenderPipelineDescriptorTests {
 		MTLTileRenderPipelineDescriptor descriptor = null;
 
@@ -20,13 +20,15 @@ namespace MonoTouchFixtures.Metal {
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 			descriptor = new MTLTileRenderPipelineDescriptor ();
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			if (descriptor != null)
+			if (descriptor is not null)
 				descriptor.Dispose ();
 			descriptor = null;
 		}
@@ -49,7 +51,7 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetRasterSampleCount ()
 		{
 			descriptor.RasterSampleCount = 2;
-			Assert.AreEqual (2, descriptor.RasterSampleCount);
+			Assert.AreEqual ((nuint) 2, descriptor.RasterSampleCount);
 		}
 
 		[Test]
@@ -74,7 +76,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
 			descriptor.MaxTotalThreadsPerThreadgroup = 10;
-			Assert.AreEqual (10, descriptor.MaxTotalThreadsPerThreadgroup);
+			Assert.AreEqual ((nuint) 10, descriptor.MaxTotalThreadsPerThreadgroup);
 		}
 	}
 }

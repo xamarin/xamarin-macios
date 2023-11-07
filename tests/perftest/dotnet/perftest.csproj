@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
+    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <MonoBundlingExtraArgs>--marshal-objectivec-exceptions:disable --registrar:static</MonoBundlingExtraArgs>
+    <LinkMode>None</LinkMode> <!-- never link -->
+    <Optimize>true</Optimize> <!-- always optimize -->
+    <SupportedOSPlatformVersion>10.15</SupportedOSPlatformVersion>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Include="System.Security.Permissions" Version="5.0.0" />
+    <PackageReference Include="System.Threading.AccessControl" Version="5.0.0" />
+    <PackageReference Include="System.CodeDom" Version="5.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="5.0.0" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="5.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../Info.plist">
+      <Link>Info.plist</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\bindings-test\dotnet\macOS\bindings-test.csproj" />
+  </ItemGroup>
+</Project>
+

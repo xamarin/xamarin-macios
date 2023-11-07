@@ -2,30 +2,24 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
 using CoreGraphics;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MapRectTest {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		[Test]
 		public void Defaults ()
 		{
@@ -35,13 +29,13 @@ namespace MonoTouchFixtures.MapKit {
 			Assert.False (rect.Spans180thMeridian, "default");
 			Assert.True (rect.Equals (rect), "Equals");
 			Assert.That (rect.ToString (), Is.EqualTo (@"{{0, 0}, {0, 0}}"), "default");
-			
+
 			MKMapRect rect2 = new MKMapRect ();
 			Assert.True (rect == rect2, "==");
 			Assert.False (rect != rect2, "!=");
 			Assert.That (rect.GetHashCode (), Is.EqualTo (rect2.GetHashCode ()), "GetHashCode");
 		}
-		
+
 		[Test]
 		public void ContainsPoint ()
 		{
@@ -77,10 +71,10 @@ namespace MonoTouchFixtures.MapKit {
 			MKMapRect rect1 = new MKMapRect (1, 2, 3, 4);
 			MKMapRect rect2 = new MKMapRect (2, 3, 2, 1);
 			Assert.True (MKMapRect.Intersects (rect1, rect2), "Intersects");
-			
+
 			MKMapRect n = MKMapRect.Intersection (rect1, rect2);
 			Assert.That (n.ToString (), Is.EqualTo (@"{{2, 3}, {2, 1}}"), "ToString");
-			
+
 			MKMapRect rect3 = new MKMapRect (-2, -3, 2, 1);
 			Assert.False (MKMapRect.Intersects (rect1, rect3), "!Intersects");
 			n = MKMapRect.Intersection (rect1, rect3);
@@ -93,12 +87,12 @@ namespace MonoTouchFixtures.MapKit {
 			MKMapRect rect = new MKMapRect (Double.PositiveInfinity, Double.PositiveInfinity, 0, 0);
 			MKMapRect rectin = rect.Inset (-1, 1);
 			Assert.True (rectin.IsNull, "IsNull");
-			
+
 			rect = new MKMapRect (1, 2, 3, 4);
 			rectin = rect.Inset (-1, 1);
 			Assert.That (rectin.ToString (), Is.EqualTo (@"{{0, 3}, {5, 2}}"), "ToString");
 		}
-		
+
 		[Test]
 		public void Offset ()
 		{
@@ -118,13 +112,13 @@ namespace MonoTouchFixtures.MapKit {
 			Assert.False (rect.Spans180thMeridian, "default");
 			MKMapRect remainder = rect.Remainder ();
 			Assert.True (remainder.IsNull, "IsNull");
-			
+
 			rect = new MKMapRect (-90, -90, 90, 90);
 			Assert.That (rect.Spans180thMeridian, Is.EqualTo (!TestRuntime.CheckXcodeVersion (5, 1)), rect.ToString ());
 			remainder = rect.Remainder ();
 			Assert.That (remainder.ToString (), Is.EqualTo (@"{{268435366, -90}, {90, 90}}"), "remainder");
 		}
-		
+
 		[Test]
 		public void Divide ()
 		{

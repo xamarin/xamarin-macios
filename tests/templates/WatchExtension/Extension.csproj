@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,9 +11,10 @@
     <RootNamespace>testextension</RootNamespace>
     <AssemblyName>testextension</AssemblyName>
     <SignAssembly>True</SignAssembly>
-    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos-extension</IntermediateOutputPath>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -26,7 +27,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs></MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
@@ -40,37 +41,9 @@
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs></MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Debug-watchos-extension</OutputPath>
-    <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs></MtouchExtraArgs>
-    <MtouchArch>ARMv7k,ARM64_32</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Debug-watchos-extension</OutputPath>
-    <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs></MtouchExtraArgs>
-    <MtouchArch>ARMv7k</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64_32|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -93,34 +66,6 @@
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v --nosymbolstrip</MtouchExtraArgs>
-    <MtouchArch>ARMv7k,ARM64_32</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchEnableBitcode>true</MtouchEnableBitcode>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Release-watchos-extension</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v --nosymbolstrip</MtouchExtraArgs>
-    <MtouchArch>ARMv7k</MtouchArch>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchEnableBitcode>true</MtouchEnableBitcode>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64_32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Release-watchos-extension</OutputPath>
-    <DefineConstants>MONOTOUCH;;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v -v -v --nosymbolstrip</MtouchExtraArgs>
     <MtouchArch>ARM64_32</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>true</MtouchUseLlvm>
@@ -131,8 +76,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.WatchOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Net.Http" />
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\watchOS\Touch.Client-watchOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-watchOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">

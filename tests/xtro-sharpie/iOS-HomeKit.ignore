@@ -1,5 +1,6 @@
-## API prohibited on iOS since Xcode 10
-!missing-selector! HMHome::removeUser:completionHandler: not bound
+# This is deprecated in Xcode 13.3 and its companion member is deprecated on 15.4
+!deprecated-attribute-wrong! HMHome::addAndSetupAccessoriesWithPayload:completionHandler: has 15.4 not 15.0 on [Deprecated] attribute
 
-## xcode11 marks it (in tvOS headers only!?!) as deprecated
-!missing-selector! HMAddAccessoryRequest::requiresOwnershipToken not bound
+# CHIP is not bound yet and will be only when is stable
+!missing-selector! HMAccessorySetupRequest::matterPayload not bound
+!missing-selector! HMAccessorySetupRequest::setMatterPayload: not bound

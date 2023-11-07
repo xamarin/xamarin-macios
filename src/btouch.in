@@ -1,3 +1,0 @@
-#!/bin/sh
-MONO_PATH=@MONOTOUCH_PREFIX@/lib/mono/2.1 @MONOTOUCH_PREFIX@/bin/btouch-mono --debug @MONOTOUCH_PREFIX@/lib/btouch/btouch.exe --target-framework=MonoTouch,v1.0 "$@"
-

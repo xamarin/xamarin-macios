@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="N0001" xml:space="preserve">
+		<value>IConvertible interfaces are not supported yet. If this code gets called, it will fail. Consider contacting the library maintainer to request a dotnet 6 upgrade.</value>
+	</data>
+
+	<data name="N0002" xml:space="preserve">
+		<value>CopyArray for nuint is not supported yet. If this method is called, it will not function correctly.</value>
+	</data>
+
+	<data name="N0003" xml:space="preserve">
+		<value>Package does not need changes - no output generated.</value>
+	</data>
+
+	<data name="N0004" xml:space="preserve">
+		<value>In {0}.{1}, found reference to {2}. Added {3} IL instructions and removed {4} IL instructions.</value>
+	</data>
+
+	<data name="N0005" xml:space="preserve">
+		<value>In {0}.{1}, found reference to {2}. Added {3} IL instructions.</value>
+	</data>
+
+	<data name="N0006" xml:space="preserve">
+		<value>In {0}.{1}, found reference to {2} - this is not transformable and will likely not work if invoked.</value>
+	</data>
+
+	<data name="N0007" xml:space="preserve">
+		<value>nnyeah is a tool for converting legacy Xamarin assemblies (pre .NET 6)
+to work with .NET 6 or later. It does this by scanning the --input assembly for
+dependencies of legacy methods, types, or fields and converts them to references
+in the --microsoft-assembly and writes the result in the --ouput assembly.
+nnyeah attempts to find the legacy Xamarin assembly automatically. If it can't
+find it, you will need to supply a path to it with the --xamarin-assembly
+argument.
+nnyeah needs to have a path to target Microsoft assembly using the
+--microsoft-assembly argument. If you do not have a specific version in mind,
+you can use this command for iOS:
+find $(dirname $(which dotnet)) -name Microsoft.iOS.dll -print | grep ref
+or this command for macOS:
+find $(dirname $(which dotnet)) -name Microsoft.macOS.dll -print | grep ref
+These commands may list more than one choice. You will probably want to use the
+one with the highest version.
+Example invocation for an assembly that originally targets Xamarin.iOS.dll:
+dotnet nnyeah --input=/path/to/AssemblyToConvert.dll \
+              --output=/path/to/Converted.dll \
+	      --microsoft-assembly=/path/to/Microsoft.iOS.dll
+		</value>
+	</data>
+
+	<data name="N0008" xml:space="preserve">
+		<value>Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
+
+	<data name="N0009" xml:space="preserve">
+		<value>Type {0} inherits from the type {1} which is in a separate assembly which will also need conversion</value>
+	</data>
+	
+	<data name="E0001" xml:space="preserve">
+		<value>Input file '{0}' doesn't exist.</value>
+	</data>
+
+	<data name="E0002" xml:space="preserve">
+		<value>Output file '{0}' already exists. Use '--force-overwrite' if you want to overwrite it.</value>
+	</data>
+
+	<data name="E0003" xml:space="preserve">
+		<value>Unable to read module from file {0}: {1}.</value>
+	</data>
+
+	<data name="E0004" xml:space="preserve">
+		<value>Unable to generate output file, unexpected exception: {0}.</value>
+	</data>
+
+	<data name="E0005" xml:space="preserve">
+		<value>Module is not loaded. Call Load first.</value>
+	</data>
+	<data name="E0006" xml:space="preserve">
+		<value>Unable to open file {0} {1}</value>
+	</data>
+	<data name="E0007" xml:space="preserve">
+		<value>This should never happen.</value>
+	</data>
+	<data name="E0008" xml:space="preserve">
+		<value>Unexpected visit kind: {0}.</value>
+	</data>
+	<data name="E0009" xml:space="preserve">
+		<value>After visiting, type stack is not empty. This is bad.</value>
+	</data>
+	<data name="E0010" xml:space="preserve">
+		<value>Type {0} not found.</value>
+	</data>
+	<data name="E0011" xml:space="preserve">
+		<value>Error while attempting to compare assemblies: {0}</value>
+	</data>
+	<data name="E0012" xml:space="preserve">
+		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
+	</data>
+	<data name="E0013" xml:space="preserve">
+		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
+	</data>
+	<data name="E0014" xml:space="preserve">
+		<value>File for conversion (--input) and output location (--output) are required options.</value>
+	</data>
+	<data name="E0015" xml:space="preserve">
+		<value>Support legacy and NET assemblies --xamarin-assembly and --microsoft-assembly are currently required options.</value>
+	</data>
+	<data name="E0016" xml:space="preserve">
+		<value>Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported.</value>
+	</data>
+	<data name="E0017" xml:space="preserve">
+		<value>Error while attempting to map member {0} in old assembly. This code uses a constructor that took an IntPtr and used to be public and is now likely an internal constructor. It is no longer available. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+	</data>
+	<data name="E0018" xml:space="preserve">
+		<value>The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported.</value>
+	</data>
+	<data name="E0019" xml:space="preserve">
+		<value>The legacy platform assembly {0} does not exist at the expected location. You will need to either install it or pass a path to nnyeah using the --xamarin-assembly argument.</value>
+	</data>
+</root>
+

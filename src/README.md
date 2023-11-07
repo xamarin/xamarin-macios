@@ -32,7 +32,7 @@ corresponding profile.
 Two special `make` targets can be used to compare the generated code (.g.cs files) changes between two branches.  
 This is **required** when making changes to the generator.
 
-1. Checkout the clean base branch (e.g master's HEAD) the feature (target) branch is based on.
+1. Checkout the clean base branch (e.g main's HEAD) the feature (target) branch is based on.
 2. Do `make generator-reference` in `xamarin-macios/src`.
 3. Checkout the feature branch that requires the diff.
 4. Do `make generator-diff`.
@@ -44,14 +44,12 @@ Conditional compilation
 
 These are the symbols defined for each platform assembly:
 
-| Assembly            | Symbols                                        |
-| ------------------  | -----------                                    |
-| monotouch.dll       | IPHONE MONOTOUCH IOS                           |
-| Xamarin.iOS.dll     | IPHONE MONOTOUCH IOS XAMCORE_2_0               |
-| XamMac.dll          | MONOMAC XAMARIN_MAC                            |
-| Xamarin.Mac.dll     | MONOMAC XAMARIN_MAC XAMCORE_2_0                |
-| Xamarin.WatchOS.dll | IPHONE MONOTOUCH WATCH XAMCORE_2_0 XAMCORE_3_0 |
-| Xamarin.TVOS.dll    | IPHONE MONOTOUCH TVOS XAMCORE_2_0 XAMCORE_3_0  |
+| Assembly            | Symbols                            |
+| ------------------  | -----------                        |
+| Xamarin.iOS.dll     | IPHONE MONOTOUCH IOS               |
+| Xamarin.Mac.dll     | MONOMAC                            |
+| Xamarin.WatchOS.dll | IPHONE MONOTOUCH WATCH XAMCORE_3_0 |
+| Xamarin.TVOS.dll    | IPHONE MONOTOUCH TVOS XAMCORE_3_0  |
 
 To build core for only one platform, use the platform unique variables `IOS`, `MONOMAC`, `WATCH` or `TVOS`.
 
@@ -108,8 +106,9 @@ We have introduced 6 new types to make this possible:
 | `CGRect`      | `System.Drawing.RectangleF` | `CoreGraphics.CGRect`    |
 
 In the Classic assembly, the `System.Drawing` types are backed by the 32-bit
-`System.Single` type. In the Unified assemblies, the `CoreGraphics` types
-are backed by 32/64-bit `System.nfloat` type.
+`System.Single` type. In the Unified assemblies, the `CoreGraphics` types are
+backed by 32/64-bit `System.nfloat` type
+(`System.Runtime.InteropServices.NFloat` in .NET).
 
 #### Enums ####
 
@@ -181,7 +180,6 @@ conditional compilation:
 | `MONOMAC` | defined for Xamarin.Mac builds; not defined for Xamarin.iOS |
 | `ARCH_32` | defined when the target architecture is 32-bit; this will be defined for Classic and the Unified 32-bit assemblies |
 | `ARCH_64` | defined when the target architecture is 64-bit; this will be defined only for the Unified 64-bit assembly |
-| `XAMCORE_2_0` | defined for the Unified assemblies; this should be used for most conditions dealing with API differences between Unified and Classic assemblies |
 | `COREBUILD` | defined when building the intermediate `core.dll` assembly against which the code generator will produce bindings |
 
 For example, to build an API for all of iOS but only 64-bit OS X (Xamarin.Mac):
@@ -191,3 +189,14 @@ For example, to build an API for all of iOS but only 64-bit OS X (Xamarin.Mac):
 ...
 #endif
 ```
+
+
+## Source Localization ##
+Coming soon!
+
+See [Localization Wiki][Localization-wiki] for more details on our localization process
+
+or the [OneLocBuild Wiki][OneLocBuild-wiki] for information on OneLocBuild.
+
+[Localization-wiki]: https://github.com/xamarin/maccore/wiki/Localization
+[OneLocBuild-wiki]: https://ceapex.visualstudio.com/CEINTL/_wiki/wikis/CEINTL.wiki/107/Localization-with-OneLocBuild-Task

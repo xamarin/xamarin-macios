@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-script minSpecVersion="1.000000" authoringTool="com.apple.PackageMaker" authoringToolVersion="3.0.4" authoringToolBuild="179">
+    <title>Xamarin.iOS</title>
+    <options customize="never" allow-external-scripts="no"/>
+    <domains enable_localSystem="true"/>
+    <installation-check script="os_check();"/>
+    <script><![CDATA[
+function os_check() {
+    if(!(system.compareVersions(system.version.ProductVersion, '10.7.0') >= 0)) {
+        my.result.title = 'Minimum Operating System Check';
+        my.result.message = 'This version of Xamarin.iOS requires OSX Lion (10.7) or later';
+        my.result.type = 'Fatal';
+        return false;
+    }
+    return true;
+}
+    ]]></script>
+    <license file="License.txt"/>
+    <choices-outline>
+        <line choice="choice0"/>
+        <line choice="choice1"/>
+    </choices-outline>
+    <choice id="choice0" title="Install Xamarin.iOS" description="Install Xamarin.iOS @PACKAGE_VERSION@">
+        <pkg-ref id="com.xamarin.monotouch.pkg"/>
+    </choice>
+    <choice id="choice1" title="Remove Xamarin.iOS Build host for Visual Studio" description="Remove Xamarin.iOS Build host for Visual Studio">
+        <pkg-ref id="com.xamarin.xamarin-ios-build-host.pkg"/>
+    </choice>
+    <pkg-ref id="com.xamarin.monotouch.pkg" installKBytes="@INSTALLKBYTES@" version="1" auth="Root">#monotouch.pkg</pkg-ref>
+    <pkg-ref id="com.xamarin.xamarin-ios-build-host.pkg" installKBytes="@INSTALLBYTES_MTVS@" version="1" auth="Root">#delete-xma-build-host.pkg</pkg-ref>
+</installer-script>

@@ -1,11 +1,7 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 

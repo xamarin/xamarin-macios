@@ -10,25 +10,11 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -39,7 +25,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Defaults ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var lm = new NSLayoutManager ()) {
 				Assert.False (lm.AllowsNonContiguousLayout, "AllowsNonContiguousLayout");
@@ -49,7 +35,9 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (lm.FirstUnlaidCharacterIndex, Is.EqualTo ((nuint) 0), "FirstUnlaidCharacterIndex");
 				Assert.That (lm.FirstUnlaidGlyphIndex, Is.EqualTo ((nuint) 0), "FirstUnlaidGlyphIndex");
 				Assert.False (lm.HasNonContiguousLayout, "HasNonContiguousLayout");
+#if !__MACCATALYST__
 				Assert.That (lm.HyphenationFactor, Is.EqualTo ((nfloat) 0), "HyphenationFactor");
+#endif
 				Assert.That (lm.NumberOfGlyphs, Is.EqualTo ((nuint) 0), "NumberOfGlyphs");
 				Assert.False (lm.ShowsControlCharacters, "ShowsControlCharacters");
 				Assert.False (lm.ShowsInvisibleCharacters, "ShowsInvisibleCharacters");
@@ -63,14 +51,14 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void GetGlyphsTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var txt = new NSTextStorage ()) {
 				var str = "hello world\n\t";
 				txt.SetString (new NSAttributedString (str));
 				using (var lm = new NSLayoutManager ()) {
 					lm.TextStorage = txt;
-					var glyphs = new short[str.Length];
+					var glyphs = new short [str.Length];
 					var props = new NSGlyphProperty [glyphs.Length];
 					var charIndexBuffer = new nuint [glyphs.Length];
 					var bidiLevelBuffer = new byte [glyphs.Length];
@@ -101,7 +89,7 @@ namespace MonoTouchFixtures.UIKit {
 				txt.SetString (new NSAttributedString (str));
 				using (var lm = new NSLayoutManager ()) {
 					lm.TextStorage = txt;
-					var glyphs = new short[str.Length];
+					var glyphs = new short [str.Length];
 					var charIndexBuffer = new nuint [glyphs.Length];
 					var bidiLevelBuffer = new byte [glyphs.Length];
 					lm.GetGlyphs (new NSRange (0, str.Length), glyphs, null, charIndexBuffer, bidiLevelBuffer);

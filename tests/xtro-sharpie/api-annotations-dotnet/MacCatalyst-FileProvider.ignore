@@ -1,0 +1,3 @@
+# Documentation as of Xcode 13 as macOS only
+!missing-enum! NSFileProviderFileSystemFlags not bound
+!missing-enum! NSFileProviderDomainTestingModes not bound

@@ -10,28 +10,24 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkAll.Interfaces {
 
-	interface I	{
+	interface I {
 		void Foo ();
 		void Bar ();
 	}
-	
+
 	class A : I {
-		public void Foo () {}
-		public void Bar () {}
+		public void Foo () { }
+		public void Bar () { }
 	}
-	
+
 	class B : I {
-		public void Foo () {}
-		public void Bar () {}
+		public void Foo () { }
+		public void Bar () { }
 	}
 
 	class UTF8Marshaler : ICustomMarshaler {
@@ -92,7 +88,19 @@ namespace LinkAll.Interfaces {
 
 			// Foo and Bar are never used on B - so they can be removed
 			Assert.Null (type_b.GetMethod ("Foo", BindingFlags.Instance | BindingFlags.Public), "B::Foo");
+#if !NET // This is actually a bug in the linker that's been fixed in .NET
 			Assert.Null (type_b.GetMethod ("Bar", BindingFlags.Instance | BindingFlags.Public), "B::Bar");
+#endif
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9566")]
+#endif
+		public void Issue9566 ()
+		{
+			var ifaces = (I []) (object) new B [0];
+			Assert.IsNotNull (ifaces, "Array cast");
 		}
 
 		[DllImport ("/usr/lib/system/libsystem_dnssd.dylib")]

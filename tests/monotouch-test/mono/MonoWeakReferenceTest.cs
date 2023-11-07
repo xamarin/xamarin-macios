@@ -1,4 +1,4 @@
-﻿//
+//
 // Port of mono's unit tests for WeakAttribute from:
 // https://github.com/mono/mono/blob/5bdaef7e5f6479cc4336bb809b419e85ad706dd7/mono/tests/weak-fields.cs
 //
@@ -10,15 +10,11 @@
 // Copyright 2018 Xamarin Inc. All rights reserved.
 //
 
+#if !NET // WeakAttribute is not supported in .NET
 using System;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
@@ -67,8 +63,10 @@ namespace MonoTouchFixtures {
 			//Finalizable.debug = true;
 			var t = new Test ();
 
-			FinalizerHelpers.PerformNoPinAction (delegate () {
-				FinalizerHelpers.PerformNoPinAction (delegate () {
+			FinalizerHelpers.PerformNoPinAction (delegate ()
+			{
+				FinalizerHelpers.PerformNoPinAction (delegate ()
+				{
 					t.Obj = new Finalizable ();
 					t.Obj2 = new Finalizable ();
 					t.Obj3 = new Finalizable ();
@@ -92,7 +90,8 @@ namespace MonoTouchFixtures {
 					new OneField ();
 
 				Exception ex = null;
-				FinalizerHelpers.PerformNoPinAction (delegate () {
+				FinalizerHelpers.PerformNoPinAction (delegate ()
+				{
 					try {
 						// This must be done on a separate thread so that the 'Test.retain' value doesn't
 						// show up on the main thread's stack as a temporary value in registers the
@@ -146,3 +145,4 @@ namespace MonoTouchFixtures {
 		int x;
 	}
 }
+#endif // !NET

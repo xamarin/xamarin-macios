@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <IsBindingProject>true</IsBindingProject>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <Import Project="../Common.props" />
+
+  <ItemGroup>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XTest.framework">
+      <Kind>Framework</Kind>
+      <Link>XTest.framework</Link>
+    </NativeReference>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
+      <Kind>Framework</Kind>
+      <Link>XStaticObjectTest.framework</Link>
+      <LinkerFlags>-lz</LinkerFlags>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+    </NativeReference>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
+      <Kind>Framework</Kind>
+      <Link>XStaticArTest.framework</Link>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(RepositoryPath)\tests\test-libraries\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(RepositoryPath)\tests\test-libraries\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="$(RepositoryPath)\tests\test-libraries\libframework.m" Outputs="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XTest.framework;$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework;$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XSharedArTest.framework">
+    <Exec Command="make -j8 -C $(RepositoryPath)\tests\test-libraries" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(RepositoryPath)\tests\bindings-framework-test\ApiDefinition.cs">
+      <Link>ApiDefinition.cs</Link>
+    </ObjcBindingApiDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="$(RepositoryPath)\tests\bindings-framework-test\StructsAndEnums.cs">
+      <Link>StructsAndEnums.cs</Link>
+    </ObjcBindingCoreSource>
+  </ItemGroup>
+</Project>

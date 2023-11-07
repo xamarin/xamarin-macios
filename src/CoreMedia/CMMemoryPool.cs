@@ -6,6 +6,8 @@
 // Copyright 2012-2014 Xamarin Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -15,55 +17,31 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-	[Watch (6,0)]
-	public partial class CMMemoryPool : IDisposable, INativeObject
-	{
-		IntPtr handle;
-
-		[DllImport(Constants.CoreMediaLibrary)]
+	public partial class CMMemoryPool : NativeObject {
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMMemoryPoolRef */ IntPtr CMMemoryPoolCreate (/* CFDictionaryRef */ IntPtr options);
 
 		public CMMemoryPool ()
+			: base (CMMemoryPoolCreate (IntPtr.Zero), true)
 		{
-			handle = CMMemoryPoolCreate (IntPtr.Zero);
 		}
 
 #if !COREBUILD
-		public CMMemoryPool (TimeSpan ageOutPeriod)
+		static IntPtr Create (TimeSpan ageOutPeriod)
 		{
 			using (var n = new NSNumber (ageOutPeriod.TotalSeconds))
 			using (var dict = new NSDictionary (AgeOutPeriodSelector, n)) {
-				handle = CMMemoryPoolCreate (dict.Handle);
+				return CMMemoryPoolCreate (dict.Handle);
 			}
+		}
+
+		public CMMemoryPool (TimeSpan ageOutPeriod)
+			: base (Create (ageOutPeriod), true)
+		{
 		}
 #endif
 
-		~CMMemoryPool ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero){
-				CFObject.CFRelease (Handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		public IntPtr Handle { 
-			get {
-				return handle;
-			}
-		}
-
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CFAllocatorRef */ IntPtr CMMemoryPoolGetAllocator (/* CMMemoryPoolRef */ IntPtr pool);
 
 		public CFAllocator GetAllocator ()
@@ -71,7 +49,7 @@ namespace CoreMedia {
 			return new CFAllocator (CMMemoryPoolGetAllocator (Handle), false);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMMemoryPoolFlush (/* CMMemoryPoolRef */ IntPtr pool);
 
 		public void Flush ()
@@ -79,7 +57,7 @@ namespace CoreMedia {
 			CMMemoryPoolFlush (Handle);
 		}
 
-		[DllImport(Constants.CoreMediaLibrary)]
+		[DllImport (Constants.CoreMediaLibrary)]
 		extern static void CMMemoryPoolInvalidate (/* CMMemoryPoolRef */ IntPtr pool);
 
 		public void Invalidate ()

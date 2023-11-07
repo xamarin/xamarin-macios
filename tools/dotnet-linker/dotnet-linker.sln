@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-linker", "dotnet-linker.csproj", "{7F7392F4-AB2D-4153-B591-46C79501B3C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7F7392F4-AB2D-4153-B591-46C79501B3C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F7392F4-AB2D-4153-B591-46C79501B3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F7392F4-AB2D-4153-B591-46C79501B3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F7392F4-AB2D-4153-B591-46C79501B3C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

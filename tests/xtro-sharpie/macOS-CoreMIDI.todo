@@ -1,0 +1,6 @@
+!missing-pinvoke! MIDIEventListForEachEvent is not bound
+!missing-field! kMIDIPropertyUMPActiveGroupBitmap not bound
+!missing-field! kMIDIPropertyUMPCanTransmitGroupless not bound
+!missing-pinvoke! MIDIEventPacketSysexBytesForGroup is not bound
+!missing-pinvoke! MIDISendUMPSysex is not bound
+!missing-pinvoke! MIDISendUMPSysex8 is not bound

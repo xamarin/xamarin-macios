@@ -25,7 +25,6 @@
 //
 
 #if !WATCH
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Threading.Tasks;
 using System.Threading;
@@ -34,32 +33,33 @@ using Foundation;
 using ObjCRuntime;
 using CoreLocation;
 
+#nullable enable
+
 namespace MapKit {
 	public partial class MKGeodesicPolyline {
 		public static unsafe MKGeodesicPolyline FromPoints (MKMapPoint [] points)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (points.Length == 0)
 				return PolylineWithPoints (IntPtr.Zero, 0);
 
-			fixed (MKMapPoint *first = &points [0]){
+			fixed (MKMapPoint* first = &points [0]) {
 				return PolylineWithPoints ((IntPtr) first, points.Length);
 			}
 		}
 
 		public static unsafe MKGeodesicPolyline FromCoordinates (CLLocationCoordinate2D [] coords)
 		{
-			if (coords == null)
-				throw new ArgumentNullException ("coords");
+			if (coords is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (coords));
 			if (coords.Length == 0)
 				return PolylineWithCoordinates (IntPtr.Zero, 0);
 
-			fixed (CLLocationCoordinate2D *first = &coords [0]){
+			fixed (CLLocationCoordinate2D* first = &coords [0]) {
 				return PolylineWithCoordinates ((IntPtr) first, coords.Length);
 			}
 		}
 	}
 }
-#endif
 #endif // !WATCH

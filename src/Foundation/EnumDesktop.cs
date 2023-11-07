@@ -25,11 +25,11 @@
 // FIXME: EnumDesktop.cs should be merged into Enums.cs
 using System;
 
-#if MONOMAC
-
 using ObjCRuntime;
 
 namespace Foundation {
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[Internal]
 	internal enum NSAttributedStringDataType {
 		RTF,
 		RTFD,
@@ -37,41 +37,31 @@ namespace Foundation {
 		DocFormat
 	}
 
-	// Utility enum, ObjC uses NSString.  Not passed to the API, so doesn't need nint.
-	public enum NSDocumentType {
-		Unknown = -1,
-		PlainText,
-		RTF,
-		RTFD,
-		HTML,
-		MacSimpleText,
-		DocFormat,
-		WordML,
-		OfficeOpenXml,
-		WebArchive,
-		OpenDocument
-	}
-
 	// NSTask.h:typedef NS_ENUM(NSInteger, NSTaskTerminationReason)
 	[Native]
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	public enum NSTaskTerminationReason : long {
 		Exit = 1,
 		UncaughtSignal = 2
 	}
 
 	// The following constants where taken from MonoDevelop Carbon.cs MacInterop file
+	[NoiOS, NoTV, NoWatch]
+	[MacCatalyst (13, 1)]
 	public enum AEEventID : uint {
 		OpenApplication = 1868656752, // 'oapp'
 		ReopenApplication = 1918988400, //'rapp'
 		OpenDocuments = 1868853091, // 'odoc'
 		PrintDocuments = 188563030, // 'pdoc'
 		OpenContents = 1868787566, // 'ocon'
-		QuitApplication =  1903520116, // 'quit'
+		QuitApplication = 1903520116, // 'quit'
 		ShowPreferences = 1886545254, // 'pref'
 		ApplicationDied = 1868720500, // 'obit'
 		GetUrl = 1196773964, // 'GURL'
 	}
 
+	[NoiOS, NoTV, NoWatch]
+	[MacCatalyst (13, 1)]
 	public enum AEEventClass : uint {
 		Mouse = 1836021107, // 'mous'
 		Keyboard = 1801812322, // 'keyb'
@@ -95,6 +85,7 @@ namespace Foundation {
 	}
 
 	// Added from NSUserNotification.h
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Native]
 	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	public enum NSUserNotificationActivationType : long {
@@ -105,10 +96,10 @@ namespace Foundation {
 		AdditionalActionClicked = 4
 	}
 
-	[Mac (10,11)]
-	[Native][Flags]
-	public enum NSAppleEventSendOptions : ulong
-	{
+	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+	[Native]
+	[Flags]
+	public enum NSAppleEventSendOptions : ulong {
 		NoReply = 0x00000001, // kAENoReply,
 		QueueReply = 0x00000002, // kAEQueueReply,
 		WaitForReply = 0x00000003, // kAEWaitReply,
@@ -122,5 +113,3 @@ namespace Foundation {
 		DefaultOptions = WaitForReply | CanInteract
 	}
 }
-
-#endif // MONOMAC

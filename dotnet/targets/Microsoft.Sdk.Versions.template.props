@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<CurrentBranch>@CURRENT_BRANCH@</CurrentBranch>
+		<CurrentHash>@CURRENT_HASH_LONG@</CurrentHash>
+
+		<_ShortPackageVersion>@NUGET_VERSION_NO_METADATA@</_ShortPackageVersion>
+		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
+		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
+		<_XamarinIsPreviewRelease>@XCODE_IS_PREVIEW@</_XamarinIsPreviewRelease>
+	</PropertyGroup>
+
+	<ItemGroup>@VALID_RUNTIME_IDENTIFIERS@
+	</ItemGroup>
+
+	<!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
+	<ItemGroup>
+		<KnownFrameworkReference
+			Include="Microsoft.@PLATFORM@"
+			TargetFramework="@DOTNET_TFM@"
+			RuntimeFrameworkName="Microsoft.@PLATFORM@"
+			DefaultRuntimeFrameworkVersion="@NUGET_VERSION_NO_METADATA@"
+			LatestRuntimeFrameworkVersion="@NUGET_VERSION_NO_METADATA@"
+			TargetingPackName="Microsoft.@PLATFORM@.Ref"
+			TargetingPackVersion="@NUGET_VERSION_NO_METADATA@"
+			RuntimePackNamePatterns="Microsoft.@PLATFORM@.Runtime.**RID**"
+			RuntimePackRuntimeIdentifiers="@RUNTIME_PACK_RUNTIME_IDENTIFIERS@"
+			Profile="@PLATFORM@"
+		/>
+	</ItemGroup>
+</Project>

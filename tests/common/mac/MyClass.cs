@@ -1,13 +1,11 @@
-﻿using System;
+using System;
 
-namespace Library
-{
-	public class MyClass
-	{
+namespace Library {
+	public class MyClass {
 		public MyClass ()
 		{
 		}
 	}
 }
 
-%CODE%
+REPLACE_CODE_REPLACE

@@ -9,14 +9,9 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using AppKit;
 using CoreImage;
-#else
-using MonoMac.AppKit;
-using MonoMac.CoreImage;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
@@ -24,7 +19,42 @@ using Xamarin.Tests;
 namespace Introspection {
 
 	[TestFixture]
-	public class MonoMacFixtures : ApiProtocolTest {
+	public class MacApiProtocolTest : ApiProtocolTest {
+
+		protected override bool Skip (Type type)
+		{
+#if !NET
+			switch (type.Namespace) {
+			case "Chip":
+				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
+				// This is legacy Xamarin only, because we removed the framework for .NET.
+				return true;
+			}
+#endif
+
+			switch (type.Name) {
+#if !NET
+			case "NSDraggingInfo":
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for .NET.
+#endif
+			// special cases wrt sandboxing
+			case "NSRemoteOpenPanel":
+			case "NSRemoteSavePanel":
+				return true;
+			case "AVCaptureSynchronizedDataCollection":
+			case "AVCaptureSynchronizedData":
+			case "CXProvider":
+				return TestRuntime.IsVM; // skip only on vms
+#if !NET // NSMenuView does not exist in .NET
+			case "NSMenuView": // not longer supported
+				return true;
+#endif // !NET
+			case "ASAuthorizationProviderExtensionRegistrationHandler":
+				return true;
+			default:
+				return base.Skip (type);
+			}
+		}
 
 		protected override bool Skip (Type type, string protocolName)
 		{
@@ -68,7 +98,7 @@ namespace Introspection {
 				case "NSFetchRequest": // Not declared in header file
 				case "NSManagedObjectModel": // Not declared in header file
 				case "NSUserInterfaceCompressionOptions": // Not declared in header file
-				// Xcode 10 (running on macOS 10.14)
+														  // Xcode 10 (running on macOS 10.14)
 				case "NSTextAlternatives":
 				case "QTDataReference": // no header files anymore for deprecated QuickTime
 				case "NSTextBlock":
@@ -86,19 +116,47 @@ namespace Introspection {
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
 					return true;
-#if !UNIFIED
-				// existing classic/old binary is not updated
-				case "NSAppearance":
-				case "NSBezierPath":
-				case "NSFileWrapper":
-				case "NSGradient":
-				case "NSSound":
-				case "NSShadow":
+				// macOS 10.15.2
+				case "NSPrintInfo": // Conformance not in headers
+				case "NSPrinter": // Conformance not in headers
 					return true;
-#endif
+				// Xcode 12.5
+				case "CXCall": // Conformance not in headers
+				case "CXCallUpdate": // Conformance not in headers
+				case "CXProviderConfiguration": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
+				case "MEComposeSession":
+				case "MEComposeContext":
+				// xcode 14
+				case "SNClassifySoundRequest":
+				case "PKInk":
+				case "VSUserAccount":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "HKAudiogramSensitivityPoint":
+				// xcode 15
+				case "NSCompositeAttributeDescription":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "NSCursor":
+					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
-					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof(CIFilter) || type.IsSubclassOf (typeof(CIFilter))))
+					if (!Mac.CheckSystemVersion (10, 11) && (type == typeof (CIFilter) || type.IsSubclassOf (typeof (CIFilter))))
 						return true;
 					break;
 				}
@@ -117,10 +175,46 @@ namespace Introspection {
 				case "ACAccount": // Not declared in header file
 				case "NEFlowMetaData": // Not declared in header file
 				case "ACAccountCredential": // Not declared in header file
-				// Xcode 11 (running on macOS 10.15)
+											// Xcode 11 (running on macOS 10.15)
 				case "NSCollectionViewUpdateItem": // Not declared in header file
 				case "MLPredictionOptions": // Not declared in header file
 				case "FPUIActionExtensionContext": // Conformance not in headers
+												   // Xcode 12.5
+				case "CXCall": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "PHCloudIdentifier":
+				case "NSMergePolicy":
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSPropertyMapping":
+				case "HMAccessoryOwnershipToken":
+				case "MEComposeSession":
+				// xcode 14
+				case "SNClassifySoundRequest":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCStreamConfiguration":
+				case "SCWindow":
+				case "HKAudiogramSample":
+				case "HKCategorySample":
+				case "HKCdaDocumentSample":
+				case "HKCorrelation":
+				case "HKCumulativeQuantitySample":
+				case "HKDiscreteQuantitySample":
+				case "HKDocumentSample":
+				case "HKElectrocardiogram":
+				case "HKObject":
+				case "HKQuantitySample":
+				case "HKSample":
+				case "HKWorkout":
+				// xcode 15
+				case "MEMessage":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
 					return true;
 				}
 				break;
@@ -137,6 +231,10 @@ namespace Introspection {
 				case "EKRecurrenceRule": // Not declared in header file
 				case "EKReminder": // Not declared in header file
 				case "INPerson": // Not declared in header file
+					return true;
+				// xcode 13 / macOS 12
+				case "NSMergePolicy":
+				case "UNNotificationSettings":
 					return true;
 				}
 				break;
@@ -168,7 +266,7 @@ namespace Introspection {
 				case "NSConstraintConflict": // Not declared in header file
 				case "NSQueryGenerationToken": // Declared in header file but SupportsSecureCoding returns false - radar 32856944
 				case "NSPersistentHistoryToken": // Conformance not in headers
-				// Xcode 10 (running on macOS 10.14)
+												 // Xcode 10 (running on macOS 10.14)
 				case "NSTextAlternatives":
 				// Xcode 11 (running on macOS 10.15)
 				case "ICHandle": // Conformance not in headers
@@ -181,6 +279,36 @@ namespace Introspection {
 				case "NSUrlSessionTaskTransactionMetrics": // Conformance not in headers
 				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
+												   // Xcode 12.5
+				case "CXCall": // Conformance not in headers
+				case "CXCallUpdate": // Conformance not in headers
+				case "CXProviderConfiguration": // Conformance not in headers
+					return true;
+				// xcode 13 / macOS 12
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
+				case "OSLogMessageComponent":
+				case "NSImageSymbolConfiguration":
+				case "NSMergePolicy":
+				case "MEComposeContext":
+				// xcode 14 
+				case "SNClassifySoundRequest":
+				case "PKInk":
+				case "VSUserAccount":
+				case "SCContentFilter":
+				case "SCDisplay":
+				case "SCRunningApplication":
+				case "SCWindow":
+				case "HKAudiogramSensitivityPoint":
+				// xcode 15
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
 					return true;
 				}
 				break;
@@ -195,7 +323,7 @@ namespace Introspection {
 				break;
 			case "NSUserInterfaceItemIdentification":
 				// NSViewController started implementing NSUserInterfaceItemIdentification in 10.10
-				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
+				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof (NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
 
 				switch (type.Name) {
@@ -217,7 +345,7 @@ namespace Introspection {
 				if (type.Name == "NSTextView")
 					return true;
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif
@@ -228,14 +356,14 @@ namespace Introspection {
 				case "NSMenuItem":
 					if (!Mac.CheckSystemVersion (10, 12))
 						return true;
-				break;
+					break;
 				}
-			break;
+				break;
 			case "NSAnimationDelegate":
 			case "NSAnimatablePropertyContainer":
 				switch (type.Name) {
 				case "NSTitlebarAccessoryViewController":
-					return true; 
+					return true;
 				}
 				break;
 			case "NSCandidateListTouchBarItemDelegate":
@@ -255,6 +383,10 @@ namespace Introspection {
 					break;
 				case "NSApplication":
 					if (!Mac.CheckSystemVersion (10, 14)) // Was added in 10.14
+						return true;
+					break;
+				case "NSMenu":
+					if (!Mac.CheckSystemVersion (11, 0))
 						return true;
 					break;
 				}
@@ -283,6 +415,20 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 11)) // NSNull started implementing the CAAction protocol in 10.11
 						return true;
 					break;
+				}
+				break;
+			case "NSTextContent":
+				switch (type.Name) {
+				case "NSTextField":
+				case "NSTextView":
+				case "NSTokenField":
+				case "NSComboBox":
+				case "NSSearchField":
+				case "NSSecureTextField":
+					if (!Mac.CheckSystemVersion (11, 0))
+						return true;
+					break;
+
 				}
 				break;
 			}
@@ -319,7 +465,7 @@ namespace Introspection {
 		[Test]
 		public override void SupportsSecureCoding ()
 		{
-			if (!Mac.CheckSystemVersion (10,8))
+			if (!Mac.CheckSystemVersion (10, 8))
 				return;
 
 			base.SupportsSecureCoding ();

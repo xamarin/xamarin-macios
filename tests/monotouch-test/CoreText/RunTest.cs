@@ -1,10 +1,11 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
 using CoreGraphics;
 using CoreText;
 using Foundation;
+using ObjCRuntime;
 
 using NUnit.Framework;
 using MonoTouchFixtures.CoreGraphics;
@@ -25,19 +26,31 @@ namespace MonoTouchFixtures.CoreText {
 			Width = false;
 		}
 
+#if NET
+		public override nfloat GetAscent ()
+#else
 		public override float GetAscent ()
+#endif
 		{
 			Ascent = true;
 			return base.GetAscent ();
 		}
 
+#if NET
+		public override nfloat GetDescent ()
+#else
 		public override float GetDescent ()
+#endif
 		{
 			Descent = true;
 			return base.GetDescent ();
 		}
 
+#if NET
+		public override nfloat GetWidth ()
+#else
 		public override float GetWidth ()
+#endif
 		{
 			Width = true;
 			return base.GetWidth ();
@@ -77,7 +90,7 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetBaseAdvancesAndOrigins ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 
 			using (var attributedString = new NSAttributedString ("Hello world."))
 			using (var line = new CTLine (attributedString)) {

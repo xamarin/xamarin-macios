@@ -10,23 +10,14 @@
 
 using System;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.UIKit;
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CMClockTest {
@@ -39,8 +30,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		public void CreateAudioClock ()
 		{
 			CMClockError ce;
-			using (var clock = CMClock.CreateAudioClock (out ce))
-			{
+			using (var clock = CMClock.CreateAudioClock (out ce)) {
 				Assert.AreEqual (CMClockError.None, ce);
 			}
 		}
@@ -49,7 +39,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void HostTimeClock ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var clock = CMClock.HostTimeClock) {
 				Assert.That (clock.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");

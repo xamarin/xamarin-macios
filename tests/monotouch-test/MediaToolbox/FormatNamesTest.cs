@@ -1,24 +1,17 @@
-﻿
+
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreMedia;
 using Foundation;
 #if !MONOMAC
 using UIKit;
 #endif
 using MediaToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.MediaToolbox;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class FormatNamesTest {
@@ -44,7 +37,7 @@ namespace MonoTouchFixtures.MediaToolbox {
 			Assert.That (CMMediaType.Video.GetLocalizedName (), Is.EqualTo ("Video"), "Video");
 
 			// incorrect
-			Assert.That (((CMMediaType)1).GetLocalizedName (), Is.EqualTo (String.Empty), "-1");
+			Assert.That (((CMMediaType) 1).GetLocalizedName (), Is.EqualTo (String.Empty), "-1");
 		}
 
 		[Test]
@@ -53,7 +46,7 @@ namespace MonoTouchFixtures.MediaToolbox {
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0 or macOS 10.11");
-			
+
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName ((uint) CMClosedCaptionFormatType.ATSC), Is.EqualTo ("ATSC/52 part-4"), "ATSC");
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName ((uint) CMClosedCaptionFormatType.CEA608), Is.EqualTo ("CEA 608"), "CEA608");
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName ((uint) CMClosedCaptionFormatType.CEA708), Is.EqualTo ("CEA 708"), "CEA708");

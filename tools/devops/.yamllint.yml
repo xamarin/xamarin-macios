@@ -1,0 +1,20 @@
+yaml-files:
+- '*.yaml'
+- '*.yml'
+- '.yamllint'
+
+rules:
+  line-length:
+    max: 300
+    level: warning
+  document-start:
+    level: error
+    present: false
+  trailing-spaces: disable
+  indentation:
+    spaces: consistent
+    indent-sequences: consistent
+    check-multi-line-strings: false
+  comments:
+    min-spaces-from-content: 1
+    level: warning

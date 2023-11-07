@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+***********************************************************************************************
+Xamarin.iOS.Common.After.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) 2010-2011 Novell. All rights reserved.
+Copyright (C) 2011-2013 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets')" />
+
+	<Target Name="EnsureMacConnection" 
+		DependsOnTargets="_SayHello" 
+		BeforeTargets="_CleanDebugSymbols;_CleanAppBundle;_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName" />
+	
+	<PropertyGroup>
+		<CreateAppBundleDependsOn>
+			GetBundleResourceWithLogicalNameItems;
+			$(CreateAppBundleDependsOn)
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="GetBundleResourceWithLogicalNameItems" Returns="@(_BundleResourceWithLogicalName)" DependsOnTargets="_GenerateBundleName">
+		<ItemGroup>
+			<!-- We need this metadata to fix the source in VS -->
+			<_BundleResourceWithLogicalName>
+				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
+				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\%(Identity)</BuildServerPath>
+				<BuildServerPath Condition="'$(IsWatchApp)' == 'true' Or '$(IsAppExtension)' == 'true'">..\..\$(_AppBundleName)\$(BuildSessionId)\%(Identity)</BuildServerPath>
+			</_BundleResourceWithLogicalName>
+		</ItemGroup>
+		<CollectMonotouchReferences References="@(_MSBuildProjectReferenceExistent)">
+			<Output TaskParameter="MonoTouchReferences" ItemName="MonoTouchReferences" />
+		</CollectMonotouchReferences>
+		<!-- This will collect the bundle resource items in the referenced projects -->
+		<MSBuild Projects="@(MonoTouchReferences)" Targets="GetBundleResourceWithLogicalNameItems" BuildInParallel="$(BuildInParallel)" RebaseOutputs="true" Properties="%(MonoTouchReferences.SetConfiguration); %(MonoTouchReferences.SetPlatform)" Condition="'@(MonoTouchReferences)' != '' and '%(MonoTouchReferences.Private)' != 'false' and '$(UseCommonOutputDirectory)' != 'true'" ContinueOnError="$(ContinueOnError)">
+			<Output TaskParameter="TargetOutputs" ItemName="_BundleResourceWithLogicalName" />
+		</MSBuild>
+	</Target>
+	
+	<PropertyGroup>
+		<CreateIpaDependsOn>
+			$(CreateIpaDependsOn);
+			CopyIpaFromMac
+		</CreateIpaDependsOn>
+		<_BeforeCreateIpaForDistributionDependsOn>
+			_SayHello;
+			CopyArchiveToMac;
+			$(_BeforeCreateIpaForDistributionDependsOn);
+		</_BeforeCreateIpaForDistributionDependsOn>
+		<ArchiveDependsOn>
+			$(ArchiveDependsOn);
+			CopyArchiveFromMac
+		</ArchiveDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="CopyAppBundleFromMac" Condition="'$(OutputType)' == 'Exe' And '$(IsMacEnabled)' == 'true' And '$(CopyAppBundle)' == 'true'" BeforeTargets="BeforeDisconnect">
+		<!-- Creates AppBundle dir on the output path -->
+		<MakeDir Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" Directories="$(DeviceSpecificOutputPath)AppBundle" />
+		<!--Zip AppBundle-->
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Sources="$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)" OutputFile="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)AppBundle" />
+		<!--Copy Zip from Mac-->
+		<Message Text="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
+		<CopyFileFromBuildServer Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true'" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
+		<!--Unzip App Bundle on Windows-->
+		<Unzip Condition="Exists('$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" ExtractionPath="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName)$(AppBundleExtension)" />
+		<!-- Delete Zip file -->
+		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)AppBundle\$(_AppBundleName).zip" />
+	</Target>
+	
+	<Target Name="CopyIpaFromMac" Condition="'$(OutputType)' == 'Exe' And '$(ComputedPlatform)' == 'iPhone' And '$(BuildIpa)' == 'true'">
+		<CopyFileFromBuildServer Condition="'$(IsAppDistribution)' == 'True'" SessionId="$(BuildSessionId)" File="$(IpaPackagePath)" TargetFile="$(DistributionPath)" />
+		<CopyFileFromBuildServer Condition="'$(IsAppDistribution)' != 'True'" SessionId="$(BuildSessionId)" File="$(IpaPackagePath)" />
+		<CopyFileFromBuildServer Condition="('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc') And '$(EmbedOnDemandResources)' == 'false'" SessionId="$(BuildSessionId)" File="$(IpaPackageDir)\OnDemandResources\%(_AssetPack.DirectoryName)" />
+		<CopyFileFromBuildServer Condition="('$(_DistributionType)' == 'AppStore' Or '$(_DistributionType)' == 'AdHoc') And '$(EmbedOnDemandResources)' == 'false'" SessionId="$(BuildSessionId)" File="$(IpaPackageDir)\OnDemandResources\AssetPackManifest.plist" />
+	</Target>
+	
+	<!-- Override Build -->
+	<Target Name="Build" Condition=" '$(_InvalidConfigurationWarning)' != 'true' " DependsOnTargets="$(BuildDependsOn)" Returns="@(TargetPath)">
+		<ItemGroup>
+			<TargetPath Include="$(TargetPath)">
+				<ArchivePath Condition="'$(ArchiveOnBuild)' == 'true'">$(ArchivePath)</ArchivePath>
+			</TargetPath>
+		</ItemGroup>
+	</Target>
+	
+	<Target Name="CopyArchiveFromMac" Condition="'$(_CanArchive)' == 'true' And '$(ArchiveOnBuild)' == 'true'">
+		<Error Condition="'$(IsMacEnabled)' != 'true'" Text="A connection to a Mac is required in order to continue" />
+		<PropertyGroup>
+			<_ArchiveName>$([System.IO.Path]::GetFileName($(ArchiveDir)))</_ArchiveName>
+			<_ArchiveZipWorkingDirOnMac>$(DeviceSpecificIntermediateOutputPath)archives</_ArchiveZipWorkingDirOnMac>
+			<_ArchiveZipFileNameOnMac>$([System.Guid]::NewGuid())</_ArchiveZipFileNameOnMac>
+			<_ArchiveZipFileNameOnMac>$(_ArchiveZipWorkingDirOnMac)\$(_ArchiveZipFileNameOnMac.Substring(0, $(_ArchiveZipFileNameOnMac.IndexOf('-')))).zip</_ArchiveZipFileNameOnMac>
+		</PropertyGroup>
+		<MakeDir SessionId="$(BuildSessionId)" Directories="$(_ArchiveZipWorkingDirOnMac)" />
+		<CopyArchiveFiles ArchivePath="$(ArchiveDir)" SessionId="$(BuildSessionId)" AppName="$(BuildAppName)" TargetPath="$(_ArchiveZipWorkingDirOnMac)" />
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="$(ArchiveDir)" OutputFile="$(_ArchiveZipFileNameOnMac)" WorkingDirectory="$([System.IO.Path]::GetDirectoryName($(ArchiveDir)))" />
+		<CreateArchiveDirectory ArchiveBasePath="$(ArchiveBasePath)">
+			<Output TaskParameter="ArchiveRootDir" PropertyName="ArchiveRootDirOnWin" />
+		</CreateArchiveDirectory>
+		<PropertyGroup>
+			<_ArchiveZipFileNameOnWin>$(ArchiveRootDirOnWin)\$([System.IO.Path]::GetFileName($(_ArchiveZipFileNameOnMac)))</_ArchiveZipFileNameOnWin>
+			<ArchivePath>$(ArchiveRootDirOnWin)\$(_ArchiveName)</ArchivePath>
+		</PropertyGroup>
+		<CopyFileFromBuildServer SessionId="$(BuildSessionId)" File="$(_ArchiveZipFileNameOnMac)" TargetFile="$(_ArchiveZipFileNameOnWin)" />
+		<Unzip ZipFilePath="$(_ArchiveZipFileNameOnWin)" ExtractionPath="$(ArchiveRootDirOnWin)" />
+		<Delete Files="$(_ArchiveZipFileNameOnMac)" />
+		<Delete Files="$(_ArchiveZipFileNameOnWin)" />
+	</Target>
+	
+	<Target Name="CopyArchiveToMac" Condition="'$(_CanArchive)' == 'true'">
+		<Error Condition="'$(IsMacEnabled)' != 'true'" Text="A connection to a Mac is required in order to continue" />
+		<PropertyGroup>
+			<_ArchiveName>$([System.IO.Path]::GetFileName($(ArchivePath)))</_ArchiveName>
+		</PropertyGroup>
+		
+		<ItemGroup>
+			<_ArchiveFiles Include="$(ArchivePath)\**\*.*" Exclude="$(ArchivePath)\**\_CodeSignature\CodeResources" />
+			<_ArchiveItems Include="@(_ArchiveFiles)">
+				<TargetPath>$(MSBuildProjectDirectory)\$(DeviceSpecificIntermediateOutputPath)archives\$(_ArchiveName)\%(_ArchiveFiles.RecursiveDir)%(_ArchiveFiles.Filename)%(_ArchiveFiles.Extension)</TargetPath>
+			</_ArchiveItems>
+			<_ArchiveCodeResourceToDelete Include="$(DeviceSpecificIntermediateOutputPath)archives\$(_ArchiveName)\**\_CodeSignature\CodeResources" />
+		</ItemGroup>
+		
+		<CopyFilesToBuildServer SessionId="$(BuildSessionId)" Files="@(_ArchiveItems)" />
+		
+		<PropertyGroup>
+			<!-- Overrides $(ArchivePath) with the path of the file copied the Mac -->
+			<ArchivePath>$(MSBuildProjectDirectory)\$(DeviceSpecificIntermediateOutputPath)archives\$(_ArchiveName)</ArchivePath>
+		</PropertyGroup>
+
+		<!-- Ensure there's no CodeResources file in the archive folder that will be used as output of _CodesignAppBundle -->
+		<!-- since publishing needs to force siging the bundle on each run -->
+		<Delete Files="@(_ArchiveCodeResourceToDelete)" />
+		<!-- Copying archive on Windows to the same location it was copied on the Mac because of _CalculateCodesignAppBundleInputs -->
+		<CopyLongPaths SourceFiles="@(_ArchiveItems)" DestinationFiles="%(_ArchiveItems.TargetPath)">
+			<Output TaskParameter="CopiedFiles" ItemName="FileWrites" />
+		</CopyLongPaths>
+	</Target>
+	
+	<Target Name="CopyDSYMFromMac" DependsOnTargets="_SayHello" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false' And '$(ComputedPlatform)' == 'iPhone' And '$(CopyDSYM)' == 'true' And ('$(BuildIpa)' == 'true' Or '$(CopyAppBundle)' == 'true')" BeforeTargets="BeforeDisconnect">
+		<!--Copy watchOS Dsym folders from Mac-->
+		<MSBuild Projects="@(_WatchAppReferenceWithConfigurationExistent)" Targets="CopyDSYMFromMac" Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration);      %(_WatchAppReferenceWithConfigurationExistent.SetPlatform);      BuildIpa=true" Condition="'$(IsWatchApp)' == 'false' And '@(_WatchAppReferenceWithConfigurationExistent)' != '' And '$(_BuildReferencedExtensionProjects)' != 'true'"></MSBuild>
+		<!--Look for all *.dsym folders int the output path of the main app -->
+		<GetDirectories SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Path="$(DeviceSpecificOutputPath)" Pattern="*.dSYM">
+			<Output TaskParameter="Directories" ItemName="_DSYMDir" />
+		</GetDirectories>
+		<ItemGroup>
+			<_DSYMDir>
+				<DsymFileName>%(_DSYMDir.Filename)%(_DSYMDir.Extension)</DsymFileName>
+			</_DSYMDir>
+		</ItemGroup>
+		<!--Zip Dsym folders-->
+		<Zip SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" ToolExe="$(ZipExe)" ToolPath="$(ZipPath)" Recursive="true" Symlinks="true" Sources="@(_DSYMDir)" OutputFile="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" WorkingDirectory="$(DeviceSpecificOutputPath)" />
+		<CopyFileFromBuildServer Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And '@(_DSYMDir)' != ''" SessionId="$(BuildSessionId)" File="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
+		<Unzip Condition="Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" ZipFilePath="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" ExtractionPath="$(DeviceSpecificOutputPath)" />
+		<Delete Condition="'$(MtouchTargetsEnabled)' And '$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip')" SessionId="$(BuildSessionId)" Files="$(DeviceSpecificOutputPath)%(_DSYMDir.DsymFileName).zip" />
+	</Target>
+
+	<Target Name="_AfterCreateIpaForDistribution" Condition="'$(IsAppDistribution)' == 'true'" AfterTargets="CreateIpa" DependsOnTargets="_SaveIpaForDistributionMacPath;_SayGoodbye" />
+	<Target Name="_AfterValidateBundleForDistribution" Condition="'$(IsAppDistribution)' == 'true'" AfterTargets="ValidateAppStoreBundle" DependsOnTargets="_SayGoodbye" />
+	<Target Name="_AfterUploadBundleForDistribution" Condition="'$(IsAppDistribution)' == 'true'" AfterTargets="UploadAppStoreBundle" DependsOnTargets="_SayGoodbye" />
+
+	<Target Name="_SaveIpaForDistributionMacPath" Condition="'$(IsAppDistribution)' == 'true'" >
+		<WriteItemsToFile Items="$(IpaPackagePath)" ItemName="_IpaPackagePath" File="$(DeviceSpecificIntermediateOutputPath)IpaPackagePath" Overwrite="true" />
+	</Target>
+
+	<Target Name="_BeforeValidateAppStoreBundle" BeforeTargets="ValidateAppStoreBundle" DependsOnTargets="_ReadIpaForDistributionMacPath"/>
+	<Target Name="_BeforeUploadAppStoreBundle" BeforeTargets="UploadAppStoreBundle" DependsOnTargets="_ReadIpaForDistributionMacPath"/>
+
+	<Target Name="_ReadIpaForDistributionMacPath" >
+		<ReadItemsFromFile File="$(DeviceSpecificIntermediateOutputPath)IpaPackagePath" Condition="Exists('$(DeviceSpecificIntermediateOutputPath)IpaPackagePath')">
+			<Output TaskParameter="Items" ItemName="IpaPackagePath" />
+		</ReadItemsFromFile>
+		
+		<PropertyGroup>
+			<FilePath>%(IpaPackagePath.Identity)</FilePath>
+		</PropertyGroup>
+		
+		<Message Importance="high" Text="Resolved Path: $(IpaPackagePath)" />
+	</Target>
+
+	<Target Name="_SetMtouchProjectDirectory" AfterTargets="_SayHello" BeforeTargets="_CompileToNative">
+		<PropertyGroup>
+			<MtouchProjectDirectory>$(MacBuildPath)</MtouchProjectDirectory>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_ResolveUniversalTypeIdentifiers" BeforeTargets="_CompileImageAssets" Condition="'$(IsMacEnabled)' == 'true'"
+					Inputs="@(ImageAsset);" Outputs="@(ImageAsset -> '$(DeviceSpecificIntermediateOutputPath)%(FileName)%(Extension).ResolveUTIs.stamp')">
+
+		<ItemGroup>
+			<_ResolveUTIOutputs Include="@(ImageAsset -> '$(DeviceSpecificIntermediateOutputPath)%(FileName)%(Extension).ResolveUTIs.stamp')" />
+			<FileWrites Include="@(_ResolveUTIOutputs)" />
+		</ItemGroup>
+		
+		<ResolveUniversalTypeIdentifiers
+			Condition="'@(ImageAsset)' != ''"
+			SessionId="$(BuildSessionId)"
+			ImageAssets="@(ImageAsset)"
+			ProjectDir="$(MSBuildProjectDirectory)" />
+
+		<Touch AlwaysCreate="true" Files="@(_ResolveUTIOutputs)" />
+	</Target>
+
+	<!-- Copies files needed by _CopyResolvedFilesToPublishPreserveNewest to the sever -->
+	<Target Name="_CopyResolvedFilesToPublishPreserveNewestToServer" BeforeTargets="_CopyResolvedFilesToPublishPreserveNewest">
+		<ItemGroup>
+			<_ResolvedFileToPublishPreserveNewestToServer Include="@(_ResolvedFileToPublishPreserveNewest)">
+				<TargetPath>%(Identity)</TargetPath>
+			</_ResolvedFileToPublishPreserveNewestToServer>
+		</ItemGroup>
+
+		<CopyFilesToBuildServer 
+			Condition="'$(IsMacEnabled)' == 'true'" 
+			SessionId="$(BuildSessionId)" 
+			Files="@(_ResolvedFileToPublishPreserveNewestToServer)" />
+	</Target>
+
+	<!-- Copies files needed by _CopyResolvedFilesToPublishAlways to the sever -->
+	<Target Name="_CopyResolvedFilesToPublishAlwaysToServer" BeforeTargets="_CopyResolvedFilesToPublishAlways">
+		<ItemGroup>
+			<_ResolvedFileToPublishAlwaysToServer Include="@(_ResolvedFileToPublishAlways)">
+				<TargetPath>%(Identity)</TargetPath>
+			</_ResolvedFileToPublishAlwaysToServer>
+		</ItemGroup>
+
+		<CopyFilesToBuildServer 
+			Condition="'$(IsMacEnabled)' == 'true'" 
+			SessionId="$(BuildSessionId)" 
+			Files="@(_ResolvedFileToPublishAlwaysToServer)" />
+	</Target>
+
+	<!-- This overrides the NET SDK target, it does the same thing but we add the SessionId property so the copy is also executed remotely -->
+	<!-- https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L222-L250 -->
+	<Target Name="_CopyResolvedFilesToPublishPreserveNewest"
+		DependsOnTargets="_ComputeResolvedFilesToPublishTypes"
+		Inputs="@(_ResolvedFileToPublishPreserveNewest)"
+		Outputs="@(_ResolvedFileToPublishPreserveNewest->'$(PublishDir)%(RelativePath)')">
+
+		<!--
+		PreserveNewest means that we will only copy the source to the destination if the source is newer.
+		SkipUnchangedFiles is not used for that purpose because it will copy if the source and destination
+		differ by size too.  Instead, this target uses inputs and outputs to only copy when the source is newer.
+		-->
+		<Copy Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			SourceFiles="@(_ResolvedFileToPublishPreserveNewest)"
+			DestinationFiles="@(_ResolvedFileToPublishPreserveNewest->'$(PublishDir)%(RelativePath)')"
+			OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+			Retries="$(CopyRetryCount)"
+			RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+			UseHardlinksIfPossible="$(CreateHardLinksForPublishFilesIfPossible)"
+			UseSymboliclinksIfPossible="$(CreateSymbolicLinksForPublishFilesIfPossible)">
+
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+		</Copy>
+
+	</Target>
+
+	<!-- This overrides the NET SDK target, it does the same thing but we add the SessionId property so the copy is also executed remotely -->
+	<!-- https://github.com/dotnet/sdk/blob/master/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L252-L279 -->
+	<Target Name="_CopyResolvedFilesToPublishAlways" DependsOnTargets="_ComputeResolvedFilesToPublishTypes">
+
+		<!--
+		Use SkipUnchangedFiles to prevent unnecessary file copies. The copy will occur if the
+		destination doesn't exist, the source is newer than the destination, or if the source and
+		destination differ by file size.
+		-->
+		<Copy Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			SourceFiles = "@(_ResolvedFileToPublishAlways)"
+			DestinationFiles="@(_ResolvedFileToPublishAlways->'$(PublishDir)%(RelativePath)')"
+			SkipUnchangedFiles="$(SkipCopyUnchangedFiles)"
+			OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"
+			Retries="$(CopyRetryCount)"
+			RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)"
+			UseHardlinksIfPossible="$(CreateHardLinksForPublishFilesIfPossible)"
+			UseSymboliclinksIfPossible="$(CreateSymbolicLinksForPublishFilesIfPossible)">
+
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+
+		</Copy>
+	</Target>
+
+	<Target Name="_UpdateDebugType" BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<DebugType Condition="'$(DebugType)' == 'full'">portable</DebugType>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_FindILLink" DependsOnTargets="_ComputeVariables">
+		<PropertyGroup>
+			<_RemoteILLinkCachePath>$(DeviceSpecificIntermediateOutputPath)remote-illink-path-$(NETCoreSdkVersion).txt</_RemoteILLinkCachePath>
+		</PropertyGroup>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<ReadLinesFromFile
+			Condition="Exists('$(_RemoteILLinkCachePath)')"
+			File="$(_RemoteILLinkCachePath)"
+		>
+			<Output TaskParameter="Lines" PropertyName="_RemoteILLinkPath" />
+		</ReadLinesFromFile>
+
+		<FindILLink
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RemoteILLinkPath)' == ''"
+			KeepTemporaryOutput="$(FindILLinkKeepKeepTemporaryOutput)"
+			RuntimeIdentifier="$(RuntimeIdentifier)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="ILLinkPath" PropertyName="_RemoteILLinkPath" />
+		</FindILLink>
+
+		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
+		<WriteLinesToFile
+			File="$(_RemoteILLinkCachePath)"
+			Lines="$(_RemoteILLinkPath)"
+			Overwrite="true"
+		/>
+		<ItemGroup>
+			<FileWrites Include="$(_RemoteILLinkCachePath)" />
+		</ItemGroup>
+	</Target>
+
+	<!-- Overrides Core SDK target to remote the ILLink execution -->
+	<!-- https://github.com/dotnet/sdk/blob/cdf57465e1cba9e44b5c9a76a403d41b1b8f178c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.ILLink.targets#L76-L132 -->
+	<Target Name="_RunILLink"
+		DependsOnTargets="_ComputeManagedAssemblyToLink;PrepareForILLink;_FindILLink"
+		Inputs="$(MSBuildAllProjects);@(ManagedAssemblyToLink);@(TrimmerRootDescriptor);@(ReferencePath)"
+		Outputs="$(_LinkSemaphore)">
+
+		<PropertyGroup>
+			<!-- The .NET 7 linker sets _TrimmerDefaultAction instead of TrimmerDefaultAction, so copy that value if it's set (and TrimmerDefaultAction is not set) -->
+			<TrimmerDefaultAction Condition="'$(TrimmerDefaultAction)' == ''">$(_TrimmerDefaultAction)</TrimmerDefaultAction>
+
+			<_RemoteExtraTrimmerArgs Condition="'$(_ExtraTrimmerArgs)' != ''">$(_ExtraTrimmerArgs.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_RemoteExtraTrimmerArgs>
+		</PropertyGroup>
+
+		<!-- Include Debug symbols as input so those are copied to the server -->
+		<ItemGroup>
+			<!-- @(_PDBToLink) comes from the _ComputeManagedAssemblyToLink target, which is a dependency of this target and is included in Microsoft.NET.ILLink.targets -->
+			<!-- @(_PDBToLink) should contain the current assembly pdb and the project reference pdbs -->
+			<_ILLinkDebugSymbols Include="@(_PDBToLink)" />
+		</ItemGroup>
+		
+		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
+		<Xamarin.iOS.Tasks.ILLink 
+				SessionId="$(BuildSessionId)"
+				AssemblyPaths="@(ManagedAssemblyToLink)"
+				ReferenceAssemblyPaths="@(ReferencePath)"
+				RootAssemblyNames="@(TrimmerRootAssembly)"
+				TrimMode="$(TrimMode)"
+				DefaultAction="$(_TrimmerDefaultAction)"
+				RemoveSymbols="$(TrimmerRemoveSymbols)"
+				FeatureSettings="@(_TrimmerFeatureSettings)"
+				CustomData="@(_TrimmerCustomData)"
+
+				BeforeFieldInit="$(_TrimmerBeforeFieldInit)"
+				OverrideRemoval="$(_TrimmerOverrideRemoval)"
+				UnreachableBodies="$(_TrimmerUnreachableBodies)"
+				UnusedInterfaces="$(_TrimmerUnusedInterfaces)"
+				IPConstProp="$(_TrimmerIPConstProp)"
+				Sealer="$(_TrimmerSealer)"
+
+				Warn="$(ILLinkWarningLevel)"
+				NoWarn="$(NoWarn)"
+				TreatWarningsAsErrors="$(ILLinkTreatWarningsAsErrors)"
+				WarningsAsErrors="$(WarningsAsErrors)"
+				WarningsNotAsErrors="$(WarningsNotAsErrors)"
+				SingleWarn="$(TrimmerSingleWarn)"
+
+				CustomSteps="@(_TrimmerCustomSteps)"
+				RootDescriptorFiles="@(TrimmerRootDescriptor)"
+				OutputDirectory="$(IntermediateLinkDir)"
+				DumpDependencies="$(_TrimmerDumpDependencies)"
+				DependenciesFileFormat="$(_TrimmerDependenciesFileFormat)"
+				ExtraArgs="$(_RemoteExtraTrimmerArgs)"
+				ToolExe="$(_DotNetHostFileName)"
+				ToolPath="$(_DotNetHostDirectory)"
+				ILLinkPath="$(_RemoteILLinkPath)"
+				LinkerItemsDirectory="$(_LinkerItemsDirectory)"
+				DebugSymbols="@(_ILLinkDebugSymbols)"
+				ContinueOnError="ErrorAndContinue">
+			<Output TaskParameter="ExitCode" PropertyName="_ILLinkExitCode" />
+			<Output TaskParameter="LinkedItems" ItemName="_XamarinLinkedItems" />
+			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
+		</Xamarin.iOS.Tasks.ILLink>
+
+		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
+
+	</Target>
+
+	<!-- Override NET.Sdk Run target to run Exec remotely -->
+	<!-- https://github.com/dotnet/sdk/blob/bc0563507d23a20e71087b03cfa50a5b42b03f06/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.targets#L869-L872 -->
+	<Target Name="Run">
+		<Exec SessionId="$(BuildSessionId)" Command="$(RunCommand) $(RunArguments)" WorkingDirectory="$(RunWorkingDirectory)"/>
+	</Target>
+
+	<Target Name="_VerifyNoAbsoluteOutputPath" Condition="'$(AllowAbsoluteOutputPath)' != 'true'" AfterTargets="_SayHello">
+		<!--
+			Remote builds won't work if either OutputPath or IntermediateOutputPath are is an absolute path, so just show an error in that case that tells people what the actual problem is (instead of a random and unintelligible build error).
+				Ref: https://github.com/xamarin/xamarin-macios/issues/18510
+				Ref: https://dev.azure.com/devdiv/DevDiv/_workitems/edit/1847166
+		-->
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(OutputPath)'))" Text="An absolute OutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
+		<Error Condition="'$(IsMacEnabled)' == 'true' And $([System.IO.Path]::IsPathRooted('$(IntermediateOutputPath)'))" Text="An absolute IntermediateOutputPath is not supported when building remotely. Note that this may occur as a consequence of setting UseArtifactsOutput=true or ArtifactsPath." />
+	</Target>
+
+	<PropertyGroup>
+		<_PrepareRunDependsOn>
+			_SetShouldDisconnect;
+			$(_PrepareRunDependsOn);
+		</_PrepareRunDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="DisconnectAfterRun" AfterTargets="Run" DependsOnTargets="_SayGoodbye" />
+	
+	<!-- Allows providing SDK-specific target overrides -->
+	<PropertyGroup>
+		<XamarinAppleSdkTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Xamarin.Apple.Sdk.targets'))\Xamarin.Apple.Sdk.targets</XamarinAppleSdkTargets>
+	</PropertyGroup>
+	
+	<Import Project="$(XamarinAppleSdkTargets)" Condition="'$(XamarinAppleSdkTargetsImported)' != 'true' And Exists('$(XamarinAppleSdkTargets)')" />
+</Project>

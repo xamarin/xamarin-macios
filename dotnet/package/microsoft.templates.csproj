@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <PackageId>Microsoft.$(_PlatformName).Templates</PackageId>
+    <PackageType>Template</PackageType>
+    <Description>Templates for $(_PlatformName) platforms</Description>
+    <_packagePath>$(MSBuildThisFileDirectory)..\Templates\Microsoft.$(_PlatformName).Templates\</_packagePath>
+    <LocalizeTemplates Condition=" '$(CIBuild)' != 'true' ">true</LocalizeTemplates>
+    <LocalizableTemplatesPath>$(_packagePath)</LocalizableTemplatesPath>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(CIBuild)' != 'true' ">
+    <PackageReference Include="Microsoft.TemplateEngine.Tasks" Version="$(MicrosoftTemplateEngineTasksVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+  </ItemGroup>
+  <Import Project="common.csproj" />
+</Project>

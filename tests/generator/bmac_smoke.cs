@@ -1,14 +1,8 @@
-#if !XAMCORE_2_0
-using MonoMac.Foundation;
-#else
 using Foundation;
-#endif
 
-namespace Test
-{
+namespace Test {
 	[BaseType (typeof (NSObject))]
-	interface TestBMACLib
-	{
+	interface TestBMACLib {
 		[Export ("addTwoRows:withSecond:")]
 		int Add (int first, int second);
 	}

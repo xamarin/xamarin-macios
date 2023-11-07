@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>WatchExtension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.MyWatchApp.WatchExtension</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>com.xamarin.WatchExtension</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>11.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>WKAppBundleIdentifier</key>
+			<string>com.xamarin.MyWatchApp.WatchApp</string>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.watchkit</string>
+	</dict>
+	<key>RemoteInterfacePrincipleClass</key>
+	<string>InterfaceController</string>
+</dict>
+</plist>

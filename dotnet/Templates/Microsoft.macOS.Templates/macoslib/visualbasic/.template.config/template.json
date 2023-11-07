@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS" ],
+  "groupIdentity": "Microsoft.macOS.macOSLib",
+  "identity": "Microsoft.macOS.macOSLib.VisualBasic",
+  "name": "macOS Class Library",
+  "description": "A project for creating a .NET macOS class library",
+  "shortName": "macoslib",
+  "tags": {
+    "language": "VB",
+    "type": "project"
+  },
+  "sourceName": "macOSLib1",
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    { "path": "macOSLib1.vbproj" }
+  ],
+  "defaultName": "macOSLib1"
+}

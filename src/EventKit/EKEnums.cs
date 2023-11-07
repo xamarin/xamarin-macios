@@ -64,7 +64,7 @@ namespace EventKit {
 		SourceDoesNotAllowCalendarAddDelete,
 		RecurringReminderRequiresDueDate,
 		StructuredLocationsNotSupported,
- 		ReminderLocationsNotSupported,
+		ReminderLocationsNotSupported,
 		AlarmProximityNotSupported,
 		CalendarDoesNotAllowEvents,
 		CalendarDoesNotAllowReminders,
@@ -80,19 +80,21 @@ namespace EventKit {
 		SourceMismatch,
 		NotificationCollectionMismatch,
 		NotificationSavedWithoutCollection,
+		ReminderAlarmContainsEmailOrUrl,
 	}
 
 	// untyped enum -> EKTypes.h
 	// Special note: some API (like `dayOfWeek:` and `dayOfWeek:weekNumber:` use an `NSInteger` instead of the enum
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'EKWeekday'.")]
-	[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'EKWeekday'.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'EKWeekday'.")]
+	[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'EKWeekday'.")]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'EKWeekday'.")]
 	public enum EKDay {
 		NotSet = 0,
 		Sunday = 1,
 		Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Native] // NSInteger (size change from previously untyped enum)
 	public enum EKWeekday : long {
 		NotSet = 0,
@@ -119,21 +121,8 @@ namespace EventKit {
 		ThisEvent, FutureEvents
 	}
 
-	// note: old binding mistakes - they should have been in EventKitUI (not EventKit)
-#if !XAMCORE_2_0
-	// untyped enum -> EKEventViewController.h
-	public enum EKEventViewAction {
-		Done, Responded, Deleted
-	}
-
-	// untyped enum -> EKEventEditViewController.h
-	public enum EKEventEditViewAction {
-		Canceled, Saved, Deleted
-	}
-#endif
-
 	// NSUInteger -> EKTypes.h
-	[Native]
+	[Native ("EKCalendarEventAvailabilityMask")]
 	[Flags]
 	public enum EKCalendarEventAvailability : ulong {
 		None = 0,
@@ -201,11 +190,11 @@ namespace EventKit {
 		Restricted,
 		Denied,
 		Authorized,
+		WriteOnly,
 	}
 
 	[Native]
-	public enum EKParticipantScheduleStatus : long
-	{
+	public enum EKParticipantScheduleStatus : long {
 		None,
 		Pending,
 		Sent,
@@ -218,12 +207,11 @@ namespace EventKit {
 	}
 
 	[Native]
-	public enum EKReminderPriority : ulong
-	{
+	public enum EKReminderPriority : ulong {
 		None = 0,
 		High = 1,
 		Medium = 5,
 		Low = 9
 	}
-	
+
 }

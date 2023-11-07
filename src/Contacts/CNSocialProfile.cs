@@ -1,4 +1,4 @@
-﻿//
+//
 // CNSocialProfile.cs: Implements some nicer methods for CNSocialProfile
 //
 // Authors:
@@ -7,14 +7,14 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 
 namespace Contacts {
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 	// Strong typed Keys to enum
-	public enum CNSocialProfileOption
-	{
+	public enum CNSocialProfileOption {
 		UrlString,
 		Username,
 		UserIdentifier,
@@ -22,8 +22,7 @@ namespace Contacts {
 	}
 
 	// Strong typed Keys to enum
-	public enum CNSocialProfileServiceOption
-	{
+	public enum CNSocialProfileServiceOption {
 		Facebook,
 		Flickr,
 		LinkedIn,
@@ -85,6 +84,4 @@ namespace Contacts {
 			}
 		}
 	}
-#endif // XAMCORE_2_0
 }
-

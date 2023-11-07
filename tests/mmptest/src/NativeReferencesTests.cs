@@ -9,35 +9,31 @@ using System.Reflection;
 
 using Xamarin.Tests;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	public class NativeReferenceTests {
 		public const string ItemGroupTemplate = @"<ItemGroup>{0}</ItemGroup>";
 		public const string NativeReferenceTemplate = @"<NativeReference Include=""{0}""><IsCxx>False</IsCxx><Kind>{1}</Kind></NativeReference>";
 
 		public static string SimpleDylibPath {
 			get {
-				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassDylib.dylib");
-				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleDylibPath missing? {0}", buildLibPath));
+				var buildLibPath = Path.Combine (Configuration.RootPath, "tests", "mac-binding-project", "bin", "SimpleClassDylib.dylib");
+				Assert.That (buildLibPath, Does.Exist, "SimpleDylibPath missing?");
 				return buildLibPath;
 			}
 		}
 
 		public static string SimpleStaticPath {
 			get {
-				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
-				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleStaticPath missing? {0}", buildLibPath));
+				var buildLibPath = Path.Combine (Configuration.RootPath, "tests", "mac-binding-project", "bin", "SimpleClassStatic.a");
+				Assert.That (buildLibPath, Does.Exist, "SimpleStaticPath missing?");
 				return buildLibPath;
 			}
 		}
 
 		public static string MobileStaticBindingPath {
 			get {
-				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/Mobile-static/MobileBinding.dll");
-				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("MobileStaticBindingPath missing? {0}", buildLibPath));
+				var buildLibPath = Path.Combine (Configuration.RootPath, "tests", "mac-binding-project", "bin", "Mobile-static", "MobileBinding.dll");
+				Assert.That (buildLibPath, Does.Exist, "MobileStaticBindingPath missing?");
 				return buildLibPath;
 			}
 		}
@@ -51,32 +47,32 @@ namespace Xamarin.MMP.Tests
 			string dylibPath = Path.Combine (tmpDir, "dll/");
 			string filePath = Path.Combine (dylibPath, fileName);
 			Directory.CreateDirectory (dylibPath);
-			File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath);
+			File.Copy (Path.Combine (TI.TestDirectory, "mac-binding-project", "bin", "SimpleClassDylib.dylib"), filePath);
 			return filePath;
 		}
 
-		void NativeReferenceTestCore (string tmpDir, TI.UnifiedTestConfig test, string testName, string libraryName, bool buildShouldBeSuccessful, bool libraryShouldNotBeCopied = false, Func<string, bool> processBuildOutput = null)
+		void NativeReferenceTestCore (string tmpDir, TI.UnifiedTestConfig test, string testName, string libraryName, bool buildShouldBeSuccessful, bool libraryShouldNotBeCopied = false, Func<BuildResult, bool> processBuildOutput = null)
 		{
 			// Mobile
 			test.XM45 = false;
-			string buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
-			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
-			if (processBuildOutput != null)
-				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
+			var testResult = TI.TestUnifiedExecutable (test, false);
+			Assert.IsTrue (!buildShouldBeSuccessful || !testResult.BuildResult.HasMessage (2006), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, testResult));
+			if (processBuildOutput is not null)
+				Assert.IsTrue (processBuildOutput (testResult.BuildResult), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
 
 			string mobileBundlePath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/");
-			if (libraryName != null)
+			if (libraryName is not null)
 				Assert.IsTrue (Directory.GetFiles (mobileBundlePath).Any (x => x.Contains (libraryName) == !libraryShouldNotBeCopied), string.Format ("{0} - Mobile - We did not pull in native lib: {1}", testName, libraryName));
 
 			// XM45
 			test.XM45 = true;
-			buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
-			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
-			if (processBuildOutput != null)
-				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
+			testResult = TI.TestUnifiedExecutable (test, false);
+			Assert.IsTrue (!buildShouldBeSuccessful || !testResult.BuildResult.HasMessage (2006), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, testResult));
+			if (processBuildOutput is not null)
+				Assert.IsTrue (processBuildOutput (testResult.BuildResult), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
 
 			string xm45BundlePath = Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/");
-			if (libraryName != null)
+			if (libraryName is not null)
 				Assert.IsTrue (Directory.GetFiles (xm45BundlePath).Any (x => x.Contains (libraryName) == !libraryShouldNotBeCopied), string.Format ("{0} - XM45 - We did not pull in native lib: {1}", testName, libraryName));
 		}
 
@@ -112,8 +108,10 @@ namespace Xamarin.MMP.Tests
 			MMPTests.RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ItemGroup = CreateSingleNativeRef (SimpleStaticPath, "Static") };
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true, false, s => {
-					string clangLine = s.Split ('\n').First (x => x.Contains ("xcrun -sdk macosx clang"));
-					return clangLine.Contains ("SimpleClassStatic.a");
+					var clangLines = s.BuildOutputLines.Where (x => x.Contains ("usr/bin/clang"));
+					var staticLib = clangLines.Where (x => x.Contains ("SimpleClassStatic.a"));
+					Assert.That (staticLib, Is.Not.Empty, "SimpleClassStatic.a:\n\t{0}", string.Join ("\n\t", clangLines));
+					return true;
 				});
 			});
 		}
@@ -126,7 +124,7 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - Nonexistant", null, false);
 
 				// Test a system dylib. Does not matter which one
-				test.ItemGroup = CreateSingleNativeRef ( "/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
+				test.ItemGroup = CreateSingleNativeRef ("/System/Library/Frameworks/MapKit.framework/Versions/A/Resources/BridgeSupport/MapKit.dylib", "Dynamic");
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_MissingLibrariesActAsExpected - System", null, true);
 
 				// Test one of the ignored libs
@@ -169,8 +167,7 @@ namespace Xamarin.MMP.Tests
 				string filePath = CreateCopyOfSimpleClassInTestDir (tmpDir);
 
 				// Use absolute path here and in TestDecl to trigger bug
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) 
-				{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedExample.csproj",
 					ItemGroup = CreateSingleNativeRef (filePath, "Dynamic"),
 					TestDecl = string.Format ("[System.Runtime.InteropServices.DllImport (\"{0}\")]public static extern int GetFour ();", filePath),
@@ -190,7 +187,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					ProjectName = "UnifiedExample.csproj",
 					CSProjConfig = "<EnableCodeSigning>true</EnableCodeSigning>",
-					ItemGroup = CreateItemGroup (new string[] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
+					ItemGroup = CreateItemGroup (new string [] { CreateNativeRefInclude (firstPath, "Dynamic"), CreateNativeRefInclude (secondPath, "Dynamic") }),
 				};
 				NativeReferenceTestCore (tmpDir, test, "MultipleNativeReferences_OnlyInvokeMMPOneTime_AndCopyEverythingIn", null, true);
 			});
@@ -206,7 +203,7 @@ namespace Xamarin.MMP.Tests
 					ItemGroup = CreateSingleNativeRef ("/Library/Frameworks/Mono.framework/Libraries/libintl.dylib", "Dynamic")
 				};
 				var log = TI.TestUnifiedExecutable (test);
-				Console.WriteLine (log.BuildOutput);
+				Console.WriteLine (log.BuildResult);
 				Assert.True (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libintl.dylib")));
 			});
 		}

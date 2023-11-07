@@ -4,36 +4,23 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ButtonTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (UIButton b = new UIButton (frame)) {
 				Assert.That (b.Frame, Is.EqualTo (frame), "Frame");
 			}
@@ -49,7 +36,7 @@ namespace MonoTouchFixtures.UIKit {
 				b.SetTitleColor (null, UIControlState.Normal);
 				var hasTitleColor = true;
 #if __IOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0))
 					hasTitleColor = false;
 #endif
 				if (hasTitleColor)

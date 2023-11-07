@@ -1,4 +1,4 @@
-﻿// 
+// 
 // VTFrameSilo.cs: VideoToolbox VTFrameSilo class
 //
 // Authors:
@@ -6,6 +6,8 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
 
 using System;
 using System.Runtime.InteropServices;
@@ -15,51 +17,30 @@ using ObjCRuntime;
 using Foundation;
 using CoreMedia;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace VideoToolbox {
-	[Mac (10,10), iOS (8,0), TV (10,2)]
-	public class VTFrameSilo : INativeObject, IDisposable {
-		IntPtr handle;
-		GCHandle callbackHandle;
 
-		/* invoked by marshallers */
-		protected internal VTFrameSilo (IntPtr handle)
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
+	public class VTFrameSilo : NativeObject {
+#if !NET
+		protected internal VTFrameSilo (NativeHandle handle)
+			: base (handle, false)
 		{
-			this.handle = handle;
-			CFObject.CFRetain (this.handle);
 		}
+#endif
 
-		public IntPtr Handle {
-			get {return handle; }
-		}
-
-		[Preserve (Conditional=true)]
-		internal VTFrameSilo (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal VTFrameSilo (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (this.handle);
-		}
-
-		~VTFrameSilo ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (callbackHandle.IsAllocated)
-				callbackHandle.Free();
-
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
@@ -70,15 +51,14 @@ namespace VideoToolbox {
 			/* CFDictionaryRef */ IntPtr options, /* Reserved, always null */
 			/* VTFrameSiloRef */ out IntPtr siloOut);
 
-		public static VTFrameSilo Create (NSUrl fileUrl = null, CMTimeRange? timeRange = null)
+		public static VTFrameSilo? Create (NSUrl? fileUrl = null, CMTimeRange? timeRange = null)
 		{
-			IntPtr ret;
 			var status = VTFrameSiloCreate (
 				IntPtr.Zero,
-				fileUrl == null ? IntPtr.Zero : fileUrl.Handle, 
-				timeRange ?? CMTimeRange.InvalidRange, 
-				IntPtr.Zero, 
-				out ret);
+				fileUrl.GetHandle (),
+				timeRange ?? CMTimeRange.InvalidRange,
+				IntPtr.Zero,
+				out var ret);
 
 			if (status != VTStatus.Ok)
 				return null;
@@ -93,11 +73,10 @@ namespace VideoToolbox {
 
 		public VTStatus AddSampleBuffer (CMSampleBuffer sampleBuffer)
 		{
-			if (sampleBuffer == null)
-				throw new ArgumentNullException ("sampleBuffer");
+			if (sampleBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 
-			var status = VTFrameSiloAddSampleBuffer (handle, sampleBuffer.Handle);
-			return status;
+			return VTFrameSiloAddSampleBuffer (Handle, sampleBuffer.Handle);
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
@@ -106,17 +85,17 @@ namespace VideoToolbox {
 			/* CMItemCount */ nint timeRangeCount,
 			/* const CMTimeRange * */ IntPtr timeRangeArray);
 
-		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange[] ranges)
+		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange [] ranges)
 		{
-			if (ranges == null)
-				throw new ArgumentNullException ("ranges");
+			if (ranges is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ranges));
 
 			if (ranges.Length > 0)
-				fixed (CMTimeRange *first = &ranges [0]) {
-					return VTFrameSiloSetTimeRangesForNextPass (handle, ranges.Length, (IntPtr)first);
+				fixed (CMTimeRange* first = &ranges [0]) {
+					return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, (IntPtr) first);
 				}
 			else
-				return VTFrameSiloSetTimeRangesForNextPass (handle, ranges.Length, IntPtr.Zero);
+				return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, IntPtr.Zero);
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
@@ -126,38 +105,53 @@ namespace VideoToolbox {
 
 		public VTStatus GetProgressOfCurrentPass (out float progress)
 		{
-			return VTFrameSiloGetProgressOfCurrentPass (handle, out progress);
+			return VTFrameSiloGetProgressOfCurrentPass (Handle, out progress);
 		}
 
+#if !NET
 		delegate VTStatus EachSampleBufferCallback (/* void* */ IntPtr callbackInfo, /* CMSampleBufferRef */ IntPtr sampleBufferPtr);
 
 		static EachSampleBufferCallback static_EachSampleBufferCallback = new EachSampleBufferCallback (BufferCallback);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (EachSampleBufferCallback))]
+#endif
 #endif
 		static VTStatus BufferCallback (IntPtr callbackInfo, IntPtr sampleBufferPtr)
 		{
 			var gch = GCHandle.FromIntPtr (callbackInfo);
-			var func = (Func<CMSampleBuffer, VTStatus>) gch.Target;
+			var func = gch.Target as Func<CMSampleBuffer, VTStatus>;
+			if (func is null)
+				return (VTStatus) 1; // return non-zero to abort iteration early.
 			var sampleBuffer = new CMSampleBuffer (sampleBufferPtr, false);
 			return func (sampleBuffer);
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static /* OSStatus */ VTStatus VTFrameSiloCallFunctionForEachSampleBuffer (
+		unsafe extern static /* OSStatus */ VTStatus VTFrameSiloCallFunctionForEachSampleBuffer (
 			/* VTFrameSiloRef */ IntPtr silo,
 			/* CMTimeRange */ CMTimeRange timeRange, // CMTimeRange.Invalid retrieves all sample buffers
 			/* void* */ IntPtr callbackInfo,
+#if NET
+			/* */ delegate* unmanaged<IntPtr, IntPtr, VTStatus> callback);
+#else
 			/* */ EachSampleBufferCallback callback);
+#endif
 
-		public VTStatus ForEach (Func<CMSampleBuffer, VTStatus> callback, CMTimeRange? range = null)
+		public unsafe VTStatus ForEach (Func<CMSampleBuffer, VTStatus> callback, CMTimeRange? range = null)
 		{
-			callbackHandle = GCHandle.Alloc (callback);
-			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (handle, range ?? CMTimeRange.InvalidRange, GCHandle.ToIntPtr (callbackHandle), static_EachSampleBufferCallback);
+			var callbackHandle = GCHandle.Alloc (callback);
+#if NET
+			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (Handle, range ?? CMTimeRange.InvalidRange, GCHandle.ToIntPtr (callbackHandle), &BufferCallback);
+#else
+			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (Handle, range ?? CMTimeRange.InvalidRange, GCHandle.ToIntPtr (callbackHandle), static_EachSampleBufferCallback);
+#endif
 			callbackHandle.Free ();
 			return foreachResult;
 		}
 	}
 }
-

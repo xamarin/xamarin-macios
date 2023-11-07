@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSLayoutConstraint
 //
 // Authors:
@@ -7,24 +7,23 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 #if !MONOMAC
-#if XAMCORE_2_0
 using UIKit;
+using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSLayoutConstraintTest {
 
 #if !__WATCHOS__ // FIXME: it looks like this test can be rewritten to not use UIViewController, so that it can run on WatchOS as well.
 		[Test]
 		public void FromVisualFormat ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var testViewController = new TestViewController ()) {
 				var constraints = NSLayoutConstraint.FromVisualFormat ("V:|[topLayoutGuide]-[firstLabel]-[secondLabel]",
@@ -36,7 +35,7 @@ namespace MonoTouchFixtures.Foundation {
 
 				const int expectedNumberOfConstraints = 3;
 
-				Assert.That (constraints != null,
+				Assert.That (constraints is not null,
 					"'NSLayoutConstraint.FromVisualFormat' method returned no constraints");
 
 				Assert.That (constraints.Length, Is.EqualTo (expectedNumberOfConstraints),

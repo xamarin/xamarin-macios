@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "sampleTiff.tiff",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -11,25 +11,20 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#if !__TVOS__
+#if HAS_IAD
 using iAd;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.iAd;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ViewControllerTest {
-		
+
 #if !__TVOS__
 		[Test]
 		public void Bug3489 ()
@@ -39,14 +34,9 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController c = new UIViewController ()) {
 				a.PresentModalViewController (b, true);
 				b.PresentModalViewController (c, true);
-				
-#if XAMCORE_2_0
+
 				b.DismissModalViewController (true);
 				a.DismissModalViewController (true); //error
-#else
-				b.DismissModalViewControllerAnimated (true);
-				a.DismissModalViewControllerAnimated (true); //error
-#endif
 			}
 		}
 #endif
@@ -59,16 +49,11 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController b = new UIViewController ())
 			using (UIViewController c = new UIViewController ())
 			using (UIViewController wb = new UINavigationController (b))
-			using (UIViewController wc = new UINavigationController (c))
-			{
+			using (UIViewController wc = new UINavigationController (c)) {
 				a.PresentModalViewController (wb, true);
 				b.PresentModalViewController (wc, true);
 
-#if XAMCORE_2_0
 				c.DismissModalViewController (true); //error
-#else
-				c.DismissModalViewControllerAnimated (true); //error
-#endif
 			}
 		}
 #endif
@@ -80,8 +65,7 @@ namespace MonoTouchFixtures.UIKit {
 			using (UIViewController b = new UIViewController ())
 			using (UIViewController c = new UIViewController ())
 			using (UIViewController wb = new UINavigationController (b))
-			using (UIViewController wc = new UINavigationController (c))
-			{
+			using (UIViewController wc = new UINavigationController (c)) {
 				// interesting [PreSnippet] for the linker (wrt backing field elimitation)
 				a.PresentViewController (wb, true, null);
 				b.PresentViewController (wc, true, null);
@@ -90,7 +74,7 @@ namespace MonoTouchFixtures.UIKit {
 				c.DismissViewController (true, null);
 			}
 		}
-				
+
 		[Test]
 		public void NSAction_Null ()
 		{
@@ -128,7 +112,9 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.Null (vc.ModalViewController, "ModalViewController");
 				Assert.Null (vc.RotatingFooterView, "RotatingFooterView");
 				Assert.Null (vc.RotatingHeaderView, "RotatingHeaderView");
+#if !__MACCATALYST__
 				Assert.Null (vc.SearchDisplayController, "SearchDisplayController");
+#endif
 				Assert.False (vc.WantsFullScreenLayout, "WantsFullScreenLayout");
 #endif
 				Assert.Null (vc.SplitViewController, "SplitViewController");
@@ -187,15 +173,15 @@ namespace MonoTouchFixtures.UIKit {
 			}
 		}
 
-#if !__TVOS__
+#if HAS_IAD
 		[Test]
 		public void InterstitialAds_New ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			UIViewController.PrepareForInterstitialAds ();
 		}
-#endif // !__TVOS__
+#endif // HAS_IAD
 	}
 }
 

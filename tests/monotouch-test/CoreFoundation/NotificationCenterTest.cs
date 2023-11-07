@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CFNotificationCenter
 //
 // Authors:
@@ -7,14 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {

@@ -9,13 +9,8 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 // this will preserve the specified type (only)
@@ -59,18 +54,13 @@ namespace LinkAll.Attributes {
 #else
 		const bool Debug = false;
 #endif
-#if XAMCORE_2_0
-		const string NamespacePrefix = "";
 		string AssemblyName = typeof (NSObject).Assembly.ToString ();
-#else
-		const string NamespacePrefix = "MonoTouch.";
-		const string AssemblyName = "monotouch";
-#endif
+		string WorkAroundLinkerHeuristics { get { return ""; } }
 
 		[Test]
 		public void PreserveTypeWithMembers ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.TypeWithMembers");
+			var t = Type.GetType ("LinkAll.Attributes.TypeWithMembers" + WorkAroundLinkerHeuristics);
 			// both type and members are preserved
 			Assert.NotNull (t, "type");
 			Assert.NotNull (t.GetProperty ("Present"), "members");
@@ -79,7 +69,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void PreserveTypeWithoutMembers ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.TypeWithoutMembers");
+			var t = Type.GetType ("LinkAll.Attributes.TypeWithoutMembers" + WorkAroundLinkerHeuristics);
 			// type is preserved
 			Assert.NotNull (t, "type");
 			// but we did not ask the linker to preserve it's members
@@ -87,9 +77,12 @@ namespace LinkAll.Attributes {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("This feature is not supported by dotnet's ILLink -> https://github.com/xamarin/xamarin-macios/issues/8900")]
+#endif
 		public void PreserveTypeWithCustomAttribute ()
 		{
-			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute");
+			var t = Type.GetType ("LinkAll.Attributes.MemberWithCustomAttribute" + WorkAroundLinkerHeuristics);
 			// both type and members are preserved - in this case the type is preserved because it's member was
 			Assert.NotNull (t, "type");
 			// and that member was preserved because it's decorated with a preserved attribute
@@ -97,38 +90,42 @@ namespace LinkAll.Attributes {
 		}
 
 		[Test]
-		public void Class_LookupFullName ()
-		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Class, " + AssemblyName);
-			Assert.NotNull (klass, "Class");
-			// only required (and preserved) for debug builds
-			var method = klass.GetMethod ("LookupFullName", BindingFlags.NonPublic | BindingFlags.Static);
-			// note: since iOS/runtime unification this is being called by ObjCRuntime.Runtime.LookupManagedTypeName
-			// and will never be removed (even on Release builds)
-			Assert.NotNull (method, "LookupFullName");
-		}
-
-		[Test]
 		public void Runtime_RegisterEntryAssembly ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Runtime, " + AssemblyName);
+#if NET
+			TestRuntime.AssertSimulator ("https://github.com/xamarin/xamarin-macios/issues/10457");
+#endif
+
+			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// RegisterEntryAssembly is only needed for the simulator (not on devices) so it's only preserved for sim builds
 			var method = klass.GetMethod ("RegisterEntryAssembly", BindingFlags.NonPublic | BindingFlags.Static, null, new [] { typeof (Assembly) }, null);
-			Assert.That (method == null, Is.EqualTo (Runtime.Arch == Arch.DEVICE), "RegisterEntryAssembly");
+#if __MACOS__
+			var expectedNull = true;
+#else
+			var expectedNull = TestRuntime.IsDevice;
+#endif
+			Assert.That (method is null, Is.EqualTo (expectedNull), "RegisterEntryAssembly");
 		}
 
 		[Test]
 		public void MonoTouchException_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "Foundation.MonoTouchException, " + AssemblyName);
-			Assert.NotNull (klass, "MonoTouchException");
+#if NET
+			const string klassName = "ObjCRuntime.ObjCException";
+#elif __MACOS__
+			const string klassName = "Foundation.ObjCException";
+#else
+			const string klassName = "Foundation.MonoTouchException";
+#endif
+			var klass = Type.GetType (klassName + ", " + AssemblyName);
+			Assert.NotNull (klass, klassName);
 		}
 
 		[Test]
 		public void Class_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Class, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Class, " + AssemblyName);
 			Assert.NotNull (klass, "Class");
 			// handle is unconditionally preserved
 			var field = klass.GetField ("handle", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -138,19 +135,19 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void Runtime_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Runtime, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Runtime, " + AssemblyName);
 			Assert.NotNull (klass, "Runtime");
 			// Initialize and a few other methods are unconditionally preserved
 			var method = klass.GetMethod ("Initialize", BindingFlags.NonPublic | BindingFlags.Static);
 			Assert.NotNull (method, "Initialize");
-			method = klass.GetMethod ("RegisterNSObject", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof (NSObject), typeof (IntPtr) }, null);
+			method = klass.GetMethod ("RegisterNSObject", BindingFlags.NonPublic | BindingFlags.Static, null, new Type [] { typeof (NSObject), typeof (IntPtr) }, null);
 			Assert.NotNull (method, "RegisterNSObject");
 		}
 
 		[Test]
 		public void Selector_Unconditional ()
 		{
-			var klass = Type.GetType (NamespacePrefix + "ObjCRuntime.Selector, " + AssemblyName);
+			var klass = Type.GetType ("ObjCRuntime.Selector, " + AssemblyName);
 			Assert.NotNull (klass, "Selector");
 			// handle and is unconditionally preserved
 			var field = klass.GetField ("handle", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -162,13 +159,13 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void SmartEnumTest ()
 		{
-			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer");
+			var consumer = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartConsumer" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (consumer, "SmartConsumer");
 			Assert.NotNull (consumer.GetMethod ("GetSmartEnumValue"), "GetSmartEnumValue");
 			Assert.NotNull (consumer.GetMethod ("SetSmartEnumValue"), "SetSmartEnumValue");
 			var smartEnum = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnum");
 			Assert.NotNull (smartEnum, "SmartEnum");
-			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions");
+			var smartExtensions = GetType ().Assembly.GetType ("LinkAll.Attributes.SmartEnumExtensions" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (smartExtensions, "SmartEnumExtensions");
 			Assert.NotNull (smartExtensions.GetMethod ("GetConstant"), "GetConstant");
 			Assert.NotNull (smartExtensions.GetMethod ("GetValue"), "GetValue");
@@ -180,8 +177,7 @@ namespace LinkAll.Attributes {
 	}
 
 	[Preserve (AllMembers = true)]
-	class SmartConsumer : NSObject
-	{
+	class SmartConsumer : NSObject {
 		// The Smart Get/Set methods should not be linked away, and neither should the Smart enums + extensions
 		[Export ("getSmartEnumValue")]
 		[return: BindAs (typeof (SmartEnum), OriginalType = typeof (NSString))]
@@ -196,13 +192,11 @@ namespace LinkAll.Attributes {
 		}
 	}
 
-	public enum SmartEnum : int
-	{
+	public enum SmartEnum : int {
 		Smart = 0,
 	}
 
-	public static class SmartEnumExtensions
-	{
+	public static class SmartEnumExtensions {
 		public static NSString GetConstant (this SmartEnum self)
 		{
 			return (NSString) "Smart";

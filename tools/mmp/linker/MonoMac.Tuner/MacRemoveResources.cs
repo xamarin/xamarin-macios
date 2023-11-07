@@ -7,10 +7,10 @@ using Mono.Tuner;
 using Xamarin.Linker;
 
 namespace MonoMac.Tuner {
-	
+
 	public class MacRemoveResources : RemoveResources {
 
-		public MacRemoveResources (LinkerOptions options) : 
+		public MacRemoveResources (LinkerOptions options) :
 			base (options.I18nAssemblies)
 		{
 		}
@@ -30,13 +30,13 @@ namespace MonoMac.Tuner {
 			Process ("System", ProcessSystem);
 			Process ("System.Drawing", ProcessSystemDrawing);
 		}
-		
+
 		void Process (string assemblyName, Action<AssemblyDefinition> process)
 		{
 			AssemblyDefinition assembly;
 			if (!Context.TryGetLinkedAssembly (assemblyName, out assembly))
 				return;
-			
+
 			if (Context.Annotations.GetAction (assembly) == AssemblyAction.Link)
 				process (assembly);
 		}
@@ -46,7 +46,7 @@ namespace MonoMac.Tuner {
 			var resources = assembly.MainModule.Resources;
 			for (int i = 0; i < resources.Count; i++) {
 				var resource = resources [i] as EmbeddedResource;
-				if (resource == null)
+				if (resource is null)
 					continue;
 				if (resource.Name.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
 					resources.RemoveAt (i--);

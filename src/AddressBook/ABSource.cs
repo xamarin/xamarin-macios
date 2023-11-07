@@ -27,6 +27,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -36,45 +38,40 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-namespace AddressBook {
-	
-	// note: not a true flag
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABSourceType : int /* typedef int */ {
-		Local		= 0x0,
-		Exchange	= 0x1,
-		ExchangeGAL	= Exchange | SearchableMask,
-		MobileMe	= 0x2,
-		LDAP		= 0x3 | SearchableMask,
-		CardDAV		= 0x4,
-		DAVSearch	= CardDAV | SearchableMask,
-
-		SearchableMask = 0x01000000
-	};	
-	
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public class ABSource : ABRecord {
-#if !XAMCORE_2_0
-		[Advice ("Use ABSourceType.SearchableMask")]
-		public const int SearchableMask = 0x01000000;
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
-		internal ABSource (IntPtr handle, bool owns)
+namespace AddressBook {
+
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[SupportedOSPlatform ("ios")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+	[Introduced (PlatformName.MacCatalyst, 14, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
+#endif
+	public class ABSource : ABRecord {
+		[Preserve (Conditional = true)]
+		internal ABSource (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
-		
-		internal ABSource (IntPtr handle, ABAddressBook addressbook)
+
+		internal ABSource (NativeHandle handle, ABAddressBook addressbook)
 			: base (handle, false)
 		{
 			AddressBook = addressbook;
 		}
-		
-		public string Name {
+
+		public string? Name {
 			get { return PropertyToString (ABSourcePropertyId.Name); }
 			set { SetValue (ABSourcePropertyId.Name, value); }
 		}
-		
+
 		// Type is already a property in ABRecord
 		public ABSourceType SourceType {
 			get { return (ABSourceType) (int) PropertyTo<NSNumber> (ABSourcePropertyId.Type); }
@@ -82,18 +79,19 @@ namespace AddressBook {
 		}
 	}
 
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-	public enum ABSourceProperty {
-		Name,
-		Type,
-	}
-	
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[ObsoletedOSPlatform ("maccatalyst14.0", "Use the 'Contacts' API instead.")]
+	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
+#endif
 	static class ABSourcePropertyId {
 
-		public static int Name { get; private set;}
-		public static int Type { get; private set;}
-		
+		public static int Name { get; private set; }
+		public static int Type { get; private set; }
+
 		static ABSourcePropertyId ()
 		{
 			InitConstants.Init ();

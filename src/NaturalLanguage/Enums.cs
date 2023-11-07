@@ -28,7 +28,8 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
 		OmitPunctuation = 1uL << 1,
@@ -39,14 +40,16 @@ namespace NaturalLanguage {
 	}
 
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLModelType : long {
 		Classifier,
 		Sequence,
 	}
 
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTokenUnit : long {
 		Word,
 		Sentence,
@@ -57,14 +60,16 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
 		Symbolic = 1uL << 1,
 		Emoji = 1uL << 2,
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -183,9 +188,14 @@ namespace NaturalLanguage {
 		Urdu,
 		[Field ("NLLanguageVietnamese")]
 		Vietnamese,
+
+		[iOS (16, 0), Mac (13, 0), Watch (9, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Field ("NLLanguageKazakh")]
+		Kazakh,
 	}
 
-	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[MacCatalyst (13, 1)]
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]
 		TokenType,
@@ -201,8 +211,93 @@ namespace NaturalLanguage {
 		Language,
 		[Field ("NLTagSchemeScript")]
 		Script,
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("NLTagSchemeSentimentScore")]
 		SentimentScore,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum NLScript {
+		[Field ("NLScriptUndetermined")]
+		Undetermined,
+		[Field ("NLScriptArabic")]
+		Arabic,
+		[Field ("NLScriptArmenian")]
+		Armenian,
+		[Field ("NLScriptBengali")]
+		Bengali,
+		[Field ("NLScriptCanadianAboriginalSyllabics")]
+		CanadianAboriginalSyllabics,
+		[Field ("NLScriptCherokee")]
+		Cherokee,
+		[Field ("NLScriptCyrillic")]
+		Cyrillic,
+		[Field ("NLScriptDevanagari")]
+		Devanagari,
+		[Field ("NLScriptEthiopic")]
+		Ethiopic,
+		[Field ("NLScriptGeorgian")]
+		Georgian,
+		[Field ("NLScriptGreek")]
+		Greek,
+		[Field ("NLScriptGujarati")]
+		Gujarati,
+		[Field ("NLScriptGurmukhi")]
+		Gurmukhi,
+		[Field ("NLScriptHebrew")]
+		Hebrew,
+		[Field ("NLScriptJapanese")]
+		Japanese,
+		[Field ("NLScriptKannada")]
+		Kannada,
+		[Field ("NLScriptKhmer")]
+		Khmer,
+		[Field ("NLScriptKorean")]
+		Korean,
+		[Field ("NLScriptLao")]
+		Lao,
+		[Field ("NLScriptLatin")]
+		Latin,
+		[Field ("NLScriptMalayalam")]
+		Malayalam,
+		[Field ("NLScriptMongolian")]
+		Mongolian,
+		[Field ("NLScriptMyanmar")]
+		Myanmar,
+		[Field ("NLScriptOriya")]
+		Oriya,
+		[Field ("NLScriptSimplifiedChinese")]
+		SimplifiedChinese,
+		[Field ("NLScriptSinhala")]
+		Sinhala,
+		[Field ("NLScriptTamil")]
+		Tamil,
+		[Field ("NLScriptTelugu")]
+		Telugu,
+		[Field ("NLScriptThai")]
+		Thai,
+		[Field ("NLScriptTibetan")]
+		Tibetan,
+		[Field ("NLScriptTraditionalChinese")]
+		TraditionalChinese,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum NLContextualEmbeddingAssetsResult : long {
+		Available,
+		NotAvailable,
+		Error,
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	public enum NLContextualEmebeddingKey {
+		[Field ("NLContextualEmbeddingKeyLanguages")]
+		Languages,
+		[Field ("NLContextualEmbeddingKeyScripts")]
+		Scripts,
+		[Field ("NLContextualEmbeddingKeyRevision")]
+		Revision,
 	}
 }

@@ -1,0 +1,38 @@
+//
+// Unit tests for AVCustomDeviceRoute
+//
+// Authors:
+//	TJ Lambert <TJ.Lambert@microsoft.com>
+//
+// Copyright 2022 Microsoft Corp. All rights reserved.
+//
+#if IOS || __MACCATALYST__
+
+using System;
+using Foundation;
+using ObjCRuntime;
+using AVRouting;
+using NUnit.Framework;
+using Xamarin.Utils;
+
+namespace MonoTouchFixtures.AVRouting {
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class AVCustomDeviceRouteTest {
+
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+		}
+
+		[Test]
+		public void GetNetworkEndpointTest ()
+		{
+			Assert.IsNotNull (AVRouting.NetworkEndpoint, "NetworkEndpoint should not be null.");
+		}
+	}
+}
+
+#endif // IOS || __MACCATALYST__

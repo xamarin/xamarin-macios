@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 
-#if __UNIFIED__
 using ObjCRuntime;
 using Foundation;
 #if __MACOS__
@@ -8,17 +7,9 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 
 namespace Bindings.Test.Protocol {
-	
+
 	[Protocol]
 	public interface P1 {
 	}
@@ -34,16 +25,20 @@ namespace Bindings.Test.Protocol {
 	[Protocol]
 	public interface MemberAttributes {
 		// Methods
-		[Abstract] [Export ("requiredInstanceMethod")]
+		[Abstract]
+		[Export ("requiredInstanceMethod")]
 		void RequiredInstanceMethod ();
 
 		[Export ("optionalInstanceMethod")]
 		void OptionalInstanceMethod ();
 
-		[Static] [Abstract] [Export ("requiredStaticMethod")]
+		[Static]
+		[Abstract]
+		[Export ("requiredStaticMethod")]
 		void RequiredStaticMethod ();
 
-		[Static] [Export ("optionalStaticMethod")]
+		[Static]
+		[Export ("optionalStaticMethod")]
 		void OptionalStaticMethod ();
 
 		[Export ("variadicMethod:", IsVariadic = true)]
@@ -62,16 +57,20 @@ namespace Bindings.Test.Protocol {
 		unsafe void MethodWithRefParameters (int p1, ref int p2, out int p3, int p4);
 
 		// Properties
-		[Abstract] [Export ("requiredInstanceProperty")]
+		[Abstract]
+		[Export ("requiredInstanceProperty")]
 		string RequiredInstanceProperty { get; set; }
 
 		[Export ("optionalInstanceProperty")]
 		string OptionalInstanceProperty { get; set; }
 
-		[Static] [Abstract] [Export ("requiredStaticProperty")]
+		[Static]
+		[Abstract]
+		[Export ("requiredStaticProperty")]
 		string RequiredStaticProperty { get; set; }
 
-		[Static] [Export ("optionalStaticProperty")]
+		[Static]
+		[Export ("optionalStaticProperty")]
 		string OptionalStaticProperty { get; set; }
 
 		[Export ("propertyWithCustomAccessors")]

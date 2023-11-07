@@ -10,18 +10,6 @@ namespace UIKit {
 	public partial class UIPickerView : UIView, IUITableViewDataSource {
 		private UIPickerViewModel model;
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use Model instead")]
-		public UIPickerViewModel Source {
-			get {
-				return Model;
-			}
-			set {
-				Model = value;
-			}
-		}
-#endif
-
 		public UIPickerViewModel Model {
 			get {
 				return model;

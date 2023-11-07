@@ -1,4 +1,4 @@
-﻿
+
 namespace WebKitDelegateEvents
 {
 	// Should subclass MonoMac.AppKit.NSResponder
@@ -7,4 +7,3 @@ namespace WebKitDelegateEvents
 	{
 	}
 }
-

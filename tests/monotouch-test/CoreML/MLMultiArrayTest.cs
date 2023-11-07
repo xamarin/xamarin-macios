@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MLMultiArrayConstraint
 //
 // Authors:
@@ -6,8 +6,6 @@
 //
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
-
-#if XAMCORE_2_0
 
 using System;
 using System.Runtime.InteropServices;
@@ -18,13 +16,11 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreML
-{
+namespace MonoTouchFixtures.CoreML {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MLMultiArrayTest
-	{
+	public class MLMultiArrayTest {
 		[Test]
 		public void Ctors ()
 		{
@@ -73,7 +69,7 @@ namespace MonoTouchFixtures.CoreML
 			var shape = new nint [] { 10 };
 			using (var arr = new MLMultiArray (shape, MLMultiArrayDataType.Int32, out err)) {
 				Assert.IsNull (err, "err");
-				Assert.AreEqual (10, arr.Count, "Count");
+				Assert.AreEqual ((nint) 10, arr.Count, "Count");
 				Assert.AreEqual (new nint [] { 10 }, arr.Shape, "Shape");
 				Assert.AreEqual (new nint [] { 1 }, arr.Strides, "Strides");
 
@@ -139,5 +135,3 @@ namespace MonoTouchFixtures.CoreML
 		}
 	}
 }
-
-#endif // !XAMCORE_2_0

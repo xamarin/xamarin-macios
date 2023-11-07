@@ -27,6 +27,8 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
 	public partial class NSString : IComparable<NSString> {
@@ -36,84 +38,50 @@ namespace Foundation {
 		static IntPtr selDataUsingEncodingAllowHandle = Selector.GetHandle (selDataUsingEncodingAllow);
 #endif
 
-#if !XAMCORE_2_0
-		[Advice ("Use 'Encode' instead.")]
-		public NSData DataUsingEncoding (NSStringEncoding enc)
-		{
-#if MONOMAC
-			return new NSData (Messaging.IntPtr_objc_msgSend_int_int (Handle, selDataUsingEncodingAllowHandle, (int) enc, 0));
-#else
-			return new NSData (Messaging.IntPtr_objc_msgSend_int_int (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (int) enc, 0));
-#endif
-		}
-
-		[Advice ("Use 'Encode' instead.")]
-		public NSData DataUsingEncoding (NSStringEncoding enc, bool allowLossyConversion)
-		{
-#if MONOMAC
-			return new NSData (Messaging.IntPtr_objc_msgSend_int_int (Handle, selDataUsingEncodingAllowHandle, (int) enc, allowLossyConversion ? 1 : 0));
-#else
-			return new NSData (Messaging.IntPtr_objc_msgSend_int_int (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (int) enc, allowLossyConversion ? 1 : 0));
-#endif
-		}
-
-		public NSData Encode (NSStringEncoding enc)
-		{
-#if MONOMAC
-			return new NSData (Messaging.IntPtr_objc_msgSend_int_int (Handle, selDataUsingEncodingAllowHandle, (int) enc, 0));
-#else
-			return new NSData (Messaging.IntPtr_objc_msgSend_int_int (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (int) enc, 0));
-#endif
-		}
-
-		public NSData Encode (NSStringEncoding enc, bool allowLossyConversion)
-#else
 		public NSData Encode (NSStringEncoding enc, bool allowLossyConversion = false)
-#endif // XAMCORE_2_0
 		{
-#if MONOMAC
-			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, selDataUsingEncodingAllowHandle, (IntPtr) (int) enc, allowLossyConversion));
+#if NET
+			return new NSData (Messaging.NativeHandle_objc_msgSend_NativeHandle_bool (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (IntPtr) (int) enc, allowLossyConversion ? (byte) 1 : (byte) 0));
 #else
-			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (IntPtr) (int) enc, allowLossyConversion));
+#if MONOMAC
+			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, selDataUsingEncodingAllowHandle, (IntPtr) (int) enc, allowLossyConversion ? (byte) 1 : (byte) 0));
+#else
+			return new NSData (Messaging.IntPtr_objc_msgSend_IntPtr_bool (Handle, Selector.GetHandle (selDataUsingEncodingAllow), (IntPtr) (int) enc, allowLossyConversion ? (byte) 1 : (byte) 0));
+#endif
 #endif
 		}
 
-		public static NSString FromData (NSData data, NSStringEncoding encoding)
+		public static NSString? FromData (NSData data, NSStringEncoding encoding)
 		{
-			if (data == null) 
-				throw new ArgumentNullException ("data");
-			NSString ret = null;
-			try { 
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			NSString? ret = null;
+			try {
 				ret = new NSString (data, encoding);
 			} catch (Exception) {
-			
+
 			}
 			return ret;
 		}
 
-		public int CompareTo (NSString other)
+		public int CompareTo (NSString? other)
 		{
-			return (int)Compare (other);
+			// `compare:` behavior is undefined if `nil` is provided, so we need to handle that case.
+			if (other is null)
+				return -1;
+			return (int) Compare (other);
 		}
 
-		// [Export ("initWithContentsOfURL:encoding:error")]
-		// IntPtr Constructor (NSUrl url, NSStringEncoding encoding, out NSError error);
-		// 
-		// [Export ("initWithContentsOfURL:usedEncoding:error:")]
-		// IntPtr Constructor (NSUrl url, out NSStringEncoding encoding, out NSError error);
-		// 
-		// [Export ("initWithBytes:length:encoding")]
-		// IntPtr Constructor (IntPtr bytes, int length, NSStringEncoding encoding);
-		
 		public char this [nint idx] {
 			get {
 				return _characterAtIndex (idx);
 			}
 		}
 
-#if !XAMCORE_4_0 && !MONOMAC
+#if !NET && !MONOMAC
 		[Obsolete ("Use 'GetLocalizedUserNotificationString' that takes 'NSString' to preserve localization.")]
-		public static string GetLocalizedUserNotificationString (string key, params NSObject[] arguments) {
+		public static string GetLocalizedUserNotificationString (string key, params NSObject [] arguments)
+		{
 			return GetLocalizedUserNotificationString ((NSString) key, arguments);
 		}
 #endif

@@ -10,6 +10,7 @@
     <RootNamespace>xtrosanity</RootNamespace>
     <AssemblyName>xtro-sanity</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,6 +35,12 @@
   <ItemGroup>
     <Compile Include="Sanitizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\..\tools\common\Frameworks.cs">
+      <Link>Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

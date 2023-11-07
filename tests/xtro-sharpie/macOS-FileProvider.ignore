@@ -1,2 +1,9 @@
 ## the only member is not available on the macOS
 !missing-protocol! NSFileProviderItemDecorating not bound
+
+## This member is not available on mac
+## https://developer.apple.com/documentation/fileprovider/nsfileprovideritem/2879552-trashed?language=objc
+!extra-protocol-member! unexpected selector NSFileProviderItem::isTrashed found
+
+## when deprecated (xcode12 beta 3) this member was marked as not available on macOS (but it was before)
+!extra-protocol-member! unexpected selector NSFileProviderItem::typeIdentifier found

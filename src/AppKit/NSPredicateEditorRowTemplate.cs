@@ -7,6 +7,8 @@
 // Copyright 2013 Xamarin Inc
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -14,12 +16,12 @@ using System.Collections.Generic;
 using Foundation;
 using CoreData;
 
-namespace AppKit
-{
-	public partial class NSPredicateEditorRowTemplate
-	{
+#nullable enable
+
+namespace AppKit {
+	public partial class NSPredicateEditorRowTemplate {
 		public NSPredicateEditorRowTemplate (params NSCompoundPredicateType [] compoundTypes)
-			: this (compoundTypes.Select (t => NSNumber.FromUInt32 ((uint)t)).ToArray ())
+			: this (Array.ConvertAll (compoundTypes, t => NSNumber.FromUInt32 ((uint) t)))
 		{
 		}
 
@@ -33,7 +35,7 @@ namespace AppKit
 				leftExpressions.ToArray (),
 				rightExpressions.ToArray (),
 				modifier,
-				operators.Select (o => NSNumber.FromUInt32 ((uint)o)).ToArray (),
+				operators.Select (o => NSNumber.FromUInt32 ((uint) o)).ToArray (),
 				options)
 		{
 		}
@@ -93,7 +95,7 @@ namespace AppKit
 				leftExpressions.ToArray (),
 				attributeType,
 				modifier,
-				operators.Select (o => NSNumber.FromUInt32 ((uint)o)).ToArray (),
+				operators.Select (o => NSNumber.FromUInt32 ((uint) o)).ToArray (),
 				options)
 		{
 		}
@@ -129,3 +131,4 @@ namespace AppKit
 		}
 	}
 }
+#endif // !__MACCATALYST__

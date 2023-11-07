@@ -1,5 +1,5 @@
-﻿//
-// Unit tests for NSTimer
+//
+// Unit tests for NSUbiquitousKeyValueStore
 //
 // Authors:
 //	Rolf Bjarne Kvinge <rolf@xamarin.com>
@@ -7,18 +7,9 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-using System;
-using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -36,9 +27,29 @@ namespace MonoTouchFixtures.Foundation {
 				using (var key = new NSString ("key")) {
 					using (var value = new NSString ("value")) {
 						store [key] = value;
+#if __TVOS__
+						// broken on appletv devices running tvOS 14, test will fail when fixed
+						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
+							Assert.Null (store [key], "key 1");
+						else
+#elif __MACCATALYST__ || __MACOS__
+						if (TestRuntime.CheckXcodeVersion (13, 0))
+							Assert.Null (store [key], "key 1");
+						else
+#endif
 						Assert.AreEqual (value, store [key], "key 1");
 
 						store [(string) key] = value;
+#if __TVOS__
+						// broken on appletv devices running tvOS 14, test will fail when fixed
+						if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (12, 0))
+							Assert.Null (store [(string) key], "key 2");
+						else
+#elif __MACCATALYST__ || __MACOS__
+						if (TestRuntime.CheckXcodeVersion (13, 0))
+							Assert.Null (store [(string) key], "key 2");
+						else
+#endif
 						Assert.AreEqual (value, store [(string) key], "key 2");
 					}
 

@@ -1,0 +1,202 @@
+parameters:
+- name: runDeviceTests
+  type: boolean
+  default: true
+
+- name: vsdropsPrefix
+  type: string
+
+- name: keyringPass
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: isPR
+  type: boolean
+  default: false
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: buildSteps 
+  type: stepList 
+  default: []
+
+- name: makeParallelism
+  type: string
+  default: '8'
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- template: ../common/setup.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}
+
+- template: install-certificates.yml@yaml-templates
+  parameters:
+    DeveloperIdApplication: $(developer-id-application)
+    DeveloperIdInstaller: $(developer-id-installer)
+    IphoneDeveloper: $(iphone-developer)
+    MacDeveloper: $(mac-developer)
+    HostedMacKeychainPassword: ${{ parameters.keyringPass }}
+
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 5.x
+  displayName: 'Install .NET 5.x SDK'
+
+- task: xamops.azdevex.provisionator-task.provisionator@2
+  displayName: 'Provision Brew components'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
+    provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
+  timeoutInMinutes: 30
+  enabled: true
+  continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
+
+- bash: |
+    make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
+  displayName: 'Generate provisionator files.'
+
+- task: xamops.azdevex.provisionator-task.provisionator@2
+  displayName: 'Provision Products & Frameworks'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
+  timeoutInMinutes: 250
+
+# Use the env variables that were set by the label parsing in the configure step
+# print some useful logging to allow to know what is going on AND allow make some
+# choices, there are labels that contradict each other (skip-package vs build-packages)
+# we use warnings for those case we are not sure about.
+- task: PowerShell@2
+  name: configuration
+  displayName: "Parse PR labels"
+  timeoutInMinutes: 5
+  inputs:
+    filePath: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/parse_pr_labels.ps1
+    arguments: -XamarinTop "$(Build.SourcesDirectory)/xamarin-macios/" -BuildReason "$(Build.Reason)"
+
+- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
+  - task: PowerShell@2
+    displayName: Setup Private Feeds Credentials
+    inputs:
+      filePath: $(System.DefaultWorkingDirectory)/xamarin-macios/eng/common/SetupNugetSources.ps1
+      arguments: -ConfigFile $(System.DefaultWorkingDirectory)/xamarin-macios/NuGet.config -Password $Env:Token
+    env:
+      Token: $(dn-bot-dnceng-artifact-feeds-rw)
+
+  - bash: |
+      set -x
+      set -e
+      ARGS="--azure-feed \"https://dotnetclimsrc.blob.core.windows.net/dotnet\" -FeedCredential $CREDENTIALS"
+      echo "##vso[task.setvariable variable=DOTNET_INSTALL_EXTRA_ARGS]$ARGS"
+    env:
+      CREDENTIALS: $(dotnetclimsrc-read-sas-token)
+    displayName: "Configure install extra args"
+    timeoutInMinutes: 5
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-build.sh
+  env:
+    ${{ if eq(parameters.isPR, true) }}:
+      IsPR: 'True'
+    ${{ else }}:
+      IsPR: 'False'
+  displayName: "Configure build"
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+  timeoutInMinutes: 5
+
+# Make sure we have the right maccore hash checked out before we try to add
+# the provisioning profiles.
+- bash: |
+    set -ex
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+  name: resetDependencies
+  displayName: 'Reset dependencies'
+  timeoutInMinutes: 10
+
+# We'll need these profiles to build the hot restart prebuilt app during the build
+# (it's built for device, and thus needs a certificate available so that the app can be signed).
+- bash: ./install-qa-provisioning-profiles.sh -v
+  displayName: 'Add build provisioning profiles'
+  timeoutInMinutes: 30
+  continueOnError: true # should not stop the build
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+
+# only install all the simulators when working on a PR, EO machines do not allow use to perform this step 
+- ${{ if parameters.isPR }}:
+  - bash: $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
+    displayName: 'Provision simulators'
+- ${{ else }}:
+  - bash: |
+      xcodebuild -downloadPlatform iOS
+    displayName: 'Provision simulators'
+
+# Actual build of the project
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-macios.sh
+  name: build
+  workingDirectory: "$(Build.SourcesDirectory)/xamarin-macios"
+  displayName: 'Build'
+  timeoutInMinutes: 300
+  env:
+    MAKE_PARALLELISM: ${{ parameters.makeParallelism }}
+
+- ${{ each step in parameters.buildSteps }}:
+  - ${{ each pair in step }}:
+      ${{ pair.key }}: ${{ pair.value }}
+
+# clean the bot after we use it
+- template: ../common/teardown.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}
+
+# if we failed, write a comment and set the pipeline to failure. In this case, we do not want to hide the fact that we failed but we also want
+# to write a comment.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
+    $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
+  condition: failed()
+  displayName: 'Report build failure'
+  env:
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(fix_commit.GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)
+
+# Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  displayName: 'Collect and upload crash reports'
+  condition: always() # who knows when crash reports can end up being useful
+  continueOnError: true
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}

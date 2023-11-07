@@ -10,31 +10,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
+using ObjCRuntime;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PDFDocumentTest {
-		
+
 		[Test]
 		public void DataProvider ()
 		{
@@ -60,7 +46,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				CheckTamarin (doc);
 			}
 		}
-		
+
 		void CheckTamarin (CGPDFDocument pdf)
 		{
 			Assert.True (pdf.AllowsCopying, "AllowsCopying");

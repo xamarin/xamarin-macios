@@ -1,0 +1,30 @@
+# not possible with the generator but added INSFastEnumeration for whenever is supported.
+!missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
+
+# ignored in mac os too
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# AVSampleCursor catagories lack API_AVAILABLE markings https://github.com/xamarin/maccore/issues/2518
+!missing-selector! AVSampleCursor::comparePositionInDecodeOrderWithPositionOfCursor: not bound
+!missing-selector! AVSampleCursor::copyCurrentSampleFormatDescription not bound
+!missing-selector! AVSampleCursor::currentChunkInfo not bound
+!missing-selector! AVSampleCursor::currentChunkStorageRange not bound
+!missing-selector! AVSampleCursor::currentChunkStorageURL not bound
+!missing-selector! AVSampleCursor::currentSampleDependencyInfo not bound
+!missing-selector! AVSampleCursor::currentSampleDuration not bound
+!missing-selector! AVSampleCursor::currentSampleIndexInChunk not bound
+!missing-selector! AVSampleCursor::currentSampleStorageRange not bound
+!missing-selector! AVSampleCursor::currentSampleSyncInfo not bound
+!missing-selector! AVSampleCursor::decodeTimeStamp not bound
+!missing-selector! AVSampleCursor::presentationTimeStamp not bound
+!missing-selector! AVSampleCursor::samplesWithEarlierDecodeTimeStampsMayHaveLaterPresentationTimeStampsThanCursor: not bound
+!missing-selector! AVSampleCursor::samplesWithLaterDecodeTimeStampsMayHaveEarlierPresentationTimeStampsThanCursor: not bound
+
+## deprecated in all Mac Catalyst versions we support, and there's a viable alternative to use instead.
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withFlags: not found
+
+## this API is to have cute Objective-C syntax for something that's (according to the docs) identical to what another method does (which we've bound).
+!missing-selector! AVCaptureSynchronizedDataCollection::objectForKeyedSubscript: not bound
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found

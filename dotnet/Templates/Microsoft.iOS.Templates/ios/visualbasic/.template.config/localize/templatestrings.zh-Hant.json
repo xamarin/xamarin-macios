@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "iOS 應用程式",
+  "description": "用於建立 .NET 6 iOS 應用程式的專案",
+  "symbols/bundleId/description": "覆寫 Info.plist 中的 CFBundleIdentifier",
+  "symbols/minOSVersion/description": "覆寫專案檔中的 SupportedOSPlatformVersion",
+  "symbols/deviceFamily/choices/universal/description": "同時支援 iPhone 與 iPad 裝置",
+  "symbols/deviceFamily/choices/iphone/description": "僅支援 iPhone 裝置",
+  "symbols/deviceFamily/choices/ipad/description": "僅支援 iPad 裝置"
+}

@@ -1,0 +1,50 @@
+# common steps to download the artifacts from the test results.
+parameters:
+
+- name: testPrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
+- name: runTests
+  type: boolean
+  default: true
+
+steps:
+
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -PathType Container) {
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Reports" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
+
+- ${{ if eq(parameters.runTests, true) }}:
+  # Download the Html Report that was added by the tests job.
+  - task: DownloadPipelineArtifact@2
+    displayName: Download html report 
+    inputs:
+      patterns: 'HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)/HtmlReport.zip'
+      allowFailedBuilds: true
+      path: $(System.DefaultWorkingDirectory)/Reports
+
+  # Unzip report.
+  - task: ExtractFiles@1
+    displayName: 'Extract HtmlReport'
+    continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
+    inputs:
+      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)/HtmlReport.zip'
+      destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+
+  # Download the test report to write the comment.
+  - task: DownloadPipelineArtifact@2
+    displayName: Download Test Summary
+    inputs:
+      patterns: '**/TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)/TestSummary.md'
+      allowFailedBuilds: true
+      path: $(System.DefaultWorkingDirectory)\Reports
+
+  - powershell: |
+      Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)\TestSummary.md"
+      Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)"
+    displayName: Publish artifact paths
+    name: artifacts # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job

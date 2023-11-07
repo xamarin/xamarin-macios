@@ -27,9 +27,16 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
-	[iOS (9,0), Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVBeatRange {
 		public double Start;
@@ -57,12 +64,12 @@ namespace AVFoundation {
 			return !left.Equals (right);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVBeatRange))
 				return false;
 
-			return this.Equals ((AVBeatRange)obj);
+			return this.Equals ((AVBeatRange) obj);
 		}
 
 		public bool Equals (AVBeatRange other)
@@ -72,7 +79,7 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return Start.GetHashCode () ^ Length.GetHashCode ();
+			return HashCode.Combine (Start, Length);
 		}
 	}
 }

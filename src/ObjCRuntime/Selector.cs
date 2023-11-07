@@ -25,6 +25,13 @@
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
+using ObjCRuntime;
+
+#nullable enable
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace ObjCRuntime {
 	public partial class Selector : IEquatable<Selector>, INativeObject {
@@ -33,36 +40,26 @@ namespace ObjCRuntime {
 		internal const string Release = "release";
 		internal const string Retain = "retain";
 		internal const string Autorelease = "autorelease";
-		internal const string Dealloc = "dealloc";
-		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
 		internal const string PerformSelectorOnMainThreadWithObjectWaitUntilDone = "performSelectorOnMainThread:withObject:waitUntilDone:";
-		internal const string PerformSelectorInBackground = "performSelectorInBackground:withObject:";
-		internal const string PerformSelectorWithObjectAfterDelay = "performSelector:withObject:afterDelay:";
 
-		IntPtr handle;
-		string name;
+		NativeHandle handle;
+		string? name;
 
-		public Selector (IntPtr sel)
-			: this (sel, true)
+		public Selector (NativeHandle sel)
 		{
-		}
-
-		internal unsafe Selector (IntPtr sel, bool check)
-		{
-			if (check && !sel_isMapped (sel))
-				throw new ArgumentException ("sel is not a selector handle.");
+			if (!sel_isMapped (sel))
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (sel), "Not a selector handle.");
 
 			this.handle = sel;
-			name = GetName (sel);
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the (string) constructor.")]
-		public Selector (string name, bool alloc)
-			: this (name)
+		// this .ctor is required, like for any INativeObject implementation
+		// even if selectors are not disposable
+		[Preserve (Conditional = true)]
+		internal Selector (NativeHandle handle, bool /* unused */ owns)
 		{
+			this.handle = handle;
 		}
-#endif
 
 		public Selector (string name)
 		{
@@ -70,34 +67,43 @@ namespace ObjCRuntime {
 			handle = GetHandle (name);
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return handle; }
 		}
 
 		public string Name {
-			get { return name; }
+			get {
+				if (name is null)
+					name = GetName (handle);
+				return name;
+			}
 		}
 
-		public static bool operator!= (Selector left, Selector right) {
+		public static bool operator != (Selector left, Selector right)
+		{
 			return !(left == right);
 		}
 
-		public static bool operator== (Selector left, Selector right) {
-			if (((object)left) == null)
-				return (((object)right) == null);
-			if (((object)right) == null)
+		public static bool operator == (Selector left, Selector right)
+		{
+			if (left is null)
+				return (right is null);
+			if (right is null)
 				return false;
 
 			// note: there's a sel_isEqual function but it's safe to compare pointers
+			// ref: https://opensource.apple.com/source/objc4/objc4-551.1/runtime/objc-sel.mm.auto.html
 			return left.handle == right.handle;
 		}
 
-		public override bool Equals (object right) {
+		public override bool Equals (object? right)
+		{
 			return Equals (right as Selector);
 		}
 
-		public bool Equals (Selector right) {
-			if (right == null)
+		public bool Equals (Selector? right)
+		{
+			if (right is null)
 				return false;
 
 			return handle == right.handle;
@@ -110,12 +116,12 @@ namespace ObjCRuntime {
 
 		internal static string GetName (IntPtr handle)
 		{
-			return Marshal.PtrToStringAuto (sel_getName (handle));
+			return Marshal.PtrToStringAuto (sel_getName (handle))!;
 		}
 
 		// return null, instead of throwing, if an invalid pointer is used (e.g. IntPtr.Zero)
 		// so this looks better in the debugger watch when no selector is assigned (ref: #10876)
-		public static Selector FromHandle (IntPtr sel)
+		public static Selector? FromHandle (NativeHandle sel)
 		{
 			if (!sel_isMapped (sel))
 				return null;
@@ -123,21 +129,23 @@ namespace ObjCRuntime {
 			return new Selector (sel, false);
 		}
 
-		public static Selector Register (IntPtr handle)
+		public static Selector Register (NativeHandle handle)
 		{
 			return new Selector (handle);
 		}
 
 		// objc/runtime.h
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		extern static /* const char* */ IntPtr sel_getName (/* SEL */ IntPtr sel);
 
 		// objc/runtime.h
-		[DllImport ("/usr/lib/libobjc.dylib", EntryPoint="sel_registerName")]
+		// Selector.GetHandle is optimized by the AOT compiler, and the current implementation only supports IntPtr, so we can't switch to NativeHandle quite yet (the AOT compiler crashes).
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "sel_registerName")]
 		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
 
 		// objc/objc.h
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
+		[return: MarshalAs (UnmanagedType.U1)]
 		extern static /* BOOL */ bool sel_isMapped (/* SEL */ IntPtr sel);
 	}
 }

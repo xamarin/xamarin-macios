@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <!-- NOTE: $(VersionBand) is passed in via Makefile -->
+    <PackageId>Microsoft.NET.Sdk.$(_PlatformName).Manifest-$(VersionBand)</PackageId>
+    <Description>.NET Workload for $(_PlatformName) platforms</Description>
+    <_packagePath>$(MSBuildThisFileDirectory)..\Workloads\Microsoft.NET.Sdk.$(_PlatformName)\</_packagePath>
+  </PropertyGroup>
+  <Import Project="common.csproj" />
+  <ItemGroup>
+    <!-- workload .nupkg contents should go in /data/ -->
+    <Content Update="$(_packagePath)WorkloadManifest.*" PackagePath="data" />
+  </ItemGroup>
+</Project>

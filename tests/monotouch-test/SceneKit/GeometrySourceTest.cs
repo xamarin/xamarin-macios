@@ -1,9 +1,8 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Metal;
 using ObjCRuntime;
@@ -13,24 +12,7 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Metal;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.SceneKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.SceneKit {
 
@@ -47,7 +29,7 @@ namespace MonoTouchFixtures.SceneKit {
 			TestRuntime.AssertDevice ();
 
 			var device = MTLDevice.SystemDefault;
-			if (device == null)
+			if (device is null)
 				Assert.Inconclusive ("Device does not support Metal");
 
 			using (var buffer = device.CreateBuffer (1024, MTLResourceOptions.CpuCacheModeDefault)) {

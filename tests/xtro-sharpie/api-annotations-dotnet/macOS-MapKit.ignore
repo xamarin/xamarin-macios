@@ -1,0 +1,6 @@
+!missing-field! MKAnnotationCalloutInfoDidChangeNotification not bound
+!missing-protocol-conformance! MKUserLocation should conform to MKAnnotation
+!missing-protocol-member! MKOverlay::coordinate not found
+
+## Marked as unavailable on macOS
+!missing-enum-value! MKUserTrackingMode native value MKUserTrackingModeFollowWithHeading = 2 not bound

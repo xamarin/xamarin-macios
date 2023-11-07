@@ -23,7 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
@@ -32,12 +32,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVMetadataMachineReadableCodeObject {
-		public CGPoint[] Corners {
+		public CGPoint[]? Corners {
 			get {
 				var arr = WeakCorners;
-				if (arr == null)
+				if (arr is null)
 					return null;
 				var rv = new CGPoint[arr.Length];
 				for (int i = 0; i < rv.Length; i++) {

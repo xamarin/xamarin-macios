@@ -7,30 +7,23 @@
 // Copyright 2012 Xamarin Inc All rights reserved.
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CMMemoryPoolTest
-	{
+	public class CMMemoryPoolTest {
 		[Test]
 		public void Ctor ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-			using (var mp = new CMMemoryPool ())
-			{
+			using (var mp = new CMMemoryPool ()) {
 				var allocator = mp.GetAllocator ();
 				var ptr = allocator.Allocate (55);
 				Assert.AreNotEqual (IntPtr.Zero, ptr);
@@ -41,10 +34,9 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CtorAgeOutPeriod ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-			using (var mp = new CMMemoryPool (TimeSpan.FromSeconds (40)))
-			{
+			using (var mp = new CMMemoryPool (TimeSpan.FromSeconds (40))) {
 				var allocator = mp.GetAllocator ();
 				var ptr = allocator.Allocate (2);
 				Assert.AreNotEqual (IntPtr.Zero, ptr);
@@ -53,4 +45,3 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 	}
 }
-

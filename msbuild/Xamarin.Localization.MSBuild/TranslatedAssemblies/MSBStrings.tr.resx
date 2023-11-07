@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="M0001" xml:space="preserve">
+        <value>{0} aracını yürütme işlemi şu bağımsız değişkenlerle başlatıldı: {1}
+        </value>
+    </data>
+  <data name="M0002" xml:space="preserve">
+        <value>{0} aracını yürütme işlemi tamamlandı (çıkış kodu = {1}).
+        </value>
+    </data>
+  <data name="E0003" xml:space="preserve">
+        <value>'{0}' aracı yürütülürken hata oluştu: {1}
+        </value>
+    </data>
+  <data name="E0004" xml:space="preserve">
+        <value>'{0}' için kod imzalaması yapılamadı: {1}
+        </value>
+    </data>
+  <data name="E0005" xml:space="preserve">
+        <value>'{0}' için kod imzalaması yapılamadı
+        </value>
+    </data>
+  <data name="E0006" xml:space="preserve">
+        <value>  '{0}' bulunamadı.
+        </value>
+    </data>
+  <data name="E0007" xml:space="preserve">
+        <value>'{0}' yüklenirken hata oluştu: Görüntü biçimi bilinmiyor.
+        </value>
+    </data>
+  <data name="E0008" xml:space="preserve">
+        <value>'{2}' için iTunesArtwork boyutları ({0}x{1}) geçersiz.
+        </value>
+    </data>
+  <data name="E0009" xml:space="preserve">
+        <value>'{2}' için aynı boyutlarda ({0}x{1}) birden fazla iTunesArtwork dosyası bulundu.
+        </value>
+    </data>
+  <data name="E0010" xml:space="preserve">
+        <value>'{0}' yüklenirken hata oluştu: {1}
+        </value>
+    </data>
+  <data name="E0011" xml:space="preserve">
+        <value>'{0}' MinimumOSVersion değeri ayrıştırılamadı
+        </value>
+    </data>
+  <data name="E0012" xml:space="preserve">
+        <value>'{0}' TargetArchitectures ayrıştırılamadı
+        </value>
+    </data>
+  <data name="E0013" xml:space="preserve">
+        <value>'{1}' için {0} SDK'sı yüklenmedi.
+        </value>
+    </data>
+  <data name="E0014" xml:space="preserve">
+        <value>iOS, uygulamayı başlatamayabileceğinden yürütülebilir (CFBundleExecutable) adı ({0}) '.app' ile bitemez.
+        </value>
+    </data>
+  <data name="W0016" xml:space="preserve">
+        <value>watchOS için derlenirken yalnızca watchOS 4.3 SDK'sı taklit edilebilir.
+        </value>
+    </data>
+  <data name="M0017" xml:space="preserve">
+        <value>Tüm http yüklerine zaten izin veriliyor.
+        </value>
+    </data>
+  <data name="M0018" xml:space="preserve">
+        <value>Hata ayıklamayı desteklemek için rastgele HTTP yüklerine izin veriliyor.
+        </value>
+    </data>
+  <data name="W0019" xml:space="preserve">
+        <value>Desteklenen iPhone yönleri ayarlanmamış
+        </value>
+    </data>
+  <data name="W0020" xml:space="preserve">
+        <value>Desteklenen iPhone yönleri eşleşen çiftler halinde değil
+        </value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="W0021" xml:space="preserve">
+        <value>Desteklenen iPad yönleri ayarlanmamış
+        </value>
+    </data>
+  <data name="W0022" xml:space="preserve">
+        <value>Desteklenen iPad yönleri eşleşen çiftler halinde değil
+        </value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="E0023" xml:space="preserve">
+        <value>1'den fazla iTunesMetadata.plist dosyası bulunamaz.
+        </value>
+    </data>
+  <data name="E0024" xml:space="preserve">
+        <value>'{0}/Settings.bundle/Root.plist' adlı Ayarlar plist dosyası yüklenirken hata oluştu: {1}.
+        </value>
+    </data>
+  <data name="E0025" xml:space="preserve">
+        <value>'{0}' SDK sürümü ayrıştırılamadı
+        </value>
+    </data>
+  <!-- E0026: not used anymore -->
+  <!-- E0027: not used anymore -->
+  <!-- E0028: not used anymore -->
+  <!-- E0029: not used anymore -->
+  <!-- E0030: not used anymore -->
+  <!-- E0031: not used anymore -->
+  <data name="E0032" xml:space="preserve">
+        <value>SDK bin dizini bulunamadı
+        </value>
+    </data>
+  <!-- E0033: not used anymore -->
+  <!-- E0034: not used anymore -->
+  <!-- E0035: not used anymore -->
+  <!-- E0036: not used anymore -->
+  <!-- E0037: not used anymore -->
+  <!-- E0038: not used anymore -->
+  <!-- E0039: not used anymore -->
+  <!-- E0040: not used anymore -->
+  <!-- E0041: not used anymore -->
+  <!-- E0042: not used anymore -->
+  <!-- E0043: not used anymore -->
+  <data name="E0044" xml:space="preserve">
+        <value>'{0}' konumunda geçerli bir Xcode uygulama paketi grubu bulunamadı. Lütfen Visual Studio tercihlerindeki {1} Apple SDK konumunuzu güncelleştirin.
+        </value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
+    </data>
+  <data name="E0045" xml:space="preserve">
+        <value>Geçerli bir kullanılabilir Xcode geliştirici yolu bulunamadı
+        </value>
+    </data>
+  <data name="E0046" xml:space="preserve">
+        <value>'{0}' bulunamadı
+        </value>
+    </data>
+  <data name="M0047" xml:space="preserve">
+        <value>'{1}' içinde '{0}' aranıyor
+        </value>
+    </data>
+  <data name="E0048" xml:space="preserve">
+        <value>Bilinmeyen SDK platformu: {0}
+        </value>
+    </data>
+  <data name="E0049" xml:space="preserve">
+        <value>{0} Adına veya UUID'sine sahip sağlama profili bulunamadı.
+        </value>
+    </data>
+  <data name="E0050" xml:space="preserve">
+        <value>Bilinmeyen arama seçeneği: {0}
+        </value>
+    </data>
+  <data name="W0051" xml:space="preserve">
+        <value>'{0}' için bilinmeyen yerel başvuru türü.
+        </value>
+    </data>
+  <data name="W0052" xml:space="preserve">
+        <value>Dinamik yerel başvurular desteklenmiyor: '{0}'
+        </value>
+    </data>
+  <data name="E0053" xml:space="preserve">
+        <value>ARMv6 hedef mimarisi, Xamarin.iOS içinde artık desteklenmiyor. Lütfen desteklenen bir mimari seçin.
+        </value>
+    </data>
+  <data name="W0054" xml:space="preserve">
+        <value>'{0}' yanıt dosyası oluşturulamadı: {1}
+        </value>
+    </data>
+  <data name="E0055" xml:space="preserve">
+        <value>Info.plist yüklenemedi: {0}
+        </value>
+    </data>
+  <data name="E0057" xml:space="preserve">
+        <value>Geçersiz mimariler: '{0}'.
+        </value>
+    </data>
+  <data name="E0058" xml:space="preserve">
+        <value>Hedef cihaz bilgileri ayrıştırılamadı.
+        </value>
+    </data>
+  <data name="E0059" xml:space="preserve">
+        <value>Hedef cihaz bulunamadı.
+        </value>
+    </data>
+  <data name="E0060" xml:space="preserve">
+        <value>Cihaz mimarisi bilgileri bulunamadı.
+        </value>
+    </data>
+  <data name="E0061" xml:space="preserve">
+        <value>Geçersiz hedef mimari: '{0}'
+        </value>
+    </data>
+  <data name="E0062" xml:space="preserve">
+        <value>Cihaz işletim sistemi bilgileri bulunamadı.
+        </value>
+    </data>
+  <data name="E0063" xml:space="preserve">
+        <value>Cihaz modeli bilgileri bulunamadı.
+        </value>
+    </data>
+  <data name="E0064" xml:space="preserve">
+        <value>iOS sürümü bilgileri bulunamadı.
+        </value>
+    </data>
+  <data name="E0065" xml:space="preserve">
+        <value>'{0}' kaynak kuralları dosyası bulunamadı.
+        </value>
+    </data>
+  <data name="E0066" xml:space="preserve">
+        <value>'{0}' SdkVersion ayrıştırılamadı.
+        </value>
+    </data>
+  <data name="E0067" xml:space="preserve">
+        <value>Xcode 10, watchOS 1 uygulamalarını desteklemiyor. watchOS 2 uygulamalarına yükseltin veya Xcode'un eski bir sürümünü kullanın.</value>
+    </data>
+  <data name="E0068" xml:space="preserve">
+        <value>WatchKit uygulamaları oluşturmak için Xcode'un 6.2 veya daha yüksek bir sürümü yüklü olmalıdır.
+        </value>
+    </data>
+  <data name="E0069" xml:space="preserve">
+        <value>iOS {0}, WatchKit'i desteklemiyor.
+        </value>
+    </data>
+  <data name="E0070" xml:space="preserve">
+        <value>Xcode uygulama paketi grubunda WatchKit başlatıcısı bulunamadı.
+        </value>
+    </data>
+  <data name="W0071" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısında ana uygulama paketi grubunun CFBundleShortVersionString değeri ({2}) ile eşleşmeyen bir CFBundleShortVersionString ({1}) var
+        </value>
+    </data>
+  <data name="W0072" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısı bir CFBundleVersion belirtmiyor
+        </value>
+    </data>
+  <data name="W0073" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısı, ana uygulama paketi grubunun CFBundleVersion ({2}) değeri ile eşleşmeyen bir CFBundleVersion ({1}) içeriyor
+        </value>
+    </data>
+  <data name="W0074" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısında tanınmayan bir NSExtensionPointIdentifier değeri ('{1}') var.
+        </value>
+    </data>
+  <data name="W0075" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir CFBundleShortVersionString belirtmiyor
+        </value>
+    </data>
+  <data name="W0076" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında ana uygulama paketi grubunun CFBundleShortVersionString ({2}) değeri ile eşleşmeyen bir CFBundleShortVersionString ({1}) var
+        </value>
+    </data>
+  <data name="W0077" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir CFBundleVersion belirtmiyor
+        </value>
+    </data>
+  <data name="W0078" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında, ana uygulama paketi grubunun CFBundleVersion ({2}) değeri ile eşleşmeyen bir CFBundleVersion ({1}) var
+        </value>
+    </data>
+  <data name="W0079" xml:space="preserve">
+        <value>'{0}' Watch Uzantısı bir CFBundleShortVersionString belirtmiyor)
+        </value>
+    </data>
+  <data name="W0080" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında ana uygulama paketi grubunun CFBundleShortVersionString ({2}) değeri ile eşleşmeyen bir CFBundleShortVersionString ({1}) var
+        </value>
+    </data>
+  <data name="W0081" xml:space="preserve">
+        <value>'{0}' Watch Uzantısı bir CFBundleVersion belirtmiyor
+        </value>
+    </data>
+  <data name="W0082" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında ana uygulama paketi grubunun CFBundleVersion ({2}) değeri ile eşleşmeyen bir CFBundleVersion ({1}) var
+        </value>
+    </data>
+  <!-- E0083: not used anymore -->
+  <data name="E0084" xml:space="preserve">
+        <value>'{}' yolundaki {0} '{1}' SDK'sı bulunamadı
+        </value>
+    </data>
+  <data name="E0085" xml:space="preserve">
+        <value>'{2}' konumunda {0} '{1}' SDK kullanıcı yolu bulunamadı
+        </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
+    </data>
+  <data name="E0086" xml:space="preserve">
+        <value>Geçerli bir Xcode geliştirici yolu bulunamadı
+        </value>
+    </data>
+  <!-- E0087: not used anymore -->
+  <!-- E0088: not used anymore -->
+  <data name="E0089" xml:space="preserve">
+        <value>Tanınmayan platform: {0}
+        </value>
+    </data>
+  <data name="W0090" xml:space="preserve">
+        <value>Varlık, bir varlık kataloğunun parçası değil: {0}
+        </value>
+    </data>
+  <data name="E0091" xml:space="preserve">
+        <value>Dosya bulunamadı: {0}
+        </value>
+    </data>
+  <data name="E0092" xml:space="preserve">
+        <value>Geçersiz JSON: {0}
+         </value>
+    </data>
+  <data name="E0093" xml:space="preserve">
+        <value>Kısmi Info.plist dosyası oluşturulmadı: {0}
+        </value>
+    </data>
+  <data name="E0094" xml:space="preserve">
+        <value>`{1}` adlı {0} günlük dosyası yüklenemedi: {2}
+        </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
+    </data>
+  <data name="W0095" xml:space="preserve">
+        <value>Altool çıkışı ayrıştırılamadı: {0}.
+			Çıkış: {1}
+        </value>
+    </data>
+  <!-- E0096: not used anymore -->
+  <data name="E0097" xml:space="preserve">
+        <value>API tanımı dosyası belirtilmedi.
+        </value>
+    </data>
+  <data name="E0098" xml:space="preserve">
+        <value>{0} başarısız oldu.
+        </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
+    </data>
+  <data name="E0099" xml:space="preserve">
+        <value>  '{0}' Paket Grubu Kaynağı diskte bulunamadı ('{1}' konumunda olmalıdır)
+        </value>
+    </data>
+  <data name="E0100" xml:space="preserve">
+        <value>'{0}' yolu, uygulama paketi grubu dışında bir dosya oluşturulmasına neden olur ve bu dosya kullanılamaz.
+        </value>
+    </data>
+  <data name="E0101" xml:space="preserve">
+        <value>Info.plist dosyalarında Derleme Eylemi değeri 'Yok' olmalıdır.
+        </value>
+    </data>
+  <data name="E0102" xml:space="preserve">
+        <value>'{0}' adı ayrıldı ve kullanılamıyor.
+        </value>
+    </data>
+  <data name="W0103" xml:space="preserve">
+        <value>Frameworks dizininde çerçeve olmayan bir dizin bulundu: {0}
+        </value>
+    </data>
+  <data name="W0104" xml:space="preserve">
+        <value>{0} çerçevesi {1} adlı ikili dosyayı içermiyor
+        </value>
+    </data>
+  <data name="M0105" xml:space="preserve">
+        <value>Frameworks dizini bulunamadı.
+        </value>
+    </data>
+  <data name="W0106" xml:space="preserve">
+        <value>'{0}' bildirim anahtarının değeri belirlenemedi
+        </value>
+    </data>
+  <data name="E0107" xml:space="preserve">
+        <value>'{0}' adlı kısmi Info.plist şablon dosyası yüklenirken hata oluştu: {1}
+        </value>
+    </data>
+  <data name="W0108" xml:space="preserve">
+        <value>Sağlama profili olmadan Entitlements.plist dosyasındaki $(TeamIdentifierPrefix) genişletilemiyor.
+        </value>
+    </data>
+  <data name="W0109" xml:space="preserve">
+        <value>Sağlama profili olmadan Entitlements.plist dosyasındaki $(AppIdentifierPrefix) genişletilemiyor.
+        </value>
+    </data>
+  <data name="W0110" xml:space="preserve">
+        <value>'{0}' gibi iCloud yetkilendirmeleri için Sağlama Profili gerekir.
+        </value>
+    </data>
+  <data name="W0111" xml:space="preserve">
+        <value>iCloud yetkilendirmesi '{0}', Hazırlık Profili tarafından desteklenmiyor.
+        </value>
+    </data>
+  <data name="E0112" xml:space="preserve">
+        <value>'{0}' Entitlements.plist şablonu bulunamadı.
+        </value>
+    </data>
+  <data name="E0113" xml:space="preserve">
+        <value>'{0}' Entitlements.plist şablonu yüklenirken hata oluştu: {1}
+        </value>
+    </data>
+  <data name="E0114" xml:space="preserve">
+        <value>'{0}' xcent dosyası yazılırken hata oluştu: {1}
+        </value>
+    </data>
+  <data name="E0115" xml:space="preserve">
+        <value>archived-expanded-entitlements.xcent dosyası yazılırken hata oluştu: {0}
+        </value>
+    </data>
+  <data name="M0116" xml:space="preserve">
+        <value>{0} aracını yürütme işlemi tamamlandı.
+        </value>
+    </data>
+  <data name="E0117" xml:space="preserve">
+        <value>{0}, {1} kodu ile çıkış yaptı
+        </value>
+    </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} öğesinden {1} koduyla çıkıldı:
+{2}</value>
+    </data>
+  <data name="M0119" xml:space="preserve">
+        <value>`{1}' çıkış dosyası daha yeni olduğundan `{0}' atlanıyor.
+        </value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
+    </data>
+  <data name="E0120" xml:space="preserve">
+        <value>`{0}' kaydedilirken hata oluştu: {1}
+        </value>
+    </data>
+  <data name="M0121" xml:space="preserve">
+        <value>Bağlama kaynak paketi oluşturuluyor: {0}
+        </value>
+    </data>
+  <data name="E0122" xml:space="preserve">
+        <value>'{0}' yüklenirken hata oluştu
+        </value>
+    </data>
+  <data name="E0123" xml:space="preserve">
+        <value>Paket oluşturulamadı. Ek bağımsız değişkenler ayrıştırılamadı.
+        </value>
+    </data>
+  <data name="E0124" xml:space="preserve">
+        <value>'{0}' kimliği, varsayılan anahtarlıktaki geçerli bir sertifika/özel anahtar çiftiyle eşleşmiyor.
+        </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
+    </data>
+  <data name="M0125" xml:space="preserve">
+        <value>İmzalama kimliği saptandı:
+        </value>
+    </data>
+  <data name="M0126" xml:space="preserve">
+        <value>'{0}' sertifikası, '{1}' ön ekleriyle eşleşmiyor.
+        </value>
+    </data>
+  <data name="M0127" xml:space="preserve">
+        <value>'{0}' sertifikasının süresi doldu ({1})
+        </value>
+    </data>
+  <data name="E0128" xml:space="preserve">
+        <value>Anahtarlıkta geçerli {0} kod imzalama anahtarı bulunamadı. https://developer.apple.com adresinden bir kod imzalama sertifikası istemeniz gerekiyor.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0129" xml:space="preserve">
+        <value>'{0}' sertifikası '{1}' ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E0130" xml:space="preserve">
+        <value>Anahtarlıkta {0} kod imzalama anahtarı ('{1}') bulunamadı.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
+    </data>
+  <data name="E0131" xml:space="preserve">
+        <value>{1} üzerinde {0} için kullanılabilir sağlama profili bulunamadı.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0132" xml:space="preserve">
+        <value>'{0}', '{1}' ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E0133" xml:space="preserve">
+        <value>Yüklü sağlama profilleri, yüklü {0} {1} imza kimlikleriyle eşleşmiyor.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
+    </data>
+  <data name="M0134" xml:space="preserve">
+        <value>Uyumlu AppID'ye sahip eşleşen sağlama profilleri bulunuyor, yalnızca en uzun eşleşen (joker) kimliklere sahip profiller saklanıyor.
+        </value>
+    </data>
+  <data name="M0135" xml:space="preserve">
+        <value>AppID: Daha iyi bir eşleşme bulunduğundan {0} kaldırıldı: {1}.
+        </value>
+    </data>
+  <data name="M0136" xml:space="preserve">
+        <value>AppID: Daha iyi eşleşmeler bulunduğundan {0} kaldırıldı: {1}.
+        </value>
+    </data>
+  <data name="W0137" xml:space="preserve">
+        <value>Paket grubu tanımlayıcısıyla eşleşen yüklü sağlama profili yok.
+        </value>
+    </data>
+  <data name="M0138" xml:space="preserve">
+        <value>Paket grubu tanımlayıcısı ile birden çok sağlama profili eşleşiyor; ilk eşleşme kullanılıyor.
+        </value>
+    </data>
+  <data name="E0139" xml:space="preserve">
+        <value>{0}, CFBundleIdentifier tanımlamıyor
+        </value>
+    </data>
+  <data name="E0140" xml:space="preserve">
+        <value>Belirtilen {0} sağlama profili ('{1}') bulunamadı
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
+    </data>
+  <data name="E0141" xml:space="preserve">
+        <value>'{0}' proje paket grubu tanımlayıcısı, belirtilen '{1}' sağlama profili ile eşleşmiyor
+        </value>
+    </data>
+  <data name="M0142" xml:space="preserve">
+        <value>'{0}' ile birden çok imzalama kimliği eşleşiyor; ilk eşleşme kullanılıyor.
+        </value>
+    </data>
+  <data name="M0143" xml:space="preserve">
+        <value>Birden çok imzalama kimliği bulundu; ilk kimlik kullanılıyor.
+        </value>
+    </data>
+  <data name="E0144" xml:space="preserve">
+        <value>Belirtilen {0} sağlama profili ('{1}') bulunamadı
+        </value>
+    </data>
+  <data name="E0145" xml:space="preserve">
+        <value>Belirtilen '{1}' sağlama profiliyle eşleşen {0} imzalama kimliği yok.
+        </value>
+    </data>
+  <data name="E0146" xml:space="preserve">
+        <value>'{0}' paket grubu tanımlayıcısı, seçilen '{0}' imzalama kimliği için yüklü bir sağlama profili ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E0147" xml:space="preserve">
+        <value>'{0}' paket grubu tanımlayıcısı, seçilen '{0}' imzalama kimliği için yüklü bir sağlama profili ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E0148" xml:space="preserve">
+        <value>'{0}' paket grubu tanımlayıcısı, yüklü bir sağlama profili ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="M0149" xml:space="preserve">
+        <value>  {1} konumunda {0} bulundu
+        </value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
+    </data>
+  <data name="E0150" xml:space="preserve">
+        <value>  AssemblyPath null veya boş olamaz
+        </value>
+    </data>
+  <data name="M0151" xml:space="preserve">
+        <value>Oluşturulan paket grubu adı: {0}
+        </value>
+    </data>
+  <data name="E0152" xml:space="preserve">
+        <value>Özellik belirtilmedi.
+        </value>
+    </data>
+  <data name="E0153" xml:space="preserve">
+        <value>'{0}' konumundaki sözlük {1} anahtarını içermiyordu
+        </value>
+    </data>
+  <data name="E0154" xml:space="preserve">
+        <value>Dizi dizini ayrıştırılamadı: {0}
+        </value>
+    </data>
+  <data name="E0155" xml:space="preserve">
+        <value>'{0}' öğesine yönelik dizi dizini aralık dışında
+        </value>
+    </data>
+  <data name="E0156" xml:space="preserve">
+        <value>{0} değerleri alt özellikleri desteklemiyor.
+        </value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
+    </data>
+  <data name="E0157" xml:space="preserve">
+        <value>{0} değerlerinin alınması desteklenmiyor.
+        </value>
+    </data>
+  <data name="E0158" xml:space="preserve">
+        <value>'{0}' dosyası yok.
+        </value>
+    </data>
+  <data name="E0159" xml:space="preserve">
+        <value>'{0}' dosyası '{1}' ile çakışıyor.
+        </value>
+    </data>
+  <data name="E0160" xml:space="preserve">
+        <value>Watch uygulamaları/uzantıları için Xcode 6.2 veya üzeri bir sürüm gerekir. Geçerli Xcode sürümü: {0}
+        </value>
+    </data>
+  <data name="E0161" xml:space="preserve">
+        <value>Öğelerin hesaplanmış mantıksal adları olmalıdır.
+        </value>
+    </data>
+  <data name="M0162" xml:space="preserve">
+        <value>Yinelenen Giriş Atlandı: {0}
+        </value>
+    </data>
+  <data name="M0163" xml:space="preserve">
+        <value>Dosya Yok Ancak Oluşturulacak: {0}
+        </value>
+    </data>
+  <data name="M0164" xml:space="preserve">
+        <value>'{0}' dizini oluşturuluyor
+        </value>
+    </data>
+  <data name="M0165" xml:space="preserve">
+        <value>'{0}' konumundaki dosya '{1}' konumuna kopyalanıyor
+        </value>
+    </data>
+  <data name="E0166" xml:space="preserve">
+        <value>DestinationFolder veya DestinationFiles belirtmeniz gerekir ancak ikisini birden belirtmeyin.
+        </value>
+    </data>
+  <data name="E0167" xml:space="preserve">
+        <value>DestinationFiles sayısı, SourceFiles sayısı ile eşleşmelidir.
+        </value>
+    </data>
+  <data name="M0168" xml:space="preserve">
+        <value>  Çerçeve bütünleştirilmiş kodu atlanıyor: {0}
+        </value>
+    </data>
+  <data name="E0169" xml:space="preserve">
+        <value>Bilinmeyen hedef çerçeve tanımlayıcısı: {0}.
+        </value>
+    </data>
+  <data name="E0170" xml:space="preserve">
+        <value>{1} içinde {0} bulunamadı.
+        </value>
+    </data>
+  <data name="E0171" xml:space="preserve">
+        <value>{0} SDK'sı yüklenmedi.
+        </value>
+    </data>
+  <data name="E0172" xml:space="preserve">
+        <value>{0} SDK'sının '{1}' sürümü yüklü değil ve daha yeni bir sürüm bulunamadı.
+        </value>
+    </data>
+  <data name="E0173" xml:space="preserve">
+        <value>{0} SDK'sının '{1}' sürümü yüklü değil. Bunun yerine, daha yeni sürüm olan '{2}' kullanılıyor.
+        </value>
+    </data>
+  <data name="E0174" xml:space="preserve">
+        <value>xcframework {0} hatalı veya bilinmeyen bir biçime sahip ve işlenemiyor.</value>
+    </data>
+  <data name="E0175" xml:space="preserve">
+        <value>'{0}' içinde eşleşen çerçeve bulunamadı. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
+    </data>
+  <data name="W0176" xml:space="preserve">
+        <value>'{0}' ve '{1}' seçenekleri çakışıyor. '{1}' yoksayılacak.
+        </value>
+    </data>
+  <data name="E0177" xml:space="preserve">
+        <value>ISshCommands örneği alınamıyor. Lütfen Mac için geçerli bir bağlantı kurulduğundan emin olun.</value>
+    </data>
+  <data name="E0178" xml:space="preserve">
+        <value>'{0}' Arşivi, '{1}' konumuna kopyalanmaya çalışılırken bir hata oluştu. Ayrıntılar: {2}</value>
+    </data>
+  <data name="E0179" xml:space="preserve">
+        <value>Kullanılabilir Mac bağlantısı yok. '{0}' görevi yürütülmeyecek</value>
+    </data>
+  <data name="E0180" xml:space="preserve">
+        <value>DataSet {0} seri durumdan çıkarılamadı</value>
+    </data>
+  <data name="E0181" xml:space="preserve">
+        <value>{0} dosyasında derleme eylemi olarak ImageAsset yok.</value>
+    </data>
+  <data name="E0182" xml:space="preserve">
+        <value>{1} kataloğundaki {0} için UTI çözümlenemedi</value>
+    </data>
+  <data name="E0183" xml:space="preserve">
+        <value>Xcode ve Xamarin.iOS arasındaki uyumluluk doğrulanmaya çalışılırken bir hata oluştu</value>
+    </data>
+  <data name="E0184" xml:space="preserve">
+        <value>Proje, uyumlu olmayan bir Xcode sürümüyle ({0}) oluşturulduğundan beklenmeyen uyarı veya hatalarla karşılaşılabilir. Lütfen Xcode '{1}' yükleyin veya daha fazla bilgi için belgelere bakın.</value>
+    </data>
+  <data name="E0185" xml:space="preserve">
+        <value>Xcode ve Xamarin.iOS arasındaki uyumluluk doğrulanmaya çalışılırken bir hata oluştu. Ayrıntılar: {0}
+        </value>
+    </data>
+  <data name="E0186" xml:space="preserve">
+        <value>Sağlanan Arşiv yolu geçerli bir arşiv dosyasından (.xcarchive) değil. Arşiv Yolu: '{0}'</value>
+    </data>
+  <data name="E0187" xml:space="preserve">
+        <value>macOS {0} sürümü karşılık gelen bir Mac Catalyst sürümüne eşlenemedi. Geçerli macOS sürümleri şunlardır: {1}</value>
+    </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Mac Catalyst {0} sürümü karşılık gelen bir macOS sürümüne eşlenemedi. Geçerli Mac Catalyst sürümleri şunlardır: {1}</value>
+    </data>
+  <data name="E0189" xml:space="preserve">
+        <value>Özel bağlayıcı bağımsız değişkenleri '-{0}' ayrıştırılamadı: {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>The NativeResource item '{0}' does not exist.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+  <data name="E7001" xml:space="preserve">
+        <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.
+        </value>
+    </data>
+  <data name="E7002" xml:space="preserve">
+        <value>Bu makinede ağ bağdaştırıcısı yok. Bu, bir cihazda Wi-Fi üzerinden hata ayıklama veya profil oluşturma sırasında gerekir.
+        </value>
+    </data>
+  <data name="E7003" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısı bir Info.plist içermiyor.
+        </value>
+    </data>
+  <data name="E7004" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısı bir CFBundleIdentifier belirtmiyor.
+        </value>
+    </data>
+  <data name="E7005" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısı bir CFBundleExecutable belirtmiyor.
+        </value>
+    </data>
+  <data name="E7006" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısında geçersiz bir CFBundleIdentifier ({1}) var. Bu, ana uygulama paketi grubunun CFBundleIdentifier değeri ({2}) ile başlamıyor.
+        </value>
+    </data>
+  <data name="E7007" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısında geçersiz ".key" son ekiyle biten bir CFBundleIdentifier ({1}) var.
+        </value>
+    </data>
+  <data name="E7008" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısı bir CFBundleShortVersionString belirtmiyor.
+        </value>
+    </data>
+  <data name="E7009" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısında geçersiz bir Info.plist var: Bir NSExtension sözlüğü içermiyor.
+        </value>
+    </data>
+  <data name="E7010" xml:space="preserve">
+        <value>'{0}' Uygulama Uzantısında geçersiz bir Info.plist var: NSExtension sözlüğü bir NSExtensionPointIdentifier değeri içermiyor.
+        </value>
+    </data>
+  <!-- E7011: not used anymore -->
+  <!-- E7012: not used anymore -->
+  <!-- E7013: not used anymore -->
+  <data name="E7014" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir Info.plist içermiyor.
+        </value>
+    </data>
+  <data name="E7015" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir CFBundleIdentifier belirtmiyor.
+        </value>
+    </data>
+  <data name="E7016" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir CFBundleIdentifier ({1}) var. Bu, ana uygulama paketi grubunun CFBundleIdentifier ({2}) değeri ile başlamıyor.
+        </value>
+    </data>
+  <data name="E7017" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçerli bir UIDeviceFamily değeri yok. 'Watch (4)' bekleniyordu ancak '{1} ({2})' bulundu.
+        </value>
+    </data>
+  <data name="E7018" xml:space="preserve">
+        <value>'{name}' Watch Uygulaması bir CFBundleExecutable belirtmiyor
+        </value>
+    </data>
+  <data name="E7019" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir WKCompanionAppBundleIdentifier ('{1}') var. Bu, ana uygulama paketi grubunun CFBundleIdentifier ('{2}') değeri ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E7020" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir Info.plist var: WKWatchKitApp anahtarı mevcut olmalı ve 'true' değerini içermelidir.
+        </value>
+    </data>
+  <data name="E7021" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir Info.plist var: LSRequiresIPhoneOS anahtarı mevcut olmamalıdır.
+        </value>
+    </data>
+  <data name="E7022" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir Watch Uzantısı içermiyor.
+        </value>
+    </data>
+  <data name="E7022_A" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir Watch Uzantısı içermiyor.
+        </value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
+    </data>
+  <data name="E7023" xml:space="preserve">
+        <value>'{0}' Watch Uzantısı bir Info.plist içermiyor.
+        </value>
+    </data>
+  <data name="E7024" xml:space="preserve">
+        <value>'{0}' Watch Uzantısı bir CFBundleIdentifier belirtmiyor.
+        </value>
+    </data>
+  <data name="E7025" xml:space="preserve">
+        <value>'{0}' Watch Uzantısı bir CFBundleExecutable belirtmiyor.
+        </value>
+    </data>
+  <data name="E7026" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir CFBundleIdentifier ({1}) var. Bu, ana uygulama paketi grubunun CFBundleIdentifier ({2}) değeri ile başlamıyor.
+        </value>
+    </data>
+  <data name="E7027" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz ".key" son ekiyle biten bir CFBundleIdentifier ({1}) var.
+        </value>
+    </data>
+  <data name="E7028" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir Info.plist var: Bir NSExtension sözlüğü içermiyor.
+        </value>
+    </data>
+  <data name="E7029" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir Info.plist var: NSExtensionPointIdentifier, "com.apple.watchkit" olmalıdır.
+        </value>
+    </data>
+  <data name="E7029_A" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir Info.plist var: NSExtension sözlüğü bir NSExtensionPointIdentifier içermelidir.
+        </value>
+    </data>
+  <data name="E7030" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir Info.plist var: NSExtension sözlüğü NSExtensionAttributes içermelidir.
+        </value>
+    </data>
+  <data name="E7031" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir WKAppBundleIdentifier değeri ('{1}') var ancak üst Watch Uygulama paketi grubunun CFBundleIdentifier tanımlayıcısı ('{2}') ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E7031_A" xml:space="preserve">
+        <value>'{0}' Watch Uzantısında geçersiz bir Info.plist var: NSExtensionAttributes sözlüğü bir WKAppBundleIdentifier içermelidir.
+        </value>
+    </data>
+  <data name="E7032" xml:space="preserve">
+        <value>'{0}' WatchKit Uzantısında geçersiz bir Info.plist var: UIRequiredDeviceCapabilities sözlüğü 'watch-companion' özelliğini içermemelidir.
+        </value>
+    </data>
+  <data name="E7032_A" xml:space="preserve">
+        <value>'{0}' WatchKit Uzantısında geçersiz bir Info.plist var: UIRequiredDeviceCapabilities dizisi 'watch-companion' özelliğini içermemelidir.
+        </value>
+    </data>
+  <data name="E7033" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir Info.plist içermiyor.
+        </value>
+    </data>
+  <data name="E7034" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir CFBundleIdentifier belirtmiyor.
+        </value>
+    </data>
+  <data name="E7035" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçerli bir UIDeviceFamily değeri yok. '{1}' bekleniyordu ancak '{2} ({3})' bulundu.
+        </value>
+    </data>
+  <data name="E7036" xml:space="preserve">
+        <value>'{0}' Watch Uygulaması bir CFBundleExecutable belirtmiyor.
+        </value>
+    </data>
+  <data name="E7037" xml:space="preserve">
+        <value>'{0}' WatchKit Uzantısında geçersiz bir WKAppBundleIdentifier değeri ('{1}') var ancak Watch Uygulamasının CFBundleIdentifier ('{2}') tanımlayıcısı ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E7038" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir WKCompanionAppBundleIdentifier ('{1}') var. Bu, ana uygulama paketi grubunun CFBundleIdentifier ('{2}') değeri ile eşleşmiyor.
+        </value>
+    </data>
+  <data name="E7038_A" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir Info.plist var: WKCompanionAppBundleIdentifier mevcut olmalı ve ana uygulama paketi grubunun CFBundleIdentifier değeri ile eşleşmelidir.
+        </value>
+    </data>
+  <data name="E7039" xml:space="preserve">
+        <value>'{0}' Watch Uygulamasında geçersiz bir Info.plist var: LSRequiresIPhoneOS anahtarı mevcut olmamalıdır.
+        </value>
+    </data>
+  <data name="E7040" xml:space="preserve">
+        <value>{0} uygulama paketi grubu bir Info.plist içermiyor.
+        </value>
+    </data>
+  <data name="E7041" xml:space="preserve">
+        <value>{0}, CFBundleIdentifier belirtmiyor.
+        </value>
+    </data>
+  <data name="E7042" xml:space="preserve">
+        <value>{0}, CFBundleExecutable belirtmiyor.
+        </value>
+    </data>
+  <data name="E7043" xml:space="preserve">
+        <value>{0}, CFBundleSupportedPlatforms belirtmiyor.
+        </value>
+    </data>
+  <data name="E7044" xml:space="preserve">
+        <value>{0}, UIDeviceFamily belirtmiyor.
+        </value>
+    </data>
+  <data name="E7044_A" xml:space="preserve">
+        <value>{0} geçersiz: UIDeviceFamily anahtarı, '{1}' için bir değer içermelidir.
+        </value>
+    </data>
+  <data name="E7045" xml:space="preserve">
+        <value>Tanınmayan Tür: {Type}
+        </value>
+    </data>
+  <data name="E7046" xml:space="preserve">
+        <value>Ekle: "{0}" Girişi Yanlış Belirtildi
+        </value>
+    </data>
+  <data name="E7047" xml:space="preserve">
+        <value>Ekle: "{0}" Girişi Geçersiz Dizi Dizini İçeriyor
+        </value>
+    </data>
+  <data name="E7048" xml:space="preserve">
+        <value>Ekle: "{0}" Girişi Zaten Var
+        </value>
+    </data>
+  <data name="E7049" xml:space="preserve">
+        <value>Ekle: "{0}" Girişi Üst Öğeye Eklenemiyor
+        </value>
+    </data>
+  <data name="E7050" xml:space="preserve">
+        <value>Sil: "{0}" Girişi Üst Öğeden Silinemiyor
+        </value>
+    </data>
+  <data name="E7051" xml:space="preserve">
+        <value>Sil: "{0}" Girişi Geçersiz Dizi Dizini İçeriyor
+        </value>
+    </data>
+  <data name="E7052" xml:space="preserve">
+        <value>Sil: "{0}" Girişi Yok
+        </value>
+    </data>
+  <data name="E7053" xml:space="preserve">
+        <value>İçeri Aktar: "{0}" Girişi Yanlış Belirtildi
+        </value>
+    </data>
+  <data name="E7054" xml:space="preserve">
+        <value>İçeri Aktar: "{0}" Girişi Geçersiz Dizi Dizini İçeriyor
+        </value>
+    </data>
+  <data name="E7055" xml:space="preserve">
+        <value>İçeri Aktar: Dosya Okunurken Hata Oluştu: {0}
+        </value>
+    </data>
+  <data name="E7056" xml:space="preserve">
+        <value>İçeri Aktar: "{0}" Girişi Üst Öğeye Eklenemiyor
+        </value>
+    </data>
+  <data name="E7057" xml:space="preserve">
+        <value>Birleştir: Dizi Girişleri Sözlüğe Eklenemiyor
+        </value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
+    </data>
+  <data name="E7058" xml:space="preserve">
+        <value>Birleştir: Belirtilen Giriş Bir Kapsayıcı Olmalıdır
+        </value>
+    </data>
+  <data name="E7059" xml:space="preserve">
+        <value>Birleştir: "{0}" Girişi Geçersiz Dizi Dizini İçeriyor
+        </value>
+    </data>
+  <data name="E7060" xml:space="preserve">
+        <value>Birleştir: "{0}" Girişi Yok
+        </value>
+    </data>
+  <data name="E7061" xml:space="preserve">
+        <value>Birleştir: Dosya Okunurken Hata Oluştu: {0}
+        </value>
+    </data>
+  <data name="E7062" xml:space="preserve">
+        <value>Ayarla: "{0}" Girişi Yanlış Belirtildi
+        </value>
+    </data>
+  <data name="E7063" xml:space="preserve">
+        <value>Ayarla: "{0}" Girişi Geçersiz Dizi Dizini İçeriyor
+        </value>
+    </data>
+  <data name="E7064" xml:space="preserve">
+        <value>Ayarla: "{0}" Girişi Yok
+        </value>
+    </data>
+  <!-- E7068: not in use anymore -->
+  <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14+ uzantısı watchOS 1 uygulamalarını desteklemiyor. Lütfen projenizi watchOS 2+ sürümüne geçirin.</value>
+    </data>
+  <data name="E7070" xml:space="preserve">
+        <value>Geçersiz mimari ({0}): Tek seferde birden fazla mimari ilişkilendirilemez.</value>
+    </data>
+  <data name="E7071" xml:space="preserve">
+        <value>AOT derleyicisi bağımsız değişkenleri ayrıştırılamıyor: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+  <data name="InvalidFramework" xml:space="preserve">
+        <value>Geçersiz çerçeve: {0}</value>
+    </data>
+  <data name="InvalidPlatform" xml:space="preserve">
+        <value>Geçersiz platform: {0}</value>
+    </data>
+  <data name="E7072" xml:space="preserve">
+        <value>Paket ürün gereksinim dosyası hedef mimariler ({1}) ile uyuşmayan mimariler ({0}) içeriyor</value>
+    </data>
+  <data name="E7073" xml:space="preserve">
+        <value>En az bir uygulama paketi grubu belirtilmelidir.</value>
+    </data>
+  <data name="E7074" xml:space="preserve">
+        <value>{0} uygulama paketi grubu yok.</value>
+    </data>
+  <data name="E7075" xml:space="preserve">
+        <value>{0} uygulama paketi grubu için 'SpecificSubDirectory' meta verisi sağlanmadı.</value>
+    </data>
+  <data name="E7076" xml:space="preserve">
+        <value>'{0}' sembolik bağlantısı birleştirilemiyor, bağlantının farklı hedefleri var.</value>
+    </data>
+  <data name="E7077" xml:space="preserve">
+        <value>'{0}' dosyası birleştirilemiyor, giriş uygulama paketi gruplarında farklı dosyalar var.</value>
+    </data>
+  <data name="E7078" xml:space="preserve">
+        <value>Geçersiz uygulama paketi grubu: {0} Mach-O dosyasında bağımlı dosyalar var.</value>
+    </data>
+  <data name="E7079" xml:space="preserve">
+        <value>Geçersiz uygulama paketi grubu: giriş uygulama paketi gruplarında {0} dosyasının farklı türleri var.</value>
+    </data>
+  <data name="E7080" xml:space="preserve">
+        <value>Uygulama paketi grubu no. {0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+  <data name="E7081" xml:space="preserve">
+        <value>'{0}' AOT derleyicisi yok.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>Info.plist ({1}) dosyasındaki {0} değeri proje dosyasındaki SupportedOSPlatformVersion değeri ({2}) ile eşleşmiyor (proje dosyasında SupportedOSPlatformVersion değeri yoksa bir varsayılan değer alınır). Info.plist dosyasındaki değeri SupportedOSPlatformVersion değeriyle eşleşecek şekilde değiştirin veya Info.plist dosyasındaki değeri kaldırın (ve dosyada yoksa, proje dosyasına bir SupportedOSPlatformVersion değeri ekleyin).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>Tüm yazı tipi dosyalarının uygulama paketi grubunda aynı dizinde bulunması gerekir. Aşağıdaki yazı tipi dosyaları uygulama paketi grubunda farklı hedef dizinlerde bulunuyor:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>Hedef dizin: {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="E7085" xml:space="preserve">
+        <value>"{0}" görevine, gerekli "{1}" parametresi için bir değer verilmedi, ayrıca {3} kaynağında "{2}" meta verileri yoktu.</value>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Girişte sembolik bağlantılar olduğundan sıkıştırılmış bağlama kaynak paketi oluşturuluyor.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>'{0}' değeri Compress özelliği için geçersiz. Geçerli değerler: 'true', 'false' veya 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>{0} dizininde bir 'manifest' dosyası bekleniyor.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="E7088" xml:space="preserve">
+        <value>'{1}' öğesindeki 'PublishFolderType' meta veri değeri '{0}' tanınmıyor. Dosya, uygulama paketine kopyalanmayacak.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>'{0}' dosyası bir 'PublishFolderType' meta verisi belirtmiyor ve varsayılan bir değer hesaplanamadı. Dosya, uygulama paketine kopyalanmayacak.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>'{1}' öğesindeki 'PublishFolderType' meta veri değeri '{0}' tanınmıyor. Dosya, uygulama paketine kopyalanmayacak. Dosyanın uygulama paketine kopyalanması gerekmiyorsa, öğedeki '{2}' meta verilerini kaldırın.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>{0} çerçevesi statik kitaplıklardan oluşan bir çerçevedir ve uygulamaya kopyalanmaz.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>'{0}' dosyası geçerli bir çerçeve değil: {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>Bağlama kaynak paketi {0} yok.</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>'{0}' dosyası veya dizini bir çerçeve veya çerçeve içindeki bir dosya değil.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. Meta veriler biri için '{1}' olurken bir diğeri için '{2}' olur.</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}={2}' meta verileri bir öğe için ayarlandı ancak diğer öğe için ayarlanmadı.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}' meta verileri her bir öğe için farklı değerlere sahip (bazen bu '{2}' olabilirken başka durumlarda ise '{3}' olabilir).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily değeri '6' bu platform için geçerli değil. Yalnızca Mac Catalyst için geçerlidir.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily değeri '6', macOS 11.0 gerektirir. Lütfen proje dosyasındaki 'SupportedOSPlatformVersion' sürümünü en az 14.0 olarak ayarlayın (macOS 11.0'ın Mac Catalyst sürümüne eşdeğer). Geçerli değer: {0} (macOS {1} sürümüne eşdeğer).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Bağlama kaynak paketi bulunamadı: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>'{0}' değerine sahip bilinmeyen özellik '{1}'.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>'{2}' türündeki '{1}' yetkilendirmesi için CustomEntitlements öğe grubunda belirtilen '{0}' değeri geçersiz. Hiçbir değer beklenmiyordu.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>'{2}' türündeki '{1}' yetkilendirmesi için CustomEntitlements öğe grubunda belirtilen '{0}' değeri geçersiz. 'true' veya 'false' bekleniyordu.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>'{1}' yetkilendirmesi için CustomEntitlements öğe grubunda belirtilen '{0}' türü bilinmiyor. 'Remove', 'Boolean', 'String' veya 'StringArray' bekleniyordu.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>'{2}' bağlama kaynak paketindeki '{1}' yerel referansı için beklenmeyen '{0}' uzantısı.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>{0} zip dosyasında '{1}' adlı bir dosya bekleniyordu.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>'{0}' zip dosyası mevcut değil.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>'{0}' dosyası yok.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>'{0}' öğesi yerel referans olarak işlenemiyor: bilinmeyen tür.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Info.plist '{0}' xcframework '{1}'den yüklenemedi.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>'{0}' dizini yok.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>'{1}' zip dosyasında '{0}' dosya veya dizini bulunamadı.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>'{0}' zip dosyası bu platformda işlenemiyor: '{1}' dosyası bir sembolik bağlantı.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}" görevine bu platformda derleme sırasında gerekli olan "{1}" parametresi için bir değer verilmedi.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>illink derlemesi yok: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>{0} bütünleştirilmiş kodu 'ObjectFile' meta verileri sağlamadı.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>Bütünleştirilmiş kod {0} bir giriş bütünleştirilmiş kodu olarak birden çok kez geçirildi ({1} bütünleştirilmiş kodundan başvuruldu).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT derlemesi {0} başarısız, AOT derleyicisinden {1} koduyla çıkıldı.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>{0} bütünleştirilmiş koduyla ilgili bir bütünleştirilmiş kod başvuru döngüsüyle karşılaşıldı.</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
+</root>

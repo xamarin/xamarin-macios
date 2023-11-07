@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Controlador de vista de Mac Catalyst",
+  "description": "Clase y xib del controlador de vista MacCatalyst",
+  "symbols/namespace/description": "espacio de nombres para el código generado"
+}

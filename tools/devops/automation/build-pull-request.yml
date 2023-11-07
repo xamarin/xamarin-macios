@@ -1,0 +1,214 @@
+# YAML pipeline build definition
+# https://devdiv.visualstudio.com/DevDiv/_apps/hub/ms.vss-ciworkflow.build-ci-hub?_a=edit-build-definition&id=13947&view=Tab_Tasks
+#
+# YAML build pipeline based on the Jenkins multi-stage (main branch) build workflow
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/job/main/
+# https://jenkins.internalx.com/view/Xamarin.MaciOS/job/macios/configure
+#
+parameters:
+
+- name: provisionatorChannel
+  displayName: Provisionator channel to use 
+  type: string
+  default: 'latest'
+
+- name: macOSName # comes from the build agent demand named macOS.Name
+  displayName: Name of the version of macOS to use
+  type: string
+  default: 'Ventura'
+
+- name: pool
+  type: string
+  displayName: Bot pool to use
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
+- name: runTests
+  displayName: Run Simulator Tests
+  type: boolean
+  default: true
+
+- name: runOldMacOSTests
+  displayName: Run Tests on older macOS versions 
+  type: boolean
+  default: true
+
+- name: runWindowsIntegration
+  displayName: Run Windows integration tests
+  type: boolean
+  default: true
+
+- name: runGovernanceTests
+  displayName: Run Governance Checks
+  type: boolean
+  default: true
+
+- name: runSamples
+  displayName: Run Samples
+  type: boolean
+  default: false
+  
+- name: enableAPIDiff
+  displayName: Enable API diff generation
+  type: boolean
+  default: true
+
+- name: simTestsConfigurations
+  displayName: Simulator test configurations to run
+  type: object
+  default: []
+
+- name: deviceTestsConfigurations
+  displayName: Device test configurations to run
+  type: object
+  default: [
+    {
+      testPrefix: 'iOS64',
+      stageName: 'ios64b_device',
+      displayName: 'iOS64 Device Tests',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
+      useXamarinStorage: false,
+      testsLabels: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests iOS',
+      makeTarget: 'vsts-device-tests',
+      extraBotDemands: [
+        'ios',
+      ]
+    },
+    {
+      testPrefix: 'tvos',
+      stageName: 'tvos_device',
+      displayName: 'tvOS Device Tests',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
+      useXamarinStorage: false,
+      testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
+      statusContext: 'VSTS: device tests tvOS',
+      makeTarget: 'vsts-device-tests',
+      extraBotDemands: [
+        'tvos',
+      ]
+    }]
+
+- name: macTestsConfigurations
+  displayName: macOS test configurations to run
+  type: object
+  default: [
+    {
+      stageName: 'mac_11_5_m1',
+      displayName: 'M1 - Mac Big Sur (11.5)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Big Sur (11.5)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals BigSur",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    },
+    {
+      stageName: 'mac_13_0_m1',
+      displayName: 'M1 - Mac Ventura (13.0)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Ventura (13.0)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Ventura",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    }]
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: true
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
+variables:
+- template: templates/variables.yml
+- name: MicrobuildConnector
+  value: ''
+- name: MaciosUploadPrefix
+  value: ''
+- name: Packaging.EnableSBOMSigning
+  value: false
+
+trigger: none
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - '*'  # yes, you do need the quote, * has meaning in yamls
+  paths:
+    exclude:
+    - .github
+    - docs
+    - CODEOWNERS
+    - ISSUE_TEMPLATE.md
+    - LICENSE
+    - NOTICE.txt
+    - SECURITY.MD
+    - README.md
+    - src/README.md
+    - tools/mtouch/README.md
+    - msbuild/Xamarin.Localization.MSBuild/README.md
+
+stages:
+- template: templates/main-stage.yml
+  parameters:
+    xcodeChannel: Stable
+    macOSName: ${{ parameters.macOSName }}
+    isPR: true
+    provisionatorChannel: ${{ parameters.provisionatorChannel }}
+    pool: ${{ parameters.pool }}
+    runTests: ${{ parameters.runTests }}
+    runDeviceTests: false
+    runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
+    runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
+    runGovernanceTests: ${{ parameters.runGovernanceTests }}
+    runSamples: ${{ parameters.runSamples }}
+    enableAPIDiff: ${{ parameters.enableAPIDiff }}
+    forceInsertion: false
+    skipESRP: true
+    ${{ if ne(length(parameters.simTestsConfigurations), 0)}}:
+      simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
+    macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+    azureStorage: ${{ variables['azureStorage'] }}
+    azureContainer: ${{ variables['azureContainer'] }}
+    signingSetupSteps:
+    - template: ./templates/sign-and-notarized/setup.yml
+      parameters:
+        isPR: true

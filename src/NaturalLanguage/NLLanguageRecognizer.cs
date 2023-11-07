@@ -19,10 +19,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using System.Linq;
-using System.Collections.Generic;
 
+#nullable enable
+
+using System;
+using System.Collections.Generic;
+using CoreFoundation;
 using Foundation;
 
 namespace NaturalLanguage {
@@ -31,44 +33,42 @@ namespace NaturalLanguage {
 
 		public static NLLanguage GetDominantLanguage (string @string)
 		{
-			var nsstring = NSString.CreateNative (@string);
-			var nslang = _GetDominantLanguage (nsstring);
-			var lang = NLLanguageExtensions.GetValue (nslang);
-			nslang?.Dispose ();
-			NSString.ReleaseNative (nsstring);
-			return lang;
-		}
-	
-		public Dictionary<NLLanguage, double> GetLanguageHypotheses (nuint maxHypotheses)
-		{
-			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses)) {
-				var result = new Dictionary<NLLanguage, double> (hypo.Keys.Length);
-				foreach (var k in hypo.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = hypo[k].DoubleValue;
-				}
-				return result;
+			var nsstring = CFString.CreateNative (@string);
+			try {
+				using (var nslang = _GetDominantLanguage (nsstring))
+					return NLLanguageExtensions.GetValue (nslang);
+			} finally {
+				NSString.ReleaseNative (nsstring);
 			}
 		}
 
-		public Dictionary<NLLanguage, double> LanguageHints
+		public Dictionary<NLLanguage, double> GetLanguageHypotheses (nuint maxHypotheses)
 		{
+			using (var hypo = GetNativeLanguageHypotheses (maxHypotheses)) {
+				return NLLanguageExtensions.Convert (hypo);
+			}
+		}
+
+		public Dictionary<NLLanguage, double> LanguageHints {
 			get {
-				var result = new Dictionary<NLLanguage, double> (NativeLanguageHints.Keys.Length);
-				foreach (var k in NativeLanguageHints.Keys) {
-					result[NLLanguageExtensions.GetValue (k)] = NativeLanguageHints[k].DoubleValue;
-				}
-				return result;
+				return NLLanguageExtensions.Convert (NativeLanguageHints);
 			}
 			set {
 				var i = 0;
-				var nsKeys = new NSString[value.Keys.Count];
-				var nsValues = new NSNumber[value.Keys.Count];
+				var skipCount = 0;
+				var nsKeys = new NSString [value.Keys.Count];
+				var nsValues = new NSNumber [value.Keys.Count];
 				foreach (var item in value) {
-					nsKeys[i] = NLLanguageExtensions.GetConstant (item.Key);
-					nsValues[i] = new NSNumber (item.Value);
+					var constant = NLLanguageExtensions.GetConstant (item.Key);
+					if (constant is null) {
+						skipCount++;
+						continue;
+					}
+					nsKeys [i] = constant;
+					nsValues [i] = new NSNumber (item.Value);
 					i++;
 				}
-				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length);
+				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length - skipCount);
 			}
 		}
 	}

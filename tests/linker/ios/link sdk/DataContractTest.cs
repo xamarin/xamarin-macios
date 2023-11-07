@@ -1,18 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk {
 
-	[DataContract(Namespace="XamarinBugExample")]
-	public enum MyEnum : short
-	{
+	[DataContract (Namespace = "XamarinBugExample")]
+	public enum MyEnum : short {
 		[EnumMember]
 		Foo = 0,
 		[EnumMember]
@@ -21,10 +16,9 @@ namespace LinkSdk {
 		Baz = 2
 	}
 
-	[DataContract(Namespace="XamarinBugExample")]
-	public class MyClass
-	{
-		public MyClass() { }
+	[DataContract (Namespace = "XamarinBugExample")]
+	public class MyClass {
+		public MyClass () { }
 
 		[DataMember]
 		List<MyEnum> MyList { get; set; }
@@ -38,10 +32,10 @@ namespace LinkSdk {
 		[Test]
 		// http://forums.xamarin.com/discussion/7380/type-cast-error-in-xamarin-6-4-3-on-device-only#latest
 		// could not be reproduced with 6.4.4
-		public void DoCrash()
+		public void DoCrash ()
 		{
-			System.Collections.IList lst = new List<MyEnum>();
-			object value = Enum.Parse (typeof(MyEnum), "1");
+			System.Collections.IList lst = new List<MyEnum> ();
+			object value = Enum.Parse (typeof (MyEnum), "1");
 			lst.Add (value); // Exception here.  List.cs throws ArgumentException.
 		}
 	}

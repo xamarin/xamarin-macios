@@ -45,29 +45,18 @@ namespace UIKit {
 			base.Dispose (disposing);
 		}
 	}
-	
+
 	public partial class UIControl {
-#if XAMCORE_2_0
-		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets = new
-			ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> ();
-#else
-		Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> targets;
-#endif
-		
+		static ConditionalWeakTable<UIControl, Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
-#if XAMCORE_2_0
-			var targets = allTargets.GetValue (this, k =>
-			{
+			if (allTargets is null)
+				allTargets = new ();
+
+			var targets = allTargets.GetValue (this, k => {
 				MarkDirty ();
 				return new Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> ();
 			});
-#else
-			if (targets == null) {
-				targets = new Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> ();
-				MarkDirty ();
-			}
-#endif
 
 			Dictionary<UIControlEvent, UIControlEventProxy> t;
 			if (!targets.TryGetValue (notification, out t)) {
@@ -88,18 +77,13 @@ namespace UIKit {
 
 		public void RemoveTarget (EventHandler notification, UIControlEvent events)
 		{
-#if XAMCORE_2_0
 			Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> targets;
 
-			if (allTargets == null)
+			if (allTargets is null)
 				return;
 
 			if (!allTargets.TryGetValue (this, out targets))
 				return;
-#else
-			if (targets == null)
-				return;
-#endif
 
 			Dictionary<UIControlEvent, UIControlEventProxy> t;
 			if (!targets.TryGetValue (notification, out t))
@@ -138,12 +122,12 @@ namespace UIKit {
 			}
 		}
 
-		public event EventHandler TouchDragInside  {
+		public event EventHandler TouchDragInside {
 			add {
-				AddTarget (value, UIControlEvent.TouchDragInside );
+				AddTarget (value, UIControlEvent.TouchDragInside);
 			}
 			remove {
-				RemoveTarget (value, UIControlEvent.TouchDragInside );
+				RemoveTarget (value, UIControlEvent.TouchDragInside);
 			}
 		}
 
@@ -210,7 +194,11 @@ namespace UIKit {
 			}
 		}
 
-		[iOS (9,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public event EventHandler PrimaryActionTriggered {
 			add {
 				AddTarget (value, UIControlEvent.PrimaryActionTriggered);

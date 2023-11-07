@@ -1,8 +1,5 @@
 using System;
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#endif
+
 namespace ObjCRuntime {
 	//
 	// BindAsAttribute
@@ -51,14 +48,14 @@ namespace ObjCRuntime {
 		Type nullable;
 		Type GetNullable (Generator generator)
 		{
-			if (nullable == null)
+			if (nullable is null)
 				nullable = Type.IsArray ? generator.TypeManager.GetUnderlyingNullableType (Type.GetElementType ()) : generator.TypeManager.GetUnderlyingNullableType (Type);
 			return nullable;
 		}
 
 		internal bool IsNullable (Generator generator)
 		{
-			return GetNullable (generator) != null;
+			return GetNullable (generator) is not null;
 		}
 		internal bool IsValueType (Generator generator)
 		{

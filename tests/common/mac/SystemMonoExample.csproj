@@ -12,6 +12,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputPath>bin\$(Configuration)</OutputPath>
+    <LangVersion>latest</LangVersion>
 %TARGETFRAMEWORKVERSION%
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -23,7 +24,7 @@
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
    <Profiling>false</Profiling>
-%CODE%
+REPLACE_CODE_REPLACE
    </PropertyGroup>
    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -33,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
-%CODE%
+REPLACE_CODE_REPLACE
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

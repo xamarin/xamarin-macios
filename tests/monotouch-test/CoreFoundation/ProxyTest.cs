@@ -12,26 +12,19 @@ using System.Threading;
 using System.IO;
 using System.Net;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ProxyTest {
-		
+
 		[Test]
 		public void Fields ()
 		{
@@ -43,8 +36,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				Assert.That (Dlfcn.dlsym (lib, "kCFProxyAutoConfigurationHTTPResponseKey"), Is.EqualTo (IntPtr.Zero), "kCFProxyAutoConfigurationHTTPResponseKey");
 				// http://developer.apple.com/library/ios/documentation/CoreFoundation/Reference/CFProxySupport/Reference/reference.html#//apple_ref/doc/c_ref/kCFNetworkProxiesProxyAutoConfigJavaScript
 				Assert.That (Dlfcn.dlsym (lib, "kCFNetworkProxiesProxyAutoConfigJavaScript"), Is.EqualTo (IntPtr.Zero), "kCFNetworkProxiesProxyAutoConfigJavaScript");
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}
@@ -53,7 +45,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		HttpListener listener;
 		int port;
 		Thread listener_thread;
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			var listening = new ManualResetEvent (false);
@@ -83,7 +75,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 						do {
 							var context = listener.GetContext ();
 							var request = context.Request;
-							var pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, request.RawUrl.Substring (1));
+							var pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, request.RawUrl.Substring (1));
 							Console.WriteLine ($"    Serving {pacPath}");
 							var buf = File.ReadAllBytes (pacPath);
 							context.Response.ContentLength64 = buf.Length;
@@ -105,10 +97,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 			});
 			listener_thread.IsBackground = true;
 			listener_thread.Start ();
-			listening.WaitOne ();
+			Assert.IsTrue (listening.WaitOne (TimeSpan.FromSeconds (15)));
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDown ()
 		{
 			listener.Stop ();
@@ -122,11 +114,15 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			// get the path for the pac file, try to parse it and ensure that 
 			// our cb was called
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.AreEqual (1, proxies.Length, "Length");
 			// assert the data of the proxy, although we are really testing the js used
@@ -136,11 +132,15 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void TestPACParsingScriptNoProxy ()
 		{
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 			NSError error = null;
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.MicrosoftUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.IsNotNull (proxies, "Not null proxies");
 			Assert.AreEqual (1, proxies.Length, "Proxies length");
@@ -153,7 +153,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			var script = "Not VALID js";
 			var targetUri = NetworkResources.MicrosoftUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationScript (script, targetUri, out error);
+#endif
 			Assert.IsNotNull (error, "Not null error");
 			Assert.IsNull (proxies, "Null proxies");
 		}
@@ -165,19 +169,23 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			NSObject cbClient = null;
 			bool done = false;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
 			var targetUri = NetworkResources.XamarinUri;
-			
+
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {
@@ -203,19 +211,23 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error = null;
 			NSObject cbClient = null;
 			bool done = false;
-			string pacPath = Path.Combine (NSBundle.MainBundle.BundlePath, "example.pac");
+			string pacPath = Path.Combine (NSBundle.MainBundle.ResourcePath, "example.pac");
 
 			var script = File.ReadAllText (pacPath);
-			var targetUri = NetworkResources.XamarinUri;
+			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationScriptAsync (script, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {
@@ -237,7 +249,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = NetworkResources.XamarinUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.AreEqual (1, proxies.Length, "Length");
 			// assert the data of the proxy, although we are really testing the js used
@@ -250,7 +266,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 			NSError error;
 			var pacUri = new Uri ($"http://localhost:{port}/example.pac");
 			var targetUri = NetworkResources.MicrosoftUri;
+#if NET
+			var proxies = global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#else
 			var proxies = CFNetwork.ExecuteProxyAutoConfigurationUrl (pacUri, targetUri, out error);
+#endif
 			Assert.IsNull (error, "Null error");
 			Assert.IsNotNull (proxies, "Not null proxies");
 			Assert.AreEqual (1, proxies.Length, "Proxies length");
@@ -270,11 +290,15 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {
@@ -305,11 +329,15 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Exception ex;
 			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					CancellationTokenSource cancelSource = new CancellationTokenSource ();
 					CancellationToken cancelToken = cancelSource.Token;
+#if NET
+					var result = await global::CoreFoundation.CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#else
 					var result = await CFNetwork.ExecuteProxyAutoConfigurationUrlAsync (pacUri, targetUri, cancelToken);
+#endif
 					proxies = result.proxies;
 					error = result.error;
 				} catch (Exception e) {

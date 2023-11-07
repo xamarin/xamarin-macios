@@ -1,15 +1,10 @@
 ## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
-!missing-enum! MPNowPlayingPlaybackState not bound
 !missing-selector! MPNowPlayingInfoCenter::playbackState not bound
 !missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
 
 # added in iOS7 but there was another way to get this ending up with the same name
 # so current code works better (before 7.0) but can't be overridden (likely a good thing)
 !missing-selector! MPMediaEntity::persistentID not bound
-
-
-## unsorted
-
 !missing-selector! MPMediaItem::albumArtist not bound
 !missing-selector! MPMediaItem::albumArtistPersistentID not bound
 !missing-selector! MPMediaItem::albumPersistentID not bound
@@ -48,3 +43,5 @@
 !missing-selector! MPMediaItem::skipCount not bound
 !missing-selector! MPMediaItem::title not bound
 !missing-selector! MPMediaItem::userGrouping not bound
+!missing-selector! MPMediaItem::isPreorder not bound
+!extra-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0

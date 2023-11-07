@@ -1,0 +1,4 @@
+# not supported on tvOS as of xcode 15 beta 7
+!missing-selector! +CLBackgroundActivitySession::backgroundActivitySession not bound
+!missing-selector! CLBackgroundActivitySession::invalidate not bound
+!missing-type! CLBackgroundActivitySession not bound

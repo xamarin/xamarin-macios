@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- This is a project file to load in the IDE to get code completion, etc. It's not used for building the product assemblies, that happens in the makefile -->
+  <PropertyGroup>
+    <_TargetPlatform>%PLATFORM%</_TargetPlatform>
+    <TargetFramework>%DOTNET_TFM%</TargetFramework>
+    <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier> <!-- this line shouldn't be necessary, but VSMac on one of my machines won't load the project otherwise -->
+    <OutputType>Library</OutputType>
+    <AssemblyName>Microsoft.%PLATFORM%</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <LangVersion>latest</LangVersion>
+    <DefineConstants>MINIMAL;NET_TODO</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>BI1234,108,114,219,414,618,660,661,1635,3003,3014,3021,4014</NoWarn>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AnalysisModeInteroperability>None</AnalysisModeInteroperability>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(_TargetPlatform)' == 'iOS'">
+    <DefineConstants>$(DefineConstants);__IOS__;IOS;MONOTOUCH;IPHONE;</DefineConstants>
+    <CompilerResponseFile>..\..\..\..\rsp\ios-defines.rsp</CompilerResponseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(_TargetPlatform)' == 'tvOS'">
+    <DefineConstants>$(DefineConstants);__TVOS__;TVOS;MONOTOUCH;IPHONE;XAMCORE_3_0;SYSTEM_NET_HTTP</DefineConstants>
+    <CompilerResponseFile>..\..\..\..\rsp\tvos-defines.rsp</CompilerResponseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(_TargetPlatform)' == 'macOS'">
+    <DefineConstants>$(DefineConstants);__MACOS__;MONOMAC;XAMARIN_MODERN</DefineConstants>
+    <CompilerResponseFile>..\..\..\..\rsp\macos-defines.rsp</CompilerResponseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(_TargetPlatform)' == 'MacCatalyst'">
+    <DefineConstants>$(DefineConstants);__IOS__;__MACCATALYST__;MACCATALYST;MONOTOUCH;IOS;SYSTEM_NET_HTTP</DefineConstants>
+    <CompilerResponseFile>..\..\..\..\rsp\maccatalyst-defines.rsp</CompilerResponseFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\$(_TargetPlatform)\generated-sources\**\*.cs">
+      <Link>build\$(_TargetPlatform)\generated-sources\%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
+    <!--%FILES%-->
+    <!--%APIS%-->
+  </ItemGroup>
+</Project>

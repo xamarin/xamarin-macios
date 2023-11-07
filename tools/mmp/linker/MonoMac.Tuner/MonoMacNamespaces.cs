@@ -2,6 +2,7 @@
 //#define DEBUG
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -10,79 +11,11 @@ using Mono.Linker.Steps;
 using Mono.Tuner;
 using Xamarin.Linker;
 
-using Xamarin.Bundler;
+using Xamarin.Tuner;
 
 namespace MonoMac.Tuner {
 
 	public class MonoMacNamespaces : IStep {
-
-	Dictionary <string, string> NamespaceMapping = new Dictionary <string, string> {
-		{ Constants.FoundationLibrary, Namespaces.Foundation },
-		{ Constants.AppKitLibrary, Namespaces.AppKit },
-		{ Constants.AddressBookLibrary, Namespaces.AddressBook },
-		{ Constants.CoreTextLibrary, Namespaces.CoreText },
-		{ Constants.WebKitLibrary, Namespaces.WebKit },
-		{ Constants.QuartzLibrary, Namespaces.CoreAnimation },
-		{ Constants.QTKitLibrary, Namespaces.QTKit },
-		{ Constants.CoreLocationLibrary, Namespaces.CoreLocation },
-		{ Constants.SecurityLibrary, Namespaces.Security },
-		{ Constants.QuartzComposerLibrary, Namespaces.QuartzComposer },
-		{ Constants.CoreWlanLibrary, Namespaces.CoreWlan },
-		{ Constants.PdfKitLibrary, Namespaces.PdfKit },
-		{ Constants.ImageKitLibrary, Namespaces.ImageKit },
-		{ Constants.ScriptingBridgeLibrary, Namespaces.ScriptingBridge },
-		{ Constants.AVFoundationLibrary, Namespaces.AVFoundation },
-		{ Constants.CoreBluetoothLibrary, Namespaces.CoreBluetooth },
-		{ Constants.GameKitLibrary, Namespaces.GameKit },
-		{ Constants.GameControllerLibrary, Namespaces.GameController },
-		{ Constants.JavaScriptCoreLibrary, Namespaces.JavaScriptCore },
-		{ Constants.CoreAudioKitLibrary, Namespaces.CoreAudioKit },
-		{ Constants.InputMethodKitLibrary, Namespaces.InputMethodKit },
-		{ Constants.OpenALLibrary, Namespaces.OpenAL },
-		{ Constants.MediaAccessibilityLibrary, Namespaces.MediaAccessibility },
-		{ Constants.CoreMidiLibrary, Namespaces.CoreMIDI },
-		{ Constants.MediaLibraryLibrary, Namespaces.MediaLibrary },
-		{ Constants.GLKitLibrary, Namespaces.GLKit },
-		{ Constants.SpriteKitLibrary, Namespaces.SpriteKit },
-		{ Constants.CloudKitLibrary, Namespaces.CloudKit },
-		{ Constants.LocalAuthenticationLibrary, Namespaces.LocalAuthentication },
-		{ Constants.AccountsLibrary, Namespaces.Accounts },
-		{ Constants.ContactsLibrary, Namespaces.Contacts },
-		{ Constants.ContactsUILibrary, Namespaces.ContactsUI },
-		{ Constants.MapKitLibrary, Namespaces.MapKit },
-		{ Constants.EventKitLibrary, Namespaces.EventKit },
-		{ Constants.SocialLibrary, Namespaces.Social },
-		{ Constants.AVKitLibrary, Namespaces.AVKit },
-		{ Constants.VideoToolboxLibrary, Namespaces.VideoToolbox },
-		{ Constants.GameplayKitLibrary, Namespaces.GameplayKit },
-		{ Constants.NetworkExtensionLibrary, Namespaces.NetworkExtension },
-		{ Constants.MultipeerConnectivityLibrary, Namespaces.MultipeerConnectivity },
-		{ Constants.MetalKitLibrary, Namespaces.MetalKit },
-		{ Constants.ModelIOLibrary, Namespaces.ModelIO },
-		{ Constants.IOBluetoothLibrary, Namespaces.IOBluetooth },
-		{ Constants.IOBluetoothUILibrary, Namespaces.IOBluetoothUI },
-		{ Constants.FinderSyncLibrary, Namespaces.FinderSync },
-		{ Constants.NotificationCenterLibrary, Namespaces.NotificationCenter },
-		{ Constants.SceneKitLibrary, Namespaces.SceneKit },
-		{ Constants.StoreKitLibrary, Namespaces.StoreKit },
-		{ Constants.MediaPlayerLibrary, Namespaces.MediaPlayer },
-		{ Constants.IntentsLibrary, Namespaces.Intents },
-		{ Constants.PhotosLibrary, Namespaces.Photos },
-		{ Constants.PhotosUILibrary, Namespaces.PhotosUI },
-		{ Constants.PrintCoreLibrary, Namespaces.PrintCore },
-		{ Constants.CoreMLLibrary, Namespaces.CoreML },
-		{ Constants.VisionLibrary, Namespaces.Vision },
-		{ Constants.IOSurfaceLibrary, Namespaces.IOSurface },
-		{ Constants.ExternalAccessoryLibrary, Namespaces.ExternalAccessory },
-		{ Constants.MetalPerformanceShadersLibrary, Namespaces.MetalPerformanceShaders },
-		{ Constants.AdSupportLibrary, Namespaces.AdSupport },
-		{ Constants.NaturalLanguageLibrary, Namespaces.NaturalLanguage},
-		{ Constants.NetworkLibrary, Namespaces.Network},
-		{ Constants.VideoSubscriberAccountLibrary, Namespaces.VideoSubscriberAccount },
-		{ Constants.ImageCaptureCoreLibrary, Namespaces.ImageCaptureCore },
-		{ Constants.iTunesLibraryLibrary, Namespaces.iTunesLibrary },
-	};
-
 		public void Process (LinkContext context)
 		{
 			var profile = (Profile.Current as BaseProfile);
@@ -94,6 +27,16 @@ namespace MonoMac.Tuner {
 			HashSet<string> namespaces = new HashSet<string> ();
 			foreach (TypeDefinition type in assembly.MainModule.Types) {
 				namespaces.Add (type.Namespace);
+			}
+
+			// Compute our map
+			// there can be multiple namespaces for the same library
+			var frameworks = Frameworks.GetFrameworks (((DerivedLinkContext) context).App.Platform, false);
+			var map = new Dictionary<string, List<string>> ();
+			foreach (var fw in frameworks.Values) {
+				if (!map.TryGetValue (fw.LibraryPath, out var list))
+					map [fw.LibraryPath] = list = new List<string> ();
+				list.Add (fw.Namespace);
 			}
 
 			// clean NSObject from loading them
@@ -112,9 +55,8 @@ namespace MonoMac.Tuner {
 				// Based on the list from xamcore/src/Foundation/NSObjectMac.cs
 				bool remove_dlopen = false;
 
-				string targetNamespace;
-				if (NamespaceMapping.TryGetValue (ins.Operand as string, out targetNamespace)) {
-					remove_dlopen = !namespaces.Contains (targetNamespace);
+				if (map.TryGetValue (ins.Operand as string, out var targetNamespaces)) {
+					remove_dlopen = !targetNamespaces.Any (v => namespaces.Contains (v));
 				}
 #if DEBUG
 				else {
@@ -126,7 +68,7 @@ namespace MonoMac.Tuner {
 
 				if (remove_dlopen) {
 					FieldDefinition f = Nop (ins);
-					if (f != null) {
+					if (f is not null) {
 						i += 3;
 						nsobject.Fields.Remove (f);
 					}

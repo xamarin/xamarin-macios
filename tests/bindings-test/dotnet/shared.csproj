@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <RootNamespace>bindingstest</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <IsBindingProject>true</IsBindingProject>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <BindingsTestDirectory>$(RootTestsDirectory)\bindings-test</BindingsTestDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="$(RootTestsDirectory)\generator\tests\ref-out-parameters.cs" />
+    <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiDefinition.generated.cs" />
+    <ObjcBindingApiDefinition Include="$(BindingsTestDirectory)\ApiProtocol.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="$(BindingsTestDirectory)\StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="$(BindingsTestDirectory)\StructsAndEnums.generated.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework">
+      <Kind>Static</Kind>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(RootTestsDirectory)\common\ConditionalCompilation.cs">
+      <Link>ConditionalCompilation.cs</Link>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\ProtocolTest.cs" />
+    <Compile Include="$(RootTestsDirectory)\api-shared\ObjCRuntime\Registrar.cs">
+      <Link>Registrar.cs</Link>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\RegistrarBindingTest.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(BindingsTestDirectory)\RuntimeTest.cs" />
+    <Compile Include="$(BindingsTestDirectory)\CodeBehind.cs" />
+    <Compile Include="$(BindingsTestDirectory)\Messaging.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(TestLibrariesDirectory)\libtest.m">
+      <Link>libtest.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest.h">
+      <Link>libtest.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest.structs.h">
+      <Link>libtest.structs.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest.properties.h">
+      <Link>libtest.properties.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\testgenerator.cs">
+      <Link>testgenerator.cs</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+    <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest.xcframework" />
+  </ItemGroup>
+
+  <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+</Project>

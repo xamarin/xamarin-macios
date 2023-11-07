@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GCGamepadSnapshot
 //
 // Authors:
@@ -10,17 +10,11 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !MONOMAC
 using UIKit;
 #endif
 using GameController;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameController;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameController {
@@ -34,7 +28,7 @@ namespace MonoTouchFixtures.GameController {
 		{
 			if (!TestRuntime.CheckXcodeVersion (5, 0, 1))
 				Assert.Inconclusive ("GameController is iOS7+ or macOS 10.9+");
-			
+
 			GCGamepadSnapShotDataV100 data;
 			Assert.False (GCGamepadSnapshot.TryGetSnapshotData (null, out data), "TryGetSnapshotData");
 			Assert.True (data.Version == 0, "Version");

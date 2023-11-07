@@ -1,12 +1,27 @@
 // Copyright 2013 Xamarin Inc. All rights reserved
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
+
+using CoreFoundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Foundation {
 
 	// Helper to (mostly) support NS[Mutable]Copying protocols
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSZone : INativeObject {
 		[DllImport (Constants.FoundationLibrary)]
 		static extern /* NSZone* */ IntPtr NSDefaultMallocZone ();
@@ -17,37 +32,43 @@ namespace Foundation {
 		[DllImport (Constants.FoundationLibrary)]
 		static extern void NSSetZoneName (/* NSZone* */ IntPtr zone, /* NSString* */ IntPtr name);
 
-		internal NSZone ()
+#if !NET
+		public NSZone (NativeHandle handle)
+			: this (handle, false)
 		{
 		}
+#endif
 
-		public NSZone (IntPtr handle)
+		[Preserve (Conditional = true)]
+#if NET
+		internal NSZone (NativeHandle handle, bool owns)
+#else
+		public NSZone (NativeHandle handle, bool owns)
+#endif
 		{
+			// NSZone is just an opaque pointer without reference counting, so we ignore the 'owns' parameter.
 			this.Handle = handle;
 		}
 
-		[Preserve (Conditional = true)]
-		public NSZone (IntPtr handle, bool owns)
-			: this (handle)
-		{
-			// NSZone is just an opaque pointer without reference counting, so we ignore the 'owns' parameter.
-		}
-
-		public IntPtr Handle { get; private set; }
+		public NativeHandle Handle { get; private set; }
 
 #if !COREBUILD
-		public string Name {
+		public string? Name {
 			get {
-				return new NSString (NSZoneName (Handle)).ToString ();
+				return CFString.FromHandle (NSZoneName (Handle));
 			}
 			set {
-				using (var ns = new NSString (value))
-					NSSetZoneName (Handle, ns.Handle);
+				var nsHandle = CFString.CreateNative (value);
+				try {
+					NSSetZoneName (Handle, nsHandle);
+				} finally {
+					CFString.ReleaseNative (nsHandle);
+				}
 			}
 		}
 
 		// note: Copy(NSZone) and MutableCopy(NSZone) with a nil pointer == default
-		public static readonly NSZone Default = new NSZone (NSDefaultMallocZone ());
+		public static readonly NSZone Default = new NSZone (NSDefaultMallocZone (), false);
 #endif
 	}
 }

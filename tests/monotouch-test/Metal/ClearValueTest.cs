@@ -1,21 +1,17 @@
-﻿
+
 #if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Metal
-{
+namespace MonoTouchFixtures.Metal {
 	[TestFixture]
-	public class ClearValueTest
-	{
+	[Preserve (AllMembers = true)]
+	public class ClearValueTest {
 		[Test]
 		public void Constructor ()
 		{

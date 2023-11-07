@@ -1,18 +1,14 @@
-## part of category GKScore_Deprecated
-!missing-selector! GKScore::playerID not bound
-
-# Apple headers: Deprecated in iOS 7
-!missing-enum! GKSessionError not bound
-
 ## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
 !missing-field! GKSessionErrorDomain not bound
 
 ## enum size declared after the enum, e.g. `typedef NSInteger GKInviteeResponse;`, so we miss the metadata
 !unknown-native-enum! GKInviteeResponse bound
 
+# Xcode 12 beta 3 - these API are missing
+# https://github.com/xamarin/maccore/issues/2269
+!missing-selector! GKLeaderboardEntry::context not bound
+!missing-selector! GKLeaderboardEntry::date not bound
+!missing-selector! GKLeaderboardEntry::formattedScore not bound
+!missing-selector! GKLeaderboardEntry::rank not bound
+!missing-selector! GKLeaderboardEntry::score not bound
 
-## unsorted
-
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
-!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound

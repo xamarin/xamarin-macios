@@ -8,6 +8,8 @@
 #import <ModelIO/ModelIO.h>
 #endif
 
+#import <SceneKit/SceneKit.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,6 +19,7 @@ void useZLib ();
 
 typedef void (^x_block_callback)();
 void x_call_block (x_block_callback block);
+void* x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3);
 
 void x_get_matrix_float2x2 (id self, const char *sel, float* r0c0, float* r0c1, float* r1c0, float* r1c1);
 void x_get_matrix_float3x3 (id self, const char *sel, float* r0c0, float* r0c1, float* r0c2, float* r1c0, float* r1c1, float* r1c2, float* r2c0, float* r2c1, float* r2c2);
@@ -28,6 +31,16 @@ void x_mdltransformcomponent_get_local_transform (id<MDLTransformComponent> self
 void x_mdltransform_create_global_transform (MDLObject *object, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
 void x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
 #endif
+
+#if TARGET_OS_OSX
+#define pfloat CGFloat
+#else
+#define pfloat float
+#endif
+
+SCNMatrix4 x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz);
+SCNMatrix4 x_SCNMatrix4MakeScale (pfloat tx, pfloat ty, pfloat tz);
+SCNMatrix4 x_SCNMatrix4Translate (SCNMatrix4 m, pfloat tx, pfloat ty, pfloat tz);
 
 /*
  * Various structs used in ObjCRegistrarTest
@@ -75,9 +88,12 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	@property char Pc4;
 	@property char Pc5;
 
+	@property (nonatomic, retain) NSObject* someObject;
+	@property (nonatomic, retain) NSArray* someArray;
 #include "libtest.properties.h"
 
 	-(void) V;
+	+(void) staticV;
 
 	-(float) F;
 	-(double) D;
@@ -247,7 +263,7 @@ typedef void (^outerBlock) (innerBlock callback);
 	-(void) testNSObject:      (int) action a:(id *)          refValue b:(id *)          outValue;
 	-(void) testNSValue:       (int) action a:(NSValue **)    refValue b:(NSValue **)    outValue;
 	-(void) testString:        (int) action a:(NSString **)   refValue b:(NSString **)   outValue;
-	-(void) testInt:           (int) action a:(int32_t *)     refValue b:(int32_t *)     outValue;
+	-(void) testInt:           (int) action a:(int32_t *)     refValue b:(int32_t *)     outValue c:(int32_t *) pointerValue;
 	-(void) testSelector:      (int) action a:(SEL *)         refValue b:(SEL *)         outValue;
 	-(void) testClass:         (int) action a:(Class *)       refValue b:(Class *)       outValue;
 

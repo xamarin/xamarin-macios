@@ -7,16 +7,27 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
+#nullable enable
 
+using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
+#if NET
+namespace ObjCRuntime
+#else
 namespace System
+#endif
 {
-	public static class NMath
-	{
-		public static readonly nfloat E = (nfloat)Math.E;
-		public static readonly nfloat PI = (nfloat)Math.PI;
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public static class NMath {
+		public static readonly nfloat E = (nfloat) Math.E;
+		public static readonly nfloat PI = (nfloat) Math.PI;
 
 		public static nfloat Abs (nfloat value)
 		{
@@ -42,7 +53,7 @@ namespace System
 
 		public static long BigMul (nint a, nint b)
 		{
-			return (long)a * (long)b;
+			return (long) a * (long) b;
 		}
 
 		public static nint DivRem (nint a, nint b, out nint result)
@@ -53,12 +64,12 @@ namespace System
 
 		public static nfloat Floor (nfloat d)
 		{
-			return (nfloat)Math.Floor ((double)d);
+			return (nfloat) Math.Floor ((double) d);
 		}
 
 		public static nfloat IEEERemainder (nfloat x, nfloat y)
 		{
-			return (nfloat)Math.IEEERemainder ((double)x, (double)y);
+			return (nfloat) Math.IEEERemainder ((double) x, (double) y);
 		}
 
 		public static nfloat Log (nfloat a, nfloat newBase)
@@ -108,22 +119,22 @@ namespace System
 
 		public static nfloat Round (nfloat a)
 		{
-			return (nfloat)Math.Round ((double)a);
+			return (nfloat) Math.Round ((double) a);
 		}
 
 		public static nfloat Round (nfloat value, int digits)
 		{
-			return (nfloat)Math.Round ((double)value, digits);
+			return (nfloat) Math.Round ((double) value, digits);
 		}
 
 		public static nfloat Round (nfloat value, MidpointRounding mode)
 		{
-			return (nfloat)Math.Round ((double)value, mode);
+			return (nfloat) Math.Round ((double) value, mode);
 		}
 
 		public static nfloat Round (nfloat value, int digits, MidpointRounding mode)
 		{
-			return (nfloat)Math.Round ((double)value, digits, mode);
+			return (nfloat) Math.Round ((double) value, digits, mode);
 		}
 
 		public static nfloat Truncate (nfloat d)
@@ -157,79 +168,77 @@ namespace System
 
 		public static nfloat Sin (nfloat a)
 		{
-			return (nfloat)Math.Sin ((double)a);
+			return (nfloat) Math.Sin ((double) a);
 		}
 
 		public static nfloat Cos (nfloat d)
 		{
-			return (nfloat)Math.Cos ((double)d);
+			return (nfloat) Math.Cos ((double) d);
 		}
 
 		public static nfloat Tan (nfloat a)
 		{
-			return (nfloat)Math.Tan ((double)a);
+			return (nfloat) Math.Tan ((double) a);
 		}
 
 		public static nfloat Sinh (nfloat value)
 		{
-			return (nfloat)Math.Sinh ((double)value);
+			return (nfloat) Math.Sinh ((double) value);
 		}
 
 		public static nfloat Cosh (nfloat value)
 		{
-			return (nfloat)Math.Cosh ((double)value);
+			return (nfloat) Math.Cosh ((double) value);
 		}
 
 		public static nfloat Tanh (nfloat value)
 		{
-			return (nfloat)Math.Tanh ((double)value);
+			return (nfloat) Math.Tanh ((double) value);
 		}
 
 		public static nfloat Acos (nfloat d)
 		{
-			return (nfloat)Math.Acos ((double)d);
+			return (nfloat) Math.Acos ((double) d);
 		}
 
 		public static nfloat Asin (nfloat d)
 		{
-			return (nfloat)Math.Asin ((double)d);
+			return (nfloat) Math.Asin ((double) d);
 		}
 
 		public static nfloat Atan (nfloat d)
 		{
-			return (nfloat)Math.Atan ((double)d);
+			return (nfloat) Math.Atan ((double) d);
 		}
 
 		public static nfloat Atan2 (nfloat y, nfloat x)
 		{
-			return (nfloat)Math.Atan2 ((double)y, (double)x);
+			return (nfloat) Math.Atan2 ((double) y, (double) x);
 		}
 
 		public static nfloat Exp (nfloat d)
 		{
-			return (nfloat)Math.Exp ((double)d);
+			return (nfloat) Math.Exp ((double) d);
 		}
 
 		public static nfloat Log (nfloat d)
 		{
-			return (nfloat)Math.Log ((double)d);
+			return (nfloat) Math.Log ((double) d);
 		}
 
 		public static nfloat Log10 (nfloat d)
 		{
-			return (nfloat)Math.Log10 ((double)d);
+			return (nfloat) Math.Log10 ((double) d);
 		}
 
 		public static nfloat Pow (nfloat x, nfloat y)
 		{
-			return (nfloat)Math.Pow ((double)x, (double)y);
+			return (nfloat) Math.Pow ((double) x, (double) y);
 		}
 
 		public static nfloat Sqrt (nfloat d)
 		{
-			return (nfloat)Math.Sqrt ((double)d);
+			return (nfloat) Math.Sqrt ((double) d);
 		}
 	}
 }
-
-#endif

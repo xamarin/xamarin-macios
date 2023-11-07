@@ -1,0 +1,1840 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="default" xml:space="preserve">
+		<value>找不到代码 {0} 的错误消息。请访问 https://github.com/xamarin/xamarin-macios/issues/new 以在 GitHub 报告这条缺失的消息 </value>
+		<comment>
+			This is the default message when an error code can not be found.
+		</comment>
+	</data>
+  <data name="MT0000" xml:space="preserve">
+		<value>意外错误 - 请在 https://github.com/xamarin/xamarin-macios/issues/new 填写 Bug 报告
+		</value>
+	</data>
+  <data name="MT0001" xml:space="preserve">
+		<value>提供了 "-devname" 而未进行任何特定于设备的操作
+		</value>
+	</data>
+  <data name="MM0001" xml:space="preserve">
+		<value>此版本的 Xamarin.Mac 需要 Mono {0} (当前 Mono 版本为 {1})。请从 http://mono-project.com/Downloads 更新 Mono.framework
+		</value>
+	</data>
+  <data name="MT0002" xml:space="preserve">
+		<value>无法分析环境变量 "{0}" 
+		</value>
+	</data>
+  <data name="MX0003" xml:space="preserve">
+		<value>应用程序名称 "{0}.exe" 与 SDK 或产品程序集(.dll)名称冲突。
+		</value>
+	</data>
+  <data name="MT0004" xml:space="preserve">
+		<value>新的引用计数逻辑要求同时启用 SGen。
+		</value>
+	</data>
+  <data name="MT0005" xml:space="preserve">
+		<value>输出目录 * 不存在。
+		</value>
+	</data>
+  <data name="MT0006" xml:space="preserve">
+		<value>{0} 没有 devel 平台，请使用 --platform=PLAT 来指定 SDK。
+		</value>
+	</data>
+  <data name="MX0007" xml:space="preserve">
+		<value>根程序集 "{0}" 不存在
+		</value>
+	</data>
+  <data name="MM0008" xml:space="preserve">
+		<value>应只提供一个根程序集，找到 {0} 个程序集: "{1}" 
+		</value>
+	</data>
+  <data name="MX0009" xml:space="preserve">
+		<value>加载程序集时出错: {0}。
+		</value>
+	</data>
+  <data name="MX0010" xml:space="preserve">
+		<value>无法分析命令行参数: {0}
+		</value>
+	</data>
+  <data name="MT0011" xml:space="preserve">
+		<value>{0} 是针对较新的运行时({1})构建的， Xamarin.iOS 不支持该运行时。
+		</value>
+	</data>
+  <data name="MT0012" xml:space="preserve">
+		<value>提供了不完整的数据，无法完成 *。
+		</value>
+	</data>
+  <data name="MT0013" xml:space="preserve">
+		<value>分析支持要求同时启用 sgen。
+		</value>
+	</data>
+  <data name="MT0014" xml:space="preserve">
+		<value>iOS {0} SDK 不支持生成面向 {1} 的应用程序。
+		</value>
+	</data>
+  <data name="MT0015" xml:space="preserve">
+		<value>无效的 ABI: {0}。受支持的 ABI 有: i386、x86_64、armv7、armv7+llvm、armv7+llvm+thumb2、armv7s、armv7s+llvm、armv7s+llvm+thumb2、armv7k、armv7k+llvm、arm64、arm64+llvm、arm64_32 和 arm64_32+llvm。
+		</value>
+	</data>
+  <data name="MX0016" xml:space="preserve">
+		<value>已弃用 "{0}" 选项。
+		</value>
+	</data>
+  <data name="MX0017" xml:space="preserve">
+		<value>应提供根程序集。
+		</value>
+	</data>
+  <data name="MX0018" xml:space="preserve">
+		<value>未知的命令行参数: "{0}" 
+		</value>
+	</data>
+  <data name="MT0019" xml:space="preserve">
+		<value>只能使用一个 --[log|install|kill|launch]dev 或 --[launch|debug]sim 选项。
+		</value>
+	</data>
+  <data name="MX0020" xml:space="preserve">
+		<value>"{0}" 的有效选项有 "{1}"。
+		</value>
+	</data>
+  <data name="MT0021" xml:space="preserve">
+		<value>使用静态注册器时无法使用 gcc/g++ (--use-gcc)进行编译(这是编译设备时的默认设置)。请删除 --use-gcc 标志或使用动态注册器(--registrar:dynamic)。
+		</value>
+	</data>
+  <data name="MT0022" xml:space="preserve">
+		<value>选项 "--unsupported--enable-generics-in-registrar" 和 "--registrar" 不兼容。
+		</value>
+	</data>
+  <data name="MT0023" xml:space="preserve">
+		<value>根程序集 {0} 与其他程序集({1})冲突。
+		</value>
+	</data>
+  <data name="MM0023" xml:space="preserve">
+		<value>应用程序名称 "{0}.exe" 与其他用户程序集冲突。
+		</value>
+	</data>
+  <data name="MT0024" xml:space="preserve">
+		<value>未能找到所需的文件 "{0}"。
+		</value>
+	</data>
+  <data name="MT0025" xml:space="preserve">
+		<value>未提供任何 SDK 版本。请添加 --sdk=X.Y 以指定应使用哪个 {0} SDK 来生成应用程序。
+		</value>
+	</data>
+  <data name="MX0026" xml:space="preserve">
+		<value>无法分析命令行参数 "-{0}": {1}
+		</value>
+	</data>
+  <data name="MT0027" xml:space="preserve">
+		<value>选项 "\*" 和 "\*" 不兼容。
+		</value>
+	</data>
+  <data name="MT0028" xml:space="preserve">
+		<value>面向 iOS 4.1 或较早版本时无法启用 PIE (-pie)。请禁用 PIE (-pie:false)或将部署目标至少设为 iOS 4.2
+		</value>
+	</data>
+  <data name="MT0029" xml:space="preserve">
+		<value>仅模拟器(--sim)中支持 REPL (--enable-repl)。
+		</value>
+	</data>
+  <data name="MT0030" xml:space="preserve">
+		<value>可执行文件名称({0})与应用名称({1})不同，这可能会阻止对故障日志进行正常符号化。
+		</value>
+	</data>
+  <data name="MT0031" xml:space="preserve">
+		<value>命令行参数 "--enable-background-fetch" 和 "--launch-for-background-fetch" 也需要 "--launchsim"。
+		</value>
+	</data>
+  <data name="MT0032" xml:space="preserve">
+		<value>除非同时指定了 "--debug"，否则会忽略选项 "--debugtrack"。
+		</value>
+	</data>
+  <data name="MT0033" xml:space="preserve">
+		<value>Xamarin.iOS 项目必须引用 monotouch.dll 或 Xamarin.iOS.dll
+		</value>
+	</data>
+  <data name="MT0034" xml:space="preserve">
+		<value>不能在 {1} 项目中引用 "{0}.dll" - 它由 "{2}" 隐式引用。
+		</value>
+	</data>
+  <data name="MT0036" xml:space="preserve">
+		<value>无法为 * 应用启动 * 模拟器。请在项目的 iOS 生成选项中启用正确的体系结构(“高级”页面)。
+		</value>
+	</data>
+  <data name="MT0037" xml:space="preserve">
+		<value>monotouch.dll 不兼容 64 位。请引用 Xamarin.iOS.dll，或不针对 64 位体系结构(ARM64 和/或 x86_64)进行生成。
+		</value>
+	</data>
+  <data name="MT0038" xml:space="preserve">
+		<value>引用 Xamarin.iOS.dll 时，不支持 old 注册器(--registrar:oldstatic|olddynamic)。
+		</value>
+	</data>
+  <data name="MT0039" xml:space="preserve">
+		<value>面向 ARMv6 的应用程序不能引用 Xamarin.iOS.dll。
+		</value>
+	</data>
+  <data name="MT0040" xml:space="preserve">
+		<value>未能找到 "\*" 引用的程序集 "\*"。
+		</value>
+	</data>
+  <data name="MT0041" xml:space="preserve">
+		<value>不能在 {1} 应用中引用 "{0}"。
+		</value>
+	</data>
+  <data name="MT0042" xml:space="preserve">
+		<value>未找到任何对 monotouch.dll 或 Xamarin.iOS.dll 的引用。将添加一个对 monotouch.dll 的引用。
+		</value>
+	</data>
+  <data name="MX0043" xml:space="preserve">
+		<value>不支持 Boehm 垃圾回收器。已改为选择 SGen 垃圾回收器。
+		</value>
+	</data>
+  <data name="MT0044" xml:space="preserve">
+		<value>--listsim 仅支持 Xcode 6.0 或更高版本。
+		</value>
+	</data>
+  <data name="MT0045" xml:space="preserve">
+		<value>仅当使用 iOS 8.0 (或更高版本) SDK 时，才支持 --extension。
+		</value>
+	</data>
+  <data name="MT0047" xml:space="preserve">
+		<value>Unified 应用程序的最低部署目标为 5.1.1，当前部署目标为 "*"。请在项目的 iOS 应用程序选项中选择较新的部署目标。
+		</value>
+	</data>
+  <data name="MT0049" xml:space="preserve">
+		<value>仅当部署目标为 8.0 或更高版本时，才支持 {0}.framework。{0} 功能可能无法正常运行。
+		</value>
+	</data>
+  <data name="MM0050" xml:space="preserve">
+		<value>如果传递了 --no-root-assembly，则无法提供根程序集，找到 {0} 个程序集: "{1}" 
+		</value>
+	</data>
+  <data name="MT0051" xml:space="preserve">
+		<value>{3} {0} 需要 Xcode {4} 或更高版本。当前的 Xcode 版本(在 {2} 中找到的版本)为 {1}。
+		</value>
+	</data>
+  <data name="MM0051" xml:space="preserve">
+		<value>如果传递了 --no-root-assembly，则需要一个输出目录(--output)。
+		</value>
+	</data>
+  <data name="MT0052" xml:space="preserve">
+		<value>未指定任何命令。
+		</value>
+	</data>
+  <data name="MT0054" xml:space="preserve">
+		<value>无法规范化路径 "{0}": {1} ({2})。
+		</value>
+	</data>
+  <data name="MT0055" xml:space="preserve">
+		<value>Xcode 路径 "{0}" 不存在。
+		</value>
+	</data>
+  <data name="MX0056" xml:space="preserve">
+		<value>在默认位置(/Applications/Xcode.app)找不到 Xcode。请安装 Xcode 或使用 --sdkroot &lt;path&gt; 传递自定义路径。
+		</value>
+	</data>
+  <data name="MT0057" xml:space="preserve">
+		<value>无法从 sdk 根 "{0}" 确定 Xcode.app 的路径。请指定 Xcode.app 捆绑包的完整路径。
+		</value>
+	</data>
+  <data name="MT0058" xml:space="preserve">
+		<value>Xcode.app "{0}" 无效(文件 "{1}" 不存在)。
+		</value>
+	</data>
+  <data name="MX0059" xml:space="preserve">
+		<value>在系统上找不到当前所选的 Xcode: {0}
+		</value>
+	</data>
+  <data name="MX0060" xml:space="preserve">
+		<value>在系统上找不到当前所选的 Xcode。"xcode-select --print-path" 返回了 "{0}"，但该路径不存在。
+		</value>
+	</data>
+  <data name="MT0061" xml:space="preserve">
+		<value>未指定任何 Xcode.app(使用 --sdkroot)，将使用 "xcode-select --print-path" 报告的系统 Xcode: {0}
+		</value>
+	</data>
+  <data name="MT0062" xml:space="preserve">
+		<value>未指定任何 Xcode.app (使用 --sdkroot 或 "xcode-select --print-path")，将改为使用默认的 Xcode: {0}
+		</value>
+	</data>
+  <data name="MT0063" xml:space="preserve">
+		<value>在扩展 * 中找不到可执行文件(Info.plist 中没有 CFBundleExecutable 项)
+		</value>
+	</data>
+  <data name="MT0064" xml:space="preserve">
+		<value>Xamarin.iOS 仅支持在 Unified 项目中使用嵌入式框架。
+		</value>
+	</data>
+  <data name="MT0065" xml:space="preserve">
+		<value>仅当部署目标至少为 8.0 时，Xamarin.iOS 才支持嵌入式框架(当前部署目标: "{0}"；嵌入式框架: "{1}")
+		</value>
+	</data>
+  <data name="MT0065_A" xml:space="preserve">
+		<value>仅当部署目标至少为 2.0 时，Xamarin.iOS 才支持嵌入式框架(当前部署目标: "{0}"；嵌入式框架: "{1}")
+		</value>
+	</data>
+  <data name="MT0066" xml:space="preserve">
+		<value>生成注册器程序集无效: *
+		</value>
+	</data>
+  <data name="MT0067" xml:space="preserve">
+		<value>注册器 {0} 无效
+		</value>
+	</data>
+  <data name="MX0068" xml:space="preserve">
+		<value>目标框架的值无效: {0}。
+		</value>
+	</data>
+  <data name="MX0070" xml:space="preserve">
+		<value>目标框架 {0} 无效。有效的目标框架为: {1}。
+		</value>
+	</data>
+  <data name="MX0071" xml:space="preserve">
+		<value>未知的平台: {0}。这通常表示 {1} 中存在 Bug；请在 https://github.com/xamarin/xamarin-macios/issues/new 提交包含测试用例的 Bug 报告。
+		</value>
+	</data>
+  <data name="MT0072" xml:space="preserve">
+		<value>平台 "{0}" 不支持扩展。
+		</value>
+	</data>
+  <data name="MT0073" xml:space="preserve">
+		<value>{4} {0} 不支持将 {3} (最低为 {2})的部署目标设置为 {1}。请在项目的 Info.plist 中选择一个较新的部署目标。
+		</value>
+		<comment>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The minimum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+		</comment>
+	</data>
+  <data name="MX0074" xml:space="preserve">
+		<value>{4} {0} 不支持将 {3} (最高为 {2})的部署目标设置为 {1}。请在项目的 Info.plist 中选择一个较旧的部署目标或升级到更新版本的 {4}。
+		</value>
+		<comment>The following are literal names and should not be translated: SDK, Xcode
+{0} - The version number of the Xamarin product.
+{1} - The name of the deployment target such as a device, simulator, etc.
+{2} - The maximum version number.
+{3} - The platform name, such as 'iOS'.
+{4} - The produce name such as Xamarin.iOS or Xamarin.Mac.
+		</comment>
+	</data>
+  <data name="MT0075" xml:space="preserve">
+		<value>{1} 项目的体系结构 "{0}" 无效。有效的体系结构为: {2}
+		</value>
+	</data>
+  <data name="MT0076" xml:space="preserve">
+		<value>未指定任何体系结构(使用 --abi 参数)。{0} 项目需要体系结构。
+		</value>
+	</data>
+  <data name="MT0077" xml:space="preserve">
+		<value>WatchOS 项目必须是扩展。
+		</value>
+	</data>
+  <data name="MT0078" xml:space="preserve">
+		<value>已启用增量生成，且部署目标 &lt; 8.0 (当前为 {0})。不支持此操作(生成的应用程序不会在 iOS 9 上启动)，因此部署目标将设为 8.0。
+		</value>
+	</data>
+  <data name="MT0079" xml:space="preserve">
+		<value>{4} {0} 的建议 Xcode 版本为 Xcode {3} 或更高版本。当前 Xcode 版本(已在 {2} 中找到)为 {1}。
+		</value>
+	</data>
+  <data name="MM0079" xml:space="preserve">
+		<value>未将任何可执行文件复制到应用捆绑包。请联系 "support@xamarin.com"
+		</value>
+	</data>
+  <data name="MX0080" xml:space="preserve">
+		<value>禁用新引用计数逻辑的功能已弃用。
+		</value>
+	</data>
+  <data name="MT0081" xml:space="preserve">
+		<value>命令行参数 --download-crash-report 还需要 --download-crash-report-to。
+		</value>
+	</data>
+  <data name="MT0082" xml:space="preserve">
+		<value>仅当不使用链接时(--nolink)支持 REPL (--enable-repl)。
+		</value>
+	</data>
+  <data name="MT0083" xml:space="preserve">
+		<value>watchOS 不支持纯 Asm 位码。请使用 --bitcode:marker 或 --bitcode:full。
+		</value>
+	</data>
+  <data name="MT0084" xml:space="preserve">
+		<value>模拟器不支持 Bitcode。请勿在针对模拟器谨慎生成时传递 --bitcode。
+		</value>
+	</data>
+  <data name="MT0085" xml:space="preserve">
+		<value>未找到对 "{0}" 的引用。将自动添加该引用。
+		</value>
+	</data>
+  <data name="MX0086" xml:space="preserve">
+		<value>必须指定目标框架(--target-framework)。
+		</value>
+	</data>
+  <data name="MT0087" xml:space="preserve">
+		<value>Boehm GC 不支持增量生成(--fastdev)。将禁用增量生成。
+		</value>
+	</data>
+  <data name="MT0088" xml:space="preserve">
+		<value>对于 watchOS 应用，GC 必须处于协作模式。请删除 mtouch 的 --coop:false 参数。
+		</value>
+	</data>
+  <data name="MT0089" xml:space="preserve">
+		<value>为 GC 启用协作模式时，选项 "{0}" 不能采用值 "{1}"。
+		</value>
+	</data>
+  <data name="MX0090" xml:space="preserve">
+		<value>目标框架“{0}”已弃用。请改用“{1}”。
+		</value>
+	</data>
+  <!-- MX0091 has been used in the past -->
+  <!-- MT0092 has been used in the past -->
+  <data name="MT0093" xml:space="preserve">
+		<value>找不到 "mlaunch"。
+		</value>
+	</data>
+  <!-- MT0094 has been used in the past -->
+  <data name="MT0095" xml:space="preserve">
+		<value>无法将 Aot 文件复制到目标目录 {0}: {1}
+		</value>
+	</data>
+  <data name="MT0095_A" xml:space="preserve">
+		<value>无法将 Aot 文件复制到目标目录 {0}: 无法启动进程。
+		</value>
+	</data>
+  <data name="MT0095_B" xml:space="preserve">
+		<value>无法将 Aot 文件复制到目标目录 {0}
+		</value>
+	</data>
+  <data name="MT0096" xml:space="preserve">
+		<value>未找到对 Xamarin.iOS.dll 的引用。
+		</value>
+	</data>
+  <data name="MM0097" xml:space="preserve">
+		<value>找不到 machine.config 文件 "{0}"。
+		</value>
+	</data>
+  <!-- MM0098 has been used in the past -->
+  <data name="MX0099" xml:space="preserve">
+		<value>内部错误: {0}。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告。
+		</value>
+	</data>
+  <data name="MT0100" xml:space="preserve">
+		<value>程序集生成目标 "{0}" 无效。请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0101" xml:space="preserve">
+		<value>在 --assembly-build-target 参数中多次指定了程序集 "{0}"。
+		</value>
+	</data>
+  <data name="MT0102" xml:space="preserve">
+		<value>程序集 "{0}" 和 "{1}" 具有相同的目标名称("{2}")，但具有不同的目标(分别为 "{3}" 和 "{4}")。
+		</value>
+	</data>
+  <data name="MT0103" xml:space="preserve">
+		<value>静态对象 "{0}" 包含多个程序集("{1}")，但每个静态对象必须精确对应于一个程序集。
+		</value>
+	</data>
+  <data name="MT0105" xml:space="preserve">
+		<value>没有为 "{0}" 指定任何程序集生成目标。
+		</value>
+	</data>
+  <data name="MT0106" xml:space="preserve">
+		<value>程序集生成目标名称 "{0}" 无效: 不允许使用字符 "{1}"。
+		</value>
+	</data>
+  <data name="MT0107" xml:space="preserve">
+		<value>程序集 "{0}" 具有不同的自定义 LLVM 优化("{1}")，在将它们编译为单个二进制文件时不允许有这种情况。
+		</value>
+	</data>
+  <data name="MT0108" xml:space="preserve">
+		<value>程序集生成目标 "{0}" 与任何程序集都不匹配。
+		</value>
+	</data>
+  <data name="MT0109" xml:space="preserve">
+		<value>从提供的路径以外的路径加载了程序集 "{0}" (提供的路径: {1}，实际路径: {2})。
+		</value>
+	</data>
+  <data name="MT0110" xml:space="preserve">
+		<value>已禁用增量生成，因为此版本的 Xamarin.iOS 不支持在包含第三方绑定库的项目中进行增量生成，该内容将编译为 bitcode。
+		</value>
+	</data>
+  <data name="MT0111" xml:space="preserve">
+		<value>已启用 Bitcode，因为仅当启用 bitcode 时，此版本的 Xamarin.iOS 才支持使用 LLVM 生成 watchOS 项目。
+		</value>
+	</data>
+  <data name="MT0112" xml:space="preserve">
+		<value>由于 {0}，已禁用本机代码共享
+		</value>
+	</data>
+  <data name="MT0112_a" xml:space="preserve">
+		<value>容器应用的部署目标低于 iOS 8.0 (为 {0})。
+		</value>
+	</data>
+  <data name="MT0112_b" xml:space="preserve">
+		<value>容器应用包括 I18N 程序集({0})。
+		</value>
+	</data>
+  <data name="MT0112_c" xml:space="preserve">
+		<value>容器应用具有托管链接器的自定义 XML 定义({0})。
+		</value>
+		<comment>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
+		</comment>
+	</data>
+  <data name="MT0113" xml:space="preserve">
+		<value>由于 {1}，已禁用扩展 "{0}" 的本机代码共享
+		</value>
+	</data>
+  <data name="MT0113_a" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的 bitcode 选项不同。
+		</value>
+	</data>
+  <data name="MT0113_b" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的 --assembly-build-target 选项不同。
+		</value>
+	</data>
+  <data name="MT0113_c" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的 I18N 程序集不同。
+		</value>
+	</data>
+  <data name="MT0113_d" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的 AOT 编译器参数不同。
+		</value>
+	</data>
+  <data name="MT0113_e" xml:space="preserve">
+		<value>对于容器应用({0})和扩展({1})，AOT 编译器的其他参数不同。
+		</value>
+	</data>
+  <data name="MT0113_f" xml:space="preserve">
+		<value>未在容器应用({0})和扩展({1})中启用或禁用 LLVM。
+		</value>
+	</data>
+  <data name="MT0113_g" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的 I18N 托管链接器设置不同。
+		</value>
+	</data>
+  <data name="MT0113_h" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的托管链接器跳过的程序集不同。
+		</value>
+	</data>
+  <data name="MT0113_i" xml:space="preserve">
+		<value>扩展具有托管链接器的自定义 XML 定义({0})。
+		</value>
+		<comment>A warning related to custom linker configuration, see: https://docs.microsoft.com/xamarin/cross-platform/deploy-test/linker. The following are literal names and should not be translated: xml, linker
+{0} - A list of xml file names.
+		</comment>
+	</data>
+  <data name="MT0113_j" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的解释器设置不同。
+		</value>
+	</data>
+  <data name="MT0113_k" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})经解释的程序集不同。
+		</value>
+	</data>
+  <data name="MT0113_l" xml:space="preserve">
+		<value>容器应用未生成 ABI {0} (但扩展会生成此 ABI)。
+		</value>
+	</data>
+  <data name="MT0113_m" xml:space="preserve">
+		<value>容器应用将生成 ABI {0}，它与扩展的 ABI ({1})不兼容。
+		</value>
+	</data>
+  <data name="MT0113_n" xml:space="preserve">
+		<value>容器应用({0})和扩展({1})的 remove-dynamic-registrar 优化不同。
+		</value>
+	</data>
+  <data name="MT0113_o" xml:space="preserve">
+		<value>容器应用将引用 "{1}" 中的 "{0}"，而扩展引用 "{2}" 中的不同版本。
+		</value>
+	</data>
+  <data name="MM0114" xml:space="preserve">
+		<value>混合 AOT 编译要求对所有程序集进行 AOT 编译
+		</value>
+	</data>
+  <data name="MT0115" xml:space="preserve">
+		<value>建议在启用 bitcode 时使用代码(--dynamic-symbol-mode=code)引用动态符号。
+		</value>
+	</data>
+  <data name="MT0116" xml:space="preserve">
+		<value>体系结构 {0} 无效。部署目标为 11 或更高版本时，不支持 32 位体系结构。
+		</value>
+	</data>
+  <data name="MT0117" xml:space="preserve">
+		<value>无法在仅支持 64 位的模拟器上启动 32 位应用。
+		</value>
+	</data>
+  <data name="MT0118" xml:space="preserve">
+		<value>找不到包含 mono 符号的目录 {0}。
+		</value>
+	</data>
+  <data name="MT0123" xml:space="preserve">
+		<value>可执行程序集 {0} 未引用 {1}.dll。
+		</value>
+	</data>
+  <data name="MT0124" xml:space="preserve">
+		<value>无法将当前语言设为 "{0}" (根据 LANG={1}): {2}
+		</value>
+	</data>
+  <data name="MT0125" xml:space="preserve">
+		<value>模拟器中已忽略 --assembly-build-target 命令行参数。
+		</value>
+	</data>
+  <data name="MT0126" xml:space="preserve">
+		<value>已禁用增量生成，因为模拟器中不支持增量生成。
+		</value>
+	</data>
+  <data name="MT0127" xml:space="preserve">
+		<value>已禁用增量生成，因为此版本的 Xamarin.iOS 不支持在包含多个第三方绑定库的项目中进行增量生成。
+		</value>
+	</data>
+  <data name="MT0128" xml:space="preserve">
+		<value>无法访问文件 "{0}": {1}
+		</value>
+	</data>
+  <data name="MX0129" xml:space="preserve">
+		<value>"{0}" 的调试符号文件与程序集不匹配，已忽略该文件。
+		</value>
+	</data>
+  <data name="MX0130" xml:space="preserve">
+		<value>未找到根程序集。应至少提供一个根程序集。
+		</value>
+	</data>
+  <data name="MX0131" xml:space="preserve">
+		<value>未在程序集列表 "{1}" 中找到产品程序集 "{0}" 
+		</value>
+	</data>
+  <data name="MX0132" xml:space="preserve">
+		<value>未知的优化: "{0}"。有效的优为: {1}。
+		</value>
+	</data>
+  <data name="MX0133" xml:space="preserve">
+		<value>找到与 "{0}" 匹配的多个程序集，将选择第一个:{1}{2}
+		</value>
+	</data>
+  <data name="MX0135" xml:space="preserve">
+		<value>未链接系统框架 "{0}" (由程序集 "{1}" 引用)，因为它是在 {2} {3} 中引入的，而我们使用 {2} {4} SDK。
+		</value>
+	</data>
+  <data name="MT0136" xml:space="preserve">
+		<value>从 "{1}" 中找不到引用的程序集 "{0}"。
+		</value>
+	</data>
+  <data name="MT0137" xml:space="preserve">
+		<value>找不到 "{1}" 中 {2} 特性引用的程序集 "{0}"。
+		</value>
+	</data>
+  <data name="MT0140" xml:space="preserve">
+		<value>文件 "{0}" 是无效的框架。
+		</value>
+	</data>
+  <data name="MT0141" xml:space="preserve">
+		<value>模拟器中不支持该解释器。即将切换到 REPL，它可在模拟器上提供相同的额外功能。
+		</value>
+	</data>
+  <data name="MT0142" xml:space="preserve">
+		<value>找不到作为参数传递到 --interpreter 的程序集 "{0}"。
+		</value>
+	</data>
+  <data name="MM0143" xml:space="preserve">
+		<value>不再支持使用 Classic API 的项目。请将项目迁移到 Unified API。
+		</value>
+	</data>
+  <data name="MM0144" xml:space="preserve">
+		<value>不再支持生成 32 位应用。请将项目的 Mac 生成选项中的体系结构更改为 "x86_64"。
+		</value>
+	</data>
+  <data name="MT0145" xml:space="preserve">
+		<value>为调试进行生成时，请在 WatchOS 上使用特定于设备的版本。
+		</value>
+	</data>
+  <data name="MT0146" xml:space="preserve">
+		<value>ARM64_32 调试模式需要 --interpreter[=all]，强制执行它。
+		</value>
+	</data>
+  <data name="MM0147" xml:space="preserve">
+		<value>无法分析 pkg-config 中的 cflags "{0}": {1}
+		</value>
+	</data>
+  <data name="MX0148" xml:space="preserve">
+		<value>对于 {2} 中的库 "{1}"，无法由 LinkWith 特性分析链接器标志 "{0}": {3}
+		</value>
+	</data>
+  <data name="MT0150" xml:space="preserve">
+		<value>内部错误: 解释器当前仅适用于 64 位。
+		</value>
+	</data>
+  <data name="MT0156" xml:space="preserve">
+		<value>内部错误: byref 数组既不是字符串，也不是 NSObject 或 INativeObject。
+		</value>
+	</data>
+  <data name="MT0157" xml:space="preserve">
+		<value>内部错误: 无法在 {2} 中从 "{0}" 转换为 "{1}"。请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0158" xml:space="preserve">
+		<value>内部错误: 智能枚举 {0} 可能不是智能枚举。请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0159" xml:space="preserve">
+		<value>内部错误: {1} 不支持的 tokentype ({0})，请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0160" xml:space="preserve">
+		<value>内部错误: 不应执行静态注册器，除非同时执行(或禁用)链接器。一种可能的解决方法是将 "-f" 作为附加 {0} 参数传递，以强制执行完整生成。请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0161" xml:space="preserve">
+		<value>内部错误: 没有名称的符号(类型: {0})。请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0168" xml:space="preserve">
+		<value>内部错误:“无法在框架之间进行转换: {0}”。请提交包含测试用例的 Bug 报告(https://github.com/xamarin/xamarin-macios/issues/new)。
+		</value>
+	</data>
+  <data name="MT0174_a" xml:space="preserve">
+		<value>程序集 {0} 由另一个程序集引用，但同时又由链接器链接出去。
+		</value>
+	</data>
+  <data name="MT0175_a" xml:space="preserve">
+		<value>链接器输出包含多个名为 "{0}" 的程序集:\n\t{1}
+		</value>
+	</data>
+  <data name="MT0175_b" xml:space="preserve">
+		<value>并非 {0} 的所有程序集都有链接任务
+		</value>
+	</data>
+  <data name="MT0175_c" xml:space="preserve">
+		<value>{0} 的链接任务不全部相同
+		</value>
+	</data>
+  <data name="MX0176" xml:space="preserve">
+        <value>已从系统的 GAC 中解析程序集“{0}”: {1}。这可能会在将来出现问题；要避免此类问题，请确保不使用仅在系统的 GAC 中提供的程序集。
+        </value>
+    </data>
+  <data name="MX0177" xml:space="preserve">
+		<value>未知的平台: {0}。这通常表示存在 Bug；请在 https://github.com/xamarin/xamarin-macios/issues/new 提交包含测试用例的 bug 报告。</value>
+	</data>
+  <data name="MX0178" xml:space="preserve">
+        <value>“{0}”的调试符号文件无效，已被忽略。
+        </value>
+    </data>
+  <data name="MX0179" xml:space="preserve">
+		<value>此版本的 {0} 需要 {1} {2} SDK (随 Xcode {3} 提供)。请升级 Xcode 以获取所需的标头文件，或者使用动态注册器，或在项目的“Mac 生成选项”&gt;“链接器行为”中将受管链接器行为设置为“链接平台”或“仅链接框架 SDK”(以尝试避免使用新 API)。</value>
+	</data>
+  <data name="MX0180" xml:space="preserve">
+		<value>此版本的 {0} 需要 {1} {2} SDK (随 Xcode {3} 提供)。请升级 Xcode 以获取所需的标头文件，或者在项目的“iOS 生成选项”&gt;“链接器行为”中将受管链接器行为设置为“仅链接框架 SDK”(以尝试避免使用新 API)。</value>
+	</data>
+  <data name="MX0181" xml:space="preserve">
+		<value>未与框架 {0} (由类型 {1} 使用)链接，因为它在当前平台({2})上不可用。</value>
+	</data>
+  <data name="MX0182" xml:space="preserve">
+		<value>未与框架 {0} (由 {1} 中的模块引用进行引用)链接，因为它在当前平台({2})上不可用。</value>
+	</data>
+  <data name="MX0183" xml:space="preserve">
+        <value>无法将 Mac Catalyst 版本 {0} 映射到相应的 macOS 版本。有效的 Mac Catalyst 版本为: {1}</value>
+    </data>
+  <data name="MX0184" xml:space="preserve">
+        <value>无法将 macOS 版本 {0} 映射到相应的 Mac Catalyst 版本。有效的 macOS 版本为: {1}</value>
+    </data>
+  <data name="MX0185" xml:space="preserve">
+		<value>使用 CoreCLR 时，选项“{0}”无法取值“{1}”。</value>
+	</data>
+  <data name="MX0186" xml:space="preserve">
+		<value>已启用 Bitcode，但 Xcode 14+ 中不支持 Bitcode，并且已将其禁用。请通过从项目文件中删除 “MtouchEnableBitcode” 属性来禁用 Bitcode。</value>
+	</data>
+  <data name="MX1009" xml:space="preserve">
+		<value>无法将程序集 "{0}" 复制到 "{1}": {2}
+		</value>
+	</data>
+  <data name="MT1010" xml:space="preserve">
+		<value>无法加载程序集 "{0}": {1}
+		</value>
+	</data>
+  <data name="MT1013" xml:space="preserve">
+		<value>依赖项跟踪错误: 没有可比较的文件。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交包含测试用例的 Bug 报告。
+		</value>
+	</data>
+  <data name="MT1014" xml:space="preserve">
+		<value>未能重新使用 "{0}" 的缓存版本: {1}。
+		</value>
+	</data>
+  <data name="MT1015" xml:space="preserve">
+		<value>未能创建可执行文件 "{0}": {1}
+		</value>
+	</data>
+  <data name="MT1022" xml:space="preserve">
+		<value>无法将目录 "{0}" 复制到 "{1}": {2}
+		</value>
+	</data>
+  <data name="MM1034" xml:space="preserve">
+		<value>无法创建符号链接 "{0}" -&gt; "{1}": 错误 {2}
+		</value>
+	</data>
+  <data name="MT1035" xml:space="preserve">
+		<value>无法包含框架 "{0}" 的不同版本
+		</value>
+	</data>
+  <data name="MT1036" xml:space="preserve">
+		<value>由 {1} 包含了框架 "{0}" (与上一个错误相关)
+		</value>
+	</data>
+  <data name="MT1300" xml:space="preserve">
+		<value>不受支持的 bitcode 平台: {0}。
+		</value>
+	</data>
+  <data name="MT1301" xml:space="preserve">
+		<value>不受支持的 TvOS ABI: {0}。
+		</value>
+	</data>
+  <data name="MT1302" xml:space="preserve">
+		<value>无法从 "{1}" 中提取本机库 "{0}"。请确保本机库已正确嵌入到托管程序集中(如果该程序集是使用绑定项目生成的，则本机库必须包含在项目中，并且其生成操作必须为 "ObjcBindingNativeLibrary")。
+		</value>
+	</data>
+  <data name="MT1302_A" xml:space="preserve">
+		<value>将 .s 转换为 .ll 时转义序列无效，\\ 作为 {0}:{1} 中的最后一个字符。
+		</value>
+	</data>
+  <data name="MT1302_B" xml:space="preserve">
+		<value>将 .s 转换为 .ll 时转义序列无效，由于 {2}，{0}:{1} 中的八进制转义符错误。
+		</value>
+	</data>
+  <data name="MT1303" xml:space="preserve">
+		<value>无法从 "{1}" 解压缩本机框架 "{0}"。请查看生成日志，以从本机 "unzip" 命令了解详细信息。
+		</value>
+	</data>
+  <data name="MT1305" xml:space="preserve">
+		<value>绑定库 "{0}" 包含用户框架({0})，但嵌入式用户框架需要 iOS 8.0 (部署目标是 {1})。请将 Info.plist 文件中的部署目标至少设为 8.0。
+		</value>
+	</data>
+  <data name="MX1306" xml:space="preserve">
+		<value>无法解压缩文件“{0}”。请查看生成日志，以从本机 “unzip” 命令获取详细信息。</value>
+	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>无法从程序集“{1}”中提取本机框架“{0}”，因为它不包含资源“{2}”。</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>无法从程序集“{1}”中提取本机库“{0}”，因为它不包含资源“{2}”。</value>
+	</data>
+  <data name="MM1401" xml:space="preserve">
+		<value>引用中缺少必需的 "Xamarin.Mac.dll" 程序集
+		</value>
+	</data>
+  <data name="MM1402" xml:space="preserve">
+		<value>程序集 "{0}" 与此工具或配置文件不兼容
+		</value>
+	</data>
+  <data name="MM1403" xml:space="preserve">
+		<value>找不到 {0} {1}。目标框架 "{2}" 不可用于打包应用程序。
+		</value>
+	</data>
+  <data name="MM1404" xml:space="preserve">
+		<value>目标框架 "{0}" 无效。
+		</value>
+	</data>
+  <data name="MM1405" xml:space="preserve">
+		<value>useFullXamMacFramework 必须始终面向框架 .NET 4.5，而非无效的 "{0}"。
+		</value>
+	</data>
+  <data name="MM1407" xml:space="preserve">
+		<value>Xamarin.Mac 引用 "{0}" 与所选的目标框架 "{1}" 不匹配。
+		</value>
+	</data>
+  <data name="MM1501" xml:space="preserve">
+		<value>无法解析引用: {0}
+		</value>
+	</data>
+  <data name="MX1502" xml:space="preserve">
+		<value>在链接之前，“{1}”中已存在一个或多个对类型“{0}”的引用
+		</value>
+	</data>
+  <data name="MX1503" xml:space="preserve">
+		<value>链接后，“{1}”中仍存在一个或多个对类型“{0}”的引用
+		</value>
+	</data>
+  <data name="MX1600" xml:space="preserve">
+		<value>不是 Mach-O 动态库(未知标头 "0x{0}"): {1}。
+		</value>
+	</data>
+  <data name="MT1601" xml:space="preserve">
+		<value>不是 Mach-O 静态库(未知的标头 "{0}"，期望的标头 "!&lt;arch&gt;")。
+		</value>
+	</data>
+  <data name="MX1602" xml:space="preserve">
+		<value>不是 Mach-O 动态库(未知标头 "0x{0}"): {1}。
+		</value>
+	</data>
+  <data name="MX1603" xml:space="preserve">
+		<value>{1} 中位置 {0} 处的 FAT 项具有未知格式。
+		</value>
+	</data>
+  <data name="MX1604" xml:space="preserve">
+		<value>{0} 类型的文件不是 MachO 文件({1})。
+		</value>
+	</data>
+  <data name="MT1605" xml:space="preserve">
+		<value>静态库 "{1}" 中的条目 "{0}" 无效，条目标头不以 0x60 0x0A 结尾(实际上为 "0x{2} 0x{3}")
+		</value>
+	</data>
+  <data name="MX2001" xml:space="preserve">
+		<value>无法链接程序集。{0}
+		</value>
+	</data>
+  <data name="MT2002" xml:space="preserve">
+		<value>无法解析引用: {0}
+		</value>
+	</data>
+  <data name="MT2003" xml:space="preserve">
+		<value>将忽略选项 "--optimize={0}{1}"，因为未启用静态注册器
+		</value>
+	</data>
+  <!-- MT2003_A is not in use anymore -->
+  <data name="MT2003_B" xml:space="preserve">
+		<value>将忽略选项 "--optimize={0}{1}"，因为已禁用链接
+		</value>
+	</data>
+  <data name="MT2003_C" xml:space="preserve">
+		<value>将忽略选项“--optimize={0}”，因为它仅适用于 {1}。</value>
+		<comment>This is a warning that is shown when the command-line option --optimize=... is not valid for a particular platform
+{0} - The optimization option that is not valid for the current platform
+{1} - The platforms in question, such as 'iOS'.
+		</comment>
+	</data>
+  <data name="MX2004" xml:space="preserve">
+		<value>找不到额外的链接器定义文件 "{0}"。
+		</value>
+	</data>
+  <data name="MX2005" xml:space="preserve">
+		<value>无法分析 "{0}" 中的定义。
+		</value>
+	</data>
+  <data name="MT2006" xml:space="preserve">
+		<value>无法从 "{0}" 加载 mscorlib.dll。请重新安装 Xamarin.iOS。
+		</value>
+	</data>
+  <data name="MM2006" xml:space="preserve">
+		<value>引用了本地库 "{0}" ，但找不到该库。
+		</value>
+	</data>
+  <data name="MT2007" xml:space="preserve">
+		<value>未能从 "{1}" 解析 "{0}" 引用
+		</value>
+	</data>
+  <data name="MM2007" xml:space="preserve">
+		<value>针对完整 .NET 框架的 Xamarin.Mac Unified API 不支持链接 SDK 或所有程序集。请传递 `-nolink` 或 `-linkplatform` 标志。
+		</value>
+		<comment>Using the linker is not supported in certain situations in Xamarin.Mac, see: https://docs.microsoft.com/xamarin/mac/deploy-test/linker. The following are literal names and should not be translated: Xamarin.Mac Unified API, .NET, SDK, All, `-nolink`, and `-linkplatform`.
+		</comment>
+	</data>
+  <data name="MM2009" xml:space="preserve">
+		<value>  引用者 {0}。{1}
+		</value>
+	</data>
+  <data name="MT2010" xml:space="preserve">
+		<value>未知的 HttpMessageHandler `{0}`。有效值为 HttpClientHandler (默认值)、CFNetworkHandler 或 NSUrlSessionHandler
+		</value>
+	</data>
+  <data name="MM2012" xml:space="preserve">
+		<value> 仅显示 {1} 个“引用者”警告中的前 {0} 个。
+		</value>
+	</data>
+  <data name="MM2013" xml:space="preserve">
+		<value>未能解析 \"{1}\" 中对 \"{0}\" 的引用。应用不会包含引用的程序集，并且可能在运行时失败。
+		</value>
+	</data>
+  <data name="MT2014" xml:space="preserve">
+		<value>无法链接程序集 "{0}" ，因为它是混合模式。
+		</value>
+	</data>
+  <data name="MT2015" xml:space="preserve">
+		<value>HttpMessageHandler `{0}` 对于 watchOS 无效。唯一的有效值是 NSUrlSessionHandler。
+		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>无法通过传递“--optimize=-remove-dynamic-registrar”来保持动态注册器，因为使用 NativeAOT 时不支持动态注册器。仍将删除对动态注册的支持。</value>
+	</data>
+  <data name="MX2017" xml:space="preserve">
+		<value>无法处理 XML 说明: {0}
+		</value>
+	</data>
+  <data name="MT2018" xml:space="preserve">
+		<value>从两个不同的位置引用了程序集 "{0}": "{1}" 和 "{2}"。
+		</value>
+	</data>
+  <data name="MT2019" xml:space="preserve">
+		<value>无法加载根程序集 "{0}"。
+		</value>
+	</data>
+  <!-- 2020 -> 2099 is used by ExceptionalSubStep subclasses in the linker -->
+  <data name="MX_ExceptionalSubSteps" xml:space="preserve">
+		<value>链接器步骤“{0}”在处理”{1}”过程中失败。</value>
+		<comment>This is a message when processing an assembly/type/field/method/property/event fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly/type/field/method/property/event that failed processing.
+		</comment>
+	</data>
+  <!-- 202x: OptimizeGeneratedCodeSubStep -->
+  <!-- 203x: RemoveUserResourcesSubStep -->
+  <!-- 204x: CoreHttpMessageHandler -->
+  <!-- 205x: RemoveCode -->
+  <!-- 206x: SealerSubStep -->
+  <!-- 207x: MetadataReducerSubStep -->
+  <!-- 208x: MarkNSObjects -->
+  <!-- 209x: InlinerSubStep -->
+  <data name="MT2101" xml:space="preserve">
+		<value>无法解析引用 "{0}" ，该引用是从 "{2}" 中的方法 "{1}" 中引用的。
+		</value>
+	</data>
+  <data name="MT2102" xml:space="preserve">
+		<value>处理程序集 "{1}" 中的方法 "{0}" 时出错: {2}
+		</value>
+	</data>
+  <data name="MT2102_A" xml:space="preserve">
+		<value>处理程序集 "{1}" 中的方法 "{0}" 时出错
+		</value>
+	</data>
+  <data name="MX2103" xml:space="preserve">
+		<value>处理程序集 "{0}" 时出错: {1}
+		</value>
+	</data>
+  <data name="MT2105_A" xml:space="preserve">
+		<value>成员 "{0}" 上的 [BindingImpl] 特性无效: 不应该有字段。
+		</value>
+	</data>
+  <data name="MT2105_B" xml:space="preserve">
+		<value>成员 "{0}" 上的 [BindingImpl] 特性无效: 不应该有属性。
+		</value>
+	</data>
+  <data name="MT2105_C" xml:space="preserve">
+		<value>成员 "{0}" 上的 [BindingImpl] 特性无效: 不应该是 "{1}" 参数类型的构造函数(应为 'ObjCRuntime.BindingImplOptions)。
+		</value>
+	</data>
+  <data name="MT2105_D" xml:space="preserve">
+		<value>成员 "{0}" 上的 [BindingImpl] 特性无效: 不应该是 {1} 个参数的构造函数(应为 1 个参数)。
+		</value>
+	</data>
+  <data name="MT2105_E" xml:space="preserve">
+		<value>属性 {0}.{1} 包含 "{2}" 异常子句，目前编译 bitcode 时不支持该子句。如果调用此属性，它将引发异常。
+		</value>
+	</data>
+  <data name="MT2105_F" xml:space="preserve">
+		<value>方法 {0}.{1} 包含 "{2}" 异常子句，目前编译 bitcode 时不支持该子句。如果调用此方法，它将引发异常。
+		</value>
+	</data>
+  <data name="MM2106" xml:space="preserve">
+		<value>无法优化 {0} 中偏移量 {1} 处对 BlockLiteral.{2} 的调用，因为上一个指令是意外发出的({3})
+		</value>
+	</data>
+  <data name="MM2106_A" xml:space="preserve">
+		<value>无法优化在 {0} 中偏移量 {1} 处对 BlockLiteral.{2} 的调用，因为无法确定第一个参数的委托类型的类型(指令: {3})
+		</value>
+	</data>
+  <data name="MM2106_B" xml:space="preserve">
+		<value>无法优化对 {0} 中对 BlockLiteral.{2} 的调用，因为作为第一个参数(trampoline)传递的值类型为 {1}，所以无法计算块签名。
+		</value>
+	</data>
+  <data name="MM2106_D" xml:space="preserve">
+		<value>无法优化在 {0} 中偏移量 {1} 处对 BlockLiteral.SetupBlock 的调用: {2}。
+		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为在类型“{4}”中找到了多个名为“{3}”的方法。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为“{3}”必须至少具有一个参数，。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”中的第一个参数不是 “System.IntPtr”、“void*” 或 “ObjCRuntime.BlockLiteral*” (它是“{4}”)</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”没有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>无法优化对 BlockLiteral 的调用。{0} 中的 {2} 偏移量为 {1}，因为方法“{3}”没有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MM2107" xml:space="preserve">
+		<value>删除动态注册器是不安全的，因为 {0} 引用 "{1}.{2} ({3})"。
+		</value>
+	</data>
+  <data name="MM2108" xml:space="preserve">
+		<value>已删除 {0} 中除 {1} 之外的体系结构，以遵循 App Store 限制。这可能会破坏现有的代码签名。可以考虑使用 lipo 删除库或使用 --optimize=-trim-architectures 禁用库
+		</value>
+	</data>
+  <data name="MM2110" xml:space="preserve">
+		<value>Xamarin.Mac "Partial Static" 注册器不支持链接。请禁用链接或使用其他注册器模式。
+		</value>
+	</data>
+  <data name="MX2111" xml:space="preserve">
+		<value>在已加载的程序集列表中找不到 corlib 程序集 "{0}"。
+		</value>
+	</data>
+  <!-- 2200 -> 2299 is used by/reserved for ExceptionalSubStep subclasses in the linker -->
+  <!-- 220x: PreserveSmartEnumConversionsSubStep -->
+  <!-- 221x: RemoveBitcodeIncompatibleCodeStep -->
+  <!-- 222x: RemoveRejectedTypesStep -->
+  <!-- 223x: CollectUnmarkedMembersSubStep -->
+  <!-- 224x: PreserveBlockCodeSubStep -->
+  <!-- 2300 -> 2399 is used by/reserved for ConfigurationAwareStep subclasses in the linker -->
+  <data name="MX_ConfigurationAwareStep" xml:space="preserve">
+		<value>链接器步骤“{0}”在处理过程中失败: {1}</value>
+		<comment>This is a message when processing fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - A string describing what failed.
+		</comment>
+	</data>
+  <data name="MX_ConfigurationAwareStepWithAssembly" xml:space="preserve">
+		<value>链接器步骤“{0}”在处理 {1} 过程中失败: {2}</value>
+		<comment>This is a message when processing an assembly fails in the linker.
+			{0} - The name of the step that fails.
+			{1} - The name of the assembly that failed processing.
+			{1} - A string describing what failed
+		</comment>
+	</data>
+  <!-- 230x: SetupStep -->
+  <!-- 231x: GatherFrameworksStep -->
+  <!-- 232x: GenerateMainStep -->
+  <!-- 233x: CollectAssembliesStep -->
+  <!-- 234x: ExtractBindingLibrariesStep -->
+  <!-- 235x: LoadNonSkippedAssembliesStep -->
+  <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
+  <data name="MX3001" xml:space="preserve">
+		<value>无法{0}程序集 "{1}" 
+		</value>
+	</data>
+  <data name="MT3003" xml:space="preserve">
+		<value>使用 LLVM 生成程序时不支持进行调试。已禁用调试。
+		</value>
+	</data>
+  <data name="MT3004" xml:space="preserve">
+		<value>无法对程序集 "{0}" 进行 AOT 操作，因为它不存在。
+		</value>
+	</data>
+  <data name="MT3005" xml:space="preserve">
+		<value>未找到程序集 "{1}" 的依赖项 "{0}"。请查看项目的引用。
+		</value>
+	</data>
+  <data name="MT3006" xml:space="preserve">
+		<value>无法计算项目的完整依赖关系映射。这将导致生成时间加长，因为 Xamarin.iOS 无法正确检测需要重新生成的内容(以及无需重新生成的内容)。请查看之前的警告以了解更多详细信息。
+		</value>
+	</data>
+  <data name="MX3007" xml:space="preserve">
+		<value>启用 llvm 时，将不会加载调试信息文件(*.mdb / *.pdb)。
+		</value>
+	</data>
+  <data name="MT3008" xml:space="preserve">
+		<value>Bitcode 支持要求使用 LLVM (--abi=arm64+llvm 等)
+		</value>
+	</data>
+  <data name="MM3009" xml:space="preserve">
+		<value>已请求 "{0}" 的 AOT，但未找到
+		</value>
+	</data>
+  <data name="MM3010" xml:space="preserve">
+		<value>已请求排除 "{0}" 的 AOT，但未找到
+		</value>
+	</data>
+  <data name="MT4001" xml:space="preserve">
+		<value>无法将主要模板扩展到 `{0}`。
+		</value>
+	</data>
+  <data name="MT4002" xml:space="preserve">
+		<value>未能为 P/Invoke 方法编译生成的代码。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4101" xml:space="preserve">
+		<value>注册器无法生成类型 `{0}` 的签名。
+		</value>
+	</data>
+  <data name="MT4102" xml:space="preserve">
+		<value>注册器在方法 `{2}` 的签名中找到无效的类型 `{0}`。请改用 `{1}`。
+		</value>
+	</data>
+  <data name="MT4103" xml:space="preserve">
+		<value>注册器在方法 `{1}` 的签名中找到无效的类型 `{0}`: 该类型可实现 INativeObject，但不具有采用两个(IntPtr、bool)参数的构造函数。
+		</value>
+	</data>
+  <data name="MT4104" xml:space="preserve">
+		<value>注册器无法在方法 `{1}` 的签名中封送类型 `{0}` 的返回值。
+		</value>
+	</data>
+  <data name="MT4104_A" xml:space="preserve">
+		<value>注册器无法在方法 `{1}.{2}` 中封送类型 `{0}` 的返回值。
+		</value>
+	</data>
+  <data name="MT4105" xml:space="preserve">
+		<value>注册器无法在方法 `{1}` 的签名中封送类型 `{0}` 的参数。
+		</value>
+	</data>
+  <data name="MT4108" xml:space="preserve">
+		<value>注册器无法获取托管类型 `{0}` 的 ObjectiveC 类型。
+		</value>
+	</data>
+  <data name="MT4109" xml:space="preserve">
+		<value>未能编译生成的注册器代码。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4110" xml:space="preserve">
+		<value>注册器无法在方法 `{1}` 的签名中封送类型 `{0}` 的 out 参数。
+		</value>
+	</data>
+  <data name="MT4111" xml:space="preserve">
+		<value>注册器无法在方法 `{1}` 中生成类型 "{0}" 的签名。
+		</value>
+	</data>
+  <data name="MT4113" xml:space="preserve">
+		<value>注册器找到了泛型方法: "{0}"。不支持导出泛型方法，并且将导致出现随机行为和/或崩溃
+		</value>
+	</data>
+  <data name="MT4114" xml:space="preserve">
+		<value>方法 "{0}.{1}" 的注册器中出现意外错误 - 请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4116" xml:space="preserve">
+		<value>无法注册程序集 "{0}": {1}
+		</value>
+	</data>
+  <data name="MT4117" xml:space="preserve">
+		<value>注册器发现方法 "{0}.{1}" 中的签名不匹配 - 选择器 "{4}" 指示此方法使用 {2} 个参数，而托管方法具有 {3} 个参数。
+		</value>
+	</data>
+  <data name="MT4118" xml:space="preserve">
+		<value>无法注册两个本机名称相同 ("{2}")的托管类型("{0}" 和 "{1}")。
+		</value>
+	</data>
+  <data name="MT4119" xml:space="preserve">
+		<value>无法注册成员 "{1}.{2}" 的选择器 "{0}" ，因为该选择器已在成员 "{3}" 上注册。
+		</value>
+	</data>
+  <data name="MT4120" xml:space="preserve">
+		<value>注册器发现字段 "{1}.{2}" 中存在未知的字段类型 "{0}"。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4121" xml:space="preserve">
+		<value>使用帐户框架时，无法使用 GCC/G++ 从静态注册器编译生成的代码(编译期间使用的 Apple 提供的头文件需要 Clang)。请使用 Clang (--compiler:clang)或动态注册器(--registrar:dynamic)。
+		</value>
+	</data>
+  <data name="MT4123" xml:space="preserve">
+		<value>可变参数函数 "{0}" 中的可变参数类型必须为 System.IntPtr。
+		</value>
+	</data>
+  <data name="MT4124" xml:space="preserve">
+		<value>在 "{1}" 上找到的 {0} 无效。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_A" xml:space="preserve">
+		<value>在 "{0}" 上找到的 RegisterAttribute 特性 {1} 无效。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_B" xml:space="preserve">
+		<value>在 "{0}" 找到的 AdoptsAttribute 无效: 预期有 1 个构造函数参数，实际有 {1} 个。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_C" xml:space="preserve">
+		<value>在 "{0}.{1}" 上找到无效的 BindAsAttribute: 未知的字段 {2}。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_D" xml:space="preserve">
+		<value>在“{1}.{2}”上找到的 {0} 无效。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_E" xml:space="preserve">
+		<value>在 "{0}" 上找到的 BindAsAttribute 无效: 应具有 1 个构造函数参数，实际找到 {1} 个。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_H" xml:space="preserve">
+		<value>在 "{0}" 上找到的 BindAsAttribute 无效: 找不到基本枚举类型 {1}。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>在“{1}”上找到的 {0} 无效。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告</value>
+	</data>
+  <data name="MT4125" xml:space="preserve">
+		<value>注册器在方法 "{1}" 的签名中找到无效的类型 "{0}": 接口必须具有指定其包装类型的 Protocol 特性。
+		</value>
+	</data>
+  <data name="MT4126" xml:space="preserve">
+		<value>无法注册两个本机名称相同("{2}")的托管协议("{0}" 和 "{1}")。
+		</value>
+	</data>
+  <data name="MT4127" xml:space="preserve">
+		<value>无法为方法 "{0}.{1}" 注册多个接口方法。
+		</value>
+	</data>
+  <data name="MT4128" xml:space="preserve">
+		<value>注册器在方法 "{1}" 的参数 {2} 中找到的泛型参数类型 "{0}" 无效。泛型参数必须具有 "NSObject" 约束。
+		</value>
+	</data>
+  <data name="MT4129" xml:space="preserve">
+		<value>注册器在方法 "{1}" 中找到的泛型返回类型 "{0}" 无效。泛型返回类型必须具有 "NSObject" 约束。
+		</value>
+	</data>
+  <data name="MT4130" xml:space="preserve">
+		<value>注册器无法导出泛型类中的静态方法("{0}")。
+		</value>
+	</data>
+  <data name="MT4131" xml:space="preserve">
+		<value>注册器无法导出泛型类中的静态属性("{0}.{1}")。
+		</value>
+	</data>
+  <data name="MT4132" xml:space="preserve">
+		<value>注册器在属性“{1}.{2}”中找到的泛型返回类型 "{0}" 无效。返回类型必须具有 "NSObject" 约束。
+		</value>
+	</data>
+  <data name="MT4134" xml:space="preserve">
+		<value>应用程序使用 "{0}" 框架，用于生成应用的 {3} SDK 中不包含此框架(此框架是在 {3} {2} 中引入的，而你使用 {3} {1} SDK 进行生成)。请在应用的 {3} 生成选项中选择更新的 SDK。
+		</value>
+	</data>
+  <data name="MM4134" xml:space="preserve">
+		<value>应用程序使用 "{0}" 框架，用于生成应用的 {3} SDK 中不包含此框架(此框架是在 {3} {2} 中引入的，而你使用 {3} {1} SDK 进行生成)。使用静态注册器时不支持此配置(请在项目的 Mac 生成选项中传递 --registrar:dynamic 作为额外的 mmp 参数以进行选择)。还可在应用的 Mac 生成选项中选择更新的 SDK。
+		</value>
+	</data>
+  <data name="MT4135" xml:space="preserve">
+		<value>成员 "{0}" 具有不带选择器的 Export 特性。需要选择器。
+		</value>
+	</data>
+  <data name="MT4136" xml:space="preserve">
+		<value>注册器无法在方法 "{2}.{3}" 中封送参数 "{1}" 的参数类型 "{0}"
+		</value>
+	</data>
+  <data name="MT4137" xml:space="preserve">
+		<value>方法 "{0}.{1}" 将实现 "{2}.{3}"。
+		</value>
+	</data>
+  <data name="MT4138" xml:space="preserve">
+		<value>注册器无法封送属性 "{1}.{2}" 的属性类型 "{0}"。
+		</value>
+	</data>
+  <data name="MT4139" xml:space="preserve">
+		<value>注册器无法封送属性 "{1}.{2}" 的属性类型 "{0}"。具有 [Connect] 特性的属性必须具有属性类型 NSObject (或 NSObject 的子类)。
+		</value>
+	</data>
+  <data name="MT4140" xml:space="preserve">
+		<value>注册器发现方法 "{0}.{1}" 中的签名不匹配 - 选择器 "{4}" 指示可变参数方法使用 {2} 个参数，而托管方法具有 {3} 个参数。
+		</value>
+	</data>
+  <data name="MT4141" xml:space="preserve">
+		<value>无法在成员“{1}.{2}”上注册选择器 "{0}" ，因为 Xamarin.iOS 隐式注册此选择器。
+		</value>
+	</data>
+  <data name="MT4145" xml:space="preserve">
+		<value>枚举 "{0}" 无效: 具有 [Native] 特性的枚举必须具有基础枚举类型 "long" 或 "ulong"。
+		</value>
+		<comment>The following are literal names and should not be translated: enum, [Native], long, ulong.
+{0} - The full name of the C# enum.
+		</comment>
+	</data>
+  <data name="MT4146" xml:space="preserve">
+		<value>(“{3}”)类“{0}”上 Registrar 特性的 Name 参数包含无效的字符:“{1}”(0x{2})。
+		</value>
+	</data>
+  <data name="MT4147" xml:space="preserve">
+		<value>在 "{1}" 上找到的 {0} 无效。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4148" xml:space="preserve">
+		<value>注册器找到了通用协议: "{0}"。不支持导出通用协议。
+		</value>
+	</data>
+  <data name="MT4149" xml:space="preserve">
+		<value>无法注册扩展方法 "{0}.{1}" ，因为第一个参数("{2}")的类型与类别类型("{3}")不匹配。
+		</value>
+	</data>
+  <data name="MT4150" xml:space="preserve">
+		<value>无法注册类型 "{0}"，因为其 Category 特性中的类别类型 "{1}" 不会从 NSObject 继承。
+		</value>
+	</data>
+  <data name="MT4151" xml:space="preserve">
+		<value>无法注册类型 "{0}" ，因为未设置其 Category 特性中的 Type 属性。
+		</value>
+	</data>
+  <data name="MT4152" xml:space="preserve">
+		<value>无法将类型 "{0}" 注册为类别，因为它可实现 INativeObject 或子类 NSObject。
+		</value>
+	</data>
+  <data name="MT4153" xml:space="preserve">
+		<value>无法将类型 "{0}" 注册为类别，因为它是泛型的。
+		</value>
+	</data>
+  <data name="MT4154" xml:space="preserve">
+		<value>无法将方法 "{0}.{1}" 注册为类别方法，因为它是泛型的。
+		</value>
+	</data>
+  <data name="MT4156" xml:space="preserve">
+		<value>无法注册两个本机名称相同("{2}")的类别("{0}" 和 "{1}")
+		</value>
+	</data>
+  <data name="MT4157" xml:space="preserve">
+		<value>无法注册类别方法 "{0}.{1}" ，因为扩展方法需要至少一个参数(并且其类型必须与类别类型 "{2}" 匹配)。
+		</value>
+	</data>
+  <data name="MT4158" xml:space="preserve">
+		<value>无法在类别 {0} 中注册构造函数 {0}.{1}，因为不支持在类别中使用构造函数。
+		</value>
+	</data>
+  <data name="MT4159" xml:space="preserve">
+		<value>无法将方法 "{0}.{1}" 注册为类别方法，因为类别方法必须为静态。
+		</value>
+	</data>
+  <data name="MT4160" xml:space="preserve">
+		<value>在 "{3}.{4}" 的选择器 "{2}" 中找到无效的字符 "{0}" (0x{1})
+		</value>
+	</data>
+  <data name="MT4161" xml:space="preserve">
+		<value>注册器找到不受支持的结构 "{0}": 结构中的所有字段也必须是结构(具有类型 "{2}" 的字段 "{1}" 不是结构)。
+		</value>
+	</data>
+  <!-- MT4162: split up into multiple messages -->
+  <data name="MT4162_A" xml:space="preserve">
+		<value>类型 "{0}" 在 {3} {4} 中不可用(该类型是在 {3} {5} 中引入的) {6} 请使用更新的 {3} SDK 进行生成(通常通过使用最新版本的 Xcode 完成)。
+		</value>
+	</data>
+  <data name="MT4162_BaseType" xml:space="preserve">
+		<value>类型“{0}”(用作 {1} 的基类型)在 {2} {3} 中不可用(该类型是在 {2} {4} 中引入的){5}请使用更新的 {2} SDK 进行生成(通常通过使用最新版本的 Xcode 完成)。
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the base type.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_Parameter" xml:space="preserve">
+		<value>类型“{0}”(用作 {1} 中的参数)在 {2} {3} 中不可用(该类型是在 {2} {4} 中引入的){5} 请使用更新的 {2} SDK 进行生成(通常通过使用最新版本的 Xcode 完成)。
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_PropertyType" xml:space="preserve">
+		<value>类型“{0}”(用作 {1} 的属性类型)在 {2} {3} 中不可用(该类型是在 {2} {4} 中引入的){5} 请使用更新的 {2} SDK 进行生成(通常通过使用最新版本的 Xcode 完成)。
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the property.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4162_ReturnType" xml:space="preserve">
+		<value>类型“{0}”(用作 {1} 中的返回类型)在 {2} {3} 中不可用(该类型是在 {2} {4} 中引入的){5} 请使用更新的 {2} SDK 进行生成(通常通过使用最新版本的 Xcode 完成)。
+		</value>
+		<comment>This is a message for usage of a type that is not available targeting older platform versions. The following are literal names and should not be translated: SDK, Xcode
+{0} - The full C# type name.
+{1} - The name of the method.
+{2} - The platform name, such as 'iOS'.
+{3} - The current platform version number.
+{4} - The platform version where the type was introduced.
+{5} - An additional message about the platform version introducing the type.
+		</comment>
+	</data>
+  <data name="MT4163" xml:space="preserve">
+		<value>注册器中的内部错误({0} ctor 有 {1} 个参数)。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4163_A" xml:space="preserve">
+		<value>注册器中的内部错误(未知的可用性类型: {0})。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4163_B" xml:space="preserve">
+		<value>注册器中的内部错误(BindAs 参数不能为 ref/out: {0})。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4164" xml:space="preserve">
+		<value>无法导出属性 "{0}" ，因为其选择器 "{1}" 是 Objective-C 关键字。请使用其他名称。
+		</value>
+	</data>
+  <data name="MT4165" xml:space="preserve">
+		<value>注册器无法在任何引用的程序集中找到类型 "System.Void"。
+		</value>
+	</data>
+  <data name="MT4166" xml:space="preserve">
+		<value>无法注册方法 "{0}" ，因为签名包含的类型({1})不是引用类型。
+		</value>
+	</data>
+  <data name="MT4167" xml:space="preserve">
+		<value>无法注册方法 "{0}" ，因为签名包含一个泛型类型({1})，该类型带有不实现 INativeObject ({2})的泛型参数类型。
+		</value>
+	</data>
+  <data name="MT4168" xml:space="preserve">
+		<value>无法注册类型 "{0}" ，因为其 Objective-C 名称 "{1}" 是 Objective-C 关键字。请使用其他名称。
+		</value>
+	</data>
+  <data name="MT4169" xml:space="preserve">
+		<value>未能为 {0} 生成 P/Invoke 包装器: {1}
+		</value>
+	</data>
+  <data name="MT4170" xml:space="preserve">
+		<value>对于方法 {2} 中的返回值，注册器无法从 "{0}" 转换为 "{1}"。
+		</value>
+	</data>
+  <data name="MT4171" xml:space="preserve">
+		<value>方法 {0} 返回值上的 BindAs 特性无效: BindAs 类型 {1} 与返回类型 {2} 不同。
+		</value>
+	</data>
+  <data name="MT4171_A" xml:space="preserve">
+		<value>参数 #{0} 上的 BindAs 特性无效: BindAs 类型 {1} 与参数类型 {2} 不同。
+		</value>
+	</data>
+  <data name="MT4171_B" xml:space="preserve">
+		<value>属性 {0}.{1} 上的 BindAs 特性无效: BindAs 类型 {2} 与属性类型 {1} 不同。
+		</value>
+	</data>
+  <data name="MT4172" xml:space="preserve">
+		<value>对于方法 {3} 中的参数 "{2}" ，注册器无法从 "{0}" 转换为 "{1}"。
+		</value>
+	</data>
+  <data name="MT4173" xml:space="preserve">
+		<value>注册器无法计算方法 {1} 中 {0} 类型委托的块签名，因为 {0} 没有特定签名。
+		</value>
+	</data>
+  <data name="MT4173_A" xml:space="preserve">
+		<value>注册器无法计算方法 {1} 中 {0} 类型委托的块签名，因为它找不到委托类型的 Invoke 方法。
+		</value>
+	</data>
+  <data name="MT4174" xml:space="preserve">
+		<value>找不到方法 {0} 参数 #{1} 的块到委托转换方法。
+		</value>
+	</data>
+  <data name="MT4175" xml:space="preserve">
+		<value>找不到方法 {0} 参数 #{1} 的块到委托转换方法。
+		</value>
+	</data>
+  <data name="MT4176" xml:space="preserve">
+		<value>找不到方法 {0} 返回值的委托到块转换类型。
+		</value>
+	</data>
+  <data name="MT4177" xml:space="preserve">
+		<value>类 "{0}" 中使用的 "Adopts" 特性的 "ProtocolType" 参数包含无效字符。使用的值: "{1}" ，无效字符: "{2}" 
+		</value>
+	</data>
+  <data name="MT4178" xml:space="preserve">
+		<value>不会注册类 "{0}"，因为已从 {2} SDK 中删除 {1} 框架。
+		</value>
+	</data>
+  <data name="MT4179" xml:space="preserve">
+		<value>注册器在 "{1}" 的签名中找到了抽象类型 "{0}"。不应在导出到 Objective-C 的成员的签名中使用抽象类型。
+		</value>
+	</data>
+  <data name="MT4184" xml:space="preserve">
+		<value>注册器中的内部错误(BindAs 参数不能为 ref/out: {0})。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT4185" xml:space="preserve">
+		<value>注册器无法计算方法 {1} 中 {0} 类型委托的块签名，因为它找不到委托类型的 Invoke 方法。
+		</value>
+	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>注册机构找到了非最佳类型 `{0}`: 该类型不具有采用两个(ObjCRuntime.NativeHandle, bool)参数的构造函数。但是，找到了一个采用两个(System.IntPtr, bool)参数的构造函数(并将改用此函数)。强烈建议将(System.IntPtr, bool)构造函数的签名更改为(ObjCRuntime.NativeHandle, bool)。</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>在类型“{0}”上找不到 [UserDelegateType] 属性。</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>无法计算类型“{0}”的块签名: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>不会注册类“{0}”，因为它已从 SDK 中 {1} 移除。</value>
+	</data>
+  <data name="MT5101" xml:space="preserve">
+		<value>缺少 "{0}" 编译器。请安装 Xcode“命令行工具”组件
+		</value>
+	</data>
+  <data name="MT5103" xml:space="preserve">
+		<value>找不到 "{0}" 或 "{1}" 编译器。请安装 Xcode“命令行工具”组件
+		</value>
+	</data>
+  <data name="MM5103" xml:space="preserve">
+		<value>编译失败。错误代码 - {0}。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT5103_A" xml:space="preserve">
+		<value>未能编译文件 "{0}"。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT5106" xml:space="preserve">
+		<value>无法编译文件 "{0}" ，请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT5107" xml:space="preserve">
+		<value>对于 32 位体系结构，无法对程序集 "{0}" 进行 AOT 编译，因为对于 32 位 ARM 体系结构而言，本机代码过大。
+		</value>
+	</data>
+  <data name="MT5108" xml:space="preserve">
+		<value>编译器输出过长，限制为 1000 行。
+		</value>
+	</data>
+  <data name="MM5109" xml:space="preserve">
+		<value>本机链接失败，错误代码为 1。请检查生成日志以了解详细信息。
+		</value>
+	</data>
+  <data name="MT5201" xml:space="preserve">
+		<value>本机链接失败。请查看生成日志和提供给 gcc 的用户标志: {0}
+		</value>
+	</data>
+  <data name="MT5202" xml:space="preserve">
+		<value>本机链接失败。请查看生成日志。
+		</value>
+	</data>
+  <data name="MM5202" xml:space="preserve">
+		<value>缺少 Mono.framework MDK。请从 https://www.mono-project.com/download/ 安装适用于 Mono.framework 版本的 MDK
+		</value>
+	</data>
+  <data name="MT5203" xml:space="preserve">
+		<value>本机链接警告: {0}
+		</value>
+	</data>
+  <data name="MM5203" xml:space="preserve">
+		<value>找不到 {0}，可能是因为 Xamarin.Mac 安装受损。请重新安装 Xamarin.Mac。
+		</value>
+	</data>
+  <data name="MT5204" xml:space="preserve">
+		<value>本机链接失败。请查看生成日志。
+		</value>
+	</data>
+  <data name="MM5205" xml:space="preserve">
+		<value>体系结构 "{0}" 无效。x86_64 是唯一有效的体系结构。
+		</value>
+	</data>
+  <data name="MT5209" xml:space="preserve">
+		<value>本地链接错误: {0}
+		</value>
+	</data>
+  <data name="MT5210" xml:space="preserve">
+		<value>本机链接失败，未定义的符号: {0}。请验证是否已引用所有必需的框架并正确链接本机库。
+		</value>
+	</data>
+  <data name="MT5211" xml:space="preserve">
+		<value>本机链接失败，未定义的 Objective-C 类: {0}。在与应用程序链接的任何库或框架中都找不到符号 "{1}"。
+		</value>
+	</data>
+  <data name="MT5212" xml:space="preserve">
+		<value>本机链接失败，重复的符号: "{0}"。
+		</value>
+	</data>
+  <data name="MT5213" xml:space="preserve">
+		<value>重复符号所在位置: {0} (与上一个错误相关的位置)
+		</value>
+	</data>
+  <data name="MT5214" xml:space="preserve">
+		<value>本机链接失败，未定义的符号: {0}。此符号是由托管成员 {1}.{2} 引用的。请验证是否已引用所有必需的框架并链接本机库。
+		</value>
+	</data>
+  <data name="MT5215" xml:space="preserve">
+		<value>对 "{0}" 的引用可能需要本地链接器的其他 -framework=XXX 或 -lXXX 指令
+		</value>
+	</data>
+  <data name="MT5216" xml:space="preserve">
+		<value>"{0}" 的本机链接失败。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
+		</value>
+	</data>
+  <data name="MT5217" xml:space="preserve">
+		<value>本机链接失败，因为链接器命令行过长({0} 个字符)。
+		</value>
+	</data>
+  <data name="MT5218" xml:space="preserve">
+		<value>无法忽略动态符号 {0} (--ignore-dynamic-symbol={0})，因为它未被检测为动态符号。
+		</value>
+	</data>
+  <data name="MT5219" xml:space="preserve">
+		<value>未与 WatchKit 链接，因为已从 iOS 中将删除它。
+		</value>
+	</data>
+  <data name="MM5220" xml:space="preserve">
+		<value>正在跳过框架 "{0}"。Mac App Store 禁止(拒绝)此操作
+		</value>
+	</data>
+  <data name="MM5221" xml:space="preserve">
+		<value>正在针对框架 "{0}" 进行链接。Mac App Store 禁止(拒绝)此操作
+		</value>
+	</data>
+  <data name="MX5222" xml:space="preserve">
+		<value>本机链接器执行失败: {0}。请在 https://github.com/xamarin/xamarin-macios/issues/new 上提交 bug 报告
+ 		</value>
+	</data>
+  <data name="MX5223" xml:space="preserve">
+		<value>未与框架“{0}”链接，因为当前 {1} SDK 在模拟器中不包含对此框架的支持。</value>
+		<comment>This is a warning explaining why a native framework won't be referenced from the app when building for the simulator. The following are literal names and should not be translated: SDK
+			{0}: The name of the native framework
+			{1}: The current platform (will be either iOS, tvOS, watchOS or macOS).
+		</comment>
+	</data>
+  <data name="MT5301" xml:space="preserve">
+		<value>缺少 "strip" 工具。请安装 Xcode“命令行工具”组件
+		</value>
+	</data>
+  <data name="MT5302" xml:space="preserve">
+		<value>缺少 "dsymutil" 工具。请安装 Xcode“命令行工具”组件
+		</value>
+	</data>
+  <data name="MT5303" xml:space="preserve">
+		<value>未能生成调试符号(dSYM 目录)。请查看生成日志。
+		</value>
+	</data>
+  <data name="MT5304" xml:space="preserve">
+		<value>未能删除最终二进制文件。请查看生成日志。
+		</value>
+	</data>
+  <data name="MX5305" xml:space="preserve">
+		<value>缺少 "lipo" 工具。请安装 Xcode“命令行工具”组件
+		</value>
+	</data>
+  <data name="MT5306" xml:space="preserve">
+		<value>未能创建 FAT 库。请查看生成日志。
+		</value>
+	</data>
+  <data name="MX5307" xml:space="preserve">
+		<value>缺少“{0}”工具。请安装 Xcode“命令行工具”组件
+		</value>
+	</data>
+  <data name="MM5308" xml:space="preserve">
+		<value>可能未接受 Xcode 许可协议。请启动 Xcode。
+		</value>
+	</data>
+  <data name="MX5309" xml:space="preserve">
+		<value>无法执行工具“{0}”，因为它已失败，错误代码为“{1}”。请查看生成日志以了解详细信息。
+		</value>
+	</data>
+  <data name="MM5310" xml:space="preserve">
+		<value>install_name_tool 失败，出现错误代码 "{0}"。请检查生成日志以了解详细信息。
+		</value>
+	</data>
+  <data name="MX5311" xml:space="preserve">
+		<value>lipo 失败，出现错误代码 "{0}"。请检查生成日志以了解详细信息。
+		</value>
+	</data>
+  <data name="MX5312" xml:space="preserve">
+		<value>pkg-config 出现故障，错误代码 "{0}"。请检查生成日志以了解详细信息。
+		</value>
+	</data>
+  <data name="MX5313" xml:space="preserve">
+		<value>找不到 {0}。请从 https://mono-project.com/Downloads 安装 Mono.framework
+		</value>
+	</data>
+  <data name="MX5314" xml:space="preserve">
+		<value>未能执行 pkg-config: "{0}"。请检查生成日志以了解详细信息。
+		</value>
+	</data>
+  <data name="MX5315" xml:space="preserve">
+		<value>查找工具“{0}”时，工具 xcrun 未能找到结果(文件“{1}”不存在)。请查看生成日志了解详细信息。
+		</value>
+	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>执行自定义链接器步骤时出错。请查看生成日志以获取详细信息。</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
+  <data name="MT8018" xml:space="preserve">
+		<value>内部一致性错误。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告。
+		</value>
+	</data>
+  <!-- 8000 -> 8036 are missing here (except 8018), so skip to 8037 -->
+  <data name="MX8037" xml:space="preserve">
+		<value>不知道如何对 {2} 调用的参数 {1} 封送类型为 {0} 的参数</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+  <data name="MX8038" xml:space="preserve">
+		<value>不知道如何对 {2} 调用的参数 {1} 封送回类型为 {0} 的参数</value>
+		<comment>
+{0} - The name of a type.
+{1} - The name of a parameter.
+{2} - The name of a method.
+		</comment>
+	</data>
+  <data name="MX8039" xml:space="preserve">
+		<value>无法从 {0} 封送到 Objective-C 对象。托管类必须继承自 NSObject 或实现 INativeObject。</value>
+		<comment>
+{0} - The name of a type.
+		</comment>
+	</data>
+  <data name="MX8040" xml:space="preserve">
+		<value>参数的类型编码无效。</value>
+	</data>
+  <data name="MX8041" xml:space="preserve">
+		<value>无法创建类型 {0} 的实例。</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>尝试调用函数 {0} 时发生异常: {1}。</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8043" xml:space="preserve">
+		<value>验证 {0} 的静态注册器代码时发生异常: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+  <data name="MX8044" xml:space="preserve">
+		<value>自生成应用以来，已对程序集 {0} 进行了修改，从而使生成的静态注册器代码无效。已加载程序集的 MVID 为 {1}，而生成的静态注册器代码对应的程序集的 MVID 为 {2}。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>无法对类型 {0} 的实例调用发布</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>无法在“{1}”中找到方法“{0}”</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>蹦床方法 {0} 与 trampolineMethod 参数的函数指针 0x{1} 不匹配(它们不引用同一方法)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>蹦床方法 {0} 必须至少具有一个参数。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>蹦床方法 {0} 中的第一个参数必须是 “System.IntPtr”、“void*” 或 “ObjCRuntime.BlockLiteral*”。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>当动态注册机构已链接到别处时，不支持 BlockLiteral.GetBlockSignature。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>蹦床方法 {0} 必须至少具有 [UnmanagedCallersOnly] 属性。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>签名必须是非空字符串。</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>无法解析程序集 {0} 中的模块。</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>使用托管静态注册机构时，无法解析方法的元数据令牌(令牌: 0x{0})。</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>在程序集“{0}”中找不到类型“ObjCRuntime.__Registrar__”。</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>无法封送 Objective-C 对象 0x{0} (类型: {1})。找不到此对象的现有托管实例，也无法创建泛型类型 {2} 的新托管实例。</value>
+	</data>
+</root>

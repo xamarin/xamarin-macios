@@ -4,24 +4,10 @@
 ## Manually bound and Sealed
 !missing-selector! MPSCNNBinaryConvolution::initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags: not bound
 !missing-selector! MPSCNNBinaryFullyConnected::initWithDevice:convolutionData:outputBiasTerms:outputScaleTerms:inputBiasTerms:inputScaleTerms:type:flags: not bound
-!missing-selector! MPSCNNNeuronPReLU::initWithDevice:a:count: not bound
 
 # Manually bound variadic selectors
 !missing-selector! +MPSStateResourceList::resourceListWithBufferSizes: not bound
 !missing-selector! +MPSStateResourceList::resourceListWithTextureDescriptors: not bound
-
-## According to header docs the following are deprecated and not binary compatibile,
-## so there is not much point in binding/using these, they only short lived
-## for iOS 11.3 and Mac 10.13.4 and were considered experimental.
-!missing-selector! +MPSKeyedUnarchiver::unarchiveObjectWithData:device: not bound
-!missing-selector! +MPSKeyedUnarchiver::unarchiveObjectWithFile:device: not bound
-!missing-selector! +MPSKeyedUnarchiver::unarchiveTopLevelObjectWithData:device:error: not bound
-!missing-selector! MPSKeyedUnarchiver::initForReadingWithData:device: not bound
-!missing-selector! MPSKeyedUnarchiver::initWithDevice: not bound
-!missing-selector! +MPSNNGraph::graphWithDevice:resultImage: not bound
-!missing-selector! MPSCNNBatchNormalization::reloadDataSource: not bound
-!missing-selector! MPSCNNConvolutionGradient::serializeWeightsAndBiases not bound
-!missing-selector! MPSCNNConvolutionGradient::setSerializeWeightsAndBiases: not bound
 
 ## The DesignatedInitializer is now deprecated in favor of a new one
 !missing-designated-initializer! MPSCNNNeuronELU::initWithDevice:a: is missing an [DesignatedInitializer] attribute
@@ -40,9 +26,23 @@
 
 # Looks like these two types were removed at some point and we just ignored this mess,
 # just moving from the ignored file to here for now
-!unknown-type! MPSCNNConvolutionState bound
 !unknown-type! MPSCNNConvolutionStateNode bound
 
 # Looks like the following selectors were released ahead of their time: Xcode 12 / iOS 13 / macOS 15
-!missing-selector! +MPSNNGraph::graphWithDevice:resultImages:resultsAreNeeded: not bound
 !missing-selector! MPSNNGraph::initWithDevice:resultImages:resultsAreNeeded: not bound
+
+# `*Count` values can change over time -> breaking change for us
+!missing-enum-value! MPSCnnLossType native value MPSCNNLossTypeCount = 10 not bound
+!missing-enum-value! MPSCnnNeuronType native value MPSCNNNeuronTypeCount = 16 not bound
+!missing-enum-value! MPSCnnReductionType native value MPSCNNReductionTypeCount = 4 not bound
+!missing-enum-value! MPSImageFeatureChannelFormat native value MPSImageFeatureChannelFormatCount = 6 not bound
+!missing-enum-value! MPSRnnMatrixId native value MPSRNNMatrixId_count = 29 not bound
+
+# unused (came along some API yet to be bound)
+!unknown-simd-type-mapping! The Simd type vector_uchar16 does not have a mapping to a managed type. Please add one in SimdCheck.cs
+
+# These four below just have a 'ref' in front of the parameters in question and are okay.
+!extra-null-allowed! 'System.Void MetalPerformanceShaders.MPSImageHistogram::.ctor(Metal.IMTLDevice,MetalPerformanceShaders.MPSImageHistogramInfo&)' has a extraneous [NullAllowed] on parameter #1
+!extra-null-allowed! 'System.Void MetalPerformanceShaders.MPSImageHistogramEqualization::.ctor(Metal.IMTLDevice,MetalPerformanceShaders.MPSImageHistogramInfo&)' has a extraneous [NullAllowed] on parameter #1
+!extra-null-allowed! 'System.Void MetalPerformanceShaders.MPSImageHistogramSpecification::.ctor(Metal.IMTLDevice,MetalPerformanceShaders.MPSImageHistogramInfo&)' has a extraneous [NullAllowed] on parameter #1
+!extra-null-allowed! 'System.Void MetalPerformanceShaders.MPSImageNormalizedHistogram::.ctor(Metal.IMTLDevice,MetalPerformanceShaders.MPSImageHistogramInfo&)' has a extraneous [NullAllowed] on parameter #1

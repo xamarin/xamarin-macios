@@ -1,4 +1,4 @@
-#if XAMCORE_2_0 && !__WATCHOS__ && !__TVOS__ && !MONOMAC
+#if !__WATCHOS__ && !__TVOS__ && !MONOMAC
 
 using System;
 using Foundation;
@@ -14,12 +14,11 @@ namespace monotouchtest {
 		public void TestConstructor ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
-			AVCaptureAutoExposureBracketedStillImageSettings [] array = new AVCaptureAutoExposureBracketedStillImageSettings [3];
-			array [0] = AVCaptureAutoExposureBracketedStillImageSettings.Create (-2f);
-			array [1] = AVCaptureAutoExposureBracketedStillImageSettings.Create (0f);
-			array [2] = AVCaptureAutoExposureBracketedStillImageSettings.Create (2f);
 			var output = new AVCapturePhotoOutput ();
-			if (output.AvailablePhotoPixelFormatTypes.Length > 0) {
+			if (output.AvailablePhotoPixelFormatTypes.Length > 0 && output.MaxBracketedCapturePhotoCount > 0) {
+				var array = new AVCaptureAutoExposureBracketedStillImageSettings [Math.Min (3, (int) output.MaxBracketedCapturePhotoCount)];
+				for (var i = 0; i < array.Length; i++)
+					array [i] = AVCaptureAutoExposureBracketedStillImageSettings.Create (-2f + 2f * i);
 				using (var settings = AVCapturePhotoBracketSettings.FromRawPixelFormatType ((uint) output.AvailablePhotoPixelFormatTypes [0], null, array))
 					Assert.That (settings.Handle, Is.Not.EqualTo (IntPtr.Zero));
 			}
@@ -27,4 +26,4 @@ namespace monotouchtest {
 	}
 }
 
-#endif 
+#endif

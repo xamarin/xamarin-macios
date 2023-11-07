@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>MyRegistrarApp</ApplicationTitle>
+		<ApplicationId>com.xamarin.myregistrarapp</ApplicationId>
+
+		<ExcludeNUnitLiteReference>true</ExcludeNUnitLiteReference>
+		<ExcludeTouchUnitReference>true</ExcludeTouchUnitReference>
+
+		<DefineConstants>$(DefineConstants);$(AdditionalDefineConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

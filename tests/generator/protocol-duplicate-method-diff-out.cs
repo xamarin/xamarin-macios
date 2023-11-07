@@ -1,24 +1,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if !XAMCORE_2_0
-#if MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
 using Foundation;
 using ObjCRuntime;
-#endif
-#else
-using Foundation;
-using ObjCRuntime;
-#endif
 
-namespace Test 
-{
+namespace Test {
 	[Protocol]
-	public interface First
-	{
+	public interface First {
 		[Abstract]
 		[Export ("doit:withmore")]
 		void DoIt (int a, out int b);
@@ -35,4 +23,3 @@ namespace Test
 	public partial interface Derived : First, Second {
 	}
 }
-

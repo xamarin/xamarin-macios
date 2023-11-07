@@ -9,7 +9,6 @@
 
 using System;
 using System.Net;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -17,71 +16,77 @@ using AppKit;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
+#if !NET && !MONOMAC
+using ObjCException = Foundation.MonoTouchException;
+#endif
+
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BundleTest {
-		
+
 		NSBundle main = NSBundle.MainBundle;
-		
+
 		[Test]
 		public void LocalizedString2 ()
 		{
+#if NET
+			string s = main.GetLocalizedString (null, "value");
+			Assert.That (s, Is.EqualTo ("value"), "key");
+#else
 			string s = main.LocalizedString (null, "comment");
 			Assert.That (s, Is.Empty, "key");
+#endif
 
-			s = main.LocalizedString ("key", null);
-			Assert.That (s, Is.EqualTo ("key"), "comment");
+			s = main.GetLocalizedString ("key", null);
+			Assert.That (s, Is.EqualTo ("key"), "key");
 
-			s = main.LocalizedString (null, null);
+			s = main.GetLocalizedString (null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
 
 		[Test]
 		public void LocalizedString3 ()
 		{
-			string s = main.LocalizedString (null, "value", "table");
+			string s = main.GetLocalizedString (null, "value", "table");
 			Assert.That (s, Is.EqualTo ("value"), "key");
 
-			s = NSBundle.MainBundle.LocalizedString ("key", null, "table");
+			s = NSBundle.MainBundle.GetLocalizedString ("key", null, "table");
 			Assert.That (s, Is.EqualTo ("key"), "value");
 
-			s = NSBundle.MainBundle.LocalizedString (null, "value", null);
+			s = NSBundle.MainBundle.GetLocalizedString (null, "value", null);
 			Assert.That (s, Is.EqualTo ("value"), "comment");
-			
-			s = main.LocalizedString (null, null, null);
+
+			s = main.GetLocalizedString (null, null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
 
+#if !NET
 		[Test]
 		public void LocalizedString4 ()
 		{
 			string s = main.LocalizedString (null, "value", "table", "comment");
 			Assert.That (s, Is.EqualTo ("value"), "key");
-			
+
 			s = NSBundle.MainBundle.LocalizedString ("key", null, "table", "comment");
 			Assert.That (s, Is.EqualTo ("key"), "value");
-			
+
 			s = NSBundle.MainBundle.LocalizedString ("key", "value", null, "comment");
 			Assert.That (s, Is.EqualTo ("value"), "table");
-			
+
 			s = NSBundle.MainBundle.LocalizedString ("key", "value", "table", null);
 			Assert.That (s, Is.EqualTo ("value"), "comment");
-			
+
 			s = main.LocalizedString (null, null, null, null);
 			Assert.That (s, Is.Empty, "all-null");
 		}
-		
+#endif
+
 		// http://developer.apple.com/library/ios/#documentation/uikit/reference/NSBundle_UIKitAdditions/Introduction/Introduction.html
-		
+
 #if false // Disabling for now due to Xcode 9 does not support nibs if deployment target == 6.0
 #if !__WATCHOS__
 		[Test]
@@ -104,24 +109,21 @@ namespace MonoTouchFixtures.Foundation {
 		// I guess no one ever used them since they don't work...
 		// commented (selectors removed from MT bindings) - can be re-enabled to test newer iOS releases
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PathForImageResource ()
 		{
-			main.PathForImageResource ("basn3p08.png");
+			Assert.Throws<ObjCException> (() => main.PathForImageResource ("basn3p08.png"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void PathForSoundResource ()
 		{
-			main.PathForSoundResource ("basn3p08.png");
+			Assert.Throws<ObjCException> (() => main.PathForSoundResource ("basn3p08.png"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (MonoTouchException))]
 		public void LoadNib ()
 		{
-			NSBundle.LoadNib (String.Empty, main);
+			Assert.Throws<ObjCException> (() => NSBundle.LoadNib (String.Empty, main));
 		}
 #endif
 		[Test]
@@ -145,12 +147,15 @@ namespace MonoTouchFixtures.Foundation {
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Inconclusive ("Requires iOS7 or later");
 
+			// The AppStoreReceiptUrl property may or may not return anything useful on the simulator, so run this only on device.
+			TestRuntime.AssertDevice ();
+
 			// on iOS8 device this now ends with "/StoreKit/sandboxReceipt" 
 			// instead of "/StokeKit/receipt"
-			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Is.StringEnding ("eceipt"), "AppStoreReceiptUrl");
+			Assert.That (main.AppStoreReceiptUrl.AbsoluteString, Does.EndWith ("eceipt"), "AppStoreReceiptUrl");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Test]
 		public void LocalizedString ()
 		{
@@ -185,7 +190,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			// null values are fine
 			using (var l = main.GetLocalizedString (null, null, null))
-				Assert.That (l.Length, Is.EqualTo (0), "null,null,null");
+				Assert.That (l.Length, Is.EqualTo ((nint) 0), "null,null,null");
 
 			// NoKey does not exists so the same string is returned
 			using (var l = main.GetLocalizedString ("NoKey", null, null))

@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,21 +36,19 @@ using ObjCRuntime;
 using CoreFoundation;
 
 namespace CoreGraphics {
-	
+
 	// internal helper class only - we avoid exposing it to users
 	static class CGPDFString {
-		
+
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr /*CFStringRef*/ CGPDFStringCopyTextString (IntPtr /*CGPDFStringRef*/ pdfStr);
 
-		static public string ToString (IntPtr pdfString)
+		static public string? ToString (IntPtr pdfString)
 		{
 			if (pdfString == IntPtr.Zero)
 				return null;
-			
-			using (var cfs = new CFString (CGPDFStringCopyTextString (pdfString), true)) {
-				return cfs.ToString ();
-			}
+
+			return CFString.FromHandle (CGPDFStringCopyTextString (pdfString), true);
 		}
 	}
 }

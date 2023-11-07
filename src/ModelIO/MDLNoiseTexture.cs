@@ -1,23 +1,28 @@
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using ObjCRuntime;
+
+#if NET
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
 using Vector2i = global::OpenTK.Vector2i;
+#endif
+
+#nullable enable
 
 namespace ModelIO {
 
-	[iOS (9,0), Mac (10,11)]
-	public enum  MDLNoiseTextureType {
-		Vector,
-		Cellular,
-	}
-
 	public partial class MDLNoiseTexture {
-		[iOS (9,0), Mac (10,11)]
+
 		public MDLNoiseTexture (float input, string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding) : this (input, name, textureDimensions, channelEncoding, MDLNoiseTextureType.Vector)
 		{
 		}
 
-		[iOS (10,2), Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public MDLNoiseTexture (float input, string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding, MDLNoiseTextureType type)
 		{
 			// two different `init*` would share the same C# signature
@@ -34,4 +39,3 @@ namespace ModelIO {
 		}
 	}
 }
-#endif

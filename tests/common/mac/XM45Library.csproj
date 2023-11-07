@@ -8,6 +8,7 @@
     <RootNamespace>XM45Library</RootNamespace>
     <AssemblyName>%NAME%</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,7 +19,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-%CODE%
+REPLACE_CODE_REPLACE
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

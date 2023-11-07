@@ -8,21 +8,16 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class StringTest {
-		
+
 		[Test]
 		public void ToString_ ()
 		{
@@ -35,6 +30,17 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void Null ()
 		{
 			Assert.Throws<ArgumentNullException> (delegate { new CFString (null); }, "null");
+		}
+
+		[Test]
+		public void Index ()
+		{
+			var str = "Ab🤔日ㅁ名";
+			using var nativeStr = new CFString (str);
+			var array = str.ToCharArray ();
+			for (int i = 0; i < array.Length; i++) {
+				Assert.AreEqual (str [i], nativeStr [i], $"{str [i]} != {nativeStr [i]}");
+			}
 		}
 	}
 }

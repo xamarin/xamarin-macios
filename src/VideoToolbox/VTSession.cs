@@ -5,6 +5,9 @@
 //     
 // Copyright 2014-2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -15,47 +18,30 @@ using Foundation;
 using CoreMedia;
 using CoreVideo;
 
-namespace VideoToolbox {		
-	[iOS (8,0), TV (10,2)]
-	public class VTSession : INativeObject, IDisposable {
-		IntPtr handle;
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
-		/* invoked by marshallers */
-		protected internal VTSession (IntPtr handle)
-		{
-			this.handle = handle;
-			CFObject.CFRetain (this.handle);
-		}
+namespace VideoToolbox {
 
-		public IntPtr Handle {
-			get {return handle; }
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
+	public class VTSession : NativeObject {
+#if !NET
+		protected internal VTSession (NativeHandle handle)
+			: base (handle, false)
+		{
 		}
+#endif
 
-		[Preserve (Conditional=true)]
-		internal VTSession (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal VTSession (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (this.handle);
-		}
-		
-		~VTSession ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		// All of them returns OSStatus mapped to VTStatus enum
@@ -77,67 +63,60 @@ namespace VideoToolbox {
 
 		public VTStatus SetProperties (VTPropertyOptions options)
 		{
-			if (options == null)
-				throw new ArgumentNullException ("options");
+			if (options is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
-			return VTSessionSetProperties (handle, options.Dictionary.Handle);
+			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
 		}
 
-		public VTStatus SetProperty (NSString propertyKey, NSObject value)
+		public VTStatus SetProperty (NSString propertyKey, NSObject? value)
 		{
-			if (propertyKey == null)
-				throw new ArgumentNullException ("propertyKey");
+			if (propertyKey is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyKey));
 
-			return VTSessionSetProperty (handle, propertyKey.Handle, value != null ? value.Handle : IntPtr.Zero);
+			return VTSessionSetProperty (Handle, propertyKey.Handle, value.GetHandle ());
 		}
 
-		public VTPropertyOptions GetProperties ()
+		public VTPropertyOptions? GetProperties ()
 		{
-			IntPtr ret;
-			var result = VTSessionCopySerializableProperties (handle, IntPtr.Zero, out ret);
+			var result = VTSessionCopySerializableProperties (Handle, IntPtr.Zero, out var ret);
 			if (result != VTStatus.Ok || ret == IntPtr.Zero)
 				return null;
 
-			var dict = Runtime.GetNSObject<NSDictionary> (ret);
+			var dict = Runtime.GetNSObject<NSDictionary> (ret, true);
+			if (dict is null)
+				return null;
 			return new VTPropertyOptions (dict);
 		}
 
-		public NSObject GetProperty (NSString propertyKey)
+		public NSObject? GetProperty (NSString propertyKey)
 		{
-			if (propertyKey == null)
-				throw new ArgumentNullException ("propertyKey");
+			if (propertyKey is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyKey));
 
-			IntPtr ret;
-			if (VTSessionCopyProperty (handle, propertyKey.Handle, IntPtr.Zero, out ret) != VTStatus.Ok || ret == IntPtr.Zero)
+			var result = VTSessionCopyProperty (Handle, propertyKey.Handle, IntPtr.Zero, out var ret);
+			if (result != VTStatus.Ok || ret == IntPtr.Zero)
 				return null;
-			var obj = Runtime.GetNSObject (ret);
-			obj.DangerousRelease ();
-			return obj;
+			return Runtime.GetNSObject<NSObject> (ret, true);
 		}
 
-		public NSDictionary GetSerializableProperties ()
+		public NSDictionary? GetSerializableProperties ()
 		{
-			IntPtr ret;
-			var result = VTSessionCopySerializableProperties (Handle, IntPtr.Zero, out ret);
+			var result = VTSessionCopySerializableProperties (Handle, IntPtr.Zero, out var ret);
 			if (result != VTStatus.Ok || ret == IntPtr.Zero)
 				return null;
 
-			var dict = Runtime.GetNSObject<NSDictionary> (ret);
-			dict.DangerousRelease ();
-			return dict;
+			return Runtime.GetNSObject<NSDictionary> (ret, true);
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		public NSDictionary GetSupportedProperties ()
+		public NSDictionary? GetSupportedProperties ()
 		{
-			IntPtr ret;
-			var result = VTSessionCopySupportedPropertyDictionary (Handle, out ret);
+			var result = VTSessionCopySupportedPropertyDictionary (Handle, out var ret);
 			if (result != VTStatus.Ok || ret == IntPtr.Zero)
 				return null;
-			
-			var dict = Runtime.GetNSObject<NSDictionary> (ret);
-			dict.DangerousRelease ();
-			return dict;
+
+			return Runtime.GetNSObject<NSDictionary> (ret, true);
 		}
 	}
 }

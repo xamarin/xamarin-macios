@@ -1,5 +1,11 @@
 # Various tests to be executed prior to releases
 
+## Test permissions
+
+There are a number of tests that acccess the file system and the bluetooh. For these tests to correctly execute you have to ensure that
+the terminal application that you are using to execute the tests has access to the full filesystem and the bluetooth. If you do not do this
+step the macOS tests will crash.
+
 ## Test solutions
 
 Many of the test solutions and test projects are generated, and will
@@ -74,10 +80,9 @@ Con
 
 ### Xamarin.Mac
 
-Many tests when run for macOS use a integration [hack](https://github.com/xamarin/xamarin-macios/blob/master/tests/common/mac/MacTestMain.cs) which helps handle a number of issues:
+Many tests when run for macOS use a integration [hack](https://github.com/xamarin/xamarin-macios/blob/main/tests/common/mac/MacMain.cs) which helps handle a number of issues:
 
 - Allowing command line arguments to tests while excluding "psn" arguments passed in while debugging with Visual Studio for Mac
-- Optionally integrating with the macOS message loop for tests that require it (anything that uses most Cocoa primitives).
 - Invoking `_exit` to work around a number of post-test hangs. See the [bug](https://bugzilla.xamarin.com/show_bug.cgi?id=52604) for details.
 - Add a number of "default" excludes for mono BCL tests
 

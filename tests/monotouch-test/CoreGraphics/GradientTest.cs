@@ -9,7 +9,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -19,26 +18,10 @@ using UIKit;
 #endif
 using CoreGraphics;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class GradientTest {
@@ -48,7 +31,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			TestRuntime.GetCGColor (UIColor.Clear),
 			TestRuntime.GetCGColor (UIColor.Blue),
 		};
-		
+
 		[Test]
 		public void Colorspace_Null ()
 		{
@@ -58,12 +41,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[],float[]");
 			}
-			
+
 			using (var g = new CGGradient (null, array, new nfloat [3] { 0f, 1f, 0.5f })) {
 				Assert.That (g.Handle, Is.Not.EqualTo (IntPtr.Zero), "null,CGColor[],float[]");
 			}
 		}
-		
+
 		static CGColorSpace [] spaces = {
 			CGColorSpace.CreateDeviceGray (),
 			CGColorSpace.CreateDeviceRGB (),
@@ -82,10 +65,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 			}
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientCreateWithColorComponents (/* CGColorSpaceRef */ IntPtr colorspace, /* CGFloat[] */ nfloat [] components, /* CGFloat[] */ nfloat [] locations, /* size_t */ nint count);
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientCreateWithColors (/* CGColorSpaceRef */ IntPtr space, /* CFArrayRef */ IntPtr colors, /* CGFloat[] */ nfloat [] locations);
 
 		[Test]

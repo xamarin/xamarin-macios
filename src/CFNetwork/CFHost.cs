@@ -7,6 +7,8 @@
 // Copyright 2012-2015 Xamarin Inc. (http://www.xamarin.com)
 //
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -14,43 +16,38 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 // CFHost is in CFNetwork.framework, no idea why it ended up in CoreServices when it was bound.
-#if XAMCORE_4_0
+#if NET
 namespace CFNetwork {
 #else
 namespace CoreServices {
 #endif
 
-	// used by CFStream.cs (only?)
-	class CFHost : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		CFHost (IntPtr handle)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	[ObsoletedOSPlatform ("tvos15.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("maccatalyst15.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("macos12.0", Constants.UseNetworkInstead)]
+	[ObsoletedOSPlatform ("ios15.0", Constants.UseNetworkInstead)]
+#else
+	[Deprecated (PlatformName.WatchOS, 8, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 15, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
+#endif
+	class CFHost : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CFHost (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-		}
-
-		~CFHost ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -61,7 +58,7 @@ namespace CoreServices {
 		{
 			// CFSocketAddress will throw the ANE
 			using (var data = new CFSocketAddress (endpoint))
-				return new CFHost (CFHostCreateWithAddress (IntPtr.Zero, data.Handle));
+				return new CFHost (CFHostCreateWithAddress (IntPtr.Zero, data.Handle), true);
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -72,7 +69,7 @@ namespace CoreServices {
 		{
 			// CFString will throw the ANE
 			using (var ptr = new CFString (name))
-				return new CFHost (CFHostCreateWithName (IntPtr.Zero, ptr.Handle));
+				return new CFHost (CFHostCreateWithName (IntPtr.Zero, ptr.Handle), true);
 		}
 	}
 }

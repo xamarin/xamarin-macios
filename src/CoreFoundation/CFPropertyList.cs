@@ -6,16 +6,27 @@
 //
 // Copyright 2013 Xamarin, Inc.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 
-namespace CoreFoundation
-{
-	public class CFPropertyList : INativeObject, IDisposable
-	{
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+namespace CoreFoundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CFPropertyList : NativeObject {
 		static nint CFDataTypeID = CFData.GetTypeID ();
 		static nint CFStringTypeID = CFString.GetTypeID ();
 		static nint CFArrayTypeID = CFArray.GetTypeID ();
@@ -32,30 +43,30 @@ namespace CoreFoundation
 
 		static nint CFNumberTypeID = CFNumberGetTypeID ();
 
-		IntPtr handle;
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		public CFPropertyList (IntPtr handle, bool owns)
-		{
-			this.handle = handle;
-			if (owns == false)
-				CFObject.CFRetain (handle);
-		}
-
-		public CFPropertyList (IntPtr handle) : this (handle, false)
+		[Preserve (Conditional = true)]
+#if NET
+		internal CFPropertyList (NativeHandle handle, bool owns)
+#else
+		public CFPropertyList (NativeHandle handle, bool owns)
+#endif
+			: base (handle, owns)
 		{
 		}
+
+#if !NET
+		public CFPropertyList (NativeHandle handle) : this (handle, false)
+		{
+		}
+#endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPropertyListCreateWithData (IntPtr allocator, IntPtr dataRef, nuint options, out nint format, /* CFError * */ out IntPtr error);
 
-		public static (CFPropertyList PropertyList, CFPropertyListFormat Format, NSError Error)
+		public static (CFPropertyList? PropertyList, CFPropertyListFormat Format, NSError? Error)
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
 		{
-			if (data == null)
-				throw new ArgumentNullException (nameof (data));
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (data.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException (nameof (data));
 
@@ -72,70 +83,52 @@ namespace CoreFoundation
 
 		public CFPropertyList DeepCopy (CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.MutableContainersAndLeaves)
 		{
-			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, handle, (nuint) (ulong) options), owns: true);
+			return new CFPropertyList (CFPropertyListCreateDeepCopy (IntPtr.Zero, Handle, (nuint) (ulong) options), owns: true);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /*CFDataRef*/IntPtr CFPropertyListCreateData (IntPtr allocator, IntPtr propertyList, nint format, nuint options, out IntPtr error);
 
-		public (NSData Data, NSError Error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
+		public (NSData? Data, NSError? Error) AsData (CFPropertyListFormat format = CFPropertyListFormat.BinaryFormat1)
 		{
 			IntPtr error;
-			var x = CFPropertyListCreateData (IntPtr.Zero, handle, (nint) (long) format, 0, out error);
+			var x = CFPropertyListCreateData (IntPtr.Zero, Handle, (nint) (long) format, 0, out error);
 			if (x == IntPtr.Zero)
 				return (null, new NSError (error));
 			return (Runtime.GetNSObject<NSData> (x, owns: true), null);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CFPropertyListIsValid (IntPtr plist, nint format);
 
 		public bool IsValid (CFPropertyListFormat format)
 		{
-			return CFPropertyListIsValid (handle, (nint) (long) format);
+			return CFPropertyListIsValid (Handle, (nint) (long) format);
 		}
 
-		~CFPropertyList ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		public object Value {
+		public object? Value {
 			get {
-				if (handle == IntPtr.Zero) {
+				if (Handle == IntPtr.Zero) {
 					return null;
 				}
 
-				var typeid = CFType.GetTypeID (handle);
+				var typeid = CFType.GetTypeID (Handle);
 
 				if (typeid == CFDataTypeID) {
-					return Runtime.GetNSObject<NSData> (handle);
+					return Runtime.GetNSObject<NSData> (Handle);
 				} else if (typeid == CFStringTypeID) {
-					return Runtime.GetNSObject<NSString> (handle);
+					return Runtime.GetNSObject<NSString> (Handle);
 				} else if (typeid == CFArrayTypeID) {
-					return Runtime.GetNSObject<NSArray> (handle);
+					return Runtime.GetNSObject<NSArray> (Handle);
 				} else if (typeid == CFDictionaryTypeID) {
-					return Runtime.GetNSObject<NSDictionary> (handle);
+					return Runtime.GetNSObject<NSDictionary> (Handle);
 				} else if (typeid == CFDateTypeID) {
-					return Runtime.GetNSObject<NSDate> (handle);
+					return Runtime.GetNSObject<NSDate> (Handle);
 				} else if (typeid == CFBooleanTypeID) {
-					return (bool) Runtime.GetNSObject<NSNumber> (handle);
+					return (bool) Runtime.GetNSObject<NSNumber> (Handle);
 				} else if (typeid == CFNumberTypeID) {
-					return Runtime.GetNSObject<NSNumber> (handle);
+					return Runtime.GetNSObject<NSNumber> (Handle);
 				}
 
 				return null;

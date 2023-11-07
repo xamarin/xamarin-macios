@@ -1,4 +1,5 @@
-#if XAMCORE_2_0 && IOS
+#if IOS
+#if !(NET && __MACOS__)
 
 using Foundation;
 using Intents;
@@ -17,9 +18,10 @@ namespace Intents {
 		// into bindings and making them virtual (not a breaking change)
 
 		public bool? IsOpenEnded {
-			get { return _IsOpenEnded == null ? null : (bool?) _IsOpenEnded.BoolValue; }
+			get { return _IsOpenEnded is null ? null : (bool?) _IsOpenEnded.BoolValue; }
 		}
 	}
 }
 
+#endif // !(NET && __MACOS__)
 #endif

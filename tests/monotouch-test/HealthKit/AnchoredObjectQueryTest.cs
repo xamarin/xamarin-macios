@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKAnchoredObjectQuery
 //
 // Authors:
@@ -7,25 +7,17 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !MONOMAC
+#if HAS_HEALTHKIT
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using HealthKit;
-using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.HealthKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if !XAMCORE_2_0
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
 #endif
 
 namespace MonoTouchFixtures.HealthKit {
@@ -37,13 +29,18 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void NoAnchor ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
+#endif
 
 			using (var t = HKCategoryType.Create (HKCategoryTypeIdentifier.SleepAnalysis))
 #if __WATCHOS__
 			using (var aoq = new HKAnchoredObjectQuery (t, null, HKQueryAnchor.Create (HKAnchoredObjectQuery.NoAnchor), 0, delegate (HKAnchoredObjectQuery query, HKSample [] addedObjects, HKDeletedObject [] deletedObjects, HKQueryAnchor newAnchor, NSError error) {
 #else
-			using (var aoq = new HKAnchoredObjectQuery (t, null, HKAnchoredObjectQuery.NoAnchor, 0, delegate (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error) {
+			using (var aoq = new HKAnchoredObjectQuery (t, null, HKAnchoredObjectQuery.NoAnchor, 0, delegate (HKAnchoredObjectQuery query, HKSample [] results, nuint newAnchor, NSError error)
+			{
 #endif
 			})) {
 				Assert.That (aoq.Handle, Is.Not.EqualTo (IntPtr.Zero), "handle");
@@ -51,4 +48,4 @@ namespace MonoTouchFixtures.HealthKit {
 		}
 	}
 }
-#endif // !__TVOS__
+#endif // HAS_HEALTHKIT

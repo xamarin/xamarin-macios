@@ -7,7 +7,6 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !__TVOS__
 using EventKit;
@@ -15,21 +14,14 @@ using EventKit;
 using ObjCRuntime;
 using CoreVideo;
 using CoreMedia;
-#else
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreVideo;
-using MonoTouch.CoreMedia;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SampleBufferTest
-	{
+	public class SampleBufferTest {
 		[Test]
 		public void CreateForImageBuffer ()
 		{
@@ -49,8 +41,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateReadyWithPacketDescriptions ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMBlockBufferError bbe;
 			using (var bb = CMBlockBuffer.CreateEmpty (0, CMBlockBufferFlags.AlwaysCopyData, out bbe)) {
@@ -69,8 +61,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateReady ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMBlockBufferError bbe;
 			using (var bb = CMBlockBuffer.CreateEmpty (0, CMBlockBufferFlags.AlwaysCopyData, out bbe)) {
@@ -82,12 +74,12 @@ namespace MonoTouchFixtures.CoreMedia {
 			}
 		}
 
-#if !XAMCORE_4_0 && !__WATCHOS__
+#if !NET && !__WATCHOS__
 		[Test]
 		public void CreateReadyWithImageBuffer_ArrayValidations ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 			using (var pixelBuffer = new CVPixelBuffer (20, 10, CVPixelFormatType.CV24RGB))
@@ -104,8 +96,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CreateReadyWithImageBuffer ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 			using (var pixelBuffer = new CVPixelBuffer (20, 10, CVPixelFormatType.CV24RGB))
@@ -129,13 +121,15 @@ namespace MonoTouchFixtures.CoreMedia {
 					CMSampleBufferError sbe;
 					using (var sb = CMSampleBuffer.CreateForImageBuffer (pixelBuffer, true, desc, sampleTiming, out sbe)) {
 						int i = 0;
-						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i++;
 						});
 
 						// we cannot replace the (native) callback without getting an error (so we should not replace
 						// the managed one either, that would be confusing and make it hard to port code)
-						result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i--;
 							Assert.AreSame (buffer, sb, "same");
 						});
@@ -158,7 +152,8 @@ namespace MonoTouchFixtures.CoreMedia {
 					CMSampleBufferError sbe;
 					using (var sb = CMSampleBuffer.CreateForImageBuffer (pixelBuffer, true, desc, sampleTiming, out sbe)) {
 						int i = 0;
-						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i++;
 							Assert.AreSame (buffer, sb, "same");
 						});
@@ -189,7 +184,8 @@ namespace MonoTouchFixtures.CoreMedia {
 						Assert.That (sb.SetInvalidateCallback (null), Is.EqualTo (CMSampleBufferError.None), "null");
 
 						int i = 0;
-						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer) {
+						var result = sb.SetInvalidateCallback (delegate (CMSampleBuffer buffer)
+						{
 							i++;
 							Assert.AreSame (buffer, sb, "same");
 						});
@@ -216,7 +212,8 @@ namespace MonoTouchFixtures.CoreMedia {
 					CMSampleBufferError sbe;
 					using (var sb = CMSampleBuffer.CreateForImageBuffer (pixelBuffer, true, desc, sampleTiming, out sbe)) {
 						int i = 0;
-						var result = sb.CallForEachSample (delegate (CMSampleBuffer buffer, int index) {
+						var result = sb.CallForEachSample (delegate (CMSampleBuffer buffer, int index)
+						{
 							i++;
 							Assert.AreSame (buffer, sb, "same-1");
 							return CMSampleBufferError.CannotSubdivide;
@@ -224,7 +221,8 @@ namespace MonoTouchFixtures.CoreMedia {
 						Assert.That (result, Is.EqualTo (CMSampleBufferError.CannotSubdivide), "custom error");
 						Assert.That (i, Is.EqualTo (1), "1");
 
-						Assert.Throws<ArgumentNullException> (delegate {
+						Assert.Throws<ArgumentNullException> (delegate
+						{
 							sb.CallForEachSample (null);
 						}, "null");
 					}

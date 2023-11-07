@@ -7,3 +7,15 @@
 
 ## obsoleted (removed from headers) in iOS 8.4
 !extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
+
+# not to be added since it is not needed in any API on macOS as of xcode13 beta 3.
+!missing-enum! CBCentralManagerFeature not bound
+!unknown-field! CBUUIDAppearanceString bound
+!unknown-field! CBUUIDDeviceNameString bound
+!unknown-field! CBUUIDGenericAccessProfileString bound
+!unknown-field! CBUUIDGenericAttributeProfileString bound
+!unknown-field! CBUUIDPeripheralPreferredConnectionParametersString bound
+!unknown-field! CBUUIDPeripheralPrivacyFlagString bound
+!unknown-field! CBUUIDReconnectionAddressString bound
+!unknown-field! CBUUIDServiceChangedString bound
+!missing-selector! CBManager::authorization not bound

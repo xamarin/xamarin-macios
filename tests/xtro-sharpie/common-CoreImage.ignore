@@ -1,7 +1,18 @@
 ## new @required on existing protocols are breaking changes
 !incorrect-protocol-member! CIImageProcessorInput::surface is REQUIRED and should be abstract
 !incorrect-protocol-member! CIImageProcessorOutput::surface is REQUIRED and should be abstract
-
+!incorrect-protocol-member! CIImageProcessorInput::digest is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorOutput::digest is REQUIRED and should be abstract
+!incorrect-protocol-member! CIAttributedTextImageGenerator::padding is REQUIRED and should be abstract
+!incorrect-protocol-member! CIAttributedTextImageGenerator::setPadding: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCube::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCube::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubesMixedWithMask::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubesMixedWithMask::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubeWithColorSpace::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIColorCubeWithColorSpace::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CITextImageGenerator::padding is REQUIRED and should be abstract
+!incorrect-protocol-member! CITextImageGenerator::setPadding: is REQUIRED and should be abstract
 
 ## requires varargs support
 !missing-selector! +CIFilter::filterWithName:keysAndValues: not bound
@@ -184,7 +195,6 @@
 !missing-selector! +CIFilter::stripesGeneratorFilter not bound
 !missing-selector! +CIFilter::subtractBlendModeFilter not bound
 !missing-selector! +CIFilter::sunbeamsGeneratorFilter not bound
-!missing-selector! +CIFilter::supportedRawCameraModels not bound
 !missing-selector! +CIFilter::swipeTransitionFilter not bound
 !missing-selector! +CIFilter::temperatureAndTintFilter not bound
 !missing-selector! +CIFilter::textImageGeneratorFilter not bound
@@ -200,3 +210,54 @@
 !missing-selector! +CIFilter::whitePointAdjustFilter not bound
 !missing-selector! +CIFilter::xRayFilter not bound
 !missing-selector! +CIFilter::zoomBlurFilter not bound
+## xcode 12
+!missing-selector! +CIFilter::areaAverageFilter not bound
+!missing-selector! +CIFilter::areaHistogramFilter not bound
+!missing-selector! +CIFilter::areaMaximumAlphaFilter not bound
+!missing-selector! +CIFilter::areaMaximumFilter not bound
+!missing-selector! +CIFilter::areaMinimumAlphaFilter not bound
+!missing-selector! +CIFilter::areaMinimumFilter not bound
+!missing-selector! +CIFilter::areaMinMaxFilter not bound
+!missing-selector! +CIFilter::areaMinMaxRedFilter not bound
+!missing-selector! +CIFilter::bumpDistortionFilter not bound
+!missing-selector! +CIFilter::bumpDistortionLinearFilter not bound
+!missing-selector! +CIFilter::circleSplashDistortionFilter not bound
+!missing-selector! +CIFilter::circularWrapFilter not bound
+!missing-selector! +CIFilter::colorAbsoluteDifferenceFilter not bound
+!missing-selector! +CIFilter::colorThresholdFilter not bound
+!missing-selector! +CIFilter::colorThresholdOtsuFilter not bound
+!missing-selector! +CIFilter::columnAverageFilter not bound
+!missing-selector! +CIFilter::displacementDistortionFilter not bound
+!missing-selector! +CIFilter::drosteFilter not bound
+!missing-selector! +CIFilter::glassDistortionFilter not bound
+!missing-selector! +CIFilter::glassLozengeFilter not bound
+!missing-selector! +CIFilter::histogramDisplayFilter not bound
+!missing-selector! +CIFilter::holeDistortionFilter not bound
+!missing-selector! +CIFilter::KMeansFilter not bound
+!missing-selector! +CIFilter::lightTunnelFilter not bound
+!missing-selector! +CIFilter::ninePartStretchedFilter not bound
+!missing-selector! +CIFilter::ninePartTiledFilter not bound
+!missing-selector! +CIFilter::pinchDistortionFilter not bound
+!missing-selector! +CIFilter::rowAverageFilter not bound
+!missing-selector! +CIFilter::stretchCropFilter not bound
+!missing-selector! +CIFilter::torusLensDistortionFilter not bound
+!missing-selector! +CIFilter::twirlDistortionFilter not bound
+!missing-selector! +CIFilter::vortexDistortionFilter not bound
+## xcode 13
+!missing-selector! +CIFilter::convolutionRGB3X3Filter not bound
+!missing-selector! +CIFilter::convolutionRGB5X5Filter not bound
+!missing-selector! +CIFilter::convolutionRGB7X7Filter not bound
+!missing-selector! +CIFilter::convolutionRGB9HorizontalFilter not bound
+!missing-selector! +CIFilter::convolutionRGB9VerticalFilter not bound
+!missing-selector! +CIFilter::linearLightBlendModeFilter not bound
+!missing-selector! +CIFilter::personSegmentationFilter not bound
+!missing-selector! +CIFilter::vividLightBlendModeFilter not bound
+## xcode 14
+!missing-selector! +CIFilter::areaLogarithmicHistogramFilter not bound
+!missing-selector! +CIFilter::convertLabToRGBFilter not bound
+!missing-selector! +CIFilter::convertRGBtoLabFilter not bound
+# xcode1 5
+!incorrect-protocol-member! CIPhotoEffect::setExtrapolate: is REQUIRED and should be abstract
+!incorrect-protocol-member! CIPhotoEffect::extrapolate is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::roiTileCount is REQUIRED and should be abstract
+!incorrect-protocol-member! CIImageProcessorInput::roiTileIndex is REQUIRED and should be abstract

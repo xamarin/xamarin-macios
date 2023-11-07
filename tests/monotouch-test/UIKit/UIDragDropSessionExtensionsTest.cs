@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UIDragDropSessionExtensionsTest
 //
 // Authors:
@@ -11,17 +11,10 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
@@ -32,7 +25,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void LoadObjectsTest ()
 		{
-			if (!TestRuntime.CheckXcodeVersion (9,0))
+			if (!TestRuntime.CheckXcodeVersion (9, 0))
 				Assert.Ignore ("Ignoring tests: Requires iOS11+");
 
 			var test = new DropSession ();
@@ -73,6 +66,10 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			throw new NotImplementedException ();
 		}
+
+#if NET
+		public NSProgress Progress { get { throw new NotImplementedException (); } }
+#endif
 	}
 }
 

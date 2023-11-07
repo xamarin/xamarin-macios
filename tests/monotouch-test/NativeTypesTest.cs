@@ -7,8 +7,6 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Globalization;
 
@@ -18,9 +16,9 @@ using Security;
 
 using NUnit.Framework;
 
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 
 namespace MonoTouchFixtures.System {
 
@@ -31,30 +29,30 @@ namespace MonoTouchFixtures.System {
 		[Test]
 		public void CompareTo ()
 		{
-			Assert.That (((nint)0).CompareTo ((nint)0), Is.EqualTo (0), "compareto 1");
-			Assert.That (((nint)0).CompareTo ((nint)1), Is.EqualTo (-1), "compareto 2");
-			Assert.That (((nint)1).CompareTo ((nint)0), Is.EqualTo (1), "compareto 3");
-			Assert.That (((nint)0).CompareTo ((object)(nint)0), Is.EqualTo (0), "compareto 4");
-			Assert.That (((nint)0).CompareTo ((object)(nint)1), Is.EqualTo (-1), "compareto 5");
-			Assert.That (((nint)1).CompareTo ((object)(nint)0), Is.EqualTo (1), "compareto 6");
-			Assert.That (((nint)1).CompareTo (null), Is.EqualTo (1), "compareto 7");
+			Assert.That (((nint) 0).CompareTo ((nint) 0), Is.EqualTo (0), "compareto 1");
+			Assert.That (((nint) 0).CompareTo ((nint) 1), Is.EqualTo (-1), "compareto 2");
+			Assert.That (((nint) 1).CompareTo ((nint) 0), Is.EqualTo (1), "compareto 3");
+			Assert.That (((nint) 0).CompareTo ((object) (nint) 0), Is.EqualTo (0), "compareto 4");
+			Assert.That (((nint) 0).CompareTo ((object) (nint) 1), Is.EqualTo (-1), "compareto 5");
+			Assert.That (((nint) 1).CompareTo ((object) (nint) 0), Is.EqualTo (1), "compareto 6");
+			Assert.That (((nint) 1).CompareTo (null), Is.EqualTo (1), "compareto 7");
 
 
-			Assert.That (((nuint)0).CompareTo ((nuint)0), Is.EqualTo (0), "compareto nuint 1");
-			Assert.That (((nuint)0).CompareTo ((nuint)1), Is.EqualTo (-1), "compareto nuint 2");
-			Assert.That (((nuint)1).CompareTo ((nuint)0), Is.EqualTo (1), "compareto nuint 3");
-			Assert.That (((nuint)0).CompareTo ((object)(nuint)0), Is.EqualTo (0), "compareto nuint 4");
-			Assert.That (((nuint)0).CompareTo ((object)(nuint)1), Is.EqualTo (-1), "compareto nuint 5");
-			Assert.That (((nuint)1).CompareTo ((object)(nuint)0), Is.EqualTo (1), "compareto nuint 6");
-			Assert.That (((nuint)1).CompareTo (null), Is.EqualTo (1), "compareto nuint 7");
+			Assert.That (((nuint) 0).CompareTo ((nuint) 0), Is.EqualTo (0), "compareto nuint 1");
+			Assert.That (((nuint) 0).CompareTo ((nuint) 1), Is.EqualTo (-1), "compareto nuint 2");
+			Assert.That (((nuint) 1).CompareTo ((nuint) 0), Is.EqualTo (1), "compareto nuint 3");
+			Assert.That (((nuint) 0).CompareTo ((object) (nuint) 0), Is.EqualTo (0), "compareto nuint 4");
+			Assert.That (((nuint) 0).CompareTo ((object) (nuint) 1), Is.EqualTo (-1), "compareto nuint 5");
+			Assert.That (((nuint) 1).CompareTo ((object) (nuint) 0), Is.EqualTo (1), "compareto nuint 6");
+			Assert.That (((nuint) 1).CompareTo (null), Is.EqualTo (1), "compareto nuint 7");
 
-			Assert.That (((nfloat)0).CompareTo ((nfloat)0), Is.EqualTo (0), "compareto nfloat 1");
-			Assert.That (((nfloat)0).CompareTo ((nfloat)1), Is.EqualTo (-1), "compareto nfloat 2");
-			Assert.That (((nfloat)1).CompareTo ((nfloat)0), Is.EqualTo (1), "compareto nfloat 3");
-			Assert.That (((nfloat)0).CompareTo ((object)(nfloat)0), Is.EqualTo (0), "compareto nfloat 4");
-			Assert.That (((nfloat)0).CompareTo ((object)(nfloat)1), Is.EqualTo (-1), "compareto nfloat 5");
-			Assert.That (((nfloat)1).CompareTo ((object)(nfloat)0), Is.EqualTo (1), "compareto nfloat 6");
-			Assert.That (((nfloat)1).CompareTo (null), Is.EqualTo (1), "compareto nfloat 7");
+			Assert.That (((nfloat) 0).CompareTo ((nfloat) 0), Is.EqualTo (0), "compareto nfloat 1");
+			Assert.That (((nfloat) 0).CompareTo ((nfloat) 1), Is.EqualTo (-1), "compareto nfloat 2");
+			Assert.That (((nfloat) 1).CompareTo ((nfloat) 0), Is.EqualTo (1), "compareto nfloat 3");
+			Assert.That (((nfloat) 0).CompareTo ((object) (nfloat) 0), Is.EqualTo (0), "compareto nfloat 4");
+			Assert.That (((nfloat) 0).CompareTo ((object) (nfloat) 1), Is.EqualTo (-1), "compareto nfloat 5");
+			Assert.That (((nfloat) 1).CompareTo ((object) (nfloat) 0), Is.EqualTo (1), "compareto nfloat 6");
+			Assert.That (((nfloat) 1).CompareTo (null), Is.EqualTo (1), "compareto nfloat 7");
 		}
 
 		[Test]
@@ -150,4 +148,3 @@ namespace MonoTouchFixtures.System {
 		}
 	}
 }
-#endif

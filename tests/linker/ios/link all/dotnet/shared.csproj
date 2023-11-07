@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>NET;$(DefineConstants)</DefineConstants>
+    <RootNamespace>linkall</RootNamespace>
+    <AssemblyName>link all</AssemblyName>
+    <MtouchLink>Full</MtouchLink>
+    <LinkMode>$(MtouchLink)</LinkMode>
+    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchExtraArgs Condition="$(Configuration.Contains('Debug'))">$(MtouchExtraArgs) --optimize=-remove-uithread-checks</MtouchExtraArgs>
+    <MonoBundlingExtraArgs>$(MtouchExtraArgs)</MonoBundlingExtraArgs>
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..\..\..'))</RootTestsDirectory>
+    <ThisTestDirectory>$(RootTestsDirectory)\linker\ios\link all</ThisTestDirectory>
+    <SingleArchReleaseBuild>true</SingleArchReleaseBuild>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <!-- We use configurations like Debug64 and Release64, which doesn't work with the default logic we and .NET have -->
+  <PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+    <MtouchDebug>true</MtouchDebug>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.Contains('Release'))">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Composition" Version="4.7.0" />
+    <ProjectReference Include="$(RootTestsDirectory)\BundledResources\dotnet\$(_PlatformName)\BundledResources.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.EndsWith('-macos'))">
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\mac\link all\LinkAllTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(TargetFramework.EndsWith('-macos'))">
+    <Compile Include="$(ThisTestDirectory)\..\..\AppDelegate.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(ThisTestDirectory)\LinkAllTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\ClassLayoutTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\StructLayoutTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\XmlSerializationTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\AttributeTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\InterfacesTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\DataContractTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\BaseOptimizeGeneratedCodeTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\link sdk\OptimizeGeneratedCodeTest.cs">
+      <Link>OptimizeGeneratedCodeTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\InternalsTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\LinqExpressionTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\CalendarTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\PreserveTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\MEFTests.cs" />
+    <Compile Include="$(ThisTestDirectory)\SealerTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\link sdk\ReflectionTest.cs">
+      <Link>ReflectionTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\SerializationTest.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\ILReader.cs" />
+    <Compile Include="$(ThisTestDirectory)\..\..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\CommonLinkAllTest.cs">
+      <Link>CommonLinkAllTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\CommonLinkAnyTest.cs">
+      <Link>CommonLinkAnyTest.cs</Link>
+    </Compile>
+    <Compile Include="$(ThisTestDirectory)\..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
+      <Link>NetworkResources.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(ThisTestDirectory)\..\..\..\monotouch-test\Tamarin.pdf">
+      <Link>Tamarin.pdf</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="$(ThisTestDirectory)\LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
+    <ImageAsset Include="$(ThisTestDirectory)\Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
+!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+!extra-enum-value! Managed value 12 for INStartCallIntentResponseCode.FailureCallRinging is available for the current platform while the value in the native header is not

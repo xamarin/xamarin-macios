@@ -9,19 +9,12 @@
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using CoreLocation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreLocation {
 
@@ -32,7 +25,7 @@ namespace MonoTouchFixtures.CoreLocation {
 		[Test]
 		public void Ctor2 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var uuid = new NSUuid ("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"))
 			using (var br = new CLBeaconRegion (uuid, "identifier")) {
@@ -51,7 +44,7 @@ namespace MonoTouchFixtures.CoreLocation {
 		[Test]
 		public void Ctor3 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var uuid = new NSUuid ("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"))
 			using (var br = new CLBeaconRegion (uuid, 0, "identifier")) {
@@ -69,7 +62,7 @@ namespace MonoTouchFixtures.CoreLocation {
 		[Test]
 		public void Ctor4 ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var uuid = new NSUuid ("E2C56DB5-DFFB-48D2-B060-D0F5A71096E0"))
 			using (var br = new CLBeaconRegion (uuid, 2, 3, "identifier")) {

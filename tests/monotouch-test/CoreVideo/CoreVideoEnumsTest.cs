@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for 4cc-based enums
 //
 // Authors:
@@ -10,14 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreVideo;
 using Foundation;
-#else
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreVideo {
@@ -28,10 +22,10 @@ namespace MonoTouchFixtures.CoreVideo {
 
 		string FourCC (int value)
 		{
-			return new string (new char [] { 
-				(char) (byte) (value >> 24), 
-				(char) (byte) (value >> 16), 
-				(char) (byte) (value >> 8), 
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
 				(char) (byte) value });
 		}
 
@@ -82,6 +76,7 @@ namespace MonoTouchFixtures.CoreVideo {
 			Assert.That (FourCC ((int) CVPixelFormatType.CV14BayerBggr), Is.EqualTo ("bgg4"), "CV14Bayer_Bggr");
 			Assert.That (FourCC ((int) CVPixelFormatType.CV14BayerGbrg), Is.EqualTo ("gbr4"), "CV14Bayer_Gbrg");
 			Assert.That (FourCC ((int) CVPixelFormatType.Argb2101010LEPacked), Is.EqualTo ("l10r"), "Argb2101010LEPacked");
+			Assert.That (FourCC ((int) CVPixelFormatType.CV64RgbaLE), Is.EqualTo ("l64r"), "CV64RgbaLE");
 		}
 	}
 }

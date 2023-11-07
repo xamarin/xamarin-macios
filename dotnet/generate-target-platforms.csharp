@@ -1,0 +1,54 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+
+// arguments are: <platform> <outputPath>
+
+using System.IO;
+using System.Xml;
+
+var args = Environment.GetCommandLineArgs ();
+var expectedArgumentCount = 2;
+if (args.Length != expectedArgumentCount + 2 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
+	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
+	// second arg the script itself
+	// then comes the ones we care about
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 2}");
+	Environment.Exit (1);
+	return;
+}
+
+var platform = args [2];
+var outputPath = args [3];
+var plistPath = platform == "macOS" ? "../Versions-mac.plist.in" : "../Versions-ios.plist.in";
+
+var doc = new XmlDocument ();
+doc.Load (plistPath);
+var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
+
+var minSdkVersionName = $"DOTNET_MIN_{platform.ToUpper ()}_SDK_VERSION";
+var minSdkVersionString = File.ReadAllLines ("../Make.config").Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
+var minSdkVersion = Version.Parse (minSdkVersionString);
+
+using (TextWriter writer = new StreamWriter (outputPath)) {
+	writer.WriteLine ($"<!-- This file contains a generated list of the {platform} platform versions that are supported for this SDK -->");
+	writer.WriteLine ($"<!-- Generation script: https://github.com/xamarin/xamarin-macios/blob/main/dotnet/generate-target-platforms.csharp -->");
+	writer.WriteLine ("<Project>");
+	writer.WriteLine ("\t<ItemGroup>");
+
+	foreach (XmlNode n in nodes) {
+		var version = n.InnerText;
+		if (Version.Parse (version) < minSdkVersion)
+			continue;
+		writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
+	}
+
+	writer.WriteLine ("\t</ItemGroup>");
+	writer.WriteLine ("\t<ItemGroup>");
+	writer.WriteLine ($"\t\t<SdkSupportedTargetPlatformVersion Condition=\"'$(TargetPlatformIdentifier)' == '{platform}'\" Include=\"@({platform}SdkSupportedTargetPlatformVersion)\" />");
+	writer.WriteLine ("\t</ItemGroup>");
+	writer.WriteLine ("\t<PropertyGroup>");
+	writer.WriteLine ($"\t\t<{platform}MinSupportedOSPlatformVersion>{minSdkVersionString}</{platform}MinSupportedOSPlatformVersion>");
+	writer.WriteLine ("\t</PropertyGroup>");
+	writer.WriteLine ("</Project>");
+}
+
+Environment.Exit (0);

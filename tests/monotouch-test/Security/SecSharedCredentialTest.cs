@@ -2,19 +2,14 @@
 using System;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using Security;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
@@ -28,6 +23,9 @@ namespace MonoTouchFixtures.Security {
 		[SetUp]
 		public void SetUp ()
 		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+
 			domainName = "com.xamarin.monotouch-test";
 			account = "twitter";
 			password = "12345678";
@@ -35,31 +33,21 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void AddSharedWebCredentialNullDomain ()
 		{
 			domainName = null;
-			Action<NSError> handler = (NSError e) =>  {
-				Assert.IsNull (e);
-				waitEvent.Set ();
+			Action<NSError> handler = (NSError e) => {
 			};
-			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler); 
-			waitEvent.WaitOne ();
-			Assert.Pass ("Block was correctly executed.");
+			Assert.Throws<ArgumentNullException> (() => SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void AddSharedWebCredentialNullAccount ()
 		{
 			account = null;
-			Action<NSError> handler = (NSError e) =>  {
-				Assert.IsNull (e);
-				waitEvent.Set ();
+			Action<NSError> handler = (NSError e) => {
 			};
-			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler); 
-			waitEvent.WaitOne ();
-			Assert.Pass ("Block was correctly executed.");
+			Assert.Throws<ArgumentNullException> (() => SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler));
 		}
 
 		[Test]
@@ -68,12 +56,12 @@ namespace MonoTouchFixtures.Security {
 		[Timeout (5000)]
 		public void AddSharedWebCredentialNotNullPassword ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
-			Action<NSError> handler = (NSError e) =>  {
+			Action<NSError> handler = (NSError e) => {
 				// we do nothing, if we did block the test should be interactive because a dialog is shown.
 			};
-			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler); 
+			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler);
 		}
 
 		[Test]
@@ -82,24 +70,24 @@ namespace MonoTouchFixtures.Security {
 		[Timeout (5000)]
 		public void AddSharedWebCredentialNullPassword ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			password = null;
-			Action<NSError> handler = (NSError e) =>  {
+			Action<NSError> handler = (NSError e) => {
 				// we do nothing, if we did block the test should be interactive because a dialog is shown.
 			};
-			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler); 
+			SecSharedCredential.AddSharedWebCredential (domainName, account, password, handler);
 		}
 
 		[Test]
 		public void CreateSharedWebCredentialPassword ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			var pwd = SecSharedCredential.CreateSharedWebCredentialPassword ();
 			Assert.IsNotNull (pwd);
 		}
 
- 	}
+	}
 }
 #endif // __IOS__

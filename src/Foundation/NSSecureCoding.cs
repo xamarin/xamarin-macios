@@ -3,12 +3,15 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
-#if XAMCORE_4_0
-	static
-#endif
+#if NET
+	public static partial class NSSecureCoding {
+#else
 	public partial class NSSecureCoding {
+#endif
 
 		const string selConformsToProtocol = "conformsToProtocol:";
 		const string selSupportsSecureCoding = "supportsSecureCoding";
@@ -19,8 +22,8 @@ namespace Foundation {
 
 		public static bool SupportsSecureCoding (Type type)
 		{
-			if (type == null)
-				throw new ArgumentNullException ("type");
+			if (type is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 #if MONOMAC
 			try {
@@ -39,8 +42,8 @@ namespace Foundation {
 
 		public static bool SupportsSecureCoding (Class klass)
 		{
-			if (klass == null)
-				throw new ArgumentNullException ("klass");
+			if (klass is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (klass));
 			return SupportsSecureCoding (klass.Handle);
 		}
 
@@ -51,15 +54,15 @@ namespace Foundation {
 			if (secure_coding == IntPtr.Zero)
 				return false;
 #if MONOMAC
-			if (!Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("conformsToProtocol:"), secure_coding))
+			if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("conformsToProtocol:"), secure_coding) == 0)
 				return false;
 
-			return Messaging.bool_objc_msgSend (ptr, Selector.GetHandle ("supportsSecureCoding"));
+			return Messaging.bool_objc_msgSend (ptr, Selector.GetHandle ("supportsSecureCoding")) != 0;
 #else
-			if (!Messaging.bool_objc_msgSend_IntPtr (ptr, selConformsToProtocolHandle, secure_coding))
+			if (Messaging.bool_objc_msgSend_IntPtr (ptr, selConformsToProtocolHandle, secure_coding) == 0)
 				return false;
 
-			return Messaging.bool_objc_msgSend (ptr, selSupportsSecureCodingHandle);
+			return Messaging.bool_objc_msgSend (ptr, selSupportsSecureCodingHandle) != 0;
 #endif
 		}
 	}

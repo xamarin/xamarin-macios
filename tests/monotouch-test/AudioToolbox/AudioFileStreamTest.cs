@@ -9,31 +9,22 @@
 
 #if !__WATCHOS__
 
-using System;
-using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
-using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AudioToolbox;
-using MonoTouch.CoreFoundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AudioFileStreamTest {
 
 		string FourCC (int value)
 		{
-			return new string (new char [] { 
-				(char) (byte) (value >> 24), 
-				(char) (byte) (value >> 16), 
-				(char) (byte) (value >> 8), 
+			return new string (new char [] {
+				(char) (byte) (value >> 24),
+				(char) (byte) (value >> 16),
+				(char) (byte) (value >> 8),
 				(char) (byte) value });
 		}
 
@@ -65,18 +56,18 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void UndocumentedFourCC ()
 		{
-			Assert.That (FourCC ((int) AudioFileProperty.AlbumArtwork), Is.EqualTo ("aart"), "AlbumArtwork");			// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.ChunkIDs), Is.EqualTo ("chid"), "ChunkIDs");				// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.DataFormatName), Is.EqualTo ("fnme"), "DataFormatName");			// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.DeferSizeUpdates), Is.EqualTo ("dszu"), "DeferSizeUpdates");		// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.EstimatedDuration), Is.EqualTo ("edur"), "EstimatedDuration");		// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.ID3Tag), Is.EqualTo ("id3t"), "ID3Tag");					// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.InfoDictionary), Is.EqualTo ("info"), "InfoDictionary");			// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.IsOptimized), Is.EqualTo ("optm"), "IsOptimized");				// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.MarkerList), Is.EqualTo ("mkls"), "MarkerList");				// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.RegionList), Is.EqualTo ("rgls"), "RegionList");				// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.ReserveDuration), Is.EqualTo ("rsrv"), "ReserveDuration");			// ? reference ?
-			Assert.That (FourCC ((int) AudioFileProperty.SourceBitDepth), Is.EqualTo ("sbtd"), "SourceBitDepth");			// ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.AlbumArtwork), Is.EqualTo ("aart"), "AlbumArtwork");           // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.ChunkIDs), Is.EqualTo ("chid"), "ChunkIDs");               // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.DataFormatName), Is.EqualTo ("fnme"), "DataFormatName");           // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.DeferSizeUpdates), Is.EqualTo ("dszu"), "DeferSizeUpdates");       // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.EstimatedDuration), Is.EqualTo ("edur"), "EstimatedDuration");     // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.ID3Tag), Is.EqualTo ("id3t"), "ID3Tag");                   // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.InfoDictionary), Is.EqualTo ("info"), "InfoDictionary");           // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.IsOptimized), Is.EqualTo ("optm"), "IsOptimized");             // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.MarkerList), Is.EqualTo ("mkls"), "MarkerList");               // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.RegionList), Is.EqualTo ("rgls"), "RegionList");               // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.ReserveDuration), Is.EqualTo ("rsrv"), "ReserveDuration");         // ? reference ?
+			Assert.That (FourCC ((int) AudioFileProperty.SourceBitDepth), Is.EqualTo ("sbtd"), "SourceBitDepth");           // ? reference ?
 		}
 
 		[Test]
@@ -95,11 +86,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 				int offset;
 				var packet = afs.FrameToPacket (0, out offset);
-				Assert.That (packet, Is.LessThanOrEqualTo (0), "FrameToPacket");	// -1 on first run
+				Assert.That (packet, Is.LessThanOrEqualTo (0), "FrameToPacket");    // -1 on first run
 				Assert.That (offset, Is.EqualTo (0), "offset");
-	
+
 				long frame = afs.PacketToFrame (packet);
-				Assert.That (frame, Is.LessThanOrEqualTo (0), "PacketToFrame"); 	// -1 on first run
+				Assert.That (frame, Is.LessThanOrEqualTo (0), "PacketToFrame");     // -1 on first run
 			}
 		}
 	}

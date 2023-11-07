@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "iOS aplikace s kartami",
+  "description": "Projekt pro vytvoření aplikace s kartami .NET pro iOS",
+  "symbols/bundleId/description": "Přepíše CFBundleIdentifier v souboru Info.plist.",
+  "symbols/minOSVersion/description": "Přepíše SupportedOSPlatformVersion v souboru projektu.",
+  "symbols/deviceFamily/choices/universal/description": "Podpora zařízení iPhone i iPad",
+  "symbols/deviceFamily/choices/iphone/description": "Podpora pouze zařízení iPhone",
+  "symbols/deviceFamily/choices/ipad/description": "Podpora pouze zařízení iPad"
+}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -10,18 +10,15 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
-namespace Xamarin
-{
-	public enum MTouchAction
-	{
+namespace Xamarin {
+	public enum MTouchAction {
 		None,
 		BuildDev,
 		BuildSim,
 		LaunchSim,
 	}
 
-	public enum MTouchSymbolMode
-	{
+	public enum MTouchSymbolMode {
 		Unspecified,
 		Default,
 		Linker,
@@ -29,22 +26,21 @@ namespace Xamarin
 		Ignore,
 	}
 
-	public enum MTouchBitcode
-	{
+	public enum MTouchBitcode {
 		Unspecified,
 		ASMOnly,
 		Full, // LLVMOnly
 		Marker,
 	}
 
-	class MTouchTool : BundlerTool, IDisposable
-	{
+	class MTouchTool : BundlerTool, IDisposable {
 #pragma warning disable 649
 		// These map directly to mtouch options
 		public MTouchAction? Action; // --sim, --dev, --launchsim, etc
 		public bool? NoSign;
 		public bool? FastDev;
 		public bool? Dlsym;
+		public string DlsymString;
 		public string Executable;
 		public string AppPath;
 		public string Device; // --device
@@ -68,6 +64,9 @@ namespace Xamarin
 		public string AotOtherArguments;
 		public string SymbolList;
 
+		public bool IsDotNet;
+		public string ProjectFile;
+
 #pragma warning restore 649
 
 		public MTouchTool ()
@@ -75,8 +74,7 @@ namespace Xamarin
 			Profile = Profile.iOS;
 		}
 
-		public class DeviceInfo
-		{
+		public class DeviceInfo {
 			public string UDID;
 			public string Name;
 			public string CompanionIdentifier;
@@ -111,7 +109,7 @@ namespace Xamarin
 					"--sdkroot", Configuration.xcode_root,
 			});
 			AddVerbosity (args);
-			if (devicetype != null) {
+			if (devicetype is not null) {
 				args.Add ("--device");
 				args.Add (devicetype);
 			}
@@ -123,6 +121,12 @@ namespace Xamarin
 		{
 			if (!Action.HasValue)
 				Action = MTouchAction.BuildSim;
+			if (IsDotNet) {
+				var rv = DotNet.Execute ("build", ProjectFile, properties: null, assert_success: false);
+				Output = rv.StandardOutput;
+				ParseMessages ();
+				return rv.ExitCode;
+			}
 			return base.Execute ();
 		}
 
@@ -160,7 +164,7 @@ namespace Xamarin
 			foreach (var file in files) {
 				var info = new FileInfo (file);
 				if (info.LastWriteTime > timestamp) {
-					if (except != null && except.Contains (Path.GetFileName (file))) {
+					if (except is not null && except.Contains (Path.GetFileName (file))) {
 						Console.WriteLine ("SKIP: {0} modified: {1} > {2}", file, info.LastWriteTime, timestamp);
 					} else {
 						failed.Add (string.Format ("{0} is modified, timestamp: {1} > {2}", file, info.LastWriteTime, timestamp));
@@ -181,7 +185,7 @@ namespace Xamarin
 			foreach (var file in files) {
 				var info = new FileInfo (file);
 				if (info.LastWriteTime <= timestamp) {
-					if (except != null && except.Contains (Path.GetFileName (file))) {
+					if (except is not null && except.Contains (Path.GetFileName (file))) {
 						Console.WriteLine ("SKIP: {0} not modified: {1} <= {2}", file, info.LastWriteTime, timestamp);
 					} else {
 						failed.Add (string.Format ("{0} is not modified, timestamp: {1} <= {2}", file, info.LastWriteTime, timestamp));
@@ -215,7 +219,7 @@ namespace Xamarin
 			Assert.IsEmpty (failed, message);
 		}
 
-		protected override string GetDefaultAbi()
+		protected override string GetDefaultAbi ()
 		{
 			var isDevice = false;
 
@@ -256,19 +260,19 @@ namespace Xamarin
 				break;
 			case MTouchAction.BuildDev:
 				MTouch.AssertDeviceAvailable ();
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--dev");
 				sb.Add (AppPath);
 				break;
 			case MTouchAction.BuildSim:
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--sim");
 				sb.Add (AppPath);
 				break;
 			case MTouchAction.LaunchSim:
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--launchsim");
 				sb.Add (AppPath);
@@ -286,7 +290,7 @@ namespace Xamarin
 			if (NoStrip.HasValue && NoStrip.Value)
 				sb.Add ("--nostrip");
 
-			if (NoSymbolStrip != null) {
+			if (NoSymbolStrip is not null) {
 				if (NoSymbolStrip.Length == 0) {
 					sb.Add ("--nosymbolstrip");
 				} else {
@@ -315,9 +319,11 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (Mono))
 				sb.Add ($"--mono:{Mono}");
-			
+
 			if (Dlsym.HasValue)
 				sb.Add ($"--dlsym:{(Dlsym.Value ? "true" : "false")}");
+			else if (!string.IsNullOrEmpty (DlsymString))
+				sb.Add ($"--dlsym:{DlsymString}");
 
 			if (!string.IsNullOrEmpty (Executable)) {
 				sb.Add ("--executable");
@@ -351,7 +357,7 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (LLVMOptimizations))
 				sb.Add ($"--llvm-opt={LLVMOptimizations}");
-			
+
 			if (Bitcode != MTouchBitcode.Unspecified)
 				sb.Add ($"--bitcode:{Bitcode.ToString ().ToLower ()}");
 
@@ -367,7 +373,7 @@ namespace Xamarin
 
 		XmlDocument FetchDeviceList (bool allowCache = true)
 		{
-			if (device_list_cache == null || !allowCache) {
+			if (device_list_cache is null || !allowCache) {
 				var output_file = Path.GetTempFileName ();
 				try {
 					if (Execute (new [] { "--listdev", output_file, "--sdkroot", Configuration.xcode_root }) != 0)
@@ -487,10 +493,10 @@ namespace Xamarin
 			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
 			Profile = profile;
-			CreateTemporaryApp (appName: appName, code: code, extraArgs: extraArgs, extraCode: extraCode, usings: usings, use_csc: use_csc);
+			CreateTemporaryApp (appName: appName, code: code, extraArgs: extraArgs, extraCode: extraCode, usings: usings);
 		}
 
 		public void CreateTemporaryApp ()
@@ -498,10 +504,10 @@ namespace Xamarin
 			CreateTemporaryApp (false, "testApp", null, (IList<string>) null);
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -509,17 +515,59 @@ namespace Xamarin
 			}
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
-			AppPath = app;
-			RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings, use_csc);
+			if (IsDotNet) {
+				// This code to create a .NET project from the options in this class is very rudimentary; most options are not honored.
+				// To be fixed when support for more options is needed.
+				var mtouchExtraArgs = new List<string> ();
+				if (Registrar != RegistrarOption.Unspecified)
+					mtouchExtraArgs.Add ($"--registrar:" + Registrar.ToString ().ToLower ());
 
-			if (hasPlist)
-				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
+				string linkMode = string.Empty;
+				if (Linker != LinkerOption.Unspecified) {
+					switch (Linker) {
+					case LinkerOption.DontLink:
+						linkMode = "None";
+						break;
+					case LinkerOption.LinkAll:
+						linkMode = "Full";
+						break;
+					case LinkerOption.LinkSdk:
+						linkMode = "SdkOnly";
+						break;
+					case LinkerOption.LinkPlatform:
+					default:
+						throw new NotImplementedException (Linker.ToString ());
+					}
+					linkMode = "<MtouchLink>" + linkMode + "</MtouchLink>";
+				}
+
+				var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{Profile.AsPlatform ().ToFramework ()}</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<MtouchExtraArgs>{string.Join (" ", mtouchExtraArgs)}</MtouchExtraArgs>
+		<ApplicationId>{appName}</ApplicationId>
+		{linkMode}
+	</PropertyGroup>
+</Project>";
+				ProjectFile = Path.Combine (testDir, appName + ".csproj");
+				File.WriteAllText (ProjectFile, csproj);
+				File.WriteAllText (Path.Combine (testDir, appName + ".cs"), CreateCode (code, usings, extraCode));
+				if (hasPlist)
+					File.WriteAllText (Path.Combine (testDir, "Info.plist"), CreatePlist (Profile, appName));
+			} else {
+				AppPath = app;
+				RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings);
+
+				if (hasPlist)
+					File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
+			}
 		}
 
 		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testServiceExtension")
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -528,7 +576,7 @@ namespace Xamarin
 			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"using UserNotifications;
 [Foundation.Register (""NotificationService"")]
 public partial class NotificationService : UNNotificationServiceExtension
@@ -536,14 +584,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 	protected NotificationService (System.IntPtr handle) : base (handle) {}
 }";
 			}
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
 
 			AppPath = app;
 			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArgs: extraArgs, appName: appName);
 
-			var info_plist = 
+			var info_plist = string.Format (
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -565,7 +613,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>10.0</string>
+	<string>{0}</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
@@ -575,7 +623,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 	</dict>
 </dict>
 </plist>
-";
+", SdkVersions.MiniOS);
 			var plist_path = Path.Combine (app, "Info.plist");
 			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
 				File.WriteAllText (plist_path, info_plist);
@@ -584,7 +632,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 		public void CreateTemporaryTodayExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testTodayExtension")
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that
@@ -593,7 +641,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"using System;
 using Foundation;
 using NotificationCenter;
@@ -613,7 +661,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 }
 ";
 			}
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
 
 			AppPath = app;
@@ -621,6 +669,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArgs: extraArgs, appName: appName);
 
 			var info_plist = // FIXME: this includes a NSExtensionMainStoryboard key which points to a non-existent storyboard. This won't matter as long as we're only building, and not running the extension.
+string.Format (
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -642,7 +691,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>10.0</string>
+	<string>{0}</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
@@ -652,7 +701,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 	</dict>
 </dict>
 </plist>
-";
+", SdkVersions.MiniOS);
 			var plist_path = Path.Combine (app, "Info.plist");
 			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
 				File.WriteAllText (plist_path, info_plist);
@@ -661,7 +710,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 		public void CreateTemporaryWatchKitExtension (string code = null, string extraCode = null, IList<string> extraArgs = null)
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that directory
@@ -670,7 +719,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 			var app = AppPath ?? Path.Combine (testDir, "testApp.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"using WatchKit;
 public partial class NotificationController : WKUserNotificationInterfaceController
 {
@@ -678,14 +727,14 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 }";
 			}
 
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
 
 			AppPath = app;
 			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, extraArgs: extraArgs, profile: Profile);
 
-			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
+			File.WriteAllText (Path.Combine (app, "Info.plist"), string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
 <dict>
@@ -700,7 +749,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>2.0</string>
+	<string>{0}</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -717,13 +766,13 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 	<string>1.0</string>
 </dict>
 </plist>
-");
+", SdkVersions.MinWatchOS));
 		}
 
 		public void CreateTemporaryWatchOSIntentsExtension (string code = null, string appName = "intentsExtension")
 		{
 			string testDir;
-			if (RootAssembly == null) {
+			if (RootAssembly is null) {
 				testDir = CreateTemporaryDirectory ();
 			} else {
 				// We're rebuilding an existing executable, so just reuse that directory
@@ -732,7 +781,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
-			if (code == null) {
+			if (code is null) {
 				code = @"
 using System;
 using Foundation;
@@ -780,7 +829,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>MinimumOSVersion</key>
-	<string>3.2</string>
+	<string>{SdkVersions.MinWatchOS}</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -821,7 +870,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 
 		public string CreateTemporaryAppDirectory ()
 		{
-			if (AppPath != null)
+			if (AppPath is not null)
 				throw new Exception ("There already is an App directory");
 
 			AppPath = Path.Combine (CreateTemporaryDirectory (), "testApp.app");
@@ -835,7 +884,7 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 		}
 
 		public IEnumerable<string> NativeSymbolsInExecutable {
-			get { 
+			get {
 				return GetNativeSymbolsInExecutable (NativeExecutablePath);
 			}
 		}
@@ -843,14 +892,14 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 		public static IEnumerable<string> GetNativeSymbolsInExecutable (string executable, string arch = null)
 		{
 			var args = new List<string> ();
-			if (arch != null) {
+			if (arch is not null) {
 				args.Add ("-arch");
 				args.Add (arch);
 			}
 			args.Add ("-gUj");
 			args.Add (executable);
 			IEnumerable<string> rv = ExecutionHelper.Execute ("nm", args, hide_output: true).Split ('\n');
-			
+
 			rv = rv.Where ((v) => {
 				if (string.IsNullOrEmpty (v))
 					return false;
@@ -858,7 +907,8 @@ public class IntentHandler : INExtension, IINRidesharingDomainHandling {
 				if (v.StartsWith (executable, StringComparison.Ordinal) && v.EndsWith (":", StringComparison.Ordinal))
 					return false;
 
-				if (v == "no symbols")
+				// nm changed its output on xcode 12.5 (it will fail, on purpose, with earlier versions)
+				if (v.EndsWith (": no symbols", StringComparison.Ordinal))
 					return false;
 
 				return true;

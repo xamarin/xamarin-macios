@@ -26,9 +26,9 @@ namespace UIKit {
 		}
 #endif
 
-		public UIAccessibilityCustomAction (string name, Func<UIAccessibilityCustomAction,bool> probe) : this (name, FuncBoolDispatcher.Selector, new FuncBoolDispatcher (probe))
+		public UIAccessibilityCustomAction (string name, Func<UIAccessibilityCustomAction, bool> probe) : this (name, FuncBoolDispatcher.Selector, new FuncBoolDispatcher (probe))
 		{
-			
+
 		}
 
 		internal UIAccessibilityCustomAction (string name, Selector sel, FuncBoolDispatcher disp) : this (name, disp, sel)
@@ -43,11 +43,11 @@ namespace UIKit {
 			public const string SelectorName = "xamarinApplySelectorFunc:";
 			public static readonly Selector Selector = new Selector (SelectorName);
 
-			readonly Func<UIAccessibilityCustomAction,bool> probe;
+			readonly Func<UIAccessibilityCustomAction, bool> probe;
 
-			public FuncBoolDispatcher (Func<UIAccessibilityCustomAction,bool> probe)
+			public FuncBoolDispatcher (Func<UIAccessibilityCustomAction, bool> probe)
 			{
-				if (probe == null)
+				if (probe is null)
 					throw new ArgumentNullException ("probe");
 
 				this.probe = probe;
@@ -61,7 +61,7 @@ namespace UIKit {
 				return probe (customAction);
 			}
 		}
-		
+
 	}
 }
 

@@ -44,42 +44,42 @@ namespace UIKit
 			if (o is nfloat) return new NSNumber ((nfloat) o);
 			return null;
 		}
-				
+
 		static public NSLayoutConstraint [] FromVisualFormat (string format, NSLayoutFormatOptions formatOptions, params object [] viewsAndMetrics)
 		{
 			NSMutableDictionary views = null, metrics = null;
 			var count = viewsAndMetrics.Length;
-			if (count != 0){
+			if (count != 0) {
 				if ((count % 2) != 0)
 					throw new ArgumentException ("You should provide pairs and values, the parameter passed is not even", "viewsAndMetrics");
 
-				for (int i = 0; i < count; i+=2){
+				for (int i = 0; i < count; i += 2) {
 					var key = viewsAndMetrics [i];
 					NSString nskey;
 
 					if (key is string)
-						nskey = new NSString ((string)key);
+						nskey = new NSString ((string) key);
 					else if (key is NSString)
 						nskey = (NSString) key;
-					else 
+					else
 						throw new ArgumentException (String.Format ("Item at {0} is not a string or an NSString", i), "viewsAndMetrics");
-					
-					var value = viewsAndMetrics [i+1];
-					if (value is View){
-						if (views == null)
+
+					var value = viewsAndMetrics [i + 1];
+					if (value is View) {
+						if (views is null)
 							views = new NSMutableDictionary ();
 						views [nskey] = (NSObject) value;
 						continue;
-					} else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View)))) {
-						if (views == null)
+					} else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View))) != 0) {
+						if (views is null)
 							views = new NSMutableDictionary ();
 						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
 						continue;
 					}
 #if !MONOMAC
 					// This requires UILayoutSupport class which is not exist on Mac
-					else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name))) {
-						if (views == null)
+					else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name)) != 0) {
+						if (views is null)
 							views = new NSMutableDictionary ();
 						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
 						continue;
@@ -87,16 +87,16 @@ namespace UIKit
 #endif // !MONOMAC
 
 					var number = AsNumber (value);
-					if (number == null)
-						throw new ArgumentException (String.Format ("Item at {0} is not a number or a view", i+1), "viewsAndMetrics");
-					if (metrics == null)
+					if (number is null)
+						throw new ArgumentException (String.Format ("Item at {0} is not a number or a view", i + 1), "viewsAndMetrics");
+					if (metrics is null)
 						metrics = new NSMutableDictionary ();
 					metrics [nskey] = number;
 				}
 			}
-			if (views == null)
+			if (views is null)
 				throw new ArgumentException ("You should at least provide a pair of name, view", "viewAndMetrics");
-			
+
 			return FromVisualFormat (format, formatOptions, metrics, views);
 		}
 
@@ -109,6 +109,37 @@ namespace UIKit
 		{
 			return NSLayoutConstraint.Create (view1, attribute1, relation, null, NSLayoutAttribute.NoAttribute, 1.0f, 0f);
 		}
+
+		// This solves the duplicate selector export problem while not breaking the API.
+		public static NSLayoutConstraint Create (NSObject view1, NSLayoutAttribute attribute1, NSLayoutRelation relation,
+				NSObject view2, NSLayoutAttribute attribute2, nfloat multiplier, nfloat constant)
+		{
+			return Create ((INativeObject) view1, attribute1, relation, view2, attribute2, multiplier, constant);
+		}
+
+#if !MONOMAC || NET
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+#endif
+		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
+		{
+			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_FirstAnchor ());
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+#endif
+		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
+		{
+			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_SecondAnchor ());
+		}
+#endif // !MONOMAC || NET
 	}
 }
 

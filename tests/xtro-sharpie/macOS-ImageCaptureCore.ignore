@@ -1,0 +1,112 @@
+# Xcode headers say `NSData* _Nullable` the but the web docs say `outData:(NSData *)data`
+# since this is an "out" variable that is NOT `NSData **`, let's leave this one here for now.
+!missing-null-allowed! 'System.Void ImageCaptureCore.ICCameraDevice::RequestSendPtpCommand(Foundation.NSData,Foundation.NSData,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #1
+
+# initial results
+!deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didAddItem: missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didReceiveMetadataForItem: missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICCameraDeviceDelegate::cameraDevice:didRemoveItem: missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICCameraItem::largeThumbnailIfAvailable missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICCameraItem::metadataIfAvailable missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICCameraItem::thumbnailIfAvailable missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICDevice::moduleExecutableArchitecture missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICDevice::requestEjectOrDisconnect missing a [Deprecated] attribute
+!deprecated-attribute-missing! ICDevice::requestYield missing a [Deprecated] attribute
+!extra-enum-value! Managed value -21000 for ICReturnCode.ThumbnailNotAvailable not found in native headers
+!extra-enum-value! Managed value -21001 for ICReturnCode.ThumbnailAlreadyFetching not found in native headers
+!extra-enum-value! Managed value -21002 for ICReturnCode.ThumbnailCanceled not found in native headers
+!extra-enum-value! Managed value -21003 for ICReturnCode.ThumbnailInvalid not found in native headers
+!extra-enum-value! Managed value -21050 for ICReturnCode.MetadataNotAvailable not found in native headers
+!extra-enum-value! Managed value -21051 for ICReturnCode.MetadataAlreadyFetching not found in native headers
+!extra-enum-value! Managed value -21052 for ICReturnCode.MetadataCanceled not found in native headers
+!extra-enum-value! Managed value -21053 for ICReturnCode.MetadataInvalid not found in native headers
+!extra-enum-value! Managed value -21300 for ICReturnCode.ErrorDeviceEjected not found in native headers
+!extra-protocol-member! unexpected selector ICDeviceDelegate::device:didReceiveButtonPress: found
+!extra-protocol-member! unexpected selector ICDeviceDelegate::device:didReceiveCustomNotification:data: found
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didAddItem: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didAddItems: is REQUIRED and should be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didCompleteDeleteFilesWithError: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveMetadataForItem: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didRemoveItem: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didRemoveItems: is REQUIRED and should be abstract
+!incorrect-protocol-member! ICDeviceDelegate::device:didCloseSessionWithError: is REQUIRED and should be abstract
+!incorrect-protocol-member! ICDeviceDelegate::device:didOpenSessionWithError: is REQUIRED and should be abstract
+!missing-enum! ICDeviceLocationTypeMask not bound
+!missing-enum! ICDeviceTypeMask not bound
+!missing-enum! ICLegacyReturnCode not bound
+!missing-enum! ICMediaPresentation not bound
+!missing-enum! ICReturnConnectionErrorCode not bound
+!missing-enum! ICReturnDownloadErrorCode not bound
+!missing-enum! ICReturnMetadataErrorCode not bound
+!missing-enum! ICReturnObjectErrorCode not bound
+!missing-enum! ICReturnPTPDeviceErrorCode not bound
+!missing-enum! ICReturnThumbnailErrorCode not bound
+!missing-enum-native! ICScannerFunctionalUnitState
+!missing-enum-value! ICReturnCode native value ICReturnExFATVolumeInvalid = 21200 not bound
+!missing-field! ICCameraDeviceSupportsHEIF not bound
+!missing-field! ICDeleteCanceled not bound
+!missing-field! ICDeleteErrorCanceled not bound
+!missing-field! ICDeleteErrorDeviceMissing not bound
+!missing-field! ICDeleteErrorFileMissing not bound
+!missing-field! ICDeleteErrorReadOnly not bound
+!missing-field! ICDeleteFailed not bound
+!missing-field! ICDeleteSuccessful not bound
+!missing-field! ICEnumerationChronologicalOrder not bound
+!missing-field! ICErrorDomain not bound
+!missing-field! ICImageSourceShouldCache not bound
+!missing-field! ICImageSourceThumbnailMaxPixelSize not bound
+!missing-field! ICTruncateAfterSuccessfulDownload not bound
+!missing-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveMetadata:forItem:error: not found
+!missing-protocol-member! ICCameraDeviceDelegate::cameraDeviceDidEnableAccessRestriction: not found
+!missing-protocol-member! ICCameraDeviceDelegate::cameraDeviceDidRemoveAccessRestriction: not found
+!missing-protocol-member! ICDeviceDelegate::device:didEjectWithError: not found
+!missing-selector! ICCameraDevice::iCloudPhotosEnabled not bound
+!missing-selector! ICCameraDevice::isEjectable not bound
+!missing-selector! ICCameraDevice::isLocked not bound
+!missing-selector! ICCameraDevice::mediaPresentation not bound
+!missing-selector! ICCameraDevice::ptpEventHandler not bound
+!missing-selector! ICCameraDevice::requestDeleteFiles:deleteFailed:completion: not bound
+!missing-selector! ICCameraDevice::requestSendPTPCommand:outData:completion: not bound
+!missing-selector! ICCameraDevice::setMediaPresentation: not bound
+!missing-selector! ICCameraDevice::setPtpEventHandler: not bound
+!missing-selector! ICCameraFile::burstFavorite not bound
+!missing-selector! ICCameraFile::burstPicked not bound
+!missing-selector! ICCameraFile::burstUUID not bound
+!missing-selector! ICCameraFile::createdFilename not bound
+!missing-selector! ICCameraFile::exifCreationDate not bound
+!missing-selector! ICCameraFile::exifModificationDate not bound
+!missing-selector! ICCameraFile::fileCreationDate not bound
+!missing-selector! ICCameraFile::fileModificationDate not bound
+!missing-selector! ICCameraFile::firstPicked not bound
+!missing-selector! ICCameraFile::gpsString not bound
+!missing-selector! ICCameraFile::groupUUID not bound
+!missing-selector! ICCameraFile::height not bound
+!missing-selector! ICCameraFile::highFramerate not bound
+!missing-selector! ICCameraFile::originalFilename not bound
+!missing-selector! ICCameraFile::originatingAssetID not bound
+!missing-selector! ICCameraFile::pairedRawImage not bound
+!missing-selector! ICCameraFile::relatedUUID not bound
+!missing-selector! ICCameraFile::requestDownloadWithOptions:completion: not bound
+!missing-selector! ICCameraFile::requestMetadataDictionaryWithOptions:completion: not bound
+!missing-selector! ICCameraFile::requestReadDataAtOffset:length:completion: not bound
+!missing-selector! ICCameraFile::requestThumbnailDataWithOptions:completion: not bound
+!missing-selector! ICCameraFile::timeLapse not bound
+!missing-selector! ICCameraFile::width not bound
+!missing-selector! ICCameraItem::flushMetadataCache not bound
+!missing-selector! ICCameraItem::flushThumbnailCache not bound
+!missing-selector! ICCameraItem::metadata not bound
+!missing-selector! ICCameraItem::requestMetadata not bound
+!missing-selector! ICCameraItem::requestThumbnail not bound
+!missing-selector! ICCameraItem::thumbnail not bound
+!missing-selector! ICDevice::productKind not bound
+!missing-selector! ICDevice::requestCloseSessionWithOptions:completion: not bound
+!missing-selector! ICDevice::requestEject not bound
+!missing-selector! ICDevice::requestEjectWithCompletion: not bound
+!missing-selector! ICDevice::requestOpenSessionWithOptions:completion: not bound
+!missing-selector! ICDevice::systemSymbolName not bound
+!unknown-native-enum! ICBrowsedDeviceType bound
+!wrong-enum-size! ICScannerFunctionalUnitState managed 4 vs native 8
+
+## new @required on existing protocols are breaking changes
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnail:forItem:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! ICCameraDeviceDelegate::cameraDevice:didReceiveThumbnailForItem: is OPTIONAL and should NOT be abstract

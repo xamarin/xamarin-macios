@@ -1,0 +1,104 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: createLocPR
+  type: boolean
+  default: false
+
+steps:
+
+- template: sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
+
+- ${{ if parameters.isPR }}:
+  - pwsh: |
+      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+      git fetch origin
+      $branch="$(Build.SourceBranch)".Replace("merge", "head")
+      $branch=$branch.Replace("refs", "origin")
+      Write-Host "Checking out branch $branch"
+      git checkout $branch
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
+    name: fix_commit
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)
+- ${{ else }}:
+  - pwsh: |
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
+    name: fix_commit
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)
+
+
+- bash: |
+    make LocProject.json
+  displayName: 'Generate LocProject.json'
+  continueOnError: true
+  workingDirectory: $(Build.SourcesDirectory)\\tools\\devops
+
+- task: PowerShell@2
+  displayName: "Update LocProject.json"
+  inputs:
+    targetType: 'filePath'
+    filePath: $(Build.SourcesDirectory)\\tools\\devops\\automation\\scripts\\update-locproject.ps1
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\\Localize\\LocProject.json"
+
+- pwsh: |
+    git remote remove origin
+    git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+    git remote # don't add -v else we see the pat
+
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
+    git branch -d Localization
+    git push origin --delete Localization
+
+    git checkout -b Localization
+    git push --force-with-lease origin Localization
+  displayName: "Create a new Localization branch from main"
+  workingDirectory: $(Build.SourcesDirectory)
+
+- task: OneLocBuild@2
+  continueOnError: true
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    locProj: '$(Build.SourcesDirectory)\\Localize\\LocProject.json'
+    outDir: '$(Build.ArtifactStagingDirectory)'
+    ${{ if eq(parameters.createLocPR, true) }}:
+      isCreatePrSelected: true
+    ${{ else }}:
+      isCreatePrSelected: false
+    packageSourceAuth: patAuth
+    patVariable: '$(OneLocBuild--PAT)'
+    isAutoCompletePrSelected: false
+    prSourceBranchPrefix: 'locfiles'
+    repoType: gitHub
+    gitHubPatVariable: '$(GitHub.Token)'
+    isDeletePrSourceBranchSelected: false
+    xLocCustomPowerShellScript: '$(Build.SourcesDirectory)\\tools\\devops\\automation\\scripts\\localizationBomRemoval.ps1'
+
+- task: PublishBuildArtifacts@1
+  continueOnError: true
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'localizationDrop'
+    publishLocation: 'Container'

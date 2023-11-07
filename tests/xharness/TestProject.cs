@@ -1,86 +1,57 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Xamarin;
+using Xharness.Jenkins.TestTasks;
 
-namespace xharness
-{
-	public class TestProject
-	{
-		XmlDocument xml;
+namespace Xharness {
+	public class TestProject {
+		XmlDocument? xml;
+		bool generate_variations = true;
 
+		public TestPlatform TestPlatform;
+		public TestLabel Label;
 		public string Path;
-		public string SolutionPath;
-		public string Name;
+		public string? SolutionPath;
+		public string? Name;
 		public bool IsExecutableProject;
 		public bool IsNUnitProject;
-		public string [] Configurations;
-		public Func<Task> Dependency;
-		public string FailureMessage;
-		public bool RestoreNugetsInProject;
-		public string MTouchExtraArgs;
+		public bool IsDotNetProject;
+		public string []? Configurations;
+		public Func<Task>? Dependency;
+		public string? FailureMessage;
+		public bool RestoreNugetsInProject = true;
 		public double TimeoutMultiplier = 1;
+		public bool? Ignore;
 
-		public IEnumerable<TestProject> ProjectReferences;
-
-		// Optional
-		public BCLTestInfo BCLInfo { get; set; }
+		public IEnumerable<TestProject>? ProjectReferences;
 
 		// Optional
-		public MonoNativeInfo MonoNativeInfo { get; set; }
+		public MonoNativeInfo? MonoNativeInfo { get; set; }
 
-		public TestProject ()
+		public TestProject (TestLabel label, string path, bool isExecutableProject = true)
 		{
-		}
-
-		public TestProject (string path, bool isExecutableProject = true)
-		{
+			Label = label;
 			Path = path;
 			IsExecutableProject = isExecutableProject;
 		}
 
-		public TestProject AsTvOSProject ()
-		{
-			var clone = Clone ();
-			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), System.IO.Path.GetFileNameWithoutExtension (Path) + "-tvos" + System.IO.Path.GetExtension (Path));
-			return clone;
-		}
-
-		public TestProject AsWatchOSProject ()
-		{
-			var clone = Clone ();
-			var fileName = System.IO.Path.GetFileNameWithoutExtension (Path);
-			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), fileName + (fileName.Contains("-watchos")?"":"-watchos") + System.IO.Path.GetExtension (Path));
-			return clone;
-		}
-
-		public TestProject AsTodayExtensionProject ()
-		{
-			var clone = Clone ();
-			clone.Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), System.IO.Path.GetFileNameWithoutExtension (Path) + "-today" + System.IO.Path.GetExtension (Path));
-			return clone;
-		}
-
-		// Get the referenced today extension project (if any)
-		public TestProject GetTodayExtension ()
-		{
-			var extensions = Xml.GetExtensionProjectReferences ().ToArray ();
-			if (!extensions.Any ())
-				return null;
-			if (extensions.Count () != 1)
-				throw new NotImplementedException ();
-			return new TestProject
-			{
-				Path = System.IO.Path.GetFullPath (System.IO.Path.Combine (System.IO.Path.GetDirectoryName (Path), extensions.First ().Replace ('\\', '/'))),
-			};
-		}
+		public virtual bool GenerateVariations { get => generate_variations; set => generate_variations = value; }
 
 		public XmlDocument Xml {
 			get {
-				if (xml == null) {
+				if (xml is null) {
 					xml = new XmlDocument ();
 					xml.LoadWithoutNetworkAccess (Path);
 				}
@@ -88,34 +59,34 @@ namespace xharness
 			}
 		}
 
-		public bool IsBclTest {
-			get {
-				return Path.Contains ("bcl-test");
-			}
-		}
-
 		public virtual TestProject Clone ()
 		{
-			TestProject rv = (TestProject) Activator.CreateInstance (GetType ());
+			return CompleteClone (new TestProject (Label, Path, IsExecutableProject));
+		}
+
+		protected virtual TestProject CompleteClone (TestProject rv)
+		{
+			rv.Label = Label;
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
+			rv.IsDotNetProject = IsDotNetProject;
 			rv.RestoreNugetsInProject = RestoreNugetsInProject;
 			rv.Name = Name;
-			rv.MTouchExtraArgs = MTouchExtraArgs;
 			rv.TimeoutMultiplier = TimeoutMultiplier;
+			rv.Ignore = Ignore;
+			rv.TestPlatform = TestPlatform;
 			return rv;
 		}
 
-		internal async Task<TestProject> CreateCloneAsync (TestTask test)
+		public Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory)
 		{
-			var rv = Clone ();
-			await rv.CreateCopyAsync (test);
-			return rv;
+			var pr = new Dictionary<string, TestProject> ();
+			return CreateCopyAsync (log, processManager, test, rootDirectory, pr);
 		}
 
-		internal async Task CreateCopyAsync (TestTask test = null)
+		async Task CreateCopyAsync (ILog log, IProcessManager processManager, ITestTask test, string rootDirectory, Dictionary<string, TestProject> allProjectReferences)
 		{
-			var directory = Xamarin.Cache.CreateTemporaryDirectory (test?.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
+			var directory = Cache.CreateTemporaryDirectory (test.TestName ?? System.IO.Path.GetFileNameWithoutExtension (Path));
 			Directory.CreateDirectory (directory);
 			var original_path = Path;
 			Path = System.IO.Path.Combine (directory, System.IO.Path.GetFileName (Path));
@@ -125,20 +96,95 @@ namespace xharness
 			XmlDocument doc;
 			doc = new XmlDocument ();
 			doc.LoadWithoutNetworkAccess (original_path);
-			var original_name = System.IO.Path.GetFileName (original_path);
-			if (original_name.Contains ("GuiUnit_NET") || original_name.Contains ("GuiUnit_xammac_mobile")) {
-				// The GuiUnit project files writes stuff outside their project directory using relative paths,
-				// but override that so that we don't end up with multiple cloned projects writing stuff to
-				// the same location.
-				doc.SetOutputPath ("bin\\$(Configuration)");
-				doc.SetNode ("DocumentationFile", "bin\\$(Configuration)\\nunitlite.xml");
+
+			var variableSubstitution = new Dictionary<string, string> ();
+			variableSubstitution.Add ("RootTestsDirectory", rootDirectory);
+
+			lock (GetType ()) {
+				InlineSharedImports (doc, original_path, variableSubstitution, rootDirectory);
 			}
-			doc.ResolveAllPaths (original_path);
+
+			doc.ResolveAllPaths (original_path, variableSubstitution);
+
+			// Replace RootTestsDirectory with a constant value, so that any relative paths don't end up wrong.
+			var rootTestsDirectoryNode = doc.SelectSingleNode ("/Project/PropertyGroup/RootTestsDirectory");
+			if (rootTestsDirectoryNode is not null)
+				rootTestsDirectoryNode.InnerText = rootDirectory;
+
+			if (doc.IsDotNetProject ()) {
+				if (test.ProjectPlatform == "iPhone") {
+					switch (test.Platform) {
+					case TestPlatform.iOS:
+					case TestPlatform.iOS_Unified:
+					case TestPlatform.iOS_Unified64:
+					case TestPlatform.iOS_TodayExtension64:
+						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm64");
+						break;
+					case TestPlatform.iOS_Unified32:
+						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "ios-arm");
+						break;
+					case TestPlatform.tvOS:
+						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "tvos-arm64");
+						break;
+					case TestPlatform.watchOS:
+					case TestPlatform.watchOS_32:
+					case TestPlatform.watchOS_64_32:
+						doc.SetTopLevelPropertyGroupValue ("RuntimeIdentifier", "watchos-arm");
+						break;
+					}
+				}
+
+				if (doc.GetEnableDefaultItems () != false) {
+					// Many types of files below the csproj directory are included by default,
+					// which means that we have to include them manually in the cloned csproj,
+					// because the cloned project is stored in a very different directory.
+					var test_dir = System.IO.Path.GetDirectoryName (original_path);
+
+					var files = await HarnessConfiguration.ListFilesInGitAsync (log, test_dir, processManager);
+					foreach (var file in files) {
+						var ext = System.IO.Path.GetExtension (file);
+						var full_path = System.IO.Path.Combine (test_dir, file);
+						var windows_file = full_path.Replace ('/', '\\');
+
+						if (file.Contains (".xcasset")) {
+							doc.AddInclude ("ImageAsset", file, windows_file, true);
+							continue;
+						}
+
+						switch (ext.ToLowerInvariant ()) {
+						case ".cs":
+							doc.AddInclude ("Compile", file, windows_file, true);
+							break;
+						case ".plist":
+							doc.AddInclude ("None", file, windows_file, true);
+							break;
+						case ".storyboard":
+							doc.AddInclude ("InterfaceDefinition", file, windows_file, true);
+							break;
+						case ".gitignore":
+						case ".csproj":
+						case ".fsproj":
+						case ".props": // Directory.Build.props
+						case "": // Makefile
+							break; // ignore these files
+						default:
+							Console.WriteLine ($"Unknown file: {file} (extension: {ext}). There might be a default inclusion behavior for this file.");
+							break;
+						}
+					}
+				}
+			}
 
 			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
-				var tp = new TestProject (pr.Replace ('\\', '/'));
-				await tp.CreateCopyAsync (test);
+				var prPath = pr.Replace ('\\', '/');
+				prPath = HarnessConfiguration.EvaluateRootTestsDirectory (prPath);
+				if (!allProjectReferences.TryGetValue (prPath, out var tp)) {
+					tp = new TestProject (Label, prPath);
+					tp.TestPlatform = TestPlatform;
+					await tp.CreateCopyAsync (log, processManager, test, rootDirectory, allProjectReferences);
+					allProjectReferences.Add (prPath, tp);
+				}
 				doc.SetProjectReferenceInclude (pr, tp.Path.Replace ('/', '\\'));
 				projectReferences.Add (tp);
 			}
@@ -147,77 +193,53 @@ namespace xharness
 			doc.Save (Path);
 		}
 
-		public override string ToString()
+		void InlineSharedImports (XmlDocument doc, string original_path, Dictionary<string, string> variableSubstitution, string rootDirectory)
 		{
-			return Name;
-		}
-	}
+			// Find Import nodes that point to a shared code file, load that shared file and inject it here.
+			var nodes = doc.SelectNodes ("//*[local-name() = 'Import']");
+			foreach (XmlNode node in nodes) {
+				if (node is null)
+					continue;
 
-	public class iOSTestProject : TestProject
-	{
-		public bool SkipiOSVariation;
-		public bool SkipwatchOSVariation; // skip both
-		public bool SkipwatchOSARM64_32Variation;
-		public bool SkipwatchOS32Variation;
-		public bool SkiptvOSVariation;
-		public bool BuildOnly;
+				var project = node.Attributes ["Project"].Value.Replace ('\\', '/');
+				var projectName = System.IO.Path.GetFileName (project);
+				if (projectName != "shared.csproj" && projectName != "shared.fsproj" && projectName != "shared-dotnet.csproj")
+					continue;
 
-		public iOSTestProject ()
-		{
-		}
+				if (TestPlatform == TestPlatform.None)
+					throw new InvalidOperationException ($"The project '{original_path}' did not set the TestPlatform property.");
 
-		public iOSTestProject (string path, bool isExecutableProject = true)
-			: base (path, isExecutableProject)
-		{
-		}
-	}
+				project = project.Replace ("$(RootTestsDirectory)", rootDirectory);
 
-	[Flags]
-	public enum MacFlavors {
-		Modern = 1, // Xamarin.Mac/Modern app
-		Full = 2, // Xamarin.Mac/Full app
-		System = 4, // Xamarin.Mac/System app
-		Console = 8, // Console executable
-	}
+				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
+				// Check for variables that won't work correctly if the shared code is moved to a different file
+				var xml = File.ReadAllText (sharedProjectPath);
+				xml = xml.Replace ("$(MSBuildThisFileDirectory)", System.IO.Path.GetDirectoryName (sharedProjectPath) + System.IO.Path.DirectorySeparatorChar);
+				if (xml.Contains ("$(MSBuildThis"))
+					throw new InvalidOperationException ($"Can't use MSBuildThis* variables in shared MSBuild test code: {sharedProjectPath}");
 
-	public class MacTestProject : TestProject
-	{
-		public MacFlavors TargetFrameworkFlavors;
+				var import = new XmlDocument ();
+				import.LoadXmlWithoutNetworkAccess (xml);
+				// Inline any shared imports in the inlined shared import too
+				InlineSharedImports (import, sharedProjectPath, variableSubstitution, rootDirectory);
+				var importNodes = import.SelectSingleNode ("/Project").ChildNodes;
+				var previousNode = node;
+				foreach (XmlNode importNode in importNodes) {
+					var importedNode = doc.ImportNode (importNode, true);
+					previousNode.ParentNode.InsertAfter (importedNode, previousNode);
+					previousNode = importedNode;
+				}
+				node.ParentNode.RemoveChild (node);
 
-		public bool GenerateFull => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.Full) == MacFlavors.Full;
-		public bool GenerateSystem => GenerateVariations && (TargetFrameworkFlavors & MacFlavors.System) == MacFlavors.System;
-
-		public bool GenerateVariations {
-			get {
-				// If a bitwise combination of flavors, then we're generating variations
-				return TargetFrameworkFlavors != MacFlavors.Modern && TargetFrameworkFlavors != MacFlavors.Full && TargetFrameworkFlavors != MacFlavors.System && TargetFrameworkFlavors != MacFlavors.Console;
+				variableSubstitution ["_PlatformName"] = TestPlatform.ToPlatformName ();
+				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
 			}
-		}
-
-		public string Platform = "x86";
-
-		public MacTestProject () : base ()
-		{
-		}
-
-		public MacTestProject (string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (path, isExecutableProject)
-		{
-			TargetFrameworkFlavors = targetFrameworkFlavor;
-		}
-
-		public override TestProject Clone()
-		{
-			var rv = (MacTestProject) base.Clone ();
-			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
-			rv.BCLInfo = BCLInfo;
-			rv.Platform = Platform;
-			return rv;
 		}
 
 		public override string ToString ()
 		{
-			return base.ToString () + " (" + TargetFrameworkFlavors.ToString () + ")";
+			return Name ?? base.ToString ();
 		}
 	}
-}
 
+}

@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+# Touch all files to make sure projects are rebuilt correctly
+find /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/ -type f -print0 | xargs -0 touch || true

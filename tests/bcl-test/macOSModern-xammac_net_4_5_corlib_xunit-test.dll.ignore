@@ -1,2 +1,5 @@
 # blocks test app
 KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests
+
+# https://github.com/xamarin/maccore/issues/2296
+KLASS:System.Tests.DateTimeTests

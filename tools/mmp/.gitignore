@@ -1,4 +1,3 @@
-Xamarin.Mac.registrar.*
-SdkVersions.cs
+*.registrar.*
 *.stamp
 mmp.csproj.inc

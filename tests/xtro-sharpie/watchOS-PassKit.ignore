@@ -9,9 +9,5 @@
 !missing-selector! PKLabeledValue::value not bound
 !missing-type! PKLabeledValue not bound
 
-## types have no availability annotationns - but all API marked as unavailable on watchOS
-!missing-enum! PKDisbursementRequestSchedule not bound
-!missing-protocol! PKDisbursementAuthorizationControllerDelegate not bound
-!missing-type! PKDisbursementAuthorizationController not bound
-!missing-type! PKDisbursementRequest not bound
-!missing-type! PKDisbursementVoucher not bound
+## types have no availability annotations - but all API marked as unavailable on watchOS
+!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract

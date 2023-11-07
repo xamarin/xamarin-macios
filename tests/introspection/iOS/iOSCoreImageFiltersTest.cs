@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the generated API for all iOS CoreImage filters
 //
 // Authors:
@@ -12,15 +12,9 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using CoreImage;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace Introspection {
@@ -28,7 +22,7 @@ namespace Introspection {
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
-	public class iOSCoreImageFiltersTest : ApiCoreImageFiltersTest  {
+	public class iOSCoreImageFiltersTest : ApiCoreImageFiltersTest {
 
 		protected override bool Skip (Type type)
 		{

@@ -8,7 +8,6 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Security;
 using ObjCRuntime;
@@ -17,13 +16,8 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -35,7 +29,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void BackgroundSessionConfiguration ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			// https://trello.com/c/F6cyUBFU/70-simple-background-transfer-bo-pang-block-by-an-system-invalidcastexception-in-nsurlsessionconfiguration-backgroundsessionconfigu
 			using (var session = NSUrlSessionConfiguration.BackgroundSessionConfiguration ("id")) {
@@ -47,7 +41,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Default_Properties ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 
@@ -72,7 +66,7 @@ namespace MonoTouchFixtures.Foundation {
 			config.HttpCookieStorage = config.HttpCookieStorage; // setHTTPCookieStorage:
 
 			// iOS 7.x returned 6 (instead of 4)
-			Assert.That (config.HttpMaximumConnectionsPerHost, Is.GreaterThanOrEqualTo (4), "HTTPMaximumConnectionsPerHost");
+			Assert.That (config.HttpMaximumConnectionsPerHost, Is.GreaterThanOrEqualTo ((nint) 4), "HTTPMaximumConnectionsPerHost");
 			config.HttpMaximumConnectionsPerHost = config.HttpMaximumConnectionsPerHost; // setHTTPMaximumConnectionsPerHost:
 
 			Assert.True (config.HttpShouldSetCookies, "HTTPShouldSetCookies");
@@ -94,7 +88,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var hasSharedContainerIdentifier = true;
 #if __MACOS__
-			hasSharedContainerIdentifier = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10);
+			hasSharedContainerIdentifier = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10);
 #else
 			hasSharedContainerIdentifier = TestRuntime.CheckXcodeVersion (6, 0);
 #endif
@@ -109,7 +103,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (config.TimeoutIntervalForResource, Is.GreaterThan (0), "timeoutIntervalForResource");
 			config.TimeoutIntervalForResource = config.TimeoutIntervalForResource; // setTimeoutIntervalForResource:
 
-			var max = TestRuntime.CheckXcodeVersion (8,0) ? SslProtocol.Unknown : SslProtocol.Tls_1_2; // Unknown also means default
+			var max = TestRuntime.CheckXcodeVersion (8, 0) ? SslProtocol.Unknown : SslProtocol.Tls_1_2; // Unknown also means default
 			Assert.That (config.TLSMaximumSupportedProtocol, Is.EqualTo (max), "TLSMaximumSupportedProtocol");
 			config.TLSMaximumSupportedProtocol = config.TLSMaximumSupportedProtocol; // setTLSMaximumSupportedProtocol:
 
@@ -124,7 +118,7 @@ namespace MonoTouchFixtures.Foundation {
 
 			var hasProtocolClasses = true;
 #if __MACOS__
-			hasProtocolClasses = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10);
+			hasProtocolClasses = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10);
 #else
 			hasProtocolClasses = TestRuntime.CheckXcodeVersion (6, 0);
 #endif

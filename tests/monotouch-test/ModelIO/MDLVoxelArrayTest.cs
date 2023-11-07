@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLAssert Unit Tests
 //
 // Authors:
@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 #if !MONOMAC
@@ -21,28 +20,23 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#if !__TVOS__
-using MonoTouch.MultipeerConnectivity;
-#endif
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
-using OpenTK;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO
-{
+#if NET
+using System.Numerics;
+using Vector4i = global::CoreGraphics.NVector4i;
+using Vector3d = global::CoreGraphics.NVector3d;
+#else
+using OpenTK;
+#endif
+
+namespace MonoTouchFixtures.ModelIO {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLVoxelArrayTest
-	{
-		[TestFixtureSetUp]
+	public class MDLVoxelArrayTest {
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
@@ -59,13 +53,21 @@ namespace MonoTouchFixtures.ModelIO
 				using (var obj = new MDLVoxelArray (data, box, 1.0f)) {
 					Asserts.AreEqual (box, obj.BoundingBox, "BoundingBox");
 
+#if NET
+					var extents = new MDLVoxelIndexExtent (
+#else
 					var extents = new MDLVoxelIndexExtent2 (
+#endif
 						new Vector4i (1, 2, 3, 4),
 						new Vector4i (5, 6, 7, 8));
 					var voxels = obj.GetVoxels (extents);
 					Assert.IsNull (voxels, "GetVoxels");
 
+#if NET
+					extents = obj.VoxelIndexExtent;
+#else
 					extents = obj.VoxelIndexExtent2;
+#endif
 					Assert.That (extents.MaximumExtent.X, Is.EqualTo (-1).Or.EqualTo (0), "MaxX");
 					Assert.That (extents.MaximumExtent.Y, Is.EqualTo (-1).Or.EqualTo (0), "MaxY");
 					Assert.That (extents.MaximumExtent.Z, Is.EqualTo (-1).Or.EqualTo (0), "MaxZ");

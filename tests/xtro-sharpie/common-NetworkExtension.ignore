@@ -1,1 +1,0 @@
-!missing-release-attribute-on-return-value! NetworkExtension.NEAppRule[] NetworkExtension.NETunnelProviderManager::get_AppRules()'s selector's ('copyAppRules') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

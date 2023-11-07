@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CTFontManager
 //
 // Authors:
@@ -9,7 +9,6 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using CoreText;
 #if MONOMAC
@@ -17,23 +16,8 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.CoreText;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using System.Linq;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreText {
 
@@ -76,8 +60,11 @@ namespace MonoTouchFixtures.CoreText {
 				// xcode 11 beta 4 stopped reporting errors
 				// Assert.IsNotNull (err, "err 3");
 				err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
-#if MONOMAC
-				Assert.IsNull (err, "err 4");
+#if MONOMAC || __MACCATALYST__
+				if (TestRuntime.CheckXcodeVersion (12, 2))
+					Assert.IsNotNull (err, "err 4");
+				else
+					Assert.IsNull (err, "err 4");
 #else
 				Assert.IsNotNull (err, "err 4");
 #endif
@@ -129,7 +116,7 @@ namespace MonoTouchFixtures.CoreText {
 		{
 			Assert.That (errors.Length, Is.EqualTo (1), "errors");
 			Assert.True (errors [0].UserInfo.TryGetValue (CTFontManagerErrorKeys.FontUrlsKey, out var urls), "FontUrlsKey");
-			Assert.True ((urls as NSArray).GetItem<NSUrl> (0).AbsoluteString.EndsWith ("NonExistent.ttf", StringComparison.Ordinal), "NonExistent"); 
+			Assert.True ((urls as NSArray).GetItem<NSUrl> (0).AbsoluteString.EndsWith ("NonExistent.ttf", StringComparison.Ordinal), "NonExistent");
 			Assert.True (done, "done");
 			return true;
 		}
@@ -170,15 +157,20 @@ namespace MonoTouchFixtures.CoreText {
 				// Assert.AreEqual (1, err.Length, "err 3 l");
 				// Assert.IsNotNull (err [0], "err 3[0]");
 				err = CTFontManager.UnregisterFontsForUrl (new [] { url }, CTFontManagerScope.Process);
-#if MONOMAC
-				Assert.IsNull (err, "err 4");
+#if MONOMAC || __MACCATALYST__
+				if (TestRuntime.CheckXcodeVersion (12, 2)) {
+					Assert.IsNotNull (err, "err 4");
+					Assert.AreEqual (1, err.Length, "err 4 l");
+					Assert.IsNotNull (err [0], "err 4[0]");
+				} else
+					Assert.IsNull (err, "err 4");
 #else
 				Assert.IsNotNull (err, "err 4");
 				Assert.AreEqual (1, err.Length, "err 4 l");
 				Assert.IsNotNull (err [0], "err 4[0]");
 #endif
 			}
-			}
+		}
 
 		[Test]
 		public void RegisterFontDescriptors_Null ()
@@ -237,11 +229,10 @@ namespace MonoTouchFixtures.CoreText {
 #endif
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void GetFontsNullUrl ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			CTFontManager.GetFonts (null);
+			Assert.Throws<ArgumentNullException> (() => CTFontManager.GetFonts (null));
 		}
 
 		[Test]
@@ -256,7 +247,7 @@ namespace MonoTouchFixtures.CoreText {
 			// method under test
 			var fonts = CTFontManager.GetFonts (url);
 			Assert.AreEqual (1, fonts.Length);
-			Assert.AreEqual ("Pacifico", fonts[0].GetAttributes().Name?.ToString ());
+			Assert.AreEqual ("Pacifico", fonts [0].GetAttributes ().Name?.ToString ());
 
 			err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 			Assert.IsNull (err, "Unregister error");
@@ -302,7 +293,8 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
+		// Running this on Mac Catalyst prints "CTFontManagerRequestFonts not implemented for plaform or scope" to the terminal
 		[Test]
 		public void RequestFonts ()
 		{

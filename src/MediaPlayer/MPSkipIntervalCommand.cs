@@ -11,22 +11,23 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MediaPlayer {
-#if XAMCORE_2_0
 	public partial class MPSkipIntervalCommand {
-		public double[] PreferredIntervals {
+		public double []? PreferredIntervals {
 			get {
 				NSArray a = _PreferredIntervals;
-				if (a == null)
+				if ((a is null) || (a.Count == 0))
 					return null;
 
-                return NSArray.ArrayFromHandle<double> (a.Handle, input => {
+				return NSArray.ArrayFromHandle<double> (a.Handle, input => {
 					return new NSNumber (input).DoubleValue;
 				});
 			}
 			set {
-				if (value == null)
-					_PreferredIntervals = null;
+				if (value is null)
+					_PreferredIntervals = new NSArray ();
 				else {
 					NSObject [] nsoa = new NSObject [value.Length];
 					for (int i = 0; i < value.Length; i++)
@@ -36,5 +37,4 @@ namespace MediaPlayer {
 			}
 		}
 	}
-#endif
 }

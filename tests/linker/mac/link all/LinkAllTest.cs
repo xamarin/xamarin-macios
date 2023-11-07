@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -7,21 +7,20 @@ using System.Xml.Serialization;
 
 using AppKit;
 using Foundation;
+using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace LinkAllTests
-{
+namespace LinkAllTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class LinkAllTest
-	{
-
+	public class LinkAllTest {
+#if !NET // this test is in a file shared with all platforms for .NET
 		static void Check (string calendarName, bool present)
 		{
 			var type = Type.GetType ("System.Globalization." + calendarName);
-			bool success = present == (type != null);
-			Assert.AreEqual (present, type != null, calendarName);
+			bool success = present == (type is not null);
+			Assert.AreEqual (present, type is not null, calendarName);
 		}
 
 		[Test]
@@ -32,6 +31,7 @@ namespace LinkAllTests
 			Check ("HijriCalendar", false);
 			Check ("ThaiBuddhistCalendar", false);
 		}
+#endif // !NET
 
 		[Test]
 		public void EnsureUIThreadException ()
@@ -57,6 +57,7 @@ namespace LinkAllTests
 
 			[CompilerGenerated]
 			[Export ("foo")]
+			[BindingImpl (BindingImplOptions.Optimizable)]
 			public static void Test ()
 			{
 				try {

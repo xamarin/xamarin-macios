@@ -68,6 +68,10 @@
 	#define x_get_matrix_float3x3 object_x_get_matrix_float3x3
 	#define x_get_matrix_float2x2 object_x_get_matrix_float2x2
 	#define x_call_block          object_x_call_block
+	#define x_call_func_3         object_x_call_func_3
+	#define x_SCNMatrix4MakeTranslation object_x_SCNMatrix4MakeTranslation
+	#define x_SCNMatrix4MakeScale       object_x_SCNMatrix4MakeScale
+	#define x_SCNMatrix4Translate       object_x_SCNMatrix4Translate
 #elif PREFIX == 2
 	#define theUltimateAnswer ar_theUltimateAnswer
 	#define useZLib           ar_useZLib
@@ -137,6 +141,10 @@
 	#define x_get_matrix_float3x3 ar_x_get_matrix_float3x3
 	#define x_get_matrix_float2x2 ar_x_get_matrix_float2x2
 	#define x_call_block          ar_x_call_block
+	#define x_call_func_3         ar_x_call_func_3
+	#define x_SCNMatrix4MakeTranslation ar_x_SCNMatrix4MakeTranslation
+	#define x_SCNMatrix4MakeScale       ar_x_SCNMatrix4MakeScale
+	#define x_SCNMatrix4Translate       ar_x_SCNMatrix4Translate
 #else
 // keep original names
 #endif

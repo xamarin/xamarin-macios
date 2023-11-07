@@ -1,0 +1,16 @@
+*.pkg
+ios-updateinfo
+ios-tmp-package
+ios-meta-package
+ios-work
+mac-updateinfo
+mac-tmp-package
+mac-work
+mac-work-uninstall
+_ios-install
+_mac-install
+Version
+Version.rev
+xma-tmp-package
+xma-work
+*.zip

@@ -5,28 +5,11 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using UIKit;
-using CoreGraphics;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -68,12 +51,12 @@ namespace MonoTouchFixtures.UIKit {
 			using (var original = UIImage.FromFile (file)) {
 				Assert.That (original.CGImage.Width, Is.EqualTo ((nint) 32), "Width-a");
 				Assert.That (original.CGImage.Height, Is.EqualTo ((nint) 32), "Height-a");
-				SizeF half = new SizeF (16f, 16f);
+				var half = new CGSize (16f, 16f);
 				IntPtr handle = original.CGImage.Handle;
 				using (var resized = original.Scale (half)) {
 					Assert.That (resized.CGImage.Height, Is.EqualTo (resized.CGImage.Width), "Width-Height-identical");
 					// caching of the backing CGImage occurs on devices (but not always)
-					if (Runtime.Arch == Arch.SIMULATOR) {
+					if (TestRuntime.IsSimulatorOrDesktop) {
 						Assert.That ((nint) 16, Is.EqualTo (resized.CGImage.Width), "half");
 					} else {
 						var h = resized.CGImage.Height;
@@ -92,9 +75,6 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (i.Images.Length, Is.EqualTo (3), "3 images");
 				Assert.True (i.Description.Contains ("UIAnimatedImage"), "UIAnimatedImage");
 			}
-#if !XAMCORE_2_0
-			Assert.Null (UIImage.CreateAnimatedImage (new UIImage[0], UIEdgeInsets.Zero, 1d), "bad binding");
-#endif
 		}
 
 		[Test]

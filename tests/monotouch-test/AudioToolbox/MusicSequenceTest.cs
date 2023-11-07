@@ -1,4 +1,4 @@
-﻿//
+//
 // MusicSequence unit Tests
 //
 // Authors:
@@ -10,15 +10,9 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using AudioToolbox;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.AudioToolbox;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {

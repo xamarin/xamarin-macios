@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="iOSIntegration">
+      <HintPath>../../API/Converted/iOSIntegration.dll</HintPath>
+    </Reference>
+      <Compile Include="../Consumer.cs" Link="Consumer.cs" />
+  </ItemGroup>
+</Project>

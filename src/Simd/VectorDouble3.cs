@@ -10,14 +10,27 @@
 // Copyright (c) 2017 Microsoft Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/vector_types.h
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NVector3d : IEquatable<NVector3d>
-	{
+	public struct NVector3d : IEquatable<NVector3d> {
 		public double X;
 		public double Y;
 		public double Z;
@@ -41,6 +54,26 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if NET
+		public static NVector3d operator * (NVector3d vec, double scale)
+		{
+			vec.X *= scale;
+			vec.Y *= scale;
+			vec.Z *= scale;
+			return vec;
+		}
+
+		public static NVector3d operator / (NVector3d vec, double scale)
+		{
+			double mult = 1 / scale;
+			vec.X *= mult;
+			vec.Y *= mult;
+			vec.Z *= mult;
+			return vec;
+		}
+#endif // NET
+
+#if !NET
 		public static explicit operator global::OpenTK.Vector3d (NVector3d value)
 		{
 			return new global::OpenTK.Vector3d (value.X, value.Y, value.Z);
@@ -50,6 +83,7 @@ namespace OpenTK
 		{
 			return new NVector3d (value.X, value.Y, value.Z);
 		}
+#endif // !NET
 
 		public override string ToString ()
 		{
@@ -58,20 +92,48 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return X.GetHashCode () ^ Y.GetHashCode () ^ Z.GetHashCode ();
+			return HashCode.Combine (X, Y, Z);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NVector3d))
+			if (!(obj is NVector3d vector))
 				return false;
 
-			return Equals ((NVector3d) obj);
+			return Equals (vector);
 		}
 
 		public bool Equals (NVector3d other)
 		{
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}
+
+		public static NVector3d Zero {
+			get => default;
+		}
+
+#if NET
+		internal double Length =>
+			System.Math.Sqrt (X * X + Y * Y + Z * Z);
+
+		internal double LengthSquared =>
+			X * X + Y * Y + Z * Z;
+
+		internal void Normalize ()
+		{
+			double scale = 1.0 / Length;
+			X *= scale;
+			Y *= scale;
+			Z *= scale;
+		}
+
+		internal static readonly NVector3d UnitX = new NVector3d (1, 0, 0);
+
+		internal static readonly NVector3d UnitY = new NVector3d (0, 1, 0);
+
+		internal static readonly NVector3d UnitZ = new NVector3d (0, 0, 1);
+
+		internal static readonly NVector3d One = new NVector3d (1, 1, 1);
+#endif // NET
 	}
 }

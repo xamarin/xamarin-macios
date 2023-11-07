@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>AdditionalAppExtensionConsumer</ApplicationTitle>
+		<ApplicationId>com.xamarin.additionalappextensionconsumer</ApplicationId>
+
+		<CodesignKey>Apple Development</CodesignKey>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+        <AdditionalAppExtensions Include="$(AdditionalAppExtensionPath)">
+            <Name>NativeIntentsExtension</Name>
+            <BuildOutput>$(AdditionalAppExtensionBuildOutput)</BuildOutput>
+        </AdditionalAppExtensions>
+    </ItemGroup>
+</Project>

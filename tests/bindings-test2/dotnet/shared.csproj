@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <RootNamespace>bindingstest2</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <IsBindingProject>true</IsBindingProject>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <BindingsTest2Directory>$(RootTestsDirectory)\bindings-test2</BindingsTest2Directory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="$(BindingsTest2Directory)\ApiProtocol.cs" />
+    <ObjcBindingCoreSource Include="$(BindingsTest2Directory)\StructsAndEnums.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\libtest2.xcframework">
+      <Kind>Static</Kind>
+    </NativeReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(BindingsTest2Directory)\BindingTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(TestLibrariesDirectory)\libtest2.m">
+      <Link>libtest2.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libtest2.h">
+      <Link>libtest2.h</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+    <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\libtest2.xcframework" />
+  </ItemGroup>
+
+  <Target Name="BuildTestLibraries" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+</Project>

@@ -1,10 +1,4 @@
-﻿using System;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -12,7 +6,7 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSDateComponentsTest {
-	
+
 		[Test]
 		public void TestUndefinedComponent ()
 		{

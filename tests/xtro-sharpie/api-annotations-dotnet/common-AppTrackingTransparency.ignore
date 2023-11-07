@@ -1,0 +1,3 @@
+## not exposed by our API (better use the OS version)
+!missing-field! AppTrackingTransparencyVersionNumber not bound
+!missing-field! AppTrackingTransparencyVersionString not bound

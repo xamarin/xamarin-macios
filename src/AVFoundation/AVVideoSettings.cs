@@ -32,18 +32,18 @@ using CoreFoundation;
 using ObjCRuntime;
 using CoreVideo;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	// Convenience enum for native strings - AVVideoSettings.h
-	public enum AVVideoCodec : int
-	{
+	public enum AVVideoCodec : int {
 		H264 = 1,
 		JPEG = 2
 	}
 
 	// Convenience enum for native strings - AVVideoSettings.h
-	public enum AVVideoScalingMode : int
-	{
+	public enum AVVideoScalingMode : int {
 		Fit,
 		Resize,
 		ResizeAspect,
@@ -51,12 +51,11 @@ namespace AVFoundation {
 	}
 
 	// Convenience enum for native strings - AVVideoSettings.h
-	public enum AVVideoProfileLevelH264 : int
-	{
+	public enum AVVideoProfileLevelH264 : int {
 		Baseline30 = 1,
 		Baseline31,
 		Baseline41,
- 		Main30,
+		Main30,
 		Main31,
 		Main32,
 		Main41,
@@ -68,8 +67,13 @@ namespace AVFoundation {
 	}
 
 #if !WATCH
-	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes {
 #if !COREBUILD
 		public AVVideoSettingsUncompressed ()
 		{
@@ -80,9 +84,9 @@ namespace AVFoundation {
 		{
 		}
 
-		internal static AVVideoScalingMode? ScalingModeFromNSString (NSString k)
+		internal static AVVideoScalingMode? ScalingModeFromNSString (NSString? k)
 		{
-			if (k == null)
+			if (k is null)
 				return null;
 			if (k == AVVideoScalingModeKey.Fit)
 				return AVVideoScalingMode.Fit;
@@ -101,7 +105,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoScalingMode.Fit:
 					v = AVVideoScalingModeKey.Fit;
@@ -122,7 +126,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.ScalingModeKey);
 				else
 					SetNativeValue (AVVideo.ScalingModeKey, v);
@@ -138,9 +142,14 @@ namespace AVFoundation {
 		AdaptiveBinaryArithmetic
 	}
 #endif
-	
-	public class AVVideoSettingsCompressed : DictionaryContainer
-	{
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AVVideoSettingsCompressed : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoSettingsCompressed ()
 			: base (new NSMutableDictionary ())
@@ -163,7 +172,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoCodec.H264:
 					v = AVVideo.CodecH264;
@@ -178,7 +187,7 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.CodecKey);
 				else
 					SetNativeValue (AVVideo.CodecKey, v);
@@ -205,7 +214,12 @@ namespace AVFoundation {
 			}
 		}
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public double? MaxKeyFrameIntervalDuration {
 			get {
 				return GetDoubleValue (AVVideo.MaxKeyFrameIntervalDurationKey);
@@ -216,7 +230,12 @@ namespace AVFoundation {
 		}
 
 #if !MONOMAC
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		public bool? AllowFrameReordering {
 			get {
 				return GetBoolValue (AVVideo.AllowFrameReorderingKey);
@@ -226,11 +245,16 @@ namespace AVFoundation {
 			}
 		}
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		public AVVideoH264EntropyMode? EntropyEncoding {
 			get {
 				var k = GetNSStringValue (AVVideo.H264EntropyModeKey);
-				if (k == null)
+				if (k is null)
 					return null;
 				if (k == AVVideo.H264EntropyModeCABAC)
 					return AVVideoH264EntropyMode.AdaptiveBinaryArithmetic;
@@ -239,7 +263,7 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoH264EntropyMode.AdaptiveBinaryArithmetic:
 					v = AVVideo.H264EntropyModeCABAC;
@@ -254,16 +278,20 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.H264EntropyModeKey);
 				else
 					SetNativeValue (AVVideo.H264EntropyModeKey, v);
 			}
 		}
-			
+
 		// frame rate can be floating point (29.97 is common for instance)
-#if XAMCORE_2_0
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		public float? ExpectedSourceFrameRate {
 			get {
 				return GetFloatValue (AVVideo.ExpectedSourceFrameRateKey);
@@ -272,21 +300,14 @@ namespace AVFoundation {
 				SetNumberValue (AVVideo.ExpectedSourceFrameRateKey, value);
 			}
 		}
-#else
-		[iOS (7,0)]
-		public int? ExpectedSourceFrameRate {
-			get {
-				return GetInt32Value (AVVideo.ExpectedSourceFrameRateKey);
-			}
-			set {
-				SetNumberValue (AVVideo.ExpectedSourceFrameRateKey, value);
-			}
-		}
-#endif
 
 		// frame rate can be floating point (29.97 is common for instance)
-#if XAMCORE_2_0
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		public float? AverageNonDroppableFrameRate {
 			get {
 				return GetFloatValue (AVVideo.AverageNonDroppableFrameRateKey);
@@ -295,17 +316,6 @@ namespace AVFoundation {
 				SetNumberValue (AVVideo.AverageNonDroppableFrameRateKey, value);
 			}
 		}
-#else
-		[iOS (7,0)]
-		public int? AverageNonDroppableFrameRate {
-			get {
-				return GetInt32Value (AVVideo.AverageNonDroppableFrameRateKey);
-			}
-			set {
-				SetNumberValue (AVVideo.AverageNonDroppableFrameRateKey, value);
-			}
-		}
-#endif
 #endif
 
 		public AVVideoScalingMode? ScalingMode {
@@ -314,7 +324,7 @@ namespace AVFoundation {
 			}
 
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoScalingMode.Fit:
 					v = AVVideoScalingModeKey.Fit;
@@ -335,30 +345,35 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.ScalingModeKey);
 				else
 					SetNativeValue (AVVideo.ScalingModeKey, v);
 			}
 		}
 
-		public AVVideoCodecSettings CodecSettings {
+		public AVVideoCodecSettings? CodecSettings {
 			get {
 				var dict = GetNSDictionary (AVVideo.CompressionPropertiesKey);
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return new AVVideoCodecSettings (dict);
 			}
 
 			set {
-				SetNativeValue (AVVideo.CompressionPropertiesKey, value == null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.CompressionPropertiesKey, value?.Dictionary);
 			}
 		}
 #endif
 	}
 
-	public class AVVideoCodecSettings : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AVVideoCodecSettings : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoCodecSettings ()
 			: base (new NSMutableDictionary ())
@@ -438,9 +453,9 @@ namespace AVFoundation {
 
 				return null;
 			}
-			
+
 			set {
-				NSString v;
+				NSString? v;
 				switch (value) {
 				case AVVideoProfileLevelH264.Baseline30:
 					v = AVVideo.ProfileLevelH264Baseline30;
@@ -487,43 +502,48 @@ namespace AVFoundation {
 					throw new ArgumentException ("value");
 				}
 
-				if (v == null)
+				if (v is null)
 					RemoveValue (AVVideo.ProfileLevelKey);
 				else
 					SetNativeValue (AVVideo.ProfileLevelKey, v);
 			}
 		}
 
-		public AVVideoPixelAspectRatioSettings PixelAspectRatio {
+		public AVVideoPixelAspectRatioSettings? PixelAspectRatio {
 			get {
 				var dict = GetNSDictionary (AVVideo.PixelAspectRatioKey);
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return new AVVideoPixelAspectRatioSettings (dict);
 			}
 
 			set {
-				SetNativeValue (AVVideo.PixelAspectRatioKey, value == null ? null : value.Dictionary);
+				SetNativeValue (AVVideo.PixelAspectRatioKey, value?.Dictionary);
 			}
 		}
 
-		public AVVideoCleanApertureSettings VideoCleanAperture {
+		public AVVideoCleanApertureSettings? VideoCleanAperture {
 			get {
 				var dict = GetNSDictionary (AVVideo.CleanApertureKey);
-				if (dict == null)
+				if (dict is null)
 					return null;
 				return new AVVideoCleanApertureSettings (dict);
 			}
 
 			set {
-				SetNativeValue (AVVideo.CleanApertureKey, value == null ? null : value.Dictionary);
-			}			
-		} 
+				SetNativeValue (AVVideo.CleanApertureKey, value?.Dictionary);
+			}
+		}
 #endif
 	}
 
-	public class AVVideoPixelAspectRatioSettings : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AVVideoPixelAspectRatioSettings : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoPixelAspectRatioSettings ()
 			: base (new NSMutableDictionary ())
@@ -555,8 +575,13 @@ namespace AVFoundation {
 #endif
 	}
 
-	public class AVVideoCleanApertureSettings : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AVVideoCleanApertureSettings : DictionaryContainer {
 #if !COREBUILD
 		public AVVideoCleanApertureSettings ()
 			: base (new NSMutableDictionary ())

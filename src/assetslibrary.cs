@@ -18,7 +18,7 @@ using System;
 
 namespace AssetsLibrary {
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	interface ALAssetLibraryChangedEventArgs {
 		[Export ("ALAssetLibraryUpdatedAssetsKey")]
 		NSSet UpdatedAssets { get; }
@@ -32,58 +32,34 @@ namespace AssetsLibrary {
 		[Export ("ALAssetLibraryDeletedAssetGroupsKey")]
 		NSSet DeletedAssetGroupsKey { get; }
 	}
-	
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsLibrary {
 		[Export ("assetForURL:resultBlock:failureBlock:")]
-#if XAMCORE_2_0
 		void AssetForUrl (NSUrl assetURL, Action<ALAsset> resultBlock, Action<NSError> failureBlock);
-#else
-		void AssetForUrl (NSUrl assetURL, ALAssetsLibraryAssetForURLResultDelegate resultBlock, ALAssetsLibraryAccessFailureDelegate failureBlock);
-#endif
 
 		[Export ("enumerateGroupsWithTypes:usingBlock:failureBlock:")]
-#if XAMCORE_2_0
 		void Enumerate (ALAssetsGroupType types, ALAssetsLibraryGroupsEnumerationResultsDelegate enumerationBlock, Action<NSError> failureBlock);
-#else
-		void Enumerate (ALAssetsGroupType types, ALAssetsLibraryGroupsEnumerationResultsDelegate enumerationBlock, ALAssetsLibraryAccessFailureDelegate failureBlock);
-#endif
 
 		[Export ("videoAtPathIsCompatibleWithSavedPhotosAlbum:")]
 		bool VideoAtPathIsIsCompatibleWithSavedPhotosAlbum (NSUrl videoPathURL);
 
 		[Export ("writeImageDataToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void WriteImageToSavedPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void WriteImageToSavedPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void WriteImageToSavedPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeImageToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void WriteImageToSavedPhotosAlbum (CGImage imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void WriteImageToSavedPhotosAlbum (CGImage imageData, NSDictionary metadata, [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void WriteImageToSavedPhotosAlbum (CGImage imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeImageToSavedPhotosAlbum:orientation:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void WriteImageToSavedPhotosAlbum (CGImage imageData, ALAssetOrientation orientation, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void WriteImageToSavedPhotosAlbum (CGImage imageData, ALAssetOrientation orientation,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void WriteImageToSavedPhotosAlbum (CGImage imageData, ALAssetOrientation orientation, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeVideoAtPathToSavedPhotosAlbum:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void WriteVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void WriteVideoToSavedPhotosAlbum (NSUrl videoPathURL,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void WriteVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Field ("ALAssetsLibraryChangedNotification")]
 		[Notification]
@@ -91,18 +67,10 @@ namespace AssetsLibrary {
 		NSString ChangedNotification { get; }
 
 		[Export ("groupForURL:resultBlock:failureBlock:")]
-#if XAMCORE_2_0
 		void GroupForUrl (NSUrl groupURL, Action<ALAssetsGroup> resultBlock, Action<NSError> failureBlock);
-#else
-		void GroupForUrl (NSUrl groupURL, ALAssetsLibraryGroupResult resultBlock, ALAssetsLibraryAccessFailure failureBlock);
-#endif
 
 		[Export ("addAssetsGroupAlbumWithName:resultBlock:failureBlock:")]
-#if XAMCORE_2_0
 		void AddAssetsGroupAlbum (string name, Action<ALAssetsGroup> resultBlock, Action<NSError> failureBlock);
-#else
-		void AddAssetsGroupAlbum (string name, ALAssetsLibraryGroupResult resultBlock, ALAssetsLibraryAccessFailure failureBlock);
-#endif
 
 		[Static]
 		[Export ("authorizationStatus")]
@@ -125,18 +93,10 @@ namespace AssetsLibrary {
 		NSString DeletedAssetGroupsKey { get; }
 	}
 
-#if !XAMCORE_2_0
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
-	delegate void ALAssetsLibraryAssetForURLResultDelegate (ALAsset asset);
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
-	delegate void ALAssetsLibraryAccessFailureDelegate (NSError error);
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
-	delegate void ALAssetsLibraryWriteCompletionDelegate (NSUrl assetURL, NSError error);
-#endif
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	delegate void ALAssetsLibraryGroupsEnumerationResultsDelegate (ALAssetsGroup group, ref bool stop);
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAsset {
 		[Export ("valueForProperty:")]
@@ -162,7 +122,7 @@ namespace AssetsLibrary {
 
 		[Field ("ALAssetPropertyOrientation"), Internal]
 		NSString _PropertyOrientation { get; }
-		
+
 		[Field ("ALAssetPropertyDate"), Internal]
 		NSString _PropertyDate { get; }
 
@@ -185,49 +145,33 @@ namespace AssetsLibrary {
 		NSString _TypeUnknown { get; }
 
 		[Export ("originalAsset")]
-		ALAsset OriginalAsset { get;  }
+		ALAsset OriginalAsset { get; }
 
 		[Export ("editable")]
-		bool Editable { [Bind ("isEditable")] get;  }
+		bool Editable { [Bind ("isEditable")] get; }
 
 		[Export ("aspectRatioThumbnail")]
 		CGImage AspectRatioThumbnail ();
 
 		[Export ("writeModifiedImageDataToSavedPhotosAlbum:metadata:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void WriteModifiedImageToSavedToPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void WriteModifiedImageToSavedToPhotosAlbum (NSData imageData, NSDictionary metadata,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void WriteModifiedImageToSavedToPhotosAlbum (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("writeModifiedVideoAtPathToSavedPhotosAlbum:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void WriteModifiedVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void WriteModifiedVideoToSavedPhotosAlbum (NSUrl videoPathURL,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void WriteModifiedVideoToSavedPhotosAlbum (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("setImageData:metadata:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void SetImageData (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void SetImageData (NSData imageData, NSDictionary metadata,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void SetImageData (NSData imageData, NSDictionary metadata, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 
 		[Export ("setVideoAtPath:completionBlock:")]
 		[Async]
-#if XAMCORE_2_0
-		void SetVideoAtPath (NSUrl videoPathURL, [NullAllowed] Action<NSUrl,NSError> completionBlock);
-#else
-		void SetVideoAtPath (NSUrl videoPathURL,  [NullAllowed] ALAssetsLibraryWriteCompletionDelegate completionBlock);
-#endif
+		void SetVideoAtPath (NSUrl videoPathURL, [NullAllowed] Action<NSUrl, NSError> completionBlock);
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	interface ALAssetRepresentation {
 		[Export ("UTI")]
 		string Uti { get; }
@@ -264,12 +208,12 @@ namespace AssetsLibrary {
 
 		[Export ("filename")]
 		string Filename { get; }
-		
+
 		[Export ("dimensions")]
 		CGSize Dimensions { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsFilter {
 		[Static, Export ("allPhotos")]
@@ -282,18 +226,10 @@ namespace AssetsLibrary {
 		ALAssetsFilter AllAssets { get; }
 	}
 
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	delegate void ALAssetsEnumerator (ALAsset result, nint index, ref bool stop);
 
-#if !XAMCORE_2_0
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
-	delegate void ALAssetsLibraryGroupResult (ALAssetsGroup group);
-
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
-	delegate void ALAssetsLibraryAccessFailure (NSError error);
-#endif
-
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use the 'Photos' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
 	[BaseType (typeof (NSObject))]
 	interface ALAssetsGroup {
 		[Export ("valueForProperty:"), Internal]
@@ -310,7 +246,7 @@ namespace AssetsLibrary {
 
 		[Export ("enumerateAssetsUsingBlock:")]
 		void Enumerate (ALAssetsEnumerator result);
-		
+
 		[Export ("enumerateAssetsWithOptions:usingBlock:")]
 		void Enumerate (NSEnumerationOptions options, ALAssetsEnumerator result);
 
@@ -327,7 +263,7 @@ namespace AssetsLibrary {
 		NSString _PersistentID { get; }
 
 		[Export ("editable")]
-		bool Editable { [Bind ("isEditable")] get;  }
+		bool Editable { [Bind ("isEditable")] get; }
 
 		[Export ("addAsset:")]
 		bool AddAsset (ALAsset asset);

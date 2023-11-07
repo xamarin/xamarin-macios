@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,20 +12,24 @@
     <AssemblyName>introspection</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_SYMLINK;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_SYMLINK;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
@@ -36,45 +40,15 @@
     <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -gcc_flags="-weak_framework GameController"</MtouchExtraArgs>
-    <MtouchArch>i386, x86_64</MtouchArch>
-    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <MtouchArch>x86_64</MtouchArch>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>None</MtouchLink>
-    <MtouchExtraArgs></MtouchExtraArgs>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <MtouchDebug>True</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>None</MtouchLink>
-    <MtouchExtraArgs></MtouchExtraArgs>
-    <MtouchArch>ARMv7</MtouchArch>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;MONOTOUCH;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -94,62 +68,31 @@
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v</MtouchExtraArgs>
-    <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARMv7</MtouchArch>
-    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v</MtouchExtraArgs>
-    <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchLink>None</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v --bitcode:full</MtouchExtraArgs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <DefineConstants>MONOTOUCH;MONO_NATIVE_COMPAT;MONO_NATIVE_STATIC;$(DefineConstants)</DefineConstants>
+  <PropertyGroup>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(RootTestsDirectory)\..\src\rsp\ios-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(RootTestsDirectory)\..\src\rsp\tvos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(RootTestsDirectory)\..\src\rsp\watchos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">$(RootTestsDirectory)\..\src\rsp\maccatalyst-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Core" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\common\AppDelegate.cs" />
+    <Compile Include="..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="iOSApiCtorInitTest.cs" />
     <Compile Include="iOSApiFieldTest.cs" />
     <Compile Include="iOSApiSelectorTest.cs" />
@@ -217,11 +160,20 @@
     <Compile Include="..\ApiAvailabilityTest.cs">
       <Link>ApiAvailabilityTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\tools\common\Frameworks.cs">
       <Link>Frameworks.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="..\ApiFrameworkTest.cs">
       <Link>ApiFrameworkTest.cs</Link>
+    </Compile>
+    <Compile Include="..\ApiTypeTest.cs">
+      <Link>ApiTypeTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -252,5 +204,6 @@
       <Link>simlauncher64-sgen.frameworks</Link>
     </BundleResource>
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

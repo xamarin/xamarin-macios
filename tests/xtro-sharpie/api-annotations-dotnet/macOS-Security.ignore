@@ -1,0 +1,499 @@
+## Not declared in header for macOS unlike iOS but in Security.framework anyway (via nm)
+!unknown-pinvoke! SecKeyDecrypt bound
+!unknown-pinvoke! SecKeyEncrypt bound
+!unknown-pinvoke! SecKeyRawSign bound
+!unknown-pinvoke! SecKeyRawVerify bound
+
+## unsorted
+
+!missing-enum! __CE_CrlDistributionPointNameType not bound
+!missing-enum! __CE_DataType not bound
+!missing-enum! __CE_GeneralNameType not bound
+!missing-enum! _SecureDownloadTrustCallbackResult not bound
+!missing-enum! AuthorizationContextFlags not bound
+!missing-enum! AuthorizationResult not bound
+!missing-enum! CMSCertificateChainMode not bound
+!missing-enum! CMSSignedAttributes not bound
+!missing-enum! CMSSignerStatus not bound
+!missing-enum! cssm_appledl_open_parameters_mask not bound
+!missing-enum! extension_data_format not bound
+!missing-enum! SecCodeSignatureFlags not bound
+!missing-enum! SecCodeStatus not bound
+!missing-enum! SecCSDigestAlgorithm not bound
+!missing-enum! SecCSFlags not bound
+!missing-enum! SecExternalFormat not bound
+!missing-enum! SecExternalItemType not bound
+!missing-enum! SecItemAttr not bound
+!missing-enum! SecItemClass not bound
+!missing-enum! SecItemImportExportFlags not bound
+!missing-enum! SecKeychainEvent not bound
+!missing-enum! SecKeychainEventMask not bound
+!missing-enum! SecKeychainPromptSelector not bound
+!missing-enum! SecKeyImportExportFlags not bound
+!missing-enum! SecKeyUsage not bound
+!missing-enum! SecPreferencesDomain not bound
+!missing-enum! SecProtocolType not bound
+!missing-enum! SecRequirementType not bound
+!missing-enum! SecTrustOptionFlags not bound
+!missing-enum! SecTrustSettingsDomain not bound
+!missing-enum! SecTrustSettingsKeyUsage not bound
+!missing-enum! SecTrustSettingsResult not bound
+!missing-enum! SessionAttributeBits not bound
+!missing-enum! SessionCreationFlags not bound
+!missing-field! gGuidAppleCSP not bound
+!missing-field! gGuidAppleCSPDL not bound
+!missing-field! gGuidAppleDotMacDL not bound
+!missing-field! gGuidAppleDotMacTP not bound
+!missing-field! gGuidAppleFileDL not bound
+!missing-field! gGuidAppleLDAPDL not bound
+!missing-field! gGuidAppleSdCSPDL not bound
+!missing-field! gGuidAppleX509CL not bound
+!missing-field! gGuidAppleX509TP not bound
+!missing-field! gGuidCssm not bound
+!missing-field! kCMSEncoderDigestAlgorithmSHA1 not bound
+!missing-field! kCMSEncoderDigestAlgorithmSHA256 not bound
+!missing-field! kSecACLAuthorizationAny not bound
+!missing-field! kSecACLAuthorizationChangeACL not bound
+!missing-field! kSecACLAuthorizationChangeOwner not bound
+!missing-field! kSecACLAuthorizationDecrypt not bound
+!missing-field! kSecACLAuthorizationDelete not bound
+!missing-field! kSecACLAuthorizationDerive not bound
+!missing-field! kSecACLAuthorizationEncrypt not bound
+!missing-field! kSecACLAuthorizationExportClear not bound
+!missing-field! kSecACLAuthorizationExportWrapped not bound
+!missing-field! kSecACLAuthorizationGenKey not bound
+!missing-field! kSecACLAuthorizationImportClear not bound
+!missing-field! kSecACLAuthorizationImportWrapped not bound
+!missing-field! kSecACLAuthorizationIntegrity not bound
+!missing-field! kSecACLAuthorizationKeychainCreate not bound
+!missing-field! kSecACLAuthorizationKeychainDelete not bound
+!missing-field! kSecACLAuthorizationKeychainItemDelete not bound
+!missing-field! kSecACLAuthorizationKeychainItemInsert not bound
+!missing-field! kSecACLAuthorizationKeychainItemModify not bound
+!missing-field! kSecACLAuthorizationKeychainItemRead not bound
+!missing-field! kSecACLAuthorizationLogin not bound
+!missing-field! kSecACLAuthorizationMAC not bound
+!missing-field! kSecACLAuthorizationPartitionID not bound
+!missing-field! kSecACLAuthorizationSign not bound
+!missing-field! kSecAttrAccess not bound
+!missing-field! kSecAttrKeyType3DES not bound
+!missing-field! kSecAttrKeyTypeAES not bound
+!missing-field! kSecAttrKeyTypeCAST not bound
+!missing-field! kSecAttrKeyTypeDES not bound
+!missing-field! kSecAttrKeyTypeDSA not bound
+!missing-field! kSecAttrKeyTypeECDSA not bound
+!missing-field! kSecAttrKeyTypeRC2 not bound
+!missing-field! kSecAttrKeyTypeRC4 not bound
+!missing-field! kSecAttrPRF not bound
+!missing-field! kSecAttrPRFHmacAlgSHA1 not bound
+!missing-field! kSecAttrPRFHmacAlgSHA224 not bound
+!missing-field! kSecAttrPRFHmacAlgSHA256 not bound
+!missing-field! kSecAttrPRFHmacAlgSHA384 not bound
+!missing-field! kSecAttrPRFHmacAlgSHA512 not bound
+!missing-field! kSecAttrRounds not bound
+!missing-field! kSecAttrSalt not bound
+!missing-field! kSecCFErrorArchitecture not bound
+!missing-field! kSecCFErrorGuestAttributes not bound
+!missing-field! kSecCFErrorInfoPlist not bound
+!missing-field! kSecCFErrorPath not bound
+!missing-field! kSecCFErrorPattern not bound
+!missing-field! kSecCFErrorRequirementSyntax not bound
+!missing-field! kSecCFErrorResourceAdded not bound
+!missing-field! kSecCFErrorResourceAltered not bound
+!missing-field! kSecCFErrorResourceMissing not bound
+!missing-field! kSecCFErrorResourceSeal not bound
+!missing-field! kSecCFErrorResourceSideband not bound
+!missing-field! kSecCodeAttributeArchitecture not bound
+!missing-field! kSecCodeAttributeBundleVersion not bound
+!missing-field! kSecCodeAttributeSubarchitecture not bound
+!missing-field! kSecCodeAttributeUniversalFileOffset not bound
+!missing-field! kSecCodeInfoCdHashes not bound
+!missing-field! kSecCodeInfoCertificates not bound
+!missing-field! kSecCodeInfoChangedFiles not bound
+!missing-field! kSecCodeInfoCMS not bound
+!missing-field! kSecCodeInfoDesignatedRequirement not bound
+!missing-field! kSecCodeInfoDigestAlgorithm not bound
+!missing-field! kSecCodeInfoDigestAlgorithms not bound
+!missing-field! kSecCodeInfoEntitlements not bound
+!missing-field! kSecCodeInfoEntitlementsDict not bound
+!missing-field! kSecCodeInfoFlags not bound
+!missing-field! kSecCodeInfoFormat not bound
+!missing-field! kSecCodeInfoIdentifier not bound
+!missing-field! kSecCodeInfoImplicitDesignatedRequirement not bound
+!missing-field! kSecCodeInfoMainExecutable not bound
+!missing-field! kSecCodeInfoPlatformIdentifier not bound
+!missing-field! kSecCodeInfoPList not bound
+!missing-field! kSecCodeInfoRequirementData not bound
+!missing-field! kSecCodeInfoRequirements not bound
+!missing-field! kSecCodeInfoSource not bound
+!missing-field! kSecCodeInfoStatus not bound
+!missing-field! kSecCodeInfoTeamIdentifier not bound
+!missing-field! kSecCodeInfoTime not bound
+!missing-field! kSecCodeInfoTimestamp not bound
+!missing-field! kSecCodeInfoTrust not bound
+!missing-field! kSecCodeInfoUnique not bound
+!missing-field! kSecCodeInfoRuntimeVersion not bound
+!missing-field! kSecDecodeTypeAttribute not bound
+!missing-field! kSecGuestAttributeArchitecture not bound
+!missing-field! kSecGuestAttributeAudit not bound
+!missing-field! kSecGuestAttributeCanonical not bound
+!missing-field! kSecGuestAttributeDynamicCode not bound
+!missing-field! kSecGuestAttributeDynamicCodeInfoPlist not bound
+!missing-field! kSecGuestAttributeHash not bound
+!missing-field! kSecGuestAttributeMachPort not bound
+!missing-field! kSecGuestAttributePid not bound
+!missing-field! kSecGuestAttributeSubarchitecture not bound
+!missing-field! kSecIdentityDomainDefault not bound
+!missing-field! kSecIdentityDomainKerberosKDC not bound
+!missing-field! kSecImportExportAccess not bound
+!missing-field! kSecImportExportKeychain not bound
+!missing-field! kSecInputIsDigest not bound
+!missing-field! kSecInputIsPlainText not bound
+!missing-field! kSecKeyAttributeName not bound
+!missing-field! kSecMatchDiacriticInsensitive not bound
+!missing-field! kSecMatchSubjectEndsWith not bound
+!missing-field! kSecMatchSubjectStartsWith not bound
+!missing-field! kSecMatchSubjectWholeString not bound
+!missing-field! kSecMatchWidthInsensitive not bound
+!missing-field! kSecOIDADC_CERT_POLICY not bound
+!missing-field! kSecOIDAPPLE_CERT_POLICY not bound
+!missing-field! kSecOIDAPPLE_EKU_CODE_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EKU_CODE_SIGNING_DEV not bound
+!missing-field! kSecOIDAPPLE_EKU_ICHAT_ENCRYPTION not bound
+!missing-field! kSecOIDAPPLE_EKU_ICHAT_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EKU_RESOURCE_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EKU_SYSTEM_IDENTITY not bound
+!missing-field! kSecOIDAPPLE_EXTENSION not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_AAI_INTERMEDIATE not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_ADC_APPLE_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_ADC_DEV_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_APPLE_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_APPLEID_INTERMEDIATE not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_CODE_SIGNING not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_INTERMEDIATE_MARKER not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_ITMS_INTERMEDIATE not bound
+!missing-field! kSecOIDAPPLE_EXTENSION_WWDR_INTERMEDIATE not bound
+!missing-field! kSecOIDAuthorityInfoAccess not bound
+!missing-field! kSecOIDAuthorityKeyIdentifier not bound
+!missing-field! kSecOIDBasicConstraints not bound
+!missing-field! kSecOIDBiometricInfo not bound
+!missing-field! kSecOIDCertificatePolicies not bound
+!missing-field! kSecOIDCertIssuer not bound
+!missing-field! kSecOIDClientAuth not bound
+!missing-field! kSecOIDCollectiveStateProvinceName not bound
+!missing-field! kSecOIDCollectiveStreetAddress not bound
+!missing-field! kSecOIDCommonName not bound
+!missing-field! kSecOIDCountryName not bound
+!missing-field! kSecOIDCrlDistributionPoints not bound
+!missing-field! kSecOIDCrlNumber not bound
+!missing-field! kSecOIDCrlReason not bound
+!missing-field! kSecOIDCSSMKeyStruct not bound
+!missing-field! kSecOIDDeltaCrlIndicator not bound
+!missing-field! kSecOIDDescription not bound
+!missing-field! kSecOIDDOTMAC_CERT_EMAIL_ENCRYPT not bound
+!missing-field! kSecOIDDOTMAC_CERT_EMAIL_SIGN not bound
+!missing-field! kSecOIDDOTMAC_CERT_EXTENSION not bound
+!missing-field! kSecOIDDOTMAC_CERT_IDENTITY not bound
+!missing-field! kSecOIDDOTMAC_CERT_POLICY not bound
+!missing-field! kSecOIDEKU_IPSec not bound
+!missing-field! kSecOIDEmailAddress not bound
+!missing-field! kSecOIDEmailProtection not bound
+!missing-field! kSecOIDExtendedKeyUsage not bound
+!missing-field! kSecOIDExtendedKeyUsageAny not bound
+!missing-field! kSecOIDExtendedUseCodeSigning not bound
+!missing-field! kSecOIDGivenName not bound
+!missing-field! kSecOIDHoldInstructionCode not bound
+!missing-field! kSecOIDInvalidityDate not bound
+!missing-field! kSecOIDIssuerAltName not bound
+!missing-field! kSecOIDIssuingDistributionPoint not bound
+!missing-field! kSecOIDIssuingDistributionPoints not bound
+!missing-field! kSecOIDKERBv5_PKINIT_KP_CLIENT_AUTH not bound
+!missing-field! kSecOIDKERBv5_PKINIT_KP_KDC not bound
+!missing-field! kSecOIDKeyUsage not bound
+!missing-field! kSecOIDLocalityName not bound
+!missing-field! kSecOIDMicrosoftSGC not bound
+!missing-field! kSecOIDMS_NTPrincipalName not bound
+!missing-field! kSecOIDNameConstraints not bound
+!missing-field! kSecOIDNetscapeCertSequence not bound
+!missing-field! kSecOIDNetscapeCertType not bound
+!missing-field! kSecOIDNetscapeSGC not bound
+!missing-field! kSecOIDOCSPSigning not bound
+!missing-field! kSecOIDOrganizationalUnitName not bound
+!missing-field! kSecOIDOrganizationName not bound
+!missing-field! kSecOIDPolicyConstraints not bound
+!missing-field! kSecOIDPolicyMappings not bound
+!missing-field! kSecOIDPrivateKeyUsagePeriod not bound
+!missing-field! kSecOIDQC_Statements not bound
+!missing-field! kSecOIDSerialNumber not bound
+!missing-field! kSecOIDServerAuth not bound
+!missing-field! kSecOIDSRVName not bound
+!missing-field! kSecOIDStateProvinceName not bound
+!missing-field! kSecOIDStreetAddress not bound
+!missing-field! kSecOIDSubjectAltName not bound
+!missing-field! kSecOIDSubjectDirectoryAttributes not bound
+!missing-field! kSecOIDSubjectEmailAddress not bound
+!missing-field! kSecOIDSubjectInfoAccess not bound
+!missing-field! kSecOIDSubjectKeyIdentifier not bound
+!missing-field! kSecOIDSubjectPicture not bound
+!missing-field! kSecOIDSubjectSignatureBitmap not bound
+!missing-field! kSecOIDSurname not bound
+!missing-field! kSecOIDTimeStamping not bound
+!missing-field! kSecOIDTitle not bound
+!missing-field! kSecOIDUseExemptions not bound
+!missing-field! kSecOIDX509V1CertificateIssuerUniqueId not bound
+!missing-field! kSecOIDX509V1CertificateSubjectUniqueId not bound
+!missing-field! kSecOIDX509V1IssuerName not bound
+!missing-field! kSecOIDX509V1IssuerNameCStruct not bound
+!missing-field! kSecOIDX509V1IssuerNameLDAP not bound
+!missing-field! kSecOIDX509V1IssuerNameStd not bound
+!missing-field! kSecOIDX509V1SerialNumber not bound
+!missing-field! kSecOIDX509V1Signature not bound
+!missing-field! kSecOIDX509V1SignatureAlgorithm not bound
+!missing-field! kSecOIDX509V1SignatureAlgorithmParameters not bound
+!missing-field! kSecOIDX509V1SignatureAlgorithmTBS not bound
+!missing-field! kSecOIDX509V1SignatureCStruct not bound
+!missing-field! kSecOIDX509V1SignatureStruct not bound
+!missing-field! kSecOIDX509V1SubjectName not bound
+!missing-field! kSecOIDX509V1SubjectNameCStruct not bound
+!missing-field! kSecOIDX509V1SubjectNameLDAP not bound
+!missing-field! kSecOIDX509V1SubjectNameStd not bound
+!missing-field! kSecOIDX509V1SubjectPublicKeyAlgorithm not bound
+!missing-field! kSecOIDX509V1SubjectPublicKeyAlgorithmParameters not bound
+!missing-field! kSecOIDX509V1SubjectPublicKeyCStruct not bound
+!missing-field! kSecOIDX509V1ValidityNotAfter not bound
+!missing-field! kSecOIDX509V1ValidityNotBefore not bound
+!missing-field! kSecOIDX509V1Version not bound
+!missing-field! kSecOIDX509V3Certificate not bound
+!missing-field! kSecOIDX509V3CertificateCStruct not bound
+!missing-field! kSecOIDX509V3CertificateExtensionCritical not bound
+!missing-field! kSecOIDX509V3CertificateExtensionCStruct not bound
+!missing-field! kSecOIDX509V3CertificateExtensionId not bound
+!missing-field! kSecOIDX509V3CertificateExtensionsCStruct not bound
+!missing-field! kSecOIDX509V3CertificateExtensionsStruct not bound
+!missing-field! kSecOIDX509V3CertificateExtensionStruct not bound
+!missing-field! kSecOIDX509V3CertificateExtensionType not bound
+!missing-field! kSecOIDX509V3CertificateExtensionValue not bound
+!missing-field! kSecOIDX509V3CertificateNumberOfExtensions not bound
+!missing-field! kSecOIDX509V3SignedCertificate not bound
+!missing-field! kSecOIDX509V3SignedCertificateCStruct not bound
+!missing-field! kSecPolicyKU_CRLSign not bound
+!missing-field! kSecPolicyKU_DataEncipherment not bound
+!missing-field! kSecPolicyKU_DecipherOnly not bound
+!missing-field! kSecPolicyKU_DigitalSignature not bound
+!missing-field! kSecPolicyKU_EncipherOnly not bound
+!missing-field! kSecPolicyKU_KeyAgreement not bound
+!missing-field! kSecPolicyKU_KeyCertSign not bound
+!missing-field! kSecPolicyKU_KeyEncipherment not bound
+!missing-field! kSecPolicyKU_NonRepudiation not bound
+!missing-field! kSecPropertyTypeData not bound
+!missing-field! kSecPropertyTypeDate not bound
+!missing-field! kSecPropertyTypeSection not bound
+!missing-field! kSecPropertyTypeString not bound
+!missing-field! kSecPropertyTypeSuccess not bound
+!missing-field! kSecPropertyTypeURL not bound
+!missing-field! kSecPropertyTypeWarning not bound
+!missing-field! kSecSignatureAttributeName not bound
+!missing-field! kSecTransformAbortOriginatorKey not bound
+!missing-field! kSecTransformErrorDomain not bound
+!missing-field! kSecTransformPreviousErrorKey not bound
+!missing-field! kSecUseKeychain not bound
+!missing-field! oidAdCAIssuer not bound
+!missing-field! oidAdOCSP not bound
+!missing-field! oidAnsip384r1 not bound
+!missing-field! oidAnsip521r1 not bound
+!missing-field! oidAnyExtendedKeyUsage not bound
+!missing-field! oidAnyPolicy not bound
+!missing-field! oidAuthorityInfoAccess not bound
+!missing-field! oidAuthorityKeyIdentifier not bound
+!missing-field! oidBasicConstraints not bound
+!missing-field! oidCertificatePolicies not bound
+!missing-field! oidCommonName not bound
+!missing-field! oidCountryName not bound
+!missing-field! oidCrlDistributionPoints not bound
+!missing-field! oidDescription not bound
+!missing-field! oidEcPrime192v1 not bound
+!missing-field! oidEcPrime256v1 not bound
+!missing-field! oidEcPubKey not bound
+!missing-field! oidEmailAddress not bound
+!missing-field! oidEntrustVersInfo not bound
+!missing-field! oidExtendedKeyUsage not bound
+!missing-field! oidExtendedKeyUsageClientAuth not bound
+!missing-field! oidExtendedKeyUsageCodeSigning not bound
+!missing-field! oidExtendedKeyUsageEmailProtection not bound
+!missing-field! oidExtendedKeyUsageIPSec not bound
+!missing-field! oidExtendedKeyUsageMicrosoftSGC not bound
+!missing-field! oidExtendedKeyUsageNetscapeSGC not bound
+!missing-field! oidExtendedKeyUsageOCSPSigning not bound
+!missing-field! oidExtendedKeyUsageServerAuth not bound
+!missing-field! oidExtendedKeyUsageTimeStamping not bound
+!missing-field! oidFee not bound
+!missing-field! oidFriendlyName not bound
+!missing-field! oidGoogleEmbeddedSignedCertificateTimestamp not bound
+!missing-field! oidGoogleOCSPSignedCertificateTimestamp not bound
+!missing-field! oidInhibitAnyPolicy not bound
+!missing-field! oidIssuerAltName not bound
+!missing-field! oidKeyUsage not bound
+!missing-field! oidLocalityName not bound
+!missing-field! oidLocalKeyId not bound
+!missing-field! oidMd2 not bound
+!missing-field! oidMd2Rsa not bound
+!missing-field! oidMd4 not bound
+!missing-field! oidMd4Rsa not bound
+!missing-field! oidMd5 not bound
+!missing-field! oidMd5Fee not bound
+!missing-field! oidMd5Rsa not bound
+!missing-field! oidMSNTPrincipalName not bound
+!missing-field! oidNameConstraints not bound
+!missing-field! oidNetscapeCertType not bound
+!missing-field! oidOrganizationalUnitName not bound
+!missing-field! oidOrganizationName not bound
+!missing-field! oidPolicyConstraints not bound
+!missing-field! oidPolicyMappings not bound
+!missing-field! oidPrivateKeyUsagePeriod not bound
+!missing-field! oidQtCps not bound
+!missing-field! oidQtUNotice not bound
+!missing-field! oidRsa not bound
+!missing-field! oidSha1 not bound
+!missing-field! oidSha1Dsa not bound
+!missing-field! oidSha1DsaCommonOIW not bound
+!missing-field! oidSha1DsaOIW not bound
+!missing-field! oidSha1Ecdsa not bound
+!missing-field! oidSha1Fee not bound
+!missing-field! oidSha1Rsa not bound
+!missing-field! oidSha1RsaOIW not bound
+!missing-field! oidSha224 not bound
+!missing-field! oidSha224Ecdsa not bound
+!missing-field! oidSha224Rsa not bound
+!missing-field! oidSha256 not bound
+!missing-field! oidSha256Ecdsa not bound
+!missing-field! oidSha256Rsa not bound
+!missing-field! oidSha384 not bound
+!missing-field! oidSha384Ecdsa not bound
+!missing-field! oidSha384Rsa not bound
+!missing-field! oidSha512 not bound
+!missing-field! oidSha512Ecdsa not bound
+!missing-field! oidSha512Rsa not bound
+!missing-field! oidStateOrProvinceName not bound
+!missing-field! oidSubjectAltName not bound
+!missing-field! oidSubjectInfoAccess not bound
+!missing-field! oidSubjectKeyIdentifier not bound
+!missing-pinvoke! AuthorizationCopyInfo is not bound
+!missing-pinvoke! AuthorizationCopyRights is not bound
+!missing-pinvoke! AuthorizationCopyRightsAsync is not bound
+!missing-pinvoke! AuthorizationCreateFromExternalForm is not bound
+!missing-pinvoke! AuthorizationFreeItemSet is not bound
+!missing-pinvoke! AuthorizationMakeExternalForm is not bound
+!missing-pinvoke! AuthorizationPluginCreate is not bound
+!missing-pinvoke! AuthorizationRightGet is not bound
+!missing-pinvoke! AuthorizationRightRemove is not bound
+!missing-pinvoke! AuthorizationRightSet is not bound
+!missing-pinvoke! CMSDecoderCopyAllCerts is not bound
+!missing-pinvoke! CMSDecoderCopyContent is not bound
+!missing-pinvoke! CMSDecoderCopyDetachedContent is not bound
+!missing-pinvoke! CMSDecoderCopyEncapsulatedContentType is not bound
+!missing-pinvoke! CMSDecoderCopySignerCert is not bound
+!missing-pinvoke! CMSDecoderCopySignerEmailAddress is not bound
+!missing-pinvoke! CMSDecoderCopySignerSigningTime is not bound
+!missing-pinvoke! CMSDecoderCopySignerStatus is not bound
+!missing-pinvoke! CMSDecoderCopySignerTimestamp is not bound
+!missing-pinvoke! CMSDecoderCopySignerTimestampCertificates is not bound
+!missing-pinvoke! CMSDecoderCopySignerTimestampWithPolicy is not bound
+!missing-pinvoke! CMSDecoderCreate is not bound
+!missing-pinvoke! CMSDecoderFinalizeMessage is not bound
+!missing-pinvoke! CMSDecoderGetNumSigners is not bound
+!missing-pinvoke! CMSDecoderGetTypeID is not bound
+!missing-pinvoke! CMSDecoderIsContentEncrypted is not bound
+!missing-pinvoke! CMSDecoderSetDetachedContent is not bound
+!missing-pinvoke! CMSDecoderUpdateMessage is not bound
+!missing-pinvoke! CMSEncodeContent is not bound
+!missing-pinvoke! CMSEncoderAddRecipients is not bound
+!missing-pinvoke! CMSEncoderAddSignedAttributes is not bound
+!missing-pinvoke! CMSEncoderAddSigners is not bound
+!missing-pinvoke! CMSEncoderAddSupportingCerts is not bound
+!missing-pinvoke! CMSEncoderCopyEncapsulatedContentType is not bound
+!missing-pinvoke! CMSEncoderCopyEncodedContent is not bound
+!missing-pinvoke! CMSEncoderCopyRecipients is not bound
+!missing-pinvoke! CMSEncoderCopySigners is not bound
+!missing-pinvoke! CMSEncoderCopySignerTimestamp is not bound
+!missing-pinvoke! CMSEncoderCopySignerTimestampWithPolicy is not bound
+!missing-pinvoke! CMSEncoderCopySupportingCerts is not bound
+!missing-pinvoke! CMSEncoderCreate is not bound
+!missing-pinvoke! CMSEncoderGetCertificateChainMode is not bound
+!missing-pinvoke! CMSEncoderGetHasDetachedContent is not bound
+!missing-pinvoke! CMSEncoderGetTypeID is not bound
+!missing-pinvoke! CMSEncoderSetCertificateChainMode is not bound
+!missing-pinvoke! CMSEncoderSetEncapsulatedContentTypeOID is not bound
+!missing-pinvoke! CMSEncoderSetHasDetachedContent is not bound
+!missing-pinvoke! CMSEncoderSetSignerAlgorithm is not bound
+!missing-pinvoke! CMSEncoderUpdateContent is not bound
+!missing-pinvoke! cssmAlgToOid is not bound
+!missing-pinvoke! cssmOidToAlg is not bound
+!missing-pinvoke! cssmPerror is not bound
+!missing-pinvoke! SecCertificateAddToKeychain is not bound
+!missing-pinvoke! SecCertificateCopyLongDescription is not bound
+!missing-pinvoke! SecCertificateCopyPreferred is not bound
+!missing-pinvoke! SecCertificateCopyShortDescription is not bound
+!missing-pinvoke! SecCertificateSetPreferred is not bound
+!missing-pinvoke! SecCodeCheckValidity is not bound
+!missing-pinvoke! SecCodeCheckValidityWithErrors is not bound
+!missing-pinvoke! SecCodeCopyDesignatedRequirement is not bound
+!missing-pinvoke! SecCodeCopyGuestWithAttributes is not bound
+!missing-pinvoke! SecCodeCopyHost is not bound
+!missing-pinvoke! SecCodeCopyPath is not bound
+!missing-pinvoke! SecCodeCopySelf is not bound
+!missing-pinvoke! SecCodeCopySigningInformation is not bound
+!missing-pinvoke! SecCodeCopyStaticCode is not bound
+!missing-pinvoke! SecCodeGetTypeID is not bound
+!missing-pinvoke! SecCodeMapMemory is not bound
+!missing-pinvoke! SecIdentityCopyPreferred is not bound
+!missing-pinvoke! SecIdentityCopySystemIdentity is not bound
+!missing-pinvoke! SecIdentityCreateWithCertificate is not bound
+!missing-pinvoke! SecIdentitySetPreferred is not bound
+!missing-pinvoke! SecIdentitySetSystemIdentity is not bound
+!missing-pinvoke! SecItemExport is not bound
+!missing-pinvoke! SecItemImport is not bound
+!missing-pinvoke! SecRequirementCopyData is not bound
+!missing-pinvoke! SecRequirementCopyString is not bound
+!missing-pinvoke! SecRequirementCreateWithData is not bound
+!missing-pinvoke! SecRequirementCreateWithString is not bound
+!missing-pinvoke! SecRequirementCreateWithStringAndErrors is not bound
+!missing-pinvoke! SecRequirementGetTypeID is not bound
+!missing-pinvoke! SecStaticCodeCheckValidity is not bound
+!missing-pinvoke! SecStaticCodeCheckValidityWithErrors is not bound
+!missing-pinvoke! SecStaticCodeCreateWithPath is not bound
+!missing-pinvoke! SecStaticCodeCreateWithPathAndAttributes is not bound
+!missing-pinvoke! SecStaticCodeGetTypeID is not bound
+!missing-pinvoke! SecTaskCopySigningIdentifier is not bound
+!missing-pinvoke! SecTaskCopyValueForEntitlement is not bound
+!missing-pinvoke! SecTaskCopyValuesForEntitlements is not bound
+!missing-pinvoke! SecTaskCreateFromSelf is not bound
+!missing-pinvoke! SecTaskCreateWithAuditToken is not bound
+!missing-pinvoke! SecTaskGetTypeID is not bound
+!missing-pinvoke! SecTrustCopyAnchorCertificates is not bound
+!missing-pinvoke! SecTrustSetOptions is not bound
+!missing-pinvoke! SecTrustSettingsCopyCertificates is not bound
+!missing-pinvoke! SecTrustSettingsCopyModificationDate is not bound
+!missing-pinvoke! SecTrustSettingsCopyTrustSettings is not bound
+!missing-pinvoke! SecTrustSettingsCreateExternalRepresentation is not bound
+!missing-pinvoke! SecTrustSettingsImportExternalRepresentation is not bound
+!missing-pinvoke! SecTrustSettingsRemoveTrustSettings is not bound
+!missing-pinvoke! SecTrustSettingsSetTrustSettings is not bound
+!missing-pinvoke! SessionCreate is not bound
+!missing-pinvoke! SessionGetInfo is not bound
+
+## new in xcode11
+!missing-field! kSecPropertyTypeArray not bound
+!missing-field! kSecPropertyTypeNumber not bound
+
+## helper
+!extra-enum-value! Managed value -1 for SecAuthenticationType.Invalid not found in native headers
+
+## xcode 12.2 / we do not have bindings for XPC
+!missing-pinvoke! SecCodeCreateWithXPCMessage is not bound
+
+## xcode15
+!missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-pinvoke! SecCodeValidateFileResource is not bound
+!missing-field! kSecCFErrorResourceRecursive not bound
+!missing-field! kSecCodeInfoStapledNotarizationTicket not bound
+

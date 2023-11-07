@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{FCA4311B-96A6-4AAC-8235-3E7F75111E73}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>RoslynTestApp</RootNamespace>
+    <AssemblyName>RoslynTestApp</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>true</UseSGen>
+    <UseRefCounting>true</UseRefCounting>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <UseSGen>true</UseSGen>
+    <UseRefCounting>true</UseRefCounting>
+    <LinkMode>None</LinkMode>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Xamarin.Mac" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.0.0-rc4" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0-rc4" />
+    <PackageReference Include="System.AppContext" Version="4.3.0" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
+    <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
+    <PackageReference Include="System.Console" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.StackTrace" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Globalization" Version="4.3.0" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Metadata" Version="1.4.2" />
+    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Encoding" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Threading" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
+    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XDocument" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XPath.XDocument" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\ReadOnlyTestMacLib\ReadOnlyTestMacLib.csproj">
+      <Project>{3A745526-7709-46D2-8978-C882D9F08656}</Project>
+      <Name>ReadOnlyTestMacLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

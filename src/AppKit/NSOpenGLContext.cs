@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
@@ -6,21 +7,23 @@ using System.Drawing;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
-	
+
 	public partial class NSOpenGLContext {
 
 		unsafe void SetValue (int /* GLint */ val, NSOpenGLContextParameter par)
 		{
-			int *p = &val;
+			int* p = &val;
 			SetValues ((IntPtr) p, par);
 		}
-			
+
 		unsafe int /* GLint */ GetValue (NSOpenGLContextParameter par)
 		{
 			int ret;
-			int *p = &ret;
-			GetValues ((IntPtr)p, par);
+			int* p = &ret;
+			GetValues ((IntPtr) p, par);
 
 			return ret;
 		}
@@ -67,7 +70,7 @@ namespace AppKit {
 
 		public NSSurfaceOrder SurfaceOrder {
 			get {
-				switch (GetValue (NSOpenGLContextParameter.SurfaceOrder)){
+				switch (GetValue (NSOpenGLContextParameter.SurfaceOrder)) {
 				case -1:
 					return NSSurfaceOrder.BelowWindow;
 				default:
@@ -98,3 +101,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

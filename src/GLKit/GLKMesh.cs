@@ -1,14 +1,14 @@
 // Copyright 2015 Xamarin Inc.
 
-#if XAMCORE_2_0 || !MONOMAC
-
 using Foundation;
 using ModelIO;
+
+#nullable enable
 
 namespace GLKit {
 
 	public partial class GLKMesh {
-		public static GLKMesh [] FromAsset (MDLAsset asset, out MDLMesh [] sourceMeshes, out NSError error)
+		public static GLKMesh []? FromAsset (MDLAsset asset, out MDLMesh [] sourceMeshes, out NSError error)
 		{
 			NSArray aret;
 
@@ -18,5 +18,3 @@ namespace GLKit {
 		}
 	}
 }
-
-#endif

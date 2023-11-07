@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
 using System.Drawing;
 
-namespace bug27986
-{
+namespace bug27986 {
 	interface IFooProtocol { }
 
 	[Model, Protocol, Preserve (AllMembers = true)]
 	[BaseType (typeof (NSObject))]
 	interface FooProtocol {
-		
+
 		[Preserve]
 		[Export ("doSomething:atIndex:")]
 		void DoSomething (NSObject @object, int index);
@@ -31,11 +30,11 @@ namespace bug27986
 		NSObject Center2 { get; set; }
 	}
 
-	
+
 	[BaseType (typeof (NSObject))]
 	[Preserve (AllMembers = true)]
 	interface Widget {
-		
+
 		[Preserve (Conditional = true)]
 		[Export ("initWithElmo:")]
 		IntPtr Constructor (uint elmo);
@@ -48,7 +47,7 @@ namespace bug27986
 		[Export ("center")]
 		NSObject Center { get; set; }
 
-		[Export("noCenter")]
+		[Export ("noCenter")]
 		PointF NoCenter { [Preserve (Conditional = true)] get; [Preserve] set; }
 
 		[Preserve]
@@ -67,4 +66,3 @@ namespace bug27986
 		IFooProtocol Delegate { get; set; }
 	}
 }
-

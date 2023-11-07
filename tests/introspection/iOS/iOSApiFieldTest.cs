@@ -9,15 +9,9 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace Introspection {
@@ -46,7 +40,7 @@ namespace Introspection {
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 			case "MetalKit":
@@ -57,24 +51,37 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
+			case "Phase":
 			case "DeviceCheck": // Only available on device
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "IOSurface":
 				// Available in the simulator starting with iOS 11
-				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
-
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (9, 0);
+			case "iAd":
+				// largely removed in xcode 13, including ADClient.ErrorDomain
+				// since using this code leads to rejections it's totally removed (so no version check)
+				return true;
+			case "NewsstandKit":
+				// largely removed in xcode 15
+				return true;
 			}
 
 			switch (p.Name) {
-			case "AutoConfigurationHTTPResponseKey":		// kCFProxyAutoConfigurationHTTPResponseKey
-			case "CFNetworkProxiesProxyAutoConfigJavaScript":	// kCFNetworkProxiesProxyAutoConfigJavaScript
+			case "AutoConfigurationHTTPResponseKey":        // kCFProxyAutoConfigurationHTTPResponseKey
+			case "CFNetworkProxiesProxyAutoConfigJavaScript":   // kCFNetworkProxiesProxyAutoConfigJavaScript
 				return true;
 
 			// defined in Apple PDF (online) but not in the HTML documentation
 			// but also inside CLError.h from iOS 5.1 SDK...
-			case "ErrorUserInfoAlternateRegionKey":			// kCLErrorUserInfoAlternateRegionKey
+			case "ErrorUserInfoAlternateRegionKey":         // kCLErrorUserInfoAlternateRegionKey
 				return true;
 
 			// ImageIO: documented since iOS 4.3 but null in iOS5 (works on iOS 6.1)
@@ -99,10 +106,13 @@ namespace Introspection {
 
 			// Apple does not ship a PushKit for every arch on some devices :(
 			case "Voip":
-				return Runtime.Arch == Arch.DEVICE;
+				return TestRuntime.IsDevice;
 			// Just available on device
 			case "UsageKey":
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
+			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
+			case "BarometricPressure":
+				return true;
 			default:
 				return base.Skip (p);
 			}
@@ -116,7 +126,7 @@ namespace Introspection {
 					return true;
 				break;
 			case "IOSurface":
-				return Runtime.Arch == Arch.SIMULATOR && !TestRuntime.CheckXcodeVersion (9, 0);
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (9, 0);
 			}
 
 			switch (constantName) {
@@ -134,12 +144,13 @@ namespace Introspection {
 				return true;
 			// Apple does not ship a PushKit for every arch on some devices :(
 			case "PKPushTypeVoIP":
-				return Runtime.Arch == Arch.DEVICE;
+				return TestRuntime.IsDevice;
 			// there's only partial support for metal on the simulator (on iOS9 beta 5) but most other frameworks
 			// that interop with it are not (yet) supported
 			case "kCVMetalTextureCacheMaximumTextureAgeKey":
 			case "kCVMetalTextureUsage":
 			case "MPSRectNoClip":
+			case "MTLCommandBufferErrorDomain":
 			case "MTKTextureLoaderErrorDomain":
 			case "MTKTextureLoaderErrorKey":
 			case "MTKTextureLoaderOptionAllocateMipmaps":
@@ -148,7 +159,14 @@ namespace Introspection {
 			case "MTKTextureLoaderOptionTextureCPUCacheMode":
 			case "MTKModelErrorDomain":
 			case "MTKModelErrorKey":
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
+			// Xcode 12.2 Beta 1 does not ship this but it is available in Xcode 12.0...
+			case "HKMetadataKeyBarometricPressure":
+				return true;
+#if __WATCHOS__
+			case "AVCaptureLensPositionCurrent": // looks like this was bound by mistake in watchOS
+				return true;
+#endif
 			default:
 				return false;
 			}

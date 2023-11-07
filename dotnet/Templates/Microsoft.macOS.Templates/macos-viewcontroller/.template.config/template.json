@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS" ],
+  "name": "macOS View Controller",
+  "description": "A macOS View Controller with UI implemented in Xcode's Interface Builder (XIB file)",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Microsoft.macOS.ViewController",
+  "shortName": "macos-viewcontroller",
+  "sourceName": "ViewController1",
+  "primaryOutputs": [
+    { "path": "ViewController1.cs" },
+    { "path": "ViewController1.designer.cs" },
+    { "path": "ViewController1.xib" }
+  ],
+  "defaultName": "ViewController1",
+  "symbols": {
+    "namespace": {
+      "description": "namespace for the generated code",
+      "replaces": "macOSApp1",
+      "type": "parameter"
+    }
+  }
+}

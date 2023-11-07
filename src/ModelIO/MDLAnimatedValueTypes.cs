@@ -7,12 +7,23 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector3 = global::CoreGraphics.NVector3;
+using Vector3d = global::CoreGraphics.NVector3d;
+using Vector4 = global::System.Numerics.Vector4;
+using Vector4d = global::CoreGraphics.NVector4d;
+using Matrix4 = global::CoreGraphics.NMatrix4;
+using Matrix4d = global::CoreGraphics.NMatrix4d;
+using Quaternion = global::System.Numerics.Quaternion;
+using Quaterniond = global::CoreGraphics.NQuaterniond;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector2d = global::OpenTK.Vector2d;
 using Vector3 = global::OpenTK.NVector3;
@@ -23,6 +34,9 @@ using Matrix4 = global::OpenTK.NMatrix4;
 using Matrix4d = global::OpenTK.NMatrix4d;
 using Quaternion = global::OpenTK.Quaternion;
 using Quaterniond = global::OpenTK.Quaterniond;
+#endif
+
+#nullable enable
 
 // Because of the lack of documentation when at the time of binding ModelIO for iOS 11 types
 // we are implementing something similar to what swift is doing here
@@ -31,10 +45,10 @@ using Quaterniond = global::OpenTK.Quaterniond;
 namespace ModelIO {
 	public partial class MDLAnimatedValue {
 
-		public double [] KeyTimes {
+		public double []? KeyTimes {
 			get {
 				var wkt = WeakKeyTimes;
-				if (wkt == null)
+				if (wkt is null)
 					return null;
 
 				var count = wkt.Length;
@@ -69,8 +83,8 @@ namespace ModelIO {
 
 		public virtual void SetValues (float [] array, double time)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 
 			unsafe {
 				fixed (float* ptr = array)
@@ -80,8 +94,8 @@ namespace ModelIO {
 
 		public virtual void SetValues (double [] array, double time)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
 
 			unsafe {
 				fixed (double* ptr = array)
@@ -115,10 +129,10 @@ namespace ModelIO {
 
 		public virtual void Reset (float [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (float* valuesPtr = values)
@@ -129,10 +143,10 @@ namespace ModelIO {
 
 		public virtual void Reset (double [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (double* valuesPtr = values)
@@ -170,9 +184,9 @@ namespace ModelIO {
 
 		public virtual void SetValues (Vector3 [] array, double time)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
-			int typeSize = Marshal.SizeOf (typeof (Vector3));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf<Vector3> ();
 
 			unsafe {
 				fixed (Vector3* arrptr = array)
@@ -182,9 +196,9 @@ namespace ModelIO {
 
 		public virtual void SetValues (Vector3d [] array, double time)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
-			int typeSize = Marshal.SizeOf (typeof (Vector3d));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf<Vector3d> ();
 
 			unsafe {
 				fixed (Vector3d* arrptr = array)
@@ -196,9 +210,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Vector3 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
+				int typeSize = sizeof (Vector3);
 				fixed (Vector3* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetFloat3Array);
 			}
@@ -210,9 +224,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Vector3d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
+				int typeSize = sizeof (Vector3d);
 				fixed (Vector3d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetDouble3Array);
 			}
@@ -222,11 +236,11 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector3 [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
-			int typeSize = Marshal.SizeOf (typeof (Vector3));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf<Vector3> ();
 
 			unsafe {
 				fixed (Vector3* valuesPtr = values)
@@ -236,11 +250,11 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector3d [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
-			int typeSize = Marshal.SizeOf (typeof (Vector3d));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf<Vector3d> ();
 
 			unsafe {
 				fixed (Vector3d* valuesPtr = values)
@@ -252,9 +266,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Vector3 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
+				int typeSize = sizeof (Vector3);
 				fixed (Vector3* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat3Array);
 			}
@@ -266,9 +280,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Vector3d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
+				int typeSize = sizeof (Vector3d);
 				fixed (Vector3d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble3Array);
 			}
@@ -281,9 +295,9 @@ namespace ModelIO {
 
 		public virtual void SetValues (Quaternion [] array, double time)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
-			int typeSize = Marshal.SizeOf (typeof (Quaternion));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf<Quaternion> ();
 
 			unsafe {
 				fixed (Quaternion* arrptr = array)
@@ -293,9 +307,9 @@ namespace ModelIO {
 
 		public virtual void SetValues (Quaterniond [] array, double time)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
-			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf<Quaterniond> ();
 
 			unsafe {
 				fixed (Quaterniond* arrptr = array)
@@ -307,9 +321,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Quaternion [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
+				int typeSize = sizeof (Quaternion);
 				fixed (Quaternion* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetFloatQuaternionArray);
 			}
@@ -321,9 +335,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Quaterniond [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
 
 			unsafe {
+				int typeSize = sizeof (Quaterniond);
 				fixed (Quaterniond* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, time, _GetDoubleQuaternionArray);
 			}
@@ -333,11 +347,11 @@ namespace ModelIO {
 
 		public virtual void Reset (Quaternion [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
-			int typeSize = Marshal.SizeOf (typeof (Quaternion));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf<Quaternion> ();
 
 			unsafe {
 				fixed (Quaternion* valuesPtr = values)
@@ -347,11 +361,11 @@ namespace ModelIO {
 
 		public virtual void Reset (Quaterniond [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
-			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
+			int typeSize = Marshal.SizeOf<Quaterniond> ();
 
 			unsafe {
 				fixed (Quaterniond* valuesPtr = values)
@@ -363,9 +377,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Quaternion [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Quaternion));
 
 			unsafe {
+				int typeSize = sizeof (Quaternion);
 				fixed (Quaternion* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloatQuaternionArray);
 			}
@@ -377,9 +391,8 @@ namespace ModelIO {
 		{
 			var count = ElementCount * TimeSampleCount;
 			var timesArr = new Quaterniond [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Quaterniond));
-
 			unsafe {
+				int typeSize = sizeof (Quaterniond);
 				fixed (Quaterniond* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDoubleQuaternionArray);
 			}
@@ -392,10 +405,10 @@ namespace ModelIO {
 
 		public virtual void Reset (float [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (float* valuesPtr = values)
@@ -406,10 +419,10 @@ namespace ModelIO {
 
 		public virtual void Reset (double [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 
 			unsafe {
 				fixed (double* valuesPtr = values)
@@ -447,13 +460,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector2 [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Vector2));
+			int typeSize = Marshal.SizeOf<Vector2> ();
 
 			unsafe {
 				fixed (Vector2* valuesPtr = values)
@@ -463,13 +476,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector2d [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Vector2d));
+			int typeSize = Marshal.SizeOf<Vector2d> ();
 
 			unsafe {
 				fixed (Vector2d* valuesPtr = values)
@@ -481,9 +494,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector2 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector2));
 
 			unsafe {
+				int typeSize = sizeof (Vector2);
 				fixed (Vector2* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat2Array);
 			}
@@ -495,9 +508,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector2d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector2d));
 
 			unsafe {
+				int typeSize = sizeof (Vector2d);
 				fixed (Vector2d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble2Array);
 			}
@@ -510,13 +523,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector3 [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Vector3));
+			int typeSize = Marshal.SizeOf<Vector3> ();
 
 			unsafe {
 				fixed (Vector3* valuesPtr = values)
@@ -526,13 +539,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector3d [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Vector3d));
+			int typeSize = Marshal.SizeOf<Vector3d> ();
 
 			unsafe {
 				fixed (Vector3d* valuesPtr = values)
@@ -544,9 +557,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector3 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector3));
 
 			unsafe {
+				int typeSize = sizeof (Vector3);
 				fixed (Vector3* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat3Array);
 			}
@@ -558,9 +571,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector3d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector3d));
 
 			unsafe {
+				int typeSize = sizeof (Vector3d);
 				fixed (Vector3d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble3Array);
 			}
@@ -573,13 +586,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector4 [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Vector4));
+			int typeSize = Marshal.SizeOf<Vector4> ();
 
 			unsafe {
 				fixed (Vector4* valuesPtr = values)
@@ -589,13 +602,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Vector4d [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Vector4d));
+			int typeSize = Marshal.SizeOf<Vector4d> ();
 
 			unsafe {
 				fixed (Vector4d* valuesPtr = values)
@@ -607,9 +620,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector4 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector4));
 
 			unsafe {
+				int typeSize = sizeof (Vector4);
 				fixed (Vector4* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat4Array);
 			}
@@ -621,9 +634,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Vector4d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Vector4d));
 
 			unsafe {
+				int typeSize = sizeof (Vector4d);
 				fixed (Vector4d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble4Array);
 			}
@@ -636,13 +649,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Matrix4 [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Matrix4));
+			int typeSize = Marshal.SizeOf<Matrix4> ();
 
 			unsafe {
 				fixed (Matrix4* valuesPtr = values)
@@ -652,13 +665,13 @@ namespace ModelIO {
 
 		public virtual void Reset (Matrix4d [] values, double [] times)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
-			if (times == null)
-				throw new ArgumentNullException (nameof (times));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
+			if (times is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (times));
 			if (values.Length != times.Length)
 				throw new InvalidOperationException ($"The length of the '{nameof (values)}' array and the '{nameof (times)}' array must match.");
-			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
+			int typeSize = Marshal.SizeOf<Matrix4d> ();
 
 			unsafe {
 				fixed (Matrix4d* valuesPtr = values)
@@ -670,9 +683,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Matrix4 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
+				int typeSize = sizeof (Matrix4);
 				fixed (Matrix4* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat4x4Array);
 			}
@@ -684,9 +697,9 @@ namespace ModelIO {
 		{
 			var count = TimeSampleCount;
 			var timesArr = new Matrix4d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {
+				int typeSize = sizeof (Matrix4d);
 				fixed (Matrix4d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble4x4Array);
 			}
@@ -699,9 +712,9 @@ namespace ModelIO {
 
 		public virtual void SetValues (Matrix4 [] array)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
-			int typeSize = Marshal.SizeOf (typeof (Matrix4));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf<Matrix4> ();
 
 			unsafe {
 				fixed (Matrix4* arrptr = array)
@@ -711,9 +724,9 @@ namespace ModelIO {
 
 		public virtual void SetValues (Matrix4d [] array)
 		{
-			if (array == null)
-				throw new ArgumentNullException (nameof (array));
-			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
+			if (array is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
+			int typeSize = Marshal.SizeOf<Matrix4d> ();
 
 			unsafe {
 				fixed (Matrix4d* arrptr = array)
@@ -725,9 +738,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Matrix4 [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Matrix4));
 
 			unsafe {
+				int typeSize = sizeof (Matrix4);
 				fixed (Matrix4* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetFloat4x4Array);
 			}
@@ -739,9 +752,9 @@ namespace ModelIO {
 		{
 			var count = ElementCount;
 			var timesArr = new Matrix4d [(int) count];
-			int typeSize = Marshal.SizeOf (typeof (Matrix4d));
 
 			unsafe {
+				int typeSize = sizeof (Matrix4d);
 				fixed (Matrix4d* arrptr = timesArr)
 					MDLMemoryHelper.FetchValues (typeSize, (IntPtr) arrptr, count, _GetDouble4x4Array);
 			}
@@ -751,127 +764,98 @@ namespace ModelIO {
 	}
 
 	static class MDLMemoryHelper {
-		static IntPtr GetAlignedPtrForArray (int typeSize, int managedArrayCount, out int nativeArrayLength, out IntPtr alignedPtr)
+		// you must free the returned `ptr` (if non null) but use the `alignedPtr` for native calls
+		static unsafe IntPtr GetAlignedPtrForArray (IntPtr arrptr, int size, bool copy, out IntPtr alignedPtr)
 		{
-			nativeArrayLength = typeSize * managedArrayCount;
-			var ptr = Marshal.AllocHGlobal (nativeArrayLength + 16);
+			// use the original pointer if it's already aligned on a 16 bytes boundary
+			if (((nuint) (ulong) arrptr & 15) == 0) {
+				alignedPtr = arrptr;
+				// nothing to free
+				return IntPtr.Zero;
+			}
+			var ptr = Marshal.AllocHGlobal (size + 16);
 			alignedPtr = new IntPtr (((nint) (ptr + 15) >> 4) << 4);
+			if (copy)
+				Buffer.MemoryCopy ((void*) arrptr, (void*) alignedPtr, size, size);
 			return ptr;
 		}
 
 		internal static void SetValues (int typeSize, IntPtr arrptr, int arrLength, Action<IntPtr, nuint> setFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, arrLength, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
-			}
-
+			var size = typeSize * arrLength;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: true, out var aligned_ptr);
 			setFunc (aligned_ptr, (nuint) arrLength);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 
 		internal static void SetValues (int typeSize, IntPtr arrptr, int arrLength, double time, Action<IntPtr, nuint, double> setFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, arrLength, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, arrptr, nativeArrayLength);
-			}
-
+			var size = typeSize * arrLength;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: true, out var aligned_ptr);
 			setFunc (aligned_ptr, (nuint) arrLength, time);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 
-		internal static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, Func<IntPtr, nuint, nuint> getFunc)
+		internal unsafe static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, Func<IntPtr, nuint, nuint> getFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-			nuint retVal;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, (int) count, out nativeArrayLength, out aligned_ptr);
-				retVal = getFunc (aligned_ptr, count);
-				Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
-			} else
-				retVal = getFunc (arrptr, count);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
-
+			var size = typeSize * (int) count;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: false, out var aligned_ptr);
+			var retVal = getFunc (aligned_ptr, count);
+			if (allocated_ptr != IntPtr.Zero) {
+				// move memory back to the original pointer, then free the aligned memory
+				Buffer.MemoryCopy ((void*) aligned_ptr, (void*) arrptr, size, size);
+				Marshal.FreeHGlobal (allocated_ptr);
+			}
 			return retVal;
 		}
 
-		internal static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, double time, Func<IntPtr, nuint, double, nuint> getFunc)
+		internal unsafe static nuint FetchValues (int typeSize, IntPtr arrptr, nuint count, double time, Func<IntPtr, nuint, double, nuint> getFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = arrptr;
-			var ptr = IntPtr.Zero;
-			nuint retVal;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, (int) count, out nativeArrayLength, out aligned_ptr);
-				retVal = getFunc (aligned_ptr, count, time);
-				Runtime.memcpy (arrptr, aligned_ptr, nativeArrayLength);
-			} else
-				retVal = getFunc (arrptr, count, time);
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
-
+			var size = typeSize * (int) count;
+			// get a 16 bytes aligned pointer for `arrptr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (arrptr, size, copy: false, out var aligned_ptr);
+			var retVal = getFunc (aligned_ptr, count, time);
+			if (allocated_ptr != IntPtr.Zero) {
+				// move memory back to the original pointer, then free the aligned memory
+				Buffer.MemoryCopy ((void*) aligned_ptr, (void*) arrptr, size, size);
+				Marshal.FreeHGlobal (allocated_ptr);
+			}
 			return retVal;
 		}
 
 		internal static void Reset (int typeSize, IntPtr valuesPtr, double [] times, Action<IntPtr, IntPtr, nuint> resetFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = valuesPtr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, times.Length, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
-			}
-
+			var size = typeSize * times.Length;
+			// get a 16 bytes aligned pointer for `valuesPtr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (valuesPtr, size, copy: true, out var aligned_ptr);
 			unsafe {
 				fixed (double* timesPtr = times)
 					resetFunc (aligned_ptr, (IntPtr) timesPtr, (nuint) times.Length);
 			}
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 
 		internal static void Reset (int typeSize, IntPtr valuesPtr, int valuesLength, double [] times, Action<IntPtr, nuint, IntPtr, nuint> resetFunc)
 		{
-			int nativeArrayLength;
-			IntPtr aligned_ptr = valuesPtr;
-			var ptr = IntPtr.Zero;
-
-			if ((nuint) aligned_ptr % 16 != 0) {
-				ptr = GetAlignedPtrForArray (typeSize, valuesLength, out nativeArrayLength, out aligned_ptr);
-				Runtime.memcpy (aligned_ptr, valuesPtr, nativeArrayLength);
-			}
-
+			var size = typeSize * valuesLength;
+			// get a 16 bytes aligned pointer for `valuesPtr` and call native code using it
+			var allocated_ptr = GetAlignedPtrForArray (valuesPtr, size, copy: true, out var aligned_ptr);
 			unsafe {
 				fixed (double* timesPtr = times)
 					resetFunc (aligned_ptr, (nuint) valuesLength, (IntPtr) timesPtr, (nuint) times.Length);
 			}
-
-			if (ptr != IntPtr.Zero)
-				Marshal.FreeHGlobal (ptr);
+			// free the potentially allocated memory using to align memory
+			if (allocated_ptr != IntPtr.Zero)
+				Marshal.FreeHGlobal (allocated_ptr);
 		}
 	}
 }
-#endif

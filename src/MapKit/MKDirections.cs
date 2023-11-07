@@ -2,6 +2,8 @@
 
 using System;
 
+#nullable enable
+
 namespace MapKit {
 
 	public partial class MKDirections {

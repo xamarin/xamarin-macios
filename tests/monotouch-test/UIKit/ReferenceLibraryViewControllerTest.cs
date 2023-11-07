@@ -3,32 +3,33 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ReferenceLibraryViewControllerTest {
-		
+
 		[Test]
+#if __MACCATALYST__
+		[Ignore ("https://github.com/xamarin/maccore/issues/2348")] // The native class doesn't exist
+#endif
+
 		public void InitWithTerm ()
 		{
-			if (Runtime.Arch == Arch.DEVICE && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
+#if !__MACCATALYST__
+			if (Runtime.Arch == Arch.DEVICE && TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 0))
 				Assert.Ignore ("crash on iOS9 devices");
+#endif
 			using (UIReferenceLibraryViewController rlvc = new UIReferenceLibraryViewController ("Mono")) {
 			}
 		}
-		
+
 		[Test]
 		[Ignore ("ios6 beta issues")]
 		public void DictionaryHasDefinitionForTerm ()

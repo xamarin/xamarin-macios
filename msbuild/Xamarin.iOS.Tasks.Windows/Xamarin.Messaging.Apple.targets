@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
+
+	<PropertyGroup>
+		<RebuildDependsOn>
+			EvaluateRemoteBuild;
+			$(RebuildDependsOn);
+		</RebuildDependsOn>
+		<CleanDependsOn>
+			EvaluateRemoteBuild;
+			$(CleanDependsOn);
+		</CleanDependsOn>
+		<BuildDependsOn>
+			EvaluateRemoteBuild;
+			$(BuildDependsOn);
+		</BuildDependsOn>
+	</PropertyGroup>
+	
+	<Target Name="EvaluateRemoteBuild">
+		<PropertyGroup>
+			<IsRemoteBuild>True</IsRemoteBuild>
+			<IsRemoteBuild Condition="'$(IsHotRestartBuild)' == 'True'">False</IsRemoteBuild>
+		</PropertyGroup>
+	</Target>
+	
+	<!-- AfterConnect belongs to Xamarin.Messaging.Build.targets -->
+	<Target Name="AfterConnect" Condition="'$(IsRemoteBuild)' == 'true'" DependsOnTargets="_VerifyXcodeVersion" />
+	
+	<Target Name="_VerifyXcodeVersion" Condition="'$(IsRemoteBuild)' == 'true' And '$(IsMacEnabled)' == 'true'">
+		<VerifyXcodeVersion SessionId="$(BuildSessionId)" />
+	</Target>
+
+	<PropertyGroup>
+		<MessagingAppleTargetsImported>True</MessagingAppleTargetsImported>
+	</PropertyGroup>
+</Project>

@@ -1,0 +1,69 @@
+<Dependencies>
+  <ProductDependencies>
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.100-rtm.23524.17">
+      <Uri>https://github.com/dotnet/installer</Uri>
+      <Sha>1dd37f868b1e3abceced391beea9667e0af10694</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.ILLink" Version="8.0.0-rtm.23524.7">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>59edaad404d1b8e47080015ae8d0787f94c970df</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>488a8a3521610422e8fbe22d5cc66127f3dce3dc</Sha>
+    </Dependency>
+    <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>488a8a3521610422e8fbe22d5cc66127f3dce3dc</Sha>
+    </Dependency>
+    <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0-rtm.23524.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://github.com/dotnet/aspnetcore</Uri>
+      <Sha>b0c12dfb32e70e2c48b1e0a62e9ceb0f5c6a14e1</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+      <Uri>https://github.com/dotnet/emsdk</Uri>
+      <Sha>51bf18a2e20024dfa89d63e20b0c3b695b5c1eed</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23509.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+      <Uri>https://github.com/dotnet/cecil</Uri>
+      <Sha>45dd3a73dd5b64b010c4251303b3664bb30df029</Sha>
+    </Dependency>
+    <!-- This is a subscription of the .NET 7 versions of our packages -->
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>59edaad404d1b8e47080015ae8d0787f94c970df</Sha>
+    </Dependency>
+  </ProductDependencies>
+  <ToolsetDependencies>
+    <Dependency Name="Microsoft.DotNet.Build.Tasks.Feed" Version="6.0.0-beta.21212.6">
+      <Uri>https://github.com/dotnet/arcade</Uri>
+      <Sha>db49d790a4bfa977a9ed7436bf2aa242cefae45e</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.TemplateEngine.Tasks" Version="7.0.100-alpha.1.21601.1">
+      <Uri>https://github.com/dotnet/templating</Uri>
+      <Sha />
+    </Dependency>
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.23526.1">
+      <Uri>https://github.com/dotnet/xharness</Uri>
+      <Sha>ab9528860ac51bb0aa6112fa2605b18c926594ef</Sha>
+    </Dependency>
+  </ToolsetDependencies>
+</Dependencies>

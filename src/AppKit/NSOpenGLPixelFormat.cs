@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -30,45 +32,46 @@ using CoreGraphics;
 using CoreImage;
 using CoreAnimation;
 
+#nullable enable
+
 namespace AppKit {
 	public partial class NSOpenGLPixelFormat {
 		static IntPtr selInitWithAttributes = Selector.GetHandle ("initWithAttributes:");
 
-		public NSOpenGLPixelFormat (NSOpenGLPixelFormatAttribute[] attribs) : base (NSObjectFlag.Empty)
+		public NSOpenGLPixelFormat (NSOpenGLPixelFormatAttribute [] attribs) : base (NSObjectFlag.Empty)
 		{
-			if (attribs == null)
+			if (attribs is null)
 				throw new ArgumentNullException ("attribs");
 
 			unsafe {
-				NSOpenGLPixelFormatAttribute [] copy = new NSOpenGLPixelFormatAttribute [attribs.Length+1];
+				NSOpenGLPixelFormatAttribute [] copy = new NSOpenGLPixelFormatAttribute [attribs.Length + 1];
 				Array.Copy (attribs, 0, copy, 0, attribs.Length);
 
-				fixed (NSOpenGLPixelFormatAttribute* pArray = copy){
+				fixed (NSOpenGLPixelFormatAttribute* pArray = copy) {
 					if (IsDirectBinding) {
-						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr((void*)pArray ));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*) pArray));
 					} else {
-						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr((void*)pArray));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*) pArray));
 					}
 				}
-				
+
 			}
 		}
 
 		public NSOpenGLPixelFormat (uint [] attribs) : base (NSObjectFlag.Empty)
 		{
-			if (attribs == null)
+			if (attribs is null)
 				throw new ArgumentNullException ("attribs");
 
-			unsafe
-			{
+			unsafe {
 				uint [] copy = new uint [attribs.Length + 1];
 				Array.Copy (attribs, 0, copy, 0, attribs.Length);
 
 				fixed (uint* pArray = copy) {
 					if (IsDirectBinding) {
-						InitializeHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*)pArray)));
+						InitializeHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*) pArray)));
 					} else {
-						InitializeHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*)pArray)));
+						InitializeHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*) pArray)));
 					}
 				}
 
@@ -77,11 +80,11 @@ namespace AppKit {
 
 		static uint [] ConvertToAttributes (object [] args)
 		{
-			
+
 			var list = new List<uint> ();
-			for (int i = 0; i < args.Length; i++){
+			for (int i = 0; i < args.Length; i++) {
 				if (args [i] is NSOpenGLPixelFormatAttribute) {
-					NSOpenGLPixelFormatAttribute v = (NSOpenGLPixelFormatAttribute)args [i];
+					NSOpenGLPixelFormatAttribute v = (NSOpenGLPixelFormatAttribute) args [i];
 					switch (v) {
 					case NSOpenGLPixelFormatAttribute.AllRenderers:
 					case NSOpenGLPixelFormatAttribute.DoubleBuffer:
@@ -135,21 +138,21 @@ namespace AppKit {
 						list.Add ((uint) (int) args [i]);
 						break;
 					}
-				} else if (args [i] is int && (int) args [i] == 0 && i == args.Length - 1) 
+				} else if (args [i] is int && (int) args [i] == 0 && i == args.Length - 1)
 					list.Add (0);
 				else
 					throw new ArgumentException ($"The specified attribute is not of type NSOpenGLPixelFormatAttribute: {args [i]}");
 			}
 
-			if (args.Length == 0 || !(args[args.Length - 1] is int) || ((int)args [args.Length - 1]) != 0)
+			if (args.Length == 0 || !(args [args.Length - 1] is int) || ((int) args [args.Length - 1]) != 0)
 				list.Add (0);
-			
+
 			return list.ToArray ();
 		}
-		
+
 		public NSOpenGLPixelFormat (params object [] attribs) : this (ConvertToAttributes (attribs))
 		{
-			if (attribs == null)
+			if (attribs is null)
 				throw new ArgumentNullException ("attribs");
 
 			unsafe {
@@ -163,15 +166,16 @@ namespace AppKit {
 					}
 				}
 
-				fixed (NSOpenGLPixelFormatAttribute* pArray = copy){
+				fixed (NSOpenGLPixelFormatAttribute* pArray = copy) {
 					if (IsDirectBinding) {
-						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr((void*)pArray ));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*) pArray));
 					} else {
-						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr((void*)pArray));
+						Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*) pArray));
 					}
 				}
-				
+
 			}
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<SignAssembly>true</SignAssembly>
+		<GenerateTailCalls>true</GenerateTailCalls>
+
+		<RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+		<FSharpLibraryDirectory>$(RootTestsDirectory)\fsharplibrary</FSharpLibraryDirectory>
+
+		<AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
+	<Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<PackageReference Include="FSharp.Core" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="$(FSharpLibraryDirectory)\AssemblyInfo.fs" />
+		<Compile Include="$(FSharpLibraryDirectory)\ObjCRuntime\RegistrarTest.fs" />
+	</ItemGroup>
+</Project>

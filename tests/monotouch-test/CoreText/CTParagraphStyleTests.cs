@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CTParagraphStyle
 //
 // Authors:
@@ -11,24 +11,9 @@ using System;
 using NUnit.Framework;
 using System.Linq;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreText;
-#else
-using MonoTouch.CoreText;
-using MonoTouch.Foundation;
-#endif
-
-
-#if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using nfloat = global::System.Single;
-using nint = global::System.Int32;
-using nuint = global::System.UInt32;
-#endif
+using ObjCRuntime;
 
 namespace MonoTouchFixtures.CoreText {
 
@@ -61,16 +46,16 @@ namespace MonoTouchFixtures.CoreText {
 
 			var style = new CTParagraphStyle (settings);
 			Assert.DoesNotThrow (() => {
-				Assert.AreEqual (settings.TailIndent, style.TailIndent, "TailIndent");
-				Assert.AreEqual (settings.ParagraphSpacingBefore, style.ParagraphSpacingBefore, "ParagraphSpacingBefore");
-				Assert.AreEqual (settings.ParagraphSpacing, style.ParagraphSpacing, "ParagraphSpacing");
-				Assert.AreEqual (settings.LineSpacing, style.LineSpacing, "LineSpacing");
-				Assert.AreEqual (settings.MinimumLineHeight, style.MinimumLineHeight, "MinimumLineHeight");
-				Assert.AreEqual (settings.MaximumLineHeight, style.MaximumLineHeight, "MaximumLineHeight");
-				Assert.AreEqual (settings.LineHeightMultiple, style.LineHeightMultiple, "LineHeightMultiple");
-				Assert.AreEqual (settings.DefaultTabInterval, style.DefaultTabInterval, "DefaultTabInterval");
-				Assert.AreEqual (settings.HeadIndent, style.HeadIndent, "HeadIndent");
-				Assert.AreEqual (settings.FirstLineHeadIndent, style.FirstLineHeadIndent, "FirstLineHeadIndent");
+				Assert.AreEqual (settings.TailIndent, (nfloat) style.TailIndent, "TailIndent");
+				Assert.AreEqual (settings.ParagraphSpacingBefore, (nfloat) style.ParagraphSpacingBefore, "ParagraphSpacingBefore");
+				Assert.AreEqual (settings.ParagraphSpacing, (nfloat) style.ParagraphSpacing, "ParagraphSpacing");
+				Assert.AreEqual (settings.LineSpacing, (nfloat) style.LineSpacing, "LineSpacing");
+				Assert.AreEqual (settings.MinimumLineHeight, (nfloat) style.MinimumLineHeight, "MinimumLineHeight");
+				Assert.AreEqual (settings.MaximumLineHeight, (nfloat) style.MaximumLineHeight, "MaximumLineHeight");
+				Assert.AreEqual (settings.LineHeightMultiple, (nfloat) style.LineHeightMultiple, "LineHeightMultiple");
+				Assert.AreEqual (settings.DefaultTabInterval, (nfloat) style.DefaultTabInterval, "DefaultTabInterval");
+				Assert.AreEqual (settings.HeadIndent, (nfloat) style.HeadIndent, "HeadIndent");
+				Assert.AreEqual (settings.FirstLineHeadIndent, (nfloat) style.FirstLineHeadIndent, "FirstLineHeadIndent");
 				Assert.AreEqual (settings.LineBreakMode, style.LineBreakMode, "LineBreakMode");
 				Assert.AreEqual (settings.BaseWritingDirection, style.BaseWritingDirection, "LineBreakMode");
 				Assert.AreEqual (settings.Alignment, style.Alignment, "Alignment");

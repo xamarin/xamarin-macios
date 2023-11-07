@@ -8,27 +8,11 @@
 //
 
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
 using ObjCRuntime;
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
@@ -42,7 +26,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void EllipseFromRect ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p = CGPath.EllipseFromRect (rect, matrix)) {
 				Assert.IsNotNull (p, "non-null");
@@ -53,8 +37,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CopyByDashingPath_18764 ()
 		{
 			var identity = CGAffineTransform.MakeIdentity ();
-			using (var path = CGPath.EllipseFromRect (RectangleF.Empty, identity)) {
-				var lengths = new nfloat[] { 10, 10 };
+			using (var path = CGPath.EllipseFromRect (CGRect.Empty, identity)) {
+				var lengths = new nfloat [] { 10, 10 };
 				var phase = 2;
 				using (var d1 = path.CopyByDashingPath (lengths)) {
 					Assert.That (d1.Handle, Is.Not.EqualTo (IntPtr.Zero), "d1");
@@ -139,7 +123,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void AddRect ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
@@ -154,7 +138,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void AddRects ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
@@ -173,8 +157,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
 				Assert.IsTrue (p1.IsEmpty, "IsEmpty-1");
-				p1.AddLines (new [] { PointF.Empty });
-				p2.AddLines (matrix, new [] { PointF.Empty });
+				p1.AddLines (new [] { CGPoint.Empty });
+				p2.AddLines (matrix, new [] { CGPoint.Empty });
 				Assert.IsFalse (p1.IsEmpty, "IsEmpty-2");
 				Assert.That (p1, Is.EqualTo (p2), "CGPathEqualToPath");
 			}
@@ -183,7 +167,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void AddEllipseInRect ()
 		{
-			var rect = new RectangleF (0, 0, 15, 15);
+			var rect = new CGRect (0, 0, 15, 15);
 			var matrix = CGAffineTransform.MakeIdentity ();
 			using (CGPath p1 = new CGPath ())
 			using (CGPath p2 = new CGPath ()) {
@@ -253,6 +237,153 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 
 		[Test]
+		public void Normalizing ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				Assert.IsNotNull (p1.CreateByNormalizing (false));
+				Assert.IsNotNull (p1.CreateByNormalizing (true));
+			}
+		}
+
+		[Test]
+		public void Union ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (2, 2);
+					p2.AddLineToPoint (0, 0);
+					Assert.IsNotNull (p1.CreateByUnioningPath (p2, false));
+					Assert.IsNotNull (p1.CreateByUnioningPath (p2, true));
+				}
+			}
+		}
+
+		[Test]
+		public void Intersecting ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (2, 2);
+					p2.AddLineToPoint (0, 0);
+					Assert.IsNotNull (p1.CreateByIntersectingPath (p2, false));
+					Assert.IsNotNull (p1.CreateByIntersectingPath (p2, true));
+				}
+			}
+		}
+
+		[Test]
+		public void Subtracting ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (2, 2);
+					p2.AddLineToPoint (0, 0);
+					Assert.IsNotNull (p1.CreateBySubtractingPath (p2, false));
+					Assert.IsNotNull (p1.CreateBySubtractingPath (p2, true));
+				}
+			}
+		}
+
+		[Test]
+		public void SymmetricDifference ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (2, 2);
+					p2.AddLineToPoint (0, 0);
+					Assert.IsNotNull (p1.CreateBySymmetricDifferenceOfPath (p2, false));
+					Assert.IsNotNull (p1.CreateBySymmetricDifferenceOfPath (p2, true));
+				}
+			}
+		}
+
+		[Test]
+		public void LineBySubtracting ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (2, 2);
+					p2.AddLineToPoint (0, 0);
+					Assert.IsNotNull (p1.CreateLineBySubtractingPath (p2, false));
+					Assert.IsNotNull (p1.CreateLineBySubtractingPath (p2, true));
+				}
+			}
+		}
+
+		[Test]
+		public void LineByIntersecting ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (2, 2);
+					p2.AddLineToPoint (0, 0);
+					Assert.IsNotNull (p1.CreateLineByIntersectingPath (p2, false));
+					Assert.IsNotNull (p1.CreateLineByIntersectingPath (p2, true));
+				}
+			}
+		}
+
+		[Test]
+		public void GetSeparateComponents ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				Assert.AreEqual (0, p1.GetSeparateComponents (true).Length);
+				Assert.AreEqual (0, p1.GetSeparateComponents (false).Length);
+			}
+		}
+
+		[Test]
+		public void CreateByFlattening ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (1, 1);
+				Assert.IsNotNull (p1.CreateByFlattening (new nfloat (0.5)));
+			}
+		}
+
+		[Test]
+		public void DoesIntersect ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using (CGPath p1 = new CGPath ()) {
+				p1.MoveToPoint (0, 0);
+				p1.AddLineToPoint (2, 2);
+				using (CGPath p2 = new CGPath ()) {
+					p2.MoveToPoint (0, 2);
+					p2.AddLineToPoint (2, 0);
+					Assert.IsFalse (p1.DoesIntersect (p2, false));
+					Assert.IsFalse (p1.DoesIntersect (p2, false));
+				}
+			}
+		}
+
+		[Test]
 		public void Bug40230 ()
 		{
 			var rect = new CGRect (1, 1, 25, 25);
@@ -269,15 +400,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void IncreaseRetainCountMakeMutable ()
 		{
 			// ensure that we do not crash and that the retain count is changed.
-			using (CGPath p1 = new CGPath ())
-			{
+			using (CGPath p1 = new CGPath ()) {
 				var count = CFGetRetainCount (p1.Handle);
-				using (var copy = p1.Copy ())
-				{
+				using (var copy = p1.Copy ()) {
 					var newRetainCount = CFGetRetainCount (copy.Handle);
 					Assert.AreEqual (count, newRetainCount, "Ref count should not have changed.");
-					Assert.AreEqual (1, count, "Original count.");
-					Assert.AreEqual (1, newRetainCount, "New count");
+					Assert.AreEqual ((nint) 1, count, "Original count.");
+					Assert.AreEqual ((nint) 1, newRetainCount, "New count");
 				}
 			}
 		}

@@ -2,14 +2,10 @@
 // Copyright 2015 Xamarin Inc
 //
 using System;
-#if XAMCORE_2_0
+using System.Collections.Generic;
+using System.IO;
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreFoundation {
@@ -19,7 +15,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 	public class BundleTest {
 #if __WATCHOS__
 		const string ExpectedAppName = "monotouchtest.appex";
-#elif MONOMAC
+#elif MONOMAC && !NET
 		const string ExpectedAppName = "xammac_tests.app";
 #else
 		const string ExpectedAppName = "monotouchtest.app";
@@ -32,7 +28,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.IsTrue (bundles.Length > 0);
 			foreach (CFBundle b in bundles) {
 				Assert.IsFalse (String.IsNullOrEmpty (b.Url.ToString ()),
-  						String.Format("Found bundle with null url and id {0}", b.Identifier));
+  						String.Format ("Found bundle with null url and id {0}", b.Identifier));
 			}
 		}
 
@@ -49,26 +45,37 @@ namespace MonoTouchFixtures.CoreFoundation {
 			// grab all bundles and make sure we do get the correct ones using their id
 			var bundles = CFBundle.GetAll ();
 			Assert.IsTrue (bundles.Length > 0);
+
+			// There may be multiple apps providing the same bundle ID (the typical example is that we usually have multiple Xcodes installed)
+			// So compute a map for bundle id -> bundle paths that's used in the second part here to verify the CFBundle.Get results.
+			var dict = new Dictionary<string, List<string>> ();
+			foreach (var bundle in bundles) {
+				var id = bundle.Identifier;
+				if (string.IsNullOrEmpty (id))
+					continue;
+				if (!dict.TryGetValue (id, out var list))
+					dict [id] = list = new List<string> ();
+				list.Add ((string) ((NSString) bundle.Url.Path).ResolveSymlinksInPath ());
+			}
+
 			foreach (CFBundle b in bundles) {
 				var id = b.Identifier;
 				if (!String.IsNullOrEmpty (id)) {
 					var otherBundle = CFBundle.Get (id);
 					Assert.AreEqual (b.Info.Type, otherBundle.Info.Type,
-  							 String.Format("Found bundle with diff type and id {0}", id));
+  							 String.Format ("Found bundle with diff type and id {0}", id));
 					var bPath = (string) ((NSString) b.Url.Path).ResolveSymlinksInPath ();
-					var otherPath = (string) ((NSString) otherBundle.Url.Path).ResolveSymlinksInPath ();
-					Assert.AreEqual (bPath, otherPath,
-  							 String.Format("Found bundle with diff url and id {0}", id));
+					var list = dict [id];
+					Assert.That (list, Does.Contain (bPath), "None of the bundles for {0} matches the path {1}", id, bPath);
 				}
 			}
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestGetBundleIdNull (string id)
 		{
-			var bundle = CFBundle.Get (id);
+			Assert.Throws<ArgumentException> (() => CFBundle.Get (id));
 		}
 
 		[Test]
@@ -77,7 +84,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var main = CFBundle.GetMain ();
 #if __WATCHOS__
 			var expectedBundleId = "com.xamarin.monotouch-test_watch.watchkitapp.watchkitextension";
-#elif MONOMAC
+#elif MONOMAC && !NET
 			var expectedBundleId = "com.xamarin.xammac_tests";
 #else
 			var expectedBundleId = "com.xamarin.monotouch-test";
@@ -90,53 +97,57 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestBuiltInPlugInsUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
+			Assert.That (main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
 		}
 
 		[Test]
 		public void TestExecutableUrl ()
 		{
 			var main = CFBundle.GetMain ();
-#if MONOMAC
-			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/Contents/MacOS/xammac_tests"));
+#if MONOMAC && !NET
+			var executableRelativePath = Path.Combine (ExpectedAppName, "Contents", "MacOS", "xammac_tests");
+#elif __MACCATALYST__ || __MACOS__
+			var executableRelativePath = Path.Combine (ExpectedAppName, "Contents", "MacOS", "monotouchtest");
 #else
-			Assert.That(main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/monotouchtest"));
+			var executableRelativePath = Path.Combine (ExpectedAppName, "monotouchtest");
 #endif
+			var alternativeRelativePath = executableRelativePath.Replace (ExpectedAppName, "PublicStaging.app");
+			Assert.That (main.ExecutableUrl.ToString (), Does.Contain (executableRelativePath).Or.Contain (alternativeRelativePath));
 		}
 
 		[Test]
 		public void TestPrivateFrameworksUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.PrivateFrameworksUrl.ToString (), Contains.Substring ("Frameworks/"));
+			Assert.That (main.PrivateFrameworksUrl.ToString (), Contains.Substring ("Frameworks/"));
 		}
 
 		[Test]
 		public void TestResourcesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.ResourcesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.ResourcesDirectoryUrl.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
 		public void TestSharedFrameworksUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SharedFrameworksUrl.ToString (), Contains.Substring ("SharedFrameworks/"));
+			Assert.That (main.SharedFrameworksUrl.ToString (), Contains.Substring ("SharedFrameworks/"));
 		}
 
 		[Test]
 		public void TestSharedSupportUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SharedSupportUrl.ToString (), Contains.Substring ("SharedSupport/"));
+			Assert.That (main.SharedSupportUrl.ToString (), Contains.Substring ("SharedSupport/"));
 		}
 
 		[Test]
 		public void TestSupportFilesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SupportFilesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.SupportFilesDirectoryUrl.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
@@ -150,7 +161,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.Url.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.Url.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
@@ -169,16 +180,15 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestLocalizationsNull ()
 		{
-			var localizations = CFBundle.GetLocalizations (null);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetLocalizations (null));
 		}
 
 		[Test]
 		public void TestPreferredLocalizations ()
 		{
-			var preferred = new string [] {"en", "es"};
+			var preferred = new string [] { "en", "es" };
 			var used = CFBundle.GetPreferredLocalizations (preferred);
 			Assert.IsTrue (used.Length > 0);
 			foreach (var u in used)
@@ -186,19 +196,17 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestPreferredLocalizationsNull ()
 		{
-			var used = CFBundle.GetPreferredLocalizations (null);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetPreferredLocalizations (null));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestAuxiliaryExecutableUrlNull (string executable)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetAuxiliaryExecutableUrl (executable);
+			Assert.Throws<ArgumentException> (() => main.GetAuxiliaryExecutableUrl (executable));
 		}
 
 		[Test]
@@ -211,156 +219,174 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlNullName (string resourceName)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrl (resourceName, "type", null);
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrl (resourceName, "type", null));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlNullType (string resourceType)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrl ("resourceName", resourceType, null);
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrl ("resourceName", resourceType, null));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestStaticResourceUrlNull ()
 		{
 			NSUrl url = null;
-			CFBundle.GetResourceUrl (url, "resourceName", "resourceType", null);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetResourceUrl (url, "resourceName", "resourceType", null));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestStaticResourceUrlNullName (string resourceName)
 		{
 			var main = CFBundle.GetMain ();
-			CFBundle.GetResourceUrl (main.Url, resourceName, "resourceType", null);
+			Assert.Throws<ArgumentException> (() => CFBundle.GetResourceUrl (main.Url, resourceName, "resourceType", null));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestStaticResourceUrlNullType (string resourceType)
 		{
 			var main = CFBundle.GetMain ();
-			CFBundle.GetResourceUrl (main.Url, "resourceName", resourceType, null);
+			Assert.Throws<ArgumentException> (() => CFBundle.GetResourceUrl (main.Url, "resourceName", resourceType, null));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlsNullType (string resourceType)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrls (resourceType, null);
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrls (resourceType, null));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestStaticResourceUrlsNullType ()
 		{
 			NSUrl url = null;
-			CFBundle.GetResourceUrls (url, "resourceType", null);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetResourceUrls (url, "resourceType", null));
 		}
-		
+
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestStaticResourceUrlsNullType (string resourceType)
 		{
 			var main = CFBundle.GetMain ();
-			CFBundle.GetResourceUrls (main.Url, resourceType, null);
+			Assert.Throws<ArgumentException> (() => CFBundle.GetResourceUrls (main.Url, resourceType, null));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlLocalNameNullName (string resourceName)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrl (resourceName, "resourceType", null, "en");
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrl (resourceName, "resourceType", null, "en"));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlLocalNameNullType (string resourceType)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrl ("resourceName", resourceType, null, "en");
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrl ("resourceName", resourceType, null, "en"));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlLocalNameNullLocale (string locale)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrl ("resourceName", "resourceType", null, locale);
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrl ("resourceName", "resourceType", null, locale));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlsLocalNameNullType (string type)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrls (type, null, "en");
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrls (type, null, "en"));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestResourceUrlsLocalNameNullLocale (string locale)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetResourceUrls ("jpg", null, locale);
+			Assert.Throws<ArgumentException> (() => main.GetResourceUrls ("jpg", null, locale));
 		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestLocalizedStringNullKey (string key)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetLocalizedString (key, null, "tableName");
-		} 
+			Assert.Throws<ArgumentException> (() => main.GetLocalizedString (key, null, "tableName"));
+		}
 
 		[TestCase ("")]
 		[TestCase (null)]
-		[ExpectedException (typeof (ArgumentException))]
 		public void TestLocalizedStringNullTable (string tableName)
 		{
 			var main = CFBundle.GetMain ();
-			main.GetLocalizedString ("key", null, tableName);
-		} 
+			Assert.Throws<ArgumentException> (() => main.GetLocalizedString ("key", null, tableName));
+		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestGetLocalizationsForPreferencesNullLocalArray ()
 		{
-			CFBundle.GetLocalizationsForPreferences (null, new string [0]);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetLocalizationsForPreferences (null, new string [0]));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestGetLocalizationsForPreferencesNullPrefArray ()
 		{
-			CFBundle.GetLocalizationsForPreferences (new string [0], null);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetLocalizationsForPreferences (new string [0], null));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void TestGetInfoDictionaryNull ()
 		{
-			CFBundle.GetInfoDictionary (null);
+			Assert.Throws<ArgumentNullException> (() => CFBundle.GetInfoDictionary (null));
 		}
+
+#if MONOMAC
+		[Test]
+		public void TestIsArchitectureLoadable ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 2);
+
+			var isX64Executable = global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.X64;
+			var isArm64Executable = global::System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture == global::System.Runtime.InteropServices.Architecture.Arm64;
+
+			bool loadable_x86_64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.X86_64);
+			// Due to Rosetta, both x64 and arm64 executables are loadable on Apple Silicon.
+			if (isX64Executable || isArm64Executable)
+				Assert.IsTrue (loadable_x86_64, "x86_64 Expected => true");
+			else
+				Assert.IsFalse (loadable_x86_64, "x86_64 Expected => false");
+
+			bool loadable_arm64 = CFBundle.IsArchitectureLoadable (CFBundle.Architecture.ARM64);
+			if (isArm64Executable)
+				Assert.IsTrue (loadable_arm64, "arm64 Expected => true");
+			// Due to Rosetta, we can't determine whether ARM64 is loadable or not if we're an X64 executable ourselves.
+		}
+
+		[Test]
+		public void TestIsExecutableLoadable ()
+		{
+			TestRuntime.AssertXcodeVersion (12, 2);
+
+			var main = CFBundle.GetMain ();
+			var loadableBundle = CFBundle.IsExecutableLoadable (main);
+			Assert.IsTrue (loadableBundle, "loadableBundle");
+
+			var loadableBundleUrl = CFBundle.IsExecutableLoadable (main.ExecutableUrl);
+			Assert.IsTrue (loadableBundleUrl, "loadableBundleUrl");
+		}
+#endif
 	}
 }

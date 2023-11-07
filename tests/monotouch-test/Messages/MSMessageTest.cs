@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MSMessage
 //
 // Authors:
@@ -7,16 +7,12 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_MESSAGE
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Messages;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Messages;
-#endif
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Messages
@@ -30,6 +26,8 @@ namespace MonoTouchFixtures.Messages
 		public void MinimumSdkCheck ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -44,4 +42,4 @@ namespace MonoTouchFixtures.Messages
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_MESSAGE

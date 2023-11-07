@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <RootNamespace>interdependentbindingprojects</RootNamespace>
+
+    <SignAssembly>true</SignAssembly>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+    <ThisTestDirectory>$(RootTestsDirectory)\interdependent-binding-projects</ThisTestDirectory>
+
+    <AssemblyOriginatorKeyFile>$(RootTestsDirectory)\..\product.snk</AssemblyOriginatorKeyFile>
+
+    <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test2\dotnet\$(_PlatformName)\bindings-test2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(ThisTestDirectory)\Main.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+    <Compile Include="$(RootTestsDirectory)\common\mac\MacMain.cs" Condition="$(TargetFramework.EndsWith('-macos'))" Link="MacMain.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs" />
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

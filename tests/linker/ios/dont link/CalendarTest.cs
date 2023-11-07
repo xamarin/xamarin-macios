@@ -2,11 +2,7 @@
 
 using System;
 using System.Globalization;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace DontLink.Calendars {
@@ -22,14 +18,22 @@ namespace DontLink.Calendars {
 		public void UmAlQura ()
 		{
 			var ci = CultureInfo.GetCultureInfo ("ar");
+#if NET // https://github.com/dotnet/runtime/issues/50859
+			Assert.That (ci.Calendar.ToString (), Is.EqualTo ("System.Globalization.GregorianCalendar"), "Calendar");
+#else
 			Assert.That (ci.Calendar.ToString (), Is.EqualTo ("System.Globalization.UmAlQuraCalendar"), "Calendar");
+#endif
 		}
 
 		[Test]
 		public void Hijri ()
 		{
 			var ci = CultureInfo.GetCultureInfo ("ps");
+#if NET // https://github.com/dotnet/runtime/issues/50859
+			Assert.That (ci.Calendar.ToString (), Is.EqualTo ("System.Globalization.PersianCalendar"), "Calendar");
+#else
 			Assert.That (ci.Calendar.ToString (), Is.EqualTo ("System.Globalization.HijriCalendar"), "Calendar");
+#endif
 		}
 
 		[Test]

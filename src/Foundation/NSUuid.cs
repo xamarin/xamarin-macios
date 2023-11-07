@@ -12,39 +12,36 @@ using ObjCRuntime;
 
 namespace Foundation {
 	partial class NSUuid {
-		static unsafe IntPtr GetIntPtr (byte [] bytes)
+
+		public NSUuid (byte [] bytes) : base (NSObjectFlag.Empty)
 		{
-			if (bytes == null)
+			if (bytes is null)
 				throw new ArgumentNullException ("bytes");
 			if (bytes.Length < 16)
 				throw new ArgumentException ("length must be at least 16 bytes");
-			
-			IntPtr ret;
-			fixed (byte *p = &bytes [0]){
-				ret = (IntPtr) p;
-			}
-			return ret;
-		}
 
-		unsafe public NSUuid (byte [] bytes) : base (NSObjectFlag.Empty)
-		{
-			IntPtr ptr = GetIntPtr (bytes);
+			unsafe {
+				fixed (byte* p = &bytes [0]) {
+					IntPtr ptr = (IntPtr) p;
 
-			if (IsDirectBinding) {
-				Handle = Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("initWithUUIDBytes:"), ptr);
-			} else {
-				Handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle ("initWithUUIDBytes:"), ptr);
+					if (IsDirectBinding) {
+						Handle = Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("initWithUUIDBytes:"), ptr);
+					} else {
+						Handle = Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle ("initWithUUIDBytes:"), ptr);
+					}
+				}
 			}
 		}
 
 		public byte [] GetBytes ()
 		{
 			byte [] ret = new byte [16];
-			
-			IntPtr buf = Marshal.AllocHGlobal (16);
-			GetUuidBytes (buf);
-			Marshal.Copy (buf, ret, 0, 16);
-			Marshal.FreeHGlobal (buf);
+
+			unsafe {
+				fixed (byte* buf = ret) {
+					GetUuidBytes ((IntPtr) buf);
+				}
+			}
 
 			return ret;
 		}

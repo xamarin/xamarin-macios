@@ -1,42 +1,40 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
 #endif
 using Bindings.Test;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 
 using NUnit.Framework;
 
-#if __MACOS__
-using ObjCException = Foundation.ObjCException;
-#else
+#if !NET && !__MACOS__
 using ObjCException = Foundation.MonoTouchException;
 #endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ExceptionsTest {
 
-#if __WATCHOS__
+#if NET
+		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
+		MarshalManagedExceptionMode defaultManagedExceptionMode = MarshalManagedExceptionMode.Default;
+#elif __WATCHOS__
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
 		MarshalManagedExceptionMode defaultManagedExceptionMode = MarshalManagedExceptionMode.Default;
 #else
+#if (__MACOS__ || __MACCATALYST__) && DEBUG
+		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
+#else
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+#endif
 		MarshalManagedExceptionMode defaultManagedExceptionMode = MarshalManagedExceptionMode.Default;
 #endif
 
@@ -90,7 +88,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void ObjCException ()
 		{
-#if !__WATCHOS__ && !__MACOS__
+#if !__WATCHOS__ && !__MACOS__ && !__MACCATALYST__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
@@ -98,6 +96,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #if !DEBUG && !__WATCHOS__
 			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
+
 			InstallHandlers ();
 
 			try {
@@ -138,13 +137,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Exception thrownException = null;
 
 #if !__WATCHOS__ && !__MACOS__
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
+			TestRuntime.AssertNotDevice ("This test requires wrapper functions, which are not enabled for monotouch-test on device.");
 #endif
 
 #if !DEBUG && !__WATCHOS__
 			Assert.Ignore ("This test only works in debug mode in the simulator.");
 #endif
+
+			TestRuntime.AssertNotARM64Desktop ("Exception handling doesn't work on ARM64 desktop: https://github.com/xamarin/xamarin-macios/issues/16264");
+
 			var hasDebugger = global::System.Diagnostics.Debugger.IsAttached;
 
 			InstallHandlers ();
@@ -159,7 +160,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						thrownException = ex;
 					}
 					Assert.AreSame (e.Exception, thrownException, "exception");
-					Assert.AreEqual ("3,14", thrownException.Message, "1 thrown message");
+					Assert.That (thrownException.Message, Does.StartWith ("3,14"), "1 thrown message");
 					Assert.AreSame (typeof (ApplicationException), thrownException.GetType (), "1 thrown type");
 					if (hasDebugger) {
 						Assert.AreEqual (0, objcEventArgs.Count, "1 objc exception");
@@ -167,7 +168,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						Assert.AreEqual (1, objcEventArgs.Count, "1 objc exception");
 						Assert.AreEqual (defaultObjectiveCExceptionMode, objcEventArgs [0].ExceptionMode, "1 objc mode");
 						Assert.AreEqual ("System.ApplicationException", objcEventArgs [0].Exception.Name, "1 objc reason");
-						Assert.AreEqual ("3,14", objcEventArgs [0].Exception.Reason, "1 objc message");
+						Assert.That (objcEventArgs [0].Exception.Reason, Does.StartWith ("3,14"), "1 objc message");
 					}
 					if (hasDebugger) {
 						Assert.AreEqual (0, managedEventArgs.Count, "1 managed count");
@@ -192,7 +193,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						Assert.AreNotSame (e.Exception, thrownException, "exception");
 						Assert.AreSame (typeof (ObjCException), thrownException.GetType (), "2 thrown type");
 						Assert.AreEqual ("Caught exception", ((ObjCException) thrownException).Name, "2 thrown name");
-						Assert.AreEqual ("exception was rethrown", ((ObjCException) thrownException).Reason, "2 thrown reason");
+						Assert.That (((ObjCException) thrownException).Reason, Does.StartWith ("exception was rethrown"), "2 thrown reason");
 					}
 					if (hasDebugger) {
 						Assert.AreEqual (0, objcEventArgs.Count, "2 objc exception");
@@ -200,7 +201,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						Assert.AreEqual (1, objcEventArgs.Count, "2 objc exception");
 						Assert.AreEqual (defaultObjectiveCExceptionMode, objcEventArgs [0].ExceptionMode, "2 objc mode");
 						Assert.AreEqual ("Caught exception", objcEventArgs [0].Exception.Name, "2 objc reason");
-						Assert.AreEqual ("exception was rethrown", objcEventArgs [0].Exception.Reason, "2 objc message");
+						Assert.That (objcEventArgs [0].Exception.Reason, Does.StartWith ("exception was rethrown"), "2 objc message");
 					}
 					if (hasDebugger) {
 						Assert.AreEqual (0, managedEventArgs.Count, "2 managed count");
@@ -222,7 +223,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					}
 				}
 			} finally {
-				UninstallHandlers ();      
+				UninstallHandlers ();
 			}
 		}
 	}

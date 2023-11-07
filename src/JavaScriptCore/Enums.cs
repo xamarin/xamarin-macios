@@ -8,8 +8,9 @@
 
 using System;
 
+using ObjCRuntime;
+
 namespace JavaScriptCore {
-#if !MONOMAC || XAMCORE_2_0
 	// untyped enum -> JSValueRef.h
 	public enum JSType {
 		Undefined,
@@ -18,7 +19,8 @@ namespace JavaScriptCore {
 		Number,
 		String,
 		Object,
-		[iOS (13,0)][Mac (10,15)]
+		[iOS (13, 0)]
+		[MacCatalyst (13, 1)]
 		Symbol,
 	}
 
@@ -37,5 +39,4 @@ namespace JavaScriptCore {
 		None = 0,
 		NoAutomaticPrototype = 1 << 1
 	}
-#endif
 }

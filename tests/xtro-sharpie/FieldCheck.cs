@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !duplicate-field-name!
@@ -25,7 +25,7 @@ namespace Extrospection {
 
 	public class FieldCheck : BaseVisitor {
 
-		Dictionary<string,MemberReference> fields = new Dictionary<string, MemberReference> ();
+		Dictionary<string, MemberReference> fields = new Dictionary<string, MemberReference> ();
 
 		public override void VisitManagedType (TypeDefinition type)
 		{
@@ -35,7 +35,7 @@ namespace Extrospection {
 						continue;
 					var getter = p.GetMethod;
 					// mostly static getters but not in the case of generated EventArgs.g.cs
-					if (getter == null)
+					if (getter is null)
 						continue;
 
 					CheckAttributes (p.FullName, p);
@@ -79,12 +79,13 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var name = decl.ToString ();
 			if (!fields.TryGetValue (name, out var mr)) {
-				Log.On (framework).Add ($"!missing-field! {name} not bound");
+				if (!decl.IsDeprecated ())
+					Log.On (framework).Add ($"!missing-field! {name} not bound");
 			} else
 				fields.Remove (name);
 		}

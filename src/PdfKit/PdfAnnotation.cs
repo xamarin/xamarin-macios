@@ -1,4 +1,4 @@
-﻿//
+//
 // PdfAnnotation.cs
 //
 // Authors:
@@ -8,56 +8,83 @@
 //
 
 using System;
+
+using CoreFoundation;
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
+#nullable enable
+
 namespace PdfKit {
 	public partial class PdfAnnotation {
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#endif
 		public bool SetValue<T> (T value, PdfAnnotationKey key) where T : class, INativeObject
 		{
-			if (value == null)
-				throw new ArgumentNullException (nameof (value));
+			if (value is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
-			return _SetValue (value.Handle, key.GetConstant ());
+			return _SetValue (value.Handle, key.GetConstant ()!);
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#endif
 		public bool SetValue (string str, PdfAnnotationKey key)
 		{
-			var nstr = NSString.CreateNative (str);
+			var nstr = CFString.CreateNative (str);
 			try {
-				return _SetValue (nstr, key.GetConstant ());
+				return _SetValue (nstr, key.GetConstant ()!);
 			} finally {
-				NSString.ReleaseNative (nstr);
+				CFString.ReleaseNative (nstr);
 			}
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#endif
 		public T GetValue<T> (PdfAnnotationKey key) where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()), true);
+			return Runtime.GetINativeObject<T> (_GetValue (key.GetConstant ()!), true)!;
 		}
 
 		public PdfAnnotationKey AnnotationType {
+#if NET
+			get { return PdfAnnotationKeyExtensions.GetValue (Type!); }
+			set { Type = value.GetConstant ()!; }
+#else
 			get { return PdfAnnotationKeyExtensions.GetValue ((NSString) Type); }
 			set { Type = value.GetConstant (); }
+#endif
 		}
 
-		[Mac (10,13)]
-		public CGPoint[] QuadrilateralPoints {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#endif
+		public CGPoint [] QuadrilateralPoints {
 			get {
-				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) =>
-					{
-						using (var value = new NSValue (v))
-							return value.CGPointValue;
-					});
+				return NSArray.ArrayFromHandleFunc<CGPoint> (_QuadrilateralPoints, (v) => {
+					using (var value = new NSValue (v))
+						return value.CGPointValue;
+				});
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					_QuadrilateralPoints = IntPtr.Zero;
 				} else {
 					using (var arr = new NSMutableArray ()) {
@@ -70,4 +97,3 @@ namespace PdfKit {
 		}
 	}
 }
-#endif // XAMCORE_2_0

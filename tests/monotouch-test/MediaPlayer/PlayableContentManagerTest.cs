@@ -7,29 +7,23 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !NET
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaPlayer {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PlayableContentManagerTest	{
+	public class PlayableContentManagerTest {
 
 		class DataSource : MPPlayableContentDataSource {
-#if XAMCORE_2_0
 			#region implemented abstract members of MPPlayableContentDataSource
 			public override MPContentItem ContentItem (NSIndexPath indexPath)
 			{
@@ -40,7 +34,6 @@ namespace MonoTouchFixtures.MediaPlayer {
 				throw new NotImplementedException ();
 			}
 			#endregion
-#endif
 		}
 
 		class Delegate : MPPlayableContentDelegate {
@@ -49,7 +42,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void Shared ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 1, throwIfOtherPlatform: false);
 
 			MPPlayableContentManager shared = MPPlayableContentManager.Shared;
 			Assert.Null (shared.DataSource, "DataSource");
@@ -61,8 +54,7 @@ namespace MonoTouchFixtures.MediaPlayer {
 					shared.DataSource = ds;
 					shared.Delegate = dg;
 				}
-			}
-			finally {
+			} finally {
 				shared.DataSource = null;
 				shared.Delegate = null;
 			}

@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json.schemastore.org/ide.host",
+  "appliesTo": "TvOSApplication | TvOSAppExtension | TvOSBinding | TvOSClassLibary",
+  "defaultItemExtension": "cs",
+  "itemHierarchyPaths": [ "tvOS" ]
+}

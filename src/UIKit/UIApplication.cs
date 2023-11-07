@@ -10,10 +10,18 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
+using CoreFoundation;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
 
 namespace UIKit {
 	public class UIKitThreadAccessException : Exception {
@@ -21,7 +29,7 @@ namespace UIKit {
 		{
 		}
 	}
-	
+
 #if WATCH
 	// There's no UIApplication on the watch, but we use the class extensively in bindings (EnsureUIThread, etc)
 	// so we include it as an internal type.
@@ -30,60 +38,68 @@ namespace UIKit {
 	public
 #endif
 	partial class UIApplication
-#if !WATCH 
+#if !WATCH
 	: UIResponder
 #endif
 	{
-		static Thread mainThread;
+		static Thread? mainThread;
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
 
 #if !WATCH
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
 		// See: https://github.com/xamarin/MicrosoftInTune/issues/3 for an example.
-		[DllImport (/*Constants.UIKitLibrary*/ "__Internal")]
-		extern static int UIApplicationMain (int argc, /* char[]* */ string [] argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName);
+		[DllImport ("__Internal")]
+		extern static int xamarin_UIApplicationMain (int argc, /* char[]* */ IntPtr argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName, out IntPtr gchandle);
+
+		static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName)
+		{
+			var strArr = TransientString.AllocStringArray (argv);
+			var rv = xamarin_UIApplicationMain (argc, strArr, principalClassName, delegateClassName, out var gchandle);
+			TransientString.FreeStringArray (strArr, argv?.Length ?? 0);
+			Runtime.ThrowException (gchandle);
+			return rv;
+		}
 #endif
 
 		// called from NSExtension.Initialize (so other, future stuff, can be added if needed)
 		// NOTE: must be called from the main thread, e.g. for extensions
 		internal static void Initialize ()
 		{
-			if (mainThread != null)
+			if (mainThread is not null)
 				return;
-			
+
 			SynchronizationContext.SetSynchronizationContext (new UIKitSynchronizationContext ());
 			mainThread = Thread.CurrentThread;
 		}
-		
+
 #if !WATCH
-		public static void Main (string [] args, string principalClassName, string delegateClassName)
+		[Obsolete ("Use the overload with 'Type' instead of 'String' parameters for type safety.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
 		{
-			var p = NSString.CreateNative (principalClassName);
-			var d = NSString.CreateNative (delegateClassName);
-			try {
-				Main (args, p, d);
-			} finally {
-				// it just looks nicer to release them
-				NSString.ReleaseNative (d);
-				NSString.ReleaseNative (p);
-			}
-		}
-		
-		public static void Main (string [] args, Type principalClass, Type delegateClass)
-		{
-			Main (args, principalClass == null ? null : new Class (principalClass).Name, delegateClass == null ? null : new Class (delegateClass).Name);
+			var p = CFString.CreateNative (principalClassName);
+			var d = CFString.CreateNative (delegateClassName);
+			Initialize ();
+			UIApplicationMain (args?.Length ?? 0, args, p, d);
+			CFString.ReleaseNative (d);
+			CFString.ReleaseNative (p);
 		}
 
-		public static void Main (string [] args)
+		public static void Main (string []? args, Type? principalClass, Type? delegateClass)
 		{
-			Main (args, IntPtr.Zero, IntPtr.Zero);
+			var p = principalClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (principalClass).Name);
+			var d = delegateClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (delegateClass).Name);
+			Initialize ();
+			UIApplicationMain (args?.Length ?? 0, args, p, d);
+			CFString.ReleaseNative (d);
+			CFString.ReleaseNative (p);
 		}
 
-		static void Main (string [] args, IntPtr principal, IntPtr @delegate)
+		public static void Main (string []? args)
 		{
 			Initialize ();
-			UIApplicationMain (args.Length, args, principal, @delegate);
+			UIApplicationMain (args?.Length ?? 0, args, IntPtr.Zero, IntPtr.Zero);
 		}
 #endif
 
@@ -91,22 +107,22 @@ namespace UIKit {
 		{
 			// note: some extensions, like keyboards, won't call Main (and set mainThread)
 			// FIXME: do better than disabling the feature
-			if (CheckForIllegalCrossThreadCalls && (mainThread != null) && (mainThread != Thread.CurrentThread))
+			if (CheckForIllegalCrossThreadCalls && (mainThread is not null) && (mainThread != Thread.CurrentThread))
 				throw new UIKitThreadAccessException ();
 		}
 
 		internal static void EnsureEventAndDelegateAreNotMismatched (object del, Type expectedType)
 		{
 			if (CheckForEventAndDelegateMismatches && !(expectedType.IsAssignableFrom (del.GetType ())))
-				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
+				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", del.GetType (), expectedType));
 		}
 
-		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object currentDelegateValue, object newDelegateValue, Type internalDelegateType)
+		internal static void EnsureDelegateAssignIsNotOverwritingInternalDelegate (object? currentDelegateValue, object? newDelegateValue, Type internalDelegateType)
 		{
-			if (UIApplication.CheckForEventAndDelegateMismatches && currentDelegateValue != null && newDelegateValue != null
-				&& currentDelegateValue.GetType().IsAssignableFrom (internalDelegateType)
-				&& !newDelegateValue.GetType().IsAssignableFrom (internalDelegateType))
-				throw new InvalidOperationException (string.Format("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType(), internalDelegateType));
+			if (UIApplication.CheckForEventAndDelegateMismatches && currentDelegateValue is not null && newDelegateValue is not null
+				&& currentDelegateValue.GetType ().IsAssignableFrom (internalDelegateType)
+				&& !newDelegateValue.GetType ().IsAssignableFrom (internalDelegateType))
+				throw new InvalidOperationException (string.Format ("Event registration is overwriting existing delegate. Either just use events or your own delegate: {0} {1}", newDelegateValue.GetType (), internalDelegateType));
 		}
 	}
 

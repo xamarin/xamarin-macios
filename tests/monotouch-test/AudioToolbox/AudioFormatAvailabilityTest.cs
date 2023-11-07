@@ -9,21 +9,15 @@
 
 #if !__WATCHOS__
 
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AudioToolbox;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioFormatAvailabilityTest
-	{
+	public class AudioFormatAvailabilityTest {
 		[Test]
 		public void GetDecoders ()
 		{

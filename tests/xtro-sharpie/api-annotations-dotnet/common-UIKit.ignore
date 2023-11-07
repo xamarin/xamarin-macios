@@ -1,0 +1,185 @@
+## we do not (need to) redefine the tintColor at every level, it will be dispatched to the right type
+!missing-selector! UIButton::setTintColor: not bound
+!missing-selector! UIButton::tintColor not bound
+!missing-selector! UIImageView::setTintColor: not bound
+!missing-selector! UIImageView::tintColor not bound
+!missing-selector! UINavigationBar::setTintColor: not bound
+!missing-selector! UINavigationBar::tintColor not bound
+!missing-selector! UISearchBar::setTintColor: not bound
+!missing-selector! UISearchBar::tintColor not bound
+!missing-selector! UITabBar::setTintColor: not bound
+!missing-selector! UITabBar::tintColor not bound
+
+## no point in having p/invoke calls that can be implement with a type cast (byte vs nint)
+!missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
+!missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=43788
+!missing-selector! +UIView::layerClass not bound
+
+## internal (xamarin) type
+!unknown-type! UIControlEventProxy bound
+
+## typedef is used (no value) in UITextInput.h: typedef NSInteger UITextDirection
+!unknown-native-enum! UITextDirection bound
+
+## Implemented in managed code
+!missing-selector! UIColor::getHue:saturation:brightness:alpha: not bound
+!missing-selector! UIColor::getRed:green:blue:alpha: not bound
+
+## Not implemented (ctor signature conflict) but there's a static method available that does the job
+!missing-selector! UIColor::initWithHue:saturation:brightness:alpha: not bound
+
+## Not bound intentionally, Factory method FromDisplayP3 is available and adding this as a ctor would make the api usage ugly since signature matches colorWithRed:green:blue:alpha:
+!missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
+
+## defined with __Internal (which is normally ignored here) so 3rd party tools can hack it
+!missing-pinvoke! UIApplicationMain is not bound
+
+## static method cannot be overriden "normally" they must be re-exposed with [Export]
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowBase is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::contentViewInsets is REQUIRED and should be abstract
+
+## Apple docs: This property is inherited from the UIView parent class. This class changes the default value of this property to NO.
+!missing-selector! UIImageView::isUserInteractionEnabled not bound
+!missing-selector! UIImageView::setUserInteractionEnabled: not bound
+!missing-selector! UILabel::isUserInteractionEnabled not bound
+!missing-selector! UILabel::setUserInteractionEnabled: not bound
+
+## the [Sealed] attributes removes the [Export] one so it seems missing (but it's not)
+!missing-selector! UIGestureRecognizer::ignorePress:forEvent: not bound
+
+## UIAccessibilityContainer is an informal protocol 
+## that we bound as a protocol but is (objc encoding) a category
+!missing-selector! NSObject::accessibilityElementAtIndex: not bound
+!missing-selector! NSObject::accessibilityElements not bound
+!missing-selector! NSObject::indexOfAccessibilityElement: not bound
+!missing-selector! NSObject::setAccessibilityElements: not bound
+
+## might not be usable unless our ToString output is parsable as an input (includes locale issues)
+!missing-pinvoke! CGAffineTransformFromString is not bound
+!missing-pinvoke! CGPointFromString is not bound
+!missing-pinvoke! CGRectFromString is not bound
+!missing-pinvoke! CGSizeFromString is not bound
+!missing-pinvoke! NSStringFromUIOffset is not bound
+!missing-pinvoke! UIOffsetFromString is not bound
+
+## UIAccessibility
+## We can't expose them as categories of NSObject so we have custom types instead
+!missing-selector! NSObject::accessibilityActivationPoint not bound
+!missing-selector! NSObject::accessibilityAttributedHint not bound
+!missing-selector! NSObject::accessibilityAttributedLabel not bound
+!missing-selector! NSObject::accessibilityAttributedValue not bound
+!missing-selector! NSObject::accessibilityContainerType not bound
+!missing-selector! NSObject::accessibilityCustomActions not bound
+!missing-selector! NSObject::accessibilityElementsHidden not bound
+!missing-selector! NSObject::accessibilityFrame not bound
+!missing-selector! NSObject::accessibilityHint not bound
+!missing-selector! NSObject::accessibilityLabel not bound
+!missing-selector! NSObject::accessibilityLanguage not bound
+!missing-selector! NSObject::accessibilityNavigationStyle not bound
+!missing-selector! NSObject::accessibilityPath not bound
+!missing-selector! NSObject::accessibilityScroll: not bound
+!missing-selector! NSObject::accessibilityTraits not bound
+!missing-selector! NSObject::accessibilityValue not bound
+!missing-selector! NSObject::accessibilityViewIsModal not bound
+!missing-selector! NSObject::accessibilityActivate not bound
+!missing-selector! NSObject::accessibilityAssistiveTechnologyFocusedIdentifiers not bound
+!missing-selector! NSObject::accessibilityDecrement not bound
+!missing-selector! NSObject::accessibilityElementCount not bound
+!missing-selector! NSObject::accessibilityElementDidBecomeFocused not bound
+!missing-selector! NSObject::accessibilityElementDidLoseFocus not bound
+!missing-selector! NSObject::accessibilityElementIsFocused not bound
+!missing-selector! NSObject::accessibilityIncrement not bound
+!missing-selector! NSObject::accessibilityPerformEscape not bound
+!missing-selector! NSObject::accessibilityPerformMagicTap not bound
+!missing-selector! NSObject::isAccessibilityElement not bound
+!missing-selector! NSObject::setAccessibilityActivationPoint: not bound
+!missing-selector! NSObject::setAccessibilityAttributedHint: not bound
+!missing-selector! NSObject::setAccessibilityAttributedLabel: not bound
+!missing-selector! NSObject::setAccessibilityAttributedValue: not bound
+!missing-selector! NSObject::setAccessibilityContainerType: not bound
+!missing-selector! NSObject::setAccessibilityCustomActions: not bound
+!missing-selector! NSObject::setAccessibilityElementsHidden: not bound
+!missing-selector! NSObject::setAccessibilityFrame: not bound
+!missing-selector! NSObject::setAccessibilityHint: not bound
+!missing-selector! NSObject::setAccessibilityLabel: not bound
+!missing-selector! NSObject::setAccessibilityLanguage: not bound
+!missing-selector! NSObject::setAccessibilityNavigationStyle: not bound
+!missing-selector! NSObject::setAccessibilityPath: not bound
+!missing-selector! NSObject::setAccessibilityTraits: not bound
+!missing-selector! NSObject::setAccessibilityValue: not bound
+!missing-selector! NSObject::setAccessibilityViewIsModal: not bound
+!missing-selector! NSObject::setIsAccessibilityElement: not bound
+!missing-selector! NSObject::setShouldGroupAccessibilityChildren: not bound
+!missing-selector! NSObject::shouldGroupAccessibilityChildren not bound
+
+# Apple renamed it from UILineBreakMode and we kept the old name for API compatibility
+!missing-enum! NSLineBreakMode not bound
+
+# Apple renamed it from UITextAlignment and we kept the old name for API compatibility
+!missing-enum! NSTextAlignment not bound
+
+## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
+!extra-ui-appearance-support! UIKit.UIColor UIKit.UIBarButtonItem::get_TintColor() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UIBarButtonItem::set_TintColor(UIKit.UIColor) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UIButton::SetImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIColor UIKit.UIButton::get_CurrentTitleColor() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIColor UIKit.UIButton::get_CurrentTitleShadowColor() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIColor UIKit.UIButton::TitleColor(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIColor UIKit.UIButton::TitleShadowColor(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UIButton::BackgroundImageForState(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UIButton::get_CurrentBackgroundImage() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UIButton::get_CurrentImage() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UIButton::ImageForState(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UIView::set_TintColor(UIKit.UIColor) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIColor UIKit.UIView::get_TintColor() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISearchBar::SetScopeBarButtonTitle(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+
+## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_TitleTextAttributes() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UINavigationBar::set_TitleTextAttributes(UIKit.UIStringAttributes) should NOT be decorated with [Appearance]
+
+## helpers
+!extra-enum-value! Managed value -1 for UITextFieldDidEndEditingReason.Unknown not found in native headers
+!extra-enum-value! Managed value 18 for UIViewAutoresizing.FlexibleDimensions not found in native headers
+!extra-enum-value! Managed value 45 for UIViewAutoresizing.FlexibleMargins not found in native headers
+!extra-enum-value! Managed value 63 for UIViewAutoresizing.All not found in native headers
+
+## it's a `ref` on a struct, which xtro assumes nullable
+!extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
+
+## added in xcode 14 and is between a #if XAMCORE_5_0
+!incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+
+# deprecated in xcode 14 beta 5
+
+# out trampolines generators does not support the following
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setCanReorderItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setDidReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setWillReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::willReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldCollapseItemHandler: not bound
+
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setSnapshotForExpandingParentItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillCollapseItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldExpandItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
+
+# no bound due to issues with foundation https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound

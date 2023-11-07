@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Controlador Mac Controller",
+  "description": "Un controlador de MacCatalyst",
+  "symbols/namespace/description": "espacio de nombres para el código generado"
+}

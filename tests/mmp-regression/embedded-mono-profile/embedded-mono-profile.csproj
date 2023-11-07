@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7B6ECB8B-ED54-4687-A8BE-7ADA22973F3F}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>embeddedmono</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>embedded-mono-profile</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseSGen>true</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <LinkMode>None</LinkMode>
+    <MonoBundlingExtraArgs>--profiling</MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseSGen>true</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <LinkMode>None</LinkMode>
+    <MonoBundlingExtraArgs>--profiling</MonoBundlingExtraArgs>
+    <AOTMode>None</AOTMode>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="..\common\Test.cs">
+      <Link>Test.cs</Link>
+    </Compile>
+    <Compile Include="embedded-mono-profile.cs" />
+  </ItemGroup>
+</Project>

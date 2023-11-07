@@ -22,9 +22,11 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+
+#if OPENTK_DLL
 
 using System;
 using System.Drawing;
@@ -41,11 +43,11 @@ namespace OpenTK.Platform.MacOS
 	public class MonoMacGameView : AppKit.NSView, IGameWindow
 	{
 		bool disposed;
-		NSOpenGLContext openGLContext;
-		NSOpenGLPixelFormat pixelFormat;
-		CVDisplayLink displayLink;
-		NSObject notificationProxy;
-		NSTimer animationTimer;
+		NSOpenGLContext? openGLContext;
+		NSOpenGLPixelFormat? pixelFormat;
+		CVDisplayLink? displayLink;
+		NSObject? notificationProxy;
+		NSTimer? animationTimer;
 		bool animating;
 		bool displayLinkSupported = false;
 		WindowState windowState = WindowState.Normal;
@@ -64,7 +66,7 @@ namespace OpenTK.Platform.MacOS
 		{
 		}
 
-		public MonoMacGameView (CGRect frame, NSOpenGLContext context) : base(frame)
+		public MonoMacGameView (CGRect frame, NSOpenGLContext? context) : base(frame)
 		{
 			var attribs = new object [] {
 				NSOpenGLPixelFormatAttribute.NoRecovery,
@@ -85,11 +87,11 @@ namespace OpenTK.Platform.MacOS
 				pixelFormat = new NSOpenGLPixelFormat (attribs);
 			}
 
-			if (pixelFormat == null)
+			if (pixelFormat is null)
 				Console.WriteLine ("No OpenGL pixel format");
 
 			// NSOpenGLView does not handle context sharing, so we draw to a custom NSView instead
-			openGLContext = new NSOpenGLContext (pixelFormat, context);
+			openGLContext = new NSOpenGLContext (ActualPixelFormat, context);
 
 			openGLContext.MakeCurrentContext ();
 
@@ -108,7 +110,7 @@ namespace OpenTK.Platform.MacOS
 			if (animating) {
 				if (displayLinkSupported) {
 					// Render Scene only if the display link is running
-					if (displayLink.IsRunning)
+					if (displayLink?.IsRunning == true)
 						RenderScene ();
 				} else {
 					RenderScene ();
@@ -120,24 +122,40 @@ namespace OpenTK.Platform.MacOS
 		public override void LockFocus ()
 		{
 			base.LockFocus ();
-			if (openGLContext.View != this)
-				openGLContext.View = this;
+			if (ActualOpenGLContext.View != this)
+				ActualOpenGLContext.View = this;
 		}
 
-		public NSOpenGLContext OpenGLContext {
-			get { return openGLContext; }
+		public NSOpenGLContext? OpenGLContext {
+			get => openGLContext;
 		}
 
-		public NSOpenGLPixelFormat PixelFormat {
-			get { return pixelFormat; }
+		NSOpenGLContext ActualOpenGLContext {
+			get {
+				if (openGLContext is null)
+					throw new InvalidOperationException ("Operation requires an OpenGLContext, which hasn't been created yet.");
+				return openGLContext;
+			}
 		}
 
-		NSViewController GetViewController ()
+		public NSOpenGLPixelFormat? PixelFormat {
+			get => pixelFormat;
+		}
+
+		NSOpenGLPixelFormat ActualPixelFormat {
+			get {
+				if (pixelFormat is null)
+					throw new InvalidOperationException ("Operation requires a PixelFormat that cannot be null.");
+				return pixelFormat;
+			}
+		}
+
+		NSViewController? GetViewController ()
 		{
-			NSResponder r = this;
-			while (r != null) {
+			NSResponder? r = this;
+			while (r is not null) {
 				var c = r as NSViewController;
-				if (c != null)
+				if (c is not null)
 					return c;
 				r = r.NextResponder;
 			}
@@ -158,7 +176,7 @@ namespace OpenTK.Platform.MacOS
 		{
 			if (!animating) {
 				if (displayLinkSupported) {
-					if (displayLink != null && !displayLink.IsRunning)
+					if (displayLink is not null && !displayLink.IsRunning)
 						displayLink.Start ();
 				} else {
 					// Can't use TimeSpan.FromSeconds() as that only has 1ms
@@ -191,10 +209,10 @@ namespace OpenTK.Platform.MacOS
 		{
 			if (animating) {
 				if (displayLinkSupported) {
-					if (displayLink != null && displayLink.IsRunning)
+					if (displayLink is not null && displayLink.IsRunning)
 						displayLink.Stop ();
 
-				} else {
+				} else if (animationTimer is not null) {
 					animationTimer.Invalidate ();
 					animationTimer = null;
 				}
@@ -207,7 +225,8 @@ namespace OpenTK.Platform.MacOS
 		{
 			Stop ();
 			displayLink = null;
-			NSNotificationCenter.DefaultCenter.RemoveObserver (notificationProxy); 
+			if (notificationProxy is not null)
+				NSNotificationCenter.DefaultCenter.RemoveObserver (notificationProxy);
 		}
 
 		void AssertValid ()
@@ -216,23 +235,17 @@ namespace OpenTK.Platform.MacOS
 				throw new ObjectDisposedException ("");
 		}
 
-		void AssertContext ()
-		{
-			if (OpenGLContext == null)
-				throw new InvalidOperationException ("Operation requires an OpenGLContext, which hasn't been created yet.");
-		}
-
 		public virtual string Title {
 			get {
 				AssertValid ();
-				if (Window != null)
+				if (Window is not null)
 					return Window.Title;
 				else
 					throw new NotSupportedException();
 			}
 			set {
 				AssertValid ();
-				if (Window != null)
+				if (Window is not null)
 					Window.Title = value;
 				else
 					throw new NotSupportedException();
@@ -242,7 +255,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnTitleChanged (EventArgs e)
 		{
 			var h = TitleChanged;
-			if (h != null)
+			if (h is not null)
 				h (this, EventArgs.Empty);
 		}
 
@@ -267,7 +280,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnVisibleChanged (EventArgs e)
 		{
 			var h = VisibleChanged;
-			if (h != null)
+			if (h is not null)
 				h (this, EventArgs.Empty);
 		}
 
@@ -292,7 +305,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnWindowStateChanged (EventArgs e)
 		{
 			var h = WindowStateChanged;
-			if (h != null)
+			if (h is not null)
 				h (this, EventArgs.Empty);
 		}
 
@@ -314,13 +327,6 @@ namespace OpenTK.Platform.MacOS
 			set { throw new NotSupportedException ();}
 		}
 
-#if !XAMCORE_2_0
-		Icon INativeWindow.Icon {  
-			get { throw new NotSupportedException ();}
-			set { throw new NotSupportedException ();}		
-		}
-#endif
-
 		Size size;
 
 		public Size Size {
@@ -334,13 +340,13 @@ namespace OpenTK.Platform.MacOS
 					size = value;
 					// This method will be called on the main thread when resizing, but we may be drawing on a secondary thread through the display link
 					// Add a mutex around to avoid the threads accessing the context simultaneously
-					openGLContext.CGLContext.Lock ();
+					ActualOpenGLContext.CGLContext.Lock ();
 
 					// Delegate to the scene object to update for a change in the view size
 					OnResize (EventArgs.Empty);
-					openGLContext.Update ();
+					ActualOpenGLContext.Update ();
 
-					openGLContext.CGLContext.Unlock ();					
+					ActualOpenGLContext.CGLContext.Unlock ();
 				}
 			}
 		}
@@ -348,7 +354,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnResize (EventArgs e)
 		{
 			var h = Resize;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -391,7 +397,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnClosed (EventArgs e)
 		{
 			var h = Closed;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -412,7 +418,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnDisposed (EventArgs e)
 		{
 			var h = Disposed;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -434,16 +440,14 @@ namespace OpenTK.Platform.MacOS
 		public virtual void MakeCurrent ()
 		{
 			AssertValid ();
-			AssertContext ();
-			OpenGLContext.MakeCurrentContext ();
+			ActualOpenGLContext.MakeCurrentContext ();
 		}
 
 		public virtual void SwapBuffers ()
 		{
 			AssertValid ();
-			AssertContext ();
 			// basically SwapBuffers is the same as FlushBuffer on OSX
-			OpenGLContext.FlushBuffer ();
+			ActualOpenGLContext.FlushBuffer ();
 		}
 
 		private bool SwapInterval { get; set; }
@@ -461,7 +465,7 @@ namespace OpenTK.Platform.MacOS
 			OnLoad (EventArgs.Empty);
 
 			// Synchronize buffer swaps with vertical refresh rate
-			openGLContext.SwapInterval = SwapInterval;
+			ActualOpenGLContext.SwapInterval = SwapInterval;
 
 			if (displayLinkSupported) 
 				SetupDisplayLink ();
@@ -485,7 +489,7 @@ namespace OpenTK.Platform.MacOS
 			DisplaylinkSupported = false;
 
 			// Synchronize buffer swaps with vertical refresh rate
-			openGLContext.SwapInterval = SwapInterval;
+			ActualOpenGLContext.SwapInterval = SwapInterval;
 
 			if (displayLinkSupported)
 				SetupDisplayLink ();
@@ -499,10 +503,10 @@ namespace OpenTK.Platform.MacOS
 			// This method will be called on both the main thread (through DrawRect:) and a secondary thread (through the display link rendering loop)
 			// Also, when resizing the view, Reshape is called on the main thread, but we may be drawing on a secondary thread
 			// Add a mutex around to avoid the threads accessing the context simultaneously 
-			openGLContext.CGLContext.Lock ();
+			ActualOpenGLContext.CGLContext.Lock ();
 
 			// Make sure we draw to the right context
-			openGLContext.MakeCurrentContext ();
+			ActualOpenGLContext.MakeCurrentContext ();
 
 			var curUpdateTime = DateTime.Now;
 			if (prevUpdateTime.Ticks == 0) {
@@ -530,14 +534,14 @@ namespace OpenTK.Platform.MacOS
 			OnRenderFrame (renderEventArgs);
 			prevRenderTime = curRenderTime;
 
-			openGLContext.FlushBuffer ();
+			ActualOpenGLContext.FlushBuffer ();
 
-			openGLContext.CGLContext.Unlock ();
+			ActualOpenGLContext.CGLContext.Unlock ();
 		}
 
 		private void SetupDisplayLink ()
 		{
-			if (displayLink != null)
+			if (displayLink is not null)
 				return;
 
 			// Create a display link capable of being used with all active displays
@@ -547,8 +551,8 @@ namespace OpenTK.Platform.MacOS
 			displayLink.SetOutputCallback (MyDisplayLinkOutputCallback);
 
 			// Set the display link for the current renderer
-			CGLContext cglContext = openGLContext.CGLContext;
-			CGLPixelFormat cglPixelFormat = PixelFormat.CGLPixelFormat;
+			CGLContext cglContext = ActualOpenGLContext.CGLContext;
+			CGLPixelFormat cglPixelFormat = ActualPixelFormat.CGLPixelFormat;
 			displayLink.SetCurrentDisplay (cglContext, cglPixelFormat);
 
 		}
@@ -573,7 +577,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnLoad (EventArgs e)
 		{
 			var h = Load;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -581,21 +585,21 @@ namespace OpenTK.Platform.MacOS
 		{
 			var h = Unload;
 			Stop ();
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected virtual void OnUpdateFrame (FrameEventArgs e)
 		{
 			var h = UpdateFrame;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected virtual void OnRenderFrame (FrameEventArgs e)
 		{
 			var h = RenderFrame;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -604,17 +608,17 @@ namespace OpenTK.Platform.MacOS
 			remove { throw new NotSupportedException ();}
 		}
 
-		public event EventHandler<EventArgs> Resize;
+		public event EventHandler<EventArgs>? Resize;
 
 		event EventHandler<CancelEventArgs> INativeWindow.Closing {
 			add { throw new NotSupportedException ();}
 			remove { throw new NotSupportedException ();}
 		}
 
-		public event EventHandler<EventArgs> Closed;
-		public event EventHandler<EventArgs> Disposed;
-		public event EventHandler<EventArgs> TitleChanged;
-		public event EventHandler<EventArgs> VisibleChanged;
+		public event EventHandler<EventArgs>? Closed;
+		public event EventHandler<EventArgs>? Disposed;
+		public event EventHandler<EventArgs>? TitleChanged;
+		public event EventHandler<EventArgs>? VisibleChanged;
 
 		event EventHandler<EventArgs> INativeWindow.FocusedChanged {
 			add { throw new NotSupportedException ();}
@@ -626,7 +630,7 @@ namespace OpenTK.Platform.MacOS
 			remove { throw new NotSupportedException ();}
 		}
 
-		public event EventHandler<EventArgs> WindowStateChanged;
+		public event EventHandler<EventArgs>? WindowStateChanged;
 
 		//		event EventHandler<KeyPressEventArgs> INativeWindow.KeyPress {
 		//			add { throw new NotSupportedException ();}
@@ -637,11 +641,11 @@ namespace OpenTK.Platform.MacOS
 			remove { throw new NotSupportedException ();}
 		}
 
-		public event EventHandler<EventArgs> Load;
-		public event EventHandler<EventArgs> Unload;
-		public event EventHandler<FrameEventArgs> UpdateFrame;
-		public event EventHandler<FrameEventArgs> RenderFrame;
+		public event EventHandler<EventArgs>? Load;
+		public event EventHandler<EventArgs>? Unload;
+		public event EventHandler<FrameEventArgs>? UpdateFrame;
+		public event EventHandler<FrameEventArgs>? RenderFrame;
 	}
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

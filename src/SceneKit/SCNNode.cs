@@ -15,11 +15,12 @@ using System.Collections.Generic;
 using CoreAnimation;
 #endif
 using Foundation;
+using ObjCRuntime;
 
-namespace SceneKit
-{
-	public partial class SCNNode : IEnumerable, IEnumerable<SCNNode>
-	{
+#nullable enable
+
+namespace SceneKit {
+	public partial class SCNNode : IEnumerable, IEnumerable<SCNNode> {
 		public void Add (SCNNode node)
 		{
 			AddChildNode (node);
@@ -27,12 +28,12 @@ namespace SceneKit
 
 		public void AddNodes (params SCNNode [] nodes)
 		{
-			if (nodes == null)
+			if (nodes is null)
 				return;
 			foreach (var n in nodes)
 				AddChildNode (n);
 		}
-		
+
 		public IEnumerator<SCNNode> GetEnumerator ()
 		{
 			foreach (var node in ChildNodes)
@@ -45,10 +46,10 @@ namespace SceneKit
 		}
 
 #if !WATCH
-		public void AddAnimation (CAAnimation animation, string key)
+		public void AddAnimation (CAAnimation animation, string? key)
 		{
-			if (key == null) {
-				((ISCNAnimatable) this).AddAnimation (animation, (NSString)null);
+			if (key is null) {
+				((ISCNAnimatable) this).AddAnimation (animation, (NSString?) null);
 			} else {
 				using (var s = new NSString (key))
 					((ISCNAnimatable) this).AddAnimation (animation, s);
@@ -58,65 +59,62 @@ namespace SceneKit
 		public void RemoveAnimation (string key, nfloat duration)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).RemoveAnimation (s, duration);
+				((ISCNAnimatable) this).RemoveAnimation (s, duration);
 		}
 
 		public void RemoveAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).RemoveAnimation (s);
+				((ISCNAnimatable) this).RemoveAnimation (s);
 		}
 
-		public CAAnimation GetAnimation (string key)
+		public CAAnimation? GetAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
-			CAAnimation animation = null;
 			using (var s = new NSString (key))
-				animation = ((ISCNAnimatable)this).GetAnimation (s);
-
-			return animation;
+				return ((ISCNAnimatable) this).GetAnimation (s);
 		}
 
 		public void PauseAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).PauseAnimation (s);
+				((ISCNAnimatable) this).PauseAnimation (s);
 		}
 
 		public void ResumeAnimation (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			using (var s = new NSString (key))
-				((ISCNAnimatable)this).ResumeAnimation (s);
+				((ISCNAnimatable) this).ResumeAnimation (s);
 		}
 
 		public bool IsAnimationPaused (string key)
 		{
 			if (string.IsNullOrEmpty (key))
-				throw new ArgumentException ("key");
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (key));
 
 			bool isPaused;
 
 			using (var s = new NSString (key))
-				isPaused = ((ISCNAnimatable)this).IsAnimationPaused (s);
+				isPaused = ((ISCNAnimatable) this).IsAnimationPaused (s);
 
 			return isPaused;
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		// SCNNodePredicate is defined as:
 		// 	delegate bool SCNNodePredicate (SCNNode node, out bool stop);
 		// but the actual objective-c definition of the block is

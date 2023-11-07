@@ -1,0 +1,73 @@
+# YAML pipeline for publishing the test results as a static gitbub page in a different 
+# repository:
+# This pipeline will trigger in a succesful build of a build with a prBuild tag.
+
+trigger: none
+pr: none
+
+resources:
+  repositories:
+  - repository: self
+    checkoutOptions:
+      submodules: false  # no need
+
+  - repository: yaml-templates
+    type: github
+    name: xamarin/yaml-templates
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: sdk-insertions
+    type: github
+    name: xamarin/sdk-insertions
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+  - repository: release-scripts
+    type: github
+    name: xamarin/release-scripts
+    ref: refs/heads/only_codesign
+    endpoint: xamarin
+
+  - repository: macios.ci
+    type: github
+    name: xamarin/macios.ci
+    ref: refs/heads/main # get main and create the branch from main
+    endpoint: xamarin
+
+  # we need all stages to be completed, else we do not have the test results, this trigger is just for CI, because we have
+  # but because we have device issues, and it needs to be gree to trigger, we will deal with it later
+  pipelines:
+  - pipeline: macios
+    source: xamarin-macios
+
+variables:
+- group: xamops-azdev-secrets
+- group: Xamarin-Secrets
+- group: Xamarin Release
+- name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
+  value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
+- name: AzDoBuildAccess.Token
+  value: $(pat--xamarinc--build-access)
+- name: system.debug
+  value: true
+
+
+jobs:
+- job: publish_results
+  displayName: Publish Results
+  pool:
+    vmImage: ubuntu-latest
+  workspace:
+    clean: all
+
+  steps:
+  - template: templates/publish-html-result.yml 
+    parameters:
+      reason: 'pr'

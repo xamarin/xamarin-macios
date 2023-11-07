@@ -4,6 +4,8 @@
 // Copyright 2013-2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -15,6 +17,12 @@ using OSStatus = System.Int32;
 
 namespace AudioToolbox {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class InstrumentInfo {
 
 		// defines, not NSString, are used for the key names
@@ -33,37 +41,50 @@ namespace AudioToolbox {
 		}
 
 		public int MSB {
-			get { return (Dictionary [MSBKey] as NSNumber).Int32Value; }
+			get { return (Dictionary [MSBKey] as NSNumber)!.Int32Value; }
 		}
 
 		public int LSB {
-			get { return (Dictionary [LSBKey] as NSNumber).Int32Value; }
+			get { return (Dictionary [LSBKey] as NSNumber)!.Int32Value; }
 		}
 
 		public int Program {
-			get { return (Dictionary [ProgramKey] as NSNumber).Int32Value; }
+			get { return (Dictionary [ProgramKey] as NSNumber)!.Int32Value; }
 		}
 
 		// some API likely wants the [CF|NS]Dictionary
 		public NSDictionary Dictionary { get; private set; }
 	}
 
-#if XAMCORE_2_0
-	static
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
-	public class SoundBank {
+	public static class SoundBank {
 
-		[iOS (7,0)] // 10.5
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyNameFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFStringRef */ ref IntPtr outName);
 
-		[iOS (7,0)] // 10.5
-		public static string GetName (NSUrl url)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public static string? GetName (NSUrl url)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			string result = null;
+			string? result = null;
 			IntPtr name = IntPtr.Zero;
 			var error = CopyNameFromSoundBank (url.Handle, ref name);
 			if (name != IntPtr.Zero) {
@@ -73,17 +94,27 @@ namespace AudioToolbox {
 			return (error != 0) ? null : result;
 		}
 
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyInstrumentInfoFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFSArrayRef */ ref IntPtr outInstrumentInfo);
 
-		[iOS (7,0)][Mac (10,9)]
-		public static InstrumentInfo [] GetInstrumentInfo (NSUrl url)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public static InstrumentInfo []? GetInstrumentInfo (NSUrl url)
 		{
-			if (url == null)
-				throw new ArgumentNullException ("url");
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			InstrumentInfo [] result = null;
+			InstrumentInfo []? result = null;
 			IntPtr array = IntPtr.Zero;
 			var error = CopyInstrumentInfoFromSoundBank (url.Handle, ref array);
 			if (array != IntPtr.Zero) {

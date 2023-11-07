@@ -12,15 +12,17 @@ using CoreAnimation;
 using AnimationType = global::CoreAnimation.CAAnimation;
 #endif
 
+#nullable enable
+
 namespace SceneKit {
 
 	partial class SCNAction {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'TimingFunction2' property.")]
-		public virtual Action<float> TimingFunction {
+		public virtual Action<float>? TimingFunction {
 			get {
-				if (TimingFunction2 == null)
+				if (TimingFunction2 is null)
 					return null;
 				else
 					return (f) => {
@@ -28,7 +30,7 @@ namespace SceneKit {
 					};
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					TimingFunction2 = null;
 				else
 					TimingFunction2 = (f) => {
@@ -38,7 +40,7 @@ namespace SceneKit {
 			}
 
 		}
-#endif
+#endif // !NET
 
 #if !XAMCORE_3_0
 		[Obsolete ("Use 'TimingFunction2' property.")]
@@ -46,99 +48,87 @@ namespace SceneKit {
 		{
 			TimingFunction = timingFunction;
 		}
-#endif
+#endif // !XAMCORE_3_0
 	}
-#if TVOS && !XAMCORE_4_0
+#if TVOS && !NET
 	partial class SCNMaterialProperty {
-	[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
-		public virtual NSObject BorderColor { get; set; }
+		public virtual NSObject? BorderColor { get; set; }
 	}
+#endif // TVOS && !NET
 
+#if TVOS && !NET
 	partial class SCNRenderer {
-		[iOS (8, 0)]
-		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "This API has been totally removed on iOS.")]
 		[Deprecated (PlatformName.TvOS, 10, 0, message: "This API has been totally removed on tvOS.")]
 		public virtual void Render ()
 		{
 		}
 	}
-#endif
+#endif // TVOS && !NET
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 	partial class SCNScene {
 		[Obsolete ("Use the 'ISCNSceneExportDelegate' overload instead.")]
-		[Mac (10, 9)]
 		public virtual bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler)
 		{
-			return WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
+			return WriteToUrl (url: url, options: options?.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
 		}
 
 		[Obsolete ("Use the 'ISCNSceneExportDelegate' overload instead.")]
-		[Mac (10, 9)]
 		public virtual bool WriteToUrl (NSUrl url, NSDictionary options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler)
 		{
 			return WriteToUrl (url: url, options: options, aDelegate: handler, exportProgressHandler: exportProgressHandler);
 		}
 	}
-#endif
+#endif // MONOMAC && !NET
 
-#if !XAMCORE_4_0
-#if XAMCORE_2_0 || !MONOMAC
+#if !NET
 	public abstract partial class SCNSceneRenderer : NSObject {
-		[Mac (10, 10)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PrepareAsync' instead.")]
-		public unsafe virtual Task<bool> PrepareAsync (NSObject[] objects)
+		public unsafe virtual Task<bool> PrepareAsync (NSObject [] objects)
 		{
 			return SCNSceneRenderer_Extensions.PrepareAsync (this, objects);
 		}
 
-		[iOS (9, 0)]
-		[Mac (10, 11, 0, PlatformArchitecture.Arch64)]
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
 		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode pointOfView)
 		{
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}
+
 	}
-#endif
-#endif
+#endif // !NET
 
 
-#if !XAMCORE_4_0
-	[Mac (10,9), iOS (8,0), Watch (4,0)]
+#if !NET
 	public delegate void SCNAnimationEventHandler (AnimationType animation, NSObject animatedObject, bool playingBackward);
 
-	public partial class SCNAnimationEvent : NSObject
-	{
+	public partial class SCNAnimationEvent : NSObject {
 		public static SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler)
 		{
 			var handler = new Action<IntPtr, NSObject, bool> ((animationPtr, animatedObject, playingBackward) => {
-				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true);
+				var animation = Runtime.GetINativeObject<AnimationType> (animationPtr, true)!;
 				eventHandler (animation, animatedObject, playingBackward);
 			});
 			return Create (keyTime, handler);
 		}
 	}
-#endif
+#endif // !NET
 
-#if !WATCH && !XAMCORE_4_0
-	[iOS (11,0)]
-	[TV (11,0)]
-	[Mac (10,13,0, PlatformArchitecture.Arch64)]
+#if !WATCH && !NET
 	static public partial class SCNAnimatableExtensions {
 		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
 		{
 			using (var ca = CAAnimation.FromSCNAnimation (animation))
-			using (var st = key != null ? new NSString (key) : null)
+			using (var st = key is not null ? new NSString (key) : null)
 				self.AddAnimation (ca, st);
 		}
 	}
-#endif
+#endif // !WATCH && !NET
 
-#if !XAMCORE_4_0
-	[Watch (3,0)]
+#if !NET
 	public partial class SCNHitTestOptions {
 		[Obsolete ("Use 'SearchMode' instead.")]
 		public SCNHitTestSearchMode? OptionSearchMode {
@@ -147,5 +137,13 @@ namespace SceneKit {
 			}
 		}
 	}
-#endif
+
+#if !MONOMAC && !WATCH && !__MACCATALYST__
+	public partial class SCNView {
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
+		[Obsolete ("Empty stub. (not a public API).")]
+		public virtual bool DrawableResizesAsynchronously { get; set; }
+	}
+#endif // !MONOMAC && !WATCH && !__MACCATALYST__
+#endif // !NET
 }

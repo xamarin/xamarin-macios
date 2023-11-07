@@ -10,23 +10,17 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using AdSupport;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AdSupport;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AdSupport {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class IdentifierManagerTest {
-		
+
 		[Test]
 		public void SharedManager ()
 		{

@@ -1,0 +1,3 @@
+variables:
+- group: AzureDevOps-Artifact-Feeds-Pats
+- group: DotNet-MSRC-Storage

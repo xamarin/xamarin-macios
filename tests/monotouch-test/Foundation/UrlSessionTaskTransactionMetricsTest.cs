@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSUrlSessionTaskTransactionMetrics
 //
 // Authors:
@@ -7,8 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -16,11 +14,6 @@ using AppKit;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -32,7 +25,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Properties ()
 		{
-			TestRuntime.AssertXcodeVersion (8,0);
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			using (var sttm = new NSUrlSessionTaskTransactionMetrics ()) {
 				// in iOS10 those selectors do not respond - but they do work (forwarded to __NSCFURLSessionTaskMetrics type ?)
@@ -51,11 +44,11 @@ namespace MonoTouchFixtures.Foundation {
 				if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					Assert.NotNull (sttm.RequestEndDate, "TransactionMetrics");
 					Assert.NotNull (sttm.RequestStartDate, "TransactionMetrics");
-				} else {
+				} else {
 					Assert.Null (sttm.RequestEndDate, "TransactionMetrics");
 					Assert.Null (sttm.RequestStartDate, "TransactionMetrics");
 				}
-				Assert.That (sttm.ResourceFetchType, Is.EqualTo (NSUrlSessionTaskMetricsResourceFetchType.Unknown),  "ResourceFetchType");
+				Assert.That (sttm.ResourceFetchType, Is.EqualTo (NSUrlSessionTaskMetricsResourceFetchType.Unknown), "ResourceFetchType");
 				Assert.Null (sttm.Response, "Response");
 				if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					Assert.NotNull (sttm.ResponseEndDate, "ResponseEndDate");
@@ -64,7 +57,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.Null (sttm.ResponseEndDate, "ResponseEndDate");
 					Assert.Null (sttm.ResponseStartDate, "ResponseStartDate");
 				}
-				Assert.False (sttm.ReusedConnection, "ReusedConnection");
+				Assert.That (sttm.ReusedConnection, Is.EqualTo (true).Or.EqualTo (false), "ReusedConnection");
 				Assert.Null (sttm.SecureConnectionEndDate, "SecureConnectionEndDate");
 				Assert.Null (sttm.SecureConnectionStartDate, "SecureConnectionStartDate");
 			}

@@ -1,0 +1,370 @@
+parameters:
+- name: sbomFilter
+  type: string
+  default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
+
+- name: azureStorage
+  type: string
+
+- name: azureContainer
+  type: string
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+- name: packages
+  type: object
+  default: [
+    "package",
+  ]
+
+steps:
+# Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
+# it cannot find the correct branch to be used. 
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    persistCredentials: true
+    path: s/xamarin-macios
+
+# checkout an extra repo to ensure that we have the same tree structure in the working directory in all pipelines.
+# if you delete this checkout the unified pipeline will have issues.
+- checkout: yaml-templates
+  clean: true
+
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/artifacts" -PathType Container) {
+      Remove-Item -Path "$Env:BUILD_SOURCESDIRECTORY/artifacts" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
+
+# Download the Html Report that was added by the tests job.
+- ${{ each pkg in parameters.packages }}:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download packages
+    inputs:
+      artifactName: ${{ parameters.uploadPrefix }}${{ pkg }}
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}${{ pkg }}
+
+- pwsh: |
+    Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts"
+  displayName: "Show downloaded artifacts"
+
+- pwsh: |
+    $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
+    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package" -File -Force -Name
+    $manifestFile = "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package\\manifest"
+    foreach ($f in $files) {
+      Add-Content -Path "$manifestFile" -Value "$packagePrefix/$f"
+    }
+    Add-Content -Path "$manifestFile" -Value "$packagePrefix/$artifacts.json"
+    Add-Content -Path "$manifestFile" -Value "$packagePrefix/manifest"
+  env:
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
+  displayName: "Build manifest"
+
+# Important needed for the next step
+- template: generate-workspace-info.yml@yaml-templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}package-internal
+
+- task: AzureFileCopy@3
+  displayName: 'Publish package to Azure'
+  name: upload
+  inputs:
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    Destination: AzureBlob
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
+    BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/${{ parameters.uploadPrefix }}package  # ideally, we would use a variable for this
+    outputStorageContainerSasToken: PackageSasToken
+
+- task: AzureFileCopy@3
+  displayName: 'Publish manifest to Azure'
+  inputs:
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    Destination: AzureBlob
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
+    BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
+    outputStorageContainerSasToken: PackageSasToken
+
+- task: AzureFileCopy@3
+  displayName: 'Publish manifest to Azure as latest'
+  inputs:
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    Destination: AzureBlob
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
+    BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
+    outputStorageContainerSasToken: PackageSasToken
+
+- task: AzureFileCopy@3
+  displayName: 'Publish manifest to Azure per commit'
+  inputs:
+    SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    Destination: AzureBlob
+    storage: ${{ parameters.azureStorage }}
+    ContainerName: ${{ parameters.azureContainer }}
+    BlobPrefix: jenkins/$(Build.SourceVersion)
+    outputStorageContainerSasToken: PackageSasToken
+
+- pwsh: |
+    $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
+
+    if (-not (Test-Path $execPath -PathType Leaf)) {
+        Write-Host "Build task not found at $execPath!"
+    }
+
+    $maciosPath="$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios"
+
+    Write-Host "Exect path is $execPath"
+    Write-Host "Macios path is $maciosPath"
+    Write-Host "$Env:VIRTUAL_PATH"
+    Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
+
+    Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a $Env:AZURE_STORAGE -c $Env:STORAGE_PASS -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`" -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`" -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`""
+  env:
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+    GITHUB_AUTH_TOKEN: $(GitHub.Token)
+    STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
+    AZURE_STORAGE: ${{ parameters.azureStorage }}
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
+  displayName: 'Generate artifacts.json'
+
+# upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
+# get the required urls
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/artifacts.json
+    artifactName: '${{ parameters.uploadPrefix }}pkg-info'
+  continueOnError: true
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
+
+    Dir "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
+
+    # the azure step sets the env variable, but it points to the wrong url since it uses the one in bosstorage, we
+    # need to use the dl version.
+    $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
+    Write-Host "Urls is $pkgsVirtualUrl"
+
+    $pkgsPath = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
+
+    $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg
+    Write-Host "iOS PKG is $iOSPkg"
+
+    $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
+    Write-Host "mac PKG is $macPkg"
+
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+      $notarizedShouldExist = $false;
+    } else {
+      $notarizedShouldExist = $true;
+    }
+
+    # create an array with objects so that we can set each of the statuses:
+    $statusInfo = @(
+      @{
+        Path = "$pkgsPath\\$iOSPkg";
+        Context = "PKG-Xamarin.iOS";
+        Description = $iOSPkg;
+        TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
+        Error = "xamarin.ios pkg not found";
+        ShouldExist = $true;
+      },
+      @{
+        Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
+        Context = "PKG-Xamarin.iOS-notarized"
+        Description = "$iOSPkg (Notarized)" ;
+        TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
+        Error = "Notarized xamarin.ios pkg not found" ;
+        ShouldExist = $notarizedShouldExist;
+      },
+      @{
+        Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
+        Context = "PKG-Xamarin.Mac" ;
+        Description = "$macPkg" ;
+        TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
+        Error = "xamarin.mac pkg not found." ;
+        ShouldExist = $true;
+      },
+      @{
+        Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
+        Context = "PKG-Xamarin.Mac-notarized" ;
+        Description = "$macPkg (Notarized)" ;
+        TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
+        Error = "Notarized xamarin.mac pkg not found." ;
+        ShouldExist = $notarizedShouldExist;
+      },
+      @{
+        Path = "$pkgsPath\\bundle.zip" ;
+        Context = "bundle.zip" ;
+        Description = "bundle.zip" ;
+        TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
+        Error = "bundle.zip not found." ;
+        ShouldExist = $true;
+      },
+      @{
+        Path = "$pkgsPath\msbuild.zip" ;
+        Context = "msbuild.zip" ;
+        Description = "msbuild.zip" ;
+        TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
+        Error = "msbuild.zip not found." ;
+        ShouldExist = $true;
+      }
+    )
+
+    foreach ($info in $statusInfo) {
+      if (Test-Path $info.Path -PathType Leaf) {
+          $statuses.SetStatus("success", $info.Description, $info.Context, $info.TargetUrl)
+      } elseif ($info.ShouldExist) {
+          $statuses.SetStatus("error", $info.Error, $info.Context)
+      }
+    }
+
+    $msi = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
+
+    foreach ($n in $msi) {
+      $statuses.SetStatus("success", "$n", "$n", "$pkgsVirtualUrl/$n")
+    }
+
+    Write-Host "Setting SBOM.PackagesPath: ${pkgsPath}"
+    Write-Host "##vso[task.setvariable variable=SBOM.PackagesPath]$pkgsPath"
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+    ACCESSTOKEN: $(System.AccessToken)
+    AZURE_CONTAINER: ${{ parameters.azureContainer }}
+    VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
+  displayName: 'Set GithubStatus'
+
+# Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
+- pwsh: |
+    # https://stackoverflow.com/questions/188892/glob-pattern-matching-in-net
+    function Is-Match([string] $Text, [string] $Filter)
+    {
+        $isMatch = $false
+
+        $regexGlobEquivalent = [Regex]::Escape($Filter).Replace("\*", ".*").Replace("\?", ".")
+        $pattern = "^${regexGlobEquivalent}$"
+
+        # https://stackoverflow.com/questions/42700341/how-can-i-use-powershell-to-do-a-net-regex-matches-method-and-add-a-timeout
+        $regEx = New-Object -TypeName regex -ArgumentList $pattern, ([Text.RegularExpressions.RegexOptions]::Singleline, [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        $isMatch = $regEx.IsMatch($Text)
+
+        return $isMatch
+    }
+
+    $filter = "${{ parameters.sbomFilter }}"
+    Write-Host "sbomFilter: ${filter}"
+
+    $sbomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
+    Write-Host "Creating SBOM staging directory: ${sbomStagingDirectory}"
+
+    if (-not ([IO.Directory]::Exists($sbomStagingDirectory))) {
+      [IO.Directory]::CreateDirectory($sbomStagingDirectory)
+    }
+
+    $pkgsPath = "$(SBOM.PackagesPath)"
+    Write-Host "Packages path: ${pkgsPath}"
+
+    if ([string]::IsNullOrEmpty($filter)) {
+        $filter = '*'       # Even if the caller attempts to force the parameter to an empty string treat empty as all '*'
+    }
+
+    $filters = $filter.Split(';', [StringSplitOptions]::RemoveEmptyEntries)
+    Write-Host "Copying files based on ${filter}"
+
+    $files = [IO.Directory]::GetFiles($pkgsPath)
+    $files | foreach {
+      $filename = [IO.Path]::GetFileName($_)
+      $isMatch = $false
+      $filters | foreach {
+        if (-not $isMatch) {
+          $isMatch = Is-Match -Text $filename -Filter $_
+        }
+      }
+
+      if ($isMatch) {
+        $destPathAndFilename = [IO.Path]::Combine($sbomStagingDirectory, $filename)
+        Write-Host "Copying $_ to ${destPathAndFilename}. Filter: ${filter}"
+        [IO.File]::Copy($_, $destPathAndFilename)
+      } else {
+        Write-Host "Skipped file copy based on filter ${filter}: ${filename}"
+      }
+    }
+  displayName: 'SBOM: Staging'
+
+- pwsh: |
+    function Get-PackageFileNames([string] $PkgsPath) {
+      $files = [IO.Directory]::GetFiles($PkgsPath)
+      $pkgFiles = $files | foreach { [IO.Path]::GetFileName($_) }
+      return $pkgFiles
+    }
+
+    $pkgsPath = "$(SBOM.PackagesPath)"
+    Write-Host "Packages path: ${pkgsPath}"
+
+    $packageFileNames = Get-PackageFileNames -PkgsPath $pkgsPath
+    $packageFileNames = @($packageFileNames)
+    Write-Host "Package files: $($packageFileNames.Count)"
+    $packageFileNames | foreach { Write-Host $_ }
+
+    Write-Host "Setting SBOM.ProductName: Xamarin iOS"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductName]Xamarin iOS"         # SBOM generation only lets us use a single package name and so choose 'Xamarin iOS' instead of 'Xamarin Mac'
+
+    $sbomManifestVersion = "$(Build.BuildId)"
+    Write-Host "Setting SBOM.ProductVersion to the build number: ${sbomManifestVersion}"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductVersion]$sbomManifestVersion"
+  displayName: 'SBOM: Set ProductVersion'
+
+- task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+  displayName: 'SBOM: Generation'
+  inputs:
+    BuildDropPath: '$(Build.ArtifactStagingDirectory)/sbom'
+    PackageName: '$(SBOM.ProductName)'
+    PackageVersion: '$(SBOM.ProductVersion)'
+    Verbosity: Verbose
+
+- pwsh: |
+    # The pkg files are already included under the drop-x64 and drop-arm locations
+    # We only needed them temporarily here as a means to produce the Software Bill of Materials (SBOM) manifest
+    # No need to include the pkg files (and duplicate them) in the SBOM drop
+    $sbomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
+
+    # Delete all top-level package files. This should leave the SBOM '_manifest' directory intact
+    $pkgFiles = [IO.Directory]::GetFiles($sbomStagingDirectory)
+    $pkgFiles | foreach {
+      Write-Host "Deleting PKG: $_"
+      [IO.File]::Delete($_)
+    }
+  displayName: 'SBOM: Cleanup'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'SBOM: Publish'
+  inputs:
+    artifactName: '${{ parameters.uploadPrefix }}sbom'
+    pathToPublish: $(Build.ArtifactStagingDirectory)/sbom
+  condition: succeeded()

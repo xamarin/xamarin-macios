@@ -10,37 +10,22 @@
 #if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.IO;
 using System.Threading;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using AVFoundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVAssetImageGeneratorTest {
-		
+
 		[Test]
 		public void Defaults ()
 		{
@@ -49,7 +34,7 @@ namespace MonoTouchFixtures.AVFoundation {
 			using (AVAssetImageGenerator aig = new AVAssetImageGenerator (video_asset)) {
 				Assert.Null (aig.ApertureMode, "ApertureMode");
 				Assert.False (aig.AppliesPreferredTrackTransform, "AppliesPreferredTrackTransform");
-				Assert.That (aig.MaximumSize, Is.EqualTo (SizeF.Empty), "MaximumSize");
+				Assert.That (aig.MaximumSize, Is.EqualTo (CGSize.Empty), "MaximumSize");
 				Assert.True (aig.RequestedTimeToleranceAfter.IsPositiveInfinity, "RequestedTimeToleranceAfter");
 				Assert.True (aig.RequestedTimeToleranceBefore.IsPositiveInfinity, "RequestedTimeToleranceBefore");
 			}
@@ -102,11 +87,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		}
 
 		string does_not_exists_asset_path = Path.Combine (NSBundle.MainBundle.BundlePath, "xamarin.mov");
-#if MONOMAC
-		string video_asset_path = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents/Resources/xamvideotest.mp4");
-#else
-		string video_asset_path = Path.Combine (NSBundle.MainBundle.BundlePath, "xamvideotest.mp4");
-#endif
+		string video_asset_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "xamvideotest.mp4");
 		bool handled;
 		ManualResetEvent mre;
 
@@ -115,7 +96,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		{
 			// This test deadlocks on Mountain Lion (but works on Lion)
 			// https://gist.github.com/rolfbjarne/1190d97af79e554c298f2c133dfd8e87
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			handled = false;
 			mre = new ManualResetEvent (false);
@@ -123,39 +104,20 @@ namespace MonoTouchFixtures.AVFoundation {
 				using (NSUrl video_url = NSUrl.FromFilename (video_asset_path))
 				using (AVAsset video_asset = AVAsset.FromUrl (video_url))
 				using (AVAssetImageGenerator aig = new AVAssetImageGenerator (video_asset)) {
-					NSValue[] values = new NSValue[] { NSValue.FromCMTime (CMTime.Zero) };
+					NSValue [] values = new NSValue [] { NSValue.FromCMTime (CMTime.Zero) };
 					aig.GenerateCGImagesAsynchronously (values, handler);
 					mre.WaitOne ();
 				}
 			};
-			var asyncResult = main.BeginInvoke (null, null);
-			main.EndInvoke (asyncResult);
+			var thread = new Thread (main) {
+				IsBackground = true,
+			};
+			thread.Start ();
 			Assert.True (mre.WaitOne (2000), "wait");
 			Assert.True (handled, "handled");
 		}
 
-#if !XAMCORE_2_0
-		[Test]
-		public void GenerateCGImagesAsynchronously_Compat ()
-		{
-			handled = false;
-			mre = new ManualResetEvent (false);
-			ThreadStart main = () => {
-				using (NSUrl video_url = NSUrl.FromFilename (video_asset_path))
-				using (AVAsset video_asset = AVAsset.FromUrl (video_url))
-				using (AVAssetImageGenerator aig = new AVAssetImageGenerator (video_asset)) {
-					aig.GenerateCGImagesAsynchronously (NSValue.FromCMTime (CMTime.Zero), handler);
-					mre.WaitOne ();
-				}
-			};
-			var asyncResult = main.BeginInvoke (null, null);
-			main.EndInvoke (asyncResult);
-			Assert.True (mre.WaitOne (2000));
-			Assert.True (handled, "handled");
-		}
-#endif
-
-		void handler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error) 
+		void handler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error)
 		{
 			handled = true;
 			mre.Set ();

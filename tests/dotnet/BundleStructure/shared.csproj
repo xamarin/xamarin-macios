@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>BundleStructure</ApplicationTitle>
+		<ApplicationId>com.xamarin.bundlestructure</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+
+		<AppManifestDetectionEnabled>false</AppManifestDetectionEnabled>
+
+		<RootTestsDirectory Condition="'$(RootTestsDirectory)' == ''">$(MSBuildThisFileDirectory)/../..</RootTestsDirectory>
+		<!-- disable IL stripping, because some of our assemblies aren't actually assemblies, they're just placeholder files -->
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+
+		<!-- None items -->
+
+		<!-- Set CopyToOutputDirectory=true for some items with different extensions -->
+		<None Update="NoneA.txt">
+			<!-- Not bundled; warning -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="NoneB.dll">
+			<!-- Bundled -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="NoneB.pdb">
+			<!-- Bundled -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="NoneB.dll.mdb">
+			<!-- Bundled -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="NoneB.config">
+			<!-- Bundled -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="NoneC.pdb">
+			<!-- No matching NoneC.dll, but still bundled. -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="NoneD.exe">
+			<!-- Bundled -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneE.dylib">
+			<!-- Bundled, linked with -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneE.so">
+			<!-- Bundled, not linked with -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libNoneF.a">
+			<!-- Not bundled; linked with -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Sub/NoneG.txt">
+			<!-- Not bundled; warning -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- From outside the project directory -->
+		<None Include="../NoneH.txt">
+			<!-- Not bundled, warning: The file '[...]/xamarin-macios/tests/dotnet/BundleStructure/NoneH.txt' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle. -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- With Link -->
+		<None Update="NoneI.txt">
+			<!-- Not bundled; warning -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Somewhere/I.txt</Link>
+		</None>
+
+		<!-- With Link + relative path -->
+		<None Update="NoneJ.txt">
+			<!-- Not bundled; warning -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link Condition=" $(TargetFramework.EndsWith('-macos'))">../Somewhere/Else/NoneJ.txt</Link>
+			<Link Condition="!$(TargetFramework.EndsWith('-macos'))">Contents/Somewhere/Else/NoneJ.txt</Link>
+		</None>
+		<!-- CopyToPublishDirectory instead of CopyToOutputDirectory -->
+		<None Update="NoneK.txt">
+			<!-- Not bundled; warning -->
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
+		<!-- .config file without a related assembly (should be copied) -->
+		<None Update="NoneL.config">
+			<!-- Bundled -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<!-- unknown file (should not be copied, warning should be shown) -->
+		<None Update="NoneM.unknown">
+			<!-- Not bundled; warning -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.dylib">
+			<!-- Bundled, linked with, install_name_tool must have been executed -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.so">
+			<!-- Bundled, not linked with, install_name_tool must have been executed -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Assembly: should be copied, but the xml file next to it should not (and there shouldn't be any warnings either) -->
+		<None Include="../NoneN.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="../NoneN.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Lone xml file (no sibling assembly): should not be copied, and a warning should be printed -->
+		<None Include="../NoneO.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+
+		<!-- Assembly: should be copied, but the xml file with the same base name (even though it's in a different directory) should not (and there shouldn't be any warnings either) -->
+		<None Include="../NoneP.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="NoneP.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- png image -->
+		<!-- bundled -->
+		<None Include="$(RootTestsDirectory)/monotouch-test/basn3p08.png" CopyToOutputDirectory="PreserveNewest" />
+
+		<!-- png image -->
+		<!-- bundled -->
+		<None Include="$(RootTestsDirectory)/monotouch-test/basn3p08_with_loc.png" CopyToOutputDirectory="PreserveNewest" />
+
+		<!-- jpg image -->
+		<!-- bundled -->
+		<None Include="$(RootTestsDirectory)/msbuild/Xamarin.MacDev.Tasks.Tests/Resources/iTunesArtwork.jpg" CopyToOutputDirectory="PreserveNewest" />
+
+		<!-- Unknown files of 'None' items with specific 'PublishFolderType' set -->
+
+		<None Update="UnknownA.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="None" />
+		<None Update="UnknownB.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="Assembly" />
+		<None Update="UnknownC.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="Resource" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownD.framework.zip"       CopyToPublishDirectory="PreserveNewest" PublishFolderType="CompressedAppleFramework" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownE.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownF1.resources.zip"      CopyToPublishDirectory="PreserveNewest" PublishFolderType="CompressedAppleBindingResourcePackage" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/UnknownF2.resources"          CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleBindingResourcePackage" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/PlugInA.bundle"               CopyToPublishDirectory="PreserveNewest" PublishFolderType="PlugIns"           Condition="'$(_IsAppSigned)' == 'false'" /> <!-- we don't support signing apps with plugins yet -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/CompressedPlugInB.bundle.zip" CopyToPublishDirectory="PreserveNewest" PublishFolderType="CompressedPlugIns" Condition="'$(_IsAppSigned)' == 'false'" /> <!-- we don't support signing apps with plugins yet -->
+		<None Update="UnknownI.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="Unknown" />
+		<!-- any files in the root directory will make macOS or Mac Catalyst app bundles invalid, and code signing will fail, so skip the following for those platforms when signing the app bundle-->
+		<None Update="UnknownJ.bin" CopyToOutputDirectory="PreserveNewest" PublishFolderType="RootDirectory" Condition="('$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst') Or '$(_IsAppSigned)' == 'false'" />
+
+		<None Update="SomewhatUnknownA.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownA.bin" PublishFolderType="None" />
+		<None Update="SomewhatUnknownB.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownB.bin" PublishFolderType="Assembly" />
+		<None Update="SomewhatUnknownC.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownC.bin" PublishFolderType="Resource" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/SomewhatUnknownD.framework.zip"  CopyToPublishDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownD.bin" PublishFolderType="CompressedAppleFramework" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/SomewhatUnknownE.framework"      CopyToPublishDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownE.bin" PublishFolderType="AppleFramework" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/SomewhatUnknownF1.resources.zip" CopyToPublishDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownF1.bin" PublishFolderType="CompressedAppleBindingResourcePackage" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/SomewhatUnknownF2.resources"     CopyToPublishDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownF2.bin" PublishFolderType="AppleBindingResourcePackage" />
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/PlugInC.bundle"                  CopyToPublishDirectory="PreserveNewest" Link="Subfolder/PlugInC.bundle"           PublishFolderType="PlugIns"           Condition="'$(_IsAppSigned)' == 'false'" /> <!-- only if not signing, because these make the app bundle invalid -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/CompressedPlugInD.bundle.zip"    CopyToPublishDirectory="PreserveNewest" Link="Subfolder/CompressedPlugInD.bundle" PublishFolderType="CompressedPlugIns" Condition="'$(_IsAppSigned)' == 'false'" /> <!-- only if not signing, because these make the app bundle invalid -->
+		<None Update="SomewhatUnknownI.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownI.bin" PublishFolderType="Unknown" />
+		<!-- any files in the root directory will make macOS or Mac Catalyst app bundles invalid, and code signing will fail, so skip the following for those platforms when signing the app bundle-->
+		<None Update="SomewhatUnknownJ.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownJ.bin" PublishFolderType="RootDirectory" Condition="('$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst') Or '$(_IsAppSigned)' == 'false'" />
+
+		<!-- https://github.com/xamarin/xamarin-macios/issues/15727 -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/Framework.With.Dots.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
+
+		<!-- https://github.com/xamarin/xamarin-macios/issues/15044 -->
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/NoLibPrefix.dylib" CopyToPublishDirectory="PreserveNewest" PublishFolderType="DynamicLibrary" />
+		<!-- Content items -->
+
+		<!-- Content without any metadata: bundled -->
+		<Content Include="../ContentA.txt" />
+		<!-- Content with CopyToOutputDirectory: bundled -->
+		<Content Include="../ContentB.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<!-- Content with CopyToPublishDirectory: bundled -->
+		<Content Include="../ContentC.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<!-- Content with CopyToPublishDirectory=Never: still bundled -->
+		<Content Include="../ContentD.txt">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</Content>
+		<!-- Content with CopyToOutputDirectory=Never: still bundled -->
+		<Content Include="../ContentE.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+		<!-- Content with CopyToOutputDirectory and PublishFolderType=None: not bundled -->
+		<Content Include="../ContentF.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</Content>
+		<!-- Content with CopyToPublishDirectory and PublishFolderType=None: not bundled -->
+		<Content Include="../ContentG.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</Content>
+		<!-- Content with just PublishFolderType=None: not bundled -->
+		<Content Include="../ContentH.txt">
+			<PublishFolderType>None</PublishFolderType>
+		</Content>
+
+		<!-- EmbeddedResource items -->
+
+		<!-- EmbeddedResource without any metadata: not bundled-->
+		<EmbeddedResource Include="EmbeddedResourceA.txt" />
+		<!-- EmbeddedResource with CopyToOutputDirectory: bundled -->
+		<EmbeddedResource Include="EmbeddedResourceB.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToPublishDirectory: bundled -->
+		<EmbeddedResource Include="EmbeddedResourceC.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToPublishDirectory=Never: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceD.txt">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToOutputDirectory=Never: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceE.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToOutputDirectory and PublishFolderType=None: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceF.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToPublishDirectory and PublishFolderType=None: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceG.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with just PublishFolderType=None: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceH.txt">
+			<PublishFolderType>None</PublishFolderType>
+		</EmbeddedResource>
+
+		<!-- BundleResource items -->
+
+		<!-- BundleResource without any metadata: bundled -->
+		<BundleResource Include="../BundleResourceA.txt" />
+		<!-- Content with CopyToOutputDirectory: bundled -->
+		<BundleResource Include="../BundleResourceB.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</BundleResource>
+		<!-- Content with CopyToPublishDirectory: bundled -->
+		<BundleResource Include="../BundleResourceC.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</BundleResource>
+		<!-- BundleResource with CopyToPublishDirectory=Never: still bundled -->
+		<BundleResource Include="../BundleResourceD.txt">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</BundleResource>
+		<!-- BundleResource with CopyToOutputDirectory=Never: still bundled -->
+		<BundleResource Include="../BundleResourceE.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</BundleResource>
+		<!-- BundleResource with CopyToOutputDirectory and PublishFolderType=None: not bundled -->
+		<BundleResource Include="../BundleResourceF.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</BundleResource>
+		<!-- BundleResource with CopyToPublishDirectory and PublishFolderType=None: not bundled -->
+		<BundleResource Include="../BundleResourceG.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</BundleResource>
+		<!-- BundleResource with just PublishFolderType=None: not bundled -->
+		<BundleResource Include="../BundleResourceH.txt">
+			<PublishFolderType>None</PublishFolderType>
+		</BundleResource>
+
+		<None Remove="@(Content)" />
+		<None Remove="@(EmbeddedResource)" />
+	</ItemGroup>
+
+	<!--
+		Frameworks
+	-->
+
+	<ItemGroup>
+		<!-- This is a NuGet with multiple frameworks (either .framework directories or .framework.zip files depending on the platform) in the runtimes/<rid>/native folder
+			This package brings in:
+			* FrameworksInRuntimesNativeDirectory1.framework
+			* FrameworksInRuntimesNativeDirectory2.framework
+		-->
+		<PackageReference Include="Xamarin.Tests.FrameworksInRuntimesNativeDirectory" Version="1.0.0" />
+	</ItemGroup>
+
+	<!-- Only uncompressed for mobile platforms, because macOS and Mac Catalyst frameworks have symlinks, which MSBuild doesn't handle very well, so for now we're just supporting compressed versions in that case -->
+	<ItemGroup Condition="!($(TargetFramework.EndsWith('-macos')) Or $(TargetFramework.EndsWith('-maccatalyst')))">
+		<!-- native framework (unzipped) -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/FrameworkTest2.framework/**/*" CopyToOutputDirectory="PreserveNewest" />
+
+		<!-- native xcframework (unzipped) -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/FrameworkTest3.xcframework/**/*" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- native framework (zipped) -->
+		<!-- should be unzipped, linked with, and bundled -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/FrameworkTest4.framework.zip" CopyToOutputDirectory="PreserveNewest" />
+
+		<!-- native xcframework (zipped) -->
+		<!-- should be unzipped, linked with, and bundled -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/FrameworkTest5.xcframework.zip" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- The bindings-framework-test project contains (next to the binding assembly):
+			*.resources/* files for iOS and tvOS
+			*.resources.zip for macOS and Mac Catalyst
+			It's only included when building on a Mac (remotely or locally), because we don't support building binding frameworks yet from Windows (without being connected to a Mac).
+		 -->
+		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" Condition="'$(IsMacEnabled)' == 'true'" />
+	</ItemGroup>
+
+	<!-- Adding resources using a custom target -->
+	<PropertyGroup>
+		<CollectBundleResourcesDependsOn>
+			$(CollectBundleResourcesDependsOn);
+			AddBundleResources;
+		</CollectBundleResourcesDependsOn>
+	</PropertyGroup>
+	<Target Name="AddBundleResources">
+		<ItemGroup>
+			<Content Include="../ContentI.txt" />
+			<BundleResource Include="../BundleResourceI.txt" />
+		</ItemGroup>
+	</Target>
+</Project>

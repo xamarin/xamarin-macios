@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<BundleResource Update="Resources\C.ttf">
+			<Link>Resources\C.ttf</Link>
+		</BundleResource>
+		<BundleResource Update="Resources\B.otf">
+			<Link>Resources\B.otf</Link>
+		</BundleResource>
+		<BundleResource Update="Resources\A.ttc">
+			<Link>Resources\A.ttc</Link>
+		</BundleResource>
+	</ItemGroup>
+	<Import Project="..\shared.csproj" />
+</Project>

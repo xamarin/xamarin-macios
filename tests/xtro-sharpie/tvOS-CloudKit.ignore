@@ -2,6 +2,5 @@
 ## In reality the selectors only answer in the simulator, not on AppleTV devices
 !missing-selector! CKContainer::fetchAllLongLivedOperationIDsWithCompletionHandler: not bound
 !missing-selector! CKContainer::fetchLongLivedOperationWithID:completionHandler: not bound
-
-## deprecated API
-!missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
+!unknown-native-enum! CKSubscriptionOptions bound
+!unknown-type! CKDiscoveredUserInfo bound

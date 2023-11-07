@@ -1,0 +1,245 @@
+# Main template that contains all the jobs that are required to run the device tests.
+#
+# The stage contains two different jobs
+#
+# tests: Runs the tests on a pool that contains devices that are capable to run them.
+# publish_html: Because vsdrop is not supported on macOS we have an extra job that
+#   will run on a pool with Windows devices that will publish the results on VSDrop to
+#   be browsable.
+
+parameters:
+
+# string that is used to identify the status to be used to expose the result on GitHub
+- name: statusContext
+  type: string
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
+
+# string that contains the extra labels to pass to xharness to select the tests to execute.
+- name: testsLabels
+  type: string
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+
+# name of the pool that contains the iOS devices
+- name: testPool
+  type: string
+  default: ''
+
+# demand that has to be matched by a bot to be able to run the tests.
+- name: extraBotDemands
+  type: object
+  default: []
+
+- name: useXamarinStorage
+  type: boolean
+  default: false
+
+- name: vsdropsPrefix
+  type: string
+
+- name: stageName
+  type: string
+
+- name: displayName
+  type: string
+
+- name: keyringPass
+  type: string
+
+- name: testPrefix
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: makeTarget
+  type: string
+  default: 'vsts-device-tests' # target to be used to run the tests
+
+- name: condition
+  type: boolean
+  default: true
+
+- name: parseLabels
+  type: boolean
+  default: true
+
+- name: simTestsConfigurations
+  type: object
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: XcodeChannel
+  type: string
+
+- name: macOSName
+  type: string
+
+stages:
+- stage: ${{ parameters.stageName }}
+  displayName: ${{ parameters.displayName }}
+  dependsOn:
+  - build_packages
+  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
+  condition: and(succeeded(), ${{ parameters.condition }})
+
+  jobs:
+  - ${{ if eq(parameters.parseLabels, true) }}:
+    - job: configure
+      displayName: 'Configure build'
+      pool:
+        vmImage: windows-latest
+
+      variables:
+        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+        BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+      steps:
+      - template: ../common/configure.yml
+        parameters: 
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+          uploadArtifacts: false
+
+  - job: "tests"
+    ${{ if eq(parameters.parseLabels, true) }}:
+      condition: ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
+    dependsOn:
+    - ${{ if eq(parameters.parseLabels, true) }}:
+      - configure
+    displayName: 'Running tests:' 
+    timeoutInMinutes: 1000
+    variables:
+      # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
+      PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+      # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+      ${{ if eq(parameters.testPool, '') }}:
+        AgentPoolComputed: $(PRBuildPool)
+      ${{ else }}:
+        AgentPoolComputed: ${{ parameters.testPool }}
+
+    pool:
+      name: $(AgentPoolComputed)
+      demands:
+      - Agent.OS -equals Darwin
+      - macOS.Name -equals ${{ parameters.macOSName }}
+      - XcodeChannel -equals ${{ parameters.XcodeChannel }}
+      - ${{ each demand in parameters.extraBotDemands }}:
+        - demand
+      workspace:
+        clean: all
+    strategy:
+      matrix:
+        ${{ each label in parameters.simTestsConfigurations }}:
+          ${{ replace(label, '-', '_') }}:
+            LABEL: ${{ label }}
+            TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ label }}-tests'
+            STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ label }}'
+            TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
+    steps:
+    - template: build.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        label: $(LABEL)
+        testsLabels: $(TESTS_LABELS)
+        statusContext: $(STATUS_CONTEXT)
+        useXamarinStorage: ${{ parameters.useXamarinStorage }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+        keyringPass: ${{ parameters.keyringPass }}
+        testPrefix: $(TEST_PREFIX)
+        makeTarget: ${{ parameters.makeTarget }}
+        gitHubToken: ${{ parameters.gitHubToken }}
+        xqaCertPass: ${{ parameters.xqaCertPass }}
+
+  - job: publish_test_results
+    ${{ if eq(parameters.parseLabels, true) }}:
+      condition: and(ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
+    ${{ else }}:
+      condition: succeededOrFailed()
+    displayName: 'GitHub comment - Publish results'
+    timeoutInMinutes: 1000
+    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+    - tests
+    - ${{ if eq(parameters.parseLabels, true) }}:
+      - configure
+    variables:
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+      ${{ each label in parameters.simTestsConfigurations }}:
+        # Define the variable FOO from the previous job
+        # Note the use of single quotes!
+        TESTS_BOT_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests.outputs['${{ replace(label, '-', '_')}}.runTests.TESTS_BOT'] ]
+        TESTS_JOBSTATUS_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests.outputs['${{ replace(label, '-', '_')}}.runTests.TESTS_JOBSTATUS'] ]
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+    steps:
+    - template: publish-html.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+        statusContext: ${{ parameters.statusContext }}
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+        testPrefix: ${{ parameters.testPrefix }}
+
+  - job: publish_skipped_tests
+    ${{ if eq(parameters.parseLabels, true) }}:
+      condition: eq(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
+    ${{ else }}:
+      condition: false
+    displayName: 'GitHub comment - Skipped tests'
+    timeoutInMinutes: 1000
+    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+    - configure
+
+    variables:
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+
+    steps:
+
+    - template: ../common/checkout.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+    - pwsh: |
+        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+        $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
+        $sb = [System.Text.StringBuilder]::new()
+        $sb.AppendLine("All tests have been skipped because the label 'skip-all-tests' was set.")
+        $result = $gihubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString())
+      displayName: 'Set comment'
+      env:
+        CONTEXT: ${{ parameters.statusContext }}
+        DEVICE_PREFIX: ${{ parameters.testPrefix }}
+        GITHUB_TOKEN: $(GitHub.Token)
+        ACCESSTOKEN: $(System.AccessToken)
+        ${{ if eq(parameters.repositoryAlias, 'self') }}:
+          COMMENT_HASH: $(GIT_HASH)
+        ${{ else }}:
+          COMMENT_HASH: $(Build.SourceVersion)

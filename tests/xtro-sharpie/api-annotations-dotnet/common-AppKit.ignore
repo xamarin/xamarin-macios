@@ -1,0 +1,18 @@
+
+## recent fox top xtro reported additional missing API (to be reviewed)
+!missing-selector! +NSCursor::pop not bound
+
+## unsorted
+
+!unknown-field! item bound
+!missing-field! NSImageNameColumnViewTemplate not bound
+!missing-field! NSImageNameGoBackTemplate not bound
+!missing-field! NSImageNameGoForwardTemplate not bound
+!missing-field! NSImageNameIconViewTemplate not bound
+!missing-field! NSImageNameListViewTemplate not bound
+!missing-field! NSTypeIdentifierAddressText not bound
+!missing-field! NSTypeIdentifierDateText not bound
+!missing-field! NSTypeIdentifierPhoneNumberText not bound
+!missing-field! NSTypeIdentifierTransitInformationText not bound
+!missing-protocol! NSAnimatablePropertyContainer not bound
+!missing-selector! NSTouchBar::itemIdentifiers not bound

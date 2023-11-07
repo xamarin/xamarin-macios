@@ -6,19 +6,36 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
+#endif
 	public class NWProtocolUdpOptions : NWProtocolOptions {
-		internal NWProtocolUdpOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolUdpOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
-		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) {}
+		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) { }
 
 		public void SetPreferNoChecksum (bool preferNoChecksum) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksum);
 	}

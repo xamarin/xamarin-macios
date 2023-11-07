@@ -9,24 +9,9 @@
 
 #if !MONOMAC
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -44,16 +29,16 @@ namespace MonoTouchFixtures.UIKit {
 			var sa = new UIStringAttributes ();
 
 			var bc = UIColor.FromRGBA (0.1f, 0.2f, 0.3f, 0.4f);
-			Assert.That (bc.RetainCount, Is.EqualTo ((nint) 2), "BackgroundColor-new"); // bug
+			Assert.That (bc.RetainCount, Is.EqualTo ((nuint) 2), "BackgroundColor-new"); // bug
 			sa.BackgroundColor = bc;
-			Assert.That (bc.RetainCount, Is.EqualTo ((nint) 3), "BackgroundColor-set");
+			Assert.That (bc.RetainCount, Is.EqualTo ((nuint) 3), "BackgroundColor-set");
 
 			sa.BaselineOffset = 0.0f;
 
 			var fc = UIColor.FromRGBA (0.5f, 0.6f, 0.7f, 0.8f);
-			Assert.That (fc.RetainCount, Is.EqualTo ((nint) 2), "ForegroundColor-new"); // bug
+			Assert.That (fc.RetainCount, Is.EqualTo ((nuint) 2), "ForegroundColor-new"); // bug
 			sa.ForegroundColor = fc;
-			Assert.That (fc.RetainCount, Is.EqualTo ((nint) 3), "ForegroundColor-set");
+			Assert.That (fc.RetainCount, Is.EqualTo ((nuint) 3), "ForegroundColor-set");
 
 			var f = UIFont.FromName ("Helvetica", 12);
 			var f_count = f.RetainCount; // lots of owner
@@ -61,21 +46,21 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.That (f.RetainCount, Is.EqualTo (++f_count), "Font-set");
 
 			var ps = new NSParagraphStyle ();
-			Assert.That (ps.RetainCount, Is.EqualTo ((nint) 1), "ParagraphStyle-new");
+			Assert.That (ps.RetainCount, Is.EqualTo ((nuint) 1), "ParagraphStyle-new");
 			sa.ParagraphStyle = ps;
-			Assert.That (ps.RetainCount, Is.EqualTo ((nint) 2), "ParagraphStyle-set");
+			Assert.That (ps.RetainCount, Is.EqualTo ((nuint) 2), "ParagraphStyle-set");
 
-			for (int i=0; i < 16; i++) {
+			for (int i = 0; i < 16; i++) {
 				Assert.NotNull (sa.BackgroundColor, "BackgroundColor-get");
 				Assert.NotNull (sa.ForegroundColor, "ForegroundColor-get");
 				Assert.NotNull (sa.Font, "Font-get");
 				Assert.NotNull (sa.ParagraphStyle, "ParagraphStyle-get");
 			}
 
-			Assert.That (sa.BackgroundColor.RetainCount, Is.EqualTo ((nint) 3), "BackgroundColor");
-			Assert.That (sa.ForegroundColor.RetainCount, Is.EqualTo ((nint) 3), "ForegroundColor");
+			Assert.That (sa.BackgroundColor.RetainCount, Is.EqualTo ((nuint) 3), "BackgroundColor");
+			Assert.That (sa.ForegroundColor.RetainCount, Is.EqualTo ((nuint) 3), "ForegroundColor");
 			Assert.That (sa.Font.RetainCount, Is.EqualTo (f_count), "Font");
-			Assert.That (sa.ParagraphStyle.RetainCount, Is.EqualTo ((nint) 2), "ParagraphStyle");
+			Assert.That (sa.ParagraphStyle.RetainCount, Is.EqualTo ((nuint) 2), "ParagraphStyle");
 
 			GC.KeepAlive (bc);
 			GC.KeepAlive (fc);
@@ -92,28 +77,28 @@ namespace MonoTouchFixtures.UIKit {
 			sa.Expansion = 0.0f;
 
 			var uc = UIColor.FromRGBA (0.1f, 0.2f, 0.3f, 0.4f);
-			Assert.That (uc.RetainCount, Is.EqualTo ((nint) 2), "UnderlineColor-new");
+			Assert.That (uc.RetainCount, Is.EqualTo ((nuint) 2), "UnderlineColor-new");
 			sa.UnderlineColor = uc;
-			Assert.That (uc.RetainCount, Is.EqualTo ((nint) 3), "UnderlineColor-set");
+			Assert.That (uc.RetainCount, Is.EqualTo ((nuint) 3), "UnderlineColor-set");
 
 			var sc = UIColor.FromRGBA (0.5f, 0.6f, 0.7f, 0.8f);
-			Assert.That (sc.RetainCount, Is.EqualTo ((nint) 2), "StrikethroughColor-new");
+			Assert.That (sc.RetainCount, Is.EqualTo ((nuint) 2), "StrikethroughColor-new");
 			sa.StrikethroughColor = sc;
-			Assert.That (sc.RetainCount, Is.EqualTo ((nint) 3), "StrikethroughColor-set");
+			Assert.That (sc.RetainCount, Is.EqualTo ((nuint) 3), "StrikethroughColor-set");
 
 			var u = new NSUrl ("http://xamarin.com");
-			Assert.That (u.RetainCount, Is.EqualTo ((nint) 1), "Link-new");
+			Assert.That (u.RetainCount, Is.EqualTo ((nuint) 1), "Link-new");
 			sa.Link = u;
-			Assert.That (u.RetainCount, Is.EqualTo ((nint) 2), "Link-set");
+			Assert.That (u.RetainCount, Is.EqualTo ((nuint) 2), "Link-set");
 
 #if !__WATCHOS__
 			var ta = new NSTextAttachment ();
-			Assert.That (ta.RetainCount, Is.EqualTo ((nint) 1), "TextAttachment-new");
+			Assert.That (ta.RetainCount, Is.EqualTo ((nuint) 1), "TextAttachment-new");
 			sa.TextAttachment = ta;
-			Assert.That (ta.RetainCount, Is.EqualTo ((nint) 2), "TextAttachment-set");
+			Assert.That (ta.RetainCount, Is.EqualTo ((nuint) 2), "TextAttachment-set");
 #endif // !__WATCHOS__
 
-			for (int i=0; i < 16; i++) {
+			for (int i = 0; i < 16; i++) {
 				Assert.NotNull (sa.UnderlineColor, "UnderlineColor-get");
 				Assert.NotNull (sa.StrikethroughColor, "StrikethroughColor-get");
 				Assert.NotNull (sa.Link, "Link-get");
@@ -122,11 +107,11 @@ namespace MonoTouchFixtures.UIKit {
 #endif
 			}
 
-			Assert.That (sa.UnderlineColor.RetainCount, Is.EqualTo ((nint) 3), "UnderlineColor");
-			Assert.That (sa.StrikethroughColor.RetainCount, Is.EqualTo ((nint) 3), "StrikethroughColor");
-			Assert.That (sa.Link.RetainCount, Is.EqualTo ((nint) 2), "Link");
+			Assert.That (sa.UnderlineColor.RetainCount, Is.EqualTo ((nuint) 3), "UnderlineColor");
+			Assert.That (sa.StrikethroughColor.RetainCount, Is.EqualTo ((nuint) 3), "StrikethroughColor");
+			Assert.That (sa.Link.RetainCount, Is.EqualTo ((nuint) 2), "Link");
 #if !__WATCHOS__
-			Assert.That (sa.TextAttachment.RetainCount, Is.EqualTo ((nint) 2), "TextAttachment");
+			Assert.That (sa.TextAttachment.RetainCount, Is.EqualTo ((nuint) 2), "TextAttachment");
 #endif
 
 			GC.KeepAlive (uc);

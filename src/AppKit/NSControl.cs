@@ -25,16 +25,21 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
+
+#nullable enable
 
 namespace AppKit {
 
 	public partial class NSControl {
 		// If you modify, also search for other other XM_ACTIVATED_COPY and update as well
-		NSObject target;
-		Selector action;
+		NSObject? target;
+		Selector? action;
 
 		public event EventHandler Activated {
 			add {
@@ -55,3 +60,4 @@ namespace AppKit {
 
 	}
 }
+#endif // !__MACCATALYST__

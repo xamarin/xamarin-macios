@@ -15,13 +15,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace EmbeddedResources {
 
@@ -33,16 +28,17 @@ namespace EmbeddedResources {
 		public void Embedded ()
 		{
 
-#if __TVOS__
+#if __TVOS__ && !NET
+			// Don't know if this might fail with .NET, so don't disable it until we know otherwise (the TestRuntime.CheckExecutingWithInterpreter is not available for .NET, so if that's the case we might need different logic)
 			if (TestRuntime.CheckExecutingWithInterpreter ())
 				Assert.Ignore ("This test is disabled on TVOS."); // Randomly crashed on tvOS -> https://github.com/xamarin/maccore/issues/1909
 
 #endif
 
-#if MONOMAC
+#if MONOMAC && !NET
 			var manager = new ResourceManager ("xammac_tests.EmbeddedResources.Welcome", typeof (ResourcesTest).Assembly);
 #else
-			var manager = new ResourceManager ("EmbeddedResources.Welcome", typeof(ResourcesTest).Assembly);
+			var manager = new ResourceManager ("EmbeddedResources.Welcome", typeof (ResourcesTest).Assembly);
 #endif
 
 			Assert.AreEqual ("Welcome", manager.GetString ("String1", new CultureInfo ("en")), "en");

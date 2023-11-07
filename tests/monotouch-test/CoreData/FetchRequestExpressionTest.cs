@@ -1,20 +1,13 @@
-﻿using System;
-#if XAMCORE_2_0
+using System;
 using Foundation;
 using CoreData;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreData
-{
+namespace MonoTouchFixtures.CoreData {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FetchRequestExpressionTest
-	{
+	public class FetchRequestExpressionTest {
 
 		[Test]
 		public void WeakFramework ()

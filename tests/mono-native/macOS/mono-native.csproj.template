@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2B174B45-CC6B-443D-870F-6B5394FDE3FD}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Mono.Native.Tests</RootNamespace>
+    <AssemblyName>mononativetests</AssemblyName>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <DefineConstants>$(DefineConstants);MOBILE;XAMMAC</DefineConstants>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Mac</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+    <LinkMode>None</LinkMode>
+    <DefineConstants>$(DefineConstants);</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Security" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" >
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\common\mac\MacMain.cs">
+      <Link>MacMain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\MonoNativeConfig.cs">
+      <Link>MonoNativeConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\NativePlatformConfig.cs" />
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatform.cs">
+      <Link>MonoNativePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\MonoNativePlatformType.cs">
+      <Link>MonoNativePlatformType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\corlib\Test\Mono\NativePlatformTest.cs">
+      <Link>NativePlatformTest.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">
+      <Project>{88A8A1AC-0829-4C98-8F4A-9FC23DC42A06}</Project>
+      <Name>Touch.Client-macOS-mobile</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

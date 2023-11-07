@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Common.props" />
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>MySpacedApp</AssemblyName>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\libtest2.a">
+      <Kind>Static</Kind>
+      <Link>libtest2.a</Link>
+    </NativeReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="LinkedBundleResource.txt">
+      <Link>Folder\LinkedBundleResource.txt</Link>
+    </BundleResource>
+    <BundleResource Include="Folder\BundleResource.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LinkedEmbeddedResource.txt">
+      <Link>Folder\LinkedEmbeddedResource.txt</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Folder\EmbeddedResource.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Folder\Content.txt" />
+    <Content Include="LinkedContent.txt">
+      <Link>Folder\LinkedContent.txt</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
+  </ItemGroup>
+</Project>

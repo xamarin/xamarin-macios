@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "sampleBmp.bmp",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

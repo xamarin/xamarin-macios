@@ -10,31 +10,19 @@
 #if !__WATCHOS__
 
 using NUnit.Framework;
-#if XAMCORE_2_0
 using Foundation;
 using AudioUnit;
 using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AudioUnit;
-using MonoTouch.CoreFoundation;
-#endif
-using System.IO;
 
 namespace MonoTouchFixtures.AudioUnit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ExtAudioFileTest
-	{
+	public class ExtAudioFileTest {
 		[Test]
 		public void WrapAudioFileID ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 			using (var file = ExtAudioFile.OpenUrl (CFUrl.FromFile (path))) {
 				Assert.IsNotNull (file.AudioFile, "#1");
 
@@ -46,11 +34,7 @@ namespace MonoTouchFixtures.AudioUnit {
 		[Test]
 		public void ClientDataFormat ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 			using (var file = ExtAudioFile.OpenUrl (CFUrl.FromFile (path))) {
 				var fmt = file.ClientDataFormat;
 			}
@@ -59,11 +43,7 @@ namespace MonoTouchFixtures.AudioUnit {
 		[Test]
 		public void OpenNSUrlTest ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 			ExtAudioFileError err;
 			using (var file = ExtAudioFile.OpenUrl (NSUrl.FromFilename (path), out err)) {
 				Assert.IsTrue (err == ExtAudioFileError.OK, "OpenNSUrlTest");
@@ -74,11 +54,7 @@ namespace MonoTouchFixtures.AudioUnit {
 		[Test]
 		public void OpenCFUrlTest ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 			ExtAudioFileError err;
 			using (var file = ExtAudioFile.OpenUrl (CFUrl.FromFile (path), out err)) {
 				Assert.IsTrue (err == ExtAudioFileError.OK, "OpenCFUrlTest");

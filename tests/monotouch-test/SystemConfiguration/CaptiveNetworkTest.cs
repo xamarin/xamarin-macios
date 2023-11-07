@@ -11,40 +11,36 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using SystemConfiguration;
 #if !MONOMAC
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.SystemConfiguration;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SystemConfiguration {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CaptiveNetworkTest {
-		
+
 #if !MONOMAC // Fields are not on Mac
 		[Test]
 		public void Fields ()
 		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
+			if (TestRuntime.IsSimulatorOrDesktop) {
 				// Fails (NullReferenceException) on iOS6 simulator
-				TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+				TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			}
 
 #if __TVOS__
+#if !NET
 			Assert.IsNull (CaptiveNetwork.NetworkInfoKeyBSSID, "kCNNetworkInfoKeyBSSID");
 			Assert.IsNull (CaptiveNetwork.NetworkInfoKeySSID, "kCNNetworkInfoKeySSID");
 			Assert.IsNull (CaptiveNetwork.NetworkInfoKeySSIDData, "kCNNetworkInfoKeySSIDData");
+#endif
 #else
 			Assert.That (CaptiveNetwork.NetworkInfoKeyBSSID.ToString (), Is.EqualTo ("BSSID"), "kCNNetworkInfoKeyBSSID");
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSID.ToString (), Is.EqualTo ("SSID"), "kCNNetworkInfoKeySSID");
@@ -55,127 +51,144 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 #if !MONOMAC // TryCopyCurrentNetworkInfo and fields checked are not on Mac
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
-#endif
 		public void TryCopyCurrentNetworkInfo_Null ()
 		{
 			NSDictionary dict;
-			CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict);
-		}
-		
-		[Test]
 #if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
 #endif
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.TryCopyCurrentNetworkInfo (null, out dict));
+#endif
+		}
+
+		[Test]
 		public void TryCopyCurrentNetworkInfo ()
 		{
-			if (Runtime.Arch == Arch.SIMULATOR) {
-#if __IOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 6, 0))
-					Assert.Inconclusive ("This test throws EntryPointNotFoundException on the iOS 6 simulator with Lion");
-#endif
-			}
-
 			NSDictionary dict;
-			var status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict);
+			StatusCode status;
+
+#if __TVOS__
+#if !NET
+			Assert.Throws<NotSupportedException> (() => { status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict); });
+#endif
+#else
+			status = CaptiveNetwork.TryCopyCurrentNetworkInfo ("en0", out dict);
 
 			// No network, ignore test
 			if (status == StatusCode.NoKey)
 				return;
 
 			Assert.AreEqual (StatusCode.OK, status, "Status");
-
-#if __TVOS__
-			Assert.IsNull (dict, "Dictionary"); // null?
-			return;
+			// It's quite complex to figure out whether we should get a dictionary back or not.
+			// References:
+			// * https://github.com/xamarin/xamarin-macios/commit/24331f35dd67d19f3ed9aca7b8b21827ce0823c0
+			// * https://github.com/xamarin/xamarin-macios/issues/11504
+			// * https://github.com/xamarin/xamarin-macios/issues/12278
+			// * https://developer.apple.com/documentation/systemconfiguration/1614126-cncopycurrentnetworkinfo
+			// So don't assert anything about the dictionary.
 #endif
+		}
 
-			if ((dict == null) && (Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0))
-				Assert.Ignore ("null on iOS9 devices - CaptiveNetwork is being deprecated ?!?");
-
-			if (dict.Count == 3) {
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeyBSSID], "NetworkInfoKeyBSSID");
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeySSID], "NetworkInfoKeySSID");
-				Assert.NotNull (dict [CaptiveNetwork.NetworkInfoKeySSIDData], "NetworkInfoKeySSIDData");
-			} else {
-				Assert.Fail ("Unexpected dictionary result with {0} items", dict.Count);
-			}
+		[Test]
+		public void TryGetSupportedInterfaces ()
+		{
+			StatusCode status;
+#if __TVOS__
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces));
+#endif
+#else
+			status = CaptiveNetwork.TryGetSupportedInterfaces (out var ifaces);
+			Assert.AreEqual (StatusCode.OK, status, "Status");
+#endif // __TVOS__
 		}
 #endif
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
-#endif
 		public void MarkPortalOnline_Null ()
 		{
-			CaptiveNetwork.MarkPortalOnline (null);
+#if __TVOS__
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOnline (null));
+#endif
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.MarkPortalOnline (null));
+#endif
 		}
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void MarkPortalOnline ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
-		}
-		
-		[Test]
+
 #if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOnline ("xamxam"));
 #endif
+#else
+			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
+#endif
+		}
+
+		[Test]
 		public void MarkPortalOffline_Null ()
 		{
-			CaptiveNetwork.MarkPortalOffline (null);
+#if __TVOS__
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline (null));
+#endif
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.MarkPortalOffline (null));
+#endif
 		}
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void MarkPortalOffline ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
-		}
-		
-		[Test]
 #if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#else
-		[ExpectedException (typeof (ArgumentNullException))]
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.MarkPortalOffline ("xamxam"));
 #endif
+#else
+			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
+#endif
+		}
+
+		[Test]
 		public void SetSupportedSSIDs_Null ()
 		{
-			CaptiveNetwork.SetSupportedSSIDs (null);
+#if __TVOS__
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.SetSupportedSSIDs (null));
+#endif
+#else
+			Assert.Throws<ArgumentNullException> (() => CaptiveNetwork.SetSupportedSSIDs (null));
+#endif
 		}
 
 		[Test]
-#if __TVOS__
-		[ExpectedException (typeof (NotSupportedException))]
-#endif
 		public void SetSupportedSSIDs ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			bool supported = true;
 #else
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)
 			bool supported = !TestRuntime.CheckXcodeVersion (7, 0);
 #endif
-			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), Is.EqualTo (supported), "set");
+#if __TVOS__
+#if !NET
+			Assert.Throws<NotSupportedException> (() => CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), "set");
+#endif
+#else
+			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" }), Is.EqualTo (supported), "set");
+#endif
 		}
 	}
 }

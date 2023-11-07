@@ -1,0 +1,54 @@
+# This job will parse all the labels present in a PR, will set
+# the tags for the build AND will set a number of configuration
+# variables to be used by the rest of the projects
+parameters:
+
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+- template: checkout.yml
+  parameters:
+    isPR: true
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+  name: configure_platforms
+  displayName: 'Configure platforms'
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    New-BuildConfiguration -ConfigFile $jsonPath
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+    ACCESSTOKEN: $(AzDoBuildAccess.Token)
+  name: labels
+  displayName: 'Configure build'
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+  name: decisions
+  displayName: 'Make decisions'
+
+# upload config to be consumed later
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: configuration.json'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+      artifactName: '${{ parameters.uploadPrefix }}build-configuration'
+    continueOnError: true

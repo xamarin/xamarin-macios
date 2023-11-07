@@ -6,7 +6,7 @@
 // Authors:
 //    Miguel de Icaza (miguel@xamarin.com)
 
-#if !MONOMAC
+#nullable enable
 
 using System;
 using Foundation;
@@ -26,5 +26,3 @@ namespace Photos {
 		}
 	}
 }
-
-#endif

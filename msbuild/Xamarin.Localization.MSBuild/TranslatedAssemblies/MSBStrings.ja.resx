@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="M0001" xml:space="preserve">
+        <value>ツール {0} の実行が開始されました。引数: {1}
+        </value>
+    </data>
+  <data name="M0002" xml:space="preserve">
+        <value>ツール {0} の実行が完了しました (終了コード = {1})。
+        </value>
+    </data>
+  <data name="E0003" xml:space="preserve">
+        <value>ツール '{0}' の実行でエラーが発生しました: {1}
+        </value>
+    </data>
+  <data name="E0004" xml:space="preserve">
+        <value>'{0}' の codesign に失敗しました: {1}
+        </value>
+    </data>
+  <data name="E0005" xml:space="preserve">
+        <value>'{0}' の codesign に失敗しました
+        </value>
+    </data>
+  <data name="E0006" xml:space="preserve">
+        <value>  '{0}' が見つかりません。
+        </value>
+    </data>
+  <data name="E0007" xml:space="preserve">
+        <value>'{0}' の読み込みでエラーが発生しました: 画像の形式が不明です。
+        </value>
+    </data>
+  <data name="E0008" xml:space="preserve">
+        <value>'{2}' に対して iTunesArtwork の大きさ ({0}x{1}) が無効です。
+        </value>
+    </data>
+  <data name="E0009" xml:space="preserve">
+        <value>'{2}' に対して同じ大きさ ({0}x{1}) の iTunesArtwork ファイルが複数検出されました。
+        </value>
+    </data>
+  <data name="E0010" xml:space="preserve">
+        <value>'{0}' の読み込みエラーです: {1}
+        </value>
+    </data>
+  <data name="E0011" xml:space="preserve">
+        <value>MinimumOSVersion 値 '{0}' を解析できませんでした
+        </value>
+    </data>
+  <data name="E0012" xml:space="preserve">
+        <value>TargetArchitectures'{0}' を解析できませんでした
+        </value>
+    </data>
+  <data name="E0013" xml:space="preserve">
+        <value>'{1}' の {0} SDK がインストールされていません。
+        </value>
+    </data>
+  <data name="E0014" xml:space="preserve">
+        <value>iOS でアプリの起動に失敗する可能性があるため、実行可能ファイル (CFBundleExecutable) の名前 ({0}) の末尾に '.app' を使用することはできません。
+        </value>
+    </data>
+  <data name="W0016" xml:space="preserve">
+        <value>watchOS 向けのビルド時に、watchOS 4.3 SDK に対してのみフェイクを作成できます。
+        </value>
+    </data>
+  <data name="M0017" xml:space="preserve">
+        <value>すべての http 読み込みは既に許可されています。
+        </value>
+    </data>
+  <data name="M0018" xml:space="preserve">
+        <value>デバッグをサポートするための任意の HTTP 読み込みが許可されました。
+        </value>
+    </data>
+  <data name="W0019" xml:space="preserve">
+        <value>サポートされている iPhone の向きが設定されていません
+        </value>
+    </data>
+  <data name="W0020" xml:space="preserve">
+        <value>サポートされている iPhone の向きが一致するペアになっていません
+        </value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="W0021" xml:space="preserve">
+        <value>サポートされている iPad の向きが設定されていません
+        </value>
+    </data>
+  <data name="W0022" xml:space="preserve">
+        <value>サポートされている iPad の向きがペアになっていません
+        </value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="E0023" xml:space="preserve">
+        <value>複数の iTunesMetadata.plist を持つことはできません。
+        </value>
+    </data>
+  <data name="E0024" xml:space="preserve">
+        <value>設定 plist ファイル '{0}/Settings.bundle/Root.plist' の読み込みでエラーが発生しました: {1}。
+        </value>
+    </data>
+  <data name="E0025" xml:space="preserve">
+        <value>SDK バージョン '{0}' を解析できませんでした
+        </value>
+    </data>
+  <!-- E0026: not used anymore -->
+  <!-- E0027: not used anymore -->
+  <!-- E0028: not used anymore -->
+  <!-- E0029: not used anymore -->
+  <!-- E0030: not used anymore -->
+  <!-- E0031: not used anymore -->
+  <data name="E0032" xml:space="preserve">
+        <value>SDK bin ディレクトリが見つかりませんでした
+        </value>
+    </data>
+  <!-- E0033: not used anymore -->
+  <!-- E0034: not used anymore -->
+  <!-- E0035: not used anymore -->
+  <!-- E0036: not used anymore -->
+  <!-- E0037: not used anymore -->
+  <!-- E0038: not used anymore -->
+  <!-- E0039: not used anymore -->
+  <!-- E0040: not used anymore -->
+  <!-- E0041: not used anymore -->
+  <!-- E0042: not used anymore -->
+  <!-- E0043: not used anymore -->
+  <data name="E0044" xml:space="preserve">
+        <value>'{0}' に、有効な Xcode アプリ バンドルが見つかりませんでした。Visual Studio の設定 {1} で、Apple SDK の場所を更新してください。
+        </value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
+    </data>
+  <data name="E0045" xml:space="preserve">
+        <value>有効で使用可能な Xcode Developer パスが見つかりませんでした
+        </value>
+    </data>
+  <data name="E0046" xml:space="preserve">
+        <value>'{0}' が見つかりませんでした
+        </value>
+    </data>
+  <data name="M0047" xml:space="preserve">
+        <value>'{1}' で '{0}' を検索しています
+        </value>
+    </data>
+  <data name="E0048" xml:space="preserve">
+        <value>不明な SDK プラットフォームです: {0}
+        </value>
+    </data>
+  <data name="E0049" xml:space="preserve">
+        <value>名前または UUID が {0} のプロビジョニング プロファイルが見つかりませんでした。
+        </value>
+    </data>
+  <data name="E0050" xml:space="preserve">
+        <value>不明な検索オプションです: {0}
+        </value>
+    </data>
+  <data name="W0051" xml:space="preserve">
+        <value>'{0}' のネイティブ参照型が不明です。
+        </value>
+    </data>
+  <data name="W0052" xml:space="preserve">
+        <value>動的なネイティブ参照はサポートされていません: '{0}'
+        </value>
+    </data>
+  <data name="E0053" xml:space="preserve">
+        <value>ターゲット アーキテクチャ ARMv6 は、Xamarin.iOS ではサポートされなくなりました。サポートされているアーキテクチャを選択してください。
+        </value>
+    </data>
+  <data name="W0054" xml:space="preserve">
+        <value>応答ファイル '{0}' を作成できませんでした: {1}
+        </value>
+    </data>
+  <data name="E0055" xml:space="preserve">
+        <value>Info.plist を読み込めませんでした: {0}
+        </value>
+    </data>
+  <data name="E0057" xml:space="preserve">
+        <value>無効なアーキテクチャです: '{0}'。
+        </value>
+    </data>
+  <data name="E0058" xml:space="preserve">
+        <value>ターゲット デバイス情報を解析できませんでした。
+        </value>
+    </data>
+  <data name="E0059" xml:space="preserve">
+        <value>ターゲット デバイスが見つかりません。
+        </value>
+    </data>
+  <data name="E0060" xml:space="preserve">
+        <value>デバイス アーキテクチャ情報が見つかりません。
+        </value>
+    </data>
+  <data name="E0061" xml:space="preserve">
+        <value>無効なターゲット アーキテクチャです: '{0}'
+        </value>
+    </data>
+  <data name="E0062" xml:space="preserve">
+        <value>デバイスのオペレーティング システム情報が見つかりません。
+        </value>
+    </data>
+  <data name="E0063" xml:space="preserve">
+        <value>デバイスのモデル情報が見つかりません。
+        </value>
+    </data>
+  <data name="E0064" xml:space="preserve">
+        <value>iOS のバージョン情報が見つかりません。
+        </value>
+    </data>
+  <data name="E0065" xml:space="preserve">
+        <value>リソース ルール ファイル '{0}' が見つかりません。
+        </value>
+    </data>
+  <data name="E0066" xml:space="preserve">
+        <value>SdkVersion '{0}' を解析できませんでした。
+        </value>
+    </data>
+  <data name="E0067" xml:space="preserve">
+        <value>Xcode 10 では、watchOS 1 アプリはサポートされていません。watchOS 2 アプリにアップグレードするか、以前のバージョンの Xcode を使用してください。</value>
+    </data>
+  <data name="E0068" xml:space="preserve">
+        <value>WatchKit アプリケーションをビルドするには、Xcode 6.2 以上をインストールする必要があります。
+        </value>
+    </data>
+  <data name="E0069" xml:space="preserve">
+        <value>iOS {0} では、WatchKit はサポートされていません。
+        </value>
+    </data>
+  <data name="E0070" xml:space="preserve">
+        <value>Xcode アプリ バンドルに WatchKit ランチャーが見つかりませんでした。
+        </value>
+    </data>
+  <data name="W0071" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
+        </value>
+    </data>
+  <data name="W0072" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' で CFBundleVersion が指定されていません
+        </value>
+    </data>
+  <data name="W0073" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
+        </value>
+    </data>
+  <data name="W0074" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に、認識されない NSExtensionPointIdentifier 値 ('{1}') があります。
+        </value>
+    </data>
+  <data name="W0075" xml:space="preserve">
+        <value>Watch App '{0}' で CFBundleShortVersionString が指定されていません
+        </value>
+    </data>
+  <data name="W0076" xml:space="preserve">
+        <value>Watch App '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
+        </value>
+    </data>
+  <data name="W0077" xml:space="preserve">
+        <value>Watch App '{0}' で CFBundleVersion が指定されていません
+        </value>
+    </data>
+  <data name="W0078" xml:space="preserve">
+        <value>Watch App '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
+        </value>
+    </data>
+  <data name="W0079" xml:space="preserve">
+        <value>Watch Extension '{0}' で CFBundleShortVersionString が指定されていません
+        </value>
+    </data>
+  <data name="W0080" xml:space="preserve">
+        <value>Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleShortVersionString ({2}) と一致しない CFBundleShortVersionString ({1}) があります
+        </value>
+    </data>
+  <data name="W0081" xml:space="preserve">
+        <value>Watch Extension '{0}' で CFBundleVersion が指定されていません
+        </value>
+    </data>
+  <data name="W0082" xml:space="preserve">
+        <value>Watch Extension '{0}' に、メイン アプリ バンドルの CFBundleVersion ({2}) と一致しない CFBundleVersion ({1}) があります
+        </value>
+    </data>
+  <!-- E0083: not used anymore -->
+  <data name="E0084" xml:space="preserve">
+        <value>パス '{}' に {0} '{1}' SDK が見つかりませんでした
+        </value>
+    </data>
+  <data name="E0085" xml:space="preserve">
+        <value>'{2}' に {0} '{1}' SDK usr パスが見つかりませんでした
+        </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
+    </data>
+  <data name="E0086" xml:space="preserve">
+        <value>有効な Xcode Developer パスが見つかりませんでした
+        </value>
+    </data>
+  <!-- E0087: not used anymore -->
+  <!-- E0088: not used anymore -->
+  <data name="E0089" xml:space="preserve">
+        <value>認識されないプラットフォームです: {0}
+        </value>
+    </data>
+  <data name="W0090" xml:space="preserve">
+        <value>資産は資産カタログの一部ではありません: {0}
+        </value>
+    </data>
+  <data name="E0091" xml:space="preserve">
+        <value>ファイルが見つかりません: {0}
+        </value>
+    </data>
+  <data name="E0092" xml:space="preserve">
+        <value>無効な JSON です: {0}
+        </value>
+    </data>
+  <data name="E0093" xml:space="preserve">
+        <value>部分的な Info.plist ファイルは生成されませんでした: {0}
+        </value>
+    </data>
+  <data name="E0094" xml:space="preserve">
+        <value>{0} ログ ファイル '{1}' を読み込めませんでした: {2}
+        </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
+    </data>
+  <data name="W0095" xml:space="preserve">
+        <value>altool の出力を解析できませんでした: {0}。
+            出力: {1}
+        </value>
+    </data>
+  <!-- E0096: not used anymore -->
+  <data name="E0097" xml:space="preserve">
+        <value>API 定義ファイルが指定されていません。
+        </value>
+    </data>
+  <data name="E0098" xml:space="preserve">
+        <value>{0} が失敗しました。
+        </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
+    </data>
+  <data name="E0099" xml:space="preserve">
+        <value>  バンドル リソース '{0}' がディスク上に見つかりません ('{1}' にあるはずです)
+        </value>
+    </data>
+  <data name="E0100" xml:space="preserve">
+        <value>パス '{0}' は、アプリ バンドル外のファイルを指しているため、使用できません。
+        </value>
+    </data>
+  <data name="E0101" xml:space="preserve">
+        <value>Info.plist ファイルのビルド アクションは 'None' である必要があります。
+        </value>
+    </data>
+  <data name="E0102" xml:space="preserve">
+        <value>名前 '{0}' は予約されているため、使用できません。
+        </value>
+    </data>
+  <data name="W0103" xml:space="preserve">
+        <value>フレームワーク ディレクトリ内にフレームワークではないディレクトリが見つかりました: {0}
+        </value>
+    </data>
+  <data name="W0104" xml:space="preserve">
+        <value>フレームワーク {0} には、{1} という名前のバイナリが含まれていません
+        </value>
+    </data>
+  <data name="M0105" xml:space="preserve">
+        <value>フレームワーク ディレクトリが見つかりません。
+        </value>
+    </data>
+  <data name="W0106" xml:space="preserve">
+        <value>マニフェスト キー '{0}' の値を特定できませんでした
+        </value>
+    </data>
+  <data name="E0107" xml:space="preserve">
+        <value>部分的な Info.plist テンプレート ファイル '{0}' の読み込みでエラーが発生しました: {1}
+        </value>
+    </data>
+  <data name="W0108" xml:space="preserve">
+        <value>プロビジョニング プロファイルなしで Entitlements.plist 内の $(TeamIdentifierPrefix) を展開することはできません。
+        </value>
+    </data>
+  <data name="W0109" xml:space="preserve">
+        <value>プロビジョニング プロファイルなしで Entitlements.plist 内の $(AppIdentifierPrefix) を展開することはできません。
+        </value>
+    </data>
+  <data name="W0110" xml:space="preserve">
+        <value>iCloud エンタイトルメント ('{0}' など) にはプロビジョニング プロファイルが必要です。
+        </value>
+    </data>
+  <data name="W0111" xml:space="preserve">
+        <value>iCloud エンタイトルメント '{0}' は、プロビジョニング プロファイルでサポートされていません。
+        </value>
+    </data>
+  <data name="E0112" xml:space="preserve">
+        <value>Entitlements.plist テンプレート '{0}' が見つかりません。
+        </value>
+    </data>
+  <data name="E0113" xml:space="preserve">
+        <value>Entitlements.plist テンプレート '{0}' の読み込みでエラーが発生しました: {1}
+        </value>
+    </data>
+  <data name="E0114" xml:space="preserve">
+        <value>xcent ファイル '{0}' の作成でエラーが発生しました: {1}
+        </value>
+    </data>
+  <data name="E0115" xml:space="preserve">
+        <value>archived-expanded-entitlements.xcent ファイルの書き込みでエラーが発生しました: {0}
+        </value>
+    </data>
+  <data name="M0116" xml:space="preserve">
+        <value>ツール {0} の実行が完了しました。
+        </value>
+    </data>
+  <data name="E0117" xml:space="preserve">
+        <value>{0} がコード {1} で終了しました
+        </value>
+    </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} がコード {1}で終了しました :
+{2}</value>
+    </data>
+  <data name="M0119" xml:space="preserve">
+        <value>出力ファイル '{1}' のほうが新しいため、'{0}' をスキップしています。
+        </value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
+    </data>
+  <data name="E0120" xml:space="preserve">
+        <value>'{0}' の保存でエラーが発生しました: {1}
+        </value>
+    </data>
+  <data name="M0121" xml:space="preserve">
+        <value>バインド リソース パッケージを作成しています: {0}
+        </value>
+    </data>
+  <data name="E0122" xml:space="preserve">
+        <value>'{0}' の読み込みでエラーが発生しました
+        </value>
+    </data>
+  <data name="E0123" xml:space="preserve">
+        <value>パッケージの作成に失敗しました。追加の引数を解析できませんでした。
+        </value>
+    </data>
+  <data name="E0124" xml:space="preserve">
+        <value>ID '{0}' は、既定のキーチェーンにある証明書および秘密キーのどの有効なペアにも一致しません。
+        </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
+    </data>
+  <data name="M0125" xml:space="preserve">
+        <value>署名 ID が検出されました:
+        </value>
+    </data>
+  <data name="M0126" xml:space="preserve">
+        <value>証明書 '{0}' が、プレフィックス '{1}' のうちどれとも一致しません。
+        </value>
+    </data>
+  <data name="M0127" xml:space="preserve">
+        <value>証明書 '{0}' の有効期限が切れています ({1})
+        </value>
+    </data>
+  <data name="E0128" xml:space="preserve">
+        <value>キーチェーンに有効な {0} コード署名キーが見つかりません。https://developer.apple.com からコード署名証明書を依頼する必要があります。
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0129" xml:space="preserve">
+        <value>証明書 '{0}' が '{1}' と一致しません。
+        </value>
+    </data>
+  <data name="E0130" xml:space="preserve">
+        <value>キーチェーンに {0} コード署名キー '{1}' が見つかりません。
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
+    </data>
+  <data name="E0131" xml:space="preserve">
+        <value>{1} で {0} に対して利用可能なプロビジョニング プロファイルが見つかりませんでした。
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0132" xml:space="preserve">
+        <value>'{0}' が '{1}' と一致しません。
+        </value>
+    </data>
+  <data name="E0133" xml:space="preserve">
+        <value>インストールされている {0} {1} 署名 ID と一致するプロビジョニング プロファイルがインストールされていません。
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
+    </data>
+  <data name="M0134" xml:space="preserve">
+        <value>互換性のある AppID を持つ、一致するプロビジョニング プロファイルを検索し、最長一致 (ワイルドカード) の ID を持つもののみを保持しています。
+        </value>
+    </data>
+  <data name="M0135" xml:space="preserve">
+        <value>AppID: よりマッチ率の高いものが見つかったため、{0} を除外しました: {1}。
+        </value>
+    </data>
+  <data name="M0136" xml:space="preserve">
+        <value>AppID: よりマッチ率の高いものが既に見つかっているため、{0} を除外しました: {1}。
+        </value>
+    </data>
+  <data name="W0137" xml:space="preserve">
+        <value>バンドル識別子と一致するインストールされたプロビジョニング プロファイルがありません。
+        </value>
+    </data>
+  <data name="M0138" xml:space="preserve">
+        <value>複数のプロビジョニング プロファイルがバンドル識別子と一致しています。最初に一致したものを使用します。
+        </value>
+    </data>
+  <data name="E0139" xml:space="preserve">
+        <value>{0} で CFBundleIdentifier が定義されていません
+        </value>
+    </data>
+  <data name="E0140" xml:space="preserve">
+        <value>指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
+    </data>
+  <data name="E0141" xml:space="preserve">
+        <value>プロジェクトのバンドル識別子 '{0}' は指定されたプロビジョニング プロファイル '{1}' と一致しません
+        </value>
+    </data>
+  <data name="M0142" xml:space="preserve">
+        <value>複数の署名 ID が '{0}' と一致します。最初の一致を使用します。
+        </value>
+    </data>
+  <data name="M0143" xml:space="preserve">
+        <value>複数の署名 ID が見つかりました。最初の ID を使用します。
+        </value>
+    </data>
+  <data name="E0144" xml:space="preserve">
+        <value>指定された {0} プロビジョニング プロファイル '{1}' が見つかりませんでした
+        </value>
+    </data>
+  <data name="E0145" xml:space="preserve">
+        <value>指定されたプロビジョニング プロファイル '{1}' と一致する {0} 署名 ID がありません。
+        </value>
+    </data>
+  <data name="E0146" xml:space="preserve">
+        <value>バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。
+        </value>
+    </data>
+  <data name="E0147" xml:space="preserve">
+        <value>バンドル識別子 '{0}' は、選ばれている署名 ID '{0}' のどのインストール済みプロビジョニング プロファイルとも一致しません。
+        </value>
+    </data>
+  <data name="E0148" xml:space="preserve">
+        <value>バンドル識別子 '{0}' は、どのインストール済みプロビジョニング プロファイルとも一致しません。
+        </value>
+    </data>
+  <data name="M0149" xml:space="preserve">
+        <value>  {0} が次の場所に見つかりました: {1}
+        </value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
+    </data>
+  <data name="E0150" xml:space="preserve">
+        <value>  AssemblyPath を null または空にすることはできません
+        </value>
+    </data>
+  <data name="M0151" xml:space="preserve">
+        <value>生成されたバンドル名: {0}
+        </value>
+    </data>
+  <data name="E0152" xml:space="preserve">
+        <value>プロパティが指定されていません。
+        </value>
+    </data>
+  <data name="E0153" xml:space="preserve">
+        <value>'{0}' にあるディクショナリにキーが含まれていませんでした: {1}
+        </value>
+    </data>
+  <data name="E0154" xml:space="preserve">
+        <value>配列インデックスを解析できませんでした: {0}
+        </value>
+    </data>
+  <data name="E0155" xml:space="preserve">
+        <value>項目 '{0}' の配列インデックスが範囲外です
+        </value>
+    </data>
+  <data name="E0156" xml:space="preserve">
+        <value>{0} 値は、子プロパティをサポートしていません。
+        </value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
+    </data>
+  <data name="E0157" xml:space="preserve">
+        <value>{0} 値の取得はサポートされていません。
+        </value>
+    </data>
+  <data name="E0158" xml:space="preserve">
+        <value>ファイル '{0}' は存在しません。
+        </value>
+    </data>
+  <data name="E0159" xml:space="preserve">
+        <value>ファイル '{0}' が '{1}' と競合しています。
+        </value>
+    </data>
+  <data name="E0160" xml:space="preserve">
+        <value>Watch App および Extension には Xcode 6.2 以降が必要です。現在の Xcode バージョンは {0} です
+        </value>
+    </data>
+  <data name="E0161" xml:space="preserve">
+        <value>項目には論理名を計算する必要があります。
+        </value>
+    </data>
+  <data name="M0162" xml:space="preserve">
+        <value>重複するエントリがスキップされました: {0}
+        </value>
+    </data>
+  <data name="M0163" xml:space="preserve">
+        <value>ファイルが存在しないため、作成されます: {0}
+        </value>
+    </data>
+  <data name="M0164" xml:space="preserve">
+        <value>ディレクトリ '{0}' を作成しています
+        </value>
+    </data>
+  <data name="M0165" xml:space="preserve">
+        <value>'{0}' から '{1}' へファイルをコピーしています
+        </value>
+    </data>
+  <data name="E0166" xml:space="preserve">
+        <value>DestinationFolder または DestinationFiles のいずれかを指定する必要があります。両方は指定できません。
+        </value>
+    </data>
+  <data name="E0167" xml:space="preserve">
+        <value>DestinationFiles の数は、SourceFiles の数と一致する必要があります。
+        </value>
+    </data>
+  <data name="M0168" xml:space="preserve">
+        <value>  フレームワーク アセンブリをスキップしています: {0}
+        </value>
+    </data>
+  <data name="E0169" xml:space="preserve">
+        <value>不明なターゲット フレームワーク識別子です: {0}。
+        </value>
+    </data>
+  <data name="E0170" xml:space="preserve">
+        <value>{1} に {0} が見つかりませんでした。
+        </value>
+    </data>
+  <data name="E0171" xml:space="preserve">
+        <value>{0} SDK がインストールされていません。
+        </value>
+    </data>
+  <data name="E0172" xml:space="preserve">
+        <value>{0} SDK バージョン '{1}' がインストールされていません。また、それより新しいバージョンも見つかりませんでした。
+        </value>
+    </data>
+  <data name="E0173" xml:space="preserve">
+        <value>{0} SDK バージョン '{1}' がインストールされていません。代わりに、それより新しいバージョン '{2}' を使用します。
+        </value>
+    </data>
+  <data name="E0174" xml:space="preserve">
+        <value>xcframework {0} の形式が正しくないか、不明なため、処理できません。</value>
+    </data>
+  <data name="E0175" xml:space="preserve">
+        <value>'{0}' 内に一致するフレームワークが見つかりません。SupportedPlatform: '{0}'、SupportedPlatformVariant: '{1}'、SupportedArchitectures: '{2}'。</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
+    </data>
+  <data name="W0176" xml:space="preserve">
+        <value>'{0}' と '{1}' のオプションが競合しています。'{1}' は無視されます。
+        </value>
+    </data>
+  <data name="E0177" xml:space="preserve">
+        <value>ISshCommands インスタンスを取得できません。Mac への有効な接続が確立されていることを確認してください。</value>
+    </data>
+  <data name="E0178" xml:space="preserve">
+        <value>アーカイブ '{0}' を '{1}' にコピーしようとしているときにエラーが発生しました。詳細: {2}</value>
+    </data>
+  <data name="E0179" xml:space="preserve">
+        <value>Mac への使用可能な接続がありません。タスク '{0}' は実行されません</value>
+    </data>
+  <data name="E0180" xml:space="preserve">
+        <value>DataSet {0} を逆シリアル化できませんでした</value>
+    </data>
+  <data name="E0181" xml:space="preserve">
+        <value>ファイル {0} で ImageAsset がビルド アクションとして設定されていません。</value>
+    </data>
+  <data name="E0182" xml:space="preserve">
+        <value>カタログ {1} で {0} の UTI を解決できませんでした</value>
+    </data>
+  <data name="E0183" xml:space="preserve">
+        <value>Xcode と Xamarin.iOS の互換性を確認しようとして、エラーが発生しました</value>
+    </data>
+  <data name="E0184" xml:space="preserve">
+        <value>このプロジェクトは互換性のないバージョンの Xcode ({0}) でビルドされており、予期しない警告やエラーが発生する可能性があります。Xcode '{1}' をインストールするか、ドキュメントで詳細をご確認ください。</value>
+    </data>
+  <data name="E0185" xml:space="preserve">
+        <value>Xcode と Xamarin.iOS の互換性を確認しようとして、エラーが発生しました。詳細: {0}
+        </value>
+    </data>
+  <data name="E0186" xml:space="preserve">
+        <value>指定されたアーカイブ パスは、有効なアーカイブ ファイル (.xcarchive) からのものではありません。アーカイブ パス: '{0}'</value>
+    </data>
+  <data name="E0187" xml:space="preserve">
+        <value>macOS バージョン {0} を対応する Mac Catalyst のバージョンにマップできませんでした。有効な macOS バージョンは次のとおりです: {1}</value>
+    </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Mac Catalyst のバージョン {0} を対応する macOS バージョンにマップできませんでした。有効な Mac Catalyst のバージョンは次のとおりです: {1}</value>
+    </data>
+  <data name="E0189" xml:space="preserve">
+        <value>カスタム リンカー引数 '-{0}' を解析できませんでした: {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource アイテム '{0}' が存在しません。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+  <data name="E7001" xml:space="preserve">
+        <value>WiFi デバッガー設定のホスト IP を解決できませんでした。
+        </value>
+    </data>
+  <data name="E7002" xml:space="preserve">
+        <value>このマシンにはネットワーク アダプターがありません。これは、WiFi を使用してデバイス上でデバッグまたはプロファイルを行うときに必要です。
+        </value>
+    </data>
+  <data name="E7003" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に Info.plist が含まれていません。
+        </value>
+    </data>
+  <data name="E7004" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' で CFBundleIdentifier が指定されていません。
+        </value>
+    </data>
+  <data name="E7005" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' で CFBundleExecutable が指定されていません。
+        </value>
+    </data>
+  <data name="E7006" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
+        </value>
+    </data>
+  <data name="E7007" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。
+        </value>
+    </data>
+  <data name="E7008" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' で CFBundleShortVersionString が指定されていません。
+        </value>
+    </data>
+  <data name="E7009" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。
+        </value>
+    </data>
+  <data name="E7010" xml:space="preserve">
+        <value>アプリ拡張機能 '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier 値が含まれていません。
+        </value>
+    </data>
+  <!-- E7011: not used anymore -->
+  <!-- E7012: not used anymore -->
+  <!-- E7013: not used anymore -->
+  <data name="E7014" xml:space="preserve">
+        <value>Watch App '{0}' に Info.plist が含まれていません。
+        </value>
+    </data>
+  <data name="E7015" xml:space="preserve">
+        <value>Watch App '{0}' で CFBundleIdentifier が指定されていません。
+        </value>
+    </data>
+  <data name="E7016" xml:space="preserve">
+        <value>Watch App '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
+        </value>
+    </data>
+  <data name="E7017" xml:space="preserve">
+        <value>Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'Watch (4)' が必要ですが、'{1} ({2})' が見つかりました。
+        </value>
+    </data>
+  <data name="E7018" xml:space="preserve">
+        <value>Watch App '{name}' で CFBundleExecutable が指定されていません
+        </value>
+    </data>
+  <data name="E7019" xml:space="preserve">
+        <value>Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
+        </value>
+    </data>
+  <data name="E7020" xml:space="preserve">
+        <value>Watch App '{0}' に無効な Info.plist があります。WKWatchKitApp キーを指定し、'true' の値を設定する必要があります。
+        </value>
+    </data>
+  <data name="E7021" xml:space="preserve">
+        <value>Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。
+        </value>
+    </data>
+  <data name="E7022" xml:space="preserve">
+        <value>Watch App '{0}' に Watch Extension が 1 つも含まれていません。
+        </value>
+    </data>
+  <data name="E7022_A" xml:space="preserve">
+        <value>Watch App '{0}' に Watch Extension が含まれていません。
+        </value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
+    </data>
+  <data name="E7023" xml:space="preserve">
+        <value>Watch Extension '{0}' に Info.plist が含まれていません。
+        </value>
+    </data>
+  <data name="E7024" xml:space="preserve">
+        <value>Watch Extension '{0}' で CFBundleIdentifier が指定されていません。
+        </value>
+    </data>
+  <data name="E7025" xml:space="preserve">
+        <value>Watch Extension '{0}' で CFBundleExecutable が指定されていません。
+        </value>
+    </data>
+  <data name="E7026" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な CFBundleIdentifier ({1}) が含まれています。メイン アプリ バンドルの CFBundleIdentifier ({2}) で始まっていません。
+        </value>
+    </data>
+  <data name="E7027" xml:space="preserve">
+        <value>Watch Extension '{0}' に、無効なサフィックス ".key" で終わる CFBundleIdentifier ({1}) が含まれています。
+        </value>
+    </data>
+  <data name="E7028" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリが含まれていません。
+        </value>
+    </data>
+  <data name="E7029" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な Info.plist があります。NSExtensionPointIdentifier は "com.apple.watchkit" でなければなりません。
+        </value>
+    </data>
+  <data name="E7029_A" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionPointIdentifier を含める必要があります。
+        </value>
+    </data>
+  <data name="E7030" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な Info.plist があります。NSExtension ディクショナリに NSExtensionAttributes を含める必要があります。
+        </value>
+    </data>
+  <data name="E7031" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、親 Watch アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
+        </value>
+    </data>
+  <data name="E7031_A" xml:space="preserve">
+        <value>Watch Extension '{0}' に無効な Info.plist があります。NSExtensionAttributes ディクショナリに WKAppBundleIdentifier を含める必要があります。
+        </value>
+    </data>
+  <data name="E7032" xml:space="preserve">
+        <value>WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities ディクショナリに 'watch-companion' 機能を含めることはできません。
+        </value>
+    </data>
+  <data name="E7032_A" xml:space="preserve">
+        <value>WatchKit 拡張機能 '{0}' に無効な Info.plist があります。UIRequiredDeviceCapabilities 配列に 'watch-companion' 機能を含めることはできません。
+        </value>
+    </data>
+  <data name="E7033" xml:space="preserve">
+        <value>Watch App '{0}' に Info.plist が含まれていません。
+        </value>
+    </data>
+  <data name="E7034" xml:space="preserve">
+        <value>Watch App '{0}' で CFBundleIdentifier が指定されていません。
+        </value>
+    </data>
+  <data name="E7035" xml:space="preserve">
+        <value>Watch App '{0}' に、有効な UIDeviceFamily 値がありません。'{1}' が必要ですが、'{2} ({3})' が見つかりました。
+        </value>
+    </data>
+  <data name="E7036" xml:space="preserve">
+        <value>Watch App '{0}' で CFBundleExecutable が指定されていません。
+        </value>
+    </data>
+  <data name="E7037" xml:space="preserve">
+        <value>WatchKit 拡張機能 '{0}' に無効な WKAppBundleIdentifier 値 ('{1}') が含まれています。これは、Watch App の CFBundleIdentifier ('{2}') と一致しません。
+        </value>
+    </data>
+  <data name="E7038" xml:space="preserve">
+        <value>Watch App '{0}' に無効な WKCompanionAppBundleIdentifier 値があります ('{1}')。メイン アプリ バンドルの CFBundleIdentifier ('{2}') と一致しません。
+        </value>
+    </data>
+  <data name="E7038_A" xml:space="preserve">
+        <value>Watch App '{0}' に無効な Info.plist があります。WKCompanionAppBundleIdentifier が存在し、メイン アプリ バンドルの CFBundleIdentifier と一致している必要があります。
+        </value>
+    </data>
+  <data name="E7039" xml:space="preserve">
+        <value>Watch App '{0}' に無効な Info.plist があります。LSRequiresIPhoneOS キーを指定することはできません。
+        </value>
+    </data>
+  <data name="E7040" xml:space="preserve">
+        <value>アプリ バンドル {0} に Info.plist が含まれていません。
+        </value>
+    </data>
+  <data name="E7041" xml:space="preserve">
+        <value>{0} は CFBundleIdentifier を指定していません。
+        </value>
+    </data>
+  <data name="E7042" xml:space="preserve">
+        <value>{0} は CFBundleExecutable を指定していません。
+        </value>
+    </data>
+  <data name="E7043" xml:space="preserve">
+        <value>{0} は CFBundleSupportedPlatforms を指定していません。
+        </value>
+    </data>
+  <data name="E7044" xml:space="preserve">
+        <value>{0} は UIDeviceFamily を指定していません。
+        </value>
+    </data>
+  <data name="E7044_A" xml:space="preserve">
+        <value>{0} が無効です。UIDeviceFamily キーに '{1}' の値を含める必要があります。
+        </value>
+    </data>
+  <data name="E7045" xml:space="preserve">
+        <value>認識されない型です: {Type}
+        </value>
+    </data>
+  <data name="E7046" xml:space="preserve">
+        <value>追加: エントリ "{0}" は正しく指定されていません
+        </value>
+    </data>
+  <data name="E7047" xml:space="preserve">
+        <value>追加: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value>
+    </data>
+  <data name="E7048" xml:space="preserve">
+        <value>追加: "{0}" エントリは既に存在します
+        </value>
+    </data>
+  <data name="E7049" xml:space="preserve">
+        <value>追加: エントリ "{0}" を親に追加できません
+        </value>
+    </data>
+  <data name="E7050" xml:space="preserve">
+        <value>削除: 親からエントリ "{0}" を削除できません
+        </value>
+    </data>
+  <data name="E7051" xml:space="preserve">
+        <value>削除: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value>
+    </data>
+  <data name="E7052" xml:space="preserve">
+        <value>削除: エントリ "{0}" が存在しません
+        </value>
+    </data>
+  <data name="E7053" xml:space="preserve">
+        <value>インポート: エントリ "{0}" は正しく指定されていません
+        </value>
+    </data>
+  <data name="E7054" xml:space="preserve">
+        <value>インポート: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value>
+    </data>
+  <data name="E7055" xml:space="preserve">
+        <value>インポート: ファイルの読み取りでエラーが発生しました: {0}
+        </value>
+    </data>
+  <data name="E7056" xml:space="preserve">
+        <value>インポート: エントリ "{0}" を親に追加できません
+        </value>
+    </data>
+  <data name="E7057" xml:space="preserve">
+        <value>マージ: 配列エントリをディクショナリに追加できません
+        </value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
+    </data>
+  <data name="E7058" xml:space="preserve">
+        <value>マージ: 指定されたエントリはコンテナーである必要があります
+        </value>
+    </data>
+  <data name="E7059" xml:space="preserve">
+        <value>マージ: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value>
+    </data>
+  <data name="E7060" xml:space="preserve">
+        <value>マージ: エントリ "{0}" が存在しません
+        </value>
+    </data>
+  <data name="E7061" xml:space="preserve">
+        <value>マージ: ファイルの読み取りでエラーが発生しました: {0}
+        </value>
+    </data>
+  <data name="E7062" xml:space="preserve">
+        <value>設定: エントリ "{0}" は正しく指定されていません
+        </value>
+    </data>
+  <data name="E7063" xml:space="preserve">
+        <value>設定: エントリ "{0}" に無効な配列インデックスが含まれています
+        </value>
+    </data>
+  <data name="E7064" xml:space="preserve">
+        <value>設定: エントリ "{0}" が存在しません
+        </value>
+    </data>
+  <!-- E7068: not in use anymore -->
+  <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14 以降では watchOS 1 アプリがサポートされていません。プロジェクトを watchOS 2 以降に移行してください。</value>
+    </data>
+  <data name="E7070" xml:space="preserve">
+        <value>無効なアーキテクチャです ({0}): 一度に複数のアーキテクチャをリンクすることはできません。</value>
+    </data>
+  <data name="E7071" xml:space="preserve">
+        <value>AOT コンパイラの引数を解析できません: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+  <data name="InvalidFramework" xml:space="preserve">
+        <value>無効なフレームワークです: {0}</value>
+    </data>
+  <data name="InvalidPlatform" xml:space="preserve">
+        <value>無効なプラットフォームです: {0}</value>
+    </data>
+  <data name="E7072" xml:space="preserve">
+        <value>パッケージの製品要件ファイルに、ターゲット アーキテクチャ ({1}) と一致しないアーキテクチャ ({0}) が含まれています</value>
+    </data>
+  <data name="E7073" xml:space="preserve">
+        <value>少なくとも 1 つのアプリ バンドルを指定する必要があります。</value>
+    </data>
+  <data name="E7074" xml:space="preserve">
+        <value>アプリ バンドル {0} が存在しません。</value>
+    </data>
+  <data name="E7075" xml:space="preserve">
+        <value>アプリ バンドル {0} に対して、'SpecificSubDirectory' メタデータが指定されていません。</value>
+    </data>
+  <data name="E7076" xml:space="preserve">
+        <value>シンボリックリンク '{0}' をマージできません。ターゲットが異なります。</value>
+    </data>
+  <data name="E7077" xml:space="preserve">
+        <value>ファイル '{0}' をマージできません。入力アプリ バンドル間で異なります。</value>
+    </data>
+  <data name="E7078" xml:space="preserve">
+        <value>無効なアプリ バンドル: Mach-O ファイル {0} に依存ファイルがあります。</value>
+    </data>
+  <data name="E7079" xml:space="preserve">
+        <value>無効なアプリ バンドル: ファイル {0} の入力アプリ バンドル間の種類が異なります。</value>
+    </data>
+  <data name="E7080" xml:space="preserve">
+        <value>アプリ バンドル ファイル #{0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+  <data name="E7081" xml:space="preserve">
+        <value>AOT コンパイラ '{0}' が存在しません。</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>Info.plist ({1}) の {0} 値がプロジェクトファイルのSupportedOSPlatformVersion の値 ({2}) と一致しません (プロジェクトファイルに SupportedOSPlatformVersion 値が存在しない場合は、既定値を仮定します)。SupportedOSPlatformVersion 値に一致するようにInfo.plist の値を変更するか、 Info.plist の値を削除します (そして変数が存在しない場合は、SupportedOSPlatformVersion 値をプロジェクトファイルに追加してください)。</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>すべてのフォント ファイルは、アプリ バンドル内の同じディレクトリに配置する必要があります。次のフォント ファイルには、アプリ バンドルで異なるターゲット ディレクトリがあります。</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>ターゲット ディレクトリは {0} です</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="E7085" xml:space="preserve">
+        <value>"{0}" タスクに必要なパラメーター "{1}" の値が指定されなかったか、リソース "{3}" に "{2}" メタデータがありませんでした。</value>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>入力にシンボリックリンクが含まれているため、圧縮バインド リソース パッケージを作成しています。</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>圧縮プロパティでは、値 '{0}' は無効です。有効な値: 'true'、'false'、'auto'。</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>ディレクトリ {0} に 'manifest' ファイルが必要です。</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="E7088" xml:space="preserve">
+        <value>項目 "{1}" の "PublishFolderType" メタデータ値 '{0}' が認識されません。ファイルはアプリ バンドルにコピーされません。</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>ファイル '{0}' で "PublishFolderType" メタデータが指定されていないため、既定値を計算できませんでした。ファイルはアプリ バンドルにコピーされません。</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>項目 "{1}" の "PublishFolderType" メタデータ値 '{0}' が認識されません。ファイルはアプリ バンドルにコピーされません。ファイルをアプリ バンドルにコピーしない場合は、項目のメタデータ "{2}" を削除します。</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>フレームワーク {0} はスタティック ライブラリのフレームワークであり、アプリにはコピーされません。</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>ファイル '{0}' は有効なフレームワークではありません: {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>バインドしているリソース パッケージ {0} は存在しません。</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>ファイルまたはディレクトリ '{0}' は、フレームワークや、フレームワーク内におけるファイルとはみなされません。</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。一方のメタデータは '{1}' ですが、もう一方のメタデータは '{2}' です。</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}={2}' が 1 つの項目に設定されていますが、もう一方の項目には設定されていません。</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}' は項目ごとに異なる値を持ちます ('{2}' になったり、'{3}' になったりします)。</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>このプラットフォームでは、UIDeviceFamily 値 '6' は無効です。Mac Catalyst でのみ有効です。</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily 値 '6' には macOS 11.0 が必要です。プロジェクト ファイルの 「SupportedOSPlatformVersion」 を 14.0 (macOS 11.0 と同等の Mac Catalyst バージョン) 以上に設定してください。現在の値は {0} (macOS {1}と同等)です。</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>バインド リソース パッケージが見つかりませんでした: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>値 '{1}' のプロパティ '{0}' が不明です。</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。値がないことが必要です。</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>CustomEntitlements アイテム グループで指定された '{2}' 種類のエンタイトルメント '{1}' の値 '{0}' が無効です。'true' または 'false' であることが必要です。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>CustomEntitlements アイテム グループで指定されたエンタイトルメント '{1}' の不明な種類 '{0}'。'Remove'、'Boolean'、'String'、または 'StringArray' が必要です。</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>バインド リソース パッケージ '{2}' のネイティブ参照 '{1}' に対して、予期しない拡張機能 '{0}'。</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip ファイル {0} に '{1}' という名前のファイルが必要です。</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip ファイル '{0}' が存在しません。</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>ファイル '{0}' が存在しません。</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>項目'{0}' をネイティブ参照として処理できません: 不明な型です。</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>xcframework '{1}' から Info.plist '{0}' を読み込めませんでした。</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>ディレクトリ '{0}' は存在しません。</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>zip ファイル '{1}' にファイルまたはディレクトリ '{0}' が見つかりませんでした。</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>このプラットフォームで zip ファイル '{0}' を処理できません: ファイル '{1}' は symlink です。</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}" タスクにパラメーター "{1}" の値が指定されませんでした。これは、このプラットフォームでビルドするときに必要です。</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>illink アセンブリが存在しません: '{0}'。</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>アセンブリ {0} では 'ObjectFile' メタデータが提供されません。</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>アセンブリ {0} が入力アセンブリとして複数回渡されました ({1} から参照)。</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT コンパイル {0} に失敗しました。AOT コンパイラはコード {1} を表示して終了しました。</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>アセンブリ {0} に関連するアセンブリ参照サイクルが発生しました。</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
+</root>

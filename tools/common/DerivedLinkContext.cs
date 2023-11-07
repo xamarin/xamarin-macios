@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Collections.Generic;
 
 using Registrar;
+using Mono.Tuner;
 using Xamarin.Bundler;
 
-namespace Xamarin.Tuner
-{
-	public class DerivedLinkContext : LinkContext
-	{
-		internal IStaticRegistrar StaticRegistrar;
+#if NET
+using LinkContext = Xamarin.Bundler.DotNetLinkContext;
+#endif
+
+namespace Xamarin.Tuner {
+	public class DerivedLinkContext : LinkContext {
+		internal StaticRegistrar StaticRegistrar => Target.StaticRegistrar;
 		internal Target Target;
 		Symbols required_symbols;
 
@@ -41,12 +43,32 @@ namespace Xamarin.Tuner
 		// so we need a second dictionary
 		Dictionary<TypeDefinition, LinkedAwayTypeReference> LinkedAwayTypeMap = new Dictionary<TypeDefinition, LinkedAwayTypeReference> ();
 
+#if NET
+		public DerivedLinkContext (Xamarin.Linker.LinkerConfiguration configuration, Target target)
+			: base (configuration)
+		{
+			this.Target = target;
+		}
+#endif
+
 		public Application App {
 			get {
 				return Target.App;
 			}
 		}
 
+		AssemblyDefinition corlib;
+		public AssemblyDefinition Corlib {
+			get {
+				if (corlib is null) {
+					var name = Driver.CorlibName;
+					corlib = this.GetAssembly (name);
+					if (corlib is null)
+						throw ErrorHelper.CreateError (2111, Errors.MX2111 /* Can not find the corlib assembly '{0}' in the list of loaded assemblies. */, name);
+				}
+				return corlib;
+			}
+		}
 		public HashSet<TypeDefinition> CachedIsNSObject {
 			get { return cached_isnsobject; }
 			set { cached_isnsobject = value; }
@@ -71,7 +93,7 @@ namespace Xamarin.Tuner
 
 		public Symbols RequiredSymbols {
 			get {
-				if (required_symbols == null)
+				if (required_symbols is null)
 					required_symbols = new Symbols ();
 				return required_symbols;
 			}
@@ -81,11 +103,13 @@ namespace Xamarin.Tuner
 			get; set;
 		}
 
+#if !NET
 		public DerivedLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{
 			UserAction = AssemblyAction.Link;
 		}
+#endif
 
 		public Dictionary<IMetadataTokenProvider, object> GetAllCustomAttributes (string storage_name)
 		{
@@ -155,7 +179,7 @@ namespace Xamarin.Tuner
 		public void AddLinkedAwayType (TypeDefinition td)
 		{
 			var latr = new LinkedAwayTypeReference (td);
-			LinkedAwayTypes.Add (td.Module.Assembly.Name.Name + ": " + td.FullName, new LinkedAwayTypeReference (td));
+			LinkedAwayTypes.Add (td.Module.Assembly.Name.Name + ": " + td.FullName, latr);
 			LinkedAwayTypeMap.Add (td, latr);
 		}
 
@@ -177,7 +201,7 @@ namespace Xamarin.Tuner
 				return td;
 			}
 
-			var name = tr.Scope.Name;
+			string name;
 			switch (tr.Scope.MetadataScopeType) {
 			case MetadataScopeType.ModuleDefinition:
 				var md = (ModuleDefinition) tr.Scope;
@@ -196,8 +220,7 @@ namespace Xamarin.Tuner
 			return null;
 		}
 
-		class AttributeStorage : ICustomAttribute
-		{
+		class AttributeStorage : ICustomAttribute {
 			public CustomAttribute Attribute;
 			public TypeReference AttributeType { get; set; }
 
@@ -210,8 +233,7 @@ namespace Xamarin.Tuner
 			public Collection<CustomAttributeArgument> ConstructorArguments => Attribute.ConstructorArguments;
 		}
 
-		class LinkedAwayTypeReference : TypeReference
-		{
+		class LinkedAwayTypeReference : TypeReference {
 			// When a type is linked away, its Module and Scope properties
 			// return null.
 			// This class keeps those values around.

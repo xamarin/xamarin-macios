@@ -12,22 +12,24 @@
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <AssemblyName>TodayContainer</AssemblyName>
     <OutputPath>bin\$(Platform)\$(Configuration)-today</OutputPath>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
-    <MtouchArch>x86_64,i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhone' ">
-    <MtouchArch>ARM64,ARMv7</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <MtouchDebug>True</MtouchDebug>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>False</DebugSymbols>
     <Optimize>True</Optimize>
     <MtouchDebug>False</MtouchDebug>
@@ -37,7 +39,10 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">

@@ -1,60 +1,56 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class GeometryTest {
-		
+
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
 		[Test]
 		public void MapPointsPerMeterAtLatitude ()
 		{
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (0), Is.EqualTo (6.743).Within (0.001), "0");
-			
+
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (90), Is.EqualTo (3.936).Within (0.001), "90");
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (91), Is.EqualTo (0), "91");
 
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (-90), Is.EqualTo (2399.37).Within (0.01), "-90");
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (-91), Is.EqualTo (0), "-91");
-			
+
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (Double.NaN), Is.NaN, "NaN");
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (Double.NegativeInfinity), Is.NaN, "NegativeInfinity");
 			Assert.That (MKGeometry.MapPointsPerMeterAtLatitude (Double.PositiveInfinity), Is.NaN, "PositiveInfinity");
 		}
-		
+
 		[Test]
 		public void MetersPerMapPointAtLatitude ()
 		{
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (0), Is.EqualTo (0.148).Within (0.001), "0");
-			
+
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (90), Is.EqualTo (0.254).Within (0.001), "90");
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (91), Is.EqualTo (Double.PositiveInfinity), "91");
 
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (-90), Is.EqualTo (0.000416).Within (0.000001), "-90");
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (-91), Is.EqualTo (Double.PositiveInfinity), "-91");
-			
+
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (Double.NaN), Is.NaN, "NaN");
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (Double.NegativeInfinity), Is.NaN, "NegativeInfinity");
 			Assert.That (MKGeometry.MetersPerMapPointAtLatitude (Double.PositiveInfinity), Is.NaN, "PositiveInfinity");
 		}
-		
+
 		[Test]
 		public void MetersBetweenMapPoints ()
 		{

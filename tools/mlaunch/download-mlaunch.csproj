@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="../../eng/Versions.props" />
+
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.Tools.Mlaunch" Version="[$(MlaunchNuGetVersion)]" />
+  </ItemGroup>
+
+  <Target Name="Download" />
+</Project>

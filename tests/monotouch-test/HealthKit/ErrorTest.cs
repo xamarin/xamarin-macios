@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKErrorCode
 //
 // Authors:
@@ -7,20 +7,18 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !MONOMAC
+#if HAS_HEALTHKIT
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using HealthKit;
-using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.HealthKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -32,11 +30,15 @@ namespace MonoTouchFixtures.HealthKit {
 		public void Domain ()
 		{
 			// the enum exists but we can't load the domain before iOS8
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
-		
+#endif
+
 			Assert.That (HKErrorCode.NoError.GetDomain ().ToString (), Is.EqualTo ("com.apple.healthkit"), "Domain");
 		}
 	}
 }
 
-#endif // __TVOS__
+#endif // HAS_HEALTHKIT

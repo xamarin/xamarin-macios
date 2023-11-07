@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if WATCH
 
 using System;
@@ -30,6 +32,11 @@ namespace WatchKit {
 		public bool CheckSystemVersion (int major, int minor)
 		{
 			return Runtime.CheckSystemVersion (major, minor, SystemVersion);
+		}
+
+		public bool CheckSystemVersion (int major, int minor, int build)
+		{
+			return Runtime.CheckSystemVersion (major, minor, build, SystemVersion);
 		}
 	}
 }

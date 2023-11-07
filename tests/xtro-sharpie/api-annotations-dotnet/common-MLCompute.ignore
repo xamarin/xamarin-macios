@@ -1,0 +1,10 @@
+## `*Count` are not constant values and can change in the future
+!missing-enum-value! MLCActivationType native value MLCActivationTypeCount = 21 not bound
+!missing-enum-value! MLCArithmeticOperation native value MLCArithmeticOperationCount = 30 not bound
+!missing-enum-value! MLCComparisonOperation native value MLCComparisonOperationCount = 12 not bound
+!missing-enum-value! MLCLossType native value MLCLossTypeCount = 9 not bound
+!missing-enum-value! MLCPoolingType native value MLCPoolingTypeCount = 4 not bound
+!missing-enum-value! MLCRandomInitializerType native value MLCRandomInitializerTypeCount = 4 not bound
+!missing-enum-value! MLCReductionType native value MLCReductionTypeCount = 10 not bound
+!missing-enum-value! MLCDeviceType native value MLCDeviceTypeCount = 4 not bound
+!missing-enum-value! MLCDataType native value MLCDataTypeCount = 10 not bound

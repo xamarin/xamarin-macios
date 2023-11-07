@@ -2,18 +2,9 @@
 
 using System;
 
+#nullable enable
+
 namespace CoreData {
-
-#if !XAMCORE_2_0
-	public partial class NSPersistentStoreCoordinator {
-
-		[Obsolete ("Use .ctor(NSManagedObjectModel)")]
-		public NSPersistentStoreCoordinator ()
-		{
-		}
-	}
-#endif
-	
 #if !XAMCORE_3_0
 	public partial class NSMergeConflict {
 
@@ -35,6 +26,15 @@ namespace CoreData {
 
 		[Obsolete ("Default constructor is not available")]
 		public NSPersistentStore ()
+		{
+		}
+	}
+#endif
+#if !NET
+	public partial class NSCoreDataCoreSpotlightDelegate {
+
+		[Obsolete ("Default constructor is not available")]
+		public NSCoreDataCoreSpotlightDelegate ()
 		{
 		}
 	}

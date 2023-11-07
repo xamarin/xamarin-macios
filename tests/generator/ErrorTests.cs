@@ -4,17 +4,17 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace GeneratorTests
-{
+namespace GeneratorTests {
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
-	public class ErrorTests
-	{
+	public class ErrorTests {
 		[Test]
-		public void BI0002 ()
+		[TestCase (Profile.iOS)]
+		public void BI0002 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding ("InvalidCodeHere");
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (2, "Could not compile the API bindings.");
@@ -29,20 +29,25 @@ namespace GeneratorTests
 			bgen.AssertError (86, "A target framework (--target-framework) must be specified.");
 		}
 
+#if !NET
 		[Test]
-		public void BI0087 ()
+		[TestCase (Profile.macOSClassic)]
+		public void BI0087 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.macOSClassic;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding ("");
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (87, "Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.");
 		}
+#endif
 
 		[Test]
 		[TestCase (Profile.iOS)]
 		public void BI1036 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);
@@ -53,10 +58,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1037 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);
@@ -66,10 +74,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1038 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);
@@ -79,10 +90,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1039 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);
@@ -92,10 +106,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1040 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);
@@ -105,10 +122,13 @@ namespace GeneratorTests
 		}
 
 		[Test]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void BI1041 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);
@@ -118,10 +138,26 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void BI1046 ()
+		[TestCase (Profile.iOS)]
+		public void BI1042 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("bi1042.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.ProcessEnums = true;
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1042, "Missing '[Field (LibraryName=value)]' for BindingTests.Tools.DoorOpener (e.g.\"__Internal\")");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void BI1046 (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("bi1046.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.ProcessEnums = true;
@@ -130,82 +166,110 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void BI1048 ()
+		[TestCase (Profile.iOS)]
+		public void BI1048 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1048error.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1048, "Unsupported type String decorated with [BindAs]");
 		}
 
 		[Test]
-		public void BI1049 ()
+		[TestCase (Profile.iOS)]
+		public void BI1049 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1049error.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1049, "Could not unbox type String from NSNumber container used on member BindAs1049ErrorTests.MyFooClass.StringMethod decorated with [BindAs].");
 		}
 
 		[Test]
-		public void GH6863_property ()
+		[TestCase (Profile.iOS)]
+		public void GH6863_property (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_property.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1071, "The BindAs type for the member \"GH6863_property.MyFooClass.StringProp\" must be an array when the member's type is an array.");
 		}
 
-        
+
 		[Test]
-		public void GH6863_method ()
+		[TestCase (Profile.iOS)]
+		public void GH6863_method (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "ghissue6863_method.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1072, "The BindAs type for the parameter \"id_test\" in the method \"GH6863_method.MyFooClass.StringMethod\" must be an array when the parameter's type is an array.");
 		}
-       
+
 
 		[Test]
-		public void BI1050_model ()
+		[TestCase (Profile.iOS)]
+		public void BI1050_model (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1050modelerror.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1050, "[BindAs] cannot be used inside Protocol or Model types. Type: MyFooClass");
 		}
 
 		[Test]
-		public void BI1050_protocol ()
+		[TestCase (Profile.iOS)]
+		public void BI1050_protocol (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bindas1050protocolerror.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1050, "[BindAs] cannot be used inside Protocol or Model types. Type: MyFooClass");
 		}
 
 		[Test]
-		public void BI1060 ()
+		[TestCase (Profile.iOS)]
+		public void BI1059 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
+			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bi1059.cs")));
+			bgen.AssertExecuteError ("build");
+			bgen.AssertError (1059, "Found 2 Foundation.PreserveAttribute attributes on the member the type BI1059. At most one was expected.");
+		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void BI1060 (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug42855.cs")));
 			bgen.AssertExecute ("build");
 			bgen.AssertWarning (1060, "The Bug42855Tests.MyFooClass protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].");
 		}
 
 		[Test]
-		public void BI1112_Bug37527_WrongProperty ()
+		[TestCase (Profile.iOS)]
+		public void BI1112_Bug37527_WrongProperty (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("bug37527-wrong-property.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecuteError ("build");
@@ -213,10 +277,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void BI1113_Bug37527_MissingProperty ()
+		[TestCase (Profile.iOS)]
+		public void BI1113_Bug37527_MissingProperty (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.AddTestApiDefinition ("bug37527-missing-property.cs");
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecuteError ("build");
@@ -224,10 +290,12 @@ namespace GeneratorTests
 		}
 
 		[Test]
-		public void BI1117 ()
+		[TestCase (Profile.iOS)]
+		public void BI1117 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"using System;
 using Foundation;
 
@@ -252,40 +320,50 @@ namespace Bug52570Tests {
 		}
 
 		[Test]
-		public void BI1117_classinternal ()
+		[TestCase (Profile.iOS)]
+		public void BI1117_classinternal (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug52570classinternal.cs")));
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 		}
 
 		[Test]
-		public void BI1117_methodinternal ()
+		[TestCase (Profile.iOS)]
+		public void BI1117_methodinternal (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug52570methodinternal.cs")));
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 		}
 
+#if !NET
 		[Test]
-		public void BI1117_allowstaticmembers ()
+		[TestCase (Profile.iOS)]
+		public void BI1117_allowstaticmembers (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bug52570allowstaticmembers.cs")));
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 		}
+#endif
 
 		[Test]
-		public void BindAsNoMultidimensionalArrays ()
+		[TestCase (Profile.iOS)]
+		public void BindAsNoMultidimensionalArrays (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -307,12 +385,14 @@ namespace Bug57795Tests {
 		}
 
 		[Test]
-		public void BindAsNullableNSStringArrayError ()
+		[TestCase (Profile.iOS)]
+		public void BindAsNullableNSStringArrayError (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=57797
 
 			var bgen = new BGenTool {
-				Profile = Profile.iOS
+				Profile = profile,
 			};
 			bgen.CreateTemporaryBinding (@"
 using System;
@@ -336,12 +416,14 @@ namespace Bug57797Tests {
 		}
 
 		[Test]
-		public void BindAsNullableNSValueArrayError ()
+		[TestCase (Profile.iOS)]
+		public void BindAsNullableNSValueArrayError (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=57797
 
 			var bgen = new BGenTool {
-				Profile = Profile.iOS
+				Profile = profile,
 			};
 			bgen.CreateTemporaryBinding (@"
 using System;
@@ -365,12 +447,14 @@ namespace Bug57797Tests {
 		}
 
 		[Test]
-		public void BindAsNullableNSNumberArrayError ()
+		[TestCase (Profile.iOS)]
+		public void BindAsNullableNSNumberArrayError (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=57797
 
 			var bgen = new BGenTool {
-				Profile = Profile.iOS,
+				Profile = profile,
 				ProcessEnums = true
 			};
 			bgen.CreateTemporaryBinding (@"
@@ -401,10 +485,12 @@ namespace Bug57797Tests {
 		}
 
 		[Test]
-		public void BindAsNoRefParam ()
+		[TestCase (Profile.iOS)]
+		public void BindAsNoRefParam (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -421,14 +507,16 @@ namespace Bug57804TestsRef {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
+			bgen.AssertError (1080, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
 		}
 
 		[Test]
-		public void BindAsNoOutParam ()
+		[TestCase (Profile.iOS)]
+		public void BindAsNoOutParam (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -445,15 +533,17 @@ namespace Bug57804TestsRef {
 	}
 }");
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1048, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
+			bgen.AssertError (1080, "Unsupported type 'ref/out NSValue' decorated with [BindAs]");
 		}
 
 		[Test]
-		public void Bug57094Test ()
+		[TestCase (Profile.iOS)]
+		public void Bug57094Test (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=57094
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -473,10 +563,12 @@ namespace Bug57094 {
 		}
 
 		[Test]
-		public void BI1062_NoAsyncMethodRefHandlerTest ()
+		[TestCase (Profile.iOS)]
+		public void BI1062_NoAsyncMethodRefHandlerTest (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -498,10 +590,12 @@ namespace BI1062Tests {
 		}
 
 		[Test]
-		public void BI1062_NoAsyncMethodOutHandlerTest ()
+		[TestCase (Profile.iOS)]
+		public void BI1062_NoAsyncMethodOutHandlerTest (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -523,10 +617,12 @@ namespace BI1062Tests {
 		}
 
 		[Test]
-		public void BI1062_NoAsyncMethodOutParameterTest ()
+		[TestCase (Profile.iOS)]
+		public void BI1062_NoAsyncMethodOutParameterTest (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -548,10 +644,12 @@ namespace BI1062Tests {
 		}
 
 		[Test]
-		public void BI1062_NoAsyncMethodRefParameterTest ()
+		[TestCase (Profile.iOS)]
+		public void BI1062_NoAsyncMethodRefParameterTest (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
-			bgen.Profile = Profile.iOS;
+			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (@"
 using System;
 using Foundation;
@@ -573,10 +671,12 @@ namespace BI1062Tests {
 		}
 
 		[Test]
-		public void BI1063_NoDoubleWrapTest ()
+		[TestCase (Profile.iOS)]
+		public void BI1063_NoDoubleWrapTest (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool {
-				Profile = Profile.iOS,
+				Profile = profile,
 				ProcessEnums = true
 			};
 			bgen.CreateTemporaryBinding (@"
@@ -616,10 +716,12 @@ namespace BI1063Tests {
 		}
 
 		[Test]
-		public void BI1064 ()
+		[TestCase (Profile.iOS)]
+		public void BI1064 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool {
-				Profile = Profile.iOS,
+				Profile = profile,
 				ProcessEnums = true
 			};
 			bgen.CreateTemporaryBinding (@"
@@ -673,10 +775,12 @@ namespace BI1064Errors
 		}
 
 		[Test]
-		public void BI1065 ()
+		[TestCase (Profile.iOS)]
+		public void BI1065 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool {
-				Profile = Profile.iOS,
+				Profile = profile,
 				ProcessEnums = true
 			};
 			bgen.CreateTemporaryBinding (@"
@@ -700,10 +804,12 @@ namespace BI1065Errors
 		}
 
 		[Test]
-		public void BI1066 ()
+		[TestCase (Profile.iOS)]
+		public void BI1066 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool {
-				Profile = Profile.iOS,
+				Profile = profile,
 				ProcessEnums = true
 			};
 			bgen.CreateTemporaryBinding (@"
@@ -727,16 +833,18 @@ namespace BI1066Errors
 		}
 
 		[Test]
-		public void BI1067_1070 ()
+		[TestCase (Profile.iOS)]
+		public void BI1067_1070 (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			BGenTool bgen = new BGenTool {
-				Profile = Profile.iOS,
+				Profile = profile,
 			};
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "diamond-protocol-errors.cs")));
 			bgen.AssertExecuteError ("build");
 			bgen.AssertError (1067, "The type 'DiamondProtocol.A.C' is trying to inline the property 'P1' from the protocols 'DiamondProtocol.A.P1' and 'DiamondProtocol.A.P2', but the inlined properties don't share the same accessors ('DiamondProtocol.A.P1 P1' is read-only, while '$DiamondProtocol.A.P2 P1' is write-only).");
 			bgen.AssertWarning (1068, "The type 'DiamondProtocol.D.C' is trying to inline the property 'P1' from the protocols 'DiamondProtocol.D.P1' and 'DiamondProtocol.D.P2', and the inlined properties use different selectors (P1.P1 uses 'pA', and P2.P1 uses 'pB'.");
-			bgen.AssertError (1069, "The type 'DiamondProtocol.Y.C' is trying to inline the methods binding the selector 'm1:' from the protocols 'DiamondProtocol.Y.P1' and 'DiamondProtocol.Y.P2', using methods with different signatures ('Void M1(System.Int32)' vs 'Int32 M1(System.Boolean)').");
+			bgen.AssertError (1069, "The type 'DiamondProtocol.Y.C' is trying to inline the methods binding the selector 'm1:' from the protocols 'DiamondProtocol.Y.P1' and 'DiamondProtocol.Y.P2', using methods with different signatures ('System.Void M1(System.Int32)' vs 'System.Int32 M1(System.Boolean)').");
 			bgen.AssertError (1070, "The type 'DiamondProtocol.C.C' is trying to inline the property 'P1' from the protocols 'DiamondProtocol.C.P1' and 'DiamondProtocol.C.P2', but the inlined properties are of different types ('DiamondProtocol.C.P1 P1' is int, while 'DiamondProtocol.C.P2 P1' is int).");
 			bgen.AssertErrorCount (3);
 			bgen.AssertWarningCount (1);
@@ -744,10 +852,13 @@ namespace BI1066Errors
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void WarnAsError (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class warnaserrorTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into warnaserrorTests.FooObject class.";
 			{
 				// Enabled
@@ -795,10 +906,13 @@ namespace BI1066Errors
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void NoWarn (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			const string message = "The member 'SomeMethod' is decorated with [Static] and its container class nowarnTests.FooObject_Extensions is decorated with [Category] this leads to hard to use code. Please inline SomeMethod into nowarnTests.FooObject class.";
 			{
 				// Enabled
@@ -846,10 +960,13 @@ namespace BI1066Errors
 
 		[Test]
 		[TestCase (Profile.iOS)]
+#if !NET
 		[TestCase (Profile.macOSFull)]
+#endif
 		[TestCase (Profile.macOSMobile)]
 		public void MissingExportOnProperty (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.Profile = profile;
 			bgen.Defines = BGenTool.GetDefaultDefines (profile);

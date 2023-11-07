@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 
 using WatchKit;
 using Foundation;
 
-using NUnit.Framework.Internal.Filters;
 using MonoTouch.NUnit.UI;
 
-public static partial class TestLoader
-{
+public static partial class TestLoader {
 	static partial void AddTestAssembliesImpl (BaseTouchRunner runner);
 
 	public static void AddTestAssemblies (BaseTouchRunner runner)
@@ -19,11 +16,9 @@ public static partial class TestLoader
 	}
 }
 
-namespace monotouchtestWatchKitExtension
-{
+namespace monotouchtestWatchKitExtension {
 	[Register ("InterfaceController")]
-	public partial class InterfaceController : WKInterfaceController
-	{
+	public partial class InterfaceController : WKInterfaceController {
 		WatchOSRunner runner;
 		bool running;
 
@@ -47,12 +42,10 @@ namespace monotouchtestWatchKitExtension
 
 		static InterfaceController ()
 		{
-			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) =>
-			{
+			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) => {
 				Console.WriteLine ("Managed exception: {0}", args.Exception);
 			};
-			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) =>
-			{
+			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) => {
 				Console.WriteLine ("Objective-C exception: {0}", args.Exception);
 			};
 		}
@@ -70,23 +63,24 @@ namespace monotouchtestWatchKitExtension
 
 		void LoadTests ()
 		{
+			var excludeCategories = new [] {
+				"MobileNotWorking",
+				"NotOnMac",
+				"NotWorking",
+				"ValueAdd",
+				"CAS",
+				"InetAccess",
+				"NotWorkingLinqInterpreter",
+				"RequiresBSDSockets",
+				"BitcodeNotSupported",
+			};
 			runner = new WatchOSRunner ();
-			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets,BitcodeNotSupported").Filter);
-			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_FILTER_START"))) {
-				var firstChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_START") [0];
-				var lastChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_END") [0];
-				var nameFilter = new NameStartsWithFilter () { FirstChar = firstChar, LastChar = lastChar };
-				runner.Filter = new AndFilter (categoryFilter, nameFilter);
-			} else {
-				runner.Filter = categoryFilter;
-			}
+			runner.ExcludedCategories = new HashSet<string> (excludeCategories);
 			runner.Add (GetType ().Assembly);
 			TestLoader.AddTestAssemblies (runner);
-			ThreadPool.QueueUserWorkItem ((v) =>
-			{
+			ThreadPool.QueueUserWorkItem ((v) => {
 				runner.LoadSync ();
-				BeginInvokeOnMainThread (() =>
-				{
+				BeginInvokeOnMainThread (() => {
 					lblStatus.SetText (string.Format ("{0} tests", runner.TestCount));
 					RenderResults ();
 					cmdRun.SetEnabled (true);
@@ -151,37 +145,5 @@ namespace monotouchtestWatchKitExtension
 		{
 			RunTests ();
 		}
-	}
-}
-
-class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter
-{
-	public char FirstChar;
-	public char LastChar;
-
-	public override bool Match (NUnit.Framework.Api.ITest test)
-	{
-		if (test is NUnit.Framework.Internal.TestAssembly)
-			return true;
-
-		var method = test as NUnit.Framework.Internal.TestMethod;
-		if (method != null)
-			return Match (method.Parent);
-		
-		var name = !string.IsNullOrEmpty (test.Name) ? test.Name : test.FullName;
-		bool rv;
-		if (string.IsNullOrEmpty (name)) {
-			rv = true;
-		} else {
-			var z = Char.ToUpperInvariant (name [0]);
-			rv = z >= Char.ToUpperInvariant (FirstChar) && z <= Char.ToUpperInvariant (LastChar);
-		}
-
-		return rv;
-	}
-
-	public override bool Pass (NUnit.Framework.Api.ITest test)
-	{
-		return Match (test);
 	}
 }

@@ -22,8 +22,8 @@ extern "C" {
 		if (!d.OnlyDynamicUsage)
 			continue;
 #>
-<#= d.CReturnType #>
-<#= d.EntryPoint #> (<#= d.CArgumentSignature #>);
+<#= d.ReturnType.ExposedCType #>
+<#= d.EntryPoint #> (<#= d.CArgumentSignatureExposed #>);
 
 <# } #>
 

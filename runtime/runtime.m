@@ -17,6 +17,12 @@
 #include "runtime-internal.h"
 #include "xamarin/xamarin.h"
 
+#if !defined (CORECLR_RUNTIME)
+#include "xamarin/monovm-bridge.h"
+#else
+#include "xamarin/coreclr-bridge.h"
+#endif
+
 #if defined (DEBUG)
 //extern BOOL NSZombieEnabled;
 #endif
@@ -41,6 +47,7 @@ bool xamarin_mac_modern = false;
 bool xamarin_debug_mode = false;
 #endif
 bool xamarin_disable_lldb_attach = false;
+bool xamarin_disable_omit_fp = false;
 #if DEBUG
 bool xamarin_init_mono_debug = true;
 #else
@@ -48,8 +55,10 @@ bool xamarin_init_mono_debug = false;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
+#if MONOMAC || TARGET_OS_MACCATALYST
+NSString * xamarin_custom_bundle_name = @"MonoBundle";
+#endif
 #if MONOMAC
-NSString * xamarin_custom_bundle_name = nil;
 bool xamarin_is_mkbundle = false;
 char *xamarin_entry_assembly_path = NULL;
 #endif
@@ -68,8 +77,17 @@ bool xamarin_is_gc_coop = false;
 #endif
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
+enum XamarinTriState xamarin_log_exceptions = XamarinTriStateNone;
 enum XamarinLaunchMode xamarin_launch_mode = XamarinLaunchModeApp;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 bool xamarin_supports_dynamic_registration = true;
+#endif
+const char *xamarin_runtime_configuration_name = NULL;
+
+#if DOTNET
+enum XamarinNativeLinkMode xamarin_libmono_native_link_mode = XamarinNativeLinkModeStaticObject;
+const char **xamarin_runtime_libraries = NULL;
+#endif
 
 /* Callbacks */
 
@@ -79,14 +97,6 @@ xamarin_register_assemblies_callback xamarin_register_assemblies = NULL;
 xamarin_extension_main_callback xamarin_extension_main = NULL;
 
 /* Local variable */
-
-static MonoImage      *platform_image;
-static MonoClass      *inativeobject_class;
-static MonoClass      *nsobject_class;
-static MonoClass      *nsvalue_class;
-static MonoClass      *nsnumber_class;
-static MonoClass      *nsstring_class;
-static MonoClass      *runtime_class;
 
 static pthread_mutex_t framework_peer_release_lock;
 static MonoGHashTable *xamarin_wrapper_hash;
@@ -119,14 +129,18 @@ struct Trampolines {
 #endif
 	void* get_gchandle_tramp;
 	void* set_gchandle_tramp;
+	void* get_flags_tramp;
+	void* set_flags_tramp;
 };
 
 enum InitializationFlags : int {
 	InitializationFlagsIsPartialStaticRegistrar = 0x01,
-	/* unused									= 0x02,*/
-	InitializationFlagsDynamicRegistrar			= 0x04,
+	InitializationFlagsIsManagedStaticRegistrar = 0x02,
+	/* unused									= 0x04,*/
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
+	InitializationFlagsIsCoreCLR                = 0x20,
+	InitializationFlagsIsNativeAOT              = 0x40,
 };
 
 struct InitializationOptions {
@@ -142,6 +156,18 @@ struct InitializationOptions {
 	const char *EntryAssemblyPath;
 #endif
 	struct AssemblyLocations* AssemblyLocations;
+#if DOTNET
+	// This struct must be kept in sync with the corresponding struct in Runtime.cs, and since we use the same managed code for both MonoVM and CoreCLR,
+	// we can't restrict the following fields to CORECLR_RUNTIME only, we can only exclude it from legacy Xamarin.
+	void *xamarin_objc_msgsend;
+	void *xamarin_objc_msgsend_super;
+	void *xamarin_objc_msgsend_stret;
+	void *xamarin_objc_msgsend_super_stret;
+	void *unhandled_exception_handler;
+	void *reference_tracking_begin_end_callback;
+	void *reference_tracking_is_referenced_callback;
+	void *reference_tracking_tracked_object_entered_finalization;
+#endif
 };
 
 static struct Trampolines trampolines = {
@@ -174,22 +200,18 @@ static struct Trampolines trampolines = {
 #endif
 	(void *) &xamarin_get_gchandle_trampoline,
 	(void *) &xamarin_set_gchandle_trampoline,
+	(void *) &xamarin_get_flags_trampoline,
+	(void *) &xamarin_set_flags_trampoline,
 };
 
 static struct InitializationOptions options = { 0 };
 
-struct Managed_NSObject {
-	MonoObject obj;
-	id handle;
-	void *class_handle;
-	uint8_t flags;
-};
-
-static void
+#if !defined (CORECLR_RUNTIME)
+void
 xamarin_add_internal_call (const char *name, const void *method)
 {
-	/* COOP: With cooperative GC, icalls will run, like manageed methods,
-	 * in GC Unsafe mode, avoiding a thread state trandition.  In return
+	/* COOP: With cooperative GC, icalls will run, like managed methods,
+	 * in GC Unsafe mode, avoiding a thread state transition.  In return
 	 * the icalls must guarantee that they won't block, or run indefinitely
 	 * without a safepoint, by manually performing a transition to GC Safe
 	 * mode.  With backward-compatible hybrid GC, icalls run in GC Safe
@@ -203,6 +225,7 @@ xamarin_add_internal_call (const char *name, const void *method)
 	else
 		mono_add_internal_call (name, method);
 }
+#endif // !CORECLR_RUNTIME
 
 id
 xamarin_get_nsobject_handle (MonoObject *obj)
@@ -210,18 +233,14 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	id rv = xamarin_get_handle_for_inativeobject (obj);
+	LOG_CORECLR (stderr, "xamarin_get_nsobject_handle (%p) => %p\n", obj, rv);
+	return rv;
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->handle;
-}
-
-void
-xamarin_set_nsobject_handle (MonoObject *obj, id handle)
-{
-	// COOP: Writing managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
-	mobj->handle  = handle;
+#endif
 }
 
 uint8_t
@@ -230,8 +249,12 @@ xamarin_get_nsobject_flags (MonoObject *obj)
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	return xamarin_get_flags_for_nsobject (obj->gchandle);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->flags;
+#endif
 }
 
 void
@@ -240,8 +263,12 @@ xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
 	// COOP: Writing managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
+#if defined (CORECLR_RUNTIME)
+	xamarin_set_flags_for_nsobject (obj->gchandle, flags);
+#else
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	mobj->flags = flags;
+#endif
 }
 
 MonoType *
@@ -257,15 +284,19 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 	if (index == -1) {
 		p = mono_signature_get_return_type (msig);
 	} else {
-		for (int i = 0; i < index + 1; i++)
+		for (int i = 0; i < index + 1; i++) {
+			xamarin_mono_object_release (&p);
 			p = mono_signature_get_params (msig, &iter);
+		}
 	}
 	
+	xamarin_bridge_free_mono_signature (&msig);
+
 	return p;
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, GCHandle *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -275,13 +306,13 @@ xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guin
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle)
+xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, GCHandle *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
 	MonoObject *mobj = NULL;
-	uint32_t gchandle = 0;
+	GCHandle gchandle = INVALID_GCHANDLE;
 
 	*created = false;
 
@@ -290,53 +321,40 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 
 	gchandle = xamarin_get_gchandle (self);
 
-	if (gchandle != 0) {
-		mobj = mono_gchandle_get_target (gchandle);
-		if (mono_object_isinst (mobj, mono_class_from_mono_type (type)) != NULL)
+	if (gchandle != INVALID_GCHANDLE) {
+		mobj = xamarin_gchandle_get_target (gchandle);
+		MonoClass *klass = mono_class_from_mono_type (type);
+		bool isinst = mono_object_isinst (mobj, klass) != NULL;
+		xamarin_mono_object_release (&klass);
+
+		if (isinst) {
 			return mobj;
+		} else {
+			xamarin_mono_object_release (&mobj);
+		}
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	MonoObject *rv = xamarin_get_nsobject_with_type (self, rtype, created, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return rv;
 }
 
 MonoObject *
-xamarin_get_managed_object_for_ptr (id self, guint32 *exception_gchandle)
+xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
 	MonoObject *mobj = NULL;
-	uint32_t gchandle = 0;
-
-	if (self == NULL)
-		return NULL;
+	GCHandle gchandle = INVALID_GCHANDLE;
 
 	gchandle = xamarin_get_gchandle (self);
 
-	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
+	if (gchandle == INVALID_GCHANDLE) {
+		mobj = xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
 	} else {
-		mobj = mono_gchandle_get_target (gchandle);
-	}
-
-	return mobj;
-}
-
-MonoObject *
-xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoObject *mobj = NULL;
-	uint32_t gchandle = 0;
-
-	gchandle = xamarin_get_gchandle (self);
-
-	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
-	} else {
-		mobj = mono_gchandle_get_target (gchandle);
+		mobj = xamarin_gchandle_get_target (gchandle);
 #if DEBUG
 		if (self != xamarin_get_nsobject_handle (mobj)) {
 			xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: found managed object %p=%p (%s) in native object %p (%s).\n",
@@ -348,104 +366,44 @@ xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
 	return mobj;
 }
 
-void xamarin_framework_peer_lock ()
+// See comments in the following methods to explain the logic here:
+// xamarin_marshal_return_value_impl in trampolines.m
+// xamarin_release_managed_ref in runtime.m
+void xamarin_framework_peer_waypoint ()
 {
 	// COOP: CHECK
 	MONO_ASSERT_GC_UNSAFE;
-	
+
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
+	pthread_mutex_unlock (&framework_peer_release_lock);
 	MONO_EXIT_GC_SAFE;
 }
 
-void xamarin_framework_peer_unlock ()
+// Same as xamarin_framework_peer_waypoint, except the current mode should be GC Safe.
+void xamarin_framework_peer_waypoint_safe ()
 {
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+	pthread_mutex_lock (&framework_peer_release_lock);
 	pthread_mutex_unlock (&framework_peer_release_lock);
 }
 
-MonoClass *
-xamarin_get_nsvalue_class ()
+MonoObject *
+xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle)
 {
-	if (nsvalue_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSValue");
-	return nsvalue_class;
-}
+	MonoType *type = mono_class_get_type (klass);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	xamarin_mono_object_release (&type);
 
-MonoClass *
-xamarin_get_nsnumber_class ()
-{
-	if (nsnumber_class == NULL)
-		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NSNumber");
-	return nsnumber_class;
-}
-
-bool
-xamarin_is_class_nsobject (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, nsobject_class, false);
-}
-
-bool
-xamarin_is_class_inativeobject (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, inativeobject_class, true);
-}
-
-bool
-xamarin_is_class_array (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
-}
-
-bool
-xamarin_is_class_nsnumber (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	if (nsnumber_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsnumber_class, false);
-}
-
-bool
-xamarin_is_class_nsvalue (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	if (nsvalue_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsvalue_class, false);
-}
-
-bool
-xamarin_is_class_nsstring (MonoClass *cls)
-{
-	// COOP: Reading managed data, must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-
-	if (nsstring_class == NULL)
-		return false;
-
-	return mono_class_is_subclass_of (cls, nsstring_class, false);
+	GCHandle obj = xamarin_create_nsobject (rtype, self, NSObjectFlagsNativeRef, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return xamarin_gchandle_unwrap (obj);
 }
 
 // Returns if a MonoClass is nullable.
 // Will also return the element type (it the type is nullable, and if out pointer is not NULL).
 bool
-xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *exception_gchandle)
+xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, GCHandle *exception_gchandle)
 {
 #ifdef DYNAMIC_MONO_RUNTIME
 	// mono_class_is_nullable/mono_class_get_nullable_param are private
@@ -458,19 +416,29 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *ex
 		static MonoMethod *get_nullable_type = NULL;
 
 		if (get_nullable_type == NULL)
-			get_nullable_type = mono_class_get_method_from_name (runtime_class, "GetNullableType", 1);
+			get_nullable_type = mono_class_get_method_from_name (xamarin_get_runtime_class (), "GetNullableType", 1);
 
-		void *args [1] { mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)) };
+		GCHandle type_handle = xamarin_gchandle_new ((MonoObject *) mono_type_get_object (mono_domain_get (), mono_class_get_type (cls)), false);
+		void *args [1] { type_handle };
 		MonoObject *exc = NULL;
-		MonoReflectionType *nullable_type = (MonoReflectionType *) mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		MonoObject *nullable_type_handle = mono_runtime_invoke (get_nullable_type, NULL, args, &exc);
+		xamarin_gchandle_free (type_handle);
 		if (exc != NULL) {
-			*exception_gchandle = mono_gchandle_new (exc, FALSE);
+			*exception_gchandle = xamarin_gchandle_new (exc, FALSE);
 			return false;
 		}
 
-		if (element_type != NULL && nullable_type != NULL)
-			*element_type = mono_class_from_mono_type (mono_reflection_type_get_type (nullable_type));
-		return nullable_type != NULL;
+		MonoReflectionType *nullable_type = (MonoReflectionType *) xamarin_gchandle_unwrap (nullable_type_handle);
+
+		if (element_type != NULL && nullable_type != NULL) {
+			MonoType *mono_type = mono_reflection_type_get_type (nullable_type);
+			*element_type = mono_class_from_mono_type (mono_type);
+			xamarin_mono_object_release (&mono_type);
+		}
+
+		bool is_nullable = nullable_type != NULL;
+		xamarin_mono_object_release (&nullable_type);
+		return is_nullable;
 	}
 #endif
 
@@ -481,93 +449,160 @@ xamarin_is_class_nullable (MonoClass *cls, MonoClass **element_type, guint32 *ex
 }
 
 MonoClass *
-xamarin_get_nullable_type (MonoClass *cls, guint32 *exception_gchandle)
+xamarin_get_nullable_type (MonoClass *cls, GCHandle *exception_gchandle)
 {
 	MonoClass *rv = NULL;
 	xamarin_is_class_nullable (cls, &rv, exception_gchandle);
 	return rv;
 }
 
-#define MANAGED_REF_BIT (1u << 31u)
-#define GCHANDLE_WEAK (1u << 30u)
-#define GCHANDLE_MASK (MANAGED_REF_BIT | GCHANDLE_WEAK)
-
 // The XamarinExtendedObject protocol is just to avoid a 
 // compiler warning (no 'xamarinGetGChandle' selector found).
 @protocol XamarinExtendedObject
--(uint32_t) xamarinGetGCHandle;
--(void) xamarinSetGCHandle: (uint32_t) gc_handle;
+-(GCHandle) xamarinGetGCHandle;
+-(bool) xamarinSetGCHandle: (GCHandle) gc_handle flags: (enum XamarinGCHandleFlags) flags;
+-(enum XamarinGCHandleFlags) xamarinGetFlags;
+-(void) xamarinSetFlags: (enum XamarinGCHandleFlags) flags;
 @end
 
-static inline uint32_t
-get_raw_gchandle_safe (id self)
+static inline GCHandle
+get_gchandle_safe (id self, enum XamarinGCHandleFlags *flags)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	id<XamarinExtendedObject> xself = self;
-	return (uint32_t) [xself xamarinGetGCHandle];
+	GCHandle rv = [xself xamarinGetGCHandle];
+	if (flags)
+		*flags = [xself xamarinGetFlags];
+	return rv;
 }
 
-static inline uint32_t
-get_raw_gchandle (id self)
+static inline bool
+set_gchandle (id self, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
+{
+	bool rv;
+
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
+	MONO_ENTER_GC_SAFE;
+	id<XamarinExtendedObject> xself = self;
+	rv = [xself xamarinSetGCHandle: gc_handle flags: flags];
+	MONO_EXIT_GC_SAFE;
+
+	return rv;
+}
+
+static inline bool
+set_gchandle_safe (id self, GCHandle gc_handle, enum XamarinGCHandleFlags flags)
+{
+	bool rv;
+
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+
+	id<XamarinExtendedObject> xself = self;
+	rv = [xself xamarinSetGCHandle: gc_handle flags: flags];
+
+	return rv;
+}
+
+static inline GCHandle
+get_gchandle_without_flags (id self)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	uint32_t rv;
+	GCHandle rv;
 	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
-	rv = (uint32_t) [xself xamarinGetGCHandle];
+	rv = (GCHandle) [xself xamarinGetGCHandle];
 	MONO_EXIT_GC_SAFE;
 	
 	return rv;
 }
 
-static inline void
-set_raw_gchandle (id self, uint32_t gc_handle)
+static inline GCHandle
+get_gchandle_with_flags (id self, enum XamarinGCHandleFlags* flags)
 {
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
+	GCHandle rv;
 	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
-	[xself xamarinSetGCHandle: gc_handle];
+	rv = (GCHandle) [xself xamarinGetGCHandle];
+	if (flags != NULL)
+		*flags = [xself xamarinGetFlags];
 	MONO_EXIT_GC_SAFE;
+	
+	return rv;
 }
 
-static inline uint32_t
-get_gchandle (id self)
+static inline enum XamarinGCHandleFlags
+get_flags (id self)
 {
-	// COOP: does not access managed memory: any mode
-	return get_raw_gchandle (self) & ~GCHANDLE_MASK;
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_UNSAFE;
+
+	enum XamarinGCHandleFlags rv;
+	MONO_ENTER_GC_SAFE;
+	id<XamarinExtendedObject> xself = self;
+	rv = [xself xamarinGetFlags];
+	MONO_EXIT_GC_SAFE;
+
+	return rv;
 }
 
-uint32_t
+static inline void
+set_flags_safe (id self, enum XamarinGCHandleFlags flags)
+{
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+
+	id<XamarinExtendedObject> xself = self;
+	[xself xamarinSetFlags: flags];
+}
+
+static inline enum XamarinGCHandleFlags
+get_flags_safe (id self)
+{
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+
+	enum XamarinGCHandleFlags rv;
+	id<XamarinExtendedObject> xself = self;
+	rv = [xself xamarinGetFlags];
+
+	return rv;
+}
+
+GCHandle
 xamarin_get_gchandle (id self)
 {
 	// COOP: does not access managed memory: any mode
-	return get_gchandle (self);
+	return get_gchandle_without_flags (self);
 }
 
-uint32_t
-xamarin_get_gchandle_with_flags (id self)
+GCHandle
+xamarin_get_gchandle_with_flags (id self, enum XamarinGCHandleFlags* flags)
 {
 	// COOP: does not access managed memory: any mode
-	return get_raw_gchandle (self);
+	return get_gchandle_with_flags (self, flags);
 }
 
 bool
 xamarin_has_managed_ref (id self)
 {
-	// COOP: get_raw_gchandle requires UNSAFE mode, so this function requires it too.
-	return get_raw_gchandle (self) & MANAGED_REF_BIT;
+	// COOP: get_flags requires UNSAFE mode, so this function requires it too.
+	return (get_flags (self) & XamarinGCHandleFlags_HasManagedRef) == XamarinGCHandleFlags_HasManagedRef;
 }
 
 bool
 xamarin_has_managed_ref_safe (id self)
 {
 	// COOP: variation of xamarin_has_managed_ref for SAFE mode.
-	return get_raw_gchandle_safe (self) & MANAGED_REF_BIT;
+	return (get_flags_safe (self) & XamarinGCHandleFlags_HasManagedRef) == XamarinGCHandleFlags_HasManagedRef;
 }
 
 MonoException *
@@ -576,28 +611,17 @@ xamarin_create_exception (const char *msg)
 	// COOP: calls mono, needs to be in UNSAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", msg);
+	return xamarin_create_system_exception (msg);
 }
-
-typedef struct {
-	MonoObject object;
-	MonoMethod *method;
-	MonoString *name;
-	MonoReflectionType *reftype;
-} PublicMonoReflectionMethod;
 
 MonoMethod *
 xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 {
-	// COOP: Reads managed memory, needs to be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
-	return rm->method;
+	return xamarin_bridge_get_mono_method (method);
 }
 
 id
-xamarin_get_handle (MonoObject *obj, guint32 *exception_gchandle)
+xamarin_get_handle (MonoObject *obj, GCHandle *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -618,17 +642,20 @@ xamarin_get_handle (MonoObject *obj, guint32 *exception_gchandle)
 		char *msg = xamarin_strdup_printf ("Unable to marshal from %s.%s to an Objective-C object. "
 									"The managed class must either inherit from NSObject or implement INativeObject.",
 									mono_class_get_namespace (klass), mono_class_get_name (klass));
-		MonoException *exc = mono_get_exception_execution_engine (msg);
+		GCHandle ex_handle = xamarin_create_runtime_exception (8039, msg, exception_gchandle);
 		xamarin_free (msg);
-		*exception_gchandle = mono_gchandle_new ((MonoObject *) exc, FALSE);
+		if (*exception_gchandle == INVALID_GCHANDLE)
+			*exception_gchandle = ex_handle;
 	}
+
+	xamarin_mono_object_release (&klass);
 	
 	return rv;
 }
 
 #if DEBUG
 static void 
-verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMethod *method, guint32 *exception_gchandle)
+verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMethod *method, GCHandle *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -645,29 +672,41 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 		"Additional information:\n"
 		"\tSelector: %s\n"
 		"\tMethod: %s\n", from_name, class_getName(from_class), to_name, sel_getName (sel), method_full_name);
-		MonoException *mono_ex = mono_exception_from_name_msg (mono_get_corlib (), "System", "InvalidCastException", msg);
+		MonoException *mono_ex = xamarin_create_system_invalid_cast_exception (msg);
 		mono_free (from_name);
 		mono_free (to_name);
 		xamarin_free (msg);
 		mono_free (method_full_name);
-		*exception_gchandle = mono_gchandle_new ((MonoObject *) mono_ex, FALSE);
+		xamarin_mono_object_release (&from);
+		*exception_gchandle = xamarin_gchandle_new ((MonoObject *) mono_ex, FALSE);
 	}
 }
 #endif
 
 void
-xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, guint32 *exception_gchandle)
+xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, GCHandle *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
 	if (obj != NULL) {
 #if DEBUG
-		verify_cast (mono_method_get_class (method), obj, [self class], sel, method, exception_gchandle);
+		MonoClass *declaring_type = mono_method_get_class (method);
+		verify_cast (declaring_type, obj, [self class], sel, method, exception_gchandle);
+		xamarin_mono_object_release (&declaring_type);
 #endif
 		return;
 	}
 	
+#if DOTNET
+	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
+	"Could not find an existing managed instance for this object, "
+	"nor was it possible to create a new managed instance "
+	"(because the type '%s' does not have a constructor that takes one NativeHandle argument).\n"
+	"Additional information:\n"
+	"\tSelector: %s\n"
+	"\tMethod: %s\n";
+#else
 	const char *m = "Failed to marshal the Objective-C object %p (type: %s). "
 	"Could not find an existing managed instance for this object, "
 	"nor was it possible to create a new managed instance "
@@ -675,14 +714,15 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	"Additional information:\n"
 	"\tSelector: %s\n"
 	"\tMethod: %s\n";
+#endif
 	
 	char *method_full_name = mono_method_full_name (method, TRUE);
 	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
-	if (*exception_gchandle == 0) {
+	if (*exception_gchandle == INVALID_GCHANDLE) {
 		char *msg = xamarin_strdup_printf (m, self, object_getClassName (self), type_name, sel_getName (sel), method_full_name);
-		guint32 ex_handle = (guint32) xamarin_create_runtime_exception (8027, msg, exception_gchandle);
+		GCHandle ex_handle = xamarin_create_runtime_exception (8027, msg, exception_gchandle);
 		xamarin_free (msg);
-		if (*exception_gchandle == 0)
+		if (*exception_gchandle == INVALID_GCHANDLE)
 			*exception_gchandle = ex_handle;
 	}
 	mono_free (type_name);
@@ -753,7 +793,7 @@ xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int ind
 //
 //	char *method_full_name = mono_method_full_name (method, TRUE);
 //	char *msg = xamarin_strdup_printf (m, obj, object_getClassName (obj), class_getName (expected_class), sel, method_full_name, index);
-//	MonoException *mono_ex = mono_exception_from_name_msg (mono_get_corlib (), "System", "InvalidCastException", msg);
+//	MonoException *mono_ex = xamarin_create_system_invalid_cast_exception (msg);
 //	xamarin_free (msg);
 //	mono_free (method_full_name);
 //	mono_raise_exception (mono_ex);
@@ -761,69 +801,52 @@ xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int ind
 #endif
 
 char *
-xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle)
+xamarin_class_get_full_name (MonoClass *klass, GCHandle *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_type_get_full_name (mono_class_get_type (klass), exception_gchandle);
+	MonoType *type = mono_class_get_type (klass);
+	char * rv = xamarin_type_get_full_name (type, exception_gchandle);
+	xamarin_mono_object_release (&type);
+
+	return rv;
 }
 
 char *
-xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle)
+xamarin_type_get_full_name (MonoType *type, GCHandle *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_reflection_type_get_full_name (mono_type_get_object (mono_domain_get (), type), exception_gchandle);
+	MonoReflectionType *rtype = mono_type_get_object (mono_domain_get (), type);
+	char *rv = xamarin_reflection_type_get_full_name (rtype, exception_gchandle);
+	xamarin_mono_object_release (&rtype);
+	return rv;
 }
 
 /*
  * ToggleRef support
  */
 // #define DEBUG_TOGGLEREF 1
-static void
-gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
-{
-	// COOP: This is an icall, at entry we're in unsafe mode. Managed memory is accessed, so we stay in unsafe mode.
-	MONO_ASSERT_GC_UNSAFE;
 
-#ifdef DEBUG_TOGGLEREF
-	id handle = xamarin_get_nsobject_handle (obj);
-
-	PRINT ("**Registering object %p handle %p RC %d flags: %i",
-		obj,
-		handle,
-		(int) (handle ? [handle retainCount] : 0),
-		xamarin_get_nsobject_flags (obj));
-#endif
-	mono_gc_toggleref_add (obj, TRUE);
-
-	// Make sure the GCHandle we have is a weak one for custom types.
-	if (isCustomType) {
-		MONO_ENTER_GC_SAFE;
-		xamarin_switch_gchandle (self, true);
-		MONO_EXIT_GC_SAFE;
-	}
-}
-
-static MonoToggleRefStatus
-gc_toggleref_callback (MonoObject *object)
+MonoToggleRefStatus
+xamarin_gc_toggleref_callback (uint8_t flags, id handle, xamarin_get_handle_func get_handle, MonoObject *info)
 {
 	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
-	id handle = NULL;
 	MonoToggleRefStatus res;
 
-	uint8_t flags = xamarin_get_nsobject_flags (object);
 	bool disposed = (flags & NSObjectFlagsDisposed) == NSObjectFlagsDisposed;
 	bool has_managed_ref = (flags & NSObjectFlagsHasManagedRef) == NSObjectFlagsHasManagedRef;
 
 	if (disposed || !has_managed_ref) {
 		res = MONO_TOGGLE_REF_DROP; /* Already disposed, we don't need the managed object around */
 	} else {
-		handle = xamarin_get_nsobject_handle (object);
+		if (handle == NULL)
+			handle = get_handle (info);
+
 		if (handle == NULL) { /* This shouldn't really happen */
-			return MONO_TOGGLE_REF_DROP;
+			res = MONO_TOGGLE_REF_DROP;
 		} else {
 			if ([handle retainCount] == 1)
 				res = MONO_TOGGLE_REF_WEAK;
@@ -844,19 +867,17 @@ gc_toggleref_callback (MonoObject *object)
 		rv = "UNKNOWN";
 	}
 	const char *cn = NULL;
-	if (handle == NULL) {
-		cn = object_getClassName (xamarin_get_nsobject_handle (object));
-	} else {
-		cn = object_getClassName (handle);
-	}
+	if (handle == NULL)
+		handle = get_handle (info);
+	cn = object_getClassName (handle);
 	PRINT ("\tinspecting %p handle:%p %s flags: %i RC %d -> %s\n", object, handle, cn, (int) flags, (int) (handle ? [handle retainCount] : 0), rv);
 #endif
 
 	return res;
 }
 
-static void
-gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
+void
+xamarin_gc_event (MonoGCEvent event)
 {
 	// COOP: this is a callback called by the GC, I believe the mode here doesn't matter.
 	switch (event) {
@@ -873,32 +894,7 @@ gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 	}
 }
 
-static void
-gc_enable_new_refcount (void)
-{
-	// COOP: this is executed at startup, I believe the mode here doesn't matter.
-	pthread_mutexattr_t attr;
-	pthread_mutexattr_init (&attr);
-	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
-	pthread_mutex_init (&framework_peer_release_lock, &attr);
-	pthread_mutexattr_destroy (&attr);
-
-	mono_gc_toggleref_register_callback (gc_toggleref_callback);
-
-	xamarin_add_internal_call ("Foundation.NSObject::RegisterToggleRef", (const void *) gc_register_toggleref);
-	mono_profiler_install_gc (gc_event_callback, NULL);
-}
-
-static MonoClass *
-get_class_from_name (MonoImage* image, const char *nmspace, const char *name, bool optional = false)
-{
-	// COOP: this is a convenience function executed only at startup, I believe the mode here doesn't matter.	
-	MonoClass *rv = mono_class_from_name (image, nmspace, name);
-	if (!rv && !optional)
-		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
-	return rv;
-}
-
+#if !defined (CORECLR_RUNTIME)
 struct _MonoProfiler {
 	int dummy;
 };
@@ -908,9 +904,10 @@ xamarin_install_mono_profiler ()
 {
 	static _MonoProfiler profiler = { 0 };
 	// This must be done before any other mono_profiler_install_* functions are called
-	// (currently gc_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
+	// (currently xamarin_enable_new_refcount and xamarin_install_nsautoreleasepool_hooks).
 	mono_profiler_install (&profiler, NULL);
 }
+#endif
 
 bool
 xamarin_file_exists (const char *path)
@@ -920,21 +917,27 @@ xamarin_file_exists (const char *path)
 	return stat (path, &buffer) == 0;
 }
 
+static MonoAssembly *
+xamarin_open_assembly_or_assert (const char *name)
+{
+	MonoImageOpenStatus status = MONO_IMAGE_OK;
+	MonoAssembly *assembly = mono_assembly_open (name, &status);
+	if (assembly == NULL)
+		xamarin_assertion_message ("Failed to open the assembly '%s' from the app: %i (errno: %i). This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name, (int) status, errno);
+	return assembly;
+}
+
+// Returns a retained MonoObject. Caller must release.
 MonoAssembly *
 xamarin_open_assembly (const char *name)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	char path [1024];
-	MonoAssembly *assembly;
 	bool exists = false;
 
 #if MONOMAC
-	if (xamarin_get_is_mkbundle ()) {
-		assembly = mono_assembly_open (name, NULL);
-		if (assembly == NULL)
-			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
-		return assembly;
-	}
+	if (xamarin_get_is_mkbundle ())
+		return xamarin_open_assembly_or_assert (name);
 #endif
 
 	exists = xamarin_locate_assembly_resource (name, NULL, name, path, sizeof (path));
@@ -944,7 +947,7 @@ xamarin_open_assembly (const char *name)
 		// Check if we already have the assembly in memory
 		xamarin_get_assembly_name_without_extension (name, path, sizeof (path));
 		MonoAssemblyName *aname = mono_assembly_name_new (path);
-		assembly = mono_assembly_loaded (aname);
+		MonoAssembly *assembly = mono_assembly_loaded (aname);
 		mono_assembly_name_free (aname);
 		if (assembly)
 			return assembly;
@@ -956,44 +959,66 @@ xamarin_open_assembly (const char *name)
 	if (!exists)
 		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 
-	assembly = mono_assembly_open (path, NULL);
-	if (assembly == NULL)
-		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
-
-	return assembly;
+	return xamarin_open_assembly_or_assert (path);
 }
 
-static bool
-register_assembly (MonoAssembly *assembly, guint32 *exception_gchandle)
+bool
+xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	if (!xamarin_supports_dynamic_registration) {
+#endif
+#if defined (CORECLR_RUNTIME)
+		if (xamarin_log_level > 0) {
+			MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
+			GCHandle assembly_gchandle = xamarin_gchandle_new ((MonoObject *) rassembly, false);
+			xamarin_mono_object_release (&rassembly);
+
+			char *assembly_name = xamarin_bridge_get_assembly_name (assembly_gchandle);
+			xamarin_gchandle_free (assembly_gchandle);
+
+			LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", assembly_name);
+			mono_free (assembly_name);
+		}
+#else
 		LOG (PRODUCT ": Skipping assembly registration for %s since it's not needed (dynamic registration is not supported)", mono_assembly_name_get_name (mono_assembly_get_name (assembly)));
+#endif
 		return true;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 	}
-	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
-	return *exception_gchandle == 0;
+#endif
+
+#if SUPPORTS_DYNAMIC_REGISTRATION
+	MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
+	xamarin_register_assembly (rassembly, exception_gchandle);
+	xamarin_mono_object_release (&rassembly);
+	return *exception_gchandle == INVALID_GCHANDLE;
+#endif // SUPPORTS_DYNAMIC_REGISTRATION
 }
 
+// Returns a retained MonoObject. Caller must release.
 MonoAssembly *
-xamarin_open_and_register (const char *aname, guint32 *exception_gchandle)
+xamarin_open_and_register (const char *aname, GCHandle *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	MonoAssembly *assembly;
 
 	assembly = xamarin_open_assembly (aname);
 
-	register_assembly (assembly, exception_gchandle);
+	xamarin_register_monoassembly (assembly, exception_gchandle);
 	
 	return assembly;
 }
 
+#if !defined (CORECLR_RUNTIME)
 static gboolean 
 is_class_finalization_aware (MonoClass *cls)
 {
 	// COOP: This is a callback called by the GC, I believe the mode here doesn't matter.
 	gboolean rv = false;
 
+	MonoClass *nsobject_class = xamarin_get_nsobject_class ();
 	if (nsobject_class)
 		rv = cls == nsobject_class || mono_class_is_assignable_from (nsobject_class, cls);
 
@@ -1012,6 +1037,7 @@ object_queued_for_finalization (MonoObject *object)
 	//PRINT ("In finalization response for %s.%s %p (handle: %p class_handle: %p flags: %i)\n", 
 	obj->flags |= NSObjectFlagsInFinalizerQueue;
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 /*
  * Registration map
@@ -1032,6 +1058,11 @@ compare_mtclassmap (const void *a, const void *b)
 void
 xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
 {
+	if (strcmp (map->product_hash, PRODUCT_HASH) != 0) {
+		fprintf (stderr, PRODUCT ": The static registrar map for %s (and %i other assemblies) is invalid. It was built using a runtime with hash %s, but the current runtime was built with hash %s.\n", map->assemblies [0].name, map->assembly_count - 1, map->product_hash, PRODUCT_HASH);
+		return;
+	}
+
 	// COOP: no managed memory access: any mode
 	options.RegistrationData = map;
 	if (partial)
@@ -1045,128 +1076,59 @@ xamarin_add_registration_map (struct MTRegistrationMap *map, bool partial)
  * Exception handling
  */
 
-static XamarinUnhandledExceptionFunc unhandled_exception_func;
-
-void 
-xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func)
-{
-	// COOP: no managed memory access: any mode
-	unhandled_exception_func = func;	
-}
-
-static MonoObject *
-fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoMethod *get = NULL;
-	MonoMethod *get_virt = NULL;
-	MonoObject *exc = NULL;
-
-	get = mono_class_get_method_from_name (mono_get_exception_class (), name, 0);
-	if (get) {
-		if (is_virtual) {
-			get_virt = mono_object_get_virtual_method (obj, get);
-			if (get_virt)
-				get = get_virt;
-		}
-
-		return (MonoObject *) mono_runtime_invoke (get, obj, NULL, &exc);
-	} else {
-		PRINT ("Could not find the property System.Exception.%s", name);
-	}
-	
-	return NULL;
-}
-
-static char *
-fetch_exception_property_string (MonoObject *obj, const char *name, bool is_virtual)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoString *str = (MonoString *) fetch_exception_property (obj, name, is_virtual);
-	return str ? mono_string_to_utf8 (str) : NULL;
-}
-
-static void
-print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	MonoClass *type = mono_object_get_class (exc);
-	char *type_name = xamarin_strdup_printf ("%s.%s", mono_class_get_namespace (type), mono_class_get_name (type));
-	char *trace = fetch_exception_property_string (exc, "get_StackTrace", true);
-	char *message = fetch_exception_property_string (exc, "get_Message", true);
-
-	if (is_inner)
-		[msg appendString:@" --- inner exception ---\n"];
-	[msg appendFormat: @"%s (%s)\n", message, type_name];
-	if (trace)
-		[msg appendFormat: @"%s\n", trace];
-
-	if (unhandled_exception_func && !is_inner)
-		unhandled_exception_func (exc, type_name, message, trace);
-
-	mono_free (trace);
-	mono_free (message);
-	xamarin_free (type_name);
-}
-
-static NSMutableString *
-print_all_exceptions (MonoObject *exc)
-{
-	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
-	MONO_ASSERT_GC_UNSAFE;
-	
-	NSMutableString *str = [[NSMutableString alloc] init];
-	// fetch the field, since the property might have been linked away.
-	int counter = 0;
-	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "_innerException");
-
-	do {
-		print_exception (exc, counter > 0, str);
-		if (inner_exception) {
-			mono_field_get_value (exc, inner_exception, &exc);
-		} else {
-			LOG ("Could not find the field _innerException in System.Exception\n");
-			break;
-		}
-	} while (counter++ < 10 && exc);
-
-	[str autorelease];
-	return str;
-}
-
 NSString *
-xamarin_print_all_exceptions (MonoObject *exc)
+xamarin_print_all_exceptions (GCHandle gchandle)
 {
-	return print_all_exceptions (exc);
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+
+	char *msg = xamarin_print_all_exceptions_wrapper (gchandle, &exception_gchandle);
+	if (exception_gchandle != INVALID_GCHANDLE) {
+		// Not much we can do here but returning a very generic message, since we failed to print one exception, it's reasonable to assume that printing another won't work either.
+		xamarin_gchandle_free (exception_gchandle);
+		exception_gchandle = INVALID_GCHANDLE;
+		return [NSString stringWithFormat: @"An exception occurred while trying to get a string representation for the exception %p (%p)", gchandle, exception_gchandle];
+	}
+
+	NSString *rv = [NSString stringWithUTF8String: msg];
+	xamarin_free (msg);
+	return rv;
 }
 
 void
-xamarin_ftnptr_exception_handler (guint32 gchandle)
+xamarin_ftnptr_exception_handler (GCHandle gchandle)
 {
 	xamarin_process_managed_exception_gchandle (gchandle);
 }
 
 void
-xamarin_process_managed_exception_gchandle (guint32 gchandle)
+xamarin_process_fatal_exception_gchandle (GCHandle gchandle, const char *message)
 {
-	if (gchandle == 0)
+	if (gchandle == INVALID_GCHANDLE)
 		return;
 
-	MonoObject *exc = mono_gchandle_get_target (gchandle);
-	mono_gchandle_free (gchandle);
+	NSString *fatal_message = [NSString stringWithFormat:@"%s\n%@", message, xamarin_print_all_exceptions (gchandle)];
+	NSLog (@PRODUCT ": %@", fatal_message);
+	xamarin_assertion_message ([fatal_message UTF8String]);
+}
+
+// Because this function won't always return, it will take ownership of the GCHandle and free it.
+void
+xamarin_process_managed_exception_gchandle (GCHandle gchandle)
+{
+	if (gchandle == INVALID_GCHANDLE)
+		return;
+
+	MonoObject *exc = xamarin_gchandle_get_target (gchandle);
+	xamarin_gchandle_free (gchandle);
 	xamarin_process_managed_exception (exc);	
 }
 
 void
 xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 {
-	PRINT ("Unhandled managed exception: %@", print_all_exceptions (exc));
+	GCHandle exception_gchandle = xamarin_gchandle_new (exc, false);
+	PRINT ("Unhandled managed exception: %@", xamarin_print_all_exceptions (exception_gchandle));
+	xamarin_gchandle_free (exception_gchandle);
 
 	abort ();
 }
@@ -1191,10 +1153,14 @@ pump_gc (void *context)
 {
 	// COOP: this runs on a separate thread, so I'm not sure what happens here.
 	//       We can make sure we're in safe mode while sleeping though.
+#if !defined (CORECLR_RUNTIME)
 	mono_thread_attach (mono_get_root_domain ());
+#endif
 
 	while (xamarin_gc_pump) {
-		mono_gc_collect (mono_gc_max_generation ());
+		GCHandle exception_gchandle = INVALID_GCHANDLE;
+		xamarin_gc_collect (&exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while running the GC in a loop");
 		MONO_ENTER_GC_SAFE;
 		usleep (1000000);
 		MONO_EXIT_GC_SAFE;
@@ -1203,6 +1169,7 @@ pump_gc (void *context)
 }
 #endif /* DEBUG */
 
+#if !defined (CORECLR_RUNTIME)
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
@@ -1219,6 +1186,7 @@ print_callback (const char *string, mono_bool is_stdout)
 	// COOP: Not accessing managed memory: any mode
 	PRINT ("%s", string);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 static int
 xamarin_compare_ints (const void *a, const void *b)
@@ -1277,9 +1245,11 @@ xamarin_initialize_embedded ()
 void
 xamarin_install_log_callbacks ()
 {
+#if !defined (CORECLR_RUNTIME)
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
 	mono_trace_set_printerr_handler (print_callback);
+#endif
 }
 
 void
@@ -1288,11 +1258,7 @@ xamarin_initialize ()
 	// COOP: accessing managed memory: UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoAssembly *assembly = NULL;
-	MonoMethod *runtime_initialize;
-	void* params[2];
-	guint32 exception_gchandle = 0;
-	MonoObject *exc = NULL;
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
 
 	initialize_started = TRUE;
 
@@ -1302,17 +1268,21 @@ xamarin_initialize ()
 	xamarin_initialize_dynamic_runtime (NULL);
 #endif
 
+#if !DOTNET
 	xamarin_insert_dllmap ();
+#endif
 
 	MONO_ENTER_GC_UNSAFE;
 
 	xamarin_install_log_callbacks ();
 
+#if !defined (CORECLR_RUNTIME)
 	MonoGCFinalizerCallbacks gc_callbacks;
 	gc_callbacks.version = MONO_GC_FINALIZER_EXTENSION_VERSION;
 	gc_callbacks.is_class_finalization_aware = is_class_finalization_aware;
 	gc_callbacks.object_queued_for_finalization = object_queued_for_finalization;
 	mono_gc_register_finalizer_callbacks (&gc_callbacks);
+#endif
 
 	if (xamarin_is_gc_coop) {
 		// There should be no such thing as an unhandled ObjC exception
@@ -1322,30 +1292,16 @@ xamarin_initialize ()
 		NSSetUncaughtExceptionHandler (exception_handler);
 	}
 
-	assembly = xamarin_open_assembly (PRODUCT_DUAL_ASSEMBLY);
-
-	if (!assembly)
-		xamarin_assertion_message ("Failed to load %s.", PRODUCT_DUAL_ASSEMBLY);
-	platform_image = mono_assembly_get_image (assembly);
-
-	const char *objcruntime = "ObjCRuntime";
-	const char *foundation = "Foundation";
-
-	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
-	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
-	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
-	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber", true);
-	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
-	nsstring_class = get_class_from_name (platform_image, foundation, "NSString", true);
-
-	xamarin_add_internal_call ("Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
-	xamarin_add_internal_call ("Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
-
-	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
-
 	options.size = sizeof (options);
-#if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
+#if TARGET_OS_SIMULATOR
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
+#endif
+
+#if defined (CORECLR_RUNTIME)
+	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsCoreCLR);
+#endif
+#if defined (NATIVEAOT)
+	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsNativeAOT);
 #endif
 
 	options.Delegates = &delegates;
@@ -1357,17 +1313,30 @@ xamarin_initialize ()
 	options.EntryAssemblyPath = xamarin_entry_assembly_path;
 #endif
 
-	params [0] = &options;
+#if defined (CORECLR_RUNTIME)
+#if !defined(__arm__) // the dynamic trampolines haven't been implemented in 32-bit ARM assembly.
+	options.xamarin_objc_msgsend = (void *) xamarin_dyn_objc_msgSend;
+	options.xamarin_objc_msgsend_super = (void *) xamarin_dyn_objc_msgSendSuper;
+#if !defined(__aarch64__)
+	options.xamarin_objc_msgsend_stret = (void *) xamarin_dyn_objc_msgSend_stret;
+	options.xamarin_objc_msgsend_super_stret = (void *) xamarin_dyn_objc_msgSendSuper_stret;
+#endif // !defined(__aarch64__)
+#endif // !defined(__arm__)
+	options.unhandled_exception_handler = (void *) &xamarin_coreclr_unhandled_exception_handler;
+	options.reference_tracking_begin_end_callback = (void *) &xamarin_coreclr_reference_tracking_begin_end_callback;
+	options.reference_tracking_is_referenced_callback = (void *) &xamarin_coreclr_reference_tracking_is_referenced_callback;
+	options.reference_tracking_tracked_object_entered_finalization = (void *) &xamarin_coreclr_reference_tracking_tracked_object_entered_finalization;
+#endif // defined(CORECLR_RUNTIME)
 
-	mono_runtime_invoke (runtime_initialize, NULL, params, &exc);
+	xamarin_bridge_call_runtime_initialize (&options, &exception_gchandle);
+	xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while calling Runtime.Initialize");
 
-	if (exc)
-		xamarin_process_managed_exception (exc);
+	xamarin_bridge_register_product_assembly (&exception_gchandle);
+	xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while registering the product assembly");
 
-	if (!register_assembly (assembly, &exception_gchandle))
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
-
-	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or gc_enable_new_refcount
+#if !defined (CORECLR_RUNTIME)
+	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or xamarin_enable_new_refcount
+#endif
 
 	xamarin_install_nsautoreleasepool_hooks ();
 
@@ -1378,9 +1347,32 @@ xamarin_initialize ()
 	}
 #endif
 
-	gc_enable_new_refcount ();
+	pthread_mutexattr_t attr;
+	pthread_mutexattr_init (&attr);
+	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init (&framework_peer_release_lock, &attr);
+	pthread_mutexattr_destroy (&attr);
+
+	xamarin_enable_new_refcount ();
 
 	MONO_EXIT_GC_UNSAFE;
+}
+
+static char *x_app_bundle_path = NULL;
+const char *
+xamarin_get_app_bundle_path ()
+{
+	if (x_app_bundle_path != NULL)
+		return x_app_bundle_path;
+
+	NSBundle *main_bundle = [NSBundle mainBundle];
+
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+	x_app_bundle_path = strdup ([[[main_bundle bundlePath] stringByStandardizingPath] UTF8String]);
+
+	return x_app_bundle_path;
 }
 
 static char *x_bundle_path = NULL;
@@ -1393,26 +1385,22 @@ xamarin_get_bundle_path ()
 
 	NSBundle *main_bundle = [NSBundle mainBundle];
 	NSString *bundle_path;
-	char *result;
 
-#if MONOMAC
+	if (main_bundle == NULL)
+		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
+
+#if TARGET_OS_MACCATALYST || TARGET_OS_OSX
 	if (xamarin_launch_mode == XamarinLaunchModeEmbedded) {
 		bundle_path = [[[NSBundle bundleForClass: [XamarinAssociatedObject class]] bundlePath] stringByAppendingPathComponent: @"Versions/Current"];
 	} else {
 		bundle_path = [[main_bundle bundlePath] stringByAppendingPathComponent:@"Contents"];
 	}
-	bundle_path = [bundle_path stringByAppendingPathComponent: xamarin_custom_bundle_name == NULL ? @"MonoBundle" : xamarin_custom_bundle_name];
+	bundle_path = [bundle_path stringByAppendingPathComponent: xamarin_custom_bundle_name];
 #else
 	bundle_path = [main_bundle bundlePath];
 #endif
 
-	if (main_bundle == NULL)
-		xamarin_assertion_message ("Could not find the main bundle in the app ([NSBundle mainBundle] returned nil)");
-
-	result = mono_path_resolve_symlinks ([bundle_path UTF8String]);
-
-	x_bundle_path = strdup (result);
-	mono_free (result);
+	x_bundle_path = strdup ([[bundle_path stringByStandardizingPath] UTF8String]);
 
 	return x_bundle_path;
 }
@@ -1739,7 +1727,7 @@ xamarin_objc_type_size (const char *type)
  */
 //#define DEBUG_REF_COUNTING
 void
-xamarin_create_gchandle (id self, void *managed_object, uint32_t flags, bool force_weak)
+xamarin_create_gchandle (id self, void *managed_object, enum XamarinGCHandleFlags flags, bool force_weak)
 {
 	// COOP: reads managed memory: unsafe mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -1747,19 +1735,18 @@ xamarin_create_gchandle (id self, void *managed_object, uint32_t flags, bool for
 	// force_weak is to avoid calling retainCount unless needed, since some classes (UIWebView in iOS 5)
 	// will crash if retainCount is called before init. See bug #9261.
 	bool weak = force_weak || ([self retainCount] == 1);
-	uint32_t gchandle;
+	GCHandle gchandle;
 
 	if (weak) {
-		gchandle = mono_gchandle_new_weakref ((MonoObject *) managed_object, TRUE);
-		flags |= GCHANDLE_WEAK;
+		gchandle = xamarin_gchandle_new_weakref ((MonoObject *) managed_object, TRUE);
+		flags = (enum XamarinGCHandleFlags) (flags | XamarinGCHandleFlags_WeakGCHandle);
 	} else {
-		gchandle = mono_gchandle_new ((MonoObject *) managed_object, FALSE);
-		flags &= ~GCHANDLE_WEAK;
+		gchandle = xamarin_gchandle_new ((MonoObject *) managed_object, FALSE);
+		flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_WeakGCHandle);
 	}
-	assert ((gchandle & GCHANDLE_MASK) == 0); // Make sure we don't create too many gchandles...
-	set_raw_gchandle (self, gchandle | flags);
+	set_gchandle (self, gchandle, flags);
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("\tGCHandle created for %p: %d (flags: %p) = %d %s\n", self, gchandle, GINT_TO_POINTER (flags), get_raw_gchandle (self), weak ? "weak" : "strong");
+	PRINT ("\tGCHandle created for %p: %d (flags: %p) = %s managed object: %p\n", self, gchandle, GINT_TO_POINTER (flags), weak ? "weak" : "strong", managed_object);
 #endif
 }
 
@@ -1769,16 +1756,14 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	// COOP: reads managed memory: unsafe mode
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
-	uint32_t new_gchandle;
-	uint32_t old_gchandle;
-	uint32_t old_gchandle_raw;
+	GCHandle new_gchandle;
+	GCHandle old_gchandle;
 	MonoObject *managed_object;
-	uint32_t flags = MANAGED_REF_BIT;
+	enum XamarinGCHandleFlags flags = XamarinGCHandleFlags_None;
 
-	old_gchandle_raw = get_raw_gchandle_safe (self);
-	old_gchandle = old_gchandle_raw & ~GCHANDLE_MASK;
+	old_gchandle = get_gchandle_safe (self, &flags);
 	if (old_gchandle) {
-		bool is_weak = (old_gchandle_raw & GCHANDLE_WEAK) == GCHANDLE_WEAK;
+		bool is_weak = (flags & XamarinGCHandleFlags_WeakGCHandle) == XamarinGCHandleFlags_WeakGCHandle;
 		if (to_weak == is_weak) {
 			// we already have the GCHandle we need
 #if defined(DEBUG_REF_COUNTING)
@@ -1804,16 +1789,17 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	
 	MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
 
-	managed_object = mono_gchandle_get_target (old_gchandle);
+	managed_object = xamarin_gchandle_get_target (old_gchandle);
 
 	if (to_weak) {
-		new_gchandle = mono_gchandle_new_weakref (managed_object, TRUE);
-		flags |= GCHANDLE_WEAK;
+		new_gchandle = xamarin_gchandle_new_weakref (managed_object, TRUE);
+		flags = (enum XamarinGCHandleFlags) (flags | XamarinGCHandleFlags_WeakGCHandle);
 	} else {
-		new_gchandle = mono_gchandle_new (managed_object, FALSE);
+		new_gchandle = xamarin_gchandle_new (managed_object, FALSE);
+		flags = (enum XamarinGCHandleFlags) (flags & ~XamarinGCHandleFlags_WeakGCHandle);
 	}
 
-	mono_gchandle_free (old_gchandle);
+	xamarin_gchandle_free (old_gchandle);
 	
 	if (managed_object) {
 		// It's possible to not have a managed object if:
@@ -1826,26 +1812,28 @@ xamarin_switch_gchandle (id self, bool to_weak)
 		// null, because the target would be collected.
 		xamarin_set_nsobject_flags (managed_object, xamarin_get_nsobject_flags (managed_object) | NSObjectFlagsHasManagedRef);
 	}
-	set_raw_gchandle (self, new_gchandle | flags);
+	set_gchandle (self, new_gchandle, flags);
 
 	MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
 
+	xamarin_mono_object_release (&managed_object);
+
 #if defined(DEBUG_REF_COUNTING)
-	PRINT ("Switched object %p to %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", new_gchandle);
+	PRINT ("Switched object %p to %s GCHandle = %d managed object = %p\n", self, to_weak ? "weak" : "strong", new_gchandle, managed_object);
 #endif
 }
 
 void
-xamarin_free_gchandle (id self, uint32_t gchandle)
+xamarin_free_gchandle (id self, GCHandle gchandle)
 {
 	// COOP: no managed memory access, but calls mono function mono_gc_handle_free. Assuming that function can be called with any mode: this function can be called with any mode as well
 	if (gchandle) {
 #if defined(DEBUG_REF_COUNTING)
 		PRINT ("\tGCHandle %i destroyed for object %p\n", gchandle, self);
 #endif
-		mono_gchandle_free (gchandle);
+		xamarin_gchandle_free (gchandle);
 
-		set_raw_gchandle (self, 0);
+		set_gchandle (self, INVALID_GCHANDLE, XamarinGCHandleFlags_None);
 	} else {
 #if defined(DEBUG_REF_COUNTING)
 		PRINT ("\tNo GCHandle for the object %p\n", self);
@@ -1857,52 +1845,21 @@ void
 xamarin_clear_gchandle (id self)
 {
 	// COOP: no managed memory access: any mode
-	set_raw_gchandle (self, 0);
+	set_gchandle (self, INVALID_GCHANDLE, XamarinGCHandleFlags_None);
 }
 
-void
-xamarin_set_gchandle (id self, uint32_t gchandle)
+bool
+xamarin_set_gchandle_with_flags (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags)
 {
 	// COOP: no managed memory access: any mode
-	set_raw_gchandle (self, gchandle);
+	return set_gchandle (self, gchandle, flags);
 }
 
-static int
-find_user_type_index (MTClassMap *map, int lo, int hi, Class cls)
+bool
+xamarin_set_gchandle_with_flags_safe (id self, GCHandle gchandle, enum XamarinGCHandleFlags flags)
 {
-	if (hi >= lo) {
-		int mid = lo + (hi - lo) / 2;
-
-		if (map [mid].handle == cls)
-			return mid;
-
-		if ((intptr_t) map [mid].handle > (intptr_t) cls)
-			return find_user_type_index (map, lo, mid - 1, cls);
-
-		return find_user_type_index (map, mid + 1, hi, cls);
-	}
-
-	return -1;
-}
-
-static inline bool
-is_user_type (id self)
-{
-	Class cls = object_getClass (self);
-
-	if (options.RegistrationData != NULL && options.RegistrationData->map_count > 0) {
-		MTClassMap *map = options.RegistrationData->map;
-		int idx = find_user_type_index (map, 0, (int) options.RegistrationData->map_count - 1, cls);
-		if (idx >= 0)
-			return (map [idx].flags & MTTypeFlagsUserType) == MTTypeFlagsUserType;
-		// If using the partial static registrar, we need to continue
-		// If full static registrar, we can return false
-		if ((options.flags & InitializationFlagsIsPartialStaticRegistrar) != InitializationFlagsIsPartialStaticRegistrar)
-			return false;
-	}
-
 	// COOP: no managed memory access: any mode
-	return class_getInstanceMethod (cls, @selector (xamarinSetGCHandle:)) != NULL;
+	return set_gchandle_safe (self, gchandle, flags);
 }
 
 #if defined(DEBUG_REF_COUNTING)
@@ -1916,40 +1873,49 @@ get_safe_retainCount (id self)
 		// NSCalendar/NSInputStream may end up with a stack overflow where CFGetRetainCount calls itself
 		return 666;
 	} else {
-		return [self retainCount];
+		return (int) [self retainCount];
 	}
 }
 #endif
 
-void
-xamarin_release_managed_ref (id self, MonoObject *managed_obj)
-{
-	// COOP: This is an icall, so at entry we're in unsafe mode.
-	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
-	MONO_ASSERT_GC_UNSAFE;
-	
-	bool user_type = is_user_type (self);
-	guint32 exception_gchandle = 0;
-	
-#if defined(DEBUG_REF_COUNTING)
-	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
-		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle (self) : 666, user_type);
-#endif
+// It's fairly frequent (due to various types of coding errors) to have the
+// call to '[self release]' in xamarin_release_managed_ref crash. These
+// crashes are typically very hard to diagnose, because it can be hard to
+// figure out which object caused the crash. So here we store the native
+// object in a static variable, so that it can be read using lldb from a core
+// dump. The variable is declared as volatile so that the compiler doesn't
+// optimize away anything (we want both writes in
+// xamarin_release_managed_ref), and it's attributed with 'unused' because
+// otherwise the compiler complains that the variable is never read.
+//
+// Admittedly the variable should also be thread-local, but that's not
+// supported on all platforms we build for (in particular it requires min
+// iOS 10), and it's also slower than a straight forward write to a static
+// variable. Also while xamarin_release_managed_ref can be called on
+// multiple threads, the vast majority of the calls occur on the main
+// thread, so let's keep the variable global for now and if it turns out
+// to be a problem we can make it thread-local later.
+extern "C" {
+	volatile id xamarin_handle_to_be_released __attribute__((unused));
+}
 
-	xamarin_set_nsobject_flags (managed_obj, xamarin_get_nsobject_flags (managed_obj) & ~NSObjectFlagsHasManagedRef);
+void
+xamarin_release_managed_ref (id self, bool user_type)
+{
+	// COOP: This is a P/Invoke, so at entry we're in safe mode.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+
+#if defined(DEBUG_REF_COUNTING)
+	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%p IsUserType=%i managed_obj=%p\n", 
+		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle_without_flags (self) : (void*) 666, user_type, managed_obj);
+#endif
 
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
-		set_raw_gchandle (self, get_raw_gchandle (self) & ~MANAGED_REF_BIT);
-		MONO_ENTER_GC_SAFE;
-		[self release];
-		MONO_EXIT_GC_SAFE;
+		set_flags_safe (self, (enum XamarinGCHandleFlags) (get_flags_safe (self) & ~XamarinGCHandleFlags_HasManagedRef));
 	} else {
-		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
-		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
-
 		//
-		// This lock is needed so that we can safely call retainCount in the
+		// This waypoint (lock+unlock) is needed so that we can safely call retainCount in the
 		// toggleref callback.
 		//
 		// The race is between the following actions (given a managed object Z):
@@ -2014,50 +1980,15 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		//
 		//    This is https://github.com/xamarin/xamarin-macios/issues/3943
 		//
-		xamarin_framework_peer_lock ();
-		xamarin_framework_peer_unlock ();
-		MONO_ENTER_GC_SAFE;
-		[self release];
-		MONO_EXIT_GC_SAFE;
+		// See also comment in xamarin_marshal_return_value_impl
+		xamarin_framework_peer_waypoint_safe ();
 	}
 
-	xamarin_process_managed_exception_gchandle (exception_gchandle);
-}
+	xamarin_handle_to_be_released = self;
 
-void
-xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
-{
-	// COOP: This is an icall, so at entry we're in unsafe mode.
-	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
-	MONO_ASSERT_GC_UNSAFE;
-	
-	uint32_t gchandle;
-	bool user_type = is_user_type (self);
-	
-#if defined(DEBUG_REF_COUNTING)
-	PRINT ("monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
-		class_getName ([self class]), self, get_safe_retainCount (self), user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle (self) : 666, user_type);
-#endif
-	
-	xamarin_set_nsobject_flags ((MonoObject *) managed_object, xamarin_get_nsobject_flags ((MonoObject *) managed_object) | NSObjectFlagsHasManagedRef);
+	[self release];
 
-	if (user_type) {
-		gchandle = get_gchandle (self);
-		if (!gchandle) {
-			xamarin_create_gchandle (self, managed_object, MANAGED_REF_BIT, !retain);
-		} else {
-#if defined(DEBUG_REF_COUNTING)
-			xamarin_assertion_message ("GCHandle already exists for %p: %d\n", self, gchandle);
-#endif
-		}
-	}
-
-	if (retain) {
-		MONO_ENTER_GC_SAFE;
-		[self retain];
-		MONO_EXIT_GC_SAFE;
-	}
-	mt_dummy_use (managed_object);
+	xamarin_handle_to_be_released = NULL;
 }
 
 /*
@@ -2066,7 +1997,7 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 
 typedef struct {
 	MonoMethod *method;
-	unsigned long par;
+	int par;
 } MethodAndPar;
 
 static gboolean
@@ -2087,18 +2018,18 @@ method_and_par_hash (gconstpointer l)
 }
 
 static pthread_mutex_t wrapper_hash_lock = PTHREAD_MUTEX_INITIALIZER;
-static MonoReferenceQueue *block_wrapper_queue;
 /*
  * Given a MonoMethod and a parameter, lookup the MethodInfo (MonoReflectionMethod)
  * that can be used to create a new delegate, this returns the method that can
  * create the method
  */
-static MonoObject *
-get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32 *exception_gchandle)
+static GCHandle
+get_method_block_wrapper_creator (MonoMethod *method, int par, GCHandle *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
+	GCHandle rv = INVALID_GCHANDLE;
 	MonoObject *res = NULL;
 	MethodAndPar mp, *nmp;
 	mp.method = method;
@@ -2116,13 +2047,18 @@ get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32
 	res = (MonoObject *) mono_g_hash_table_lookup (xamarin_wrapper_hash, &mp);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 	if (res != NULL){
+		rv = xamarin_gchandle_new (res, false);
+		xamarin_mono_object_release (&res);
 		// PRINT ("Found match: %x", (int) res);
-		return res;
+		return rv;
 	}
 
-	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), par, exception_gchandle);
-	if (*exception_gchandle != 0)
-		return NULL;
+	MonoReflectionMethod *reflection_method = mono_method_get_object (mono_domain_get (), method, NULL);
+	res = xamarin_get_block_wrapper_creator (reflection_method, (int) par, exception_gchandle);
+	xamarin_mono_object_release (&reflection_method);
+
+	if (*exception_gchandle != INVALID_GCHANDLE)
+		return INVALID_GCHANDLE;
 	// PRINT ("New value: %x", (int) res);
 
 	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
@@ -2133,7 +2069,10 @@ get_method_block_wrapper_creator (MonoMethod *method, unsigned long par, guint32
 	MONO_EXIT_GC_SAFE;
 	mono_g_hash_table_insert (xamarin_wrapper_hash, nmp, res);
 	pthread_mutex_unlock (&wrapper_hash_lock);
-	return res;
+
+	rv = xamarin_gchandle_new (res, false);
+	xamarin_mono_object_release (&res);
+	return rv;
 }
 
 void
@@ -2161,53 +2100,64 @@ xamarin_release_block_on_main_thread (void *obj)
  *
  * Returns: the instantiated delegate.
  */
-int *
-xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, unsigned long par, void *nativeBlock, guint32 *exception_gchandle)
+MonoObject *
+xamarin_get_delegate_for_block_parameter (MonoMethod *method, guint32 token_ref, int par, void *nativeBlock, GCHandle *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MonoObject *delegate;
+	MonoObject *delegate = NULL;
+	GCHandle obj_handle = INVALID_GCHANDLE;
 
 	if (nativeBlock == NULL)
 		return NULL;
 
-	MonoObject *obj;
 	if (token_ref != INVALID_TOKEN_REF) {
-		obj = (MonoObject *) xamarin_get_method_from_token (token_ref, exception_gchandle);
+		obj_handle = xamarin_get_method_from_token (token_ref, exception_gchandle);
 	} else {
-		obj = get_method_block_wrapper_creator (method, par, exception_gchandle);
+		obj_handle = get_method_block_wrapper_creator (method, par, exception_gchandle);
 	}
-	if (*exception_gchandle != 0)
-		return NULL;
+	if (*exception_gchandle != INVALID_GCHANDLE)
+		goto cleanup;
 
 	/* retain or copy (if it's a stack block) the block */
 	nativeBlock = _Block_copy (nativeBlock);
 
-	delegate = delegates.create_block_proxy (obj, nativeBlock, exception_gchandle);
-	if (*exception_gchandle != 0) {
+	delegate = xamarin_create_block_proxy (obj_handle, nativeBlock, exception_gchandle);
+	if (*exception_gchandle != INVALID_GCHANDLE) {
 		_Block_release (nativeBlock);
-		return NULL;
+		delegate = NULL;
+		goto cleanup;
 	}
 
-	MONO_ENTER_GC_SAFE;
-	pthread_mutex_lock (&wrapper_hash_lock);
-	MONO_EXIT_GC_SAFE;
-
-	if (block_wrapper_queue == NULL)
-		block_wrapper_queue = mono_gc_reference_queue_new (xamarin_release_block_on_main_thread);
-
-	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
-	pthread_mutex_unlock (&wrapper_hash_lock);
-
-	return (int *) delegate;
+cleanup:
+	xamarin_gchandle_free (obj_handle);
+	return delegate;
 }
 
 id
-xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 token_ref, guint32 *exception_gchandle)
+xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, const char *signature, guint32 token_ref, GCHandle *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, signature, token_ref, exception_gchandle);
+	MonoReflectionMethod *reflection_method = mono_method_get_object (mono_domain_get (), method, NULL);
+	id rv = xamarin_create_delegate_proxy (reflection_method, delegate, signature, token_ref, exception_gchandle);
+	xamarin_mono_object_release (&reflection_method);
+	return rv;
+}
+
+void
+xamarin_release_static_dictionaries ()
+{
+#if defined (CORECLR_RUNTIME)
+	// Release static dictionaries of cached objects. If we end up trying to
+	// add objects to these dictionaries after this point (on a background
+	// thread), the dictionaries will be re-created (and leak) - which
+	// shouldn't be a problem, because at this point the process is about to
+	// exit anyway.
+	pthread_mutex_lock (&wrapper_hash_lock);
+	xamarin_mono_object_release (&xamarin_wrapper_hash);
+	pthread_mutex_unlock (&wrapper_hash_lock);
+#endif
 }
 
 void
@@ -2251,31 +2201,67 @@ xamarin_skip_encoding_flags (const char *encoding)
 	}
 }
 
-void
-xamarin_process_nsexception (NSException *ns_exception)
+bool
+xamarin_log_marshalled_exceptions ()
 {
-	xamarin_process_nsexception_using_mode (ns_exception, false);
+	if (xamarin_log_exceptions == XamarinTriStateNone) {
+		const char *var = getenv ("XAMARIN_LOG_MARSHALLED_EXCEPTIONS");
+		xamarin_log_exceptions = (var && *var) ? XamarinTriStateEnabled : XamarinTriStateDisabled;
+	}
+	return xamarin_log_exceptions == XamarinTriStateEnabled;
 }
 
 void
-xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault)
+xamarin_log_managed_exception (MonoObject *exception, MarshalManagedExceptionMode mode)
+{
+	if (!xamarin_log_marshalled_exceptions ())
+		return;
+
+	GCHandle handle = xamarin_gchandle_new (exception, false);
+	NSLog (@PRODUCT ": Processing managed exception for exception marshalling (mode: %i):\n%@", mode, xamarin_print_all_exceptions (handle));
+	xamarin_gchandle_free (handle);
+}
+
+void
+xamarin_log_objectivec_exception (NSException *exception, MarshalObjectiveCExceptionMode mode)
+{
+	if (!xamarin_log_marshalled_exceptions ())
+		return;
+
+	NSLog (@PRODUCT ": Processing Objective-C exception for exception marshalling (mode: %i):\n%@", mode, [exception debugDescription]);
+}
+
+void
+xamarin_process_nsexception (NSException *ns_exception)
+{
+	xamarin_process_nsexception_using_mode (ns_exception, false, NULL);
+}
+
+void
+xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception)
 {
 	XamarinGCHandle *exc_handle;
-	guint32 exception_gchandle = 0;
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
 	MarshalObjectiveCExceptionMode mode;
 
 	mode = xamarin_on_marshal_objectivec_exception (ns_exception, throwManagedAsDefault, &exception_gchandle);
 
-	if (exception_gchandle != 0) {
+	if (exception_gchandle != INVALID_GCHANDLE) {
 		PRINT (PRODUCT ": Got an exception while executing the MarshalObjectiveCException event (this exception will be ignored):");
-		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
-		mono_gchandle_free (exception_gchandle);
-		exception_gchandle = 0;
+		PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+		xamarin_gchandle_free (exception_gchandle);
+		exception_gchandle = INVALID_GCHANDLE;
 	}
 
 	if (mode == MarshalObjectiveCExceptionModeDefault)
+#if DOTNET
+		mode = MarshalObjectiveCExceptionModeThrowManagedException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
+#endif
 	
+	xamarin_log_objectivec_exception (ns_exception, mode);
+
 	switch (mode) {
 	case MarshalObjectiveCExceptionModeUnwindManagedCode:
 		if (xamarin_is_gc_coop)
@@ -2284,25 +2270,33 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		break;
 	case MarshalObjectiveCExceptionModeThrowManagedException:
 		exc_handle = [[ns_exception userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
+		GCHandle handle;
 		if (exc_handle != NULL) {
-			uint32_t handle = [exc_handle getHandle];
+			GCHandle e_handle = [exc_handle getHandle];
 			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = mono_gchandle_get_target (handle);
-			mono_runtime_set_pending_exception ((MonoException *) exc, false);
+			MonoObject *exc = xamarin_gchandle_get_target (e_handle);
+			handle = xamarin_gchandle_new (exc, false);
+			xamarin_mono_object_release (&exc);
 			MONO_EXIT_GC_UNSAFE;
 		} else {
-			uint32_t handle = (uint32_t) xamarin_create_ns_exception (ns_exception, &exception_gchandle);
-			if (exception_gchandle != 0) {
+			handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
+			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
-				PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				handle = exception_gchandle;
-				exception_gchandle = 0;
+				exception_gchandle = INVALID_GCHANDLE;
 			}
+		}
+
+		if (output_exception == NULL) {
 			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = mono_gchandle_get_target (handle);
+			MonoObject *exc = xamarin_gchandle_get_target (handle);
 			mono_runtime_set_pending_exception ((MonoException *) exc, false);
-			mono_gchandle_free (handle);
+			xamarin_mono_object_release (&exc);
+			xamarin_gchandle_free (handle);
 			MONO_EXIT_GC_UNSAFE;
+		} else {
+			*output_exception = handle;
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:
@@ -2312,6 +2306,7 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	}
 }
 
+// Since this method may not return, it will release the given exception object.
 void
 xamarin_process_managed_exception (MonoObject *exception)
 {
@@ -2319,24 +2314,32 @@ xamarin_process_managed_exception (MonoObject *exception)
 		return;
 
 	MarshalManagedExceptionMode mode;
-	guint32 exception_gchandle = 0;
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
 
-	uint32_t handle = mono_gchandle_new (exception, false);
-	mode = xamarin_on_marshal_managed_exception ((int) handle, &exception_gchandle);
-	mono_gchandle_free (handle);
+	GCHandle handle = xamarin_gchandle_new (exception, false);
+	mode = xamarin_on_marshal_managed_exception (handle, &exception_gchandle);
+	xamarin_gchandle_free (handle);
 
-	if (exception_gchandle != 0) {
+	if (exception_gchandle != INVALID_GCHANDLE) {
 		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedException event (this exception will be ignored):");
-		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
-		mono_gchandle_free (exception_gchandle);
-		exception_gchandle = 0;
+		PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+		xamarin_gchandle_free (exception_gchandle);
+		exception_gchandle = INVALID_GCHANDLE;
 		mode = MarshalManagedExceptionModeDefault;
 	}
 
-	if (mode == MarshalManagedExceptionModeDefault)
+	if (mode == MarshalManagedExceptionModeDefault) {
+#if DOTNET
+		mode = MarshalManagedExceptionModeThrowObjectiveCException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
+#endif
+	}
+
+	xamarin_log_managed_exception (exception, mode);
 
 	switch (mode) {
+#if !defined (CORECLR_RUNTIME) // CoreCLR won't unwind through native frames, so we'll have to abort (in the default case statement)
 	case MarshalManagedExceptionModeDisable:
 	case MarshalManagedExceptionModeUnwindNativeCode:
 		if (xamarin_is_gc_coop)
@@ -2354,35 +2357,35 @@ xamarin_process_managed_exception (MonoObject *exception)
 		// to throw an exception that contains the original stack trace.
 		//
 
-		handle = mono_gchandle_new (exception, false);
+		handle = xamarin_gchandle_new (exception, false);
 		xamarin_rethrow_managed_exception (handle, &exception_gchandle);
-		mono_gchandle_free (handle);
+		xamarin_gchandle_free (handle);
 
-		if (exception_gchandle == 0) {
+		if (exception_gchandle == INVALID_GCHANDLE) {
 			PRINT (PRODUCT ": Did not get a rethrow exception, will throw the original exception. The original stack trace will be lost.");
 		} else {
-			exception = mono_gchandle_get_target (exception_gchandle);
-			mono_gchandle_free (exception_gchandle);
+			xamarin_mono_object_release (&exception);
+			exception = xamarin_gchandle_get_target (exception_gchandle);
+			xamarin_gchandle_free (exception_gchandle);
 		}
 
 		mono_raise_exception ((MonoException *) exception);
-
+#endif
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
-		uint32_t handle = mono_gchandle_new (exception, false);
+		GCHandle handle = xamarin_gchandle_new (exception, false);
 		NSException *ns_exc = xamarin_unwrap_ns_exception (handle, &exception_gchandle);
 		
-		if (exception_gchandle != 0) {
+		if (exception_gchandle != INVALID_GCHANDLE) {
 			PRINT (PRODUCT ": Got an exception while unwrapping a managed NSException wrapper (this exception will be ignored):");
-			PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
-			mono_gchandle_free (exception_gchandle);
-			exception_gchandle = 0;
+			PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+			xamarin_gchandle_free (exception_gchandle);
+			exception_gchandle = INVALID_GCHANDLE;
 			ns_exc = NULL;
 		}
 
 		if (ns_exc != NULL) {
-			mono_gchandle_free (handle);
-			@throw ns_exc;
+			xamarin_gchandle_free (handle);
 		} else {
 			// Strangely enough the thread might be detached, if xamarin_process_managed_exception was called from
 			// xamarin_ftnptr_exception_handler for an exception that occurred in a reverse delegate that
@@ -2391,34 +2394,51 @@ xamarin_process_managed_exception (MonoObject *exception)
 			NSString *name;
 			NSString *reason;
 			NSDictionary *userInfo;
-			const char *fullname;
+			char *fullname;
 			MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
 			
-			fullname = xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)), &exception_gchandle);
-			if (exception_gchandle != 0) {
+			fullname = xamarin_get_object_type_fullname (handle, &exception_gchandle);
+			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
-				PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
-				mono_gchandle_free (exception_gchandle);
-				exception_gchandle = 0;
-				fullname = "Unknown";
+				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+				xamarin_gchandle_free (exception_gchandle);
+				exception_gchandle = INVALID_GCHANDLE;
+				name = @"Unknown type";
+			} else {
+				name = [NSString stringWithUTF8String: fullname];
+				xamarin_free (fullname);
 			}
 
-			name = [NSString stringWithUTF8String: fullname];
+			reason = xamarin_print_all_exceptions (handle);
+			if (exception_gchandle != INVALID_GCHANDLE) {
+				PRINT (PRODUCT ": Got an exception when trying to get the message for an exception (this exception will be ignored):");
+				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
+				xamarin_gchandle_free (exception_gchandle);
+				exception_gchandle = INVALID_GCHANDLE;
+				reason = @"Unknown message";
+			}
 
-			char *message = fetch_exception_property_string (exception, "get_Message", true);
-			reason = [NSString stringWithUTF8String: message];
-			mono_free (message);
 			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
 			
 			MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
 			
-			@throw [[NSException alloc] initWithName: name reason: reason userInfo: userInfo];
+			ns_exc = [[NSException alloc] initWithName: name reason: reason userInfo: userInfo];
 		}
-		break;
+
+		xamarin_mono_object_release (&exception);
+
+		@throw ns_exc;
 	}
+#if defined (CORECLR_RUNTIME)
+	case MarshalManagedExceptionModeDisable:
+	case MarshalManagedExceptionModeUnwindNativeCode:
+#endif
 	case MarshalManagedExceptionModeAbort:
 	default:
-		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", [print_all_exceptions (exception) UTF8String]);
+		handle = xamarin_gchandle_new (exception, false);
+		const char *msg = [xamarin_print_all_exceptions (handle) UTF8String];
+		xamarin_gchandle_free (handle);
+		xamarin_assertion_message ("Aborting due to trying to marshal managed exception:\n%s\n", msg);
 		break;
 	}
 }
@@ -2429,25 +2449,27 @@ xamarin_throw_product_exception (int code, const char *message)
 	xamarin_process_managed_exception_gchandle (xamarin_create_product_exception (code, message));
 }
 
-guint32
+GCHandle
 xamarin_create_product_exception (int code, const char *message)
 {
 	return xamarin_create_product_exception_with_inner_exception (code, 0, message);
 }
 
-guint32
-xamarin_create_product_exception_with_inner_exception (int code, guint32 inner_exception_gchandle, const char *message)
+GCHandle
+xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_exception_gchandle, const char *message)
 {
-	guint32 exception_gchandle = 0;
-	guint32 handle = xamarin_create_product_exception_for_error (code, inner_exception_gchandle, message, &exception_gchandle);
-	if (exception_gchandle != 0)
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+	GCHandle handle = xamarin_create_product_exception_for_error (code, inner_exception_gchandle, message, &exception_gchandle);
+	if (exception_gchandle != INVALID_GCHANDLE)
 		return exception_gchandle;
 	return handle;
 }
+
+#if !DOTNET
 void
 xamarin_insert_dllmap ()
 {
-#if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__))
+#if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__) || defined (__arm64__))
 	if (xamarin_marshal_objectivec_exception_mode == MarshalObjectiveCExceptionModeDisable)
 		return;
 #if DYLIB
@@ -2457,11 +2479,227 @@ xamarin_insert_dllmap ()
 #endif
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend",            lib, "xamarin_dyn_objc_msgSend");
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper",       lib, "xamarin_dyn_objc_msgSendSuper");
+#if !defined (__arm64__)
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
+#endif
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
-#endif // defined (__i386__) || defined (__x86_64__)
+#endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 }
+#endif // !DOTNET
+
+#if DOTNET
+
+// List all the assemblies that we can find in the app bundle in:
+// - The bundle directory
+// - The runtimeidentifier-specific subdirectory
+// Caller must free the return value using xamarin_free.
+char *
+xamarin_compute_trusted_platform_assemblies ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *files = [NSMutableArray array];
+	NSMutableArray<NSString *> *exes = [NSMutableArray array];
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	[directories addObject: [NSString stringWithFormat: @"%s/.xamarin/%s", bundle_path, RUNTIMEIDENTIFIER]];
+
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (NSString *dir in directories) {
+		NSDirectoryEnumerator *enumerator = [manager enumeratorAtURL:[NSURL fileURLWithPath: dir]
+		                                  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+		                                                     options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+		                                                     errorHandler:nil];
+		for (NSURL *file in enumerator) {
+			// skip subdirectories
+			NSNumber *isDirectory = nil;
+			if (![file getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil] || [isDirectory boolValue])
+				continue;
+
+			NSString *name = nil;
+			if (![file getResourceValue:&name forKey:NSURLNameKey error:nil])
+				continue;
+
+			if ([name length] < 4)
+				continue;
+
+			// We want dlls and exes
+			if ([name compare: @".dll" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[files addObject: [dir stringByAppendingPathComponent: name]];
+			} else if ([name compare: @".exe" options: NSCaseInsensitiveSearch range: NSMakeRange ([name length] - 4, 4)] == NSOrderedSame) {
+				[exes addObject: [dir stringByAppendingPathComponent: name]];
+			}
+		}
+	}
+
+	// Any .exe files must be at the end, due to https://github.com/dotnet/runtime/issues/62735
+	[files addObjectsFromArray: exes];
+
+	// Join them all together with a colon separating them
+	NSString *joined = [files componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
+char *
+xamarin_compute_native_dll_search_directories ()
+{
+	const char *bundle_path = xamarin_get_bundle_path ();
+
+	NSMutableArray<NSString *> *directories = [NSMutableArray array];
+
+	// Always check in the root directory first.
+	[directories addObject: @"/"];
+
+	// Native libraries might be in the app bundle
+	[directories addObject: [NSString stringWithUTF8String: bundle_path]];
+	// They won't be in the runtimeidentifier-specific directory (because they get lipo'ed into a fat file instead)
+	// However, might also be in the Resources/lib directory
+	[directories addObject: [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: @"lib"]];
+
+	// Missing:
+	// * The parent app bundle if launched from an app extension. This requires adding app extension tests, which we currently don't have.
+
+	// Remove the ones that don't exist
+	NSFileManager *manager = [NSFileManager defaultManager];
+	for (int i = (int) [directories count] - 1; i >= 0; i--) {
+		NSString *dir = [directories objectAtIndex: (NSUInteger) i];
+		BOOL isDirectory;
+		if ([manager fileExistsAtPath: dir isDirectory: &isDirectory] && isDirectory)
+			continue;
+
+		[directories removeObjectAtIndex: (NSUInteger) i];
+	}
+
+	// Join them all together with a colon separating them
+	NSString *joined = [directories componentsJoinedByString: @":"];
+	char *rv = xamarin_strdup_printf ("%s", [joined UTF8String]);
+	return rv;
+}
+
+void
+xamarin_vm_initialize ()
+{
+	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
+	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
+	char *native_dll_search_directories = xamarin_compute_native_dll_search_directories ();
+
+	// All the properties we pass here must also be listed in the _RuntimeConfigReservedProperties item group
+	// for the _CreateRuntimeConfiguration target in dotnet/targets/Xamarin.Shared.Sdk.targets.
+	const char *propertyKeys[] = {
+		"APP_CONTEXT_BASE_DIRECTORY", // path to where the managed assemblies are (usually at least - RID-specific assemblies will be in subfolders)
+		"APP_PATHS",
+		"PINVOKE_OVERRIDE",
+		"TRUSTED_PLATFORM_ASSEMBLIES",
+		"NATIVE_DLL_SEARCH_DIRECTORIES",
+		"RUNTIME_IDENTIFIER",
+	};
+	const char *propertyValues[] = {
+		xamarin_get_bundle_path (),
+		xamarin_get_bundle_path (),
+		pinvokeOverride,
+		trusted_platform_assemblies,
+		native_dll_search_directories,
+		RUNTIMEIDENTIFIER,
+	};
+	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
+
+	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0]));
+	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
+
+	xamarin_free (pinvokeOverride);
+	xamarin_free (trusted_platform_assemblies);
+	xamarin_free (native_dll_search_directories);
+
+	if (!rv)
+		xamarin_assertion_message ("Failed to initialize the VM");
+}
+
+static bool
+xamarin_is_native_library (const char *libraryName)
+{
+	if (xamarin_runtime_libraries == NULL)
+		return false;
+
+	size_t libraryNameLength = strlen (libraryName);
+	// The libraries in xamarin_runtime_libraries are extension-less, so we need to
+	// remove any .dylib extension for the library name we're comparing with too.
+	if (libraryNameLength > 6 && strcmp (libraryName + libraryNameLength - 6, ".dylib") == 0)
+		libraryNameLength -= 6;
+
+	bool rv = false;
+	for (int i = 0; xamarin_runtime_libraries [i] != NULL; i++) {
+		// Check if the start of the current xamarin_runtime_libraries entry matches libraryName
+		if (!strncmp (xamarin_runtime_libraries [i], libraryName, libraryNameLength)) {
+			// The start matches, now check if that's all there is
+			if (xamarin_runtime_libraries [i] [libraryNameLength] == 0) {
+				// If so, we've got a match
+				rv = true;
+				break;
+			}
+		}
+	}
+
+	return rv;
+}
+
+void*
+xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
+{
+
+	void* symbol = NULL;
+
+	if (!strcmp (libraryName, "__Internal")) {
+		symbol = dlsym (RTLD_DEFAULT, entrypointName);
+#if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
+#if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
+	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
+		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
+			if (!strcmp (entrypointName, "objc_msgSend")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSend;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSendSuper;
+#if !defined (__arm64__)
+			} else if (!strcmp (entrypointName, "objc_msgSend_stret")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSend_stret;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
+				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
+#endif // !defined (__arm64__)
+			} else {
+				return NULL;
+			}
+		} else {
+			return NULL;
+		}
+#endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
+#endif // !defined (CORECLR_RUNTIME)
+	} else if (xamarin_is_native_library (libraryName)) {
+		switch (xamarin_libmono_native_link_mode) {
+		case XamarinNativeLinkModeStaticObject:
+			// lookup the symbol in loaded memory, like __Internal does.
+			symbol = dlsym (RTLD_DEFAULT, entrypointName);
+			break;
+		case XamarinNativeLinkModeDynamicLibrary:
+			// if we're not linking statically, then don't do anything at all, let mono handle whatever needs to be done
+			return NULL;
+		case XamarinNativeLinkModeFramework:
+		default:
+			// handle this as "DynamicLibrary" for now - do nothing.
+			LOG (PRODUCT ": Unhandled libmono link mode: %i when looking up %s in %s", xamarin_libmono_native_link_mode, entrypointName, libraryName);
+			return NULL;
+		}
+	} else {
+		return NULL;
+	}
+
+	if (symbol == NULL) {
+		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
+	}
+
+	return symbol;
+}
+#endif
 
 void
 xamarin_printf (const char *format, ...)
@@ -2479,7 +2717,7 @@ xamarin_vprintf (const char *format, va_list args)
 	
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *msg = [message UTF8String];
-	size_t len = strlen (msg);
+	NSUInteger len = [message lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1; // does not include NULL
 	fwrite (msg, 1, len, stdout);
 	if (len == 0 || msg [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
@@ -2489,6 +2727,30 @@ xamarin_vprintf (const char *format, va_list args)
 #endif
 
 	[message release];
+}
+
+void
+xamarin_registrar_dlsym (void **function_pointer, const char *assembly, const char *symbol, int32_t id)
+{
+	if (*function_pointer != NULL)
+		return;
+
+	*function_pointer = dlsym (RTLD_MAIN_ONLY, symbol);
+	if (*function_pointer != NULL)
+		return;
+
+	GCHandle exception_gchandle = INVALID_GCHANDLE;
+	*function_pointer = xamarin_lookup_unmanaged_function (assembly, symbol, id, &exception_gchandle);
+	if (*function_pointer != NULL)
+		return;
+
+	if (exception_gchandle != INVALID_GCHANDLE)
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
+
+	// This shouldn't really happen
+	NSString *msg = [NSString stringWithFormat: @"Unable to load the symbol '%s' to call managed code: %@", symbol, xamarin_print_all_exceptions (exception_gchandle)];
+	NSLog (@"%@", msg);
+	@throw [[NSException alloc] initWithName: @"SymbolNotFoundException" reason: msg userInfo: NULL];
 }
 
 /*
@@ -2503,7 +2765,7 @@ xamarin_vprintf (const char *format, va_list args)
  *
  * The platform assembly (Xamarin.[iOS|TVOS|WatchOS].dll) and any assemblies
  * the platform assembly references (mscorlib.dll, System.dll) may be in a
- * pointer-size subdirectory (ARCH_SUBDIR).
+ * pointer-size subdirectory (ARCH_SUBDIR), or an RID-specific subdirectory.
  * 
  * AOT data files will have an arch-specific infix.
  */
@@ -2511,13 +2773,22 @@ xamarin_vprintf (const char *format, va_list args)
 void
 xamarin_get_assembly_name_without_extension (const char *aname, char *name, size_t namelen)
 {
-	size_t len = strlen (aname);
+	size_t len = strnlen (aname, namelen);
+	if (len == namelen)
+		return;
 	strlcpy (name, aname, namelen);
 	if (namelen <= 4 || len <= 4)
 		return;
 	const char *ext = name + (len - 4);
 	if (!strncmp (".exe", ext, 4) || !strncmp (".dll", ext, 4))
 		name [len - 4] = 0; // strip off any extensions.
+}
+
+bool
+xamarin_locate_app_resource (const char *resource, char *path, size_t pathlen)
+{
+	const char *app_path = xamarin_get_bundle_path ();
+	return xamarin_locate_assembly_resource_for_root (app_path, NULL, resource, path, pathlen);
 }
 
 static bool
@@ -2559,6 +2830,26 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 	}
 #endif // !MONOMAC
 
+#if DOTNET
+	// RID-specific subdirectory
+	if (snprintf (path, pathlen, "%s/.xamarin/%s/%s", root, RUNTIMEIDENTIFIER, resource) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (5): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+
+	if (culture != NULL && *culture != 0) {
+		// culture-specific directory
+		if (snprintf (path, pathlen, "%s/%s/.xamarin/%s/%s", root, culture, RUNTIMEIDENTIFIER, resource) < 0) {
+			LOG (PRODUCT ": Failed to construct path for assembly resource (root directory: '%s', culture: '%s', resource: '%s', runtimeidentifier: %s): %s", root, culture, resource, RUNTIMEIDENTIFIER, strerror (errno));
+			return false;
+		} else if (xamarin_file_exists (path)) {
+			return true;
+		}
+	}
+#endif
+
 	// just the file, no extensions, etc.
 	if (snprintf (path, pathlen, "%s/%s", root, resource) < 0) {
 		LOG (PRODUCT ": Failed to construct path for resource: %s (6): %s", resource, strerror (errno));
@@ -2570,6 +2861,7 @@ xamarin_locate_assembly_resource_for_root (const char *root, const char *culture
 	return false;
 }
 
+#if !defined (CORECLR_RUNTIME)
 bool
 xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, size_t pathlen)
 {
@@ -2577,6 +2869,7 @@ xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, cons
 	const char *aname = mono_assembly_name_get_name (assembly_name);
 	return xamarin_locate_assembly_resource (aname, culture, resource, path, pathlen);
 }
+#endif
 
 // #define LOG_RESOURCELOOKUP(...) do { NSLog (@ __VA_ARGS__); } while (0);
 #define LOG_RESOURCELOOKUP(...)
@@ -2643,6 +2936,14 @@ xamarin_locate_assembly_resource (const char *assembly_name, const char *culture
 		}
 	}
 
+#if TARGET_OS_MACCATALYST
+	snprintf (root, sizeof (root), "%s/Contents/%s", app_path, [xamarin_custom_bundle_name UTF8String]);
+	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
+		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from macOS content bundle '%s': %s\n", resource, aname, path);
+		return true;
+	}
+#endif
+
 	return false;
 }
 
@@ -2675,14 +2976,71 @@ xamarin_find_assembly_directory (const char *assembly_name)
 }
 
 MonoMethod *
-xamarin_get_managed_method_for_token (guint32 token_ref, guint32 *exception_gchandle)
+xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gchandle)
 {
 	MonoReflectionMethod *reflection_method;
 
-	reflection_method = xamarin_get_method_from_token (token_ref, exception_gchandle);
-	if (*exception_gchandle != 0) return NULL;
+	reflection_method = (MonoReflectionMethod *) xamarin_gchandle_unwrap (xamarin_get_method_from_token (token_ref, exception_gchandle));
+	if (*exception_gchandle != INVALID_GCHANDLE) return NULL;
 
-	return xamarin_get_reflection_method_method (reflection_method);
+	MonoMethod *rv = xamarin_get_reflection_method_method (reflection_method);
+	xamarin_mono_object_release (&reflection_method);
+	return rv;
+}
+
+GCHandle
+xamarin_gchandle_new (MonoObject *obj, bool pinned)
+{
+#if defined (CORECLR_RUNTIME)
+	return xamarin_bridge_create_gchandle (obj == NULL ? INVALID_GCHANDLE : obj->gchandle, pinned ? XamarinGCHandleTypePinned : XamarinGCHandleTypeNormal);
+#else
+	return GINT_TO_POINTER (mono_gchandle_new (obj, pinned));
+#endif
+}
+
+GCHandle
+xamarin_gchandle_new_weakref (MonoObject *obj, bool track_resurrection)
+{
+#if defined (CORECLR_RUNTIME)
+	return xamarin_bridge_create_gchandle (obj == NULL ? INVALID_GCHANDLE : obj->gchandle, track_resurrection ? XamarinGCHandleTypeWeakTrackResurrection : XamarinGCHandleTypeWeak);
+#else
+	return GINT_TO_POINTER (mono_gchandle_new_weakref (obj, track_resurrection));
+#endif
+}
+
+MonoObject *
+xamarin_gchandle_get_target (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return NULL;
+
+#if defined (CORECLR_RUNTIME)
+	return xamarin_bridge_get_monoobject (handle);
+#else
+	return mono_gchandle_get_target (GPOINTER_TO_UINT (handle));
+#endif
+}
+
+void
+xamarin_gchandle_free (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return;
+#if defined (CORECLR_RUNTIME)
+	xamarin_bridge_free_gchandle (handle);
+#else
+	mono_gchandle_free (GPOINTER_TO_UINT (handle));
+#endif
+}
+
+MonoObject *
+xamarin_gchandle_unwrap (GCHandle handle)
+{
+	if (handle == INVALID_GCHANDLE)
+		return NULL;
+	MonoObject *rv = xamarin_gchandle_get_target (handle);
+	xamarin_gchandle_free (handle);
+	return rv;
 }
 
 /*
@@ -2768,12 +3126,12 @@ XamarinObject::~XamarinObject ()
 {
 	// COOP: no managed memory access: any mode.
 	@try {
-		xamarin_notify_dealloc (native_object, gc_handle & ~GCHANDLE_MASK);
+		xamarin_notify_dealloc (native_object, gc_handle);
 	} @catch (NSException *ex) {
 		NSLog (@"%@", ex);
 	}
 	native_object = NULL;
-	gc_handle = 0;
+	gc_handle = INVALID_GCHANDLE;
 }
 
 /*
@@ -2788,9 +3146,9 @@ XamarinObject::~XamarinObject ()
 -(void) dealloc
 {
 	// COOP: no managed memory access: any mode.
-	xamarin_notify_dealloc (native_object, gc_handle & ~GCHANDLE_MASK);
+	xamarin_notify_dealloc (native_object, gc_handle);
 	native_object = NULL;
-	gc_handle = 0;
+	gc_handle = INVALID_GCHANDLE;
 	[super dealloc];
 }
 @end
@@ -2803,16 +3161,22 @@ XamarinObject::~XamarinObject ()
  * calling xamarinGetGCHandle. TODO: verify if this is really faster than
  * checking the type first.
  *
- * Do not add a xamarinSetGCHandle: method, since we use the presence
+ * Do not add a xamarinSetGCHandle:flags: method, since we use the presence
  * of it to detect whether a particular type is a user type or not
- * (see is_user_type).
+ * (see Runtime.IsUserType).
  */
 
 @implementation NSObject (NonXamarinObject)
--(uint32_t) xamarinGetGCHandle
+-(GCHandle) xamarinGetGCHandle
 {
 	// COOP: no managed memory access: any mode.
-	return 0;
+	return INVALID_GCHANDLE;
+}
+
+-(enum XamarinGCHandleFlags) xamarinGetFlags
+{
+	// COOP: no managed memory access: any mode.
+	return XamarinGCHandleFlags_None;
 }
 @end
 
@@ -2848,10 +3212,22 @@ xamarin_get_is_debug ()
 	return xamarin_debug_mode;
 }
 
+void
+xamarin_set_is_managed_static_registrar (bool value)
+{
+	if (value) {
+		options.flags = (InitializationFlags) (options.flags | InitializationFlagsIsManagedStaticRegistrar);
+	} else {
+		options.flags = (InitializationFlags) (options.flags & ~InitializationFlagsIsManagedStaticRegistrar);
+	}
+}
+
 bool
 xamarin_is_managed_exception_marshaling_disabled ()
 {
-#if DEBUG
+#if defined (CORECLR_RUNTIME)
+	return false; // never disable exception marshalling for CoreCLR.
+#elif DEBUG
 	if (xamarin_is_gc_coop)
 		return false;
 
@@ -2873,11 +3249,23 @@ xamarin_is_managed_exception_marshaling_disabled ()
 #endif
 }
 
+#if DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+int
+xamarin_get_runtime_arch ()
+{
+	#if TARGET_OS_SIMULATOR
+		return 1;
+	#else
+		return 0;
+	#endif
+}
+#endif // DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+
 /*
  * XamarinGCHandle
  */
 @implementation XamarinGCHandle
-+(XamarinGCHandle *) createWithHandle: (uint32_t) h
++(XamarinGCHandle *) createWithHandle: (GCHandle) h
 {
 	XamarinGCHandle *rv = [[XamarinGCHandle alloc] init];
 	rv->handle = h;
@@ -2887,11 +3275,11 @@ xamarin_is_managed_exception_marshaling_disabled ()
 
 -(void) dealloc
 {
-	mono_gchandle_free (handle);
+	xamarin_gchandle_free (handle);
 	[super dealloc];
 }
 
--(uint32_t) getHandle
+-(GCHandle) getHandle
 {
 	return handle;
 }

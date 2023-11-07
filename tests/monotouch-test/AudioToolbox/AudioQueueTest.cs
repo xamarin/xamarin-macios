@@ -9,43 +9,34 @@
 
 #if !__WATCHOS__
 
-using System;
 using System.Collections.Generic;
-#if XAMCORE_2_0
 using Foundation;
-using AVFoundation;
 using AudioToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.AudioToolbox;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioQueueTest
-	{
-#if !MONOMAC // HardwareCodecPolicy and SetChannelAssignments are iOS only
+	public class AudioQueueTest {
+#if !MONOMAC && !__MACCATALYST__ // HardwareCodecPolicy and SetChannelAssignments are iOS only
 		[Test]
 		public void Properties ()
 		{
 			TestRuntime.RequestMicrophonePermission ();
 
 			var b = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
-			b.HardwareCodecPolicy = AudioQueueHardwareCodecPolicy.PreferHardware;
 
-			Assert.That (b.HardwareCodecPolicy, Is.EqualTo (AudioQueueHardwareCodecPolicy.PreferHardware), "#1");
+			b.HardwareCodecPolicy = AudioQueueHardwareCodecPolicy.UseSoftwareOnly;
+
+			Assert.That (b.HardwareCodecPolicy, Is.EqualTo (AudioQueueHardwareCodecPolicy.UseSoftwareOnly), "#1");
 		}
 
 		[Test]
 		public void ChannelAssignments ()
 		{
 			var aq = new OutputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
-			
+
 			var route = global::AVFoundation.AVAudioSession.SharedInstance ().CurrentRoute;
 			var outputs = route.Outputs;
 			if (outputs.Length > 0) {
@@ -62,8 +53,9 @@ namespace MonoTouchFixtures.AudioToolbox {
 
 		}
 #endif
-		
-		[Test][Ignore ("Fails on some machines with undefined error code 5")]
+
+		[Test]
+		[Ignore ("Fails on some machines with undefined error code 5")]
 		public void ProcessingTap ()
 		{
 			var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
@@ -71,7 +63,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 			bool called = false;
 
 			using (var tap = aq.CreateProcessingTap (
-				delegate(AudioQueueProcessingTap audioQueueTap, uint numberOfFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags, AudioBuffers data) {
+				delegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags, AudioBuffers data)
+				{
 					called = true;
 					return 33;
 				}, AudioQueueProcessingTapFlags.PreEffects, out ret)) {

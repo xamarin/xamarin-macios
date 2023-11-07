@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Foundation;
 using ObjCRuntime;
@@ -14,7 +14,6 @@ namespace NoAsyncInternalWrapperTests {
 
 		[Async]
 		[Export ("optional:completion:")]
-		void OptionalMethod (int arg1, Action<NSError> err);	
+		void OptionalMethod (int arg1, Action<NSError> err);
 	}
 }
-

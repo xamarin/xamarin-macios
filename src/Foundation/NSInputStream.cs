@@ -34,7 +34,8 @@ namespace Foundation {
 		CFStreamClientContext context;
 
 		// This is done manually because the generator can't handle byte[] as a native pointer (it will try to use NSArray instead).
-		public nint Read (byte [] buffer, nuint len) {
+		public nint Read (byte [] buffer, nuint len)
+		{
 			return objc_msgSend (Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
 		}
 
@@ -43,17 +44,17 @@ namespace Foundation {
 			if (offset + (long) len > buffer.Length)
 				throw new ArgumentException ();
 
-			fixed (byte* ptr = &buffer[offset])
+			fixed (byte* ptr = &buffer [offset])
 				return Read ((IntPtr) ptr, len);
 		}
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern nint objc_msgSend (IntPtr handle, IntPtr sel, [In, Out] byte [] buffer, nuint len);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern nint objc_msgSend (IntPtr handle, IntPtr sel, IntPtr buffer, nuint len);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern nint objc_msgSendSuper (IntPtr handle, IntPtr sel, IntPtr buffer, nuint len);
 
 		[Export ("read:maxLength:")]
@@ -61,7 +62,7 @@ namespace Foundation {
 		{
 			if (buffer == IntPtr.Zero)
 				throw new ArgumentNullException ("buffer");
-			
+
 			if (IsDirectBinding) {
 				return objc_msgSend (this.Handle, Selector.GetHandle (selReadMaxLength), buffer, len);
 			} else {
@@ -73,27 +74,27 @@ namespace Foundation {
 		{
 			context.Release ();
 			context.Info = IntPtr.Zero;
-			
+
 			base.Dispose (disposing);
 		}
-		
+
 		// Private API, so no documentation.
 		[Export ("_setCFClientFlags:callback:context:")]
 		protected virtual bool SetCFClientFlags (CFStreamEventType inFlags, IntPtr inCallback, IntPtr inContextPtr)
 		{
 			CFStreamClientContext inContext;
-			
+
 			if (inContextPtr == IntPtr.Zero)
 				return false;
-			
-			inContext = (CFStreamClientContext) Marshal.PtrToStructure (inContextPtr, typeof (CFStreamClientContext));
+
+			inContext = Marshal.PtrToStructure<CFStreamClientContext> (inContextPtr)!;
 			if (inContext.Version != 0)
 				return false;
-			
+
 			context.Release ();
 			context = inContext;
 			context.Retain ();
-			
+
 			flags = inFlags;
 			callback = inCallback;
 
@@ -116,4 +117,4 @@ namespace Foundation {
 			context.Invoke (callback, Handle, eventType);
 		}
 	}
-}	
+}

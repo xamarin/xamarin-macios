@@ -1,0 +1,2 @@
+## for compatibility we have extra code that return `false` if `url` is `null`
+!extra-null-allowed! 'System.Boolean SafariServices.SSReadingList::SupportsUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0

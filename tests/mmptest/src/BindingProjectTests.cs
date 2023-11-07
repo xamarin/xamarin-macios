@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -6,11 +6,9 @@ using System.Text;
 using NUnit.Framework;
 using Xamarin.Utils;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	// There are a mess of different binding project configurations in the wild
-	public enum BindingProjectType
-	{
+	public enum BindingProjectType {
 		Modern, // The ideal Modern - Sets TargetFrameworkVersion and TargetFrameworkIdentifier correclty
 		ModernNoTag, // Sets neither TargetFrameworkVersion nor TargetFrameworkIdentifier
 		Full, // Sets both TargetFrameworkVersion and UseXamMacFullFramework
@@ -18,13 +16,12 @@ namespace Xamarin.MMP.Tests
 		FullXamMacTag, // Sets just UseXamMacFullFramework
 	}
 
-	public class BindingProjectTests
-	{
+	public class BindingProjectTests {
 		internal static string RemoveCSProj (string s) => s.Remove (s.IndexOf (".csproj", StringComparison.InvariantCulture));
 
-		internal static Tuple<string, string> SetupAndBuildLinkedTestProjects (TI.UnifiedTestConfig binding, TI.UnifiedTestConfig project, string tmpDir, bool useProjectReference, bool setupDefaultNativeReference)
+		internal static (BuildResult BindingBuildResult, OutputText AppTestResult) SetupAndBuildLinkedTestProjects (TI.UnifiedTestConfig binding, TI.UnifiedTestConfig project, string tmpDir, bool useProjectReference, bool setupDefaultNativeReference)
 		{
-			string bindingBuildLog = SetupAndBuildBindingProject (binding, setupDefaultNativeReference);
+			var bindingBuildLog = SetupAndBuildBindingProject (binding, setupDefaultNativeReference);
 
 			string bindingName = RemoveCSProj (binding.ProjectName);
 
@@ -35,12 +32,13 @@ namespace Xamarin.MMP.Tests
 
 			project.TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));";
 
-			string appBuildLog = TI.TestUnifiedExecutable (project).BuildOutput;
+			var appBuildLog = TI.TestUnifiedExecutable (project);
 
-			return new Tuple<string, string> (bindingBuildLog, appBuildLog);
+			(BuildResult BindingBuildResult, OutputText AppTestResult) rv = (bindingBuildLog, appBuildLog);
+			return rv;
 		}
 
-		internal static string SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference, bool shouldFail = false)
+		internal static BuildResult SetupAndBuildBindingProject (TI.UnifiedTestConfig binding, bool setupDefaultNativeReference, bool shouldFail = false)
 		{
 			if (setupDefaultNativeReference)
 				binding.ItemGroup += NativeReferenceTests.CreateSingleNativeRef (Path.GetFullPath (NativeReferenceTests.SimpleDylibPath), "Dynamic");
@@ -51,7 +49,7 @@ namespace Xamarin.MMP.Tests
 			return TI.BuildProject (projectPath, shouldFail: shouldFail);
 		}
 
-		internal static Tuple <TI.UnifiedTestConfig, TI.UnifiedTestConfig> GenerateTestProject (BindingProjectType type, string tmpDir)
+		internal static Tuple<TI.UnifiedTestConfig, TI.UnifiedTestConfig> GenerateTestProject (BindingProjectType type, string tmpDir)
 		{
 			TI.UnifiedTestConfig binding = new TI.UnifiedTestConfig (tmpDir);
 			TI.UnifiedTestConfig project = new TI.UnifiedTestConfig (tmpDir);
@@ -78,10 +76,10 @@ namespace Xamarin.MMP.Tests
 			case BindingProjectType.FullXamMacTag:
 				binding.ProjectName = "XM45Binding.csproj";
 				binding.CustomProjectReplacement = new Tuple<string, string> (
-					"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>", 
+					"<TargetFrameworkVersion>v4.5</TargetFrameworkVersion>",
 					"<UseXamMacFullFramework>true</UseXamMacFullFramework>");
 				project.XM45 = true;
-				break;	
+				break;
 			default:
 				throw new NotImplementedException ();
 			}
@@ -130,31 +128,40 @@ namespace Xamarin.MMP.Tests
 
 				var logs = SetupAndBuildLinkedTestProjects (projects.Item1, projects.Item2, tmpDir, useProjectReference: false, setupDefaultNativeReference: noEmbedding);
 
-				Assert.False (logs.Item1.Contains ("mcs"), "Bindings project must not use mcs:\n" + logs.Item1);
-				Assert.True (logs.Item1.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1); 
+				Assert.True (logs.BindingBuildResult.BuildOutput.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1);
 
-				var bgenInvocation = logs.Item1.SplitLines ().First (x => x.Contains ("bin/bgen"));
-				var bgenParts = bgenInvocation.Split (new char[] { ' ' });
+				var bgenInvocation = logs.BindingBuildResult.BuildOutputLines.First (x => x.Contains ("bin/bgen"));
+				Assert.IsTrue (StringUtils.TryParseArguments (bgenInvocation, out var bgenArguments, out var _), "Parse bgen arguments");
+				// unfurl any response files
+				var bgenParts = bgenArguments.ToList ();
+				var responseFiles = bgenParts.Where (v => v [0] == '@').ToArray ();
+				bgenParts.RemoveAll (v => v [0] == '@');
+				foreach (var rsp in responseFiles) {
+					Assert.IsTrue (StringUtils.TryParseArguments (File.ReadAllText (rsp.Substring (1)).Replace ('\n', ' '), out var args, out var _), "Parse response file");
+					bgenParts.AddRange (args);
+				}
 				var mscorlib = bgenParts.First (x => x.Contains ("mscorlib.dll"));
 				var system = bgenParts.First (x => x.Contains ("System.dll"));
 
 				switch (type) {
 				case BindingProjectType.Modern:
 				case BindingProjectType.ModernNoTag:
-					Assert.True (mscorlib.EndsWith ("lib/mono/Xamarin.Mac/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Modern location: " + mscorlib);
-					Assert.True (system.EndsWith ("lib/mono/Xamarin.Mac/System.dll", StringComparison.Ordinal), "system not found in expected Modern location: " + system);
+					Assert.That (mscorlib, Does.EndWith ("lib/mono/Xamarin.Mac/mscorlib.dll"), "mscorlib not found in expected Modern location: " + mscorlib);
+					Assert.That (system, Does.EndWith ("lib/mono/Xamarin.Mac/System.dll"), "system not found in expected Modern location: " + system);
 					break;
 				case BindingProjectType.Full:
 				case BindingProjectType.FullTVF:
 				case BindingProjectType.FullXamMacTag:
-					Assert.True (mscorlib.EndsWith ("lib/mono/4.5/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Full location: " + mscorlib);
-					Assert.True (system.EndsWith ("lib/mono/4.5/System.dll", StringComparison.Ordinal), "system not found in expected Full location: " + system);
+					Assert.That (mscorlib, Does.EndWith ("lib/mono/4.5/mscorlib.dll"), "mscorlib not found in expected Full location: " + mscorlib);
+					Assert.That (system, Does.EndWith ("lib/mono/4.5/System.dll"), "system not found in expected Full location: " + system);
 					break;
 				default:
 					throw new NotImplementedException ();
 				}
 
-				Assert.False (logs.Item1.Contains ("CS1685"), "Binding should not contains CS1685 multiple definition warning:\n" + logs.Item1);
+				Assert.False (logs.BindingBuildResult.BuildOutput.Contains ("CS1685"), "Binding should not contains CS1685 multiple definition warning.");
+
+				Assert.False (logs.BindingBuildResult.BuildOutput.Contains ("MSB9004"), "Binding should not contains MSB9004 warning");
 
 				string bindingName = RemoveCSProj (projects.Item1.ProjectName);
 				string appName = RemoveCSProj (projects.Item2.ProjectName);
@@ -162,7 +169,7 @@ namespace Xamarin.MMP.Tests
 
 				Assert.True (File.Exists (libPath));
 				string results = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monop", new [] { "--refs", "-r:" + libPath }, "monop");
-				string mscorlibLine = results.Split (new char[] { '\n' }).First (x => x.Contains ("mscorlib"));
+				string mscorlibLine = results.Split (new char [] { '\n' }).First (x => x.Contains ("mscorlib"));
 
 				string expectedVersion = GetExpectedBCLVersion (type);
 				Assert.True (mscorlibLine.Contains (expectedVersion), $"{mscorlibLine} did not contain expected version {expectedVersion}");

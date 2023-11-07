@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>DEBUG;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER;NET</DefineConstants>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" GeneratePathProperty="true" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="4.7.2" />
+    <!--<PackageReference Include="XliffTasks" Version="1.0.0-beta.19607.1" PrivateAssets="all" />-->
+  </ItemGroup>
+
+  <PropertyGroup>
+    <RepositoryPath>$(MSBuildThisFileDirectory)/../..</RepositoryPath>
+    <DotNetBuildDir>$(MSBuildThisFileDirectory)/../build/dotnet</DotNetBuildDir>
+    <BuildsDir>$(RepositoryPath)/builds</BuildsDir>
+    <BuildDir Condition="'$(BUILD_DIR)' != ''">$(BUILD_DIR)\</BuildDir>
+    <BuildDir Condition="'$(BUILD_DIR)' == ''">..\build\</BuildDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(RepositoryPath)\docs\website\generator-errors.md">
+      <Link>generator-errors.md</Link>
+    </None>
+    <Compile Include="$(RepositoryPath)\src\error.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\Stret.cs" />
+    <Compile Include="$(RepositoryPath)\tools\common\ApplePlatform.cs" />
+    <Compile Include="$(RepositoryPath)\tools\common\TargetFramework.cs" />
+    <Compile Include="$(RepositoryPath)\tools\common\StringUtils.cs" />
+    <Compile Include="$(BuildDir)\generator-frameworks.g.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\AdviceAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\ExportAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\FieldAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\ModelAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\NotImplementedAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\PreserveAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\ProtocolAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\RegisterAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\Foundation\XpcInterfaceAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\ArgumentSemantic.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindAsAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindingImplAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\LinkWithAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\NativeAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\NativeNameAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\PlatformAvailability2.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\PlatformAvailabilityShadow.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\Registrar.core.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\RequiresSuperAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\Resources.Designer.cs">
+      <DependentUpon>..\Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\tools\common\Driver.execution.cs">
+      <Link>Driver.execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
+    <None Include="$(PkgMono_Options)\lib\netstandard2.0\Mono.Options.pdb" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>..\Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <StartArguments />
+    <StartWorkingDirectory>$(ProjectDir)</StartWorkingDirectory>
+    <ExternalConsole>true</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+      <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'ios' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvos' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchos' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'macos' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'maccatalyst' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>@build/dotnet/$(RunConfiguration)/$(RunConfiguration).rsp</StartArguments>
+    <StartWorkingDirectory>..</StartWorkingDirectory>
+    <ExternalConsole>false</ExternalConsole>
+    <EnvironmentVariables>
+      <Variable name="MD_MTOUCH_SDK_ROOT" value="../../_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git" />
+      <Variable name="XamarinMacFrameworkRoot" value="../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current" />
+    </EnvironmentVariables>
+  </PropertyGroup>
+
+  <Target Name="AfterBuild">
+    <Exec Command="make bgen dotnet -C .. -j" />
+  </Target>
+</Project>

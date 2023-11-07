@@ -1,14 +1,13 @@
 TOP=../..
 
 include $(TOP)/Make.config
+include $(TOP)/mk/rules.mk
 
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 
 check: run-tests
-
-NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/
 
 all-local::
 	$(MAKE) dependencies
@@ -19,26 +18,30 @@ all-local::
 # or multiple tests:
 #     make run-tests TEST_FIXTURE="-test=Xamarin.MTouch.MT1016,Xamarin.MTouch.MT1017"
 
-run-tests: bin/Debug/mtouch.dll test.config
+run-tests: bin/Debug/mtouchtests.dll test.config
 	rm -f .failed-stamp
-	$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe "$(abspath $<)" "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All --inprocess || touch $(CURDIR)/.failed-stamp
+	$(TOP)/tools/nunit3-console-3.11.1 "$(abspath $<)" "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=After --inprocess || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
 	@[[ -z "$$BUILD_REPOSITORY" ]] || \
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
 
-# mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch.dll needs to be rebuilt or not.
-mtouch.csproj.inc: $(TOP)/tools/common/create-makefile-fragment.sh Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk
-	$(Q_GEN) $< $(CURDIR)/mtouch.csproj
--include mtouch.csproj.inc
+# mtouchtests.csproj.inc contains the mtouchtests_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
+mtouchtests.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
+-include mtouchtests.csproj.inc
 
-bin/Debug/mtouch.dll: $(mtouch_dependencies)
-	$(Q_XBUILD) $(SYSTEM_XIBUILD) -t -- /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore packages.config
-	$(SYSTEM_XIBUILD) -- mtouch.csproj $(XBUILD_VERBOSITY)
+bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
+	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
 
-build: bin/Debug/mtouch.dll
+$(abspath $(TOP)/tools/mtouch/Constants.cs):
+	$(Q) $(MAKE) $(notdir $@) -C $(dir $@)
+
+$(TOP)/tools/common/ProductConstants.cs:
+	$(Q) $(MAKE) -C $(TOP)/tools/mtouch ../common/ProductConstants.cs
+
+build: bin/Debug/mtouchtests.dll
 
 test.config: $(TOP)/Make.config Makefile
 	@rm -f $@

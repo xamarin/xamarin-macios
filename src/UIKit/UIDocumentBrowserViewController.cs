@@ -36,9 +36,9 @@ namespace UIKit {
 
 		static bool CheckSystemVersion () {
 #if IOS
-			return UIKit.UIDevice.CurrentDevice.CheckSystemVersion (12, 0);
+			return SystemVersion.CheckiOS (12, 0);
 #else
-			#error Unknown platform
+#error Unknown platform
 #endif
 		}
 

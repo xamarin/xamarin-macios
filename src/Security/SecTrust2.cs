@@ -11,6 +11,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -18,20 +21,37 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (5, 0)]
+#endif
 	public class SecTrust2 : NativeObject {
-		internal SecTrust2 (IntPtr handle) : base (handle, false) {}
-		public SecTrust2 (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public SecTrust2 (NativeHandle handle, bool owns) : base (handle, owns) { }
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_trust_create (IntPtr sectrustHandle);
 
 		public SecTrust2 (SecTrust trust)
 		{
-			if (trust == null)
-				throw new ArgumentNullException (nameof (trust));
+			if (trust is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (trust));
 
 			Handle = sec_trust_create (trust.Handle);
 		}

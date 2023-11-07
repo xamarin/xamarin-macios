@@ -1,0 +1,325 @@
+parameters:
+- name: statusContext
+  type: string
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
+
+- name: testsLabels
+  type: string
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+
+- name: label
+  type: string
+
+- name: useXamarinStorage
+  type: boolean
+  default: false  # xamarin-storage will disappear, so by default do not use it
+
+- name: vsdropsPrefix
+  type: string
+
+- name: testPrefix
+  type: string
+  default: 'ios' # default context, since we started dealing with iOS devices.
+
+- name: makeTarget
+  type: string
+  default: 'vsts-device-tests' # target to be used to run the tests
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- pwsh: |
+    Write-Host "##vso[task.setvariable variable=MAC_DESTDIR]/"
+    Write-Host "##vso[task.setvariable variable=IOS_DESTDIR]/"
+    Write-Host "##vso[task.setvariable variable=TESTS_USE_SYSTEM]true"
+  displayName: Set SDK destination dirs 
+
+# remove any old processes that might have been left behind.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Clear-XamarinProcesses
+  displayName: 'Process cleanup'
+
+# Increase mlaunch verbosity. Will step on the old setting present.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Set-MLaunchVerbosity -Verbosity 10
+  displayName: 'Make mlaunch verbose'
+
+# Re-start the daemon used to find the devices in the bot.
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    Optimize-DeviceDiscovery
+  displayName: 'Fix device discovery (reset launchctl)'
+
+- bash: |
+    make -C src build/generator-frameworks.g.cs
+    make -C src build/ios/Constants.cs
+    make -C msbuild Versions.dotnet.g.cs
+    make -C msbuild Versions.ios.g.cs
+    make -C msbuild Versions.mac.g.cs
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: Generate constants files 
+  timeoutInMinutes: 15
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: >-
+    ./set_xtro_workloads.ps1
+    -WorkloadPath "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  displayName: 'Set workload versions for xtro'
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: 'Install dotnet workloads'
+  timeoutInMinutes: 45
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+
+- bash: |
+    set -x
+    set -e
+
+    make -C src build/ios.rsp
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: Generate rsp files
+  timeoutInMinutes: 30
+
+- bash: |
+    set -x
+    set -e
+    make -C tools/xibuild
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: Build test dependencies
+  timeoutInMinutes: 30
+
+# download the prebuilt test dependencies
+- task: DownloadPipelineArtifact@2
+  displayName: Download test libraries dependencies 
+  inputs:
+    patterns: '**/package-test-libraries.zip'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+# expand all the prebuilt test dependencies
+- bash: |
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
+    unzip -o $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+    ls -Rla@ .
+    xattr -s -c -r .
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: Expand test libraries.
+  timeoutInMinutes: 10
+
+# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
+# point we were just setting up the agent.
+- template: ../common/status.yml
+  parameters:
+    status: "pending"
+    description: "Running device tests on ${{ parameters.statusContext }}"
+    context: ${{ parameters.statusContext }}
+    githubToken: $(GitHub.Token)
+    continueOnError: true
+    condition: succeededOrFailed() # re-starting the daemon should not be an issue
+    timeoutInMinutes: 5
+
+# Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
+- bash: |
+    set -x
+    set -e
+
+    echo "Running tests on $AGENT_NAME"
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
+
+    # uri used to create the vsdrops index using full uri
+    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX-$SYSTEM_JOBATTEMPT;/tests/"
+
+    # assume something is going to fail
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+
+    # show environment
+    env -0 | sort -z | tr '\0' '\n' || true
+
+    make -C builds download -j
+    make -C builds .stamp-mono-ios-sdk-destdir -j
+    make -C tests ${{ parameters.makeTarget }}
+
+    # We reached the end! This means we succeeded!
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
+  env:
+    TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
+    TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
+    USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
+    USE_TCP_TUNNEL: 'true'
+    PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: 'Run tests'
+  name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
+  timeoutInMinutes: 840
+
+# Collect simulator diagnostic logs
+- bash: |
+    set -x
+    set -e
+
+    rm -Rf $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+    mkdir -p $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+    if ! printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output; then
+      echo "simctl diagnose failed with exit code $?"
+    fi
+
+  displayName: 'Collect diagnostic info from simulators'
+  condition: eq(variables['system.debug'], true)
+  continueOnError: true
+  name: collectSimulatorInfo
+  timeoutInMinutes: 30
+
+# Publish the simulator diagnostic logs
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Simulator diagnostic info'
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
+    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.label }}'
+  condition: and(eq(variables['system.debug'], true), succeededOrFailed())
+  continueOnError: true
+
+# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the comment, this way
+# we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+    $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    $testAttempt = [int]"$(System.JobAttempt)"
+    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}" -Attempt $testAttempt
+
+    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
+    $statuses.SetStatus($testResult.GetStatus())
+  displayName: "Set tests status."
+  continueOnError: true
+  condition: succeededOrFailed()
+  timeoutInMinutes: 5
+
+# Upload TestSummary as an artifact.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: TestSummary'
+  inputs:
+    targetPath: 'xamarin-macios/tests/TestSummary.md'
+    artifactName: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- pwsh: |
+    $summaryName = "TestSummary-${{ parameters.testPrefix }}.md"
+    $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
+    if (Test-Path -Path $summaryPath -PathType Leaf) {
+      Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
+    }
+  displayName: Set TestSummary
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- task: artifactDropTask@1
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}-$(System.JobAttempt)'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
+    sourcePath: 'xamarin-macios/jenkins-results'
+    detailedLog: true
+    usePat: true
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- bash: |
+    set -ex
+    find . -name 'vsts-*.xml' || true
+    find . -name 'vsts-*.xml' -ls -exec cat {} \; || true
+    VSTS_XML_FILES=$(find . -name 'vsts-*.xml' | wc -l | sed 's/ //g')
+    set +x
+    echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
+    set -x
+  name: CountNUnitTestResults
+  continueOnError: true
+  condition: succeededOrFailed()
+  displayName: 'Count NUnit test results'
+
+# Upload test results to vsts.
+- task: PublishTestResults@2
+  displayName: 'Publish NUnit Device Test Results'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: '**/vsts-*.xml'
+  continueOnError: true
+  condition: and(ne(variables['VSTS_XML_FILES'], 0), succeededOrFailed())
+
+# Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
+- task: ArchiveFiles@1
+  displayName: 'Archive HtmlReport'
+  inputs:
+    rootFolder: 'xamarin-macios/jenkins-results'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Create HtmlReport artifact. This serves two purposes:
+# 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
+# 2. Users can download this if they want.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: HtmlReport'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifactName: '${{ parameters.uploadPrefix }}HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Upload all the binlogs
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- script: |
+    set -x
+    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: All binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+    artifactName: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)
+  continueOnError: true
+  condition: succeededOrFailed()
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  displayName: 'Collect and upload crash reports'
+  condition: always() # who knows when crash reports can end up being useful
+  continueOnError: true
+  env:
+    MACIOS_TEST_PREFIX: ${{ parameters.testPrefix }}
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+
+# Be nice and clean behind you
+- pwsh: |
+    Import-Module ./MaciosCI.psd1
+    Clear-AfterTests
+  displayName: 'Cleanup'
+  continueOnError: true
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  condition: always() # no matter what, includes cancellation

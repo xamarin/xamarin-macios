@@ -27,37 +27,29 @@
 //
 
 using System;
+using System.Runtime.InteropServices;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Foundation {
 	public abstract partial class NSUrlProtocol : NSObject {
-#if !XAMCORE_2_0
-		NSUrlProtocolClient client;
-
-		public NSUrlProtocolClient Client {
-			get {
-				if (client == null) {
-					client = new NSUrlProtocolClient (WeakClient.Handle);
-					MarkDirty ();
-				}
-				return client;
-			}
-		}
-#endif
-#if XAMCORE_2_0 && MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Obsolete ("Use the overload that takes an 'INSUrlProtocolClient' instead.")]
 		public NSUrlProtocol (NSUrlRequest request, NSCachedUrlResponse cachedResponse, NSUrlProtocolClient client)
 			: base (NSObjectFlag.Empty)
 		{
-			if (request == null)
+			if (request is null)
 				throw new ArgumentNullException ("request");
-			if (client == null)
+			if (client is null)
 				throw new ArgumentNullException ("client");
 			if (IsDirectBinding) {
-				InitializeHandle (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_XHandle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			} else {
-				InitializeHandle (global::ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_XHandle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			}
 		}
 
@@ -65,14 +57,20 @@ namespace Foundation {
 		public virtual NSObject WeakClient {
 			get {
 				var client = Client;
-				if (client == null)
+				if (client is null)
 					return null;
 				var nsclient = client as NSObject;
-				if (nsclient != null)
+				if (nsclient is not null)
 					return nsclient;
 				return Runtime.GetNSObject (client.Handle);
 			}
 		}
+
+		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+		static extern IntPtr IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (NativeHandle receiver, NativeHandle selector, NativeHandle arg0, NativeHandle arg1, NativeHandle arg2);
+
+		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSendSuper")]
+		static extern IntPtr IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (NativeHandle receiver, NativeHandle selector, NativeHandle arg0, NativeHandle arg1, NativeHandle arg2);
 #endif
 	}
 }

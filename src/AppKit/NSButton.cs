@@ -25,64 +25,91 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AppKit {
 
 	public partial class NSButton {
-		NSActionDispatcher dispatcher;
+		NSObject? dispatcher;
+
+		NSObject? Dispatcher {
+			set {
+				dispatcher = value;
+				MarkDirty ();
+			}
+		}
 
 		public new NSButtonCell Cell {
-			get { return (NSButtonCell)base.Cell; }
+			get { return (NSButtonCell) base.Cell; }
 			set { base.Cell = value; }
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		public static NSButton CreateButton (string title, NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		public static NSButton CreateButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		public static NSButton CreateButton (NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateButton (image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		public static NSButton CreateCheckbox (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateCheckbox (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 
-		[Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		public static NSButton CreateRadioButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
 			var control = _CreateRadioButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
+			control.Dispatcher = dispatcher;
 			return control;
 		}
 	}
 }
-
+#endif // !__MACCATALYST__

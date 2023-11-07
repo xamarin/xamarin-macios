@@ -5,27 +5,24 @@ using System.IO;
 
 using Mono.Cecil;
 
-namespace Xamarin.Bundler
-{
-	public enum SymbolType
-	{
+namespace Xamarin.Bundler {
+	public enum SymbolType {
 		Function,
 		ObjectiveCClass,
 		Field,
 	}
 
-	public enum SymbolMode
-	{
+	public enum SymbolMode {
 		Default,
 		Linker, // pass "-u symbol" to the native linker
 		Code, // generate code
 		Ignore, // do nothing and hope for the best
 	}
 
-	public class Symbol
-	{
+	public class Symbol {
 		public SymbolType Type;
 		public bool Ignore;
+		public Abi? ValidAbis;
 
 		static string ObjectiveCPrefix {
 			get {
@@ -36,11 +33,11 @@ namespace Xamarin.Bundler
 		string name;
 		public string Name {
 			get {
-				if (name != null)
+				if (name is not null)
 					return name;
-				if (ObjectiveCName != null)
+				if (ObjectiveCName is not null)
 					return ObjectiveCPrefix + ObjectiveCName;
-				throw ErrorHelper.CreateError (99, $"Internal error: symbol without a name (type: {Type}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"symbol without a name (type: {Type})");
 			}
 			set {
 				name = value;
@@ -75,8 +72,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class Symbols : IEnumerable<Symbol>
-	{
+	public class Symbols : IEnumerable<Symbol> {
 		Dictionary<string, Symbol> store = new Dictionary<string, Symbol> (StringComparer.Ordinal);
 
 		public int Count {
@@ -97,7 +93,7 @@ namespace Xamarin.Bundler
 				ObjectiveCName = class_name,
 			};
 			var existing = Find (symbol.Name);
-			if (existing != null)
+			if (existing is not null)
 				return existing;
 			Add (symbol);
 			return symbol;
@@ -106,7 +102,7 @@ namespace Xamarin.Bundler
 		public Symbol AddField (string name)
 		{
 			Symbol rv = Find (name);
-			if (rv == null) {
+			if (rv is null) {
 				rv = new Symbol { Name = name, Type = SymbolType.Field };
 				Add (rv);
 			}
@@ -116,7 +112,7 @@ namespace Xamarin.Bundler
 		public Symbol AddFunction (string name)
 		{
 			Symbol rv = Find (name);
-			if (rv == null) {
+			if (rv is null) {
 				rv = new Symbol { Name = name, Type = SymbolType.Function };
 				Add (rv);
 			}
@@ -164,14 +160,14 @@ namespace Xamarin.Bundler
 			using (var reader = new StreamReader (filename)) {
 				string line;
 				Symbol current = null;
-				while ((line = reader.ReadLine ()) != null) {
+				while ((line = reader.ReadLine ()) is not null) {
 					if (line.Length == 0)
 						continue;
 					if (line [0] == '\t') {
 						var asm = line.Substring (1);
 						Assembly assembly;
 						if (!target.Assemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly))
-							throw ErrorHelper.CreateError (99, $"Internal error: serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded");
 						current.AddAssembly (assembly.AssemblyDefinition);
 					} else {
 						var eq = line.IndexOf ('=');

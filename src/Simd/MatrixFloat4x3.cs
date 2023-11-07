@@ -9,16 +9,33 @@
 // This represents the native matrix_float4x3 type (3 rows and 4 columns)
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
-using VectorFloat4=global::OpenTK.Vector4;
+#if NET
+using VectorFloat4=global::System.Numerics.Vector4;
+#else
+using VectorFloat4 = global::OpenTK.Vector4;
+#endif
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct NMatrix4x3 : IEquatable<NMatrix4x3>
-	{
+	public struct NMatrix4x3 : IEquatable<NMatrix4x3> {
 		public float M11;
 		public float M21;
 		public float M31;
@@ -106,9 +123,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row0 {
+		public VectorFloat4 Row0 {
 			get {
-				return new Vector4 (M11, M12, M13, M14);
+				return new VectorFloat4 (M11, M12, M13, M14);
 			}
 			set {
 				M11 = value.X;
@@ -118,9 +135,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row1 {
+		public VectorFloat4 Row1 {
 			get {
-				return new Vector4 (M21, M22, M23, M24);
+				return new VectorFloat4 (M21, M22, M23, M24);
 			}
 			set {
 				M21 = value.X;
@@ -130,9 +147,9 @@ namespace OpenTK
 			}
 		}
 
-		public Vector4 Row2 {
+		public VectorFloat4 Row2 {
 			get {
-				return new Vector4 (M31, M32, M33, M34);
+				return new VectorFloat4 (M31, M32, M33, M34);
 			}
 			set {
 				M31 = value.X;
@@ -162,18 +179,28 @@ namespace OpenTK
 
 		public override int GetHashCode ()
 		{
-			return
-				M11.GetHashCode () ^ M12.GetHashCode () ^ M13.GetHashCode () ^ M14.GetHashCode () ^
-				M21.GetHashCode () ^ M22.GetHashCode () ^ M23.GetHashCode () ^ M24.GetHashCode () ^
-				M31.GetHashCode () ^ M32.GetHashCode () ^ M33.GetHashCode () ^ M34.GetHashCode ();
+			var hash = new HashCode ();
+			hash.Add (M11);
+			hash.Add (M12);
+			hash.Add (M13);
+			hash.Add (M14);
+			hash.Add (M21);
+			hash.Add (M22);
+			hash.Add (M23);
+			hash.Add (M24);
+			hash.Add (M31);
+			hash.Add (M32);
+			hash.Add (M33);
+			hash.Add (M34);
+			return hash.ToHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix4x3))
+			if (!(obj is NMatrix4x3 matrix))
 				return false;
 
-			return Equals ((NMatrix4x3) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix4x3 other)

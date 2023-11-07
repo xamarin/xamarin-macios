@@ -1,14 +1,15 @@
 ## it's an internal that is called from a non-generated binding
 !incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
 
-## Deprecated in iOS 10 (xcode8)
-!missing-selector! +SKUniform::uniformWithName:floatVector2: not bound
-!missing-selector! +SKUniform::uniformWithName:floatVector3: not bound
-!missing-selector! +SKUniform::uniformWithName:floatVector4: not bound
-!missing-selector! +SKUniform::uniformWithName:floatMatrix2: not bound
-!missing-selector! +SKUniform::uniformWithName:floatMatrix3: not bound
-!missing-selector! +SKUniform::uniformWithName:floatMatrix4: not bound
+## bad API signature, removed in XAMCORE_3_0
+!extra-null-allowed! 'SpriteKit.SKShapeNode SpriteKit.SKShapeNode::FromPoints(CoreGraphics.CGPoint&,System.nuint)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'SpriteKit.SKShapeNode SpriteKit.SKShapeNode::FromSplinePoints(CoreGraphics.CGPoint&,System.nuint)' has a extraneous [NullAllowed] on parameter #0
 
-## both introduced and deprecated in Xcode8
-!missing-selector! SKView::preferredFrameRate not bound
-!missing-selector! SKView::setPreferredFrameRate: not bound
+## headers documents it as: default to `nil`
+!extra-null-allowed! 'System.Void SpriteKit.SKAction::set_TimingFunction2(SpriteKit.SKActionTimingFunction2)' has a extraneous [NullAllowed] on parameter #0
+
+## kept for compatibility (unit tested)
+!extra-null-allowed! 'System.Void SpriteKit.SKKeyframeSequence::.ctor(Foundation.NSObject[],Foundation.NSArray)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void SpriteKit.SKKeyframeSequence::.ctor(Foundation.NSObject[],Foundation.NSArray)' has a extraneous [NullAllowed] on parameter #1
+
+## this is null-resetable (unit tested)

@@ -31,8 +31,7 @@ namespace Foundation {
 
 #if !COREBUILD
 	// Use this for synchronous operations
-	internal abstract class NSDispatcher : NSObject
-	{
+	internal abstract class NSDispatcher : NSObject {
 		public const string SelectorName = "xamarinApplySelector";
 		public static readonly Selector Selector = new Selector (SelectorName);
 
@@ -53,7 +52,7 @@ namespace Foundation {
 
 		public NSActionDispatcher (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
@@ -64,14 +63,13 @@ namespace Foundation {
 
 	// Use this for synchronous operations
 	[Register ("__MonoMac_NSSynchronizationContextDispatcher")]
-	internal sealed class NSSynchronizationContextDispatcher : NSDispatcher
-	{
+	internal sealed class NSSynchronizationContextDispatcher : NSDispatcher {
 		readonly SendOrPostCallback d;
 		readonly object state;
 
 		public NSSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (d == null)
+			if (d is null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;
@@ -91,7 +89,7 @@ namespace Foundation {
 
 		public NSTimerActionDispatcher (Action<NSTimer> action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			this.action = action;
@@ -140,7 +138,7 @@ namespace Foundation {
 
 		public NSAsyncActionDispatcher (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException (nameof (action));
 
 			this.action = action;
@@ -165,7 +163,7 @@ namespace Foundation {
 
 		public NSAsyncSynchronizationContextDispatcher (SendOrPostCallback d, object state)
 		{
-			if (d == null)
+			if (d is null)
 				throw new ArgumentNullException (nameof (d));
 
 			this.d = d;
@@ -185,4 +183,3 @@ namespace Foundation {
 	}
 #endif // !COREBUILD
 }
-

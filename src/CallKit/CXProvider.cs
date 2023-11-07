@@ -1,4 +1,4 @@
-﻿//
+//
 // CXProvider extensions and syntax sugar
 //
 // Authors:
@@ -7,11 +7,13 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
+#if !MONOMAC
 using System;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 namespace CallKit {
 	public partial class CXProvider {
 
@@ -21,4 +23,4 @@ namespace CallKit {
 		}
 	}
 }
-#endif // XAMCORE_2_0
+#endif // !MONOMAC

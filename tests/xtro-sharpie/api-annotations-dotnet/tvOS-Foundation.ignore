@@ -1,0 +1,14 @@
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
+!missing-field! NSUbiquitousUserDefaultsCompletedInitialSyncNotification not bound
+!missing-field! NSUbiquitousUserDefaultsDidChangeAccountsNotification not bound
+!missing-field! NSUserDefaultsSizeLimitExceededNotification not bound
+
+## does not exists in iOS (or tvOS) as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound
+
+## unsorted
+
+!missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
+!missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
+!missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound

@@ -1,14 +1,12 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace Xamarin.MMP.Tests
-{
+namespace Xamarin.MMP.Tests {
 	[TestFixture]
-	public class AssemblyReferencesTests
-	{
+	public class AssemblyReferencesTests {
 		[Test]
 		public void ShouldNotAllowReference_ToSystemDrawing ()
 		{
@@ -34,7 +32,7 @@ namespace Xamarin.MMP.Tests
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
 					References = " <Reference Include=\"OpenTK\" />",
 					TestCode = "var matrix = new OpenTK.Matrix2 ();",
-					XM45 = full 
+					XM45 = full
 				};
 				TI.TestUnifiedExecutable (test);
 			});

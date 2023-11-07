@@ -1,5 +1,11 @@
-# fixed in XAMCORE_3_0 - API break
+# API removed by Apple, marked as deprecated
+!unknown-native-enum! GKAuthenticationType bound
 
+
+# addressed in XAMCORE_5_0
+
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindPlayers: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKTurnBasedMatchmakerViewControllerDelegate::turnBasedMatchmakerViewController:playerQuitForMatch: is OPTIONAL and should NOT be abstract

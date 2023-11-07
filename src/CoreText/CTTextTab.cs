@@ -24,27 +24,42 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using CoreGraphics;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreText {
 
-#region Text Tab Constants
+	#region Text Tab Constants
+#if !NET
 	public static class CTTextTabOptionKey {
 
 		public static readonly NSString ColumnTerminators;
 
 		static CTTextTabOptionKey ()
 		{
-			ColumnTerminators = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTTabColumnTerminatorsAttributeName");
+			ColumnTerminators = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTTabColumnTerminatorsAttributeName")!;
 		}
 	}
+#endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTextTabOptions {
 
 		public CTTextTabOptions ()
@@ -54,57 +69,43 @@ namespace CoreText {
 
 		public CTTextTabOptions (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
-		public NSDictionary Dictionary {get; private set;}
+		public NSDictionary Dictionary { get; private set; }
 
 		public NSCharacterSet ColumnTerminators {
-			get {return (NSCharacterSet) Dictionary [CTTextTabOptionKey.ColumnTerminators];}
-			set {Adapter.SetValue (Dictionary, CTTextTabOptionKey.ColumnTerminators, value);}
+			get { return (NSCharacterSet) Dictionary [CTTextTabOptionKey.ColumnTerminators]; }
+			set { Adapter.SetValue (Dictionary, CTTextTabOptionKey.ColumnTerminators, value); }
 		}
 	}
-#endregion
 
-	public class CTTextTab : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CTTextTab (IntPtr handle, bool owns)
+	static class CTTextTabOptionsExtensions {
+		public static IntPtr GetHandle (this CTTextTabOptions? self)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
+			if (self is null)
+				return IntPtr.Zero;
+			return self.Dictionary.GetHandle ();
 		}
-		
-		public IntPtr Handle {
-			get {return handle;}
-		}
+	}
+	#endregion
 
-		~CTTextTab ()
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CTTextTab : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTTextTab (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
 		}
 
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-#region Text Tab Creation
+		#region Text Tab Creation
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTextTabCreate (CTTextAlignment alignment, double location, IntPtr options);
 		public CTTextTab (CTTextAlignment alignment, double location)
@@ -112,40 +113,34 @@ namespace CoreText {
 		{
 		}
 
-		public CTTextTab (CTTextAlignment alignment, double location, CTTextTabOptions options)
+		public CTTextTab (CTTextAlignment alignment, double location, CTTextTabOptions? options)
+			: base (CTTextTabCreate (alignment, location, options.GetHandle ()), true, true)
 		{
-			handle = CTTextTabCreate (alignment, location, 
-					options == null ? IntPtr.Zero : options.Dictionary.Handle);
-
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
-#endregion
+		#endregion
 
-#region Text Tab Access
+		#region Text Tab Access
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CTTextAlignment CTTextTabGetAlignment (IntPtr tab);
 		public CTTextAlignment TextAlignment {
-			get {return CTTextTabGetAlignment (handle);}
+			get { return CTTextTabGetAlignment (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern double CTTextTabGetLocation (IntPtr tab);
 		public double Location {
-			get {return CTTextTabGetLocation (handle);}
+			get { return CTTextTabGetLocation (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTextTabGetOptions (IntPtr tab);
-		public CTTextTabOptions GetOptions ()
+		public CTTextTabOptions? GetOptions ()
 		{
-			var options = CTTextTabGetOptions (handle);
+			var options = CTTextTabGetOptions (Handle);
 			if (options == IntPtr.Zero)
 				return null;
-			return new CTTextTabOptions (
-					(NSDictionary) Runtime.GetNSObject (options));
+			return new CTTextTabOptions (Runtime.GetNSObject<NSDictionary> (options)!);
 		}
-#endregion
+		#endregion
 	}
 }
-

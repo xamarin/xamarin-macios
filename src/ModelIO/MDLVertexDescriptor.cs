@@ -1,4 +1,3 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 
@@ -7,29 +6,39 @@ using ModelIO;
 using ObjCRuntime;
 using Metal;
 
+#nullable enable
+
 namespace ModelIO {
 	public partial class MDLVertexDescriptor {
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern  /* MDLVertexDescriptor __nonnull */ IntPtr MTKModelIOVertexDescriptorFromMetal (/* MTLVertexDescriptor __nonnull */ IntPtr mtlDescriptor);
 
-		public static MDLVertexDescriptor FromMetal (MTLVertexDescriptor descriptor)
+		public static MDLVertexDescriptor? FromMetal (MTLVertexDescriptor descriptor)
 		{
-			if (descriptor == null)
-				throw new ArgumentException ("descriptor");
+			if (descriptor is null)
+				throw new ArgumentException (nameof (descriptor));
 			return Runtime.GetNSObject<MDLVertexDescriptor> (MTKModelIOVertexDescriptorFromMetal (descriptor.Handle));
 		}
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MDLVertexDescriptor __nonnull */ IntPtr MTKModelIOVertexDescriptorFromMetalWithError (/* MTLVertexDescriptor __nonnull */ IntPtr metalDescriptor, out /* NSError */ IntPtr error);
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		public static MDLVertexDescriptor FromMetal (MTLVertexDescriptor descriptor, out NSError error)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
+		public static MDLVertexDescriptor? FromMetal (MTLVertexDescriptor descriptor, out NSError? error)
 		{
-			if (descriptor == null)
-				throw new ArgumentException ("descriptor");
+			if (descriptor is null)
+				throw new ArgumentException (nameof (descriptor));
 			IntPtr err;
 			var vd = Runtime.GetNSObject<MDLVertexDescriptor> (MTKModelIOVertexDescriptorFromMetalWithError (descriptor.Handle, out err));
 			error = Runtime.GetNSObject<NSError> (err);
@@ -37,4 +46,3 @@ namespace ModelIO {
 		}
 	}
 }
-#endif

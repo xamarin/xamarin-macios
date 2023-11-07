@@ -1,0 +1,16 @@
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# as per the header comments, the following enum has to be ignored on tvOS
+!missing-enum! AVAudioSessionIOType not bound
+
+# not used on tvOS
+!missing-enum! AVAudioSessionInterruptionReason not bound
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+
+## https://github.com/xamarin/xamarin-macios/issues/16229 prevents crashing instead of return null
+## so these selectors have been bound manually
+!missing-selector! AVAudioPlayer::initWithContentsOfURL:error: not bound
+!missing-selector! AVAudioPlayer::initWithData:error: not bound

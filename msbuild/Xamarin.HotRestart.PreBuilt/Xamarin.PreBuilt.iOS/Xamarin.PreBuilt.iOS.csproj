@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-ios</TargetFramework>
+    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../../tests/common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProvisioningType>automatic</ProvisioningType>
+    <DebugType>portable</DebugType>
+    <_LinkMode>None</_LinkMode>
+    <UseInterpreter>true</UseInterpreter>
+    <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
+    <!-- disable code signing unless we're building in CI, to avoid requiring code signing during developer builds (who will usually never need the prebuilt app) -->
+    <EnableCodeSigning Condition="'$(BUILD_REVISION)' == ''">false</EnableCodeSigning>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\appiconfg.png" />
+    <BundleResource Include="Resources\appiconfg@2x.png" />
+    <BundleResource Include="Resources\appiconfg@3x.png" />
+  </ItemGroup>
+
+  <!-- For debug only, copies files from a AdditionalFiles directory into the bundle (i.e. an app to be interpreted) -->
+  <!-- <Target Name="ResolveAdditionalReferences">
+    <ItemGroup>
+      <AdditionalFiles Include="AdditionalReferences\**\*.*" Exclude="AdditionalReferences\Xamarin.Forms.Core.dll" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyAdditionalReferences" DependsOnTargets="ResolveAdditionalReferences" AfterTargets="_CalculateCodesignAppBundleInputs" Inputs="@(AdditionalFiles)" Outputs="@(AdditionalFiles -> '$(_AppBundlePath)$(_AppBundleName).content\%(RecursiveDir)%(Filename)%(Extension)')">
+    <Copy SourceFiles="@(AdditionalFiles)" DestinationFiles="@(AdditionalFiles -> '$(_AppBundlePath)$(_AppBundleName).content\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target> -->
+</Project>

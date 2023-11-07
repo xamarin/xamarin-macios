@@ -1,0 +1,97 @@
+# Job that downloads the change detection artifact and:
+# * Uploads the results to VSDrops
+# * Publishes results (as a comment) to GitHub
+
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- pwsh: |
+    if (Test-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -PathType Container) {
+      Remove-Item -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/Artifacts" -Force -Recurse
+    }
+  displayName: "Remove artifacts"
+  condition: always()
+
+# Download the change detection artifact
+- task: DownloadPipelineArtifact@2
+  displayName: 'Download change detection artifacts'
+  inputs:
+    patterns: '${{ parameters.uploadPrefix }}change-detection/change-detection.zip'
+    allowFailedBuilds: true
+    path: $(System.DefaultWorkingDirectory)/Artifacts
+
+# Unzip the change detection artifact
+- task: ExtractFiles@1
+  displayName: 'Decompress change detection artifacts'
+  inputs:
+    archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Artifacts/${{ parameters.uploadPrefix }}change-detection/change-detection.zip'
+    destinationFolder: '$(System.DefaultWorkingDirectory)/change-detection'
+
+# Upload the change detection results to vsdrops
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish change detection results to Artifact Services Drop'
+  continueOnError: true # don't let any failures here stop us
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-ChangeDetection-$(System.JobAttempt)'
+    buildNumber: 'xamarin-macios/detected-changes/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)'
+    sourcePath: '$(System.DefaultWorkingDirectory)/change-detection/results/'
+    detailedLog: true
+    usePat: true
+
+# Process the github comment and publish it
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $vsdropsChangeDetectionPrefix = "https://vsdrop.corp.microsoft.com/file/v1/xamarin-macios/detected-changes/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/;/"
+
+    $rootDirectory = Join-Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" "change-detection" "results"
+
+    $inputContentsPath = Join-Path -Path $rootDirectory -ChildPath "gh-comment.md"
+    if (Test-Path $inputContentsPath -PathType leaf) {
+      $inputContents = Get-Content -Path $inputContentsPath -Raw
+    } else {
+      $inputContents = ":fire: Unable to find the contents for the comment: $inputContentsPath does not exist :fire"
+    }
+
+    try {
+      $converted = Convert-Markdown -RootDirectory $rootDirectory -InputContents $inputContents -VSDropsPrefix $vsdropsChangeDetectionPrefix
+    } catch {
+      $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
+    }
+    $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH
+    $result = $githubComments.NewCommentFromMessage("", "", $converted)
+  displayName: 'Publish GitHub comment for change detection'
+  timeoutInMinutes: 10
+  continueOnError: true # don't let any failures here stop us
+  condition: always() # We always want to post something on github
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+    ${{ if eq(parameters.repositoryAlias, 'self') }}:
+      COMMENT_HASH: $(GIT_HASH)
+    ${{ else }}:
+      COMMENT_HASH: $(Build.SourceVersion)

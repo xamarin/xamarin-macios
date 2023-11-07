@@ -8,10 +8,8 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	public enum LinkerOption
-	{
+namespace Xamarin.Tests {
+	public enum LinkerOption {
 		Unspecified,
 		LinkAll,
 		LinkSdk,
@@ -19,16 +17,14 @@ namespace Xamarin.Tests
 		LinkPlatform, // only applicable for XM
 	}
 
-	public enum RegistrarOption
-	{
+	public enum RegistrarOption {
 		Unspecified,
 		Dynamic,
 		Static,
 	}
 
 	[Flags]
-	enum I18N
-	{
+	enum I18N {
 		None = 0,
 
 		CJK = 1,
@@ -42,8 +38,7 @@ namespace Xamarin.Tests
 	}
 
 	// This class represents options/logic that is identical between mtouch and mmp
-	abstract class BundlerTool : Tool
-	{
+	abstract class BundlerTool : Tool {
 		public const string None = "None";
 		public bool AlwaysShowOutput;
 
@@ -133,7 +128,7 @@ namespace Xamarin.Tests
 				sb.Add (Cache);
 			}
 
-			if (CustomArguments != null) {
+			if (CustomArguments is not null) {
 				foreach (var arg in CustomArguments) {
 					sb.Add (arg);
 				}
@@ -191,7 +186,7 @@ namespace Xamarin.Tests
 					sb.Add ($"--linkskip:{ls}");
 			}
 
-			if (NoWarn != null) {
+			if (NoWarn is not null) {
 				if (NoWarn.Length > 0) {
 					sb.Add ($"--nowarn:{string.Join (",", NoWarn.Select ((v) => v.ToString ()))}");
 				} else {
@@ -199,7 +194,7 @@ namespace Xamarin.Tests
 				}
 			}
 
-			if (Optimize != null) {
+			if (Optimize is not null) {
 				foreach (var opt in Optimize)
 					sb.Add ($"--optimize:{opt}");
 			}
@@ -207,7 +202,7 @@ namespace Xamarin.Tests
 			if (Profiling.HasValue)
 				sb.Add ($"--profiling:{(Profiling.Value ? "true" : "false")}");
 
-			if (References != null) {
+			if (References is not null) {
 				foreach (var r in References)
 					sb.Add ((IsMtouchTool ? "-r:" : "-a:") + r);
 			}
@@ -256,23 +251,18 @@ namespace Xamarin.Tests
 			} else if (!string.IsNullOrEmpty (TargetFramework)) {
 				sb.Add ("--target-framework");
 				sb.Add (TargetFramework);
-			} else if (!NoPlatformAssemblyReference) {
-				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
+			} else {
 				switch (Profile) {
 				case Profile.iOS:
-					sb.Add ($"-r:" + Configuration.XamarinIOSDll);
-					break;
 				case Profile.tvOS:
 				case Profile.watchOS:
-					sb.Add ("--target-framework");
-					sb.Add (Configuration.GetTargetFramework (Profile));
-					sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
-					break;
 				case Profile.macOSFull:
 				case Profile.macOSMobile:
 				case Profile.macOSSystem:
 					sb.Add ("--target-framework");
 					sb.Add (Configuration.GetTargetFramework (Profile));
+					if (!NoPlatformAssemblyReference)
+						sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -288,7 +278,7 @@ namespace Xamarin.Tests
 
 			AddVerbosity (sb);
 
-			if (WarnAsError != null) {
+			if (WarnAsError is not null) {
 				if (WarnAsError.Length > 0) {
 					sb.Add ($"--warnaserror:{string.Join (",", WarnAsError.Select ((v) => v.ToString ()))}");
 				} else {
@@ -301,7 +291,7 @@ namespace Xamarin.Tests
 					sb.Add ($"--xml:{xd}");
 			}
 
-			if (Interpreter != null) {
+			if (Interpreter is not null) {
 				if (Interpreter.Length == 0)
 					sb.Add ("--interpreter");
 				else
@@ -331,8 +321,8 @@ namespace Xamarin.Tests
 			if (rv == 0)
 				return;
 			var errors = Messages.Where ((v) => v.IsError).ToList ();
-			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s): {message}\n\t" +
-				     string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
+			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s).\nCommand: {ToolPath} {StringUtils.FormatArguments (ToolArguments)}\nMessage: {message}\n\t" +
+					 string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
 		public void AssertExecuteFailure (string message = null)
@@ -340,18 +330,22 @@ namespace Xamarin.Tests
 			Assert.AreEqual (1, Execute (), message);
 		}
 
-		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true);
+		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null);
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
+		public static string CreateCode (string code, string usings, string extraCode)
 		{
-			if (code == null)
+			if (code is null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-			if (usings != null)
+			if (usings is not null)
 				code = usings + "\n" + code;
-			if (extraCode != null)
+			if (extraCode is not null)
 				code += extraCode;
+			return code;
+		}
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArgs, profile, appName, use_csc);
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
+		{
+			return CompileTestAppCode ("exe", targetDirectory, CreateCode (code, usings, extraCode), extraArgs, profile, appName);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
@@ -359,7 +353,7 @@ namespace Xamarin.Tests
 			return CompileTestAppCode ("library", targetDirectory, code, extraArgs, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
@@ -370,14 +364,14 @@ namespace Xamarin.Tests
 
 			string output;
 			var args = new List<string> ();
-			string fileName = Configuration.GetCompiler (profile, args, use_csc);
+			string fileName = Configuration.GetCompiler (profile, args);
 			args.Add ("/noconfig");
 			args.Add ($"/t:{target}");
 			args.Add ("/nologo");
 			args.Add ($"/out:{assembly}");
 			args.Add ($"/r:{root_library}");
 			args.Add (cs);
-			if (extraArgs != null)
+			if (extraArgs is not null)
 				args.AddRange (extraArgs);
 			if (ExecutionHelper.Execute (fileName, args, out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);

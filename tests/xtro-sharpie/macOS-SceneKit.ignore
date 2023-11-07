@@ -6,5 +6,13 @@
 !missing-selector! SCNProgram::setTessellationEvaluationShader: not bound
 !missing-selector! SCNProgram::tessellationControlShader not bound
 !missing-selector! SCNProgram::tessellationEvaluationShader not bound
-!missing-selector! SCNText::chamferSegmentCount not bound
-!missing-selector! SCNText::setChamferSegmentCount: not bound
+!incorrect-protocol-member! SCNSceneRenderer::audioEnvironmentNode is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::colorPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::commandQueue is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::currentRenderCommandEncoder is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::depthPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::device is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::currentRenderPassDescriptor is REQUIRED and should be abstract
+!missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
+!missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound

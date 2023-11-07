@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{5C7259BF-4253-48A6-9D9E-5036F492D7CE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SystemMemoryFromNetStandard2_0</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>SystemMemoryFromNetStandard2_0</AssemblyName>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'iPhoneSimulator' ">
+    <MtouchArch>x86_64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'iPhone' ">
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchArch>ARM64</MtouchArch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Xamarin.iOS" />
+    <ProjectReference Include="../SystemMemoryLibrary/SystemMemoryLibrary.csproj"  />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

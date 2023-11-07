@@ -11,6 +11,7 @@
     <AssemblyName>%NAME%</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,7 +29,7 @@
     <CreatePackage>false</CreatePackage>
     <EnableCodeSigning>false</EnableCodeSigning>
     <EnablePackageSigning>false</EnablePackageSigning>
-%CODE%
+REPLACE_CODE_REPLACE
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -4,37 +4,30 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using CoreLocation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolylineTest {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
-		
+
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromPoints_Null ()
 		{
-			MKPolyline.FromPoints (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolyline.FromPoints (null));
 		}
-		
+
 		void CheckEmpty (MKPolyline pl)
 		{
 			// MKAnnotation
@@ -58,7 +51,7 @@ namespace MonoTouchFixtures.MapKit {
 			Assert.False (pl.Intersects (pl.BoundingMapRect), "Intersect/Self");
 			MKMapRect rect = new MKMapRect (0, 0, 0, 0);
 			Assert.False (pl.Intersects (rect), "Intersect/Empty");
-			
+
 			ShapeTest.CheckShape (pl);
 		}
 
@@ -70,19 +63,18 @@ namespace MonoTouchFixtures.MapKit {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromCoordinates_Null ()
 		{
-			MKPolyline.FromCoordinates (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolyline.FromCoordinates (null));
 		}
-		
+
 		[Test]
 		public void FromCoordinates_Empty ()
 		{
 			MKPolyline pl = MKPolyline.FromCoordinates (new CLLocationCoordinate2D [] { });
 			CheckEmpty (pl);
 		}
-		
+
 #if false
 		// Annotations that support dragging should implement this method to update the position of the annotation.
 		// keyword is SHOULD - it's not working for MKPolyline
@@ -94,7 +86,11 @@ namespace MonoTouchFixtures.MapKit {
 			try {
 				pl.Coordinate = new CLLocationCoordinate2D (10, 20);
 			}
+#if NET
+			catch (ObjCException mte) {
+#else
 			catch (MonoTouchException mte) {
+#endif
 				Assert.True (mte.Message.Contains ("unrecognized selector sent to instance"));
 			}
 			catch {

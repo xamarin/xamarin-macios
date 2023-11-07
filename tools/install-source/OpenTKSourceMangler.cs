@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.IO;
 
-namespace InstallSources
-{
+namespace InstallSources {
 	/// <summary>
 	/// Path manipulator that knows how to deal with OpenTK paths.
 	/// </summary>
-	public class OpenTKSourceMangler : IPathMangler
-	{
+	public class OpenTKSourceMangler : IPathMangler {
 		static readonly string iOSFramework = "Xamarin.iOS/";
 		static readonly string MacFramework = "Xamarin.Mac/";
-		
+
 		/// <summary>
 		/// Locations of the OpenTK source.
 		/// </summary>
@@ -21,8 +19,8 @@ namespace InstallSources
 		/// Gets or sets the install dir.
 		/// </summary>
 		/// <value>The install dir.</value>
-		public string InstallDir { get; set;}
-		
+		public string InstallDir { get; set; }
+
 		/// <summary>
 		/// Gets or sets the frame work dir.
 		/// </summary>
@@ -32,15 +30,15 @@ namespace InstallSources
 		public string GetSourcePath (string path)
 		{
 			bool iosFramework = true;
-			if (path.StartsWith (OpenTKSourcePath, StringComparison.Ordinal)) 
+			if (path.StartsWith (OpenTKSourcePath, StringComparison.Ordinal))
 				return path;
 			// we are dealing with a package build
 			var index = path.IndexOf (iOSFramework, StringComparison.Ordinal);
 			if (index < 0) {// we are dealing with mac sources
 				iosFramework = false;
-				index = path.IndexOf(MacFramework, StringComparison.Ordinal);
+				index = path.IndexOf (MacFramework, StringComparison.Ordinal);
 			}
-			path = path.Remove (0, index + ((iosFramework)?iOSFramework.Length : MacFramework.Length)); // + length framework
+			path = path.Remove (0, index + ((iosFramework) ? iOSFramework.Length : MacFramework.Length)); // + length framework
 			return Path.Combine (OpenTKSourcePath, path);
 		}
 

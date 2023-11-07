@@ -29,44 +29,30 @@ namespace UIKit {
 
 	public partial class UITextField : IUITextInputTraits {
 
-		internal virtual Type GetInternalEventDelegateType
-		{
+		internal virtual Type GetInternalEventDelegateType {
 			get { return typeof (_UITextFieldDelegate); }
 		}
 
 		internal virtual _UITextFieldDelegate CreateInternalEventDelegateType ()
 		{
-			return (_UITextFieldDelegate)(new _UITextFieldDelegate());
+			return (_UITextFieldDelegate) (new _UITextFieldDelegate ());
 		}
 
 		internal _UITextFieldDelegate EnsureUITextFieldDelegate ()
 		{
-#if XAMCORE_2_0
-			if (Delegate != null)
+			if (Delegate is not null)
 				UIApplication.EnsureEventAndDelegateAreNotMismatched (Delegate, GetInternalEventDelegateType);
 			_UITextFieldDelegate del = Delegate as _UITextFieldDelegate;
-			if (del == null){
-				del = (_UITextFieldDelegate)CreateInternalEventDelegateType ();
-				Delegate = (IUITextFieldDelegate)del;
+			if (del is null) {
+				del = (_UITextFieldDelegate) CreateInternalEventDelegateType ();
+				Delegate = (IUITextFieldDelegate) del;
 			}
 			return del;
-#else
-			var del = Delegate;
-			if (del == null || (!(del is _UITextFieldDelegate))){
-				del = new _UITextFieldDelegate ();
-				Delegate = del;
-			}
-			return (_UITextFieldDelegate) del;
-#endif
 		}
 
-		#pragma warning disable 672
+#pragma warning disable 672
 		[Register]
-#if XAMCORE_2_0
 		internal class _UITextFieldDelegate : NSObject, IUITextFieldDelegate {
-#else
-		internal class _UITextFieldDelegate : UITextFieldDelegate {
-#endif
 			public _UITextFieldDelegate () { IsDirectBinding = false; }
 
 			internal EventHandler editingEnded;
@@ -75,12 +61,12 @@ namespace UIKit {
 			public void EditingEnded (UITextField textField)
 			{
 				EventHandler handler = editingEnded;
-				if (handler != null){
+				if (handler is not null) {
 					handler (textField, EventArgs.Empty);
 				} else {
 					// if this is executed before iOS10 and only the new API is used we'll raise the new event (if set)
 					EventHandler<UITextFieldEditingEndedEventArgs> handler2 = editingEnded1;
-					if (handler2 != null) {
+					if (handler2 is not null) {
 						var args = new UITextFieldEditingEndedEventArgs (UITextFieldDidEndEditingReason.Unknown);
 						handler2 (textField, args);
 					}
@@ -93,13 +79,13 @@ namespace UIKit {
 			public void EditingEnded (UITextField textField, UITextFieldDidEndEditingReason reason)
 			{
 				EventHandler<UITextFieldEditingEndedEventArgs> handler = editingEnded1;
-				if (handler != null) {
+				if (handler is not null) {
 					var args = new UITextFieldEditingEndedEventArgs (reason);
 					handler (textField, args);
 				} else {
 					// if this is executed on iOS10 (or late) and only the old API is used then we'll raise the old event (if set)
 					EventHandler handler2 = editingEnded;
-					if (handler2 != null)
+					if (handler2 is not null)
 						handler2 (textField, EventArgs.Empty);
 				}
 			}
@@ -110,7 +96,7 @@ namespace UIKit {
 			public void EditingStarted (UITextField textField)
 			{
 				EventHandler handler = editingStarted;
-				if (handler != null){
+				if (handler is not null) {
 					handler (textField, EventArgs.Empty);
 				}
 			}
@@ -121,7 +107,7 @@ namespace UIKit {
 			public bool ShouldBeginEditing (UITextField textField)
 			{
 				UITextFieldCondition handler = shouldBeginEditing;
-				if (handler != null)
+				if (handler is not null)
 					return handler (textField);
 				return true;
 			}
@@ -132,7 +118,7 @@ namespace UIKit {
 			public bool ShouldChangeCharacters (UITextField textField, NSRange range, string replacementString)
 			{
 				UITextFieldChange handler = shouldChangeCharacters;
-				if (handler != null)
+				if (handler is not null)
 					return handler (textField, range, replacementString);
 				return true;
 			}
@@ -143,7 +129,7 @@ namespace UIKit {
 			public bool ShouldClear (UITextField textField)
 			{
 				UITextFieldCondition handler = shouldClear;
-				if (handler != null)
+				if (handler is not null)
 					return handler (textField);
 				return true;
 			}
@@ -154,7 +140,7 @@ namespace UIKit {
 			public bool ShouldEndEditing (UITextField textField)
 			{
 				UITextFieldCondition handler = shouldEndEditing;
-				if (handler != null)
+				if (handler is not null)
 					return handler (textField);
 				return true;
 			}
@@ -165,12 +151,12 @@ namespace UIKit {
 			public bool ShouldReturn (UITextField textField)
 			{
 				UITextFieldCondition handler = shouldReturn;
-				if (handler != null)
+				if (handler is not null)
 					return handler (textField);
 				return true;
 			}
 		}
-		#pragma warning restore 672
+#pragma warning restore 672
 
 		public event EventHandler Ended {
 			add { EnsureUITextFieldDelegate ().editingEnded += value; }

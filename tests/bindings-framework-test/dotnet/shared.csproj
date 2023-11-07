@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <IsBindingProject>true</IsBindingProject>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;FRAMEWORK_TEST</DefineConstants>
+    <RootNamespace>bindingstest</RootNamespace>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>bindings-framework-test</AssemblyName>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+    <ThisTestDirectory>$(RootTestsDirectory)\bindings-framework-test</ThisTestDirectory>
+
+    <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(ThisTestDirectory)/ApiDefinition.cs" />
+    <ObjcBindingCoreSource Include="$(ThisTestDirectory)/StructsAndEnums.cs" />
+
+    <None Include="$(TestLibrariesDirectory)\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(TestLibrariesDirectory)\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+    <TestLibrariesInput Include="$(TestLibrariesDirectory)\libframework.m" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XTest.framework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XSharedObjectTest.framework" />
+    <TestLibrariesOutput Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XSharedARTest.framework" />
+
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XStaticArTest.framework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XStaticObjectTest.framework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+    <NativeReference Include="$(TestLibrariesDirectory)\.libs\$(NativeLibName)\XTest.framework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+
+  <Target Name="BeforeBuild" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)" BeforeTargets="BeforeBuild">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+</Project>

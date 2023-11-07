@@ -27,19 +27,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 
 namespace System.ComponentModel {
 
-	public class CancelEventArgs : EventArgs
-	{
+	public class CancelEventArgs : EventArgs {
 		private bool cancel;
-	
-		public CancelEventArgs() { 
+
+		public CancelEventArgs ()
+		{
 			cancel = false;
 		}
 
-		public CancelEventArgs( bool cancel )
+		public CancelEventArgs (bool cancel)
 		{
 			this.cancel = cancel;
 		}
@@ -55,5 +57,3 @@ namespace System.ComponentModel {
 	}
 
 }
-
-

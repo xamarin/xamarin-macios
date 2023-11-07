@@ -1,6 +1,8 @@
-#if XAMCORE_2_0 && !XAMCORE_4_0
+#if !NET
 using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+
+#nullable enable
 
 namespace ModelIO {
 	public partial class MDLTransformComponent_Extensions {
@@ -14,7 +16,7 @@ namespace ModelIO {
 			self.Matrix = (Matrix4) MatrixFloat4x4.Transpose (value);
 		}
 
-		public static MatrixFloat4x4 GetLocalTransform4x4(this IMDLTransformComponent This, double time)
+		public static MatrixFloat4x4 GetLocalTransform4x4 (this IMDLTransformComponent This, double time)
 		{
 			return MatrixFloat4x4.Transpose ((MatrixFloat4x4) GetLocalTransform (This, time));
 		}

@@ -15,19 +15,15 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
 [assembly: Debuggable (DebuggableAttribute.DebuggingModes.Default)]
 
 [assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeA))]
-[assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeAA[][]))]
-[assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeAAA[,]))]
+[assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeAA [] []))]
+[assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeAAA [,]))]
 //[assembly: LinkAll.Attributes.CustomAttributeArray (new object [] { typeof (LinkAll.Attributes.CustomTypeAAAA) })]
 [assembly: LinkAll.Attributes.CustomAttribute (typeof (LinkAll.Attributes.CustomType))]
 [assembly: LinkAll.Attributes.CustomAttribute (typeof (List<LinkAll.Attributes.CustomTypeG>))]
@@ -55,16 +51,16 @@ namespace LinkAll.Attributes {
 
 	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
 	public class CustomAttributeArray : Attribute {
-		readonly Type[] _types;
+		readonly Type [] _types;
 
-		public CustomAttributeArray (params Type[] types)
+		public CustomAttributeArray (params Type [] types)
 		{
 			_types = types;
 		}
 
 		public CustomAttributeArray (params object [] types)
 		{
-			_types = (Type[]) types;
+			_types = (Type []) types;
 		}
 	}
 
@@ -97,19 +93,19 @@ namespace LinkAll.Attributes {
 	}
 
 	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
-	public class CustomAttributeObject : Attribute
-	{
+	public class CustomAttributeObject : Attribute {
 		readonly Type _type;
 
 		public CustomAttributeObject (object type)
 		{
-			_type = (Type)type;
+			_type = (Type) type;
 		}
 	}
 
 	public class CustomTypeO {
 	}
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -119,20 +115,25 @@ namespace LinkAll.Attributes {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class AttributeTest {
-		
+
 		// Good enough to fool linker to abort the tracking
+#if NET
+		static string mscorlib = "System.Private.CoreLib";
+#else
 		static string mscorlib = "mscorlib";
+#endif
 
 		[Test]
 		public void DebugAssemblyAttributes ()
 		{
 			bool result = false;
-			foreach (object ca in typeof(FullyDecorated).Assembly.GetCustomAttributes (false)) {
+			foreach (object ca in typeof (FullyDecorated).Assembly.GetCustomAttributes (false)) {
 				if (ca is DebuggableAttribute)
 					result = true;
 			}
@@ -146,7 +147,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void DebugTypeAttributes ()
 		{
-			var ca = typeof(FullyDecorated).GetCustomAttributes (false);
+			var ca = typeof (FullyDecorated).GetCustomAttributes (false);
 #if DEBUG
 			Assert.That (ca.Length, Is.EqualTo (5), "Debug attributes in debug mode");
 #else
@@ -157,7 +158,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void DebugConstructorAttributes ()
 		{
-			var ca = typeof(FullyDecorated).GetConstructor (Type.EmptyTypes).GetCustomAttributes (false);
+			var ca = typeof (FullyDecorated).GetConstructor (Type.EmptyTypes).GetCustomAttributes (false);
 #if DEBUG
 			Assert.That (ca.Length, Is.EqualTo (2), "Debug attributes in debug mode");
 #else
@@ -188,7 +189,7 @@ namespace LinkAll.Attributes {
 		[Test]
 		public void DebuggerTypeProxy_24203 ()
 		{
-			var d = new Dictionary<string,int> () { { "key", 0 } };
+			var d = new Dictionary<string, int> () { { "key", 0 } };
 			Assert.NotNull (d); // just to be 100% sure it won't be linked away (with the attribute we'll be looking for)
 			var proxy = Type.GetType ("System.Collections.Generic.IDictionaryDebugView`2, " + mscorlib);
 #if DEBUG
@@ -212,7 +213,7 @@ namespace LinkAll.Attributes {
 			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeAAA"), "CustomTypeAAA");
 			//Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeAAAA"), "CustomTypeAAAA");
 
-			var t = assembly.GetCustomAttributes<CustomAttribute>();
+			var t = assembly.GetCustomAttributes<CustomAttribute> ();
 			Assert.That (t.Count (), Is.EqualTo (2), "Type");
 			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomType"), "CustomType");
 			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeG"), "CustomTypeG");
@@ -222,6 +223,7 @@ namespace LinkAll.Attributes {
 			//Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeO"), "CustomTypeO");
 		}
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -232,5 +234,6 @@ namespace LinkAll.Attributes {
 			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, " + mscorlib), "FileIOPermissionAttribute");
 			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, " + mscorlib), "FileIOPermissionAccess");
 		}
+#endif
 	}
 }

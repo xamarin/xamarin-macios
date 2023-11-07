@@ -1,14 +1,11 @@
 using System;
 
-using Foundation;
-using CoreFoundation;
 using ObjCRuntime;
-using CoreVideo;
+#nullable enable
 
 namespace Compression {
 
-	// this enum as per the headers is an int NOT an NSInterger
-	[iOS (9,0), TV (9,0), Mac (10,11)]
+	// this enum as per the headers is an int NOT an NSInteger
 	public enum CompressionAlgorithm {
 		LZ4 = 0x100,
 		LZ4Raw = 0x101,
@@ -17,17 +14,20 @@ namespace Compression {
 		Zlib = 0x205,
 	}
 
+	[Internal]
 	enum CompressionStatus {
 		Ok = 0,
 		End = 1,
 		Error = -1,
 	}
 
+	[Internal]
 	enum StreamFlag {
 		Continue = 0, // not present in the API, but makes it nice in our case
 		Finalize = 0x0001,
 	}
 
+	[Internal]
 	enum StreamOperation {
 		Encode = 0,
 		Decode = 1,

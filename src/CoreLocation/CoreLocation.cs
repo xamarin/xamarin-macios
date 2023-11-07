@@ -29,11 +29,14 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
-#if IOS && !COREBUILD && XAMCORE_2_0
+#if IOS && !COREBUILD
 using Contacts;
 using Intents;
 #endif
@@ -43,6 +46,12 @@ namespace CoreLocation {
 	// CLLocationDegrees -> double -> CLLocation.h
 
 	// CLLocation.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CLLocationCoordinate2D {
 		public /* CLLocationDegrees */ double Latitude;
@@ -55,8 +64,9 @@ namespace CoreLocation {
 		}
 
 		[DllImport (Constants.CoreLocationLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern /* BOOL */ bool CLLocationCoordinate2DIsValid (CLLocationCoordinate2D cord);
-		
+
 		public bool IsValid ()
 		{
 			return CLLocationCoordinate2DIsValid (this);
@@ -67,45 +77,20 @@ namespace CoreLocation {
 			return $"(Latitude={Latitude}, Longitude={Longitude}";
 		}
 	}
-	
-#if !MONOMAC && !COREBUILD && !XAMCORE_2_0
-	public partial class CLHeading {
 
-		[Obsolete ("This type is not meant to be created by application code")]
-		public CLHeading () : base (IntPtr.Zero)
-		{
-			// calling ToString, 'description' selector, would crash the application
-			IsDirectBinding = GetType () == typeof (CLHeading);
-		}
-	}
-
-	public partial class CLRegion {
-
-		[Obsolete ("This type is not meant to be created by application code")]
-		public CLRegion () : base (IntPtr.Zero)
-		{
-			// calling ToString, 'description' selector, would crash the application
-			IsDirectBinding = GetType () == typeof (CLRegion);
-		}
-	}
-
+#if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
 	public partial class CLPlacemark {
-
-		[Obsolete ("This type is not meant to be created by application code")]
-		public CLPlacemark () : base (IntPtr.Zero)
-		{
-			// calling ToString, 'description' selector, or disposing the instance would crash the application
-			IsDirectBinding = GetType () == typeof (CLPlacemark);
-		}
-	}
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[Mac (11,0)]
 #endif
-
-#if IOS && !COREBUILD && XAMCORE_2_0 // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
-	public partial class CLPlacemark {
-		[iOS (10, 0)]
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)
 		{
-			return (null as CLPlacemark)._GetPlacemark (location, name, postalAddress);
+			return (null as CLPlacemark)!._GetPlacemark (location, name, postalAddress);
 		}
 	}
 #endif

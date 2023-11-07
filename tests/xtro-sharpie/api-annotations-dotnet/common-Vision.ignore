@@ -1,0 +1,59 @@
+# note: framework not available on watchOS
+
+## we do not expose internal framework versions
+!missing-field! VNVisionVersionNumber not bound
+
+## called indirectly (there's a required native layer for them)
+!missing-pinvoke! VNImagePointForFaceLandmarkPoint is not bound
+!missing-pinvoke! VNNormalizedFaceBoundingBoxPointForLandmarkPoint is not bound
+
+## Custom enums to represent header constats like
+## static const NSUInteger VNCoreMLRequestRevision1 = 1;
+!unknown-native-enum! VNRequestRevision bound
+!unknown-native-enum! VNBarcodeObservationRequestRevision bound
+!unknown-native-enum! VNCoreMLRequestRevision bound
+!unknown-native-enum! VNDetectBarcodesRequestRevision bound
+!unknown-native-enum! VNDetectedObjectObservationRequestRevision bound
+!unknown-native-enum! VNDetectFaceLandmarksRequestRevision bound
+!unknown-native-enum! VNDetectFaceRectanglesRequestRevision bound
+!unknown-native-enum! VNDetectHorizonRequestRevision bound
+!unknown-native-enum! VNDetectRectanglesRequestRevision bound
+!unknown-native-enum! VNDetectTextRectanglesRequestRevision bound
+!unknown-native-enum! VNFaceObservationRequestRevision bound
+!unknown-native-enum! VNHomographicImageRegistrationRequestRevision bound
+!unknown-native-enum! VNRecognizedObjectObservationRequestRevision bound
+!unknown-native-enum! VNRectangleObservationRequestRevision bound
+!unknown-native-enum! VNTextObservationRequestRevision bound
+!unknown-native-enum! VNTrackObjectRequestRevision bound
+!unknown-native-enum! VNTrackRectangleRequestRevision bound
+!unknown-native-enum! VNTranslationalImageRegistrationRequestRevision bound
+!unknown-native-enum! VNClassifyImageRequestRevision bound
+!unknown-native-enum! VNDetectFaceCaptureQualityRequestRevision bound
+!unknown-native-enum! VNDetectHumanRectanglesRequestRevision bound
+!unknown-native-enum! VNGenerateAttentionBasedSaliencyImageRequestRevision bound
+!unknown-native-enum! VNGenerateImageFeaturePrintRequestRevision bound
+!unknown-native-enum! VNGenerateObjectnessBasedSaliencyImageRequestRevision bound
+!unknown-native-enum! VNRecognizeAnimalsRequestRevision bound
+!unknown-native-enum! VNRecognizeTextRequestRevision bound
+!unknown-native-enum! VNDetectContourRequestRevision bound
+!unknown-native-enum! VNDetectHumanBodyPoseRequestRevision bound
+!unknown-native-enum! VNDetectHumanHandPoseRequestRevision bound
+!unknown-native-enum! VNDetectTrajectoriesRequestRevision bound
+!unknown-native-enum! VNGenerateOpticalFlowRequestRevision bound
+!unknown-native-enum! VNStatefulRequestRevision bound
+!unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
+!unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
+
+## VNRequest is an abstract class so this will be bound in subclasses
+## matching the return type to the above defined custom enums 
+!missing-selector! +VNRequest::currentRevision not bound
+!missing-selector! +VNRequest::defaultRevision not bound
+!missing-selector! +VNRequest::supportedRevisions not bound
+!missing-selector! VNRequest::revision not bound
+!missing-selector! VNRequest::setRevision: not bound
+## init is available but it's abstract (type) and not a designated initializer (so we don't bind it)
+!missing-selector! VNRequest::init not bound
+
+# API requires new marshal directive which needs to be manually tested (ideally via sample)
+!missing-selector! VNHumanBodyPose3DObservation::getCameraRelativePosition:forJointName:error: not bound
+

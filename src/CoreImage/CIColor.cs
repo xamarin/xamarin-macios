@@ -15,6 +15,8 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#nullable enable
+
 namespace CoreImage {
 	public partial class CIColor {
 
@@ -23,7 +25,7 @@ namespace CoreImage {
 				var n = NumberOfComponents;
 				var result = new nfloat [n];
 				unsafe {
-					nfloat *p = (nfloat *) GetComponents ();
+					nfloat* p = (nfloat*) GetComponents ();
 					for (int i = 0; i < n; i++)
 						result [i] = p [i];
 				}

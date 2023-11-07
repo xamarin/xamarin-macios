@@ -1,11 +1,9 @@
 using System;
 using Foundation;
 
-namespace DiamondProtocol
-{
+namespace DiamondProtocol {
 	[Protocol]
-	interface P1
-	{
+	interface P1 {
 		[Abstract]
 		[Export ("p1")]
 		int P1 { get; }
@@ -28,8 +26,7 @@ namespace DiamondProtocol
 	}
 
 	[Protocol]
-	interface P2
-	{
+	interface P2 {
 		[Abstract]
 		[Export ("p1")]
 		int P1 { get; }
@@ -58,7 +55,6 @@ namespace DiamondProtocol
 
 	//[BaseType (typeof (NSObject))]
 	[Protocol]
-	interface C : P1, P2
-	{
+	interface C : P1, P2 {
 	}
 }

@@ -1,0 +1,132 @@
+# Provides all the steps to sign and notarize pks and msi
+parameters:
+
+- name: signatureType
+  type: string
+  default: 'Real'
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: keyringPass
+  type: string
+
+- name: packageName
+  type: string
+
+- name: packagePattern
+  type: string
+
+- name: condition
+  default: succeeded()
+
+- name: signingSetupSteps
+  type: stepList
+  default: []
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- ${{ each step in parameters.signingSetupSteps }}:
+  - ${{ each pair in step }}:
+      ${{ pair.key }}: ${{ pair.value }}
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/package
+  displayName: "Remove artifacts"
+  condition: always()
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download not notarized build
+  inputs:
+    artifact: '${{ parameters.uploadPrefix }}not-signed-package'
+    patterns: ${{ parameters.packagePattern }}
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package
+
+- bash: |
+    set -x
+    set -e
+
+    PACKAGES=$(find $(Build.SourcesDirectory)/package -type f -name "${{ parameters.packagePattern }}" | xargs basename)
+    if [ -z "$PACKAGES" ]; then
+      echo "Packages ${{ parameters.packageName }} not found."
+    else
+      PACKAGES_PATH="$(Build.SourcesDirectory)/package/$PACKAGES"
+      set +x
+      echo "##vso[task.setvariable variable=PACKAGES;]$PACKAGES_PATH"
+      echo "${{ parameters.packageName }} package found at $PACKAGES_PATH"
+      set -x
+    fi
+  displayName: 'Retrieve packages to sign'
+  condition: ${{ parameters.condition }}
+  timeoutInMinutes: 180
+
+- ${{ if and(eq(parameters.skipESRP, false), eq(parameters.isPR, false)) }}:
+  - bash: |
+      set -exo pipefail
+      if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+        export ESRP_TEMP="$WORKING_DIR/esrp"
+        echo "Temp dir is $ESRP_TEMP"
+        mkdir -p "$ESRP_TEMP"
+      fi
+
+      echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8025" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
+      ls -R $(Build.SourcesDirectory)/package
+    env:
+      WORKING_DIR: $(System.DefaultWorkingDirectory)
+      PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+      MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
+    name: notarize
+    displayName: 'Signing Release Build (ESRP)'
+    timeoutInMinutes: 180
+    condition: ${{ parameters.condition }}
+
+- ${{ if eq(parameters.isPR, false) }}:
+  - task: ArchiveFiles@1
+    displayName: 'Archive ESRP temp'
+    inputs:
+      rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+    continueOnError: true
+    condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
+
+  # Upload the esrp temp dir
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: ESRP temp'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+      artifactName: '${{ parameters.uploadPrefix }}ESRP-tmp-${{ parameters.packageName }}'
+    continueOnError: true
+    condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
+
+- ${{ if eq(parameters.isPR, false) }}: 
+  - task: PowerShell@2
+    inputs:
+      filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
+    displayName: 'Notarize & verify packages (ESRP)'
+    condition: ${{ parameters.condition }}
+
+# always upload no matter what, since if we are not signing we need the artifact in the pipeline
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Notarized Classic Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: '${{ parameters.uploadPrefix }}classic-${{ parameters.packageName }}-signed'
+  continueOnError: true

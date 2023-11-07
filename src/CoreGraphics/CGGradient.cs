@@ -25,12 +25,20 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreGraphics {
 
@@ -41,107 +49,125 @@ namespace CoreGraphics {
 		DrawsBeforeStartLocation = (1 << 0),
 		DrawsAfterEndLocation = (1 << 1)
 	}
-	
-	public class CGGradient : INativeObject
-#if !COREBUILD
-		, IDisposable
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
-	{
+	public class CGGradient : NativeObject {
 #if !COREBUILD
-		internal IntPtr handle;
-
-		[Preserve (Conditional=true)]
-		internal CGGradient (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CGGradient (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CGGradientRetain (handle);
-
-			this.handle = handle;
 		}
 
-		~CGGradient ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGGradientRef */ IntPtr CGGradientRetain (/* CGGradientRef */ IntPtr gradient);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGGradientRelease (/* CGGradientRef */ IntPtr gradient);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected internal override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGGradientRelease (handle);
-				handle = IntPtr.Zero;
+			CGGradientRetain (GetCheckedHandle ());
+		}
+
+		protected internal override void Release ()
+		{
+			CGGradientRelease (GetCheckedHandle ());
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static unsafe /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
+			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat* components,
+			/* const CGFloat* __nullable */ nfloat* locations, /* size_t */ nint count);
+
+		static IntPtr Create (CGColorSpace colorspace, nfloat [] components, nfloat []? locations)
+		{
+			// those parameters are __nullable but would return a `nil` instance back,
+			// which is not something we can handle nicely from a .NET constructor
+			if (colorspace is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
+			if (components is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
+
+			unsafe {
+				fixed (nfloat* componentsPtr = components, locationsPtr = locations) {
+					return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), componentsPtr, locationsPtr, components.Length / (colorspace.Components + 1));
+				}
 			}
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColorComponents (
-			/* CGColorSpaceRef __nullable */ IntPtr colorspace, /* const CGFloat* __nullable */ nfloat [] components, 
-			/* const CGFloat* __nullable */ nfloat [] locations, /* size_t */ nint count);
+		public CGGradient (CGColorSpace colorspace, nfloat [] components, nfloat []? locations)
+			: base (Create (colorspace, components, locations), true)
+		{
+		}
 
-		public CGGradient (CGColorSpace colorspace, nfloat [] components, nfloat [] locations)
+		static IntPtr Create (CGColorSpace colorspace, nfloat [] components)
 		{
 			// those parameters are __nullable but would return a `nil` instance back,
 			// which is not something we can handle nicely from a .NET constructor
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
-			if (components == null)
-				throw new ArgumentNullException ("components");
+			if (colorspace is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
+			if (components is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (components));
 
-			handle = CGGradientCreateWithColorComponents (colorspace.handle, components, locations, components.Length / (colorspace.Components+1));
+			unsafe {
+				fixed (nfloat* componentsPtr = components) {
+					return CGGradientCreateWithColorComponents (colorspace.GetCheckedHandle (), componentsPtr, null, components.Length / (colorspace.Components + 1));
+				}
+			}
 		}
 
 		public CGGradient (CGColorSpace colorspace, nfloat [] components)
+			: base (Create (colorspace, components), true)
 		{
-			// those parameters are __nullable but would return a `nil` instance back,
-			// which is not something we can handle nicely from a .NET constructor
-			if (colorspace == null)
-				throw new ArgumentNullException ("colorspace");
-			if (components == null)
-				throw new ArgumentNullException ("components");
-
-			handle = CGGradientCreateWithColorComponents (colorspace.handle, components, null, components.Length / (colorspace.Components+1));
 		}
 
-		[DllImport(Constants.CoreGraphicsLibrary)]
-		extern static /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
-			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors, 
-			/* const CGFloat* __nullable */ nfloat [] locations);
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static unsafe /* CGGradientRef __nullable */ IntPtr CGGradientCreateWithColors (
+			/* CGColorSpaceRef __nullable */ IntPtr space, /* CFArrayRef __nullable */ IntPtr colors,
+			/* const CGFloat* __nullable */ nfloat* locations);
 
-		public CGGradient (CGColorSpace colorspace, CGColor [] colors, nfloat [] locations)
+		static IntPtr Create (CGColorSpace? colorspace, CGColor [] colors, nfloat []? locations)
 		{
 			// colors is __nullable but would return a `nil` instance back,
 			// which is not something we can handle nicely from a .NET constructor
-			if (colors == null)
-				throw new ArgumentNullException ("colors");
-			
-			IntPtr csh = colorspace == null ? IntPtr.Zero : colorspace.handle;
-			using (var array = CFArray.FromNativeObjects (colors))
-				handle = CGGradientCreateWithColors (csh, array.Handle, locations);
+			if (colors is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colors));
+
+			using (var array = CFArray.FromNativeObjects (colors)) {
+				unsafe {
+					fixed (nfloat* locationsPtr = locations) {
+						return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, locationsPtr);
+					}
+				}
+			}
 		}
 
-		public CGGradient (CGColorSpace colorspace, CGColor [] colors)
+		public CGGradient (CGColorSpace colorspace, CGColor [] colors, nfloat []? locations)
+			: base (Create (colorspace, colors, locations), true)
 		{
-			if (colors == null)
-				throw new ArgumentNullException ("colors");
-			
-			IntPtr csh = colorspace == null ? IntPtr.Zero : colorspace.handle;
-			using (var array = CFArray.FromNativeObjects (colors))
-				handle = CGGradientCreateWithColors (csh, array.Handle, null);
+		}
+
+		static IntPtr Create (CGColorSpace? colorspace, CGColor [] colors)
+		{
+			if (colors is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colors));
+
+			using (var array = CFArray.FromNativeObjects (colors)) {
+				unsafe {
+					return CGGradientCreateWithColors (colorspace.GetHandle (), array.Handle, null);
+				}
+			}
+		}
+
+		public CGGradient (CGColorSpace? colorspace, CGColor [] colors)
+			: base (Create (colorspace, colors), true)
+		{
 		}
 #endif // !COREBUILD
 	}

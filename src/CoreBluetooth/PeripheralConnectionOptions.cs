@@ -31,11 +31,17 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
-	[Watch (4,0)]
-	public class PeripheralConnectionOptions : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class PeripheralConnectionOptions : DictionaryContainer {
 #if !COREBUILD
 		public PeripheralConnectionOptions ()
 			: base (new NSMutableDictionary ())
@@ -48,75 +54,49 @@ namespace CoreBluetooth {
 		}
 
 #if !MONOMAC
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'NotifyOnConnection' property instead.")]
-		public bool NotifyOnConnectionKey {
-			set {
-				NotifyOnConnection = value;
-			}
-		}
-
-		[Obsolete ("Use 'NotifyOnNotification' property instead.")]
-		public bool NotifyOnNotificationKey {
-			set {
-				NotifyOnNotification = value;
-			}
-		}
-#endif
-	
 		public bool? NotifyOnConnection {
 			get {
-				return GetBoolValue (CBCentralManager.OptionNotifyOnConnectionKey);
+				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
 			}
-			
+
 			set {
-				if (!value.HasValue){
-					RemoveValue (CBCentralManager.OptionNotifyOnConnectionKey);
+				if (!value.HasValue) {
+					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey);
 					return;
 				}
-				SetNumberValue (CBCentralManager.OptionNotifyOnConnectionKey, value.Value ? 1 : 0);
+				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnConnectionKey, value.Value ? 1 : 0);
 			}
 		}
 
 		public bool? NotifyOnNotification {
 			get {
-				return GetBoolValue (CBCentralManager.OptionNotifyOnNotificationKey);
-				
+				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
+
 			}
-			
+
 			set {
-				if (!value.HasValue){
-					RemoveValue (CBCentralManager.OptionNotifyOnNotificationKey);
+				if (!value.HasValue) {
+					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey);
 					return;
 				}
-				
-				SetNumberValue (CBCentralManager.OptionNotifyOnNotificationKey, value.Value ? 1 : 0);
-			}
-		}
-#endif
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'NotifyOnDisconnection' property instead.")]
-		public bool NotifyOnDisconnectionKey {
-			set {
-				NotifyOnDisconnection = value;
-			}			
+				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnNotificationKey, value.Value ? 1 : 0);
+			}
 		}
 #endif
 
 		public bool? NotifyOnDisconnection {
 			get {
-				return GetBoolValue (CBCentralManager.OptionNotifyOnDisconnectionKey);
+				return GetBoolValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);
 			}
 			set {
-				if (!value.HasValue){
-					RemoveValue (CBCentralManager.OptionNotifyOnDisconnectionKey);
+				if (!value.HasValue) {
+					RemoveValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey);
 					return;
 				}
-				SetNumberValue (CBCentralManager.OptionNotifyOnDisconnectionKey, value.Value ? 1 : 0);
-			}			
+				SetNumberValue (CBConnectPeripheralOptionsKeys.NotifyOnDisconnectionKey, value.Value ? 1 : 0);
+			}
 		}
 #endif
 	}
 }
-

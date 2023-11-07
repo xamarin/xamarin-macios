@@ -11,7 +11,7 @@ namespace GH6863_property {
 
 		[BindAs (typeof (string))]
 		[Export ("stringProp")]
-		NSString[] StringProp { get; }
-		
+		NSString [] StringProp { get; }
+
 	}
 }

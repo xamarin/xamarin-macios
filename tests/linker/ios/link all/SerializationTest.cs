@@ -9,17 +9,11 @@
 
 using System;
 using System.Runtime.Serialization;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
-namespace LinkAll
-{
-	static class Helper
-	{
+namespace LinkAll {
+	static class Helper {
 		public static Type GetType (string name)
 		{
 			return Type.GetType (name);
@@ -36,7 +30,7 @@ namespace LinkAll.Serialization {
 
 	[Serializable]
 	public class Unused {
-		
+
 		[OnDeserializing]
 		void Deserializing ()
 		{
@@ -57,7 +51,7 @@ namespace LinkAll.Serialization {
 		{
 		}
 	}
-	
+
 	[Serializable]
 	public class Used {
 
@@ -70,7 +64,7 @@ namespace LinkAll.Serialization {
 		void Deserialized ()
 		{
 		}
-	
+
 		[OnSerializing]
 		void Serializing ()
 		{
@@ -81,12 +75,12 @@ namespace LinkAll.Serialization {
 		{
 		}
 	}
-	
+
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class SerializationAttributeTests {
-	
+
 		[Test]
 		public void UnusedType ()
 		{
@@ -106,7 +100,7 @@ namespace LinkAll.Serialization {
 			// it's not removed by the linker
 			Assert.NotNull (t, "type");
 			// and since it's not the 4 decorated methods are also kept (even if uncalled)
-			Assert.That (t.GetMethods ().Length, Is.EqualTo (4), "4");	  
+			Assert.That (t.GetMethods ().Length, Is.EqualTo (4), "4");
 		}
 	}
 }

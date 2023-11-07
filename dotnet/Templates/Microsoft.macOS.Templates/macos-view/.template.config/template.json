@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS" ],
+  "name": "macOS View",
+  "description": "A macOS View with UI implemented in Xcode's Interface Builder (XIB file)",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Microsoft.macOS.View",
+  "shortName": "macos-view",
+  "sourceName": "View1",
+  "primaryOutputs": [
+    { "path": "View1.cs" },
+    { "path": "View1.designer.cs" },
+    { "path": "View1.xib" }
+  ],
+  "defaultName": "View1",
+  "symbols": {
+    "namespace": {
+      "description": "namespace for the generated code",
+      "replaces": "macOSApp1",
+      "type": "parameter"
+    }
+  }
+}

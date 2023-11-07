@@ -5,42 +5,29 @@
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using MapKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
 namespace MonoTouchFixtures.MapKit {
-	
+
+#if !XAMCORE_3_0
 	class PolylineViewPoker : MKPolylineView {
-		
+
 		static FieldInfo bkPolyline;
-		
+
 		static PolylineViewPoker ()
 		{
 			var t = typeof (MKPolylineView);
 			bkPolyline = t.GetField ("__mt_Polyline_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public PolylineViewPoker ()
 		{
 		}
@@ -48,32 +35,35 @@ namespace MonoTouchFixtures.MapKit {
 		public PolylineViewPoker (MKPolyline polyline) : base (polyline)
 		{
 		}
-		
+
 		public MKPolyline PolylineBackingField {
 			get {
 				return (MKPolyline) bkPolyline.GetValue (this);
 			}
 		}
 	}
+#endif // !XAMCORE_3_0
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PolylineViewTest {
-		
+
 		[Test]
 		public void InitWithFrame ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (MKPolylineView pl = new MKPolylineView (frame)) {
 				Assert.That (pl.Frame, Is.EqualTo (frame), "Frame");
 			}
 		}
+
+#if !XAMCORE_3_0
 		[Test]
 		public void Defaults_BackingFields ()
 		{
 			if (PolylineViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var pv = new PolylineViewPoker ()) {
 				Assert.Null (pv.PolylineBackingField, "1a");
 				Assert.Null (pv.Polyline, "2a");
@@ -85,13 +75,14 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (PolylineViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
+
 			using (var p = new MKPolyline ())
 			using (var pv = new PolylineViewPoker (p)) {
 				Assert.AreSame (p, pv.PolylineBackingField, "1a");
 				Assert.AreSame (p, pv.Polyline, "2a");
 			}
 		}
+#endif // !XAMCORE_3_0
 	}
 }
 

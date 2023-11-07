@@ -14,7 +14,11 @@
 //#define LOG_HTTP(...) do { NSLog (@ __VA_ARGS__); } while (0);
 #define LOG_HTTP(...)
 
+#include <TargetConditionals.h>
+
+#if !TARGET_OS_OSX
 #include <UIKit/UIKit.h>
+#endif
 
 #include <zlib.h>
 
@@ -45,6 +49,7 @@
 // permanent connection variables
 static long monodevelop_port = -1;
 static int sdb_fd = -1;
+static long sdb_timeout_time = -1;
 static int heapshot_fd = -1; // this is the socket to write 'heapshot' to to requests heapshots from the profiler
 static long heapshot_port = -1;
 static char *profiler_description = NULL;
@@ -77,7 +82,6 @@ extern "C" {
 void monotouch_connect_usb ();
 void monotouch_connect_wifi (NSMutableArray *hosts);
 void xamarin_connect_http (NSMutableArray *hosts);
-int monotouch_debug_listen (int debug_port, int output_port);
 int monotouch_debug_connect (NSMutableArray *hosts, int debug_port, int output_port);
 void monotouch_configure_debugging ();
 void monotouch_load_profiler ();
@@ -88,6 +92,8 @@ void monotouch_dump_objc_api (Class klass);
 
 static struct timeval wait_tv;
 static struct timespec wait_ts;
+
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 
 static NSURLSessionConfiguration *http_session_config = NULL;
 static volatile int http_connect_counter = 0;
@@ -374,6 +380,8 @@ xamarin_http_send (void *c)
 }
 @end /* XamarinHttpConnection */
 
+#endif // TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+
 void
 monotouch_set_connection_mode (const char *mode)
 {
@@ -381,9 +389,9 @@ monotouch_set_connection_mode (const char *mode)
 }
 
 void
-monotouch_set_monodevelop_port (long port)
+monotouch_set_monodevelop_port (int port)
 {
-	monodevelop_port = port;
+	monodevelop_port = (long) port;
 }
 
 void
@@ -443,6 +451,7 @@ monotouch_start_debugging ()
 			LOG (PRODUCT ": Not connecting to the IDE, debug has been disabled\n");
 		}
 	
+#if !defined (CORECLR_RUNTIME)
 		char *trace = getenv ("MONO_TRACE");
 		if (trace && *trace) {
 			if (!strncmp (trace, "--trace=", 8))
@@ -452,6 +461,7 @@ monotouch_start_debugging ()
 			mono_jit_set_trace_options (trace);
 			MONO_EXIT_GC_UNSAFE;
 		}
+#endif // !defined (CORECLR_RUNTIME)
 	}
 }
 
@@ -511,9 +521,8 @@ void monotouch_configure_debugging ()
 	NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile: root_plist];
 	NSArray *preferences = [settings objectForKey:@"PreferenceSpecifiers"];
 	NSMutableArray *hosts = [NSMutableArray array];
-	bool debug_enabled;
+	bool debug_enabled = true;
 	NSString *monodevelop_host;
-	NSString *monotouch_debug_enabled;
 
 	if (!strcmp (connection_mode, "default")) {
 		char *evar = getenv ("__XAMARIN_DEBUG_MODE__");
@@ -529,13 +538,16 @@ void monotouch_configure_debugging ()
 		return;
 	}
  
-	// If debugging is enabled
+ #if !(TARGET_OS_MACCATALYST || TARGET_OS_OSX)
+	NSString *monotouch_debug_enabled;
+	// If debugging is enabled (only check for mobile builds - for macOS / Mac Catalyst debugging is always enabled in debug versions of libxamarin)
 	monotouch_debug_enabled = get_preference (preferences, NULL, @"__monotouch_debug_enabled"); 
 	if (monotouch_debug_enabled != nil) {
 		debug_enabled = [monotouch_debug_enabled isEqualToString:@"1"];
 	} else {
 		debug_enabled = [defaults boolForKey:@"__monotouch_debug_enabled"];
 	}
+#endif // !(TARGET_OS_MACCATALYST || TARGET_OS_OSX)
 
 #if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 	if (debug_enabled) {
@@ -580,6 +592,15 @@ void monotouch_configure_debugging ()
 			}
 		}
 		unsetenv ("__XAMARIN_DEBUG_HOSTS__");
+	}
+
+	evar = getenv ("__XAMARIN_DEBUG_CONNECT_TIMEOUT__");
+	if (evar && *evar) {
+		if (sdb_timeout_time == -1) {
+			sdb_timeout_time = strtol (evar, NULL, 10);
+			LOG (PRODUCT ": Found connect timeout %i in environment variables\n", sdb_timeout_time);
+		}
+		unsetenv ("__XAMARIN_DEBUG_CONNECT_TIMEOUT__");
 	}
 
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
@@ -637,7 +658,8 @@ void monotouch_configure_debugging ()
 #endif
 
 	// Finally, fall back to loading values from MonoTouchDebugConfiguration.txt
-	FILE *debug_conf = fopen ("MonoTouchDebugConfiguration.txt", "r");
+	NSString *conf_path = [bundle_path stringByAppendingPathComponent:@"MonoTouchDebugConfiguration.txt"];
+	FILE *debug_conf = fopen ([conf_path UTF8String], "r");
 	if (debug_conf != NULL) { 
 		bool add_hosts = [hosts count] == 0;
 		char line [128];
@@ -669,6 +691,8 @@ void monotouch_configure_debugging ()
 #endif
 				} else if (!strncmp ("Port: ", line, 6) && monodevelop_port == -1) {
 					monodevelop_port = strtol (line + 6, NULL, 10);
+				} else  if (!strncmp ("Connect Timeout: ", line, 17) && sdb_timeout_time == -1) {
+					sdb_timeout_time = strtol (line + 17, NULL, 10);
 				}
 			}
 		}
@@ -691,13 +715,15 @@ void monotouch_configure_debugging ()
 		if (monodevelop_port <= 0) {
 			LOG (PRODUCT ": Invalid IDE Port: %i\n", monodevelop_port);
 		} else {
-			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, debugging_mode == DebuggingModeHttp ? "HTTP" : (debugging_mode == DebuggingModeUsb ? "USB" : "WiFi"));
+			LOG (PRODUCT ": IDE Port: %i Transport: %s Connect Timeout: %i\n", monodevelop_port, debugging_mode == DebuggingModeHttp ? "HTTP" : (debugging_mode == DebuggingModeUsb ? "USB" : "WiFi"), sdb_timeout_time);
 			if (debugging_mode == DebuggingModeUsb) {
 				monotouch_connect_usb ();
 			} else if (debugging_mode == DebuggingModeWifi) {
 				monotouch_connect_wifi (hosts);
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 			} else if (debugging_mode == DebuggingModeHttp) {
 				xamarin_connect_http (hosts);
+#endif
 			}
 		}
 	}
@@ -710,6 +736,7 @@ void monotouch_configure_debugging ()
 	pthread_mutex_unlock (&mutex);
 }
 
+#if !defined (CORECLR_RUNTIME)
 static void sdb_connect (const char *address)
 {
 	gboolean shaked;
@@ -733,6 +760,7 @@ static void sdb_close2 (void)
 {
 	shutdown (sdb_fd, SHUT_RDWR);
 }
+#endif // !defined (CORECLR_RUNTIME)
 
 static gboolean send_uninterrupted (int fd, const void *buf, size_t len)
 {
@@ -760,6 +788,7 @@ static ssize_t recv_uninterrupted (int fd, void *buf, size_t len)
 	return total;
 }
 
+#if !defined (CORECLR_RUNTIME)
 static gboolean sdb_send (void *buf, size_t len)
 {
 	gboolean rv;
@@ -790,6 +819,9 @@ static ssize_t sdb_recv (void *buf, size_t len)
 
 	return rv;
 }
+#endif // !defined (CORECLR_RUNTIME)
+
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 
 static XamarinHttpConnection *connected_connection = NULL;
 static NSString *connected_ip = NULL;
@@ -873,6 +905,8 @@ xamarin_connect_http (NSMutableArray *ips)
 
 	return;
 }
+
+#endif // TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
 
 void
 monotouch_connect_wifi (NSMutableArray *ips)
@@ -1219,6 +1253,7 @@ monotouch_load_debugger ()
 	
 	// main thread only 
 	if (sdb_fd != -1) {
+#if !defined (CORECLR_RUNTIME)
 		DebuggerTransport transport;
 		transport.name = "custom_transport";
 		transport.connect = sdb_connect;
@@ -1228,10 +1263,20 @@ monotouch_load_debugger ()
 		transport.recv = sdb_recv;
 
 		mono_debugger_agent_register_transport (&transport);
-	
-		mono_debugger_agent_parse_options ("transport=custom_transport,address=dummy,embedding=1");
+
+		char *options;
+		if (sdb_timeout_time != -1) {
+			options = xamarin_strdup_printf ("transport=custom_transport,address=dummy,embedding=1,timeout=%d", sdb_timeout_time);
+		} else {
+			options = xamarin_strdup_printf ("transport=custom_transport,address=dummy,embedding=1");
+		}
+		mono_debugger_agent_parse_options (options);
+		// Can't free the 'options' variable, because mono_debugger_agent_parse_option stores the pointer instead of creating a copy :/
 
 		LOG (PRODUCT ": Debugger loaded with custom transport (fd: %i)\n", sdb_fd);
+#else
+		LOG (PRODUCT ": Debugger not loaded (debugger loading not implemented for CoreCLR).\n");
+#endif
 	} else {
 		LOG (PRODUCT ": Debugger not loaded (disabled).\n");
 	}
@@ -1246,9 +1291,13 @@ monotouch_load_profiler ()
 	// TODO: make this generic enough for other profilers to work too
 	// Main thread only
 	if (profiler_description != NULL) {
+#if !defined (CORECLR_RUNTIME)
 		mono_profiler_load (profiler_description);
 
 		LOG (PRODUCT ": Profiler loaded: %s\n", profiler_description);
+#else
+		LOG (PRODUCT ": Profiler not loaded (profiler loading not implemented for CoreCLR): %s\n", profiler_description);
+#endif
 		free (profiler_description);
 		profiler_description = NULL;
 	} else {
@@ -1381,107 +1430,6 @@ monotouch_process_connection (int fd)
 			LOG (PRODUCT ": Unknown command received from the IDE: '%s'\n", command);
 		}
 	}
-}
-
-int monotouch_debug_listen (int debug_port, int output_port)
-{
-	struct sockaddr_in listen_addr;
-	int listen_socket;
-	int output_socket;
-	socklen_t len;
-	int rv;
-	long flags;
-	int flag;
-	fd_set rset;
-	struct timeval tv;
-	
-	// Create the listen socket and set it up
-	listen_socket = socket (PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (listen_socket == -1) {
-		PRINT (PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
-		return 1;
-	} else {
-		flag = 1;
-		if (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof (flag)) == -1) {
-			PRINT (PRODUCT ": Could not set SO_REUSEADDR on the listening socket (%s)", strerror (errno));
-			// not a fatal failure
-		}
-
-		memset (&listen_addr, 0, sizeof (listen_addr));
-		listen_addr.sin_family = AF_INET;
-		listen_addr.sin_port = htons (output_port);
-		listen_addr.sin_addr.s_addr = INADDR_ANY;
-		rv = bind (listen_socket, (struct sockaddr *) &listen_addr, sizeof (listen_addr));
-		if (rv == -1) {
-			PRINT (PRODUCT ": Could not bind to address: %s", strerror (errno));
-			close (listen_socket);
-			return 2;
-		} else {
-			// Make the socket non-blocking
-			flags = fcntl (listen_socket, F_GETFL, NULL);
-			flags |= O_NONBLOCK;
-			fcntl (listen_socket, F_SETFL, flags);
-
-			rv = listen (listen_socket, 1);
-			if (rv == -1) {
-				PRINT (PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
-				close (listen_socket);
-				return 2;
-			} else {
-				// Yay!
-			}
-		}
-	}
-
-	tv.tv_sec = 2;
-	tv.tv_usec = 0;
-	
-	FD_ZERO (&rset);
-	FD_SET (listen_socket, &rset);
-	
-	do {
-		if ((rv = select (listen_socket + 1, &rset, NULL, NULL, &tv)) == 0) {
-			// timeout hit, no connections available.
-			PRINT (PRODUCT ": Listened for connections from the IDE for 2 seconds, nobody connected.");
-			close (listen_socket);
-			return 3;
-		}
-	} while (rv == -1 && errno == EINTR);
-	
-	if (rv == -1) {
-		PRINT (PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
-		close (listen_socket);
-		return 2;
-	}
-
-	len = sizeof (struct sockaddr_in);
-	output_socket = accept (listen_socket, (struct sockaddr *) &listen_addr, &len);
-	if (output_socket == -1) {
-		PRINT (PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
-		close (listen_socket);
-		return 3;
-	}
-
-	flag = 1;
-	if (setsockopt (output_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof (flag)) < 0) {
-		PRINT (PRODUCT ": Could not set TCP_NODELAY on socket (%s)", strerror (errno));
-		// not a fatal failure
-	}
-		
-	LOG (PRODUCT ": Successfully received USB connection from the IDE on port %i.\n", output_port);
-
-	// make the socket block on reads/writes
-	flags = fcntl (output_socket, F_GETFL, NULL);
-	fcntl (output_socket, F_SETFL, flags & ~O_NONBLOCK);
-
-	dup2 (output_socket, 1);
-	dup2 (output_socket, 2);
-
-	close (listen_socket); // no need to listen anymore
- 
-	debug_host = strdup ("127.0.0.1");
-
-	return 0;
 }
 
 // SUCCESS = 0

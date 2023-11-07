@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="../Common.props" />
+  <PropertyGroup>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{CB22E620-41D9-4625-805E-0CE15D3A7286}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MyiOSFrameworkBinding</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>MyiOSFrameworkBinding</AssemblyName>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XTest.framework">
+      <Kind>Framework</Kind>
+      <Link>XTest.framework</Link>
+    </NativeReference>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XStaticObjectTest.framework">
+      <Kind>Framework</Kind>
+      <Link>XStaticObjectTest.framework</Link>
+      <LinkerFlags>-lz</LinkerFlags>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+    <NativeReference Include="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XStaticArTest.framework">
+      <Kind>Framework</Kind>
+      <Link>XStaticArTest.framework</Link>
+      <Frameworks>CoreLocation Foundation ModelIO</Frameworks>
+      <NoDSymUtil>true</NoDSymUtil>
+      <NoSymbolStrip>true</NoSymbolStrip>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(RepositoryPath)\tests\test-libraries\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="$(RepositoryPath)\tests\test-libraries\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="$(RepositoryPath)\tests\test-libraries\libframework.m" Outputs="$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XTest.framework;$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XSharedObjectTest.framework;$(RepositoryPath)\tests\test-libraries\.libs\ios-fat\XSharedArTest.framework">
+    <Exec Command="make -j8 -C $(RepositoryPath)\tests\test-libraries" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="$(RepositoryPath)\tests\bindings-framework-test\ApiDefinition.cs">
+      <Link>ApiDefinition.cs</Link>
+    </ObjcBindingApiDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="$(RepositoryPath)\tests\bindings-framework-test\StructsAndEnums.cs">
+      <Link>StructsAndEnums.cs</Link>
+    </ObjcBindingCoreSource>
+  </ItemGroup>
+</Project>

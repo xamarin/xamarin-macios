@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- Version information -->
+	<Import Project="Microsoft.$(_PlatformName).Sdk.Versions.props" />
+
+	<!-- This contains the OS versions we support for target platform -->
+	<Import Project="Microsoft.$(_PlatformName).Sdk.SupportedTargetPlatforms.props" />
+
+	<Import Project="Xamarin.Shared.Sdk.TargetFrameworkInference.props" />
+	
+	<PropertyGroup>
+		<!-- e.g: C:\Users\user1\app1\app1\obj\ -->
+		<_MobilePropsDir>$([System.IO.Path]::Combine($(MSBuildProjectDirectory), $(BaseIntermediateOutputPath)))</_MobilePropsDir>
+		<!-- e.g: C:\Users\user1\app1\app1\obj\app1.mobile.props -->
+		<_MobilePropsPath>$(_MobilePropsDir)$(MSBuildProjectName).mobile.props</_MobilePropsPath>
+	</PropertyGroup>
+
+	<!-- Imports the .mobile.props file if exists and the build is from VS -->
+	<Import Project="$(_MobilePropsPath)" Condition="Exists('$(_MobilePropsPath)') And '$(BuildingInsideVisualStudio)' == 'true'" />
+	
+	<PropertyGroup>
+		<!-- Set to true when using the Microsoft.<platform>.Sdk NuGet. This is used by pre-existing/shared targets to tweak behavior depending on build system -->
+		<UsingAppleNETSdk>true</UsingAppleNETSdk>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet (/usr/local/share/dotnet/sdk/<version>/Sdks/Microsoft.[iOS/tvOS/watchOS/macOS].Sdk) on the platform the build is running from (Mac or Win) -->
+		<_XamarinSdkRootDirectory>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)', '..'))\</_XamarinSdkRootDirectory>
+		<!-- This is the location of the Microsoft.<platform>.Sdk NuGet on macOS, this value will be overriden from Windows  -->
+		<_XamarinSdkRootDirectoryOnMac>$(_XamarinSdkRootDirectory)</_XamarinSdkRootDirectoryOnMac>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
+		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
+
+		<!--
+			PublishAot should only take effect when doing 'dotnet publish', not when doing 'dotnet build'. We distinguish these cases using the '_IsPublishing' property,
+			but it's rather annoying to always have to check both PublishAot and _IsPublishing to see if we're using NativeAOT, so introduce a third property that's
+			only set to true if both PublishAot=true and _IsPublishing=true
+		-->
+		<_UseNativeAot Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">true</_UseNativeAot>
+
+		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
+		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_UseNativeAot)' == 'true'">false</UseMonoRuntime>
+		<UseMonoRuntime Condition=" '$(UseMonoRuntime)' == ''">true</UseMonoRuntime>
+
+		<!--
+			With NativeAOT we want to suppress trim warnings coming from ILLink and enable them only for ILC.
+			For this reason, in case of NativeAOT, we set SuppressTrimAnalysisWarnings to true by default and store the overwriten default in
+			_OriginalSuppressTrimAnalysisWarnings property, which is later used to properly configure warning suppression for ILC.
+		-->
+		<_OriginalSuppressTrimAnalysisWarnings>$(SuppressTrimAnalysisWarnings)</_OriginalSuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(_UseNativeAot)' == 'true'">true</SuppressTrimAnalysisWarnings>
+		<SuppressTrimAnalysisWarnings Condition="'$(SuppressTrimAnalysisWarnings)' == ''">true</SuppressTrimAnalysisWarnings>
+
+		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
+
+		<!-- _XamarinSdkRoot is used by the existing MSBuild targets files -->
+		<_XamarinSdkRoot Condition="'$(_XamarinSdkRoot)' == ''">$(_XamarinSdkRootDirectory)</_XamarinSdkRoot>
+		<!-- _XamarinSdkRootOnMac this should be passed to tasks that need to access the Xamarin Sdk dir on the Mac, this value will be overriden from Windows -->
+		<_XamarinSdkRootOnMac>$(_XamarinSdkRoot)</_XamarinSdkRootOnMac>
+
+		<!-- We don't need any dependency files -->
+		<GenerateDependencyFile Condition="'$(GenerateDependencyFile)' == ''">false</GenerateDependencyFile>
+
+		<!-- MSBuild will discard the 'PublishFolderType' metadata on items unless we set these properties -->
+		<MSBuildDisableGetCopyToOutputDirectoryItemsOptimization>true</MSBuildDisableGetCopyToOutputDirectoryItemsOptimization>
+		<MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>true</MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>
+
+		<!-- Do we need a RuntimeIdentifier? For apps and app extensions we do -->
+		<_RuntimeIdentifierIsRequired Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_RuntimeIdentifierIsRequired>
+
+		<!-- The logic to compute the default value for GenerateSatelliteAssembliesForCore is wrong when building inside Visual Studio (Windows), so make sure it defaults to the correct value -->
+		<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/16193 -->
+		<!-- Ref: https://github.com/dotnet/sdk/issues/28419 -->
+		<GenerateSatelliteAssembliesForCore Condition="'$(GenerateSatelliteAssembliesForCore)' == ''">true</GenerateSatelliteAssembliesForCore>
+
+		<!-- This will ensure any trimmer components are restored by the framework reference logic. As such it must happen before Microsoft.NET.Publish.targets is included.
+			Ref:
+			* https://github.com/dotnet/sdk/pull/29441
+			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L20-L21
+			* https://github.com/dotnet/sdk/blob/c5a58bc6c3eb2b236b314e6d17a89a537459890c/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Sdk.FrameworkReferenceResolution.targets#L102
+		-->
+		<_IsTrimmingEnabled>true</_IsTrimmingEnabled>
+		<!-- The GRCF property is contingent upon the HasRuntimeOutput property, which is only defined for executable projects. So, explicitly define GRCF for extension projects to avoid warnings at build time. -->
+		<GenerateRuntimeConfigurationFiles Condition="'$(IsAppExtension)' == 'true'">true</GenerateRuntimeConfigurationFiles>
+
+		<!-- Setting _RequiresILLinkPack to true so that the ILLink pack is always restored. -->
+		<_RequiresILLinkPack Condition="'$(_RequiresILLinkPack)' == ''">true</_RequiresILLinkPack>
+
+		<!-- Explicitly export symbols using clang command-line option "-exported_symbols_list export_list" -->
+		<_ExportSymbolsExplicitly Condition="'$(_ExportSymbolsExplicitly)' == ''">true</_ExportSymbolsExplicitly>
+
+		<!--
+			Some runtime libraries feature switches defaults that need to be set early
+			Available feature switches: https://github.com/dotnet/runtime/blob/master/docs/workflow/trimming/feature-switches.md
+		-->
+		<!-- AutoreleasePoolSupport needs to be set earlier than other switches, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set here, instead of in Xamarin.Shared.Sdk.targets -->
+		<AutoreleasePoolSupport Condition="'$(AutoreleasePoolSupport)' == ''">true</AutoreleasePoolSupport>
+
+		<!-- Enable the reflection-based json serializer by default. Ref: https://github.com/xamarin/xamarin-macios/issues/18057 -->
+		<JsonSerializerIsReflectionEnabledByDefault Condition="'$(JsonSerializerIsReflectionEnabledByDefault)' == ''">true</JsonSerializerIsReflectionEnabledByDefault>
+
+		<!-- Tell .NET to skip sanity checks that trigger too eagerly for builds with multiple RuntimeIdentifiers -->
+		<AllowPublishAotWithoutRuntimeIdentifier Condition="'$(AllowPublishAotWithoutRuntimeIdentifier)' == '' And '$(_UseNativeAot)' == 'true'">true</AllowPublishAotWithoutRuntimeIdentifier>
+		<AllowSelfContainedWithoutRuntimeIdentifier Condition="'$(AllowSelfContainedWithoutRuntimeIdentifier)' == ''">true</AllowSelfContainedWithoutRuntimeIdentifier>
+	</PropertyGroup>
+
+	<!-- Set the default RuntimeIdentifier if not already specified. -->
+	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
+		<!-- The _<platform>RuntimeIdentifier values are set from the IDE -->
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">$(_iOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">$(_tvOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">$(_macOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst'">$(_MacCatalystRuntimeIdentifier)</RuntimeIdentifier>
+
+		<_XamarinUsingDefaultRuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">true</_XamarinUsingDefaultRuntimeIdentifier>
+		
+		<!-- Figure out which architecture we're running on -->
+		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'arm64'">true</_IsArm64Machine>
+		<_IsArm64Machine Condition="'$(_IsArm64Machine)' == ''">false</_IsArm64Machine>
+
+		<!-- for mobile non-publish builds we default to the simulator (and the host mac's architecture) -->
+		<!-- for mobile publish builds we default to the device architecture -->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' == 'true'">ios-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">iossimulator-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">iossimulator-x64</RuntimeIdentifier>
+
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' == 'true'">tvos-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' == 'true'">tvossimulator-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS' And '$(_IsPublishing)' != 'true' And '$(_IsArm64Machine)' != 'true'">tvossimulator-x64</RuntimeIdentifier>
+
+		<!-- For debug desktop builds we default to the host architecture -->
+		<!-- For release desktop builds we default to universal apps in .NET 7+ -->
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS' And '$(_IsArm64Machine)' == 'true'">osx-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS' And '$(_IsArm64Machine)' != 'true'">osx-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst' And '$(_IsArm64Machine)' == 'true'">maccatalyst-arm64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst' And '$(_IsArm64Machine)' != 'true'">maccatalyst-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64;osx-arm64</RuntimeIdentifiers>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
+
+	</PropertyGroup>
+
+	<!-- We're never using any app hosts -->
+	<PropertyGroup>
+		<_RuntimeIdentifierUsesAppHost>false</_RuntimeIdentifierUsesAppHost>
+		<UseAppHost>false</UseAppHost>
+	</PropertyGroup>
+
+	<!-- If a runtime identifier is required, and we have a runtime identifier, then we must be self contained.
+	     This of course begs the question: when could we have a runtime identifier and such a thing would not be required?
+	     The answer is: library projects may end up with a RuntimeIdentifier when building a referencing executable project
+	     from the command line, and that command line specifies a RuntimeIdentifier -->
+	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' != ''">
+		<SelfContained>true</SelfContained>
+	</PropertyGroup>
+
+	<!--
+
+		SelfContained is automatically enabled if PublishAot is true, and that
+		doesn't work properly (restore fails because RuntimeIdentifier is not
+		set) when doing the outer build of a universal apps (when
+		RuntimeIdentifier=''), so manually disable SelfContained in that case.
+
+		This might not be necessary after: https://github.com/dotnet/sdk/pull/33229
+
+	-->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true' And '$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == '' And '$(SelfContained)' == ''">
+		<SelfContained>false</SelfContained>
+	</PropertyGroup>
+
+	<!--
+		Enable LLVM by default for mobile release builds.
+
+		At this point we don't necessarily know yet whether we're building for device or simulator,
+		but the MtouchUseLlvm value is ignored when using the simulator, so it doesn't matter
+		if we set it in all cases.
+	-->
+	<PropertyGroup Condition="'$(MtouchUseLlvm)' == '' And '$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+		<MtouchUseLlvm>true</MtouchUseLlvm>
+	</PropertyGroup>
+
+	<!-- Various options when using NativeAOT -->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true'">
+		<!-- This turns off some NativeAOT logic we don't want nor need -->
+		<NativeCompilationDuringPublish>false</NativeCompilationDuringPublish>
+
+		<!-- We must find the BCL libraries using the runtime pack instead of using the built-in NativeAOT BCL -->
+		<PublishAotUsingRuntimePack>true</PublishAotUsingRuntimePack>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
+		<!-- Disable our own assembly IL stripping logic, because ILC does that already -->
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
+
+		<!-- We're using our own native main function when using NativeAOT -->
+		<CustomNativeMain>true</CustomNativeMain>
+	</PropertyGroup>
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <RootNamespace>create_dotnet_linker_launch_json</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,2 @@
+!extra-enum-value! Managed value 4 for UNNotificationCategoryOptions.HiddenPreviewsShowTitle is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 8 for UNNotificationCategoryOptions.HiddenPreviewsShowSubtitle is available for the current platform while the value in the native header is not

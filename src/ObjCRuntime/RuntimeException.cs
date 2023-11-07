@@ -3,37 +3,36 @@
 using System;
 using System.Collections.Generic;
 
-#if XAMCORE_2_0
-namespace ObjCRuntime {
-#endif
+#nullable enable
 
+namespace ObjCRuntime {
 	public class RuntimeException : Exception {
-		public RuntimeException (string message, params object[] args)
+		public RuntimeException (string message, params object? [] args)
 			: base (string.Format (message, args))
 		{
 		}
 
-		public RuntimeException (int code, string message, params object[] args) : 
-			this (code, false, message, args)
+		public RuntimeException (int code, string message, params object? [] args) :
+			this (code, false, null, message, args)
 		{
 		}
-		
-		public RuntimeException (int code, bool error, string message, params object[] args) : 
+
+		public RuntimeException (int code, bool error, string message, params object? [] args) :
 			this (code, error, null, message, args)
 		{
 		}
-		
-		public RuntimeException (int code, bool error, Exception innerException, string message, params object[] args) : 
+
+		public RuntimeException (int code, bool error, Exception? innerException, string message, params object? [] args) :
 			base (String.Format (message, args), innerException)
 		{
 			Code = code;
 			Error = error;
 		}
-		
+
 		public int Code { get; private set; }
-		
+
 		public bool Error { get; private set; }
-		
+
 		// http://blogs.msdn.com/b/msbuild/archive/2006/11/03/msbuild-visual-studio-aware-error-messages-and-message-formats.aspx
 		/*
 		public override string ToString ()
@@ -43,6 +42,4 @@ namespace ObjCRuntime {
 		}
 		*/
 	}
-#if XAMCORE_2_0
 }
-#endif

@@ -6,8 +6,7 @@ using MonoMac.AppKit;
 
 using Test;
 
-static class App
-{
+static class App {
 	[DllImport ("dl")]
 	static extern IntPtr dlopen (string path, int mode);
 

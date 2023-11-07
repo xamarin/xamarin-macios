@@ -1,10 +1,13 @@
-﻿// 
+// 
 // VTPropertyOptions.cs: Strongly Typed dictionary for VTPropertyKeys 
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -18,11 +21,11 @@ using CoreVideo;
 namespace VideoToolbox {
 
 	public partial class VTPropertyOptions {
-		public VTPropertyType Type { 
+		public VTPropertyType Type {
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.Type);
 
-				if (key == null)
+				if (key is null)
 					return VTPropertyType.Unset;
 				if (key == VTPropertyTypeKeys.Enumeration)
 					return VTPropertyType.Enumeration;
@@ -50,11 +53,11 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTReadWriteStatus ReadWriteStatus { 
+		public VTReadWriteStatus ReadWriteStatus {
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.ReadWriteStatus);
 
-				if (key == null)
+				if (key is null)
 					return VTReadWriteStatus.Unset;
 				if (key == VTPropertyReadWriteStatusKeys.ReadOnly)
 					return VTReadWriteStatus.ReadOnly;
@@ -78,4 +81,3 @@ namespace VideoToolbox {
 		}
 	}
 }
-

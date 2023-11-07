@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<DefineConstants>$(DefineConstants);NET;TESTS</DefineConstants>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>Nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="nunit" Version="3.12.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+		<PackageReference Include="Mono.Cecil" Version="0.11.4" />
+		<PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
+		<PackageReference Include="System.Text.Json" Version="5.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\..\common\Configuration.cs">
+			<Link>external\Configuration.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\DotNet.cs">
+			<Link>external\DotNet.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\ExecutionHelper.cs">
+			<Link>external\ExecutionHelper.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\Profile.cs">
+			<Link>external\Profile.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\StringUtils.cs">
+			<Link>external\StringUtils.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+			<Link>external\ApplePlatform.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\Execution.cs">
+			<Link>external\Execution.cs</Link>
+		</Compile>
+		<Compile Include="..\..\mtouch\Cache.cs">
+			<Link>external\Cache.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\TargetFramework.cs">
+			<Link>external\TargetFramework.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\BinLog.cs">
+			<Link>external\BinLog.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
+			<Link>external\PListObject.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\SdkVersions.cs">
+			<Link>external\SdkVersions.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\MachO.cs">
+			<Link>external\MachO.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\mtouch\Errors.designer.cs">
+			<Link>external\Errors.designer.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\src\ObjCRuntime\ErrorHelper.cs">
+			<Link>external\ErrorHelper.cs</Link>
+		</Compile>
+		<Compile Include="..\..\common\ErrorHelper.tests.cs">
+			<Link>external\ErrorHelper.tests.cs</Link>
+		</Compile>
+		<Compile Include="..\..\..\tools\common\error.cs">
+			<Link>external\error.cs</Link>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="external\" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="System.Text.Json" />
+	</ItemGroup>
+</Project>

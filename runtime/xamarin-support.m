@@ -47,7 +47,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 
 #if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
 	const char *utf8 = [msg UTF8String];
-	size_t len = strlen (utf8);
+	NSUInteger len = [msg lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1; // does not include NULL
 	fwrite (utf8, 1, len, stdout);
 	if (len == 0 || utf8 [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
@@ -57,7 +57,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 		// Write in chunks of max 4096 characters; older versions of iOS seems to have a bug where NSLog may hang with long strings (!).
 		// https://github.com/xamarin/maccore/issues/1014
 		const char *utf8 = [msg UTF8String];
-		size_t len = strlen (utf8);
+		NSUInteger len = [msg lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1; // does not include NULL
 		const size_t max_size = 4096;
 		while (len > 0) {
 			size_t chunk_size = len > max_size ? max_size : len;
@@ -87,7 +87,7 @@ xamarin_log (const unsigned short *unicodeMessage)
 // See in Mono sdks/ios/runtime/runtime.m
 
 void*
-xamarin_timezone_get_data (const char *name, unsigned long *size)
+xamarin_timezone_get_data (const char *name, uint32_t *size)
 {
 	// COOP: no managed memory access: any mode.
 	NSTimeZone *tz = nil;
@@ -99,18 +99,18 @@ xamarin_timezone_get_data (const char *name, unsigned long *size)
 		tz = [NSTimeZone localTimeZone];
 	}
 	NSData *data = [tz data];
-	*size = [data length];
+	*size = (uint32_t) [data length];
 	void* result = malloc (*size);
-	memcpy (result, data.bytes, *size);
+	[data getBytes: result length: *size];
 	return result;
 }
 
 char**
-xamarin_timezone_get_names (unsigned long *count)
+xamarin_timezone_get_names (uint32_t *count)
 {
 	// COOP: no managed memory access: any mode.
 	NSArray *array = [NSTimeZone knownTimeZoneNames];
-	*count = array.count;
+	*count = (uint32_t) array.count;
 	char** result = (char**) malloc (sizeof (char*) * (*count));
 	for (unsigned long i = 0; i < *count; i++) {
 		NSString *s = [array objectAtIndex: i];
@@ -131,7 +131,7 @@ xamarin_timezone_get_local_name ()
 	return (name != nil) ? strdup ([name UTF8String]) : strdup ("Local");
 }
 
-#if !TARGET_OS_WATCH && !TARGET_OS_TV
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !(TARGET_OS_MACCATALYST && defined (DOTNET)) && !TARGET_OS_OSX
 void
 xamarin_start_wwan (const char *uri)
 {
@@ -145,7 +145,10 @@ xamarin_start_wwan (const char *uri)
 	CFURLRef url = CFURLCreateWithString (kCFAllocatorDefault, host, nil);
 	
 	CFHTTPMessageRef message = CFHTTPMessageCreateRequest (kCFAllocatorDefault, get, url, kCFHTTPVersion1_1);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	CFReadStreamRef stream = CFReadStreamCreateForHTTPRequest (kCFAllocatorDefault, message);
+#pragma clang diagnostic pop
 	
 	CFReadStreamScheduleWithRunLoop (stream, CFRunLoopGetCurrent (), kCFRunLoopCommonModes);
 	
@@ -166,7 +169,7 @@ xamarin_start_wwan (const char *uri)
 	CFRelease (message);
 #endif
 }
-#endif /* !TARGET_OS_WATCH && !TARGET_OS_TV */
+#endif /* !TARGET_OS_WATCH && !TARGET_OS_TV && !TARGET_OS_MACCATALYST */
 
 #if defined (MONOTOUCH)
 // called from mono-extensions/mcs/class/corlib/System/Environment.iOS.cs

@@ -25,34 +25,56 @@ using Registrar;
 namespace ObjCRuntime {
 	public unsafe partial class Runtime {
 		
+#if !NET
 <# foreach (var d in delegates) { #>
-		internal delegate <#= d.MReturnType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
+<#
+		if (d.OnlyCoreCLR)
+			continue;
+#>
+		internal delegate <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
 <# } #>
+#endif // !NET
 
 		internal struct Delegates {
 <# foreach (var d in delegates) { #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#if NET\n");
+#>
 			public IntPtr <#= d.SimpleEntryPoint #>;
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 		}
 
 <# 		foreach (var d in delegates) { #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#if NET\n");
+#>
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (<#= d.SimpleEntryPoint #>_delegate))]
-		static <#= d.MReturnType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
+#endif
+		static unsafe <#= d.ReturnType.MType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
 <# if (d.ExceptionHandling) { #>
 		{	
-			exception_gchandle = 0;
+			*exception_gchandle = IntPtr.Zero;
 			try {
 <# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
 				throw new NotImplementedException ();
 <# } else { #>
-				<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
+				<# if (d.ReturnType.MType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
 <# } #>
 			} catch (Exception ex) {
 				var handle = GCHandle.Alloc (ex, GCHandleType.Normal);
-				exception_gchandle = GCHandle.ToIntPtr (handle).ToInt32 ();
-<# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				created = false;
+				*exception_gchandle = GCHandle.ToIntPtr (handle);
+<# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				*created = 0;
 <# } #>
-<# if (d.MReturnType != "void") { #>				return default (<#= d.MReturnType #>);
+<# if (d.ReturnType.MType != "void") { #>				return default (<#= d.ReturnType.MType #>);
 <# } #>
 			}
 		}
@@ -61,19 +83,36 @@ namespace ObjCRuntime {
 <# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
 			throw new NotImplementedException ();
 <# } else { #>
-			<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
+			<# if (d.ReturnType.MType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
 <# } #>
 		}
 <# } #>
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 
 <# } #>
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static void RegisterDelegates (InitializationOptions* options)
+		unsafe static void RegisterDelegates (InitializationOptions* options)
 		{
 <# foreach (var d in delegates) {
 	if (d.OnlyDynamicUsage) continue; #>
+<#
+	if (d.OnlyCoreCLR) {
+		Write ("#if NET\n");
+		Write ("\t\t\tif (IsCoreCLR)\n\t");
+	}
+#>#if NET
+			options->Delegates-><#= d.SimpleEntryPoint #> = (IntPtr) (void *) <#= d.UnmanagedDelegateCast #> &<#= d.SimpleEntryPoint #>;
+#else
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+#endif
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 
 			// The linker will remove this condition (and the subsequent method call) if possible
@@ -85,7 +124,21 @@ namespace ObjCRuntime {
 		{
 <# foreach (var d in delegates) {
 	if (!d.OnlyDynamicUsage) continue; #>
+<#
+	if (d.OnlyCoreCLR) {
+		Write ("#if NET\n");
+		Write ("\t\t\tif (IsCoreCLR)\n\t");
+	}
+#>
+#if NET
+			options->Delegates-><#= d.SimpleEntryPoint #> = (IntPtr) (void *) <#= d.UnmanagedDelegateCast #> &<#= d.SimpleEntryPoint #>;
+#else
 			options->Delegates-><#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+#endif
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // NET\n");
+#>
 <# } #>
 		}
 	}

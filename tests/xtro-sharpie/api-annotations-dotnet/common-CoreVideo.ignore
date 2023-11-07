@@ -1,0 +1,49 @@
+!missing-enum! CVPixelBufferLockFlags not bound
+!missing-field! kCVImageBufferICCProfileKey not bound
+!missing-field! kCVIndefiniteTime not bound
+!missing-field! kCVPixelBufferPoolFreeBufferNotification not bound
+
+## the following fields are manually bound in CVPixelFormatDescription.cs
+!missing-field! kCVPixelFormatBitsPerBlock not bound
+!missing-field! kCVPixelFormatBlackBlock not bound
+!missing-field! kCVPixelFormatBlockHeight not bound
+!missing-field! kCVPixelFormatBlockHorizontalAlignment not bound
+!missing-field! kCVPixelFormatBlockVerticalAlignment not bound
+!missing-field! kCVPixelFormatBlockWidth not bound
+!missing-field! kCVPixelFormatCGBitmapContextCompatibility not bound
+!missing-field! kCVPixelFormatCGBitmapInfo not bound
+!missing-field! kCVPixelFormatCGImageCompatibility not bound
+!missing-field! kCVPixelFormatCodecType not bound
+!missing-field! kCVPixelFormatComponentRange not bound
+!missing-field! kCVPixelFormatComponentRange_FullRange not bound
+!missing-field! kCVPixelFormatComponentRange_VideoRange not bound
+!missing-field! kCVPixelFormatComponentRange_WideRange not bound
+!missing-field! kCVPixelFormatConstant not bound
+!missing-field! kCVPixelFormatContainsAlpha not bound
+!missing-field! kCVPixelFormatContainsGrayscale not bound
+!missing-field! kCVPixelFormatContainsRGB not bound
+!missing-field! kCVPixelFormatContainsYCbCr not bound
+!missing-field! kCVPixelFormatFillExtendedPixelsCallback not bound
+!missing-field! kCVPixelFormatFourCC not bound
+!missing-field! kCVPixelFormatHorizontalSubsampling not bound
+!missing-field! kCVPixelFormatName not bound
+!missing-field! kCVPixelFormatOpenGLCompatibility not bound
+!missing-field! kCVPixelFormatOpenGLFormat not bound
+!missing-field! kCVPixelFormatOpenGLInternalFormat not bound
+!missing-field! kCVPixelFormatOpenGLType not bound
+!missing-field! kCVPixelFormatPlanes not bound
+!missing-field! kCVPixelFormatQDCompatibility not bound
+!missing-field! kCVPixelFormatVerticalSubsampling not bound
+!missing-field! kCVPixelFormatContainsSenselArray not bound
+
+!missing-field! kCVZeroTime not bound
+!missing-pinvoke! CVPixelBufferRelease is not bound
+!missing-pinvoke! CVPixelBufferRetain is not bound
+
+# iOS and tvOS
+
+!missing-field! kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey not bound
+
+## *GetTypeID are generally not bound
+!missing-pinvoke! CVMetalTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVMetalTextureGetTypeID is not bound

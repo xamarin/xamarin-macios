@@ -32,9 +32,13 @@ using CoreAnimation;
 using CoreImage;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuartzComposer {
 
-	[Deprecated (PlatformName.MacOSX, 10,15)]
+	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	[BaseType (typeof (NSObject))]
 	interface QCComposition : NSCopying {
 		[Static]
@@ -52,14 +56,14 @@ namespace QuartzComposer {
 		NSDictionary Attributes { get; }
 
 		[Export ("inputKeys")]
-		string[] InputKeys { get; }
+		string [] InputKeys { get; }
 
 		[Export ("outputKeys")]
-		string[] OutputKeys { get; }
+		string [] OutputKeys { get; }
 
 		[Export ("identifier")]
 		string Identifier { get; }
-		
+
 		[Field ("QCCompositionAttributeNameKey")]
 		NSString AttributeNameKey { get; }
 
@@ -68,25 +72,25 @@ namespace QuartzComposer {
 
 		[Field ("QCCompositionAttributeCopyrightKey")]
 		NSString AttributeCopyrightKey { get; }
-		
+
 		[Field ("QCCompositionAttributeBuiltInKey")]
 		NSString AttributeBuiltInKey { get; }
-		
+
 		[Field ("QCCompositionAttributeIsTimeDependentKey")]
 		NSString AttributeIsTimeDependentKey { get; }
-		
+
 		[Field ("QCCompositionAttributeHasConsumersKey")]
 		NSString AttributeHasConsumersKey { get; }
-		
+
 		[Field ("QCCompositionAttributeCategoryKey")]
 		NSString AttributeCategoryKey { get; }
-		
+
 		[Field ("QCCompositionCategoryDistortion")]
 		NSString CategoryDistortion { get; }
-				
+
 		[Field ("QCCompositionCategoryStylize")]
 		NSString CategoryStylize { get; }
-		
+
 		[Field ("QCCompositionCategoryUtility")]
 		NSString CategoryUtility { get; }
 
@@ -99,11 +103,11 @@ namespace QuartzComposer {
 		[Field ("QCCompositionInputDestinationImageKey")]
 		NSString InputDestinationImageKey { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Field ("QCCompositionInputRSSFeedURLKey")]
 		NSString InputRSSFeedURLKey { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Field ("QCCompositionInputRSSArticleDurationKey")]
 		NSString InputRSSArticleDurationKey { get; }
 
@@ -161,7 +165,7 @@ namespace QuartzComposer {
 		[Field ("QCCompositionProtocolScreenSaver")]
 		NSString ProtocolScreenSaver { get; }
 
-		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 		[Field ("QCCompositionProtocolRSSVisualizer")]
 		NSString ProtocolRSSVisualizer { get; }
 
@@ -170,11 +174,11 @@ namespace QuartzComposer {
 	}
 
 
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
 	[BaseType (typeof (CAOpenGLLayer))]
 	[DisableDefaultCtor] // return invalid handle
 	interface QCCompositionLayer {
-		
+
 		[Static]
 		[Export ("compositionLayerWithFile:")]
 		QCCompositionLayer Create (string path);
@@ -184,17 +188,17 @@ namespace QuartzComposer {
 		QCCompositionLayer Create (QCComposition composition);
 
 		[Export ("initWithFile:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("initWithComposition:")]
-		IntPtr Constructor (QCComposition composition);
+		NativeHandle Constructor (QCComposition composition);
 
 		[Export ("composition")]
 		QCComposition Composition { get; }
 
 	}
 
-	[Deprecated (PlatformName.MacOSX, 10,15)]
+	[Deprecated (PlatformName.MacOSX, 10, 15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when used (e.g. description) meant to be used thru sharedCompositionRepository
 	interface QCCompositionRepository {
@@ -206,10 +210,10 @@ namespace QuartzComposer {
 		QCComposition GetComposition (string identifier);
 
 		[Export ("compositionsWithProtocols:andAttributes:")]
-		QCComposition[] GetCompositions (NSArray protocols, NSDictionary attributes);
+		QCComposition [] GetCompositions (NSArray protocols, NSDictionary attributes);
 
 		[Export ("allCompositions")]
-		QCComposition[] AllCompositions { get; }
+		QCComposition [] AllCompositions { get; }
 
 	}
 

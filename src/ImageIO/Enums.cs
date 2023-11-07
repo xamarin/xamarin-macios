@@ -5,6 +5,7 @@
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013-2016, Xamarin Inc.
+// Copyright 2020, Microsoft Corp.
 //
 
 using System;
@@ -14,7 +15,6 @@ namespace ImageIO {
 
 	// untyped enum -> CGImageMetadata.h
 	// note: not used in any API
-	[iOS (7,0)]
 	[ErrorDomain ("kCFErrorDomainCGImageMetadata")]
 	public enum CGImageMetadataErrors {
 		Unknown = 0,
@@ -25,7 +25,6 @@ namespace ImageIO {
 	}
 
 	// untyped enum -> CGImageMetadata.h
-	[iOS (7,0)]
 	public enum CGImageMetadataType {
 		Invalid = -1,
 		Default = 0,
@@ -50,7 +49,7 @@ namespace ImageIO {
 
 	// untyped enum / #defines
 	// used with kCGImagePropertyPNGCompressionFilter
-	[iOS (9,0)][Mac (10,11)]
+	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CGImagePropertyPngFilters {
 		No = 0,
@@ -59,5 +58,24 @@ namespace ImageIO {
 		Up = 0x20,
 		Average = 0x40,
 		Paeth = 0x80
+	}
+
+	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[MacCatalyst (13, 1)]
+	public enum CGImageAnimationStatus {
+		Ok = 0,
+		ParameterError = -22140,
+		CorruptInputImage = -22141,
+		UnsupportedFormat = -22142,
+		IncompleteInputImage = -22143,
+		AllocationFailure = -22144,
+	}
+
+	// Yes, no [Native] here
+	[Mac (11, 0), iOS (14, 1), TV (14, 2), Watch (7, 1)]
+	[MacCatalyst (14, 1)]
+	public enum CGImagePropertyTgaCompression : uint {
+		None = 0,
+		Rle,
 	}
 }

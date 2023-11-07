@@ -2,15 +2,13 @@ using System;
 using System.IO;
 using System.Net;
 using System.ServiceModel;
+#if !NET
 using System.ServiceModel.Channels;
+#endif
 using System.Windows.Input;
 using System.Xml;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk {
@@ -18,7 +16,7 @@ namespace LinkSdk {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class PclTest {
-		
+
 		[Test]
 		public void Corlib ()
 		{
@@ -34,90 +32,93 @@ namespace LinkSdk {
 #endif
 			const string url = "http://www.google.com";
 			Uri uri = new Uri (url);
-			
+
 			Assert.False (this is ICommand, "ICommand");
-			
-			HttpWebRequest hwr = new HttpWebRequest (uri);
+
+			HttpWebRequest hwr = WebRequest.CreateHttp (uri);
 			try {
 				Assert.True (hwr.SupportsCookieContainer, "SupportsCookieContainer");
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
-			
+
 			WebResponse wr = hwr.GetResponse ();
 			try {
 				Assert.True (wr.SupportsHeaders, "SupportsHeaders");
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 			wr.Dispose ();
 
 			try {
 				Assert.NotNull (WebRequest.CreateHttp (url));
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 
 			try {
 				Assert.NotNull (WebRequest.CreateHttp (uri));
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 		}
 
+#if !NET
 		[Test]
 		public void ServiceModel ()
 		{
 			AddressHeaderCollection ahc = new AddressHeaderCollection ();
 			try {
-				ahc.FindAll (null, null);
-			}
-			catch (NotImplementedException) {
+				ahc.FindAll ("name", "namespace");
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
-			
+
 			try {
-				FaultException.CreateFault (null, String.Empty, null);
-			}
-			catch (NotImplementedException) {
+				FaultException.CreateFault (new TestFault (), String.Empty, Array.Empty<Type> ());
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 		}
+
+		class TestFault : MessageFault {
+			public override FaultCode Code => throw new NotImplementedException ();
+			public override bool HasDetail => throw new NotImplementedException ();
+			public override FaultReason Reason => throw new NotImplementedException ();
+			protected override void OnWriteDetailContents (XmlDictionaryWriter writer)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+#endif
 
 		[Test]
 		public void Xml ()
 		{
 			try {
 				XmlConvert.VerifyPublicId (String.Empty);
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 
 			try {
 				XmlConvert.VerifyWhitespace (String.Empty);
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
 
 			try {
 				XmlConvert.VerifyXmlChars (String.Empty);
-			}
-			catch (NotImplementedException) {
+			} catch (NotImplementedException) {
 				// feature is not available, but the symbol itself is needed
 			}
-			
+
 			var xr = XmlReader.Create (Stream.Null);
 			xr.Dispose ();
-			
+
 			var xw = XmlWriter.Create (Stream.Null);
 			xw.Dispose ();
-			
+
 			XmlReaderSettings xrs = new XmlReaderSettings ();
 			xrs.DtdProcessing = DtdProcessing.Ignore;
 		}

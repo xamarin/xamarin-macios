@@ -8,10 +8,8 @@
 // Copyright 2012-2013, 2015 Xamarin Inc. All rights reserved.
 //
 
-using System;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -19,11 +17,6 @@ using AppKit;
 using UIKit;
 #endif
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {

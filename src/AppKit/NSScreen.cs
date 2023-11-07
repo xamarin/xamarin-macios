@@ -21,15 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace AppKit {
-	
+
 	public partial class NSScreen {
-		
-		public NSWindowDepth[] SupportedWindowDepths {
+
+		public NSWindowDepth [] SupportedWindowDepths {
 			get {
 				List<NSWindowDepth> list = new List<NSWindowDepth> ();
 				IntPtr p = GetSupportedWindowDepths ();
@@ -38,7 +42,7 @@ namespace AppKit {
 					int value = Marshal.ReadInt32 (p);
 					while (value != 0) {
 						list.Add ((NSWindowDepth) value);
-						p = (IntPtr) (p.ToInt64 () + sizeof(int));
+						p = (IntPtr) (p.ToInt64 () + sizeof (int));
 						value = Marshal.ReadInt32 (p);
 					}
 				}
@@ -47,3 +51,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

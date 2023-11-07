@@ -3,11 +3,14 @@ MonoTouch.NUnitLite.csproj
 MonoTouch.NUnitLite.tvos.csproj
 MonoTouch.NUnitLite.unified.csproj
 MonoTouch.NUnitLite.watchos.csproj
+MonoTouch.NUnitLite.maccatalyst.csproj
 xamios.csproj
 xammac.csproj
 xamtvos.csproj
 xamwatch.csproj
+xammaccatalyst.csproj
 generator.csproj.inc
 *~
 *.rsp
+MinimumVersions.cs
 

@@ -10,21 +10,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-namespace SceneKit
-{
+#nullable enable
+
+namespace SceneKit {
 	public partial class SCNSceneSource {
 
-		public NSObject GetEntryWithIdentifier<T> (string uid)
+		public NSObject? GetEntryWithIdentifier<T> (string uid)
 		{
 			return GetEntryWithIdentifier (uid, new Class (typeof (T)));
 		}
 
 		public string [] GetIdentifiersOfEntries<T> ()
 		{
-			return NSArray.StringArrayFromHandle (Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("identifiersOfEntriesWithClass:"), new Class (typeof(T)).Handle));
+			return CFArray.StringArrayFromHandle (Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle ("identifiersOfEntriesWithClass:"), new Class (typeof (T)).Handle))!;
 		}
 	}
 }

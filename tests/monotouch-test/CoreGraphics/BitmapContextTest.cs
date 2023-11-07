@@ -8,18 +8,12 @@
 //
 
 using System;
-using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BitmapContextTest {
@@ -28,7 +22,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void Ctor_CGBitmapFlags ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=7441
-			byte[] data = new byte [400];
+			byte [] data = new byte [400];
 			using (CGColorSpace space = CGColorSpace.CreateDeviceRGB ()) {
 				// According to Apple "This value is equivalent to kCGImageAlphaNoneSkipLast" which is not true (at least in this "context" ;-)
 				Assert.Throws<Exception> (delegate { new CGBitmapContext (data, 10, 10, 8, 40, space, CGBitmapFlags.None); }, "None");
@@ -61,7 +55,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void Ctor_CGImageAlphaInfo ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=7441
-			byte[] data = new byte [400];
+			byte [] data = new byte [400];
 			using (CGColorSpace space = CGColorSpace.CreateDeviceRGB ()) {
 				// According to Apple "This value is equivalent to kCGImageAlphaNoneSkipLast" which is not true (at least in this "context" ;-)
 				Assert.Throws<Exception> (delegate { new CGBitmapContext (data, 10, 10, 8, 40, space, CGImageAlphaInfo.None); }, "None");
@@ -93,7 +87,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Ctor_CGColorSpace_Null ()
 		{
-			byte[] data = new byte [400];
+			byte [] data = new byte [400];
 			// a null colorspace is not always accepted - that will return an invalid (IntPtr.Zero) handle and CGContext.set_Handle will throw
 			Assert.Throws<Exception> (delegate { new CGBitmapContext (data, 10, 10, 8, 40, null, CGImageAlphaInfo.NoneSkipFirst); }, "null");
 
@@ -107,7 +101,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void ToImage ()
 		{
-			byte[] data = new byte [400];
+			byte [] data = new byte [400];
 			using (CGColorSpace space = CGColorSpace.CreateDeviceRGB ()) {
 				CGBitmapContext c = new CGBitmapContext (data, 10, 10, 8, 40, space, CGImageAlphaInfo.PremultipliedLast);
 				using (var img = c.ToImage ())

@@ -8,17 +8,12 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ImageIO;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ImageIO;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+
+using CGImageProperties = ImageIO.CGImageProperties;
 
 namespace MonoTouchFixtures.ImageIO {
 
@@ -58,7 +53,7 @@ namespace MonoTouchFixtures.ImageIO {
 
 				Assert.True (meta.SetValue (null, path, false), "SetValue");
 
-				Assert.True (meta.SetValueMatchingImageProperty (CGImageProperties.ExifDictionary, CGImageProperties.ExifDateTimeOriginal, (NSDate)DateTime.Now), "SetValueMatchingImageProperty");
+				Assert.True (meta.SetValueMatchingImageProperty (CGImageProperties.ExifDictionary, CGImageProperties.ExifDateTimeOriginal, (NSDate) DateTime.Now), "SetValueMatchingImageProperty");
 			}
 		}
 	}

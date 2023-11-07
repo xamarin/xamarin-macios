@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -12,25 +12,26 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 namespace Xamarin.Linker {
-
-	public abstract class BaseProfile {
-
-		protected abstract bool IsSdk (string assemblyName);
-	}
-
 	public class ProfilePoker : MobileProfile {
 
 		static ProfilePoker p = new ProfilePoker ();
+
+		public override string ProductAssembly => throw new NotImplementedException ();
 
 		public static bool IsWellKnownSdk (string assemblyName)
 		{
 			return p.IsSdk (assemblyName);
 		}
+
+		protected override bool IsProduct (string assemblyName)
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 	[TestFixture]
 	public partial class SdkTest {
-		
+
 		static string UnifiedPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.iOS/"); } }
 		static string tvOSPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.TVOS/"); } }
 		static string watchOSPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.WatchOS/"); } }
@@ -59,12 +60,9 @@ namespace Xamarin.Linker {
 					break;
 				case "Newtonsoft.Json":
 				case "Xamarin.iOS.Tasks":
-				case "Xamarin.iOS.Tasks.Core":
 				case "Xamarin.ObjcBinding.Tasks":
 				case "Xamarin.MacDev":
 				case "Xamarin.MacDev.Tasks":
-				case "Xamarin.MacDev.Tasks.Core":
-				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
 					failed_bcl.Add (aname);
 					break;
@@ -212,7 +210,7 @@ namespace Xamarin.Linker {
 			if (!arg.Type.Is ("System", "Type"))
 				return;
 			var ar = (arg.Value as TypeReference)?.Scope as AssemblyNameReference;
-			if (ar == null)
+			if (ar is null)
 				return;
 			references.Add (ar);
 		}
@@ -224,7 +222,7 @@ namespace Xamarin.Linker {
 			rv.AddRange (Directory.GetFiles (watchOSPath, "*.dll", SearchOption.TopDirectoryOnly).
 				Select ((v) => v.Substring (watchOSPath.Length)).ToArray ());
 			rv.Remove ("Xamarin.WatchOS.dll");
-			rv.Add (Path.Combine ("..", "..", "32bits", "Xamarin.WatchOS.dll"));
+			rv.Add (Path.Combine ("..", "..", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
 			return rv.ToArray ();
 		}
 
@@ -302,9 +300,19 @@ namespace Xamarin.Linker {
 				"LLVM failed for '<SendFrameFallbackAsync>d__56.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.Read': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.Write': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.BeginRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.EndRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.BeginWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.EndWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.ReadAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.WriteAsync': non-finally/catch/fault clause.",
 			}) },
 			{ "System.Core.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
+			}) },
+			{ "System.Net.Http.dll", new Tuple<int, string[]> (0, new string [] {
 			}) },
 			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'Console.Write': opcode arglist",
@@ -349,7 +357,7 @@ namespace Xamarin.Linker {
 			if (known_llvm_failures.TryGetValue (asm, out var known_failures)) {
 				expected_exit_code = known_failures.Item1;
 				Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
-				if (known_failures.Item2 != null) {
+				if (known_failures.Item2 is not null) {
 					// Check if there are known failures for failures we've fixed
 					var known_inexistent_failures = known_failures.Item2.Where ((v) => !llvm_failed.Contains (v));
 					Assert.IsEmpty (string.Join ("\n", known_inexistent_failures), $"Redundant known failures: should be removed from dictionary for {asm}");

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,9 +13,11 @@
     <AssemblyName>BundledResources</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' Or '$(Configuration)' == 'Debug64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -24,7 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode' Or '$(Configuration)' == 'Release64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
@@ -34,7 +36,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -42,6 +48,9 @@
   <ItemGroup>
     <BundleResource Include="..\monotouch-test\basn3p08.png">
       <Link>basn3p08.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\monotouch-test\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
     </BundleResource>
     <BundleResource Include="..\monotouch-test\xamvideotest.mp4">
       <Link>xamvideotest.mp4</Link>

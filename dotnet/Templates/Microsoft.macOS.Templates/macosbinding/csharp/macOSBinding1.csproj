@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-macos</TargetFramework>
+    <RootNamespace Condition="'$(name)' != '$(name{-VALUE-FORMS-}safe_namespace)'">macOSBinding1</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <IsBindingProject>true</IsBindingProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+  </ItemGroup>
+</Project>

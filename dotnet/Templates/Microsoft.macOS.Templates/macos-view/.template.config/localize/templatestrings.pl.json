@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Widok systemu macOS",
+  "description": "Widok systemu macOS z interfejsem użytkownika zaimplementowanym w kompilatorze Xcode Interface Builder (plik XIB)",
+  "symbols/namespace/description": "przestrzeń nazw wygenerowanego kodu."
+}

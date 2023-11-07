@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
+	<!-- Allows providing SDK-specific property overrides -->
+	<PropertyGroup>
+		<XamarinAppleSdkProps>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'Xamarin.Apple.Sdk.props'))\Xamarin.Apple.Sdk.props</XamarinAppleSdkProps>
+	</PropertyGroup>
+	
+	<Import Project="$(XamarinAppleSdkProps)" Condition="'$(XamarinAppleSdkPropsImported)' != 'true' And Exists('$(XamarinAppleSdkProps)')" />
+</Project>

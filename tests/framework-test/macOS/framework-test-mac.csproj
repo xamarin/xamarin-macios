@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <RootTestsDirectory>..\..</RootTestsDirectory>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{E0E84B58-C333-1BF3-D1EC-42EE3EA0D071}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>framework-test</RootNamespace>
+    <AssemblyName>framework-test</AssemblyName>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)</IntermediateOutputPath>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <XamMacArch>x86_64</XamMacArch>
+    <DefineConstants></DefineConstants>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;MONOMAC;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <PlatformTarget>x64</PlatformTarget>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <LinkMode>None</LinkMode>
+    <AOTMode>None</AOTMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>MONOMAC;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <LinkMode>SdkOnly</LinkMode>
+    <PlatformTarget>x86</PlatformTarget>
+    <AOTMode>None</AOTMode>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\iOS\FrameworkTests.cs">
+      <Link>FrameworkTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\mac\MacMain.cs">
+      <Link>MacMain.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">
+      <Project>{88A8A1AC-0829-4C98-8F4A-9FC23DC42A06}</Project>
+      <Name>Touch.Client-macOS-mobile</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-framework-test\macOS\bindings-framework-test.csproj">
+      <Project>{E40B0B77-3467-4891-9117-7AF8F248E306}</Project>
+      <Name>bindings-framework-test-mac</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
+

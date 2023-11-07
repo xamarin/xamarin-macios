@@ -1,0 +1,161 @@
+<Project>
+  <Import Project="../targets/Microsoft.$(_PlatformName).Sdk.Versions.props" />
+  <Import Project="..\..\eng\Versions.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageType Condition="'$(PackageType)'==''">DotnetPlatform</PackageType>
+    <PackageVersion>$(_PackageVersion)</PackageVersion>
+    <RepositoryUrl>https://github.com/xamarin/xamarin-macios</RepositoryUrl>
+    <RepositoryBranch>$(CurrentBranch)</RepositoryBranch>
+    <RepositoryCommit>$(CurrentHash)</RepositoryCommit>
+    <Authors>Microsoft</Authors>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/xamarin/xamarin-macios</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <!-- Remove the `<group targetFramework=".NETStandard2.0" />` entry from the .nuspec. -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- Ignore TargetFramework reference group related warnings, these are workload packs not functional NuGets. -->
+    <!-- NU5105: The package version '#.#.#-alpha.##+hash' uses SemVer 2.0.0 or components of SemVer 1.0.0 that are not supported on legacy clients. Change the package version to a SemVer 1.0.0 string. If the version contains a release label it must start with a letter. This message can be ignored if the package is not intended for older clients. -->
+    <NoWarn>$(NoWarn);NU5105;NU5128;NU5131</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_RepositoryPath>$(MSBuildThisFileDirectory)../..</_RepositoryPath>
+    <_buildPath>$(_RepositoryPath)/_build</_buildPath>
+    <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
+    <NupkgPath Condition=" '$(NupkgPath)' == '' ">$([MSBuild]::NormalizeDirectory ('$(_buildPath)\nupkgs\'))</NupkgPath>
+    <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests\$(_PlatformName)</BarManifestOutputPath>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">tvOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">watchOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">macOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'MacCatalyst'">MacCatalyst</_AssemblyInfix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(_RepositoryPath)/LICENSE" Pack="true" PackagePath="/" />
+    <Content Include="$(_packagePath)**" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <!-- Code to automatically create FrameworkList.xml or RuntimeList.xml -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Packaging" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.DotNet.Arcade.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <!-- do not load this Sdk for template packages -->
+  <!-- it overwrites packageType -->
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" Condition="'$(PackageType)' != 'Template'" />
+  <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetSharedFrameworkTaskFile)" Condition="'$(PackageType)' != 'Template'" />
+  <UsingTask TaskName="GenerateBuildManifest" AssemblyFile="$(_MicrosoftDotNetBuildTasksFeedTaskDir)Microsoft.DotNet.Build.Tasks.Feed.dll" />
+
+  <Target Name="_GenerateFrameworkListFile" Condition=" '$(_CreateFrameworkList)' == 'true' Or '$(_CreateRuntimeList)' == 'true' ">
+    <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
+    <PropertyGroup Condition="'$(_CreateFrameworkList)' == 'true'">
+      <_FrameworkListFile>$(_packagePath)data/FrameworkList.xml</_FrameworkListFile>
+      <_PackTargetPath>ref/net$(BundledNETCoreAppTargetFrameworkVersion)</_PackTargetPath>
+      <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(_CreateRuntimeList)' == 'true'">
+      <_FrameworkListFile>$(_packagePath)data/RuntimeList.xml</_FrameworkListFile>
+      <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/net$(BundledNETCoreAppTargetFrameworkVersion)</_PackTargetPath>
+      <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
+    </PropertyGroup>
+    <ItemGroup>
+      <_PackageFiles Include="$(_packagePath)$(_PackTargetPath)/*.dll" PackagePath="$(_PackTargetPath)" TargetPath="$(_PackTargetPath)" />
+      <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.a" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
+      <_PackageFiles Include="$(_packagePath)$(_PackNativePath)/*.dylib" PackagePath="$(_PackNativePath)" TargetPath="$(_PackNativePath)" IsNative="true" />
+      <_FrameworkListFileClass Include="@(_PackageFiles->'%(Filename)%(Extension)')" Profile="$(_PlatformName)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- Hardcode framework attributes -->
+      <_FrameworkListRootAttributes Include="Name" Value="Microsoft $(_PlatformName) - NET $(BundledNETCoreAppTargetFrameworkVersion)" />
+      <_FrameworkListRootAttributes Include="TargetFrameworkIdentifier" Value=".NETCoreApp" />
+      <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="$(BundledNETCoreAppTargetFrameworkVersion)" />
+      <_FrameworkListRootAttributes Include="FrameworkName" Value="Microsoft.$(_PlatformName)" />
+      <_PackageFiles Include="$(_FrameworkListFile)" PackagePath="data" />
+
+      <!-- The CreateFrameworkListFile task will add _PackageFiles to the files to pack, so remove them if they're already there -->
+      <Content Remove="@(_PackageFiles)" />
+    </ItemGroup>
+    <!-- https://github.com/dotnet/arcade/blob/5824baf1c9a900ee00c167f96201c750bba6a574/src/Microsoft.DotNet.SharedFramework.Sdk/src/CreateFrameworkListFile.cs -->
+    <CreateFrameworkListFile
+        Files="@(_PackageFiles)"
+        FileClassifications="@(_FrameworkListFileClass)"
+        TargetFile="$(_FrameworkListFile)"
+        TargetFilePrefixes="ref;runtimes"
+        RootAttributes="@(_FrameworkListRootAttributes)"
+    />
+  </Target>
+
+  <PropertyGroup>
+    <BeforePack>
+      _GenerateFrameworkListFile;
+      $(BeforePack);
+    </BeforePack>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(IntermediateOutputPath)RuntimeList.xml" Condition="Exists ('$(IntermediateOutputPath)RuntimeList.xml')">
+      <Pack>true</Pack>
+      <PackagePath>data</PackagePath>
+    </Content>
+    <Content Include="$(IntermediateOutputPath)FrameworkList.xml" Condition="Exists ('$(IntermediateOutputPath)FrameworkList.xml')">
+      <Pack>true</Pack>
+      <PackagePath>data</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="GenerateBuildAssetRegistryManifest" >
+    <ItemGroup>
+      <BuildArtifacts Include="$(NupkgPath)\Microsoft*.$(_PlatformName).*.nupkg" />
+    </ItemGroup>
+
+    <Error Condition="'@(BuildArtifacts)' == ''" Text="No packages to create manifest from." />
+
+    <ItemGroup>
+      <ManifestBuildData Include="InitialAssetsLocation=https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json" />
+      <ManifestBuildData Include="AzureDevOpsBuildId=$(BUILD_BUILDID)" />
+      <ManifestBuildData Include="AzureDevOpsBuildDefinitionId=$(SYSTEM_DEFINITIONID)" />
+      <ManifestBuildData Include="AzureDevOpsProject=$(SYSTEM_TEAMPROJECT)" />
+      <ManifestBuildData Include="AzureDevOpsBuildNumber=$(BUILD_BUILDNUMBER)" />
+      <ManifestBuildData Include="AzureDevOpsRepository=$(BUILD_REPOSITORY_URI)" />
+      <ManifestBuildData Include="AzureDevOpsBranch=$(BUILD_SOURCEBRANCH)" />
+    </ItemGroup>
+
+    <GenerateBuildManifest
+        Artifacts="@(BuildArtifacts)"
+        OutputPath="$(BarManifestOutputPath)\AssetManifest.xml"
+        BuildId="$(BUILD_BUILDNUMBER)"
+        BuildData="@(ManifestBuildData)"
+        RepoUri="$(BUILD_REPOSITORY_URI)"
+        RepoBranch="$(BUILD_SOURCEBRANCH)"
+        RepoCommit="$(BUILD_SOURCEVERSION)"
+        PublishingVersion="3" />
+  </Target>
+
+  <Target Name="PushManifestToBuildAssetRegistry" >
+    <PropertyGroup>
+      <VersionPrefix>1.0.0</VersionPrefix>
+    </PropertyGroup>
+
+    <MSBuild
+        Targets="Restore"
+        Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);NuGetPackageRoot=$(_RepositoryPath)\packages\"
+    />
+
+    <MSBuild
+        Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);ManifestsPath=$(BarManifestOutputPath);MaestroApiEndpoint=https://maestro-prod.westus2.cloudapp.azure.com;NuGetPackageRoot=$(_RepositoryPath)\packages\"
+    />
+  </Target>
+
+</Project>

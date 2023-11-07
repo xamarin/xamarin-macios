@@ -1,18 +1,16 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLIndirectCommandBufferDescriptorTest {
 		MTLIndirectCommandBufferDescriptor descriptor = null;
 
@@ -26,7 +24,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (descriptor != null)
+			if (descriptor is not null)
 				descriptor.Dispose ();
 			descriptor = null;
 		}
@@ -58,14 +56,14 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetMaxVertexBufferBindCountTest ()
 		{
 			descriptor.MaxVertexBufferBindCount = 1;
-			Assert.AreEqual (1, descriptor.MaxVertexBufferBindCount);
+			Assert.AreEqual ((nuint) 1, descriptor.MaxVertexBufferBindCount);
 		}
 
 		[Test]
 		public void GetSetMaxFragmentBufferBindCountTest ()
 		{
 			descriptor.MaxFragmentBufferBindCount = 1;
-			Assert.AreEqual (1, descriptor.MaxFragmentBufferBindCount);
+			Assert.AreEqual ((nuint) 1, descriptor.MaxFragmentBufferBindCount);
 		}
 	}
 }

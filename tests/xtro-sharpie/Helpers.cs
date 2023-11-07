@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -9,56 +9,44 @@ using Clang.Ast;
 
 namespace Extrospection {
 
-	public enum Platforms
-	{
+	public enum Platforms {
 		macOS,
 		iOS,
 		watchOS,
 		tvOS,
+		MacCatalyst,
 	}
 
 	public static partial class Helpers {
+		static Dictionary<string, object> map = new Dictionary<string, object> ();
 
-		// the original name can be lost and, if not registered (e.g. enums), might not be available
-		static Dictionary<string,string> map = new Dictionary<string, string> () {
-			{ "AudioChannelBitmap", "AudioChannelBit" },
-			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
-			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
-			{ "GKErrorCode", "GKError" },
-			{ "HMCharacteristicValueAirParticulateSize", "HMCharacteristicValueAirParticulate" },
-			{ "HMCharacteristicValueLockMechanismLastKnownAction", "HMCharacteristicValueLockMechanism" },
-			{ "HMErrorCode", "HMError" },
-			{ "LAError", "LAStatus" },
-			{ "MCErrorCode", "MCError" },
-			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
-			{ "NEVPNIKEv2CertificateType", "NEVpnIke2CertificateType" },
-			{ "NEVPNIKEv2DeadPeerDetectionRate", "NEVpnIke2DeadPeerDetectionRate" },
-			{ "NEVPNIKEv2DiffieHellmanGroup", "NEVpnIke2DiffieHellman" },
-			{ "NEVPNIKEv2EncryptionAlgorithm", "NEVpnIke2EncryptionAlgorithm" },
-			{ "NEVPNIKEv2IntegrityAlgorithm", "NEVpnIke2IntegrityAlgorithm" },
-			{ "NSAttributedStringEnumerationOptions", "NSAttributedStringEnumeration" },
-			{ "NSFileProviderErrorCode", "NSFileProviderError" },
-			{ "NSUbiquitousKeyValueStoreChangeReason", "NSUbiquitousKeyValueStore" },
-			{ "PHLivePhotoEditingErrorCode", "PHLivePhotoEditingError" },
-			{ "RPRecordingErrorCode", "RPRecordingError" },
-			{ "SecTrustResultType", "SecTrustResult" },
-			{ "SKErrorCode", "SKError" },
-			{ "SSReadingListErrorCode", "SSReadingListError" },
-			{ "tls_ciphersuite_group_t", "TlsCipherSuiteGroup" },
-			{ "tls_ciphersuite_t", "TlsCipherSuite" },
-			{ "tls_protocol_version_t", "TlsProtocolVersion" },
-			{ "UIDataDetectorTypes", "UIDataDetectorType" },
-			{ "UIControlEvents", "UIControlEvent" },
-			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
-			{ "UITableViewCellStateMask", "UITableViewCellState" },
-			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
-			// not enums
-		};
+		public static void MapNames (string nativeName, string managedName)
+		{
+			if (map.TryGetValue (nativeName, out var value)) {
+				if (value is string str) {
+					var list = new List<string> ();
+					list.Add (str);
+					list.Add (managedName);
+					map [nativeName] = list;
+				} else if (value is List<string> list) {
+					list.Add (managedName);
+				} else {
+					throw new InvalidOperationException ($"Unexpected type in map: {value}");
+				}
+			} else {
+				map.Add (nativeName, managedName);
+			}
+		}
 
 		public static string GetManagedName (string nativeName)
 		{
-			map.TryGetValue (nativeName, out var result);
-			return result ?? nativeName;
+			if (!map.TryGetValue (nativeName, out var value))
+				return nativeName;
+			if (value is string str)
+				return str;
+			if (value is List<string> list)
+				throw new InvalidOperationException ($"The native name '{nativeName}' has multiple managed types: {string.Join (", ", list)}");
+			throw new InvalidOperationException ($"Unexpected type in map: {value}");
 		}
 
 		public static string ReplaceFirstInstance (this string source, string find, string replace)
@@ -68,10 +56,11 @@ namespace Extrospection {
 		}
 
 		public static Platforms Platform { get; set; }
+		public static bool IsDotNet { get; set; }
 
 		public static int GetPlatformManagedValue (Platforms platform)
 		{
-			// None, MacOSX, iOS, WatchOS, TvOS
+			// None, MacOSX, iOS, WatchOS, TvOS, MacCatalyst
 			switch (platform) {
 			case Platforms.macOS:
 				return 1;
@@ -81,14 +70,15 @@ namespace Extrospection {
 				return 3;
 			case Platforms.tvOS:
 				return 4;
+			case Platforms.MacCatalyst:
+				return 5;
 			default:
 				throw new InvalidOperationException ($"Unexpected Platform {Platform} in GetPlatformManagedValue");
 			}
 		}
 
 		// Clang.Ast.AvailabilityAttr.Platform.Name
-		public static string ClangPlatformName
-		{
+		public static string ClangPlatformName {
 			get {
 				switch (Helpers.Platform) {
 				case Platforms.macOS:
@@ -99,10 +89,52 @@ namespace Extrospection {
 					return "watchos";
 				case Platforms.tvOS:
 					return "tvos";
+				case Platforms.MacCatalyst:
+					return "macos";
 				default:
 					throw new InvalidOperationException ($"Unexpected Platform {Platform} in ClangPlatformName");
 				}
 			}
+		}
+
+		public static bool IsAvailable (this ICustomAttributeProvider cap)
+		{
+			if (!cap.HasCustomAttributes)
+				return true;
+
+			foreach (var ca in cap.CustomAttributes) {
+				switch (ca.Constructor.DeclaringType.Name) {
+				case "UnavailableAttribute":
+					if (GetPlatformManagedValue (Platform) == (byte) ca.ConstructorArguments [0].Value)
+						return false;
+					break;
+				case "NoiOSAttribute":
+					if (Platform == Platforms.iOS)
+						return false;
+					break;
+				case "NoTVAttribute":
+					if (Platform == Platforms.tvOS)
+						return false;
+					break;
+				case "NoWatchAttribute":
+					if (Platform == Platforms.watchOS)
+						return false;
+					break;
+				case "NoMacAttribute":
+					if (Platform == Platforms.macOS)
+						return false;
+					break;
+				case "UnsupportedOSPlatformAttribute":
+					if (AttributeHelpers.IsOSPlatformAttribute (ca, Platform))
+						return false;
+					break;
+				case "ObsoletedOSPlatformAttribute":
+					if (AttributeHelpers.IsOSPlatformAttribute (ca, Platform))
+						return false;
+					break;
+				}
+			}
+			return true;
 		}
 
 		public static bool IsAvailable (this Decl decl)
@@ -114,20 +146,20 @@ namespace Extrospection {
 			if (!result.HasValue) {
 				// first check if we're checking the category itself
 				var category = decl as ObjCCategoryDecl;
-				if (category != null)
+				if (category is not null)
 					result = category.ClassInterface.IsAvailable (Platform);
 
 				if (!result.HasValue) {
 					// then check if we're a method inside a category
 					category = (decl.DeclContext as ObjCCategoryDecl);
-					if (category != null)
+					if (category is not null)
 						result = category.ClassInterface.IsAvailable (Platform);
 				}
 			}
-				
-			// but right now most frameworks consider tvOS and watchOS like iOS unless 
+
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
 			// decorated otherwise so we must check again if we do not get a definitve answer
-			if ((result == null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS)))
+			if ((result is null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
 				result = decl.IsAvailable (Platforms.iOS);
 			return !result.HasValue ? true : result.Value;
 		}
@@ -141,19 +173,76 @@ namespace Extrospection {
 				if (attr is UnavailableAttr)
 					return false;
 				var avail = (attr as AvailabilityAttr);
-				if (avail == null)
+				if (avail is null)
 					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
 				// if the headers says it's not available then we won't report it as missing
-				if (avail.Unavailable && (avail.Platform.Name == platform))
+				if (avail.Unavailable && (availName == platform))
 					return false;
 				// for iOS we won't report missing members that were deprecated before 5.0
-				if (!avail.Deprecated.IsEmpty && avail.Platform.Name == "ios" && avail.Deprecated.Major < 5)
+				if (!avail.Deprecated.IsEmpty && availName == "ios" && avail.Deprecated.Major < 5)
 					return false;
 				// can't return true right away as it can be deprecated too
-				if (!avail.Introduced.IsEmpty && (avail.Platform.Name == platform))
+				if (!avail.Introduced.IsEmpty && (availName == platform))
 					result = true;
 			}
 			return result;
+		}
+
+		public static bool IsDeprecated (this Decl decl)
+		{
+			// there's no doubt we need to ask for the current platform
+			var result = decl.IsDeprecated (Platform);
+
+			// some categories are not decorated (as not available) but they extend types that are
+			if (!result.HasValue) {
+				// first check if we're checking the category itself
+				var category = decl as ObjCCategoryDecl;
+				if (category is not null)
+					result = category.ClassInterface.IsDeprecated (Platform);
+
+				if (!result.HasValue) {
+					// then check if we're a method inside a category
+					category = (decl.DeclContext as ObjCCategoryDecl);
+					if (category is not null)
+						result = category.ClassInterface.IsDeprecated (Platform);
+				}
+			}
+
+			// but right now most frameworks consider tvOS, watchOS, and catalyst like iOS unless 
+			// decorated otherwise so we must check again if we do not get a definitve answer
+			if ((result is null) && ((Platform == Platforms.tvOS) || (Platform == Platforms.watchOS) || (Platform == Platforms.MacCatalyst)))
+				result = decl.IsDeprecated (Platforms.iOS);
+			return result == true;
+		}
+
+		static bool? IsDeprecated (this Decl decl, Platforms platform_value)
+		{
+			var platform = platform_value.ToString ().ToLowerInvariant ();
+			// First check if there are any deprecations
+			foreach (var attr in decl.Attrs) {
+				var avail = attr as AvailabilityAttr;
+				if (avail is null)
+					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
+				if (availName != platform)
+					continue;
+				if (!avail.Deprecated.IsEmpty)
+					return true;
+			}
+			// then check for introduced - there may be both, so we must check *all* attributes for deprecation before checking for introduced
+			foreach (var attr in decl.Attrs) {
+				var avail = attr as AvailabilityAttr;
+				if (avail is null)
+					continue;
+				var availName = avail.Platform.Name.ToLowerInvariant ();
+				if (availName != platform)
+					continue;
+				if (!avail.Introduced.IsEmpty)
+					return false;
+			}
+
+			return null;
 		}
 
 		public static bool IsDesignatedInitializer (this MethodDefinition self)
@@ -190,9 +279,9 @@ namespace Extrospection {
 
 		public static string GetName (this ObjCMethodDecl self)
 		{
-			if (self == null)
+			if (self is null)
 				return null;
-			
+
 			var sb = new StringBuilder ();
 			if (self.IsClassMethod)
 				sb.Append ('+');
@@ -209,7 +298,7 @@ namespace Extrospection {
 
 		public static string GetName (this TypeDefinition self)
 		{
-			if ((self == null) || !self.HasCustomAttributes)
+			if ((self is null) || !self.HasCustomAttributes)
 				return null;
 
 			if (self.IsStatic ()) {
@@ -219,6 +308,8 @@ namespace Extrospection {
 						if (ca.HasProperties)
 							return (ca.Properties [0].Argument.Value as string);
 						return self.Name;
+					} else if (ca.Constructor.DeclaringType.Name == "NativeNameAttribute") {
+						return (string) ca.ConstructorArguments [0].Value;
 					}
 				}
 			} else {
@@ -231,6 +322,12 @@ namespace Extrospection {
 						if (ca.HasConstructorArguments)
 							return (ca.ConstructorArguments [0].Value as string);
 						return self.Name;
+					} else if (ca.Constructor.DeclaringType.Name == "NativeNameAttribute") {
+						return (string) ca.ConstructorArguments [0].Value;
+					} else if (ca.Constructor.DeclaringType.Name == "NativeAttribute") {
+						if (ca.HasConstructorArguments)
+							return ca.ConstructorArguments [0].Value as string;
+						return self.Name;
 					}
 				}
 			}
@@ -239,7 +336,7 @@ namespace Extrospection {
 
 		public static string GetName (this MethodDefinition self)
 		{
-			if (self == null)
+			if (self is null)
 				return null;
 
 			var type = self.DeclaringType;
@@ -250,13 +347,13 @@ namespace Extrospection {
 			// static types, e.g. categories, won't have a [Register] attribute
 			if (type.IsStatic ()) {
 				if (self.HasParameters)
-					tname = self.Parameters [0].ParameterType.Name; // extension method
+					tname = self.Parameters [0].ParameterType.Resolve ().GetName (); // extension method
 			}
-			if (tname == null)
+			if (tname is null)
 				return null;
 
 			var selector = self.GetSelector ();
-			if (selector == null)
+			if (selector is null)
 				return null;
 
 			var sb = new StringBuilder ();
@@ -270,7 +367,7 @@ namespace Extrospection {
 
 		public static string GetSelector (this MethodDefinition self)
 		{
-			if ((self == null) || !self.HasCustomAttributes)
+			if ((self is null) || !self.HasCustomAttributes)
 				return null;
 
 			foreach (var ca in self.CustomAttributes) {
@@ -297,7 +394,7 @@ namespace Extrospection {
 
 			// If we're a property accessor, check the property as well.
 			var prop = FindProperty (provider as MethodReference);
-			if (prop != null)
+			if (prop is not null)
 				return IsObsolete (prop);
 
 			return false;
@@ -306,7 +403,7 @@ namespace Extrospection {
 		public static PropertyDefinition FindProperty (this MethodReference method)
 		{
 			var def = method?.Resolve ();
-			if (def == null)
+			if (def is null)
 				return null;
 
 			if (!def.IsSpecialName)
@@ -357,7 +454,7 @@ namespace Extrospection {
 			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
 			if (fxh <= 0)
 				return null;
-			
+
 			var start = header_file.LastIndexOf ('/', fxh) + 1;
 			return MapFramework (header_file.Substring (start, fxh - start));
 		}
@@ -439,6 +536,24 @@ namespace Extrospection {
 				return "UnsafeUnretained|Assign";
 
 			return argSem.ToString ();
+		}
+
+		public static string AsPlatformAttributeString (this Platforms platform)
+		{
+			switch (platform) {
+			case Platforms.iOS:
+				return "ios";
+			case Platforms.MacCatalyst:
+				return "maccatalyst";
+			case Platforms.macOS:
+				return "macos";
+			case Platforms.tvOS:
+				return "tvos";
+			case Platforms.watchOS:
+				return "watchos";
+			default:
+				throw new NotImplementedException (platform.ToString ());
+			}
 		}
 	}
 }

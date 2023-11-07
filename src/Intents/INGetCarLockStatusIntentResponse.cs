@@ -1,4 +1,4 @@
-﻿// INGetCarLockStatusIntentResponse.cs
+// INGetCarLockStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
@@ -6,7 +6,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && (IOS || TVOS)
+#if IOS
 
 using Foundation;
 using Intents;
@@ -20,7 +20,7 @@ namespace Intents {
 		// into bindings and making them virtual (not a breaking change)
 
 		public bool? Locked {
-			get { return _Locked == null ? null : (bool?) _Locked.BoolValue; }
+			get { return _Locked is null ? null : (bool?) _Locked.BoolValue; }
 		}
 	}
 }

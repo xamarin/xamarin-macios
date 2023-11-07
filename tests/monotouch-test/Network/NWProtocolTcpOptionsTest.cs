@@ -1,18 +1,11 @@
 #if !__WATCHOS__
 using System;
-using System.Threading;
-#if XAMCORE_2_0
+
 using Foundation;
 using Network;
-using ObjCRuntime;
-using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.CoreFoundation;
-#endif
 
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace MonoTouchFixtures.Network {
 
@@ -21,7 +14,7 @@ namespace MonoTouchFixtures.Network {
 	public class NWProtocolTcpOptionsTest {
 		NWProtocolTcpOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
@@ -44,7 +37,7 @@ namespace MonoTouchFixtures.Network {
 		public void NoPushTest () => Assert.DoesNotThrow (() => options.SetNoPush (true));
 
 		[Test]
-		public void NoOptionsTest ()=> Assert.DoesNotThrow (() => options.SetNoOptions (true));
+		public void NoOptionsTest () => Assert.DoesNotThrow (() => options.SetNoOptions (true));
 
 		[Test]
 		public void EnableKeepAliveTest () => Assert.DoesNotThrow (() => options.SetEnableKeepAlive (true));
@@ -79,6 +72,13 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void DisableEcnTest () => Assert.DoesNotThrow (() => options.SetDisableEcn (true));
+
+		[Test]
+		public void ForceMultipathVersionTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => options.ForceMultipathVersion (NWMultipathVersion.Version0));
+		}
 
 	}
 }

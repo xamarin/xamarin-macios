@@ -1,6 +1,5 @@
 ## Deprecated so not exposing it into Xamarin.Watch.dll
 ##!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod: not bound
-!missing-selector! INRideDriver::initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber: not bound
 
 ## False positive the class INBookRestaurantReservationIntentResponse is not available on watchOS
 !missing-enum! INBookRestaurantReservationIntentCode not bound
@@ -18,3 +17,30 @@
 !unknown-type! INRadioTypeResolutionResult bound
 !unknown-type! INRelativeReferenceResolutionResult bound
 !unknown-type! INRelativeSettingResolutionResult bound
+
+## These do not make sense to have on watchOS, we can bind later if needed
+!unknown-native-enum! INCarAirCirculationMode bound
+!unknown-native-enum! INCarAudioSource bound
+!unknown-native-enum! INCarDefroster bound
+!unknown-native-enum! INCarSeat bound
+!unknown-native-enum! INRadioType bound
+!unknown-native-enum! INRelativeReference bound
+!unknown-native-enum! INRelativeSetting bound
+!unknown-type! INParameter bound
+
+## SDK shipping with Xcode 12.5 is for watchOS 7.4 (not 7.3)
+!deprecated-attribute-wrong! INCallRecord::caller has 7.4 not 7.3 on [Deprecated] attribute
+!deprecated-attribute-wrong! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen: has 7.4 not 7.3 on [Deprecated] attribute
+!deprecated-attribute-wrong! INCallRecord::initWithIdentifier:dateCreated:caller:callRecordType:callCapability:callDuration:unseen:numberOfCalls: has 7.4 not 7.3 on [Deprecated] attribute
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
+!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
+!extra-enum-value! Managed value 12 for INStartCallIntentResponseCode.FailureCallRinging is available for the current platform while the value in the native header is not
+
+# removed in xamcore 5
+!extra-enum-value! Managed value 4 for INAddMediaIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 5 for INPlayMediaIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 7 for INStartWorkoutIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 8 for INStartWorkoutIntentResponseCode.Success is available for the current platform while the value in the native header is not

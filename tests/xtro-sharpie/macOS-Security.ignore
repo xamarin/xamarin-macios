@@ -4,7 +4,6 @@
 !unknown-pinvoke! SecKeyRawSign bound
 !unknown-pinvoke! SecKeyRawVerify bound
 
-
 ## unsorted
 
 !missing-enum! __CE_CrlDistributionPointNameType not bound
@@ -20,7 +19,6 @@
 !missing-enum! extension_data_format not bound
 !missing-enum! SecCodeSignatureFlags not bound
 !missing-enum! SecCodeStatus not bound
-!missing-enum! SecCredentialType not bound
 !missing-enum! SecCSDigestAlgorithm not bound
 !missing-enum! SecCSFlags not bound
 !missing-enum! SecExternalFormat not bound
@@ -32,471 +30,16 @@
 !missing-enum! SecKeychainEventMask not bound
 !missing-enum! SecKeychainPromptSelector not bound
 !missing-enum! SecKeyImportExportFlags not bound
-!missing-enum! SecKeySizes not bound
 !missing-enum! SecKeyUsage not bound
 !missing-enum! SecPreferencesDomain not bound
 !missing-enum! SecProtocolType not bound
 !missing-enum! SecRequirementType not bound
-!missing-enum! SecTransformMetaAttributeType not bound
 !missing-enum! SecTrustOptionFlags not bound
 !missing-enum! SecTrustSettingsDomain not bound
 !missing-enum! SecTrustSettingsKeyUsage not bound
 !missing-enum! SecTrustSettingsResult not bound
 !missing-enum! SessionAttributeBits not bound
 !missing-enum! SessionCreationFlags not bound
-!missing-field! CSSMOID_AD_CA_ISSUERS not bound
-!missing-field! CSSMOID_AD_CA_REPOSITORY not bound
-!missing-field! CSSMOID_AD_OCSP not bound
-!missing-field! CSSMOID_AD_TIME_STAMPING not bound
-!missing-field! CSSMOID_ADC_CERT_POLICY not bound
-!missing-field! CSSMOID_AliasedEntryName not bound
-!missing-field! CSSMOID_ANSI_DH_EPHEM not bound
-!missing-field! CSSMOID_ANSI_DH_EPHEM_SHA1 not bound
-!missing-field! CSSMOID_ANSI_DH_HYBRID_ONEFLOW not bound
-!missing-field! CSSMOID_ANSI_DH_HYBRID1 not bound
-!missing-field! CSSMOID_ANSI_DH_HYBRID1_SHA1 not bound
-!missing-field! CSSMOID_ANSI_DH_HYBRID2 not bound
-!missing-field! CSSMOID_ANSI_DH_HYBRID2_SHA1 not bound
-!missing-field! CSSMOID_ANSI_DH_ONE_FLOW not bound
-!missing-field! CSSMOID_ANSI_DH_ONE_FLOW_SHA1 not bound
-!missing-field! CSSMOID_ANSI_DH_PUB_NUMBER not bound
-!missing-field! CSSMOID_ANSI_DH_STATIC not bound
-!missing-field! CSSMOID_ANSI_DH_STATIC_SHA1 not bound
-!missing-field! CSSMOID_ANSI_MQV1 not bound
-!missing-field! CSSMOID_ANSI_MQV1_SHA1 not bound
-!missing-field! CSSMOID_ANSI_MQV2 not bound
-!missing-field! CSSMOID_ANSI_MQV2_SHA1 not bound
-!missing-field! CSSMOID_APPLE_ASC not bound
-!missing-field! CSSMOID_APPLE_CERT_POLICY not bound
-!missing-field! CSSMOID_APPLE_ECDSA not bound
-!missing-field! CSSMOID_APPLE_EKU_CODE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EKU_CODE_SIGNING_DEV not bound
-!missing-field! CSSMOID_APPLE_EKU_ICHAT_ENCRYPTION not bound
-!missing-field! CSSMOID_APPLE_EKU_ICHAT_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EKU_PASSBOOK_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EKU_PROFILE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EKU_QA_PROFILE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EKU_RESOURCE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EKU_SYSTEM_IDENTITY not bound
-!missing-field! CSSMOID_APPLE_EXTENSION not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_AAI_INTERMEDIATE not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_ADC_APPLE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_ADC_DEV_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_APPLE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_APPLEID_INTERMEDIATE not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_APPLEID_SHARING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_CODE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_DEVELOPER_AUTHENTICATION not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_ESCROW_SERVICE not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_INTERMEDIATE_MARKER not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_ITMS_INTERMEDIATE not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_MACAPPSTORE_RECEIPT not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_PASSBOOK_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_PROVISIONING_PROFILE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_SERVER_AUTHENTICATION not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_SYSINT2_INTERMEDIATE not bound
-!missing-field! CSSMOID_APPLE_EXTENSION_WWDR_INTERMEDIATE not bound
-!missing-field! CSSMOID_APPLE_FEE not bound
-!missing-field! CSSMOID_APPLE_FEE_MD5 not bound
-!missing-field! CSSMOID_APPLE_FEE_SHA1 not bound
-!missing-field! CSSMOID_APPLE_FEED not bound
-!missing-field! CSSMOID_APPLE_FEEDEXP not bound
-!missing-field! CSSMOID_APPLE_ISIGN not bound
-!missing-field! CSSMOID_APPLE_TP_APPLEID_SHARING not bound
-!missing-field! CSSMOID_APPLE_TP_CODE_SIGN not bound
-!missing-field! CSSMOID_APPLE_TP_CODE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_CSR_GEN not bound
-!missing-field! CSSMOID_APPLE_TP_EAP not bound
-!missing-field! CSSMOID_APPLE_TP_ESCROW_SERVICE not bound
-!missing-field! CSSMOID_APPLE_TP_ICHAT not bound
-!missing-field! CSSMOID_APPLE_TP_IP_SEC not bound
-!missing-field! CSSMOID_APPLE_TP_LOCAL_CERT_GEN not bound
-!missing-field! CSSMOID_APPLE_TP_MACAPPSTORE_RECEIPT not bound
-!missing-field! CSSMOID_APPLE_TP_MOBILE_STORE not bound
-!missing-field! CSSMOID_APPLE_TP_PACKAGE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_PASSBOOK_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_PCS_ESCROW_SERVICE not bound
-!missing-field! CSSMOID_APPLE_TP_PKINIT_CLIENT not bound
-!missing-field! CSSMOID_APPLE_TP_PKINIT_SERVER not bound
-!missing-field! CSSMOID_APPLE_TP_PROFILE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_PROVISIONING_PROFILE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_QA_PROFILE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_RESOURCE_SIGN not bound
-!missing-field! CSSMOID_APPLE_TP_REVOCATION not bound
-!missing-field! CSSMOID_APPLE_TP_REVOCATION_CRL not bound
-!missing-field! CSSMOID_APPLE_TP_REVOCATION_OCSP not bound
-!missing-field! CSSMOID_APPLE_TP_SMIME not bound
-!missing-field! CSSMOID_APPLE_TP_SSL not bound
-!missing-field! CSSMOID_APPLE_TP_SW_UPDATE_SIGNING not bound
-!missing-field! CSSMOID_APPLE_TP_TEST_MOBILE_STORE not bound
-!missing-field! CSSMOID_APPLE_TP_TIMESTAMPING not bound
-!missing-field! CSSMOID_APPLE_X509_BASIC not bound
-!missing-field! CSSMOID_APPLEID_CERT_POLICY not bound
-!missing-field! CSSMOID_APPLEID_SHARING_CERT_POLICY not bound
-!missing-field! CSSMOID_AuthorityInfoAccess not bound
-!missing-field! CSSMOID_AuthorityKeyIdentifier not bound
-!missing-field! CSSMOID_AuthorityRevocationList not bound
-!missing-field! CSSMOID_BasicConstraints not bound
-!missing-field! CSSMOID_BiometricInfo not bound
-!missing-field! CSSMOID_BusinessCategory not bound
-!missing-field! CSSMOID_CACertificate not bound
-!missing-field! CSSMOID_Certicom not bound
-!missing-field! CSSMOID_CerticomEllCurve not bound
-!missing-field! CSSMOID_CertificatePolicies not bound
-!missing-field! CSSMOID_CertificateRevocationList not bound
-!missing-field! CSSMOID_CertIssuer not bound
-!missing-field! CSSMOID_ChallengePassword not bound
-!missing-field! CSSMOID_ClientAuth not bound
-!missing-field! CSSMOID_CollectiveFacsimileTelephoneNumber not bound
-!missing-field! CSSMOID_CollectiveInternationalISDNNumber not bound
-!missing-field! CSSMOID_CollectiveOrganizationalUnitName not bound
-!missing-field! CSSMOID_CollectiveOrganizationName not bound
-!missing-field! CSSMOID_CollectivePhysicalDeliveryOfficeName not bound
-!missing-field! CSSMOID_CollectivePostalAddress not bound
-!missing-field! CSSMOID_CollectivePostalCode not bound
-!missing-field! CSSMOID_CollectivePostOfficeBox not bound
-!missing-field! CSSMOID_CollectiveStateProvinceName not bound
-!missing-field! CSSMOID_CollectiveStreetAddress not bound
-!missing-field! CSSMOID_CollectiveTelephoneNumber not bound
-!missing-field! CSSMOID_CollectiveTelexNumber not bound
-!missing-field! CSSMOID_CollectiveTelexTerminalIdentifier not bound
-!missing-field! CSSMOID_CommonName not bound
-!missing-field! CSSMOID_ContentType not bound
-!missing-field! CSSMOID_CounterSignature not bound
-!missing-field! CSSMOID_CountryName not bound
-!missing-field! CSSMOID_CrlDistributionPoints not bound
-!missing-field! CSSMOID_CrlNumber not bound
-!missing-field! CSSMOID_CrlReason not bound
-!missing-field! CSSMOID_CrossCertificatePair not bound
-!missing-field! CSSMOID_CSSMKeyStruct not bound
-!missing-field! CSSMOID_DeltaCrlIndicator not bound
-!missing-field! CSSMOID_DES_CBC not bound
-!missing-field! CSSMOID_Description not bound
-!missing-field! CSSMOID_DestinationIndicator not bound
-!missing-field! CSSMOID_DH not bound
-!missing-field! CSSMOID_DistinguishedName not bound
-!missing-field! CSSMOID_DNQualifier not bound
-!missing-field! CSSMOID_DomainComponent not bound
-!missing-field! CSSMOID_DOTMAC_CERT not bound
-!missing-field! CSSMOID_DOTMAC_CERT_EMAIL_ENCRYPT not bound
-!missing-field! CSSMOID_DOTMAC_CERT_EMAIL_SIGN not bound
-!missing-field! CSSMOID_DOTMAC_CERT_EXTENSION not bound
-!missing-field! CSSMOID_DOTMAC_CERT_IDENTITY not bound
-!missing-field! CSSMOID_DOTMAC_CERT_POLICY not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_ARCHIVE_FETCH not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_ARCHIVE_LIST not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_ARCHIVE_REMOVE not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_ARCHIVE_STORE not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_EMAIL_ENCRYPT not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_EMAIL_SIGN not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_IDENTITY not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_SHARED_SERVICES not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_VALUE_ASYNC not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_VALUE_HOSTNAME not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_VALUE_IS_PENDING not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_VALUE_PASSWORD not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_VALUE_RENEW not bound
-!missing-field! CSSMOID_DOTMAC_CERT_REQ_VALUE_USERNAME not bound
-!missing-field! CSSMOID_DSA not bound
-!missing-field! CSSMOID_DSA_CMS not bound
-!missing-field! CSSMOID_DSA_JDK not bound
-!missing-field! CSSMOID_ECDSA_WithSHA1 not bound
-!missing-field! CSSMOID_ECDSA_WithSHA224 not bound
-!missing-field! CSSMOID_ECDSA_WithSHA256 not bound
-!missing-field! CSSMOID_ECDSA_WithSHA384 not bound
-!missing-field! CSSMOID_ECDSA_WithSHA512 not bound
-!missing-field! CSSMOID_ECDSA_WithSpecified not bound
-!missing-field! CSSMOID_ecPublicKey not bound
-!missing-field! CSSMOID_EKU_IPSec not bound
-!missing-field! CSSMOID_EmailAddress not bound
-!missing-field! CSSMOID_EmailProtection not bound
-!missing-field! CSSMOID_EnhancedSearchGuide not bound
-!missing-field! CSSMOID_ETSI_QCS_QC_COMPLIANCE not bound
-!missing-field! CSSMOID_ETSI_QCS_QC_LIMIT_VALUE not bound
-!missing-field! CSSMOID_ETSI_QCS_QC_RETENTION not bound
-!missing-field! CSSMOID_ETSI_QCS_QC_SSCD not bound
-!missing-field! CSSMOID_ExtendedCertificateAttributes not bound
-!missing-field! CSSMOID_ExtendedKeyUsage not bound
-!missing-field! CSSMOID_ExtendedKeyUsageAny not bound
-!missing-field! CSSMOID_ExtendedUseCodeSigning not bound
-!missing-field! CSSMOID_FacsimileTelephoneNumber not bound
-!missing-field! CSSMOID_GenerationQualifier not bound
-!missing-field! CSSMOID_GivenName not bound
-!missing-field! CSSMOID_HoldInstructionCode not bound
-!missing-field! CSSMOID_HouseIdentifier not bound
-!missing-field! CSSMOID_InhibitAnyPolicy not bound
-!missing-field! CSSMOID_Initials not bound
-!missing-field! CSSMOID_InternationalISDNNumber not bound
-!missing-field! CSSMOID_InvalidityDate not bound
-!missing-field! CSSMOID_IssuerAltName not bound
-!missing-field! CSSMOID_IssuingDistributionPoint not bound
-!missing-field! CSSMOID_IssuingDistributionPoints not bound
-!missing-field! CSSMOID_KERBv5_PKINIT_AUTH_DATA not bound
-!missing-field! CSSMOID_KERBv5_PKINIT_DH_KEY_DATA not bound
-!missing-field! CSSMOID_KERBv5_PKINIT_KP_CLIENT_AUTH not bound
-!missing-field! CSSMOID_KERBv5_PKINIT_KP_KDC not bound
-!missing-field! CSSMOID_KERBv5_PKINIT_RKEY_DATA not bound
-!missing-field! CSSMOID_KeyUsage not bound
-!missing-field! CSSMOID_KnowledgeInformation not bound
-!missing-field! CSSMOID_LocalityName not bound
-!missing-field! CSSMOID_MACAPPSTORE_CERT_POLICY not bound
-!missing-field! CSSMOID_MACAPPSTORE_RECEIPT_CERT_POLICY not bound
-!missing-field! CSSMOID_MD2 not bound
-!missing-field! CSSMOID_MD2WithRSA not bound
-!missing-field! CSSMOID_MD4 not bound
-!missing-field! CSSMOID_MD4WithRSA not bound
-!missing-field! CSSMOID_MD5 not bound
-!missing-field! CSSMOID_MD5WithRSA not bound
-!missing-field! CSSMOID_Member not bound
-!missing-field! CSSMOID_MessageDigest not bound
-!missing-field! CSSMOID_MicrosoftSGC not bound
-!missing-field! CSSMOID_MOBILE_STORE_SIGNING_POLICY not bound
-!missing-field! CSSMOID_Name not bound
-!missing-field! CSSMOID_NameConstraints not bound
-!missing-field! CSSMOID_NetscapeCertSequence not bound
-!missing-field! CSSMOID_NetscapeCertType not bound
-!missing-field! CSSMOID_NetscapeSGC not bound
-!missing-field! CSSMOID_OAEP_ID_PSPECIFIED not bound
-!missing-field! CSSMOID_OAEP_MGF1 not bound
-!missing-field! CSSMOID_ObjectClass not bound
-!missing-field! CSSMOID_OCSPSigning not bound
-!missing-field! CSSMOID_OID_QCS_SYNTAX_V1 not bound
-!missing-field! CSSMOID_OID_QCS_SYNTAX_V2 not bound
-!missing-field! CSSMOID_OrganizationalUnitName not bound
-!missing-field! CSSMOID_OrganizationName not bound
-!missing-field! CSSMOID_Owner not bound
-!missing-field! CSSMOID_PDA_COUNTRY_CITIZEN not bound
-!missing-field! CSSMOID_PDA_COUNTRY_RESIDENCE not bound
-!missing-field! CSSMOID_PDA_DATE_OF_BIRTH not bound
-!missing-field! CSSMOID_PDA_GENDER not bound
-!missing-field! CSSMOID_PDA_PLACE_OF_BIRTH not bound
-!missing-field! CSSMOID_PhysicalDeliveryOfficeName not bound
-!missing-field! CSSMOID_PKCS12_certBag not bound
-!missing-field! CSSMOID_PKCS12_crlBag not bound
-!missing-field! CSSMOID_PKCS12_keyBag not bound
-!missing-field! CSSMOID_PKCS12_pbeWithSHAAnd128BitRC2CBC not bound
-!missing-field! CSSMOID_PKCS12_pbeWithSHAAnd128BitRC4 not bound
-!missing-field! CSSMOID_PKCS12_pbeWithSHAAnd2Key3DESCBC not bound
-!missing-field! CSSMOID_PKCS12_pbeWithSHAAnd3Key3DESCBC not bound
-!missing-field! CSSMOID_PKCS12_pbewithSHAAnd40BitRC2CBC not bound
-!missing-field! CSSMOID_PKCS12_pbeWithSHAAnd40BitRC4 not bound
-!missing-field! CSSMOID_PKCS12_safeContentsBag not bound
-!missing-field! CSSMOID_PKCS12_secretBag not bound
-!missing-field! CSSMOID_PKCS12_shroudedKeyBag not bound
-!missing-field! CSSMOID_PKCS3 not bound
-!missing-field! CSSMOID_PKCS5_DES_EDE3_CBC not bound
-!missing-field! CSSMOID_PKCS5_DIGEST_ALG not bound
-!missing-field! CSSMOID_PKCS5_ENCRYPT_ALG not bound
-!missing-field! CSSMOID_PKCS5_HMAC_SHA1 not bound
-!missing-field! CSSMOID_PKCS5_PBES2 not bound
-!missing-field! CSSMOID_PKCS5_pbeWithMD2AndDES not bound
-!missing-field! CSSMOID_PKCS5_pbeWithMD2AndRC2 not bound
-!missing-field! CSSMOID_PKCS5_pbeWithMD5AndDES not bound
-!missing-field! CSSMOID_PKCS5_pbeWithMD5AndRC2 not bound
-!missing-field! CSSMOID_PKCS5_pbeWithSHA1AndDES not bound
-!missing-field! CSSMOID_PKCS5_pbeWithSHA1AndRC2 not bound
-!missing-field! CSSMOID_PKCS5_PBKDF2 not bound
-!missing-field! CSSMOID_PKCS5_PBMAC1 not bound
-!missing-field! CSSMOID_PKCS5_RC2_CBC not bound
-!missing-field! CSSMOID_PKCS5_RC5_CBC not bound
-!missing-field! CSSMOID_PKCS7_Data not bound
-!missing-field! CSSMOID_PKCS7_DataWithAttributes not bound
-!missing-field! CSSMOID_PKCS7_DigestedData not bound
-!missing-field! CSSMOID_PKCS7_EncryptedData not bound
-!missing-field! CSSMOID_PKCS7_EncryptedPrivateKeyInfo not bound
-!missing-field! CSSMOID_PKCS7_EnvelopedData not bound
-!missing-field! CSSMOID_PKCS7_SignedAndEnvelopedData not bound
-!missing-field! CSSMOID_PKCS7_SignedData not bound
-!missing-field! CSSMOID_PKCS9_CertTypes not bound
-!missing-field! CSSMOID_PKCS9_CrlTypes not bound
-!missing-field! CSSMOID_PKCS9_FriendlyName not bound
-!missing-field! CSSMOID_PKCS9_Id_Ct_TSTInfo not bound
-!missing-field! CSSMOID_PKCS9_LocalKeyId not bound
-!missing-field! CSSMOID_PKCS9_SdsiCertificate not bound
-!missing-field! CSSMOID_PKCS9_TimeStampToken not bound
-!missing-field! CSSMOID_PKCS9_X509Certificate not bound
-!missing-field! CSSMOID_PKCS9_X509Crl not bound
-!missing-field! CSSMOID_PKIX_OCSP not bound
-!missing-field! CSSMOID_PKIX_OCSP_ARCHIVE_CUTOFF not bound
-!missing-field! CSSMOID_PKIX_OCSP_BASIC not bound
-!missing-field! CSSMOID_PKIX_OCSP_CRL not bound
-!missing-field! CSSMOID_PKIX_OCSP_NOCHECK not bound
-!missing-field! CSSMOID_PKIX_OCSP_NONCE not bound
-!missing-field! CSSMOID_PKIX_OCSP_RESPONSE not bound
-!missing-field! CSSMOID_PKIX_OCSP_SERVICE_LOCATOR not bound
-!missing-field! CSSMOID_PolicyConstraints not bound
-!missing-field! CSSMOID_PolicyMappings not bound
-!missing-field! CSSMOID_PostalAddress not bound
-!missing-field! CSSMOID_PostalCode not bound
-!missing-field! CSSMOID_PostOfficeBox not bound
-!missing-field! CSSMOID_PreferredDeliveryMethod not bound
-!missing-field! CSSMOID_PresentationAddress not bound
-!missing-field! CSSMOID_PrivateKeyUsagePeriod not bound
-!missing-field! CSSMOID_ProtocolInformation not bound
-!missing-field! CSSMOID_QC_Statements not bound
-!missing-field! CSSMOID_QT_CPS not bound
-!missing-field! CSSMOID_QT_UNOTICE not bound
-!missing-field! CSSMOID_RegisteredAddress not bound
-!missing-field! CSSMOID_RoleOccupant not bound
-!missing-field! CSSMOID_RSA not bound
-!missing-field! CSSMOID_RSAWithOAEP not bound
-!missing-field! CSSMOID_SearchGuide not bound
-!missing-field! CSSMOID_secp112r1 not bound
-!missing-field! CSSMOID_secp112r2 not bound
-!missing-field! CSSMOID_secp128r1 not bound
-!missing-field! CSSMOID_secp128r2 not bound
-!missing-field! CSSMOID_secp160k1 not bound
-!missing-field! CSSMOID_secp160r1 not bound
-!missing-field! CSSMOID_secp160r2 not bound
-!missing-field! CSSMOID_secp192k1 not bound
-!missing-field! CSSMOID_secp192r1 not bound
-!missing-field! CSSMOID_secp224k1 not bound
-!missing-field! CSSMOID_secp224r1 not bound
-!missing-field! CSSMOID_secp256k1 not bound
-!missing-field! CSSMOID_secp256r1 not bound
-!missing-field! CSSMOID_secp384r1 not bound
-!missing-field! CSSMOID_secp521r1 not bound
-!missing-field! CSSMOID_sect113r1 not bound
-!missing-field! CSSMOID_sect113r2 not bound
-!missing-field! CSSMOID_sect131r1 not bound
-!missing-field! CSSMOID_sect131r2 not bound
-!missing-field! CSSMOID_sect163k1 not bound
-!missing-field! CSSMOID_sect163r1 not bound
-!missing-field! CSSMOID_sect163r2 not bound
-!missing-field! CSSMOID_sect193r1 not bound
-!missing-field! CSSMOID_sect193r2 not bound
-!missing-field! CSSMOID_sect233k1 not bound
-!missing-field! CSSMOID_sect233r1 not bound
-!missing-field! CSSMOID_sect239k1 not bound
-!missing-field! CSSMOID_sect283k1 not bound
-!missing-field! CSSMOID_sect283r1 not bound
-!missing-field! CSSMOID_sect409k1 not bound
-!missing-field! CSSMOID_sect409r1 not bound
-!missing-field! CSSMOID_sect571k1 not bound
-!missing-field! CSSMOID_sect571r1 not bound
-!missing-field! CSSMOID_SeeAlso not bound
-!missing-field! CSSMOID_SerialNumber not bound
-!missing-field! CSSMOID_ServerAuth not bound
-!missing-field! CSSMOID_SHA1 not bound
-!missing-field! CSSMOID_SHA1WithDSA not bound
-!missing-field! CSSMOID_SHA1WithDSA_CMS not bound
-!missing-field! CSSMOID_SHA1WithDSA_JDK not bound
-!missing-field! CSSMOID_SHA1WithRSA not bound
-!missing-field! CSSMOID_SHA1WithRSA_OIW not bound
-!missing-field! CSSMOID_SHA224 not bound
-!missing-field! CSSMOID_SHA224WithRSA not bound
-!missing-field! CSSMOID_SHA256 not bound
-!missing-field! CSSMOID_SHA256WithRSA not bound
-!missing-field! CSSMOID_SHA384 not bound
-!missing-field! CSSMOID_SHA384WithRSA not bound
-!missing-field! CSSMOID_SHA512 not bound
-!missing-field! CSSMOID_SHA512WithRSA not bound
-!missing-field! CSSMOID_SigningTime not bound
-!missing-field! CSSMOID_StateProvinceName not bound
-!missing-field! CSSMOID_StreetAddress not bound
-!missing-field! CSSMOID_SubjectAltName not bound
-!missing-field! CSSMOID_SubjectDirectoryAttributes not bound
-!missing-field! CSSMOID_SubjectEmailAddress not bound
-!missing-field! CSSMOID_SubjectInfoAccess not bound
-!missing-field! CSSMOID_SubjectKeyIdentifier not bound
-!missing-field! CSSMOID_SubjectPicture not bound
-!missing-field! CSSMOID_SubjectSignatureBitmap not bound
-!missing-field! CSSMOID_SupportedApplicationContext not bound
-!missing-field! CSSMOID_Surname not bound
-!missing-field! CSSMOID_TelephoneNumber not bound
-!missing-field! CSSMOID_TelexNumber not bound
-!missing-field! CSSMOID_TelexTerminalIdentifier not bound
-!missing-field! CSSMOID_TEST_MOBILE_STORE_SIGNING_POLICY not bound
-!missing-field! CSSMOID_TimeStamping not bound
-!missing-field! CSSMOID_Title not bound
-!missing-field! CSSMOID_UniqueIdentifier not bound
-!missing-field! CSSMOID_UniqueMember not bound
-!missing-field! CSSMOID_UnstructuredAddress not bound
-!missing-field! CSSMOID_UnstructuredName not bound
-!missing-field! CSSMOID_UseExemptions not bound
-!missing-field! CSSMOID_UserCertificate not bound
-!missing-field! CSSMOID_UserID not bound
-!missing-field! CSSMOID_UserPassword not bound
-!missing-field! CSSMOID_X_121Address not bound
-!missing-field! CSSMOID_X509V1CertificateIssuerUniqueId not bound
-!missing-field! CSSMOID_X509V1CertificateSubjectUniqueId not bound
-!missing-field! CSSMOID_X509V1CRLIssuerNameCStruct not bound
-!missing-field! CSSMOID_X509V1CRLIssuerNameLDAP not bound
-!missing-field! CSSMOID_X509V1CRLIssuerStruct not bound
-!missing-field! CSSMOID_X509V1CRLNextUpdate not bound
-!missing-field! CSSMOID_X509V1CRLNumberOfRevokedCertEntries not bound
-!missing-field! CSSMOID_X509V1CRLRevokedCertificatesCStruct not bound
-!missing-field! CSSMOID_X509V1CRLRevokedCertificatesStruct not bound
-!missing-field! CSSMOID_X509V1CRLRevokedEntryCStruct not bound
-!missing-field! CSSMOID_X509V1CRLRevokedEntryRevocationDate not bound
-!missing-field! CSSMOID_X509V1CRLRevokedEntrySerialNumber not bound
-!missing-field! CSSMOID_X509V1CRLRevokedEntryStruct not bound
-!missing-field! CSSMOID_X509V1CRLThisUpdate not bound
-!missing-field! CSSMOID_X509V1IssuerName not bound
-!missing-field! CSSMOID_X509V1IssuerNameCStruct not bound
-!missing-field! CSSMOID_X509V1IssuerNameLDAP not bound
-!missing-field! CSSMOID_X509V1IssuerNameStd not bound
-!missing-field! CSSMOID_X509V1SerialNumber not bound
-!missing-field! CSSMOID_X509V1Signature not bound
-!missing-field! CSSMOID_X509V1SignatureAlgorithm not bound
-!missing-field! CSSMOID_X509V1SignatureAlgorithmParameters not bound
-!missing-field! CSSMOID_X509V1SignatureAlgorithmTBS not bound
-!missing-field! CSSMOID_X509V1SignatureCStruct not bound
-!missing-field! CSSMOID_X509V1SignatureStruct not bound
-!missing-field! CSSMOID_X509V1SubjectName not bound
-!missing-field! CSSMOID_X509V1SubjectNameCStruct not bound
-!missing-field! CSSMOID_X509V1SubjectNameLDAP not bound
-!missing-field! CSSMOID_X509V1SubjectNameStd not bound
-!missing-field! CSSMOID_X509V1SubjectPublicKey not bound
-!missing-field! CSSMOID_X509V1SubjectPublicKeyAlgorithm not bound
-!missing-field! CSSMOID_X509V1SubjectPublicKeyAlgorithmParameters not bound
-!missing-field! CSSMOID_X509V1SubjectPublicKeyCStruct not bound
-!missing-field! CSSMOID_X509V1ValidityNotAfter not bound
-!missing-field! CSSMOID_X509V1ValidityNotBefore not bound
-!missing-field! CSSMOID_X509V1Version not bound
-!missing-field! CSSMOID_X509V2CRLAllExtensionsCStruct not bound
-!missing-field! CSSMOID_X509V2CRLAllExtensionsStruct not bound
-!missing-field! CSSMOID_X509V2CRLExtensionCritical not bound
-!missing-field! CSSMOID_X509V2CRLExtensionId not bound
-!missing-field! CSSMOID_X509V2CRLExtensionType not bound
-!missing-field! CSSMOID_X509V2CRLNumberOfExtensions not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryAllExtensionsCStruct not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryAllExtensionsStruct not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryExtensionCritical not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryExtensionId not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryExtensionType not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryExtensionValue not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntryNumberOfExtensions not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntrySingleExtensionCStruct not bound
-!missing-field! CSSMOID_X509V2CRLRevokedEntrySingleExtensionStruct not bound
-!missing-field! CSSMOID_X509V2CRLSignedCrlCStruct not bound
-!missing-field! CSSMOID_X509V2CRLSignedCrlStruct not bound
-!missing-field! CSSMOID_X509V2CRLSingleExtensionCStruct not bound
-!missing-field! CSSMOID_X509V2CRLSingleExtensionStruct not bound
-!missing-field! CSSMOID_X509V2CRLTbsCertListCStruct not bound
-!missing-field! CSSMOID_X509V2CRLTbsCertListStruct not bound
-!missing-field! CSSMOID_X509V2CRLVersion not bound
-!missing-field! CSSMOID_X509V3Certificate not bound
-!missing-field! CSSMOID_X509V3CertificateCStruct not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionCritical not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionCStruct not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionId not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionsCStruct not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionsStruct not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionStruct not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionType not bound
-!missing-field! CSSMOID_X509V3CertificateExtensionValue not bound
-!missing-field! CSSMOID_X509V3CertificateNumberOfExtensions not bound
-!missing-field! CSSMOID_X509V3SignedCertificate not bound
-!missing-field! CSSMOID_X509V3SignedCertificateCStruct not bound
-!missing-field! CSSMOID_X9_62 not bound
-!missing-field! CSSMOID_X9_62_C_TwoCurve not bound
-!missing-field! CSSMOID_X9_62_EllCurve not bound
-!missing-field! CSSMOID_X9_62_FieldType not bound
-!missing-field! CSSMOID_X9_62_PrimeCurve not bound
-!missing-field! CSSMOID_X9_62_PubKeyType not bound
-!missing-field! CSSMOID_X9_62_SigType not bound
 !missing-field! gGuidAppleCSP not bound
 !missing-field! gGuidAppleCSPDL not bound
 !missing-field! gGuidAppleDotMacDL not bound
@@ -532,80 +75,6 @@
 !missing-field! kSecACLAuthorizationMAC not bound
 !missing-field! kSecACLAuthorizationPartitionID not bound
 !missing-field! kSecACLAuthorizationSign not bound
-!missing-field! kSecAsn1AnyTemplate not bound
-!missing-field! kSecAsn1BitStringTemplate not bound
-!missing-field! kSecAsn1BMPStringTemplate not bound
-!missing-field! kSecAsn1BooleanTemplate not bound
-!missing-field! kSecAsn1EnumeratedTemplate not bound
-!missing-field! kSecAsn1GeneralizedTimeTemplate not bound
-!missing-field! kSecAsn1IA5StringTemplate not bound
-!missing-field! kSecAsn1IntegerTemplate not bound
-!missing-field! kSecAsn1NullTemplate not bound
-!missing-field! kSecAsn1ObjectIDTemplate not bound
-!missing-field! kSecAsn1OctetStringTemplate not bound
-!missing-field! kSecAsn1PointerToAnyTemplate not bound
-!missing-field! kSecAsn1PointerToBitStringTemplate not bound
-!missing-field! kSecAsn1PointerToBMPStringTemplate not bound
-!missing-field! kSecAsn1PointerToBooleanTemplate not bound
-!missing-field! kSecAsn1PointerToEnumeratedTemplate not bound
-!missing-field! kSecAsn1PointerToGeneralizedTimeTemplate not bound
-!missing-field! kSecAsn1PointerToIA5StringTemplate not bound
-!missing-field! kSecAsn1PointerToIntegerTemplate not bound
-!missing-field! kSecAsn1PointerToNullTemplate not bound
-!missing-field! kSecAsn1PointerToObjectIDTemplate not bound
-!missing-field! kSecAsn1PointerToOctetStringTemplate not bound
-!missing-field! kSecAsn1PointerToPrintableStringTemplate not bound
-!missing-field! kSecAsn1PointerToT61StringTemplate not bound
-!missing-field! kSecAsn1PointerToTeletexStringTemplate not bound
-!missing-field! kSecAsn1PointerToUniversalStringTemplate not bound
-!missing-field! kSecAsn1PointerToUTCTimeTemplate not bound
-!missing-field! kSecAsn1PointerToUTF8StringTemplate not bound
-!missing-field! kSecAsn1PointerToVisibleStringTemplate not bound
-!missing-field! kSecAsn1PrintableStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfAnyTemplate not bound
-!missing-field! kSecAsn1SequenceOfBitStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfBMPStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfBooleanTemplate not bound
-!missing-field! kSecAsn1SequenceOfEnumeratedTemplate not bound
-!missing-field! kSecAsn1SequenceOfGeneralizedTimeTemplate not bound
-!missing-field! kSecAsn1SequenceOfIA5StringTemplate not bound
-!missing-field! kSecAsn1SequenceOfIntegerTemplate not bound
-!missing-field! kSecAsn1SequenceOfNullTemplate not bound
-!missing-field! kSecAsn1SequenceOfObjectIDTemplate not bound
-!missing-field! kSecAsn1SequenceOfOctetStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfPrintableStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfT61StringTemplate not bound
-!missing-field! kSecAsn1SequenceOfTeletexStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfUniversalStringTemplate not bound
-!missing-field! kSecAsn1SequenceOfUTCTimeTemplate not bound
-!missing-field! kSecAsn1SequenceOfUTF8StringTemplate not bound
-!missing-field! kSecAsn1SequenceOfVisibleStringTemplate not bound
-!missing-field! kSecAsn1SetOfAnyTemplate not bound
-!missing-field! kSecAsn1SetOfBitStringTemplate not bound
-!missing-field! kSecAsn1SetOfBMPStringTemplate not bound
-!missing-field! kSecAsn1SetOfBooleanTemplate not bound
-!missing-field! kSecAsn1SetOfEnumeratedTemplate not bound
-!missing-field! kSecAsn1SetOfGeneralizedTimeTemplate not bound
-!missing-field! kSecAsn1SetOfIA5StringTemplate not bound
-!missing-field! kSecAsn1SetOfIntegerTemplate not bound
-!missing-field! kSecAsn1SetOfNullTemplate not bound
-!missing-field! kSecAsn1SetOfObjectIDTemplate not bound
-!missing-field! kSecAsn1SetOfOctetStringTemplate not bound
-!missing-field! kSecAsn1SetOfPrintableStringTemplate not bound
-!missing-field! kSecAsn1SetOfT61StringTemplate not bound
-!missing-field! kSecAsn1SetOfTeletexStringTemplate not bound
-!missing-field! kSecAsn1SetOfUniversalStringTemplate not bound
-!missing-field! kSecAsn1SetOfUTCTimeTemplate not bound
-!missing-field! kSecAsn1SetOfUTF8StringTemplate not bound
-!missing-field! kSecAsn1SetOfVisibleStringTemplate not bound
-!missing-field! kSecAsn1SkipTemplate not bound
-!missing-field! kSecAsn1T61StringTemplate not bound
-!missing-field! kSecAsn1TeletexStringTemplate not bound
-!missing-field! kSecAsn1UniversalStringTemplate not bound
-!missing-field! kSecAsn1UnsignedIntegerTemplate not bound
-!missing-field! kSecAsn1UTCTimeTemplate not bound
-!missing-field! kSecAsn1UTF8StringTemplate not bound
-!missing-field! kSecAsn1VisibleStringTemplate not bound
 !missing-field! kSecAttrAccess not bound
 !missing-field! kSecAttrKeyType3DES not bound
 !missing-field! kSecAttrKeyTypeAES not bound
@@ -623,8 +92,6 @@
 !missing-field! kSecAttrPRFHmacAlgSHA512 not bound
 !missing-field! kSecAttrRounds not bound
 !missing-field! kSecAttrSalt not bound
-!missing-field! kSecBase32Encoding not bound
-!missing-field! kSecBase64Encoding not bound
 !missing-field! kSecCFErrorArchitecture not bound
 !missing-field! kSecCFErrorGuestAttributes not bound
 !missing-field! kSecCFErrorInfoPlist not bound
@@ -666,23 +133,7 @@
 !missing-field! kSecCodeInfoTrust not bound
 !missing-field! kSecCodeInfoUnique not bound
 !missing-field! kSecCodeInfoRuntimeVersion not bound
-!missing-field! kSecCompressionRatio not bound
 !missing-field! kSecDecodeTypeAttribute not bound
-!missing-field! kSecDigestHMACKeyAttribute not bound
-!missing-field! kSecDigestHMACMD5 not bound
-!missing-field! kSecDigestHMACSHA1 not bound
-!missing-field! kSecDigestHMACSHA2 not bound
-!missing-field! kSecDigestLengthAttribute not bound
-!missing-field! kSecDigestMD2 not bound
-!missing-field! kSecDigestMD4 not bound
-!missing-field! kSecDigestMD5 not bound
-!missing-field! kSecDigestSHA1 not bound
-!missing-field! kSecDigestSHA2 not bound
-!missing-field! kSecDigestTypeAttribute not bound
-!missing-field! kSecEncodeLineLengthAttribute not bound
-!missing-field! kSecEncodeTypeAttribute not bound
-!missing-field! kSecEncryptionMode not bound
-!missing-field! kSecEncryptKey not bound
 !missing-field! kSecGuestAttributeArchitecture not bound
 !missing-field! kSecGuestAttributeAudit not bound
 !missing-field! kSecGuestAttributeCanonical not bound
@@ -696,27 +147,14 @@
 !missing-field! kSecIdentityDomainKerberosKDC not bound
 !missing-field! kSecImportExportAccess not bound
 !missing-field! kSecImportExportKeychain not bound
-!missing-field! kSecInputIsAttributeName not bound
 !missing-field! kSecInputIsDigest not bound
 !missing-field! kSecInputIsPlainText not bound
-!missing-field! kSecInputIsRaw not bound
-!missing-field! kSecIVKey not bound
 !missing-field! kSecKeyAttributeName not bound
-!missing-field! kSecLineLength64 not bound
-!missing-field! kSecLineLength76 not bound
 !missing-field! kSecMatchDiacriticInsensitive not bound
 !missing-field! kSecMatchSubjectEndsWith not bound
 !missing-field! kSecMatchSubjectStartsWith not bound
 !missing-field! kSecMatchSubjectWholeString not bound
 !missing-field! kSecMatchWidthInsensitive not bound
-!missing-field! kSecModeCBCKey not bound
-!missing-field! kSecModeCFBKey not bound
-!missing-field! kSecModeECBKey not bound
-!missing-field! kSecModeNoneKey not bound
-!missing-field! kSecModeOFBKey not bound
-!missing-field! kSecOAEPEncodingParametersAttributeName not bound
-!missing-field! kSecOAEPMessageLengthAttributeName not bound
-!missing-field! kSecOAEPMGF1DigestAlgorithmAttributeName not bound
 !missing-field! kSecOIDADC_CERT_POLICY not bound
 !missing-field! kSecOIDAPPLE_CERT_POLICY not bound
 !missing-field! kSecOIDAPPLE_EKU_CODE_SIGNING not bound
@@ -838,13 +276,6 @@
 !missing-field! kSecOIDX509V3CertificateNumberOfExtensions not bound
 !missing-field! kSecOIDX509V3SignedCertificate not bound
 !missing-field! kSecOIDX509V3SignedCertificateCStruct not bound
-!missing-field! kSecPaddingKey not bound
-!missing-field! kSecPaddingNoneKey not bound
-!missing-field! kSecPaddingOAEPKey not bound
-!missing-field! kSecPaddingPKCS1Key not bound
-!missing-field! kSecPaddingPKCS5Key not bound
-!missing-field! kSecPaddingPKCS7Key not bound
-!missing-field! kSecPolicyAppleiChat not bound
 !missing-field! kSecPolicyKU_CRLSign not bound
 !missing-field! kSecPolicyKU_DataEncipherment not bound
 !missing-field! kSecPolicyKU_DecipherOnly not bound
@@ -862,26 +293,10 @@
 !missing-field! kSecPropertyTypeURL not bound
 !missing-field! kSecPropertyTypeWarning not bound
 !missing-field! kSecSignatureAttributeName not bound
-!missing-field! kSecTransformAbortAttributeName not bound
 !missing-field! kSecTransformAbortOriginatorKey not bound
-!missing-field! kSecTransformActionAttributeNotification not bound
-!missing-field! kSecTransformActionAttributeValidation not bound
-!missing-field! kSecTransformActionCanExecute not bound
-!missing-field! kSecTransformActionExternalizeExtraData not bound
-!missing-field! kSecTransformActionFinalize not bound
-!missing-field! kSecTransformActionInternalizeExtraData not bound
-!missing-field! kSecTransformActionProcessData not bound
-!missing-field! kSecTransformActionStartingExecution not bound
-!missing-field! kSecTransformDebugAttributeName not bound
 !missing-field! kSecTransformErrorDomain not bound
-!missing-field! kSecTransformInputAttributeName not bound
-!missing-field! kSecTransformOutputAttributeName not bound
 !missing-field! kSecTransformPreviousErrorKey not bound
-!missing-field! kSecTransformTransformName not bound
 !missing-field! kSecUseKeychain not bound
-!missing-field! kSecUseNoAuthenticationUI not bound
-!missing-field! kSecUseOperationPrompt not bound
-!missing-field! kSecZLibEncoding not bound
 !missing-field! oidAdCAIssuer not bound
 !missing-field! oidAdOCSP not bound
 !missing-field! oidAnsip384r1 not bound
@@ -963,7 +378,6 @@
 !missing-field! oidSubjectInfoAccess not bound
 !missing-field! oidSubjectKeyIdentifier not bound
 !missing-pinvoke! AuthorizationCopyInfo is not bound
-!missing-pinvoke! AuthorizationCopyPrivilegedReference is not bound
 !missing-pinvoke! AuthorizationCopyRights is not bound
 !missing-pinvoke! AuthorizationCopyRightsAsync is not bound
 !missing-pinvoke! AuthorizationCreateFromExternalForm is not bound
@@ -990,9 +404,7 @@
 !missing-pinvoke! CMSDecoderGetTypeID is not bound
 !missing-pinvoke! CMSDecoderIsContentEncrypted is not bound
 !missing-pinvoke! CMSDecoderSetDetachedContent is not bound
-!missing-pinvoke! CMSDecoderSetSearchKeychain is not bound
 !missing-pinvoke! CMSDecoderUpdateMessage is not bound
-!missing-pinvoke! CMSEncode is not bound
 !missing-pinvoke! CMSEncodeContent is not bound
 !missing-pinvoke! CMSEncoderAddRecipients is not bound
 !missing-pinvoke! CMSEncoderAddSignedAttributes is not bound
@@ -1010,246 +422,17 @@
 !missing-pinvoke! CMSEncoderGetHasDetachedContent is not bound
 !missing-pinvoke! CMSEncoderGetTypeID is not bound
 !missing-pinvoke! CMSEncoderSetCertificateChainMode is not bound
-!missing-pinvoke! CMSEncoderSetEncapsulatedContentType is not bound
 !missing-pinvoke! CMSEncoderSetEncapsulatedContentTypeOID is not bound
 !missing-pinvoke! CMSEncoderSetHasDetachedContent is not bound
 !missing-pinvoke! CMSEncoderSetSignerAlgorithm is not bound
 !missing-pinvoke! CMSEncoderUpdateContent is not bound
-!missing-pinvoke! CSSM_AC_AuthCompute is not bound
-!missing-pinvoke! CSSM_AC_PassThrough is not bound
-!missing-pinvoke! CSSM_ChangeKeyAcl is not bound
-!missing-pinvoke! CSSM_ChangeKeyOwner is not bound
-!missing-pinvoke! CSSM_CL_CertAbortCache is not bound
-!missing-pinvoke! CSSM_CL_CertAbortQuery is not bound
-!missing-pinvoke! CSSM_CL_CertCache is not bound
-!missing-pinvoke! CSSM_CL_CertCreateTemplate is not bound
-!missing-pinvoke! CSSM_CL_CertDescribeFormat is not bound
-!missing-pinvoke! CSSM_CL_CertGetAllFields is not bound
-!missing-pinvoke! CSSM_CL_CertGetAllTemplateFields is not bound
-!missing-pinvoke! CSSM_CL_CertGetFirstCachedFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CertGetFirstFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CertGetKeyInfo is not bound
-!missing-pinvoke! CSSM_CL_CertGetNextCachedFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CertGetNextFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CertGroupFromVerifiedBundle is not bound
-!missing-pinvoke! CSSM_CL_CertGroupToSignedBundle is not bound
-!missing-pinvoke! CSSM_CL_CertSign is not bound
-!missing-pinvoke! CSSM_CL_CertVerify is not bound
-!missing-pinvoke! CSSM_CL_CertVerifyWithKey is not bound
-!missing-pinvoke! CSSM_CL_CrlAbortCache is not bound
-!missing-pinvoke! CSSM_CL_CrlAbortQuery is not bound
-!missing-pinvoke! CSSM_CL_CrlAddCert is not bound
-!missing-pinvoke! CSSM_CL_CrlCache is not bound
-!missing-pinvoke! CSSM_CL_CrlCreateTemplate is not bound
-!missing-pinvoke! CSSM_CL_CrlDescribeFormat is not bound
-!missing-pinvoke! CSSM_CL_CrlGetAllCachedRecordFields is not bound
-!missing-pinvoke! CSSM_CL_CrlGetAllFields is not bound
-!missing-pinvoke! CSSM_CL_CrlGetFirstCachedFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CrlGetFirstFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CrlGetNextCachedFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CrlGetNextFieldValue is not bound
-!missing-pinvoke! CSSM_CL_CrlRemoveCert is not bound
-!missing-pinvoke! CSSM_CL_CrlSetFields is not bound
-!missing-pinvoke! CSSM_CL_CrlSign is not bound
-!missing-pinvoke! CSSM_CL_CrlVerify is not bound
-!missing-pinvoke! CSSM_CL_CrlVerifyWithKey is not bound
-!missing-pinvoke! CSSM_CL_FreeFields is not bound
-!missing-pinvoke! CSSM_CL_FreeFieldValue is not bound
-!missing-pinvoke! CSSM_CL_IsCertInCachedCrl is not bound
-!missing-pinvoke! CSSM_CL_IsCertInCrl is not bound
-!missing-pinvoke! CSSM_CL_PassThrough is not bound
-!missing-pinvoke! CSSM_CSP_ChangeLoginAcl is not bound
-!missing-pinvoke! CSSM_CSP_ChangeLoginOwner is not bound
-!missing-pinvoke! CSSM_CSP_CreateAsymmetricContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateDeriveKeyContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateDigestContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateKeyGenContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateMacContext is not bound
-!missing-pinvoke! CSSM_CSP_CreatePassThroughContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateRandomGenContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateSignatureContext is not bound
-!missing-pinvoke! CSSM_CSP_CreateSymmetricContext is not bound
-!missing-pinvoke! CSSM_CSP_GetLoginAcl is not bound
-!missing-pinvoke! CSSM_CSP_GetLoginOwner is not bound
-!missing-pinvoke! CSSM_CSP_GetOperationalStatistics is not bound
-!missing-pinvoke! CSSM_CSP_Login is not bound
-!missing-pinvoke! CSSM_CSP_Logout is not bound
-!missing-pinvoke! CSSM_CSP_ObtainPrivateKeyFromPublicKey is not bound
-!missing-pinvoke! CSSM_CSP_PassThrough is not bound
-!missing-pinvoke! CSSM_DecryptData is not bound
-!missing-pinvoke! CSSM_DecryptDataFinal is not bound
-!missing-pinvoke! CSSM_DecryptDataInit is not bound
-!missing-pinvoke! CSSM_DecryptDataInitP is not bound
-!missing-pinvoke! CSSM_DecryptDataP is not bound
-!missing-pinvoke! CSSM_DecryptDataUpdate is not bound
-!missing-pinvoke! CSSM_DeleteContext is not bound
-!missing-pinvoke! CSSM_DeleteContextAttributes is not bound
-!missing-pinvoke! CSSM_DeriveKey is not bound
-!missing-pinvoke! CSSM_DigestData is not bound
-!missing-pinvoke! CSSM_DigestDataClone is not bound
-!missing-pinvoke! CSSM_DigestDataFinal is not bound
-!missing-pinvoke! CSSM_DigestDataInit is not bound
-!missing-pinvoke! CSSM_DigestDataUpdate is not bound
-!missing-pinvoke! CSSM_DL_Authenticate is not bound
-!missing-pinvoke! CSSM_DL_ChangeDbAcl is not bound
-!missing-pinvoke! CSSM_DL_ChangeDbOwner is not bound
-!missing-pinvoke! CSSM_DL_CreateRelation is not bound
-!missing-pinvoke! CSSM_DL_DataAbortQuery is not bound
-!missing-pinvoke! CSSM_DL_DataDelete is not bound
-!missing-pinvoke! CSSM_DL_DataGetFirst is not bound
-!missing-pinvoke! CSSM_DL_DataGetFromUniqueRecordId is not bound
-!missing-pinvoke! CSSM_DL_DataGetNext is not bound
-!missing-pinvoke! CSSM_DL_DataInsert is not bound
-!missing-pinvoke! CSSM_DL_DataModify is not bound
-!missing-pinvoke! CSSM_DL_DbClose is not bound
-!missing-pinvoke! CSSM_DL_DbCreate is not bound
-!missing-pinvoke! CSSM_DL_DbDelete is not bound
-!missing-pinvoke! CSSM_DL_DbOpen is not bound
-!missing-pinvoke! CSSM_DL_DestroyRelation is not bound
-!missing-pinvoke! CSSM_DL_FreeNameList is not bound
-!missing-pinvoke! CSSM_DL_FreeUniqueRecord is not bound
-!missing-pinvoke! CSSM_DL_GetDbAcl is not bound
-!missing-pinvoke! CSSM_DL_GetDbNameFromHandle is not bound
-!missing-pinvoke! CSSM_DL_GetDbNames is not bound
-!missing-pinvoke! CSSM_DL_GetDbOwner is not bound
-!missing-pinvoke! CSSM_DL_PassThrough is not bound
-!missing-pinvoke! CSSM_EncryptData is not bound
-!missing-pinvoke! CSSM_EncryptDataFinal is not bound
-!missing-pinvoke! CSSM_EncryptDataInit is not bound
-!missing-pinvoke! CSSM_EncryptDataInitP is not bound
-!missing-pinvoke! CSSM_EncryptDataP is not bound
-!missing-pinvoke! CSSM_EncryptDataUpdate is not bound
-!missing-pinvoke! CSSM_FreeContext is not bound
-!missing-pinvoke! CSSM_FreeKey is not bound
-!missing-pinvoke! CSSM_GenerateAlgorithmParams is not bound
-!missing-pinvoke! CSSM_GenerateKey is not bound
-!missing-pinvoke! CSSM_GenerateKeyP is not bound
-!missing-pinvoke! CSSM_GenerateKeyPair is not bound
-!missing-pinvoke! CSSM_GenerateKeyPairP is not bound
-!missing-pinvoke! CSSM_GenerateMac is not bound
-!missing-pinvoke! CSSM_GenerateMacFinal is not bound
-!missing-pinvoke! CSSM_GenerateMacInit is not bound
-!missing-pinvoke! CSSM_GenerateMacUpdate is not bound
-!missing-pinvoke! CSSM_GenerateRandom is not bound
-!missing-pinvoke! CSSM_GetAPIMemoryFunctions is not bound
-!missing-pinvoke! CSSM_GetContext is not bound
-!missing-pinvoke! CSSM_GetContextAttribute is not bound
-!missing-pinvoke! CSSM_GetKeyAcl is not bound
-!missing-pinvoke! CSSM_GetKeyOwner is not bound
-!missing-pinvoke! CSSM_GetModuleGUIDFromHandle is not bound
-!missing-pinvoke! CSSM_GetPrivilege is not bound
-!missing-pinvoke! CSSM_GetSubserviceUIDFromHandle is not bound
-!missing-pinvoke! CSSM_GetTimeValue is not bound
-!missing-pinvoke! CSSM_Init is not bound
-!missing-pinvoke! CSSM_Introduce is not bound
-!missing-pinvoke! CSSM_ListAttachedModuleManagers is not bound
-!missing-pinvoke! CSSM_ModuleAttach is not bound
-!missing-pinvoke! CSSM_ModuleDetach is not bound
-!missing-pinvoke! CSSM_ModuleLoad is not bound
-!missing-pinvoke! CSSM_ModuleUnload is not bound
-!missing-pinvoke! CSSM_QueryKeySizeInBits is not bound
-!missing-pinvoke! CSSM_QuerySize is not bound
-!missing-pinvoke! CSSM_RetrieveCounter is not bound
-!missing-pinvoke! CSSM_RetrieveUniqueId is not bound
-!missing-pinvoke! CSSM_SetContext is not bound
-!missing-pinvoke! CSSM_SetPrivilege is not bound
-!missing-pinvoke! CSSM_SignData is not bound
-!missing-pinvoke! CSSM_SignDataFinal is not bound
-!missing-pinvoke! CSSM_SignDataInit is not bound
-!missing-pinvoke! CSSM_SignDataUpdate is not bound
-!missing-pinvoke! CSSM_Terminate is not bound
-!missing-pinvoke! CSSM_TP_ApplyCrlToDb is not bound
-!missing-pinvoke! CSSM_TP_CertCreateTemplate is not bound
-!missing-pinvoke! CSSM_TP_CertGetAllTemplateFields is not bound
-!missing-pinvoke! CSSM_TP_CertGroupConstruct is not bound
-!missing-pinvoke! CSSM_TP_CertGroupPrune is not bound
-!missing-pinvoke! CSSM_TP_CertGroupToTupleGroup is not bound
-!missing-pinvoke! CSSM_TP_CertGroupVerify is not bound
-!missing-pinvoke! CSSM_TP_CertReclaimAbort is not bound
-!missing-pinvoke! CSSM_TP_CertReclaimKey is not bound
-!missing-pinvoke! CSSM_TP_CertRemoveFromCrlTemplate is not bound
-!missing-pinvoke! CSSM_TP_CertRevoke is not bound
-!missing-pinvoke! CSSM_TP_CertSign is not bound
-!missing-pinvoke! CSSM_TP_ConfirmCredResult is not bound
-!missing-pinvoke! CSSM_TP_CrlCreateTemplate is not bound
-!missing-pinvoke! CSSM_TP_CrlSign is not bound
-!missing-pinvoke! CSSM_TP_CrlVerify is not bound
-!missing-pinvoke! CSSM_TP_FormRequest is not bound
-!missing-pinvoke! CSSM_TP_FormSubmit is not bound
-!missing-pinvoke! CSSM_TP_PassThrough is not bound
-!missing-pinvoke! CSSM_TP_ReceiveConfirmation is not bound
-!missing-pinvoke! CSSM_TP_RetrieveCredResult is not bound
-!missing-pinvoke! CSSM_TP_SubmitCredRequest is not bound
-!missing-pinvoke! CSSM_TP_TupleGroupToCertGroup is not bound
-!missing-pinvoke! CSSM_Unintroduce is not bound
-!missing-pinvoke! CSSM_UnwrapKey is not bound
-!missing-pinvoke! CSSM_UnwrapKeyP is not bound
-!missing-pinvoke! CSSM_UpdateContextAttributes is not bound
-!missing-pinvoke! CSSM_VerifyData is not bound
-!missing-pinvoke! CSSM_VerifyDataFinal is not bound
-!missing-pinvoke! CSSM_VerifyDataInit is not bound
-!missing-pinvoke! CSSM_VerifyDataUpdate is not bound
-!missing-pinvoke! CSSM_VerifyDevice is not bound
-!missing-pinvoke! CSSM_VerifyMac is not bound
-!missing-pinvoke! CSSM_VerifyMacFinal is not bound
-!missing-pinvoke! CSSM_VerifyMacInit is not bound
-!missing-pinvoke! CSSM_VerifyMacUpdate is not bound
-!missing-pinvoke! CSSM_WrapKey is not bound
-!missing-pinvoke! CSSM_WrapKeyP is not bound
 !missing-pinvoke! cssmAlgToOid is not bound
 !missing-pinvoke! cssmOidToAlg is not bound
 !missing-pinvoke! cssmPerror is not bound
-!missing-pinvoke! MDS_Initialize is not bound
-!missing-pinvoke! MDS_Install is not bound
-!missing-pinvoke! MDS_Terminate is not bound
-!missing-pinvoke! MDS_Uninstall is not bound
-!missing-pinvoke! SecAccessCopyACLList is not bound
-!missing-pinvoke! SecAccessCopyMatchingACLList is not bound
-!missing-pinvoke! SecAccessCopyOwnerAndACL is not bound
-!missing-pinvoke! SecAccessCopySelectedACLList is not bound
-!missing-pinvoke! SecAccessCreate is not bound
-!missing-pinvoke! SecAccessCreateFromOwnerAndACL is not bound
-!missing-pinvoke! SecAccessCreateWithOwnerAndACL is not bound
-!missing-pinvoke! SecAccessGetOwnerAndACL is not bound
-!missing-pinvoke! SecAccessGetTypeID is not bound
-!missing-pinvoke! SecACLCopyAuthorizations is not bound
-!missing-pinvoke! SecACLCopyContents is not bound
-!missing-pinvoke! SecACLCopySimpleContents is not bound
-!missing-pinvoke! SecACLCreateFromSimpleContents is not bound
-!missing-pinvoke! SecACLCreateWithSimpleContents is not bound
-!missing-pinvoke! SecACLGetAuthorizations is not bound
-!missing-pinvoke! SecACLGetTypeID is not bound
-!missing-pinvoke! SecACLRemove is not bound
-!missing-pinvoke! SecACLSetAuthorizations is not bound
-!missing-pinvoke! SecACLSetContents is not bound
-!missing-pinvoke! SecACLSetSimpleContents is not bound
-!missing-pinvoke! SecACLUpdateAuthorizations is not bound
-!missing-pinvoke! SecAsn1AllocCopy is not bound
-!missing-pinvoke! SecAsn1AllocCopyItem is not bound
-!missing-pinvoke! SecAsn1AllocItem is not bound
-!missing-pinvoke! SecAsn1CoderCreate is not bound
-!missing-pinvoke! SecAsn1CoderRelease is not bound
-!missing-pinvoke! SecAsn1Decode is not bound
-!missing-pinvoke! SecAsn1DecodeData is not bound
-!missing-pinvoke! SecAsn1EncodeItem is not bound
-!missing-pinvoke! SecAsn1Malloc is not bound
-!missing-pinvoke! SecAsn1OidCompare is not bound
 !missing-pinvoke! SecCertificateAddToKeychain is not bound
 !missing-pinvoke! SecCertificateCopyLongDescription is not bound
-!missing-pinvoke! SecCertificateCopyNormalizedIssuerContent is not bound
-!missing-pinvoke! SecCertificateCopyNormalizedSubjectContent is not bound
-!missing-pinvoke! SecCertificateCopyPreference is not bound
 !missing-pinvoke! SecCertificateCopyPreferred is not bound
-!missing-pinvoke! SecCertificateCopyPublicKey is not bound
 !missing-pinvoke! SecCertificateCopyShortDescription is not bound
-!missing-pinvoke! SecCertificateCreateFromData is not bound
-!missing-pinvoke! SecCertificateGetAlgorithmID is not bound
-!missing-pinvoke! SecCertificateGetCLHandle is not bound
-!missing-pinvoke! SecCertificateGetData is not bound
-!missing-pinvoke! SecCertificateGetIssuer is not bound
-!missing-pinvoke! SecCertificateGetSubject is not bound
-!missing-pinvoke! SecCertificateGetType is not bound
-!missing-pinvoke! SecCertificateSetPreference is not bound
 !missing-pinvoke! SecCertificateSetPreferred is not bound
 !missing-pinvoke! SecCodeCheckValidity is not bound
 !missing-pinvoke! SecCodeCheckValidityWithErrors is not bound
@@ -1262,107 +445,19 @@
 !missing-pinvoke! SecCodeCopyStaticCode is not bound
 !missing-pinvoke! SecCodeGetTypeID is not bound
 !missing-pinvoke! SecCodeMapMemory is not bound
-!missing-pinvoke! SecDecodeTransformCreate is not bound
-!missing-pinvoke! SecDecryptTransformCreate is not bound
-!missing-pinvoke! SecDecryptTransformGetTypeID is not bound
-!missing-pinvoke! SecDigestTransformCreate is not bound
-!missing-pinvoke! SecDigestTransformGetTypeID is not bound
-!missing-pinvoke! SecEncodeTransformCreate is not bound
-!missing-pinvoke! SecEncryptTransformCreate is not bound
-!missing-pinvoke! SecEncryptTransformGetTypeID is not bound
-!missing-pinvoke! SecGroupTransformGetTypeID is not bound
-!missing-pinvoke! SecIdentityCopyPreference is not bound
 !missing-pinvoke! SecIdentityCopyPreferred is not bound
 !missing-pinvoke! SecIdentityCopySystemIdentity is not bound
 !missing-pinvoke! SecIdentityCreateWithCertificate is not bound
-!missing-pinvoke! SecIdentitySearchCopyNext is not bound
-!missing-pinvoke! SecIdentitySearchCreate is not bound
-!missing-pinvoke! SecIdentitySearchGetTypeID is not bound
-!missing-pinvoke! SecIdentitySetPreference is not bound
 !missing-pinvoke! SecIdentitySetPreferred is not bound
 !missing-pinvoke! SecIdentitySetSystemIdentity is not bound
 !missing-pinvoke! SecItemExport is not bound
 !missing-pinvoke! SecItemImport is not bound
-!missing-pinvoke! SecKeychainAddCallback is not bound
-!missing-pinvoke! SecKeychainAttributeInfoForItemID is not bound
-!missing-pinvoke! SecKeychainCopyAccess is not bound
-!missing-pinvoke! SecKeychainCopyDefault is not bound
-!missing-pinvoke! SecKeychainCopyDomainDefault is not bound
-!missing-pinvoke! SecKeychainCopyDomainSearchList is not bound
-!missing-pinvoke! SecKeychainCopySearchList is not bound
-!missing-pinvoke! SecKeychainCopySettings is not bound
-!missing-pinvoke! SecKeychainCreate is not bound
-!missing-pinvoke! SecKeychainDelete is not bound
-!missing-pinvoke! SecKeychainFreeAttributeInfo is not bound
-!missing-pinvoke! SecKeychainGetCSPHandle is not bound
-!missing-pinvoke! SecKeychainGetDLDBHandle is not bound
-!missing-pinvoke! SecKeychainGetPath is not bound
-!missing-pinvoke! SecKeychainGetPreferenceDomain is not bound
-!missing-pinvoke! SecKeychainGetStatus is not bound
-!missing-pinvoke! SecKeychainGetTypeID is not bound
-!missing-pinvoke! SecKeychainGetUserInteractionAllowed is not bound
-!missing-pinvoke! SecKeychainGetVersion is not bound
-!missing-pinvoke! SecKeychainItemCopyAccess is not bound
-!missing-pinvoke! SecKeychainItemCopyAttributesAndData is not bound
-!missing-pinvoke! SecKeychainItemCopyContent is not bound
-!missing-pinvoke! SecKeychainItemCopyFromPersistentReference is not bound
-!missing-pinvoke! SecKeychainItemCopyKeychain is not bound
-!missing-pinvoke! SecKeychainItemCreateCopy is not bound
-!missing-pinvoke! SecKeychainItemCreateFromContent is not bound
-!missing-pinvoke! SecKeychainItemCreatePersistentReference is not bound
-!missing-pinvoke! SecKeychainItemDelete is not bound
-!missing-pinvoke! SecKeychainItemExport is not bound
-!missing-pinvoke! SecKeychainItemFreeAttributesAndData is not bound
-!missing-pinvoke! SecKeychainItemGetDLDBHandle is not bound
-!missing-pinvoke! SecKeychainItemGetTypeID is not bound
-!missing-pinvoke! SecKeychainItemGetUniqueRecordID is not bound
-!missing-pinvoke! SecKeychainItemImport is not bound
-!missing-pinvoke! SecKeychainItemModifyAttributesAndData is not bound
-!missing-pinvoke! SecKeychainItemModifyContent is not bound
-!missing-pinvoke! SecKeychainItemSetAccess is not bound
-!missing-pinvoke! SecKeychainLock is not bound
-!missing-pinvoke! SecKeychainLockAll is not bound
-!missing-pinvoke! SecKeychainOpen is not bound
-!missing-pinvoke! SecKeychainRemoveCallback is not bound
-!missing-pinvoke! SecKeychainSearchCopyNext is not bound
-!missing-pinvoke! SecKeychainSearchCreateFromAttributes is not bound
-!missing-pinvoke! SecKeychainSearchGetTypeID is not bound
-!missing-pinvoke! SecKeychainSetAccess is not bound
-!missing-pinvoke! SecKeychainSetDefault is not bound
-!missing-pinvoke! SecKeychainSetDomainDefault is not bound
-!missing-pinvoke! SecKeychainSetDomainSearchList is not bound
-!missing-pinvoke! SecKeychainSetPreferenceDomain is not bound
-!missing-pinvoke! SecKeychainSetSearchList is not bound
-!missing-pinvoke! SecKeychainSetSettings is not bound
-!missing-pinvoke! SecKeychainSetUserInteractionAllowed is not bound
-!missing-pinvoke! SecKeychainUnlock is not bound
-!missing-pinvoke! SecKeyCreateFromData is not bound
-!missing-pinvoke! SecKeyCreatePair is not bound
-!missing-pinvoke! SecKeyDeriveFromPassword is not bound
-!missing-pinvoke! SecKeyGenerate is not bound
-!missing-pinvoke! SecKeyGeneratePairAsync is not bound
-!missing-pinvoke! SecKeyGenerateSymmetric is not bound
-!missing-pinvoke! SecKeyGetCredentials is not bound
-!missing-pinvoke! SecKeyGetCSPHandle is not bound
-!missing-pinvoke! SecKeyGetCSSMKey is not bound
-!missing-pinvoke! SecKeyUnwrapSymmetric is not bound
-!missing-pinvoke! SecKeyWrapSymmetric is not bound
-!missing-pinvoke! SecPolicyCreateWithOID is not bound
-!missing-pinvoke! SecPolicyGetOID is not bound
-!missing-pinvoke! SecPolicyGetTPHandle is not bound
-!missing-pinvoke! SecPolicyGetValue is not bound
-!missing-pinvoke! SecPolicySearchCopyNext is not bound
-!missing-pinvoke! SecPolicySearchCreate is not bound
-!missing-pinvoke! SecPolicySearchGetTypeID is not bound
-!missing-pinvoke! SecPolicySetProperties is not bound
-!missing-pinvoke! SecPolicySetValue is not bound
 !missing-pinvoke! SecRequirementCopyData is not bound
 !missing-pinvoke! SecRequirementCopyString is not bound
 !missing-pinvoke! SecRequirementCreateWithData is not bound
 !missing-pinvoke! SecRequirementCreateWithString is not bound
 !missing-pinvoke! SecRequirementCreateWithStringAndErrors is not bound
 !missing-pinvoke! SecRequirementGetTypeID is not bound
-!missing-pinvoke! SecSignTransformCreate is not bound
 !missing-pinvoke! SecStaticCodeCheckValidity is not bound
 !missing-pinvoke! SecStaticCodeCheckValidityWithErrors is not bound
 !missing-pinvoke! SecStaticCodeCreateWithPath is not bound
@@ -1374,36 +469,8 @@
 !missing-pinvoke! SecTaskCreateFromSelf is not bound
 !missing-pinvoke! SecTaskCreateWithAuditToken is not bound
 !missing-pinvoke! SecTaskGetTypeID is not bound
-!missing-pinvoke! SecTranformCustomGetAttribute is not bound
-!missing-pinvoke! SecTransformConnectTransforms is not bound
-!missing-pinvoke! SecTransformCopyExternalRepresentation is not bound
-!missing-pinvoke! SecTransformCreate is not bound
-!missing-pinvoke! SecTransformCreateFromExternalRepresentation is not bound
-!missing-pinvoke! SecTransformCreateGroupTransform is not bound
-!missing-pinvoke! SecTransformCreateReadTransformWithReadStream is not bound
-!missing-pinvoke! SecTransformCustomGetAttribute is not bound
-!missing-pinvoke! SecTransformCustomSetAttribute is not bound
-!missing-pinvoke! SecTransformExecute is not bound
-!missing-pinvoke! SecTransformExecuteAsync is not bound
-!missing-pinvoke! SecTransformFindByName is not bound
-!missing-pinvoke! SecTransformGetAttribute is not bound
-!missing-pinvoke! SecTransformGetTypeID is not bound
-!missing-pinvoke! SecTransformNoData is not bound
-!missing-pinvoke! SecTransformPushbackAttribute is not bound
-!missing-pinvoke! SecTransformRegister is not bound
-!missing-pinvoke! SecTransformSetAttribute is not bound
-!missing-pinvoke! SecTransformSetAttributeAction is not bound
-!missing-pinvoke! SecTransformSetDataAction is not bound
-!missing-pinvoke! SecTransformSetTransformAction is not bound
 !missing-pinvoke! SecTrustCopyAnchorCertificates is not bound
-!missing-pinvoke! SecTrustedApplicationGetTypeID is not bound
-!missing-pinvoke! SecTrustGetCssmResult is not bound
-!missing-pinvoke! SecTrustGetCssmResultCode is not bound
-!missing-pinvoke! SecTrustGetResult is not bound
-!missing-pinvoke! SecTrustGetTPHandle is not bound
-!missing-pinvoke! SecTrustSetKeychains is not bound
 !missing-pinvoke! SecTrustSetOptions is not bound
-!missing-pinvoke! SecTrustSetParameters is not bound
 !missing-pinvoke! SecTrustSettingsCopyCertificates is not bound
 !missing-pinvoke! SecTrustSettingsCopyModificationDate is not bound
 !missing-pinvoke! SecTrustSettingsCopyTrustSettings is not bound
@@ -1411,47 +478,24 @@
 !missing-pinvoke! SecTrustSettingsImportExternalRepresentation is not bound
 !missing-pinvoke! SecTrustSettingsRemoveTrustSettings is not bound
 !missing-pinvoke! SecTrustSettingsSetTrustSettings is not bound
-!missing-pinvoke! SecureDownloadCopyCreationDate is not bound
-!missing-pinvoke! SecureDownloadCopyName is not bound
-!missing-pinvoke! SecureDownloadCopyTicketLocation is not bound
-!missing-pinvoke! SecureDownloadCopyURLs is not bound
-!missing-pinvoke! SecureDownloadCreateWithTicket is not bound
-!missing-pinvoke! SecureDownloadFinished is not bound
-!missing-pinvoke! SecureDownloadGetDownloadSize is not bound
-!missing-pinvoke! SecureDownloadRelease is not bound
-!missing-pinvoke! SecureDownloadUpdateWithData is not bound
-!missing-pinvoke! SecVerifyTransformCreate is not bound
 !missing-pinvoke! SessionCreate is not bound
 !missing-pinvoke! SessionGetInfo is not bound
-!missing-pinvoke! SSLCopyCertificateAuthorities is not bound
-!missing-pinvoke! SSLCopyPeerCertificates is not bound
-!missing-pinvoke! SSLCopyTrustedRoots is not bound
-!missing-pinvoke! SSLDisposeContext is not bound
-!missing-pinvoke! SSLGetAllowsAnyRoot is not bound
-!missing-pinvoke! SSLGetAllowsExpiredCerts is not bound
-!missing-pinvoke! SSLGetAllowsExpiredRoots is not bound
-!missing-pinvoke! SSLGetDiffieHellmanParams is not bound
-!missing-pinvoke! SSLGetEnableCertVerify is not bound
-!missing-pinvoke! SSLGetProtocolVersion is not bound
-!missing-pinvoke! SSLGetProtocolVersionEnabled is not bound
-!missing-pinvoke! SSLGetRsaBlinding is not bound
-!missing-pinvoke! SSLNewContext is not bound
-!missing-pinvoke! SSLSetAllowsAnyRoot is not bound
-!missing-pinvoke! SSLSetAllowsExpiredCerts is not bound
-!missing-pinvoke! SSLSetAllowsExpiredRoots is not bound
-!missing-pinvoke! SSLSetCertificateAuthorities is not bound
-!missing-pinvoke! SSLSetDiffieHellmanParams is not bound
-!missing-pinvoke! SSLSetEnableCertVerify is not bound
-!missing-pinvoke! SSLSetProtocolVersion is not bound
-!missing-pinvoke! SSLSetProtocolVersionEnabled is not bound
-!missing-pinvoke! SSLSetRsaBlinding is not bound
-!missing-pinvoke! SSLSetTrustedRoots is not bound
 
 ## new in xcode11
 !missing-field! kSecPropertyTypeArray not bound
 !missing-field! kSecPropertyTypeNumber not bound
 
-## deprecated in Xcode 11 (but never bound because they were, previously, marked as unavailable on macOS)
-!missing-pinvoke! SecTrustedApplicationCopyData is not bound
-!missing-pinvoke! SecTrustedApplicationCreateFromPath is not bound
-!missing-pinvoke! SecTrustedApplicationSetData is not bound
+## helper
+!extra-enum-value! Managed value -1 for SecAuthenticationType.Invalid not found in native headers
+
+## xcode 12.2 / we do not have bindings for XPC
+!missing-pinvoke! SecCodeCreateWithXPCMessage is not bound
+!extra-enum-value! Managed value -2147483648 for SecAccessControlCreateFlags.ApplicationPassword not found in native headers
+!missing-enum-value! SecAccessControlCreateFlags native value kSecAccessControlApplicationPassword = 2147483648 not bound
+
+## xcode15
+!missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-pinvoke! SecCodeValidateFileResource is not bound
+!missing-field! kSecCFErrorResourceRecursive not bound
+!missing-field! kSecCodeInfoStapledNotarizationTicket not bound
+

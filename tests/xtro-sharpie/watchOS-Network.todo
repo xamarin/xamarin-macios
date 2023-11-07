@@ -1,24 +1,21 @@
-!missing-field! _nw_data_transfer_report_all_paths not bound
-!missing-pinvoke! nw_framer_async is not bound
-!missing-pinvoke! nw_framer_copy_local_endpoint is not bound
-!missing-pinvoke! nw_framer_copy_parameters is not bound
-!missing-pinvoke! nw_framer_copy_remote_endpoint is not bound
-!missing-pinvoke! nw_framer_create_options is not bound
-!missing-pinvoke! nw_framer_deliver_input is not bound
-!missing-pinvoke! nw_framer_deliver_input_no_copy is not bound
-!missing-pinvoke! nw_framer_mark_failed_with_error is not bound
-!missing-pinvoke! nw_framer_mark_ready is not bound
-!missing-pinvoke! nw_framer_parse_input is not bound
-!missing-pinvoke! nw_framer_parse_output is not bound
-!missing-pinvoke! nw_framer_pass_through_input is not bound
-!missing-pinvoke! nw_framer_pass_through_output is not bound
-!missing-pinvoke! nw_framer_prepend_application_protocol is not bound
-!missing-pinvoke! nw_framer_schedule_wakeup is not bound
-!missing-pinvoke! nw_framer_set_cleanup_handler is not bound
-!missing-pinvoke! nw_framer_set_input_handler is not bound
-!missing-pinvoke! nw_framer_set_output_handler is not bound
-!missing-pinvoke! nw_framer_set_stop_handler is not bound
-!missing-pinvoke! nw_framer_set_wakeup_handler is not bound
-!missing-pinvoke! nw_framer_write_output is not bound
-!missing-pinvoke! nw_framer_write_output_data is not bound
-!missing-pinvoke! nw_framer_write_output_no_copy is not bound
+!missing-pinvoke! nw_privacy_context_add_proxy is not bound
+!missing-pinvoke! nw_privacy_context_clear_proxies is not bound
+!missing-pinvoke! nw_proxy_config_add_excluded_domain is not bound
+!missing-pinvoke! nw_proxy_config_add_match_domain is not bound
+!missing-pinvoke! nw_proxy_config_clear_excluded_domains is not bound
+!missing-pinvoke! nw_proxy_config_clear_match_domains is not bound
+!missing-pinvoke! nw_proxy_config_create_http_connect is not bound
+!missing-pinvoke! nw_proxy_config_create_oblivious_http is not bound
+!missing-pinvoke! nw_proxy_config_create_relay is not bound
+!missing-pinvoke! nw_proxy_config_create_socksv5 is not bound
+!missing-pinvoke! nw_proxy_config_enumerate_excluded_domains is not bound
+!missing-pinvoke! nw_proxy_config_enumerate_match_domains is not bound
+!missing-pinvoke! nw_proxy_config_get_failover_allowed is not bound
+!missing-pinvoke! nw_proxy_config_set_failover_allowed is not bound
+!missing-pinvoke! nw_proxy_config_set_username_and_password is not bound
+!missing-pinvoke! nw_relay_hop_add_additional_http_header_field is not bound
+!missing-pinvoke! nw_relay_hop_create is not bound
+!missing-protocol! OS_nw_proxy_config not bound
+!missing-protocol! OS_nw_relay_hop not bound
+!missing-selector! NSURLSessionConfiguration::proxyConfigurations not bound
+!missing-selector! NSURLSessionConfiguration::setProxyConfigurations: not bound

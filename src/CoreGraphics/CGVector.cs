@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -35,6 +37,13 @@ using CoreFoundation;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGGeometry.h
 	public struct CGVector {
 		public /* CGFloat */ nfloat dx, dy;
@@ -57,51 +66,74 @@ namespace CoreGraphics {
 
 		public override int GetHashCode ()
 		{
+#if NET
+			return HashCode.Combine (dx, dy);
+#else
 			unchecked {
-				return ((int)dx) ^ ((int)dy);
+				return ((int) dx) ^ ((int) dy);
 			}
+#endif
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
-			if (other == null || !(other is CGVector))
-				return false;
-			CGVector o = (CGVector) other;
-			return o.dx == dx && o.dy == dy;
+			if (other is CGVector vector)
+				return dx == vector.dx && dy == vector.dy;
+			return false;
 		}
 
 #if MONOTOUCH
 #if !COREBUILD
-		[iOS (8,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static IntPtr NSStringFromCGVector (CGVector vector);
 		
-		[iOS (8,0)]
-		public override string ToString ()
-		{
-			using (var ns = new NSString (NSStringFromCGVector (this)))
-				return ns.ToString ();
-#if false
-			return String.Format ("{{dx={0}, dy={1}}}", dx.ToString (CultureInfo.CurrentCulture),
-				dy.ToString (CultureInfo.CurrentCulture));
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #endif
+		public override string? ToString ()
+		{
+			return CFString.FromHandle (NSStringFromCGVector (this));
 		}
 
-		[iOS (8,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static CGVector CGVectorFromString (IntPtr str);
 		
-		[iOS (8,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#endif
 		static public CGVector FromString (string s)
 		{
 			// note: null is allowed
-			var ptr = NSString.CreateNative (s);
+			var ptr = CFString.CreateNative (s);
 			var value = CGVectorFromString (ptr);
-			NSString.ReleaseNative (ptr);
+			CFString.ReleaseNative (ptr);
 			return value;
 		}
 #endif
+#else // MONOMAC
+		public override string ToString ()
+		{
+			return $"{{{dx}, {dy}}}";
+		}
 #endif
-	
+
 	}
 }

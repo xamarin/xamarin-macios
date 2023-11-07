@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NLLanguageRecognizer.
 //
 // Authors:
@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 		}
 
 		[Test]
-		public void HandelNumbers()
+		public void HandelNumbers ()
 		{
 			using (var recognizer = new NLLanguageRecognizer ()) {
 				Assert.That (recognizer.DominantLanguage, Is.EqualTo (NLLanguage.Unevaluated), "DominantLanguage/Pre-Process");

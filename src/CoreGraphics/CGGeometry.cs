@@ -26,8 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -42,40 +45,15 @@ namespace CoreGraphics {
 		MaxYEdge,
 	}
 
-#if !COREBUILD && !XAMCORE_2_0
-	public static class PointFExtensions {
-
-		// CGGeometry.h
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static /* CFDictionaryRef */ IntPtr CGPointCreateDictionaryRepresentation (CGPoint point);
-
-		// This exact method is defined on CGPoint in the Unified API, so there's no need for the extension method.
-		public static NSDictionary ToDictionary (this CGPoint self)
-		{
-			return new NSDictionary (CGPointCreateDictionaryRepresentation (self));
-		}
-	}
-
-	public static class NSDictionaryExtensions {
-
-		// CGGeometry.h
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPointMakeWithDictionaryRepresentation (/* CFDictionaryRef */ IntPtr dict, out CGPoint ret);
-
-		// Use CGPoint.TryParse (NSDictionary, out CGPoint) instead in the Unified API.
-		// Not sure how to best advice Classic API users here, since the method does 
-		// not exist in the Classic API (so an Obsolete method can't point anywhere).
-		public static bool ToPoint (this NSDictionary dictionary, out CGPoint point)
-		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
-			
-			return CGPointMakeWithDictionaryRepresentation (dictionary.Handle, out point);
-		}
-	}
-#endif
-	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	public static class CGRectExtensions {
+#else
 	public static class RectangleFExtensions {
+#endif
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CGFloat */ nfloat CGRectGetMinX (CGRect rect);
@@ -134,6 +112,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGRectIsNull (CGRect rect);
 
 		public static bool IsNull (this CGRect self)
@@ -142,6 +121,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CGRectIsInfinite (CGRect rect);
 
 		public static bool IsInfinite (this CGRect self)
@@ -182,4 +162,3 @@ namespace CoreGraphics {
 		}
 	}
 }
-

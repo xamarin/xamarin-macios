@@ -1,0 +1,30 @@
+parameters:
+- name: runTests
+  type: boolean
+  default: true
+
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
+steps:
+
+# download the common artifacts + the api diff
+- template: ../common/download-artifacts.yml
+  parameters:
+    testPrefix: sim
+    runTests: ${{ parameters.runTests }}
+
+# download the artifacts.json, which will use to find the URI of the built pkg to later be given to the user
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts.json
+  inputs:
+    patterns: '**/*.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- pwsh: |
+    Get-ChildItem -Recurse $Env:SYSTEM_DEFAULTWORKINGDIRECTORY
+    Write-Host "##vso[task.setvariable variable=ARTIFACTS_JSON_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\artifacts\pkg-info\\artifacts.json"
+  displayName: 'Set artifacts.json path'
+  timeoutInMinutes: 5

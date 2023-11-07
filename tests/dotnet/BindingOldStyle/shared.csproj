@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<IsBindingProject>true</IsBindingProject>
+		<NoBindingEmbedding>false</NoBindingEmbedding>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ObjcBindingApiDefinition Include="../ApiDefinition.cs" />
+		<ObjcBindingCoreSource Include="../StructsAndEnums.cs" />
+		<!-- doesn't have to be a real native library for this particular test, we're just testing what happens with 'dotnet pack' on a project with an ObjcBindingNativeLibrary item (it's supposed to show an error) -->
+		<ObjcBindingNativeLibrary Include="../shared.mk" />
+	</ItemGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+</Project>

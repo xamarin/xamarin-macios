@@ -20,11 +20,11 @@ namespace UIKit {
 		public UIPageViewController (UIPageViewControllerTransitionStyle style, UIPageViewControllerNavigationOrientation navigationOrientation, UIPageViewControllerSpineLocation spineLocation, float interPageSpacing) : this (style, navigationOrientation, NSDictionary.FromObjectsAndKeys (new object [] { spineLocation, interPageSpacing }, new object [] { OptionSpineLocationKey, OptionInterPageSpacingKey }))
 		{
 		}
-		
+
 		public UIPageViewController (UIPageViewControllerTransitionStyle style, UIPageViewControllerNavigationOrientation navigationOrientation) : this (style, navigationOrientation, NSDictionary.FromObjectsAndKeys (new object [] { UIPageViewControllerSpineLocation.Mid }, new object [] { OptionSpineLocationKey }))
 		{
 		}
-		
+
 	}
 }
 

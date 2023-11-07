@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UILocalNotification
 //
 // Authors:
@@ -10,26 +10,10 @@
 #if !__TVOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -50,7 +34,7 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.IsNull (def.AlertAction, "AlertAction");
 				Assert.IsNull (def.AlertLaunchImage, "AlertLaunchImage");
 				Assert.IsNull (def.SoundName, "SoundName");
-				Assert.That (def.ApplicationIconBadgeNumber, Is.EqualTo ((nint)0), "ApplicationIconBadgeNumber");
+				Assert.That (def.ApplicationIconBadgeNumber, Is.EqualTo ((nint) 0), "ApplicationIconBadgeNumber");
 				Assert.IsNull (def.UserInfo, "UserInfo");
 			}
 		}
@@ -73,8 +57,8 @@ namespace MonoTouchFixtures.UIKit {
 
 				def.RepeatInterval = NSCalendarUnit.Calendar;
 				Assert.That (def.RepeatInterval, Is.EqualTo (NSCalendarUnit.Calendar), "RepeatInterval 1");
-				def.RepeatInterval = (NSCalendarUnit)0;
-				Assert.That (def.RepeatInterval, Is.EqualTo ((NSCalendarUnit)0), "RepeatInterval 2");
+				def.RepeatInterval = (NSCalendarUnit) 0;
+				Assert.That (def.RepeatInterval, Is.EqualTo ((NSCalendarUnit) 0), "RepeatInterval 2");
 
 				def.RepeatCalendar = null;
 				def.RepeatCalendar = new NSCalendar (NSCalendarType.Hebrew);

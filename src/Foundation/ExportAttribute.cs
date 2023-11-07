@@ -30,40 +30,34 @@
 //
 using System;
 using System.Globalization;
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#else
 using System.Reflection;
-#endif
 using ObjCRuntime;
 using Registrar;
+
+#nullable enable
 
 namespace Foundation {
 
 	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property)]
 	public class ExportAttribute : Attribute {
-		string selector;
+		string? selector;
 		ArgumentSemantic semantic;
 
-#if XAMCORE_2_0 || MTOUCH || MMP
-		protected ExportAttribute () {}
-#else
-		[Obsolete ("Every exported selector must include a name")]
-		public ExportAttribute () {}
-#endif
+		protected ExportAttribute () { }
 
-		public ExportAttribute(string selector) {
+		public ExportAttribute (string? selector)
+		{
 			this.selector = selector;
 			this.semantic = ArgumentSemantic.None;
 		}
-		
-		public ExportAttribute(string selector, ArgumentSemantic semantic) {
+
+		public ExportAttribute (string? selector, ArgumentSemantic semantic)
+		{
 			this.selector = selector;
 			this.semantic = semantic;
 		}
 
-		public string Selector {
+		public string? Selector {
 			get { return this.selector; }
 			set { this.selector = value; }
 		}
@@ -77,29 +71,31 @@ namespace Foundation {
 			get;
 			set;
 		}
-			
-		public ExportAttribute ToGetter (PropertyInfo prop) {
+
+		public ExportAttribute ToGetter (PropertyInfo prop)
+		{
 			if (string.IsNullOrEmpty (Selector))
 				Selector = prop.Name;
 			return new ExportAttribute (selector, semantic);
 		}
 
-		public ExportAttribute ToSetter (PropertyInfo prop) {
+		public ExportAttribute ToSetter (PropertyInfo prop)
+		{
 			if (string.IsNullOrEmpty (Selector))
 				Selector = prop.Name;
-			return new ExportAttribute (Registrar.Registrar.CreateSetterSelector (selector), semantic); 
+			return new ExportAttribute (Registrar.Registrar.CreateSetterSelector (selector), semantic);
 		}
 	}
 
 	[AttributeUsage (AttributeTargets.Property)]
 	public sealed class OutletAttribute : ExportAttribute {
-		public OutletAttribute () : base (null) {}
-		public OutletAttribute (string name) : base (name) {}
+		public OutletAttribute () : base (null) { }
+		public OutletAttribute (string name) : base (name) { }
 	}
 
 	[AttributeUsage (AttributeTargets.Method)]
 	public sealed class ActionAttribute : ExportAttribute {
-		public ActionAttribute () : base (null) {}
-		public ActionAttribute (string selector) : base (selector) {}
+		public ActionAttribute () : base (null) { }
+		public ActionAttribute (string selector) : base (selector) { }
 	}
 }

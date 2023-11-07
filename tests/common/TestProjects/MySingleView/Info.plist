@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIMainStoryboardFile</key>
+	<string>MainStoryboard</string>
+	<key>MinimumOSVersion</key>
+	<string>11.0</string>
+	<key>CFBundleDisplayName</key>
+	<string>ApplicationName</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.mysingleview</string>
+	<key>XSAppIconAssets</key>
+	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Resources/Images.xcassets/LaunchImage.launchimage</string>
+</dict>
+</plist>

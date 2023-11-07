@@ -13,20 +13,33 @@ namespace CoreFoundation {
 	[Partial]
 	interface CFAllocator {
 
-		[Internal][Field ("kCFAllocatorDefault")]
+		[Internal]
+		[Field ("kCFAllocatorDefault")]
 		IntPtr default_ptr { get; }
 
-		[Internal][Field ("kCFAllocatorSystemDefault")]
+		[Internal]
+		[Field ("kCFAllocatorSystemDefault")]
 		IntPtr system_default_ptr { get; }
 
-		[Internal][Field ("kCFAllocatorMalloc")]
+		[Internal]
+		[Field ("kCFAllocatorMalloc")]
 		IntPtr malloc_ptr { get; }
 
-		[Internal][Field ("kCFAllocatorMallocZone")]
+		[Internal]
+		[Field ("kCFAllocatorMallocZone")]
 		IntPtr malloc_zone_ptr { get; }
 
-		[Internal][Field ("kCFAllocatorNull")]
+		[Internal]
+		[Field ("kCFAllocatorNull")]
 		IntPtr null_ptr { get; }
+	}
+
+	[Partial]
+	interface CFArray {
+
+		[Internal]
+		[Field ("kCFNull")]
+		IntPtr /* CFNullRef */ _CFNullHandle { get; }
 	}
 
 	[Partial]
@@ -115,5 +128,15 @@ namespace CoreFoundation {
 
 		[Field ("kCFStringTransformStripDiacritics")]
 		StripDiacritics,
+	}
+
+	[Introduced (PlatformName.MacCatalyst, 13, 0)]
+	public enum OSLogLevel : byte {
+		// These values must match the os_log_type_t enum in <os/log.h>.
+		Default = 0x00,
+		Info = 0x01,
+		Debug = 0x02,
+		Error = 0x10,
+		Fault = 0x11,
 	}
 }

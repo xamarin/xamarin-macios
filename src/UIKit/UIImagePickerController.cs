@@ -19,40 +19,19 @@ using System.Drawing;
 
 namespace UIKit {
 	public partial class UIImagePickerController {
-
-// the newer (4.1 fields) are defined in uikit.cs
-#if !XAMCORE_2_0
-		public readonly static NSString MediaType;
-		public readonly static NSString OriginalImage;
-		public readonly static NSString EditedImage;
-		public readonly static NSString CropRect;
-		public readonly static NSString MediaURL;
-		
-		static UIImagePickerController ()
-		{
-			var handle = Libraries.UIKit.Handle;
-
-			MediaType  = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerMediaType");
-			OriginalImage = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerOriginalImage");
-			EditedImage = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerEditedImage");
-			CropRect = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerCropRect");
-			MediaURL = Dlfcn.GetStringConstant (handle, "UIImagePickerControllerMediaURL");
-		}
-#endif
-		
 		//
 		// The following construct emulates the support for:
 		// id<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 		//
-		// That is, the type can contain either one, btu we still want it strongly typed
+		// That is, the type can contain either one, but we still want it strongly typed
 		//
-#if XAMCORE_4_0
+#if NET
 		public IUIImagePickerControllerDelegate ImagePickerControllerDelegate {
 			get {
 				return Delegate as IUIImagePickerControllerDelegate;
 			}
 			set {
-				Delegate = value;
+				Delegate = (NSObject) value;
 			}
 		}
 
@@ -61,7 +40,7 @@ namespace UIKit {
 				return Delegate as IUINavigationControllerDelegate;
 			}
 			set {
-				Delegate = value;
+				Delegate = (NSObject) value;
 			}
 		}
 #else
@@ -90,7 +69,7 @@ namespace UIKit {
 	public partial class UIImagePickerMediaPickedEventArgs {
 		public string MediaType {
 			get {
-				return ((NSString)Info [UIImagePickerController.MediaType]).ToString ();
+				return ((NSString) Info [UIImagePickerController.MediaType]).ToString ();
 			}
 		}
 
@@ -108,8 +87,8 @@ namespace UIKit {
 
 		public CGRect? CropRect {
 			get {
-				var nsv = ((NSValue)Info [UIImagePickerController.CropRect]);
-				if (nsv == null)
+				var nsv = ((NSValue) Info [UIImagePickerController.CropRect]);
+				if (nsv is null)
 					return null;
 				return nsv.CGRectValue;
 			}
@@ -121,7 +100,10 @@ namespace UIKit {
 			}
 		}
 
-		[iOS (9,1)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		public PHLivePhoto LivePhoto {
 			get {
 				return (PHLivePhoto) Info [UIImagePickerController.LivePhoto];
@@ -140,14 +122,20 @@ namespace UIKit {
 			}
 		}
 
-		[iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		public PHAsset PHAsset {
 			get {
 				return (PHAsset) Info [UIImagePickerController.PHAsset];
 			}
 		}
 
-		[iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+#endif
 		public NSUrl ImageUrl {
 			get {
 				return (NSUrl) Info [UIImagePickerController.ImageUrl];

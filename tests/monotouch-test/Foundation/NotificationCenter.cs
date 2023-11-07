@@ -10,21 +10,16 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NotificationCenterTest {
-		
+
 		[Test]
 		[Ignore ("This test is 'randomly' failing the first time it's executed with debugging disabled (if executed with the rest of the tests) - CWLS show that the TestNotification instance is freed at the end of the test run.")]
 		public void Free ()
@@ -54,8 +49,7 @@ namespace MonoTouchFixtures.Foundation {
 			testNotification.StopObserving ();
 		}
 
-		public class TestNotification : NSObject 
-		{
+		public class TestNotification : NSObject {
 			public bool A;
 			public bool B;
 			Action<TestNotification> destroyed_callback;
@@ -64,42 +58,42 @@ namespace MonoTouchFixtures.Foundation {
 			{
 				destroyed_callback = destroyedCallback;
 
-				NSNotificationCenter.DefaultCenter.AddObserver(this,
-				                                               new Selector("a:"),
-				                                               new NSString("notifyA"),
-				                                               null);
-				
-				NSNotificationCenter.DefaultCenter.AddObserver(this,
-				                                               new Selector("b:"),
-				                                               new NSString("notifyB"),
-				                                               null);
+				NSNotificationCenter.DefaultCenter.AddObserver (this,
+															   new Selector ("a:"),
+															   new NSString ("notifyA"),
+															   null);
+
+				NSNotificationCenter.DefaultCenter.AddObserver (this,
+															   new Selector ("b:"),
+															   new NSString ("notifyB"),
+															   null);
 			}
-			
+
 			[Export ("a:")]
 			public void a (NSNotification notification)
 			{
 				A = true;
 			}
-			
+
 			[Export ("b:")]
 			public void b (NSNotification notification)
 			{
 				B = true;
 			}
-			
+
 			public void StopObserving ()
 			{
 				NSNotificationCenter.DefaultCenter.RemoveObserver (this);
 			}
-	
-			~TestNotification() 
+
+			~TestNotification ()
 			{
 				destroyed_callback (this);
 			}
-	
+
 		}
 
-#if XAMCORE_2_0 && __IOS__
+#if __IOS__
 		[Test]
 		public void TargetedNotificationsTest ()
 		{
@@ -110,7 +104,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.False (called, "Notification should not be called");
 
 				NSNotificationCenter.DefaultCenter.PostNotificationName (global::UIKit.UITextField.TextFieldTextDidChangeNotification, txt);
-				Assert.True (called,  "Notification should have been called");
+				Assert.True (called, "Notification should have been called");
 			}
 		}
 #endif

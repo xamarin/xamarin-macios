@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.Common.Before.props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\Xamarin.iOS.Common.Before.targets" />
+
+  <PropertyGroup>
+    <_DotNetRootRemoteDirectory Condition="$(_DotNetRootRemoteDirectory) == ''">/usr/local/share/dotnet/</_DotNetRootRemoteDirectory>
+    <_XamarinSdkRootDirectoryOnMac Condition="'$(_XamarinSdkRootDirectory)' != ''">$(_XamarinSdkRootDirectory.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRootDirectoryOnMac>
+    <_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(_XamarinSdkRootDirectoryOnMac)tools/bin/mlaunch</_MlaunchPath>
+    <MlaunchPath Condition="'$(MlaunchPath)' == ''">$(_XamarinSdkRootDirectoryOnMac)tools/bin/mlaunch</MlaunchPath>
+    <AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)..\targets\Microsoft.iOS.Windows.Sdk.targets</AfterMicrosoftNETSdkTargets>
+
+    <_XamarinSdkRootOnMac Condition="'$(_XamarinSdkRoot)' != ''">$(_XamarinSdkRoot.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)'))</_XamarinSdkRootOnMac>
+  </PropertyGroup>
+
+</Project>

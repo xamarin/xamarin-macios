@@ -12,7 +12,7 @@ using ObjCRuntime;
 
 namespace MessageUI {
 
-#if XAMCORE_4_0
+#if NET
 	[Native]
 	public enum MFMailComposeResult : long {
 #else
@@ -27,7 +27,7 @@ namespace MessageUI {
 	}
 
 	[ErrorDomain ("MFMailComposeErrorDomain")]
-#if XAMCORE_4_0
+#if NET
 	[Native]
 	public enum MFMailComposeErrorCode : long {
 #else
@@ -35,11 +35,11 @@ namespace MessageUI {
 	// Note: now used as a NSInteger in the API.
 	public enum MFMailComposeErrorCode {
 #endif
-	    SaveFailed,
-	    SendFailed
+		SaveFailed,
+		SendFailed
 	}
 
-#if XAMCORE_4_0
+#if NET
 	[Native]
 	public enum MessageComposeResult : long {
 #else

@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 function show_help () {
 cat <<EOL
@@ -23,54 +23,117 @@ Usage: configure [options]
     --enable-ccache
     --disable-ccache        Enable/disable ccache. Default: enabled if detected.
 
-    --enable-xamarin        Enable additional Xamarin-specific parts of the build.
+    --enable-xamarin
+    --disable-xamarin       Enable/disable additional Xamarin-specific parts of the build.
 
     --disable-packaged-llvm Compile LLVM instead of downloading a precompiled version.
 
     --enable-packaged-mono
     --disable-packaged-mono Enable/disable using the precompiled version of mono. If disabled mono will be compiled from source.
+
+    --enable-dotnet         Enable building .NET 6 bits.
+    --disable-dotnet        Disable building .NET 6 bits.
+
+    --enable-documentation  Enable building of API documentation
+    --disable-documentation Disable building of API documentation.
+
+    --enable-install-source  Enable building of API documentation
+    --disable-install-source Disable building of API documentation.
+
+    --enable-legacy-xamarin  Enable building the legacy version of Xamarin.iOS/Xamarin.Mac.
+    --disable-legacy-xamarin Disable building the legacy version of Xamarin.iOS/Xamarin.Mac.
+
+    --custom-dotnet=[artifacts] Use a locally built version of dotnet/runtime. See docs/CORECLR.md for detailed instructions about how to build dotnet/runtime from source.
 EOL
 }
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
 CONFIGURED_FILE=configure.inc
 
 rm -f $CONFIGURED_FILE
 
 if test -z "$1"; then
-	echo "configure: all default values assumed."
+    echo "configure: all default values assumed."
     exit 0
 fi
 
 echo "# Configure arguments: $*" >> $CONFIGURED_FILE
 
-while test x$1 != x; do
-	case $1 in
-	--disable-mac)
-		echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
-		echo "Mac Build disabled (partially)"
-		shift
-		;;
+while test "x$1" != x; do
+    case $1 in
+    --disable-all-platforms)
+        echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
+        echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+        echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
+        echo "Disabled all platforms"
+        shift
+        ;;
+    --disable-mac | --disable-macos)
+        echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
+        echo "Mac Build disabled"
+        shift
+        ;;
+    --enable-mac | --enable-macos)
+        echo "INCLUDE_MAC=1" >> $CONFIGURED_FILE
+        echo "Mac Build enabled"
+        shift
+        ;;
     --disable-ios-device)
         echo "INCLUDE_DEVICE=" >> $CONFIGURED_FILE
         shift
         ;;
-	--disable-ios)
-		echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
-		echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
-		echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
-		echo "iOS Build disabled (partially)"
-		shift
-		;;
-	--disable-strip)
-		echo "DISABLE_STRIP=1" >> $CONFIGURED_FILE
-		shift
-		;;
+    --disable-ios)
+        echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
+        echo "iOS Build disabled"
+        shift
+        ;;
+    --enable-ios)
+        echo "INCLUDE_IOS=1" >> $CONFIGURED_FILE
+        echo "iOS Build enabled"
+        shift
+        ;;
+    --disable-tvos)
+        echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
+        echo "tvOS Build disabled"
+        shift
+        ;;
+    --enable-tvos)
+        echo "INCLUDE_TVOS=1" >> $CONFIGURED_FILE
+        echo "tvOS Build enabled"
+        shift
+        ;;
+    --disable-watchos)
+        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+        echo "watchOS Build disabled"
+        shift
+        ;;
+    --enable-watchos)
+        echo "INCLUDE_WATCH=1" >> $CONFIGURED_FILE
+        echo "watchOS Build enabled"
+        shift
+        ;;
+    --disable-maccatalyst)
+        echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
+        echo "Mac Catalyst Build disabled"
+        shift
+        ;;
+    --enable-maccatalyst)
+        echo "INCLUDE_MACCATALYST=1" >> $CONFIGURED_FILE
+        echo "Mac Catalyst Build enabled"
+        shift
+        ;;
+    --disable-strip)
+        echo "DISABLE_STRIP=1" >> $CONFIGURED_FILE
+        shift
+        ;;
     --disable-ccache)
         echo "ENABLE_CCACHE=" >> $CONFIGURED_FILE
         shift
         ;;
     --enable-ccache)
-        if ! CCACHE=$(which ccache); then
+        if ! command -v ccache >/dev/null; then
             echo "Could not find ccache"
         else
             echo "ENABLE_CCACHE=1" >> $CONFIGURED_FILE
@@ -82,15 +145,14 @@ while test x$1 != x; do
         echo "ENABLE_XAMARIN=1" >> $CONFIGURED_FILE
         shift
         ;;
-	--enable-bitcode-on-ios)
-		# Private option
-		echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
-		shift
-		;;
-	--disable-packaged-llvm)
-		echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
-		shift
-		;;
+    --disable-xamarin)
+    echo "ENABLE_XAMARIN=" >> $CONFIGURED_FILE
+        shift
+        ;;
+    --disable-packaged-llvm)
+        echo "DISABLE_DOWNLOAD_LLVM=1" >> $CONFIGURED_FILE
+        shift
+        ;;
     --enable-packaged-mono)
         echo "MONO_BUILD_FROM_SOURCE=" >> "$CONFIGURED_FILE"
         shift
@@ -103,13 +165,56 @@ while test x$1 != x; do
         echo "MONO_BUILD_FROM_SOURCE=" >> "$CONFIGURED_FILE"
         shift
         ;;
-	--help|-h)
-		show_help
-		exit 0
-		;;
-	*)
-		echo Unknown configure argument $1 >&2
-		shift
-		;;
-	esac
+    --enable-dotnet)
+        echo "ENABLE_DOTNET=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-dotnet)
+        echo "ENABLE_DOTNET=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --enable-dotnet-windows)
+        echo "$1 is ignored. Use --enable-dotnet instead"
+        shift
+        ;;
+    --disable-dotnet-windows)
+        echo "$1 is ignored. Use --disable-dotnet instead"
+        shift
+        ;;
+    --enable-install-source)
+        echo "ENABLE_INSTALL_SOURCE=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-install-source)
+        echo "ENABLE_INSTALL_SOURCE=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --enable-legacy-xamarin)
+        echo "INCLUDE_XAMARIN_LEGACY=1" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --disable-legacy-xamarin)
+        echo "INCLUDE_XAMARIN_LEGACY=" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --custom-dotnet=*)
+        echo "CUSTOM_DOTNET=1" >> "$CONFIGURED_FILE"
+        echo "DOTNET_RUNTIME_PATH=${1:16}" >> "$CONFIGURED_FILE"
+        shift
+        ;;
+    --custom-dotnet)
+        echo "CUSTOM_DOTNET=1" >> "$CONFIGURED_FILE"
+        echo "DOTNET_RUNTIME_PATH=$2" >> "$CONFIGURED_FILE"
+        shift 2
+        ;;
+    --help|-h)
+        show_help
+        exit 0
+        ;;
+    *)
+        echo "Unknown configure argument $1" >&2
+        shift
+        ;;
+    esac
 done
+exit 0

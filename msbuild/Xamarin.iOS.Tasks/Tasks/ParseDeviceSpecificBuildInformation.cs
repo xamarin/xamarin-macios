@@ -1,6 +1,4 @@
-﻿namespace Xamarin.iOS.Tasks
-{
-	public class ParseDeviceSpecificBuildInformation : ParseDeviceSpecificBuildInformationTaskBase
-	{
+namespace Xamarin.iOS.Tasks {
+	public class ParseDeviceSpecificBuildInformation : ParseDeviceSpecificBuildInformationTaskBase {
 	}
 }

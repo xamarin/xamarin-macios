@@ -13,21 +13,16 @@ using System.Reflection;
 using NUnit.Framework;
 using Xamarin.Tests;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 
 namespace Introspection {
-	
+
 	[TestFixture]
 	// we want the tests to be available because we use the linker
 	[Preserve (AllMembers = true)]
 	public class MacSignatureTest : ApiSignatureTest {
-		
+
 		static MacSignatureTest ()
 		{
 			Runtime.RegisterAssembly (typeof (NSObject).Assembly);
@@ -57,7 +52,7 @@ namespace Introspection {
 					return true;
 				break;
 			}
-			
+
 			// Bug 20232 - This is a hack.
 			if (selector == "geometryElementWithData:primitiveType:primitiveCount:bytesPerIndex:")
 				return true;
@@ -159,23 +154,11 @@ namespace Introspection {
 		{
 			switch (structName) {
 			case "_NSPoint":
-#if XAMCORE_2_0
 				return type.FullName == "CoreGraphics.CGPoint";
-#else
-				return type.FullName == "System.Drawing.PointF";
-#endif
 			case "_NSRect":
-#if XAMCORE_2_0
 				return type.FullName == "CoreGraphics.CGRect";
-#else
-				return type.FullName == "System.Drawing.RectangleF";
-#endif
 			case "_NSSize":
-#if XAMCORE_2_0
 				return type.FullName == "CoreGraphics.CGSize";
-#else
-				return type.FullName == "System.Drawing.SizeF";
-#endif
 			case "_SCNVector3":
 				return type.Name == "SCNVector3";
 			case "_SCNVector4":
@@ -183,7 +166,7 @@ namespace Introspection {
 			// CIImage 'static MonoMac.CoreImage.CIImage FromImageBuffer(MonoMac.CoreVideo.CVImageBuffer)' selector: imageWithCVImageBuffer: == @12@0:4^{__CVBuffer=}8
 			// AVAssetWriterInputPixelBufferAdaptor 'instance Boolean AppendPixelBufferWithPresentationTime(MonoMac.CoreVideo.CVPixelBuffer, CMTime)' selector: appendPixelBuffer:withPresentationTime: == c36@0:4^{__CVBuffer=}8{?=qiIq}12
 			case "__CVBuffer":
-				return type.Name == "CVImageBuffer" || type.Name == "CVPixelBuffer";;
+				return type.Name == "CVImageBuffer" || type.Name == "CVPixelBuffer"; ;
 			case "CATransform3D":
 				return type.Name == "CATransform3D" || type.Name == "SCNMatrix4";
 			case "SCNVector4":
@@ -259,22 +242,22 @@ namespace Introspection {
 			return base.Check (encodedType, type);
 		}
 
+#if !NET
 		protected override bool CheckType (Type t, ref int n)
 		{
 			switch (t.Name) {
-#if !XAMCORE_4_0
 			case "NSPasteboardReading":
 			case "NSPasteboardWriting":
-#endif
 				return true;
 			}
 
 			return base.CheckType (t, ref n);
 		}
+#endif
 
 		protected override void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
-#if !XAMCORE_4_0 // let's review the tests exceptions if we break things
+#if !XAMCORE_5_0 // let's review the tests exceptions if we break things
 			switch (m.Name) {
 			case "get_Source":
 			case "set_Source":
@@ -282,13 +265,15 @@ namespace Introspection {
 				if (t.Name == "NSTableView")
 					return;
 				break;
+#if !NET
 			case "AddEventListener":
-				// Fixed in XAMCORE_4_0
+				// Fixed in NET
 				if (t.Name == "DomNode")
 					return;
 				break;
+#endif // !NET
 			}
-#endif
+#endif // XAMCORE_5_0
 			base.CheckManagedMemberSignatures (m, t, ref n);
 		}
 	}

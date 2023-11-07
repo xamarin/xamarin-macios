@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using CoreFoundation;
 using Foundation;
@@ -28,8 +28,13 @@ namespace MonoTouchFixtures.Security {
 		public void Equals ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
+#if NET
+			using (var npo = new NWProtocolTlsOptions ()) {
+				var options = npo.ProtocolOptions;
+#else
 			using (var npo = NWProtocolOptions.CreateTls ()) {
 				var options = npo.TlsProtocolOptions;
+#endif
 
 				Assert.True (SecProtocolOptions.Equals (null, null), "1");
 				Assert.True (SecProtocolOptions.Equals (options, options), "2");
@@ -45,8 +50,13 @@ namespace MonoTouchFixtures.Security {
 		public void NewTlsOptions ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
+#if NET
+			using (var npo = new NWProtocolTlsOptions ()) {
+				var options = npo.ProtocolOptions;
+#else
 			using (var npo = NWProtocolOptions.CreateTls ()) {
 				var options = npo.TlsProtocolOptions;
+#endif
 				options.SetTlsMaxVersion (TlsProtocolVersion.Tls12);
 				options.SetTlsMinVersion (TlsProtocolVersion.Tls10);
 				options.AddTlsCipherSuite (TlsCipherSuite.Aes128GcmSha256);

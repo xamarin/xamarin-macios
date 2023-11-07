@@ -1,13 +1,11 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 using InstallSources;
 
-namespace InstallSourcesTests
-{
+namespace InstallSourcesTests {
 	[TestFixture]
-	public class MonoPathManglerTest
-	{
+	public class MonoPathManglerTest {
 		MonoPathMangler mangler;
 		string monoPath;
 		string installDir;

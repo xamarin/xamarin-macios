@@ -3,13 +3,8 @@
  *
  */
 using System;
-#if !XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using Foundation;
-using ObjCRuntime;
-#endif
 
 namespace Test {
 	[BaseType (typeof (NSObject))]
@@ -18,8 +13,8 @@ namespace Test {
 	public interface SharedDelegate {
 	}
 
-	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SharedDelegate)})]
-	public interface TestWrongPropertyName{
+	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (SharedDelegate) })]
+	public interface TestWrongPropertyName {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 

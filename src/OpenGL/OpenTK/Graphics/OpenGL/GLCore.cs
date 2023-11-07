@@ -23,15 +23,17 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+
+#if OPENTK_DLL
 
 namespace OpenTK.Graphics.OpenGL
 {
     using System;
     using System.Text;
     using System.Runtime.InteropServices;
-    #pragma warning disable 3019
-    #pragma warning disable 1591
+#pragma warning disable 3019
+#pragma warning disable 1591
 
     partial class GL
     {
@@ -6705,4 +6707,4 @@ namespace OpenTK.Graphics.OpenGL
     }
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

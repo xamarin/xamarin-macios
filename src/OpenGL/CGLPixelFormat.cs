@@ -25,52 +25,49 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace OpenGL {
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-	public class CGLPixelFormat : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		public CGLPixelFormat (IntPtr handle)
-		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid parameters to context creation");
-
-			CGLRetainPixelFormat (handle);
-			this.handle = handle;
-		}
-
-		internal CGLPixelFormat ()
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
+#else
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
+#endif
+	public class CGLPixelFormat : NativeObject {
+#if !NET
+		public CGLPixelFormat (NativeHandle handle)
+			: base (handle, false, verify: true)
 		{
 		}
+#endif
 
-		[Preserve (Conditional=true)]
-		internal CGLPixelFormat (IntPtr handle, bool owns)
+		protected internal override void Retain ()
 		{
-			if (!owns)
-				CGLRetainPixelFormat (handle);
-
-			this.handle = handle;
+			CGLRetainPixelFormat (GetCheckedHandle ());
 		}
 
-		~CGLPixelFormat ()
+		protected internal override void Release ()
 		{
-			Dispose (false);
+			CGLReleasePixelFormat (GetCheckedHandle ());
 		}
 
-		public void Dispose ()
+		[Preserve (Conditional = true)]
+		internal CGLPixelFormat (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
 		}
 
 		[DllImport (Constants.OpenGLLibrary)]
@@ -79,25 +76,17 @@ namespace OpenGL {
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLReleasePixelFormat (IntPtr handle);
 
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CGLReleasePixelFormat (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
 		[DllImport (Constants.OpenGLLibrary)]
-		extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute[] attributes, out IntPtr /* CGLPixelFormatObj* */ pix, out int /* GLint* */ npix);
-		public CGLPixelFormat (CGLPixelFormatAttribute[] attributes, out int npix)
+		extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute [] attributes, out IntPtr /* CGLPixelFormatObj* */ pix, out int /* GLint* */ npix);
+		public CGLPixelFormat (CGLPixelFormatAttribute [] attributes, out int npix)
+			: base (Create (attributes, out npix), true)
 		{
-			Initialize (attributes, out npix);
 		}
 
-		void Initialize (CGLPixelFormatAttribute[] attributes, out int npix)
+		static IntPtr Create (CGLPixelFormatAttribute [] attributes, out int npix)
 		{
-			if (attributes == null)
-				throw new ArgumentNullException ("attributes");
+			if (attributes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
 			IntPtr pixelFormatOut;
 			var marshalAttribs = new CGLPixelFormatAttribute [attributes.Length + 1];
 
@@ -109,13 +98,12 @@ namespace OpenGL {
 				throw new Exception ("CGLChoosePixelFormat returned: " + ret);
 			}
 
-			this.handle = pixelFormatOut;
+			return pixelFormatOut;
 		}
 
 		public CGLPixelFormat (params object [] attributes)
+			: base (Create (ConvertToAttributes (attributes), out _), true)
 		{
-			int ignored;
-			Initialize (ConvertToAttributes (attributes), out ignored);
 		}
 
 		public CGLPixelFormat (out int npix, params object [] attributes) : this (ConvertToAttributes (attributes), out npix)
@@ -125,9 +113,9 @@ namespace OpenGL {
 		static CGLPixelFormatAttribute [] ConvertToAttributes (object [] args)
 		{
 			var list = new List<CGLPixelFormatAttribute> ();
-			for (int i = 0; i < args.Length; i++){
+			for (int i = 0; i < args.Length; i++) {
 				var v = (CGLPixelFormatAttribute) args [i];
-				switch (v){
+				switch (v) {
 				case CGLPixelFormatAttribute.AllRenderers:
 				case CGLPixelFormatAttribute.DoubleBuffer:
 				case CGLPixelFormatAttribute.Stereo:
@@ -146,7 +134,7 @@ namespace OpenGL {
 				case CGLPixelFormatAttribute.Compliant:
 				case CGLPixelFormatAttribute.PixelBuffer:
 
-					// Not listed in the docs, but header file implies it
+				// Not listed in the docs, but header file implies it
 				case CGLPixelFormatAttribute.RemotePixelBuffer:
 				case CGLPixelFormatAttribute.AuxDepthStencil:
 				case CGLPixelFormatAttribute.ColorFloat:
@@ -158,7 +146,7 @@ namespace OpenGL {
 				case CGLPixelFormatAttribute.MPSafe:
 					list.Add (v);
 					break;
-					
+
 				case CGLPixelFormatAttribute.AuxBuffers:
 				case CGLPixelFormatAttribute.ColorSize:
 				case CGLPixelFormatAttribute.AlphaSize:
@@ -168,7 +156,7 @@ namespace OpenGL {
 				case CGLPixelFormatAttribute.RendererID:
 				case CGLPixelFormatAttribute.ScreenMask:
 
-					// not listed in the docs, but header file implies it
+				// not listed in the docs, but header file implies it
 				case CGLPixelFormatAttribute.SampleBuffers:
 				case CGLPixelFormatAttribute.Samples:
 				case CGLPixelFormatAttribute.VirtualScreenCount:
@@ -190,6 +178,6 @@ namespace OpenGL {
 			}
 			return list.ToArray ();
 		}
-		
+
 	}
 }

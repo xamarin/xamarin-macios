@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <MergeSystemAssemblies>false</MergeSystemAssemblies>
+    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
+    <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
+    <RuntimeIdentifier>win</RuntimeIdentifier>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn> <!-- warning NU1701: Package 'BouncyCastle 1.8.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project. -->
+    <NoWarn>$(NoWarn);MSB3246</NoWarn> <!-- Resolved file has a bad image, no metadata, or is otherwise inaccessible. System.BadImageFormatException: Assembly file 'xamarin-macios/packages/xamarin.ios.hotrestart.client/1.0.93/lib/netstandard2.0/ws2_32.dll' could not be opened - PE image doesn't contain managed metadata. -->
+  </PropertyGroup>
+  <Import Project="..\..\eng\Versions.props" />
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
+    <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReference Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="2.1.0-alpha" GeneratePathProperty="true" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
+      <ExcludeAssets>all</ExcludeAssets>
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <IsAgent>True</IsAgent>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="*.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="*.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Versions.ios.g.cs" />
+    <Compile Include="..\Xamarin.MacDev.Tasks\PublishFolderType.cs">
+      <Link>PublishFolderType.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Properties\Resources.Designer.cs" />
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Type>Resx</Type>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <StronglyTypedFileName>Properties/Resources.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Xamarin.iOS.Tasks.Windows.Properties</StronglyTypedNamespace>
+      <StronglyTypedClassName>Resources</StronglyTypedClassName>
+      <GenerateResource>true</GenerateResource>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+
+  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.ios.g.cs" BeforeTargets="BeforeBuild">
+    <Exec Command="make -C .. Versions.ios.g.cs" />
+  </Target>
+
+  <!-- Replaces the reference assemblies by the runtime implementation -->
+  <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
+    <ItemGroup>
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.Pkcs'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Formats.Asn1'" />
+    </ItemGroup>
+  </Target>
+</Project>

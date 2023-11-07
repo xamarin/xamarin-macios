@@ -1,0 +1,53 @@
+## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+
+## marked as available in tvOS 11 but the member is not and using a type, MPMusicPlayerQueueDescriptor, that's not available
+!missing-protocol! MPSystemMusicPlayerController not bound
+
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
+!missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
+!missing-field! MPMediaPlaylistPropertyDescriptionText not bound
+
+## the API are present but from calling the underlying collections
+## the selectors are newer but they were already bound that way
+!missing-selector! MPMediaItem::albumArtist not bound
+!missing-selector! MPMediaItem::albumArtistPersistentID not bound
+!missing-selector! MPMediaItem::albumPersistentID not bound
+!missing-selector! MPMediaItem::albumTitle not bound
+!missing-selector! MPMediaItem::albumTrackCount not bound
+!missing-selector! MPMediaItem::albumTrackNumber not bound
+!missing-selector! MPMediaItem::artist not bound
+!missing-selector! MPMediaItem::artistPersistentID not bound
+!missing-selector! MPMediaItem::artwork not bound
+!missing-selector! MPMediaItem::assetURL not bound
+!missing-selector! MPMediaItem::beatsPerMinute not bound
+!missing-selector! MPMediaItem::bookmarkTime not bound
+!missing-selector! MPMediaItem::comments not bound
+!missing-selector! MPMediaItem::composer not bound
+!missing-selector! MPMediaItem::composerPersistentID not bound
+!missing-selector! MPMediaItem::dateAdded not bound
+!missing-selector! MPMediaItem::discCount not bound
+!missing-selector! MPMediaItem::discNumber not bound
+!missing-selector! MPMediaItem::genre not bound
+!missing-selector! MPMediaItem::genrePersistentID not bound
+!missing-selector! MPMediaItem::hasProtectedAsset not bound
+!missing-selector! MPMediaItem::isCloudItem not bound
+!missing-selector! MPMediaItem::isCompilation not bound
+!missing-selector! MPMediaItem::isExplicitItem not bound
+!missing-selector! MPMediaItem::lastPlayedDate not bound
+!missing-selector! MPMediaItem::lyrics not bound
+!missing-selector! MPMediaItem::mediaType not bound
+!missing-selector! MPMediaItem::persistentID not bound
+!missing-selector! MPMediaItem::playbackDuration not bound
+!missing-selector! MPMediaItem::playbackStoreID not bound
+!missing-selector! MPMediaItem::playCount not bound
+!missing-selector! MPMediaItem::podcastPersistentID not bound
+!missing-selector! MPMediaItem::podcastTitle not bound
+!missing-selector! MPMediaItem::rating not bound
+!missing-selector! MPMediaItem::releaseDate not bound
+!missing-selector! MPMediaItem::skipCount not bound
+!missing-selector! MPMediaItem::title not bound
+!missing-selector! MPMediaItem::userGrouping not bound
+!missing-selector! MPMediaItem::isPreorder not bound

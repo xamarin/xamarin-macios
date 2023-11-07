@@ -1,4 +1,4 @@
-﻿//
+//
 // ILReader to parse the byte array provided by MethodBase.GetMethodBody ().GetILAsByteArray () into better-looking IL instructions.
 //
 // Authors:
@@ -14,10 +14,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Linker.Shared
-{
-	public class ILInstruction
-	{
+namespace Linker.Shared {
+	public class ILInstruction {
 		public MethodBase Method;
 		public OpCode OpCode;
 		public int Offset;
@@ -34,14 +32,13 @@ namespace Linker.Shared
 		public override string ToString ()
 		{
 			var methodOperand = Operand as MethodBase;
-			if (methodOperand != null)
+			if (methodOperand is not null)
 				return $"IL_{Offset:0000} {OpCode} {methodOperand.DeclaringType.FullName}.{methodOperand.Name}";
 			return $"IL_{Offset:0000} {OpCode} {(Operand is MethodBase ? ((MethodBase) Operand).Name : Operand?.ToString ())}";
 		}
 	}
 
-	public class ILReader : IEnumerable<ILInstruction>
-	{
+	public class ILReader : IEnumerable<ILInstruction> {
 		List<ILInstruction> instructions;
 
 		static OpCode [] oneByteOpcodes = new OpCode [0x100];
@@ -79,7 +76,7 @@ namespace Linker.Shared
 			var position = 0;
 
 			var body = method.GetMethodBody ();
-			if (body == null)
+			if (body is null)
 				return rv;
 
 			var bytes = body.GetILAsByteArray ();
@@ -164,7 +161,7 @@ namespace Linker.Shared
 			}
 		}
 
-		static byte ReadByte (byte[] bytes, ref int position)
+		static byte ReadByte (byte [] bytes, ref int position)
 		{
 			return bytes [position++];
 		}

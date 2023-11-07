@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="M0001" xml:space="preserve">
+        <value>Spouštění nástroje {0} začalo s těmito argumenty: {1}
+        </value>
+    </data>
+  <data name="M0002" xml:space="preserve">
+        <value>Spouštění nástroje {0} se dokončilo (ukončovací kód = {1}).
+        </value>
+    </data>
+  <data name="E0003" xml:space="preserve">
+        <value>Při spouštění nástroje {0} došlo k chybě: {1}
+        </value>
+    </data>
+  <data name="E0004" xml:space="preserve">
+        <value>Nepovedlo se podepsat kód {0}: {1}
+        </value>
+    </data>
+  <data name="E0005" xml:space="preserve">
+        <value>Nepovedlo se podepsat kód {0}.
+        </value>
+    </data>
+  <data name="E0006" xml:space="preserve">
+        <value>  {0} se nepovedlo najít.
+        </value>
+    </data>
+  <data name="E0007" xml:space="preserve">
+        <value>Při načítání {0} došlo k chybě: neznámý formát image
+        </value>
+    </data>
+  <data name="E0008" xml:space="preserve">
+        <value>Neplatné rozměry iTunesArtwork ({0} × {1}) pro {2}
+        </value>
+    </data>
+  <data name="E0009" xml:space="preserve">
+        <value>Pro {2} se zjistilo několik souborů iTunesArtwork se stejnými rozměry ({0} × {1}).
+        </value>
+    </data>
+  <data name="E0010" xml:space="preserve">
+        <value>Chyba při načítání {0}: {1}
+        </value>
+    </data>
+  <data name="E0011" xml:space="preserve">
+        <value>Nepovedlo se parsovat hodnotu MinimumOSVersion {0}.
+        </value>
+    </data>
+  <data name="E0012" xml:space="preserve">
+        <value>Nepodařilo se parsovat TargetArchitectures {0}.
+        </value>
+    </data>
+  <data name="E0013" xml:space="preserve">
+        <value>Sada SDK {0} pro {1} není nainstalovaná.
+        </value>
+    </data>
+  <data name="E0014" xml:space="preserve">
+        <value>Název spustitelného souboru (CFBundleExecutable) ({0}) nemůže končit na .app, protože iOSu se nemusí podařit aplikaci spustit.
+        </value>
+    </data>
+  <data name="W0016" xml:space="preserve">
+        <value>Sada watchOS 4.3 SDK se dá imitovat jen při vytváření pro watchOS.
+        </value>
+    </data>
+  <data name="M0017" xml:space="preserve">
+        <value>Všechna načtení protokolu HTTP jsou už povolená.
+        </value>
+    </data>
+  <data name="M0018" xml:space="preserve">
+        <value>Povolila se libovolná načtení protokolu HTTP, aby se podporovalo ladění.
+        </value>
+    </data>
+  <data name="W0019" xml:space="preserve">
+        <value>Nenastavily se podporované orientace iPhonu.
+        </value>
+    </data>
+  <data name="W0020" xml:space="preserve">
+        <value>Podporované orientace iPhonu nejsou odpovídající dvojice.
+        </value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="W0021" xml:space="preserve">
+        <value>Nenastavily se podporované orientace iPadu.
+        </value>
+    </data>
+  <data name="W0022" xml:space="preserve">
+        <value>Podporované orientace iPadu nejsou odpovídající dvojice.
+        </value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="E0023" xml:space="preserve">
+        <value>Není možné mít více než 1 soubor iTunesMetadata.plist.
+        </value>
+    </data>
+  <data name="E0024" xml:space="preserve">
+        <value>Při načítání souboru plist nastavení {0}/Settings.bundle/Root.plist došlo k chybě: {1}
+        </value>
+    </data>
+  <data name="E0025" xml:space="preserve">
+        <value>Nepovedlo se parsovat verzi sady SDK {0}.
+        </value>
+    </data>
+  <!-- E0026: not used anymore -->
+  <!-- E0027: not used anymore -->
+  <!-- E0028: not used anymore -->
+  <!-- E0029: not used anymore -->
+  <!-- E0030: not used anymore -->
+  <!-- E0031: not used anymore -->
+  <data name="E0032" xml:space="preserve">
+        <value>Nepovedlo se najít adresář bin sady SDK.
+        </value>
+    </data>
+  <!-- E0033: not used anymore -->
+  <!-- E0034: not used anymore -->
+  <!-- E0035: not used anymore -->
+  <!-- E0036: not used anymore -->
+  <!-- E0037: not used anymore -->
+  <!-- E0038: not used anymore -->
+  <!-- E0039: not used anymore -->
+  <!-- E0040: not used anymore -->
+  <!-- E0041: not used anymore -->
+  <!-- E0042: not used anymore -->
+  <!-- E0043: not used anymore -->
+  <data name="E0044" xml:space="preserve">
+        <value>Na cestě {0} se nepovedlo najít platnou sadu prostředků aplikace Xcode. Aktualizujte prosím v předvolbách sady Visual Studio {1} umístění sady Apple SDK.
+        </value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
+    </data>
+  <data name="E0045" xml:space="preserve">
+        <value>Nepovedlo se najít platnou a použitelnou cestu vývojáře v Xcode.
+        </value>
+    </data>
+  <data name="E0046" xml:space="preserve">
+        <value>Nepovedlo se najít {0}.
+        </value>
+    </data>
+  <data name="M0047" xml:space="preserve">
+        <value>Hledá se {0} v {1}.
+        </value>
+    </data>
+  <data name="E0048" xml:space="preserve">
+        <value>Neznámá platforma sady SDK: {0}
+        </value>
+    </data>
+  <data name="E0049" xml:space="preserve">
+        <value>Nepovedlo se najít zřizovací profil s názvem nebo UUID {0}.
+        </value>
+    </data>
+  <data name="E0050" xml:space="preserve">
+        <value>Neznámé možnosti hledání: {0}
+        </value>
+    </data>
+  <data name="W0051" xml:space="preserve">
+        <value>Neznámý typ nativního odkazu pro {0}
+        </value>
+    </data>
+  <data name="W0052" xml:space="preserve">
+        <value>Dynamické nativní odkazy se nepodporují: {0}
+        </value>
+    </data>
+  <data name="E0053" xml:space="preserve">
+        <value>Cílová architektura ARMv6 se už v Xamarin.iOS nepodporuje. Vyberte prosím podporovanou architekturu.
+        </value>
+    </data>
+  <data name="W0054" xml:space="preserve">
+        <value>Nepovedlo se vytvořit soubor odpovědi {0}: {1}
+        </value>
+    </data>
+  <data name="E0055" xml:space="preserve">
+        <value>Nepovedlo se načíst soubor Info.plist: {0}
+        </value>
+    </data>
+  <data name="E0057" xml:space="preserve">
+        <value>Neplatné architektury: {0}
+        </value>
+    </data>
+  <data name="E0058" xml:space="preserve">
+        <value>Nepovedlo se parsovat informace o cílovém zařízení.
+        </value>
+    </data>
+  <data name="E0059" xml:space="preserve">
+        <value>Nenašlo se žádné cílové zařízení.
+        </value>
+    </data>
+  <data name="E0060" xml:space="preserve">
+        <value>Nenašly se žádné informace o architektuře zařízení.
+        </value>
+    </data>
+  <data name="E0061" xml:space="preserve">
+        <value>Neplatná cílová architektura: {0}
+        </value>
+    </data>
+  <data name="E0062" xml:space="preserve">
+        <value>Nenašly se žádné informace o operačním systému zařízení.
+        </value>
+    </data>
+  <data name="E0063" xml:space="preserve">
+        <value>Nenašly se žádné informace o modelu zařízení.
+        </value>
+    </data>
+  <data name="E0064" xml:space="preserve">
+        <value>Nenašly se žádné informace o verzi iOSu.
+        </value>
+    </data>
+  <data name="E0065" xml:space="preserve">
+        <value>Soubor pravidel prostředků {0} se nenašel.
+        </value>
+    </data>
+  <data name="E0066" xml:space="preserve">
+        <value>Nepovedlo se parsovat SdkVersion {0}.
+        </value>
+    </data>
+  <data name="E0067" xml:space="preserve">
+        <value>Xcode 10 nepodporuje aplikace watchOS 1. Buď upgradujte na aplikace watchOS 2, nebo použijte starší verzi Xcode.</value>
+    </data>
+  <data name="E0068" xml:space="preserve">
+        <value>Aby bylo možné vytvářet aplikace WatchKitu, vyžaduje se instalace Xcode &gt;= 6.2.
+        </value>
+    </data>
+  <data name="E0069" xml:space="preserve">
+        <value>iOS {0} nepodporuje WatchKit.
+        </value>
+    </data>
+  <data name="E0070" xml:space="preserve">
+        <value>V sadě prostředků aplikace Xcode se nepovedlo najít spouštěč WatchKitu.
+        </value>
+    </data>
+  <data name="W0071" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má hodnotu CFBundleShortVersionString ({1}), která neodpovídá hodnotě CFBundleShortVersionString ({2}) hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <data name="W0072" xml:space="preserve">
+        <value>Rozšíření aplikace {0} neurčuje CFBundleVersion.
+        </value>
+    </data>
+  <data name="W0073" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má hodnotu CFBundleVersion ({1}), která neodpovídá hodnotě CFBundleVersion ({2}) hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <data name="W0074" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má nerozpoznanou hodnotu NSExtensionPointIdentifier ({1}).
+        </value>
+    </data>
+  <data name="W0075" xml:space="preserve">
+        <value>Aplikace Watch {0} neurčuje CFBundleShortVersionString.
+        </value>
+    </data>
+  <data name="W0076" xml:space="preserve">
+        <value>Aplikace Watch {0} má hodnotu CFBundleShortVersionString ({1}), která neodpovídá hodnotě CFBundleShortVersionString ({2}) hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <data name="W0077" xml:space="preserve">
+        <value>Aplikace Watch {0} neurčuje CFBundleVersion.
+        </value>
+    </data>
+  <data name="W0078" xml:space="preserve">
+        <value>Aplikace Watch {0} má hodnotu CFBundleVersion ({1}), která neodpovídá hodnotě CFBundleVersion ({2}) hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <data name="W0079" xml:space="preserve">
+        <value>Rozšíření Watch {0} neurčuje CFBundleShortVersionString.
+        </value>
+    </data>
+  <data name="W0080" xml:space="preserve">
+        <value>Rozšíření Watch {0} má hodnotu CFBundleShortVersionString ({1}), která neodpovídá hodnotě CFBundleShortVersionString ({2}) hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <data name="W0081" xml:space="preserve">
+        <value>Rozšíření Watch {0} neurčuje CFBundleVersion.
+        </value>
+    </data>
+  <data name="W0082" xml:space="preserve">
+        <value>Rozšíření Watch {0} má hodnotu CFBundleVersion ({1}), která neodpovídá hodnotě CFBundleVersion ({2}) hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <!-- E0083: not used anymore -->
+  <data name="E0084" xml:space="preserve">
+        <value>Nepovedlo se najít sadu {0} SDK {1} na cestě {}.
+        </value>
+    </data>
+  <data name="E0085" xml:space="preserve">
+        <value>Nepovedlo se najít cestu usr sady {0} SDK {1} na cestě {2}.
+        </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
+    </data>
+  <data name="E0086" xml:space="preserve">
+        <value>Nepovedlo se najít platnou cestu vývojáře v Xcode.
+        </value>
+    </data>
+  <!-- E0087: not used anymore -->
+  <!-- E0088: not used anymore -->
+  <data name="E0089" xml:space="preserve">
+        <value>Nerozpoznaná platforma: {0}
+        </value>
+    </data>
+  <data name="W0090" xml:space="preserve">
+        <value>Prostředek se nenachází v katalogu prostředků: {0}
+        </value>
+    </data>
+  <data name="E0091" xml:space="preserve">
+        <value>Nepovedlo se najít soubor: {0}
+        </value>
+    </data>
+  <data name="E0092" xml:space="preserve">
+        <value>Neplatný formát JSON {0}
+        </value>
+    </data>
+  <data name="E0093" xml:space="preserve">
+        <value>Částečný soubor Info.plist se nevygeneroval: {0}
+        </value>
+    </data>
+  <data name="E0094" xml:space="preserve">
+        <value>Nepovedlo se načíst soubor protokolu {1} nástroje {0}: {2}
+        </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
+    </data>
+  <data name="W0095" xml:space="preserve">
+        <value>Nepovedlo se parsovat výstup altool: {0}
+            Výstup: {1}
+        </value>
+    </data>
+  <!-- E0096: not used anymore -->
+  <data name="E0097" xml:space="preserve">
+        <value>Nezadal se žádný soubor definice rozhraní API.
+        </value>
+    </data>
+  <data name="E0098" xml:space="preserve">
+        <value>Nástroj {0} nebyl úspěšný.
+        </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
+    </data>
+  <data name="E0099" xml:space="preserve">
+        <value>  Na disku se nenašel prostředek sady {0} (měl by se nacházet v {1}).
+        </value>
+    </data>
+  <data name="E0100" xml:space="preserve">
+        <value>Cesta {0} by vedla na soubor mimo sadu prostředků aplikace a nedá se použít.
+        </value>
+    </data>
+  <data name="E0101" xml:space="preserve">
+        <value>Soubory Info.plist by měly mít akci sestavení None.
+        </value>
+    </data>
+  <data name="E0102" xml:space="preserve">
+        <value>Název {0} je rezervovaný a nedá se použít.
+        </value>
+    </data>
+  <data name="W0103" xml:space="preserve">
+        <value>V adresáři Frameworks se našel adresář, který není architektura: {0}
+        </value>
+    </data>
+  <data name="W0104" xml:space="preserve">
+        <value>Architektura {0} neobsahuje binární soubor s názvem {1}.
+        </value>
+    </data>
+  <data name="M0105" xml:space="preserve">
+        <value>Nenašel se žádný adresář Frameworks.
+        </value>
+    </data>
+  <data name="W0106" xml:space="preserve">
+        <value>Nepovedlo se určit hodnotu pro klíč manifestu {0}.
+        </value>
+    </data>
+  <data name="E0107" xml:space="preserve">
+        <value>Při načítání částečného souboru šablony Info.plist {0} došlo k chybě: {1}
+        </value>
+    </data>
+  <data name="W0108" xml:space="preserve">
+        <value>Bez zřizovacího profilu se nedá rozbalit $(TeamIdentifierPrefix) v souboru Entitlements.plist.
+        </value>
+    </data>
+  <data name="W0109" xml:space="preserve">
+        <value>Bez zřizovacího profilu se nedá rozbalit $(AppIdentifierPrefix) v souboru Entitlements.plist.
+        </value>
+    </data>
+  <data name="W0110" xml:space="preserve">
+        <value>Nároky iCloudu, třeba {0}, vyžadují zřizovací profil.
+        </value>
+    </data>
+  <data name="W0111" xml:space="preserve">
+        <value>Zřizovací profil nepodporuje nárok iCloudu {0}.
+        </value>
+    </data>
+  <data name="E0112" xml:space="preserve">
+        <value>Šablona Entitlements.plist {0} se nenašla.
+        </value>
+    </data>
+  <data name="E0113" xml:space="preserve">
+        <value>Při načítání šablony Entitlements.plist {0} došlo k chybě: {1}
+        </value>
+    </data>
+  <data name="E0114" xml:space="preserve">
+        <value>Při zápisu do souboru xcent {0} došlo k chybě: {1}
+        </value>
+    </data>
+  <data name="E0115" xml:space="preserve">
+        <value>Při zápisu do souboru archived-expanded-entitlements.xcent došlo k chybě: {0}
+        </value>
+    </data>
+  <data name="M0116" xml:space="preserve">
+        <value>Spouštění nástroje {0} se dokončilo.
+        </value>
+    </data>
+  <data name="E0117" xml:space="preserve">
+        <value>{0} skončilo s kódem {1}.
+        </value>
+    </data>
+  <data name="E0118" xml:space="preserve">
+        <value>Program {0} se ukončil s kódem {1}:
+{2}</value>
+    </data>
+  <data name="M0119" xml:space="preserve">
+        <value>Přeskakuje se {0}, protože výstupní soubor {1} je novější.
+        </value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
+    </data>
+  <data name="E0120" xml:space="preserve">
+        <value>Chyba při ukládání {0}: {1}
+        </value>
+    </data>
+  <data name="M0121" xml:space="preserve">
+        <value>Vytváří se balíček prostředků vazby: {0}
+        </value>
+    </data>
+  <data name="E0122" xml:space="preserve">
+        <value>Chyba při načítání {0}
+        </value>
+    </data>
+  <data name="E0123" xml:space="preserve">
+        <value>Vytvoření balíčku neproběhlo úspěšně. Další argumenty se nedají parsovat.
+        </value>
+    </data>
+  <data name="E0124" xml:space="preserve">
+        <value>Identita {0} neodpovídá žádné platné dvojici certifikátu a privátního klíče ve výchozí klíčence.
+        </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
+    </data>
+  <data name="M0125" xml:space="preserve">
+        <value>Zjistila se podpisová identita:
+        </value>
+    </data>
+  <data name="M0126" xml:space="preserve">
+        <value>Certifikát {0} neodpovídá žádné předponě {1}.
+        </value>
+    </data>
+  <data name="M0127" xml:space="preserve">
+        <value>Platnost certifikátu {0} vypršela ({1}).
+        </value>
+    </data>
+  <data name="E0128" xml:space="preserve">
+        <value>V klíčence se nenašly žádné platné klíče pro podepisování kódu {0}. Je nutné požádat o certifikát pro podepisování kódu na adrese https://developer.apple.com.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0129" xml:space="preserve">
+        <value>Certifikát {0} neodpovídá {1}.
+        </value>
+    </data>
+  <data name="E0130" xml:space="preserve">
+        <value>V klíčence se nenašel klíč pro podepisování kódu {1} pro {0}.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
+    </data>
+  <data name="E0131" xml:space="preserve">
+        <value>V {1} se nepovedlo najít žádný dostupný zřizovací profil pro {0}.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0132" xml:space="preserve">
+        <value>{0} neodpovídá {1}.
+        </value>
+    </data>
+  <data name="E0133" xml:space="preserve">
+        <value>Žádný nainstalovaný zřizovací profil neodpovídá nainstalovaným podpisovým identitám {1} pro {0}.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
+    </data>
+  <data name="M0134" xml:space="preserve">
+        <value>Hledají se odpovídající zřizovací profily s kompatibilním AppID a zachovávají se jen ty s nejdelším odpovídajícím ID (zástupné znaky).
+        </value>
+    </data>
+  <data name="M0135" xml:space="preserve">
+        <value>AppID: {0} se vyloučilo, protože jsme našli lepší shodu: {1}
+        </value>
+    </data>
+  <data name="M0136" xml:space="preserve">
+        <value>AppID: {0} se vyloučilo, protože jsme už našli lepší shody: {1}
+        </value>
+    </data>
+  <data name="W0137" xml:space="preserve">
+        <value>Identifikátoru sady prostředků neodpovídají žádné zřizovací profily.
+        </value>
+    </data>
+  <data name="M0138" xml:space="preserve">
+        <value>Identifikátoru sady prostředků odpovídá více zřizovacích profilů. Použije se první shoda.
+        </value>
+    </data>
+  <data name="E0139" xml:space="preserve">
+        <value>{0} nedefinuje CFBundleIdentifier.
+        </value>
+    </data>
+  <data name="E0140" xml:space="preserve">
+        <value>Zadaný zřizovací profil {1} pro {0} se nenašel.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
+    </data>
+  <data name="E0141" xml:space="preserve">
+        <value>Identifikátor sady prostředků projektu {0} neodpovídá zadanému zřizovacímu profilu {1}.
+        </value>
+    </data>
+  <data name="M0142" xml:space="preserve">
+        <value>S {0} se shoduje několik podpisových identit. Použije se první shoda.
+        </value>
+    </data>
+  <data name="M0143" xml:space="preserve">
+        <value>Našlo se několik podpisových identit. Použije se ta první.
+        </value>
+    </data>
+  <data name="E0144" xml:space="preserve">
+        <value>Zadaný zřizovací profil {0} {1} se nenašel.
+        </value>
+    </data>
+  <data name="E0145" xml:space="preserve">
+        <value>Zadanému zřizovacímu profilu {1} neodpovídají žádné podpisové identity {0}.
+        </value>
+    </data>
+  <data name="E0146" xml:space="preserve">
+        <value>Identifikátor sady prostředků {0} neodpovídá žádnému nainstalovanému zřizovacímu profilu pro vybranou identitu podepisování {0}.
+        </value>
+    </data>
+  <data name="E0147" xml:space="preserve">
+        <value>Identifikátor sady prostředků {0} neodpovídá žádnému nainstalovanému zřizovacímu profilu pro vybranou identitu podepisování {0}.
+        </value>
+    </data>
+  <data name="E0148" xml:space="preserve">
+        <value>Identifikátor sady prostředků {0} neodpovídá žádnému nainstalovanému zřizovacímu profilu.
+        </value>
+    </data>
+  <data name="M0149" xml:space="preserve">
+        <value>  Soubor {0} se našel v {1}.
+        </value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
+    </data>
+  <data name="E0150" xml:space="preserve">
+        <value>  Cesta AssemblyPath nemůže být null ani prázdná.
+        </value>
+    </data>
+  <data name="M0151" xml:space="preserve">
+        <value>Vygenerovaný název sady: {0}
+        </value>
+    </data>
+  <data name="E0152" xml:space="preserve">
+        <value>Nezadala se žádná vlastnost.
+        </value>
+    </data>
+  <data name="E0153" xml:space="preserve">
+        <value>Slovník v {0} neobsahoval klíč: {1}
+        </value>
+    </data>
+  <data name="E0154" xml:space="preserve">
+        <value>Nepovedlo se parsovat index pole: {0}
+        </value>
+    </data>
+  <data name="E0155" xml:space="preserve">
+        <value>Index pole je pro položku {0} mimo rozsah.
+        </value>
+    </data>
+  <data name="E0156" xml:space="preserve">
+        <value>Hodnoty {0} nepodporují podřízené vlastnosti.
+        </value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
+    </data>
+  <data name="E0157" xml:space="preserve">
+        <value>Získávání hodnot {0} se nepodporuje.
+        </value>
+    </data>
+  <data name="E0158" xml:space="preserve">
+        <value>Soubor {0} neexistuje.
+        </value>
+    </data>
+  <data name="E0159" xml:space="preserve">
+        <value>Soubor {0} je v konfliktu s {1}.
+        </value>
+    </data>
+  <data name="E0160" xml:space="preserve">
+        <value>Aplikace a rozšíření pro hodinky Watch vyžadují Xcode 6.2 nebo novější. Aktuální verze Xcode je {0}.
+        </value>
+    </data>
+  <data name="E0161" xml:space="preserve">
+        <value>Položky musí mít vypočítané logické názvy.
+        </value>
+    </data>
+  <data name="M0162" xml:space="preserve">
+        <value>Přeskočila se duplicitní položka: {0}
+        </value>
+    </data>
+  <data name="M0163" xml:space="preserve">
+        <value>Soubor neexistuje, vytvoří se: {0}
+        </value>
+    </data>
+  <data name="M0164" xml:space="preserve">
+        <value>Vytváří se adresář {0}.
+        </value>
+    </data>
+  <data name="M0165" xml:space="preserve">
+        <value>Kopíruje se soubor z {0} do {1}.
+        </value>
+    </data>
+  <data name="E0166" xml:space="preserve">
+        <value>Musíte zadat buď DestinationFolder, nebo DestinationFiles, ale ne obojí.
+        </value>
+    </data>
+  <data name="E0167" xml:space="preserve">
+        <value>Počet DestinationFiles musí odpovídat počtu SourceFiles.
+        </value>
+    </data>
+  <data name="M0168" xml:space="preserve">
+        <value>  Přeskakuje se sestavení architektury: {0}
+        </value>
+    </data>
+  <data name="E0169" xml:space="preserve">
+        <value>Neznámý identifikátor cílové architektury: {0}
+        </value>
+    </data>
+  <data name="E0170" xml:space="preserve">
+        <value>Nenašel se {0} v {1}.
+        </value>
+    </data>
+  <data name="E0171" xml:space="preserve">
+        <value>Sada SDK {0} není nainstalovaná.
+        </value>
+    </data>
+  <data name="E0172" xml:space="preserve">
+        <value>Sada {0} SDK verze {1} není nainstalovaná a nenašla se žádná novější verze.
+        </value>
+    </data>
+  <data name="E0173" xml:space="preserve">
+        <value>Verze sady {0} SDK {1} není nainstalovaná. Používá se místo ní novější verze {2}.
+        </value>
+    </data>
+  <data name="E0174" xml:space="preserve">
+        <value>Standard xcframework {0} má nesprávný nebo neznámý formát a nedá se zpracovat.</value>
+    </data>
+  <data name="E0175" xml:space="preserve">
+        <value>Uvnitř {0} nebyl nalezen žádný odpovídající standard zásad. SupportedPlatform: {0}, SupportedPlatformVariant: {1}, SupportedArchitectures: {2}.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
+    </data>
+  <data name="W0176" xml:space="preserve">
+        <value>Konfliktní možnosti {0} a {1}. {1} se bude ignorovat.
+        </value>
+    </data>
+  <data name="E0177" xml:space="preserve">
+        <value>Nepovedlo se získat instanci ISshCommands. Zkontrolujte prosím, že se navázalo platné připojení k Macu.</value>
+    </data>
+  <data name="E0178" xml:space="preserve">
+        <value>Při pokusu zkopírovat archiv {0} do {1} došlo k chybě. Podrobnosti: {2}</value>
+    </data>
+  <data name="E0179" xml:space="preserve">
+        <value>Není dostupné žádné připojení k Macu. Úloha {0} nebude provedena.</value>
+    </data>
+  <data name="E0180" xml:space="preserve">
+        <value>Nepovedlo se deserializovat DataSet {0}.</value>
+    </data>
+  <data name="E0181" xml:space="preserve">
+        <value>Soubor {0} nemá ImageAsset jako akci sestavení.</value>
+    </data>
+  <data name="E0182" xml:space="preserve">
+        <value>Nepovedlo se vyřešit UTI pro {0} v katalogu {1}.</value>
+    </data>
+  <data name="E0183" xml:space="preserve">
+        <value>Při pokusu ověřit kompatibilitu mezi Xcode a Xamarin.iOS došlo k chybě.</value>
+    </data>
+  <data name="E0184" xml:space="preserve">
+        <value>Projekt se sestavil pomocí verze Xcode ({0}), která není kompatibilní, což může způsobit neočekávaná upozornění nebo chyby. Nainstalujte prosím Xcode {1} nebo si přečtěte další informace v dokumentaci.</value>
+    </data>
+  <data name="E0185" xml:space="preserve">
+        <value>Při pokusu ověřit kompatibilitu mezi Xcode a Xamarin.iOS došlo k chybě. Podrobnosti: {0}
+        </value>
+    </data>
+  <data name="E0186" xml:space="preserve">
+        <value>Poskytnutá cesta k archivu nepochází z platného souboru archivu (.xcarchive). Cesta k archivu: {0}</value>
+    </data>
+  <data name="E0187" xml:space="preserve">
+        <value>Nepovedlo se namapovat verzi macOS {0} na odpovídající verzi Mac Catalystu. Platné verze macOS jsou: {1}</value>
+    </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Nepovedlo se namapovat verzi Mac Catalystu {0} na odpovídající verzi macOS. Platné verze Mac Catalystu jsou: {1}</value>
+    </data>
+  <data name="E0189" xml:space="preserve">
+        <value>Nepovedlo se parsovat argumenty vlastního linkeru -{0}: {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>Položka NativeResource {0} neexistuje.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+  <data name="E7001" xml:space="preserve">
+        <value>Nepovedlo se přeložit IP adresy hostitele pro nastavení ladicího programu Wi-Fi.
+        </value>
+    </data>
+  <data name="E7002" xml:space="preserve">
+        <value>Tento počítač nemá žádné síťové adaptéry. Při ladění nebo profilování na zařízení přes Wi-Fi se ale vyžadují.
+        </value>
+    </data>
+  <data name="E7003" xml:space="preserve">
+        <value>Rozšíření aplikace {0} neobsahuje soubor Info.plist.
+        </value>
+    </data>
+  <data name="E7004" xml:space="preserve">
+        <value>Rozšíření aplikace {0} neurčuje CFBundleIdentifier.
+        </value>
+    </data>
+  <data name="E7005" xml:space="preserve">
+        <value>Rozšíření aplikace {0} neurčuje CFBundleExecutable.
+        </value>
+    </data>
+  <data name="E7006" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má neplatný identifikátor CFBundleIdentifier ({1}), nezačíná identifikátorem CFBundleIdentifier hlavní sady prostředků aplikace ({2}).
+        </value>
+    </data>
+  <data name="E7007" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má CFBundleIdentifier ({1}), který končí neplatnou příponou .key.
+        </value>
+    </data>
+  <data name="E7008" xml:space="preserve">
+        <value>Rozšíření aplikace {0} neurčuje CFBundleShortVersionString.
+        </value>
+    </data>
+  <data name="E7009" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má neplatný soubor Info.plist: neobsahuje slovník NSExtension.
+        </value>
+    </data>
+  <data name="E7010" xml:space="preserve">
+        <value>Rozšíření aplikace {0} má neplatný soubor Info.plist: slovník NSExtension neobsahuje hodnotu NSExtensionPointIdentifier.
+        </value>
+    </data>
+  <!-- E7011: not used anymore -->
+  <!-- E7012: not used anymore -->
+  <!-- E7013: not used anymore -->
+  <data name="E7014" xml:space="preserve">
+        <value>Aplikace Watch {0} neobsahuje soubor Info.plist.
+        </value>
+    </data>
+  <data name="E7015" xml:space="preserve">
+        <value>Aplikace Watch {0} neurčuje CFBundleIdentifier.
+        </value>
+    </data>
+  <data name="E7016" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatný identifikátor CFBundleIdentifier ({1}), nezačíná identifikátorem CFBundleIdentifier hlavní sady prostředků aplikace ({2}).
+        </value>
+    </data>
+  <data name="E7017" xml:space="preserve">
+        <value>Aplikace Watch {0} nemá platnou hodnotu UIDeviceFamily. Očekává se Watch (4), ale našla se hodnota {1} ({2}).
+        </value>
+    </data>
+  <data name="E7018" xml:space="preserve">
+        <value>Aplikace Watch {name} neurčuje CFBundleExecutable.
+        </value>
+    </data>
+  <data name="E7019" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatnou hodnotu WKCompanionAppBundleIdentifier ({1}), neodpovídá identifikátoru CFBundleIdentifier hlavní sady prostředků aplikace ({2}).
+        </value>
+    </data>
+  <data name="E7020" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatný soubor Info.plist: musí být k dispozici klíč WKWatchKitApp, který má hodnotu true.
+        </value>
+    </data>
+  <data name="E7021" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatný soubor Info.plist: nesmí být k dispozici klíč LSRequiresIPhoneOS.
+        </value>
+    </data>
+  <data name="E7022" xml:space="preserve">
+        <value>Aplikace Watch {0} neobsahuje žádná rozšíření Watch.
+        </value>
+    </data>
+  <data name="E7022_A" xml:space="preserve">
+        <value>Aplikace Watch {0} neobsahuje rozšíření Watch.
+        </value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
+    </data>
+  <data name="E7023" xml:space="preserve">
+        <value>Rozšíření Watch {0} neobsahuje soubor Info.plist.
+        </value>
+    </data>
+  <data name="E7024" xml:space="preserve">
+        <value>Rozšíření Watch {0} neurčuje CFBundleIdentifier.
+        </value>
+    </data>
+  <data name="E7025" xml:space="preserve">
+        <value>Rozšíření Watch {0} neurčuje CFBundleExecutable.
+        </value>
+    </data>
+  <data name="E7026" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný identifikátor CFBundleIdentifier ({1}), nezačíná identifikátorem CFBundleIdentifier hlavní sady prostředků aplikace ({2}).
+        </value>
+    </data>
+  <data name="E7027" xml:space="preserve">
+        <value>Rozšíření Watch {0} má identifikátor CFBundleIdentifier ({1}), který končí neplatnou příponou .key.
+        </value>
+    </data>
+  <data name="E7028" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: neobsahuje slovník NSExtension.
+        </value>
+    </data>
+  <data name="E7029" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: NSExtensionPointIdentifier musí být com.apple.watchkit.
+        </value>
+    </data>
+  <data name="E7029_A" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: slovník NSExtension musí obsahovat NSExtensionPointIdentifier.
+        </value>
+    </data>
+  <data name="E7030" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: slovník NSExtension musí obsahovat NSExtensionAttributes.
+        </value>
+    </data>
+  <data name="E7031" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatnou hodnotu WKAppBundleIdentifier ({1}), neodpovídá hodnotě CFBundleIdentifier ({2}) nadřazené sady prostředků aplikace Watch.
+        </value>
+    </data>
+  <data name="E7031_A" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: slovník NSExtensionAttributes musí obsahovat WKAppBundleIdentifier.
+        </value>
+    </data>
+  <data name="E7032" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: slovník UIRequiredDeviceCapabilities by neměl obsahovat funkci watch-companion.
+        </value>
+    </data>
+  <data name="E7032_A" xml:space="preserve">
+        <value>Rozšíření Watch {0} má neplatný soubor Info.plist: pole UIRequiredDeviceCapabilities by nemělo obsahovat funkci watch-companion.
+        </value>
+    </data>
+  <data name="E7033" xml:space="preserve">
+        <value>Aplikace Watch {0} neobsahuje soubor Info.plist.
+        </value>
+    </data>
+  <data name="E7034" xml:space="preserve">
+        <value>Aplikace Watch {0} neurčuje CFBundleIdentifier.
+        </value>
+    </data>
+  <data name="E7035" xml:space="preserve">
+        <value>Aplikace Watcher {0} nemá platnou hodnotu UIDeviceFamily. Očekávalo se {1}, ale našlo se {2} ({3}).
+        </value>
+    </data>
+  <data name="E7036" xml:space="preserve">
+        <value>Aplikace Watch {0} neurčuje CFBundleExecutable.
+        </value>
+    </data>
+  <data name="E7037" xml:space="preserve">
+        <value>Rozšíření WatchKitu {0} má neplatnou hodnotu WKAppBundleIdentifier ({1}), která neodpovídá hodnotě CFBundleIdentifier ({2}) aplikace Watch.
+        </value>
+    </data>
+  <data name="E7038" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatnou hodnotu WKCompanionAppBundleIdentifier ({1}), neodpovídá identifikátoru CFBundleIdentifier hlavní sady prostředků aplikace ({2}).
+        </value>
+    </data>
+  <data name="E7038_A" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatný soubor Info.plist: WKCompanionAppBundleIdentifier musí existovat a musí odpovídat identifikátoru CFBundleIdentifier hlavní sady prostředků aplikace.
+        </value>
+    </data>
+  <data name="E7039" xml:space="preserve">
+        <value>Aplikace Watch {0} má neplatný soubor Info.plist: nesmí být k dispozici klíč LSRequiresIPhoneOS.
+        </value>
+    </data>
+  <data name="E7040" xml:space="preserve">
+        <value>Sada prostředků aplikace {0} neobsahuje soubor Info.plist.
+        </value>
+    </data>
+  <data name="E7041" xml:space="preserve">
+        <value>{0} neurčuje CFBundleIdentifier.
+        </value>
+    </data>
+  <data name="E7042" xml:space="preserve">
+        <value>{0} neurčuje CFBundleExecutable.
+        </value>
+    </data>
+  <data name="E7043" xml:space="preserve">
+        <value>{0} neurčuje CFBundleSupportedPlatforms.
+        </value>
+    </data>
+  <data name="E7044" xml:space="preserve">
+        <value>{0} neurčuje UIDeviceFamily.
+        </value>
+    </data>
+  <data name="E7044_A" xml:space="preserve">
+        <value>{0} je neplatné: klíč UIDeviceFamily musí obsahovat hodnotu pro {1}.
+        </value>
+    </data>
+  <data name="E7045" xml:space="preserve">
+        <value>Nerozpoznaný typ: {Type}
+        </value>
+    </data>
+  <data name="E7046" xml:space="preserve">
+        <value>Přidání: Položka {0} se nezadala správně.
+        </value>
+    </data>
+  <data name="E7047" xml:space="preserve">
+        <value>Přidání: Položka {0} obsahuje neplatný index pole.
+        </value>
+    </data>
+  <data name="E7048" xml:space="preserve">
+        <value>Přidání: Položka {0} už existuje.
+        </value>
+    </data>
+  <data name="E7049" xml:space="preserve">
+        <value>Přidání: Do nadřazeného prvku se nepovedlo přidat položku {0}.
+        </value>
+    </data>
+  <data name="E7050" xml:space="preserve">
+        <value>Odstranění: Z nadřazeného prvku se nedala odstranit položka {0}.
+        </value>
+    </data>
+  <data name="E7051" xml:space="preserve">
+        <value>Odstranění: Položka {0} obsahuje neplatný index pole.
+        </value>
+    </data>
+  <data name="E7052" xml:space="preserve">
+        <value>Odstranění: Položka {0} neexistuje.
+        </value>
+    </data>
+  <data name="E7053" xml:space="preserve">
+        <value>Import: Položka {0} se nezadala správně.
+        </value>
+    </data>
+  <data name="E7054" xml:space="preserve">
+        <value>Import: Položka {0} obsahuje neplatný index pole.
+        </value>
+    </data>
+  <data name="E7055" xml:space="preserve">
+        <value>Import: Při čtení souboru došlo k chybě: {0}
+        </value>
+    </data>
+  <data name="E7056" xml:space="preserve">
+        <value>Import: Do nadřazeného prvku se nepovedlo přidat položku {0}.
+        </value>
+    </data>
+  <data name="E7057" xml:space="preserve">
+        <value>Sloučení: Do slovníku se nedají přidat položky pole.
+        </value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
+    </data>
+  <data name="E7058" xml:space="preserve">
+        <value>Sloučení: Zadaná položka musí být kontejner.
+        </value>
+    </data>
+  <data name="E7059" xml:space="preserve">
+        <value>Sloučení: Položka {0} obsahuje neplatný index pole.
+        </value>
+    </data>
+  <data name="E7060" xml:space="preserve">
+        <value>Sloučení: Položka {0} neexistuje.
+        </value>
+    </data>
+  <data name="E7061" xml:space="preserve">
+        <value>Sloučení: Při čtení souboru došlo k chybě: {0}
+        </value>
+    </data>
+  <data name="E7062" xml:space="preserve">
+        <value>Nastavení: Položka {0} se nezadala správně.
+        </value>
+    </data>
+  <data name="E7063" xml:space="preserve">
+        <value>Nastavení: Položka {0} obsahuje neplatný index pole.
+        </value>
+    </data>
+  <data name="E7064" xml:space="preserve">
+        <value>Nastavení: Položka {0} neexistuje.
+        </value>
+    </data>
+  <!-- E7068: not in use anymore -->
+  <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14+ nepodporuje aplikace watchOS 1. Migrujte projekt na watchOS 2+.</value>
+    </data>
+  <data name="E7070" xml:space="preserve">
+        <value>Neplatná architektura ({0}): není možné propojit více než jednu architekturu současně.</value>
+    </data>
+  <data name="E7071" xml:space="preserve">
+        <value>Argumenty kompilátoru AOT se nepovedlo analyzovat: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+  <data name="InvalidFramework" xml:space="preserve">
+        <value>Neplatná architektura: {0}</value>
+    </data>
+  <data name="InvalidPlatform" xml:space="preserve">
+        <value>Neplatná platforma: {0}</value>
+    </data>
+  <data name="E7072" xml:space="preserve">
+        <value>Soubor požadavků na produkt balíčku obsahuje architektury ({0}), které neodpovídají cílovým architekturám ({1}).</value>
+    </data>
+  <data name="E7073" xml:space="preserve">
+        <value>Musí se zadat nejméně jedna sada prostředků aplikace.</value>
+    </data>
+  <data name="E7074" xml:space="preserve">
+        <value>Sada prostředků aplikace {0} neexistuje.</value>
+    </data>
+  <data name="E7075" xml:space="preserve">
+        <value>Pro sadu prostředků aplikace {0} se neposkytla žádná metadata SpecificSubDirectory.</value>
+    </data>
+  <data name="E7076" xml:space="preserve">
+        <value>Symbolický odkaz {0} se nedá sloučit, protože má rozdílné cíle.</value>
+    </data>
+  <data name="E7077" xml:space="preserve">
+        <value>Nedá se sloučit soubor {0}, protože se liší mezi vstupními sadami prostředků aplikace.</value>
+    </data>
+  <data name="E7078" xml:space="preserve">
+        <value>Neplatná sada prostředků aplikace: soubor Mach-O {0} má závislé soubory.</value>
+    </data>
+  <data name="E7079" xml:space="preserve">
+        <value>Neplatná sada prostředků aplikace: soubor {0} má mezi vstupními sadami prostředků aplikace rozdílné typy.</value>
+    </data>
+  <data name="E7080" xml:space="preserve">
+        <value>Soubor sady prostředků aplikace č. {0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+  <data name="E7081" xml:space="preserve">
+        <value>Kompilátor AOT {0} neexistuje.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>Hodnota {0} v Info.plist ({1}) se neshoduje s hodnotou SupportedOSPlatformVersion ({2}) v souboru projektu (pokud v souboru projektu není žádná SupportedOSPlatformVersion, předpokládá se výchozí hodnota). Buď změňte hodnotu v Info.plist tak, aby se shodovala s hodnotou SupportedOSPlatformVersion, nebo odeberte hodnotu v Info.plist (a přidejte hodnotu SupportedOSPlatformVersion do souboru projektu, pokud ještě neexistuje).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>Všechny soubory písem se musí nacházet ve stejném adresáři v sadě prostředků aplikace. Následující soubory písem mají v sadě prostředků aplikace různé cílové adresáře:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>Cílový adresář je {0}.</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="E7085" xml:space="preserve">
+        <value>Úloha {0} neobdržela hodnotu požadovaného parametru {1} a ani metadata {2} nebyla v prostředku {3}.</value>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>Vytváření balíčku prostředků komprimované vazby, protože ve vstupu jsou symbolické odkazy.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>Hodnota {0} není pro vlastnost Compress platná. Platné hodnoty: true, false nebo auto.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>V adresáři {0} byl očekáván soubor manifestu.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="E7088" xml:space="preserve">
+        <value>Hodnota metadat PublishFolderType {0} položky {1} se nerozpoznala. Soubor se do sady prostředků aplikace nezkopíruje.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>Soubor {0} neurčuje metadata PublishFolderType a výchozí hodnota se nedá vypočítat. Soubor se do sady prostředků aplikace nezkopíruje.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>Hodnota metadat PublishFolderType {0} položky {1} se nerozpoznala. Soubor se do sady prostředků aplikace nezkopíruje. Pokud se soubor nemá zkopírovat do sady prostředků aplikace, odeberte u položky metadata {2}.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>Architektura {0} je architekturou statických knihoven a nezkopíruje se do aplikace.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>Soubor {0} není platná architektura: {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>Balíček prostředků vazby {0} neexistuje.</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>Soubor nebo adresář {0} není rozhraním ani souborem rozhraní.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata byla v jednom případě {1} a v druhém případě {2}.</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata {1}={2} byla nastavena pro jednu položku, ale ne pro druhou.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata {1} měla pro každou položku jinou hodnotu (jednou {2}, jindy {3}).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>Hodnota UIDeviceFamily 6 není pro tuto platformu platná. Je platná jenom pro Mac Catalyst.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>Hodnota UIDeviceFamily 6 vyžaduje macOS 11.0. V souboru projektu prosím nastavte SupportedOSPlatformVersion na alespoň 14.0 (ekvivalent verze macOS 11.0 pro Mac). Aktuální hodnota je {0} (ekvivalent macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Nepovedlo se najít balíček prostředků vazby: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Neznámá vlastnost {0} s hodnotou {1}.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>Neplatná hodnota {0} pro nárok {1} typu {2} zadaná ve skupině položek CustomEntitlements. Neočekávala se vůbec žádná hodnota.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>Neplatná hodnota {0} pro nárok {1} typu {2} zadaná ve skupině položek CustomEntitlements. Očekávala se hodnota true nebo false.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>Neznámý typ {0} pro nárok {1} zadaný ve skupině položek CustomEntitlements Očekávala se hodnota Remove, Boolean, String nebo StringArray.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>Neočekávané rozšíření {0} pro nativní odkaz {1}v balíčku prostředků vazby {2}.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>V souboru ZIP {0} se očekával soubor s názvem {1}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>Soubor ZIP {0} neexistuje.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>Soubor {0} neexistuje.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Položku {0} se nepovedlo zpracovat jako nativní odkaz: neznámý typ.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Ze standardu xcframework {1} se nepovedlo načíst soubor Info.plist {0}.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>Adresář {0} neexistuje.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>V souboru ZIP {1} se nepovedlo najít soubor nebo adresář {0}.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Soubor ZIP {0} nelze na této platformě zpracovat: soubor {1} je symbolický odkaz.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>Úloze “{0}“ nebyla určena hodnota parametru „{1}“, která se při sestavování na této platformě vyžaduje.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>Sestavení illink neexistuje: „{0}“</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>Sestavení {0} neposkytuje metadata „ObjectFile“.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>Sestavení {0} bylo předáno vícekrát jako vstupní sestavení (odkazováno z {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT kompilace {0} se nezdařila. Kompilátor AOT byl ukončen s kódem {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>Byl zjištěn cyklus odkazu na sestavení související se sestavením {0}.</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
+</root>

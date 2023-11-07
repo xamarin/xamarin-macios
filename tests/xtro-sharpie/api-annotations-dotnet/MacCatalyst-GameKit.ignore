@@ -1,0 +1,7 @@
+# This selector does not exist (respond?) in macOS either
+!missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
+
+# Are only available for TvOS
+
+## not annotated by itself but it maps to presentFriendRequestCreatorFromViewController which is not available on Catalyst
+!missing-selector! GKLocalPlayer::isPresentingFriendRequestViewController not bound

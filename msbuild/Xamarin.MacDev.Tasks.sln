@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Core", "Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj", "{93E12FA0-089C-4BC8-840F-43CFBC7927C7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Tests", "tests\Xamarin.iOS.Tasks.Tests\Xamarin.iOS.Tasks.Tests.csproj", "{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev", "..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj", "{CC3D9353-20C4-467A-8522-A9DED6F0C753}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks", "Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj", "{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}"
@@ -15,48 +11,100 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks", "Xamari
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks", "Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj", "{44605724-8002-48E1-895F-7CB068099B6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks.Core", "Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj", "{7B095849-6FDB-4BD2-9B59-569D81A1A809}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Localization.MSBuild", "Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj", "{947E3C4C-8891-49D7-B665-23F785489D3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks.Core", "Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.csproj", "{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D669990B-EE95-4282-AAC4-17CA05AE0575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tests", "..\tests\msbuild\Xamarin.MacDev.Tests\Xamarin.MacDev.Tests.csproj", "{14A12D59-A630-42F1-BC19-A63A9D87DB3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks.Tests", "..\tests\msbuild\Xamarin.MacDev.Tasks.Tests\Xamarin.MacDev.Tasks.Tests.csproj", "{17E54157-C5DA-414C-8C28-7F642E6E4FB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{F70FD520-F1A7-44F4-A7D5-2E3F471F7CC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Windows", "Xamarin.iOS.Tasks.Windows\Xamarin.iOS.Tasks.Windows.csproj", "{37C7273B-CB32-49B8-8820-1AB0940C7934}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Messaging.Build", "Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj", "{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Debug-net461|Any CPU = Debug-net461|Any CPU
+		Debug-netstandard2.0|Any CPU = Debug-netstandard2.0|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1AC7C3-F6DD-4E46-B897-9DBB90B158EC}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-net461|Any CPU.ActiveCfg = Debug-netstandard2.0|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-net461|Any CPU.Build.0 = Debug-netstandard2.0|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug-netstandard2.0|Any CPU
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0}.Debug-netstandard2.0|Any CPU.Build.0 = Debug-netstandard2.0|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{37C7273B-CB32-49B8-8820-1AB0940C7934}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,8 +112,10 @@ Global
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.TextStylePolicy = $1
-		$1.inheritsSet = null
 		$1.scope = text/x-csharp
+		$1.FileWidth = 80
+		$1.TabWidth = 8
+		$1.IndentWidth = 8
 		$0.CSharpFormattingPolicy = $2
 		$2.IndentSwitchSection = False
 		$2.NewLinesForBracesInProperties = False
@@ -78,13 +128,19 @@ Global
 		$2.NewLineForElse = False
 		$2.NewLineForCatch = False
 		$2.NewLineForFinally = False
-		$2.NewLineForMembersInObjectInit = True
-		$2.NewLineForMembersInAnonymousTypes = True
-		$2.NewLineForClausesInQuery = True
+		$2.NewLineForMembersInObjectInit = False
+		$2.NewLineForMembersInAnonymousTypes = False
+		$2.NewLineForClausesInQuery = False
 		$2.SpacingAfterMethodDeclarationName = True
 		$2.SpaceAfterMethodCallName = True
 		$2.SpaceAfterCast = True
-		$2.SpaceBeforeOpenSquareBracket = False
+		$2.SpaceBeforeOpenSquareBracket = True
 		$2.scope = text/x-csharp
+		$2.NewLinesForBracesInTypes = False
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{14A12D59-A630-42F1-BC19-A63A9D87DB3B} = {D669990B-EE95-4282-AAC4-17CA05AE0575}
+		{17E54157-C5DA-414C-8C28-7F642E6E4FB0} = {D669990B-EE95-4282-AAC4-17CA05AE0575}
+		{F515F859-A90B-4EF1-A0F2-D1BDD2C3FF36} = {F70FD520-F1A7-44F4-A7D5-2E3F471F7CC2}
 	EndGlobalSection
 EndGlobal

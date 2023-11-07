@@ -7,19 +7,13 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !NET
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreAnimation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreAnimation;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreAnimation {
 
@@ -33,8 +27,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 		[Test]
 		public void AllBehaviorTypes ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			// turns out there's 2 undocumented behaviors: colorOverDistance and valueOverDistance
 			foreach (var type in CAEmitterBehavior.BehaviorTypes) {
@@ -49,8 +43,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 		[Test]
 		public void ColorOverDistance ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			// undocumented - we'll track it over the betas :)
 			using (var eb = CAEmitterBehavior.Create ((NSString) "colorOverDistance")) {
@@ -69,8 +63,8 @@ namespace MonoTouchFixtures.CoreAnimation {
 		[Test]
 		public void ValueOverDistance ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			// undocumented - we'll track it over the betas :)
 			using (var eb = CAEmitterBehavior.Create ((NSString) "valueOverDistance")) {
@@ -88,4 +82,4 @@ namespace MonoTouchFixtures.CoreAnimation {
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !NET

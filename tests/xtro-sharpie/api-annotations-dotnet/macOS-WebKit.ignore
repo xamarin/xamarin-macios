@@ -1,0 +1,32 @@
+## only a subset of the old, pre WKWebKit, is bound for macOS
+
+# TODO WKWebView should conform to NSTextFinderClient is marked as macos(WK_MAC_TBA) as of 11.4 beta3
+
+# xcode 15
+
+# older/legacy API
+!missing-selector! +NSObject::isKeyExcludedFromWebScript: not bound
+!missing-selector! +NSObject::isSelectorExcludedFromWebScript: not bound
+!missing-selector! +NSObject::webScriptNameForKey: not bound
+!missing-selector! +NSObject::webScriptNameForSelector: not bound
+!missing-selector! NSObject::finalizeForWebScript not bound
+!missing-selector! NSObject::invokeDefaultMethodWithArguments: not bound
+!missing-selector! NSObject::invokeUndefinedMethodFromWebScript:withArguments: not bound
+!missing-selector! NSObject::objectForWebScript not bound
+!missing-selector! NSObject::webFrame not bound
+!missing-selector! NSObject::webPlugInContainerLoadRequest:inFrame: not bound
+!missing-selector! NSObject::webPlugInContainerSelectionColor not bound
+!missing-selector! NSObject::webPlugInContainerShowStatus: not bound
+!missing-selector! NSObject::webPlugInDestroy not bound
+!missing-selector! NSObject::webPlugInInitialize not bound
+!missing-selector! NSObject::webPlugInMainResourceDidFailWithError: not bound
+!missing-selector! NSObject::webPlugInMainResourceDidFinishLoading not bound
+!missing-selector! NSObject::webPlugInMainResourceDidReceiveData: not bound
+!missing-selector! NSObject::webPlugInMainResourceDidReceiveResponse: not bound
+!missing-selector! NSObject::webPlugInSetIsSelected: not bound
+!missing-selector! NSObject::webPlugInStart not bound
+!missing-selector! NSObject::webPlugInStop not bound
+
+# enabled for XAMCORE 5, else breaking change
+!missing-protocol-conformance! WKWebView should conform to NSTextFinderClient (defined in 'WKNSTextFinderClient' category)
+

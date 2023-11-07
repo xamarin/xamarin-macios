@@ -1,0 +1,11 @@
+## helpers built from existing (native) values
+!extra-enum-value! Managed value 12 for CAEdgeAntialiasingMask.TopBottomEdges not found in native headers
+!extra-enum-value! Managed value 15 for CAEdgeAntialiasingMask.All not found in native headers
+!extra-enum-value! Managed value 3 for CAEdgeAntialiasingMask.LeftRightEdges not found in native headers
+
+## unsorted
+
+!missing-field! CATransform3DIdentity not bound
+!missing-pinvoke! CATransform3DMakeScale is not bound
+!missing-pinvoke! CATransform3DMakeTranslation is not bound
+!missing-selector! CALayer::shouldArchiveValueForKey: not bound

@@ -1,3 +1,4 @@
 ### API not marked with unavailable (but without availability for tvOS/iOS)
 !missing-field! kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID not bound
 !missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
+!unknown-field! kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder bound

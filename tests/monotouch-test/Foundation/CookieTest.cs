@@ -9,52 +9,37 @@
 
 using System;
 using System.Net;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class HttpCookieTest {
-		
+
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3603
 		[Test]
 		public void NSDictionaryCtor ()
 		{
 			using (var props = new NSMutableDictionary ()) {
-#if XAMCORE_2_0
 				props.Add (NSHttpCookie.KeyOriginUrl, new NSString ("http://yodawg.com"));
-#else
-				props.Add (NSHttpCookie.KeyOriginURL, new NSString ("http://yodawg.com"));
-#endif
 				props.Add (NSHttpCookie.KeyName, new NSString ("iherd"));
 				props.Add (NSHttpCookie.KeyValue, new NSString ("ulikecookies"));
-				
+
 				// an invalid NSDictionary returns null from Objective-C but that
 				// results in an 'empty' instance inside MonoTouch
 				Assert.Throws<Exception> (() => new NSHttpCookie (props), "ctor");
-	
+
 				props.Add (NSHttpCookie.KeyPath, new NSString ("/"));
 				using (var cookie = new NSHttpCookie (props)) {
 					Assert.That (cookie.Handle, Is.Not.EqualTo (IntPtr.Zero), "ctor");
-					
+
 					Assert.That (cookie.Domain, Is.EqualTo ("yodawg.com"), "Domain");
 					Assert.That (cookie.Name, Is.EqualTo ("iherd"), "Name");
 					Assert.That (cookie.Value, Is.EqualTo ("ulikecookies"), "Value");
@@ -62,26 +47,22 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void CookieFromProperties ()
 		{
 			using (var props = new NSMutableDictionary ()) {
-#if XAMCORE_2_0
 				props.Add (NSHttpCookie.KeyOriginUrl, new NSString ("http://yodawg.com"));
-#else
-				props.Add (NSHttpCookie.KeyOriginURL, new NSString ("http://yodawg.com"));
-#endif
 				props.Add (NSHttpCookie.KeyName, new NSString ("iherd"));
 				props.Add (NSHttpCookie.KeyValue, new NSString ("ulikecookies"));
-				
+
 				var cookie = NSHttpCookie.CookieFromProperties (props);
 				Assert.Null (cookie, "missing path");
-	
+
 				props.Add (NSHttpCookie.KeyPath, new NSString ("/"));
 				using (cookie = NSHttpCookie.CookieFromProperties (props)) {
 					Assert.NotNull (cookie, "w/path");
-		
+
 					Assert.That (cookie.Domain, Is.EqualTo ("yodawg.com"), "Domain");
 					Assert.That (cookie.Name, Is.EqualTo ("iherd"), "Name");
 					Assert.That (cookie.Value, Is.EqualTo ("ulikecookies"), "Value");
@@ -89,7 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void NiceTwoCtor ()
 		{
@@ -100,7 +81,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (cookie.Domain, Is.EqualTo ("*"), "Domain");
 			}
 		}
-		
+
 		[Test]
 		public void NiceThreeCtor ()
 		{
@@ -129,7 +110,7 @@ namespace MonoTouchFixtures.Foundation {
 			// an invalid NSDictionary returns null from Objective-C but that
 			// results in an 'empty' instance inside MonoTouch
 			using (var cookie = new NSHttpCookie (new Cookie ())) {
-				Assert.That (cookie.Handle, Is.EqualTo (IntPtr.Zero), "ctor");
+				Assert.That (cookie.Handle, Is.EqualTo (NativeHandle.Zero), "ctor");
 			}
 		}
 
@@ -154,7 +135,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (cookie.Version, Is.EqualTo ((nuint) 0), "Version");
 			}
 		}
-		
+
 		[Test]
 		public void DotNetInteropMax ()
 		{

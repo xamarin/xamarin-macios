@@ -1,0 +1,6 @@
+{
+  "$schema": "http://json.schemastore.org/ide.host",
+  "appliesTo": "MacCatalystApplication | MacCatalystAppExtension | MacCatalystBinding | MacCatalystClassLibary",
+  "defaultItemExtension": "cs",
+  "itemHierarchyPaths": [ "Mac Catalyst" ]
+}

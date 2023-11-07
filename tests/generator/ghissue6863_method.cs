@@ -10,8 +10,8 @@ namespace GH6863_method {
 	interface MyFooClass {
 
 		[Export ("stringMethod:")]
-		void StringMethod ([BindAs (typeof (string))] NSString[] id_test );
+		void StringMethod ([BindAs (typeof (string))] NSString [] id_test);
 
-		
+
 	}
 }

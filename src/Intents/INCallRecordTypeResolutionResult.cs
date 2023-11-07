@@ -1,4 +1,4 @@
-﻿//
+//
 // INCallRecordTypeResolutionResult.cs
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
+#if !TVOS
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -18,13 +18,13 @@ namespace Intents {
 		public static INCallRecordTypeResolutionResult GetSuccess (INCallRecordType resolvedValue)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (10, 13))
+			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				return SuccessWithResolvedCallRecordType (resolvedValue);
+			return SuccessWithResolvedCallRecordType (resolvedValue);
 			else
 				return SuccessWithResolvedValue (resolvedValue);
 		}
@@ -32,13 +32,13 @@ namespace Intents {
 		public static INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType valueToConfirm)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (10, 13))
+			if (SystemVersion.CheckmacOS (10, 13))
 #endif
-				return ConfirmationRequiredWithCallRecordTypeToConfirm (valueToConfirm);
+			return ConfirmationRequiredWithCallRecordTypeToConfirm (valueToConfirm);
 			else
 				return ConfirmationRequiredWithValueToConfirm (valueToConfirm);
 		}

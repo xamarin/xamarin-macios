@@ -13,15 +13,17 @@ public class Cache {
 	const string NAME = "mmp";
 #elif MTOUCH
 	const string NAME = "mtouch";
+#elif BUNDLER
+	const string NAME = "dotnet-linker";
 #else
-	#error Wrong defines
+#error Wrong defines
 #endif
 
 	string cache_dir;
 	bool temporary_cache;
-	string[] arguments;
+	string [] arguments;
 
-	public Cache (string[] arguments)
+	public Cache (string [] arguments)
 	{
 		this.arguments = arguments;
 	}
@@ -29,11 +31,11 @@ public class Cache {
 	public bool IsCacheTemporary {
 		get { return temporary_cache; }
 	}
-	
+
 	// see --cache=DIR
 	public string Location {
 		get {
-			if (cache_dir == null) {
+			if (cache_dir is null) {
 				do {
 					cache_dir = Path.Combine (Path.GetTempPath (), NAME + ".cache", Path.GetRandomFileName ());
 					if (File.Exists (cache_dir) || Directory.Exists (cache_dir))
@@ -60,11 +62,11 @@ public class Cache {
 			cache_dir = Target.GetRealPath (Path.GetFullPath (cache_dir));
 		}
 	}
-	
+
 	public void Clean ()
 	{
 #if DEBUG
-		Console.WriteLine ("Cache.Clean: {0}" , Location);
+		Console.WriteLine ("Cache.Clean: {0}", Location);
 #endif
 		Directory.Delete (Location, true);
 		Directory.CreateDirectory (Location);
@@ -144,56 +146,17 @@ public class Cache {
 			return false;
 		}
 
-		var ab = new byte[2048];
-		var bb = new byte[2048];
-		
-		do {
-			int ar = astream.Read (ab, 0, ab.Length);
-			int br = bstream.Read (bb, 0, bb.Length);
-
-			if (ar != br) {
-				Driver.Log (6, " > streams are considered different because their lengths do not match.");
-				return false;
-			}
-
-			if (ar == 0)
-				return true;
-
-			fixed (byte *aptr = ab, bptr = bb) {
-				long *l1 = (long *) aptr;
-				long *l2 = (long *) bptr;
-				int len = ar;
-				// Compare one long at a time.
-				for (int i = 0; i < len / 8; i++) {
-					if (l1 [i] != l2 [i]) {
-						Driver.Log (6, " > streams differ at index {0}-{1}", i, i + 8);
-						return false;
-					}
-				}
-				// Compare any remaining bytes.
-				int mod = len % 8;
-				if (mod > 0) {
-					for (int i = len - mod; i < len; i++) {
-						if (ab [i] != bb [i]) {						
-							Driver.Log (6, " > streams differ at byte index {0}", i);
-							return false;
-						}
-					}
-				}
-			}
-		} while (true);
+		return FileUtils.CompareStreams (astream, bstream);
 	}
-	
-	string GetArgumentsForCacheData ()
+
+	string GetArgumentsForCacheData (Application app)
 	{
 		var sb = new StringBuilder ();
 		var args = new List<string> (arguments);
 
-		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
-		if (args.Count > 0)
-			sb.Append ("# [first argument, ignore] # ").AppendLine (args [0]);
+		sb.Append ("# Version: ").Append (app.ProductConstants.Version).Append ('.').Append (app.ProductConstants.Revision).AppendLine ();
 		sb.Append (Driver.GetFullPath ()).AppendLine (" \\");
-		CollectArgumentsForCache (args, 1, sb);
+		CollectArgumentsForCache (args, 0, sb);
 		return sb.ToString ();
 	}
 
@@ -217,14 +180,14 @@ public class Cache {
 			default:
 				if (arg [0] == '@')
 					CollectArgumentsForCache (File.ReadAllLines (arg.Substring (1)), 0, sb);
-				
+
 				sb.Append ('\t').Append (StringUtils.Quote (arg)).AppendLine (" \\");
 				break;
 			}
 		}
 	}
 
-	public bool IsCacheValid ()
+	public bool IsCacheValid (Application app)
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -232,7 +195,7 @@ public class Cache {
 		if (!File.Exists (pcache)) {
 			Driver.Log (3, "A full rebuild will be performed because the cache is either incomplete or entirely missing.");
 			return false;
-		} else if (GetArgumentsForCacheData () != File.ReadAllText (pcache)) {
+		} else if (GetArgumentsForCacheData (app) != File.ReadAllText (pcache)) {
 			Driver.Log (3, "A full rebuild will be performed because the arguments to " + NAME + " has changed with regards to the cached data.");
 			return false;
 		}
@@ -247,9 +210,9 @@ public class Cache {
 		return true;
 	}
 
-	public bool VerifyCache ()
+	public bool VerifyCache (Application app)
 	{
-		if (!IsCacheValid ()) {
+		if (!IsCacheValid (app)) {
 			Clean ();
 			return false;
 		}
@@ -257,11 +220,11 @@ public class Cache {
 		return true;
 	}
 
-	public void ValidateCache ()
+	public void ValidateCache (Application app)
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
-		File.WriteAllText (pcache, GetArgumentsForCacheData ());
+		File.WriteAllText (pcache, GetArgumentsForCacheData (app));
 	}
 
 	// A stream that reads an assembly and skips the header and the GUID table.
@@ -282,8 +245,8 @@ public class Cache {
 
 			stream = File.OpenRead (filename);
 		}
-		
-		public override int Read (byte[] buffer, int offset, int count)
+
+		public override int Read (byte [] buffer, int offset, int count)
 		{
 			// read the header, always the same 136 bytes, followed by a 4 bytes timestamp (which we must ignore)
 			// the rest (except the #GUID table) is safe to compare.
@@ -293,13 +256,13 @@ public class Cache {
 				if (stream.Position == 136) {
 					// skip the timestamp
 					stream.Position += 4;
-// 					this prints the timestamp:
-//					byte[] buf = new byte[4];
-//					stream.Read (buf, 0, 4);
-//					int t2 = (buf [3] << 24) + (buf [2] << 16) + (buf [1] << 8) + buf [0];
-//					var d = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-//					var d2 = d.AddSeconds (t2);
-//					Console.WriteLine ("TS of {1}: {0}", d2, filename);
+					// this prints the timestamp:
+					// byte[] buf = new byte[4];
+					// stream.Read (buf, 0, 4);
+					// int t2 = (buf [3] << 24) + (buf [2] << 16) + (buf [1] << 8) + buf [0];
+					// var d = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+					// var d2 = d.AddSeconds (t2);
+					// Console.WriteLine ("TS of {1}: {0}", d2, filename);
 				}
 				return read; // don't bother reading more, this makes the implementation easier.
 			}
@@ -354,7 +317,8 @@ public class Cache {
 					// Read the optional PE header
 					str.BaseStream.Position += 208;
 					int cliHeaderRVA = str.ReadInt32 ();
-					/*int cliHeaderSize = */str.ReadInt32 ();
+					/*int cliHeaderSize = */
+					str.ReadInt32 ();
 
 					str.BaseStream.Position += 8;
 
@@ -383,10 +347,11 @@ public class Cache {
 					str.BaseStream.Position = cliHeaderRVA - (virtualAddress - pointerToRawData);
 					str.BaseStream.Position += 8;
 					uint metadataRVA = str.ReadUInt32 ();
-					/*uint metadataSize = */str.ReadUInt32 ();
+					/*uint metadataSize = */
+					str.ReadUInt32 ();
 
 					// Find and read the metadata header
-					uint metadataRootPosition = metadataRVA - (virtualAddress - pointerToRawData); 
+					uint metadataRootPosition = metadataRVA - (virtualAddress - pointerToRawData);
 					str.BaseStream.Position = metadataRootPosition;
 					if (str.ReadByte () != 0x42 || str.ReadByte () != 0x53 || str.ReadByte () != 0x4a || str.ReadByte () != 0x42)
 						return; // Invalid magic signature.
@@ -399,7 +364,7 @@ public class Cache {
 					for (ushort i = 0; i < metadataStreams; i++) {
 						uint offset = str.ReadUInt32 ();
 						uint size = str.ReadUInt32 ();
-						byte[] name = new byte [32];
+						byte [] name = new byte [32];
 
 						for (int k = 0; k < 8; k++) {
 							str.Read (name, k * 4, 4);
@@ -439,7 +404,7 @@ public class Cache {
 			throw new NotImplementedException ();
 		}
 
-		public override void Write (byte[] buffer, int offset, int count)
+		public override void Write (byte [] buffer, int offset, int count)
 		{
 			throw new NotImplementedException ();
 		}

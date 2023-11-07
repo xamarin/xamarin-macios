@@ -26,30 +26,25 @@
 
 using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
 namespace Foundation {
-	public partial class NSObject : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
-		{
+	public partial class NSObject {
 #if !COREBUILD
 
 		// note: the linker will remove the unrequired `dlopen` calls
 		// Used to force the loading of AppKit and Foundation
 		// ** DO NOT rename the fields as mmp's linker can remove them when not required **
-		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 		static IntPtr fl = Dlfcn.dlopen (Constants.FoundationLibrary, 1);
 		static IntPtr al = Dlfcn.dlopen (Constants.AppKitLibrary, 1);
 		static IntPtr ab = Dlfcn.dlopen (Constants.AddressBookLibrary, 1);
 		static IntPtr ct = Dlfcn.dlopen (Constants.CoreTextLibrary, 1);
 		static IntPtr wl = Dlfcn.dlopen (Constants.WebKitLibrary, 1);
 		static IntPtr zl = Dlfcn.dlopen (Constants.QuartzLibrary, 1);
+#if !NET
 		static IntPtr ql = Dlfcn.dlopen (Constants.QTKitLibrary, 1);
+#endif
 		static IntPtr cl = Dlfcn.dlopen (Constants.CoreLocationLibrary, 1);
 		static IntPtr ll = Dlfcn.dlopen (Constants.SecurityLibrary, 1);
 		static IntPtr zc = Dlfcn.dlopen (Constants.QuartzComposerLibrary, 1);
@@ -71,7 +66,6 @@ namespace Foundation {
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
 		static IntPtr ic = Dlfcn.dlopen (Constants.ImageCaptureCoreLibrary, 1);
-#if XAMCORE_2_0 && ARCH_64
 		static IntPtr it = Dlfcn.dlopen (Constants.IntentsLibrary, 1);
 		static IntPtr me = Dlfcn.dlopen (Constants.MediaLibraryLibrary, 1);
 		static IntPtr gl = Dlfcn.dlopen (Constants.GLKitLibrary, 1);
@@ -104,23 +98,24 @@ namespace Foundation {
 		static IntPtr ios = Dlfcn.dlopen (Constants.IOSurfaceLibrary, 1);
 		static IntPtr ex = Dlfcn.dlopen (Constants.ExternalAccessoryLibrary, 1);
 		static IntPtr ms = Dlfcn.dlopen (Constants.MetalPerformanceShadersLibrary, 1);
+		static IntPtr msg = Dlfcn.dlopen (Constants.MetalPerformanceShadersGraphLibrary, 1);
 		static IntPtr bc = Dlfcn.dlopen (Constants.BusinessChatLibrary, 1);
 		static IntPtr ad = Dlfcn.dlopen (Constants.AdSupportLibrary, 1);
 		static IntPtr nl = Dlfcn.dlopen (Constants.NaturalLanguageLibrary, 1);
 		static IntPtr vs = Dlfcn.dlopen (Constants.VideoSubscriberAccountLibrary, 1);
 		static IntPtr un = Dlfcn.dlopen (Constants.UserNotificationsLibrary, 1);
 		static IntPtr il  = Dlfcn.dlopen (Constants.iTunesLibraryLibrary, 1);
-#endif
-		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
+		static IntPtr exl = Dlfcn.dlopen (Constants.ExtensionKitLibrary, 1);
+		static IntPtr sw = Dlfcn.dlopen (Constants.SharedWithYouLibrary, 1);
+		static IntPtr swc = Dlfcn.dlopen (Constants.SharedWithYouCoreLibrary, 1);
+		static IntPtr th = Dlfcn.dlopen (Constants.ThreadNetworkLibrary, 1);
+		static IntPtr ni = Dlfcn.dlopen (Constants.NearbyInteractionLibrary, 1);
+		static IntPtr sm = Dlfcn.dlopen (Constants.ServiceManagementLibrary, 1);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms.")]
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
-
-		internal void SetAsProxy () {
-			IsDirectBinding = true;
-		}
 #endif // !COREBUILD
 	}
 }

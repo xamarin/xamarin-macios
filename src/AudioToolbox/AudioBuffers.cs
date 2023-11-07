@@ -27,16 +27,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
-namespace AudioToolbox
-{
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+namespace AudioToolbox {
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CoreAudio.framework - CoreAudioTypes.h
-	public class AudioBuffers : IDisposable, INativeObject
-	{
+	public class AudioBuffers : IDisposable, INativeObject {
 		IntPtr address;
 		readonly bool owns;
 
@@ -48,7 +60,7 @@ namespace AudioToolbox
 		public AudioBuffers (IntPtr address, bool owns)
 		{
 			if (address == IntPtr.Zero)
-				throw new ArgumentException ("address");
+				throw new ArgumentException (nameof (address));
 
 			this.address = address;
 			this.owns = owns;
@@ -57,7 +69,7 @@ namespace AudioToolbox
 		public unsafe AudioBuffers (int count)
 		{
 			if (count < 0)
-				throw new ArgumentOutOfRangeException ("count");
+				throw new ArgumentOutOfRangeException (nameof (count));
 
 			//
 			// AudioBufferList is a int + array of AudioBuffer (int + int + intptr).
@@ -71,8 +83,8 @@ namespace AudioToolbox
 			owns = true;
 
 			Marshal.WriteInt32 (address, 0, count);
-			AudioBuffer *ptr = (AudioBuffer *) (((byte *) address) + IntPtr.Size);
-			for (int i = 0; i < count; i++){
+			AudioBuffer* ptr = (AudioBuffer*) (((byte*) address) + IntPtr.Size);
+			for (int i = 0; i < count; i++) {
 				ptr->NumberChannels = 0;
 				ptr->DataByteSize = 0;
 				ptr->Data = IntPtr.Zero;
@@ -87,14 +99,14 @@ namespace AudioToolbox
 
 		public unsafe int Count {
 			get {
-				return *(int *) address;
+				return *(int*) address;
 			}
 		}
 
 		public AudioBuffer this [int index] {
 			get {
 				if (index >= Count)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				//
 				// Decodes
@@ -106,25 +118,25 @@ namespace AudioToolbox
 				// }
 				//
 				unsafe {
-					byte *baddress = (byte *) address;
-					
+					byte* baddress = (byte*) address;
+
 					var ptr = baddress + IntPtr.Size + index * sizeof (AudioBuffer);
-					return *(AudioBuffer *) ptr;
+					return *(AudioBuffer*) ptr;
 				}
 			}
 			set {
 				if (index >= Count)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException (nameof (index));
 
 				unsafe {
-					byte *baddress = (byte *) address;
-					var ptr = (AudioBuffer *) (baddress + IntPtr.Size + index * sizeof (AudioBuffer));
+					byte* baddress = (byte*) address;
+					var ptr = (AudioBuffer*) (baddress + IntPtr.Size + index * sizeof (AudioBuffer));
 					*ptr = value;
 				}
 			}
 		}
 
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return address; }
 		}
 
@@ -136,11 +148,11 @@ namespace AudioToolbox
 		public void SetData (int index, IntPtr data)
 		{
 			if (index >= Count)
-				throw new ArgumentOutOfRangeException ("index");
+				throw new ArgumentOutOfRangeException (nameof (index));
 
 			unsafe {
-				byte * baddress = (byte *) address;
-				var ptr = (IntPtr *)(baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int) + sizeof (int));
+				byte* baddress = (byte*) address;
+				var ptr = (IntPtr*) (baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int) + sizeof (int));
 				*ptr = data;
 			}
 		}
@@ -148,14 +160,14 @@ namespace AudioToolbox
 		public void SetData (int index, IntPtr data, int dataByteSize)
 		{
 			if (index >= Count)
-				throw new ArgumentOutOfRangeException ("index");
+				throw new ArgumentOutOfRangeException (nameof (index));
 
 			unsafe {
-				byte *baddress = (byte *) address;
-				var ptr = (int *)(baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int));
+				byte* baddress = (byte*) address;
+				var ptr = (int*) (baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int));
 				*ptr = dataByteSize;
 				ptr++;
-				IntPtr *iptr = (IntPtr *) ptr;
+				IntPtr* iptr = (IntPtr*) ptr;
 				*iptr = data;
 			}
 		}

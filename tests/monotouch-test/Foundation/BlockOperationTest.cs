@@ -8,36 +8,28 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
-using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BlockOperationTest {
-		
+
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Create_Null ()
 		{
 			// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSBlockOperation addExecutionBlock:]: block is nil
-			NSBlockOperation.Create (null);
+			Assert.Throws<ArgumentNullException> (() => NSBlockOperation.Create (null));
 		}
-		
+
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Add_Null ()
 		{
 			using (var bo = NSBlockOperation.Create (Create_Null)) {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSBlockOperation addExecutionBlock:]: block is nil
-				bo.AddExecutionBlock (null);
+				Assert.Throws<ArgumentNullException> (() => bo.AddExecutionBlock (null));
 			}
 		}
 

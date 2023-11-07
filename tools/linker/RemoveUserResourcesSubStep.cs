@@ -1,34 +1,58 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Mono.Cecil;
 using Mono.Linker;
+#if NET
+using Mono.Linker.Steps;
+#endif
 using Mono.Tuner;
+
+using Xamarin.Bundler;
+using Xamarin.Utils;
 
 namespace Xamarin.Linker {
 
 	public class RemoveUserResourcesSubStep : ExceptionalSubStep {
 
-#if MTOUCH
-		const string Content = "__monotouch_content_";
-		const string Page = "__monotouch_page_";
+		const string iOS_Content = "__monotouch_content_";
+		const string iOS_Page = "__monotouch_page_";
+		const string Mac_Content = "__xammac_content_";
+		const string Mac_Page = "__xammac_page_";
 
-		public RemoveUserResourcesSubStep (MonoTouch.Tuner.LinkerOptions options)
-		{
-			Device = options.Device;
-		}
-#else
-		const string Content = "__xammac_content_";
-		const string Page = "__xammac_page_";
-#endif
+		string Content;
+		string Page;
+
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly; }
 		}
 
-		public bool Device { get; private set; }
+		public bool Simulator { get { return LinkContext.App.IsSimulatorBuild; } }
 
-		protected override string Name { get; } = " Removing User Resources";
+		protected override string Name { get; } = "Removing User Resources";
 		protected override int ErrorCode { get; } = 2030;
+
+		public override void Initialize (LinkContext context)
+		{
+			base.Initialize (context);
+
+			switch (LinkContext.App.Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				Content = iOS_Content;
+				Page = iOS_Page;
+				break;
+			case ApplePlatform.MacOSX:
+				Content = Mac_Content;
+				Page = Mac_Page;
+				break;
+			default:
+				Report (ErrorHelper.CreateError (71, Errors.MX0071, LinkContext.App.Platform, LinkContext.App.ProductName));
+				break;
+			}
+		}
 
 		protected override void Process (AssemblyDefinition assembly)
 		{
@@ -38,15 +62,15 @@ namespace Xamarin.Linker {
 			var module = assembly.MainModule;
 			if (!module.HasResources)
 				return;
-			
+
 			HashSet<string> libraries = null;
 			if (assembly.HasCustomAttributes) {
 				foreach (var ca in assembly.CustomAttributes) {
 					if (!ca.AttributeType.Is ("ObjCRuntime", "LinkWithAttribute"))
 						continue;
 					var lwa = Xamarin.Bundler.Assembly.GetLinkWithAttribute (ca);
-					if (lwa.LibraryName != null) {
-						if (libraries == null)
+					if (lwa.LibraryName is not null) {
+						if (libraries is null)
 							libraries = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 						libraries.Add (lwa.LibraryName);
 					}
@@ -76,10 +100,10 @@ namespace Xamarin.Linker {
 
 		bool IsMonoTouchResource (string resourceName)
 		{
-#if MTOUCH
-			if (!Device)
+			// Don't bother removing the resources if we're building for the simulator
+			if (Simulator)
 				return false;
-#endif
+
 			if (resourceName.StartsWith (Content, StringComparison.OrdinalIgnoreCase))
 				return true;
 
@@ -91,7 +115,7 @@ namespace Xamarin.Linker {
 
 		static bool IsNativeLibrary (string resourceName, HashSet<string> libraries)
 		{
-			if (libraries == null)
+			if (libraries is null)
 				return false;
 
 			return libraries.Contains (resourceName);

@@ -1,18 +1,14 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 
-namespace Xamarin.MMP.Tests
-{
-	public partial class MMPTests
-	{
+namespace Xamarin.MMP.Tests {
+	public partial class MMPTests {
 		void CreateRemotingConfigFile (string path)
 		{
-			using (Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Xamarin.MMP.Tests.remoting.config"))
-			{
-				using (StreamReader reader = new StreamReader (stream))
-				{
+			using (Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Xamarin.MMP.Tests.remoting.config")) {
+				using (StreamReader reader = new StreamReader (stream)) {
 					string result = reader.ReadToEnd ();
 					File.WriteAllText (path, result);
 				}
@@ -30,19 +26,17 @@ namespace Xamarin.MMP.Tests
 		//[Test] Disabled due to https://bugzilla.xamarin.com/show_bug.cgi?id=50230
 		public void RemotingConfigruation_RemoteConfigTests ()
 		{
-			RunMMPTest (tmpDir =>
-			{
+			RunMMPTest (tmpDir => {
 				CreateRemotingConfigFile (Path.Combine (tmpDir, "remoting.config"));
 
-				var config = new TI.UnifiedTestConfig (tmpDir)
-				{
+				var config = new TI.UnifiedTestConfig (tmpDir) {
 					ItemGroup = RemotingConfigCSProjText,
 					TestCode = RemotingTestCode
 				};
 
 				TI.TestUnifiedExecutable (config);
 
-				config.CSProjConfig ="<MonoBundlingExtraArgs>--machine-config=\"\"</MonoBundlingExtraArgs>";
+				config.CSProjConfig = "<MonoBundlingExtraArgs>--machine-config=\"\"</MonoBundlingExtraArgs>";
 				TI.TestUnifiedExecutable (config);
 			});
 		}

@@ -6,7 +6,6 @@
 //
 // Copyrigh 2014, Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
 
 using System;
 using System.ComponentModel;
@@ -14,6 +13,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace Metal {
 
@@ -81,8 +82,7 @@ namespace Metal {
 	}
 
 	public partial class MTLPipelineBufferDescriptorArray {
-		public MTLPipelineBufferDescriptor this [nuint index]
-		{
+		public MTLPipelineBufferDescriptor this [nuint index] {
 			get {
 				return GetObject (index);
 			}
@@ -106,4 +106,3 @@ namespace Metal {
 	}
 #endif
 }
-#endif

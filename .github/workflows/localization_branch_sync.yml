@@ -1,0 +1,32 @@
+# Disabling this action since we do something similar already in the CI
+
+name: Sync Localization Branch
+on:
+  pull_request:
+    branches:
+      - 'main'
+    types: [closed]
+
+concurrency: 
+  group: 'Localization-Sync'
+  cancel-in-progress: false
+
+jobs:
+  replaceLocalizationBranch:
+    name: 'Replace Localization Branch'
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
+    steps:
+    - uses: dawidd6/action-delete-branch@v3
+      name: 'delete'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branches: Localization
+        soft_fail: true
+
+    - uses: peterjgrainger/action-create-branch@v2.4.0
+      name: 'Create Localization Branch'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branch: 'Localization'

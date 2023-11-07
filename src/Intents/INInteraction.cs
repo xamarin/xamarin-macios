@@ -1,4 +1,4 @@
-﻿//
+//
 // INInteraction.cs
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !MONOMAC
+#if IOS || WATCH
 using System;
 using Foundation;
 using ObjCRuntime;

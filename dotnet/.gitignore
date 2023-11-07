@@ -1,0 +1,12 @@
+tmpdir
+Workloads/Microsoft.NET.Sdk.*/LICENSE
+WorkloadManifest.json
+WorkloadManifest.targets
+nupkgs
+Microsoft.*.Sdk/targets/Microsoft.*.Sdk.ImplicitNamespaceImports.props
+Microsoft.*.Sdk/targets/Microsoft.*.Sdk.SupportedTargetPlatforms.props
+Microsoft.*.Sdk/targets/Microsoft.*.Sdk.DefaultItems.props
+Microsoft.*.Sdk/targets/Microsoft.*.Sdk.Versions.props
+Microsoft.*.Sdk/Sdk/AutoImport.props
+_pkg
+.stamp-*

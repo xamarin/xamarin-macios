@@ -1,0 +1,1543 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    
+    <data name="M0001" xml:space="preserve">
+        <value>Tool {0} execution started with arguments: {1}
+        </value>
+    </data>
+    
+    <data name="M0002" xml:space="preserve">
+        <value>Tool {0} execution finished (exit code = {1}).
+        </value>
+    </data>
+    
+    <data name="E0003" xml:space="preserve">
+        <value>Error executing tool '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="E0004" xml:space="preserve">
+        <value>Failed to codesign '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="E0005" xml:space="preserve">
+        <value>Failed to codesign '{0}'
+        </value>
+    </data>
+    
+    <data name="E0006" xml:space="preserve">
+        <value>  '{0}' not found.
+        </value>
+    </data>
+    
+    <data name="E0007" xml:space="preserve">
+        <value>Error loading '{0}': Unknown image format.
+        </value>
+    </data>
+    
+    <data name="E0008" xml:space="preserve">
+        <value>Invalid iTunesArtwork dimensions ({0}x{1}) for '{2}'.
+        </value>
+    </data>
+    
+    <data name="E0009" xml:space="preserve">
+        <value>Multiple iTunesArtwork files with the same dimensions detected ({0}x{1}) for '{2}'.
+        </value>
+    </data>
+    
+    <data name="E0010" xml:space="preserve">
+        <value>Error loading '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="E0011" xml:space="preserve">
+        <value>Could not parse MinimumOSVersion value '{0}'
+        </value>
+    </data>
+    
+     <data name="E0012" xml:space="preserve">
+        <value>Could not parse TargetArchitectures '{0}'
+        </value>
+    </data>
+    
+    <data name="E0013" xml:space="preserve">
+        <value>The {0} SDK for '{1}' is not installed.
+        </value>
+    </data>
+    
+    <data name="E0014" xml:space="preserve">
+        <value>The executable (CFBundleExecutable) name ({0}) cannot end with '.app', because iOS may fail to launch the app.
+        </value>
+    </data>
+    
+     <data name="W0016" xml:space="preserve">
+        <value>Can only fake the watchOS 4.3 SDK when building for watchOS.
+        </value>
+    </data>
+    
+    <data name="M0017" xml:space="preserve">
+        <value>All http loads are already allowed.
+        </value>
+    </data>
+    
+    <data name="M0018" xml:space="preserve">
+        <value>Allowed arbitrary HTTP loads to support debugging.
+        </value>
+    </data>
+    
+    <data name="W0019" xml:space="preserve">
+        <value>Supported iPhone orientations have not been set
+        </value>
+    </data>
+    
+    <data name="W0020" xml:space="preserve">
+        <value>Supported iPhone orientations are not matched pairs
+        </value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+    
+    <data name="W0021" xml:space="preserve">
+        <value>Supported iPad orientations have not been set
+        </value>
+    </data>
+    
+    <data name="W0022" xml:space="preserve">
+        <value>Supported iPad orientations are not matched pairs
+        </value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+    
+    <data name="E0023" xml:space="preserve">
+        <value>Cannot have more than 1 iTunesMetadata.plist.
+        </value>
+    </data>
+    
+    <data name="E0024" xml:space="preserve">
+        <value>Error loading Settings plist file '{0}/Settings.bundle/Root.plist': {1}.
+        </value>
+    </data>
+    
+    <data name="E0025" xml:space="preserve">
+        <value>Could not parse the SDK version '{0}'
+        </value>
+    </data>
+    
+    <!-- E0026: not used anymore -->
+    <!-- E0027: not used anymore -->
+    <!-- E0028: not used anymore -->
+    <!-- E0029: not used anymore -->
+    <!-- E0030: not used anymore -->
+    <!-- E0031: not used anymore -->
+    
+    <data name="E0032" xml:space="preserve">
+        <value>Could not locate SDK bin directory
+        </value>
+    </data>
+    
+    <!-- E0033: not used anymore -->
+    <!-- E0034: not used anymore -->
+    <!-- E0035: not used anymore -->
+    <!-- E0036: not used anymore -->
+    <!-- E0037: not used anymore -->
+    <!-- E0038: not used anymore -->
+    <!-- E0039: not used anymore -->
+    <!-- E0040: not used anymore -->
+    <!-- E0041: not used anymore -->
+    <!-- E0042: not used anymore -->
+    <!-- E0043: not used anymore -->
+
+    <data name="E0044" xml:space="preserve">
+        <value>Could not find a valid Xcode app bundle at '{0}'. Please update your Apple SDK location in Visual Studio's preferences {1}.
+        </value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
+    </data>
+    
+    <data name="E0045" xml:space="preserve">
+        <value>Could not find valid a usable Xcode developer path
+        </value>
+    </data>
+    
+    <data name="E0046" xml:space="preserve">
+        <value>Could not find '{0}'
+        </value>
+    </data>
+    
+    <data name="M0047" xml:space="preserve">
+        <value>Searching for '{0}' in '{1}'
+        </value>
+    </data>
+    
+    <data name="E0048" xml:space="preserve">
+        <value>Unknown SDK platform: {0}
+        </value>
+    </data>
+    
+    <data name="E0049" xml:space="preserve">
+        <value>Could not locate the provisioning profile with a Name or UUID of {0}.
+        </value>
+    </data>
+    
+    <data name="E0050" xml:space="preserve">
+        <value>Unknown search option: {0}
+        </value>
+    </data>
+    
+    <data name="W0051" xml:space="preserve">
+        <value>Unknown native reference type for '{0}'.
+        </value>
+    </data>
+    
+    <data name="W0052" xml:space="preserve">
+        <value>Dynamic native references are not supported: '{0}'
+        </value>
+    </data>
+    
+    <data name="E0053" xml:space="preserve">
+        <value>Target architecture ARMv6 is no longer supported in Xamarin.iOS. Please select a supported architecture.
+        </value>
+    </data>
+    
+    <data name="W0054" xml:space="preserve">
+        <value>Failed to create response file '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="E0055" xml:space="preserve">
+        <value>Could not load Info.plist: {0}
+        </value>
+    </data>
+    
+    <data name="E0057" xml:space="preserve">
+        <value>Invalid architectures: '{0}'.
+        </value>
+    </data>
+    
+    <data name="E0058" xml:space="preserve">
+        <value>Failed to parse the target device information.
+        </value>
+    </data>
+    
+    <data name="E0059" xml:space="preserve">
+        <value>No target device found.
+        </value>
+    </data>
+    
+    <data name="E0060" xml:space="preserve">
+        <value>No device architecture information found.
+        </value>
+    </data>
+    
+    <data name="E0061" xml:space="preserve">
+        <value>Invalid target architecture: '{0}'
+        </value>
+    </data>
+    
+    <data name="E0062" xml:space="preserve">
+        <value>No device operating system information found.
+        </value>
+    </data>
+    
+    <data name="E0063" xml:space="preserve">
+        <value>No device model information found.
+        </value>
+    </data>
+    
+    <data name="E0064" xml:space="preserve">
+        <value>No iOS version information found.
+        </value>
+    </data>
+    
+    <data name="E0065" xml:space="preserve">
+        <value>Resources rules file '{0}' not found.
+        </value>
+    </data>
+    
+    <data name="E0066" xml:space="preserve">
+        <value>Failed to parse SdkVersion '{0}'.
+        </value>
+    </data>
+    
+    <data name="E0067" xml:space="preserve">
+        <value>Xcode 10 does not support watchOS 1 apps. Either upgrade to watchOS 2 apps, or use an older version of Xcode.</value>
+    </data>
+    
+    <data name="E0068" xml:space="preserve">
+        <value>An installation of Xcode >= 6.2 is required to build WatchKit applications.
+        </value>
+    </data>
+    
+    <data name="E0069" xml:space="preserve">
+        <value>iOS {0} does not support WatchKit.
+        </value>
+    </data>
+    
+    <data name="E0070" xml:space="preserve">
+        <value>Failed to locate the WatchKit launcher in the Xcode app bundle.
+        </value>
+    </data>
+    
+    <data name="W0071" xml:space="preserve">
+        <value>The App Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        </value>
+    </data>
+    
+    <data name="W0072" xml:space="preserve">
+        <value>The App Extension '{0}' does not specify a CFBundleVersion
+        </value>
+    </data>
+    
+    <data name="W0073" xml:space="preserve">
+        <value>The App Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        </value>
+    </data>
+    
+    
+    <data name="W0074" xml:space="preserve">
+        <value>The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').
+        </value>
+    </data>
+    
+    <data name="W0075" xml:space="preserve">
+        <value>The Watch App '{0}' does not specify a CFBundleShortVersionString
+        </value>
+    </data>
+    
+    <data name="W0076" xml:space="preserve">
+        <value>The Watch App '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        </value>
+    </data>
+    
+    <data name="W0077" xml:space="preserve">
+        <value>The Watch App '{0}' does not specify a CFBundleVersion
+        </value>
+    </data>
+    
+    <data name="W0078" xml:space="preserve">
+        <value>The Watch App '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        </value>
+    </data>
+        
+    <data name="W0079" xml:space="preserve">
+        <value>The Watch Extension '{0}' does not specify a CFBundleShortVersionString)
+        </value>
+    </data>
+    
+    <data name="W0080" xml:space="preserve">
+        <value>The Watch Extension '{0}' has a CFBundleShortVersionString ({1}) that does not match the main app bundle's CFBundleShortVersionString ({2})
+        </value>
+    </data>
+    
+    <data name="W0081" xml:space="preserve">
+        <value>The Watch Extension '{0}' does not specify a CFBundleVersion
+        </value>
+    </data>
+    
+    <data name="W0082" xml:space="preserve">
+        <value>The Watch Extension '{0}' has a CFBundleVersion ({1}) that does not match the main app bundle's CFBundleVersion ({2})
+        </value>
+    </data>
+    
+    <!-- E0083: not used anymore -->
+    
+    <data name="E0084" xml:space="preserve">
+        <value>Could not locate the {0} '{1}' SDK at path '{}'
+        </value>
+    </data>
+    
+    <data name="E0085" xml:space="preserve">
+        <value>Could not locate the {0} '{1}' SDK usr path at '{2}'
+        </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
+    </data>
+        
+    <data name="E0086" xml:space="preserve">
+        <value>Could not find a valid Xcode developer path
+        </value>
+    </data>
+    
+    <!-- E0087: not used anymore -->
+    
+    <!-- E0088: not used anymore -->
+        
+    <data name="E0089" xml:space="preserve">
+        <value>Unrecognized platform: {0}
+        </value>
+    </data>
+    
+    <data name="W0090" xml:space="preserve">
+        <value>Asset not part of an asset catalog: {0}
+        </value>
+    </data>
+    
+    <data name="E0091" xml:space="preserve">
+        <value>File not found: {0}
+        </value>
+    </data>
+    
+    <data name="E0092" xml:space="preserve">
+        <value>Invalid json: {0}
+        </value>
+    </data>
+    
+    <data name="E0093" xml:space="preserve">
+        <value>Partial Info.plist file was not generated: {0}
+        </value>
+    </data>
+    
+    <data name="E0094" xml:space="preserve">
+        <value>Failed to load {0} log file `{1}`: {2}
+        </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
+    </data>
+    
+    <data name="W0095" xml:space="preserve">
+        <value>Failed to parse altool output: {0}.
+            Output: {1}
+        </value>
+    </data>
+
+    <!-- E0096: not used anymore -->
+    
+    <data name="E0097" xml:space="preserve">
+        <value>No API definition file specified.
+        </value>
+    </data>
+    
+    <data name="E0098" xml:space="preserve">
+        <value>{0} failed.
+        </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
+    </data>
+    
+    <data name="E0099" xml:space="preserve">
+        <value>  Bundle Resource '{0}' not found on disk (should be at '{1}')
+        </value>
+    </data>
+    
+    <data name="E0100" xml:space="preserve">
+        <value>The path '{0}' would result in a file outside of the app bundle and cannot be used.
+        </value>
+    </data>
+    
+    <data name="E0101" xml:space="preserve">
+        <value>Info.plist files should have a Build Action of 'None'.
+        </value>
+    </data>
+    
+    <data name="E0102" xml:space="preserve">
+        <value>The name '{0}' is reserved and cannot be used.
+        </value>
+    </data>
+    
+    <data name="W0103" xml:space="preserve">
+        <value>Found a directory within the Frameworks directory which is not a framework: {0}
+        </value>
+    </data>
+    
+    <data name="W0104" xml:space="preserve">
+        <value>The framework {0} does not contain a binary named {1}
+        </value>
+    </data>
+    
+    <data name="M0105" xml:space="preserve">
+        <value>No Frameworks directory found.
+        </value>
+    </data>
+    
+    <data name="W0106" xml:space="preserve">
+        <value>Could not determine value for manifest key '{0}'
+        </value>
+    </data>
+    
+    <data name="E0107" xml:space="preserve">
+        <value>Error loading partial Info.plist template file '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="W0108" xml:space="preserve">
+        <value>Cannot expand $(TeamIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+        </value>
+    </data>
+    
+    <data name="W0109" xml:space="preserve">
+        <value>Cannot expand $(AppIdentifierPrefix) in Entitlements.plist without a provisioning profile.
+        </value>
+    </data>
+        
+    <data name="W0110" xml:space="preserve">
+        <value>iCloud entitlements such as '{0}' require a Provisioning Profile.
+        </value>
+    </data>
+    
+    <data name="W0111" xml:space="preserve">
+        <value>The iCloud entitlement '{0}' is not supported by the Provisioning Profile.
+        </value>
+    </data>
+    
+    <data name="E0112" xml:space="preserve">
+        <value>Entitlements.plist template '{0}' not found.
+        </value>
+    </data>
+    
+    <data name="E0113" xml:space="preserve">
+        <value>Error loading Entitlements.plist template '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="E0114" xml:space="preserve">
+        <value>Error writing xcent file '{0}': {1}
+        </value>
+    </data>
+    
+    <data name="E0115" xml:space="preserve">
+        <value>Error writing archived-expanded-entitlements.xcent file: {0}
+        </value>
+    </data>
+    
+    <data name="M0116" xml:space="preserve">
+        <value>Tool {0} execution finished.
+        </value>
+    </data>
+    
+    <data name="E0117" xml:space="preserve">
+        <value>{0} exited with code {1}
+        </value>
+    </data>
+
+    <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
+    
+    <data name="M0119" xml:space="preserve">
+        <value>Skipping `{0}' as the output file, `{1}', is newer.
+        </value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
+    </data>
+    
+    <data name="E0120" xml:space="preserve">
+        <value>Error saving `{0}': {1}
+        </value>
+    </data>
+    
+    <data name="M0121" xml:space="preserve">
+        <value>Creating binding resource package: {0}
+        </value>
+    </data>
+    
+    <data name="E0122" xml:space="preserve">
+        <value>Error loading '{0}'
+        </value>
+    </data>
+    
+    <data name="E0123" xml:space="preserve">
+        <value>Package creation failed. Could not parse extra arguments.
+        </value>
+    </data>
+    
+    <data name="E0124" xml:space="preserve">
+        <value>The identity '{0}' doesn't match any valid certificate/private key pair in the default keychain.
+        </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
+    </data>
+    
+    <data name="M0125" xml:space="preserve">
+        <value>Detected signing identity:
+        </value>
+    </data>
+    
+    <data name="M0126" xml:space="preserve">
+        <value>The certificate '{0}' does not match any of the prefixes '{1}'.
+        </value>
+    </data>
+    
+    <data name="M0127" xml:space="preserve">
+        <value>The certificate '{0}' has expired ({1})
+        </value>
+    </data>
+        
+    <data name="E0128" xml:space="preserve">
+        <value>No valid {0} code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
+    </data>
+    
+    <data name="M0129" xml:space="preserve">
+        <value>The certificate '{0}' does not match '{1}'.
+        </value>
+    </data>
+    
+    <data name="E0130" xml:space="preserve">
+        <value>{0} code signing key '{1}' not found in keychain.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
+    </data>
+    
+    <data name="E0131" xml:space="preserve">
+        <value>Could not find any available provisioning profiles for {0} on {1}.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
+    </data>
+    
+    <data name="M0132" xml:space="preserve">
+        <value>'{0}' doesn't match '{1}'.
+        </value>
+    </data>
+    
+    <data name="E0133" xml:space="preserve">
+        <value>No installed provisioning profiles match the installed {0} {1} signing identities.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
+    </data>
+    
+    <data name="M0134" xml:space="preserve">
+        <value>Finding matching provisioning profiles with compatible AppID, keeping only those with the longest matching (wildcard) IDs.
+        </value>
+    </data>
+    
+    <data name="M0135" xml:space="preserve">
+        <value>AppID: {0} was ruled out because we found a better match: {1}.
+        </value>
+    </data>
+    
+    <data name="M0136" xml:space="preserve">
+        <value>AppID: {0} was ruled out because we already found better matches: {1}.
+        </value>
+    </data>
+    
+    <data name="W0137" xml:space="preserve">
+        <value>No installed provisioning profiles match the bundle identifier.
+        </value>
+    </data>
+    
+    <data name="M0138" xml:space="preserve">
+        <value>Multiple provisioning profiles match the bundle identifier; using the first match.
+        </value>
+    </data>
+    
+    <data name="E0139" xml:space="preserve">
+        <value>{0} does not define CFBundleIdentifier
+        </value>
+    </data>
+    
+    <data name="E0140" xml:space="preserve">
+        <value>The specified {0} provisioning profile '{1}' could not be found
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
+    </data>
+    
+    <data name="E0141" xml:space="preserve">
+        <value>Project bundle identifier '{0}' does not match specified provisioning profile '{1}'
+        </value>
+    </data>
+    
+    <data name="M0142" xml:space="preserve">
+        <value>Multiple signing identities match '{0}'; using the first match.
+        </value>
+    </data>
+    
+    <data name="M0143" xml:space="preserve">
+        <value>Multiple signing identities found; using the first identity.
+        </value>
+    </data>
+    
+    <data name="E0144" xml:space="preserve">
+        <value>The specified {0} provisioning profile '{1}' could not be found
+        </value>
+    </data>
+    
+    <data name="E0145" xml:space="preserve">
+        <value>No {0} signing identities match the specified provisioning profile '{1}'.
+        </value>
+    </data>
+    
+    <data name="E0146" xml:space="preserve">
+        <value>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
+        </value>
+    </data>
+    
+    <data name="E0147" xml:space="preserve">
+        <value>Bundle identifier '{0}' does not match any installed provisioning profile for selected signing identity '{0}'.
+        </value>
+    </data>
+    
+    <data name="E0148" xml:space="preserve">
+        <value>Bundle identifier '{0}' does not match any installed provisioning profile.
+        </value>
+    </data>
+    
+    <data name="M0149" xml:space="preserve">
+        <value>  {0} found at: {1}
+        </value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
+    </data>
+    
+    <data name="E0150" xml:space="preserve">
+        <value>  AssemblyPath cannot be null or empty
+        </value>
+    </data>
+    
+    <data name="M0151" xml:space="preserve">
+        <value>Generated bundle name: {0}
+        </value>
+    </data>
+    
+    <data name="E0152" xml:space="preserve">
+        <value>No property specified.
+        </value>
+    </data>
+    
+    <data name="E0153" xml:space="preserve">
+        <value>The dictionary at '{0}' did not contain the key: {1}
+        </value>
+    </data>
+    
+    <data name="E0154" xml:space="preserve">
+        <value>Could not parse array index: {0}
+        </value>
+    </data>
+    
+    <data name="E0155" xml:space="preserve">
+        <value>Array index out of range for item '{0}'
+        </value>
+    </data>
+    
+    <data name="E0156" xml:space="preserve">
+        <value>{0} values do not support child properties.
+        </value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
+    </data>
+    
+    <data name="E0157" xml:space="preserve">
+        <value>Getting {0} values is not supported.
+        </value>
+    </data>
+    
+    <data name="E0158" xml:space="preserve">
+        <value>The file '{0}' does not exist.
+        </value>
+    </data>
+    
+    <data name="E0159" xml:space="preserve">
+        <value>The file '{0}' conflicts with '{1}'.
+        </value>
+    </data>
+    
+    <data name="E0160" xml:space="preserve">
+        <value>Watch apps/extensions require Xcode 6.2 or later. The current Xcode version is {0}
+        </value>
+    </data>
+    
+    <data name="E0161" xml:space="preserve">
+        <value>Items must have logical names computed.
+        </value>
+    </data>
+    
+    <data name="M0162" xml:space="preserve">
+        <value>Duplicate Entry Was Skipped: {0}
+        </value>
+    </data>
+    
+    <data name="M0163" xml:space="preserve">
+        <value>File Doesn't Exist, Will Create: {0}
+        </value>
+    </data>
+    
+    <data name="M0164" xml:space="preserve">
+        <value>Creating directory '{0}'
+        </value>
+    </data>
+    
+    <data name="M0165" xml:space="preserve">
+        <value>Copying file from '{0}' to '{1}'
+        </value>
+    </data>
+    
+    <data name="E0166" xml:space="preserve">
+        <value>You must specify a DestinationFolder or the DestinationFiles, but not both.
+        </value>
+    </data>
+    
+    <data name="E0167" xml:space="preserve">
+        <value>The number of DestinationFiles must match the number of SourceFiles.
+        </value>
+    </data>
+    
+    <data name="M0168" xml:space="preserve">
+        <value>  Skipping framework assembly: {0}
+        </value>
+    </data>
+    
+    <data name="E0169" xml:space="preserve">
+        <value>Unknown target framework identifier: {0}.
+        </value>
+    </data>
+    
+    <data name="E0170" xml:space="preserve">
+        <value>Could not find {0} in {1}.
+        </value>
+    </data>
+    
+    <data name="E0171" xml:space="preserve">
+        <value>The {0} SDK is not installed.
+        </value>
+    </data>
+    
+    <data name="E0172" xml:space="preserve">
+        <value>The {0} SDK version '{1}' is not installed, and no newer version was found.
+        </value>
+    </data>
+    
+    <data name="E0173" xml:space="preserve">
+        <value>The {0} SDK version '{1}' is not installed. Using newer version '{2}' instead'.
+        </value>
+    </data>
+
+    <data name="E0174" xml:space="preserve">
+        <value>The xcframework {0} has an incorrect or unknown format and cannot be processed.</value>
+    </data>
+
+    <data name="E0175" xml:space="preserve">
+        <value>No matching framework found inside '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
+    </data>
+
+    <data name="W0176" xml:space="preserve">
+        <value>Conflicting '{0}' and '{1}' options. '{1}' will be ignored.
+        </value>
+    </data>
+
+    <data name="E0177" xml:space="preserve">
+        <value>Can't get an ISshCommands instance. Please check that a valid connection to the Mac is established.</value>
+    </data>
+    
+    <data name="E0178" xml:space="preserve">
+        <value>An error occurred while trying to copy Archive '{0}' to '{1}'. Details: {2}</value>
+    </data>
+
+    <data name="E0179" xml:space="preserve">
+        <value>There is no available connection to the Mac. Task '{0}' will not be executed</value>
+    </data>
+
+    <data name="E0180" xml:space="preserve">
+        <value>Could not deserialize DataSet {0}</value>
+    </data>
+
+    <data name="E0181" xml:space="preserve">
+        <value>The file {0} does not have ImageAsset as build action.</value>
+    </data>
+
+    <data name="E0182" xml:space="preserve">
+        <value>Could not resolve UTI for {0} in catalog {1}</value>
+    </data>
+
+    <data name="E0183" xml:space="preserve">
+        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS</value>
+    </data>
+
+    <data name="E0184" xml:space="preserve">
+        <value>The project was built with a version of Xcode ({0}) that is not compatible which may result in unexpected warnings or errors. Please install Xcode '{1}' or visit the documentation to learn more.</value>
+    </data>
+
+    <data name="E0185" xml:space="preserve">
+        <value>An error occurred while trying to verify the compatibility between Xcode and Xamarin.iOS. Details: {0}
+        </value>
+    </data>
+
+    <data name="E0186" xml:space="preserve">
+        <value>The provided Archive Path is not from a valid archive file (.xcarchive). Archive Path: '{0}'</value>
+    </data>
+    
+    <data name="E0187" xml:space="preserve">
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+    </data>
+
+    <data name="E0188" xml:space="preserve">
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+    </data>
+
+    <data name="E0189" xml:space="preserve">
+        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
+    </data>
+
+    <data name="E0190" xml:space="preserve">
+        <value>The NativeResource item '{0}' does not exist.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+
+    <data name="E7001" xml:space="preserve">
+        <value>Could not resolve host IPs for WiFi debugger settings.
+        </value>
+    </data>
+    
+    <data name="E7002" xml:space="preserve">
+        <value>This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
+        </value>
+    </data>
+    
+    <data name="E7003" xml:space="preserve">
+        <value>The App Extension '{0}' does not contain an Info.plist.
+        </value>
+    </data>
+    
+    <data name="E7004" xml:space="preserve">
+        <value>The App Extension '{0}' does not specify a CFBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7005" xml:space="preserve">
+        <value>The App Extension '{0}' does not specify a CFBundleExecutable.
+        </value>
+    </data>
+    
+    <data name="E7006" xml:space="preserve">
+        <value>The App Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        </value>
+    </data>
+    
+    <data name="E7007" xml:space="preserve">
+        <value>The App Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
+        </value>
+    </data>
+    
+    <data name="E7008" xml:space="preserve">
+        <value>The App Extension '{0}' does not specify a CFBundleShortVersionString.
+        </value>
+    </data>
+    
+    <data name="E7009" xml:space="preserve">
+        <value>The App Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+        </value>
+    </data>
+    
+    <data name="E7010" xml:space="preserve">
+        <value>The App Extension '{0}' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
+        </value>
+    </data>
+    
+    <!-- E7011: not used anymore -->
+    <!-- E7012: not used anymore -->
+    <!-- E7013: not used anymore -->
+    
+    <data name="E7014" xml:space="preserve">
+        <value>The Watch App '{0}' does not contain an Info.plist.
+        </value>
+    </data>
+    
+    <data name="E7015" xml:space="preserve">
+        <value>The Watch App '{0}' does not specify a CFBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7016" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        </value>
+    </data>
+    
+    <data name="E7017" xml:space="preserve">
+        <value>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '{1} ({2})'.
+        </value>
+    </data>
+    
+    <data name="E7018" xml:space="preserve">
+        <value>The Watch App '{name}' does not specify a CFBundleExecutable
+        </value>
+    </data>
+    
+    <data name="E7019" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
+        </value>
+    </data>
+    
+    <data name="E7020" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
+        </value>
+    </data>
+    
+    <data name="E7021" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+        </value>
+    </data>
+    
+    <data name="E7022" xml:space="preserve">
+        <value>The Watch App '{0}' does not contain any Watch Extensions.
+        </value>
+    </data>
+    
+    <data name="E7022_A" xml:space="preserve">
+        <value>The Watch App '{0}' does not contain a Watch Extension.
+        </value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
+    </data>
+    
+    <data name="E7023" xml:space="preserve">
+        <value>The Watch Extension '{0}' does not contain an Info.plist.
+        </value>
+    </data>
+    
+    <data name="E7024" xml:space="preserve">
+        <value>The Watch Extension '{0}' does not specify a CFBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7025" xml:space="preserve">
+        <value>The Watch Extension '{0}' does not specify a CFBundleExecutable.
+        </value>
+    </data>
+    
+    <data name="E7026" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid CFBundleIdentifier ({1}), it does not begin with the main app bundle's CFBundleIdentifier ({2}).
+        </value>
+    </data>
+    
+    <data name="E7027" xml:space="preserve">
+        <value>The Watch Extension '{0}' has a CFBundleIdentifier ({1}) that ends with the illegal suffix ".key".
+        </value>
+    </data>
+    
+    <data name="E7028" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+        </value>
+    </data>
+    
+    <data name="E7029" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
+        </value>
+    </data>
+    
+    <data name="E7029_A" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain an NSExtensionPointIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7030" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
+        </value>
+    </data>
+    
+    <data name="E7031" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the parent Watch App bundle's CFBundleIdentifier ('{2}').
+        </value>
+    </data>
+    
+    <data name="E7031_A" xml:space="preserve">
+        <value>The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7032" xml:space="preserve">
+        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.
+        </value>
+    </data>
+    
+    <data name="E7032_A" xml:space="preserve">
+        <value>The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.
+        </value>
+    </data>
+    
+    <data name="E7033" xml:space="preserve">
+        <value>The Watch App '{0}' does not contain an Info.plist.
+        </value>
+    </data>
+    
+    <data name="E7034" xml:space="preserve">
+        <value>The Watch App '{0}' does not specify a CFBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7035" xml:space="preserve">
+        <value>The Watch App '{0}' does not have a valid UIDeviceFamily value. Expected '{1}' but found '{2} ({3})'.
+        </value>
+    </data>
+    
+    <data name="E7036" xml:space="preserve">
+        <value>The Watch App '{0}' does not specify a CFBundleExecutable.
+        </value>
+    </data>
+    
+    <data name="E7037" xml:space="preserve">
+        <value>The WatchKit Extension '{0}' has an invalid WKAppBundleIdentifier value ('{1}'), it does not match the Watch App's CFBundleIdentifier ('{2}').
+        </value>
+    </data>
+    
+    <data name="E7038" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid WKCompanionAppBundleIdentifier value ('{1}'), it does not match the main app bundle's CFBundleIdentifier ('{2}').
+        </value>
+    </data>
+    
+    <data name="E7038_A" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7039" xml:space="preserve">
+        <value>The Watch App '{0}' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+        </value>
+    </data>
+    
+    <data name="E7040" xml:space="preserve">
+        <value>The app bundle {0} does not contain an Info.plist.
+        </value>
+    </data>
+    
+    <data name="E7041" xml:space="preserve">
+        <value>{0} does not specify a CFBundleIdentifier.
+        </value>
+    </data>
+    
+    <data name="E7042" xml:space="preserve">
+        <value>{0} does not specify a CFBundleExecutable.
+        </value>
+    </data>
+    
+    <data name="E7043" xml:space="preserve">
+        <value>{0} does not specify a CFBundleSupportedPlatforms.
+        </value>
+    </data>
+    
+    <data name="E7044" xml:space="preserve">
+        <value>{0} does not specify a UIDeviceFamily.
+        </value>
+    </data>
+    
+    <data name="E7044_A" xml:space="preserve">
+        <value>{0} is invalid: the UIDeviceFamily key must contain a value for '{1}'.
+        </value>
+    </data>
+    
+    <data name="E7045" xml:space="preserve">
+        <value>Unrecognized Type: {Type}
+        </value>
+    </data>
+    
+    <data name="E7046" xml:space="preserve">
+        <value>Add: Entry, "{0}", Incorrectly Specified
+        </value>
+    </data>
+    
+    <data name="E7047" xml:space="preserve">
+        <value>Add: Entry, "{0}", Contains Invalid Array Index
+        </value>
+    </data>
+    
+    <data name="E7048" xml:space="preserve">
+        <value>Add: "{0}" Entry Already Exists
+        </value>
+    </data>
+    
+    <data name="E7049" xml:space="preserve">
+        <value>Add: Can't Add Entry, "{0}", to Parent
+        </value>
+    </data>
+    
+    <data name="E7050" xml:space="preserve">
+        <value>Delete: Can't Delete Entry, "{0}", from Parent
+        </value>
+    </data>
+    
+    <data name="E7051" xml:space="preserve">
+        <value>Delete: Entry, "{0}", Contains Invalid Array Index
+        </value>
+    </data>
+    
+    <data name="E7052" xml:space="preserve">
+        <value>Delete: Entry, "{0}", Does Not Exist
+        </value>
+    </data>
+    
+    <data name="E7053" xml:space="preserve">
+        <value>Import: Entry, "{0}", Incorrectly Specified
+        </value>
+    </data>
+    
+    <data name="E7054" xml:space="preserve">
+        <value>Import: Entry, "{0}", Contains Invalid Array Index
+        </value>
+    </data>
+    
+    <data name="E7055" xml:space="preserve">
+        <value>Import: Error Reading File: {0}
+        </value>
+    </data>
+    
+    <data name="E7056" xml:space="preserve">
+        <value>Import: Can't Add Entry, "{0}", to Parent
+        </value>
+    </data>
+    
+    <data name="E7057" xml:space="preserve">
+        <value>Merge: Can't Add array Entries to dict
+        </value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
+    </data>
+
+    <data name="E7058" xml:space="preserve">
+        <value>Merge: Specified Entry Must Be a Container
+        </value>
+    </data>
+    
+    <data name="E7059" xml:space="preserve">
+        <value>Merge: Entry, "{0}", Contains Invalid Array Index
+        </value>
+    </data>
+    
+    <data name="E7060" xml:space="preserve">
+        <value>Merge: Entry, "{0}", Does Not Exist
+        </value>
+    </data>
+    
+    <data name="E7061" xml:space="preserve">
+        <value>Merge: Error Reading File: {0}
+        </value>
+    </data>
+    
+    <data name="E7062" xml:space="preserve">
+        <value>Set: Entry, "{0}", Incorrectly Specified
+        </value>
+    </data>
+    
+    <data name="E7063" xml:space="preserve">
+        <value>Set: Entry, "{0}", Contains Invalid Array Index
+        </value>
+    </data>
+    
+    <data name="E7064" xml:space="preserve">
+        <value>Set: Entry, "{0}", Does Not Exist
+        </value>
+    </data>
+    
+    <!-- E7068: not in use anymore -->
+    
+    <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value>
+    </data>
+    
+    <data name="E7070" xml:space="preserve">
+        <value>Invalid architecture ({0}): can't link more than one architecture at a time.</value>
+    </data>
+
+    <data name="E7071" xml:space="preserve">
+        <value>Unable to parse the AOT compiler arguments: {0} ({1})</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+
+    <data name="InvalidFramework" xml:space="preserve">
+        <value>Invalid framework: {0}</value>
+    </data>
+    
+    <data name="InvalidPlatform" xml:space="preserve">
+        <value>Invalid platform: {0}</value>
+    </data>
+    
+    <data name="E7072" xml:space="preserve">
+        <value>Package product requirement file contains architectures ({0}) which mismatches with target architectures ({1})</value>
+    </data>
+
+    <data name="E7073" xml:space="preserve">
+        <value>At least one app bundle must be specified.</value>
+    </data>
+
+    <data name="E7074" xml:space="preserve">
+        <value>The app bundle {0} does not exist.</value>
+    </data>
+
+    <data name="E7075" xml:space="preserve">
+        <value>No 'SpecificSubDirectory' metadata was provided for the app bundle {0}.</value>
+    </data>
+
+    <data name="E7076" xml:space="preserve">
+        <value>Can't merge the symlink '{0}', it has different targets.</value>
+    </data>
+
+    <data name="E7077" xml:space="preserve">
+        <value>Unable to merge the file '{0}', it's different between the input app bundles.</value>
+    </data>
+
+    <data name="E7078" xml:space="preserve">
+        <value>Invalid app bundle: the Mach-O file {0} has dependent files.</value>
+    </data>
+
+    <data name="E7079" xml:space="preserve">
+        <value>Invalid app bundle: the file {0} has different types between the input app bundles.</value>
+    </data>
+
+    <data name="E7080" xml:space="preserve">
+        <value>App bundle file #{0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+
+    <data name="E7081" xml:space="preserve">
+        <value>The AOT compiler '{0}' does not exist.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+
+    <data name="E7082" xml:space="preserve">
+        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+
+    <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+
+    <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+
+    <data name="E7085" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}.</value>
+    </data>
+
+    <data name="W7085" xml:space="preserve">
+        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+    </data>
+
+    <data name="E7086" xml:space="preserve">
+        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+
+    <data name="W7087" xml:space="preserve">
+        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+
+    <data name="E7088" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+
+    <data name="E7089" xml:space="preserve">
+        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+
+    <data name="E7090" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+
+    <data name="W7091" xml:space="preserve">
+        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+    </data>
+
+    <!-- This is the same as MT0140 -->
+    <data name="E7092" xml:space="preserve">
+        <value>File '{0}' is not a valid framework: {1}</value>
+    </data>
+
+    <data name="W7093" xml:space="preserve">
+        <value>The binding resource package {0} does not exist.</value>
+    </data>
+
+    <data name="E7094" xml:space="preserve">
+        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+    </data>
+
+    <data name="W7095" xml:space="preserve">
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata for one are: '{1}', while the metadata for the other are: '{2}'</value>
+    </data>
+
+    <data name="W7096" xml:space="preserve">
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}={2}' has been set for one item, but not the other.</value>
+    </data>
+
+    <data name="W7097" xml:space="preserve">
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').</value>
+    </data>
+
+    <data name="E7098" xml:space="preserve">
+        <value>The UIDeviceFamily value '6' is not valid for this platform. It's only valid for Mac Catalyst.</value>
+    </data>
+
+    <data name="E7099" xml:space="preserve">
+        <value>The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}).</value>
+    </data>
+
+    <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
+    </data>
+
+    <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
+    </data>
+
+    <data name="E7102" xml:space="preserve">
+        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+
+    <data name="E7103" xml:space="preserve">
+        <value>Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+
+    <data name="E7104" xml:space="preserve">
+        <value>Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+
+    <data name="W7105" xml:space="preserve">
+        <value>Unexpected extension '{0}' for native reference '{1}' in binding resource package '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+
+    <data name="W7106" xml:space="preserve">
+        <value>Expected a file named '{1}' in the zip file {0}.</value>
+    </data>
+
+    <data name="W7107" xml:space="preserve">
+        <value>The zip file '{0}' does not exist.</value>
+    </data>
+
+    <data name="W7108" xml:space="preserve">
+        <value>The file '{0}' does not exist.</value>
+    </data>
+
+    <data name="W7109" xml:space="preserve">
+        <value>Unable to process the item '{0}' as a native reference: unknown type.</value>
+    </data>
+
+    <data name="E7110" xml:space="preserve">
+        <value>Could not load Info.plist '{0}' from the xcframework '{1}'.</value>
+    </data>
+
+    <data name="W7111" xml:space="preserve">
+        <value>The directory '{0}' does not exist.</value>
+    </data>
+
+    <data name="E7112" xml:space="preserve">
+        <value>Could not find the file or directory '{0}' in the zip file '{1}'.</value>
+    </data>
+
+    <data name="E7113" xml:space="preserve">
+        <value>Can't process the zip file '{0}' on this platform: the file '{1}' is a symlink.</value>
+    </data>
+
+    <data name="E7114" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the parameter "{1}", which is required when building on this platform.</value>
+    </data>
+
+    <data name="E7115" xml:space="preserve">
+        <value>The illink assembly doesn't exist: '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+
+    <data name="E7116" xml:space="preserve">
+        <value>The assembly {0} does not provide an 'ObjectFile' metadata.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+
+    <data name="E7117" xml:space="preserve">
+        <value>The assembly {0} was passed multiple times as an input assembly (referenced from {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+
+    <data name="E7118" xml:space="preserve">
+        <value>Failed to AOT compile {0}, the AOT compiler exited with code {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+
+    <data name="E7119" xml:space="preserve">
+        <value>Encountered an assembly reference cycle related to the assembly {0}.</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
+</root>

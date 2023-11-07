@@ -25,103 +25,92 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace OpenGL {
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-	public class CGLContext : INativeObject, IDisposable {
-		IntPtr handle;
-
-		public CGLContext (IntPtr handle)
-		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid parameters to context creation");
-
-			CGLRetainContext (handle);
-			this.handle = handle;
-		}
-
-		internal CGLContext ()
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' Framework instead.")]
+#else
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
+#endif
+	public class CGLContext : NativeObject {
+#if !COREBUILD
+#if !NET
+		public CGLContext (NativeHandle handle)
+			: base (handle, false, verify: true)
 		{
 		}
+#endif
 
-		[Preserve (Conditional=true)]
-		internal CGLContext (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CGLContext (NativeHandle handle, bool owns)
+			: base (handle, owns, true)
 		{
-			if (!owns)
-				CGLRetainContext (handle);
-
-			this.handle = handle;
 		}
 
-		~CGLContext ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLRetainContext (IntPtr handle);
 
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLReleaseContext (IntPtr handle);
 
-		protected virtual void Dispose (bool disposing)
+		protected internal override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGLReleaseContext (handle);
-				handle = IntPtr.Zero;
-			}
+			CGLRetainContext (GetCheckedHandle ());
+		}
+
+		protected internal override void Release ()
+		{
+			CGLReleaseContext (GetCheckedHandle ());
 		}
 
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLLockContext (IntPtr ctx);
 		public CGLErrorCode Lock ()
 		{
-			return CGLLockContext (this.handle);
+			return CGLLockContext (Handle);
 		}
 
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLUnlockContext (IntPtr ctx);
 		public CGLErrorCode Unlock ()
 		{
-			return CGLUnlockContext (this.handle);
+			return CGLUnlockContext (Handle);
 		}
-	
+
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLSetCurrentContext (IntPtr ctx);
 
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static IntPtr CGLGetCurrentContext ();
 
-		public static CGLContext CurrentContext {
+		public static CGLContext? CurrentContext {
 			get {
 				IntPtr ctx = CGLGetCurrentContext ();
 				if (ctx != IntPtr.Zero)
-					return new CGLContext (ctx);
+					return new CGLContext (ctx, false);
 				else
 					return null;
-			} 
+			}
 
 			set {
-
-				CGLErrorCode retValue = CGLSetCurrentContext (value?.Handle ?? IntPtr.Zero);
+				var retValue = CGLSetCurrentContext (value.GetHandle ());
 				if (retValue != CGLErrorCode.NoError)
 					throw new Exception ("Error setting the Current Context");
 			}
 		}
+#endif // !COREBUILD
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Extrospection {
 
@@ -37,7 +37,6 @@ namespace Extrospection {
 			case "HIToolbox":
 			case "Hypervisor":
 			case "ICADevices":
-			case "ImageCaptureCore":
 			case "ImageCapture":
 			case "IMServicePlugIn":
 			case "Ink":
@@ -47,8 +46,11 @@ namespace Extrospection {
 			case "IOBluetoothUI":
 			case "IOKit":
 			case "JavaFrameEmbedding":
+			case "JavaNativeFoundation":
+			case "JavaRuntimeSupport":
 			case "JavaVM":
 			case "Kerberos":
+			case "KernelManagement":
 			case "LatentSemanticMapping":
 			case "LaunchServices":
 			case "Metadata":
@@ -59,6 +61,8 @@ namespace Extrospection {
 			case "OpenScripting":
 			case "OSAKit":
 			case "OSServices":
+			case "ParavirtualizedGraphics":
+			case "PCSC":
 			case "PreferencePanes":
 			case "Python":
 			case "QD":
@@ -70,20 +74,21 @@ namespace Extrospection {
 			case "SearchKit":
 			case "SecurityFoundation": // bugzilla
 			case "SecurityHI":
-			case "ServiceManagement":
 			case "SharedFileList":
 			case "SpeechRecognition":
 			case "SpeechSynthesis":
 			case "SyncServices":
+			case "SystemExtensions":
 			case "Tcl":
 			case "TWAIN":
+			case "Virtualization":
 			case "vmnet":
-				// other non-supported frameworks
+			// other non-supported frameworks
 			case "GSS": // iOS and macOS
 			case "vecLib": // all
 				return true;
 			default:
-				return false;
+				return fx.EndsWith ("_SwiftUI", StringComparison.Ordinal);
 			}
 		}
 	}

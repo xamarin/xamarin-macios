@@ -10,14 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using MediaAccessibility;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaAccessibility;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaAccessibility {
@@ -55,10 +49,10 @@ namespace MonoTouchFixtures.MediaAccessibility {
 		[Test]
 		public void DidDisplayCaptions ()
 		{
-			TestRuntime.AssertXcodeVersion (11,0);
+			TestRuntime.AssertXcodeVersion (11, 0);
 
 			// there's a known bug with UIPasteboard and NSAttributedString - and it makes our tests hang
-			var nsa = new NSAttributedString  [0];
+			var nsa = new NSAttributedString [0];
 			MACaptionAppearance.DidDisplayCaptions (nsa);
 			nsa = new [] { new NSAttributedString ("Bonjour") };
 			MACaptionAppearance.DidDisplayCaptions (nsa);

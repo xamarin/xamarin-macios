@@ -28,32 +28,32 @@ namespace UIKit {
 		{
 		}
 
-		static NSArray FromObjects (object[] args)
+		static NSArray FromObjects (object [] args)
 		{
-			if (args == null)
+			if (args is null)
 				throw new ArgumentNullException (nameof (args));
 
 			NSObject [] nsargs = new NSObject [args.Length];
-			
-			for (int i = 0; i < args.Length; i++){
+
+			for (int i = 0; i < args.Length; i++) {
 				object a = args [i];
-				if (a == null)
+				if (a is null)
 					throw new ArgumentNullException ($"Element {i} in args is null");
 
 				var s = (a as string);
-				if (s != null) {
+				if (s is not null) {
 					nsargs [i] = new NSString (s);
 					continue;
 				}
 
 				var ns = (a as NSString);
-				if (ns != null) {
+				if (ns is not null) {
 					nsargs [i] = ns;
 					continue;
 				}
 
 				var img = (a as UIImage);
-				if (img != null)
+				if (img is not null)
 					nsargs [i] = img;
 				else
 					throw new ArgumentException ("Non-string or UIImage at position {i} with type {a.GetType ()}");
@@ -73,7 +73,7 @@ namespace UIKit {
 		{
 			// if the caller used an array [] then items can be null
 			// if the caller used only null then we get an array with a null item
-			if ((items == null) || ((items.Length == 1) && (items [0] == null)))
+			if ((items is null) || ((items.Length == 1) && (items [0] is null)))
 				throw new ArgumentNullException (nameof (items));
 
 			return NSArray.FromNSObjects (items);
@@ -87,17 +87,17 @@ namespace UIKit {
 		{
 			// if the caller used an array [] then items can be null
 			// if the caller used only null then we get an array with a null item
-			if ((strings == null) || ((strings.Length == 1) && (strings[0] == null)))
+			if ((strings is null) || ((strings.Length == 1) && (strings [0] is null)))
 				throw new ArgumentNullException (nameof (strings));
-			
+
 			return NSArray.FromStrings (strings);
 		}
 
 		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 		{
-			if (attributes == null)
+			if (attributes is null)
 				throw new ArgumentNullException ("attributes");
-                        
+
 			using (var dict = attributes.Dictionary) {
 				_SetTitleTextAttributes (dict, state);
 			}
@@ -113,9 +113,9 @@ namespace UIKit {
 		public partial class UISegmentedControlAppearance {
 			public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 			{
-				if (attributes == null)
+				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
-	                        
+
 				using (var dict = attributes.Dictionary) {
 					_SetTitleTextAttributes (dict, state);
 				}

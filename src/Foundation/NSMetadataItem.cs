@@ -7,16 +7,20 @@
 //   Miguel de Icaza
 //
 using System;
+using CoreFoundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace Foundation {
 	public partial class NSMetadataItem {
-
+#if !NET
 		bool GetBool (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-			return n == null ? false : n.BoolValue;
+			return n is null ? false : n.BoolValue;
 		}
+#endif
 
 		bool? GetNullableBool (NSString key)
 		{
@@ -27,7 +31,7 @@ namespace Foundation {
 		double GetDouble (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-			return n == null ? 0 : n.DoubleValue;
+			return n is null ? 0 : n.DoubleValue;
 		}
 
 		double? GetNullableDouble (NSString key)
@@ -39,88 +43,113 @@ namespace Foundation {
 		nint? GetNInt (NSString key)
 		{
 			var n = Runtime.GetNSObject<NSNumber> (GetHandle (key));
-#if XAMCORE_2_0
 			return n?.NIntValue;
-#else
-			return n?.IntValue;
-#endif
 		}
 
 		// same order as NSMetadataAttributes.h
 
-		public NSString FileSystemName {
+		public NSString? FileSystemName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemFSNameKey));
 			}
 		}
 
-		public NSString DisplayName {
+		public NSString? DisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemDisplayNameKey));
 			}
 		}
 
-		public NSUrl Url {
+		public NSUrl? Url {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.ItemURLKey));
 			}
 		}
 
-		public NSString Path {
+		public NSString? Path {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ItemPathKey));
 			}
 		}
 
-		public NSNumber FileSystemSize {
+		public NSNumber? FileSystemSize {
 			get {
 				return Runtime.GetNSObject<NSNumber> (GetHandle (NSMetadataQuery.ItemFSSizeKey));
 			}
 		}
 
-		public NSDate FileSystemCreationDate {
+		public NSDate? FileSystemCreationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ItemFSCreationDateKey));
 			}
 		}
 
-		public NSDate FileSystemContentChangeDate {
+		public NSDate? FileSystemContentChangeDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ItemFSContentChangeDateKey));
 			}
 		}
 
-		[iOS (8,0)][Mac (10,9)]
-		public NSString ContentType {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSString? ContentType {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ContentTypeKey));
 			}
 		}
 
-		[iOS (8,0)][Mac (10,9)]
-		public NSString[] ContentTypeTree {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSString? []? ContentTypeTree {
 			get {
 				using (var a = Runtime.GetNSObject<NSArray> (GetHandle (NSMetadataQuery.ContentTypeTreeKey)))
 					return NSArray.FromArray<NSString> (a);
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? IsUbiquitous {
+#else
 		public bool IsUbiquitous {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#else
 				return GetBool (NSMetadataQuery.ItemIsUbiquitousKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemHasUnresolvedConflicts {
+#else
 		public bool UbiquitousItemHasUnresolvedConflicts {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemHasUnresolvedConflictsKey);
+#endif
 			}
 		}
 
-		[iOS (7,0)][Mac (10,9)]
-#if XAMCORE_4_0
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+#if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
 #else
 		public NSItemDownloadingStatus DownloadingStatus {
@@ -130,1087 +159,2463 @@ namespace Foundation {
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsDownloading {
+#else
 		public bool UbiquitousItemIsDownloading {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsDownloadingKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsUploaded {
+#else
 		public bool UbiquitousItemIsUploaded {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public bool? UbiquitousItemIsUploading {
+#else
 		public bool UbiquitousItemIsUploading {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsUploadingKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public double? UbiquitousItemPercentDownloaded {
+#else
 		public double UbiquitousItemPercentDownloaded {
+#endif
 			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#else
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentDownloadedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
+#if NET
+		public double? UbiquitousItemPercentUploaded {
+#else
 		public double UbiquitousItemPercentUploaded {
+#endif
 			get {
+#if NET
+				return GetNullableDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#else
 				return GetDouble (NSMetadataQuery.UbiquitousItemPercentUploadedKey);
+#endif
 			}
 		}
 
-		[iOS (7,0)][Mac (10,9)]
-		public NSError UbiquitousItemDownloadingError {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSError? UbiquitousItemDownloadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemDownloadingErrorKey));
 			}
 		}
 
-		[iOS (7,0)][Mac (10,9)]
-		public NSError UbiquitousItemUploadingError {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSError? UbiquitousItemUploadingError {
 			get {
 				return Runtime.GetNSObject<NSError> (GetHandle (NSMetadataQuery.UbiquitousItemUploadingErrorKey));
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+#if NET
+		public bool? UbiquitousItemDownloadRequested {
+#else
 		public bool UbiquitousItemDownloadRequested {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemDownloadRequestedKey);
+#endif
 			}
 		}
 
-		// XAMCORE_4_0 FIXME return nullable
-		[iOS (8,0)][Mac (10,10)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+#if NET
+		public bool? UbiquitousItemIsExternalDocument {
+#else
 		public bool UbiquitousItemIsExternalDocument {
+#endif
 			get {
+#if NET
+				return GetNullableBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#else
 				return GetBool (NSMetadataQuery.UbiquitousItemIsExternalDocumentKey);
+#endif
 			}
 		}
 
-		[iOS (8,0)][Mac (10,9)]
-		public NSString UbiquitousItemContainerDisplayName {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSString? UbiquitousItemContainerDisplayName {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.UbiquitousItemContainerDisplayNameKey));
 			}
 		}
 
-		[iOS (8,0)][Mac (10,9)]
-		public NSUrl UbiquitousItemUrlInLocalContainer {
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#endif
+		public NSUrl? UbiquitousItemUrlInLocalContainer {
 			get {
 				return Runtime.GetNSObject<NSUrl> (GetHandle (NSMetadataQuery.UbiquitousItemURLInLocalContainerKey));
 			}
 		}
 
 #if MONOMAC
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Keywords {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Keywords {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.KeywordsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Title {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Title {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.TitleKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Authors {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Authors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey)); 
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Editors {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Editors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EditorsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Participants {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Participants {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ParticipantsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Projects {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Projects {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ProjectsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate DownloadedDate {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? DownloadedDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DownloadedDateKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] WhereFroms {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? WhereFroms {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.WhereFromsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Comment {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Comment {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CommentKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Copyright {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Copyright {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CopyrightKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate LastUsedDate {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? LastUsedDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.LastUsedDateKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate ContentCreationDate {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? ContentCreationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ContentCreationDateKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate ContentModificationDate {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? ContentModificationDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.ContentModificationDateKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate DateAdded {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? DateAdded {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DateAddedKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? DurationSeconds {
 			get {
 				return GetNullableDouble (NSMetadataQuery.DurationSecondsKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] ContactKeywords {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? ContactKeywords {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContactKeywordsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Version {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Version {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.VersionKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? PixelHeight {
 			get {
 				return GetNInt (NSMetadataQuery.PixelHeightKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? PixelWidth {
 			get {
 				return GetNInt (NSMetadataQuery.PixelWidthKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? PixelCount {
 			get {
 				return GetNInt (NSMetadataQuery.PixelCountKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ColorSpace {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ColorSpace {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ColorSpaceKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? BitsPerSample {
 			get {
 				return GetNInt (NSMetadataQuery.BitsPerSampleKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? FlashOnOff {
 			get {
 				return GetNullableBool (NSMetadataQuery.FlashOnOffKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? FocalLength {
 			get {
 				return GetNullableDouble (NSMetadataQuery.FocalLengthKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string AcquisitionMake {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? AcquisitionMake {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionMakeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string AcquisitionModel {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? AcquisitionModel {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AcquisitionModelKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? IsoSpeed {
 			get {
 				return GetNullableDouble (NSMetadataQuery.IsoSpeedKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? Orientation {
 			get {
 				return GetNInt (NSMetadataQuery.OrientationKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] LayerNames {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? LayerNames {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LayerNamesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? WhiteBalance {
 			get {
 				return GetNullableDouble (NSMetadataQuery.WhiteBalanceKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? Aperture {
 			get {
 				return GetNullableDouble (NSMetadataQuery.ApertureKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ProfileName {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ProfileName {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProfileNameKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? ResolutionWidthDpi {
 			get {
 				return GetNInt (NSMetadataQuery.ResolutionWidthDpiKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? ResolutionHeightDpi {
 			get {
 				return GetNInt (NSMetadataQuery.ResolutionHeightDpiKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? ExposureMode {
 			get {
 				return GetNInt (NSMetadataQuery.ExposureModeKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? ExposureTimeSeconds {
 			get {
 				return GetNullableDouble (NSMetadataQuery.ExposureTimeSecondsKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ExifVersion {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ExifVersion {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifVersionKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string CameraOwner {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? CameraOwner {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CameraOwnerKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? FocalLength35mm {
 			get {
 				return GetNInt (NSMetadataQuery.FocalLength35mmKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string LensModel {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? LensModel {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.LensModelKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ExifGpsVersion {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ExifGpsVersion {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExifGpsVersionKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? Altitude {
 			get {
 				return GetNullableDouble (NSMetadataQuery.AltitudeKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? Latitude {
 			get {
 				return GetNullableDouble (NSMetadataQuery.LatitudeKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? Longitude {
 			get {
 				return GetNullableDouble (NSMetadataQuery.LongitudeKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? Speed {
 			get {
 				return GetNullableDouble (NSMetadataQuery.SpeedKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate Timestamp {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? Timestamp {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.TimestampKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsTrack {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsTrackKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? ImageDirection {
 			get {
 				return GetNullableDouble (NSMetadataQuery.ImageDirectionKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string NamedLocation {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? NamedLocation {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.NamedLocationKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string GpsStatus {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? GpsStatus {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsStatusKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string GpsMeasureMode {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? GpsMeasureMode {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMeasureModeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsDop {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsDopKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string GpsMapDatum {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? GpsMapDatum {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsMapDatumKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsDestLatitude {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsDestLatitudeKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsDestLongitude {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsDestLongitudeKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsDestBearing {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsDestBearingKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsDestDistance {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsDestDistanceKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string GpsProcessingMethod {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? GpsProcessingMethod {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsProcessingMethodKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string GpsAreaInformation {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? GpsAreaInformation {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GpsAreaInformationKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate GpsDateStamp {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? GpsDateStamp {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.GpsDateStampKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? GpsDifferental {
 			get {
 				return GetNullableDouble (NSMetadataQuery.GpsDifferentalKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Codecs {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Codecs {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CodecsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] MediaTypes {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? MediaTypes {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.MediaTypesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? Streamable {
 			get {
 				return GetNullableBool (NSMetadataQuery.StreamableKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? TotalBitRate {
 			get {
 				return GetNInt (NSMetadataQuery.TotalBitRateKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? VideoBitRate {
 			get {
 				return GetNInt (NSMetadataQuery.VideoBitRateKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? AudioBitRate {
 			get {
 				return GetNInt (NSMetadataQuery.AudioBitRateKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string DeliveryType {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? DeliveryType {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.DeliveryTypeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Album {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Album {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AlbumKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? HasAlphaChannel {
 			get {
 				return GetNullableBool (NSMetadataQuery.HasAlphaChannelKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? RedEyeOnOff {
 			get {
 				return GetNullableBool (NSMetadataQuery.RedEyeOnOffKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string MeteringMode {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? MeteringMode {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MeteringModeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? MaxAperture {
 			get {
 				return GetNullableDouble (NSMetadataQuery.MaxApertureKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? FNumber {
 			get {
 				return GetNInt (NSMetadataQuery.FNumberKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ExposureProgram {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ExposureProgram {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureProgramKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ExposureTimeString {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ExposureTimeString {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExposureTimeStringKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Headline {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Headline {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.HeadlineKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Instructions {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Instructions {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.InstructionsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string City {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? City {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CityKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string StateOrProvince {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? StateOrProvince {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.StateOrProvinceKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Country {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Country {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CountryKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string TextContent {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? TextContent {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.TextContentKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? AudioSampleRate {
 			get {
 				return GetNInt (NSMetadataQuery.AudioSampleRateKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? AudioChannelCount {
 			get {
 				return GetNInt (NSMetadataQuery.AudioChannelCountKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? Tempo {
 			get {
 				return GetNullableDouble (NSMetadataQuery.TempoKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string KeySignature {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? KeySignature {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.KeySignatureKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string TimeSignature {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? TimeSignature {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.TimeSignatureKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string AudioEncodingApplication {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? AudioEncodingApplication {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AudioEncodingApplicationKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Composer {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Composer {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ComposerKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Lyricist {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Lyricist {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.LyricistKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? AudioTrackNumber {
 			get {
 				return GetNInt (NSMetadataQuery.AudioTrackNumberKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate RecordingDate {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? RecordingDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.RecordingDateKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string MusicalGenre {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? MusicalGenre {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalGenreKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? IsGeneralMidiSequence {
 			get {
 				return GetNullableBool (NSMetadataQuery.IsGeneralMidiSequenceKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? RecordingYear {
 			get {
 				return GetNInt (NSMetadataQuery.RecordingYearKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Organizations {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Organizations {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));			}
-		}
-
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Languages {
-			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.OrganizationsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Rights {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Languages {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.LanguagesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Publishers {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Rights {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.RightsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Contributors {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Publishers {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PublishersKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Coverage {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Contributors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ContributorsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Subject {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Coverage {
+			get {
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.CoverageKey));
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Subject {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.SubjectKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Theme {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Theme {
 			get {
 				return Runtime.GetNSObject<NSString> (GetHandle (NSMetadataQuery.ThemeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Description {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Description {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.DescriptionKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Identifier {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Identifier {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.IdentifierKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Audiences {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Audiences {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AudiencesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public nint? NumberOfPages {
 			get {
 				return GetNInt (NSMetadataQuery.NumberOfPagesKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? PageWidth {
 			get {
 				return GetNullableDouble (NSMetadataQuery.PageWidthKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? PageHeight {
 			get {
 				return GetNullableDouble (NSMetadataQuery.PageHeightKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string SecurityMethod {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? SecurityMethod {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.SecurityMethodKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Creator {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Creator {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CreatorKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] EncodingApplications {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? EncodingApplications {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EncodingApplicationsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public NSDate DueDate {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public NSDate? DueDate {
 			get {
 				return Runtime.GetNSObject<NSDate> (GetHandle (NSMetadataQuery.DueDateKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public double? StarRating {
 			get {
 				return GetNullableDouble (NSMetadataQuery.StarRatingKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] PhoneNumbers {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? PhoneNumbers {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PhoneNumbersKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] EmailAddresses {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? EmailAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.EmailAddressesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] InstantMessageAddresses {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? InstantMessageAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.InstantMessageAddressesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Kind {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Kind {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.KindKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Recipients {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Recipients {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string FinderComment {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? FinderComment {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.FinderCommentKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Fonts {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Fonts {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.FontsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string AppleLoopsRoot {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? AppleLoopsRoot {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsRootKeyKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string AppleLoopsKeyFilterType {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? AppleLoopsKeyFilterType {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsKeyFilterTypeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string AppleLoopsLoopMode {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? AppleLoopsLoopMode {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.AppleLoopsLoopModeKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] AppleLoopDescriptors {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? AppleLoopDescriptors {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AppleLoopDescriptorsKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string MusicalInstrumentCategory {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? MusicalInstrumentCategory {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentCategoryKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string MusicalInstrumentName {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? MusicalInstrumentName {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.MusicalInstrumentNameKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string CFBundleIdentifier {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? CFBundleIdentifier {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.CFBundleIdentifierKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Information {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Information {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.InformationKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Director {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Director {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.DirectorKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Producer {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Producer {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ProducerKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string Genre {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? Genre {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.GenreKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] Performers {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? Performers {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.PerformersKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string OriginalFormat {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? OriginalFormat {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalFormatKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string OriginalSource {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? OriginalSource {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.OriginalSourceKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] AuthorEmailAddresses {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? AuthorEmailAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorEmailAddressesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] RecipientEmailAddresses {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? RecipientEmailAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientEmailAddressesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] AuthorAddresses {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? AuthorAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.AuthorAddressesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] RecipientAddresses {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? RecipientAddresses {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.RecipientAddressesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? IsLikelyJunk {
 			get {
 				return GetNullableBool (NSMetadataQuery.IsLikelyJunkKey);
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] ExecutableArchitectures {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? ExecutableArchitectures {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ExecutableArchitecturesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string ExecutablePlatform {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? ExecutablePlatform {
 			get {
-				return NSString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
+				return CFString.FromHandle (GetHandle (NSMetadataQuery.ExecutablePlatformKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
-		public string [] ApplicationCategories {
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
+		public string? []? ApplicationCategories {
 			get {
-				return NSArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
+				return CFArray.StringArrayFromHandle (GetHandle (NSMetadataQuery.ApplicationCategoriesKey));
 			}
 		}
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+#endif
 		public bool? IsApplicationManaged {
 			get {
 				return GetNullableBool (NSMetadataQuery.IsApplicationManagedKey);

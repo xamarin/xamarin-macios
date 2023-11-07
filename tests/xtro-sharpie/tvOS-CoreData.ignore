@@ -1,3 +1,2 @@
-# ignored due to missing types due to  https://github.com/xamarin/xamarin-macios/issues/6567
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithDifference: not found
 !missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithSnapshot: not found

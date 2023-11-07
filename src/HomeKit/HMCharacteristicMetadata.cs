@@ -1,13 +1,13 @@
+#nullable enable
+
 using System;
+
 using ObjCRuntime;
 using Foundation;
 
 namespace HomeKit {
 
-	[TV (10,0)]
-	[iOS (8,0)]
-	public partial class HMCharacteristicMetadata
-	{
+	public partial class HMCharacteristicMetadata {
 		public HMCharacteristicMetadataUnits Units {
 			get {
 				var u = _Units;

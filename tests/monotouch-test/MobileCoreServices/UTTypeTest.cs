@@ -9,25 +9,17 @@
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using MobileCoreServices;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.MobileCoreServices;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MobileCoreServices {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UTTypeTest {
-		
+
 		[Test]
 		public void NSStringConstants ()
 		{
@@ -128,27 +120,47 @@ namespace MonoTouchFixtures.MobileCoreServices {
 		[Test]
 		public void GetPreferredTag ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
 			Assert.NotNull (UTType.GetPreferredTag (UTType.PDF, UTType.TagClassFilenameExtension), "GetPreferredTag");
 		}
 
 		[Test]
 		public void GetDeclaration ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
 			Assert.NotNull (UTType.GetDeclaration (UTType.PDF));
 		}
 
 		[Test]
 		public void GetDeclaringBundleURL ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
+#if NET
+			Assert.NotNull (UTType.GetDeclaringBundleUrl (UTType.PDF));
+#else
 			Assert.NotNull (UTType.GetDeclaringBundleURL (UTType.PDF));
+#endif
 		}
 
 		[Test]
 		public void CreatePreferredIdentifier ()
 		{
-			string[] extensions = new [] { ".html", ".css", ".jpg", ".js", ".otf" };
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
+			string [] extensions = new [] { ".html", ".css", ".jpg", ".js", ".otf" };
 			// random failure reported in #36708 (on some iPad2 only)
-			for (int i=0; i < 100; i++) {
+			for (int i = 0; i < 100; i++) {
 				foreach (var ext in extensions) {
 					var result = UTType.CreatePreferredIdentifier (UTType.TagClassMIMEType, ext, null);
 					Assert.NotNull (result, ext + i.ToString ());

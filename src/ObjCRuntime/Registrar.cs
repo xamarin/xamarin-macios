@@ -22,59 +22,44 @@ using System.Text;
 
 using Foundation;
 using ObjCRuntime;
+using Xamarin.Bundler;
+
+#if MTOUCH || MMP || BUNDLER
 using Xamarin.Utils;
-
-#if MTOUCH || MMP
-using TAssembly=Mono.Cecil.AssemblyDefinition;
-using TType=Mono.Cecil.TypeReference;
-using TMethod=Mono.Cecil.MethodDefinition;
-using TProperty=Mono.Cecil.PropertyDefinition;
-using TField=Mono.Cecil.FieldDefinition;
-using R=Registrar.Registrar;
+using TAssembly = Mono.Cecil.AssemblyDefinition;
+using TType = Mono.Cecil.TypeReference;
+using TMethod = Mono.Cecil.MethodDefinition;
+using TProperty = Mono.Cecil.PropertyDefinition;
+using TField = Mono.Cecil.FieldDefinition;
+using R = Registrar.Registrar;
 #else
-using TAssembly=System.Reflection.Assembly;
-using TType=System.Type;
-using TMethod=System.Reflection.MethodBase;
-using TProperty=System.Reflection.PropertyInfo;
-using TField=System.Reflection.FieldInfo;
-using R=ObjCRuntime.Runtime;
+using TAssembly = System.Reflection.Assembly;
+using TType = System.Type;
+using TMethod = System.Reflection.MethodBase;
+using TProperty = System.Reflection.PropertyInfo;
+using TField = System.Reflection.FieldInfo;
+using R = ObjCRuntime.Runtime;
 #endif
 
-#if MONOTOUCH
-#if MTOUCH
-using Xamarin.Bundler;
-using ProductException=Xamarin.Bundler.MonoTouchException;
-#else
-#if XAMCORE_2_0
-using ProductException=ObjCRuntime.RuntimeException;
-#else
-using ProductException=MonoTouch.RuntimeException;
+#if !(MTOUCH || MMP || BUNDLER)
+using ProductException = ObjCRuntime.RuntimeException;
 #endif
-#endif
-#elif MONOMAC
-#if MMP
-using Xamarin.Bundler;
-using ProductException=Xamarin.Bundler.MonoMacException;
-#elif XAMCORE_2_0
-using ProductException=ObjCRuntime.RuntimeException;
-#else
-using ProductException=MonoMac.RuntimeException;
-#endif
-#else
-#error Only XI and XM
+
+#if !MTOUCH && !MMP && !BUNDLER
+// static registrar needs them but they might not be marked (e.g. if System.Console is not used)
+[assembly: Preserve (typeof (System.Action))]
+[assembly: Preserve (typeof (System.Action<string>))]
 #endif
 
 //
-// This file cannot use any cecil code, since it's also compiled into monotouch.dll
+// This file cannot use any cecil code, since it's also compiled into Xamarin.[iOS|Mac].dll
 //
 
 #if MONOMAC
-namespace ObjCRuntime
-{
+namespace ObjCRuntime {
 	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
 
-	public class AssemblyRegistrationEventArgs : EventArgs
-	{
+	public class AssemblyRegistrationEventArgs : EventArgs {
 		public bool Register { get; set; }
 		public System.Reflection.AssemblyName AssemblyName { get; internal set; }
 	}
@@ -83,31 +68,34 @@ namespace ObjCRuntime
 
 namespace Registrar {
 	static class Shared {
-		
-		public static ProductException GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)
+
+		public static List<ProductException> GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)
 		{
-			var msg = new System.Text.StringBuilder ();
-			msg.Append ("Cannot register more than one interface method for the method '");
-			msg.Append (impl.DeclaringType.FullName).Append ('.').Append (impl.Name);
-			msg.Append ("' (which is implementing '");
+			var exceptions = new List<ProductException> ();
+			exceptions.Add (ErrorHelper.CreateError (4127, Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
 			for (int i = 0; i < ifaceMethods.Count; i++) {
-				if (i > 0)
-					msg.Append (i < ifaceMethods.Count - 1 ? "', '" : "' and '");
 				var ifaceM = ifaceMethods [i];
-				msg.Append (ifaceM.DeclaringType.FullName).Append ('.').Append (ifaceM.Name);
+				exceptions.Add (ErrorHelper.CreateError (4137, Errors.MT4137, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
 			}
-			msg.Append ("').");
-			return ErrorHelper.CreateError (4127, msg.ToString ());
+			return exceptions;
 		}
 	}
 
 	abstract partial class Registrar {
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		public Application App { get; protected set; }
 #endif
 
+#if MMP || MTOUCH || BUNDLER
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
+#elif NET
+		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
+#else
+		const string NFloatTypeName = "System.nfloat";
+#endif
+
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
-		// locking: all accesses must lock 'types'.
+																						 // locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
 		// this is used to check if multiple types are registered with the same name.
 		// locking: all accesses must lock 'type_map'.
@@ -142,10 +130,11 @@ namespace Registrar {
 			public bool IsInformalProtocol;
 			public bool IsWrapper;
 			public bool IsGeneric;
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 			public IntPtr Handle;
 #else
 			public TType ProtocolWrapperType;
+			public int ClassMapIndex;
 #endif
 
 			public Dictionary<string, ObjCField> Fields;
@@ -156,9 +145,9 @@ namespace Registrar {
 
 			ObjCType superType;
 
-			public bool IsCategory { get { return CategoryAttribute != null; } }
+			public bool IsCategory { get { return CategoryAttribute is not null; } }
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 			HashSet<ObjCType> all_protocols;
 			// This contains all protocols in the type hierarchy.
 			// Given a type T that implements a protocol with super protocols:
@@ -170,10 +159,10 @@ namespace Registrar {
 			// This property will contain both IP1 and IP2. The Protocols property only contains IP2.
 			public IEnumerable<ObjCType> AllProtocols {
 				get {
-					if (Protocols == null || Protocols.Length == 0)
+					if (Protocols is null || Protocols.Length == 0)
 						return null;
 
-					if (all_protocols == null) {
+					if (all_protocols is null) {
 						var queue = new Queue<ObjCType> (Protocols);
 						var rv = new HashSet<ObjCType> ();
 						while (queue.Count > 0) {
@@ -194,17 +183,35 @@ namespace Registrar {
 					return all_protocols;
 				}
 			}
+
+			HashSet<ObjCType> all_protocols_in_hierarchy;
+			public IEnumerable<ObjCType> AllProtocolsInHierarchy {
+				get {
+					if (all_protocols_in_hierarchy is null) {
+						all_protocols_in_hierarchy = new HashSet<ObjCType> ();
+						var type = this;
+						while (type is not null && (object) type != (object) type.BaseType) {
+							var allProtocols = type.AllProtocols;
+							if (allProtocols is not null)
+								all_protocols_in_hierarchy.UnionWith (allProtocols);
+							type = type.BaseType;
+						}
+					}
+
+					return all_protocols_in_hierarchy;
+				}
+			}
 #endif
 
 			public void VerifyRegisterAttribute (ref List<Exception> exceptions)
 			{
-				if (RegisterAttribute == null)
+				if (RegisterAttribute is null)
 					return;
 
 				var name = RegisterAttribute.Name;
 				if (string.IsNullOrEmpty (name))
 					return;
-					
+
 				for (int i = 0; i < name.Length; i++) {
 					if (!char.IsWhiteSpace (name [i]))
 						continue;
@@ -223,17 +230,17 @@ namespace Registrar {
 							break;
 						}
 					}
-					AddException (ref exceptions, new ProductException (4146, showError, "The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).", Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
+					AddException (ref exceptions, new ProductException (4146, showError, Errors.MT4146, Registrar.GetTypeFullName (Type), name [i], ((int) name [i]).ToString ("x"), name));
 					break;
 				}
 			}
 
 			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
 			// Update that list whenever this list is updated.
-			static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
+			static readonly char [] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
-				if (method.Method == null)
+				if (method.Method is null)
 					return;
 
 				var split = method.Selector.Split (':');
@@ -243,39 +250,39 @@ namespace Registrar {
 					nativeParamCount++;
 
 				var pars = method.Parameters;
-				var paramCount = pars == null ? 0 : pars.Length;
+				var paramCount = pars is null ? 0 : pars.Length;
 				if (method.IsCategoryInstance)
 					paramCount--;
-				
+
 				if (nativeParamCount != paramCount) {
 					Exception ex;
 
 					if (method.IsVariadic) {
-						ex = Registrar.CreateException (4140, method, "The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the variadic method takes {2} parameters, while the managed method has {3} parameters.",
+						ex = Registrar.CreateException (4140, method, Errors.MT4140,
 							method.Method.DeclaringType.FullName, method.MethodName, nativeParamCount, paramCount, method.Selector);
 					} else {
-						ex = Registrar.CreateException (4117, method, "The registrar found a signature mismatch in the method '{0}.{1}' - the selector '{4}' indicates the method takes {2} parameters, while the managed method has {3} parameters.",
+						ex = Registrar.CreateException (4117, method, Errors.MT4117,
 							method.Method.DeclaringType.FullName, method.MethodName, nativeParamCount, paramCount, method.Selector);
 					}
 
 					Registrar.AddException (ref exceptions, ex);
 				}
 
-				if (method.IsVariadic && pars != null && Registrar.GetTypeFullName (pars [paramCount - 1]) != "System.IntPtr")
-					Registrar.AddException (ref exceptions, Registrar.CreateException (4123, method, "The type of the variadic parameter in the variadic function '{0}' must be System.IntPtr.", Registrar.GetDescriptiveMethodName (method.Method)));
-				
+				if (method.IsVariadic && pars is not null && Registrar.GetTypeFullName (pars [paramCount - 1]) != "System.IntPtr")
+					Registrar.AddException (ref exceptions, Registrar.CreateException (4123, method, Errors.MT4123, Registrar.GetDescriptiveMethodName (method.Method)));
+
 				char ch;
 				var idx = method.Selector.IndexOfAny (invalidSelectorCharacters);
 				if (idx != -1) {
 					ch = method.Selector [idx];
-					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, "Invalid character '{0}' (0x{1}) found in selector '{2}' for '{3}.{4}'",
+					Registrar.AddException (ref exceptions, Registrar.CreateException (4160, method, Errors.MT4160,
 						ch, ((int) ch).ToString ("x"), method.Selector, Registrar.GetTypeFullName (Type), Registrar.GetDescriptiveMethodName (method.Method)));
 				}
 			}
 
 			public void VerifyAdoptedProtocolsNames (ref List<Exception> exceptions)
 			{
-				if (AdoptedProtocols == null)
+				if (AdoptedProtocols is null)
 					return;
 
 				foreach (var adoptedProtocol in AdoptedProtocols) {
@@ -293,7 +300,10 @@ namespace Registrar {
 							str = "}}";
 							ap = ap.Insert (idx, "}");
 						}
-						AddException (ref exceptions, new ProductException (4177, true, $"The 'ProtocolType' parameter of the 'Adopts' attribute used in class '{Registrar.GetTypeFullName (Type)}' contains an invalid character. Value used: '{ap}' Invalid Char: '{str}'"));
+
+						var m4177 = String.Format (Errors.MT4177, Registrar.GetTypeFullName (Type), ap, str);
+						AddException (ref exceptions, new ProductException (4177, true, m4177, new string [0]));
+
 					}
 				}
 			}
@@ -303,8 +313,8 @@ namespace Registrar {
 				// Check if there are any base types with the same property.
 				var base_type = BaseType;
 				var fieldNameInDictionary = (field.IsStatic ? "+" : "-") + field.Name;
-				while (base_type != null) {
-					if (base_type.Fields != null && base_type.Fields.ContainsKey (fieldNameInDictionary)) {
+				while (base_type is not null) {
+					if (base_type.Fields is not null && base_type.Fields.ContainsKey (fieldNameInDictionary)) {
 						// Maybe we should warn here? Not sure if this is something bad or not.
 						return;
 					}
@@ -313,7 +323,7 @@ namespace Registrar {
 					base_type = base_type.BaseType;
 				}
 
-				if (Fields == null)
+				if (Fields is null)
 					Fields = new Dictionary<string, ObjCField> ();
 				// Do fields and methods live in the same objc namespace? // AddToMap (field, errorIfExists);
 				Fields.Add (fieldNameInDictionary, field);
@@ -323,7 +333,7 @@ namespace Registrar {
 			{
 				bool rv;
 
-				if (Methods == null)
+				if (Methods is null)
 					Methods = new List<ObjCMethod> ();
 
 				VerifySelector (method, ref exceptions);
@@ -340,7 +350,7 @@ namespace Registrar {
 
 			public void Add (ObjCProperty property, ref List<Exception> exceptions)
 			{
-				if (Properties == null)
+				if (Properties is null)
 					Properties = new List<ObjCProperty> ();
 				// Do properties and methods live in the same objc namespace? // AddToMap (property, errorIfExists);
 				Properties.Add (property);
@@ -402,7 +412,7 @@ namespace Registrar {
 			void VerifyIsNotKeyword (ref List<Exception> exceptions, ObjCProperty property)
 			{
 				if (IsObjectiveCKeyword (property.Selector))
-					AddException (ref exceptions, CreateException (4164, property, "Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.", property.Name, property.Selector));
+					AddException (ref exceptions, CreateException (4164, property, Errors.MT4164, property.Name, property.Selector));
 			}
 
 			public bool TryGetMember (string selector, bool is_static, out ObjCMember member)
@@ -420,30 +430,30 @@ namespace Registrar {
 				bool rv = true;
 				if (TryGetMember (member.Selector, member.IsNativeStatic, out existing)) {
 					if (existing.IsImplicit) {
-						AddException (ref exceptions, CreateException (4141, member, "Cannot register the selector '{0}' on the member '{1}.{2}' because Xamarin.iOS implicitly registers this selector.", member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
+						AddException (ref exceptions, CreateException (4141, member, Errors.MT4141, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member)));
 					} else {
-						AddException (ref exceptions, CreateException (4119, member, "Could not register the selector '{0}' of the member '{1}.{2}' because the selector is already registered on the member '{3}'.", member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member), Registrar.GetMemberName (existing)));
+						AddException (ref exceptions, CreateException (4119, member, Errors.MT4119, member.Selector, Registrar.GetTypeFullName (Type), Registrar.GetMemberName (member), Registrar.GetMemberName (existing)));
 					}
 					rv = false;
 				}
-				
+
 				Map [(member.IsNativeStatic ? "+" : "-") + member.Selector] = member;
 				return rv;
 			}
 
-			Exception CreateException (int code, ObjCMember member, string message, params object[] args)
+			Exception CreateException (int code, ObjCMember member, string message, params object [] args)
 			{
 				var method = member as ObjCMethod;
-				if (method != null)
+				if (method is not null)
 					return Registrar.CreateException (code, method.Method, message, args);
 				var property = member as ObjCProperty;
-				if (property != null && property.Property != null)
+				if (property is not null && property.Property is not null)
 					return Registrar.CreateException (code, property.Property.GetMethod ?? property.Property.SetMethod, message, args);
 				return Registrar.CreateException (code, message, args);
 			}
 
 			public string Name {
-				get { return RegisterAttribute != null && RegisterAttribute.Name != null ? RegisterAttribute.Name : Registrar.GetTypeFullName (Type); }
+				get { return RegisterAttribute is not null && RegisterAttribute.Name is not null ? RegisterAttribute.Name : Registrar.GetTypeFullName (Type); }
 			}
 
 			public string CategoryName {
@@ -452,7 +462,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = CategoryAttribute;
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return StringUtils.SanitizeObjectiveCName (name);
+					return SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -462,7 +472,7 @@ namespace Registrar {
 						throw new InvalidOperationException ();
 					var attrib = Registrar.GetProtocolAttribute (Type);
 					var name = attrib.Name ?? Registrar.GetTypeFullName (Type);
-					return StringUtils.SanitizeObjectiveCName (name);
+					return SanitizeObjectiveCName (name);
 				}
 			}
 
@@ -474,7 +484,7 @@ namespace Registrar {
 
 			public bool IsFakeProtocol {
 				get {
-					if (RegisterAttribute == null || IsProtocol || IsModel)
+					if (RegisterAttribute is null || IsProtocol || IsModel)
 						return false;
 
 					return Registrar.HasProtocolAttribute (Type);
@@ -486,11 +496,11 @@ namespace Registrar {
 			/// </summary>
 			public ObjCType SuperType {
 				get {
-					if (superType != null)
+					if (superType is not null)
 						return superType;
 
 					var super = BaseType;
-					while (super != null && (super.IsModel || super.IsFakeProtocol))
+					while (super is not null && (super.IsModel || super.IsFakeProtocol))
 						super = super.BaseType;
 					superType = super;
 					return superType;
@@ -510,7 +520,7 @@ namespace Registrar {
 			public bool SetExportAttribute (ExportAttribute ea, ref List<Exception> exceptions)
 			{
 				if (string.IsNullOrEmpty (ea.Selector)) {
-					AddException (ref exceptions, Registrar.CreateException (4135, this, "The member '{0}' has an Export attribute without a selector. A selector is required.", FullName));
+					AddException (ref exceptions, Registrar.CreateException (4135, this, Errors.MT4135, FullName));
 					return false;
 				}
 				Selector = ea.Selector;
@@ -534,7 +544,7 @@ namespace Registrar {
 				get { return selector; }
 				set {
 					if (string.IsNullOrEmpty (value))
-						throw Registrar.CreateException (4135, this, "The member '{0}' has an Export attribute without a selector. A selector is required.", FullName);
+						throw Registrar.CreateException (4135, this, Errors.MT4135, FullName);
 					selector = value;
 				}
 			}
@@ -555,8 +565,8 @@ namespace Registrar {
 			Trampoline trampoline;
 			bool? is_static;
 			bool? is_ctor;
-			TType[] parameters;
-			TType[] native_parameters;
+			TType [] parameters;
+			TType [] native_parameters;
 			TType return_type;
 			TType native_return_type;
 
@@ -574,7 +584,7 @@ namespace Registrar {
 
 			public override bool IsImplicit {
 				get {
-					if (Method != null)
+					if (Method is not null)
 						return false;
 
 					switch (trampoline) {
@@ -582,6 +592,8 @@ namespace Registrar {
 					case Trampoline.Retain:
 					case Trampoline.GetGCHandle:
 					case Trampoline.SetGCHandle:
+					case Trampoline.GetFlags:
+					case Trampoline.SetFlags:
 						return true;
 					default:
 						return false;
@@ -600,7 +612,7 @@ namespace Registrar {
 				}
 			}
 
-#if !MMP && !MTOUCH
+#if !MMP && !MTOUCH && !BUNDLER
 			// The ArgumentSemantic enum is public, and
 			// I don't want to add another enum value there which
 			// is just an internal implementation detail, so just
@@ -624,8 +636,8 @@ namespace Registrar {
 			{
 				var semantic = ArgumentSemantic;
 				var minfo = method_base as System.Reflection.MethodInfo;
-				var retainReturnValue = minfo != null && minfo.GetBaseDefinition ().ReturnTypeCustomAttributes.IsDefined (typeof (ReleaseAttribute), false);
-				var instanceCategory = minfo != null && DynamicRegistrar.HasThisAttributeImpl (minfo);
+				var retainReturnValue = minfo is not null && minfo.GetBaseDefinition ().ReturnTypeCustomAttributes.IsDefined (typeof (ReleaseAttribute), false);
+				var instanceCategory = minfo is not null && DynamicRegistrar.HasThisAttributeImpl (minfo);
 
 				// bitfields and a default value of -1 don't go very well together.
 				if (semantic == ArgumentSemantic.None)
@@ -640,28 +652,28 @@ namespace Registrar {
 				if (bindas_count < 1 + Parameters.Length)
 					throw ErrorHelper.CreateError (8018, $"Internal consistency error: BindAs array is not big enough (expected at least {1 + parameters.Length} elements, got {bindas_count} elements) for {method_base.DeclaringType.FullName + "." + method_base.Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
 
-				Marshal.WriteIntPtr (desc, ObjectWrapper.Convert (method_base));
+				Marshal.WriteIntPtr (desc, Runtime.AllocGCHandle (method_base));
 				Marshal.WriteInt32 (desc + IntPtr.Size, (int) semantic);
 
 				if (!IsConstructor && ReturnType != NativeReturnType)
-					Marshal.WriteIntPtr (desc + IntPtr.Size + 8, ObjectWrapper.Convert (NativeReturnType));
+					Marshal.WriteIntPtr (desc + IntPtr.Size + 8, Runtime.AllocGCHandle (NativeReturnType));
 				for (int i = 0; i < NativeParameters.Length; i++) {
 					if (parameters [i] == native_parameters [i])
 						continue;
-					Marshal.WriteIntPtr (desc + IntPtr.Size + 8 + IntPtr.Size * (i + 1), ObjectWrapper.Convert (native_parameters [i]));
+					Marshal.WriteIntPtr (desc + IntPtr.Size + 8 + IntPtr.Size * (i + 1), Runtime.AllocGCHandle (native_parameters [i]));
 				}
 			}
 #endif
 
 			public bool HasParameters {
 				get {
-					return parameters != null;
+					return parameters is not null;
 				}
 			}
 
 			public TType [] Parameters {
 				get {
-					if (parameters == null)
+					if (parameters is null)
 						parameters = Registrar.GetParameters (Method);
 					return parameters;
 				}
@@ -673,15 +685,15 @@ namespace Registrar {
 
 			public TType [] NativeParameters {
 				get {
-					if (native_parameters == null && Parameters != null) {
+					if (native_parameters is null && Parameters is not null) {
 						// Put the parameters in a temporary variable, and only store them in the instance field once done,
 						// so that if an exception occurs, the same exception will be raised the next time too.
 						var native_parameters = new TType [parameters.Length];
 						for (int i = 0; i < parameters.Length; i++) {
 							var originalType = Registrar.GetBindAsAttribute (this, i)?.OriginalType;
-							if (originalType != null) {
+							if (originalType is not null) {
 								if (!IsValidToManagedTypeConversion (originalType, parameters [i]))
-									throw Registrar.CreateException (4172, Method, $"The registrar can't convert from '{Registrar.GetTypeFullName (parameters [i])}' to '{originalType.FullName}' for the parameter '{Registrar.GetParameterName (Method, i)}' in the method {DescriptiveMethodName}.");
+									throw Registrar.CreateException (4172, Method, Errors.MT4172, Registrar.GetTypeFullName (parameters [i]), originalType.FullName, Registrar.GetParameterName (Method, i), DescriptiveMethodName);
 								native_parameters [i] = originalType;
 							} else {
 								native_parameters [i] = parameters [i];
@@ -696,7 +708,7 @@ namespace Registrar {
 			bool IsValidToManagedTypeConversion (TType inputType, TType outputType)
 			{
 				var nullableType = Registrar.GetNullableType (outputType);
-				var isNullable = nullableType != null;
+				var isNullable = nullableType is not null;
 				var arrayRank = 0;
 				var isArray = Registrar.IsArray (outputType, out arrayRank);
 
@@ -724,14 +736,17 @@ namespace Registrar {
 					case "System.UInt32":
 					case "System.Int64":
 					case "System.UInt64":
+					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nint":
 					case "System.nuint":
 					case "System.Single":
 					case "System.Double":
-					case "System.nfloat":
 					case "System.Boolean":
 						return true;
 					default:
+						if (outputTypeName == NFloatTypeName)
+							return true;
 						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
@@ -746,6 +761,7 @@ namespace Registrar {
 					case "CoreMedia.CMTime":
 					case "CoreMedia.CMTimeMapping":
 					case "CoreMedia.CMTimeRange":
+					case "CoreMedia.CMVideoDimensions":
 					case "MapKit.MKCoordinateSpan":
 					case "Foundation.NSRange":
 					case "SceneKit.SCNMatrix4":
@@ -772,13 +788,13 @@ namespace Registrar {
 
 			public bool HasReturnType {
 				get {
-					return return_type != null;
+					return return_type is not null;
 				}
 			}
 
 			public TType ReturnType {
 				get {
-					if (return_type == null)
+					if (return_type is null)
 						return_type = Registrar.GetReturnType (Method);
 					return return_type;
 				}
@@ -790,14 +806,14 @@ namespace Registrar {
 
 			public TType NativeReturnType {
 				get {
-					if (native_return_type == null) {
+					if (native_return_type is null) {
 						if (Registrar.Is (ReturnType, "System", "Void")) {
 							native_return_type = ReturnType;
 						} else {
 							var originalType = Registrar.GetBindAsAttribute (this, -1)?.OriginalType;
-							if (originalType != null) {
+							if (originalType is not null) {
 								if (!IsValidToManagedTypeConversion (originalType, ReturnType))
-									throw Registrar.CreateException (4170, Method, $"The registrar can't convert from '{Registrar.GetTypeFullName (ReturnType)}' to '{originalType.FullName}' for the return value in the method {DescriptiveMethodName}.");
+									throw Registrar.CreateException (4170, Method, Errors.MT4170, Registrar.GetTypeFullName (ReturnType), originalType.FullName, DescriptiveMethodName);
 								native_return_type = originalType;
 							} else {
 								native_return_type = ReturnType;
@@ -827,7 +843,7 @@ namespace Registrar {
 			}
 
 			public bool IsCategory {
-				get { return CategoryType != null; }
+				get { return CategoryType is not null; }
 			}
 
 			public bool RetainReturnValue {
@@ -847,15 +863,23 @@ namespace Registrar {
 					if (trampoline != Trampoline.None)
 						return trampoline;
 
-#if MTOUCH || MMP
-					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+#if MTOUCH || MMP || BUNDLER
+					throw ErrorHelper.CreateError (8018, Errors.MT8018);
 #else
 					var mi = (System.Reflection.MethodInfo) Method;
 					bool is_stret;
 #if __WATCHOS__
-					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
-#elif MONOMAC
-					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					if (Runtime.Arch == Arch.DEVICE) {
+						is_stret = Stret.ArmNeedStret (NativeReturnType, null);
+					} else {
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
+					}
+#elif MONOMAC || __MACCATALYST__
+					if (Runtime.IsARM64CallingConvention) {
+						is_stret = false;
+					} else {
+						is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (NativeReturnType, null) : Stret.X86NeedStret (NativeReturnType, null);
+					}
 #elif __IOS__
 					if (Runtime.Arch == Arch.DEVICE) {
 						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (NativeReturnType, null);
@@ -865,14 +889,14 @@ namespace Registrar {
 #elif __TVOS__
 					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType, null);
 #else
-	#error unknown architecture
+#error unknown architecture
 #endif
 					var is_static_trampoline = IsStatic && !IsCategoryInstance;
 					var is_value_type = Registrar.IsValueType (NativeReturnType) && !Registrar.IsEnum (NativeReturnType);
 
 					if (is_value_type && Registrar.IsGenericType (NativeReturnType))
 						throw Registrar.CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", Registrar.GetTypeFullName (NativeReturnType), Registrar.GetTypeFullName (DeclaringType.Type), Registrar.GetDescriptiveMethodName (Method));
-					
+
 					if (is_stret) {
 						if (Registrar.IsSimulatorOrDesktop && !Registrar.Is64Bits) {
 							trampoline = is_static_trampoline ? Trampoline.X86_DoubleABI_StaticStretTrampoline : Trampoline.X86_DoubleABI_StretTrampoline;
@@ -896,7 +920,7 @@ namespace Registrar {
 							break;
 						}
 					}
-					
+
 					return trampoline;
 #endif
 				}
@@ -907,7 +931,7 @@ namespace Registrar {
 
 			public string Signature {
 				get {
-					if (signature == null)
+					if (signature is null)
 						signature = ComputeSignature ();
 					return signature;
 				}
@@ -921,7 +945,7 @@ namespace Registrar {
 				if (Registrar.LaxMode)
 					return true;
 
-				if (signature == null) {
+				if (signature is null) {
 					try {
 						signature = ComputeSignature ();
 					} catch (ProductException mte) {
@@ -929,7 +953,7 @@ namespace Registrar {
 						return false;
 					}
 				}
-					
+
 				return true;
 			}
 
@@ -940,12 +964,12 @@ namespace Registrar {
 
 			public override string ToString ()
 			{
-				return string.Format ("[ObjCMethod: Name={0}, IsStatic={1}, Trampoline={2}, Signature={3}]", Method != null ? Registrar.GetMethodName (Method) : "null", IsStatic, Trampoline, ""); //Signature);
+				return string.Format ("[ObjCMethod: Name={0}, IsStatic={1}, Trampoline={2}, Signature={3}]", Method is not null ? Registrar.GetMethodName (Method) : "null", IsStatic, Trampoline, ""); //Signature);
 			}
 
 			public string DescriptiveMethodName {
 				get {
-					return Registrar.GetTypeFullName (DeclaringType.Type) + "." + (Method == null ? Name : Registrar.GetMethodName (Method));
+					return Registrar.GetTypeFullName (DeclaringType.Type) + "." + (Method is null ? Name : Registrar.GetMethodName (Method));
 				}
 			}
 
@@ -957,10 +981,7 @@ namespace Registrar {
 
 			public bool IsPropertyAccessor {
 				get {
-					if (Method == null)
-						return false;
-					
-					return Method.IsSpecialName && (Method.Name.StartsWith ("get_", StringComparison.Ordinal) || Method.Name.StartsWith ("set_", StringComparison.Ordinal));
+					return Registrar.IsPropertyAccessor (Method);
 				}
 			}
 		}
@@ -971,7 +992,7 @@ namespace Registrar {
 			TType property_type;
 			public TType PropertyType {
 				get {
-					if (property_type == null)
+					if (property_type is null)
 						property_type = Property.PropertyType;
 					return property_type;
 				}
@@ -987,7 +1008,7 @@ namespace Registrar {
 			public bool IsReadOnly {
 				get {
 					if (!is_read_only.HasValue)
-						is_read_only = Registrar.GetSetMethod (Property) == null;
+						is_read_only = Registrar.GetSetMethod (Property) is null;
 					return is_read_only.Value;
 				}
 				set {
@@ -1010,17 +1031,18 @@ namespace Registrar {
 
 			public override string FullName {
 				get {
-					return Registrar.GetTypeFullName (DeclaringType.Type) + "." + (Property != null ? Registrar.GetPropertyName (Property) : Name);
+					return Registrar.GetTypeFullName (DeclaringType.Type) + "." + (Property is not null ? Registrar.GetPropertyName (Property) : Name);
 				}
 			}
 		}
 
 		internal class ObjCField : ObjCMember {
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 			public int Size;
 			public byte Alignment;
 #else
 			public bool IsPrivate;
+			public TProperty Property;
 #endif
 			public string FieldType;
 			public bool IsProperty;
@@ -1042,11 +1064,11 @@ namespace Registrar {
 			}
 		}
 
-		protected virtual void OnRegisterType (ObjCType type) {}
+		protected virtual void OnRegisterType (ObjCType type) { }
 		protected virtual void OnSkipType (TType type, ObjCType registered_type) { }
-		protected virtual void OnReloadType (ObjCType type) {}
-		protected virtual void OnRegisterProtocol (ObjCType type) {}
-		protected virtual void OnRegisterCategory (ObjCType type, ref List<Exception> exceptions) {}
+		protected virtual void OnReloadType (ObjCType type) { }
+		protected virtual void OnRegisterProtocol (ObjCType type) { }
+		protected virtual void OnRegisterCategory (ObjCType type, ref List<Exception> exceptions) { }
 
 		protected virtual bool SkipRegisterAssembly (TAssembly assembly) { return false; }
 
@@ -1057,10 +1079,10 @@ namespace Registrar {
 
 		protected abstract bool ContainsPlatformReference (TAssembly assembly); // returns true if the assembly is monotouch.dll too.
 		protected abstract TType GetBaseType (TType type); // for generic parameters it returns the first specific class constraint.
-		protected abstract TType[] GetInterfaces (TType type); // may return interfaces from base classes as well. May return null if no interfaces found.
+		protected abstract TType [] GetInterfaces (TType type); // may return interfaces from base classes as well. May return null if no interfaces found.
 		protected virtual TType [] GetLinkedAwayInterfaces (TType type) { return null; } // may NOT return interfaces from base classes as well. May return null if no interfaces found.
 		protected abstract TMethod GetBaseMethod (TMethod method);
-		protected abstract TType[] GetParameters (TMethod method);
+		protected abstract TType [] GetParameters (TMethod method);
 		protected abstract string GetParameterName (TMethod method, int parameter_index);
 		protected abstract TMethod GetGetMethod (TProperty property);
 		protected abstract TMethod GetSetMethod (TProperty property);
@@ -1071,9 +1093,9 @@ namespace Registrar {
 		protected abstract bool IsStatic (TField field);
 		protected abstract bool IsStatic (TMethod method);
 		protected abstract TType MakeByRef (TType type);
-		protected abstract bool HasThisAttribute (TMethod method);
+		public abstract bool HasThisAttribute (TMethod method);
 		protected abstract bool IsConstructor (TMethod method);
-		protected abstract TType GetElementType (TType type);
+		public abstract TType GetElementType (TType type);
 		protected abstract TType GetReturnType (TMethod method);
 		protected abstract void GetNamespaceAndName (TType type, out string @namespace, out string name);
 		protected abstract bool TryGetAttribute (TType type, string attributeNamespace, string attributeType, out object attribute);
@@ -1081,38 +1103,39 @@ namespace Registrar {
 		protected abstract ExportAttribute GetExportAttribute (TMethod method); // Return null if no attribute is found. Must check the base method (i.e. if method is overriding a method in a base class, must check the overridden method for the attribute).
 		protected abstract Dictionary<TMethod, List<TMethod>> PrepareMethodMapping (TType type);
 		public abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
-		protected abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
+		public abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
 		public abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TType type); // Return null if no attributes found. Do not consider base types.
-		protected abstract List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TType obj); // must only return attributes for the current platform.
+		protected virtual Version GetSdkIntroducedVersion (TType obj, out string message) { message = null; return null; } // returns the sdk version when the type was introduced for the current platform (null if all supported versions)
 		protected abstract Version GetSDKVersion ();
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
-		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
-		protected abstract BindAsAttribute GetBindAsAttribute (TProperty property);
+		public abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
+		public abstract BindAsAttribute GetBindAsAttribute (TProperty property);
 		protected abstract IList<AdoptsAttribute> GetAdoptsAttributes (TType type);
 		public abstract TType GetNullableType (TType type); // For T? returns T. For T returns null.
-		protected abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
+		public abstract bool HasReleaseAttribute (TMethod method); // Returns true of the method's return type/value has a [Release] attribute.
 		protected abstract bool IsINativeObject (TType type);
 		protected abstract bool IsValueType (TType type);
-		protected abstract bool IsArray (TType type, out int rank);
+		public abstract bool IsArray (TType type, out int rank);
 		protected abstract bool IsEnum (TType type, out bool isNativeEnum);
-		protected abstract bool IsNullable (TType type);
+		public abstract bool IsNullable (TType type);
 		protected abstract bool IsDelegate (TType type);
 		protected abstract bool IsGenericType (TType type);
 		protected abstract bool IsGenericMethod (TMethod method);
 		protected abstract bool IsInterface (TType type);
 		protected abstract bool IsAbstract (TType type);
+		protected abstract bool IsPointer (TType type);
 		protected abstract TType GetGenericTypeDefinition (TType type);
-		protected abstract bool VerifyIsConstrainedToNSObject (TType type, out TType constrained_type);
+		public abstract bool VerifyIsConstrainedToNSObject (TType type, out TType constrained_type);
 		protected abstract TType GetEnumUnderlyingType (TType type);
 		protected abstract IEnumerable<TField> GetFields (TType type); // Must return all instance fields. May return static fields (they are filtered out automatically).
 		protected abstract TType GetFieldType (TField field);
 		protected abstract int GetValueTypeSize (TType type);
-		protected abstract bool IsCorlibType (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
-		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object[] args);
+		protected abstract bool IsARM64 { get; }
+		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object [] args);
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
 		public abstract TType FindType (TType relative, string @namespace, string name);
@@ -1136,7 +1159,33 @@ namespace Registrar {
 		{
 		}
 
-		protected bool IsArray (TType type)
+		public static bool IsPropertyAccessor (TMethod method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			var name = method.Name;
+			if (!name.StartsWith ("get_", StringComparison.Ordinal) && !name.StartsWith ("set_", StringComparison.Ordinal))
+				return false;
+
+			return true;
+		}
+
+		public bool IsPropertyAccessor (TMethod method, out TProperty property)
+		{
+			property = null;
+
+			if (!IsPropertyAccessor (method))
+				return false;
+
+			property = FindProperty (method.DeclaringType, method.Name.Substring (4));
+			return property is not null;
+		}
+
+		public bool IsArray (TType type)
 		{
 			int rank;
 			return IsArray (type, out rank);
@@ -1151,18 +1200,18 @@ namespace Registrar {
 		public BindAsAttribute GetBindAsAttribute (ObjCMethod method, int parameter_index)
 		{
 			var attrib = GetBindAsAttribute (method.Method, parameter_index);
-			if (attrib != null) {
+			if (attrib is not null) {
 				var type = parameter_index == -1 ? GetReturnType (method.Method) : GetParameters (method.Method) [parameter_index];
 				if (parameter_index == -1) {
 					var returnType = GetReturnType (method.Method);
 					if (!AreEqual (returnType, attrib.Type))
-						throw CreateException (4171, method.Method, $"The BindAs attribute on the return value of the method {method.DescriptiveMethodName} is invalid: the BindAs type {GetTypeFullName (attrib.Type)} is different from the return type {GetTypeFullName (returnType)}.");
+						throw CreateException (4171, method.Method, Errors.MT4171, method.DescriptiveMethodName, GetTypeFullName (attrib.Type), GetTypeFullName (returnType));
 				} else {
 					var parameterType = GetParameters (method.Method) [parameter_index];
 					if (IsByRef (parameterType))
 						parameterType = GetElementType (parameterType);
 					if (!AreEqual (parameterType, attrib.Type))
-						throw CreateException (4171, method.Method, $"The BindAs attribute on the parameter #{parameter_index + 1} is invalid: the BindAs type {GetTypeFullName (attrib.Type)} is different from the parameter type {GetTypeFullName (parameterType)}.");
+						throw CreateException (4171, method.Method, Errors.MT4171_A, parameter_index + 1, GetTypeFullName (attrib.Type), GetTypeFullName (parameterType));
 				}
 
 				return attrib;
@@ -1173,10 +1222,10 @@ namespace Registrar {
 
 			var property = FindProperty (method.DeclaringType.Type, method.MethodName.Substring (4));
 			attrib = GetBindAsAttribute (property);
-			if (attrib != null) {
+			if (attrib is not null) {
 				var propertyType = GetPropertyType (property);
 				if (!AreEqual (propertyType, attrib.Type))
-					throw CreateException (4171, property, $"The BindAs attribute on the property {GetTypeFullName (method.DeclaringType.Type)}.{GetPropertyName (property)} is invalid: the BindAs type {GetTypeFullName (attrib.Type)} is different from the property type {GetTypeFullName (propertyType)}.");
+					throw CreateException (4171, property, Errors.MT4171_B, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property), GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
 			}
 			return attrib;
 		}
@@ -1196,7 +1245,7 @@ namespace Registrar {
 				return false;
 
 			var extension = FindType (type, type.Namespace, type.Name + "Extensions");
-			if (extension == null)
+			if (extension is null)
 				return false;
 
 			var getConstantMethods = FindMethods (extension, "GetConstant");
@@ -1211,7 +1260,7 @@ namespace Registrar {
 				getConstantMethod = m;
 				break;
 			}
-			if (getConstantMethod == null)
+			if (getConstantMethod is null)
 				return false;
 
 			var getValueMethods = FindMethods (extension, "GetValue");
@@ -1226,7 +1275,7 @@ namespace Registrar {
 				getValueMethod = m;
 				break;
 			}
-			if (getValueMethod == null)
+			if (getValueMethod is null)
 				return false;
 
 			return true;
@@ -1235,15 +1284,15 @@ namespace Registrar {
 		protected string GetMemberName (ObjCMember member)
 		{
 			var method = member as ObjCMethod;
-			if (method != null) {
-				if (method.Method != null)
+			if (method is not null) {
+				if (method.Method is not null)
 					return GetMethodName (method.Method);
 				return method.MethodName ?? "<implicit>";
 			}
 			var property = member as ObjCProperty;
-			if (property != null)
+			if (property is not null)
 				return GetPropertyName (property.Property);
-			return ((ObjCField)member).Name;
+			return ((ObjCField) member).Name;
 		}
 
 		internal static string Foundation {
@@ -1264,7 +1313,7 @@ namespace Registrar {
 			}
 		}
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 		internal static string AppKit {
 			get {
 				return "AppKit";
@@ -1272,47 +1321,70 @@ namespace Registrar {
 		}
 #endif
 
-#if MONOMAC
-		internal const string AssemblyName = "Xamarin.Mac";
-#else
-#if MTOUCH
-		internal string AssemblyName
-		{
+#if MTOUCH || MMP || BUNDLER
+		internal string AssemblyName {
 			get {
 				switch (App.Platform) {
-				case Xamarin.Utils.ApplePlatform.iOS:
-					return "Xamarin.iOS";
-				case Xamarin.Utils.ApplePlatform.WatchOS:
-					return "Xamarin.WatchOS";
-				case Xamarin.Utils.ApplePlatform.TVOS:
-					return "Xamarin.TVOS";
+				case ApplePlatform.iOS:
+					return Driver.IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
+				case ApplePlatform.WatchOS:
+					return Driver.IsDotNet ? "Microsoft.watchOS" : "Xamarin.WatchOS";
+				case ApplePlatform.TVOS:
+					return Driver.IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
+				case ApplePlatform.MacOSX:
+					return Driver.IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
+				case ApplePlatform.MacCatalyst:
+					return Driver.IsDotNet ? "Microsoft.MacCatalyst" : "Xamarin.MacCatalyst";
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case.", App.Platform);
+					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 			}
 		}
+#elif MONOMAC
+#if NET
+		internal const string AssemblyName = "Microsoft.macOS";
+#else
+		internal const string AssemblyName = "Xamarin.Mac";
+#endif
 #elif WATCH
+#if NET
+		internal const string AssemblyName = "Microsoft.watchOS";
+#else
 		internal const string AssemblyName = "Xamarin.WatchOS";
+#endif
 #elif TVOS
+#if NET
+		internal const string AssemblyName = "Microsoft.tvOS";
+#else
 		internal const string AssemblyName = "Xamarin.TVOS";
+#endif
+#elif __MACCATALYST__
+#if NET
+		internal const string AssemblyName = "Microsoft.MacCatalyst";
+#else
+		internal const string AssemblyName = "Xamarin.MacCatalyst";
+#endif
 #elif IOS
+#if NET
+		internal const string AssemblyName = "Microsoft.iOS";
+#else
 		internal const string AssemblyName = "Xamarin.iOS";
+#endif
 #else
 #error Unknown platform
 #endif
-#endif
 		internal static class StringConstants {
-				internal const string ExportAttribute         =	"ExportAttribute";
-				internal const string ModelAttribute          =	"ModelAttribute";
-				internal const string RegisterAttribute       =	"RegisterAttribute";
-				internal const string ConnectAttribute        =	"ConnectAttribute";
-				internal const string ProtocolAttribute       =	"ProtocolAttribute";
-				internal const string ProtocolMemberAttribute = "ProtocolMemberAttribute";
-				internal const string TransientAttribute      =   "TransientAttribute";
-				internal const string ReleaseAttribute        =	"ReleaseAttribute";
-				internal const string NativeAttribute         =   "NativeAttribute";
-				internal const string CategoryAttribute       =   "CategoryAttribute";
-				internal const string INativeObject           =	"INativeObject";
+			internal const string ExportAttribute = "ExportAttribute";
+			internal const string ModelAttribute = "ModelAttribute";
+			internal const string RegisterAttribute = "RegisterAttribute";
+			internal const string ConnectAttribute = "ConnectAttribute";
+			internal const string ProtocolAttribute = "ProtocolAttribute";
+			internal const string ProtocolMemberAttribute = "ProtocolMemberAttribute";
+			internal const string TransientAttribute = "TransientAttribute";
+			internal const string ReleaseAttribute = "ReleaseAttribute";
+			internal const string NativeAttribute = "NativeAttribute";
+			internal const string CategoryAttribute = "CategoryAttribute";
+			internal const string INativeObject = "INativeObject";
 		}
 
 		public string PlatformAssembly {
@@ -1321,24 +1393,24 @@ namespace Registrar {
 			}
 		}
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		// "#if MTOUCH" code does not need locking when accessing 'types', because mtouch is single-threaded.
 		public Dictionary<TType, ObjCType> Types {
 			get { return types; }
 		}
 #endif
 
-		protected Exception CreateException (int code, string message, params object[] args)
+		protected Exception CreateException (int code, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, message, args);
 		}
 
-		protected Exception CreateException (int code, TMethod method, string message, params object[] args)
+		protected Exception CreateException (int code, TMethod method, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, method, message, args);
 		}
 
-		protected Exception CreateException (int code, TProperty property, string message, params object[] args)
+		protected Exception CreateException (int code, TProperty property, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, property, message, args);
 		}
@@ -1348,7 +1420,7 @@ namespace Registrar {
 			return CreateExceptionImpl (code, true, type, message, args);
 		}
 
-		protected Exception CreateException (int code, Exception innerException, TProperty property, string message, params object[] args)
+		protected Exception CreateException (int code, Exception innerException, TProperty property, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, innerException, property, message, args);
 		}
@@ -1375,10 +1447,10 @@ namespace Registrar {
 
 		Exception CreateExceptionImpl (int code, bool error, Exception innerException, TProperty property, string message, params object [] args)
 		{
-			if (property == null)
+			if (property is null)
 				return CreateExceptionImpl (code, error, innerException, (TMethod) null, message, args);
 			var getter = GetGetMethod (property);
-			if (getter != null)
+			if (getter is not null)
 				return CreateExceptionImpl (code, error, innerException, getter, message, args);
 			return CreateExceptionImpl (code, error, innerException, GetSetMethod (property), message, args);
 		}
@@ -1388,13 +1460,13 @@ namespace Registrar {
 			return CreateExceptionImpl (code, true, member, message, args);
 		}
 
-		Exception CreateExceptionImpl (int code, bool error, ObjCMember member, string message, params object[] args)
+		Exception CreateExceptionImpl (int code, bool error, ObjCMember member, string message, params object [] args)
 		{
 			var method = member as ObjCMethod;
-			if (method != null)
+			if (method is not null)
 				return CreateExceptionImpl (code, error, method.Method, message, args);
 			var property = member as ObjCProperty;
-			if (property != null)
+			if (property is not null)
 				return CreateExceptionImpl (code, error, property.Property, message, args);
 			return CreateExceptionImpl (code, error, message, args);
 		}
@@ -1406,15 +1478,15 @@ namespace Registrar {
 
 		protected string GetDescriptiveMethodName (TMethod method)
 		{
-			if (method == null)
+			if (method is null)
 				return string.Empty;
-			
+
 			var sb = new StringBuilder ();
 
 			sb.Append (GetMethodName (method));
 			sb.Append ("(");
 			var pars = GetParameters (method);
-			if (pars != null && pars.Length > 0) {
+			if (pars is not null && pars.Length > 0) {
 				for (int i = 0; i < pars.Length; i++) {
 					if (i > 0)
 						sb.Append (",");
@@ -1442,7 +1514,7 @@ namespace Registrar {
 				return true;
 
 			var baseType = GetBaseType (type);
-			if (baseType != null)
+			if (baseType is not null)
 				return IsNSObject (baseType);
 
 			return false;
@@ -1467,7 +1539,7 @@ namespace Registrar {
 			object dummy;
 			return TryGetAttribute (type, Foundation, StringConstants.ModelAttribute, out dummy);
 		}
-		
+
 		// overridable so that descendant classes can provide a faster implementation
 		// do not check base types.
 		public virtual bool HasProtocolAttribute (TType type)
@@ -1489,7 +1561,7 @@ namespace Registrar {
 				rv = RegisterTypeUnsafe (type, ref exceptions);
 			}
 
-			if (exceptions != null && exceptions.Count > 0)
+			if (exceptions is not null && exceptions.Count > 0)
 				throw new AggregateException (exceptions);
 
 			return rv;
@@ -1507,18 +1579,17 @@ namespace Registrar {
 			if (!IsGenericMethod (method))
 				return true;
 
-			AddException (ref exceptions, CreateException (4113, method, 
-				"The registrar found a generic method: '{0}'. Exporting generic methods is not supported, and will lead to random behavior and/or crashes", 
+			AddException (ref exceptions, CreateException (4113, method, Errors.MT4113,
 				GetDescriptiveMethodName (declaringType, method)));
 			return false;
 		}
 
 		void VerifyInSdk (ref List<Exception> exceptions, ObjCMethod method)
 		{
-			if (method.HasReturnType || (method.Method != null && !method.IsConstructor && method.NativeReturnType != null))
+			if (method.HasReturnType || (method.Method is not null && !method.IsConstructor && method.NativeReturnType is not null))
 				VerifyTypeInSDK (ref exceptions, method.NativeReturnType, returnTypeOf: method);
 
-			if (method.HasParameters || (method.Method != null && method.Parameters != null)) {
+			if (method.HasParameters || (method.Method is not null && method.Parameters is not null)) {
 				foreach (var p in method.Parameters)
 					VerifyTypeInSDK (ref exceptions, p, parameterIn: method);
 			}
@@ -1531,75 +1602,66 @@ namespace Registrar {
 
 		void VerifyTypeInSDK (ref List<Exception> exceptions, TType type, ObjCMethod parameterIn = null, ObjCMethod returnTypeOf = null, ObjCProperty propertyTypeOf = null, TType baseTypeOf = null)
 		{
-			var attribs = GetAvailabilityAttributes (type);
-			if (attribs == null || attribs.Count == 0)
+			var sdkVersion = GetSdkIntroducedVersion (type, out var message);
+			if (sdkVersion is null)
 				return;
 
 			Version sdk = GetSDKVersion ();
-			foreach (var attrib in attribs) {
-				// The attributes are already filtered to the current platform.
-				switch (attrib.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					if (attrib.Version <= sdk)
-						break;
+			if (sdkVersion <= sdk)
+				return;
 
-					string msg = "The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).";
-					string zero = GetTypeFullName (type);
-					string one = string.Empty;
-					string two = string.Empty;
-					string three = PlatformName;
-					string four = sdk.ToString ();
-					string five = attrib.Version.ToString ();
-					string six = string.IsNullOrEmpty (attrib.Message) ? "." : ": '" + attrib.Message + "'.";
-					if (baseTypeOf != null) {
-						one = "a base type of";
-						two = GetTypeFullName (baseTypeOf);
-					} else if (parameterIn != null) {
-						one = "a parameter in";
-						two = parameterIn.DescriptiveMethodName;
-					} else if (returnTypeOf != null) {
-						one = "a return type in";
-						two = returnTypeOf.DescriptiveMethodName;
-					} else if (propertyTypeOf != null) {
-						one = "the property type of";
-						two = propertyTypeOf.FullName;
-					} else {
-						msg = "The type '{0}' is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer {3} SDK (usually done by using the most recent version of Xcode).";
-					}
-
-					msg = string.Format (msg, zero, one, two, three, four, five, six);
-
-					Exception ex;
-
-					if (baseTypeOf != null) {
-						ex = CreateException (4162, baseTypeOf, msg);
-					} else if (parameterIn != null) {
-						ex = CreateException (4162, parameterIn, msg);
-					} else if (returnTypeOf != null) {
-						ex = CreateException (4162, returnTypeOf, msg);
-					} else if (propertyTypeOf != null) {
-						ex = CreateException (4162, propertyTypeOf, msg);
-					} else {
-						ex = CreateException (4162, msg);
-					}
-
-					AddException (ref exceptions, ex);
-
-					break;
-				}
+			string msg;
+			string zero = GetTypeFullName (type);
+			string one = string.Empty;
+			string two = PlatformName;
+			string three = sdk.ToString ();
+			string four = sdkVersion.ToString ();
+			string five = string.IsNullOrEmpty (message) ? "." : ": '" + message + "'.";
+			if (baseTypeOf is not null) {
+				msg = Errors.MT4162_BaseType;
+				one = GetTypeFullName (baseTypeOf);
+			} else if (parameterIn is not null) {
+				msg = Errors.MT4162_Parameter;
+				one = parameterIn.DescriptiveMethodName;
+			} else if (returnTypeOf is not null) {
+				msg = Errors.MT4162_ReturnType;
+				one = returnTypeOf.DescriptiveMethodName;
+			} else if (propertyTypeOf is not null) {
+				msg = Errors.MT4162_PropertyType;
+				one = propertyTypeOf.FullName;
+			} else {
+				msg = Errors.MT4162_A;
 			}
+
+			msg = string.Format (msg, zero, one, two, three, four, five);
+
+			Exception ex;
+
+			if (baseTypeOf is not null) {
+				ex = CreateException (4162, baseTypeOf, msg);
+			} else if (parameterIn is not null) {
+				ex = CreateException (4162, parameterIn, msg);
+			} else if (returnTypeOf is not null) {
+				ex = CreateException (4162, returnTypeOf, msg);
+			} else if (propertyTypeOf is not null) {
+				ex = CreateException (4162, propertyTypeOf, msg);
+			} else {
+				ex = CreateException (4162, msg);
+			}
+
+			AddException (ref exceptions, ex);
 		}
 
 		protected static void AddException (ref List<Exception> exceptions, Exception mex)
 		{
-			if (exceptions == null)
+			if (exceptions is null)
 				exceptions = new List<Exception> ();
 			exceptions.Add (mex);
 		}
 
 		bool IsSubClassOf (TType type, string @namespace, string name)
 		{
-			while ((type = GetBaseType (type)) != null) {
+			while ((type = GetBaseType (type)) is not null) {
 				string ns, n;
 				GetNamespaceAndName (type, out ns, out n);
 				if (ns == @namespace && n == name)
@@ -1614,35 +1676,35 @@ namespace Registrar {
 			TType constrained_type = null;
 
 			if (!VerifyIsConstrainedToNSObject (method.ReturnType, out constrained_type)) {
-				AddException (ref exceptions, CreateException (4129, method.Method, "The registrar found an invalid generic return type '{0}' in the method '{1}'. The generic return type must have an 'NSObject' constraint.", GetTypeFullName (method.ReturnType), GetDescriptiveMethodName (type, method.Method)));
+				AddException (ref exceptions, CreateException (4129, method.Method, Errors.MT4129, GetTypeFullName (method.ReturnType), GetDescriptiveMethodName (type, method.Method)));
 				return false;
 			}
-			if (constrained_type != null)
+			if (constrained_type is not null)
 				method.ReturnType = constrained_type;
 
 			var pars = method.Parameters;
-			if (pars == null)
+			if (pars is null)
 				return true;
 
 			List<TType> types = null;
 			for (int i = 0; i < pars.Length; i++) {
 				var p = pars [i];
 				if (!VerifyIsConstrainedToNSObject (p, out constrained_type)) {
-					AddException (ref exceptions, CreateException (4128, method.Method, "The registrar found an invalid generic parameter type '{0}' in the parameter {2} of the method '{1}'. The generic parameter must have an 'NSObject' constraint.", GetTypeFullName (p), GetDescriptiveMethodName (type, method.Method), GetParameterName (method.Method, i)));
+					AddException (ref exceptions, CreateException (4128, method.Method, Errors.MT4128, GetTypeFullName (p), GetDescriptiveMethodName (type, method.Method), GetParameterName (method.Method, i)));
 					return false;
 				}
-				if (constrained_type != null) {
-					if (types == null) {
+				if (constrained_type is not null) {
+					if (types is null) {
 						types = new List<TType> ();
 						for (int j = 0; j < i; j++)
 							types.Add (pars [j]);
 					}
 					types.Add (constrained_type);
-				} else if (types != null) {
+				} else if (types is not null) {
 					types.Add (p);
 				}
 			}
-			if (types != null)
+			if (types is not null)
 				method.Parameters = types.ToArray ();
 
 			return true;
@@ -1662,16 +1724,16 @@ namespace Registrar {
 
 			for (int i = 0; i < ifaces.Length; i++) {
 				var iface = ifaces [i];
-				if (iface == null)
+				if (iface is null)
 					continue;
 				var ii = GetInterfaces (iface);
-				if (ii == null)
+				if (ii is null)
 					continue;
 				for (int j = 0; j < ii.Length; j++) {
 					for (int k = 0; k < ifaces.Length; k++) {
 						if (k == i)
 							continue;
-						if (ifaces [k] == null)
+						if (ifaces [k] is null)
 							continue;
 						if (ifaces [k] == ii [j])
 							ifaces [k] = null;
@@ -1692,16 +1754,16 @@ namespace Registrar {
 
 			var type = objcType.Type;
 			var allI = GetInterfaces (type);
-			if (allI == null || allI.Length == 0)
+			if (allI is null || allI.Length == 0)
 				return allI;
 			FlattenInterfaces (allI);
 
 			var baseType = objcType.SuperType;
-			if (baseType == null || baseType.Type == null)
+			if (baseType is null || baseType.Type is null)
 				return allI;
-				
+
 			var baseI = GetInterfaces (baseType.Type);
-			if (baseI == null || baseI.Length == 0)
+			if (baseI is null || baseI.Length == 0)
 				return allI;
 			FlattenInterfaces (baseI);
 
@@ -1724,13 +1786,13 @@ namespace Registrar {
 				var ifaceList = new List<TType> (interfaces);
 				protocolList = new List<ObjCType> (interfaces.Length);
 				for (int i = 0; i < ifaceList.Count; i++) {
-					if (ifaceList [i] == null)
+					if (ifaceList [i] is null)
 						continue;
 					var baseP = RegisterTypeUnsafe (ifaceList [i], ref exceptions);
-					if (baseP != null) {
+					if (baseP is not null) {
 						if (baseP.IsInformalProtocol) {
 							var ifaces = GetInterfacesImpl (baseP);
-							if (ifaces != null)
+							if (ifaces is not null)
 								ifaceList.AddRange (ifaces);
 						} else {
 							protocolList.Add (baseP);
@@ -1744,26 +1806,26 @@ namespace Registrar {
 			var laifaces = GetLinkedAwayInterfaces (type.Type);
 			var baseType = type.BaseType;
 
-			if (laifaces != null)
+			if (laifaces is not null)
 				linkedAwayInterfaces.AddRange (laifaces);
 
 			while (baseType?.IsModel == true) {
 				laifaces = GetLinkedAwayInterfaces (baseType.Type);
-				if (laifaces != null)
+				if (laifaces is not null)
 					linkedAwayInterfaces.AddRange (laifaces);
 				baseType = baseType.BaseType;
 			}
 			if (linkedAwayInterfaces.Count > 0) {
-				if (protocolList == null)
+				if (protocolList is null)
 					protocolList = new List<ObjCType> ();
 				for (int i = 0; i < linkedAwayInterfaces.Count; i++) {
 					var iface = linkedAwayInterfaces [i];
 					var proto = GetProtocolAttribute (iface);
-					if (proto == null)
+					if (proto is null)
 						continue;
 					if (proto.IsInformal) {
 						laifaces = GetLinkedAwayInterfaces (iface);
-						if (laifaces != null)
+						if (laifaces is not null)
 							linkedAwayInterfaces.AddRange (laifaces);
 						continue;
 					}
@@ -1776,15 +1838,15 @@ namespace Registrar {
 						Type = iface,
 						IsProtocol = true,
 					};
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 					objcType.ProtocolWrapperType = GetProtocolAttributeWrapperType (objcType.Type);
-					objcType.IsWrapper = objcType.ProtocolWrapperType != null;
+					objcType.IsWrapper = objcType.ProtocolWrapperType is not null;
 #endif
 
 					protocolList.Add (objcType);
 				}
 			}
-			if (protocolList == null || protocolList.Count == 0)
+			if (protocolList is null || protocolList.Count == 0)
 				return null;
 			return protocolList.ToArray ();
 		}
@@ -1792,7 +1854,7 @@ namespace Registrar {
 		string [] GetAdoptedProtocols (ObjCType type)
 		{
 			var attribs = GetAdoptsAttributes (type.Type);
-			if (attribs == null || attribs.Count == 0)
+			if (attribs is null || attribs.Count == 0)
 				return null;
 			var rv = new string [attribs.Count];
 			for (var i = 0; i < attribs.Count; i++)
@@ -1803,23 +1865,23 @@ namespace Registrar {
 		ObjCType RegisterCategory (TType type, CategoryAttribute attrib, ref List<Exception> exceptions)
 		{
 			if (IsINativeObject (type)) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4152, "Cannot register the type '{0}' as a category because it implements INativeObject or subclasses NSObject.", GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4152, Errors.MT4152, GetTypeFullName (type)));
 				return null;
 			}
 
 			if (IsGenericType (type)) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4153, "Cannot register the type '{0}' as a category because it's generic.", GetTypeFullName (type)));
+				AddException (ref exceptions, ErrorHelper.CreateError (4153, Errors.MT4153, GetTypeFullName (type)));
 				return null;
 			}
 
-			if (attrib.Type == null) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4151, "Cannot register the type '{0}' because the Type property in its Category attribute isn't set.", GetTypeFullName (type)));
+			if (attrib.Type is null) {
+				AddException (ref exceptions, ErrorHelper.CreateError (4151, Errors.MT4151, GetTypeFullName (type)));
 				return null;
 			}
 
 			var declaringType = RegisterType (attrib.Type, ref exceptions);
-			if (declaringType == null) {
-				AddException (ref exceptions, ErrorHelper.CreateError (4150, "Cannot register the type '{0}' because the category type '{1}' in its Category attribute does not inherit from NSObject.", GetTypeFullName (type), GetTypeFullName (attrib.Type)));
+			if (declaringType is null) {
+				AddException (ref exceptions, ErrorHelper.CreateError (4150, Errors.MT4150, GetTypeFullName (type), GetTypeFullName (attrib.Type)));
 				return null;
 			}
 
@@ -1833,7 +1895,7 @@ namespace Registrar {
 			lock (categories_map) {
 				TType previous_type;
 				if (categories_map.TryGetValue (objcType.CategoryName, out previous_type)) {
-					AddException (ref exceptions, ErrorHelper.CreateError (4156, "Cannot register two categories ('{0}' and '{1}') with the same native name ('{2}')",
+					AddException (ref exceptions, ErrorHelper.CreateError (4156, Errors.MT4156,
 						GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.CategoryName));
 					return null;
 				}
@@ -1846,45 +1908,44 @@ namespace Registrar {
 
 			foreach (var ctor in CollectConstructors (type)) {
 				var ea = GetExportAttribute (ctor);
-				if (ea == null)
+				if (ea is null)
 					continue;
 
-				AddException (ref exceptions, CreateException (4158, ctor, "Cannot register the constructor {0}.{1} in the category {0} because constructors in categories are not supported.", GetTypeFullName (type), GetDescriptiveMethodName (ctor)));
+				AddException (ref exceptions, CreateException (4158, ctor, Errors.MT4158, GetTypeFullName (type), GetDescriptiveMethodName (ctor)));
 			}
 
 			foreach (var method in CollectMethods (type)) {
 				var ea = GetExportAttribute (method);
 
-				if (ea == null)
+				if (ea is null)
 					continue;
-					
+
 				if (!IsStatic (method)) {
-					AddException (ref exceptions, CreateException (4159, method, "Cannot register the method '{0}.{1}' as a category method because category methods must be static.", GetTypeFullName (type), GetMethodName (method)));
+					AddException (ref exceptions, CreateException (4159, method, Errors.MT4159, GetTypeFullName (type), GetMethodName (method)));
 					return null;
 				}
 
 				if (HasThisAttribute (method)) {
 					var parameters = GetParameters (method);
-					if (parameters == null || parameters.Length == 0) {
-						AddException (ref exceptions, CreateException (4157, method, "Cannot register the category method '{0}.{1}' because at least one parameter is required for extension methods (and its type must match the category type '{2}').",
+					if (parameters is null || parameters.Length == 0) {
+						AddException (ref exceptions, CreateException (4157, method, Errors.MT4157,
 							GetTypeFullName (type), GetMethodName (method), GetTypeFullName (declaringType.Type)));
 						continue;
 					} else if (GetTypeFullName (parameters [0]) != GetTypeFullName (declaringType.Type)) {
-						AddException (ref exceptions, CreateException (4149, method, "Cannot register the extension method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').",
+						AddException (ref exceptions, CreateException (4149, method, Errors.MT4149,
 							GetTypeFullName (type), GetMethodName (method), GetTypeFullName (parameters [0]), GetTypeFullName (declaringType.Type)));
 						continue;
 					}
 				}
 
 				if (IsGenericMethod (method)) {
-					AddException (ref exceptions, CreateException (4154, method, "Cannot register the method '{0}.{1}' as a category method because it's generic.", GetTypeFullName (type), GetMethodName (method)));
+					AddException (ref exceptions, CreateException (4154, method, Errors.MT4154, GetTypeFullName (type), GetMethodName (method)));
 					continue;
 				}
 
 				Trace ("        [METHOD] {0} => {1}", method, ea.Selector);
 
-				var category_method = new ObjCMethod (this, declaringType, method)
-				{
+				var category_method = new ObjCMethod (this, declaringType, method) {
 					CategoryType = objcType,
 				};
 				if (category_method.SetExportAttribute (ea, ref exceptions)) {
@@ -1898,18 +1959,6 @@ namespace Registrar {
 			OnRegisterCategory (objcType, ref exceptions);
 
 			return objcType;
-		}
-			
-		protected bool SupportsModernObjectiveC {
-			get {
-#if MTOUCH || MONOTOUCH
-				return true;
-#elif MMP
-				return App.Is64Build;
-#elif MONOMAC
-				return IntPtr.Size == 8;
-#endif
-			}
 		}
 
 		// This method is not thread-safe wrt 'types', and must be called with
@@ -1932,7 +1981,7 @@ namespace Registrar {
 			}
 
 			var categoryAttribute = GetCategoryAttribute (type);
-			if (categoryAttribute != null)
+			if (categoryAttribute is not null)
 				return RegisterCategory (type, categoryAttribute, ref exceptions);
 
 			if (!IsNSObject (type)) {
@@ -1944,7 +1993,7 @@ namespace Registrar {
 					return null;
 
 				if (isGenericType) {
-					exceptions.Add (ErrorHelper.CreateError (4148, "The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.", GetTypeFullName (type)));
+					exceptions.Add (ErrorHelper.CreateError (4148, Errors.MT4148, GetTypeFullName (type)));
 					return null;
 				}
 
@@ -1953,8 +2002,8 @@ namespace Registrar {
 				isInformalProtocol = pAttr.IsInformal;
 				isProtocol = true;
 
-#if MMP || MTOUCH
-				if (pAttr.FormalSinceVersion != null && pAttr.FormalSinceVersion > App.SdkVersion)
+#if MMP || MTOUCH || BUNDLER
+				if (pAttr.FormalSinceVersion is not null && pAttr.FormalSinceVersion > App.SdkVersion)
 					isInformalProtocol = !isInformalProtocol;
 #endif
 			}
@@ -1962,13 +2011,13 @@ namespace Registrar {
 			// make sure the base type is already registered
 			var baseType = GetBaseType (type);
 			ObjCType baseObjCType = null;
-			if (baseType != null) {
+			if (baseType is not null) {
 				Trace ("Registering base type {0} of {1}", GetTypeName (baseType), GetTypeName (type));
 				baseObjCType = RegisterTypeUnsafe (baseType, ref exceptions);
 			}
 
 			var register_attribute = GetRegisterAttribute (type);
-			if (register_attribute != null && register_attribute.SkipRegistration) {
+			if (register_attribute is not null && register_attribute.SkipRegistration) {
 				OnSkipType (type, baseObjCType);
 				return baseObjCType;
 			}
@@ -1987,21 +2036,21 @@ namespace Registrar {
 			objcType.VerifyAdoptedProtocolsNames (ref exceptions);
 			objcType.BaseType = isProtocol ? null : (baseObjCType ?? objcType);
 			objcType.Protocols = GetProtocols (objcType, ref exceptions);
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 			objcType.ProtocolWrapperType = (isProtocol && !isInformalProtocol) ? GetProtocolAttributeWrapperType (objcType.Type) : null;
 #endif
-			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) != null) : (objcType.RegisterAttribute != null && objcType.RegisterAttribute.IsWrapper);
+			objcType.IsWrapper = (isProtocol && !isInformalProtocol) ? (GetProtocolAttributeWrapperType (objcType.Type) is not null) : (objcType.RegisterAttribute is not null && objcType.RegisterAttribute.IsWrapper);
 
-			if (!objcType.IsWrapper && objcType.BaseType != null)
+			if (!objcType.IsWrapper && objcType.BaseType is not null)
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
 
 			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
-				AddException (ref exceptions, ErrorHelper.CreateError (4168, $"Cannot register the type '{GetTypeFullName (type)}' because its Objective-C name '{objcType.ExportedName}' is an Objective-C keyword. Please use a different name."));
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, Errors.MT4168, GetTypeFullName (type), objcType.ExportedName));
 
 			// make sure all the protocols this type implements are registered
-			if (objcType.Protocols != null) {
+			if (objcType.Protocols is not null) {
 				foreach (var p in objcType.Protocols) {
-					Trace ("Registering implemented protocol {0} of {1}", p == null ? "null" : p.ProtocolName, GetTypeName (type));
+					Trace ("Registering implemented protocol {0} of {1}", p is null ? "null" : p.ProtocolName, GetTypeName (type));
 					OnRegisterProtocol (p);
 				}
 			}
@@ -2010,22 +2059,22 @@ namespace Registrar {
 			if (objcType.IsProtocol) {
 				lock (protocol_map) {
 					if (protocol_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError (4126, "Cannot register two managed protocols ('{0}' and '{1}') with the same native name ('{2}').",
+						throw ErrorHelper.CreateError (4126, Errors.MT4126,
 							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					protocol_map.Add (objcType.ExportedName, type);
 				}
 			} else {
 				lock (type_map) {
 					if (type_map.TryGetValue (objcType.ExportedName, out previous_type))
-						throw ErrorHelper.CreateError (4118, "Cannot register two managed types ('{0}' and '{1}') with the same native name ('{2}').",
+						throw ErrorHelper.CreateError (4118, Errors.MT4118,
 							GetAssemblyQualifiedName (type), GetAssemblyQualifiedName (previous_type), objcType.ExportedName);
 					type_map.Add (objcType.ExportedName, type);
 				}
 			}
-		
+
 			types.Add (type, objcType);
-			
-			Trace ("    [TYPE] Registering {0} => {1} IsWrapper: {2} BaseType: {3} IsModel: {4} IsProtocol: {5}", type.ToString ().Replace ('+', '/'), objcType.ExportedName, objcType.IsWrapper, objcType.BaseType == null ? "null" : objcType.BaseType.Name, objcType.IsModel, objcType.IsProtocol);
+
+			Trace ("    [TYPE] Registering {0} => {1} IsWrapper: {2} BaseType: {3} IsModel: {4} IsProtocol: {5}", type.ToString ().Replace ('+', '/'), objcType.ExportedName, objcType.IsWrapper, objcType.BaseType is null ? "null" : objcType.BaseType.Name, objcType.IsModel, objcType.IsProtocol);
 
 			// Special methods
 			bool is_first_nonWrapper = false;
@@ -2058,15 +2107,29 @@ namespace Registrar {
 					}, ref exceptions);
 
 					objcType.Add (new ObjCMethod (this, objcType, null) {
-						Selector = "xamarinSetGCHandle:",
+						Selector = "xamarinSetGCHandle:flags:",
 						Trampoline = Trampoline.SetGCHandle,
+						Signature = "v@:^vi",
+						IsStatic = false,
+					}, ref exceptions);
+
+					objcType.Add (new ObjCMethod (this, objcType, null) {
+						Selector = "xamarinGetFlags",
+						Trampoline = Trampoline.GetFlags,
+						Signature = "i@:",
+						IsStatic = false,
+					}, ref exceptions);
+
+					objcType.Add (new ObjCMethod (this, objcType, null) {
+						Selector = "xamarinSetFlags:",
+						Trampoline = Trampoline.SetFlags,
 						Signature = "v@:i",
 						IsStatic = false,
 					}, ref exceptions);
 				}
 
 				// Find conform_to_protocol
-				if (conforms_to_protocol == null && Is (type, Foundation, "NSObject")) {
+				if (conforms_to_protocol is null && Is (type, Foundation, "NSObject")) {
 					foreach (var method in methods) {
 						switch (GetMethodName (method)) {
 						case "InvokeConformsToProtocol":
@@ -2077,23 +2140,23 @@ namespace Registrar {
 							break;
 						}
 
-						if (invoke_conforms_to_protocol != null && conforms_to_protocol != null)
+						if (invoke_conforms_to_protocol is not null && conforms_to_protocol is not null)
 							break;
 					}
 				}
 
-#if MMP || MTOUCH
+#if MMP || MTOUCH || BUNDLER
 				// Special fields
 				if (is_first_nonWrapper) {
 					// static registrar
-						objcType.Add (new ObjCField () {
-							DeclaringType = objcType,
-							FieldType = "XamarinObject",// "^v", // void*
-							Name = "__monoObjectGCHandle",
-							IsPrivate = SupportsModernObjectiveC,
-							IsStatic = false,
-						}, ref exceptions);
-					}
+					objcType.Add (new ObjCField () {
+						DeclaringType = objcType,
+						FieldType = "XamarinObject",// "^v", // void*
+						Name = "__monoObjectGCHandle",
+						IsPrivate = true,
+						IsStatic = false,
+					}, ref exceptions);
+				}
 #endif
 			}
 
@@ -2109,7 +2172,7 @@ namespace Registrar {
 							var objcGetter = new ObjCMethod (this, objcType, null) {
 								Name = attrib.Name,
 								Selector = attrib.GetterSelector,
-								Parameters = new TType[] { },
+								Parameters = new TType [] { },
 								ReturnType = attrib.PropertyType,
 								IsStatic = attrib.IsStatic,
 								IsOptional = !attrib.IsRequired,
@@ -2122,7 +2185,7 @@ namespace Registrar {
 								var objcSetter = new ObjCMethod (this, objcType, null) {
 									Name = attrib.Name,
 									Selector = attrib.SetterSelector,
-									Parameters = new TType[] { attrib.PropertyType },
+									Parameters = new TType [] { attrib.PropertyType },
 									ReturnType = GetSystemVoidType (),
 									IsStatic = attrib.IsStatic,
 									IsOptional = !attrib.IsRequired,
@@ -2149,7 +2212,7 @@ namespace Registrar {
 						}
 					} else {
 						TMethod method = null;
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 						method = attrib.Method;
 #endif
 						var objcMethod = new ObjCMethod (this, objcType, method) {
@@ -2163,7 +2226,7 @@ namespace Registrar {
 							IsConstructor = false,
 						};
 
-						if (attrib.ParameterType != null) {
+						if (attrib.ParameterType is not null) {
 							var parameters = new TType [attrib.ParameterType.Length];
 							for (int i = 0; i < parameters.Length; i++) {
 								if (attrib.ParameterByRef [i]) {
@@ -2174,7 +2237,7 @@ namespace Registrar {
 							}
 							objcMethod.Parameters = parameters;
 						} else {
-							objcMethod.Parameters = new TType[] { };
+							objcMethod.Parameters = new TType [] { };
 						}
 
 						objcType.Add (objcMethod, ref exceptions);
@@ -2185,13 +2248,12 @@ namespace Registrar {
 			foreach (TProperty property in properties) {
 				if (hasProtocolMemberAttributes)
 					continue;
-				
+
 				if (!isProtocol) {
 					var ca = GetConnectAttribute (property);
-					if (ca != null) {
+					if (ca is not null) {
 						if (!IsINativeObject (GetPropertyType (property))) {
-							AddException (ref exceptions, CreateException (4139, property,
-								"The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'. Properties with the [Connect] attribute must have a property type of NSObject (or a subclass of NSObject).",
+							AddException (ref exceptions, CreateException (4139, property, Errors.MT4139,
 								GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 							continue;
 						}
@@ -2199,20 +2261,23 @@ namespace Registrar {
 						objcType.Add (new ObjCField () {
 							DeclaringType = objcType,
 							Name = ca.Name ?? GetPropertyName (property),
-#if !MTOUCH && !MMP
+#if !MTOUCH && !MMP && !BUNDLER
 							Size = Is64Bits ? 8 : 4,
 							Alignment = (byte) (Is64Bits ? 3 : 2),
 #endif
 							FieldType = "@",
 							IsProperty = true,
 							IsStatic = IsStatic (property),
+#if MTOUCH || MMP || BUNDLER
+							Property = property,
+#endif
 						}, ref exceptions);
 					}
 				}
 
 				var ea = GetExportAttribute (property);
 
-				if (ea == null)
+				if (ea is null)
 					continue;
 
 				if (IsStatic (property) && (objcType.IsWrapper || objcType.IsModel)) {
@@ -2222,22 +2287,21 @@ namespace Registrar {
 				}
 
 				if (IsStatic (property) && isGenericType) {
-					AddException (ref exceptions, CreateException (4131, property, "The registrar cannot export static properties in generic classes ('{0}.{1}').", GetTypeFullName (type), GetPropertyName (property)));
+					AddException (ref exceptions, CreateException (4131, property, Errors.MT4131, GetTypeFullName (type), GetPropertyName (property)));
 					continue;
 				}
 
 				TType property_type = null;
 				if (isGenericType && !VerifyIsConstrainedToNSObject (GetPropertyType (property), out property_type)) {
-					AddException (ref exceptions, CreateException (4132, property, "The registrar found an invalid generic return type '{0}' in the property '{1}.{2}'. The return type must have an 'NSObject' constraint.", GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
+					AddException (ref exceptions, CreateException (4132, property, Errors.MT4132, GetTypeFullName (GetPropertyType (property)), GetTypeFullName (type), GetPropertyName (property)));
 					continue;
 				}
-				if (property_type == null)
+				if (property_type is null)
 					property_type = GetPropertyType (property);
 
 				Trace ("        [PROPERTY] {0} => {1}", property, ea.Selector);
 
-				var objcProperty = new ObjCProperty ()
-				{
+				var objcProperty = new ObjCProperty () {
 					Registrar = this,
 					DeclaringType = objcType,
 					Property = property,
@@ -2250,7 +2314,7 @@ namespace Registrar {
 				TMethod getter = GetGetMethod (property);
 				TMethod setter = GetSetMethod (property);
 
-				if (getter != null && VerifyNonGenericMethod (ref exceptions, type, getter)) {
+				if (getter is not null && VerifyNonGenericMethod (ref exceptions, type, getter)) {
 					var method = new ObjCMethod (this, objcType, getter) {
 						Selector = ea.Selector ?? GetPropertyName (property),
 						ArgumentSemantic = ea.ArgumentSemantic,
@@ -2259,7 +2323,7 @@ namespace Registrar {
 
 					List<Exception> excs = null;
 					if (!method.ValidateSignature (ref excs)) {
-						exceptions.Add (CreateException (4138, excs [0], property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
+						exceptions.Add (CreateException (4138, excs [0], property, Errors.MT4138,
 							GetTypeFullName (property.PropertyType), property.DeclaringType.FullName, property.Name));
 						continue;
 					}
@@ -2270,18 +2334,18 @@ namespace Registrar {
 					Trace ("            [GET] {0}", objcType.Methods [objcType.Methods.Count - 1].Name);
 				}
 
-				if (setter != null && VerifyNonGenericMethod (ref exceptions, type, setter)) {
+				if (setter is not null && VerifyNonGenericMethod (ref exceptions, type, setter)) {
 					string setterName = ea.Selector ?? GetPropertyName (property);
 
 					var method = new ObjCMethod (this, objcType, setter) {
 						Selector = CreateSetterSelector (setterName),
 						ArgumentSemantic = ea.ArgumentSemantic,
-						Parameters = new TType[] { property_type },
+						Parameters = new TType [] { property_type },
 					};
 
 					List<Exception> excs = null;
 					if (!method.ValidateSignature (ref excs)) {
-						exceptions.Add (CreateException (4138, excs [0], property, "The registrar cannot marshal the property type '{0}' of the property '{1}.{2}'.",
+						exceptions.Add (CreateException (4138, excs [0], property, Errors.MT4138,
 							GetTypeFullName (property.PropertyType), property.DeclaringType.FullName, property.Name));
 						continue;
 					}
@@ -2297,9 +2361,16 @@ namespace Registrar {
 
 			var custom_conforms_to_protocol = !is_first_nonWrapper; // we only have to generate the conformsToProtocol method for the first non-wrapper type.
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 			ObjCMethod custom_copy_with_zone = null;
-			var isNSCellSubclass = IsSubClassOf (type, AppKit, "NSCell");
+			var isNSCellSubclass = false;
+#if BUNDLER
+			var isMac = App.Platform == ApplePlatform.MacOSX;
+#elif MONOMAC
+			const bool isMac = true;
+#endif
+			if (isMac)
+				isNSCellSubclass = IsSubClassOf (type, AppKit, "NSCell");
 #endif
 			Dictionary<TMethod, List<TMethod>> method_map = null;
 
@@ -2309,14 +2380,15 @@ namespace Registrar {
 			foreach (TMethod method in methods) {
 				if (hasProtocolMemberAttributes)
 					continue;
-				
+
 				var ea = GetExportAttribute (method);
 
-				if (ea == null) {
+				if (ea is null) {
 					List<TMethod> impls;
-					if (method_map != null && method_map.TryGetValue (method, out impls)) {
+					if (method_map is not null && method_map.TryGetValue (method, out impls)) {
 						if (impls.Count != 1) {
-							AddException (ref exceptions, Shared.GetMT4127 (method, impls));
+							foreach (var err in Shared.GetMT4127 (method, impls))
+								AddException (ref exceptions, err);
 							continue;
 						}
 
@@ -2324,7 +2396,7 @@ namespace Registrar {
 					}
 				}
 
-				if (ea == null)
+				if (ea is null)
 					continue;
 
 				if (IsStatic (method) && (objcType.IsWrapper || objcType.IsModel) && !(objcType.IsProtocol && !objcType.IsFakeProtocol)) {
@@ -2348,13 +2420,13 @@ namespace Registrar {
 				if (!objcMethod.SetExportAttribute (ea, ref exceptions))
 					continue;
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 				if (objcMethod.Selector == "copyWithZone:")
 					custom_copy_with_zone = objcMethod;
 #endif
 
 				if (IsStatic (method) && isGenericType) {
-					AddException (ref exceptions, CreateException (4130, method, "The registrar cannot export static methods in generic classes ('{0}').", GetDescriptiveMethodName (type, method)));
+					AddException (ref exceptions, CreateException (4130, method, Errors.MT4130, GetDescriptiveMethodName (type, method)));
 					continue;
 				} else if (isGenericType && !VerifyIsConstrainedToNSObject (ref exceptions, type, objcMethod)) {
 					continue;
@@ -2376,9 +2448,9 @@ namespace Registrar {
 				}, ref exceptions);
 			}
 
-#if MONOMAC
+#if MONOMAC || BUNDLER
 			if (isNSCellSubclass) {
-				if (custom_copy_with_zone != null) {
+				if (custom_copy_with_zone is not null) {
 					custom_copy_with_zone.Trampoline = Trampoline.CopyWithZone2;
 				} else {
 					objcType.Add (new ObjCMethod (this, objcType, null) {
@@ -2396,11 +2468,10 @@ namespace Registrar {
 					continue;
 
 				var parameters = GetParameters (ctor);
-				if (parameters == null || parameters.Length == 0) {
+				if (parameters is null || parameters.Length == 0) {
 					Trace ("        [CTOR] {0} default => init", GetTypeName (type));
 
-					objcType.Add (new ObjCMethod (this, objcType, ctor)
-					{
+					objcType.Add (new ObjCMethod (this, objcType, ctor) {
 						Selector = "init",
 						Trampoline = Trampoline.Constructor,
 					}, ref exceptions);
@@ -2409,11 +2480,11 @@ namespace Registrar {
 
 				var ea = GetExportAttribute (ctor);
 
-				if (ea == null)
+				if (ea is null)
 					continue;
 
 				Trace ("        [CTOR] {2} {0} => {1}", GetMethodName (ctor), ea.Selector, GetTypeName (type));
-				
+
 				if (!VerifyNonGenericMethod (ref exceptions, type, ctor))
 					continue;
 
@@ -2435,7 +2506,7 @@ namespace Registrar {
 
 		public void RegisterAssembly (TAssembly assembly)
 		{
-			if (assembly == null)
+			if (assembly is null)
 				throw new ArgumentNullException ("assembly");
 
 			if (assemblies.ContainsKey (assembly))
@@ -2450,7 +2521,7 @@ namespace Registrar {
 				assemblies.Add (assembly, null);
 				return;
 			}
-			
+
 			var exceptions = new List<Exception> ();
 
 			try {
@@ -2471,15 +2542,15 @@ namespace Registrar {
 
 				assemblies.Add (assembly, null);
 			} catch (Exception e) {
-				ReportError (4116, "Could not register the assembly '{0}': {1}", GetAssemblyName (assembly), e);
+				ReportError (4116, Errors.MT4116, GetAssemblyName (assembly), e);
 			}
 
 			FlushTrace ();
 
 			if (exceptions.Count > 0) {
 				Exception ae = exceptions.Count == 1 ? exceptions [0] : new AggregateException (exceptions);
-#if !MTOUCH
-				Console.WriteLine (ae);
+#if !MTOUCH && !MMP && !BUNDLER
+				Runtime.NSLog (ae.ToString ());
 #endif
 				throw ae;
 			}
@@ -2491,17 +2562,17 @@ namespace Registrar {
 			var method = member as ObjCMethod;
 			TType return_type = null;
 
-			if (Method != null) {
+			if (Method is not null) {
 				is_ctor = IsConstructor (Method);
 			} else {
 				is_ctor = method.IsConstructor;
 			}
 
 			if (!is_ctor)
-				return_type = Method != null ? GetReturnType (Method) : method.NativeReturnType;
+				return_type = Method is not null ? GetReturnType (Method) : method.NativeReturnType;
 
-			TType[] parameters;
-			if (Method != null) {
+			TType [] parameters;
+			if (Method is not null) {
 				parameters = GetParameters (Method);
 			} else {
 				parameters = method.NativeParameters;
@@ -2514,20 +2585,20 @@ namespace Registrar {
 		{
 			var success = true;
 			var signature = new StringBuilder ();
-			if (mi == null)
+			if (mi is null)
 				mi = (member as ObjCMethod)?.Method;
-			
+
 			if (is_ctor) {
 				signature.Append ('@');
 			} else {
 				signature.Append (ToSignature (return_type, member, ref success));
 				if (!success)
-					throw CreateException (4104, mi, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
+					throw CreateException (4104, mi, Errors.MT4104_A, GetTypeFullName (return_type), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 			}
 
 			signature.Append (isBlockSignature ? "@?" : "@:");
 
-			if (parameters != null) {
+			if (parameters is not null) {
 				for (int i = 0; i < parameters.Length; i++) {
 					if (i == 0 && isCategoryInstance)
 						continue;
@@ -2544,13 +2615,13 @@ namespace Registrar {
 						signature.Append (ToSignature (type, member, ref success));
 					}
 					if (!success) {
-						if (mi != null) {
+						if (mi is not null) {
 							// The input 'parameters' might be closed generic types, and thus might not correspond exactly with the source code.
 							// By fetching the parameters from the method again, we attempt to report the parameter type as close as possible
 							// to the source code.
 							parameters = GetParameters (mi);
 						}
-						throw CreateException (4136, mi, "The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'",
+						throw CreateException (4136, mi, Errors.MT4136,
 							GetTypeFullName (parameters [i]), GetParameterName (mi, i), GetTypeFullName (declaring_type), GetDescriptiveMethodName (mi));
 					}
 				}
@@ -2566,23 +2637,23 @@ namespace Registrar {
 				return rv;
 
 			var objcMethod = member as ObjCMethod;
-			if (objcMethod != null)
-				throw ErrorHelper.CreateError (4111, "The registrar cannot build a signature for type `{0}' in method `{1}`.", GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
+			if (objcMethod is not null)
+				throw ErrorHelper.CreateError (4111, Errors.MT4111, GetTypeFullName (type), GetTypeFullName (objcMethod.DeclaringType.Type) + "." + objcMethod.MethodName);
 
-			throw ErrorHelper.CreateError (4101, "The registrar cannot build a signature for type `{0}`.", GetTypeFullName (type));
+			throw ErrorHelper.CreateError (4101, Errors.MT4101, GetTypeFullName (type));
 		}
 
 		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
 			string name = null;
-			if (register_attribute != null) {
+			if (register_attribute is not null) {
 				if (register_attribute.SkipRegistration)
 					return GetExportedTypeName (GetBaseType (type));
 				name = register_attribute.Name;
 			}
-			if (name == null)
+			if (name is null)
 				name = GetTypeFullName (type);
-			return StringUtils.SanitizeObjectiveCName (name);
+			return SanitizeObjectiveCName (name);
 		}
 
 		protected string GetExportedTypeName (TType type)
@@ -2597,6 +2668,7 @@ namespace Registrar {
 			var typeFullName = GetTypeFullName (type);
 
 			switch (typeFullName) {
+			case "System.UIntPtr":
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";
@@ -2611,11 +2683,11 @@ namespace Registrar {
 			case "System.Double": return "d";
 			case "System.Boolean":
 				// map managed 'bool' to ObjC BOOL = 'unsigned char' in OSX and 32bit iOS architectures and 'bool' in 64bit iOS architectures
-				#if MONOMAC
-				return "c";
-				#else
+#if MONOMAC || __MACCATALYST__
+				return IsARM64 ? "B" : "c";
+#else
 				return Is64Bits ? "B" : "c";
-				#endif
+#endif
 			case "System.Void": return "v";
 			case "System.String":
 				return forProperty ? "@\"NSString\"" : "@";
@@ -2623,11 +2695,12 @@ namespace Registrar {
 				return Is64Bits ? "q" : "i";
 			case "System.nuint":
 				return Is64Bits ? "Q" : "I";
-			case "System.nfloat":
-				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
-				throw CreateException (4102, member, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", "Foundation.NSDate", member.FullName);
+				throw CreateException (4102, member, Errors.MT4102, "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
+
+			if (typeFullName == NFloatTypeName)
+				return Is64Bits ? "d" : "f";
 
 			if (Is (type, ObjCRuntime, "Selector"))
 				return ":";
@@ -2637,7 +2710,7 @@ namespace Registrar {
 
 			if (IsINativeObject (type)) {
 				if (!IsGenericType (type) && !IsInterface (type) && !IsNSObject (type) && IsAbstract (type))
-					ErrorHelper.Show (CreateWarning (4179, member, $"The registrar found the abstract type '{type.FullName}' in the signature for '{member.FullName}'. Abstract types should not be used in the signature for a member exported to Objective-C."));
+					ErrorHelper.Show (CreateWarning (4179, member, Errors.MT4179, type.FullName, member.FullName));
 				if (IsNSObject (type) && forProperty) {
 					return "@\"" + GetExportedTypeName (type) + "\"";
 				} else {
@@ -2656,7 +2729,7 @@ namespace Registrar {
 					case "System.UInt64":
 						return "I";
 					default:
-						throw CreateException (4145, "Invalid enum '{0}': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.", GetTypeFullName (type));
+						throw CreateException (4145, Errors.MT4145, GetTypeFullName (type));
 					}
 				} else {
 					return ToSignature (GetEnumUnderlyingType (type), member, ref success);
@@ -2670,6 +2743,9 @@ namespace Registrar {
 				ToSignature (GetElementType (type), member, ref success); // this validates that the element type is a type we support.
 				return "@"; // But we don't care about the actual type, we'll just return '@'. We only support NSArrays of the element type, so '@' is always right.
 			}
+
+			if (IsPointer (type))
+				return "^" + ToSignature (GetElementType (type), member, ref success);
 
 			success = false;
 			return string.Empty;
@@ -2707,7 +2783,7 @@ namespace Registrar {
 			System.Threading.Monitor.Exit (types);
 		}
 
-#if MTOUCH || MMP
+#if MTOUCH || MMP || BUNDLER
 		internal static void NSLog (string format, params object [] args)
 		{
 			Console.WriteLine (format, args);
@@ -2720,10 +2796,10 @@ namespace Registrar {
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
 			// to NSLog and is using NSString (and we haven't necessarily finished registering
 			// everything yet).
-			R.NSLog (message, args);
+			R.NSLog (String.Format (message, args));
 		}
 
-		protected virtual void ReportWarning (int code, string message, params object[] args)
+		protected virtual void ReportWarning (int code, string message, params object [] args)
 		{
 			// Using Console.WriteLine here is error prone, since if we get an early error
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
@@ -2737,7 +2813,7 @@ namespace Registrar {
 		[Conditional ("VERBOSE_REGISTRAR")]
 		public static void FlushTrace ()
 		{
-			if (trace != null) {
+			if (trace is not null) {
 				trace.Insert (0, '\n');
 				R.NSLog (trace.ToString ());
 #if DEV
@@ -2750,13 +2826,13 @@ namespace Registrar {
 		[Conditional ("VERBOSE_REGISTRAR")]
 		public static void Trace (string msg, params object [] args)
 		{
-			if (trace == null)
+			if (trace is null)
 				trace = new StringBuilder ();
 			trace.AppendFormat (msg, args);
 			trace.AppendLine ();
 		}
 	}
-	
+
 	enum Trampoline {
 		None,
 		Normal,
@@ -2774,12 +2850,11 @@ namespace Registrar {
 		StaticLong,
 		X86_DoubleABI_StaticStretTrampoline,
 		X86_DoubleABI_StretTrampoline,
-#if MONOMAC
 		CopyWithZone1,
 		CopyWithZone2,
-#endif
 		GetGCHandle,
 		SetGCHandle,
+		GetFlags,
+		SetFlags,
 	}
 }
-

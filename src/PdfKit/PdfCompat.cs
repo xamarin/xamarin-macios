@@ -1,12 +1,17 @@
-#if !XAMCORE_4_0
+#if !NET
 using System;
 
+using Foundation;
+using ObjCRuntime;
+
+#nullable enable
+
 namespace PdfKit {
-	
+
 	partial class PdfAnnotation {
 #if __IOS__
 		[Obsolete ("Empty stub (not a public API on iOS).")]
-		public virtual string ToolTip { get; }
+		public virtual string? ToolTip { get; }
 #endif
 	}
 
@@ -25,6 +30,23 @@ namespace PdfKit {
 
 		[Obsolete ("Empty stub (not a public API on iOS).")]
 		public virtual bool ShouldAntiAlias { get; set; }
+
+		[Obsolete ("Empty stub (not a public API on iOS).")]
+		public virtual void TakeBackgroundColor (NSObject sender) {}
+
+		[Obsolete ("Empty stub (not a public API on iOS).")]
+		public virtual void TakePasswordFrom (NSObject sender) {}
+#endif
+	}
+
+	public partial class PdfAnnotation {
+
+#if __IOS__
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual PdfAction? MouseUpAction { get; set; }
+
+		[Obsolete ("Empty stub (not a public API).")]
+		public virtual void RemoveAllAppearanceStreams () {}
 #endif
 	}
 }

@@ -32,11 +32,19 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
-	public class AudioSettings : DictionaryContainer
-	{
+	public class AudioSettings : DictionaryContainer {
 #if !COREBUILD
 		public AudioSettings ()
 			: base (new NSMutableDictionary ())
@@ -53,27 +61,18 @@ namespace AVFoundation {
 				SetNumberValue (AVAudioSettings.AVFormatIDKey, (int?) value);
 			}
 			get {
-				return (AudioFormatType?)GetInt32Value (AVAudioSettings.AVFormatIDKey);
+				return (AudioFormatType?) GetInt32Value (AVAudioSettings.AVFormatIDKey);
 			}
 		}
 
-#if XAMCORE_2_0
-	public double?
-#else
-		public float?
-#endif
-			SampleRate {
+		public double? SampleRate {
 			set {
 				SetNumberValue (AVAudioSettings.AVSampleRateKey, value);
 			}
 			get {
-#if XAMCORE_2_0
 				return GetDoubleValue (AVAudioSettings.AVSampleRateKey);
-#else
-				return GetFloatValue (AVAudioSettings.AVSampleRateKey);
-#endif
 			}
-		}			
+		}
 
 		public int? NumberChannels {
 			set {
@@ -147,7 +146,7 @@ namespace AVFoundation {
 			}
 			get {
 				return GetInt32Value (AVAudioSettings.AVEncoderBitRateKey);
-			}			
+			}
 		}
 
 		public int? EncoderBitRatePerChannel {
@@ -156,8 +155,8 @@ namespace AVFoundation {
 			}
 			get {
 				return GetInt32Value (AVAudioSettings.AVEncoderBitRatePerChannelKey);
-			}			
-		}			
+			}
+		}
 
 		public int? EncoderBitDepthHint {
 			set {
@@ -168,14 +167,19 @@ namespace AVFoundation {
 			}
 			get {
 				return GetInt32Value (AVAudioSettings.AVEncoderBitDepthHintKey);
-			}			
+			}
 		}
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
-				NSString v = null;
-				switch (value){
+				NSString? v = null;
+				switch (value) {
 				case AVAudioBitRateStrategy.Constant:
 					v = AVAudioSettings._Constant;
 					break;
@@ -188,12 +192,10 @@ namespace AVFoundation {
 				case AVAudioBitRateStrategy.Variable:
 					v = AVAudioSettings._Variable;
 					break;
-#if XAMCORE_2_0
 				case null:
 					break;
 				default:
 					throw new ArgumentOutOfRangeException ("value");
-#endif
 				}
 				SetStringValue (AVAudioSettings.AVEncoderBitRateStrategyKey, v);
 			}
@@ -211,7 +213,12 @@ namespace AVFoundation {
 			}
 		}
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public AVSampleRateConverterAlgorithm? SampleRateConverterAlgorithm {
 			get {
 				var k = GetNSStringValue (AVAudioSettings.AVSampleRateConverterAlgorithmKey);
@@ -222,26 +229,29 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				NSString v = null;
-				switch (value){
+				NSString? v = null;
+				switch (value) {
 				case AVSampleRateConverterAlgorithm.Mastering:
 					v = AVAudioSettings.AVSampleRateConverterAlgorithm_Mastering;
 					break;
 				case AVSampleRateConverterAlgorithm.Normal:
 					v = AVAudioSettings.AVSampleRateConverterAlgorithm_Normal;
 					break;
-#if XAMCORE_2_0
 				case null:
 					break;
 				default:
 					throw new ArgumentOutOfRangeException ("value");
-#endif
 				}
 				SetStringValue (AVAudioSettings.AVSampleRateConverterAlgorithmKey, v);
 			}
 		}
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public AVAudioQuality? EncoderAudioQualityForVBR {
 			get {
 				return (AVAudioQuality?) (long?) GetNIntValue (AVAudioSettings.AVEncoderAudioQualityForVBRKey);
@@ -250,14 +260,13 @@ namespace AVFoundation {
 				SetNumberValue (AVAudioSettings.AVEncoderAudioQualityForVBRKey, (nint?) (long?) value);
 			}
 		}
-		
+
 		public AudioChannelLayout ChannelLayout {
 			set {
-				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value == null ? null : value.AsData ());
+				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value is null ? null : value.AsData ());
 			}
 		}
 
 #endif
 	}
 }
-

@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 	// The kyes are not found in any of the public headers from apple. That is the reason
 	// to use this technique.
@@ -29,7 +29,7 @@ namespace Foundation {
 
 		public bool IsOptional { 
 			get {
-				return Optional != null && Optional == "Yes";
+				return Optional is not null && Optional == "Yes";
 			}
  			set {
 				Optional = (value) ? "Yes" : "No";
@@ -59,4 +59,4 @@ namespace Foundation {
 #endif
 
 }
-	
+

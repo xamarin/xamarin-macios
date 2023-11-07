@@ -1,0 +1,7 @@
+### API not marked with unavailable (but without availability for tvOS/iOS)
+!missing-field! kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID not bound
+!missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
+
+## availability macro says iOS 8.0 but constants are under a #if !TARGET_OS_IPHONE define.
+## introspection does not report them as missing...
+!unknown-field! kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder bound

@@ -1,0 +1,59 @@
+# all steps that are required to build the nugets
+
+parameters:
+
+- name: dotnetPlatforms
+  type: object
+  default: [
+    {
+      platform: iOS,
+      conditionVariable: "INCLUDE_DOTNET_IOS"
+    },
+    {
+      platform: tvOS,
+      conditionVariable: "INCLUDE_DOTNET_TVOS"
+    },
+    {
+      platform: macOS,
+      conditionVariable: "INCLUDE_DOTNET_MACOS"
+    },
+    {
+      platform: MacCatalyst,
+      conditionVariable: "INCLUDE_DOTNET_MACCATALYST"
+    }]
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
+  displayName: 'Build Nugets'
+  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'],''))
+  continueOnError: true # should not stop the build since is not official just yet.
+  timeoutInMinutes: 180
+
+- ${{ each platform in parameters.dotnetPlatforms }}:
+  - script: >-
+      dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
+      $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.${{ platform.platform }}.Ref/package.csproj
+      -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest-${{ platform.platform }}.binlog
+    displayName: 'Generate Build Asset Registry Manifest for ${{ platform.platform }}'
+    condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['${{ platform.conditionVariable }}'],''))
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: AssetManifests'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/xamarin-macios/_build/nupkgs/bar-manifests
+    artifactName: '${{ parameters.uploadPrefix }}AssetManifests'
+  continueOnError: true
+  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'],''))
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: build-binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
+    artifactName: ${{ parameters.uploadPrefix }}build-binlogs-$(Build.BuildId)-$(System.JobAttempt)
+  continueOnError: true
+  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'],''))

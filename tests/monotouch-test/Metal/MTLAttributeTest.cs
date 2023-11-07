@@ -2,31 +2,29 @@
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
-	
+
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLAttributeTest {
 		MTLAttribute attr = null;
-		
+
 		[SetUp]
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 			attr = new MTLAttribute ();
 		}
-		
+
 		[TearDown]
 		public void TearDown ()
 		{
-			if (attr != null)
+			if (attr is not null)
 				attr.Dispose ();
 			attr = null;
 		}
@@ -40,7 +38,7 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetAttributeIndexTest ()
 		{
-			Assert.AreEqual (0, attr.AttributeIndex, $"AttributeIndex default value is {attr.AttributeIndex}");
+			Assert.AreEqual ((nuint) 0, attr.AttributeIndex, $"AttributeIndex default value is {attr.AttributeIndex}");
 		}
 
 		[Test]

@@ -1,10 +1,15 @@
 #
-# A release branch requires updating the following two variables at the bottom of this file:
+# A release branch requires updating the following six variables at the bottom of this file:
 #
 # IOS_PACKAGE_VERSION (major/minor/revision #)
 # MAC_PACKAGE_VERSION (major/minor/revision #)
 #
-# Update version numbers on master as well, to the next version
+# IOS_NUGET_VERSION (major/minor/patch #)
+# TVOS_NUGET_VERSION (major/minor/patch #)
+# WATCHOS_NUGET_VERSION (major/minor/patch #)
+# MACOS_NUGET_VERSION (major/minor/patch #)
+#
+# Update version numbers on main as well, to the next version
 #
 
 #
@@ -43,5 +48,42 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=13.15.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=6.15.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=17.1.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=9.1.0.$(MAC_COMMIT_DISTANCE)
+
+#
+# ** NuGet package version numbers **
+#
+# See dotnet/VERSIONS.md.
+#
+# Rules:
+# * The first two numbers represent the major and minor version of the corresponding OS.
+# * A third number will be added later (the commit distance).
+#
+# IMPORTANT: There must be *no* managed API differences unless the two first
+# numbers (major.minor) changes.
+
+# WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
+
+IOS_NUGET_OS_VERSION=17.0
+TVOS_NUGET_OS_VERSION=17.0
+WATCHOS_NUGET_OS_VERSION=10.0
+MACOS_NUGET_OS_VERSION=14.0
+MACCATALYST_NUGET_OS_VERSION=17.0
+
+
+# Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
+# * We release support for iOS 14.5 with .NET 6
+# * Apple releases iOS 15.0, we're still using .NET 6. This default continues to be iOS 14.5
+# * .NET 7 is shipped, and at this point we bump the default to iOS 15.0
+# Basically: this should be the last OS version of the platform in question when the current major .NET version is first released to stable.
+# Ref: https://github.com/dotnet/designs/blob/8e6394406d44f75f30ea2259a425cb9e38d75b69/accepted/2020/net5/net5.md#os-versions
+
+DEFAULT_TARGET_PLATFORM_VERSION_IOS=17.0
+DEFAULT_TARGET_PLATFORM_VERSION_TVOS=17.0
+DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=10.0
+DEFAULT_TARGET_PLATFORM_VERSION_MACOS=14.0
+DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=17.0
+
+# .NET 7 versions are bumped using maestro.
+

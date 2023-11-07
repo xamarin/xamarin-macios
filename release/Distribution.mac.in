@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-script minSpecVersion="1.000000" authoringTool="com.apple.PackageMaker" authoringToolVersion="3.0.4" authoringToolBuild="179">
+    <title>Xamarin.Mac</title>
+    <options customize="allow" allow-external-scripts="yes"/>
+    <domains enable_localSystem="true"/>
+    <installation-check script="os_check();"/>
+    <script><![CDATA[
+function os_check() {
+    if(!(system.compareVersions(system.version.ProductVersion, '10.7.0') >= 0)) {
+        my.result.title = 'Minimum Operating System Check';
+        my.result.message = 'This version of Xamarin.Mac requires OSX Lion (10.7) or later';
+        my.result.type = 'Fatal';
+        return false;
+    }
+    var check_result;
+    check_result = system.run('mono-check.sh');
+    if(check_result != '2') {
+        my.result.title = 'Mono framework check';
+        my.result.message = 'Xamarin.Mac requires the Mono framework to be installed (3.2 or later). You can download the latest version of the Mono framework here: http://mono-project.com/Download';
+        my.result.type = 'Fatal';
+    }
+    return true;
+}
+    ]]></script>
+    <license file="License.txt"/>
+    <choices-outline>
+        <line choice="choice0"/>
+        <line choice="choice1"/>
+    </choices-outline>
+    <choice id="choice0" title="Install Xamarin.Mac @PACKAGE_VERSION@" description="Install Xamarin.Mac @PACKAGE_VERSION@">
+        <pkg-ref id="com.xamarin.mac-@PACKAGE_VERSION@.pkg"/>
+    </choice>
+    <choice id="choice1" title="Uninstall any previous versions" description="Uninstall any previous versions of Xamarin.Mac you may have installed.">
+        <pkg-ref id="com.xamarin.mac-uninstall-@PACKAGE_VERSION@.pkg"/>
+    </choice>
+    <pkg-ref id="com.xamarin.mac-@PACKAGE_VERSION@.pkg" installKBytes="@INSTALLKBYTES@" version="1" auth="Root">#xamarin.mac-@PACKAGE_VERSION@.pkg</pkg-ref>
+    <pkg-ref id="com.xamarin.mac-uninstall-@PACKAGE_VERSION@.pkg" installKBytes="0" version="1" auth="Root">#xamarin.mac-uninstall-@PACKAGE_VERSION@.pkg</pkg-ref>
+</installer-script>

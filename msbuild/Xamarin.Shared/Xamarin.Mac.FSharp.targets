@@ -1,0 +1,47 @@
+<!--
+  Xamarin.Mac.FSharp.targets
+
+  Authors:
+    Dave Thomas <dave.thomas@xamarin.com>
+
+  Copyright 2014 Xamarin Inc. All Rights Reserved.
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+	
+	<PropertyGroup>
+		<!-- Version/fx properties -->
+		<TargetFrameworkVersion Condition="'$(TargetFrameworkIdentifier)' == '' And '$(TargetFrameworkVersion)' ==''">v4.5</TargetFrameworkVersion>
+
+		<!-- This should be done in the F# target files, but _DebugFileExt is not an upstream
+		     msbuild feature yet, so F# doesn't have this. Once, upstream F# adds it, we can
+		     remove this -->
+		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
+		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
+
+		<!-- Enable nuget package conflict resolution -->
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
+		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
+	</PropertyGroup>
+
+	    <Import Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')"
+		        Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets" />
+
+        <Import Condition="!$(MSBuildAllProjects.Contains('Microsoft.FSharp.Targets')) and Exists('$(MSBuildBinPath)\Microsoft.FSharp.Targets')"
+                Project="$(MSBuildBinPath)\Microsoft.FSharp.Targets" />
+
+	<Import Project="Xamarin.Mac.Common.targets" />
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
+</Project>

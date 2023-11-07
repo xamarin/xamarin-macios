@@ -7,13 +7,13 @@
 	<key>CFBundleDisplayName</key>
 	<string>FinderSyncExtension</string>
 	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
+	<string>FinderExtensionTest</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.FinderExtensionTest</string>
+	<string>com.xamarin.FinderExtensionTest</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>FinderExtensionTest</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.10</string>
+	<string>10.15</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSExtension</key>

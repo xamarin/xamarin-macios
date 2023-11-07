@@ -11,13 +11,8 @@ using System;
 using System.Runtime.InteropServices;
 
 using MonoTouch;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace LinkAll.InernalCalls {
@@ -36,7 +31,7 @@ namespace LinkAll.InernalCalls {
 			Assert.IsNotNull (xamarin_get_locale_country_code (), "xamarin_get_locale_country_code");
 		}
 
-		[DllImport ("__Internal", CharSet=CharSet.Unicode)]
+		[DllImport ("__Internal", CharSet = CharSet.Unicode)]
 		extern static void xamarin_log (string s);
 
 		[Test]
@@ -45,14 +40,6 @@ namespace LinkAll.InernalCalls {
 			xamarin_log ("ascii");
 			xamarin_log ("ЉЩщӃ");
 		}
-
-#if !XAMCORE_2_0
-		[Test]
-		public void MessagingApi ()
-		{
-			Messaging.monotouch_IntPtr_objc_msgSend_IntPtr (IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-		}
-#endif
 
 		[DllImport ("__Internal")]
 		extern static IntPtr xamarin_timezone_get_names (ref int count);
@@ -73,12 +60,12 @@ namespace LinkAll.InernalCalls {
 		}
 
 		[DllImport ("__Internal")]
-		extern static IntPtr xamarin_timezone_get_data (string name, ref int size);
+		extern static IntPtr xamarin_timezone_get_data (string name, ref uint size);
 
 		[Test]
 		public void TimeZone_Data ()
 		{
-			int size = 0;
+			uint size = 0;
 			IntPtr data = xamarin_timezone_get_data (null, ref size);
 			Assert.That (data, Is.Not.EqualTo (IntPtr.Zero), "default");
 			Assert.That (size, Is.GreaterThan (0), "default size");

@@ -1,10 +1,17 @@
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
 !unknown-type! NSPortMessage bound
 
-## type was not marked as unavailable before Xcode9
-!unknown-type! NSUbiquitousKeyValueStore bound
+## removed in Xcode 12
+!unknown-field! NSNetServicesErrorDomain bound
 
 ## unsorted
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
+!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
+
+# was removed, we leave it until XAMCORE_5_0
+!unknown-native-enum! NSNetServiceOptions bound

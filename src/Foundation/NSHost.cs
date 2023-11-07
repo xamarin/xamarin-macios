@@ -10,6 +10,8 @@
 
 #if MONOMAC
 
+#nullable enable
+
 using System;
 using System.Net;
 using System.Collections;
@@ -19,79 +21,85 @@ namespace Foundation
 {
 	public partial class NSHost : IEquatable<NSHost>, IEnumerable<IPAddress>
 	{
-		static NSHost CheckNull (NSHost host)
+		static NSHost? CheckNull (NSHost? host)
 		{
-			if (host == null)
+			if (host is null)
 				return null;
 
 			var addrs = host._Addresses;
-			if (addrs == null || addrs.Length == 0)
+			if (addrs is null || addrs.Length == 0)
 				return null;
 
 			return host;
 		}
 
-		public static NSHost Current {
+		public static NSHost? Current {
 			get { return CheckNull (_Current); }
 		}
 
-		public static NSHost FromAddress (string address)
+		public static NSHost? FromAddress (string? address)
 		{
-			if (address == null)
+			if (address is null)
 				return null;
 			return CheckNull (_FromAddress (address));
 		}
 
-		public static NSHost FromName (string name)
+		public static NSHost? FromName (string? name)
 		{
-			if (name == null)
+			if (name is null)
 				return null;
 			return CheckNull (_FromName (name));
 		}
 
-		public static explicit operator IPAddress (NSHost host)
+		public static explicit operator IPAddress? (NSHost? host)
 		{
+			if (host is null)
+				return null;
+
 			return host.Address;
 		}
 
-		public static explicit operator NSHost (IPAddress address)
+		public static explicit operator NSHost? (IPAddress? address)
 		{
 			return FromAddress (address);
 		}
 
-		public static explicit operator IPHostEntry (NSHost host)
+		public static explicit operator IPHostEntry? (NSHost host)
 		{
+			if (host is null)
+				return null;
+
 			return host.ToIPHostEntry ();
 		}
 
-		public static explicit operator NSHost (IPHostEntry hostEntry)
+		public static explicit operator NSHost? (IPHostEntry? hostEntry)
 		{
 			return FromIPHostEntry (hostEntry);
 		}
 
-		public static NSHost FromIPHostEntry (IPHostEntry hostEntry)
+		public static NSHost? FromIPHostEntry (IPHostEntry? hostEntry)
 		{
-			if (hostEntry == null)
+			if (hostEntry is null)
 				return null;
 
-			if (hostEntry.AddressList != null) {
+			if (hostEntry.AddressList is not null) {
 				foreach (var addr in hostEntry.AddressList) {
 					var host = FromAddress (addr);
-					if (host != null)
+					if (host is not null)
 						return host;
 				}
 			}
 
-			if (hostEntry.HostName != null) {
+			if (hostEntry.HostName is not null) {
 				var host = FromName (hostEntry.HostName);
-				if (host != null)
+				if (host is not null)
 					return host;
 			}
 
-			if (hostEntry.Aliases != null) {
+			if (hostEntry.Aliases is not null) {
 				foreach (var name in hostEntry.Aliases) {
 					var host = FromName (name);
-					if (host != null)
+					if (host is not null)
 						return host;
 				}
 			}
@@ -102,21 +110,26 @@ namespace Foundation
 		public IPHostEntry ToIPHostEntry ()
 		{
 			return new IPHostEntry {
-				HostName = Name,
+				HostName = Name!,
 				AddressList = Addresses,
 				Aliases = Names
 			};
 		}
 
-		public static NSHost FromAddress (IPAddress address)
+		public static NSHost? FromAddress (IPAddress? address)
 		{
-			if (address == null)
+			if (address is null)
 				return null;
 			return FromAddress (address.ToString ());
 		}
 
-		public IPAddress Address {
-			get { return IPAddress.Parse (_Address); }
+		public IPAddress? Address {
+			get {
+				var address = _Address;
+				if (address is null)
+					return null;
+				return IPAddress.Parse (address);
+			}
 		}
 
 		public IPAddress [] Addresses {
@@ -133,13 +146,13 @@ namespace Foundation
 			return (int)_Hash;
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (obj == this)
 				return true;
 
 			var host = obj as NSHost;
-			if (host != null)
+			if (host is not null)
 				return Equals (host);
 
 			return false;
@@ -154,6 +167,11 @@ namespace Foundation
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return GetEnumerator ();
+		}
+
+		bool IEquatable<NSHost>.Equals (NSHost? other)
+		{
+			return Equals ((object?) other);
 		}
 	}
 }

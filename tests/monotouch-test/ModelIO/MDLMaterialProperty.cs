@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLMaterialProperty Unit Tests
 //
 // Authors:
@@ -10,7 +10,7 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -23,20 +23,20 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
+#if NET
+using System.Numerics;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 = global::CoreGraphics.NVector3;
 #else
-using MonoTouch.Foundation;
-#if !__TVOS__
-using MonoTouch.MultipeerConnectivity;
-#endif
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
 using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 using Bindings.Test;
 using NUnit.Framework;
 
@@ -46,56 +46,12 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLMaterialPropertyTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-
-			if (
-#if !MONOMAC
-				Runtime.Arch == Arch.SIMULATOR && 
-# endif
-				IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion)) {
-					dummy = obj.Color;
-					dummy = obj.Float2Value;
-					dummy = obj.Float3Value;
-					dummy = obj.Float4Value;
-					dummy = obj.FloatValue;
-					dummy = obj.Matrix4x4;
-					dummy = obj.Name;
-					dummy = obj.Semantic;
-					obj.SetProperties (new MDLMaterialProperty ("foo", MDLMaterialSemantic.AmbientOcclusion));
-					dummy = obj.StringValue;
-					dummy = obj.TextureSamplerValue;
-					dummy = obj.Type;
-					dummy = obj.UrlValue;
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, Vector3.Zero)) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, new MDLTextureSampler ())) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, "string value")) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, new NSUrl ("http://foo.com"))) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, Matrix4.Identity)) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, Vector4.Zero)) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, UIColor.Black.CGColor)) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, Vector2.Zero)) {
-				}
-				using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, 1.23f)) {
-				}
-			}
 		}
 
 
@@ -105,8 +61,12 @@ namespace MonoTouchFixtures.ModelIO {
 			Vector2 V2;
 			Vector3 V3;
 			Vector4 V4;
+#if NET
+			NMatrix4 M4;
+#else
 			Matrix4 M4;
 			MatrixFloat4x4 M4x4;
+#endif
 			MDLTextureSampler tsv;
 			NSUrl url;
 
@@ -127,8 +87,12 @@ namespace MonoTouchFixtures.ModelIO {
 				V2 = new Vector2 (1, 2);
 				V3 = new Vector3 (3, 4, 5);
 				V4 = new Vector4 (6, 7, 8, 9);
+#if NET
+				M4 = new NMatrix4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+#else
 				M4 = new Matrix4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 				M4x4 = new MatrixFloat4x4 (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+#endif
 				tsv = new MDLTextureSampler ();
 				url = new NSUrl ("http://xamarin.com");
 
@@ -191,18 +155,24 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, "string value")) {
 				Assert.AreEqual ("string value", obj.StringValue, "6 StringValue");
 			}
-				
+
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4)) {
 				Asserts.AreEqual (M4, obj.Matrix4x4, "7 Matrix4x4");
+#if NET
+				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.Matrix4x4, "7b MatrixFloat4x4");
+				Asserts.AreEqual (M4, obj.Matrix4x4, "7c MatrixFloat4x4");
+#else
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7b MatrixFloat4x4");
 				Asserts.AreEqual (MatrixFloat4x4.Transpose ((MatrixFloat4x4) M4), obj.MatrixFloat4x4, "7c MatrixFloat4x4");
+#endif
 			}
 
+#if !NET
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, M4x4)) {
 				Asserts.AreEqual (CFunctions.GetMatrixFloat4x4 (obj, "matrix4x4"), obj.MatrixFloat4x4, "7' MatrixFloat4x4");
 				Asserts.AreEqual (M4x4, obj.MatrixFloat4x4, "7'b MatrixFloat4x4");
 			}
-
+#endif
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion, V4)) {
 				Asserts.AreEqual (V4, obj.Float4Value, "8 Float4Value");
 			}

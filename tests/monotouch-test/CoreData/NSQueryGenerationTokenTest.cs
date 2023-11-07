@@ -1,19 +1,11 @@
-﻿using System;
-#if XAMCORE_2_0
 using CoreData;
 using Foundation;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreData
-{
+namespace MonoTouchFixtures.CoreData {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NSQueryGenerationTokenTest
-	{
+	public class NSQueryGenerationTokenTest {
 		[Test]
 		public void EncodeWithCoderTest ()
 		{

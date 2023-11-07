@@ -1,10 +1,8 @@
-﻿using NUnitLite;
+using NUnitLite;
 
-namespace mononativetests
-{
-	public class Application
-	{
-		static int Main (string[] args)
+namespace mononativetests {
+	public class Application {
+		static int Main (string [] args)
 		{
 			return new AutoRun ().Execute (args);
 		}

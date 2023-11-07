@@ -8,39 +8,26 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-#if XAMCORE_2_0
+
+using CoreFoundation;
 using Foundation;
 using Security;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
-
 namespace MonoTouchFixtures.Security {
-	
+
 	[TestFixture]
-	// we want the test to be availble if we use the linker
+	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class CertificateTest {
 
 		// CN=mail.google.com, O=Google Inc, L=Mountain View, S=California, C=US
-		static public byte[] mail_google_com = {
+		static public byte [] mail_google_com = {
 			0x30, 0x82, 0x03, 0x22, 0x30, 0x82, 0x02, 0x8b, 0xa0, 0x03, 0x02, 0x01,
 			0x02, 0x02, 0x10, 0x2b, 0x9f, 0x7e, 0xe5, 0xca, 0x25, 0xa6, 0x25, 0x14,
 			0x20, 0x47, 0x82, 0x75, 0x3a, 0x9b, 0xb9, 0x30, 0x0d, 0x06, 0x09, 0x2a,
@@ -111,7 +98,7 @@ namespace MonoTouchFixtures.Security {
 			0xcf, 0xb0,  };
 
 		// CN=Thawte SGC CA, O=Thawte Consulting (Pty) Ltd., C=ZA
-		static public byte[] thawte_sgc_ca = {
+		static public byte [] thawte_sgc_ca = {
 			0x30, 0x82, 0x03, 0x23, 0x30, 0x82, 0x02, 0x8c, 0xa0, 0x03, 0x02, 0x01,
 			0x02, 0x02, 0x04, 0x30, 0x00, 0x00, 0x02, 0x30, 0x0d, 0x06, 0x09, 0x2a,
 			0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x05, 0x05, 0x00, 0x30, 0x5f,
@@ -182,7 +169,7 @@ namespace MonoTouchFixtures.Security {
 			0x1e, 0x05, 0xaf,  };
 
 		// OU=Class 3 Public Primary Certification Authority, O="VeriSign, Inc.", C
-		static public byte[] verisign_class3_root = {
+		static public byte [] verisign_class3_root = {
 			0x30, 0x82, 0x02, 0x3c, 0x30, 0x82, 0x01, 0xa5, 0x02, 0x10, 0x3c, 0x91,
 			0x31, 0xcb, 0x1f, 0xf6, 0xd0, 0x1b, 0x0e, 0x9a, 0xb8, 0xd0, 0x44, 0xbf,
 			0x12, 0xbe, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d,
@@ -233,7 +220,7 @@ namespace MonoTouchFixtures.Security {
 			0x69, 0x4e, 0x6b, 0x7c, 0x65, 0xbf, 0x0f, 0xfc, 0x70, 0xce, 0x88, 0x90,  };
 
 		// CN=api.imgur.com, OU=Domain Control Validated - QuickSSL(R) Premium, OU=See www.geotrust.com/resources/cps (c)11, OU=GT13382594, O=api.imgur.com, C=US, SERIALNUMBER=Jj-6wNiUyc1j1w-dsJtowuRbij10QwfE
-		public static byte[] api_imgur_com = {
+		public static byte [] api_imgur_com = {
 			0x30, 0x82, 0x04, 0xf1, 0x30, 0x82, 0x03, 0xd9, 0xa0, 0x03, 0x02, 0x01,
 			0x02, 0x02, 0x03, 0x02, 0x5d, 0x8d, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86,
 			0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x05, 0x05, 0x00, 0x30, 0x61, 0x31,
@@ -342,7 +329,7 @@ namespace MonoTouchFixtures.Security {
 			0x79, 0xd9, 0x07, 0xe8, 0xec, 0x99, 0x44, 0xa3, 0x8c, };
 
 		// CN=GeoTrust DV SSL CA, OU=Domain Validated SSL, O=GeoTrust Inc., C=US
-		public static byte[] geotrust_dv_ssl_ca = {
+		public static byte [] geotrust_dv_ssl_ca = {
 			0x30, 0x82, 0x03, 0xfa, 0x30, 0x82, 0x02, 0xe2, 0xa0, 0x03, 0x02, 0x01,
 			0x02, 0x02, 0x03, 0x02, 0x36, 0xd2, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86,
 			0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x05, 0x05, 0x00, 0x30, 0x42, 0x31,
@@ -431,7 +418,7 @@ namespace MonoTouchFixtures.Security {
 			0xc4, 0xb4, };
 
 		// CN=GeoTrust Global CA, O=GeoTrust Inc., C=US
-		public static byte[] geotrust_global_root = {
+		public static byte [] geotrust_global_root = {
 			0x30, 0x82, 0x03, 0x54, 0x30, 0x82, 0x02, 0x3c, 0xa0, 0x03, 0x02, 0x01,
 			0x02, 0x02, 0x03, 0x02, 0x34, 0x56, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86,
 			0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x05, 0x05, 0x00, 0x30, 0x42, 0x31,
@@ -508,7 +495,7 @@ namespace MonoTouchFixtures.Security {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);
 
-		void CheckMailGoogleCom (SecCertificate cert, int expectedRetainCount)
+		void CheckMailGoogleCom (SecCertificate cert, nint expectedRetainCount)
 		{
 			Assert.That (cert.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo (expectedRetainCount), "RetainCount");
@@ -519,24 +506,26 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (cert.GetSerialNumber ().ToStableString (), Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber");
 
 				var emailAddresses = cert.GetEmailAddresses ();
-				Assert.IsTrue (emailAddresses == null || emailAddresses.Length == 0, "GetEmailAddresses");
+				Assert.IsTrue (emailAddresses is null || emailAddresses.Length == 0, "GetEmailAddresses");
 
 				Assert.NotNull (cert.GetNormalizedIssuerSequence (), "GetNormalizedIssuerSequence");
 				Assert.NotNull (cert.GetNormalizedSubjectSequence (), "GetNormalizedSubjectSequence");
+#if !__MACCATALYST__
 				Assert.NotNull (cert.GetPublicKey (), "GetPublicKey");
+#endif
 			}
-			if (TestRuntime.CheckXcodeVersion (9,0)) {
+			if (TestRuntime.CheckXcodeVersion (9, 0)) {
 				NSError err;
 				Assert.That (cert.GetSerialNumber (out err).ToStableString (), Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber/NSError");
-				Assert.Null (err, "err") ;
+				Assert.Null (err, "err");
 			}
-			if (TestRuntime.CheckXcodeVersion (10,0)) {
+			if (TestRuntime.CheckXcodeVersion (10, 0)) {
 				Assert.NotNull (cert.GetKey (), "GetKey");
 			}
 		}
 
 		[Test]
-		public void MailNSData()
+		public void MailNSData ()
 		{
 			using (var data = NSData.FromArray (mail_google_com))
 			using (var sc = new SecCertificate (data)) {
@@ -561,10 +550,15 @@ namespace MonoTouchFixtures.Security {
 				 * store the SecCertificateRef in its Handle.
 				 */
 				Assert.That (cert.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo (1), "RetainCount");
+				Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 				using (var sc = new SecCertificate (cert)) {
+#if NET
+					// dotnet PAL layer does not return the same instance
+					CheckMailGoogleCom (sc, 1); // so the new one is RC == 1
+#else
 					Assert.That (sc.Handle, Is.EqualTo (cert.Handle), "Same Handle");
-					CheckMailGoogleCom (sc, 2);
+					CheckMailGoogleCom (sc, 2); // same handle means another reference was added
+#endif
 					Assert.That (cert.ToString (true), Is.EqualTo (sc.ToX509Certificate ().ToString (true)), "X509Certificate");
 				}
 			}
@@ -596,8 +590,8 @@ namespace MonoTouchFixtures.Security {
 			SecKey private_key;
 			SecKey public_key;
 			var att = new SecPublicPrivateKeyAttrs ();
-			att.Label = "NotDefault";
-			att.IsPermanent = true;
+			att.Label = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
+			att.IsPermanent = false;
 			att.ApplicationTag = new NSData ();
 			att.EffectiveKeySize = 1024;
 			att.CanEncrypt = false;
@@ -607,38 +601,45 @@ namespace MonoTouchFixtures.Security {
 			att.CanVerify = false;
 			att.CanUnwrap = false;
 
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
-			Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, out _, out _); }, "GenerateKeyPair - Invalid");
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "GenerateKeyPair - Param issue, invalid RSA key size");
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - Null optional params, success");
+			try {
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
+
+
+				Assert.Throws<ArgumentException> (() => { SecKey.GenerateKeyPair (SecKeyType.Invalid, -1, null, out _, out _); }, "GenerateKeyPair - Invalid");
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, -1, null, out _, out _), Is.EqualTo (SecStatusCode.Param), "GenerateKeyPair - Param issue, invalid RSA key size");
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, null, out _, out _), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - Null optional params, success");
 
 #if IOS
-			var att2 = new SecPublicPrivateKeyAttrs ();
-			att2.IsPermanent = false;
-			att2.EffectiveKeySize = 1024;
-			att2.CanEncrypt = true;
-			att2.CanDecrypt = true;
-			att2.CanDerive = true;
-			att2.CanSign = true;
-			att2.CanVerify = true;
-			att2.CanUnwrap = true;
-			Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att2, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - iOS Only API");
+				var att2 = new SecPublicPrivateKeyAttrs ();
+				att2.Label = att.Label;
+				att2.IsPermanent = false;
+				att2.EffectiveKeySize = 1024;
+				att2.CanEncrypt = true;
+				att2.CanDecrypt = true;
+				att2.CanDerive = true;
+				att2.CanSign = true;
+				att2.CanVerify = true;
+				att2.CanUnwrap = true;
+				Assert.That (SecKey.GenerateKeyPair (SecKeyType.RSA, 1024, att, att2, out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair - iOS Only API");
 #endif
-			if (TestRuntime.CheckXcodeVersion (8,0)) {
-				using (var attrs = public_key.GetAttributes ()) {
-					Assert.That (attrs.Count, Is.GreaterThan (0), "public/GetAttributes");
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					using (var attrs = public_key.GetAttributes ()) {
+						Assert.That (attrs.Count, Is.GreaterThan ((nuint) 0), "public/GetAttributes");
+					}
+					using (var attrs = private_key.GetAttributes ()) {
+						Assert.That (attrs.Count, Is.GreaterThan ((nuint) 0), "private/GetAttributes");
+					}
 				}
-				using (var attrs = private_key.GetAttributes ()) {
-					Assert.That (attrs.Count, Is.GreaterThan (0), "private/GetAttributes");
-				}
+			} finally {
+				KeyTest.DeleteKeysWithLabel (att.Label);
 			}
 		}
 
 		[Test]
 		public void X2 ()
 		{
-			TestRuntime.AssertXcodeVersion (10,0);
-			using (var x1 = new SecCertificate (mail_google_com)) 
+			TestRuntime.AssertXcodeVersion (10, 0);
+			using (var x1 = new SecCertificate (mail_google_com))
 			using (var x2 = new SecCertificate2 (x1)) {
 				Assert.That (x2.Certificate.GetCommonName (), Is.EqualTo (x1.GetCommonName ()), "CommonName");
 			}

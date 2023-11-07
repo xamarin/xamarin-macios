@@ -1,18 +1,16 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLPointerTypeTests {
 		MTLPointerType ptrType = null;
 
@@ -26,7 +24,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (ptrType != null)
+			if (ptrType is not null)
 				ptrType.Dispose ();
 			ptrType = null;
 		}
@@ -40,13 +38,13 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void GetAlignmentTest ()
 		{
-			Assert.AreEqual (0, ptrType.Alignment);
+			Assert.AreEqual ((nuint) 0, ptrType.Alignment);
 		}
 
 		[Test]
 		public void GetDataSizeTest ()
 		{
-			Assert.AreEqual (0, ptrType.DataSize);
+			Assert.AreEqual ((nuint) 0, ptrType.DataSize);
 		}
 
 		[Test]

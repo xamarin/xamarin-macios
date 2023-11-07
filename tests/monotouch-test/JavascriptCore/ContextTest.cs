@@ -10,14 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using JavaScriptCore;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.JavaScriptCore;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.JavascriptCore {
@@ -45,7 +39,7 @@ namespace MonoTouchFixtures.JavascriptCore {
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var context = new JSContext ())
-			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }")) 
+			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }"))
 			using (JSValue function = context [(NSString) "square"])
 			using (JSValue input = JSValue.From (2, context))
 			using (JSValue result = function.Call (input)) {
@@ -59,8 +53,8 @@ namespace MonoTouchFixtures.JavascriptCore {
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
 			using (var context = new JSContext ())
-			using (JSValue value = context.EvaluateScript ("a = 3")) 
-			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }")) 
+			using (JSValue value = context.EvaluateScript ("a = 3"))
+			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }"))
 			using (JSValue function = context [(NSString) "square"])
 			using (JSValue result = function.Call (context [(NSString) "a"])) {
 				Assert.That (result.ToInt32 (), Is.EqualTo (9), "9");

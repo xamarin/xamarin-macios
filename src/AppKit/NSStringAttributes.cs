@@ -6,73 +6,75 @@
 //
 // Copyright 2013 Xamarin Inc
 
+#if !__MACCATALYST__
+
 using System;
 
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-namespace AppKit
-{
-	public partial class NSStringAttributes : DictionaryContainer
-	{
-		static internal NSDictionary ToDictionary (
-			NSFont font,
-			NSColor foregroundColor,
-			NSColor backgroundColor,
-			NSColor strokeColor,
-			NSColor underlineColor,
-			NSColor strikethroughColor,
-			NSUnderlineStyle underlineStyle,
+#nullable enable
+
+namespace AppKit {
+	public partial class NSStringAttributes : DictionaryContainer {
+		static internal NSDictionary? ToDictionary (
+			NSFont? font,
+			NSColor? foregroundColor,
+			NSColor? backgroundColor,
+			NSColor? strokeColor,
+			NSColor? underlineColor,
+			NSColor? strikethroughColor,
+			NSUnderlineStyle? underlineStyle,
 			NSUnderlineStyle strikethroughStyle,
-			NSParagraphStyle paragraphStyle,
+			NSParagraphStyle? paragraphStyle,
 			float strokeWidth,
-			NSShadow shadow,
-			NSUrl link,
+			NSShadow? shadow,
+			NSUrl? link,
 			bool superscript,
-			NSTextAttachment attachment,
+			NSTextAttachment? attachment,
 			NSLigatureType ligature,
 			float baselineOffset,
 			float kerningAdjustment,
 			float obliqueness,
 			float expansion,
-			NSCursor cursor,
-			string toolTip,
+			NSCursor? cursor,
+			string? toolTip,
 			int characterShape,
-			NSGlyphInfo glyphInfo,
-			NSArray writingDirection,
+			NSGlyphInfo? glyphInfo,
+			NSArray? writingDirection,
 			bool markedClauseSegment,
 			NSTextLayoutOrientation verticalGlyphForm,
-			NSTextAlternatives textAlternatives,
+			NSTextAlternatives? textAlternatives,
 			NSSpellingState spellingState)
 		{
 			var attr = new NSStringAttributes ();
 
-			if (font != null){
+			if (font is not null) {
 				attr.Font = font;
 			}
 
-			if (paragraphStyle != null) {
+			if (paragraphStyle is not null) {
 				attr.ParagraphStyle = paragraphStyle;
 			}
 
-			if (foregroundColor != null) {
+			if (foregroundColor is not null) {
 				attr.ForegroundColor = foregroundColor;
 			}
 
-			if (underlineStyle != NSUnderlineStyle.None) {
-				attr.UnderlineStyle = (int?)underlineStyle;
+			if (underlineStyle is not NSUnderlineStyle.None) {
+				attr.UnderlineStyle = (int?) underlineStyle;
 			}
 
 			if (superscript) {
 				attr.Superscript = true;
 			}
 
-			if (backgroundColor != null) {
+			if (backgroundColor is not null) {
 				attr.BackgroundColor = backgroundColor;
 			}
 
-			if (attachment != null) {
+			if (attachment is not null) {
 				attr.Attachment = attachment;
 			}
 
@@ -88,7 +90,7 @@ namespace AppKit
 				attr.KerningAdjustment = kerningAdjustment;
 			}
 
-			if (link != null) {
+			if (link is not null) {
 				attr.Link = link;
 			}
 
@@ -96,23 +98,23 @@ namespace AppKit
 				attr.StrokeWidth = strokeWidth;
 			}
 
-			if (strokeColor != null) {
+			if (strokeColor is not null) {
 				attr.StrokeColor = strokeColor;
 			}
 
-			if (underlineColor != null) {
+			if (underlineColor is not null) {
 				attr.UnderlineColor = underlineColor;
 			}
 
 			if (strikethroughStyle != NSUnderlineStyle.None) {
-				attr.StrikethroughStyle = (int?)strikethroughStyle;
+				attr.StrikethroughStyle = (int?) strikethroughStyle;
 			}
 
-			if (strikethroughColor != null) {
+			if (strikethroughColor is not null) {
 				attr.StrikethroughColor = strikethroughColor;
 			}
 
-			if (shadow != null) {
+			if (shadow is not null) {
 				attr.Shadow = shadow;
 			}
 
@@ -124,11 +126,11 @@ namespace AppKit
 				attr.Expansion = expansion;
 			}
 
-			if (cursor != null) {
+			if (cursor is not null) {
 				attr.Cursor = cursor;
 			}
 
-			if (toolTip != null) {
+			if (toolTip is not null) {
 				attr.ToolTip = toolTip;
 			}
 
@@ -136,11 +138,11 @@ namespace AppKit
 				attr.CharacterShape = 0;
 			}
 
-			if (glyphInfo != null) {
+			if (glyphInfo is not null) {
 				attr.GlyphInfo = glyphInfo;
 			}
 
-			if (writingDirection != null) {
+			if (writingDirection is not null) {
 				attr.WritingDirection = writingDirection;
 			}
 
@@ -152,7 +154,7 @@ namespace AppKit
 				attr.VerticalGlyphForm = verticalGlyphForm;
 			}
 
-			if (textAlternatives != null) {
+			if (textAlternatives is not null) {
 				attr.TextAlternatives = textAlternatives;
 			}
 
@@ -177,7 +179,7 @@ namespace AppKit
 			return CFDictionary.GetValue (Dictionary.Handle, key.Handle);
 		}
 
-		T Get<T> (NSString key, Func<IntPtr, T> ctor)
+		T? Get<T> (NSString key, Func<IntPtr, T> ctor)
 		{
 			var handle = Get (key);
 			if (handle == IntPtr.Zero) {
@@ -190,18 +192,18 @@ namespace AppKit
 		bool? GetBool (NSString key)
 		{
 			var value = GetInt32Value (key);
-			return value == null ? null : (bool?)(value.Value != 0);
+			return value is null ? null : (bool?) (value.Value != 0);
 		}
-		
+
 		void Set (NSString key, bool? value)
 		{
-			SetNumberValue (key, value == null ? null : (int?)(value.Value ? 1 : 0));
+			SetNumberValue (key, value is null ? null : (int?) (value.Value ? 1 : 0));
 		}
 
 		int SetUnderlineStyle (NSString attr, NSUnderlineStyle style,
 			NSUnderlinePattern pattern, bool byWord)
 		{
-			var value = (int)style | (int)pattern;
+			var value = (int) style | (int) pattern;
 			if (byWord) {
 				value |= (int) NSAttributedString.UnderlineByWordMaskAttributeName;
 			}
@@ -210,28 +212,27 @@ namespace AppKit
 			return value;
 		}
 
-		public NSUrl LinkUrl {
+		public NSUrl? LinkUrl {
 			get { return Link as NSUrl; }
 			set { Link = value; }
 		}
 
-		public NSString LinkString {
+		public NSString? LinkString {
 			get { return Link as NSString; }
 			set { Link = value; }
 		}
 
-#if XAMCORE_2_0
-		public NSFont Font {
+		public NSFont? Font {
 			get { return Get (NSStringAttributeKey.Font, handle => new NSFont (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Font, value); }
 		}
 
-		public NSParagraphStyle ParagraphStyle {
+		public NSParagraphStyle? ParagraphStyle {
 			get { return Get (NSStringAttributeKey.ParagraphStyle, handle => new NSParagraphStyle (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.ParagraphStyle, value); }
 		}
 
-		public NSColor ForegroundColor {
+		public NSColor? ForegroundColor {
 			get { return Get (NSStringAttributeKey.ForegroundColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.ForegroundColor, value); }
 		}
@@ -252,19 +253,19 @@ namespace AppKit
 			set { Set (NSStringAttributeKey.Superscript, value); }
 		}
 
-		public NSColor BackgroundColor {
+		public NSColor? BackgroundColor {
 			get { return Get (NSStringAttributeKey.BackgroundColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.BackgroundColor, value); }
 		}
 
-		public NSTextAttachment Attachment {
+		public NSTextAttachment? Attachment {
 			get { return Get (NSStringAttributeKey.Attachment, handle => new NSTextAttachment (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Attachment, value); }
 		}
 
 		public NSLigatureType? Ligature {
-			get { return (NSLigatureType?)GetInt32Value (NSStringAttributeKey.Ligature); }
-			set { SetNumberValue (NSStringAttributeKey.Ligature, (int?)value); }
+			get { return (NSLigatureType?) GetInt32Value (NSStringAttributeKey.Ligature); }
+			set { SetNumberValue (NSStringAttributeKey.Ligature, (int?) value); }
 		}
 
 		public float? BaselineOffset {
@@ -277,7 +278,7 @@ namespace AppKit
 			set { SetNumberValue (NSStringAttributeKey.KerningAdjustment, value); }
 		}
 
-		NSObject Link {
+		NSObject? Link {
 			get {
 				var handle = Get (NSStringAttributeKey.Link);
 				return handle == IntPtr.Zero ? null : Runtime.GetNSObject (handle);
@@ -291,12 +292,12 @@ namespace AppKit
 			set { SetNumberValue (NSStringAttributeKey.StrokeWidth, value); }
 		}
 
-		public NSColor StrokeColor {
+		public NSColor? StrokeColor {
 			get { return Get (NSStringAttributeKey.StrokeColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.StrokeColor, value); }
 		}
 
-		public NSColor UnderlineColor {
+		public NSColor? UnderlineColor {
 			get { return Get (NSStringAttributeKey.UnderlineColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.UnderlineColor, value); }
 		}
@@ -312,12 +313,12 @@ namespace AppKit
 			return SetUnderlineStyle (NSStringAttributeKey.StrikethroughStyle, style, pattern, byWord);
 		}
 
-		public NSColor StrikethroughColor {
+		public NSColor? StrikethroughColor {
 			get { return Get (NSStringAttributeKey.StrikethroughColor, handle => new NSColor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.StrikethroughColor, value); }
 		}
 
-		public NSShadow Shadow {
+		public NSShadow? Shadow {
 			get { return Get (NSStringAttributeKey.Shadow, handle => new NSShadow (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Shadow, value); }
 		}
@@ -332,7 +333,7 @@ namespace AppKit
 			set { SetNumberValue (NSStringAttributeKey.Expansion, value); }
 		}
 
-		public NSCursor Cursor {
+		public NSCursor? Cursor {
 			get { return Get (NSStringAttributeKey.Cursor, handle => new NSCursor (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.Cursor, value); }
 		}
@@ -347,12 +348,12 @@ namespace AppKit
 			set { SetNumberValue (NSStringAttributeKey.CharacterShape, value); }
 		}
 
-		public NSGlyphInfo GlyphInfo {
+		public NSGlyphInfo? GlyphInfo {
 			get { return Get (NSStringAttributeKey.GlyphInfo, handle => new NSGlyphInfo (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.GlyphInfo, value); }
 		}
 
-		public NSArray WritingDirection {
+		public NSArray? WritingDirection {
 			get { return Get (NSStringAttributeKey.WritingDirection, handle => new NSArray (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.GlyphInfo, value); }
 		}
@@ -363,175 +364,19 @@ namespace AppKit
 		}
 
 		public NSTextLayoutOrientation? VerticalGlyphForm {
-			get { return (NSTextLayoutOrientation?)GetInt32Value (NSStringAttributeKey.VerticalGlyphForm); }
-			set { SetNumberValue (NSStringAttributeKey.VerticalGlyphForm, (int?)value); }
+			get { return (NSTextLayoutOrientation?) GetInt32Value (NSStringAttributeKey.VerticalGlyphForm); }
+			set { SetNumberValue (NSStringAttributeKey.VerticalGlyphForm, (int?) value); }
 		}
 
-		public NSTextAlternatives TextAlternatives {
+		public NSTextAlternatives? TextAlternatives {
 			get { return Get (NSStringAttributeKey.TextAlternatives, handle => new NSTextAlternatives (handle)); }
 			set { SetNativeValue (NSStringAttributeKey.TextAlternatives, value); }
 		}
 
 		public NSSpellingState? SpellingState {
-			get { return (NSSpellingState?)GetInt32Value (NSStringAttributeKey.SpellingState); }
-			set { SetNumberValue (NSStringAttributeKey.SpellingState, (int?)value); }
+			get { return (NSSpellingState?) GetInt32Value (NSStringAttributeKey.SpellingState); }
+			set { SetNumberValue (NSStringAttributeKey.SpellingState, (int?) value); }
 		}
-#else
-		public NSFont Font {
-			get { return Get (NSAttributedString.FontAttributeName, handle => new NSFont (handle)); }
-			set { SetNativeValue (NSAttributedString.FontAttributeName, value); }
-		}
-
-		public NSParagraphStyle ParagraphStyle {
-			get { return Get (NSAttributedString.ParagraphStyleAttributeName, handle => new NSParagraphStyle (handle)); }
-			set { SetNativeValue (NSAttributedString.ParagraphStyleAttributeName, value); }
-		}
-
-		public NSColor ForegroundColor {
-			get { return Get (NSAttributedString.ForegroundColorAttributeName, handle => new NSColor (handle)); }
-			set { SetNativeValue (NSAttributedString.ForegroundColorAttributeName, value); }
-		}
-
-		public int? UnderlineStyle {
-			get { return GetInt32Value (NSAttributedString.UnderlineStyleAttributeName); }
-			set { SetNumberValue (NSAttributedString.UnderlineStyleAttributeName, value); }
-		}
-
-		public int SetUnderlineStyle (NSUnderlineStyle style = NSUnderlineStyle.None,
-			NSUnderlinePattern pattern = NSUnderlinePattern.Solid, bool byWord = false)
-		{
-			return SetUnderlineStyle (NSAttributedString.UnderlineStyleAttributeName, style, pattern, byWord);
-		}
-
-		public bool? Superscript {
-			get { return GetBool (NSAttributedString.SuperscriptAttributeName); }
-			set { Set (NSAttributedString.SuperscriptAttributeName, value); }
-		}
-
-		public NSColor BackgroundColor {
-			get { return Get (NSAttributedString.BackgroundColorAttributeName, handle => new NSColor (handle)); }
-			set { SetNativeValue (NSAttributedString.BackgroundColorAttributeName, value); }
-		}
-
-		public NSTextAttachment Attachment {
-			get { return Get (NSAttributedString.AttachmentAttributeName, handle => new NSTextAttachment (handle)); }
-			set { SetNativeValue (NSAttributedString.AttachmentAttributeName, value); }
-		}
-
-		public NSLigatureType? Ligature {
-			get { return (NSLigatureType?)GetInt32Value (NSAttributedString.LigatureAttributeName); }
-			set { SetNumberValue (NSAttributedString.LigatureAttributeName, (int?)value); }
-		}
-
-		public float? BaselineOffset {
-			get { return GetFloatValue (NSAttributedString.BaselineOffsetAttributeName); }
-			set { SetNumberValue (NSAttributedString.BaselineOffsetAttributeName, value); }
-		}
-
-		public float? KerningAdjustment {
-			get { return GetFloatValue (NSAttributedString.KernAttributeName); }
-			set { SetNumberValue (NSAttributedString.KernAttributeName, value); }
-		}
-
-		NSObject Link {
-			get {
-				var handle = Get (NSAttributedString.LinkAttributeName);
-				return handle == IntPtr.Zero ? null : Runtime.GetNSObject (handle);
-			}
-
-			set { SetNativeValue (NSAttributedString.LinkAttributeName, value); }
-		}
-
-		public float? StrokeWidth {
-			get { return GetFloatValue (NSAttributedString.StrokeWidthAttributeName); }
-			set { SetNumberValue (NSAttributedString.StrokeWidthAttributeName, value); }
-		}
-
-		public NSColor StrokeColor {
-			get { return Get (NSAttributedString.StrokeColorAttributeName, handle => new NSColor (handle)); }
-			set { SetNativeValue (NSAttributedString.StrokeColorAttributeName, value); }
-		}
-	
-		public NSColor UnderlineColor {
-			get { return Get (NSAttributedString.UnderlineColorAttributeName, handle => new NSColor (handle)); }
-			set { SetNativeValue (NSAttributedString.UnderlineColorAttributeName, value); }
-		}
-
-		public int? StrikethroughStyle {
-			get { return GetInt32Value (NSAttributedString.StrikethroughStyleAttributeName); }
-			set { SetNumberValue (NSAttributedString.StrikethroughStyleAttributeName, value); }
-		}
-
-		public int SetStrikethroughStyle (NSUnderlineStyle style = NSUnderlineStyle.None,
-			NSUnderlinePattern pattern = NSUnderlinePattern.Solid, bool byWord = false)
-		{
-			return SetUnderlineStyle (NSAttributedString.StrikethroughStyleAttributeName, style, pattern, byWord);
-		}
-
-		public NSColor StrikethroughColor {
-			get { return Get (NSAttributedString.StrikethroughColorAttributeName, handle => new NSColor (handle)); }
-			set { SetNativeValue (NSAttributedString.StrikethroughColorAttributeName, value); }
-		}
-
-		public NSShadow Shadow {
-			get { return Get (NSAttributedString.ShadowAttributeName, handle => new NSShadow (handle)); }
-			set { SetNativeValue (NSAttributedString.ShadowAttributeName, value); }
-		}
-
-		public float? Obliqueness {
-			get { return GetFloatValue (NSAttributedString.ObliquenessAttributeName); }
-			set { SetNumberValue (NSAttributedString.ObliquenessAttributeName, value); }
-		}
-
-		public float? Expansion {
-			get { return GetFloatValue (NSAttributedString.ExpansionAttributeName); }
-			set { SetNumberValue (NSAttributedString.ExpansionAttributeName, value); }
-		}
-
-		public NSCursor Cursor {
-			get { return Get (NSAttributedString.CursorAttributeName, handle => new NSCursor (handle)); }
-			set { SetNativeValue (NSAttributedString.CursorAttributeName, value); }
-		}
-
-		public string ToolTip {
-			get { return Get (NSAttributedString.ToolTipAttributeName, handle => new NSString (handle)); }
-			set { SetNativeValue (NSAttributedString.ToolTipAttributeName, new NSString (value)); }
-		}
-
-		public int? CharacterShape {
-			get { return GetInt32Value (NSAttributedString.CharacterShapeAttributeName); }
-			set { SetNumberValue (NSAttributedString.CharacterShapeAttributeName, value); }
-		}
-
-		public NSGlyphInfo GlyphInfo {
-			get { return Get (NSAttributedString.GlyphInfoAttributeName, handle => new NSGlyphInfo (handle)); }
-			set { SetNativeValue (NSAttributedString.GlyphInfoAttributeName, value); }
-		}
-
-		public NSArray WritingDirection {
-			get { return Get (NSAttributedString.WritingDirectionAttributeName, handle => new NSArray (handle)); }
-			set { SetNativeValue (NSAttributedString.GlyphInfoAttributeName, value); }
-		}
-
-		public bool? MarkedClauseSegment {
-			get { return GetBool (NSAttributedString.MarkedClauseSegmentAttributeName); }
-			set { Set (NSAttributedString.MarkedClauseSegmentAttributeName, value); }
-		}
-
-		public NSTextLayoutOrientation? VerticalGlyphForm {
-			get { return (NSTextLayoutOrientation?)GetInt32Value (NSAttributedString.VerticalGlyphFormAttributeName); }
-			set { SetNumberValue (NSAttributedString.VerticalGlyphFormAttributeName, (int?)value); }
-		}
-
-		public NSTextAlternatives TextAlternatives {
-			get { return Get (NSAttributedString.TextAlternativesAttributeName, handle => new NSTextAlternatives (handle)); }
-			set { SetNativeValue (NSAttributedString.TextAlternativesAttributeName, value); }
-		}
-
-		public NSSpellingState? SpellingState {
-			get { return (NSSpellingState?)GetInt32Value (NSAttributedString.SpellingStateAttributeName); }
-			set { SetNumberValue (NSAttributedString.SpellingStateAttributeName, (int?)value); }
-		}
-#endif
 	}
 }
+#endif // !__MACCATALYST__

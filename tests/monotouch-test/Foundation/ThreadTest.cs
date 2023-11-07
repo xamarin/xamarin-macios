@@ -9,16 +9,10 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -45,8 +39,8 @@ namespace MonoTouchFixtures.Foundation {
 			var t = new Thread (() => {
 				if (NSThread.IsMain)
 					rv = 1;
-				else if (Assembly.GetEntryAssembly () == null)
-					rv =  2;
+				else if (Assembly.GetEntryAssembly () is null)
+					rv = 2;
 				else
 					rv = 0;
 			}) {

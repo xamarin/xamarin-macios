@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKNoiseMap
 //
 // Authors:
@@ -8,14 +8,20 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__ && XAMCORE_2_0
+#if !__WATCHOS__
 
 using System;
-using OpenTK;
 using NUnit.Framework;
 
 using Foundation;
 using GameplayKit;
+
+#if NET
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GamePlayKit {
 	[TestFixture]
@@ -27,7 +33,7 @@ namespace MonoTouchFixtures.GamePlayKit {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Ignoring GameplayKit tests: Requires iOS10+");
-			
+
 			var size = new Vector2d (1.0, 1.0);
 			var origin = new Vector2d (0, 0);
 			var sample = new Vector2i (100, 100);

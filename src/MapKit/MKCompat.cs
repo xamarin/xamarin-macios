@@ -3,9 +3,11 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
-#if !XAMCORE_4_0 && __IOS__
+#if !NET && __IOS__
 	public partial class MKUserTrackingBarButtonItem {
 
 		[Obsolete ("Does not return a valid instance on iOS 12.")]

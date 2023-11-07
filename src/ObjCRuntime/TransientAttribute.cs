@@ -10,10 +10,7 @@
 using System;
 
 namespace ObjCRuntime {
-	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple=false)]
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class TransientAttribute : Attribute {
+	[AttributeUsage (AttributeTargets.Parameter, AllowMultiple = false)]
+	public sealed class TransientAttribute : Attribute {
 	}
 }

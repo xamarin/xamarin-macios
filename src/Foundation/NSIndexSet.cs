@@ -73,10 +73,9 @@ namespace Foundation {
 			return indexes;
 		}
 
-#if XAMCORE_2_0
 		public static NSIndexSet FromArray (nuint[] items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSIndexSet ();
 			
 			var indexSet = new NSMutableIndexSet();
@@ -84,11 +83,10 @@ namespace Foundation {
 				indexSet.Add (index);	
 			return indexSet;
 		}
-#endif
 
 		public static NSIndexSet FromArray (uint[] items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSIndexSet ();
 
 			var indexSet = new NSMutableIndexSet();
@@ -99,7 +97,7 @@ namespace Foundation {
 
 		public static NSIndexSet FromArray (int[] items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSIndexSet ();
 			
 			var indexSet = new NSMutableIndexSet();
@@ -111,7 +109,6 @@ namespace Foundation {
 			return indexSet;
 		}
 
-#if XAMCORE_2_0
 		public NSIndexSet (uint value) : this ((nuint)value)
 		{
 		}
@@ -122,7 +119,6 @@ namespace Foundation {
 				throw new ArgumentException ("value must be positive");
 			// init done by the base ctor
 		}
-#endif
 
 		public NSIndexSet (int value) : this ((nuint)(uint)value)
 		{

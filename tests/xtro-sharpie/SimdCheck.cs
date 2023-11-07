@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,17 +6,14 @@ using Mono.Cecil;
 
 using Clang.Ast;
 
-namespace Extrospection
-{
+namespace Extrospection {
 
-	class SimdCheck : BaseVisitor
-	{
+	class SimdCheck : BaseVisitor {
 		bool very_strict = false;
 		bool strict = false;
 
 		// A dictionary of native type -> managed type mapping.
-		class NativeSimdInfo
-		{
+		class NativeSimdInfo {
 			public string Managed;
 			public string InvalidManaged;
 		}
@@ -43,6 +40,8 @@ namespace Extrospection
 			{ "vector_uint2", new NativeSimdInfo { Managed = "Vector2i", }},
 			{ "vector_uint3", new NativeSimdInfo { Managed = "Vector3i", }},
 			{ "vector_uint4", new NativeSimdInfo { Managed = "Vector4i", }},
+			// simd_doubleX is typedefed to vector_doubleX
+			{ "simd_double2", new NativeSimdInfo { Managed = "Vector2d" }},
 			// simd_floatX is typedefed to vector_floatX
 			{ "simd_float2", new NativeSimdInfo { Managed = "Vector2" }},
 			{ "simd_float3", new NativeSimdInfo { Managed = "Vector3" }},
@@ -91,8 +90,7 @@ namespace Extrospection
 			}
 		}
 
-		class ManagedSimdInfo
-		{
+		class ManagedSimdInfo {
 			public MethodDefinition Method;
 			public bool ContainsInvalidMappingForSimd;
 		}
@@ -121,7 +119,7 @@ namespace Extrospection
 			var contains_simd_types = ContainsSimdTypes (method, ref invalid_simd_type);
 
 			var key = method.GetName ();
-			if (key == null) {
+			if (key is null) {
 				if (method.IsObsolete ())
 					return; // Don't care about obsolete API.
 
@@ -142,7 +140,8 @@ namespace Extrospection
 				}
 			} else {
 				managed_methods [key] = new ManagedSimdInfo {
-					Method = method, ContainsInvalidMappingForSimd = invalid_simd_type
+					Method = method,
+					ContainsInvalidMappingForSimd = invalid_simd_type
 				};
 			}
 		}
@@ -185,14 +184,14 @@ namespace Extrospection
 
 			// Unpoint the type
 			var pointerType = t as Clang.Ast.PointerType;
-			if (pointerType != null)
+			if (pointerType is not null)
 				t = pointerType.PointeeQualType.Type;
 
 			if (t.Kind == TypeKind.ExtVector) {
 				rv = true;
 			} else {
 				var r = (t as RecordType)?.Decl;
-				if (r != null) {
+				if (r is not null) {
 					foreach (var f in r.Fields) {
 						var qt = f.QualType.CanonicalQualType.Type;
 						if (qt.Kind == TypeKind.ExtVector) {
@@ -200,7 +199,7 @@ namespace Extrospection
 							break;
 						}
 						var at = qt as ConstantArrayType;
-						if (at != null) {
+						if (at is not null) {
 							if (at.ElementType.Type.Kind == TypeKind.ExtVector) {
 								rv = true;
 								break;
@@ -216,10 +215,10 @@ namespace Extrospection
 				var framework = Helpers.GetFramework (decl);
 				Log.On (framework).Add ($"!unknown-simd-type! Could not detect that {typeName} is a Simd type, but its name contains 'simd'. Something needs fixing in SimdCheck.cs");
 			}
-			
+
 			if (rv)
 				simd_type = typeName;
-			
+
 			return rv;
 		}
 
@@ -243,11 +242,21 @@ namespace Extrospection
 
 		string Undecorate (string native_name)
 		{
-			if (native_name.StartsWith ("const ", StringComparison.Ordinal))
-				return Undecorate (native_name.Substring ("const ".Length));
+			const string _const = "const ";
+			if (native_name.StartsWith (_const, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_const.Length));
 
-			if (native_name.StartsWith ("struct ", StringComparison.Ordinal))
-				return Undecorate (native_name.Substring ("struct ".Length));
+			const string _struct = "struct ";
+			if (native_name.StartsWith (_struct, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_struct.Length));
+
+			const string _nsrefinedforswift = "NS_REFINED_FOR_SWIFT ";
+			if (native_name.StartsWith (_nsrefinedforswift, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_nsrefinedforswift.Length));
+
+			const string _nsreturnsinnerpointer = "NS_RETURNS_INNER_POINTER ";
+			if (native_name.StartsWith (_nsreturnsinnerpointer, StringComparison.Ordinal))
+				return Undecorate (native_name.Substring (_nsreturnsinnerpointer.Length));
 
 			const string _Nonnull = " _Nonnull";
 			if (native_name.EndsWith (_Nonnull, StringComparison.Ordinal))
@@ -256,7 +265,7 @@ namespace Extrospection
 			const string _Nullable = " _Nullable";
 			if (native_name.EndsWith (_Nullable, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (0, native_name.Length - _Nullable.Length));
-			
+
 			const string _star = " *";
 			if (native_name.EndsWith (_star, StringComparison.Ordinal))
 				return Undecorate (native_name.Substring (0, native_name.Length - _star.Length));
@@ -295,7 +304,7 @@ namespace Extrospection
 				case Mono.Cecil.Cil.Code.Calli:
 				case Mono.Cecil.Cil.Code.Callvirt:
 					var mr = i.Operand as MethodReference;
-					if (mr != null) {
+					if (mr is not null) {
 						if (mr.Name.StartsWith ("xamarin_simd__", StringComparison.Ordinal))
 							return;
 						if (mr.Name.StartsWith ("xamarin_vector_float3__", StringComparison.Ordinal))
@@ -327,7 +336,7 @@ namespace Extrospection
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			var simd_type = string.Empty;
@@ -339,7 +348,7 @@ namespace Extrospection
 			var method = info?.Method;
 
 			if (!native_simd) {
-				if (method != null) {
+				if (method is not null) {
 					// The managed method uses types that were incorrectly used in place of the correct Simd types,
 					// but the native method doesn't use the native Simd types. This means the binding is correct.
 				} else {
@@ -348,7 +357,7 @@ namespace Extrospection
 				return;
 			}
 
-			if (method == null) {
+			if (method is null) {
 				// Could not map the native method to a managed method.
 				// This needs investigation, to see why the native method couldn't be mapped.
 
@@ -356,12 +365,12 @@ namespace Extrospection
 				var is_new = false;
 				var attrs = decl.Attrs.ToList ();
 				var parentClass = decl.DeclContext as Decl;
-				if (parentClass != null)
+				if (parentClass is not null)
 					attrs.AddRange (parentClass.Attrs);
 
 				foreach (var attr in attrs) {
 					var av_attr = attr as AvailabilityAttr;
-					if (av_attr == null)
+					if (av_attr is null)
 						continue;
 					if (av_attr.Platform.Name != "ios")
 						continue;
@@ -392,7 +401,7 @@ namespace Extrospection
 
 			if (requires_marshal_directive)
 				CheckMarshalDirective (method, simd_type);
-			
+
 			// We have a potentially broken managed method. This needs fixing/investigation.
 			Log.On (framework).Add ($"!unknown-simd-type-in-signature! {method}: the native signature has a simd type ({simd_type}), while the corresponding managed method is using an incorrect (non-simd) type.");
 		}

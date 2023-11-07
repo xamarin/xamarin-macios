@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NLGazetteer
 //
 // Copyright 2019 Microsoft Corp. All rights reserved.
@@ -25,7 +25,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 			sd [new NSString ("b")] = new [] { "Bonjour" };
 
 			var wd = sd.Dictionary;
-			Assert.That (wd.Count, Is.EqualTo (2), "Count");
+			Assert.That (wd.Count, Is.EqualTo ((nuint) 2), "Count");
 
 			using (var weak = new NLGazetteer (wd, NLLanguage.French.GetConstant (), out var error)) {
 				Assert.Null (error, "weak error");

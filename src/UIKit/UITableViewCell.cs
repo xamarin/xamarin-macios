@@ -11,7 +11,7 @@ using CoreGraphics;
 namespace UIKit {
 
 	public partial class UITableViewCell {
-		public UITableViewCell (UITableViewCellStyle style, string reuseIdentifier) : this (style, reuseIdentifier == null ? (NSString) null : new NSString (reuseIdentifier))
+		public UITableViewCell (UITableViewCellStyle style, string reuseIdentifier) : this (style, reuseIdentifier is null ? (NSString) null : new NSString (reuseIdentifier))
 		{
 		}
 	} /* class UITableViewCell */

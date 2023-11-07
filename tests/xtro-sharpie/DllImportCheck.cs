@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !missing-pinvoke!
@@ -23,7 +23,7 @@ namespace Extrospection {
 	class DllImportCheck : BaseVisitor {
 
 		// dupes :|
-		Dictionary<string,MethodDefinition> dllimports = new Dictionary<string, MethodDefinition> ();
+		Dictionary<string, MethodDefinition> dllimports = new Dictionary<string, MethodDefinition> ();
 
 		public override void VisitManagedMethod (MethodDefinition method)
 		{
@@ -33,7 +33,7 @@ namespace Extrospection {
 			var info = method.PInvokeInfo;
 			if (info.Module.Name == "__Internal")
 				return;
-			
+
 			// there are duplicates declarations
 			// TODO: right now we only check the first one, as the priority is knowing if we have (or not) bindings for them
 			var name = info.EntryPoint;
@@ -55,16 +55,18 @@ namespace Extrospection {
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			// check availability macros to see if the API is available on the OS and not deprecated
 			if (!decl.IsAvailable ())
 				return;
-			
+
 			if (!dllimports.ContainsKey (name)) {
 				// if we find functions without matching DllImport then we report them
-				Log.On (framework).Add ($"!missing-pinvoke! {name} is not bound");
+				// but don't report deprecated functions
+				if (!decl.IsDeprecated ())
+					Log.On (framework).Add ($"!missing-pinvoke! {name} is not bound");
 				return;
 			}
 

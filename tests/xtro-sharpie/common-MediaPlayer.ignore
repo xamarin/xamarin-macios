@@ -1,0 +1,5 @@
+## the API are present but from calling the underlying collections
+## the selectors are newer but they were already bound that way
+
+
+# Headers do not show that null is allowed, but docs do allow it. Testing shows nullable functionality does work.

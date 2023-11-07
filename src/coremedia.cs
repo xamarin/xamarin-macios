@@ -10,45 +10,58 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-	[Watch (6,0)]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[Partial]
 	interface CMMemoryPool {
 
-		[Internal][Field ("kCMMemoryPoolOption_AgeOutPeriod")]
+		[Internal]
+		[Field ("kCMMemoryPoolOption_AgeOutPeriod")]
 		IntPtr AgeOutPeriodSelector { get; }
 	}
 
-	[Static][Internal]
-	[Mac (10, 9), Watch (6,0)]
+	[Static]
+	[Internal]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	interface CMTextMarkupAttributesKeys {
-		[Internal][Field ("kCMTextMarkupAttribute_ForegroundColorARGB")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_ForegroundColorARGB")]
 		NSString ForegroundColorARGB { get; }
 
-		[Internal][Field ("kCMTextMarkupAttribute_BackgroundColorARGB")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_BackgroundColorARGB")]
 		NSString BackgroundColorARGB { get; }
 
-		[Internal][Field ("kCMTextMarkupAttribute_BoldStyle")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_BoldStyle")]
 		NSString BoldStyle { get; }
 
-		[Internal][Field ("kCMTextMarkupAttribute_ItalicStyle")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_ItalicStyle")]
 		NSString ItalicStyle { get; }
 
-		[Internal][Field ("kCMTextMarkupAttribute_UnderlineStyle")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_UnderlineStyle")]
 		NSString UnderlineStyle { get; }
 
-		[Internal][Field ("kCMTextMarkupAttribute_FontFamilyName")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_FontFamilyName")]
 		NSString FontFamilyName { get; }
 
-		[Internal][Field ("kCMTextMarkupAttribute_RelativeFontSize")]
+		[Internal]
+		[Field ("kCMTextMarkupAttribute_RelativeFontSize")]
 		NSString RelativeFontSize { get; }
 
 		[Internal]
-		[Field("kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight")]
+		[Field ("kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight")]
 		NSString BaseFontSizePercentageRelativeToVideoHeight { get; }
 	}
 
-	[Static][Internal]
-	[Watch (6,0)]
+	[Static]
+	[Internal]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	interface CMSampleAttachmentKey {
 		[Field ("kCMSampleAttachmentKey_NotSync")]
 		NSString NotSync { get; }
@@ -126,59 +139,72 @@ namespace CoreMedia {
 		NSString GradualDecoderRefreshKey { get; }
 
 		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		NSString DroppedFrameReason { get; }
 
-		[iOS (9,0)][NoMac]
+		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		NSString StillImageLensStabilizationInfo { get; }
 
-		[iOS (9,0)][NoMac]
+		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Active")]
 		NSString BufferLensStabilizationInfo_Active { get; }
 
-		[iOS (9,0)][NoMac]
+		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_OutOfRange")]
 		NSString BufferLensStabilizationInfo_OutOfRange { get; }
 
-		[iOS (9,0)][NoMac]
+		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Unavailable")]
 		NSString BufferLensStabilizationInfo_Unavailable { get; }
 
-		[iOS (9,0)][NoMac]
+		[NoMac]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Off")]
 		NSString BufferLensStabilizationInfo_Off { get; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalLevelInfo")]
 		NSString HevcTemporalLevelInfoKey { get; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalSubLayerAccess")]
 		NSString HevcTemporalSubLayerAccessKey { get; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCStepwiseTemporalSubLayerAccess")]
 		NSString HevcStepwiseTemporalSubLayerAccessKey { get; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCSyncSampleNALUnitType")]
 		NSString HevcSyncSampleNalUnitTypeKey { get; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		NSString CameraIntrinsicMatrixKey { get; }
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_AudioIndependentSampleDecoderRefreshCount")]
 		NSString AudioIndependentSampleDecoderRefreshCountKey { get; }
 
-		[Mac (10,10), Watch (6,0)]
+		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		NSString ForceKeyFrameKey { get; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
+		NSString Hdr10PlusPerFrameDataKey { get; }
 	}
 
-	[Watch (6,0)]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CMSampleAttachmentKey")]
 	interface CMSampleBufferAttachmentSettings {
 
@@ -192,31 +218,38 @@ namespace CoreMedia {
 		int SampleReferenceByteOffset { get; set; }
 		NSNumber GradualDecoderRefresh { get; set; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		[StrongDictionary]
 		CMHevcTemporalLevelInfoSettings HevcTemporalLevelInfo { get; set; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		bool HevcTemporalSubLayerAccess { get; set; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		bool HevcStepwiseTemporalSubLayerAccess { get; set; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		int HevcSyncSampleNalUnitType { get; set; }
 
-		[iOS (11,0), Mac (10,13), TV (11,0)]
+		[MacCatalyst (13, 1)]
 		NSData CameraIntrinsicMatrix { get; set; }
 
-		[iOS (13,0), Mac (10,15), TV (13,0), Watch (6,0)]
+		[iOS (13, 0), TV (13, 0)]
+		[MacCatalyst (13, 1)]
 		nint AudioIndependentSampleDecoderRefreshCount { get; set; }
 
-		[Mac (10,10), Watch (6,0)]
+		[MacCatalyst (13, 1)]
 		bool ForceKeyFrame { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[MacCatalyst (16, 0)]
+		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
+		NSData Hdr10PlusPerFrameData { get; set; } // it is a CFData, but that is a toll-free bridged
 	}
 
 	[Internal]
-	[iOS (11,0), Mac (10,13), TV (11,0), Watch (6,0)]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[Static]
 	interface CMHevcTemporalLevelInfoKeys {
 
@@ -242,7 +275,8 @@ namespace CoreMedia {
 		NSString LevelIndexKey { get; }
 	}
 
-	[iOS (11,0), Mac (10,13), TV (11,0), Watch (6,0)]
+	[Watch (6, 0)]
+	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CMHevcTemporalLevelInfoKeys")]
 	interface CMHevcTemporalLevelInfoSettings {
 

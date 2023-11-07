@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests CFHTTPMessage
 //
 // Authors:
@@ -11,19 +11,13 @@
 
 using System;
 using System.Net;
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
-#elif XAMCORE_2_0
+#else
 using CoreServices;
 #endif
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 using System.Threading;
@@ -60,7 +54,7 @@ namespace MonoTouchFixtures.CoreServices {
 				Assert.That (m.ResponseStatusCode, Is.EqualTo (HttpStatusCode.OK), "ResponseStatusCode");
 				Assert.That (m.ResponseStatusLine, Is.Empty, "ResponseStatusLine");
 				Assert.That (m.Version.ToString (), Is.EqualTo ("1.1"), "Version");
-				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint)1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 
@@ -74,7 +68,7 @@ namespace MonoTouchFixtures.CoreServices {
 				Assert.Throws<InvalidOperationException> (delegate { var x = m.ResponseStatusCode; }, "ResponseStatusCode");
 				Assert.Throws<InvalidOperationException> (delegate { var x = m.ResponseStatusLine; }, "ResponseStatusLine");
 				Assert.That (m.Version.ToString (), Is.EqualTo ("1.0"), "Version");
-				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint)1), "RetainCount");
+				Assert.That (TestRuntime.CFGetRetainCount (m.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 			}
 		}
 
@@ -86,7 +80,7 @@ namespace MonoTouchFixtures.CoreServices {
 			var taskCompletionSource = new TaskCompletionSource<CFHTTPMessage> ();
 			// the following code has to be in a diff thread, else, we are blocking the current loop, not cool
 			// perform a request so that we fail in the auth, then create the auth object and check the count
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				using (var request = CFHTTPMessage.CreateRequest (
 					new Uri (NetworkResources.Httpbin.GetStatusCodeUrl (HttpStatusCode.Unauthorized)), "GET", null)) {
 					request.SetBody (Array.Empty<byte> ()); // empty body, we are not interested
@@ -104,6 +98,9 @@ namespace MonoTouchFixtures.CoreServices {
 					}
 				}
 			}, () => done);
+			if (!done)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (done, "Network request completed");
 			using (var auth = CFHTTPAuthentication.CreateFromResponse (response)) {
 				Assert.NotNull (auth, "Null Auth");
 				Assert.IsTrue (auth.IsValid, "Auth is valid");

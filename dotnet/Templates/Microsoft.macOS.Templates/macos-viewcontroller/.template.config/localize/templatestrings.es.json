@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "Controlador de vista de macOS",
+  "description": "Controlador de vista de macOS con interfaz de usuario implementado en el Interface Builder de Xcode (archivo XIB)",
+  "symbols/namespace/description": "espacio de nombres para el código generado"
+}

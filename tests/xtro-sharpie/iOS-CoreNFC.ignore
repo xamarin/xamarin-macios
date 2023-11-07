@@ -1,7 +1,4 @@
-## deprecated/replaced selector (typo) - will be removed in a future beta
-!missing-selector! +NFCNDEFPayload::wellKnowTypeTextPayloadWithString:locale: not bound
-
-## breaking change -> XAMCORE_4_0
+## breaking change -> .NET
 !incorrect-protocol-member! NFCReaderSessionDelegate::readerSession:didDetectTags: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! NFCISO15693Tag::customCommandWithRequestFlag:customCommandCode:customRequestParameters:completionHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! NFCISO15693Tag::extendedLockBlockWithRequestFlags:blockNumber:completionHandler: is REQUIRED and should be abstract
@@ -28,3 +25,14 @@
 !incorrect-protocol-member! NFCTag::asNFCISO15693Tag is REQUIRED and should be abstract
 !incorrect-protocol-member! NFCTag::asNFCISO7816Tag is REQUIRED and should be abstract
 !incorrect-protocol-member! NFCTag::asNFCMiFareTag is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::authenticateWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::challengeWithRequestFlags:cryptoSuiteIdentifier:message:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::extendedFastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::extendedGetMultipleBlockSecurityStatusWithRequestFlag:blockRange:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::extendedWriteMultipleBlocksWithRequestFlags:blockRange:dataBlocks:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::keyUpdateWithRequestFlags:keyIdentifier:message:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::readBufferWithRequestFlags:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::sendRequestWithFlag:commandCode:data:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::fastReadMultipleBlocksWithRequestFlag:blockRange:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::getSystemInfoAndUIDWithRequestFlag:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! NFCISO15693Tag::lockDSFIDWithRequestFlag:completionHandler: is REQUIRED and should be abstract

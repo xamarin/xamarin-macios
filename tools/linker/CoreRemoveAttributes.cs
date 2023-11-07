@@ -8,11 +8,18 @@ namespace Xamarin.Linker {
 
 	// this can be used (directly) with Xamarin.Mac and as the base of Xamarin.iOS step
 	public class CoreRemoveAttributes : MobileRemoveAttributes {
-		
+
 		protected DerivedLinkContext LinkContext {
 			get {
 				return (DerivedLinkContext) base.context;
 			}
+		}
+
+		public override bool IsActiveFor (AssemblyDefinition assembly)
+		{
+			if (LinkContext.App.Optimizations.CustomAttributesRemoval != true)
+				return false;
+			return base.IsActiveFor (assembly);
 		}
 
 		protected override bool IsRemovedAttribute (CustomAttribute attribute)
@@ -22,7 +29,7 @@ namespace Xamarin.Linker {
 			switch (attr_type.Name) {
 			case "AdviceAttribute":
 			case "FieldAttribute":
-			case "PreserveAttribute":	// the ApplyPreserveAttribute substep is executed before this
+			case "PreserveAttribute":   // the ApplyPreserveAttribute substep is executed before this
 			case "LinkerSafeAttribute":
 				return attr_type.Namespace == Namespaces.Foundation;
 			// used for documentation, not at runtime
@@ -30,21 +37,27 @@ namespace Xamarin.Linker {
 			case "AvailabilityBaseAttribute":
 			case "DeprecatedAttribute":
 			case "IntroducedAttribute":
-			case "iOSAttribute":
-			case "MacAttribute":
-			case "LionAttribute":
-			case "MountainLionAttribute":
-			case "MavericksAttribute":
 			case "NotImplementedAttribute":
 			case "ObsoletedAttribute":
-			case "SinceAttribute":
 			case "ThreadSafeAttribute":
 			case "UnavailableAttribute":
 			case "LinkWithAttribute":
 			case "DesignatedInitializerAttribute":
 			case "RequiresSuperAttribute":
 			case "BindingImplAttribute":
+			case "NoiOSAttribute":
+			case "NoMacAttribute":
+			case "NoTVAttribute":
+			case "NoWatchAttribute":
+			// special subclasses of IntroducedAttribute
+			case "TVAttribute":
+			case "MacCatalystAttribute":
+			case "WatchAttribute":
 				return attr_type.Namespace == Namespaces.ObjCRuntime;
+			// special subclasses of IntroducedAttribute
+			case "iOSAttribute":
+			case "MacAttribute":
+				return String.IsNullOrEmpty (attr_type.Namespace);
 			case "AdoptsAttribute":
 				return attr_type.Namespace == Namespaces.ObjCRuntime && LinkContext.App.Optimizations.RegisterProtocols == true;
 			case "ProtocolAttribute":
@@ -60,10 +73,14 @@ namespace Xamarin.Linker {
 			var attr_type = attribute.Constructor.DeclaringType;
 			if (attr_type.Namespace == Namespaces.ObjCRuntime) {
 				switch (attr_type.Name) {
-				case "AvailabilityAttribute":
-				case "AvailabilityBaseAttribute":
+				case "AvailabilityAttribute":       // obsolete (could be present in user code)
+				case "AvailabilityBaseAttribute":   // base type for IntroducedAttribute and DeprecatedAttribute (could be in user code)
 				case "DeprecatedAttribute":
 				case "IntroducedAttribute":
+				// they are subclasses of ObjCRuntime.IntroducedAttribute
+				case "TVAttribute":
+				case "MacCatalystAttribute":
+				case "WatchAttribute":
 					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
 					break;
 				case "AdoptsAttribute":
@@ -76,6 +93,14 @@ namespace Xamarin.Linker {
 				case "ProtocolAttribute":
 				case "ProtocolMemberAttribute":
 					LinkContext.StoreCustomAttribute (provider, attribute);
+					break;
+				}
+			} else if (String.IsNullOrEmpty (attr_type.Namespace)) {
+				switch (attr_type.Name) {
+				// they are subclasses of ObjCRuntime.IntroducedAttribute
+				case "iOSAttribute":
+				case "MacAttribute":
+					LinkContext.StoreCustomAttribute (provider, attribute, "Availability");
 					break;
 				}
 			}

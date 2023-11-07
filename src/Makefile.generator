@@ -2,14 +2,51 @@
 # Generator
 #
 
-# generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
-$(BUILD_DIR)/generator.csproj.inc: Makefile.generator $(TOP)/tools/common/create-makefile-fragment.sh $(TOP)/Make.config $(TOP)/mk/mono.mk | $(BUILD_DIR)
-	$(Q_GEN) $(TOP)/tools/common/create-makefile-fragment.sh $(abspath $(CURDIR)/generator.csproj) $(abspath $@)
+# copy generator.csproj to the build dir so that we can use our shared .csproj.inc target from rules.mk to create generator.csproj.inc
+# we need any generated files in this directory to go into the build directory, and the shared target will output the csproj.inc into the same directory as the csproj
+$(BUILD_DIR)/generator.csproj: generator.csproj | $(BUILD_DIR)
+	$(Q) $(CP) $< $@
 
+# generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
+$(BUILD_DIR)/generator.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include $(BUILD_DIR)/generator.csproj.inc
 
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common
+	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common /restore
+
+$(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs | $(DOTNET_BUILD_DIR)/bgen
+	$(Q_DOTNET_BUILD) $(DOTNET) publish bgen/bgen.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=Debug /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common/bgen)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen/)/
+	$(Q) $(CP) $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen/publish/* $(dir $@)
+	$(Q) printf 'exec $(DOTNET) "$$(dirname "$$0")"/bgen.dll $$@\n' > $@
+	$(Q) chmod +x $@
+
+
+define BGenTargets
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen
+	$$(Q) rm -Rf "$$(dir $$@)"
+	$$(Q) $$(CP) -r "$$(dir $$<)" "$$(dir $$@)"
+
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/bgen: bgen/bgen.dotnet | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin
+	$$(Q) $$(CP) $$< $$@
+
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib
+	$$(Q) $$(CP) $$< $$@
+	$$(Q) $$(CP) $$(<:.dll=.pdb) $$(@:.dll=.pdb)
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BGenTargets,$(platform))))
+
+DOTNET_TARGETS += \
+	$(DOTNET_BUILD_DIR)/bgen/bgen \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/bin/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/bgen/bgen) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll) \
+
+DOTNET_TARGETS_DIRS += \
+	$(DOTNET_BUILD_DIR) \
+	$(DOTNET_BUILD_DIR)/bgen \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/bin) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib) \
+	$(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/lib/bgen) \
 
 #
 # Common
@@ -17,7 +54,24 @@ $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUI
 
 $(BUILD_DIR)/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
 	@mkdir -p $(dir $@)
-	@./generate-frameworks.csharp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' > $@
+	$(Q) ./generate-frameworks.csharp $@.tmp '$(IOS_FRAMEWORKS)' '$(MACOS_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' '$(MACCATALYST_FRAMEWORKS)'
+	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; git diff "$@"; echo "The file $@ has been automatically re-generated; please commit the changes."; exit 1; fi
+	$(Q) mv $@.tmp $@
+
+# This rule means: generate a <platform>-defines.rsp for the frameworks in the variable <PLATFORM>_FRAMEWORKS
+$(RSP_DIR)/%-defines.rsp: frameworks.sources Makefile.generator generate-defines.csharp
+	@mkdir -p $(dir $@)
+	$(Q) ./generate-defines.csharp $@.tmp '$($(shell echo $* | tr a-z A-Z)_FRAMEWORKS)'
+	$(Q) mv $@.tmp $@
+
+# This rule means: generate a <platform>-defines.rsp for the frameworks in the variable <PLATFORM>_FRAMEWORKS
+$(RSP_DIR)/dotnet/%-defines-dotnet.rsp: frameworks.sources Makefile.generator generate-defines.csharp
+	@mkdir -p $(dir $@)
+	$(Q) ./generate-defines.csharp $@.tmp '$(filter-out $(DOTNET_REMOVED_$(shell echo $* | tr a-z A-Z)_FRAMEWORKS),$($(shell echo $* | tr a-z A-Z)_FRAMEWORKS))'
+	$(Q) mv $@.tmp $@
+
+$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll: bgen/Attributes.cs Makefile.generator | $(DOTNET_BUILD_DIR)
+	$(Q_DOTNET_BUILD) $(SYSTEM_CSC) $(DOTNET_FLAGS) -out:$@ $<
 
 #
 # Xamarin.iOS (btouch)
@@ -36,17 +90,15 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native                 \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) \"\$$@\"\n" > $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen: bgen/bgen | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q_GEN) printf "#!/bin/sh -e\n\necho \"error BI0088: btouch: MonoTouch binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.iOS (Unified) binding project.\"\nexit 1\n" > $@
 	$(Q) chmod +x $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch: | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=MonoTouch,v1.0 \"\$$@\" \n" > $@
-	$(Q) chmod +x $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native: | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=Xamarin.iOS,v1.0 \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btouch-native: btouch-native | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(IOS_BUILD_DIR)/native/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
@@ -55,10 +107,11 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(IOS_BUILD_DIR)/native/%.dll 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe: $(BUILD_DIR)/common/bgen.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
+	$(Q) install -m 0755 "$(dir $<)"/*.dll "$(dir $@)"
 
-$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
+$(IOS_BUILD_DIR)/native/Xamarin.iOS.BindingAttributes.dll: bgen/Attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -nologo -out:$@ -debug generator-attributes.cs -target:library -deterministic
+	$(Q_GEN) $(IOS_CSC) -features:strict -nologo -out:$@ -debug bgen/Attributes.cs -target:library -deterministic
 
 #
 # Xamarin.Watch (bwatch)
@@ -73,17 +126,16 @@ WATCH_TARGETS +=                                                        \
 WATCH_TARGETS +=                                                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch                        \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=Xamarin.WatchOS,v1.0 \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: bwatch | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(WATCH_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
-$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
+$(WATCH_BUILD_DIR)/Xamarin.WatchOS.BindingAttributes.dll: bgen/Attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
+	$(Q_GEN) $(WATCH_CSC) -features:strict -nologo -debug -out:$@ -debug bgen/Attributes.cs -target:library -deterministic
 
 # #
 # # Xamarin.TVOS (btv)
@@ -98,65 +150,84 @@ TVOS_TARGETS +=                                                  \
 TVOS_TARGETS +=                                                  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv                    \
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: Makefile.generator | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe) --target-framework=Xamarin.TVOS,v1.0 \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: btv | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q) $(CP) $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(TVOS_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
 
-$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: generator-attributes.cs Makefile.generator
+$(TVOS_BUILD_DIR)/Xamarin.TVOS.BindingAttributes.dll: bgen/Attributes.cs Makefile.generator
 	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
+	$(Q_GEN) $(TV_CSC) -features:strict -nologo -debug -out:$@ -debug bgen/Attributes.cs -target:library -deterministic
+
+#
+# Xamarin.MacCatalyst
+#
+
+MACCATALYST_TARGETS +=                                                  \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.MacCatalyst.BindingAttributes.dll \
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/%.dll: $(MACCATALYST_BUILD_DIR)/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen
+	$(Q) install -m 0755 $< $@
+	$(Q) install -m 0644 $(<:.dll=.pdb) $(@:.dll=.pdb)
+
+$(MACCATALYST_BUILD_DIR)/Xamarin.MacCatalyst.BindingAttributes.dll: bgen/Attributes.cs Makefile.generator
+	$(Q) mkdir -p $(dir $@)
+	$(Q_GEN) $(MACCATALYST_CSC) -features:strict -nologo -debug -out:$@ -debug bgen/Attributes.cs -target:library -deterministic
 
 #
 # Xamarin.Mac (bmac)
 #
 
-MAC_TARGETS_DIRS +=                                     \
+MACOS_TARGETS_DIRS +=                                     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bmac \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen \
 
-MAC_TARGETS += \
+MACOS_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic             \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-full.BindingAttributes.dll     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-mobile.BindingAttributes.dll     \
 
-MAC_TARGETS += \
+MACOS_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac                     \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
-	$(Q_GEN) printf "#!/bin/sh -e\n\nexec /Library/Frameworks/Mono.framework/Versions/Current/bin/mono64 --debug $(abspath $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe) \"\$$@\"\n" > $@
-	$(Q) chmod +x $@
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen: bgen/bgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) $(CP) $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen-classic: Makefile.generator | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q_GEN) printf "#!/bin/sh -e\n\necho \"error BI0087: bgen-classic: Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.\"\nexit 1\n" > $@
 	$(Q) chmod +x $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac: bmac.ikvm | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.dll: $(MAC_BUILD_DIR)/%.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.dll: $(MACOS_BUILD_DIR)/%.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.pdb: $(MAC_BUILD_DIR)/%.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.pdb: $(MACOS_BUILD_DIR)/%.pdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0644 $< $@
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.mdb: $(MAC_BUILD_DIR)/%.mdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.mdb: $(MACOS_BUILD_DIR)/%.mdb | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0644 $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/%.exe: $(BUILD_DIR)/common/bgen.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $< $(@:.exe=.pdb)
+	$(Q) install -m 0755 "$(dir $<)"/*.dll "$(dir $@)"
 
-$(MAC_BUILD_DIR)/Xamarin.Mac-%.BindingAttributes.dll: generator-attributes.cs Makefile.generator
-	$(Q) mkdir -p $(dir $@)
-	$(Q_GEN) $(SYSTEM_CSC) -nologo -debug -out:$@ -debug generator-attributes.cs -target:library -deterministic
+define MAC_BINDINGATTRIBUTES_template
+$$(MACOS_BUILD_DIR)/Xamarin.Mac-$(1).BindingAttributes.dll: bgen/Attributes.cs Makefile.generator
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(Q_GEN) $$(MAC_$(1)_CSC) -features:strict -nologo -debug -out:$$@ -debug bgen/Attributes.cs -target:library -deterministic
+endef
 
-bgen:	\
+$(eval $(call MAC_BINDINGATTRIBUTES_template,full))
+$(eval $(call MAC_BINDINGATTRIBUTES_template,mobile))
+
+install-bgen:	\
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bgen                     \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/bgen.exe            \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bgen/Xamarin.Mac-full.BindingAttributes.dll     \
@@ -164,6 +235,7 @@ bgen:	\
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.iOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.TVOS.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.WatchOS.BindingAttributes.dll \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/Xamarin.MacCatalyst.BindingAttributes.dll \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bgen/bgen.exe                 \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bgen                          \
 

@@ -9,21 +9,16 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSTimeZoneTest {
-		
+
 		[Test]
 		public void KnownTimeZoneNames ()
 		{
@@ -49,7 +44,7 @@ namespace MonoTouchFixtures.Foundation {
 			foreach (var name in NSTimeZone.KnownTimeZoneNames) {
 				// simulator uses OSX to get timezones which might have some holes,
 				// e.g. @"Pacific/Bougainville" does not seems to be available in Mavericks
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 				if (Runtime.Arch == Arch.SIMULATOR) {
 					if (!File.Exists (Path.Combine ("/usr/share/zoneinfo/", name)))
 						continue;

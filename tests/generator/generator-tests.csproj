@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>generatortests</RootNamespace>
     <AssemblyName>generator-tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -18,33 +18,35 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Moq" Version="4.18.4" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
+    <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
+    <Compile Include="AttributeFactoryTests.cs" />
+    <Compile Include="CollectionsExtensionsTests.cs" />
+    <Compile Include="ConstructorArgumentsTests.cs" />
     <Compile Include="ErrorTests.cs" />
     <Compile Include="BGenTool.cs" />
     <Compile Include="..\common\ExecutionHelper.cs">
@@ -59,16 +61,29 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
     <Compile Include="GeneratorTests.cs" />
     <Compile Include="BGenTests.cs" />
     <Compile Include="Asserts.cs" />
     <Compile Include="..\common\Profile.cs">
       <Link>Profile.cs</Link>
     </Compile>
+    <Compile Include="..\common\Tool.cs">
+      <Link>Tool.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BinLog.cs">
+      <Link>BinLog.cs</Link>
+    </Compile>
+    <Compile Include="NomenclatorTests.cs" />
+    <Compile Include="NullabilityContextTests.cs" />
+    <Compile Include="PlatformNameExtensionsTests.cs" />
+    <Compile Include="ReflectionTest.cs" />
+    <Compile Include="StringExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tests\is-direct-binding.cs" />
-    <None Include="packages.config" />
     <None Include="tests\ref-out-parameters.cs" />
     <None Include="tests\return-release.cs" />
     <None Include="tests\vsts-970507.cs" />

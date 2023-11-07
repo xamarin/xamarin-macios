@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <NoBindingEmbedding>true</NoBindingEmbedding>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E40B0B77-3467-4891-9117-7AF8F248E306}</ProjectGuid>
+    <ProjectTypeGuids>{810C163F-4746-4721-8B8E-88A3673A62EA};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+   <OutputType>Library</OutputType>
+    <RootNamespace>bindingstest</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>bindings-xcframework-test</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;FRAMEWORK_TEST;XCFRAMEWORK;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DO_NOT_REMOVE;FRAMEWORK_TEST;XCFRAMEWORK;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="..\..\bindings-framework-test\ApiDefinition.cs">
+      <Link>ApiDefinition.cs</Link>
+    </ObjcBindingApiDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="..\..\bindings-framework-test\StructsAndEnums.cs">
+      <Link>StructsAndEnums.cs</Link>
+    </ObjcBindingCoreSource>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.ObjCBinding.CSharp.targets" />
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\..\tests\test-libraries\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="..\..\..\tests\test-libraries\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <TestLibrariesInput Include="..\..\..\tests\test-libraries\libframework.m" />
+    <TestLibrariesOutput Include="..\..\..\tests\test-libraries\.libs\XTest.xcframework" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="..\..\test-libraries\.libs\XTest.xcframework">
+      <Kind>Framework</Kind>
+      <SmartLink>False</SmartLink>
+      <Frameworks>CoreLocation ModelIO</Frameworks>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnitLite" Version="3.12.0" />
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+</Project>

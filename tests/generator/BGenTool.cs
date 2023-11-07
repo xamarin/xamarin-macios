@@ -1,3 +1,5 @@
+#pragma warning disable 0649 // Field 'X' is never assigned to, and will always have its default value null
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,11 +13,12 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	class BGenTool : Tool
-	{
-		AssemblyDefinition assembly;
+#nullable enable
+
+namespace Xamarin.Tests {
+	class BGenTool : Tool {
+		public const string None = "None";
+		AssemblyDefinition? assembly;
 
 		public Profile Profile;
 		public bool InProcess = true; // if executed using an in-process bgen. Ignored if using the classic bgen (for XM/Classic), in which case we'll always use the out-of-process bgen.
@@ -24,13 +27,27 @@ namespace Xamarin.Tests
 		public List<string> ApiDefinitions = new List<string> ();
 		public List<string> Sources = new List<string> ();
 		public List<string> References = new List<string> ();
+#if NET
+		public List<string>? CompileCommand = null;
+#endif
 
-		public string [] Defines;
-		public string TmpDirectory;
-		public string ResponseFile;
-		public string WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
-		public string NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
-		public string Out;
+		// If BaseLibrary and AttributeLibrary are null, we calculate a default value
+#if NET
+		public string? BaseLibrary;
+		public string? AttributeLibrary;
+		public bool ReferenceBclByDefault = true;
+#else
+		public string BaseLibrary = None;
+		public string AttributeLibrary = None;
+		public bool ReferenceBclByDefault = false;
+#endif
+		public string []? Defines;
+		public string? TmpDirectory;
+		public string? ResponseFile;
+		public string? WarnAsError; // Set to empty string to pass /warnaserror, set to non-empty string to pass /warnaserror:<nonemptystring>
+		public string? NoWarn; // Set to empty string to pass /nowarn, set to non-empty string to pass /nowarn:<nonemptystring>
+		public string? Out;
+		public int Verbosity = 1;
 
 		protected override string ToolPath { get { return Profile == Profile.macOSClassic ? Configuration.BGenClassicPath : Configuration.BGenPath; } }
 		protected override string MessagePrefix { get { return "BI"; } }
@@ -38,10 +55,14 @@ namespace Xamarin.Tests
 
 		public BGenTool ()
 		{
-			EnvironmentVariables = new Dictionary<string, string> {
-				{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
-				{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
-			};
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+				EnvironmentVariables = new Dictionary<string, string> ();
+			} else {
+				EnvironmentVariables = new Dictionary<string, string> {
+					{ "MD_MTOUCH_SDK_ROOT", Configuration.SdkRootXI },
+					{ "XamarinMacFrameworkRoot", Configuration.SdkRootXM },
+				};
+			}
 		}
 
 		public void AddTestApiDefinition (string filename)
@@ -51,42 +72,86 @@ namespace Xamarin.Tests
 
 		public AssemblyDefinition ApiAssembly {
 			get {
-				LoadAssembly ();
-				return assembly;
+				return LoadAssembly ();
+			}
+		}
+
+		public static string GetTargetFramework (Profile profile)
+		{
+			switch (profile) {
+#if NET
+			case Profile.iOS:
+				return TargetFramework.DotNet_iOS_String;
+			case Profile.tvOS:
+				return TargetFramework.DotNet_tvOS_String;
+			case Profile.watchOS:
+				return TargetFramework.DotNet_watchOS_String;
+			case Profile.MacCatalyst:
+				return TargetFramework.DotNet_MacCatalyst_String;
+			case Profile.macOSMobile:
+				return TargetFramework.DotNet_macOS_String;
+			case Profile.macOSFull:
+			case Profile.macOSSystem:
+				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
+#else
+			case Profile.iOS:
+				return "Xamarin.iOS,v1.0";
+			case Profile.tvOS:
+				return "Xamarin.TVOS,v1.0";
+			case Profile.watchOS:
+				return "Xamarin.WatchOS,v1.0";
+			case Profile.macOSClassic:
+				return "XamMac,v1.0";
+			case Profile.macOSFull:
+				return "Xamarin.Mac,Version=v4.5,Profile=Full";
+			case Profile.macOSMobile:
+				return "Xamarin.Mac,Version=v2.0,Profile=Mobile";
+			case Profile.macOSSystem:
+				return "Xamarin.Mac,Version=v4.5,Profile=System";
+#endif
+			default:
+				throw new NotImplementedException ($"Profile: {profile}");
 			}
 		}
 
 		string [] BuildArgumentArray ()
 		{
 			var sb = new List<string> ();
-			var targetFramework = (string) null;
+			var targetFramework = (string?) null;
 
-			switch (Profile) {
-			case Profile.None:
-				break;
-			case Profile.iOS:
-				targetFramework = "Xamarin.iOS,v1.0";
-				break;
-			case Profile.tvOS:
-				targetFramework = "Xamarin.TVOS,v1.0";
-				break;
-			case Profile.watchOS:
-				targetFramework = "Xamarin.WatchOS,v1.0";
-				break;
-			case Profile.macOSClassic:
-				targetFramework = "XamMac,v1.0";
-				break;
-			case Profile.macOSFull:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=Full";
-				break;
-			case Profile.macOSMobile:
-				targetFramework = "Xamarin.Mac,Version=v2.0,Profile=Mobile";
-				break;
-			case Profile.macOSSystem:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=System";
-				break;
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
+			if (Profile != Profile.None)
+				targetFramework = GetTargetFramework (Profile);
+
+#if NET
+			if (CompileCommand is null) {
+				if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var args, out var ex))
+					throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
+
+				CompileCommand = new List<string> (args);
+			}
+
+			if (CompileCommand.Count > 0) {
+				sb.Add ($"--compile-command");
+				sb.Add (string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.ToArray ())));
+			}
+#endif
+
+			TargetFramework? tf = null;
+			if (targetFramework is not null)
+				tf = TargetFramework.Parse (targetFramework);
+
+			if (BaseLibrary is null) {
+				if (tf.HasValue)
+					sb.Add ($"--baselib={Configuration.GetBaseLibrary (tf.Value)}");
+			} else if (BaseLibrary != None) {
+				sb.Add ($"--baselib={BaseLibrary}");
+			}
+
+			if (AttributeLibrary is null) {
+				if (tf.HasValue)
+					sb.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf.Value)}");
+			} else if (AttributeLibrary != None) {
+				sb.Add ($"--attributelib={AttributeLibrary}");
 			}
 
 			if (!string.IsNullOrEmpty (targetFramework))
@@ -97,6 +162,16 @@ namespace Xamarin.Tests
 
 			foreach (var s in Sources)
 				sb.Add ($"-s={s}");
+
+			if (ReferenceBclByDefault) {
+				if (tf is null) {
+					// do nothing
+				} else if (tf.Value.IsDotNet == true) {
+					References.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"));
+				} else {
+					throw new NotImplementedException ("ReferenceBclByDefault");
+				}
+			}
 
 			foreach (var r in References)
 				sb.Add ($"-r={r}");
@@ -113,25 +188,26 @@ namespace Xamarin.Tests
 			if (ProcessEnums)
 				sb.Add ("--process-enums");
 
-			if (Defines != null) {
+			if (Defines is not null) {
 				foreach (var d in Defines)
 					sb.Add ($"-d={d}");
 			}
 
-			if (WarnAsError != null) {
+			if (WarnAsError is not null) {
 				var arg = "--warnaserror";
 				if (WarnAsError.Length > 0)
 					arg += ":" + WarnAsError;
 				sb.Add (arg);
 			}
 
-			if (NoWarn != null) {
+			if (NoWarn is not null) {
 				var arg = "--nowarn";
 				if (NoWarn.Length > 0)
 					arg += ":" + NoWarn;
 				sb.Add (arg);
 			}
-			sb.Add ("-v");
+			if (Verbosity != 0)
+				sb.Add ("-" + new string (Verbosity > 0 ? 'v' : 'q', Math.Abs (Verbosity)));
 			return sb.ToArray ();
 		}
 
@@ -151,7 +227,7 @@ namespace Xamarin.Tests
 			var in_process = InProcess && Profile != Profile.macOSClassic;
 			if (in_process) {
 				int rv;
-				var previous_environment = new Dictionary<string, string> ();
+				var previous_environment = new Dictionary<string, string?> ();
 				foreach (var kvp in EnvironmentVariables) {
 					previous_environment [kvp.Key] = Environment.GetEnvironmentVariable (kvp.Key);
 					Environment.SetEnvironmentVariable (kvp.Key, kvp.Value);
@@ -187,7 +263,7 @@ namespace Xamarin.Tests
 				if (ins.OpCode.FlowControl != FlowControl.Call)
 					continue;
 				var mr = ins.Operand as MethodReference;
-				if (mr == null)
+				if (mr is null)
 					continue;
 				if (mr.Name == called_method)
 					return;
@@ -211,7 +287,7 @@ namespace Xamarin.Tests
 				if (ins.OpCode.Code != Code.Ldsfld && ins.OpCode.Code != Code.Ldfld)
 					continue;
 				var fr = ins.Operand as FieldReference;
-				if (fr == null)
+				if (fr is null)
 					continue;
 				if (fr.DeclaringType.FullName != declaring_type)
 					continue;
@@ -222,51 +298,79 @@ namespace Xamarin.Tests
 			Assert.Fail ($"Could not find any instructions loading the field {declaring_type}.{field} in {method.FullName}: {message}\n\t{string.Join ("\n\t", instructions)}");
 		}
 
-		public void AssertPublicTypeCount (int count, string message = null)
+		public void AssertPublicTypeCount (int count, string? message = null)
 		{
-			LoadAssembly ();
+			var assembly = LoadAssembly ();
 
 			var actual = assembly.MainModule.Types.Where ((v) => v.IsPublic || v.IsNestedPublic);
 			if (actual.Count () != count)
 				Assert.Fail ($"Expected {count} public type(s), found {actual} public type(s). {message}\n\t{string.Join ("\n\t", actual.Select ((v) => v.FullName).ToArray ())}");
 		}
 
-		public void AssertPublicMethodCount (string typename, int count, string message = null)
+		public void AssertPublicMethodCount (string typename, int count, string? message = null)
 		{
-			LoadAssembly ();
+			var assembly = LoadAssembly ();
 
-			var t = assembly.MainModule.Types.FirstOrDefault ((v) => v.FullName == typename);
-			var actual = t.Methods.Count ((v) => {
+			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
+			var actual = t.Methods.Where ((v) => {
 				if (v.IsPrivate || v.IsFamily || v.IsFamilyAndAssembly)
 					return false;
 				return true;
 			});
-			if (actual != count)
-				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual} publicly accessible method(s). {message}");
+			if (actual.Count () != count) {
+				Assert.Fail ($"Expected {count} publicly accessible method(s) in {typename}, found {actual} publicly accessible method(s): {message}\n\t{string.Join ("\n\t", actual.Select (v => v.FullName).OrderBy (v => v))}");
+			}
 		}
 
-		public void AssertType (string fullname, TypeAttributes? attributes = null, string message = null)
+		public void AssertType (string fullname, TypeAttributes? attributes = null, string? message = null)
 		{
-			LoadAssembly ();
+			var assembly = LoadAssembly ();
 
 			var allTypes = assembly.MainModule.GetTypes ().ToArray ();
 			var t = allTypes.FirstOrDefault ((v) => v.FullName == fullname);
-			if (t == null)
+			if (t is null) {
 				Assert.Fail ($"No type named '{fullname}' in the generated assembly. {message}\nList of types:\n\t{string.Join ("\n\t", allTypes.Select ((v) => v.FullName))}");
-			if (attributes != null)
+				return;
+			}
+			if (attributes is not null)
 				Assert.AreEqual (attributes.Value, t.Attributes, $"Incorrect attributes for type {fullname}.");
 		}
 
-		public void AssertMethod (string typename, string method, string returnType = null, params string [] parameterTypes)
+		public void AssertMethod (string typename, string method, params string [] parameterTypes)
+		{
+			AssertMethod (typename, method, null, null, parameterTypes);
+		}
+
+		public void AssertMethod (string typename, string method, string? returnType = null, params string [] parameterTypes)
 		{
 			AssertMethod (typename, method, null, returnType, parameterTypes);
 		}
 
-		public void AssertMethod (string typename, string method, MethodAttributes? attributes = null, string returnType = null, params string [] parameterTypes)
+		public void AssertMethod (string typename, string method, MethodAttributes? attributes = null, string? returnType = null, params string [] parameterTypes)
 		{
-			LoadAssembly ();
+			var m = FindMethod (typename, method, returnType, parameterTypes);
+			if (m is null) {
+				Assert.Fail ($"No method '{method}' with signature '{string.Join ("', '", parameterTypes)}' on the type '{typename}' was found.");
+				return;
+			}
+			if (attributes.HasValue)
+				Assert.AreEqual (attributes.Value, m.Attributes, "Attributes for {0}", m.FullName);
+		}
 
-			var t = assembly.MainModule.Types.First ((v) => v.FullName == typename);
+		public void AssertNoMethod (string typename, string method, string? returnType = null, params string [] parameterTypes)
+		{
+			var m = FindMethod (typename, method, returnType, parameterTypes);
+			if (m is not null)
+				Assert.Fail ($"Unexpectedly found method '{method}' with signature '{string.Join ("', '", parameterTypes)}' on the type '{typename}'.");
+		}
+
+		MethodDefinition? FindMethod (string typename, string method, string? returnType, params string [] parameterTypes)
+		{
+			var assembly = LoadAssembly ();
+			var t = assembly.MainModule.Types.FirstOrDefault ((v) => v.FullName == typename);
+			if (t is null)
+				return null;
+
 			var m = t.Methods.FirstOrDefault ((v) => {
 				if (v.Name != method)
 					return false;
@@ -277,34 +381,44 @@ namespace Xamarin.Tests
 						return false;
 				return true;
 			});
-			if (m == null)
-				Assert.Fail ($"No method '{method}' with signature '{string.Join ("', '", parameterTypes)}' was found.");
-			if (attributes.HasValue)
-				Assert.AreEqual (attributes.Value, m.Attributes, "Attributes for {0}", m.FullName);
+			return m;
 		}
 
-		void LoadAssembly ()
+		AssemblyDefinition LoadAssembly ()
 		{
-			if (assembly == null)
-				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (TmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")));
+			if (assembly is null) {
+				var parameters = new ReaderParameters ();
+				var resolver = new DefaultAssemblyResolver ();
+#if NET
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile.AsPlatform (), true));
+#else
+				var searchdir = Path.GetDirectoryName (Configuration.GetBaseLibrary (Profile));
+#endif
+				resolver.AddSearchDirectory (searchdir);
+				parameters.AssemblyResolver = resolver;
+				var tmpDirectory = EnsureTempDir ();
+				assembly = AssemblyDefinition.ReadAssembly (Out ?? (Path.Combine (tmpDirectory, Path.GetFileNameWithoutExtension (ApiDefinitions [0]).Replace ('-', '_') + ".dll")), parameters);
+			}
+			return assembly;
 		}
 
-		void EnsureTempDir ()
+		string EnsureTempDir ()
 		{
-			if (TmpDirectory == null)
+			if (TmpDirectory is null)
 				TmpDirectory = Cache.CreateTemporaryDirectory ();
+			return TmpDirectory;
 		}
 
 		public void CreateTemporaryBinding (params string [] api_definition)
 		{
-			EnsureTempDir ();
+			var tmpDirectory = EnsureTempDir ();
 			for (int i = 0; i < api_definition.Length; i++) {
-				var api = Path.Combine (TmpDirectory, $"api{i}.cs");
+				var api = Path.Combine (tmpDirectory, $"api{i}.cs");
 				File.WriteAllText (api, api_definition [i]);
 				ApiDefinitions.Add (api);
 			}
 			WorkingDirectory = TmpDirectory;
-			Out = Path.Combine (WorkingDirectory, "api0.dll");
+			Out = Path.Combine (tmpDirectory, "api0.dll");
 		}
 
 		public static string [] GetDefaultDefines (Profile profile)
@@ -318,6 +432,8 @@ namespace Xamarin.Tests
 				return new string [] { "MONOMAC" };
 			case Profile.iOS:
 				return new string [] { "IOS", "XAMCORE_2_0" };
+			case Profile.MacCatalyst:
+				return new string [] { "MACCATALYST" };
 			default:
 				throw new NotImplementedException (profile.ToString ());
 			}
@@ -326,21 +442,20 @@ namespace Xamarin.Tests
 
 	// This class will replace stdout/stderr with its own thread-static storage for stdout/stderr.
 	// This means we're capturing stdout/stderr per thread.
-	class ThreadStaticTextWriter : TextWriter
-	{
+	class ThreadStaticTextWriter : TextWriter {
 		[ThreadStatic]
-		static TextWriter current_writer;
+		static TextWriter? current_writer;
 
 		static ThreadStaticTextWriter instance = new ThreadStaticTextWriter ();
 		static object lock_obj = new object ();
 		static int counter;
 
-		static TextWriter original_stdout;
-		static TextWriter original_stderr;
+		static TextWriter? original_stdout;
+		static TextWriter? original_stderr;
 
 		public static void ReplaceConsole (StringBuilder sb)
 		{
-			lock (lock_obj) { 
+			lock (lock_obj) {
 				if (counter == 0) {
 					original_stdout = Console.Out;
 					original_stderr = Console.Error;
@@ -353,14 +468,14 @@ namespace Xamarin.Tests
 		}
 
 		public static void RestoreConsole ()
-		{ 
+		{
 			lock (lock_obj) {
-				current_writer.Dispose ();
+				current_writer?.Dispose ();
 				current_writer = null;
 				counter--;
 				if (counter == 0) {
-					Console.SetOut (original_stdout);
-					Console.SetError (original_stderr);
+					Console.SetOut (original_stdout!);
+					Console.SetError (original_stderr!);
 					original_stdout = null;
 					original_stderr = null;
 				}
@@ -373,9 +488,11 @@ namespace Xamarin.Tests
 
 		public TextWriter CurrentWriter {
 			get {
-				if (current_writer == null)
-					return original_stdout;
-				return current_writer;
+				lock (lock_obj) {
+					if (current_writer is null)
+						return original_stdout ?? Console.Out;
+					return current_writer;
+				}
 			}
 		}
 
@@ -393,19 +510,19 @@ namespace Xamarin.Tests
 				CurrentWriter.Write (value);
 		}
 
-		public override void Write (string value)
+		public override void Write (string? value)
 		{
 			lock (lock_obj)
 				CurrentWriter.Write (value);
 		}
 
-		public override void Write (char [] buffer)
+		public override void Write (char []? buffer)
 		{
 			lock (lock_obj)
 				CurrentWriter.Write (buffer);
 		}
 
-		public override void WriteLine (string value)
+		public override void WriteLine (string? value)
 		{
 			lock (lock_obj)
 				CurrentWriter.WriteLine (value);

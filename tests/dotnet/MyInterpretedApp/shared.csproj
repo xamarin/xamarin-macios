@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<UseInterpreter>true</UseInterpreter>
+		<MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+
+		<ApplicationTitle>MyInterpretedApp</ApplicationTitle>
+		<ApplicationId>com.xamarin.myinterpretedapp</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

@@ -11,6 +11,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -18,19 +21,37 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (5, 0)]
+#endif
 	public class SecCertificate2 : NativeObject {
-		public SecCertificate2 (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal SecCertificate2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public SecCertificate2 (NativeHandle handle, bool owns) : base (handle, owns) { }
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr sec_certificate_create (IntPtr seccertificateHandle);
 
 		public SecCertificate2 (SecCertificate certificate)
 		{
-			if (certificate == null)
-				throw new ArgumentNullException (nameof (certificate));
+			if (certificate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 			InitializeHandle (sec_certificate_create (certificate.Handle));
 		}
 

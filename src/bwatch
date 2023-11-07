@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+pushd "$(dirname "$0")/.." > /dev/null
+MONOTOUCH_PREFIX=$(pwd -P)
+popd > /dev/null
+
+exec /Library/Frameworks/Mono.framework/Commands/mono64 --debug "$MONOTOUCH_PREFIX/lib/bgen/bgen.exe" --target-framework=Xamarin.WatchOS,v1.0 "$@"

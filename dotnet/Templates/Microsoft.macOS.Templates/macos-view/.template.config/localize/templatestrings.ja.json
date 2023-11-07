@@ -1,0 +1,6 @@
+{
+  "author": "Microsoft",
+  "name": "macOS ビュー",
+  "description": "Xcode の Interface Builder (XIB ファイル) に実装された UI を備えた macOS ビュー",
+  "symbols/namespace/description": "生成されたコードの名前空間"
+}

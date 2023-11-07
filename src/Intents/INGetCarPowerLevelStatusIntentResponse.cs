@@ -1,4 +1,4 @@
-﻿// INGetCarPowerLevelStatusIntentResponse.cs
+// INGetCarPowerLevelStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
@@ -6,7 +6,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && (IOS || TVOS)
+#if IOS && !TVOS
+#if !(NET && __MACOS__)
 
 using Foundation;
 using Intents;
@@ -20,13 +21,14 @@ namespace Intents {
 		// into bindings and making them virtual (not a breaking change)
 
 		public float? FuelPercentRemaining {
-			get { return _FuelPercentRemaining == null ? null : (float?) _FuelPercentRemaining.FloatValue; }
+			get { return _FuelPercentRemaining is null ? null : (float?) _FuelPercentRemaining.FloatValue; }
 		}
 
 		public float? ChargePercentRemaining {
-			get { return _ChargePercentRemaining == null ? null : (float?) _ChargePercentRemaining.FloatValue; }
+			get { return _ChargePercentRemaining is null ? null : (float?) _ChargePercentRemaining.FloatValue; }
 		}
 	}
 }
 
+#endif // !(NET && __MACOS__)
 #endif

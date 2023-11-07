@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "iOS タブ付きアプリケーション",
+  "description": ".NET iOS タブ付きアプリケーションを作成するためのプロジェクト",
+  "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
+  "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします",
+  "symbols/deviceFamily/choices/universal/description": "iPhone デバイスと iPad デバイスの両方をサポートする",
+  "symbols/deviceFamily/choices/iphone/description": "iPhone デバイスのみをサポート",
+  "symbols/deviceFamily/choices/ipad/description": "iPad デバイスのみをサポート"
+}

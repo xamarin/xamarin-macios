@@ -7,6 +7,8 @@
 // Copyright 2014-2016 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,65 +20,56 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-namespace Security {
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
-	public class SslContext : INativeObject, IDisposable {
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
-		SslConnection connection;
+namespace Security {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+	[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+	[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+	[ObsoletedOSPlatform ("maccatalyst13.0", "Use 'Network.framework' instead.")]
+#else
+	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'Network.framework' instead.")]
+#endif
+	public class SslContext : NativeObject {
+
+		SslConnection? connection;
 		SslStatus result;
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* SSLContextRef */ IntPtr SSLCreateContext (/* CFAllocatorRef */ IntPtr alloc, SslProtocolSide protocolSide, SslConnectionType connectionType);
 
 		public SslContext (SslProtocolSide protocolSide, SslConnectionType connectionType)
+			: base (SSLCreateContext (IntPtr.Zero, protocolSide, connectionType), true)
 		{
-			Handle = SSLCreateContext (IntPtr.Zero, protocolSide, connectionType);
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static /* OSStatus */ SslStatus SSLClose (/* SSLContextRef */ IntPtr context);
 
-		~SslContext ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		bool disposed;
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (disposed)
-				return;
-
-			disposed = true;
-
 			if (Handle != IntPtr.Zero)
 				result = SSLClose (Handle);
 
 			// don't remove the read/write delegates before we closed the connection, i.e.
 			// the SSLClose will send an Alert for a "close notify"
-			if (connection != null) {
+			if (connection is not null) {
 				connection.Dispose ();
 				connection = null;
 			}
 
-			// SSLCreateContext -> CFRelease (not SSLDisposeContext)
-			if (Handle != IntPtr.Zero) {
-				CFObject.CFRelease (Handle);
-				Handle = IntPtr.Zero;
-			}
+			base.Dispose (disposing);
 		}
-
-		public IntPtr Handle { get; private set; }
 
 		public SslStatus GetLastStatus ()
 		{
@@ -135,11 +128,18 @@ namespace Security {
 		extern static /* OSStatus */ SslStatus SSLSetConnection (/* SSLContextRef */ IntPtr context, /* SSLConnectionRef */ IntPtr connection);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLSetIOFuncs (/* SSLContextRef */ IntPtr context, /* SSLReadFunc */ SslReadFunc readFunc, /* SSLWriteFunc */ SslWriteFunc writeFunc);
+#if NET
+		unsafe extern static /* OSStatus */ SslStatus SSLSetIOFuncs (
+			/* SSLContextRef */ IntPtr context,
+			/* SSLReadFunc */ delegate* unmanaged<IntPtr, IntPtr, nint*, SslStatus> readFunc,
+			/* SSLWriteFunc */ delegate* unmanaged<IntPtr, IntPtr, nint*, SslStatus> writeFunc);
+#else
+		extern static /* OSStatus */ SslStatus SSLSetIOFuncs (/* SSLContextRef */ IntPtr context, /* SSLReadFunc */ SslReadFunc? readFunc, /* SSLWriteFunc */ SslWriteFunc? writeFunc);
+#endif
 
-		public SslConnection Connection {
+		public SslConnection? Connection {
 			get {
-				if (connection == null)
+				if (connection is null)
 					return null;
 				IntPtr value;
 				result = SSLGetConnection (Handle, out value);
@@ -148,21 +148,23 @@ namespace Security {
 				return connection;
 			}
 			set {
-				// the read/write delegates needs to be set before set set the connection id
-				if (value == null)
-					result = SSLSetIOFuncs (Handle, null, null);
-				else
-					result = SSLSetIOFuncs (Handle, value.ReadFunc, value.WriteFunc);
+				// the read/write delegates needs to be set before setting the connection id
+				unsafe {
+					if (value is null)
+						result = SSLSetIOFuncs (Handle, null, null);
+					else
+						result = SSLSetIOFuncs (Handle, value.ReadFunc, value.WriteFunc);
+				}
 
 				if (result == SslStatus.Success) {
-					result = SSLSetConnection (Handle, value == null ? IntPtr.Zero : value.ConnectionId);
+					result = SSLSetConnection (Handle, value is null ? IntPtr.Zero : value.ConnectionId);
 					connection = value;
 				}
 			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, out bool value);
+		extern static /* OSStatus */ SslStatus SSLGetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public SslStatus GetSessionOption (SslSessionOption option, out bool value)
 		{
@@ -171,7 +173,7 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, bool value);
+		extern static /* OSStatus */ SslStatus SSLSetSessionOption (/* SSLContextRef */ IntPtr context, SslSessionOption option, [MarshalAs (UnmanagedType.I1)] bool value);
 
 		public SslStatus SetSessionOption (SslSessionOption option, bool value)
 		{
@@ -214,7 +216,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerID (/* SSLContextRef */ IntPtr context, /* const void* */ byte* peerID, /* size_t */ nint peerIDLen);
 
-		public unsafe byte[] PeerId {
+		public unsafe byte []? PeerId {
 			get {
 				nint length;
 				IntPtr id;
@@ -226,8 +228,8 @@ namespace Security {
 				return data;
 			}
 			set {
-				nint length = (value == null) ? 0 : value.Length;
-				fixed (byte *p = value) {
+				nint length = (value is null) ? 0 : value.Length;
+				fixed (byte* p = value) {
 					result = SSLSetPeerID (Handle, p, length);
 				}
 			}
@@ -247,19 +249,19 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLRead (/* SSLContextRef */ IntPtr context, /* const void* */ byte* data, /* size_t */ nint dataLength, /* size_t* */ out nint processed);
 
-		internal unsafe SslStatus Read (byte[] data, int offset, int size, out nint processed)
+		internal unsafe SslStatus Read (byte [] data, int offset, int size, out nint processed)
 		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
-			fixed (byte *d = &data [offset])
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			fixed (byte* d = &data [offset])
 				result = SSLRead (Handle, d, size, out processed);
 			return result;
 		}
 
-		public unsafe SslStatus Read (byte[] data, out nint processed)
+		public unsafe SslStatus Read (byte [] data, out nint processed)
 		{
-			int size = data == null ? 0 : data.Length;
-			fixed (byte *d = data)
+			int size = data is null ? 0 : data.Length;
+			fixed (byte* d = data)
 				result = SSLRead (Handle, d, size, out processed);
 			return result;
 		}
@@ -267,31 +269,32 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLWrite (/* SSLContextRef */ IntPtr context, /* const void* */ byte* data, /* size_t */ nint dataLength, /* size_t* */ out nint processed);
 
-		internal unsafe SslStatus Write (byte[] data, int offset, int size, out nint processed)
+		internal unsafe SslStatus Write (byte [] data, int offset, int size, out nint processed)
 		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
-			fixed (byte *d = &data [offset])
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
+			fixed (byte* d = &data [offset])
 				result = SSLWrite (Handle, d, size, out processed);
 			return result;
 		}
 
-		public unsafe SslStatus Write (byte[] data, out nint processed)
+		public unsafe SslStatus Write (byte [] data, out nint processed)
 		{
-			int size = data == null ? 0 : data.Length;
-			fixed (byte *d = data)
+			int size = data is null ? 0 : data.Length;
+			fixed (byte* d = data)
 				result = SSLWrite (Handle, d, size, out processed);
 			return result;
 		}
 
 
+#if !NET
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetNumberSupportedCiphers (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint numCiphers);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetSupportedCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite *ciphers, /* size_t* */ ref nint numCiphers);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetSupportedCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite* ciphers, /* size_t* */ ref nint numCiphers);
 
-		public unsafe IList<SslCipherSuite> GetSupportedCiphers ()
+		public unsafe IList<SslCipherSuite>? GetSupportedCiphers ()
 		{
 			nint n;
 			result = SSLGetNumberSupportedCiphers (Handle, out n);
@@ -299,7 +302,7 @@ namespace Security {
 				return null;
 
 			var ciphers = new SslCipherSuite [n];
-			fixed (SslCipherSuite *p = ciphers) {
+			fixed (SslCipherSuite* p = ciphers) {
 				result = SSLGetSupportedCiphers (Handle, p, ref n);
 				if (result != SslStatus.Success)
 					return null;
@@ -311,9 +314,9 @@ namespace Security {
 		extern unsafe static /* OSStatus */ SslStatus SSLGetNumberEnabledCiphers (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint numCiphers);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetEnabledCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite *ciphers, /* size_t* */ ref nint numCiphers);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetEnabledCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite* ciphers, /* size_t* */ ref nint numCiphers);
 
-		public unsafe IList<SslCipherSuite> GetEnabledCiphers ()
+		public unsafe IList<SslCipherSuite>? GetEnabledCiphers ()
 		{
 			nint n;
 			result = SSLGetNumberEnabledCiphers (Handle, out n);
@@ -321,7 +324,7 @@ namespace Security {
 				return null;
 
 			var ciphers = new SslCipherSuite [n];
-			fixed (SslCipherSuite *p = ciphers) {
+			fixed (SslCipherSuite* p = ciphers) {
 				result = SSLGetEnabledCiphers (Handle, p, ref n);
 				if (result != SslStatus.Success)
 					return null;
@@ -330,16 +333,16 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetEnabledCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite *ciphers, /* size_t */ nint numCiphers);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetEnabledCiphers (/* SSLContextRef */ IntPtr context, SslCipherSuite* ciphers, /* size_t */ nint numCiphers);
 
 		public unsafe SslStatus SetEnabledCiphers (IEnumerable<SslCipherSuite> ciphers)
 		{
-			if (ciphers == null)
-				throw new ArgumentNullException ("ciphers");
+			if (ciphers is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ciphers));
 
 			var array = ciphers.ToArray ();
-			fixed (SslCipherSuite *p = array)
-			result = SSLSetEnabledCiphers (Handle, p, ciphers.Count ());
+			fixed (SslCipherSuite* p = array)
+				result = SSLSetEnabledCiphers (Handle, p, array.Length);
 			return result;
 		}
 
@@ -353,6 +356,7 @@ namespace Security {
 				return value;
 			}
 		}
+#endif
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLGetDatagramWriteSize (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint bufSize);
@@ -383,12 +387,12 @@ namespace Security {
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetDatagramHelloCookie (/* SSLContextRef */ IntPtr context, /* const void* */ byte *cookie, nint cookieLength);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetDatagramHelloCookie (/* SSLContextRef */ IntPtr context, /* const void* */ byte* cookie, nint cookieLength);
 
-		public unsafe SslStatus SetDatagramHelloCookie (byte[] cookie)
+		public unsafe SslStatus SetDatagramHelloCookie (byte [] cookie)
 		{
-			nint len = cookie == null ? 0 : cookie.Length;
-			fixed (byte *p = cookie)
+			nint len = cookie is null ? 0 : cookie.Length;
+			fixed (byte* p = cookie)
 				result = SSLSetDatagramHelloCookie (Handle, p, len);
 			return result;
 		}
@@ -397,10 +401,10 @@ namespace Security {
 		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainNameLength (/* SSLContextRef */ IntPtr context, /* size_t* */ out nint peerNameLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte[] peerName, /* size_t */ ref nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLGetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte []? peerName, /* size_t */ ref nint peerNameLen);
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte[] peerName, /* size_t */ nint peerNameLen);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetPeerDomainName (/* SSLContextRef */ IntPtr context, /* char* */ byte []? peerName, /* size_t */ nint peerNameLen);
 
 		public string PeerDomainName {
 			get {
@@ -413,7 +417,7 @@ namespace Security {
 				return result == SslStatus.Success ? Encoding.UTF8.GetString (bytes) : String.Empty;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					result = SSLSetPeerDomainName (Handle, null, 0);
 				} else {
 					var bytes = Encoding.UTF8.GetBytes (value);
@@ -429,7 +433,7 @@ namespace Security {
 		extern unsafe static /* OSStatus */ SslStatus SSLCopyDistinguishedNames (/* SSLContextRef */ IntPtr context, /* CFArrayRef* */ out IntPtr names);
 
 		// TODO: need to setup a server that requires client-side certificates
-		public IList<T> GetDistinguishedNames<T> ()
+		public IList<T>? GetDistinguishedNames<T> ()
 		{
 			IntPtr p;
 			result = SSLCopyDistinguishedNames (Handle, out p);
@@ -466,15 +470,17 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetCertificate (/* SSLContextRef */ IntPtr context, /* _Nullable CFArrayRef */ IntPtr certRefs);
 
-		NSArray Bundle (SecIdentity identity, IEnumerable<SecCertificate> certificates)
+		NSArray Bundle (SecIdentity? identity, IEnumerable<SecCertificate>? certificates)
 		{
-			int i = identity == null ? 0 : 1;
-			int n = certificates == null ? 0 : certificates.Count ();
-			var ptrs = new IntPtr [n + i];
+			int i = identity is null ? 0 : 1;
+			int n = certificates is null ? 0 : certificates.Count ();
+			var ptrs = new NativeHandle [n + i];
 			if (i == 1)
-				ptrs [0] = identity.Handle;
-			foreach (var certificate in certificates)
-				ptrs [i++] = certificate.Handle;
+				ptrs [0] = identity!.Handle;
+			if (certificates is not null) {
+				foreach (var certificate in certificates)
+					ptrs [i++] = certificate.Handle;
+			}
 			return NSArray.FromIntPtrs (ptrs);
 		}
 
@@ -497,13 +503,33 @@ namespace Security {
 			}
 		}
 
-		[DllImport (Constants.SecurityLibrary)]
-		[Deprecated (PlatformName.iOS, 9, 0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("macos10.11")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios9.0", "The use of different RSA certificates for signing and encryption is no longer allowed.")]
+#else
+		[Deprecated (PlatformName.iOS, 9, 0, message: "The use of different RSA certificates for signing and encryption is no longer allowed.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
+#endif
+		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLSetEncryptionCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
 
-		[Deprecated (PlatformName.iOS, 9, 0, message : "Export ciphers are not available anymore.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Export ciphers are not available anymore.")]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("macos10.11", "Export ciphers are not available anymore.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Export ciphers are not available anymore.")]
+		[ObsoletedOSPlatform ("ios9.0", "Export ciphers are not available anymore.")]
+#else
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Export ciphers are not available anymore.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Export ciphers are not available anymore.")]
+#endif
 		public SslStatus SetEncryptionCertificate (SecIdentity identify, IEnumerable<SecCertificate> certificates)
 		{
 			using (var array = Bundle (identify, certificates)) {
@@ -515,7 +541,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern unsafe static /* OSStatus */ SslStatus SSLCopyPeerTrust (/* SSLContextRef */ IntPtr context, /* SecTrustRef */ out IntPtr trust);
 
-		public SecTrust PeerTrust {
+		public SecTrust? PeerTrust {
 			get {
 				IntPtr value;
 				result = SSLCopyPeerTrust (Handle, out value);
@@ -532,70 +558,133 @@ namespace Security {
 		}
 
 #if !WATCH
-		[iOS(9,0)][Mac (10,11)]
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
-		[Deprecated (PlatformName.iOS, 9, 2)]
-		[Unavailable (PlatformName.iOS, message : "'SetSessionStrengthPolicy' is not available anymore.")]
-		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		[Unavailable (PlatformName.MacOSX, message : "'SetSessionStrengthPolicy' is not available anymore.")]
+
+#if !XAMCORE_5_0
+#if NET
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[Unavailable (PlatformName.iOS, message: "'SetSessionStrengthPolicy' is not available anymore.")]
+		[Unavailable (PlatformName.MacOSX, message: "'SetSessionStrengthPolicy' is not available anymore.")]
+#endif
 		[Obsolete ("'SetSessionStrengthPolicy' is not available anymore.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
-			Console.WriteLine ("SetSessionStrengthPolicy is not available anymore.");
+			Runtime.NSLog ("SetSessionStrengthPolicy is not available anymore.");
 			return SslStatus.Success;
 		}
 #endif
+#endif // !XAMCORE_5_0
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
-		[Watch (3,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
 		{
-			if (config == null)
-				throw new ArgumentNullException (nameof (config));
-			
+			if (config is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (config));
+
 			return SSLSetSessionConfig (Handle, config.Handle);
 		}
 
-		[iOS (10,0)][Mac (10,12)]
-		[TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		public int SetSessionConfig (SslSessionConfig config)
 		{
-			return SetSessionConfig (config.GetConstant ());
+			return SetSessionConfig (config.GetConstant ()!);
 		}
 
-		[iOS (10,0)][Mac (10,12)]
-		[Watch (3,0)]
-		[TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
 
-		[iOS (10,0)][Mac (10,12)]
-		[Watch (3,0)]
-		[TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		public int ReHandshake ()
 		{
 			return SSLReHandshake (Handle);
 		}
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
-		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte[] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
+		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte [] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, ref nuint /* size_t */ peerNameLen);
 
-		[iOS (9,0)][Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		public string GetRequestedPeerName ()
 		{
 			var result = String.Empty;
@@ -608,72 +697,154 @@ namespace Security {
 			return result;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetSessionTicketsEnabled (IntPtr /* SSLContextRef */ context, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ enabled);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		public int SetSessionTickets (bool enabled)
 		{
 			return SSLSetSessionTicketsEnabled (Handle, enabled);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetError (IntPtr /* SSLContextRef */ context, SecStatusCode /* OSStatus */ status);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		public int SetError (SecStatusCode status)
 		{
 			return SSLSetError (Handle, status);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetOCSPResponse (IntPtr /* SSLContextRef */ context, IntPtr /* CFDataRef __nonnull */ response);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		public int SetOcspResponse (NSData response)
 		{
-			if (response == null)
-				throw new ArgumentNullException (nameof (response));
+			if (response is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (response));
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLSetALPNProtocols (IntPtr /* SSLContextRef */ context, IntPtr /* CFArrayRef */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
-		public int SetAlpnProtocols (string[] protocols)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
+		public int SetAlpnProtocols (string [] protocols)
 		{
 			using (var array = NSArray.FromStrings (protocols))
 				return SSLSetALPNProtocols (Handle, array.Handle);
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OSStatus */ int SSLCopyALPNProtocols (IntPtr /* SSLContextRef */ context, ref IntPtr /* CFArrayRef* */ protocols);
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
-		public string[] GetAlpnProtocols (out int error)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
+
+		public string? [] GetAlpnProtocols (out int error)
 		{
 			IntPtr protocols = IntPtr.Zero; // must be null, CFArray allocated by SSLCopyALPNProtocols
 			error = SSLCopyALPNProtocols (Handle, ref protocols);
 			if (protocols == IntPtr.Zero)
 				return Array.Empty<string> ();
-			var result = NSArray.StringArrayFromHandle (protocols);
-			CFObject.CFRelease (protocols);
-			return result;
+			return CFArray.StringArrayFromHandle (protocols, true)!;
 		}
 
-		[iOS (11,0)][TV (11,0)][Watch (4,0)]
-		[Mac (10,13,4)]
-		public string[] GetAlpnProtocols ()
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("macos10.15", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'Network.framework' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'Network.framework' instead.")]
+#endif
+		public string? [] GetAlpnProtocols ()
 		{
 			int error;
 			return GetAlpnProtocols (out error);

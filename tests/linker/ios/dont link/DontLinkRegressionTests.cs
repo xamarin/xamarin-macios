@@ -17,17 +17,16 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
 using MonoTouch;
-#if XAMCORE_2_0
 using Foundation;
+#if !__MACOS__
 using UIKit;
-using ObjCRuntime;
-#else
-using MonoTouch.UIKit;
 #endif
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace DontLink {
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -37,10 +36,11 @@ namespace DontLink {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	public class DontLinkRegressionTests {
-		
+
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=587
 		// regressed: http://bugzilla.xamarin.com/show_bug.cgi?id=1824
 		private readonly Dictionary<string, string> queued = new Dictionary<string, string> ();
@@ -48,7 +48,7 @@ namespace DontLink {
 		[Test]
 		public void Bug587_FullAotRuntime ()
 		{
-			KeyValuePair<string, string> valuePair = queued.FirstOrDefault (delegate {return true; });
+			KeyValuePair<string, string> valuePair = queued.FirstOrDefault (delegate { return true; });
 			Assert.NotNull (valuePair);
 			// should not crash with System.ExecutionEngineException
 		}
@@ -57,22 +57,21 @@ namespace DontLink {
 		public void RemovedAttributes ()
 		{
 			// since we do not link the attributes will be available - used or not by the application
-#if XAMCORE_2_0
 			var fullname = typeof (NSObject).Assembly.FullName;
 			Assert.NotNull (Type.GetType ("ObjCRuntime.ThreadSafeAttribute, " + fullname), "ThreadSafeAttribute");
-#else
-			Assert.NotNull (Type.GetType ("MonoTouch.ObjCRuntime.SinceAttribute, monotouch"), "SinceAttribute");
-			Assert.NotNull (Type.GetType ("MonoTouch.ObjCRuntime.ThreadSafeAttribute, monotouch"), "ThreadSafeAttribute");
-#endif
 		}
 
 		[Test]
+#if NET
+		[Ignore ("MulticastDelegate.BeginInvoke isn't supported in .NET (https://github.com/dotnet/runtime/issues/16312)")]
+#endif
 		public void Bug5354 ()
 		{
 			Action<string> testAction = (string s) => { s.ToString (); };
 			testAction.BeginInvoke ("Teszt", null, null);
 		}
 
+#if !__MACOS__
 		[Test]
 		public void Autorelease ()
 		{
@@ -87,7 +86,9 @@ namespace DontLink {
 				img.CreateResizableImage (new UIEdgeInsets (1, 2, 3, 4));
 			}
 		}
+#endif // !__MACOS__
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -98,6 +99,7 @@ namespace DontLink {
 			Assert.NotNull (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, mscorlib"), "FileIOPermissionAttribute");
 			Assert.NotNull (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, mscorlib"), "FileIOPermissionAccess");
 		}
+#endif
 
 		[Test]
 		public void DefaultEncoding ()
@@ -116,7 +118,7 @@ namespace DontLink {
 				Assert.Fail ("No exception was thrown. " + message);
 			} catch (TargetInvocationException tie) {
 				var nse = tie.InnerException as TargetInvocationException;
-				if (nse != null)
+				if (nse is not null)
 					Assert.Fail ("An exception was thrown, but {0} instead of NotSupportedException. " + message, tie.InnerException.GetType ().FullName);
 			}
 		}
@@ -150,12 +152,16 @@ namespace DontLink {
 			}
 
 			var all_properties = type.GetProperties ();
-			var notsupported_properties = new string [] { "StandardError", "StandardInput", "StandardOutput", "StartInfo" };
+			var notsupported_properties = new string [] { "StandardError", "StandardInput", "StandardOutput",
+#if !NET
+				"StartInfo"
+#endif
+			};
 			foreach (var notsupported_property in notsupported_properties) {
 				foreach (var property in all_properties.Where ((v) => v.Name == notsupported_property)) {
-					if (property.GetGetMethod () != null)
+					if (property.GetGetMethod () is not null)
 						AssertThrowsWrappedNotSupportedException (() => property.GetGetMethod ().Invoke (instance, new object [] {}), notsupported_property + " (getter)");
-					if (property.GetSetMethod () != null)
+					if (property.GetSetMethod () is not null)
 						AssertThrowsWrappedNotSupportedException (() => property.GetSetMethod ().Invoke (instance, new object [] { null }), notsupported_property + " (setter)");
 				}
 
@@ -164,7 +170,7 @@ namespace DontLink {
 #endif // __TVOS__ || __WATCHOS__
 
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 		// Test that we allow P/Invokes to functions that don't exist
 		// for functions in platform libraries.
 		[DllImport ("/usr/lib/libsqlite3.dylib")]

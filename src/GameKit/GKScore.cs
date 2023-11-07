@@ -39,6 +39,8 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+#nullable enable
+
 namespace GameKit {
 	public partial class GKScore {
 
@@ -51,23 +53,18 @@ namespace GameKit {
 		// start to differ in future releases (in IOS7 it looks like the older is called, nothing else)
 		public GKScore (string categoryOrIdentifier)
 		{
-			if (categoryOrIdentifier == null)
-				throw new ArgumentNullException ("categoryOrIdentifier");
+			if (categoryOrIdentifier is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (categoryOrIdentifier));
 
 #if WATCH
 			Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
 #else
-			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
+			if (SystemVersion.CheckiOS (7, 0))
 				Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
 			else
 				Handle = InitWithCategory (categoryOrIdentifier);
 #endif
 		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("Use Date property")]
-		NSDate date { get { return Date; }}
-#endif
 	}
 }
 

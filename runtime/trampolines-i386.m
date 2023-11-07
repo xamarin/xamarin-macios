@@ -28,7 +28,7 @@ dump_state (struct XamarinCallState *state)
 #endif
 
 static void
-param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
+param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, GCHandle *exception_gchandle)
 {
 	struct ParamIterator *it = (struct ParamIterator *) context;
 	
@@ -67,7 +67,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle)
 {
 	MonoObject *value = (MonoObject *) vvalue;
 	struct ParamIterator *it = (struct ParamIterator *) context;

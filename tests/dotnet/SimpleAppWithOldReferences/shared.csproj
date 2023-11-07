@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>SimpleAppWithOldReferences</ApplicationTitle>
+		<ApplicationId>com.xamarin.mysimpleappwitholdreferences</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+		<Reference Include="../dotnet45assembly/dotnet45assembly.dll" />
+	</ItemGroup>
+
+	<Target Name="BuildDotNet45Assembly" BeforeTargets="PrepareForBuild;ResolvAssemblyReferences">
+		<Exec Command="make -j8 -C ../dotnet45assembly" />
+	</Target>
+</Project>

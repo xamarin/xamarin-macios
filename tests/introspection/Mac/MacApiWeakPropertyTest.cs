@@ -1,10 +1,6 @@
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoMac.Foundation;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
@@ -22,8 +18,15 @@ namespace Introspection {
 				return true;
 			// VNImageOptions is a DictionaryContainer that exposes a Weak* NSDictionary
 			case "VNImageOptions":
-				return true; 
+				return true;
 			}
+
+			switch (type.Namespace) {
+			case "MonoMac.QTKit": // QTKit has been removed from macOS
+			case "QTKit":
+				return true;
+			}
+
 			return base.Skip (type);
 		}
 	}

@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="M0001" xml:space="preserve">
+        <value>{0} 도구 실행이 인수로 시작됨: {1}
+        </value>
+    </data>
+  <data name="M0002" xml:space="preserve">
+        <value>{0} 도구 실행이 완료되었습니다(종료 코드 = {1}).
+        </value>
+    </data>
+  <data name="E0003" xml:space="preserve">
+        <value>'{0}' 도구를 실행하는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="E0004" xml:space="preserve">
+        <value>'{0}'을(를) 코드 서명하지 못함: {1}
+        </value>
+    </data>
+  <data name="E0005" xml:space="preserve">
+        <value>'{0}'을(를) 코드 서명하지 못함
+        </value>
+    </data>
+  <data name="E0006" xml:space="preserve">
+        <value>  '{0}'이(가) 없습니다.
+        </value>
+    </data>
+  <data name="E0007" xml:space="preserve">
+        <value>'{0}'을(를) 로드하는 동안 오류 발생: 알 수 없는 이미지 형식입니다.
+        </value>
+    </data>
+  <data name="E0008" xml:space="preserve">
+        <value>'{2}'의 iTunesArtwork 크기({0}x{1})가 잘못되었습니다.
+        </value>
+    </data>
+  <data name="E0009" xml:space="preserve">
+        <value>'{2}'에 대해 동일한 크기({0}x{1})의 여러 iTunesArtwork 파일이 검색되었습니다.
+        </value>
+    </data>
+  <data name="E0010" xml:space="preserve">
+        <value>'{0}'을(를) 로드하는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="E0011" xml:space="preserve">
+        <value>MinimumOSVersion 값 '{0}'을(를) 구문 분석할 수 없음
+        </value>
+    </data>
+  <data name="E0012" xml:space="preserve">
+        <value>TargetArchitectures '{0}'을(를) 구문 분석할 수 없음
+        </value>
+    </data>
+  <data name="E0013" xml:space="preserve">
+        <value>'{1}'의 {0} SDK가 설치되지 않았습니다.
+        </value>
+    </data>
+  <data name="E0014" xml:space="preserve">
+        <value>iOS에서 앱을 실행하지 못할 수 있으므로 실행 파일(CFBundleExecutable) 이름({0})은 '.app'으로 끝날 수 없습니다.
+        </value>
+    </data>
+  <data name="W0016" xml:space="preserve">
+        <value>watchOS용으로 빌드할 때만 watchOS 4.3 SDK를 가짜로 만들 수 있습니다.
+        </value>
+    </data>
+  <data name="M0017" xml:space="preserve">
+        <value>모든 http 로드가 이미 허용되었습니다.
+        </value>
+    </data>
+  <data name="M0018" xml:space="preserve">
+        <value>디버깅을 지원하기 위해 임의의 HTTP 로드가 허용되었습니다.
+        </value>
+    </data>
+  <data name="W0019" xml:space="preserve">
+        <value>지원되는 iPhone 방향이 설정되지 않음
+        </value>
+    </data>
+  <data name="W0020" xml:space="preserve">
+        <value>지원되는 iPhone 방향이 일치하는 쌍이 아님
+        </value>
+        <comment>The iPhone orientation settings do not match iPad, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="W0021" xml:space="preserve">
+        <value>지원되는 iPad 방향이 설정되지 않음
+        </value>
+    </data>
+  <data name="W0022" xml:space="preserve">
+        <value>지원되는 iPad 방향이 일치하는 쌍이 아님
+        </value>
+        <comment>The iPad orientation settings do not match iPhone, see: https://xamarin.github.io/bugzilla-archives/85/850/bug.html</comment>
+    </data>
+  <data name="E0023" xml:space="preserve">
+        <value>iTunesMetadata.plist가 2개 이상 있으면 안 됩니다.
+        </value>
+    </data>
+  <data name="E0024" xml:space="preserve">
+        <value>설정 plist 파일 '{0}/Settings.bundle/Root.plist'를 로드하는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="E0025" xml:space="preserve">
+        <value>SDK 버전 '{0}'을(를) 구문 분석할 수 없음
+        </value>
+    </data>
+  <!-- E0026: not used anymore -->
+  <!-- E0027: not used anymore -->
+  <!-- E0028: not used anymore -->
+  <!-- E0029: not used anymore -->
+  <!-- E0030: not used anymore -->
+  <!-- E0031: not used anymore -->
+  <data name="E0032" xml:space="preserve">
+        <value>SDK bin 디렉터리를 찾을 수 없음
+        </value>
+    </data>
+  <!-- E0033: not used anymore -->
+  <!-- E0034: not used anymore -->
+  <!-- E0035: not used anymore -->
+  <!-- E0036: not used anymore -->
+  <!-- E0037: not used anymore -->
+  <!-- E0038: not used anymore -->
+  <!-- E0039: not used anymore -->
+  <!-- E0040: not used anymore -->
+  <!-- E0041: not used anymore -->
+  <!-- E0042: not used anymore -->
+  <!-- E0043: not used anymore -->
+  <data name="E0044" xml:space="preserve">
+        <value>'{0}'에서 유효한 Xcode 앱 번들을 찾을 수 없습니다. Visual Studio의 기본 설정 {1}에서 Apple SDK 위치를 업데이트하세요.
+        </value>
+        <comment>The following are literal names and should not be translated: Xcode, Apple SDK, Visual Studio
+{0} - The selected Xcode / Apple SDK directory.</comment>
+    </data>
+  <data name="E0045" xml:space="preserve">
+        <value>유효하고 사용 가능한 Xcode 개발자 경로를 찾을 수 없음
+        </value>
+    </data>
+  <data name="E0046" xml:space="preserve">
+        <value>'{0}'을(를) 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="M0047" xml:space="preserve">
+        <value>'{1}'에서 '{0}'을(를) 검색하는 중
+        </value>
+    </data>
+  <data name="E0048" xml:space="preserve">
+        <value>알 수 없는 SDK 플랫폼: {0}
+        </value>
+    </data>
+  <data name="E0049" xml:space="preserve">
+        <value>이름 또는 UUID가 {0}인 프로비저닝 프로필을 찾을 수 없음
+        </value>
+    </data>
+  <data name="E0050" xml:space="preserve">
+        <value>알 수 없는 검색 옵션: {0}
+        </value>
+    </data>
+  <data name="W0051" xml:space="preserve">
+        <value>'{0}'에 대한 알 수 없는 네이티브 참조 형식입니다.
+        </value>
+    </data>
+  <data name="W0052" xml:space="preserve">
+        <value>동적 네이티브 참조('{0}')가 지원되지 않음
+        </value>
+    </data>
+  <data name="E0053" xml:space="preserve">
+        <value>대상 아키텍처 ARMv6는 Xamarin.iOS에서 더 이상 지원되지 않습니다. 지원되는 아키텍처를 선택하세요.
+        </value>
+    </data>
+  <data name="W0054" xml:space="preserve">
+        <value>지시 파일 '{0}'을(를) 생성하지 못함: {1}
+        </value>
+    </data>
+  <data name="E0055" xml:space="preserve">
+        <value>Info.plist({0})를 로드할 수 없음
+        </value>
+    </data>
+  <data name="E0057" xml:space="preserve">
+        <value>잘못된 아키텍처: '{0}'.
+        </value>
+    </data>
+  <data name="E0058" xml:space="preserve">
+        <value>대상 디바이스 정보를 구문 분석하지 못했습니다.
+        </value>
+    </data>
+  <data name="E0059" xml:space="preserve">
+        <value>대상 디바이스를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0060" xml:space="preserve">
+        <value>디바이스 아키텍처 정보를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0061" xml:space="preserve">
+        <value>잘못된 대상 아키텍처: '{0}'
+        </value>
+    </data>
+  <data name="E0062" xml:space="preserve">
+        <value>디바이스 운영 체제 정보를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0063" xml:space="preserve">
+        <value>디바이스 모델 정보를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0064" xml:space="preserve">
+        <value>iOS 버전 정보를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0065" xml:space="preserve">
+        <value>리소스 규칙 파일 '{0}'을(를) 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0066" xml:space="preserve">
+        <value>SdkVersion '{0}'을(를) 구문 분석하지 못했습니다.
+        </value>
+    </data>
+  <data name="E0067" xml:space="preserve">
+        <value>Xcode 10에서는 watchOS 1 앱을 지원하지 않습니다. watchOS 2 앱으로 업그레이드하거나 이전 버전의 Xcode를 사용하세요.</value>
+    </data>
+  <data name="E0068" xml:space="preserve">
+        <value>WatchKit 애플리케이션을 빌드하려면 6.2 이상의 Xcode가 설치되어 있어야 합니다.
+        </value>
+    </data>
+  <data name="E0069" xml:space="preserve">
+        <value>iOS {0}은(는) WatchKit를 지원하지 않습니다.
+        </value>
+    </data>
+  <data name="E0070" xml:space="preserve">
+        <value>Xcode 앱 번들에서 WatchKit 시작 관리자를 찾지 못했습니다.
+        </value>
+    </data>
+  <data name="W0071" xml:space="preserve">
+        <value>앱 확장 '{0}'에 기본 앱 번들의 CFBundleShortVersionString({2})과 일치하지 않는 CFBundleShortVersionString({1})이 있습니다.
+        </value>
+    </data>
+  <data name="W0072" xml:space="preserve">
+        <value>앱 확장 '{0}'에서 CFBundleVersion을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="W0073" xml:space="preserve">
+        <value>앱 확장 '{0}'에 기본 앱 번들의 CFBundleVersion({2})과 일치하지 않는 CFBundleVersion({1})이 있습니다.
+        </value>
+    </data>
+  <data name="W0074" xml:space="preserve">
+        <value>앱 확장 '{0}'에 인식할 수 없는 NSExtensionPointIdentifier 값('{1}')이 있습니다.
+        </value>
+    </data>
+  <data name="W0075" xml:space="preserve">
+        <value>Watch 앱 '{0}'에서 CFBundleShortVersionString을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="W0076" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 기본 앱 번들의 CFBundleShortVersionString({2})과 일치하지 않는 CFBundleShortVersionString({1})이 있습니다.
+        </value>
+    </data>
+  <data name="W0077" xml:space="preserve">
+        <value>Watch 앱 '{0}'에서 CFBundleVersion을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="W0078" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 기본 앱 번들의 CFBundleVersion({2})과 일치하지 않는 CFBundleVersion({1})이 있습니다.
+        </value>
+    </data>
+  <data name="W0079" xml:space="preserve">
+        <value>Watch 확장 '{0}'에서 CFBundleShortVersionString을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="W0080" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 기본 앱 번들의 CFBundleShortVersionString({2})과 일치하지 않는 CFBundleShortVersionString({1})이 있습니다.
+        </value>
+    </data>
+  <data name="W0081" xml:space="preserve">
+        <value>Watch 확장 '{0}'에서 CFBundleVersion을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="W0082" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 기본 앱 번들의 CFBundleVersion({2})과 일치하지 않는 CFBundleVersion({1})이 있습니다.
+        </value>
+    </data>
+  <!-- E0083: not used anymore -->
+  <data name="E0084" xml:space="preserve">
+        <value>경로 '{}'에서 {0} '{1}' SDK를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0085" xml:space="preserve">
+        <value>'{2}'에서 {0} '{1}' SDK usr 경로를 찾을 수 없습니다.
+        </value>
+        <comment>The provided SDK path is missing a 'usr' directory. The following are literal names and should not be translated: SDK, usr
+{0} - The platform name, such as 'iOS'.
+{1} - The version number of the SDK.
+{2} - The file path of the SDK.</comment>
+    </data>
+  <data name="E0086" xml:space="preserve">
+        <value>유효한 Xcode 개발자 경로를 찾을 수 없음
+        </value>
+    </data>
+  <!-- E0087: not used anymore -->
+  <!-- E0088: not used anymore -->
+  <data name="E0089" xml:space="preserve">
+        <value>인식할 수 없는 플랫폼: {0}
+        </value>
+    </data>
+  <data name="W0090" xml:space="preserve">
+        <value>자산 카탈로그에 포함되지 않은 자산: {0}
+        </value>
+    </data>
+  <data name="E0091" xml:space="preserve">
+        <value>파일을 찾을 수 없음: {0}
+        </value>
+    </data>
+  <data name="E0092" xml:space="preserve">
+        <value>잘못된 json: {0}
+        </value>
+    </data>
+  <data name="E0093" xml:space="preserve">
+        <value>부분 Info.plist 파일이 생성되지 않음: {0}
+        </value>
+    </data>
+  <data name="E0094" xml:space="preserve">
+        <value>{0} 로그 파일 '{1}'을(를) 로드하지 못함: {2}
+        </value>
+        <comment>A general failure message if a log file wasn't able to be loaded.
+{0} - The command-line tool that generated the log.
+{1} - The file path to the log.
+{2} - Further detail about the failure.</comment>
+    </data>
+  <data name="W0095" xml:space="preserve">
+        <value>altool 출력을 구문 분석하지 못함: {0}.
+            출력: {1}
+        </value>
+    </data>
+  <!-- E0096: not used anymore -->
+  <data name="E0097" xml:space="preserve">
+        <value>지정된 API 정의 파일이 없습니다.
+        </value>
+    </data>
+  <data name="E0098" xml:space="preserve">
+        <value>{0}이(가) 실패했습니다.
+        </value>
+        <comment>A general error message that a command-line tool failed.
+{0} - The file path to the command-line tool.</comment>
+    </data>
+  <data name="E0099" xml:space="preserve">
+        <value>  디스크에서 번들 리소스 '{0}'을(를) 찾을 수 없음('{1}'에 있어야 함)
+        </value>
+    </data>
+  <data name="E0100" xml:space="preserve">
+        <value>'{0}' 경로는 앱 번들 외부의 파일로 이어지므로 사용할 수 없습니다.
+        </value>
+    </data>
+  <data name="E0101" xml:space="preserve">
+        <value>Info.plist 파일에는 'None' 빌드 작업이 있어야 합니다.
+        </value>
+    </data>
+  <data name="E0102" xml:space="preserve">
+        <value>'{0}' 이름은 예약되어 있으므로 사용할 수 없습니다.
+        </value>
+    </data>
+  <data name="W0103" xml:space="preserve">
+        <value>Frameworks 디렉터리 내에서 프레임워크가 아닌 디렉터리를 찾음: {0}
+        </value>
+    </data>
+  <data name="W0104" xml:space="preserve">
+        <value>프레임워크 {0}에 {1}(이)라는 이진이 포함되어 있지 않음
+        </value>
+    </data>
+  <data name="M0105" xml:space="preserve">
+        <value>Frameworks 디렉터리를 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="W0106" xml:space="preserve">
+        <value>매니페스트 키 '{0}'의 값을 확인할 수 없음
+        </value>
+    </data>
+  <data name="E0107" xml:space="preserve">
+        <value>부분 Info.plist 템플릿 파일 '{0}'을(를) 로드하는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="W0108" xml:space="preserve">
+        <value>프로비저닝 프로필 없이 Entitlements.plist에서 $(TeamIdentifierPrefix)를 확장할 수 없습니다.
+        </value>
+    </data>
+  <data name="W0109" xml:space="preserve">
+        <value>프로비저닝 프로필 없이 Entitlements.plist에서 $(AppIdentifierPrefix)를 확장할 수 없습니다.
+        </value>
+    </data>
+  <data name="W0110" xml:space="preserve">
+        <value>'{0}'과(와) 같은 iCloud 자격에는 프로비저닝 프로필이 필요합니다.
+        </value>
+    </data>
+  <data name="W0111" xml:space="preserve">
+        <value>iCloud 자격 '{{0}}'은(는) 프로비저닝 프로필에서 지원되지 않습니다.
+        </value>
+    </data>
+  <data name="E0112" xml:space="preserve">
+        <value>Entitlements.plist 템플릿 '{0}'을(를) 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0113" xml:space="preserve">
+        <value>Entitlements.plist 템플릿 '{0}'을(를) 로드하는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="E0114" xml:space="preserve">
+        <value>xcent 파일 '{0}'을(를) 쓰는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="E0115" xml:space="preserve">
+        <value>archived-expanded-entitlements.xcent 파일을 쓰는 동안 오류 발생: {0}
+        </value>
+    </data>
+  <data name="M0116" xml:space="preserve">
+        <value>{0} 도구 실행이 완료되었습니다.
+        </value>
+    </data>
+  <data name="E0117" xml:space="preserve">
+        <value>{0}이(가) 코드 {1}(으)로 종료됨
+        </value>
+    </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} 다음 코드로 종료됨 {1}:
+{2}</value>
+    </data>
+  <data name="M0119" xml:space="preserve">
+        <value>출력 파일로 '{0}'을(를) 건너뜁니다. '{1}'이(가) 더 최신입니다.
+        </value>
+        <comment>Skipping a build operation, since the destination file is newer than the source file.
+{0} - The destination file.
+{1} - The source file.</comment>
+    </data>
+  <data name="E0120" xml:space="preserve">
+        <value>'{0}'을(를) 저장하는 동안 오류 발생: {1}
+        </value>
+    </data>
+  <data name="M0121" xml:space="preserve">
+        <value>바인딩 리소스 패키지({0})를 생성하는 중
+        </value>
+    </data>
+  <data name="E0122" xml:space="preserve">
+        <value>'{0}'을(를) 로드하는 동안 오류 발생
+        </value>
+    </data>
+  <data name="E0123" xml:space="preserve">
+        <value>패키지 생성에 실패했습니다. 추가 인수를 구문 분석할 수 없습니다.
+        </value>
+    </data>
+  <data name="E0124" xml:space="preserve">
+        <value>ID '{0}'이(가) 기본 키 집합의 유효한 인증서/프라이빗 키 쌍과 일치하지 않습니다.
+        </value>
+        <comment>A failure to sign the iOS application, due to a missing certificate/private key. Xcode has an identical error message, see: https://developer.apple.com/library/archive/technotes/tn2250/_index.html#//apple_ref/doc/uid/DTS40009933-CH1-TNTAG40-WHAT_DOES__VALID_SIGNING_IDENTITY_NOT_FOUND__MEAN_AND_HOW_DO_I_RESOLVE_IT_
+{0} - The name of the identity, such as 'iPhone Developer'.</comment>
+    </data>
+  <data name="M0125" xml:space="preserve">
+        <value>검색된 서명 ID:
+        </value>
+    </data>
+  <data name="M0126" xml:space="preserve">
+        <value>'{0}' 인증서가 '{1}' 접두사와 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="M0127" xml:space="preserve">
+        <value>'{0}' 인증서가 만료되었음({1})
+        </value>
+    </data>
+  <data name="E0128" xml:space="preserve">
+        <value>키 집합에서 유효한 {0} 코드 서명 키를 찾을 수 없습니다. https://developer.apple.com에서 코드 서명 인증서를 요청해야 합니다.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0129" xml:space="preserve">
+        <value>'{0}' 인증서가 '{1}'과(와) 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E0130" xml:space="preserve">
+        <value>{0} 코드 서명 키 '{1}'을(를) 키 집합에서 찾을 수 없습니다.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The name of the code signing key, such as 'Apple Development'.</comment>
+    </data>
+  <data name="E0131" xml:space="preserve">
+        <value>{1}에서 {0}에 대해 사용 가능한 프로비저닝 프로필을 찾을 수 없습니다.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The app bundle name, such as 'YouriOSApp.app'
+{1} - The platform name, such as 'iOS'.</comment>
+    </data>
+  <data name="M0132" xml:space="preserve">
+        <value>'{0}'이(가) '{1}'과(와) 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E0133" xml:space="preserve">
+        <value>설치된 프로비저닝 프로필이 설치된 {0} {1} 서명 ID와 일치하지 않습니다.
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The app bundle name, such as 'YouriOSApp.app'</comment>
+    </data>
+  <data name="M0134" xml:space="preserve">
+        <value>호환 가능한 AppID와 일치하는 프로비저닝 프로필을 찾고, 일치하는(와일드카드) ID가 가장 긴 프로필만 유지합니다.
+        </value>
+    </data>
+  <data name="M0135" xml:space="preserve">
+        <value>AppID: 더 일치하는 항목({1})이 있으므로 {0}은(는) 제외되었습니다.
+        </value>
+    </data>
+  <data name="M0136" xml:space="preserve">
+        <value>AppID: 이미 더 일치하는 항목({1})이 있으므로 {0}은(는) 제외되었습니다.
+        </value>
+    </data>
+  <data name="W0137" xml:space="preserve">
+        <value>설치된 프로비저닝 프로필이 번들 식별자와 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="M0138" xml:space="preserve">
+        <value>여러 프로비저닝 프로필이 번들 식별자와 일치하므로 처음 일치를 사용합니다.
+        </value>
+    </data>
+  <data name="E0139" xml:space="preserve">
+        <value>{0}은(는) CFBundleIdentifier를 정의하지 않음
+        </value>
+    </data>
+  <data name="E0140" xml:space="preserve">
+        <value>지정한 {0} 프로비저닝 프로필 '{1}'을(를) 찾을 수 없음
+        </value>
+        <comment>A failure to sign the iOS application, due to missing code-signing credentials. See: https://docs.microsoft.com/xamarin/ios/troubleshooting/questions/no-codesigning-keys
+{0} - The platform name, such as 'iOS'.
+{1} - The provisioning profile ID. A string such as: 'f35b0040-2be5-4b1c-a1d6-59ae85047fad'</comment>
+    </data>
+  <data name="E0141" xml:space="preserve">
+        <value>프로젝트 번들 ID '{0}'이(가) 지정한 프로비저닝 프로필 '{1}'과(와) 일치하지 않음
+        </value>
+    </data>
+  <data name="M0142" xml:space="preserve">
+        <value>여러 서명 ID가 '{0}'과(와) 일치하므로 처음 일치를 사용합니다.
+        </value>
+    </data>
+  <data name="M0143" xml:space="preserve">
+        <value>여러 서명 ID를 찾았습니다. 첫 번째 ID를 사용합니다.
+        </value>
+    </data>
+  <data name="E0144" xml:space="preserve">
+        <value>지정한 {0} 프로비저닝 프로필 '{1}'을(를) 찾을 수 없음
+        </value>
+    </data>
+  <data name="E0145" xml:space="preserve">
+        <value>지정한 프로비저닝 프로필 '{1}'과(와) 일치하는 {0} 서명 ID가 없습니다.
+        </value>
+    </data>
+  <data name="E0146" xml:space="preserve">
+        <value>번들 식별자 '{0}'이(가) 선택한 서명 ID '{0}'에 대해 설치된 프로비저닝 프로필과 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E0147" xml:space="preserve">
+        <value>번들 식별자 '{0}'이(가) 선택한 서명 ID '{0}'에 대해 설치된 프로비저닝 프로필과 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E0148" xml:space="preserve">
+        <value>번들 식별자 '{0}'이(가) 설치된 프로비저닝 프로필과 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="M0149" xml:space="preserve">
+        <value>  {0}은(는) {1}에 있습니다.
+        </value>
+        <comment>A file was found at a location.
+{0} - The '%(LogicalName)' of the file, or a relative path.
+{1} - The location the file was found.</comment>
+    </data>
+  <data name="E0150" xml:space="preserve">
+        <value>  AssemblyPath는 null이거나 비워 둘 수 없음
+        </value>
+    </data>
+  <data name="M0151" xml:space="preserve">
+        <value>생성된 번들 이름: {0}
+        </value>
+    </data>
+  <data name="E0152" xml:space="preserve">
+        <value>지정된 속성이 없습니다.
+        </value>
+    </data>
+  <data name="E0153" xml:space="preserve">
+        <value>'{0}'의 사전에 키가 포함되어 있지 않음: {1}
+        </value>
+    </data>
+  <data name="E0154" xml:space="preserve">
+        <value>배열 인덱스({0})를 구문 분석할 수 없음
+        </value>
+    </data>
+  <data name="E0155" xml:space="preserve">
+        <value>배열 인덱스가 '{0}' 항목의 범위를 벗어남
+        </value>
+    </data>
+  <data name="E0156" xml:space="preserve">
+        <value>{0} 값은 자식 속성을 지원하지 않습니다.
+        </value>
+        <comment>The type of value in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), such as a number or string cannot contain child values.
+{0} - The value type, such as 'NSString'.</comment>
+    </data>
+  <data name="E0157" xml:space="preserve">
+        <value>{0} 값 가져오기는 지원되지 않습니다.
+        </value>
+    </data>
+  <data name="E0158" xml:space="preserve">
+        <value>'{0}' 파일이 없습니다.
+        </value>
+    </data>
+  <data name="E0159" xml:space="preserve">
+        <value>'{0}' 파일이 '{1}'과(와) 충돌합니다.
+        </value>
+    </data>
+  <data name="E0160" xml:space="preserve">
+        <value>Watch 앱/확장에는 Xcode 6.2 이상이 필요합니다. 현재 Xcode 버전은 {0}입니다.
+        </value>
+    </data>
+  <data name="E0161" xml:space="preserve">
+        <value>항목에는 계산된 논리 이름이 있어야 합니다.
+        </value>
+    </data>
+  <data name="M0162" xml:space="preserve">
+        <value>중복된 항목({0})을 건너뛰었음
+        </value>
+    </data>
+  <data name="M0163" xml:space="preserve">
+        <value>파일이 없음, 생성 예정: {0}
+        </value>
+    </data>
+  <data name="M0164" xml:space="preserve">
+        <value>'{0}' 디렉터리를 생성하는 중
+        </value>
+    </data>
+  <data name="M0165" xml:space="preserve">
+        <value>'{0}'에서 '{1}'(으)로 파일 복사 중
+        </value>
+    </data>
+  <data name="E0166" xml:space="preserve">
+        <value>DestinationFolder 또는 DestinationFiles 중 하나만 지정해야 합니다.
+        </value>
+    </data>
+  <data name="E0167" xml:space="preserve">
+        <value>DestinationFiles의 수는 SourceFiles의 수와 일치해야 합니다.
+        </value>
+    </data>
+  <data name="M0168" xml:space="preserve">
+        <value>  프레임워크 어셈블리({0})를 건너뛰는 중
+        </value>
+    </data>
+  <data name="E0169" xml:space="preserve">
+        <value>알 수 없는 대상 프레임워크 식별자({0})입니다.
+        </value>
+    </data>
+  <data name="E0170" xml:space="preserve">
+        <value>{1}에서 {0}을(를) 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0171" xml:space="preserve">
+        <value>{0} SDK가 설치되지 않았습니다.
+        </value>
+    </data>
+  <data name="E0172" xml:space="preserve">
+        <value>{0} SDK 버전 '{1}'이(가) 설치되지 않았으며 최신 버전을 찾을 수 없습니다.
+        </value>
+    </data>
+  <data name="E0173" xml:space="preserve">
+        <value>{0} SDK 버전 '{1}'이(가) 설치되지 않았습니다. 대신 최신 버전 '{2}'을(를) 사용합니다.
+        </value>
+    </data>
+  <data name="E0174" xml:space="preserve">
+        <value>xcframework {0}의 형식이 잘못되었거나 알 수 없어 처리할 수 없습니다.</value>
+    </data>
+  <data name="E0175" xml:space="preserve">
+        <value>내부 '{0}'에 일치하는 프레임워크가 없습니다. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
+    </data>
+  <data name="W0176" xml:space="preserve">
+        <value>'{0}' 옵션과 '{1}' 옵션이 충돌합니다. '{1}'은(는) 무시됩니다.
+        </value>
+    </data>
+  <data name="E0177" xml:space="preserve">
+        <value>ISshCommands 인스턴스를 가져올 수 없습니다. Mac과의 연결이 유효한지 확인하세요.</value>
+    </data>
+  <data name="E0178" xml:space="preserve">
+        <value>'{0}' 보관을 '{1}'에 복사하는 중 오류가 발생했습니다. 세부 정보: {2}</value>
+    </data>
+  <data name="E0179" xml:space="preserve">
+        <value>Mac에 사용할 수 있는 연결이 없습니다. '{0}' 작업이 실행되지 않습니다.</value>
+    </data>
+  <data name="E0180" xml:space="preserve">
+        <value>DataSet {0}을(를) 역직렬화할 수 없습니다.</value>
+    </data>
+  <data name="E0181" xml:space="preserve">
+        <value>{0} 파일에 빌드 작업으로 ImageAsset이 없습니다.</value>
+    </data>
+  <data name="E0182" xml:space="preserve">
+        <value>카탈로그 {1}에서 {0}에 대한 UTI를 확인할 수 없습니다.</value>
+    </data>
+  <data name="E0183" xml:space="preserve">
+        <value>Xcode 및 Xamarin.iOS 간의 호환성을 확인하는 동안 오류가 발생했습니다.</value>
+    </data>
+  <data name="E0184" xml:space="preserve">
+        <value>프로젝트가 호환되지 않는 Xcode ({0}) 버전으로 빌드되었으므로, 예기치 않은 경고나 오류가 발생할 수 있습니다. Xcode '{1}'을(를) 설치하거나 설명서를 확인하여 자세히 알아보세요.</value>
+    </data>
+  <data name="E0185" xml:space="preserve">
+        <value>Xcode 및 Xamarin.iOS 간의 호환성을 확인하는 동안 오류가 발생했습니다. {0}
+        </value>
+    </data>
+  <data name="E0186" xml:space="preserve">
+        <value>입력된 보관 경로의 출처가 유효한 보관 파일(.xcarchive)이 아닙니다. 보관 경로: '{0}'</value>
+    </data>
+  <data name="E0187" xml:space="preserve">
+        <value>macOS 버전 {0}을(를) 해당 Mac Catalyst 버전에 매핑할 수 없습니다. 유효한 macOS 버전은 다음과 같습니다. {1}</value>
+    </data>
+  <data name="E0188" xml:space="preserve">
+        <value>Mac Catalyst 버전 {0}을(를) 해당 macOS 버전에 매핑할 수 없습니다. 유효한 Mac Catalyst 버전은 다음과 같습니다. {1}</value>
+    </data>
+  <data name="E0189" xml:space="preserve">
+        <value>사용자 지정 링커 인수 '-{0}'을(를) 구문 분석할 수 없습니다. {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>The NativeResource item '{0}' does not exist.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+  <data name="E7001" xml:space="preserve">
+        <value>WiFi 디버거 설정의 호스트 IP를 확인할 수 없습니다.
+        </value>
+    </data>
+  <data name="E7002" xml:space="preserve">
+        <value>이 머신에 네트워크 어댑터가 없습니다. 네트워크 어댑터는 WiFi를 통해 디바이스에서 디버깅 또는 프로파일링할 때 필요합니다.
+        </value>
+    </data>
+  <data name="E7003" xml:space="preserve">
+        <value>앱 확장 '{0}'에 Info.plist가 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7004" xml:space="preserve">
+        <value>앱 확장 '{0}'에서 CFBundleIdentifier를 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7005" xml:space="preserve">
+        <value>앱 확장 '{0}'에서 CFBundleExecutable을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7006" xml:space="preserve">
+        <value>앱 확장 '{0}'에 잘못된 CFBundleIdentifier({1})가 있는데, 이는 기본 앱 번들의 CFBundleIdentifier({2})로 시작되지 않습니다.
+        </value>
+    </data>
+  <data name="E7007" xml:space="preserve">
+        <value>앱 확장 '{0}'에 적합하지 않은 접미사인 ".key"로 끝나는 CFBundleIdentifier({1})가 있습니다.
+        </value>
+    </data>
+  <data name="E7008" xml:space="preserve">
+        <value>앱 확장 '{0}'에서 CFBundleShortVersionString을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7009" xml:space="preserve">
+        <value>앱 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtension 사전이 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7010" xml:space="preserve">
+        <value>앱 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtension 사전에 NSExtensionPointIdentifier 값이 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <!-- E7011: not used anymore -->
+  <!-- E7012: not used anymore -->
+  <!-- E7013: not used anymore -->
+  <data name="E7014" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 Info.plist가 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7015" xml:space="preserve">
+        <value>Watch 앱 '{0}'에서 CFBundleIdentifier를 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7016" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 CFBundleIdentifier({1})가 있는데, 이는 기본 앱 번들의 CFBundleIdentifier({2})로 시작되지 않습니다.
+        </value>
+    </data>
+  <data name="E7017" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 유효한 UIDeviceFamily 값이 없습니다. 'Watch(4)'를 예상했지만 '{1}({2})'이(가) 검색되었습니다.
+        </value>
+    </data>
+  <data name="E7018" xml:space="preserve">
+        <value>Watch 앱 '{name}'에서 CFBundleExecutable을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7019" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 WKCompanionAppBundleIdentifier 값('{1}')이 있으며, 기본 앱 번들의 CFBundleIdentifier('{2}')와 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E7020" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 Info.plist가 있습니다. WKWatchKitApp 키가 있어야 하며 값이 'true'여야 합니다.
+        </value>
+    </data>
+  <data name="E7021" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 Info.plist가 있습니다. LSRequiresIPhoneOS 키가 없어야 합니다.
+        </value>
+    </data>
+  <data name="E7022" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 어떤 Watch 확장도 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7022_A" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 Watch 확장이 포함되어 있지 않습니다.
+        </value>
+        <comment>The watchOS Application does not contain a watchOS extension, see: https://developer.apple.com/documentation/watchkit
+{0} - The app bundle name, such as 'YourWatchOSApp.app'</comment>
+    </data>
+  <data name="E7023" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 Info.plist가 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7024" xml:space="preserve">
+        <value>Watch 확장 '{0}'에서 CFBundleIdentifier를 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7025" xml:space="preserve">
+        <value>Watch 확장 '{0}'에서 CFBundleExecutable을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7026" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 CFBundleIdentifier({1})가 있는데, 이는 기본 앱 번들의 CFBundleIdentifier({2})로 시작되지 않습니다.
+        </value>
+    </data>
+  <data name="E7027" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 적합하지 않은 접미사인 ".key"로 끝나는 CFBundleIdentifier({1})가 있습니다.
+        </value>
+    </data>
+  <data name="E7028" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtension 사전이 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7029" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtensionPointIdentifier는 'com.apple.watchkit'여야 합니다.
+        </value>
+    </data>
+  <data name="E7029_A" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtension 사전에 NSExtensionPointIdentifier가 포함되어 있어야 합니다.
+        </value>
+    </data>
+  <data name="E7030" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtension 사전에 NSExtensionAttributes가 포함되어 있어야 합니다.
+        </value>
+    </data>
+  <data name="E7031" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 WKAppBundleIdentifier 값('{1}')이 있는데, 이는 상위 Watch 앱 번들의 CFBundleIdentifier('{2}')와 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E7031_A" xml:space="preserve">
+        <value>Watch 확장 '{0}'에 잘못된 Info.plist가 있으며, NSExtensionAttributes 사전에 WKAppBundleIdentifier가 포함되어 있어야 합니다.
+        </value>
+    </data>
+  <data name="E7032" xml:space="preserve">
+        <value>WatchKit 확장 '{0}'에 잘못된 Info.plist가 있으며, UIRequiredDeviceCapabilities 사전에 'watch-companion' 기능이 포함되어 있지 않아야 합니다.
+        </value>
+    </data>
+  <data name="E7032_A" xml:space="preserve">
+        <value>WatchKit 확장 '{0}'에 잘못된 Info.plist가 있으며, UIRequiredDeviceCapabilities 배열에 'watch-companion' 기능이 포함되어 있지 않아야 합니다.
+        </value>
+    </data>
+  <data name="E7033" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 Info.plist가 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7034" xml:space="preserve">
+        <value>Watch 앱 '{0}'에서 CFBundleIdentifier를 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7035" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 유효한 UIDeviceFamily 값이 없습니다. '{1}'을(를) 예상했지만 '{2}({3})'이(가) 검색되었습니다.
+        </value>
+    </data>
+  <data name="E7036" xml:space="preserve">
+        <value>Watch 앱 '{0}'에서 CFBundleExecutable을 지정하지 않았습니다.
+        </value>
+    </data>
+  <data name="E7037" xml:space="preserve">
+        <value>WatchKit 확장 '{0}'에 잘못된 WKAppBundleIdentifier 값('{1}')이 있는데, 이는 Watch 앱의 CFBundleIdentifier('{2}')와 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E7038" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 WKCompanionAppBundleIdentifier 값('{1}')이 있으며, 기본 앱 번들의 CFBundleIdentifier('{2}')와 일치하지 않습니다.
+        </value>
+    </data>
+  <data name="E7038_A" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 Info.plist가 있습니다. WKCompanionAppBundleIdentifier가 있어야 하며 기본 앱 번들의 CFBundleIdentifier와 일치해야 합니다.
+        </value>
+    </data>
+  <data name="E7039" xml:space="preserve">
+        <value>Watch 앱 '{0}'에 잘못된 Info.plist가 있습니다. LSRequiresIPhoneOS 키가 없어야 합니다.
+        </value>
+    </data>
+  <data name="E7040" xml:space="preserve">
+        <value>앱 번들 {0}에 Info.plist가 포함되어 있지 않습니다.
+        </value>
+    </data>
+  <data name="E7041" xml:space="preserve">
+        <value>{0}에서 CFBundleIdentifier를 지정하지 않습니다.
+        </value>
+    </data>
+  <data name="E7042" xml:space="preserve">
+        <value>{0}에서 CFBundleExecutable을 지정하지 않습니다.
+        </value>
+    </data>
+  <data name="E7043" xml:space="preserve">
+        <value>{0}에서 CFBundleSupportedPlatforms를 지정하지 않습니다.
+        </value>
+    </data>
+  <data name="E7044" xml:space="preserve">
+        <value>{0}에서 UIDeviceFamily를 지정하지 않습니다.
+        </value>
+    </data>
+  <data name="E7044_A" xml:space="preserve">
+        <value>{0}이(가) 잘못되었습니다. UIDeviceFamily 키에 '{1}'에 대한 값이 포함되어 있어야 합니다.
+        </value>
+    </data>
+  <data name="E7045" xml:space="preserve">
+        <value>인식할 수 없는 형식: {Type}
+        </value>
+    </data>
+  <data name="E7046" xml:space="preserve">
+        <value>추가: '{0}' 항목이 잘못 지정됨
+        </value>
+    </data>
+  <data name="E7047" xml:space="preserve">
+        <value>추가: '{0}' 항목에 잘못된 배열 인덱스가 포함되어 있음
+        </value>
+    </data>
+  <data name="E7048" xml:space="preserve">
+        <value>추가: '{0}' 항목이 이미 있음
+        </value>
+    </data>
+  <data name="E7049" xml:space="preserve">
+        <value>추가: '{0}' 항목을 상위에 추가할 수 없음
+        </value>
+    </data>
+  <data name="E7050" xml:space="preserve">
+        <value>삭제: 상위에서 '{0}' 항목을 삭제할 수 없음
+        </value>
+    </data>
+  <data name="E7051" xml:space="preserve">
+        <value>삭제: '{0}' 항목에 잘못된 배열 인덱스가 포함되어 있음
+        </value>
+    </data>
+  <data name="E7052" xml:space="preserve">
+        <value>삭제: '{0}' 항목이 없음
+        </value>
+    </data>
+  <data name="E7053" xml:space="preserve">
+        <value>가져오기: '{0}' 항목이 잘못 지정됨
+        </value>
+    </data>
+  <data name="E7054" xml:space="preserve">
+        <value>가져오기: '{0}' 항목에 잘못된 배열 인덱스가 포함되어 있음
+        </value>
+    </data>
+  <data name="E7055" xml:space="preserve">
+        <value>가져오기: 파일을 읽는 동안 오류 발생: {0}
+        </value>
+    </data>
+  <data name="E7056" xml:space="preserve">
+        <value>가져오기: '{0}' 항목을 상위에 추가할 수 없음
+        </value>
+    </data>
+  <data name="E7057" xml:space="preserve">
+        <value>병합: 사전에 배열 항목을 추가할 수 없음
+        </value>
+        <comment>Array entries in a '.plist' file (see: https://en.wikipedia.org/wiki/Property_list), cannot be added to a dictionary.</comment>
+    </data>
+  <data name="E7058" xml:space="preserve">
+        <value>병합: 지정한 항목은 컨테이너여야 함
+        </value>
+    </data>
+  <data name="E7059" xml:space="preserve">
+        <value>병합: '{0}' 항목에 잘못된 배열 인덱스가 포함되어 있음
+        </value>
+    </data>
+  <data name="E7060" xml:space="preserve">
+        <value>병합: '{0}' 항목이 없음
+        </value>
+    </data>
+  <data name="E7061" xml:space="preserve">
+        <value>병합: 파일을 읽는 동안 오류 발생: {0}
+        </value>
+    </data>
+  <data name="E7062" xml:space="preserve">
+        <value>설정: '{0}' 항목이 잘못 지정됨
+        </value>
+    </data>
+  <data name="E7063" xml:space="preserve">
+        <value>설정: '{0}' 항목에 잘못된 배열 인덱스가 포함되어 있음
+        </value>
+    </data>
+  <data name="E7064" xml:space="preserve">
+        <value>설정: '{0}' 항목이 없음
+        </value>
+    </data>
+  <!-- E7068: not in use anymore -->
+  <data name="E7069" xml:space="preserve">
+        <value>Xamarin.iOS 14 이상은 watchOS 1 앱을 지원하지 않습니다. 프로젝트를 watchOS 2 이상으로 마이그레이션하세요.</value>
+    </data>
+  <data name="E7070" xml:space="preserve">
+        <value>잘못된 아키텍처({0}): 한 번에 둘 이상의 아키텍처를 연결할 수 없습니다.</value>
+    </data>
+  <data name="E7071" xml:space="preserve">
+        <value>AOT 컴파일러 인수 {0}({1})을(를) 구문 분석할 수 없습니다.</value>
+        <comment>
+            AOT: Ahead-of-Time
+            {0}: The arguments that failed to parse
+            {1}: A more detailed description about the failure
+        </comment>
+    </data>
+  <data name="InvalidFramework" xml:space="preserve">
+        <value>잘못된 프레임워크: {0}</value>
+    </data>
+  <data name="InvalidPlatform" xml:space="preserve">
+        <value>잘못된 플랫폼: {0}</value>
+    </data>
+  <data name="E7072" xml:space="preserve">
+        <value>패키지 제품 요구 사항 파일에 대상 아키텍처({1})와 일치하지 않는 아키텍처({0})가 포함되어 있습니다.</value>
+    </data>
+  <data name="E7073" xml:space="preserve">
+        <value>하나 이상의 앱 번들을 지정해야 합니다.</value>
+    </data>
+  <data name="E7074" xml:space="preserve">
+        <value>앱 번들 {0}이(가) 없습니다.</value>
+    </data>
+  <data name="E7075" xml:space="preserve">
+        <value>앱 번들 {0}에 대해 'SpecificSubDirectory' 메타데이터가 제공되지 않았습니다.</value>
+    </data>
+  <data name="E7076" xml:space="preserve">
+        <value>symlink '{0}'을(를) 병합할 수 없습니다. 대상이 다릅니다.</value>
+    </data>
+  <data name="E7077" xml:space="preserve">
+        <value>'{0}' 파일을 병합할 수 없습니다. 입력 앱 번들 간에 다릅니다.</value>
+    </data>
+  <data name="E7078" xml:space="preserve">
+        <value>잘못된 앱 번들: Mach-O {0} 파일에 종속 파일이 있습니다.</value>
+    </data>
+  <data name="E7079" xml:space="preserve">
+        <value>잘못된 앱 번들: 파일 {0}의 입력 앱 번들 간에 형식이 다릅니다.</value>
+    </data>
+  <data name="E7080" xml:space="preserve">
+        <value>앱 번들 파일 #{0}: {1}</value>
+        <comment>
+            This error will be shown multiple times, listing the full path to the files causing E7076, E7077 and E7079.
+            {0}: a number indicating which input app bundle the file is from
+            {1}: the full path to the file in question
+        </comment>
+    </data>
+  <data name="E7081" xml:space="preserve">
+        <value>AOT 컴파일러 '{0}'이(가) 없습니다.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+  <data name="E7082" xml:space="preserve">
+        <value>Info.plist({1})의 {0} 값이 프로젝트 파일의 SupportedOSPlatformVersion 값({2})과 일치하지 않습니다. 프로젝트 파일에 SupportedOSPlatformVersion 값이 없으면, 기본값을 전제로 합니다. Info.plist의 값을 SupportedOSPlatformVersion 값에 맞도록 변경하거나 Info.plist의 값을 제거하고 없는 경우, SupportedOSPlatformVersion 값을 프로젝트 파일에 추가합니다.</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+  <data name="E7083" xml:space="preserve">
+        <value>모든 글꼴 파일은 앱 번들의 동일한 디렉토리에 있어야 합니다. 다음 글꼴 파일은 앱 번들에서 대상 디렉토리가 서로 다릅니다.</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+  <data name="E7084" xml:space="preserve">
+        <value>대상 디렉토리는 {0}입니다.</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+  <data name="E7085" xml:space="preserve">
+        <value>"{0}" 작업에 필요한 매개 변수 "{1}"의 값이 지정되지 않았거나 {3} 리소스에 "{2}" 메타데이터가 없었습니다.</value>
+    </data>
+  <data name="W7085" xml:space="preserve">
+        <value>입력에 symlinks가 있으므로 압축 바인딩 리소스 패키지를 만들고 있습니다.</value>
+    </data>
+  <data name="E7086" xml:space="preserve">
+        <value>압축 속성에 대한 '{0}' 값이 잘못되었습니다. 유효한 값은 'true', 'false' 또는 '자동'입니다.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+  <data name="W7087" xml:space="preserve">
+        <value>디렉터리 {0}에 'manifest' 파일이 필요합니다.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+  <data name="E7088" xml:space="preserve">
+        <value>항목 '{1}'의 'PublishFolderType' 메타데이터 값 '{0}'이(가) 인식되지 않습니다. 파일은 앱 번들에 복사되지 않습니다.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+  <data name="E7089" xml:space="preserve">
+        <value>'{0}' 파일은 'PublishFolderType' 메타데이터를 지정하지 않으며 기본값을 계산할 수 없습니다. 파일은 앱 번들에 복사되지 않습니다.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+  <data name="E7090" xml:space="preserve">
+        <value>항목 '{1}'의 'PublishFolderType' 메타데이터 값 '{0}'이(가) 인식되지 않습니다. 파일은 앱 번들에 복사되지 않습니다. 파일이 App Bundle에 복사되지 않아야 하는 경우 항목에서 '{2}' 메타데이터를 제거하세요.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+  <data name="W7091" xml:space="preserve">
+        <value>프레임워크 {0}은(는) 정적 라이브러리의 프레임워크이며 앱에 복사되지 않습니다.</value>
+    </data>
+  <!-- This is the same as MT0140 -->
+  <data name="E7092" xml:space="preserve">
+        <value>파일 '{0}'은(는) 유효한 프레임워크가 아닙니다. {1}</value>
+    </data>
+  <data name="W7093" xml:space="preserve">
+        <value>바인딩 리소스 패키지 {0}이(가) 존재하지 않습니다.</value>
+    </data>
+  <data name="E7094" xml:space="preserve">
+        <value>파일 또는 디렉터리 '{0}'은(는) 프레임워크나 프레임워크 내의 파일이 아닙니다.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 하나의 메타데이터는 ‘{1}’이고 다른 하나의 메타데이터는 ‘{2}’입니다.</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 메타데이터 ‘{1}={2}’이(가) 한 항목에 대해 설정되었지만 다른 항목에는 설정되지 않았습니다.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 메타데이터 ‘{1}’에는 각 항목에 대한 다른 값이 있습니다(‘{2}’인 경우 다른 경우에는 ‘{3}’).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily 값 '6'은 이 플랫폼에 유효하지 않습니다. Mac Catalyst에만 유효합니다.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily 값 '6'에는 macOS 11.0이 필요합니다. 프로젝트 파일의 'SupportedOSPlatformVersion'을 최소 14.0(macOS 11.0에 해당하는 Mac Catalyst 버전)으로 설정하세요. 현재 값은 {0}(macOS {1}와 동일)입니다.</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>바인딩 리소스 패키지를 찾을 수 없습니다. {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>알 수 없는 속성 '{0}'과(와) 값 '{1}'입니다.</value>
+    </data>
+  <data name="E7102" xml:space="preserve">
+        <value>CustomEntitlements 항목 그룹에 지정된 '{2}' 유형의 인타이틀먼트 '{1}'에 대한 값 '{0}'이(가) 잘못되었습니다. 값이 전혀 필요되지 않습니다.</value>
+        <comment>
+            Don't translate: CustomEntitlements (name of option in project file)
+        </comment>
+    </data>
+  <data name="E7103" xml:space="preserve">
+        <value>CustomEntitlements 항목 그룹에 지정된 '{2}' 유형의 인타이틀먼트 '{1}'에 대한 값 '{0}'이(가) 잘못되었습니다. 'true' 또는 'false'가 필요합니다.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'true', 'false'
+        </comment>
+    </data>
+  <data name="E7104" xml:space="preserve">
+        <value>CustomEntitlements 항목 그룹에 지정된 인타이틀먼트 '{1}'에 대해 알 수 없는 유형 '{0}'. 'Remove', 'Boolean', 'String' 또는 'StringArray'가 필요합니다.</value>
+        <comment>
+            Don't translate:
+                * CustomEntitlements (name of option in project file)
+                * 'Remove', 'Boolean', 'String', 'StringArray'
+        </comment>
+    </data>
+  <data name="W7105" xml:space="preserve">
+        <value>바인딩 리소스 패키지 '{2}'의 기본 참조 '{1}'에 대해 예기치 않은 확장 '{0}'이(가) 발생했습니다.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip 파일 {0}에 이름이 '{1}'인 파일이 있어야 합니다.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip 파일 '{0}'이(가) 존재하지 않습니다.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>'{0}' 파일이 없습니다.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>항목 '{0}'을(를) 기본 참조로 처리할 수 없음: 알 수 없는 유형.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>xcframework '{1}'에서 Info.plist '{0}'을(를) 로드할 수 없습니다.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>'{0}' 디렉터리가 없습니다.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>zip 파일 '{1}'에서 파일 또는 디렉터리 '{0}'을(를) 찾을 수 없습니다.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>이 플랫폼에서 zip 파일 '{0}'을(를) 처리할 수 없습니다. 파일 '{1}'은(는) symlink입니다.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}" 작업에 이 플랫폼에서 빌드할 때 필요한 매개 변수 "{1}" 값이 제공되지 않았습니다.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>잘못된 어셈블리가 없습니다. '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>{0} 어셈블리는 'ObjectFile' 메타데이터를 제공하지 않습니다.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>{0} 어셈블리가 입력 어셈블리로 여러 번 전달되었습니다({1}에서 참조됨).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT 컴파일 {0}에 실패했습니다. AOT 컴파일러가 코드 {1}과(와) 함께 종료되었습니다.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>{0} 어셈블리와 관련된 어셈블리 참조 주기를 발견했습니다.</value>
+        <comment>
+            {0}: the path to an assembly
+        </comment>
+    </data>
+</root>

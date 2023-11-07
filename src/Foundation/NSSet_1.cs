@@ -24,19 +24,27 @@
 //
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSSet", SkipRegistration = true)]
 	public sealed class NSSet<TKey> : NSSet, IEnumerable<TKey>
-		where TKey : class, INativeObject
-	{
+		where TKey : class, INativeObject {
 		public NSSet ()
 		{
 		}
@@ -46,7 +54,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSSet (IntPtr handle)
+		internal NSSet (NativeHandle handle)
 			: base (handle)
 		{
 		}
@@ -70,7 +78,7 @@ namespace Foundation {
 
 		public TKey LookupMember (TKey probe)
 		{
-			if (probe == null)
+			if (probe is null)
 				throw new ArgumentNullException (nameof (probe));
 
 			return Runtime.GetINativeObject<TKey> (_LookupMember (probe.Handle), false);
@@ -84,9 +92,9 @@ namespace Foundation {
 
 		public bool Contains (TKey obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
-			
+
 			return _Contains (obj.Handle);
 		}
 
@@ -97,38 +105,36 @@ namespace Foundation {
 
 		public static NSSet<TKey> operator + (NSSet<TKey> first, NSSet<TKey> second)
 		{
-			if (first == null || first.Count == 0)
+			if (first is null || first.Count == 0)
 				return new NSSet<TKey> (second);
-			if (second == null || second.Count == 0)
+			if (second is null || second.Count == 0)
 				return new NSSet<TKey> (first);
 			return new NSSet<TKey> (first._SetByAddingObjectsFromSet (second.Handle));
 		}
 
 		public static NSSet<TKey> operator - (NSSet<TKey> first, NSSet<TKey> second)
 		{
-			if (first == null || first.Count == 0)
+			if (first is null || first.Count == 0)
 				return null;
-			if (second == null || second.Count == 0)
+			if (second is null || second.Count == 0)
 				return new NSSet<TKey> (first);
 			var copy = new NSMutableSet<TKey> (first);
 			copy.MinusSet (second);
 			return new NSSet<TKey> (copy);
 		}
 
-#region IEnumerable<TKey>
+		#region IEnumerable<TKey>
 		IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}
-#endregion
+		#endregion
 
-#region IEnumerable implementation
+		#region IEnumerable implementation
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return new NSFastEnumerator<TKey> (this);
 		}
-#endregion
+		#endregion
 	}
 }
-
-#endif // XAMCORE_2_0

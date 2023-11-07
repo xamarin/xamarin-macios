@@ -1,4 +1,4 @@
-﻿//
+//
 // MPSImageBatch.cs
 //
 // Authors:
@@ -6,7 +6,9 @@
 //
 // Copyright 2019 Microsoft Corporation.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -14,7 +16,15 @@ using Foundation;
 using Metal;
 
 namespace MetalPerformanceShaders {
-	[iOS (11,3), TV (11,3), Mac (10,13,4)]
+#if NET
+	[SupportedOSPlatform ("ios11.3")]
+	[SupportedOSPlatform ("tvos11.3")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[iOS (11, 3)]
+	[TV (11, 3)]
+#endif
 	public static partial class MPSImageBatch {
 
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
@@ -23,8 +33,8 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
 		public static nuint IncrementReadCount (NSArray<MPSImage> imageBatch, nint amount)
 		{
-			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchIncrementReadCount (imageBatch.Handle, amount);
 		}
@@ -35,34 +45,50 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
 		public static void Synchronize (NSArray<MPSImage> imageBatch, IMTLCommandBuffer commandBuffer)
 		{
-			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
-			if (commandBuffer == null)
-				throw new ArgumentNullException (nameof (commandBuffer));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
+			if (commandBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSImageBatchSynchronize (imageBatch.Handle, commandBuffer.Handle);
 		}
 
-		[iOS (12,0), TV (12,0), Mac (10,14)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (12, 0)]
+		[TV (12, 0)]
+#endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern nuint MPSImageBatchResourceSize (IntPtr batch);
 
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
-		[iOS (12,0), TV (12,0), Mac (10,14)]
+#if NET
+		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (12, 0)]
+		[TV (12, 0)]
+#endif
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
-			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchResourceSize (imageBatch.Handle);
 		}
 
 		// TODO: Disabled due to 'MPSImageBatchIterate' is not in the native library rdar://47282304.
-		//[iOS (12,0), TV (12,0), Mac (10,14)]
+		//[iOS (12,0), TV (12,0)]
 		//[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		//static extern nint MPSImageBatchIterate (IntPtr batch, IntPtr iterator);
 
-		//[iOS (12,0), TV (12,0), Mac (10,14)]
+		//[iOS (12,0), TV (12,0)]
 		//public delegate nint MPSImageBatchIterator (MPSImage image, nuint index);
 
 		//[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
@@ -85,14 +111,14 @@ namespace MetalPerformanceShaders {
 		//	}
 		//}
 
-		//[iOS (12,0), TV (12,0), Mac (10,14)]
+		//[iOS (12,0), TV (12,0)]
 		//[BindingImpl (BindingImplOptions.Optimizable)]
 		//public static nint Iterate (NSArray<MPSImage> imageBatch, MPSImageBatchIterator iterator)
 		//{
-		//	if (imageBatch == null)
-		//		throw new ArgumentNullException (nameof (imageBatch));
-		//	if (iterator == null)
-		//		throw new ArgumentNullException (nameof (iterator));
+		//	if (imageBatch is null)
+		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
+		//	if (iterator is null)
+		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (iterator));
 		//	unsafe {
 		//		BlockLiteral* block_ptr_iterator;
 		//		BlockLiteral block_iterator;
@@ -109,4 +135,3 @@ namespace MetalPerformanceShaders {
 		//}
 	}
 }
-#endif

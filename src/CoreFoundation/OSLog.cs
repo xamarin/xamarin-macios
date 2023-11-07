@@ -20,31 +20,62 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#nullable enable
+
 using System;
+
+using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-namespace CoreFoundation {
-	[Mac (10,12), iOS (10,0), Watch (3,0), TV (10,0)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
-	public sealed class OSLog : NativeObject {
-		public static OSLog Default { get; } = new OSLog (IntPtr.Zero, false);
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
-		protected override void Retain ()
+namespace CoreFoundation {
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
+	[SupportedOSPlatform ("maccatalyst")]
+#endif
+	public sealed class OSLog : NativeObject {
+
+		static OSLog? _default;
+
+		public static OSLog Default {
+			get {
+				if (_default is null) {
+					var h = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
+					if (h == IntPtr.Zero)
+						throw new NotSupportedException ("Feature not available on this OS version");
+					_default = new OSLog (h, false);
+				}
+				return _default;
+			}
+		}
+
+		protected internal override void Retain ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_retain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_release (Handle);
 		}
 
+#if NET
+		[DllImport (Constants.libSystemLibrary)]
+		extern static IntPtr os_log_create (IntPtr subsystem, IntPtr category);
+#else
 		[DllImport (Constants.libSystemLibrary)]
 		extern static IntPtr os_log_create (string subsystem, string category);
+#endif
 
 		[DllImport (Constants.libSystemLibrary)]
 		extern static IntPtr os_retain (IntPtr handle);
@@ -53,21 +84,27 @@ namespace CoreFoundation {
 		extern static void os_release (IntPtr handle);
 
 		[DllImport ("__Internal")]
-		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, string message);
+		extern static void xamarin_os_log (IntPtr logHandle, OSLogLevel level, IntPtr message);
 
-		OSLog (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal OSLog (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
 		public OSLog (string subsystem, string category)
 		{
-			if (subsystem == null)
-				throw new ArgumentNullException (nameof (subsystem));
-			if (category == null)
-				throw new ArgumentNullException (nameof (category));
-
+			if (subsystem is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subsystem));
+			if (category is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (category));
+#if NET
+			using var subsystemPtr = new TransientString (subsystem);
+			using var categoryPtr = new TransientString (category);
+			Handle = os_log_create (subsystemPtr, categoryPtr);
+#else
 			Handle = os_log_create (subsystem, category);
+#endif
 		}
 
 		public void Log (string message)
@@ -77,22 +114,11 @@ namespace CoreFoundation {
 
 		public void Log (OSLogLevel level, string message)
 		{
-			if (message == null)
-				throw new ArgumentNullException (nameof (message));
+			if (message is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 
-			xamarin_os_log (Handle, level, message);
+			using var messagePtr = new TransientString (message);
+			xamarin_os_log (Handle, level, messagePtr);
 		}
-	}
-
-	[Mac (10,12), iOS (10,0), Watch (3,0), TV (10,0)]
-	[Introduced (PlatformName.MacCatalyst, 13, 0)]
-	public enum OSLogLevel : byte
-	{
-		// These values must match the os_log_type_t enum in <os/log.h>.
-		Default = 0x00,
-		Info    = 0x01,
-		Debug   = 0x02,
-		Error   = 0x10,
-		Fault   = 0x11,
 	}
 }

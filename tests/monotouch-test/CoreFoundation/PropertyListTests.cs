@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CFNotificationCenter
 //
 // Authors:
@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			using (var dummy = CreateDummy ()) {
 				var rc = CFGetRetainCount (dummy.Handle);
-				using (var clone = new CFPropertyList (dummy.Handle)) {
+				using (var clone = Runtime.GetINativeObject<CFPropertyList> (dummy.Handle, false)) {
 					Assert.AreEqual (clone.Handle, dummy.Handle, "Handle 1");
 					Assert.AreEqual (rc + 1, CFGetRetainCount (clone.Handle), "RC 1");
 				}
@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 
 			using (var dummy = CreateDummy ()) {
 				var rc = CFGetRetainCount (dummy.Handle);
-				using (var clone = new CFPropertyList (dummy.Handle, false)) {
+				using (var clone = Runtime.GetINativeObject<CFPropertyList> (dummy.Handle, false)) {
 					Assert.AreEqual (clone.Handle, dummy.Handle, "Handle 2");
 					Assert.AreEqual (rc + 1, CFGetRetainCount (clone.Handle), "RC 2");
 				}
@@ -70,7 +70,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (var dummy = CreateDummy ()) {
 				CFRetain (dummy.Handle);
 				var rc = CFGetRetainCount (dummy.Handle);
-				using (var clone = new CFPropertyList (dummy.Handle, true)) {
+				using (var clone = Runtime.GetINativeObject<CFPropertyList> (dummy.Handle, true)) {
 					Assert.AreEqual (clone.Handle, dummy.Handle, "Handle 3");
 					Assert.AreEqual (rc, CFGetRetainCount (clone.Handle), "RC 3");
 				}
@@ -95,7 +95,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var data = dummy.AsData (CFPropertyListFormat.XmlFormat1);
 				Assert.IsNull (data.Error, "Error");
 				Assert.IsNotNull (data.Data, "Data");
-				Assert.That (new StreamReader (data.Data.AsStream ()).ReadToEnd (), Is.StringStarting ("<?xml"), "String Value");
+				Assert.That (new StreamReader (data.Data.AsStream ()).ReadToEnd (), Does.StartWith ("<?xml"), "String Value");
 			}
 		}
 
@@ -116,8 +116,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			using (var dummy = CreateDummy ("<array><string>SomeStringArrayValue</string></array>")) {
 				var value = dummy.Value;
 				Assert.AreEqual (typeof (NSMutableArray), value.GetType (), "Array Value Type");
-				var arr = (NSArray)value;
-				Assert.AreEqual (1, arr.Count, "Array Count");
+				var arr = (NSArray) value;
+				Assert.AreEqual ((nuint) 1, arr.Count, "Array Count");
 				Assert.AreEqual ("SomeStringArrayValue", arr.GetItem<NSString> (0).ToString (), "Array First Value");
 			}
 
@@ -131,7 +131,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				var value = dummy.Value;
 				Assert.AreEqual (typeof (NSMutableDictionary), value.GetType (), "Dictionary Value Type");
 				var dict = (NSDictionary) value;
-				Assert.AreEqual (1, dict.Count, "Dictionary Count");
+				Assert.AreEqual ((nuint) 1, dict.Count, "Dictionary Count");
 				Assert.AreEqual ("SomeKey", dict.Keys [0].ToString (), "Dictionary Key Value");
 				Assert.AreEqual ("SomeStringValue", dict ["SomeKey"].ToString (), "Dictionary Entry Value");
 			}

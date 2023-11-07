@@ -25,7 +25,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -33,27 +33,29 @@ using CoreFoundation;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace GLKit {
 	public partial class GLKTextureLoader {
-		public static GLKTextureInfo CubeMapFromFiles (string [] files, NSDictionary textureOperations, out NSError error)
+		public static GLKTextureInfo? CubeMapFromFiles (string [] files, NSDictionary? textureOperations, out NSError error)
 		{
 			using (var array = NSArray.FromStrings (files))
 				return CubeMapFromFiles (array, textureOperations, out error);
 		}
 
-		public static GLKTextureInfo CubeMapFromUrls (NSUrl [] urls, NSDictionary textureOperations, out NSError error)
+		public static GLKTextureInfo? CubeMapFromUrls (NSUrl [] urls, NSDictionary? textureOperations, out NSError error)
 		{
 			using (var array = NSArray.FromNSObjects (urls))
 				return CubeMapFromFiles (array, textureOperations, out error);
 		}
 
-		public void BeginLoadCubeMap (string [] files, NSDictionary textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginLoadCubeMap (string [] files, NSDictionary? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
 			using (var array = NSArray.FromStrings (files))
 				BeginLoadCubeMap (array, textureOperations, queue, onComplete);
 		}
 
-		public void BeginLoadCubeMap (NSUrl [] urls, NSDictionary textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginLoadCubeMap (NSUrl [] urls, NSDictionary? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
 			using (var array = NSArray.FromNSObjects (urls))
 				BeginLoadCubeMap (array, textureOperations, queue, onComplete);
@@ -62,99 +64,109 @@ namespace GLKit {
 		//
 		// New, strongly typed
 		//
-		public static GLKTextureInfo FromFile (string path, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? FromFile (string path, GLKTextureOperations? textureOperations, out NSError error)
 		{
-			return FromFile (path, textureOperations == null ? null : textureOperations.Dictionary, out error);
+			return FromFile (path, textureOperations?.Dictionary, out error);
 		}
 
-		public static GLKTextureInfo FromUrl (NSUrl url, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? FromUrl (NSUrl url, GLKTextureOperations? textureOperations, out NSError error)
 		{
-			return FromUrl (url, textureOperations == null ? null : textureOperations.Dictionary, out error);
+			return FromUrl (url, textureOperations?.Dictionary, out error);
 		}
 
-		public static GLKTextureInfo FromData (NSData data, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? FromData (NSData data, GLKTextureOperations? textureOperations, out NSError error)
 		{
-			return FromData (data, textureOperations == null ? null : textureOperations.Dictionary, out error);
+			return FromData (data, textureOperations?.Dictionary, out error);
 		}
 
-		public static GLKTextureInfo FromImage (CGImage cgImage, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? FromImage (CGImage cgImage, GLKTextureOperations? textureOperations, out NSError error)
 		{
-			return FromImage (cgImage, textureOperations == null ? null : textureOperations.Dictionary, out error);
+			return FromImage (cgImage, textureOperations?.Dictionary, out error);
 		}
 
-		public static GLKTextureInfo CubeMapFromFiles (string [] files, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? CubeMapFromFiles (string [] files, GLKTextureOperations? textureOperations, out NSError error)
 		{
 			using (var array = NSArray.FromStrings (files))
-				return CubeMapFromFiles (files, textureOperations == null ? null : textureOperations.Dictionary, out error);
+				return CubeMapFromFiles (files, textureOperations?.Dictionary, out error);
 		}
 
-		public static GLKTextureInfo CubeMapFromUrls (NSUrl [] urls, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? CubeMapFromUrls (NSUrl [] urls, GLKTextureOperations? textureOperations, out NSError error)
 		{
 			using (var array = NSArray.FromNSObjects (urls))
-				return CubeMapFromFiles (array, textureOperations == null ? null : textureOperations.Dictionary, out error);
-		}
-		
-		public static GLKTextureInfo CubeMapFromFile (string path, GLKTextureOperations textureOperations, out NSError error)
-		{
-			return CubeMapFromFile (path, textureOperations == null ? null : textureOperations.Dictionary, out error);
+				return CubeMapFromFiles (array, textureOperations?.Dictionary, out error);
 		}
 
-		public static GLKTextureInfo CubeMapFromUrl (NSUrl url, GLKTextureOperations textureOperations, out NSError error)
+		public static GLKTextureInfo? CubeMapFromFile (string path, GLKTextureOperations? textureOperations, out NSError error)
 		{
-			return CubeMapFromUrl (url, textureOperations == null ? null : textureOperations.Dictionary, out error);
+			return CubeMapFromFile (path, textureOperations?.Dictionary, out error);
 		}
 
-		public void BeginTextureLoad (string file, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public static GLKTextureInfo? CubeMapFromUrl (NSUrl url, GLKTextureOperations? textureOperations, out NSError error)
 		{
-			BeginTextureLoad (file, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+			return CubeMapFromUrl (url, textureOperations?.Dictionary, out error);
 		}
 
-		public void BeginTextureLoad (NSUrl filePath, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginTextureLoad (string file, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
-			BeginTextureLoad (filePath, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+			BeginTextureLoad (file, textureOperations?.Dictionary, queue, onComplete);
 		}
 
-		public void BeginTextureLoad (NSData data, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginTextureLoad (NSUrl filePath, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
-			BeginTextureLoad (data, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+			BeginTextureLoad (filePath, textureOperations?.Dictionary, queue, onComplete);
 		}
 
-		public void BeginTextureLoad (CGImage image, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginTextureLoad (NSData data, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
-			BeginTextureLoad (image, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+			BeginTextureLoad (data, textureOperations?.Dictionary, queue, onComplete);
 		}
 
-		public void BeginLoadCubeMap (string [] files, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginTextureLoad (CGImage image, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		{
+			BeginTextureLoad (image, textureOperations?.Dictionary, queue, onComplete);
+		}
+
+		public void BeginLoadCubeMap (string [] files, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
 			using (var array = NSArray.FromStrings (files))
-				BeginLoadCubeMap (array, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+				BeginLoadCubeMap (array, textureOperations?.Dictionary, queue, onComplete);
 		}
 
-		public void BeginLoadCubeMap (NSUrl [] urls, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginLoadCubeMap (NSUrl [] urls, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
 			using (var array = NSArray.FromNSObjects (urls))
-				BeginLoadCubeMap (array, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+				BeginLoadCubeMap (array, textureOperations?.Dictionary, queue, onComplete);
 		}
 
-		public void BeginLoadCubeMap (string fileName, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginLoadCubeMap (string fileName, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
-			BeginLoadCubeMap (fileName, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+			BeginLoadCubeMap (fileName, textureOperations?.Dictionary, queue, onComplete);
 		}
 
-		public void BeginLoadCubeMap (NSUrl filePath, GLKTextureOperations textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
+		public void BeginLoadCubeMap (NSUrl filePath, GLKTextureOperations? textureOperations, DispatchQueue queue, GLKTextureLoaderCallback onComplete)
 		{
-			BeginLoadCubeMap (filePath, textureOperations == null ? null : textureOperations.Dictionary, queue, onComplete);
+			BeginLoadCubeMap (filePath, textureOperations?.Dictionary, queue, onComplete);
 		}
-		
+
 	}
 
-	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
-	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+	[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]
+	[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
+#else
+	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
+#endif
 	public class GLKTextureOperations : DictionaryContainer {
-		public GLKTextureOperations () : base (new NSMutableDictionary ()) {}
+		public GLKTextureOperations () : base (new NSMutableDictionary ()) { }
 
-		public GLKTextureOperations (NSDictionary options) : base (options) {}
+		public GLKTextureOperations (NSDictionary options) : base (options) { }
 
 		public bool? ApplyPremultiplication {
 			get {
@@ -192,7 +204,15 @@ namespace GLKit {
 			}
 		}
 
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+		[ObsoletedOSPlatform ("macos10.14", "Use 'Metal' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
+#endif
 		public bool? SRGB {
 			get {
 				return GetBoolValue (GLKTextureLoader.SRGB);
@@ -203,4 +223,3 @@ namespace GLKit {
 		}
 	}
 }
-#endif

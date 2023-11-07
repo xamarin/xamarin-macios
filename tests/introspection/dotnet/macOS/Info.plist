@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>introspection</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.introspection</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.developer-tools</string>
+	<key>CFBundleName</key>
+	<string>introspection</string>
+	<key>LSUIElement</key>
+	<string>1</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Testing tastes</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Smile!</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Testing friends</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Testing roofs</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Testing mike</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Testing lens</string>
+</dict>
+</plist>

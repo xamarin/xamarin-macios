@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
-namespace OpenGLES
-{
-	public partial class EAGLContext
-	{
+namespace OpenGLES {
+	public partial class EAGLContext {
 		public enum PresentationMode {
 			AtTime = 0,
 			AfterMinimumDuration = 1,
@@ -21,15 +19,25 @@ namespace OpenGLES
 		}
 #endif
 
-		[iOS (10,0)]
-		[TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
+#endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime)
 		{
 			return _PresentRenderbufferAtTime (target, presentationTime);
 		}
 
-		[iOS (10,3)]
-		[TV (10,2)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[ObsoletedOSPlatform ("tvos12.0", "Use 'Metal' instead.")]
+		[ObsoletedOSPlatform ("ios12.0", "Use 'Metal' instead.")]
+#endif
 		public virtual bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
 		{
 			switch (mode) {
@@ -43,4 +51,3 @@ namespace OpenGLES
 		}
 	}
 }
-

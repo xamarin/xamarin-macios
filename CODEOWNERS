@@ -10,195 +10,198 @@
 
 /builds @rolfbjarne
 
-/docs @spouliot
+/docs
 
 /mk @rolfbjarne
 
-/msbuild @kzu @jstedfast @emaf @rolfbjarne @VincentDondain @chamons
+/msbuild @emaf @mauroa @rolfbjarne
 
 /runtime @rolfbjarne
 
 /src/AddressBook @dalexsoto
 /src/addressbook.cs @dalexsoto
-/src/AppKit @chamons @dalexsoto
-/src/appkit.cs @chamons @dalexsoto
-/src/ARKit @VincentDondain
-/src/arkit.cs @VincentDondain
+/src/AppKit @dalexsoto
+/src/appkit.cs @dalexsoto
+/src/ARKit
+/src/arkit.cs
 /src/AudioToolbox @dalexsoto
 /src/audiotoolbox.cs @dalexsoto
 /src/AudioUnit @dalexsoto
 /src/audiounit.cs @dalexsoto
-/src/authenticationservices.cs @spouliot
+/src/authenticationservices.cs
 /src/AVFoundation @mandel-macaque @dalexsoto
 /src/avfoundation.cs @mandel-macaque @dalexsoto
-/src/AVKit @spouliot @dalexsoto
-/src/avkit.cs @spouliot @dalexsoto
+/src/AVKit @dalexsoto
+/src/avkit.cs @dalexsoto
 /src/CallKit @dalexsoto
 /src/callkit.cs @dalexsoto
 /src/CarPlay @dalexsoto
 /src/carplay.cs @dalexsoto
-/src/CFNetwork @spouliot
-/src/cfnetwork.cs @spouliot
+/src/CFNetwork @mandel-macaque
+/src/cfnetwork.cs @mandel-macaque
 /src/CloudKit @mandel-macaque
 /src/cloudkit.cs @mandel-macaque
 /src/Compression @mandel-macaque
-/src/Contacts @dalexsoto @spouliot
-/src/contacts.cs @dalexsoto @spouliot
+/src/Contacts @dalexsoto
+/src/contacts.cs @dalexsoto
 /src/CoreAudio @dalexsoto
 /src/coreaudio.cs @dalexsoto
-/src/CoreBluetooth @VincentDondain @dalexsoto
-/src/corebluetooth.cs @VincentDondain @dalexsoto
+/src/CoreBluetooth @dalexsoto
+/src/corebluetooth.cs @dalexsoto
 /src/CoreData @mandel-macaque
 /src/coredata.cs @mandel-macaque
-/src/CoreFoundation @rolfbjarne @spouliot
-/src/corefoundation.cs @rolfbjarne @spouliot
-/src/CoreGraphics @spouliot
-/src/coregraphics.cs @spouliot
-/src/CoreImage @spouliot
-/src/coreimage.cs @spouliot
-/src/CoreLocation @dalexsoto @spouliot
-/src/corelocation.cs @dalexsoto @spouliot
+/src/CoreFoundation @rolfbjarne
+/src/corefoundation.cs @rolfbjarne
+/src/CoreGraphics
+/src/coregraphics.cs
+/src/CoreImage
+/src/coreimage.cs
+/src/CoreLocation @dalexsoto
+/src/corelocation.cs @dalexsoto
 /src/CoreMedia @dalexsoto
 /src/coremedia.cs @dalexsoto
 /src/CoreMIDI @dalexsoto
 /src/coremidi.cs @dalexsoto
 /src/CoreML @dalexsoto
 /src/coreml.cs @dalexsoto
-/src/CoreMotion @spouliot
-/src/coremotion.cs @spouliot
-/src/CoreSpotlight @dalexsoto @spouliot
-/src/corespotlight.cs @dalexsoto @spouliot
-/src/CoreTelephony @spouliot
-/src/coretelephony.cs @spouliot
-/src/CoreText @VincentDondain
-/src/coretext.cs @VincentDondain
-/src/CoreVideo @dalexsoto @spouliot @rolfbjarne
-/src/corevideo.cs @dalexsoto @spouliot @rolfbjarne
-/src/EventKit @dalexsoto @spouliot
-/src/eventkit.cs @dalexsoto @spouliot
-/src/ExternalAccessory @dalexsoto @spouliot
-/src/externalaccessory.cs @dalexsoto @spouliot
-/src/Foundation @spouliot @rolfbjarne @chamons
-/src/foundation.cs @spouliot @rolfbjarne @chamons
-/src/GameController @VincentDondain @spouliot
-/src/gamecontroller.cs @VincentDondain @spouliot
-/src/GameKit @VincentDondain
-/src/gamekit.cs @VincentDondain
+/src/CoreMotion
+/src/coremotion.cs
+/src/CoreSpotlight @dalexsoto
+/src/corespotlight.cs @dalexsoto
+/src/CoreTelephony
+/src/coretelephony.cs
+/src/CoreText
+/src/coretext.cs
+/src/CoreVideo @dalexsoto @rolfbjarne
+/src/corevideo.cs @dalexsoto @rolfbjarne
+/src/EventKit @dalexsoto
+/src/eventkit.cs @dalexsoto
+/src/ExternalAccessory @dalexsoto
+/src/externalaccessory.cs @dalexsoto
+/src/Foundation @rolfbjarne
+/src/Foundation/NSUrl* @mandel-macaque
+/src/foundation.cs @rolfbjarne
+/src/GameController
+/src/gamecontroller.cs
+/src/GameKit
+/src/gamekit.cs
 /src/GameplayKit @dalexsoto
 /src/gameplaykit.cs @dalexsoto
-/src/generator* @dalexsoto @spouliot @rolf @VincentDondain
-/src/GLKit @dalexsoto @spouliot
-/src/glkit.cs @dalexsoto @spouliot
-/src/HealthKit @VincentDondain
-/src/healthkit.cs @VincentDondain
-/src/HomeKit @VincentDondain
-/src/homekit.cs @VincentDondain
-/src/iad.cs @spouliot
-/src/iAd.framework @spouliot
+/src/generator* @dalexsoto @rolfbjarne
+/src/GLKit @dalexsoto
+/src/glkit.cs @dalexsoto
+/src/HealthKit
+/src/healthkit.cs
+/src/HomeKit
+/src/homekit.cs
+/src/iad.cs
+/src/iAd.framework
 /src/identitylookup.cs @dalexsoto
 /src/identitylookupui.cs @dalexsoto
 /src/ituneslibrary.cs @mandel-macaque
 /src/iTunesLibrary @mandel-macaque
-/src/ImageIO @spouliot @chamons
-/src/imageio.cs @spouliot @chamons
-/src/ImageKit @chamons
-/src/imagekit.cs @chamons
+/src/ImageIO
+/src/imageio.cs
+/src/ImageKit
+/src/imagekit.cs
 /src/Intents @dalexsoto
 /src/intents.cs @dalexsoto
 /src/IntentsUI @dalexsoto
 /src/intentsui.cs @dalexsoto
 /src/JavaScriptCore @rolfbjarne
 /src/javascriptcore.cs @rolfbjarne
-/src/LocalAuthentication @spouliot
-/src/localauthentication.cs @spouliot
-/src/MapKit @spouliot
-/src/mapkit.cs @spouliot
-/src/MediaPlayer @VincentDondain
-/src/mediaplayer.cs @VincentDondain
-/src/Messages @VincentDondain
-/src/messages.cs @VincentDondain
-/src/MessageUI @VincentDondain
-/src/messageui.cs @VincentDondain
+/src/LocalAuthentication
+/src/localauthentication.cs
+/src/MapKit
+/src/mapkit.cs
+/src/MediaPlayer @mandel-macaque
+/src/mediaplayer.cs @mandel-macaque
+/src/Messages
+/src/messages.cs
+/src/MessageUI
+/src/messageui.cs
 /src/Metal @mandel-macaque
 /src/metal.cs @mandel-macaque
-/src/MetalKit @spouliot
-/src/metalkit.cs @spouliot
-/src/MetalPerformanceShaders @spouliot
-/src/metalperformanceshaders.cs @spouliot
-/src/MobileCoreServices @spouliot
-/src/mobilecoreservices.cs @spouliot
-/src/ModelIO @VincentDondain
-/src/modelio.cs @VincentDondain
-/src/MultipeerConnectivity @spouliot
-/src/multipeerconnectivity.cs @spouliot
+/src/MetalKit
+/src/metalkit.cs
+/src/MetalPerformanceShaders
+/src/metalperformanceshaders.cs
+/src/MetalPerformanceShadersGraph @praeclarum
+/src/metalperformanceshadersgraph.cs @praeclarum
+/src/MobileCoreServices
+/src/mobilecoreservices.cs
+/src/ModelIO
+/src/modelio.cs
+/src/MultipeerConnectivity
+/src/multipeerconnectivity.cs
 /src/naturallanguage.cs @mandel-macaque
 /src/NaturalLanguage @mandel-macaque
-/src/Network @migueldeicaza
-/src/NetworkExtension @spouliot
-/src/networkextension.cs @spouliot
-/src/NotificationCenter @spouliot
-/src/notificationcenter.cs @spouliot
-/src/OpenGLES @spouliot
-/src/opengles.cs @spouliot
-/src/PassKit @spouliot
-/src/passkit.cs @spouliot
-/src/Photos @dalexsoto @spouliot
-/src/photos.cs @dalexsoto @spouliot
-/src/PhotosUI @dalexsoto @spouliot
-/src/photosui.cs @dalexsoto @spouliot
-/src/PushKit @dalexsoto @spouliot
-/src/pushkit.cs @dalexsoto @spouliot
-/src/QuartzCore @spouliot
-/src/quartzcore.cs @spouliot
-/src/QuickLook @spouliot
-/src/quicklook.cs @spouliot
-/src/ReplayKit @dalexsoto @spouliot
-/src/replaykit.cs @dalexsoto @spouliot
-/src/SafariServices @chamons @spouliot
-/src/safariservices.cs @chamons @spouliot
-/src/SceneKit @dalexsoto @VincentDondain
-/src/scenekit.cs @dalexsoto @VincentDondain
-/src/Security @dalexsoto @spouliot
-/src/security.cs @dalexsoto @spouliot
+/src/Network @mandel-macaque
+/src/NetworkExtension
+/src/networkextension.cs
+/src/NotificationCenter
+/src/notificationcenter.cs
+/src/OpenGLES
+/src/opengles.cs
+/src/PassKit
+/src/passkit.cs
+/src/Photos @dalexsoto
+/src/photos.cs @dalexsoto
+/src/PhotosUI @dalexsoto
+/src/photosui.cs @dalexsoto
+/src/PushKit @dalexsoto
+/src/pushkit.cs @dalexsoto
+/src/QuartzCore
+/src/quartzcore.cs
+/src/QuickLook
+/src/quicklook.cs
+/src/ReplayKit @dalexsoto
+/src/replaykit.cs @dalexsoto
+/src/SafariServices
+/src/safariservices.cs
+/src/SceneKit @dalexsoto
+/src/scenekit.cs @dalexsoto
+/src/Security @dalexsoto
+/src/security.cs @dalexsoto
 /src/Speech @dalexsoto
 /src/speech.cs @dalexsoto
-/src/SpriteKit @VincentDondain
-/src/spritekit.cs @VincentDondain
-/src/SystemConfiguration @spouliot
-/src/systemconfiguration.cs @spouliot
-/src/UIKit @dalexsoto @spouliot @rolfbjarne @VincentDondain
-/src/uikit.cs @dalexsoto @spouliot @rolfbjarne @VincentDondain
+/src/SpriteKit
+/src/spritekit.cs
+/src/SystemConfiguration
+/src/systemconfiguration.cs
+/src/System.Net.Http @mandel-macaque
+/src/UIKit @dalexsoto @rolfbjarne
+/src/uikit.cs @dalexsoto @rolfbjarne
 /src/UserNotifications @dalexsoto
 /src/usernotifications.cs @dalexsoto
 /src/UserNotificationsUI @dalexsoto
 /src/usernotificationsui.cs @dalexsoto
 /src/VideoSubscriberAccount @dalexsoto
 /src/videosubscriberaccount.cs @dalexsoto
-/src/VideoToolbox @dalexsoto @spouliot
-/src/videotoolbox.cs @dalexsoto @spouliot
+/src/VideoToolbox @dalexsoto
+/src/videotoolbox.cs @dalexsoto
 /src/Vision @dalexsoto
 /src/vision.cs @dalexsoto
-/src/WatchConnectivity @spouliot @rolfbjarne
-/src/watchconnectivity.cs @spouliot @rolfbjarne
-/src/WatchKit @spouliot @rolf
-/src/watchkit.cs @spouliot @rolf
-/src/WebKit @chamons
-/src/webkit.cs @chamons
-/src/WKWebKit @spouliot
-/src/wkwebkit.cs @spouliot
+/src/WatchConnectivity @rolfbjarne
+/src/watchconnectivity.cs @rolfbjarne
+/src/WatchKit @rolfbjarne
+/src/watchkit.cs @rolfbjarne
+/src/WebKit
+/src/webkit.cs
 
-/tests/xharness @rolfbjarne
-/tests/xtro-sharpie @spouliot
-/tests/mmptest @chamons
-/tests/common/mac @chamons
-/tests/msbuild-mac @chamons
+/tests/xharness @rolfbjarne @mandel-macaque
+/tests/xtro-sharpie
+/tests/mmptest @rolfbjarne
+/tests/common/mac @rolfbjarne
+/tests/bcl-tests @mandel-macaque
 
-
-/tools/common @rolfbjarne @chamons @spouliot
+/tools/common @rolfbjarne
 /tools/common/StaticRegistrar.cs @rolfbjarne
-/tools/linker @spouliot
-/tools/mmp @chamons
-/tools/mtouch @spouliot @rolfbjarne
+/tools/tools/devops/device-tests @mandel-macaque
+/tools/linker
+/tools/mmp
+/tools/mtouch @rolfbjarne
+/tools/nnyeah @stephen-hawley
 
 configure @rolfbjarne
 Make.* @rolfbjarne

@@ -7,13 +7,12 @@
 using System;
 using ObjCRuntime;
 using Foundation;
-using UIKit;
 
 namespace ReplayKit {
 
-	[iOS (9,0)]
-	[TV (10,0)]
-	[Native]
+	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
+	[Native ("RPRecordingErrorCode")]
 	[ErrorDomain ("RPRecordingErrorDomain")]
 	public enum RPRecordingError : long {
 		None = 0,
@@ -51,10 +50,14 @@ namespace ReplayKit {
 		PhotoFailure = -5831,
 		RecordingInvalidSession = -5832,
 		FailedToStartCaptureStack = -5833,
+		InvalidParameter = -5834,
+		FilePermissions = -5835,
+		ExportClipToUrlInProgress = -5836,
 	}
 
 	[NoiOS]
-	[TV (10,0)]
+	[NoMac]
+	[NoMacCatalyst]
 	[Native]
 	public enum RPPreviewViewControllerMode : long {
 		Preview,
@@ -62,8 +65,8 @@ namespace ReplayKit {
 	}
 
 	[Native]
-	[iOS (10,0)]
-	[TV (10,0)]
+	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	public enum RPSampleBufferType : long {
 		Video = 1,
 		AudioApp,
@@ -71,8 +74,9 @@ namespace ReplayKit {
 	}
 
 	[Native]
-	[iOS (11,0)]
 	[NoTV]
+	[Mac (11, 0)]
+	[MacCatalyst (13, 1)]
 	public enum RPCameraPosition : long {
 		Front = 1,
 		Back,

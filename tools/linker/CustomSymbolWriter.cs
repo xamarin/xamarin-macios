@@ -5,10 +5,8 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Xamarin.Linker
-{
-	public sealed class CustomSymbolWriterProvider : ISymbolWriterProvider
-	{
+namespace Xamarin.Linker {
+	public sealed class CustomSymbolWriterProvider : ISymbolWriterProvider {
 		readonly DefaultSymbolWriterProvider default_symbol_writer_provider = new DefaultSymbolWriterProvider ();
 
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, string filename)
@@ -24,8 +22,7 @@ namespace Xamarin.Linker
 	// https://bugzilla.xamarin.com/show_bug.cgi?id=54578 (Assemblies are duplicated in fat apps when built with .pdb, because pdb paths are different)
 	// https://github.com/jbevain/cecil/issues/372 (first attempt at a fix: make cecil write the filename only)
 	// https://github.com/jbevain/cecil/pull/554 (first fix attempt broke something else, so it had to be reverted)
-	public sealed class CustomSymbolWriter : ISymbolWriter
-	{
+	public sealed class CustomSymbolWriter : ISymbolWriter {
 		readonly ISymbolWriter _symbolWriter;
 
 		public CustomSymbolWriter (ISymbolWriter symbolWriter)
@@ -79,6 +76,9 @@ namespace Xamarin.Linker
 		public ISymbolReaderProvider GetReaderProvider () => _symbolWriter.GetReaderProvider ();
 
 		public void Write (MethodDebugInformation info) => _symbolWriter.Write (info);
+#if NET
+		public void Write () => _symbolWriter.Write ();
+#endif
 
 		public void Dispose () => _symbolWriter.Dispose ();
 	}

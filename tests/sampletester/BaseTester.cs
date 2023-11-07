@@ -9,7 +9,7 @@ namespace Xamarin.Tests {
 		string repository;
 		public virtual string Repository {
 			get {
-				if (repository == null)
+				if (repository is null)
 					repository = (string) GetType ().GetField ("REPO", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).GetValue (null);
 				return repository;
 			}
@@ -21,7 +21,7 @@ namespace Xamarin.Tests {
 		string hash;
 		public virtual string Hash {
 			get {
-				if (hash == null)
+				if (hash is null)
 					hash = (string) GetType ().GetField ("HASH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static).GetValue (null);
 				return hash;
 			}
@@ -33,12 +33,25 @@ namespace Xamarin.Tests {
 		string org;
 		public virtual string Org {
 			get {
-				if (org == null)
+				if (org is null)
 					org = (string) GetType ().GetField ("ORG", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)?.GetValue (null) ?? "xamarin";
 				return org;
 			}
 			protected set {
 				org = value;
+			}
+		}
+
+		string default_branch;
+		public virtual string DefaultBranch {
+			get {
+				if (default_branch is null)
+					default_branch = (string) GetType ().GetField ("DEFAULT_BRANCH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)?.GetValue (null);
+				return default_branch;
+
+			}
+			set {
+				default_branch = value;
 			}
 		}
 

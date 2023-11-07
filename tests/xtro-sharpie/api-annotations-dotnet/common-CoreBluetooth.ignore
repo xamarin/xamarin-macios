@@ -1,0 +1,2 @@
+## this was, at some point, crashing on macOS so we provided a different implementation that expose events
+!missing-selector! CBCentralManager::init not bound

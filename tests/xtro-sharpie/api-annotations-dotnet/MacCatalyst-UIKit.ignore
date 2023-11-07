@@ -1,0 +1,40 @@
+# deprecated types, not working at runtime
+!missing-protocol! UISearchDisplayDelegate not bound
+
+## Grouped nint constants
+!unknown-native-enum! UIFocusGroupPriority bound
+
+## Selectors documented in web docs but not in header files
+!missing-selector! +NSToolbarItem::itemWithItemIdentifier:barButtonItem: not bound
+!missing-selector! NSSharingServicePickerToolbarItem::activityItemsConfiguration not bound
+!missing-selector! NSSharingServicePickerToolbarItem::setActivityItemsConfiguration: not bound
+!missing-selector! NSSharingServicePickerTouchBarItem::activityItemsConfiguration not bound
+!missing-selector! NSSharingServicePickerTouchBarItem::setActivityItemsConfiguration: not bound
+
+## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
+!unknown-native-enum! UIToolbarPosition bound
+
+## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
+!extra-ui-appearance-support! System.Void UIKit.UINavigationBar::SetTitleTextAttributes(UIKit.UITextAttributes) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::set_MaxValueImage(UIKit.UIImage) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::set_MinValueImage(UIKit.UIImage) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::SetMaxTrackImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::SetMinTrackImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISlider::SetThumbImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::get_MaxValueImage() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::get_MinValueImage() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MaxTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MinTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::ThumbImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UINavigationBar::GetTitleTextAttributes() should NOT be decorated with [Appearance]
+
+## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
+!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_LargeTitleTextAttributes() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UINavigationBar::set_LargeTitleTextAttributes(UIKit.UIStringAttributes) should NOT be decorated with [Appearance]
+
+## UITextAlignment is deprecated in iOS6 in favor of NSTextAlignment - values added to avoid breaking changes
+!extra-enum-value! Managed value 3 for UITextAlignment.Justified not found in native headers
+!extra-enum-value! Managed value 4 for UITextAlignment.Natural not found in native headers
+
+## manually bound
+!missing-field! UIListSeparatorAutomaticInsets not bound

@@ -1,11 +1,7 @@
-﻿// Copyright 2016 Xamarin Inc. All rights reserved.
+// Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace Linker.Sealer {
@@ -40,12 +36,23 @@ namespace Linker.Sealer {
 	[Preserve (AllMembers = true)]
 	public class SealerTest {
 
+#if NET
+		[SetUp]
+		public void SetUp ()
+		{
+			// XML serialization mechanism is controlled by RuntimeFeature.IsDynamicCodeSupported
+			// which will be true for simulator / JIT builds
+			// so the optimization is disabled unless AOT is used
+			TestRuntime.AssertDevice ();
+		}
+#endif
+
 		[Test]
 		public void Sealed ()
 		{
 			// this can not be optimized into a sealed type
 			Assert.False (typeof (Unsealable).IsSealed, "Unsealed");
-#if DEBUG
+#if DEBUG || __MACOS__
 			// this is not a sealed type (in the source)
 			Assert.False (typeof (Sealable).IsSealed, "Sealable");
 			Assert.False (typeof (Base).IsSealed, "Base");
@@ -70,7 +77,7 @@ namespace Linker.Sealer {
 			var a = t.GetMethod ("A");
 			var b = t.GetMethod ("B");
 			var c = t.GetMethod ("C");
-#if DEBUG
+#if DEBUG || __MACOS__
 			// this is not a sealed (C#) method (in the source)
 			Assert.False (a.IsFinal, "A");
 			Assert.False (b.IsFinal, "B");
@@ -79,7 +86,7 @@ namespace Linker.Sealer {
 			// but it can be optimized / sealed as nothing else is (or can) overrides it
 			Assert.True (a.IsFinal, "A");
 			Assert.True (b.IsFinal, "B");
-			Assert.True (c.IsFinal, "C");
+			Assert.False (c.IsFinal, "C"); // devirtualized
 #endif
 		}
 
@@ -90,7 +97,7 @@ namespace Linker.Sealer {
 			var a = t.GetMethod ("A");
 			var b = t.GetMethod ("B");
 			var c = t.GetMethod ("C");
-#if DEBUG
+#if DEBUG || __MACOS__
 			// both methods are virtual (both in C# and IL)
 			Assert.True (a.IsVirtual, "A");
 			Assert.True (b.IsVirtual, "B");

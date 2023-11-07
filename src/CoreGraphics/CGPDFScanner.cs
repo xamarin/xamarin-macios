@@ -6,16 +6,29 @@
 //     
 // Copyright 2014 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
-	public class CGPDFScanner : INativeObject, IDisposable {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CGPDFScanner : NativeObject {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFScannerRef */ IntPtr CGPDFScannerCreate (/* CGPDFContentStreamRef */ IntPtr cs,
@@ -27,73 +40,65 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFScannerRelease (/* CGPDFScannerRef */ IntPtr scanner);
 
-		object info;
-		internal GCHandle gch;
+		object? info;
+		GCHandle gch;
 
 		public CGPDFScanner (CGPDFContentStream cs, CGPDFOperatorTable table, object userInfo)
 		{
-			if (cs == null)
-				throw new ArgumentNullException ("cs");
-			if (table == null)
-				throw new ArgumentNullException ("table");
+			if (cs is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cs));
+			if (table is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (table));
 
 			info = userInfo;
 			gch = GCHandle.Alloc (this);
-			Handle = CGPDFScannerCreate (cs.Handle, table.Handle, GCHandle.ToIntPtr (gch));
+			InitializeHandle (CGPDFScannerCreate (cs.Handle, table.Handle, GCHandle.ToIntPtr (gch)));
 		}
 
-		public CGPDFScanner (IntPtr handle)
+#if !NET
+		public CGPDFScanner (NativeHandle handle)
+			: base (handle, false)
 		{
-			CGPDFScannerRetain (handle);
-			Handle = handle;
 		}
+#endif
 
-		[Preserve (Conditional=true)]
-		internal CGPDFScanner (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal CGPDFScanner (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CGPDFScannerRetain (handle);
-
-			Handle = handle;
 		}
 
-		~CGPDFScanner ()
-		{
-			Dispose (false);
-		}
-
-		public object UserInfo {
+		public object? UserInfo {
 			get { return info; }
 		}
 
-		public void Dispose ()
+		protected internal override void Retain ()
 		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
+			CGPDFScannerRetain (GetCheckedHandle ());
 		}
 
-		protected virtual void Dispose (bool disposing)
+		protected internal override void Release ()
 		{
-			if (Handle != IntPtr.Zero) {
-				CGPDFScannerRelease (Handle);
-				Handle = IntPtr.Zero;
-			}
+			CGPDFScannerRelease (GetCheckedHandle ());
+		}
+
+		protected override void Dispose (bool disposing)
+		{
 			if (gch.IsAllocated)
 				gch.Free ();
+			base.Dispose (disposing);
 		}
-
-		public IntPtr Handle { get; private set; }
-
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFContentStreamRef */ IntPtr CGPDFScannerGetContentStream (/* CGPDFScannerRef */ IntPtr scanner);
 
 		public CGPDFContentStream GetContentStream ()
 		{
-			return new CGPDFContentStream (CGPDFScannerGetContentStream (Handle));
+			return new CGPDFContentStream (CGPDFScannerGetContentStream (Handle), false);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerScan (/* CGPDFScannerRef */ IntPtr scanner);
 
 		public bool Scan ()
@@ -102,9 +107,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopObject (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFObjectRef* */ out IntPtr value);
 
-		public bool TryPop (out CGPDFObject value)
+		public bool TryPop (out CGPDFObject? value)
 		{
 			IntPtr ip;
 			if (CGPDFScannerPopObject (Handle, out ip)) {
@@ -117,7 +123,8 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static bool CGPDFScannerPopBoolean (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFBoolean* */ out bool value);
+		[return: MarshalAs (UnmanagedType.I1)]
+		extern static bool CGPDFScannerPopBoolean (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFBoolean* */ [MarshalAs (UnmanagedType.I1)] out bool value);
 
 		public bool TryPop (out bool value)
 		{
@@ -125,6 +132,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopInteger (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFInteger* */ out nint value);
 
 		public bool TryPop (out nint value)
@@ -133,6 +141,7 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopNumber (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFReal* */ out nfloat value);
 
 		public bool TryPop (out nfloat value)
@@ -141,11 +150,12 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopName (/* CGPDFScannerRef */ IntPtr scanner, /* const char** */ out IntPtr value);
 		// note: that string is not ours to free
 
 		// not to be confusing with CGPDFScannerPopString (value)
-		public bool TryPopName (out string name)
+		public bool TryPopName (out string? name)
 		{
 			IntPtr ip;
 			if (CGPDFScannerPopName (Handle, out ip)) {
@@ -158,9 +168,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopString (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFStringRef* */ out IntPtr value);
 
-		public bool TryPop (out string value)
+		public bool TryPop (out string? value)
 		{
 			IntPtr ip;
 			if (CGPDFScannerPopString (Handle, out ip)) {
@@ -173,9 +184,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopArray (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFArrayRef* */ out IntPtr value);
 
-		public bool TryPop (out CGPDFArray value)
+		public bool TryPop (out CGPDFArray? value)
 		{
 			IntPtr ip;
 			if (CGPDFScannerPopArray (Handle, out ip)) {
@@ -188,9 +200,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopDictionary (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFDictionaryRef* */ out IntPtr value);
 
-		public bool TryPop (out CGPDFDictionary value)
+		public bool TryPop (out CGPDFDictionary? value)
 		{
 			IntPtr ip;
 			if (CGPDFScannerPopDictionary (Handle, out ip)) {
@@ -203,9 +216,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool CGPDFScannerPopStream (/* CGPDFScannerRef */ IntPtr scanner, /* CGPDFStreamRef* */ out IntPtr value);
 
-		public bool TryPop (out CGPDFStream value)
+		public bool TryPop (out CGPDFStream? value)
 		{
 			IntPtr ip;
 			if (CGPDFScannerPopStream (Handle, out ip)) {
@@ -215,6 +229,30 @@ namespace CoreGraphics {
 				value = null;
 				return false;
 			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPDFScannerStop (/* CGPDFScannerRef */ IntPtr scanner);
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9, 0)]
+#endif
+		public void Stop ()
+		{
+			CGPDFScannerStop (Handle);
 		}
 	}
 }

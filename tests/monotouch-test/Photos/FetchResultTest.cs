@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for FetchResult
 //
 // Authors:
@@ -7,32 +7,20 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_PHOTOS && !__TVOS__ && HAS_UIKIT
 
 using System;
 using System.Linq;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
 using Photos;
 using CoreGraphics;
+#if HAS_ASSETSLIBRARY
 using AssetsLibrary;
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.Photos;
-using System.Drawing;
-using MonoTouch.AssetsLibrary;
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Photos {
 
@@ -40,14 +28,25 @@ namespace MonoTouchFixtures.Photos {
 	[Preserve (AllMembers = true)]
 	public class FetchResultTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+#if HAS_ASSETSLIBRARY
+			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
+				Assert.Inconclusive ("Requires access to the photo library");
+#elif __MACCATALYST__
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			if (PHPhotoLibrary.GetAuthorizationStatus (PHAccessLevel.ReadWrite) != PHAuthorizationStatus.Authorized)
+				Assert.Inconclusive ("Requires access to the photo library");
+#else
+#error Add authorization check for the platform
+#endif
+		}
+
 		[Test]
 		public void FetchResultToArray ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -56,17 +55,12 @@ namespace MonoTouchFixtures.Photos {
 
 			// Actual Test
 			var array = collection.ToArray ();
-			Assert.That (array != null && array.Count() > 0);
+			Assert.That (array is not null && array.Count () > 0);
 		}
 
 		[Test]
 		public void FetchResultIndex ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-				
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -81,11 +75,6 @@ namespace MonoTouchFixtures.Photos {
 		[Test]
 		public void FetchResultObjectsAt ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (ALAssetsLibrary.AuthorizationStatus != ALAuthorizationStatus.Authorized)
-				Assert.Inconclusive ("Requires access to the photo library");
-
 			var collection = PHAsset.FetchAssets (PHAssetMediaType.Image, null);
 			if (collection.Count == 0) {
 				XamagramImage.Image.SaveToPhotosAlbum (null);
@@ -94,39 +83,38 @@ namespace MonoTouchFixtures.Photos {
 
 			// Actual Test
 			var obj = collection.ObjectsAt<NSObject> (NSIndexSet.FromNSRange (new NSRange (0, 1)));
-			Assert.That (obj != null && obj.Count() > 0);
+			Assert.That (obj is not null && obj.Count () > 0);
 		}
 	}
 
 	// This class is only used in case the Photo Library is Empty,
 	// this will create a blue Xamagram logo
-	static class XamagramImage
-	{
+	static class XamagramImage {
 		static UIImage imageOfXamagram;
 
-		static void DrawXamagram()
+		static void DrawXamagram ()
 		{
 			var context = UIGraphics.GetCurrentContext ();
 			var color = UIColor.FromRGBA (0.204f, 0.600f, 0.863f, 1.000f);
 
 			context.SaveState ();
 			context.TranslateCTM (257.0f, 257.0f);
-			context.RotateCTM (90.0f * (nfloat)Math.PI / 180.0f);
+			context.RotateCTM (90.0f * (nfloat) Math.PI / 180.0f);
 
-			var polygonPath = new UIBezierPath();
-			polygonPath.MoveTo (new PointF (0.0f, -250.0f));
-			polygonPath.AddLineTo (new PointF (216.51f, -125.0f));
-			polygonPath.AddLineTo (new PointF (216.51f, 125.0f));
-			polygonPath.AddLineTo (new PointF (0.0f, 250.0f));
-			polygonPath.AddLineTo (new PointF (-216.51f, 125.0f));
-			polygonPath.AddLineTo (new PointF (-216.51f, -125.0f));
+			var polygonPath = new UIBezierPath ();
+			polygonPath.MoveTo (new CGPoint (0.0f, -250.0f));
+			polygonPath.AddLineTo (new CGPoint (216.51f, -125.0f));
+			polygonPath.AddLineTo (new CGPoint (216.51f, 125.0f));
+			polygonPath.AddLineTo (new CGPoint (0.0f, 250.0f));
+			polygonPath.AddLineTo (new CGPoint (-216.51f, 125.0f));
+			polygonPath.AddLineTo (new CGPoint (-216.51f, -125.0f));
 			polygonPath.ClosePath ();
 			color.SetFill ();
 			polygonPath.Fill ();
 
-			context.RestoreState();
+			context.RestoreState ();
 
-			var textRect = new RectangleF (0.0f, 0.0f, 512.0f, 512.0f);
+			var textRect = new CGRect (0.0f, 0.0f, 512.0f, 512.0f);
 			var textContent = "X";
 			UIColor.White.SetFill ();
 			var textFont = UIFont.FromName ("Helvetica", 350.0f);
@@ -134,14 +122,12 @@ namespace MonoTouchFixtures.Photos {
 			new NSString (textContent).DrawString (textRect, textFont, UILineBreakMode.WordWrap, UITextAlignment.Center);
 		}
 
-		public static UIImage Image
-		{
-			get
-			{
-				if (imageOfXamagram != null)
+		public static UIImage Image {
+			get {
+				if (imageOfXamagram is not null)
 					return imageOfXamagram;
 
-				UIGraphics.BeginImageContextWithOptions (new SizeF (512.0f, 512.0f), false, 0);
+				UIGraphics.BeginImageContextWithOptions (new CGSize (512.0f, 512.0f), false, 0);
 				DrawXamagram ();
 				imageOfXamagram = UIGraphics.GetImageFromCurrentImageContext ();
 				UIGraphics.EndImageContext ();
@@ -152,4 +138,4 @@ namespace MonoTouchFixtures.Photos {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // HAS_PHOTOS && !__TVOS__

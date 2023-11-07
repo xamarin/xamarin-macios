@@ -756,16 +756,23 @@ disabling the managed linker.
 The default behavior can be overridden by passing
 `--optimize=[+|-]custom-attributes-removal` to `mtouch` or `mmp`.
 
-## Experimental Xamarin.Forms.Platform.iOS ProductType inclusion
+## Force Rejected Types Removal
 
-This optimization requires the linker to be enabled and is only applied
-on `Xamarin.Forms.Platform.iOS.dll`.
+This optimization can be enabled when it's not possible to use the 
+managed linker (e.g. **Don't link**) or when the managed linker cannot
+remove references to deprecated types that would cause an application
+to be rejected by Apple.
 
-This is **experimental** and might be removed or replaced in future 
-versions of Xamarin.iOS.
+References to the existing types will be renamed, e.g. `UIWebView` to 
+`DeprecatedWebView`, in every assemblies.
 
-This optimization consider the assembly `Xamarin.Forms.Platform.iOS` as
-a product assembly and does not automagically mark all `NSObject` 
-subclasses. This allows additional removes and optimizations to be 
-applied to the assembly, including the ability to remove `UIWebView` if
-nothing else in the application requires it.
+The type definition is also renamed (for validity) and all custom 
+attributes on the types and their members will be removed. 
+Code inside the members will be replaced with a
+`throw new NotSupportedException ();`.
+
+The default behavior can be overridden by passing
+`--optimize=[+|-]force-rejected-types-removal` to `mtouch`.
+
+The exact list of types might change over time and is best read directly from
+the [source code](https://github.com/xamarin/xamarin-macios/blob/main/tools/linker/RemoveRejectedTypesStep.cs).

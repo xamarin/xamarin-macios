@@ -13,13 +13,14 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
     <IntermediateOutputPath>build\IDE\obj\watchOS\$(Configuration)</IntermediateOutputPath>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>build\IDE\bin\watchOS\Debug</OutputPath>
-    <DefineConstants>MONOTOUCH;WATCH;XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
+    <DefineConstants>MONOTOUCH;WATCH;XAMCORE_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -31,7 +32,7 @@
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>build\IDE\bin\watchOS\Release</OutputPath>
-    <DefineConstants>MONOTOUCH;WATCH;XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
+    <DefineConstants>MONOTOUCH;WATCH;XAMCORE_3_0</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

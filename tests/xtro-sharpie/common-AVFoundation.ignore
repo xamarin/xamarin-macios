@@ -1,56 +1,42 @@
 ## there's a type of the same name (like NSObject, check what Swift did)
-!missing-protocol! AVVideoCompositionInstruction not bound
 
 ## fixed in XAMCORE_3_0 - API break
-!incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
-!incorrect-protocol-member! AVAudioMixing::destinationForMixer:bus: is REQUIRED and should be abstract
 
 ## Used only once in a deprecated API, native use `NSInteger` not a real enum - that's why there's a `[Native]`
-!unknown-native-enum! AVAudioSessionFlags bound
 
 ## native use `NSUInteger` not a real enum - that's why there's a `[Native]`
 !unknown-native-enum! AVAudioSessionInterruptionFlags bound
 
 ## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
-!missing-selector! AVMutableComposition::tracks not bound
 
 ## type and protocol are named identically (check the swift name, it's a similar situation to NSObject)
-!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
 
 ## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
 
 ### deprecated in iOS8
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
 ### deprecated in iOS8
-!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
-
-## singleton -> API_DEPRECATED_WITH_REPLACEMENT("+sharedInstance", ...
-!missing-selector! AVAudioSession::init not bound
 
 ## unsorted
 
-!missing-field! AVCoreAnimationBeginTimeAtZero not bound
-!missing-field! AVVideoCodecHEVC not bound
-!missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
-!missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
-!missing-protocol-conformance! AVAsset should conform to AVAsynchronousKeyValueLoading
-!missing-protocol-conformance! AVAssetTrack should conform to AVAsynchronousKeyValueLoading
-!missing-protocol-conformance! AVMetadataItem should conform to AVAsynchronousKeyValueLoading
-!missing-selector! +AVAudioChannelLayout::layoutWithLayout: not bound
-!missing-selector! +AVAudioChannelLayout::layoutWithLayoutTag: not bound
-!missing-selector! AVCompositionTrack::segmentForTrackTime: not bound
-!missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
-!missing-selector! NSCoder::decodeCMTimeForKey: not bound
-!missing-selector! NSCoder::decodeCMTimeMappingForKey: not bound
-!missing-selector! NSCoder::decodeCMTimeRangeForKey: not bound
-!missing-selector! NSCoder::encodeCMTime:forKey: not bound
-!missing-selector! NSCoder::encodeCMTimeMapping:forKey: not bound
-!missing-selector! NSCoder::encodeCMTimeRange:forKey: not bound
 
 # cannot be done because it will break the API, we have a #if define with the correct implementation
-!incorrect-protocol-member! AVAudio3DMixing::pointSourceInHeadMode is REQUIRED and should be abstract
-!incorrect-protocol-member! AVAudio3DMixing::setPointSourceInHeadMode: is REQUIRED and should be abstract
-!incorrect-protocol-member! AVAudio3DMixing::setSourceMode: is REQUIRED and should be abstract
-!incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
 
 !missing-release-attribute-on-return-value! CoreMedia.CMFormatDescription AVFoundation.AVTimedMetadataGroup::CopyFormatDescription()'s selector's ('copyFormatDescription') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+# Initial result from new rule extra-null-allowed
+
+# Swift Docs and Obj-C are out of sync
+# https://developer.apple.com/documentation/avfoundation/avvideocompositioninstructionprotocol/1388661-requiredsourcetrackids
+# https://developer.apple.com/documentation/avfoundation/1386654-avvideocompositioninstruction/1388661-requiredsourcetrackids?language=objc
+
+# Keep [NullAllowed] on FromAsset to keep existing tests passing and allow backwards compatibility
+
+# Initial result from new rule missing-null-allowed
+
+# intro says that this is not true
+
+# no tests/samples
+
+# adding abstract member to an existing type would be a breaking change
+
+# added for .NET since it is part of a new breaking change in a notification

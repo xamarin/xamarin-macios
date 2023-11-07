@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NSGestureRecognizer: Implements some helper methods for NSGestureRecognizer
 //
 // Authors:
@@ -6,20 +6,22 @@
 //     
 // Copyright 2014 Xamarin Inc. All rights reserved
 //
+
+#if !__MACCATALYST__
+
 using System;
 using System.Collections;
-using Foundation; 
+using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
+
+#nullable enable
 
 namespace AppKit {
 	public partial class NSGestureRecognizer {
-		object recognizers;
+		object? recognizers;
 		static Selector tsel = new Selector ("target");
-#if XAMCORE_2_0
 		internal static Selector ParametrizedSelector = new Selector ("target:");
-#else
-		public static Selector ParametrizedSelector = new Selector ("target:");
-#endif
 
 		public NSGestureRecognizer (Action action) : this (tsel, new ParameterlessDispatch (action))
 		{
@@ -34,6 +36,10 @@ namespace AppKit {
 			MarkDirty ();
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerToken")]
 		[Preserve (Conditional = true)]
 		public class Token : NSObject {
@@ -43,6 +49,10 @@ namespace AppKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerParameterlessToken")]
 		[Preserve (Conditional = true)]
 		public class ParameterlessDispatch : Token {
@@ -61,6 +71,10 @@ namespace AppKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerParametrizedToken")]
 		[Preserve (Conditional = true)]
 		public class ParametrizedDispatch : Token {
@@ -81,8 +95,8 @@ namespace AppKit {
 	}
 
 	public partial class NSClickGestureRecognizer : NSGestureRecognizer {
-		public NSClickGestureRecognizer (Action action) : base (action) {}
-		public NSClickGestureRecognizer (Action<NSClickGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
+		public NSClickGestureRecognizer (Action action) : base (action) { }
+		public NSClickGestureRecognizer (Action<NSClickGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) { }
 
 		[Register ("__NSClickGestureRecognizer")]
 		[Preserve (Conditional = true)]
@@ -104,8 +118,8 @@ namespace AppKit {
 	}
 
 	public partial class NSMagnificationGestureRecognizer : NSGestureRecognizer {
-		public NSMagnificationGestureRecognizer (Action action) : base (action) {}
-		public NSMagnificationGestureRecognizer (Action<NSMagnificationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
+		public NSMagnificationGestureRecognizer (Action action) : base (action) { }
+		public NSMagnificationGestureRecognizer (Action<NSMagnificationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) { }
 
 		[Register ("__NSMagnificationGestureRecognizer")]
 		[Preserve (Conditional = true)]
@@ -127,8 +141,8 @@ namespace AppKit {
 	}
 
 	public partial class NSPanGestureRecognizer : NSGestureRecognizer {
-		public NSPanGestureRecognizer (Action action) : base (action) {}
-		public NSPanGestureRecognizer (Action<NSPanGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
+		public NSPanGestureRecognizer (Action action) : base (action) { }
+		public NSPanGestureRecognizer (Action<NSPanGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) { }
 
 		[Register ("__NSPanGestureRecognizer")]
 		[Preserve (Conditional = true)]
@@ -150,8 +164,8 @@ namespace AppKit {
 	}
 
 	public partial class NSPressGestureRecognizer : NSGestureRecognizer {
-		public NSPressGestureRecognizer (Action action) : base (action) {}
-		public NSPressGestureRecognizer (Action<NSPressGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
+		public NSPressGestureRecognizer (Action action) : base (action) { }
+		public NSPressGestureRecognizer (Action<NSPressGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) { }
 
 		[Register ("__NSPressGestureRecognizer")]
 		[Preserve (Conditional = true)]
@@ -173,8 +187,8 @@ namespace AppKit {
 	}
 
 	public partial class NSRotationGestureRecognizer : NSGestureRecognizer {
-		public NSRotationGestureRecognizer (Action action) : base (action) {}
-		public NSRotationGestureRecognizer (Action<NSRotationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) {}
+		public NSRotationGestureRecognizer (Action action) : base (action) { }
+		public NSRotationGestureRecognizer (Action<NSRotationGestureRecognizer> action) : base (NSGestureRecognizer.ParametrizedSelector, new Callback (action)) { }
 
 		[Register ("__NSRotationGestureRecognizer")]
 		[Preserve (Conditional = true)]
@@ -195,3 +209,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

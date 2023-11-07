@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This test can be removed in .NET 7 -->
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationId>com.xamarin.centralpackageversionsapp</ApplicationId>
+		<ExcludeNUnitLiteReference>true</ExcludeNUnitLiteReference>
+		<ExcludeTouchUnitReference>true</ExcludeTouchUnitReference>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<CentralPackagesFile>$(MSBuildThisFileDirectory)Packages.props</CentralPackagesFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
+
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="macOSIntegration">
+      <HintPath>../../API/Converted/macOSIntegration.dll</HintPath>
+    </Reference>
+      <Compile Include="../Consumer.cs" Link="Consumer.cs" />
+  </ItemGroup>
+</Project>

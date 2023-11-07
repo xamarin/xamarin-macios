@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file contains default item includes (globs and implicit references).
+
+	*** WARNING ***
+
+	This file is imported by AutoImport.props, and will be imported by all
+	projects using Microsoft.NET.Sdk.  All Item includes in this file *MUST*
+	be hidden behind a TargetPlatformIdentifier based condition.
+
+	This file can also not define any properties. However, due to the
+	order MSBuild evaluates properties, it's possible to use properties
+	defined in our .targets files in conditions in ItemGroups in this
+	file.
+
+	*** WARNING ***
+
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">
+		<!-- Default plist file inclusion -->
+		<None Include="*.plist">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+		</None>
+
+		<!-- Default Asset Catalog file inclusion -->
+		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<Visible>false</Visible>
+			<IsDefaultItem>true</IsDefaultItem>
+		</ImageAsset>
+
+		<!-- Default Storyboard file inclusion -->
+		<InterfaceDefinition Include="**\*.storyboard;**\*.xib" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</InterfaceDefinition>
+
+		<!-- Default Atlas Texture file inclusion -->
+		<AtlasTexture Include="**\*.atlas\*.png" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</AtlasTexture>
+
+		<!-- Default CoreMLModel inclusion -->
+		<CoreMLModel Include="**\*.mlmodel" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</CoreMLModel>
+
+		<!-- Default Metal inclusion -->
+		<Metal Include="**\*.metal" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</Metal>
+
+		<!-- Default SceneKit assets inclusion -->
+		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+			<IsDefaultItem>true</IsDefaultItem>
+		</SceneKitAsset>
+
+		<!-- Include everything in the project's Resources folder (as represented by the _ResourcePrefix property, which is set from the IPhoneResourcePrefix/XamMacResourcePrefix properties),
+		     except for files that are already in any of the other resource type item groups -->
+		<BundleResource Include="$(_ResourcePrefix)\**\*" Exclude="
+			$(DefaultItemExcludes);
+			$(DefaultExcludesInProjectFolder);
+			$(_ResourcePrefix)\**\*.xcassets\**\*.*;
+			$(_ResourcePrefix)\**\*.storyboard;**\*.xib;
+			$(_ResourcePrefix)\**\*.atlas\*.png;
+			$(_ResourcePrefix)\**\*.mlmodel;
+			$(_ResourcePrefix)\**\*.metal;
+			$(_ResourcePrefix)\**\*.scnassets\*;
+			$(_ResourcePrefix)\**\*.DS_Store;
+			@(Compile);
+			@(EmbeddedResource);
+			" Condition="'$(_ResourcePrefix)' != ''" >
+			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
+			<IsDefaultItem>true</IsDefaultItem>
+		</BundleResource>
+	</ItemGroup>
+</Project>

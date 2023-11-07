@@ -30,6 +30,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -55,7 +56,7 @@ namespace Foundation {
 				return GetObject (idx);
 			}
 		}
-		
+
 		public T [] ToArray<T> () where T : class, INativeObject
 		{
 			IntPtr nsarr = _ToArray ();
@@ -72,8 +73,8 @@ namespace Foundation {
 		{
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
-			
-			while ((obj = enumerator.NextObject ()) != null)
+
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj as NSObject;
 		}
 
@@ -81,16 +82,16 @@ namespace Foundation {
 		{
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
-			
-			while ((obj = enumerator.NextObject ()) != null)
+
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj;
 		}
 
 		public static NSOrderedSet operator + (NSOrderedSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSOrderedSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.UnionSet (second);
@@ -99,9 +100,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator + (NSOrderedSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSOrderedSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.UnionSet (second);
@@ -110,9 +111,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator - (NSOrderedSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.MinusSet (second);
@@ -121,9 +122,9 @@ namespace Foundation {
 
 		public static NSOrderedSet operator - (NSOrderedSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSOrderedSet (first);
 			var copy = new NSMutableOrderedSet (first);
 			copy.MinusSet (second);
@@ -155,7 +156,7 @@ namespace Foundation {
 		public override bool Equals (object other)
 		{
 			NSOrderedSet o = other as NSOrderedSet;
-			if (o == null)
+			if (o is null)
 				return false;
 			return IsEqualToOrderedSet (o);
 		}
@@ -164,7 +165,7 @@ namespace Foundation {
 		{
 			return (int) GetNativeHash ();
 		}
-		
+
 		public bool Contains (object obj)
 		{
 			return Contains (NSObject.FromObject (obj));
@@ -183,7 +184,7 @@ namespace Foundation {
 		public NSMutableOrderedSet (params string [] strings) : this (NSArray.FromStrings (strings))
 		{
 		}
-		
+
 		public new NSObject this [nint idx] {
 			get {
 				return GetObject (idx);
@@ -193,5 +194,41 @@ namespace Foundation {
 				SetObject (value, idx);
 			}
 		}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		delegate bool NSOrderedCollectionDifferenceEquivalenceTestProxy (IntPtr blockLiteral, /* NSObject */ IntPtr first, /* NSObject */ IntPtr second);
+		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEquality = DiffEqualityHandler;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceEquivalenceTestProxy))]
+		static bool DiffEqualityHandler (IntPtr block, IntPtr first, IntPtr second)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceEquivalenceTest> (block);
+			if (callback is not null) {
+				var nsFirst = Runtime.GetNSObject<NSObject> (first, false);
+				var nsSecond = Runtime.GetNSObject<NSObject> (second, false);
+				return callback (nsFirst, nsSecond);
+			}
+			return false;
+		}
+
+#if !NET
+		[Watch (6,0), TV (13,0), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos")]
+#endif
+		public NSOrderedCollectionDifference GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest equivalenceTest)
+		{
+			if (equivalenceTest is null)
+				throw new ArgumentNullException (nameof (equivalenceTest));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_DiffEquality, equivalenceTest);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference> (_GetDifference (other, options, ref block));
+			} finally {
+				block.CleanupBlock ();
+			}
+		}
+#endif
 	}
 }

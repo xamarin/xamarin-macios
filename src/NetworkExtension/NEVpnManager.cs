@@ -1,4 +1,4 @@
-﻿//
+//
 // NEVpnManager.cs
 //
 // Authors:
@@ -7,7 +7,9 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && MONOMAC
+#nullable enable
+
+#if MONOMAC
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -16,11 +18,16 @@ using Security;
 namespace NetworkExtension {
 	public partial class NEVpnManager {
 
-		[Mac (10,11)]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#endif
 		public void SetAuthorization (Authorization authorization)
 		{
-			if (authorization == null)
-				throw new ArgumentNullException (nameof (authorization));
+			if (authorization is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (authorization));
 
 			_SetAuthorization (authorization.Handle);
 		}

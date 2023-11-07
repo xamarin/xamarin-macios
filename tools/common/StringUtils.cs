@@ -1,26 +1,29 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+
+#nullable enable
 
 namespace Xamarin.Utils {
 	internal class StringUtils {
 		static StringUtils ()
 		{
 			PlatformID pid = Environment.OSVersion.Platform;
-			if (((int)pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
+			if (((int) pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
 				shellQuoteChar = '"'; // Windows
 			else
 				shellQuoteChar = '\''; // !Windows
 		}
 
 		static char shellQuoteChar;
-		static char[] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
+		static char [] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
 		static char [] mustQuoteCharactersProcess = { ' ', '\\', '"', '\'' };
 
-		public static string[] Quote (params string[] array)
+		public static string []? Quote (params string [] array)
 		{
-			if (array == null || array.Length == 0)
+			if (array is null || array.Length == 0)
 				return array;
 
 			var rv = new string [array.Length];
@@ -51,16 +54,17 @@ namespace Xamarin.Utils {
 			return s.ToString ();
 		}
 
-		public static string [] QuoteForProcess (IList<string> arguments)
+		public static string []? QuoteForProcess (IList<string> arguments)
 		{
-			if (arguments == null)
+			if (arguments is null)
 				return Array.Empty<string> ();
 			return QuoteForProcess (arguments.ToArray ());
 		}
 
-		public static string [] QuoteForProcess (params string [] array)
+		[return: NotNullIfNotNull ("array")]
+		public static string []? QuoteForProcess (params string [] array)
 		{
-			if (array == null || array.Length == 0)
+			if (array is null || array.Length == 0)
 				return array;
 
 			var rv = new string [array.Length];
@@ -84,7 +88,6 @@ namespace Xamarin.Utils {
 			foreach (var c in f) {
 				if (c == '"') {
 					s.Append ('\\');
-					s.Append (c).Append (c);
 				} else if (c == '\\') {
 					s.Append (c);
 				}
@@ -102,12 +105,12 @@ namespace Xamarin.Utils {
 
 		public static string FormatArguments (IList<string> arguments)
 		{
-			return string.Join (" ", QuoteForProcess (arguments));
+			return string.Join (" ", QuoteForProcess (arguments)!);
 		}
 
-		public static string Unquote (string input)
+		public static string? Unquote (string input)
 		{
-			if (input == null || input.Length == 0 || input [0] != shellQuoteChar)
+			if (input is null || input.Length == 0 || input [0] != shellQuoteChar)
 				return input;
 
 			var builder = new StringBuilder ();
@@ -123,24 +126,23 @@ namespace Xamarin.Utils {
 			return builder.ToString ();
 		}
 
-		public static bool TryParseArguments (string quotedArguments, out string [] argv, out Exception ex)
+		public static bool TryParseArguments (string quotedArguments, [NotNullWhen (true)] out string []? argv, [NotNullWhen (false)] out Exception? ex)
 		{
 			var builder = new StringBuilder ();
 			var args = new List<string> ();
-			string argument;
 			int i = 0, j;
 			char c;
 
 			while (i < quotedArguments.Length) {
 				c = quotedArguments [i];
 				if (c != ' ' && c != '\t') {
-					if ((argument = GetArgument (builder, quotedArguments, i, out j, out ex)) == null) {
+					if (TryGetArgument (builder, quotedArguments, i, out var argument, out j, out ex)) {
+						args.Add (argument);
+						i = j;
+					} else {
 						argv = null;
 						return false;
 					}
-
-					args.Add (argument);
-					i = j;
 				}
 
 				i++;
@@ -152,7 +154,7 @@ namespace Xamarin.Utils {
 			return true;
 		}
 
-		static string GetArgument (StringBuilder builder, string buf, int startIndex, out int endIndex, out Exception ex)
+		static bool TryGetArgument (StringBuilder builder, string buf, int startIndex, [NotNullWhen (true)] out string? argument, out int endIndex, [NotNullWhen (false)] out Exception? ex)
 		{
 			bool escaped = false;
 			char qchar, c = '\0';
@@ -183,16 +185,18 @@ namespace Xamarin.Utils {
 					break;
 				} else if (qchar == '\0' && (c == '\'' || c == '"')) {
 					string sofar = builder.ToString ();
-					string embedded;
 
-					if ((embedded = GetArgument (builder, buf, i, out endIndex, out ex)) == null)
-						return null;
+					if (TryGetArgument (builder, buf, i, out var embedded, out endIndex, out ex)) {
+						i = endIndex;
+						builder.Clear ();
+						builder.Append (sofar);
+						builder.Append (embedded);
+						continue;
+					}
 
-					i = endIndex;
-					builder.Clear ();
-					builder.Append (sofar);
-					builder.Append (embedded);
-					continue;
+					argument = null;
+					return false;
+
 				} else {
 					builder.Append (c);
 				}
@@ -203,15 +207,17 @@ namespace Xamarin.Utils {
 			if (escaped || (qchar != '\0' && c != qchar)) {
 				ex = new FormatException (escaped ? "Incomplete escape sequence." : "No matching quote found.");
 				endIndex = -1;
-				return null;
+				argument = null;
+				return false;
 			}
 
 			endIndex = i;
 			ex = null;
 
-			return builder.ToString ();
+			argument = builder.ToString ();
+			return true;
 		}
-		
+
 		// Version.Parse requires, minimally, both major and minor parts.
 		// However we want to accept `11` as `11.0`
 		public static Version ParseVersion (string v)
@@ -221,55 +227,21 @@ namespace Xamarin.Utils {
 				return new Version (major, 0);
 			return Version.Parse (v);
 		}
-
-		public static string SanitizeObjectiveCName (string name)
-		{
-			StringBuilder sb = null;
-
-			for (int i = 0; i < name.Length; i++) {
-				var ch = name [i];
-				switch (ch) {
-				case '.':
-				case '+':
-				case '/':
-				case '`':
-				case '@':
-				case '<':
-				case '>':
-				case '$':
-				case '-':
-					if (sb == null)
-						sb = new StringBuilder (name, 0, i, name.Length);
-					sb.Append ('_');
-					break;
-				default:
-					if (sb != null)
-						sb.Append (ch);
-					break;
-				}
-			}
-
-			if (sb != null)
-				return sb.ToString ();
-
-			return name;
-		}
 	}
 
-	static class StringExtensions
-	{
+	static class StringExtensions {
 		internal static string [] SplitLines (this string s) => s.Split (new [] { Environment.NewLine }, StringSplitOptions.None);
 
 		// Adds an element to an array and returns a new array with the added element.
 		// The original array is not modified.
 		// If the original array is null, a new array is also created, with just the new value.
-		internal static T [] CopyAndAdd<T>(this T[] array, T value)
+		internal static T [] CopyAndAdd<T> (this T [] array, T value)
 		{
-			if (array == null || array.Length == 0)
+			if (array is null || array.Length == 0)
 				return new T [] { value };
 			var tmpArray = array;
 			Array.Resize (ref array, array.Length + 1);
-			tmpArray[tmpArray.Length - 1] = value;
+			tmpArray [tmpArray.Length - 1] = value;
 			return tmpArray;
 		}
 	}

@@ -1,0 +1,107 @@
+parameters:
+# name of the pool that contains the iOS devices
+- name: pool
+  type: string
+
+- name: stageName
+  type: string
+
+- name: displayName
+  type: string
+
+- name: statusContext
+  type: string
+  default: 'Windows Integration Tests'
+
+- name: macPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
+- name: windowsPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+stages:
+- stage: ${{ parameters.stageName }}
+  displayName: ${{ parameters.displayName }}
+  dependsOn:
+  - build_packages
+  condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_WINDOWS_TESTS'], 'true'))
+
+  jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    steps:
+    - template: ../common/configure.yml
+      parameters:
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: false
+
+  - job: mac_reservation
+    dependsOn:
+    - configure
+    displayName: "Reserve bot for tests"
+    timeoutInMinutes: 1000
+    condition: ne(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    workspace:
+      clean: all
+    pool:
+      name: ${{ parameters.macPool }}
+      demands:
+      - agent.os -equals Darwin
+      - SSH.Enabled -equals True
+
+    steps:
+    - template: reserve-mac.yml
+      parameters:
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        macPool: ${{ parameters.macPool }}
+
+  - job: run_tests
+    dependsOn:
+    - mac_reservation
+    - configure
+    displayName: 'Dotnet tests'
+    timeoutInMinutes: 1000
+    condition: ne(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    workspace:
+      clean: all
+
+    pool:
+      name: ${{ parameters.windowsPool }}
+      demands:
+      - agent.os -equals Windows_NT
+
+    variables:
+      MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]
+      MAC_AGENT_POOL: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_POOL'] ]
+      MAC_AGENT_IP: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_IP'] ]
+
+    steps:
+    - template: build.yml
+      parameters:
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        isPR: ${{ parameters.isPR }}
+        statusContext: ${{ parameters.statusContext }}

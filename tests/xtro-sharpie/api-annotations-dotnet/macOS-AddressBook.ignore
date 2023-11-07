@@ -1,0 +1,347 @@
+## largely deprecated in favor of the new cross-platform Contacts framework
+
+!missing-enum! _ABPropertyType not bound
+!missing-enum! _ABSearchComparison not bound
+!missing-enum! _ABSearchConjunction not bound
+!missing-field! ABAddressBookErrorDomain not bound
+!missing-field! ABMultiValueIdentifiersErrorKey not bound
+!missing-field! ABPeoplePickerDisplayedPropertyDidChangeNotification not bound
+!missing-field! ABPeoplePickerGroupSelectionDidChangeNotification not bound
+!missing-field! ABPeoplePickerNameSelectionDidChangeNotification not bound
+!missing-field! ABPeoplePickerValueSelectionDidChangeNotification not bound
+!missing-field! kABAddressCityKey not bound
+!missing-field! kABAddressCountryCodeKey not bound
+!missing-field! kABAddressCountryKey not bound
+!missing-field! kABAddressHomeLabel not bound
+!missing-field! kABAddressProperty not bound
+!missing-field! kABAddressStateKey not bound
+!missing-field! kABAddressStreetKey not bound
+!missing-field! kABAddressWorkLabel not bound
+!missing-field! kABAddressZIPKey not bound
+!missing-field! kABAlternateBirthdayComponentsProperty not bound
+!missing-field! kABAnniversaryLabel not bound
+!missing-field! kABAssistantLabel not bound
+!missing-field! kABBirthdayComponentsProperty not bound
+!missing-field! kABBirthdayProperty not bound
+!missing-field! kABBrotherLabel not bound
+!missing-field! kABCalendarURIsProperty not bound
+!missing-field! kABChildLabel not bound
+!missing-field! kABCreationDateProperty not bound
+!missing-field! kABDatabaseChangedExternallyNotification not bound
+!missing-field! kABDatabaseChangedNotification not bound
+!missing-field! kABDeletedRecords not bound
+!missing-field! kABDepartmentProperty not bound
+!missing-field! kABEmailHomeLabel not bound
+!missing-field! kABEmailMobileMeLabel not bound
+!missing-field! kABEmailProperty not bound
+!missing-field! kABEmailWorkLabel not bound
+!missing-field! kABFatherLabel not bound
+!missing-field! kABFirstNamePhoneticProperty not bound
+!missing-field! kABFirstNameProperty not bound
+!missing-field! kABFriendLabel not bound
+!missing-field! kABHomePageLabel not bound
+!missing-field! kABHomePageProperty not bound
+!missing-field! kABInsertedRecords not bound
+!missing-field! kABInstantMessageProperty not bound
+!missing-field! kABInstantMessageServiceAIM not bound
+!missing-field! kABInstantMessageServiceFacebook not bound
+!missing-field! kABInstantMessageServiceGaduGadu not bound
+!missing-field! kABInstantMessageServiceGoogleTalk not bound
+!missing-field! kABInstantMessageServiceICQ not bound
+!missing-field! kABInstantMessageServiceJabber not bound
+!missing-field! kABInstantMessageServiceKey not bound
+!missing-field! kABInstantMessageServiceMSN not bound
+!missing-field! kABInstantMessageServiceQQ not bound
+!missing-field! kABInstantMessageServiceSkype not bound
+!missing-field! kABInstantMessageServiceYahoo not bound
+!missing-field! kABInstantMessageUsernameKey not bound
+!missing-field! kABJobTitleProperty not bound
+!missing-field! kABLastNamePhoneticProperty not bound
+!missing-field! kABLastNameProperty not bound
+!missing-field! kABMaidenNameProperty not bound
+!missing-field! kABManagerLabel not bound
+!missing-field! kABMiddleNamePhoneticProperty not bound
+!missing-field! kABMiddleNameProperty not bound
+!missing-field! kABMobileMeLabel not bound
+!missing-field! kABModificationDateProperty not bound
+!missing-field! kABMotherLabel not bound
+!missing-field! kABNicknameProperty not bound
+!missing-field! kABNoteProperty not bound
+!missing-field! kABOrganizationPhoneticProperty not bound
+!missing-field! kABOrganizationProperty not bound
+!missing-field! kABOtherDateComponentsProperty not bound
+!missing-field! kABOtherDatesProperty not bound
+!missing-field! kABParentLabel not bound
+!missing-field! kABPartnerLabel not bound
+!missing-field! kABPersonFlags not bound
+!missing-field! kABPhoneHomeFAXLabel not bound
+!missing-field! kABPhoneHomeLabel not bound
+!missing-field! kABPhoneiPhoneLabel not bound
+!missing-field! kABPhoneMainLabel not bound
+!missing-field! kABPhoneMobileLabel not bound
+!missing-field! kABPhonePagerLabel not bound
+!missing-field! kABPhoneProperty not bound
+!missing-field! kABPhoneWorkFAXLabel not bound
+!missing-field! kABPhoneWorkLabel not bound
+!missing-field! kABRelatedNamesProperty not bound
+!missing-field! kABSisterLabel not bound
+!missing-field! kABSocialProfileProperty not bound
+!missing-field! kABSocialProfileServiceFacebook not bound
+!missing-field! kABSocialProfileServiceFlickr not bound
+!missing-field! kABSocialProfileServiceKey not bound
+!missing-field! kABSocialProfileServiceLinkedIn not bound
+!missing-field! kABSocialProfileServiceMySpace not bound
+!missing-field! kABSocialProfileServiceSinaWeibo not bound
+!missing-field! kABSocialProfileServiceTencentWeibo not bound
+!missing-field! kABSocialProfileServiceTwitter not bound
+!missing-field! kABSocialProfileServiceYelp not bound
+!missing-field! kABSocialProfileURLKey not bound
+!missing-field! kABSocialProfileUserIdentifierKey not bound
+!missing-field! kABSocialProfileUsernameKey not bound
+!missing-field! kABSpouseLabel not bound
+!missing-field! kABSuffixProperty not bound
+!missing-field! kABTitleProperty not bound
+!missing-field! kABUIDProperty not bound
+!missing-field! kABUpdatedRecords not bound
+!missing-field! kABURLsProperty not bound
+!missing-pinvoke! ABAddPropertiesAndTypes is not bound
+!missing-pinvoke! ABAddRecord is not bound
+!missing-pinvoke! ABBeginLoadingImageDataForClient is not bound
+!missing-pinvoke! ABCancelLoadingImageDataForTag is not bound
+!missing-pinvoke! ABCopyArrayOfAllGroups is not bound
+!missing-pinvoke! ABCopyArrayOfAllPeople is not bound
+!missing-pinvoke! ABCopyArrayOfMatchingRecords is not bound
+!missing-pinvoke! ABCopyArrayOfPropertiesForRecordType is not bound
+!missing-pinvoke! ABCopyDefaultCountryCode is not bound
+!missing-pinvoke! ABCopyLocalizedPropertyOrLabel is not bound
+!missing-pinvoke! ABCopyRecordForUniqueId is not bound
+!missing-pinvoke! ABCopyRecordTypeFromUniqueId is not bound
+!missing-pinvoke! ABCreateFormattedAddressFromDictionary is not bound
+!missing-pinvoke! ABGetMe is not bound
+!missing-pinvoke! ABGetSharedAddressBook is not bound
+!missing-pinvoke! ABGroupAddGroup is not bound
+!missing-pinvoke! ABGroupAddMember is not bound
+!missing-pinvoke! ABGroupCopyArrayOfAllMembers is not bound
+!missing-pinvoke! ABGroupCopyArrayOfAllSubgroups is not bound
+!missing-pinvoke! ABGroupCopyDistributionIdentifier is not bound
+!missing-pinvoke! ABGroupCopyParentGroups is not bound
+!missing-pinvoke! ABGroupCreate is not bound
+!missing-pinvoke! ABGroupCreateSearchElement is not bound
+!missing-pinvoke! ABGroupRemoveGroup is not bound
+!missing-pinvoke! ABGroupRemoveMember is not bound
+!missing-pinvoke! ABGroupSetDistributionIdentifier is not bound
+!missing-pinvoke! ABHasUnsavedChanges is not bound
+!missing-pinvoke! ABLocalizedPropertyOrLabel is not bound
+!missing-pinvoke! ABMultiValueAdd is not bound
+!missing-pinvoke! ABMultiValueCopyIdentifierAtIndex is not bound
+!missing-pinvoke! ABMultiValueCopyLabelAtIndex is not bound
+!missing-pinvoke! ABMultiValueCopyPrimaryIdentifier is not bound
+!missing-pinvoke! ABMultiValueCopyValueAtIndex is not bound
+!missing-pinvoke! ABMultiValueCount is not bound
+!missing-pinvoke! ABMultiValueCreate is not bound
+!missing-pinvoke! ABMultiValueCreateCopy is not bound
+!missing-pinvoke! ABMultiValueCreateMutable is not bound
+!missing-pinvoke! ABMultiValueCreateMutableCopy is not bound
+!missing-pinvoke! ABMultiValueIndexForIdentifier is not bound
+!missing-pinvoke! ABMultiValueInsert is not bound
+!missing-pinvoke! ABMultiValuePropertyType is not bound
+!missing-pinvoke! ABMultiValueRemove is not bound
+!missing-pinvoke! ABMultiValueReplaceLabel is not bound
+!missing-pinvoke! ABMultiValueReplaceValue is not bound
+!missing-pinvoke! ABMultiValueSetPrimaryIdentifier is not bound
+!missing-pinvoke! ABPersonCopyImageData is not bound
+!missing-pinvoke! ABPersonCopyParentGroups is not bound
+!missing-pinvoke! ABPersonCopyVCardRepresentation is not bound
+!missing-pinvoke! ABPersonCreate is not bound
+!missing-pinvoke! ABPersonCreateSearchElement is not bound
+!missing-pinvoke! ABPersonCreateWithVCardRepresentation is not bound
+!missing-pinvoke! ABPersonSetImageData is not bound
+!missing-pinvoke! ABPickerAddProperty is not bound
+!missing-pinvoke! ABPickerChangeAttributes is not bound
+!missing-pinvoke! ABPickerClearSearchField is not bound
+!missing-pinvoke! ABPickerCopyColumnTitle is not bound
+!missing-pinvoke! ABPickerCopyDisplayedProperty is not bound
+!missing-pinvoke! ABPickerCopyProperties is not bound
+!missing-pinvoke! ABPickerCopySelectedGroups is not bound
+!missing-pinvoke! ABPickerCopySelectedIdentifiers is not bound
+!missing-pinvoke! ABPickerCopySelectedRecords is not bound
+!missing-pinvoke! ABPickerCopySelectedValues is not bound
+!missing-pinvoke! ABPickerCreate is not bound
+!missing-pinvoke! ABPickerDeselectAll is not bound
+!missing-pinvoke! ABPickerDeselectGroup is not bound
+!missing-pinvoke! ABPickerDeselectIdentifier is not bound
+!missing-pinvoke! ABPickerDeselectRecord is not bound
+!missing-pinvoke! ABPickerEditInAddressBook is not bound
+!missing-pinvoke! ABPickerGetAttributes is not bound
+!missing-pinvoke! ABPickerGetDelegate is not bound
+!missing-pinvoke! ABPickerGetFrame is not bound
+!missing-pinvoke! ABPickerIsVisible is not bound
+!missing-pinvoke! ABPickerRemoveProperty is not bound
+!missing-pinvoke! ABPickerSelectGroup is not bound
+!missing-pinvoke! ABPickerSelectIdentifier is not bound
+!missing-pinvoke! ABPickerSelectInAddressBook is not bound
+!missing-pinvoke! ABPickerSelectRecord is not bound
+!missing-pinvoke! ABPickerSetColumnTitle is not bound
+!missing-pinvoke! ABPickerSetDelegate is not bound
+!missing-pinvoke! ABPickerSetDisplayedProperty is not bound
+!missing-pinvoke! ABPickerSetFrame is not bound
+!missing-pinvoke! ABPickerSetVisibility is not bound
+!missing-pinvoke! ABRecordCopyRecordType is not bound
+!missing-pinvoke! ABRecordCopyUniqueId is not bound
+!missing-pinvoke! ABRecordCopyValue is not bound
+!missing-pinvoke! ABRecordCreateCopy is not bound
+!missing-pinvoke! ABRecordIsReadOnly is not bound
+!missing-pinvoke! ABRecordRemoveValue is not bound
+!missing-pinvoke! ABRecordSetValue is not bound
+!missing-pinvoke! ABRemoveProperties is not bound
+!missing-pinvoke! ABRemoveRecord is not bound
+!missing-pinvoke! ABSave is not bound
+!missing-pinvoke! ABSearchElementCreateWithConjunction is not bound
+!missing-pinvoke! ABSearchElementMatchesRecord is not bound
+!missing-pinvoke! ABSetMe is not bound
+!missing-pinvoke! ABTypeOfProperty is not bound
+!missing-protocol! ABImageClient not bound
+!missing-protocol! ABPersonPickerDelegate not bound
+!missing-selector! +ABGroup::addPropertiesAndTypes: not bound
+!missing-selector! +ABGroup::removeProperties: not bound
+!missing-selector! +ABGroup::searchElementForProperty:label:key:value:comparison: not bound
+!missing-selector! +ABGroup::typeOfProperty: not bound
+!missing-selector! +ABPerson::addPropertiesAndTypes: not bound
+!missing-selector! +ABPerson::cancelLoadingImageDataForTag: not bound
+!missing-selector! +ABPerson::removeProperties: not bound
+!missing-selector! +ABPerson::searchElementForProperty:label:key:value:comparison: not bound
+!missing-selector! +ABPerson::typeOfProperty: not bound
+!missing-selector! +ABSearchElement::searchElementForConjunction:children: not bound
+!missing-selector! ABAddressBook::addRecord: not bound
+!missing-selector! ABAddressBook::addRecord:error: not bound
+!missing-selector! ABAddressBook::formattedAddressFromDictionary: not bound
+!missing-selector! ABAddressBook::recordClassFromUniqueId: not bound
+!missing-selector! ABAddressBook::recordForUniqueId: not bound
+!missing-selector! ABAddressBook::recordsMatchingSearchElement: not bound
+!missing-selector! ABAddressBook::removeRecord: not bound
+!missing-selector! ABAddressBook::removeRecord:error: not bound
+!missing-selector! ABAddressBook::saveAndReturnError: not bound
+!missing-selector! ABAddressBook::setMe: not bound
+!missing-selector! ABGroup::addMember: not bound
+!missing-selector! ABGroup::addSubgroup: not bound
+!missing-selector! ABGroup::distributionIdentifierForProperty:person: not bound
+!missing-selector! ABGroup::removeMember: not bound
+!missing-selector! ABGroup::removeSubgroup: not bound
+!missing-selector! ABGroup::setDistributionIdentifier:forProperty:person: not bound
+!missing-selector! ABMultiValue::identifierAtIndex: not bound
+!missing-selector! ABMultiValue::indexForIdentifier: not bound
+!missing-selector! ABMultiValue::labelAtIndex: not bound
+!missing-selector! ABMultiValue::labelForIdentifier: not bound
+!missing-selector! ABMultiValue::valueAtIndex: not bound
+!missing-selector! ABMultiValue::valueForIdentifier: not bound
+!missing-selector! ABMutableMultiValue::addValue:withLabel: not bound
+!missing-selector! ABMutableMultiValue::insertValue:withLabel:atIndex: not bound
+!missing-selector! ABMutableMultiValue::removeValueAndLabelAtIndex: not bound
+!missing-selector! ABMutableMultiValue::replaceLabelAtIndex:withLabel: not bound
+!missing-selector! ABMutableMultiValue::replaceValueAtIndex:withValue: not bound
+!missing-selector! ABMutableMultiValue::setPrimaryIdentifier: not bound
+!missing-selector! ABPeoplePickerView::accessoryView not bound
+!missing-selector! ABPeoplePickerView::addProperty: not bound
+!missing-selector! ABPeoplePickerView::allowsGroupSelection not bound
+!missing-selector! ABPeoplePickerView::allowsMultipleSelection not bound
+!missing-selector! ABPeoplePickerView::autosaveName not bound
+!missing-selector! ABPeoplePickerView::clearSearchField: not bound
+!missing-selector! ABPeoplePickerView::columnTitleForProperty: not bound
+!missing-selector! ABPeoplePickerView::deselectAll: not bound
+!missing-selector! ABPeoplePickerView::deselectGroup: not bound
+!missing-selector! ABPeoplePickerView::deselectIdentifier:forPerson: not bound
+!missing-selector! ABPeoplePickerView::deselectRecord: not bound
+!missing-selector! ABPeoplePickerView::displayedProperty not bound
+!missing-selector! ABPeoplePickerView::editInAddressBook: not bound
+!missing-selector! ABPeoplePickerView::groupDoubleAction not bound
+!missing-selector! ABPeoplePickerView::nameDoubleAction not bound
+!missing-selector! ABPeoplePickerView::removeProperty: not bound
+!missing-selector! ABPeoplePickerView::selectedGroups not bound
+!missing-selector! ABPeoplePickerView::selectedIdentifiersForPerson: not bound
+!missing-selector! ABPeoplePickerView::selectedRecords not bound
+!missing-selector! ABPeoplePickerView::selectGroup:byExtendingSelection: not bound
+!missing-selector! ABPeoplePickerView::selectIdentifier:forPerson:byExtendingSelection: not bound
+!missing-selector! ABPeoplePickerView::selectInAddressBook: not bound
+!missing-selector! ABPeoplePickerView::selectRecord:byExtendingSelection: not bound
+!missing-selector! ABPeoplePickerView::setAccessoryView: not bound
+!missing-selector! ABPeoplePickerView::setAllowsGroupSelection: not bound
+!missing-selector! ABPeoplePickerView::setAllowsMultipleSelection: not bound
+!missing-selector! ABPeoplePickerView::setAutosaveName: not bound
+!missing-selector! ABPeoplePickerView::setColumnTitle:forProperty: not bound
+!missing-selector! ABPeoplePickerView::setDisplayedProperty: not bound
+!missing-selector! ABPeoplePickerView::setGroupDoubleAction: not bound
+!missing-selector! ABPeoplePickerView::setNameDoubleAction: not bound
+!missing-selector! ABPeoplePickerView::setTarget: not bound
+!missing-selector! ABPeoplePickerView::setValueSelectionBehavior: not bound
+!missing-selector! ABPeoplePickerView::target not bound
+!missing-selector! ABPeoplePickerView::valueSelectionBehavior not bound
+!missing-selector! ABPerson::beginLoadingImageDataForClient: not bound
+!missing-selector! ABPerson::initWithVCardRepresentation: not bound
+!missing-selector! ABPerson::setImageData: not bound
+!missing-selector! ABPersonPicker::delegate not bound
+!missing-selector! ABPersonPicker::properties not bound
+!missing-selector! ABPersonPicker::setDelegate: not bound
+!missing-selector! ABPersonPicker::setProperties: not bound
+!missing-selector! ABPersonPicker::showRelativeToRect:ofView:preferredEdge: not bound
+!missing-selector! ABPersonView::editing not bound
+!missing-selector! ABPersonView::person not bound
+!missing-selector! ABPersonView::setEditing: not bound
+!missing-selector! ABPersonView::setPerson: not bound
+!missing-selector! ABPersonView::setShouldShowLinkedPeople: not bound
+!missing-selector! ABPersonView::shouldShowLinkedPeople not bound
+!missing-selector! ABRecord::displayName not bound
+!missing-selector! ABRecord::initWithAddressBook: not bound
+!missing-selector! ABRecord::removeValueForProperty: not bound
+!missing-selector! ABRecord::setValue:forProperty: not bound
+!missing-selector! ABRecord::setValue:forProperty:error: not bound
+!missing-selector! ABRecord::uniqueId not bound
+!missing-selector! ABRecord::valueForProperty: not bound
+!missing-selector! ABSearchElement::matchesRecord: not bound
+!missing-selector! NSObject::performActionForPerson:identifier: not bound
+!missing-selector! NSObject::shouldEnableActionForPerson:identifier: not bound
+!missing-selector! NSObject::titleForPerson:identifier: not bound
+!missing-type! ABAddressBook not bound
+!missing-type! ABGroup not bound
+!missing-type! ABMultiValue not bound
+!missing-type! ABMutableMultiValue not bound
+!missing-type! ABPeoplePickerView not bound
+!missing-type! ABPerson not bound
+!missing-type! ABPersonPicker not bound
+!missing-type! ABPersonView not bound
+!missing-type! ABRecord not bound
+!missing-type! ABSearchElement not bound
+
+!missing-selector! +ABAddressBook::addressBook not bound
+!missing-selector! +ABAddressBook::sharedAddressBook not bound
+!missing-selector! +ABGroup::properties not bound
+!missing-selector! +ABPerson::properties not bound
+!missing-selector! ABAddressBook::defaultCountryCode not bound
+!missing-selector! ABAddressBook::defaultNameOrdering not bound
+!missing-selector! ABAddressBook::groups not bound
+!missing-selector! ABAddressBook::hasUnsavedChanges not bound
+!missing-selector! ABAddressBook::me not bound
+!missing-selector! ABAddressBook::people not bound
+!missing-selector! ABAddressBook::save not bound
+!missing-selector! ABGroup::members not bound
+!missing-selector! ABGroup::parentGroups not bound
+!missing-selector! ABGroup::subgroups not bound
+!missing-selector! ABMultiValue::count not bound
+!missing-selector! ABMultiValue::primaryIdentifier not bound
+!missing-selector! ABMultiValue::propertyType not bound
+!missing-selector! ABPeoplePickerView::properties not bound
+!missing-selector! ABPeoplePickerView::selectedValues not bound
+!missing-selector! ABPerson::imageData not bound
+!missing-selector! ABPerson::linkedPeople not bound
+!missing-selector! ABPerson::parentGroups not bound
+!missing-selector! ABPerson::vCardRepresentation not bound
+!missing-selector! ABPersonPicker::close not bound
+!missing-selector! ABRecord::init not bound
+!missing-selector! ABRecord::isReadOnly not bound
+!missing-selector! NSObject::actionProperty not bound
+
+## constants were manually bound and this framework is deprecated (Contact)
+## so it's not worth updating the binding code for them
+!missing-field! kABGroupNameProperty not bound
+!missing-field! kABHomeLabel not bound
+!missing-field! kABOtherLabel not bound
+!missing-field! kABWorkLabel not bound

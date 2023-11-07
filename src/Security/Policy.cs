@@ -27,43 +27,46 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-namespace Security {
-	public partial class SecPolicy : INativeObject, IDisposable {
-		IntPtr handle;
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
-		public SecPolicy (IntPtr handle) 
-			: this (handle, false)
+namespace Security {
+
+	public partial class SecPolicy : NativeObject {
+#if !NET
+		public SecPolicy (NativeHandle handle)
+			: base (handle, false, true)
 		{
 		}
+#endif
 
-		[Preserve (Conditional=true)]
-		internal SecPolicy (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal SecPolicy (NativeHandle handle, bool owns)
+			: base (handle, owns, true)
 		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid handle");
-
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateSSL (bool server, IntPtr /* CFStringRef */ hostname);
+		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateSSL ([MarshalAs (UnmanagedType.I1)] bool server, IntPtr /* CFStringRef */ hostname);
 
 		static public SecPolicy CreateSslPolicy (bool server, string hostName)
 		{
-			NSString host = hostName == null ? null : new NSString (hostName);
-			IntPtr handle = host == null ? IntPtr.Zero : host.Handle; 
-			SecPolicy policy = new SecPolicy (SecPolicyCreateSSL (server, handle), true);
-			if (host != null)
-				host.Dispose ();
-			return policy;
+			var handle = CFString.CreateNative (hostName);
+			try {
+				return new SecPolicy (SecPolicyCreateSSL (server, handle), true);
+			} finally {
+				CFString.ReleaseNative (handle);
+			}
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -74,52 +77,32 @@ namespace Security {
 			return new SecPolicy (SecPolicyCreateBasicX509 (), true);
 		}
 
-		~SecPolicy ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
-		[DllImport (Constants.SecurityLibrary, EntryPoint="SecPolicyGetTypeID")]
+		[DllImport (Constants.SecurityLibrary, EntryPoint = "SecPolicyGetTypeID")]
 		public extern static nint GetTypeID ();
 
-		public static bool operator == (SecPolicy a, SecPolicy b)
+#if !NET
+		public static bool operator == (SecPolicy? a, SecPolicy? b)
 		{
-			if (((object)a) == null)
-				return ((object)b) == null;
-			else if ((object)b == null)
+			if (a is null)
+				return b is null;
+			else if (b is null)
 				return false;
 
 			return a.Handle == b.Handle;
 		}
 
-		public static bool operator != (SecPolicy a, SecPolicy b)
+		public static bool operator != (SecPolicy? a, SecPolicy? b)
 		{
-			if (((object)a) == null)
-				return ((object)b) != null;
-			else if (((object)b) == null)
+			if (a is null)
+				return b is not null;
+			else if (b is null)
 				return true;
 			return a.Handle != b.Handle;
 		}
 
-		public override bool Equals (object other)
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
+		public override bool Equals (object? other)
 		{
 			var o = other as SecPolicy;
 			return this == o;
@@ -127,7 +110,8 @@ namespace Security {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
+#endif
 	}
 }

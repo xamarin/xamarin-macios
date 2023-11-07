@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,9 +15,9 @@
     <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' Or '$(Configuration)' == 'Debug64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +27,7 @@
     <PlatformTarget>
     </PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode' Or '$(Configuration)' == 'Release64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
     <DefineConstants>;$(DefineConstants)</DefineConstants>
@@ -41,7 +41,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core" />
+    <Reference Include="FSharp.Core" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.MacCatalyst'" />
+    <PackageReference Include="FSharp.Core" Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'" Version="5.0.0" />
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>

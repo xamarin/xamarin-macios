@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 using System;
 using System.Drawing;
 using System.Diagnostics;
@@ -19,37 +19,37 @@ using CoreFoundation;
 
 namespace Intents {
 	[Register("INRadioTypeResolutionResult", true)]
-	[Obsolete ("This class is not available on watchOS")]
+	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INRadioTypeResolutionResult : INIntentResolutionResult {
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("This class is not supported on watchOS"); } }
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
 
 		protected INRadioTypeResolutionResult (NSObjectFlag t) : base (t)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		protected internal INRadioTypeResolutionResult (IntPtr handle) : base (handle)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		public new static INRadioTypeResolutionResult NeedsValue {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INRadioTypeResolutionResult NotRequired {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INRadioTypeResolutionResult Unsupported {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 	} /* class INRadioTypeResolutionResult */
 }
-#endif // __WATCHOS__ && !XAMCORE_4_0
+#endif // __WATCHOS__ && !NET

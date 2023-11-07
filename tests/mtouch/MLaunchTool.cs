@@ -1,15 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Utils;
 using Xamarin.Tests;
 
-namespace Xamarin
-{
-	class MLaunchTool : Tool
-	{
-		public enum MLaunchAction
-		{
+namespace Xamarin {
+	class MLaunchTool : Tool {
+		public enum MLaunchAction {
 			None,
 			Sim,
 			Dev,
@@ -52,7 +49,7 @@ namespace Xamarin
 			case MLaunchAction.None:
 				break;
 			case MLaunchAction.Sim:
-				if (AppPath == null)
+				if (AppPath is null)
 					throw new Exception ("No AppPath specified.");
 				sb.Add ("--launchsim");
 				sb.Add (AppPath);

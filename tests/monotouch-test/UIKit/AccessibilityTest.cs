@@ -10,16 +10,11 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -30,13 +25,28 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void RequestGuidedAccessSession ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			// should not affect execution since it needs to be a "supervised" device (and allowed in MDM)
-			UIAccessibility.RequestGuidedAccessSession (true, delegate (bool didSuccess) {
+			UIAccessibility.RequestGuidedAccessSession (true, delegate (bool didSuccess)
+			{
 				Assert.False (didSuccess, "devices are not supervised by default");
 			});
 			UIAccessibility.RequestGuidedAccessSession (false, null);
+		}
+
+		[Test]
+		public void ButtonShapesEnabled ()
+		{
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
+			Assert.False (UIAccessibility.ButtonShapesEnabled);
+		}
+
+		[Test]
+		public void PrefersCrossFadeTransitions ()
+		{
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
+			Assert.False (UIAccessibility.PrefersCrossFadeTransitions);
 		}
 	}
 }

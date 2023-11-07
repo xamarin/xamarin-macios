@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMetalGame", "MyMetalGame.csproj", "{4598E620-3F15-4F66-B01A-B7F9E45CE659}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Debug|iPhone.Build.0 = Debug|iPhone
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Release|iPhone.ActiveCfg = Release|iPhone
+		{4598E620-3F15-4F66-B01A-B7F9E45CE659}.Release|iPhone.Build.0 = Release|iPhone
+	EndGlobalSection
+EndGlobal

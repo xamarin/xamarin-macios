@@ -1,4 +1,4 @@
-﻿//
+//
 // PdfAnnotation Unit Tests
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Microsoft Inc.
 //
 
-#if (__IOS__ || MONOMAC) && XAMCORE_2_0
+#if __IOS__ || MONOMAC
 
 using System;
 
@@ -18,15 +18,13 @@ using PdfKit;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.PdfKit
-{
+namespace MonoTouchFixtures.PdfKit {
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class PdfAnnotationTest
-	{
-		[TestFixtureSetUp]
+	public class PdfAnnotationTest {
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
@@ -58,4 +56,4 @@ namespace MonoTouchFixtures.PdfKit
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // __IOS__ || MONOMAC

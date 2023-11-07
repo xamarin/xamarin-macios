@@ -1,0 +1,6 @@
+!missing-pinvoke! CVImageBufferCreateColorSpaceFromAttachments is not bound
+!missing-field! kCVPixelBufferIOSurfaceOpenGLESFBOCompatibilityKey not bound
+!missing-field! kCVPixelBufferIOSurfaceOpenGLESTextureCompatibilityKey not bound
+!missing-field! kCVPixelFormatOpenGLESCompatibility not bound
+!missing-pinvoke! CVMetalTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVMetalTextureGetTypeID is not bound

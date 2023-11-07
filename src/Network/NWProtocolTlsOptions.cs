@@ -6,6 +6,9 @@
 //
 // Copyrigh 2019 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -13,16 +16,30 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using Security;
-using OS_nw_protocol_definition=System.IntPtr;
-using IntPtr=System.IntPtr;
+using OS_nw_protocol_definition = System.IntPtr;
+using IntPtr = System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12, 0)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
+#endif
 	public class NWProtocolTlsOptions : NWProtocolOptions {
-		internal NWProtocolTlsOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolTlsOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
-		public NWProtocolTlsOptions () : this (nw_tls_create_options (), owns: true) {}
+		public NWProtocolTlsOptions () : this (nw_tls_create_options (), owns: true) { }
 
 		public SecProtocolOptions ProtocolOptions => new SecProtocolOptions (nw_tls_copy_sec_protocol_options (GetCheckedHandle ()), owns: true);
 	}

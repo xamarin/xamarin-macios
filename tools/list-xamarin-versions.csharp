@@ -1,0 +1,65 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
+
+using System.IO;
+using System.Text;
+using System.Xml;
+
+var args = Environment.GetCommandLineArgs ();
+string dir;
+var defaultArgumentCount = 3;
+var scriptPath = args [defaultArgumentCount - 1];
+var rootDir = Path.GetDirectoryName (Path.GetDirectoryName (Path.GetFullPath (scriptPath)));
+var downloadMarkdownPath = Path.Combine (rootDir, "DOWNLOADS.md");
+
+if (args.Length > defaultArgumentCount + 1) {
+	Console.Error.WriteLine ($"At most one argument can be specified (the path to the xamarinhq/updater-release-xml checkout)");
+	Environment.Exit (1);
+	return;
+} else if (args.Length == defaultArgumentCount + 1) {
+	// First argument can be the path to the xamarinhq/updater-release-xml checkout
+	dir = args [defaultArgumentCount];
+} else {
+	// Otherwise assume it's next to the parent/parent directory of the current xamarin-macios' checkout
+	dir = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (rootDir))), "updater-release-xml");
+}
+if (!Directory.Exists (dir)) {
+	Console.Error.WriteLine ($"You must checkout xamarinhq/updater-release-xml in {dir}");
+	Environment.Exit (1);
+	return;
+}
+
+var infos = new []
+{
+	new { Name = "Xamarin.iOS", Doc = "4569c276-1397-4adb-9485-82a7696df22e.xml" },
+	new { Name = "Xamarin.Mac", Doc = "0ab364ff-c0e9-43a8-8747-3afb02dc7731.xml" },
+};
+
+var sb = new StringBuilder ();
+foreach (var info in infos) {
+	var xml = Path.Combine (dir, info.Doc);
+
+	sb.AppendLine ($"# {info.Name}");
+	sb.AppendLine ();
+	sb.AppendLine ("| Date | Version | Package | Release Notes |");
+	sb.AppendLine ("|------|---------|---------|---------------|");
+
+	var doc = new XmlDocument ();
+	doc.Load (xml);
+	var nodes = doc.SelectNodes ("/ApplicationInfo/Update").Cast<XmlNode> ().Where (v => v.Attributes ["level"]?.Value?.Contains ("stable", StringComparison.OrdinalIgnoreCase) == true).ToArray ();
+	foreach (var node in nodes) {
+		var version = node.SelectSingleNode ("Version")?.InnerText;
+		var pkg = node.SelectSingleNode ("DownloadUrl")?.InnerText;
+		var releaseDate = DateTime.Parse (node.SelectSingleNode ("Date")?.InnerText);
+		var releaseNotes = node.SelectSingleNode ("ReleaseNotes")?.InnerText;
+		var releaseNotesUrl = string.Empty;
+
+		var lastLink = releaseNotes.LastIndexOf ("http", StringComparison.Ordinal);
+		if (lastLink >= 0)
+			releaseNotesUrl = releaseNotes.Substring (lastLink).Trim ();
+
+		sb.AppendLine ($"|{releaseDate.ToString ("yyyy/MM/dd")}|{version}|[{Path.GetFileName (pkg)}]({pkg})|{releaseNotesUrl}|");
+	}
+	sb.AppendLine ();
+}
+File.WriteAllText (downloadMarkdownPath, sb.ToString ());
+Console.WriteLine ($"Saved output to {downloadMarkdownPath}");

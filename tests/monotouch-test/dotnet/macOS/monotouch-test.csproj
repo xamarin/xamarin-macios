@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
+    <DefineConstants>$(DefineConstants);XAMMAC_TESTS</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
+
+  <ItemGroup>
+    <Compile Include="..\..\..\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\PlatformInfo.cs">
+      <Link>PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\Profile.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\common\mac\MacMain.cs">
+      <Link>MacMain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\OSPlatformAttributeExtensions.cs">
+      <Link>OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

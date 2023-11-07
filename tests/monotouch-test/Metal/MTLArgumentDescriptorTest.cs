@@ -1,18 +1,16 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLArgumentDescriptorTest {
 		MTLArgumentDescriptor descriptor = null;
 
@@ -26,7 +24,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (descriptor != null)
+			if (descriptor is not null)
 				descriptor.Dispose ();
 			descriptor = null;
 		}
@@ -42,14 +40,14 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetArrayLengthTest ()
 		{
 			descriptor.ArrayLength = 1;
-			Assert.AreEqual (1, descriptor.ArrayLength);
+			Assert.AreEqual ((nuint) 1, descriptor.ArrayLength);
 		}
 
 		[Test]
 		public void GetSetConstantBlockAlignmentTest ()
 		{
 			descriptor.ConstantBlockAlignment = 1;
-			Assert.AreEqual (1, descriptor.ConstantBlockAlignment);
+			Assert.AreEqual ((nuint) 1, descriptor.ConstantBlockAlignment);
 		}
 
 		[Test]
@@ -63,7 +61,7 @@ namespace MonoTouchFixtures.Metal {
 		public void GetSetIndexTest ()
 		{
 			descriptor.Index = 1;
-			Assert.AreEqual (1, descriptor.Index);
+			Assert.AreEqual ((nuint) 1, descriptor.Index);
 		}
 
 		[Test]

@@ -11,7 +11,7 @@
     <RootNamespace></RootNamespace>
     <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
     <UseMSBuildEngine>True</UseMSBuildEngine>
-    <DefineConstants>NUNITLITE;CLR_4_0;NET_4_5;XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH</DefineConstants>
+    <DefineConstants>NUNITLITE;CLR_4_0;NET_4_5;XAMCORE_2_0;XAMCORE_3_0;MONOTOUCH;MONO</DefineConstants>
     <OutputPath>build\watch\reference</OutputPath>
     <IntermediateOutputPath>$(OutputPath)</IntermediateOutputPath>
     <SignAssembly>true</SignAssembly>

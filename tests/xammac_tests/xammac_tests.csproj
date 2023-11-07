@@ -11,13 +11,18 @@
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootTestsDirectory>..</RootTestsDirectory>
+    <CompilerResponseFile>$(RootTestsDirectory)\..\src\rsp\macos-defines.rsp</CompilerResponseFile>
+    <MonoBundlingExtraArgs>$(MonoBundlingExtraArgs) --marshal-objectivec-exceptions:throwmanagedexception</MonoBundlingExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -38,7 +43,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
-    <DefineConstants>__UNIFIED__;MONOMAC;XAMCORE_2_0;XAMMAC_TESTS</DefineConstants>
+    <DefineConstants>MONOMAC;XAMMAC_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
@@ -64,20 +69,32 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\common\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
     <Compile Include="..\common\Configuration.cs">
       <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PlatformInfo.cs">
+      <Link>PlatformInfo.cs</Link>
     </Compile>
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
+    <Compile Include="..\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
+    </Compile>
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
-    <Compile Include="..\common\mac\MacTestMain.cs">
-      <Link>MacTestMain.cs</Link>
+    <Compile Include="..\common\mac\MacMain.cs">
+      <Link>MacMain.cs</Link>
     </Compile>
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>api-shared\ObjCRuntime\RegistrarTest.cs</Link>
@@ -88,18 +105,29 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
-    <Compile Include="..\common\mac\ProjectTestHelpers.cs">
-      <Link>ProjectTestHelpers.cs</Link>
-    </Compile>
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**">
+    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\**\obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="AppKit\NSGridViewTest.cs" />
+    <Compile Include="..\..\tools\common\Driver.execution.cs">
+      <Link>Driver.execution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\Execution.cs">
+      <Link>Execution.cs</Link>
+    </Compile>
+    <Compile Include="..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\TargetFramework.cs">
+      <Link>TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -146,6 +174,9 @@
     <Content Include="..\monotouch-test\basn3p08.png">
       <Link>basn3p08.png</Link>
     </Content>
+        <Content Include="..\monotouch-test\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
+    </Content>
     <Content Include="..\monotouch-test\AudioToolbox\1.caf">
       <Link>AudioToolbox\1.caf</Link>
     </Content>
@@ -176,6 +207,9 @@
     <Content Include="..\monotouch-test\access-granted.html">
       <Link>access-granted.html</Link>
     </Content>
+    <Content Include="..\monotouch-test\Resources\square.gif">
+      <Link>Resources\square.gif</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Metal Include="..\monotouch-test\Resources\metal-sample.metal">
@@ -198,19 +232,31 @@
     <EmbeddedResource Include="..\EmbeddedResources\Welcome.es.resx">
       <Link>EmbeddedResources\Welcome.es.resx</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\monotouch-test\Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
 	<Folder Include="..\monotouch-test\BundleResourceResources\Base.lproj\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
-      <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
-      <Name>GuiUnit_xammac_mobile</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\bindings-test\bindings-test-mac.csproj">
+    <ProjectReference Include="..\bindings-test\macOS\bindings-test.csproj">
       <Project>{20BEA313-7E2D-4209-93C0-E4D99C72695A}</Project>
-      <Name>bindings-test-mac</Name>
+      <Name>bindings-test</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\macOS\mobile\Touch.Client-macOS-mobile.csproj">
+      <Project>{88A8A1AC-0829-4C98-8F4A-9FC23DC42A06}</Project>
+      <Name>Touch.Client-macOS-mobile</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +267,8 @@
       <Link>Base.lproj\Localizable.strings</Link>
     </BundleResource>
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\ComputeRegistrarConstant.targets" />
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <PropertyGroup>
     <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
@@ -229,17 +277,21 @@
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\custom-type-assembly\*.cs" />
     <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\custom-type-assembly\.libs\macos\custom-type-assembly.dll" />
     <CustomMetalSmeltingInput Include="..\monotouch-test\Resources\fragmentShader.metal" />
   </ItemGroup>
-  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\Contents\Resources\fragmentShader.metallib" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
     <MakeDir Directories="$(IntermediateOutputPath)\Contents\Resources;$(AppBundleDir)\Contents\Resources" />
-    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" />
-    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" />
+    <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"/>
+    <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting"
+      Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath=" Condition="'$(BUILD_REVISION)' == ''" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath=" Condition="'$(BUILD_REVISION)' == ''"/>
   </Target>
 </Project>

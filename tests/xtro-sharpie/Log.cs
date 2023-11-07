@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,30 +13,33 @@ namespace Extrospection {
 			List<string> list;
 			if (!lists.TryGetValue (fx, out list)) {
 				list = new List<string> ();
-				lists.Add (fx, list); 
+				lists.Add (fx, list);
 			}
 			return list;
 		}
 
-		public static void Save ()
+		public static void Save (string outputDirectory)
 		{
+			if (!string.IsNullOrEmpty (outputDirectory))
+				Directory.CreateDirectory (outputDirectory);
+
 			foreach (var kvp in lists) {
 				var framework = kvp.Key;
 				var list = kvp.Value.Distinct ().ToList ();
 
 				// not generally useful but we want to keep the data sane
-				var raw = $"{Helpers.Platform}-{framework}.raw";
+				var raw = Path.Combine (outputDirectory, $"{Helpers.Platform}-{framework}.raw");
 				File.WriteAllLines (raw, list);
 
 				// load ignore and pending files and remove them
 				// 1. common.framework.ignore - long term (shared cross platforms) **preferred**
-				Remove (list, $"common-{framework}.ignore");
+				Remove (list, Path.Combine (outputDirectory, $"common-{framework}.ignore"));
 				// 2. platform.framework.ignore - long term (platform specific) **special cases**
-				Remove (list, $"{Helpers.Platform}-{framework}.ignore");
+				Remove (list, Path.Combine (outputDirectory, $"{Helpers.Platform}-{framework}.ignore"));
 				// 3. platform.framework.pending - short term
-				Remove (list, $"{Helpers.Platform}-{framework}.todo");
+				Remove (list, Path.Combine (outputDirectory, $"{Helpers.Platform}-{framework}.todo"));
 
-				var fname = $"{Helpers.Platform}-{framework}.unclassified";
+				var fname = Path.Combine (outputDirectory, $"{Helpers.Platform}-{framework}.unclassified");
 				if (list.Count == 0) {
 					if (File.Exists (fname))
 						File.Delete (fname);

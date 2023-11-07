@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for Protocol
 //
 // Authors:
@@ -6,8 +6,6 @@
 //
 // Copyright 2018 Microsoft Inc. All rights reserved.
 //
-
-#if XAMCORE_2_0
 
 using System;
 using System.Collections.Generic;
@@ -19,13 +17,11 @@ using ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ObjCRuntime
-{
+namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ProtocolTest
-	{
+	public class ProtocolTest {
 		[Test]
 		public void Ctors ()
 		{
@@ -46,5 +42,3 @@ namespace MonoTouchFixtures.ObjCRuntime
 		}
 	}
 }
-
-#endif // XAMCORE_2_0

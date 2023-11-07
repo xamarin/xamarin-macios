@@ -7,12 +7,18 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 
 		public enum InitMode {
 			WithConnection,
-			[iOS (8,0)]
+#if NET
+			[SupportedOSPlatform ("ios")]
+			[SupportedOSPlatform ("macos")]
+			[SupportedOSPlatform ("maccatalyst")]
+#endif
 			WithNoConnection,
 		}
 
@@ -30,7 +36,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public AVCaptureVideoPreviewLayer (AVCaptureSession session) : this (session, InitMode.WithConnection) {}
+		public AVCaptureVideoPreviewLayer (AVCaptureSession session) : this (session, InitMode.WithConnection) { }
 	}
 }
 

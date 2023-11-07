@@ -1,0 +1,18 @@
+<linker>
+  <assembly fullname="Microsoft.macOS">
+    <type fullname="ObjCRuntime.Dlfcn">
+      <method signature="System.Void WarnOnce()" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
+    </type>
+    <type fullname="ObjCRuntime.Runtime">
+      <method signature="System.Boolean get_IsCoreCLR()" body="stub" value="true" />
+      <method signature="System.Boolean get_IsNativeAOT()" body="stub" feature="ObjCRuntime.Runtime.IsNativeAOT" featurevalue="false" value="false" />
+      <method signature="System.Boolean get_IsNativeAOT()" body="stub" feature="ObjCRuntime.Runtime.IsNativeAOT" featurevalue="true" value="true" />
+      <method signature="System.Boolean get_IsManagedStaticRegistrar()" body="stub" feature="ObjCRuntime.Runtime.IsManagedStaticRegistrar" featurevalue="false" value="false" />
+      <method signature="System.Boolean get_IsManagedStaticRegistrar()" body="stub" feature="ObjCRuntime.Runtime.IsManagedStaticRegistrar" featurevalue="true" value="true" />
+    </type>
+    <type fullname="AppKit.NSApplication">
+      <method signature="System.Void EnsureEventAndDelegateAreNotMismatched(System.Object,System.Type)" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
+      <method signature="System.Void EnsureDelegateAssignIsNotOverwritingInternalDelegate(System.Object,System.Object,System.Type)" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
+    </type>
+  </assembly>
+</linker>

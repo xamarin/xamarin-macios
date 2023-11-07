@@ -24,9 +24,15 @@ extern "C" {
 <# foreach (var d in delegates) {
 		if (d.OnlyDynamicUsage)
 			continue;
+		if (d.OnlyCoreCLR)
+			Write ("#if defined (CORECLR_RUNTIME)\n");
 #>
-<#= d.CReturnType #>
-<#= d.EntryPoint #> (<#= d.CArgumentSignature #>);
+<#= d.ReturnType.ExposedCType #>
+<#= d.EntryPoint #> (<#= d.CArgumentSignatureFunctionDeclaration #>);
+<#
+		if (d.OnlyCoreCLR)
+			Write ("#endif // CORECLR_RUNTIME\n");
+#>
 
 <# } #>
 

@@ -31,10 +31,11 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
-	public partial class PeripheralScanningOptions
-	{
+	public partial class PeripheralScanningOptions {
 #if !COREBUILD
 		public bool AllowDuplicatesKey {
 			get {

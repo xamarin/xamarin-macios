@@ -44,13 +44,73 @@ enum XamarinLaunchMode {
 	XamarinLaunchModeEmbedded = 2,
 };
 
+// This has a managed equivalent in NSObject2.cs
+enum NSObjectFlags {
+	NSObjectFlagsDisposed = 1,
+	NSObjectFlagsNativeRef = 2,
+	NSObjectFlagsIsDirectBinding = 4,
+	NSObjectFlagsRegisteredToggleRef = 8,
+	NSObjectFlagsInFinalizerQueue = 16,
+	NSObjectFlagsHasManagedRef = 32,
+	// 64, // Used by SoM
+	NSObjectFlagsIsCustomType = 128,
+};
+
+enum XamarinGCHandleType : int {
+	XamarinGCHandleTypeWeak = 0,
+	XamarinGCHandleTypeWeakTrackResurrection = 1,
+	XamarinGCHandleTypeNormal = 2,
+	XamarinGCHandleTypePinned = 3,
+};
+
+// Keep in sync with Runtime.LookupTypes in Runtime.CoreCLR.cs
+enum XamarinLookupTypes : int {
+	XamarinLookupTypes_System_Array,
+	XamarinLookupTypes_System_String,
+	XamarinLookupTypes_System_IntPtr,
+	XamarinLookupTypes_Foundation_NSNumber,
+	XamarinLookupTypes_Foundation_NSObject,
+	XamarinLookupTypes_Foundation_NSString,
+	XamarinLookupTypes_Foundation_NSValue,
+	XamarinLookupTypes_ObjCRuntime_INativeObject,
+	XamarinLookupTypes_ObjCRuntime_NativeHandle,
+};
+
+// Keep in sync with Runtime.ExceptionType in Runtime.CoreCLR.cs
+enum XamarinExceptionTypes : int {
+	XamarinExceptionTypes_System_Exception,
+	XamarinExceptionTypes_System_InvalidCastException,
+	XamarinExceptionTypes_System_EntryPointNotFoundException,
+	XamarinExceptionTypes_System_OutOfMemoryException,
+};
+
+// Keep in sync with AssemblyBuildTarget in AssemblyBuildTarget.cs
+enum XamarinNativeLinkMode : int {
+	XamarinNativeLinkModeStaticObject,
+	XamarinNativeLinkModeDynamicLibrary,
+	XamarinNativeLinkModeFramework,
+};
+
+enum XamarinTriState : int {
+	XamarinTriStateNone,
+	XamarinTriStateEnabled,
+	XamarinTriStateDisabled,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
+
+#if defined (NATIVEAOT)
+#define SUPPORTS_DYNAMIC_REGISTRATION 0
+#else
+#define SUPPORTS_DYNAMIC_REGISTRATION 1
+#endif
 
 #if DEBUG
 extern bool xamarin_gc_pump;
 #endif
 extern bool xamarin_debug_mode;
 extern bool xamarin_disable_lldb_attach;
+extern bool xamarin_disable_omit_fp;
 #if MONOMAC
 extern bool xamarin_mac_hybrid_aot;
 extern bool xamarin_mac_modern;
@@ -59,12 +119,20 @@ extern char *xamarin_entry_assembly_path;
 extern bool xamarin_init_mono_debug;
 extern int xamarin_log_level;
 extern const char *xamarin_executable_name;
+#if MONOMAC || TARGET_OS_MACCATALYST
+extern NSString *xamarin_custom_bundle_name;
+#endif
 extern const char *xamarin_arch_name;
 extern bool xamarin_is_gc_coop;
 extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
 extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 extern enum XamarinLaunchMode xamarin_launch_mode;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 extern bool xamarin_supports_dynamic_registration;
+#endif
+extern const char *xamarin_runtime_configuration_name;
+extern enum XamarinNativeLinkMode xamarin_libmono_native_link_mode;
+extern const char** xamarin_runtime_libraries;
 
 typedef void (*xamarin_setup_callback) ();
 typedef int (*xamarin_extension_main_callback) (int argc, char** argv);

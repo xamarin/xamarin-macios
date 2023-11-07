@@ -13,12 +13,18 @@ namespace ObjCRuntime {
 
 		readonly IntPtr blockPtr;
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
-		static extern IntPtr _Block_copy (IntPtr ptr);
-
-		protected unsafe TrampolineBlockBase (BlockLiteral *block)
+		internal TrampolineBlockBase (IntPtr block, bool owns)
 		{
-			blockPtr = _Block_copy ((IntPtr) block);
+			if (owns) {
+				blockPtr = block;
+			} else {
+				blockPtr = BlockLiteral.Copy (block);
+			}
+		}
+
+		protected unsafe TrampolineBlockBase (BlockLiteral* block)
+			: this ((IntPtr) block, false)
+		{
 		}
 
 		~TrampolineBlockBase ()
@@ -34,7 +40,7 @@ namespace ObjCRuntime {
 		{
 			if (!BlockLiteral.IsManagedBlock (block))
 				return null;
-			return ((BlockLiteral *) block)->Target;
+			return ((BlockLiteral*) block)->Target;
 		}
 	}
 }

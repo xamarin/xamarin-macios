@@ -11,6 +11,7 @@
     <RootNamespace>WebKitDelegateEvents</RootNamespace>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>WebKitDelegateEvents</AssemblyName>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

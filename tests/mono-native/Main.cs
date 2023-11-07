@@ -4,24 +4,7 @@ using Foundation;
 #endif
 using UIKit;
 
-namespace mononativetests
-{
-	public class Application
-	{
-#if !__WATCHOS__
-		// This is the main entry point of the application.
-		static void Main (string[] args)
-		{
-			// if you want to use a different Application Delegate class from "AppDelegate"
-			// you can specify it here.
-			UIApplication.Main (args, null, "AppDelegate");
-		}
-#endif // !__WATCHOS__
-	}
-}
-
-partial class TestRuntime
-{
+partial class TestRuntime {
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
 #if __WATCHOS__

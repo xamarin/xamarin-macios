@@ -1,0 +1,24 @@
+name: Notify release branch change
+
+on:
+  # trigger for main and release branches.
+  push:
+    branches:
+      - main
+      - release/*
+
+jobs:
+  pingRemote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Ping remote repository'
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.SERVICEACCOUNT_PAT }}
+          event-type: ping-mirror
+          repository: ${{ secrets.ORG }}/${{ secrets.REPO }}
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+

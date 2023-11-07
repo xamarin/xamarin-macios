@@ -11,22 +11,18 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
-	
+
 	[TestFixture]
 	public class MacApiSelectorTest : CoreSelectorTest {
-		
+
 		static MacApiSelectorTest ()
 		{
 			Runtime.RegisterAssembly (typeof (NSObject).Assembly);
@@ -84,6 +80,9 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8))
 					return true;
 				break;
+			case "AuthenticationServices.ASWebAuthenticationSessionWebBrowserSessionManager":
+				// needed protocol but wont pass without an impl
+				return true;
 			}
 
 			switch (type.Namespace) {
@@ -118,6 +117,12 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 15))
 					return true;
 				break;
+#if !NET
+			case "Chip":
+				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
+				// This is legacy Xamarin only, because we removed the framework for .NET.
+				return true;
+#endif
 			}
 
 			return base.Skip (type);
@@ -127,7 +132,7 @@ namespace Introspection {
 		{
 			if (SkipAccessibilitySelectors (type, selectorName))
 				return true;
-			
+
 			switch (selectorName) {
 			case "encodeWithCoder:":
 				switch (type.Name) {
@@ -149,7 +154,7 @@ namespace Introspection {
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "xamarinselector:removed:":
 				return true;
 #endif
@@ -160,11 +165,6 @@ namespace Introspection {
 				// compat.
 				return true;
 #endif
-			case "waitUntilExit":
-				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
-				if (type.Name == "NSTask")
-					return true;
-				break;
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -196,10 +196,6 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 9))
 						return true;
 					break;
-				case "MPSImageDescriptor":
-					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
-						return true;
-					break;
 				case "SFSafariPage":
 				case "SFSafariTab":
 				case "SFSafariToolbarItem":
@@ -215,6 +211,54 @@ namespace Introspection {
 			case "newWindowForTab:": // "This method can be implemented in the responder chain", optional but not protocol directly on NSResponder
 				switch (type.Name) {
 				case "NSViewController":
+					return true;
+				}
+				break;
+			case "startup:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipDeviceController":
+					return true;
+				}
+				break;
+			case "readAttributeFabricIdWithResponseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipGeneralCommissioning":
+					return true;
+				}
+				break;
+			case "removeAllFabrics:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "removeFabric:nodeId:vendorId:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "setFabric:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "loadedTimeRanges":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "URLAsset":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "options":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
 					return true;
 				}
 				break;
@@ -357,6 +401,10 @@ namespace Introspection {
 						if (Mac.CheckSystemVersion (10, 13))
 							return true;
 						break;
+					case "progress":
+						if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+							return true;
+						break;
 					}
 					break;
 				case "NSUrlSessionConfiguration":
@@ -386,8 +434,15 @@ namespace Introspection {
 						return true;
 					}
 					break;
-
-#if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
+#if !NET // NSMenuView does not exist in .NET
+				case "NSMenuView":
+					switch (selectorName) {
+					case "menuBarHeight":
+						return TestRuntime.IsVM; // skip on vms due to hadware problems
+					}
+					break;
+#endif // !NET
+#if !NET      // These should be not be marked [Abstract] but can't fix w/o breaking change...                                                                                        
 				case "NSScrollView":
 				case "NSTextView":
 					switch (selectorName) {
@@ -414,7 +469,7 @@ namespace Introspection {
 #endif
 				case "NSMenuDelegate":
 					switch (selectorName) {
-#if !XAMCORE_3_0
+#if !NET
 					case "menu:willHighlightItem:":
 						return true; // bound
 #endif
@@ -587,7 +642,7 @@ namespace Introspection {
 					break;
 				case "PdfView":
 					switch (selectorName) {
-#if !XAMCORE_3_0					
+#if !NET
 					case "menu:willHighlightItem:":
 						return true;
 #endif
@@ -655,7 +710,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "buttonPressed":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1796
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}
@@ -668,7 +723,7 @@ namespace Introspection {
 					switch (selectorName) {
 					case "isSyncFailureHidden":
 						// It's just gone! https://github.com/xamarin/maccore/issues/1797
-						if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 15))
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
 							return true;
 						break;
 					}
@@ -677,6 +732,16 @@ namespace Introspection {
 				break;
 			case "AVFoundation":
 				switch (type.Name) {
+				case "AVCaptureDevice":
+					switch (selectorName) {
+					// macOS 11.0 / AVCaptureDeviceTransportControls category selectors don't respond anymore
+					case "setTransportControlsPlaybackMode:speed:":
+					case "transportControlsPlaybackMode":
+					case "transportControlsSpeed":
+					case "transportControlsSupported":
+						return true;
+					}
+					break;
 				case "AVCapturePhoto":
 					switch (selectorName) {
 					case "fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:":
@@ -691,12 +756,17 @@ namespace Introspection {
 						return true;
 					}
 					break;
-				break;
+					break;
 				}
 				break;
 			case "Metal":
 				switch (type.Name) {
 				case "MTLCounterSampleBufferDescriptor":
+				case "MTLRasterizationRateMapDescriptor":
+				case "MTLTileRenderPipelineDescriptor":
+				case "MTLHeapDescriptor":
+				case "MTLRasterizationRateLayerDescriptor":
+				case "MTLLinkedFunctions":
 					// This whole type is implemented using a different (internal) type,
 					// and it's the internal type who knows how to respond to the selectors.
 					return true;
@@ -1001,7 +1071,7 @@ namespace Introspection {
 			case "Foundation.NSUrlConnection":
 
 			// 10.8:
-			case "MonoMac.Accounts.ACAccount":									// maybe the default .ctor is not allowed ?
+			case "MonoMac.Accounts.ACAccount":                                  // maybe the default .ctor is not allowed ?
 			case "Accounts.ACAccount":
 			case "MonoMac.Accounts.ACAccountCredential":
 			case "Accounts.ACAccountCredential":
@@ -1023,23 +1093,23 @@ namespace Introspection {
 
 			switch (name) {
 			// NSDraggingDestination protocol
-			case "concludeDragOperation:":		// e.g. NSTokenField
-			case "draggingEnded:":			// e.g. NSMatrix
-			case "draggingExited:":			// e.g. NSTokenField
-			case "draggingUpdated:":		// e.g. NSTokenField
-			case "performDragOperation:":		// e.g. NSTokenField
-			case "prepareForDragOperation:":	// e.g. NSTokenField
-			case "wantsPeriodicDraggingUpdates":	// e.g. NSBrowser - optional, [DefaultValue(true)] if it does not exists
+			case "concludeDragOperation:":      // e.g. NSTokenField
+			case "draggingEnded:":          // e.g. NSMatrix
+			case "draggingExited:":         // e.g. NSTokenField
+			case "draggingUpdated:":        // e.g. NSTokenField
+			case "performDragOperation:":       // e.g. NSTokenField
+			case "prepareForDragOperation:":    // e.g. NSTokenField
+			case "wantsPeriodicDraggingUpdates":    // e.g. NSBrowser - optional, [DefaultValue(true)] if it does not exists
 				return true;
 			// NSDraggingSource
-			case "draggedImage:beganAt:":				// e.g. NSTextView
-			case "draggedImage:endedAt:deposited:":			// e.g. NSTableView
-			case "draggedImage:movedTo:":				// e.g. NSCollectionView
-			case "ignoreModifierKeysWhileDragging":			// e.g. NSTextView
-			case "namesOfPromisedFilesDroppedAtDestination:":	// e.g. NSTextView
+			case "draggedImage:beganAt:":               // e.g. NSTextView
+			case "draggedImage:endedAt:deposited:":         // e.g. NSTableView
+			case "draggedImage:movedTo:":               // e.g. NSCollectionView
+			case "ignoreModifierKeysWhileDragging":         // e.g. NSTextView
+			case "namesOfPromisedFilesDroppedAtDestination:":   // e.g. NSTextView
 				return true;
 			// NSAnimatablePropertyContainer
-			case "animationForKey:":		// e.g. NSViewAnimation
+			case "animationForKey:":        // e.g. NSViewAnimation
 			case "animator":
 			case "animations":
 			case "setAnimations:":
@@ -1059,7 +1129,7 @@ namespace Introspection {
 			case "finish:":
 				return true;
 			// IKFilterUIView
-			case "viewForUIConfiguration:excludedKeys:":	// [Target] on CIFilter
+			case "viewForUIConfiguration:excludedKeys:":    // [Target] on CIFilter
 				return true;
 			// NSDictionaryEnumerator
 			case "fileModificationDate":
@@ -1077,8 +1147,8 @@ namespace Introspection {
 			case "fileCreationDate":
 			case "fileOwnerAccountID":
 			case "fileGroupOwnerAccountID":
-				return true;				// all [Target] on NSDictionary
-			// SBObject
+				return true;                // all [Target] on NSDictionary
+											// SBObject
 			case "get":
 				return true;
 
@@ -1088,33 +1158,36 @@ namespace Introspection {
 				return true;
 
 			// NSFileManager
-			case "ubiquityIdentityToken":		// documented in 10.8
+			case "ubiquityIdentityToken":       // documented in 10.8
 				return true;
 			// NS[Mutable]UrlRequest
-			case "allowsCellularAccess":		// documented in 10.8
-			case "setAllowsCellularAccess:":	// documented in 10.8
+			case "allowsCellularAccess":        // documented in 10.8
+			case "setAllowsCellularAccess:":    // documented in 10.8
 				return true;
 			// NSString
-			case "capitalizedStringWithLocale:":	// documented in 10.8
-			case "lowercaseStringWithLocale:":	// documented in 10.8
-			case "uppercaseStringWithLocale:":	// documented in 10.8
+			case "capitalizedStringWithLocale:":    // documented in 10.8
+			case "lowercaseStringWithLocale:":  // documented in 10.8
+			case "uppercaseStringWithLocale:":  // documented in 10.8
 				return true;
 			// AVVideoComposition
-			case "isValidForAsset:timeRange:validationDelegate:":	// documented in 10.8
+			case "isValidForAsset:timeRange:validationDelegate:":   // documented in 10.8
 				return true;
 			// AVPlayer
 			case "setRate:time:atHostTime:":                // 10.8+
 			case "prerollAtRate:completionHandler:":        // 10.8+
 			case "cancelPendingPrerolls":                   // 10.8+
 			case "masterClock":                             // 10.8+
-			case "setMasterClock:":				// 10.8+
+			case "setMasterClock:":             // 10.8+
+												// AVUrlAsset
+			case "contentKeySession:didProvideContentKey:": // fails because it is in-lined via protocol AVContentKeyRecipient
+				return true;
 			// NSDateComponents
-			case "isLeapMonth":				// 10.8+
-			case "setLeapMonth:":				// 10.8+
-			// NSFileCoordinator
-			case "itemAtURL:willMoveToURL:":		// 10.8+
+			case "isLeapMonth":             // 10.8+
+			case "setLeapMonth:":               // 10.8+
+												// NSFileCoordinator
+			case "itemAtURL:willMoveToURL:":        // 10.8+
 				return true; // documented (but does not respond)
-			
+
 			// MonoMac.CoreImage.CIDetector (10.8+)
 			case "featuresInImage:options:":
 			// MonoMac.CoreImage.CIFaceFeature (10.8+)
@@ -1156,10 +1229,6 @@ namespace Introspection {
 			case "usesSceneTimeBase":
 			case "setUsesSceneTimeBase:":
 				if (!Mac.CheckSystemVersion (10, 8))
-					return true;
-				break;
-			case "initWithString:":
-				if (declaredType.Name == "NSTextStorage")
 					return true;
 				break;
 			}
@@ -1207,21 +1276,21 @@ namespace Introspection {
 			case "Foundation.NSUrlSessionStreamTask":
 			case "NSUrlSessionStreamTask":
 				switch (name) {
-					case "captureStreams":
-					case "closeRead":
-					case "closeWrite":
-					case "readDataOfMinLength:maxLength:timeout:completionHandler:":
-					case "startSecureConnection":
-					case "stopSecureConnection":
-					case "writeData:timeout:completionHandler:":
-						if (!Mac.CheckSystemVersion (10, 11))
-							return true;
-						break;
+				case "captureStreams":
+				case "closeRead":
+				case "closeWrite":
+				case "readDataOfMinLength:maxLength:timeout:completionHandler:":
+				case "startSecureConnection":
+				case "stopSecureConnection":
+				case "writeData:timeout:completionHandler:":
+					if (!Mac.CheckSystemVersion (10, 11))
+						return true;
+					break;
 				}
 				break;
 			}
 
-//			Console.WriteLine ("{0} {1}", declaredType, name);
+			//			Console.WriteLine ("{0} {1}", declaredType, name);
 			return base.CheckResponse (value, actualType, method, ref name);
 		}
 
@@ -1270,17 +1339,14 @@ namespace Introspection {
 			// QTMovie
 			case "movieWithTimeRange:error:":
 			case "initWithQuickTimeMedia:error:":
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// NSAnimation
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
-			// NSImage
-			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
+			// Cinematic.CNDecision
+			case "initWithTime:detectionGroupID:strong:":
+			case "initWithTime:detectionID:strong:":
+				return true;
 			default:
 				return base.SkipInit (selector, m);
 			}

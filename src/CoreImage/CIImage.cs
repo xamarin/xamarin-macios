@@ -32,7 +32,19 @@ using UIKit;
 using CoreVideo;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace CoreImage {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CIAutoAdjustmentFilterOptions {
 
 		// The default value is true.
@@ -41,16 +53,26 @@ namespace CoreImage {
 		// The default value is true
 		public bool? RedEye;
 
-		public CIFeature [] Features;
+		public CIFeature []? Features;
 
 		public CIImageOrientation? ImageOrientation;
 
-		[iOS (8,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public bool? AutoAdjustCrop;
-		[iOS (8,0)]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public bool? AutoAdjustLevel;
-		
-		internal NSDictionary ToDictionary ()
+
+		internal NSDictionary? ToDictionary ()
 		{
 			int n = 0;
 			if (Enhance.HasValue && Enhance.Value == false)
@@ -59,7 +81,7 @@ namespace CoreImage {
 				n++;
 			if (ImageOrientation.HasValue)
 				n++;
-			if (Features != null && Features.Length != 0)
+			if (Features is not null && Features.Length != 0)
 				n++;
 			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true)
 				n++;
@@ -67,28 +89,28 @@ namespace CoreImage {
 				n++;
 			if (n == 0)
 				return null;
-			
+
 			NSMutableDictionary dict = new NSMutableDictionary ();
 
-			if (Enhance.HasValue && Enhance.Value == false){
+			if (Enhance.HasValue && Enhance.Value == false) {
 				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustEnhanceKey.Handle);
 			}
-			if (RedEye.HasValue && RedEye.Value == false){
+			if (RedEye.HasValue && RedEye.Value == false) {
 				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustRedEyeKey.Handle);
 			}
-			if (Features != null && Features.Length != 0){
+			if (Features is not null && Features.Length != 0) {
 				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
 			}
-			if (ImageOrientation.HasValue){
-				dict.LowlevelSetObject (new NSNumber ((int)ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
+			if (ImageOrientation.HasValue) {
+				dict.LowlevelSetObject (new NSNumber ((int) ImageOrientation.Value), global::ImageIO.CGImageProperties.Orientation.Handle);
 			}
-			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true){
+			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true) {
 				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustCrop.Handle);
 			}
-			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true){
+			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true) {
 				dict.LowlevelSetObject (CFBoolean.TrueHandle, CIImage.AutoAdjustLevel.Handle);
 			}
-			
+
 #if false
 			for (i = 0; i < n; i++){
 				Console.WriteLine ("{0} {1}-{2}", i, keys [i], values [i]);
@@ -100,39 +122,19 @@ namespace CoreImage {
 
 	public partial class CIImage {
 
-#if !MONOMAC && !XAMCORE_2_0
-		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
-		public CIImage (CGLayer layer)
-		{
-			throw new NotSupportedException ();
-		}
-
-		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
-		public CIImage (CGLayer layer, NSDictionary d)
-		{
-			throw new NotSupportedException ();
-		}
-
-		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
-		public CIImage (CGLayer layer, CIImageInitializationOptions options)
-		{
-			throw new NotSupportedException ();
-		}
-#endif
-
 		static CIFilter [] WrapFilters (NSArray filters)
 		{
-			if (filters == null)
+			if (filters is null)
 				return new CIFilter [0];
 
 			nuint count = filters.Count;
 			if (count == 0)
 				return new CIFilter [0];
 			var ret = new CIFilter [count];
-			for (nuint i = 0; i < count; i++){
-				IntPtr filterHandle = filters.ValueAt (i);
-				string filterName = CIFilter.GetFilterName (filterHandle);
-									 
+			for (nuint i = 0; i < count; i++) {
+				var filterHandle = filters.ValueAt (i);
+				string? filterName = CIFilter.GetFilterName (filterHandle);
+
 				ret [i] = CIFilter.FromName (filterName, filterHandle);
 			}
 			return ret;
@@ -140,12 +142,12 @@ namespace CoreImage {
 
 		public static CIImage FromCGImage (CGImage image, CGColorSpace colorSpace)
 		{
-			if (colorSpace == null)
-				throw new ArgumentNullException ("colorSpace");
-			
-			using (var arr = NSArray.FromIntPtrs (new IntPtr [] { colorSpace.Handle })){
-				using (var keys = NSArray.FromIntPtrs (new IntPtr [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle } )){
-					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)){
+			if (colorSpace is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorSpace));
+
+			using (var arr = NSArray.FromIntPtrs (new [] { colorSpace.Handle })) {
+				using (var keys = NSArray.FromIntPtrs (new [] { CIImageInitializationOptionsKeys.ColorSpaceKey.Handle })) {
+					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)) {
 						return FromCGImage (image, dict);
 					}
 				}
@@ -157,10 +159,10 @@ namespace CoreImage {
 		{
 			return GetAutoAdjustmentFilters (null);
 		}
-		
-		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions options)
+
+		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions? options)
 		{
-			NSDictionary dict = options == null ? null : options.ToDictionary ();
+			var dict = options?.ToDictionary ();
 			return WrapFilters (_GetAutoAdjustmentFilters (dict));
 		}
 
@@ -168,11 +170,11 @@ namespace CoreImage {
 		{
 			return FromCGImage (image);
 		}
-		
+
 		internal static int CIFormatToInt (CIFormat format)
 		{
 			switch (format) {
-			case CIFormat.ARGB8: return FormatARGB8;			
+			case CIFormat.ARGB8: return FormatARGB8;
 			case CIFormat.RGBAh: return FormatRGBAh;
 #if MONOMAC
 			case CIFormat.RGBA16: return FormatRGBA16;
@@ -209,11 +211,11 @@ namespace CoreImage {
 
 		public static CIImage FromProvider (ICIImageProvider provider, nuint width, nuint height, CIFormat pixelFormat, CGColorSpace colorSpace, CIImageProviderOptions options)
 		{
-			return FromProvider (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options == null ? null : options.Dictionary);
+			return FromProvider (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options?.Dictionary);
 		}
 
 		public CIImage (ICIImageProvider provider, nuint width, nuint height, CIFormat pixelFormat, CGColorSpace colorSpace, CIImageProviderOptions options)
-			: this (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options == null ? null : options.Dictionary)
+			: this (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options?.Dictionary)
 		{
 		}
 	}

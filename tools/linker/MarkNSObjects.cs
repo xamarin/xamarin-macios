@@ -33,7 +33,9 @@ using System;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
-using Xamarin.Bundler;
+#if NET
+using Mono.Linker.Steps;
+#endif
 
 namespace Xamarin.Linker.Steps {
 
@@ -50,7 +52,7 @@ namespace Xamarin.Linker.Steps {
 
 		protected override void Process (TypeDefinition type)
 		{
-			if (ProductAssembly == null)
+			if (ProductAssembly is null)
 				ProductAssembly = (Profile.Current as BaseProfile).ProductAssembly;
 
 			bool nsobject = type.IsNSObject (LinkContext);
@@ -59,17 +61,17 @@ namespace Xamarin.Linker.Steps {
 
 			if (!IsProductType (type)) {
 				// we need to annotate the parent type(s) of a nested type
-				// otherwise the sweeper will not keep the parents (nor the childs)
+				// otherwise the sweeper will not keep the parents (nor the children)
 				if (type.IsNested) {
 					var parent = type.DeclaringType;
-					while (parent != null) {
+					while (parent is not null) {
 						Annotations.Mark (parent);
 						parent = parent.DeclaringType;
 					}
 				}
 				Annotations.Mark (type);
 				Annotations.SetPreserve (type, TypePreserve.All);
-			} else {
+			} else if (type.HasMethods) {
 				PreserveIntPtrConstructor (type);
 				if (nsobject)
 					PreserveExportedMethods (type);
@@ -78,17 +80,15 @@ namespace Xamarin.Linker.Steps {
 
 		void PreserveExportedMethods (TypeDefinition type)
 		{
-			if (!type.HasMethods)
-				return;
-
 			foreach (var method in type.Methods) {
 				if (!IsExportedMethod (method))
 					continue;
 
+				// not optimal if "Link all" is used as the override might be removed later
 				if (!IsOverridenInUserCode (method))
 					continue;
 
-				PreserveMethod (type, method);
+				Annotations.AddPreservedMethod (type, method);
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace Xamarin.Linker.Steps {
 				return false;
 
 			var overrides = Annotations.GetOverrides (method);
-			if (overrides == null || overrides.Count == 0)
+			if (overrides is null)
 				return false;
 
 			foreach (var @override in overrides)
@@ -108,17 +108,12 @@ namespace Xamarin.Linker.Steps {
 			return false;
 		}
 
-		bool IsExportedMethod (MethodDefinition method)
+		static bool IsExportedMethod (MethodDefinition method)
 		{
-			return HasExportAttribute (method);
-		}
-
-		bool HasExportAttribute (ICustomAttributeProvider provider)
-		{
-			if (!provider.HasCustomAttributes)
+			if (!method.HasCustomAttributes)
 				return false;
 
-			foreach (CustomAttribute attribute in provider.CustomAttributes)
+			foreach (CustomAttribute attribute in method.CustomAttributes)
 				if (attribute.Constructor.DeclaringType.Inherits (Namespaces.Foundation, "ExportAttribute"))
 					return true;
 
@@ -127,24 +122,20 @@ namespace Xamarin.Linker.Steps {
 
 		void PreserveIntPtrConstructor (TypeDefinition type)
 		{
-			if (!type.HasMethods)
-				return;
-
 			foreach (MethodDefinition constructor in type.GetConstructors ()) {
 				if (!constructor.HasParameters)
 					continue;
 
+#if NET
+				if (constructor.Parameters.Count != 1 || !constructor.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+#else
 				if (constructor.Parameters.Count != 1 || !constructor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+#endif
 					continue;
 
-				PreserveMethod (type, constructor);
+				Annotations.AddPreservedMethod (type, constructor);
 				break; // only one .ctor can match this
 			}
-		}
-
-		void PreserveMethod (TypeDefinition type, MethodDefinition method)
-		{
-			Annotations.AddPreservedMethod (type, method);
 		}
 
 		static bool IsProductMethod (MethodDefinition method)
@@ -154,10 +145,16 @@ namespace Xamarin.Linker.Steps {
 
 		bool IsProductType (TypeDefinition type)
 		{
+			if (LinkContext.App.SkipMarkingNSObjectsInUserAssemblies)
+				return true;
+
 			var name = type.Module.Assembly.Name.Name;
 			switch (name) {
 			case "Xamarin.Forms.Platform.iOS":
-				return LinkContext.App.Optimizations.ExperimentalFormsProductType == true;
+				return true;
+			case "Xamarin.iOS":
+				// for Catalyst this has extra stubs and must be considered has _product_ to remove extra binding code
+				return true;
 			default:
 				return name == ProductAssembly;
 			}

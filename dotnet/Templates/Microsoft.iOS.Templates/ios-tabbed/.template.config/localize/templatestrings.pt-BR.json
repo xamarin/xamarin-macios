@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "Aplicativo com guias do iOS",
+  "description": "Um projeto para criar um aplicativo iOS .NET com guias",
+  "symbols/bundleId/description": "Substitui o CFBundleIdentifier no Info.plist",
+  "symbols/minOSVersion/description": "Substitui o SupportedOSPlatformVersion no arquivo de projetos",
+  "symbols/deviceFamily/choices/universal/description": "Dar suporte aos dispositivos iPhone e iPad",
+  "symbols/deviceFamily/choices/iphone/description": "Oferecer suporte somente aos dispositivos iPhone",
+  "symbols/deviceFamily/choices/ipad/description": "Oferecer suporte somente aos dispositivos iPad"
+}

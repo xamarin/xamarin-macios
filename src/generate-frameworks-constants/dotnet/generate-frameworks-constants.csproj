@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\Frameworks.cs">
+      <Link>Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
+  </ItemGroup>
+</Project>

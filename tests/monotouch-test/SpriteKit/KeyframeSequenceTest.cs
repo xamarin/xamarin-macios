@@ -10,25 +10,9 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.SpriteKit {
 
@@ -81,22 +65,22 @@ namespace MonoTouchFixtures.SpriteKit {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0, 1);
 
-			NSNumber[] keys = new NSNumber[] { 1.0f, 2.0f, 3.0f };
-			NSNumber[] values = new NSNumber[] { 1.0f, 2.0f, 3.0f };
+			NSNumber [] keys = new NSNumber [] { 1.0f, 2.0f, 3.0f };
+			NSNumber [] values = new NSNumber [] { 1.0f, 2.0f, 3.0f };
 			using (var s = new SKKeyframeSequence (keys, values)) {
 				Assert.That (s.Count, Is.EqualTo ((nuint) 3), "Count-1");
 				Assert.That (s.InterpolationMode, Is.EqualTo (SKInterpolationMode.Linear), "SKInterpolationMode-1");
 				Assert.That (s.RepeatMode, Is.EqualTo (SKRepeatMode.Clamp), "RepeatMode-1");
 			}
 
-			float[] values_f = new [] { 4.0f, 5.0f, 6.0f };
+			float [] values_f = new [] { 4.0f, 5.0f, 6.0f };
 			using (var s = new SKKeyframeSequence (keys, values_f)) {
 				Assert.That (s.Count, Is.EqualTo ((nuint) 3), "Count-2");
 				Assert.That (s.InterpolationMode, Is.EqualTo (SKInterpolationMode.Linear), "SKInterpolationMode-2");
 				Assert.That (s.RepeatMode, Is.EqualTo (SKRepeatMode.Clamp), "RepeatMode-2");
 			}
 
-			double[] values_d = new [] { 7.0d, 8.0d, 9.0d };
+			double [] values_d = new [] { 7.0d, 8.0d, 9.0d };
 			using (var s = new SKKeyframeSequence (keys, values_d)) {
 				Assert.That (s.Count, Is.EqualTo ((nuint) 3), "Count-3");
 				Assert.That (s.InterpolationMode, Is.EqualTo (SKInterpolationMode.Linear), "SKInterpolationMode-3");

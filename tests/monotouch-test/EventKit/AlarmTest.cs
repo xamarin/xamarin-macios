@@ -10,30 +10,23 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
 using EventKit;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AlarmTest {
-		
+
 		[Test]
 		public void NullAllowedTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var alarm = EKAlarm.FromTimeInterval (1234)) {
 				alarm.AbsoluteDate = null;

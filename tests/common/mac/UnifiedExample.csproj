@@ -11,6 +11,7 @@
     <AssemblyName>%NAME%</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +24,7 @@
     <UseRefCounting>true</UseRefCounting>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-%CODE%
+REPLACE_CODE_REPLACE
     </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,7 +39,7 @@
     <UseSGen>true</UseSGen>
     <UseRefCounting>true</UseRefCounting>
     <LinkMode>SdkOnly</LinkMode>
-%CODE%
+REPLACE_CODE_REPLACE
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

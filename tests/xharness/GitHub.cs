@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,29 +6,52 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Xml;
-using System.Text;
-using Xamarin;
+using Microsoft.DotNet.XHarness.Common.Execution;
+using Microsoft.DotNet.XHarness.Common.Logging;
 
-namespace xharness
-{
-	public static class GitHub
-	{
+namespace Xharness {
+	/// <summary>
+	/// API to interact with the vcs used in the project. It is used to indentify those modified files in a PR and
+	/// choose which tests to execute.
+	/// </summary>
+	public interface IVersionControlSystem {
+
+		string GetPullRequestTargetBranch (int pullRequest);
+		IEnumerable<string> GetLabels (int pullRequest);
+		IEnumerable<string> GetModifiedFiles (int pullRequest);
+	}
+
+	public class GitHub : IVersionControlSystem {
+
+		readonly IHarness harness;
+		readonly IProcessManager processManager;
+
+		public GitHub (IHarness harness, IProcessManager processManager)
+		{
+			if (harness is null)
+				throw new ArgumentNullException (nameof (harness));
+			if (processManager is null)
+				throw new ArgumentNullException (nameof (processManager));
+			this.harness = harness;
+			this.processManager = processManager;
+		}
+
 		static WebClient CreateClient ()
 		{
 			var client = new WebClient ();
 			client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
-			var xharness_github_token_file = Environment.GetEnvironmentVariable ("XHARNESS_GITHUB_TOKEN_FILE");
-			if (!string.IsNullOrEmpty (xharness_github_token_file) && File.Exists (xharness_github_token_file))
-				client.Headers.Add (HttpRequestHeader.Authorization, File.ReadAllText (xharness_github_token_file));
+			var xharness_github_token = Environment.GetEnvironmentVariable ("GITHUB_TOKEN");
+			if (!string.IsNullOrEmpty (xharness_github_token))
+				client.Headers.Add (HttpRequestHeader.Authorization, xharness_github_token);
 			return client;
 		}
 
-		public static string GetPullRequestTargetBranch (Harness harness, int pull_request)
+		public string GetPullRequestTargetBranch (int pullRequest)
 		{
-			if (pull_request <= 0)
+			if (pullRequest <= 0)
 				return string.Empty;
 
-			var info = DownloadPullRequestInfo (harness, pull_request);
+			var info = DownloadPullRequestInfo (pullRequest);
 			if (info.Length == 0)
 				return string.Empty;
 
@@ -39,9 +62,9 @@ namespace xharness
 			}
 		}
 
-		public static IEnumerable<string> GetLabels (Harness harness, int pull_request)
+		public IEnumerable<string> GetLabels (int pullRequest)
 		{
-			var info = DownloadPullRequestInfo (harness, pull_request);
+			var info = DownloadPullRequestInfo (pullRequest);
 			using (var reader = JsonReaderWriterFactory.CreateJsonReader (info, new XmlDictionaryReaderQuotas ())) {
 				var doc = new XmlDocument ();
 				doc.Load (reader);
@@ -53,14 +76,14 @@ namespace xharness
 			}
 		}
 
-		public static IEnumerable<string> GetModifiedFiles (Harness harness, int pull_request)
+		public IEnumerable<string> GetModifiedFiles (int pullRequest)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-files.log");
+			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + "-files.log");
 			if (!File.Exists (path)) {
-				var rv = GetModifiedFilesLocally (harness, pull_request);
-				if (rv == null || rv.Count () == 0) {
-					rv = GetModifiedFilesRemotely (harness, pull_request);
-					if (rv == null)
+				var rv = GetModifiedFilesLocally (pullRequest);
+				if (rv is null || rv.Count () == 0) {
+					rv = GetModifiedFilesRemotely (pullRequest);
+					if (rv is null)
 						rv = new string [] { };
 				}
 
@@ -71,14 +94,14 @@ namespace xharness
 			return File.ReadAllLines (path);
 		}
 
-		static IEnumerable<string> GetModifiedFilesRemotely (Harness harness, int pull_request)
+		IEnumerable<string> GetModifiedFilesRemotely (int pullRequest)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + "-remote-files.log");
+			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + "-remote-files.log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
 				using (var client = CreateClient ()) {
 					var rv = new List<string> ();
-					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}/files?per_page=100"; // 100 items per page is max
+					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}/files?per_page=100"; // 100 items per page is max
 					do {
 						byte [] data;
 						try {
@@ -99,7 +122,7 @@ namespace xharness
 
 						var link = client.ResponseHeaders ["Link"];
 						try {
-							if (link != null) {
+							if (link is not null) {
 								var ltIdx = link.IndexOf ('<');
 								var gtIdx = link.IndexOf ('>', ltIdx + 1);
 								while (ltIdx >= 0 && gtIdx > ltIdx) {
@@ -129,7 +152,7 @@ namespace xharness
 						} catch (Exception e) {
 							harness.Log ("Could not paginate github response: {0}: {1}", link, e.Message);
 						}
-					} while (url != null);
+					} while (url is not null);
 					File.WriteAllLines (path, rv.ToArray ());
 					return rv;
 				}
@@ -138,10 +161,10 @@ namespace xharness
 			return File.ReadAllLines (path);
 		}
 
-		static IEnumerable<string> GetModifiedFilesLocally (Harness harness, int pull_request)
+		IEnumerable<string> GetModifiedFilesLocally (int pullRequest)
 		{
-			var base_commit = $"origin/pr/{pull_request}/merge^";
-			var head_commit = $"origin/pr/{pull_request}/merge";
+			var base_commit = $"origin/pull/{pullRequest}/merge^";
+			var head_commit = $"origin/pull/{pullRequest}/merge";
 
 			harness.Log ("Fetching modified files for commit range {0}..{1}", base_commit, head_commit);
 
@@ -151,8 +174,10 @@ namespace xharness
 			using (var git = new Process ()) {
 				git.StartInfo.FileName = "git";
 				git.StartInfo.Arguments = $"diff-tree --no-commit-id --name-only -r {base_commit}..{head_commit}";
-				var output = new StringWriter ();
-				var rv = git.RunAsync (harness.HarnessLog, output, output).Result;
+				var output = new MemoryLog () {
+					Timestamp = false // ensure we do not add the timestap or the logic for the file check will be hard and having it adds no value
+				};
+				var rv = processManager.RunAsync (git, harness.HarnessLog, stdoutLog: output, stderrLog: output).Result;
 				if (rv.Succeeded)
 					return output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -163,15 +188,15 @@ namespace xharness
 			}
 		}
 
-		static byte[] DownloadPullRequestInfo (Harness harness, int pull_request)
+		byte [] DownloadPullRequestInfo (int pullRequest)
 		{
-			var path = Path.Combine (harness.LogDirectory, "pr" + pull_request + ".log");
+			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + ".log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
 				using (var client = CreateClient ()) {
 					byte [] data;
 					try {
-						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pull_request}");
+						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}");
 						File.WriteAllBytes (path, data);
 						return data;
 					} catch (WebException we) {

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <RootNamespace>monotouchtest</RootNamespace>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>monotouchtest</AssemblyName>
+
+    <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
+    <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+    <MonoTouchTestDirectory>$(RootTestsDirectory)\monotouch-test</MonoTouchTestDirectory>
+
+    <LinkMode>None</LinkMode>
+    <!-- Don't remove native symbols, because it makes debugging native crashes harder -->
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
+    <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
+
+    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(RootTestsDirectory)\EmbeddedResources\dotnet\$(_PlatformName)\EmbeddedResources.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\bindings-test\dotnet\$(_PlatformName)\bindings-test.csproj" />
+    <ProjectReference Include="$(RootTestsDirectory)\fsharplibrary\dotnet\$(_PlatformName)\fsharplibrary.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(MonoTouchTestDirectory)\Entitlements.plist" />
+    <None Include="$(MonoTouchTestDirectory)\app.config" />
+    <None Include="$(MonoTouchTestDirectory)\EmptyNib.xib" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MonoTouchTestDirectory)\**\*.cs" Exclude="$(DefaultItemExcludes);$(MonoTouchTestDirectory)\obj\**;$(MonoTouchTestDirectory)\dotnet\**">
+      <Link>%(RecursiveDir)%(Filename).cs</Link>
+    </Compile>
+    <Compile Include="$(TestLibrariesDirectory)\TrampolineTest.generated.cs" />
+    <Compile Include="$(TestLibrariesDirectory)\RegistrarTest.generated.cs" />
+    <Compile Include="$(RootTestsDirectory)\api-shared\ObjCRuntime\RegistrarTest.cs">
+      <Link>shared\ObjCRuntime\RegistrarTest.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\api-shared\CoreFoundation\CFNotificationCenterTest.cs">
+      <Link>CoreFoundation\CFNotificationCenterTest.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestRuntime.RunAsync.cs">
+      <Link>TestRuntime.RunAsync.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\ConditionalCompilation.cs">
+      <Link>ConditionalCompilation.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\TestAssemblyLoader.cs">
+      <Link>TestAssemblyLoader.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="$(RootTestsDirectory)\common\AppDelegate.cs" Condition="!$(TargetFramework.EndsWith('-macos'))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(MonoTouchTestDirectory)\AudioToolbox\1.caf">
+      <Link>AudioToolbox\1.caf</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\Tamarin.pdf">
+      <Link>Tamarin.pdf</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\basn3p08.png">
+      <Link>basn3p08.png</Link>
+    </Content>
+        <Content Include="$(MonoTouchTestDirectory)\basn3p08_with_loc.png">
+      <Link>basn3p08_with_loc.png</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\BoardingPass.pkpass">
+      <Link>BoardingPass.pkpass</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\Hand.wav">
+      <Link>Hand.wav</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\Pacifico.ttf">
+      <Link>Pacifico.ttf</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc">
+      <Link>LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\drum01.mp3">
+      <Link>drum01.mp3</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\Model3.arobject">
+      <Link>Model3.arobject</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\access-denied.html">
+      <Link>access-denied.html</Link>
+    </Content>
+    <Content Include="$(MonoTouchTestDirectory)\access-granted.html">
+      <Link>access-granted.html</Link>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <BundleResource Include="$(MonoTouchTestDirectory)\CoreImage\Xam.png">
+      <Link>CoreImage\Xam.png</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\xamarin0.png">
+      <Link>Resources\xamarin0.png</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\xamarin1.png">
+      <Link>Resources\xamarin1.png</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\xamarin2.png">
+      <Link>Resources\xamarin2.png</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\xamvideotest.mp4">
+      <Link>xamvideotest.mp4</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\CoreImage\xamarinmonkey.heic">
+      <Link>CoreImage\xamarinmonkey.heic</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\Base.lproj\Localizable.strings">
+      <Link>Resources\Base.lproj\Localizable.strings</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\metal-sample.metal">
+      <Link>Resources\metal-sample.metal</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\fragmentShader.metal">
+      <Link>Resources\fragmentShader.metal</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\uncompressed.txt">
+      <Link>uncompressed.txt</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\compressed_lze">
+      <Link>compressed_lze</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\compressed_lz4">
+      <Link>compressed_lz4</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\compressed_lzma">
+      <Link>compressed_lzma</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\compressed_zip">
+      <Link>compressed_zip</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\example.pac">
+      <Link>example.pac</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\square.gif">
+      <Link>Resources\square.gif</Link>
+    </BundleResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="$(MonoTouchTestDirectory)\Resources\metal-sample.metal" Condition="'$(_SdkIsSimulator)' != 'true'">
+      <Link>Resources\metal-sample.metal</Link>
+    </Metal>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Security\openssl_crt.der">
+        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.resx">
+      <LogicalName>monotouchtest.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.en-AU.resx">
+      <LogicalName>monotouchtest.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.es.resx">
+      <LogicalName>monotouchtest.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MonoTouchTestDirectory)\Resources\Welcome.de.resx">
+      <LogicalName>monotouchtest.Welcome.de.resources</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.m" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.h" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\*.cs" />
+    <GeneratedTestInput Include="$(TestLibrariesDirectory)\Makefile" />
+    <GeneratedTestOutput Include="$(TestLibrariesDirectory)\TrampolineTest.generated.cs" />
+    <GeneratedTestOutput Include="$(TestLibrariesDirectory)\RegistrarTest.generated.cs" />
+    <CustomMetalSmeltingInput Include="$(MonoTouchTestDirectory)\Resources\fragmentShader.metal" />
+  </ItemGroup>
+
+  <Target Name="ComputeMetalOutputPath" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
+    <PropertyGroup>
+      <MetalBundleSubDirectory Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents/Resources/</MetalBundleSubDirectory>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(_SdkIsSimulator)' != 'true' Or '$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations;ComputeMetalOutputPath" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <_SmeltingSdk Condition="'$(_PlatformName)' == 'iOS'">iphoneos</_SmeltingSdk>
+      <_SmeltingSdk Condition="'$(_PlatformName)' == 'tvOS'">appletvos</_SmeltingSdk>
+      <_SmeltingSdk Condition="'$(_PlatformName)' == 'macOS'">macosx</_SmeltingSdk>
+      <_SmeltingSdk Condition="'$(_PlatformName)' == 'MacCatalyst'">macosx</_SmeltingSdk> <!-- 'macosx' is not a typo here - that's the actual sdk used to build -->
+      <_SmeltingTarget Condition="'$(_PlatformName)' == 'MacCatalyst'">-target air64-apple-ios14.0-macabi</_SmeltingTarget>
+      <_SmeltingMinOS Condition="'$(_PlatformName)' == 'iOS'">-mios-version-min=11.0</_SmeltingMinOS>
+      <_SmeltingMinOS Condition="'$(_PlatformName)' == 'tvOS'">-mtvos-version-min=11.0</_SmeltingMinOS>
+      <_SmeltingMinOS Condition="'$(_PlatformName)' == 'macOS'">-mmacos-version-min=10.13</_SmeltingMinOS>
+      <_SmeltingMinOS Condition="'$(_PlatformName)' == 'MacCatalyst'"></_SmeltingMinOS>
+    </PropertyGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)/$(MetalBundleSubDirectory);$(AppBundleDir)/$(MetalBundleSubDirectory)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal $(_SmeltingTarget) -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)$(MetalBundleSubDirectory)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)/$(MetalBundleSubDirectory)fragmentShader.air -o $(AppBundleDir)/$(MetalBundleSubDirectory)fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+  </Target>
+
+  <Target Name="BuildTestLibraries" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" BeforeTargets="BeforeBuild"
+      Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" Condition="'$(BUILD_REVISION)' == ''" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" Condition="'$(BUILD_REVISION)' == ''" />
+  </Target>
+
+  <Target Name="ComputeDefineConstants" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <DefineConstants Condition="'$(ComputedPlatform)' == 'iPhone'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'iossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+      <DefineConstants Condition="'$(RuntimeIdentifier)' == 'tvossimulator-arm64'">$(DefineConstants);AOT</DefineConstants>
+    </PropertyGroup>
+  </Target>
+</Project>

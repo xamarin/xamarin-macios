@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,7 +12,11 @@
     <AssemblyName>link all</AssemblyName>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootTestsDirectory>..\..\..</RootTestsDirectory>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -25,8 +29,8 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchExtraArgs>--registrar=static --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchExtraArgs>--registrar=static --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchArch>x86_64</MtouchArch>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
@@ -37,9 +41,9 @@
     <WarningLevel>4</WarningLevel>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <DefineConstants>$(DefineConstants)</DefineConstants>
-    <MtouchExtraArgs>--registrar:static --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
+    <MtouchExtraArgs>--registrar:static --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -54,41 +58,9 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchDebug>True</MtouchDebug>
-    <MtouchLink>Full</MtouchLink>
-    <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchArch>ARMv7</MtouchArch>
-    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchDebug>True</MtouchDebug>
-    <MtouchLink>Full</MtouchLink>
-    <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>ARM64</MtouchArch>
-    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
+    <MtouchExtraArgs>-gcc_flags="-UhoItsB0rken" --optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
+    <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -101,53 +73,8 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>Full</MtouchLink>
-    <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchArch>ARMv7</MtouchArch>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>Full</MtouchLink>
-    <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchArch>ARM64</MtouchArch>
-    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\iPhone\$(Configuration)-bitcode-unified</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchLink>Full</MtouchLink>
-    <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
-    <MtouchExtraArgs>--bitcode:full --optimize=all,-remove-dynamic-registrar</MtouchExtraArgs>
+    <MtouchExtraArgs>--optimize=all,-remove-dynamic-registrar,-force-rejected-types-removal</MtouchExtraArgs>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -155,12 +82,17 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="OpenTK-1.0" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Net.Http" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">
@@ -168,8 +100,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\AppDelegate.cs" />
+    <Compile Include="..\..\..\common\AppDelegate.cs" />
     <Compile Include="LinkAllTest.cs" />
     <Compile Include="ClassLayoutTest.cs" />
     <Compile Include="StructLayoutTest.cs" />
@@ -192,6 +124,7 @@
     </Compile>
     <Compile Include="SerializationTest.cs" />
     <Compile Include="..\..\ILReader.cs" />
+    <Compile Include="..\..\..\common\TestAssemblyLoader.cs" />
     <Compile Include="..\..\..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
@@ -204,6 +137,11 @@
     <Compile Include="..\..\..\monotouch-test\System.Net.Http\NetworkResources.cs">
       <Link>NetworkResources.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\monotouch-test\Tamarin.pdf">
+      <Link>Tamarin.pdf</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
@@ -225,10 +163,11 @@
       <Project>{FE6EDEE9-ADF6-4F42-BCF2-B68C0A44EC3D}</Project>
       <Name>BundledResources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\bindings-test\bindings-test.csproj">
+    <ProjectReference Include="..\..\..\bindings-test\iOS\bindings-test.csproj">
       <Project>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</Project>
       <Name>bindings-test</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

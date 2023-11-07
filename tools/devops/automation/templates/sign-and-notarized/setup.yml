@@ -1,0 +1,74 @@
+# template that setups all the diff plugins needed to perform the sign and notarize step
+parameters:
+
+- name: signatureType
+  type: string
+  default: 'Real'
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: condition
+  default: succeeded()
+
+steps:
+
+# DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
+- template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
+  parameters:
+    resource: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    clean: true
+    submodules: recursive
+    path: s/xamarin-macios
+
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- checkout: yaml-templates
+  clean: true
+
+- checkout: release-scripts
+  clean: true
+
+# the ddsign plugin needs this version or it will crash and will make the sign step fail
+
+- ${{ if eq(parameters.isPR, false) }}:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+
+  - task: UseDotNet@2
+    inputs:
+      packageType: sdk
+      version: 3.x
+    displayName: 'Install .NET Core SDK 3.x needed for ESRP'
+
+  - task: MicroBuildSigningPlugin@4
+    displayName: 'Install Signing Plugin'
+    inputs:
+      signType: '${{ parameters.signatureType }}'
+      azureSubscription: $(MicrobuildConnector)
+      zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    condition: ${{ parameters.condition }}
+
+  - task: MicroBuildSigningPlugin@4
+    displayName: 'Install Notarizing Plugin'
+    inputs:
+      signType: 'Real'  # test is not present for mac..
+      azureSubscription: $(MicrobuildConnector)
+      zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    condition: ${{ parameters.condition }}

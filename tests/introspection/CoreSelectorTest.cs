@@ -11,21 +11,13 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 
 	public abstract class CoreSelectorTest : ApiSelectorTest {
-		
+
 		protected override bool CheckResponse (bool value, Type actualType, MethodBase method, ref string name)
 		{
 			if (value)
@@ -39,6 +31,15 @@ namespace Introspection {
 				// does not respond but the properties works (see monotouch-test for a partial list)
 				if (TestRuntime.CheckXcodeVersion (8, 0))
 					return true;
+				break;
+			// broken with Xcode 12 beta 1
+			case "MidiCISession":
+				switch (name) {
+				case "deviceIdentification":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
 				break;
 			}
 

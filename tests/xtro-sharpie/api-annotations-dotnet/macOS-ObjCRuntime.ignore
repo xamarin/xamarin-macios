@@ -1,0 +1,23 @@
+## defined in /usr/include/asl.h
+!unknown-pinvoke! asl_add_log_file bound
+!unknown-pinvoke! asl_close bound
+!unknown-pinvoke! asl_free bound
+!unknown-pinvoke! asl_get bound
+!unknown-pinvoke! asl_key bound
+!unknown-pinvoke! asl_log bound
+!unknown-pinvoke! asl_new bound
+!unknown-pinvoke! asl_open bound
+!unknown-pinvoke! asl_open_from_file bound
+!unknown-pinvoke! asl_remove_log_file bound
+!unknown-pinvoke! asl_search bound
+!unknown-pinvoke! asl_send bound
+!unknown-pinvoke! asl_set bound
+!unknown-pinvoke! asl_set_filter bound
+!unknown-pinvoke! asl_set_query bound
+!unknown-pinvoke! asl_unset bound
+!unknown-pinvoke! aslresponse_free bound
+!unknown-pinvoke! aslresponse_next bound
+
+## used in src/Darwin/KernelNotification.cs
+!unknown-pinvoke! kevent bound
+!unknown-pinvoke! kqueue bound

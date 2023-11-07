@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Views\RazorView.cs">
+      <DependentUpon>RazorView.cshtml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Views\RazorView.cs</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Views\RazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyDocumentPickerExtension\MyDocumentPickerExtension.dotnet.csproj">
+      <Name>MyDocumentPickerExtension</Name>
+      <IsAppExtension>True</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Info.plist" />
+    <None Update="Info-dotnet.plist" Link="Info.plist" />
+  </ItemGroup>
+</Project>

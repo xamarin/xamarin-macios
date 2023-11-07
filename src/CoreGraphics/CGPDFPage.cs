@@ -25,45 +25,41 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
+using CoreFoundation;
 using ObjCRuntime;
-using Foundation;
+using System.Runtime.Versioning;
 
 namespace CoreGraphics {
 
-	// CGPDFPage.h
-	public partial class CGPDFPage : INativeObject, IDisposable {
-		internal IntPtr handle;
-		
-		~CGPDFPage ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
 
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	// CGPDFPage.h
+	public partial class CGPDFPage : NativeObject {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPDFPageRef */ IntPtr CGPDFPageRetain (/* CGPDFPageRef */ IntPtr page);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFPageRelease (/* CGPDFPageRef */ IntPtr page);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected internal override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGPDFPageRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CGPDFPageRetain (GetCheckedHandle ());
+		}
+
+		protected internal override void Release ()
+		{
+			CGPDFPageRelease (GetCheckedHandle ());
 		}
 	}
 }

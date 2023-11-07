@@ -6,10 +6,25 @@
 //
 // Copyright 2015 Xamarin, Inc.
 
-
 using System;
+using System.ComponentModel;
+
+using ObjCRuntime;
 
 namespace Foundation {
+
+#if !NET
+#if MONOMAC
+	public partial class NSError {
+
+		// removed in Xcode 11 GM
+		[Obsolete ("This API has been removed.")]
+		public static NSError GetFileProviderErrorForOutOfDateItem (FileProvider.INSFileProviderItem updatedVersion)
+		{
+			return null;
+		}
+	}
+#endif
 
 #if !XAMCORE_3_0
 	public partial class NSOperation {
@@ -30,18 +45,32 @@ namespace Foundation {
 	}
 #endif
 
-#if !XAMCORE_4_0 && (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 	public partial class NSUserActivity {
 
 		[Obsolete ("Use the constructor that allows you to set an activity type.")]
 		public NSUserActivity ()
-#if XAMCORE_2_0
 			: this (String.Empty)
-#else
-			: this (NSString.Empty)
-#endif
 		{
 		}
 	}
 #endif
+#endif // !NET
+
+#if !XAMCORE_5_0
+#if __IOS__ && !__MACCATALYST__
+	public partial class NSUrlConnection {
+		// Extension from iOS5, NewsstandKit
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("The NewsstandKit framework has been removed from iOS.")]
+		public virtual global::NewsstandKit.NKAssetDownload NewsstandAssetDownload {
+			get {
+				throw new InvalidOperationException (Constants.NewsstandKitRemoved);
+			}
+		}
+
+	}
+#endif // __IOS__
+#endif // !XAMCORE_5_0
 }
+

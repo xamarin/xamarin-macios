@@ -23,147 +23,58 @@
 //
 using Foundation;
 using ObjCRuntime;
-using AudioToolbox;
 using System;
+using System.Runtime.InteropServices;
+
+#nullable enable
 
 namespace AVFoundation {
-#if !XAMCORE_2_0
-	[Advice ("Use 'AudioSettings' instead.")]
-	public class AVAudioPlayerSettings {
-		NSDictionary dict;
-		
-		internal AVAudioPlayerSettings (NSDictionary dictionary)
-		{
-			dict = dictionary;
-		}
-
-		public AudioChannelLayout AudioChannelLayout {
-			get {
-				var data = dict.ObjectForKey (AVAudioSettings.AVChannelLayoutKey) as NSData;
-				if (data == null)
-					return new AudioChannelLayout ();
-				return AudioChannelLayout.FromHandle (data.Bytes);
-			}
-		}
-
-		public int EncoderBitRateKey {
-			get {
-				var rate = dict.ObjectForKey (AVAudioSettings.AVEncoderBitRateKey) as NSNumber;
-				return rate == null ? 0 : rate.Int32Value;
-			}
-		}
-
-		public AudioFormatType AudioFormat {
-			get {
-				var ft = dict.ObjectForKey (AVAudioSettings.AVFormatIDKey) as NSNumber;
-				return (AudioFormatType) (ft == null ? -1 : ft.Int32Value);
-			}
-		}
-
-		public int NumberChannels {
-			get {
-				var n =  dict.ObjectForKey (AVAudioSettings.AVNumberOfChannelsKey) as NSNumber;
-				return n == null ? 1 : n.Int32Value;
-			}
-		}
-
-		public float SampleRate {
-			get {
-				var r = dict.ObjectForKey (AVAudioSettings.AVSampleRateKey) as NSNumber;
-				return r == null ? 0 : r.FloatValue;
-			}
-		}
-		
-		public static implicit operator NSDictionary (AVAudioPlayerSettings settings)
-		{
-			return settings.dict;
-		}
-	}
-#endif
-
 #if !WATCH
 	public partial class AVAudioPlayer {
 
-		public static AVAudioPlayer FromUrl (NSUrl url, out NSError error)
+		[DllImport (Constants.ObjectiveCLibrary, EntryPoint = "objc_msgSend")]
+		unsafe static extern IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr* arg2);
+
+		public static AVAudioPlayer? FromUrl (NSUrl url, out NSError? error)
 		{
+			error = null;
+			IntPtr url__handle__ = url!.GetNonNullHandle (nameof (url));
+			IntPtr handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
+			IntPtr errorptr = IntPtr.Zero;
+			if (handle == IntPtr.Zero)
+				return null;
 			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ap = new AVAudioPlayer (url, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero){
-					error = (NSError) Runtime.GetNSObject (errhandle);
-					return null;
-				} else
-					error = null;
-				return ap;
+				handle = objc_msgSend (handle, Selector.GetHandle ("initWithContentsOfURL:error:"), url__handle__, &errorptr);
 			}
+			error = Runtime.GetNSObject<NSError> (errorptr);
+			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
 		}
 
-		public static AVAudioPlayer FromUrl (NSUrl url)
+		public static AVAudioPlayer? FromUrl (NSUrl url)
 		{
+			return FromUrl (url, out _);
+		}
+
+		public static AVAudioPlayer? FromData (NSData data, out NSError? error)
+		{
+			error = null;
+			IntPtr data__handle__ = data!.GetNonNullHandle (nameof (data));
+			IntPtr errorptr = IntPtr.Zero;
+			IntPtr handle = Messaging.IntPtr_objc_msgSend (class_ptr, Selector.GetHandle ("alloc"));
+
+			if (handle == IntPtr.Zero)
+				return null;
 			unsafe {
-				var ap = new AVAudioPlayer (url, IntPtr.Zero);
-				if (ap.Handle == IntPtr.Zero)
-					return null;
-
-				return ap;
+				handle = objc_msgSend (handle, Selector.GetHandle ("initWithData:error:"), data__handle__, &errorptr);
 			}
+			error = Runtime.GetNSObject<NSError> (errorptr);
+			return Runtime.GetNSObject<AVAudioPlayer> (handle, owns: true);
 		}
 
-		public static AVAudioPlayer FromData (NSData data, out NSError error)
+		public static AVAudioPlayer? FromData (NSData data)
 		{
-			unsafe {
-				IntPtr errhandle;
-				IntPtr ptrtohandle = (IntPtr) (&errhandle);
-
-				var ap = new AVAudioPlayer (data, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero){
-					error = (NSError) Runtime.GetNSObject (errhandle);
-					return null;
-				} else
-					error = null;
-				return ap;
-			}
+			return FromData (data, out _);
 		}
-
-		public static AVAudioPlayer FromData (NSData data)
-		{
-			unsafe {
-				var ap = new AVAudioPlayer (data, IntPtr.Zero);
-				if (ap.Handle == IntPtr.Zero)
-					return null;
-
-				return ap;
-			}
-		}
-
-#if !XAMCORE_2_0
-		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use 'AVAudioPlayer.FromUrl' instead.")]
-		public AVAudioPlayer (NSUrl url, NSError error) : this (url, IntPtr.Zero)
-		{
-			
-		}
-
-		[Obsolete ("This method had an invalid signature in MonoMac 1.0.3, use 'AVAudioPlayer.FromData' instead.")]
-		public AVAudioPlayer (NSData data, NSError error) : this (data, IntPtr.Zero)
-		{
-			
-		}
-
-		[Advice ("Use SoundSettings")]
-		public AVAudioPlayerSettings Settings {
-			get {
-				return new AVAudioPlayerSettings (WeakSettings);
-			}
-		}
-
-		[Advice ("This method was incorrectly named, use 'PlayAtTime' instead.")]
-		public bool PlayAtTimetime (double time)
-		{
-			return PlayAtTime (time);
-		}
-#endif
 	}
 #endif // !WATCH
 }

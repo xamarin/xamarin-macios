@@ -1,0 +1,346 @@
+!extra-enum-value! Managed value 0 for MTLFeatureSet.iOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 1 for MTLFeatureSet.iOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 2 for MTLFeatureSet.iOS_GPUFamily1_v2 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 3 for MTLFeatureSet.iOS_GPUFamily2_v2 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 30000 for MTLFeatureSet.tvOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 4 for MTLFeatureSet.iOS_GPUFamily3_v1 is available for the current platform while the value in the native header is not
+!missing-enum! MTLAccelerationStructureRefitOptions not bound
+!missing-enum! MTLBindingType not bound
+!missing-enum! MTLIOCommandQueueType not bound
+!missing-enum! MTLIOCompressionMethod not bound
+!missing-enum! MTLIOCompressionStatus not bound
+!missing-enum! MTLIOError not bound
+!missing-enum! MTLIOPriority not bound
+!missing-enum! MTLIOStatus not bound
+!missing-enum! MTLLibraryOptimizationLevel not bound
+!missing-enum! MTLSparsePageSize not bound
+!missing-enum! MTLTextureCompressionType not bound
+!missing-enum-value! MTLBinaryArchiveError native value MTLBinaryArchiveErrorInternalError = 4 not bound
+!missing-enum-value! MTLFunctionType native value MTLFunctionTypeMesh = 7 not bound
+!missing-enum-value! MTLFunctionType native value MTLFunctionTypeObject = 8 not bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple8 = 1008 not bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyMetal3 = 5001 not bound
+!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion3_0 = 196608 not bound
+!missing-enum-value! MTLRenderStages native value MTLRenderStageMesh = 16 not bound
+!missing-enum-value! MTLRenderStages native value MTLRenderStageObject = 8 not bound
+!missing-field! MTLIOErrorDomain not bound
+!missing-pinvoke! MTLIOCompressionContextAppendData is not bound
+!missing-pinvoke! MTLIOCreateCompressionContext is not bound
+!missing-pinvoke! MTLIOFlushAndDestroyCompressionContext is not bound
+!missing-protocol! MTLBinding not bound
+!missing-protocol! MTLBufferBinding not bound
+!missing-protocol! MTLIOCommandBuffer not bound
+!missing-protocol! MTLIOCommandQueue not bound
+!missing-protocol! MTLIOFileHandle not bound
+!missing-protocol! MTLIOScratchBuffer not bound
+!missing-protocol! MTLIOScratchBufferAllocator not bound
+!missing-protocol! MTLObjectPayloadBinding not bound
+!missing-protocol! MTLTextureBinding not bound
+!missing-protocol! MTLThreadgroupBinding not bound
+!missing-protocol-member! MTLAccelerationStructure::gpuResourceID not found
+!missing-protocol-member! MTLAccelerationStructureCommandEncoder::refitAccelerationStructure:descriptor:destination:scratchBuffer:scratchBufferOffset:options: not found
+!missing-protocol-member! MTLBuffer::gpuAddress not found
+!missing-protocol-member! MTLCommandBuffer::accelerationStructureCommandEncoderWithDescriptor: not found
+!missing-protocol-member! MTLComputePipelineState::gpuResourceID not found
+!missing-protocol-member! MTLDevice::heapAccelerationStructureSizeAndAlignWithDescriptor: not found
+!missing-protocol-member! MTLDevice::heapAccelerationStructureSizeAndAlignWithSize: not found
+!missing-protocol-member! MTLDevice::newArgumentEncoderWithBufferBinding: not found
+!missing-protocol-member! MTLDevice::newIOCommandQueueWithDescriptor:error: not found
+!missing-protocol-member! MTLDevice::newIOHandleWithURL:compressionMethod:error: not found
+!missing-protocol-member! MTLDevice::newIOHandleWithURL:error: not found
+!missing-protocol-member! MTLDevice::newRenderPipelineStateWithMeshDescriptor:options:completionHandler: not found
+!missing-protocol-member! MTLDevice::newRenderPipelineStateWithMeshDescriptor:options:reflection:error: not found
+!missing-protocol-member! MTLDevice::sparseTileSizeInBytesForSparsePageSize: not found
+!missing-protocol-member! MTLDevice::sparseTileSizeWithTextureType:pixelFormat:sampleCount:sparsePageSize: not found
+!missing-protocol-member! MTLHeap::newAccelerationStructureWithDescriptor: not found
+!missing-protocol-member! MTLHeap::newAccelerationStructureWithDescriptor:offset: not found
+!missing-protocol-member! MTLHeap::newAccelerationStructureWithSize: not found
+!missing-protocol-member! MTLHeap::newAccelerationStructureWithSize:offset: not found
+!missing-protocol-member! MTLIndirectCommandBuffer::gpuResourceID not found
+!missing-protocol-member! MTLIntersectionFunctionTable::gpuResourceID not found
+!missing-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLRenderCommandEncoder::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshBuffer:offset:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshBufferOffset:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshBuffers:offsets:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshBytes:length:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshSamplerState:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshSamplerState:lodMinClamp:lodMaxClamp:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshSamplerStates:lodMinClamps:lodMaxClamps:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshSamplerStates:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshTexture:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setMeshTextures:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectBuffer:offset:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectBufferOffset:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectBuffers:offsets:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectBytes:length:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectSamplerState:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectSamplerState:lodMinClamp:lodMaxClamp:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectSamplerStates:lodMinClamps:lodMaxClamps:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectSamplerStates:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectTexture:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectTextures:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setObjectThreadgroupMemoryLength:atIndex: not found
+!missing-protocol-member! MTLRenderPipelineState::gpuResourceID not found
+!missing-protocol-member! MTLRenderPipelineState::maxTotalThreadgroupsPerMeshGrid not found
+!missing-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerMeshThreadgroup not found
+!missing-protocol-member! MTLRenderPipelineState::maxTotalThreadsPerObjectThreadgroup not found
+!missing-protocol-member! MTLRenderPipelineState::meshThreadExecutionWidth not found
+!missing-protocol-member! MTLRenderPipelineState::objectThreadExecutionWidth not found
+!missing-protocol-member! MTLSamplerState::gpuResourceID not found
+!missing-protocol-member! MTLTexture::compressionType not found
+!missing-protocol-member! MTLTexture::gpuResourceID not found
+!missing-protocol-member! MTLVisibleFunctionTable::gpuResourceID not found
+!missing-selector! +MTLAccelerationStructurePassDescriptor::accelerationStructurePassDescriptor not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::primitiveDataBuffer not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::primitiveDataBufferOffset not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::primitiveDataElementSize not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::primitiveDataStride not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::setPrimitiveDataBuffer: not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::setPrimitiveDataBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::setPrimitiveDataElementSize: not bound
+!missing-selector! MTLAccelerationStructureGeometryDescriptor::setPrimitiveDataStride: not bound
+!missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::setTransformationMatrixBuffer: not bound
+!missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::setTransformationMatrixBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::setVertexFormat: not bound
+!missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::transformationMatrixBuffer not bound
+!missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::transformationMatrixBufferOffset not bound
+!missing-selector! MTLAccelerationStructureMotionTriangleGeometryDescriptor::vertexFormat not bound
+!missing-selector! MTLAccelerationStructurePassDescriptor::sampleBufferAttachments not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor::endOfEncoderSampleIndex not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor::sampleBuffer not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor::setEndOfEncoderSampleIndex: not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor::setSampleBuffer: not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor::setStartOfEncoderSampleIndex: not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor::startOfEncoderSampleIndex not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray::objectAtIndexedSubscript: not bound
+!missing-selector! MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray::setObject:atIndexedSubscript: not bound
+!missing-selector! MTLAccelerationStructureTriangleGeometryDescriptor::setTransformationMatrixBuffer: not bound
+!missing-selector! MTLAccelerationStructureTriangleGeometryDescriptor::setTransformationMatrixBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureTriangleGeometryDescriptor::setVertexFormat: not bound
+!missing-selector! MTLAccelerationStructureTriangleGeometryDescriptor::transformationMatrixBuffer not bound
+!missing-selector! MTLAccelerationStructureTriangleGeometryDescriptor::transformationMatrixBufferOffset not bound
+!missing-selector! MTLAccelerationStructureTriangleGeometryDescriptor::vertexFormat not bound
+!missing-selector! MTLCompileOptions::optimizationLevel not bound
+!missing-selector! MTLCompileOptions::setOptimizationLevel: not bound
+!missing-selector! MTLComputePipelineReflection::bindings not bound
+!missing-selector! MTLHeapDescriptor::setSparsePageSize: not bound
+!missing-selector! MTLHeapDescriptor::sparsePageSize not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setSupportRayTracing: not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::supportRayTracing not bound
+!missing-selector! MTLIOCommandQueueDescriptor::maxCommandBufferCount not bound
+!missing-selector! MTLIOCommandQueueDescriptor::maxCommandsInFlight not bound
+!missing-selector! MTLIOCommandQueueDescriptor::priority not bound
+!missing-selector! MTLIOCommandQueueDescriptor::scratchBufferAllocator not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandBufferCount: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandsInFlight: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setPriority: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setScratchBufferAllocator: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setType: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::type not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::colorAttachments not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::depthAttachmentPixelFormat not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::fragmentBuffers not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::fragmentFunction not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::isAlphaToCoverageEnabled not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::isAlphaToOneEnabled not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::isRasterizationEnabled not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::label not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::maxTotalThreadgroupsPerMeshGrid not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::maxTotalThreadsPerMeshThreadgroup not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::maxTotalThreadsPerObjectThreadgroup not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::maxVertexAmplificationCount not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::meshBuffers not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::meshFunction not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::meshThreadgroupSizeIsMultipleOfThreadExecutionWidth not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::objectBuffers not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::objectFunction not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::objectThreadgroupSizeIsMultipleOfThreadExecutionWidth not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::payloadMemoryLength not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::rasterSampleCount not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::reset not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setAlphaToCoverageEnabled: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setAlphaToOneEnabled: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setDepthAttachmentPixelFormat: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setFragmentFunction: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setLabel: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMaxTotalThreadgroupsPerMeshGrid: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMaxTotalThreadsPerMeshThreadgroup: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMaxTotalThreadsPerObjectThreadgroup: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMaxVertexAmplificationCount: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMeshFunction: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMeshThreadgroupSizeIsMultipleOfThreadExecutionWidth: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setObjectFunction: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setObjectThreadgroupSizeIsMultipleOfThreadExecutionWidth: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setPayloadMemoryLength: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setRasterizationEnabled: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setRasterSampleCount: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setStencilAttachmentPixelFormat: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::stencilAttachmentPixelFormat not bound
+!missing-selector! MTLRenderPipelineReflection::fragmentBindings not bound
+!missing-selector! MTLRenderPipelineReflection::meshBindings not bound
+!missing-selector! MTLRenderPipelineReflection::objectBindings not bound
+!missing-selector! MTLRenderPipelineReflection::tileBindings not bound
+!missing-selector! MTLRenderPipelineReflection::vertexBindings not bound
+!missing-selector! MTLTextureDescriptor::compressionType not bound
+!missing-selector! MTLTextureDescriptor::setCompressionType: not bound
+!missing-type! MTLAccelerationStructurePassDescriptor not bound
+!missing-type! MTLAccelerationStructurePassSampleBufferAttachmentDescriptor not bound
+!missing-type! MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray not bound
+!missing-type! MTLIOCommandQueueDescriptor not bound
+!missing-type! MTLMeshRenderPipelineDescriptor not bound
+!missing-pinvoke! MTLIOCompressionContextDefaultChunkSize is not bound
+!missing-protocol-member! MTLResourceStateCommandEncoder::moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin: not found
+!missing-enum! MTLCompileSymbolVisibility not bound
+!missing-selector! MTLCompileOptions::allowReferencingUndefinedSymbols not bound
+!missing-selector! MTLCompileOptions::compileSymbolVisibility not bound
+!missing-selector! MTLCompileOptions::maxTotalThreadsPerThreadgroup not bound
+!missing-selector! MTLCompileOptions::setAllowReferencingUndefinedSymbols: not bound
+!missing-selector! MTLCompileOptions::setCompileSymbolVisibility: not bound
+!missing-selector! MTLCompileOptions::setMaxTotalThreadsPerThreadgroup: not bound
+!missing-protocol-member! MTLDevice::maximumConcurrentCompilationTaskCount not found
+!missing-protocol-member! MTLDevice::setShouldMaximizeConcurrentCompilation: not found
+!missing-protocol-member! MTLDevice::shouldMaximizeConcurrentCompilation not found
+!missing-enum! MTLBindingAccess not bound
+!missing-enum! MTLCurveBasis not bound
+!missing-enum! MTLCurveEndCaps not bound
+!missing-enum! MTLCurveType not bound
+!missing-enum-value! MTLAccelerationStructureInstanceDescriptorType native value MTLAccelerationStructureInstanceDescriptorTypeIndirect = 3 not bound
+!missing-enum-value! MTLAccelerationStructureInstanceDescriptorType native value MTLAccelerationStructureInstanceDescriptorTypeIndirectMotion = 4 not bound
+!missing-enum-value! MTLAttributeFormat native value MTLAttributeFormatFloatRG11B10 = 54 not bound
+!missing-enum-value! MTLAttributeFormat native value MTLAttributeFormatFloatRGB9E5 = 55 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeBFloat = 121 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeBFloat2 = 122 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeBFloat3 = 123 not bound
+!missing-enum-value! MTLDataType native value MTLDataTypeBFloat4 = 124 not bound
+!missing-enum-value! MTLFunctionOptions native value MTLFunctionOptionStoreFunctionInMetalScript = 2 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureCurveData = 128 not bound
+!missing-enum-value! MTLIntersectionFunctionSignature native value MTLIntersectionFunctionSignatureMaxLevels = 64 not bound
+!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion3_1 = 196609 not bound
+!missing-enum-value! MTLTextureUsage native value MTLTextureUsageShaderAtomic = 32 not bound
+!missing-enum-value! MTLVertexFormat native value MTLVertexFormatFloatRG11B10 = 54 not bound
+!missing-enum-value! MTLVertexFormat native value MTLVertexFormatFloatRGB9E5 = 55 not bound
+!missing-protocol-member! MTLComputeCommandEncoder::setBuffer:offset:attributeStride:atIndex: not found
+!missing-protocol-member! MTLComputeCommandEncoder::setBufferOffset:attributeStride:atIndex: not found
+!missing-protocol-member! MTLComputeCommandEncoder::setBuffers:offsets:attributeStrides:withRange: not found
+!missing-protocol-member! MTLComputeCommandEncoder::setBytes:length:attributeStride:atIndex: not found
+!missing-protocol-member! MTLDevice::architecture not found
+!missing-protocol-member! MTLDevice::newIOFileHandleWithURL:compressionMethod:error: not found
+!missing-protocol-member! MTLDevice::newIOFileHandleWithURL:error: not found
+!missing-protocol-member! MTLIndirectComputeCommand::setKernelBuffer:offset:attributeStride:atIndex: not found
+!missing-protocol-member! MTLIndirectRenderCommand::setVertexBuffer:offset:attributeStride:atIndex: not found
+!missing-protocol-member! MTLIntersectionFunctionTable::setOpaqueCurveIntersectionFunctionWithSignature:atIndex: not found
+!missing-protocol-member! MTLIntersectionFunctionTable::setOpaqueCurveIntersectionFunctionWithSignature:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setVertexBuffer:offset:attributeStride:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setVertexBufferOffset:attributeStride:atIndex: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setVertexBuffers:offsets:attributeStrides:withRange: not found
+!missing-protocol-member! MTLRenderCommandEncoder::setVertexBytes:length:attributeStride:atIndex: not found
+!missing-selector! +MTLAccelerationStructureCurveGeometryDescriptor::descriptor not bound
+!missing-selector! +MTLAccelerationStructureMotionCurveGeometryDescriptor::descriptor not bound
+!missing-selector! +MTLIndirectInstanceAccelerationStructureDescriptor::descriptor not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::controlPointBuffer not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::controlPointBufferOffset not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::controlPointCount not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::controlPointFormat not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::controlPointStride not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::curveBasis not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::curveEndCaps not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::curveType not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::indexBuffer not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::indexBufferOffset not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::indexType not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::radiusBuffer not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::radiusBufferOffset not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::radiusFormat not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::radiusStride not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::segmentControlPointCount not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::segmentCount not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setControlPointBuffer: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setControlPointBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setControlPointCount: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setControlPointFormat: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setControlPointStride: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setCurveBasis: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setCurveEndCaps: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setCurveType: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setIndexBuffer: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setIndexBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setIndexType: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setRadiusBuffer: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setRadiusBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setRadiusFormat: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setRadiusStride: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setSegmentControlPointCount: not bound
+!missing-selector! MTLAccelerationStructureCurveGeometryDescriptor::setSegmentCount: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::controlPointBuffers not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::controlPointCount not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::controlPointFormat not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::controlPointStride not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::curveBasis not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::curveEndCaps not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::curveType not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::indexBuffer not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::indexBufferOffset not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::indexType not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::radiusBuffers not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::radiusFormat not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::radiusStride not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::segmentControlPointCount not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::segmentCount not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setControlPointBuffers: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setControlPointCount: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setControlPointFormat: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setControlPointStride: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setCurveBasis: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setCurveEndCaps: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setCurveType: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setIndexBuffer: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setIndexBufferOffset: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setIndexType: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setRadiusBuffers: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setRadiusFormat: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setRadiusStride: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setSegmentControlPointCount: not bound
+!missing-selector! MTLAccelerationStructureMotionCurveGeometryDescriptor::setSegmentCount: not bound
+!missing-selector! MTLArchitecture::name not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::maxKernelThreadgroupMemoryBindCount not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setMaxKernelThreadgroupMemoryBindCount: not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::setSupportDynamicAttributeStride: not bound
+!missing-selector! MTLIndirectCommandBufferDescriptor::supportDynamicAttributeStride not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::instanceCountBuffer not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::instanceCountBufferOffset not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::instanceDescriptorBuffer not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::instanceDescriptorBufferOffset not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::instanceDescriptorStride not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::instanceDescriptorType not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::maxInstanceCount not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::maxMotionTransformCount not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::motionTransformBuffer not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::motionTransformBufferOffset not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::motionTransformCountBuffer not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::motionTransformCountBufferOffset not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setInstanceCountBuffer: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setInstanceCountBufferOffset: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setInstanceDescriptorBuffer: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setInstanceDescriptorBufferOffset: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setInstanceDescriptorStride: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setInstanceDescriptorType: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setMaxInstanceCount: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setMaxMotionTransformCount: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setMotionTransformBuffer: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setMotionTransformBufferOffset: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setMotionTransformCountBuffer: not bound
+!missing-selector! MTLIndirectInstanceAccelerationStructureDescriptor::setMotionTransformCountBufferOffset: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::fragmentLinkedFunctions not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::meshLinkedFunctions not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::objectLinkedFunctions not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setFragmentLinkedFunctions: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setMeshLinkedFunctions: not bound
+!missing-selector! MTLMeshRenderPipelineDescriptor::setObjectLinkedFunctions: not bound
+!missing-type! MTLAccelerationStructureCurveGeometryDescriptor not bound
+!missing-type! MTLAccelerationStructureMotionCurveGeometryDescriptor not bound
+!missing-type! MTLArchitecture not bound
+!missing-type! MTLIndirectInstanceAccelerationStructureDescriptor not bound
+!unknown-native-enum! MTLArgumentAccess bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyApple9 = 1009 not bound

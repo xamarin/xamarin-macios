@@ -4,16 +4,11 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using MediaPlayer;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaPlayer {
 
@@ -24,22 +19,21 @@ namespace MonoTouchFixtures.MediaPlayer {
 		[Test]
 		public void DefaultValues ()
 		{
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Inconclusive ("This test only works on device (the simulator does not have an iPod Music library).");
+			TestRuntime.AssertDevice ();
 
 			TestRuntime.RequestMediaLibraryPermission (true);
 
 			using (var q = new MPMediaQuery ()) {
 				var items = q.Items;
-				if (items == null)
+				if (items is null)
 					Assert.Inconclusive ("This test needs media library privacy permission to be executed.");
 				if (items.Length == 0)
 					Assert.Inconclusive ("This test needs music in the music library on the device.");
 
 				var six_dot_oh = true;
-				var nine_dot_two = TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 2);
-				var ten_dot_oh = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0);
-				var ten_dot_three = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 3);
+				var nine_dot_two = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 2);
+				var ten_dot_oh = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 0);
+				var ten_dot_three = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 3);
 
 				foreach (var i in items) {
 					object dummy;
