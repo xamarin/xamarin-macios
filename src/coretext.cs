@@ -356,8 +356,8 @@ namespace CoreText {
 	[StrongDictionary ("CTFontDescriptorMatchingKeys")]
 	interface CTFontDescriptorMatchingProgress {
 		CTFontDescriptor SourceDescriptor { get; }
-		CTFontDescriptor[] Descriptors { get; }
-		CTFontDescriptor[] Result { get; }
+		CTFontDescriptor [] Descriptors { get; }
+		CTFontDescriptor [] Result { get; }
 		double Percentage { get; }
 		long CurrentAssetSize { get; }
 		long TotalDownloadedSize { get; }
