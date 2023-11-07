@@ -133,13 +133,21 @@ jobs:
   # download msbuild.zip and bundle.zip to the 'package' dir, so that they're uploaded into the 'package' artifact,
   # since we later depend on these files being there later.
   - task: DownloadPipelineArtifact@2
-    displayName: Add msbuild.zip and bundle.zip to the package artifact
+    displayName: Download msbuild.zip and bundle.zip
     inputs:
       patterns: |
         not-signed-package/msbuild.zip
         not-signed-package/bundle.zip
       allowFailedBuilds: true
-      path: $(Build.SourcesDirectory)/package
+      path: $(Build.SourcesDirectory)/not-signed-package
+
+  - bash: |
+      set -x
+      set -e
+      cp "$BUILD_SOURCESDIRECTORY"/not-signed-package/*.zip "$BUILD_SOURCESDIRECTORY"/package
+      ls -la "$BUILD_SOURCESDIRECTORY"/not-signed-package
+      ls -la "$BUILD_SOURCESDIRECTORY"/package
+    displayName: Copy msbuild.zip and bundle.zip to the package artifact
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Build Artifacts (notarized)'
