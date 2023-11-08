@@ -153,6 +153,7 @@ stages:
       # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
       XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+      DOTNET_PLATFORMS: $[ dependencies.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
       ${{ if eq(parameters.testPool, '') }}:
         AgentPoolComputed: $(PRBuildPool)
       ${{ else }}:
