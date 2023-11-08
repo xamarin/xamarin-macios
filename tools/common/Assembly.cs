@@ -157,44 +157,6 @@ namespace Xamarin.Bundler {
 			if (!assembly.HasCustomAttributes)
 				return;
 
-			string resourceBundlePath = Path.ChangeExtension (FullPath, ".resources");
-			if (!Directory.Exists (resourceBundlePath)) {
-				var zipPath = resourceBundlePath + ".zip";
-				if (File.Exists (zipPath)) {
-					var path = Path.Combine (App.Cache.Location, Path.GetFileName (resourceBundlePath));
-					if (Driver.RunCommand ("/usr/bin/unzip", "-u", "-o", "-d", path, zipPath) != 0)
-						throw ErrorHelper.CreateError (1306, Errors.MX1306 /* Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command. */, zipPath);
-					resourceBundlePath = path;
-				}
-			}
-			string manifestPath = Path.Combine (resourceBundlePath, "manifest");
-			if (File.Exists (manifestPath)) {
-				foreach (NativeReferenceMetadata metadata in ReadManifest (manifestPath)) {
-					LogNativeReference (metadata);
-					ProcessNativeReferenceOptions (metadata);
-
-					switch (Path.GetExtension (metadata.LibraryName).ToLowerInvariant ()) {
-					case ".framework":
-						AssertiOSVersionSupportsUserFrameworks (metadata.LibraryName);
-						Frameworks.Add (metadata.LibraryName);
-#if MMP // HACK - MMP currently doesn't respect Frameworks on non-App - https://github.com/xamarin/xamarin-macios/issues/5203
-						App.Frameworks.Add (metadata.LibraryName);
-#endif
-						break;
-					case ".xcframework":
-						// this is resolved, at msbuild time, into a framework
-						// but we must ignore it here (can't be the `default` case)
-						break;
-					default:
-#if MMP // HACK - MMP currently doesn't respect LinkWith - https://github.com/xamarin/xamarin-macios/issues/5203
-						Driver.native_references.Add (metadata.LibraryName);
-#endif
-						LinkWith.Add (metadata.LibraryName);
-						break;
-					}
-				}
-			}
-
 			ProcessLinkWithAttributes (assembly);
 
 			// Make sure there are no duplicates between frameworks and weak frameworks.
