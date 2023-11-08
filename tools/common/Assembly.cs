@@ -157,6 +157,17 @@ namespace Xamarin.Bundler {
 			if (!assembly.HasCustomAttributes)
 				return;
 
+			string resourceBundlePath = Path.ChangeExtension (FullPath, ".resources");
+			if (Directory.Exists (resourceBundlePath)) {
+				Driver.Log (3, $"Found a binding resource package for the assembly '{FullPath}' in {resourceBundlePath}, so not looking for any libraries embedded in the assembly.");
+				return;
+			}
+			var zipPath = resourceBundlePath + ".zip";
+			if (File.Exists (zipPath)) {
+				Driver.Log (3, $"Found a binding resource package for the assembly '{FullPath}' in {zipPath}, so not looking for any libraries embedded in the assembly.");
+				return;
+			}
+
 			ProcessLinkWithAttributes (assembly);
 
 			// Make sure there are no duplicates between frameworks and weak frameworks.
