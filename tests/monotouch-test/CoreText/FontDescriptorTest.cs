@@ -79,7 +79,7 @@ namespace MonoTouchFixtures.CoreText {
 		public void MatchFontDescriptors ()
 		{
 			var fda1 = new CTFontDescriptorAttributes () {
-				Name = "Apple-Chancery",
+				Name = "Helvetica",
 			};
 			using var desc1 = new CTFontDescriptor (fda1);
 			var tcs = new TaskCompletionSource<bool> ();
