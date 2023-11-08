@@ -144,8 +144,8 @@ jobs:
   - bash: |
       set -x
       set -e
-      cp "$BUILD_SOURCESDIRECTORY"/not-signed-package/*.zip "$BUILD_SOURCESDIRECTORY"/package
       ls -la "$BUILD_SOURCESDIRECTORY"/not-signed-package
+      cp "$BUILD_SOURCESDIRECTORY"/not-signed-package/not-signed-package/*.zip "$BUILD_SOURCESDIRECTORY"/package
       ls -la "$BUILD_SOURCESDIRECTORY"/package
     displayName: Copy msbuild.zip and bundle.zip to the package artifact
 
