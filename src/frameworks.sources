@@ -1780,6 +1780,8 @@ UIKIT_SOURCES = \
 	UIKit/UITextAttributes.cs \
 	UIKit/UITextField.cs \
 	UIKit/UITextView.cs \
+	UIKit/UITraitChangeObservable.cs \
+	UIKit/UITraitOverrides.cs \
 	UIKit/UITraitCollection.cs \
 	UIKit/UIToolbar.cs \
 	UIKit/UIVibrancyEffect.cs \
