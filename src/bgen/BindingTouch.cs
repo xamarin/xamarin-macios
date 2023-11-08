@@ -68,11 +68,15 @@ public class BindingTouch : IDisposable {
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
-	public TypeManager? typeManager;
-	NamespaceManager? namespaceManager;
-	public TypeManager TypeManager => typeManager!;
 	public Frameworks? Frameworks;
-	public AttributeManager? AttributeManager;
+
+	AttributeManager? attributeManager;
+	public AttributeManager AttributeManager => attributeManager!;
+
+	TypeManager? typeManager;
+	public TypeManager TypeManager => typeManager!;
+
+	NamespaceManager? namespaceManager;
 	public NamespaceManager NamespaceManager => namespaceManager!;
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
@@ -480,7 +484,7 @@ public class BindingTouch : IDisposable {
 				return 1;
 			}
 
-			AttributeManager = new AttributeManager (this);
+			attributeManager ??= new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
