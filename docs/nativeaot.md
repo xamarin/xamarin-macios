@@ -6,9 +6,30 @@ tvOS, Mac Catalyst and macOS apps in .NET 8.
 NativeAOT may produce smaller and/or faster apps - or it may not. It's very
 important to test and profile to determine the results of enabling NativeAOT.
 
-However, our initial testing shows significant improvements both in size (up
+Our initial testing shows significant improvements both in size (up
 to 50% smaller) and startup (up to 50% faster). For more information about
 performance see [.NET 8 Performance Improvements in .NET MAUI][3].
+
+However, it is important to point out that NativeAOT requires trimming whole
+applications (using `<MtouchLink>Full</MtouchLink>`, which is enabled by
+default) and is much more restrictive and aggressive in removing code which is
+not AOT compatible. As a result, if the applications is using some AOT
+incompatible constructs (e.g. dynamically referencing code for which a
+dependency cannot be statically determined), NativeAOT compiler might remove
+them during build time, which can result in crashes at runtime. To warn users
+about when this can happen, trimming and AOT warnings are produced and they
+should not be neglected. Instead, all such warnings should be addressed, code
+adapted accordingly, and the application must be tested and profiled in this
+configuration. Only then it is safe to assume that the application is
+compatible with NativeAOT and should not cause any unexpected behaviour.
+
+Finally, there could be cases when fixing mentioned trimming and AOT warnings
+is not possible, i.e. warnings coming from referenced frameworks or
+third-party libraries. In such cases, `<MtouchLink>SdkOnly</MtouchLink>` can
+be specified on the project level and could help as a workaround. This affects
+the application size, but even in this mode NativeAOT tends to produce up to
+28% smaller applications compared to Mono showing a great potential of this
+new experimental feature.
 
 ## How to enable NativeAOT?
 
