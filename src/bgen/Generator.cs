@@ -819,7 +819,7 @@ public partial class Generator : IMemberGatherer {
 			return "&" + pi.Name + "Value";
 
 		if (pi.ParameterType.IsArray && pi.ParameterType.GetElementType ().IsValueType) {
-			return string.Format ("nsa_{0}", pi.Name);
+			return pi.Name;
 		}
 		if (HasBindAsAttribute (pi))
 			return string.Format ("nsb_{0}.GetHandle ()", pi.Name);
@@ -1738,7 +1738,6 @@ public partial class Generator : IMemberGatherer {
 			print ("{"); indent++;
 			string cast_a = "", cast_b = "";
 			bool use_temp_return;
-			bool try_finally;
 
 			GenerateArgumentChecks (mi, true);
 
@@ -1750,8 +1749,7 @@ public partial class Generator : IMemberGatherer {
 						  convs: out convs,
 						  disposes: out disposes,
 						  by_ref_processing: out by_ref_processing,
-						  by_ref_init: out by_ref_init,
-						  needsTryFinally: out try_finally); ;
+						  by_ref_init: out by_ref_init); ;
 
 			if (by_ref_init.Length > 0)
 				print (by_ref_init.ToString ());
@@ -3276,14 +3274,13 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, out bool needsTryFinally, PropertyInfo propInfo = null, bool castEnum = true)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null, bool castEnum = true)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
 		disposes = new StringBuilder ();
 		by_ref_processing = new StringBuilder ();
 		by_ref_init = new StringBuilder ();
-		needsTryFinally = false;
 
 		foreach (var pi in mi.GetParameters ()) {
 			var safe_name = pi.Name.GetSafeParamName ();
@@ -3337,10 +3334,9 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					if (etype.IsValueType) {
 						// pass the address of the pinned objects, make sure we do write a try/finally
-						needsTryFinally = true;
-						convs.AppendFormat ("var nsa_{0}Handle = GCHandle.Alloc ({1}, GCHandleType.Pinned);\n", pi.Name, pi.Name.GetSafeParamName ());
+						/*convs.AppendFormat ("var nsa_{0}Handle = GCHandle.Alloc ({1}, GCHandleType.Pinned);\n", pi.Name, pi.Name.GetSafeParamName ());
 						convs.AppendFormat ("IntPtr nsa_{0} = nsa_{0}Handle.AddrOfPinnedObject ();\n", pi.Name);
-						disposes.AppendFormat ("nsa_{0}Handle.Free ();\n", pi.Name);
+						disposes.AppendFormat ("nsa_{0}Handle.Free ();\n", pi.Name);*/
 					} else if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} is not null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
@@ -3567,8 +3563,7 @@ public partial class Generator : IMemberGatherer {
 
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
-		bool try_finally = false;
-		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing,  out var by_ref_init, out bool needsTryFinally, propInfo);
+		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing,  out var by_ref_init, propInfo);
 
 		var argsArray = args.ToString ();
 
@@ -3587,10 +3582,6 @@ public partial class Generator : IMemberGatherer {
 
 		if (convs.Length > 0)
 			print (sw, convs.ToString ());
-		if (try_finally) {
-			print ("try {");
-			indent++;
-		}
 
 		Inject<PreSnippetAttribute> (mi);
 		var align = AttributeManager.GetCustomAttribute<AlignAttribute> (mi);
@@ -3705,18 +3696,8 @@ public partial class Generator : IMemberGatherer {
 
 		Inject<PostSnippetAttribute> (mi);
 
-		if (disposes.Length > 0) {
-			if (try_finally) {
-				indent--;
-				print (sw, "} finally {");
-				indent++;
-			}
+		if (disposes.Length > 0)
 			print (sw, disposes.ToString ());
-			if (try_finally) {
-				indent--;
-				print (sw, "}");
-			}
-		}
 		if ((body_options & BodyOption.StoreRet) == BodyOption.StoreRet) {
 			// nothing to do
 		} else if ((body_options & BodyOption.CondStoreRet) == BodyOption.CondStoreRet) {
