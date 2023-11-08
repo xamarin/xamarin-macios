@@ -72,6 +72,9 @@
     <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="..\RuntimeTest.cs" />
     <Compile Include="..\CodeBehind.cs" />
     <Compile Include="..\Messaging.cs" />
