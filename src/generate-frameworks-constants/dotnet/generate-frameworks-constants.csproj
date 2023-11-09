@@ -14,6 +14,9 @@
     <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
