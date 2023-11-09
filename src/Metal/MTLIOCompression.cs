@@ -70,28 +70,39 @@ namespace Metal {
 
 			using var pathPtr = new TransientString (path);
 			var handle = MTLIOCreateCompressionContext (pathPtr, (long) type, chunkSize);
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero) {
 				return null;
+			}
 			return new MTLIOCompressionContext (handle, owns: true);
 		}
 
 		protected override void Dispose (bool disposing)
 		{
-			if (Handle != NativeHandle.Zero)
+			// only call th eparent if the user did not call FlushAndDestroy
+			if (disposing && Handle != NativeHandle.Zero && Owns) {
 				FlushAndDestroy ();
-			base.Dispose (disposing);
+			}
+			base.Dispose (false);
 		}
 
 		[DllImport (Constants.MetalLibrary)]
 		static extern long MTLIOFlushAndDestroyCompressionContext (IntPtr context);
 
-		public MTLIOCompressionStatus FlushAndDestroy ()
-			=> (MTLIOCompressionStatus) MTLIOFlushAndDestroyCompressionContext (GetCheckedHandle ());
+		public MTLIOCompressionStatus FlushAndDestroy () {
+			var result = (MTLIOCompressionStatus) MTLIOFlushAndDestroyCompressionContext (GetCheckedHandle ());
+#if NET
+			Class.ThrowOnInitFailure = false;
+			Handle = NativeHandle.Zero;
+#else
+			ClearHandle ();
+#endif
+			return result;
+		}
 
 		[DllImport (Constants.MetalLibrary)]
-		static extern nuint MTLIOCompressionContextDefaultChunkSize ();
+		static extern long MTLIOCompressionContextDefaultChunkSize ();
 
-		public static nuint DefaultChunkSize => MTLIOCompressionContextDefaultChunkSize ();
+		public static long DefaultChunkSize => MTLIOCompressionContextDefaultChunkSize ();
 
 	}
 }

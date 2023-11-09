@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using Foundation;
 using Metal;
@@ -7,6 +8,7 @@ using Metal;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
+	[Preserve (AllMembers = true)]
 	public class MTLIOCompressionContextTest {
 
 		string outputPath = string.Empty;
@@ -17,7 +19,7 @@ namespace MonoTouchFixtures.Metal {
 			var paths = NSSearchPath.GetDirectories (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User);
 
 			// Convert once
-			outputPath = Path.Combine (paths [0], $"monotouch-test-MTLIOCompressinoContextTest-output{System.Diagnostics.Process.GetCurrentProcess ().Id}");
+			outputPath = Path.Combine (paths [0], $"monotouch-test-MTLIOCompressinoContextTest-output{Process.GetCurrentProcess ().Id}");
 		}
 
 
@@ -39,7 +41,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			TestRuntime.AssertNotSimulator (); // metal api no supported on the sim
 											   // create and flush, test should simple pass, no need to asserts
-			using var compressIO = MTLIOCompressionContext.Create (outputPath, MTLIOCompressionMethod.Lzfse,
+			var compressIO = MTLIOCompressionContext.Create (outputPath, MTLIOCompressionMethod.Lzfse,
 				MTLIOCompressionContext.DefaultChunkSize);
 			Assert.NotNull (compressIO, "Null compress IO");
 			// add data
