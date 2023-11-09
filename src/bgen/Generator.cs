@@ -3349,7 +3349,11 @@ public partial class Generator : IMemberGatherer {
 					exceptions.Add (ErrorHelper.CreateError (1065, mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 				} else {
 					if (etype.IsValueType) {
-						if (numberOfFixedStatements > 0)
+						for (int i = 0; i < numberOfFixedStatements; i++)
+							convs.Append ("\t");
+						convs.AppendFormat ("if ({0}.Length > 0) {{\n", pi.Name);
+						numberOfFixedStatements++;
+						for (int i = 0; i < numberOfFixedStatements; i++)
 							convs.Append ("\t");
 						numberOfFixedStatements++;
 						convs.AppendFormat ("fixed ({0}* {1}Ptr = &{1}[0]) {{\n", pi.ParameterType.GetElementType ().Name, pi.Name);
@@ -3720,6 +3724,7 @@ public partial class Generator : IMemberGatherer {
 			indent--;
 			print (sw, "}");
 		}
+
 		if ((body_options & BodyOption.StoreRet) == BodyOption.StoreRet) {
 			// nothing to do
 		} else if ((body_options & BodyOption.CondStoreRet) == BodyOption.CondStoreRet) {
