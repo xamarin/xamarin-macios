@@ -142,13 +142,20 @@ steps:
     Write-Host "$Env:VIRTUAL_PATH"
     Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
 
-    Invoke-Expression `
-      "$execPath artifacts -s `"$maciosPath`" `
-      -a $Env:AZURE_STORAGE `
-      -c $Env:STORAGE_PASS `
-      -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`" `
-      -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`" `
-      -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`""
+    $execExpression = (
+                    "$execPath artifacts" +
+                    " -s `"$maciosPath`"" +
+                    " -a $Env:AZURE_STORAGE" +
+                    " -c $Env:STORAGE_PASS" +
+                    " -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`"" +
+                    " -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
+                    " -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`""
+                    )
+
+    Write-Host "Expression is:"
+    Write-Host $execExpression
+
+    Invoke-Expression $execExpression
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
