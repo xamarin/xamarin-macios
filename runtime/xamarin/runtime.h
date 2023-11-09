@@ -460,6 +460,10 @@ public:
 	} while (0)
 #endif
 
+void objc_release (id value);
+id objc_retain (id value);
+id objc_autorelease (id value);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
