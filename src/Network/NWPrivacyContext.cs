@@ -84,7 +84,7 @@ namespace Network {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_privacy_context_clear_proxies (OS_nw_privacy_context privacy_context);
@@ -95,7 +95,7 @@ namespace Network {
 		[SupportedOSPlatform ("ios17.0")]
 		[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-		[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
 		public void ClearProxies ()
 		{

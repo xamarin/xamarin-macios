@@ -24,9 +24,9 @@ namespace Network {
 	[SupportedOSPlatform ("ios17.0")]
 	[SupportedOSPlatform ("maccatalyst17.0")]
 #else
-	[Watch (10,0), TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 #endif
-	public class  NWProxyConfig: NativeObject {
+	public class NWProxyConfig : NativeObject {
 		[Preserve (Conditional = true)]
 #if NET
 		internal NWProxyConfig (NativeHandle handle, bool owns) : base (handle, owns) {}
@@ -50,7 +50,7 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static unsafe extern OS_nw_proxy_config nw_proxy_config_create_oblivious_http (OS_nw_relay_hop relay, /* sbyte* */IntPtr relay_resource_path, /* byte* */ IntPtr gateway_key_config, nuint gateway_key_config_length);
 
-		public static NWProxyConfig? CreateObliviousHttp (NWRelayHop hop, string relaysResourcePath, byte[] gatewayKeyConfig)
+		public static NWProxyConfig? CreateObliviousHttp (NWRelayHop hop, string relaysResourcePath, byte [] gatewayKeyConfig)
 		{
 			if (hop is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (hop));
@@ -77,7 +77,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_proxy_config nw_proxy_config_create_http_connect (OS_nw_endpoint proxy_endpoint, /* [NullAllowed] */ OS_nw_protocol_options proxy_tls_options);
 
-		public static NWProxyConfig? CreateHttpConnect (NWEndpoint proxyEndpoint, NWProtocolTlsOptions? options) {
+		public static NWProxyConfig? CreateHttpConnect (NWEndpoint proxyEndpoint, NWProtocolTlsOptions? options)
+		{
 			if (proxyEndpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxyEndpoint));
 
@@ -91,7 +92,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_proxy_config nw_proxy_config_create_socksv5 (OS_nw_endpoint proxy_endpoint);
 
-		public static NWProxyConfig? CreateSocksV5 (NWEndpoint endpoint) {
+		public static NWProxyConfig? CreateSocksV5 (NWEndpoint endpoint)
+		{
 			if (endpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			var handle = nw_proxy_config_create_socksv5 (endpoint!.GetCheckedHandle ());
@@ -103,7 +105,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_proxy_config_set_username_and_password (OS_nw_proxy_config proxy_config, /* sbyte* */ IntPtr username, /* sbyte* */ IntPtr password);
 
-		public void SetUsernameAndPassword (string username, string password) {
+		public void SetUsernameAndPassword (string username, string password)
+		{
 			if (username is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (username));
 			if (password is null)
@@ -128,7 +131,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_proxy_config_add_match_domain (OS_nw_proxy_config config, /* sbyte* */ IntPtr match_domain);
 
-		public void AddMatchDomain (string domain) {
+		public void AddMatchDomain (string domain)
+		{
 			if (domain is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (domain));
 			using var domainPtr = new TransientString (domain);
@@ -143,7 +147,8 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_proxy_config_add_excluded_domain (OS_nw_proxy_config config, /* sbyte* */ IntPtr excluded_domain);
 
-		public void AddExcludedDomain (string domain) {
+		public void AddExcludedDomain (string domain)
+		{
 			if (domain is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (domain));
 			using var domainPtr = new TransientString (domain);
@@ -155,7 +160,7 @@ namespace Network {
 
 		public void ClearExcludedDomains () => nw_proxy_config_clear_excluded_domains (GetCheckedHandle ());
 
-	
+
 		[DllImport (Constants.NetworkLibrary)]
 		static unsafe extern void nw_proxy_config_enumerate_match_domains (OS_nw_proxy_config config, /* nw_proxy_domain_enumerator_t */ BlockLiteral* enumerator);
 
@@ -224,7 +229,7 @@ namespace Network {
 				using var block = new BlockLiteral (trampoline, handler, typeof (NWProxyConfig), nameof (TrampolineEnumerateExcludeDomainHandler));
 #else
 				using var block = new BlockLiteral ();
-				block.SetupBlockUnsafe (static_EnumerateExcludeDomainHandler , handler);
+				block.SetupBlockUnsafe (static_EnumerateExcludeDomainHandler, handler);
 #endif
 				nw_proxy_config_enumerate_excluded_domains (GetCheckedHandle (), &block);
 			}

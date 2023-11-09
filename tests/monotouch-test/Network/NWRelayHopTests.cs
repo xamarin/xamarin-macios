@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.Network {
 			Assert.DoesNotThrow (
 				() => hop.AddAdditionalHttpHeaderField (
 					"Keep-Alive", "timeout=5, max=1000"));
-		} 
+		}
 	}
 }
 #endif
