@@ -232,8 +232,14 @@ public partial class Generator : IMemberGatherer {
 			return PrimitiveType (mai.Type, formatted);
 
 		// Arrays are returned as NSArrays
-		if (mai.Type.IsArray)
+		if (mai.Type.IsArray) {
+			if (mai.Type.GetElementType ().IsValueType) {
+				string suffix = formatted ? "*" : "Array";
+				return mai.Type.GetElementType ().Name + suffix;
+			}
+
 			return NativeHandleType;
+		}
 
 		//
 		// Pass "out ValueType" directly
@@ -819,7 +825,7 @@ public partial class Generator : IMemberGatherer {
 			return "&" + pi.Name + "Value";
 
 		if (pi.ParameterType.IsArray && pi.ParameterType.GetElementType ().IsValueType) {
-			return pi.Name;
+			return pi.Name + "Ptr";
 		}
 		if (HasBindAsAttribute (pi))
 			return string.Format ("nsb_{0}.GetHandle ()", pi.Name);
@@ -1738,18 +1744,20 @@ public partial class Generator : IMemberGatherer {
 			print ("{"); indent++;
 			string cast_a = "", cast_b = "";
 			bool use_temp_return;
+			int numberOfFixedStatements = 0;
 
 			GenerateArgumentChecks (mi, true);
 
 			StringBuilder args, convs, disposes, by_ref_processing, by_ref_init;
 			GenerateTypeLowering (mi,
 						  null_allowed_override: true,
-						  castEnum: false,
 						  args: out args,
 						  convs: out convs,
 						  disposes: out disposes,
 						  by_ref_processing: out by_ref_processing,
-						  by_ref_init: out by_ref_init); ;
+						  by_ref_init: out by_ref_init,
+						  out numberOfFixedStatements,
+						  castEnum: false); ;
 
 			if (by_ref_init.Length > 0)
 				print (by_ref_init.ToString ());
@@ -1760,6 +1768,9 @@ public partial class Generator : IMemberGatherer {
 
 			if (convs.Length > 0)
 				print (convs.ToString ());
+			for (int i = 0; i < numberOfFixedStatements; i++)
+				indent++;
+
 			print ("{0}{1}invoker (BlockPointer{2}){3};",
 				   use_temp_return ? "var ret = " : "",
 				   cast_a,
@@ -1767,6 +1778,10 @@ public partial class Generator : IMemberGatherer {
 				   cast_b);
 			if (disposes.Length > 0)
 				print (disposes.ToString ());
+			for (int i = 0; i < numberOfFixedStatements; i++) {
+				indent--;
+				print (sw, "}");
+			}
 			if (by_ref_processing.Length > 0)
 				print (sw, by_ref_processing.ToString ());
 			if (use_temp_return) {
@@ -3274,13 +3289,14 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null, bool castEnum = true)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, out int numberOfFixedStatements, PropertyInfo propInfo = null, bool castEnum = true)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
 		disposes = new StringBuilder ();
 		by_ref_processing = new StringBuilder ();
 		by_ref_init = new StringBuilder ();
+		numberOfFixedStatements = 0;
 
 		foreach (var pi in mi.GetParameters ()) {
 			var safe_name = pi.Name.GetSafeParamName ();
@@ -3333,10 +3349,10 @@ public partial class Generator : IMemberGatherer {
 					exceptions.Add (ErrorHelper.CreateError (1065, mai.Type.FullName, string.IsNullOrEmpty (pi.Name) ? $"#{pi.Position}" : pi.Name, mi.DeclaringType.FullName, mi.Name));
 				} else {
 					if (etype.IsValueType) {
-						// pass the address of the pinned objects, make sure we do write a try/finally
-						/*convs.AppendFormat ("var nsa_{0}Handle = GCHandle.Alloc ({1}, GCHandleType.Pinned);\n", pi.Name, pi.Name.GetSafeParamName ());
-						convs.AppendFormat ("IntPtr nsa_{0} = nsa_{0}Handle.AddrOfPinnedObject ();\n", pi.Name);
-						disposes.AppendFormat ("nsa_{0}Handle.Free ();\n", pi.Name);*/
+						if (numberOfFixedStatements > 0)
+							convs.Append ("\t");
+						numberOfFixedStatements++;
+						convs.AppendFormat ("fixed ({0}* {1}Ptr = &{1}[0]) {{\n", pi.ParameterType.GetElementType ().Name, pi.Name);
 					} else if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} is not null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
@@ -3560,11 +3576,10 @@ public partial class Generator : IMemberGatherer {
 		Inject<PrologueSnippetAttribute> (mi);
 
 		GenerateArgumentChecks (mi, false, propInfo);
-
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
-		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing,  out var by_ref_init, propInfo);
-
+		int numberOfFixedStatements = 0;
+		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing,  out var by_ref_init, out numberOfFixedStatements, propInfo);
 		var argsArray = args.ToString ();
 
 		if (by_ref_init.Length > 0)
@@ -3583,6 +3598,8 @@ public partial class Generator : IMemberGatherer {
 		if (convs.Length > 0)
 			print (sw, convs.ToString ());
 
+		for (int i = 0; i < numberOfFixedStatements; i++)
+			indent++;
 		Inject<PreSnippetAttribute> (mi);
 		var align = AttributeManager.GetCustomAttribute<AlignAttribute> (mi);
 
@@ -3698,6 +3715,11 @@ public partial class Generator : IMemberGatherer {
 
 		if (disposes.Length > 0)
 			print (sw, disposes.ToString ());
+
+		for (int i = 0; i < numberOfFixedStatements; i++) {
+			indent--;
+			print (sw, "}");
+		}
 		if ((body_options & BodyOption.StoreRet) == BodyOption.StoreRet) {
 			// nothing to do
 		} else if ((body_options & BodyOption.CondStoreRet) == BodyOption.CondStoreRet) {
