@@ -3589,7 +3589,7 @@ public partial class Generator : IMemberGatherer {
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
 		int numberOfFixedStatements = 0;
-		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing,  out var by_ref_init, out numberOfFixedStatements, propInfo);
+		GenerateTypeLowering (mi, null_allowed_override, out var args, out var convs, out var disposes, out var by_ref_processing, out var by_ref_init, out numberOfFixedStatements, propInfo);
 		var argsArray = args.ToString ();
 
 		if (by_ref_init.Length > 0)
