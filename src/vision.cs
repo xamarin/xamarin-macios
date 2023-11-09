@@ -202,11 +202,9 @@ namespace Vision {
 		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
 		[MacCatalyst (15, 0)]
 		Two = 2,
-		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
-		[MacCatalyst (16, 0)]
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst(16, 0)]
 		Three = 3,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0)]
-		[MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst(17, 0)]
 		Four = 4,
 	}
 
@@ -352,8 +350,7 @@ namespace Vision {
 	enum VNClassifyImageRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0)]
-		[MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst(17, 0)]
 		Two = 2,
 	}
 
@@ -372,8 +369,7 @@ namespace Vision {
 		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Two = 2,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0)]
-		[MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst(17, 0)]
 		Three = 3,
 	}
 
@@ -402,8 +398,7 @@ namespace Vision {
 	enum VNGenerateAttentionBasedSaliencyImageRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0)]
-		[MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst(17, 0)]
 		Two = 2,
 	}
 
@@ -413,8 +408,7 @@ namespace Vision {
 	enum VNGenerateImageFeaturePrintRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0)]
-		[MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst(17, 0)]
 		Two = 2,
 	}
 
@@ -424,8 +418,7 @@ namespace Vision {
 	enum VNGenerateObjectnessBasedSaliencyImageRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
-		[TV (17, 0), Mac (14, 0), iOS (17, 0)]
-		[MacCatalyst (17, 0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst(17, 0)]
 		Two = 2,
 	}
 
