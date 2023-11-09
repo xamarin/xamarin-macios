@@ -31,7 +31,7 @@ namespace GHIssue6994 {
 		void AddProxies (IntPtr [] proxies);
 
 		[Export ("getProxies")]
-		IntPtr[] GetProxies ();
+		IntPtr [] GetProxies ();
 
 		[Export ("initWithRegion:")]
 		IntPtr Constructor (MTLRegion [] regions);
