@@ -27,6 +27,12 @@ namespace GHIssue6994 {
 		[Export ("convertSparsePixelRegions:toTileRegions:alignmentMode:numRegions:")]
 		void ConvertSparsePixelRegions (MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions);
 
+		[Export ("addProxies:")]
+		void AddProxies (IntPtr [] proxies);
+
+		[Export ("getProxies")]
+		IntPtr[] GetProxies ();
+
 		[Export ("initWithRegion:")]
 		IntPtr Constructor (MTLRegion [] regions);
 	}
