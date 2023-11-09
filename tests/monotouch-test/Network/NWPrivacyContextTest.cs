@@ -54,11 +54,11 @@ namespace MonoTouchTest.Network {
 		public void ClearProxyTest ()
 		{
 			TestRuntime.AssertXcodeVersion (15, 0);
-			Assert.DoesNotThrow (() => context.ClearProxies(), "On empty clear");
+			Assert.DoesNotThrow (() => context.ClearProxies (), "On empty clear");
 			using var endpoint = NWEndpoint.Create ("https://github.com");
 			using var config = NWProxyConfig.CreateHttpConnect (endpoint, null);
 			context.AddProxy (config!);
-			Assert.DoesNotThrow (() => context.ClearProxies(), "On clear");
+			Assert.DoesNotThrow (() => context.ClearProxies (), "On clear");
 		}
 	}
 }
