@@ -207,7 +207,6 @@ namespace Cecil.Tests {
 			"System.Boolean CoreServices.FSEvent::FSEventsPurgeEventsForDeviceUpToEventId(System.UInt64,System.UInt64)",
 			"System.Boolean CoreServices.FSEventStream::FSEventStreamStart(System.IntPtr)",
 			"System.Boolean CoreText.CTFont::CTFontGetGlyphsForCharacters(System.IntPtr,System.Char[],System.UInt16[],System.IntPtr)",
-			"System.Boolean CoreText.CTFontDescriptor::CTFontDescriptorMatchFontDescriptorsWithProgressHandler(System.IntPtr,System.IntPtr,method System.Boolean *(CoreText.CTFontDescriptorMatchingState,System.IntPtr))",
 			"System.Boolean CoreText.CTFontManager::CTFontManagerIsSupportedFont(System.IntPtr)",
 			"System.Boolean CoreText.CTFontManager::CTFontManagerRegisterFontsForURL(System.IntPtr,CoreText.CTFontManagerScope,System.IntPtr&)",
 			"System.Boolean CoreText.CTFontManager::CTFontManagerRegisterFontsForURLs(System.IntPtr,CoreText.CTFontManagerScope,System.IntPtr&)",
