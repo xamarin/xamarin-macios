@@ -157,6 +157,9 @@
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="SceneKit\SCNVector3Test.cs" />
     <Compile Include="SceneKit\SCNVector4Test.cs" />
     <Compile Include="..\common\AppDelegate.cs" />

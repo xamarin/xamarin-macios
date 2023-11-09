@@ -1969,6 +1969,9 @@ public partial class Generator : IMemberGatherer {
 							} else if (elementType == TypeManager.System_String) {
 								getter = "GetArray<string> ({0}, (ptr) => CFString.FromHandle (ptr)!)";
 								setter = "SetArrayValue ({0}, value)";
+							} else if (elementType.Name == "CTFontDescriptor") {
+								getter = "GetArray<CTFontDescriptor> ({0}, (ptr) => new CTFontDescriptor (ptr, false))";
+								setter = "SetArrayValue ({0}, value)";
 							} else {
 								throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 							}
@@ -1998,6 +2001,9 @@ public partial class Generator : IMemberGatherer {
 							getter = "GetNativeValue<" + pi.PropertyType + "> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else if (pi.PropertyType.Name == "CGImageSource") {
+							getter = "GetNativeValue<" + pi.PropertyType + "> ({0})";
+							setter = "SetNativeValue ({0}, value)";
+						} else if (pi.PropertyType.Name == "CTFontDescriptor") {
 							getter = "GetNativeValue<" + pi.PropertyType + "> ({0})";
 							setter = "SetNativeValue ({0}, value)";
 						} else {

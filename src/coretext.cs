@@ -325,6 +325,46 @@ namespace CoreText {
 	}
 #endif
 
+	[Internal]
+	[Static]
+	interface CTFontDescriptorMatchingKeys {
+		[Field ("kCTFontDescriptorMatchingSourceDescriptor")]
+		NSString SourceDescriptorKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingDescriptors")]
+		NSString DescriptorsKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingResult")]
+		NSString ResultKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingPercentage")]
+		NSString PercentageKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingCurrentAssetSize")]
+		NSString CurrentAssetSizeKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingTotalDownloadedSize")]
+		NSString TotalDownloadedSizeKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingTotalAssetSize")]
+		NSString TotalAssetSizeKey { get; }
+
+		[Field ("kCTFontDescriptorMatchingError")]
+		NSString ErrorKey { get; }
+	}
+
+	[StrongDictionary ("CTFontDescriptorMatchingKeys")]
+	interface CTFontDescriptorMatchingProgress {
+		CTFontDescriptor SourceDescriptor { get; }
+		CTFontDescriptor [] Descriptors { get; }
+		CTFontDescriptor [] Result { get; }
+		double Percentage { get; }
+		long CurrentAssetSize { get; }
+		long TotalDownloadedSize { get; }
+		long TotalAssetSize { get; }
+		NSError Error { get; }
+	}
+
 	[Static]
 	[Partial]
 	interface CTStringAttributeKey {
