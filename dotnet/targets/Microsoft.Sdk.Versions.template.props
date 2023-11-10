@@ -8,6 +8,7 @@
 		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
 		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
 		<_XamarinIsPreviewRelease>@XCODE_IS_PREVIEW@</_XamarinIsPreviewRelease>
+		<_XamarinDotNetVersion>@DOTNET_TFM@</_XamarinDotNetVersion>
 	</PropertyGroup>
 
 	<ItemGroup>@VALID_RUNTIME_IDENTIFIERS@
