@@ -93,6 +93,7 @@ namespace Metal {
 #if NET
 			Class.ThrowOnInitFailure = false;
 			Handle = NativeHandle.Zero;
+			Class.ThrowOnInitFailure = true;
 #else
 			ClearHandle ();
 #endif

@@ -66,6 +66,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void CtorOwnsVerify ()
 		{
 			var obj = new Subclassed (NativeHandle.Zero, true, false);
+			Console.WriteLine ($"Handle is {obj.Handle}");
 			Assert.AreEqual (NativeHandle.Zero, obj.Handle, "Handle 1");
 			Assert.AreEqual (true, obj.Owns, "Owns 1");
 			Assert.Throws<ObjectDisposedException> (() => obj.GetCheckedHandle (), "GetCheckedHandle 1");
