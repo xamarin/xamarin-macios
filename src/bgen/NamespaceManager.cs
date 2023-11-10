@@ -5,9 +5,8 @@ using ObjCRuntime;
 #nullable enable
 
 public class NamespaceManager {
-	public BindingTouch BindingTouch;
-	PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
-	Frameworks? Frameworks { get { return BindingTouch.Frameworks; } }
+	PlatformName CurrentPlatform => Frameworks!.CurrentPlatform;
+	Frameworks? Frameworks { get; set;  }
 
 	// Where user-overrideable messaging may live
 	public string ObjCRuntime { get; private set; }
@@ -19,10 +18,9 @@ public class NamespaceManager {
 	public ICollection<string> ImplicitNamespaces { get; private set; }
 	public ICollection<string> NamespacesThatConflictWithTypes { get; private set; }
 
-	public NamespaceManager (BindingTouch binding_touch, string customObjCRuntimeNS, bool skipSystemDrawing)
+	public NamespaceManager (PlatformName currentPlatform, string customObjCRuntimeNS, bool skipSystemDrawing)
 	{
-		BindingTouch = binding_touch;
-
+		Frameworks = new (currentPlatform);
 		ObjCRuntime = String.IsNullOrEmpty (customObjCRuntimeNS)
 			? "ObjCRuntime"
 			: customObjCRuntimeNS;

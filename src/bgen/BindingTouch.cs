@@ -547,7 +547,7 @@ public class BindingTouch : IDisposable {
 			}
 
 			namespaceManager ??= new NamespaceManager (
-				this,
+				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
