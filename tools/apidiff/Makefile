@@ -45,8 +45,8 @@ export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking chang
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
 ifeq ($(DOTNET_TFM_REFERENCE),)
-# Change the below to net8.0 once we have reference assemblies from net8.0 (i.e. once net8.0 goes stable).
-DOTNET_TFM_REFERENCE=net7.0
+# Change the below to net9.0 once we have reference assemblies from net9.0 (i.e. once net8.0 goes stable).
+DOTNET_TFM_REFERENCE=net8.0
 endif
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
@@ -444,7 +444,10 @@ $$(BUNDLE_ZIP_$(1)):
 		$$(CP) ~/Library/Caches/xamarin-macios/$$(notdir $$@) $$@.tmp; \
 	else \
 		$(MAKE) check-token || exit 1; \
-		$(CURL_RETRY) -H "Authorization: token $(AUTH_TOKEN_GITHUB_COM)" "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; \
+		if ! $(CURL_RETRY) -H "Authorization: token $(AUTH_TOKEN_GITHUB_COM)" "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; then \
+			echo "Failed to download $$(BUNDLE_ZIP_$(1)_URL)"; \
+			exit 1; \
+		fi; \
 		if [[ "x$$$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
 			mkdir -p ~/Library/Caches/xamarin-macios/; \
 			$$(CP) $$@.tmp ~/Library/Caches/xamarin-macios/"$$(notdir $$@)"; \
