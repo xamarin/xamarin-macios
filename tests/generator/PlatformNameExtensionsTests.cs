@@ -1,4 +1,6 @@
 #nullable enable
+using System;
+using System.IO;
 using NUnit.Framework;
 using ObjCRuntime;
 using Xamarin.Utils;
@@ -57,5 +59,24 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.None, ApplePlatform.None)]
 		public void AsApplePlatformTest (PlatformName platformName, ApplePlatform expected)
 			=> Assert.AreEqual (expected, platformName.AsApplePlatform ());
+
+		[TestCase (PlatformName.iOS, "MD_MTOUCH_SDK_ROOT", new [] { "lib/mono/Xamarin.iOS/Xamarin.iOS.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/Xamarin.iOS.dll")]
+		[TestCase (PlatformName.iOS, "MD_MTOUCH_SDK_ROOT", new [] { "lib", "mono", "Xamarin.iOS", "Xamarin.iOS.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/Xamarin.iOS.dll")]
+		[TestCase (PlatformName.TvOS, "MD_MTOUCH_SDK_ROOT", new [] { "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll")]
+		[TestCase (PlatformName.TvOS, "MD_MTOUCH_SDK_ROOT", new [] { "lib", "mono", "Xamarin.TVOS", "Xamarin.TVOS.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll")]
+		[TestCase (PlatformName.WatchOS, "MD_MTOUCH_SDK_ROOT", new [] { "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll")]
+		[TestCase (PlatformName.WatchOS, "MD_MTOUCH_SDK_ROOT", new [] { "lib", "mono", "Xamarin.WatchOS", "Xamarin.WatchOS.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll")]
+		[TestCase (PlatformName.MacCatalyst, "MD_MTOUCH_SDK_ROOT", new [] { "lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll")]
+		[TestCase (PlatformName.MacCatalyst, "MD_MTOUCH_SDK_ROOT", new [] { "lib", "mono", "Xamarin.MacCatalyst", "Xamarin.MacCatalyst.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll")]
+		public void GetPath (PlatformName platformName, string envVar, string [] paths, string result)
+		{
+			// get the env, test and reset
+			var env = Environment.GetEnvironmentVariable (envVar);
+			Environment.SetEnvironmentVariable (envVar, "");
+			var path = platformName.GetPath (paths);
+			Environment.SetEnvironmentVariable (envVar, env);
+			
+			Assert.AreEqual (result, path, platformName.GetPath (paths));
+		}
 	}
 }
