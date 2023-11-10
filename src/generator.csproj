@@ -125,6 +125,7 @@
     <Compile Include="..\src\bgen\StringExtensions.cs" />
     <Compile Include="..\src\bgen\ThreadCheck.cs" />
     <Compile Include="..\src\bgen\TrampolineInfo.cs" />
+    <Compile Include="..\src\bgen\TypeCache.cs" />
     <Compile Include="..\src\bgen\TypeExtensions.cs" />
     <Compile Include="..\src\bgen\TypeManager.cs" />
     <Compile Include="..\src\bgen\WrapPropMemberInformation.cs" />

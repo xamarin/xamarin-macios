@@ -78,6 +78,10 @@ public class BindingTouch : IDisposable {
 
 	NamespaceManager? namespaceManager;
 	public NamespaceManager NamespaceManager => namespaceManager!;
+
+	TypeCache? typeCache;
+	public TypeCache TypeCache => typeCache!;
+
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -490,7 +494,8 @@ public class BindingTouch : IDisposable {
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			typeManager ??= new (this, api, universe.CoreAssembly, baselib);
+			typeCache ??= new (this, api, universe.CoreAssembly, baselib);
+			typeManager ??= new (this);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 #if NET
