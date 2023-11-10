@@ -6,7 +6,7 @@ using ObjCRuntime;
 
 public class NamespaceManager {
 	PlatformName CurrentPlatform => Frameworks!.CurrentPlatform;
-	Frameworks? Frameworks { get; set;  }
+	Frameworks? Frameworks { get; set; }
 
 	// Where user-overrideable messaging may live
 	public string ObjCRuntime { get; private set; }
