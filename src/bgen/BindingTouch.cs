@@ -32,7 +32,6 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
-using bgen;
 using Mono.Options;
 
 using ObjCRuntime;
