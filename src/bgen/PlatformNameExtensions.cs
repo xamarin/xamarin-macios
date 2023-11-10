@@ -100,7 +100,7 @@ public static class PlatformNameExtensions {
 			throw new ArgumentOutOfRangeException (nameof (platform), platform, $"Unknown platform: {platform}");
 		}
 	}
-	
+
 	static string GetSdkRoot (this PlatformName currentPlatform)
 	{
 		switch (currentPlatform) {
@@ -124,7 +124,7 @@ public static class PlatformNameExtensions {
 
 	public static string GetPath (this PlatformName currentPlatform, params string [] paths)
 	{
-		var fullPaths = new string[paths.Length + 1];
+		var fullPaths = new string [paths.Length + 1];
 		fullPaths [0] = currentPlatform.GetSdkRoot ();
 		Array.Copy (paths, 0, fullPaths, 1, paths.Length);
 		return Path.Combine (fullPaths);

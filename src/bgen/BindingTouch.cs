@@ -385,7 +385,7 @@ public class BindingTouch : IDisposable {
 				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "mobile", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
-					baselibdll = CurrentPlatform.GetPath("lib", "reference", "full", "Xamarin.Mac.dll");
+					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "full", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.DotNet_macOS)
 					baselibdll = CurrentPlatform.GetPath ("lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else

@@ -75,7 +75,7 @@ namespace GeneratorTests {
 			Environment.SetEnvironmentVariable (envVar, "");
 			var path = platformName.GetPath (paths);
 			Environment.SetEnvironmentVariable (envVar, env);
-			
+
 			Assert.AreEqual (result, path, platformName.GetPath (paths));
 		}
 	}
