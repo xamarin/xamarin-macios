@@ -42,7 +42,7 @@ using (var writer = new StreamWriter (outputPath)) {
 	if (hasWindows) {
 		foreach (var tfv in supportedTFMs) {
 			var major = Version.Parse (tfv).Major.ToString ();
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{major}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.net{major}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
 	}
 	writer.WriteLine ($"	</ImportGroup>");
