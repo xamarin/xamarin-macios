@@ -125,7 +125,7 @@ namespace Network {
 
 		public bool FailoverAllowed {
 			get => nw_proxy_config_get_failover_allowed (GetCheckedHandle ()) != 0;
-			set => nw_proxy_config_set_failover_allowed (GetCheckedHandle (), value ? (byte) 1 : (byte) 0);
+			set => nw_proxy_config_set_failover_allowed (GetCheckedHandle (), (byte) (value ? 1 : 0));
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
