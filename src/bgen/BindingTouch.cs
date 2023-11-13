@@ -494,7 +494,7 @@ public class BindingTouch : IDisposable {
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			typeCache ??= new (this, api, universe.CoreAssembly, baselib);
+			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {

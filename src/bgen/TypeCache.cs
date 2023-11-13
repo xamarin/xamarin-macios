@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using ObjCRuntime;
 
 #nullable enable
 
@@ -134,12 +135,12 @@ public class TypeCache {
 	public Type? UIEdgeInsets { get; }
 	public Type? NSDirectionalEdgeInsets { get; }
 
-	public TypeCache (BindingTouch bindingTouch, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly)
+	public TypeCache (MetadataLoadContext universe, Frameworks frameworks, PlatformName currentPlatform, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly, bool bindThirdPartyLibrary)
 	{
-		if (bindingTouch.Frameworks is null)
-			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
-		if (bindingTouch.universe is null)
-			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
+		if (frameworks is null)
+			throw ErrorHelper.CreateError (3, currentPlatform);
+		if (universe is null)
+			throw ErrorHelper.CreateError (4, currentPlatform);
 
 		/* corlib */
 		System_Attribute = Lookup (corlibAssembly, "System", "Attribute");
@@ -166,7 +167,7 @@ public class TypeCache {
 #if NET
 		System_nint = Lookup (corlibAssembly, "System", "IntPtr");
 		System_nuint = Lookup (corlibAssembly, "System", "UIntPtr");
-		var interopAssembly = bindingTouch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
+		var interopAssembly = universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
 		System_nfloat = Lookup (interopAssembly, "System.Runtime.InteropServices", "NFloat");
 #else
 		System_nint = Lookup (platformAssembly, "System", "nint");
@@ -207,10 +208,10 @@ public class TypeCache {
 		CGVector = Lookup (platformAssembly, "CoreGraphics", "CGVector");
 		DispatchQueue = Lookup (platformAssembly, "CoreFoundation", "DispatchQueue");
 		DispatchData = Lookup (platformAssembly, "CoreFoundation", "DispatchData");
-		NSNumber = Lookup (bindingTouch.BindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSNumber");
+		NSNumber = Lookup (bindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSNumber");
 		NSRange = Lookup (platformAssembly, "Foundation", "NSRange");
 		NSString = Lookup (platformAssembly, "Foundation", "NSString");
-		NSValue = Lookup (bindingTouch.BindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSValue");
+		NSValue = Lookup (bindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSValue");
 		NSZone = Lookup (platformAssembly, "Foundation", "NSZone");
 		SCNVector3 = Lookup (platformAssembly, "SceneKit", "SCNVector3");
 		SCNVector4 = Lookup (platformAssembly, "SceneKit", "SCNVector4");
@@ -227,28 +228,28 @@ public class TypeCache {
 		CoreGraphics_CGSize = Lookup (platformAssembly, "CoreGraphics", "CGSize");
 
 		// optional types per framework
-		if (bindingTouch.Frameworks.HaveAddressBook) {
+		if (frameworks.HaveAddressBook) {
 			ABAddressBook = ConditionalLookup (platformAssembly, "AddressBook", "ABAddressBook");
 			ABPerson = ConditionalLookup (platformAssembly, "AddressBook", "ABPerson");
 			ABRecord = ConditionalLookup (platformAssembly, "AddressBook", "ABRecord");
 		}
-		if (bindingTouch.Frameworks.HaveAudioToolbox) {
+		if (frameworks.HaveAudioToolbox) {
 			MusicSequence = ConditionalLookup (platformAssembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
 		}
-		if (bindingTouch.Frameworks.HaveAudioUnit) {
+		if (frameworks.HaveAudioUnit) {
 			AudioComponent = ConditionalLookup (platformAssembly, "AudioUnit", "AudioComponent");
 			AudioUnit = ConditionalLookup (platformAssembly, "AudioUnit", "AudioUnit");
 			AURenderEventEnumerator = ConditionalLookup (platformAssembly, "AudioUnit", "AURenderEventEnumerator");
 		}
-		if (bindingTouch.Frameworks.HaveCoreAnimation)
+		if (frameworks.HaveCoreAnimation)
 			CATransform3D = ConditionalLookup (platformAssembly, "CoreAnimation", "CATransform3D");
-		if (bindingTouch.Frameworks.HaveOpenGL) {
+		if (frameworks.HaveOpenGL) {
 			CGLContext = ConditionalLookup (platformAssembly, "OpenGL", "CGLContext");
 			CGLPixelFormat = ConditionalLookup (platformAssembly, "OpenGL", "CGLPixelFormat");
 		}
-		if (bindingTouch.Frameworks.HaveCoreLocation)
+		if (frameworks.HaveCoreLocation)
 			CLLocationCoordinate2D = ConditionalLookup (platformAssembly, "CoreLocation", "CLLocationCoordinate2D");
-		if (bindingTouch.Frameworks.HaveCoreMedia) {
+		if (frameworks.HaveCoreMedia) {
 			CMAudioFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMAudioFormatDescription");
 			CMClock = ConditionalLookup (platformAssembly, "CoreMedia", "CMClock");
 			CMFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMFormatDescription");
@@ -260,18 +261,18 @@ public class TypeCache {
 			CMVideoFormatDescription = ConditionalLookup (platformAssembly, "CoreMedia", "CMVideoFormatDescription");
 			CMVideoDimensions = ConditionalLookup (platformAssembly, "CoreMedia", "CMVideoDimensions");
 		}
-		if (bindingTouch.Frameworks.HaveCoreVideo) {
+		if (frameworks.HaveCoreVideo) {
 			CVImageBuffer = ConditionalLookup (platformAssembly, "CoreVideo", "CVImageBuffer");
 			CVPixelBuffer = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBuffer");
 			CVPixelBufferPool = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBufferPool");
 		}
-		if (bindingTouch.Frameworks.HaveCoreMidi)
+		if (frameworks.HaveCoreMidi)
 			MidiEndpoint = ConditionalLookup (platformAssembly, "CoreMidi", "MidiEndpoint");
-		if (bindingTouch.Frameworks.HaveMapKit)
+		if (frameworks.HaveMapKit)
 			MKCoordinateSpan = ConditionalLookup (platformAssembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
-		if (bindingTouch.Frameworks.HaveMediaToolbox)
+		if (frameworks.HaveMediaToolbox)
 			MTAudioProcessingTap = ConditionalLookup (platformAssembly, "MediaToolbox", "MTAudioProcessingTap");
-		if (bindingTouch.Frameworks.HaveUIKit) {
+		if (frameworks.HaveUIKit) {
 			UIOffset = ConditionalLookup (platformAssembly, "UIKit", "UIOffset");
 			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
