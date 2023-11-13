@@ -130,7 +130,7 @@ namespace AppKit {
 			if (rects is null)
 				throw new ArgumentNullException ("rects");
 			unsafe {
-				fixed (CGRect* ptr = &rects [0])
+				fixed (CGRect* ptr = rects)
 					RectFillList (ptr, rects.Length);
 			}
 		}
@@ -205,8 +205,8 @@ namespace AppKit {
 			if (sides.Length != grays.Length)
 				throw new ArgumentOutOfRangeException ("grays", "Both array parameters must have the same length");
 			unsafe {
-				fixed (NSRectEdge* ptr = &sides [0])
-				fixed (nfloat* ptr2 = &grays [0])
+				fixed (NSRectEdge* ptr = sides)
+				fixed (nfloat* ptr2 = grays)
 					return DrawTiledRects (aRect, clipRect, ptr, ptr2, sides.Length);
 			}
 		}

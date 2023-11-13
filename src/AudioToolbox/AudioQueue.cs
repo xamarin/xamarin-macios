@@ -1073,7 +1073,7 @@ namespace AudioToolbox {
 					return;
 
 				unsafe {
-					fixed (byte* bp = &value [0]) {
+					fixed (byte* bp = value) {
 						SetProperty (AudioQueueProperty.MagicCookie, value.Length, (IntPtr) bp);
 					}
 				}
