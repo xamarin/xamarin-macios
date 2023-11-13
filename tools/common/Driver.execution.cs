@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 	public partial class Driver {
 		public static int RunCommand (string path, IList<string> args, Dictionary<string, string> env, out StringBuilder output, bool suppressPrintOnErrors, int verbose)

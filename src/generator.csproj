@@ -13,6 +13,8 @@
     <BuildDir Condition="'$(BUILD_DIR)' == ''">build\</BuildDir>
     <LangVersion>latest</LangVersion>
     <NoWarn>8601,8618</NoWarn>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
