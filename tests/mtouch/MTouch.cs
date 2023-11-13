@@ -2080,16 +2080,54 @@ public class TestApp {
 			return fn;
 		}
 
-		static string GetFrameworksBindingLibrary (Profile profile)
+		static string [] CollectFrameworks (string binding_resource_package)
 		{
-			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/iOS/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+			var rv = new HashSet<string> ();
+			var document = new XmlDocument ();
+			var manifestPath = Path.Combine (binding_resource_package, "manifest");
+			LoadWithoutNetworkAccess (document, manifestPath);
+
+			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
+				var attributes = new Dictionary<string, string> ();
+				foreach (XmlNode attribute in referenceNode.ChildNodes)
+					attributes [attribute.Name] = attribute.InnerText;
+
+				var kind = attributes ["Kind"];
+				if (!string.Equals (kind, "Framework", StringComparison.OrdinalIgnoreCase))
+					continue;
+
+				var fw = Path.Combine (binding_resource_package, referenceNode.Attributes ["Name"].Value);
+				rv.Add (fw);
+				rv.UnionWith (attributes ["Frameworks"].Split (' '));
+			}
+			return rv.ToArray ();
+		}
+
+		static string AddFrameworksBindingLibrary (MTouchTool tool)
+		{
+			var profile = tool.Profile;
+			var dir = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile));
+			var libName = "bindings-framework-test";
+			var fn = Path.Combine (dir, $"{libName}.dll");
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bindings-framework-test.csproj");
 				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
+			var bindingResourcePackage = Path.Combine (dir, $"{libName}.resources");
+			if (!Directory.Exists (bindingResourcePackage))
+				throw new InvalidOperationException ($"The binding project {libName} does not have a binding resource package?");
+			var frameworks = CollectFrameworks (bindingResourcePackage);
+			Assert.AreEqual (5, frameworks.Length, "Framework count in binding resource package");
+
+			var refs = new string [] { fn };
+			if (tool.References is null) {
+				tool.References = refs;
+			} else {
+				tool.References = tool.References.Concat (refs).ToArray ();
+			}
+			tool.Frameworks.AddRange (frameworks);
 			return fn;
 		}
 
@@ -3538,10 +3576,7 @@ class C {
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.Linker = MTouchLinker.DontLink; // faster
 
-				exttool.References = new string []
-				{
-					GetFrameworksBindingLibrary (exttool.Profile),
-				};
+				AddFrameworksBindingLibrary (exttool);
 				exttool.CreateTemporaryServiceExtension (code: @"using UserNotifications;
 [Foundation.Register (""NotificationService"")]
 public partial class NotificationService : UNNotificationServiceExtension
@@ -3573,7 +3608,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.iOS;
 				exttool.Linker = MTouchLinker.DontLink; // faster
-				exttool.References = new string [] { GetFrameworksBindingLibrary (exttool.Profile) };
+				AddFrameworksBindingLibrary (exttool);
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{exttool.References [0]}" });
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
@@ -3581,7 +3616,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				using (var apptool = new MTouchTool ()) {
 					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
-					apptool.References = exttool.References;
+					AddFrameworksBindingLibrary (apptool);
 					apptool.CreateTemporaryApp (extraCode: @"[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } };", extraArgs: new [] { $"-r:{apptool.References [0]}" });
 					apptool.AppExtensions.Add (exttool);
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
@@ -3598,11 +3633,10 @@ public partial class NotificationService : UNNotificationServiceExtension
 			// Verify that an error is shown if two different frameworks with the same name are included.
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			var framework_binding_library = GetFrameworksBindingLibrary (Profile.iOS);
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.iOS;
 				exttool.Linker = MTouchLinker.DontLink; // faster
-				exttool.References = new string [] { framework_binding_library };
+				var framework_binding_library = AddFrameworksBindingLibrary (exttool);
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{exttool.References [0]}" });
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
@@ -3613,12 +3647,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 					var modified_framework_binding_library = Path.Combine (tmpdir, fx_binding_name);
 
 					Bundler.FileCopier.UpdateDirectory (Path.Combine (Path.GetDirectoryName (framework_binding_library), "."), tmpdir);
-					var extra_content = Path.Combine (tmpdir, Path.ChangeExtension (fx_binding_name, ".resources"), "XTest.framework", "XTest");
+					var binding_resource_package = Path.Combine (tmpdir, Path.ChangeExtension (fx_binding_name, ".resources"));
+					var extra_content = Path.Combine (binding_resource_package, "XTest.framework", "XTest");
 					File.AppendAllText (extra_content, "Hello world");
 
 					apptool.Profile = Profile.iOS;
 					apptool.Linker = MTouchLinker.DontLink; // faster
 					apptool.References = new string [] { modified_framework_binding_library };
+					apptool.Frameworks = CollectFrameworks (binding_resource_package).ToList ();
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.CreateTemporaryApp (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{apptool.References [0]}" });
 					apptool.AppExtensions.Add (exttool);
@@ -3638,7 +3674,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			using (var service_ext = new MTouchTool ()) {
 				service_ext.Profile = Profile.iOS;
 				service_ext.Linker = MTouchLinker.DontLink; // faster
-				service_ext.References = new string [] { GetFrameworksBindingLibrary (service_ext.Profile) };
+				AddFrameworksBindingLibrary (service_ext);
 				service_ext.CreateTemporaryCacheDirectory ();
 				service_ext.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{service_ext.References [0]}" });
 				service_ext.AssertExecute (MTouchAction.BuildSim, "build service extension");
@@ -3646,7 +3682,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				using (var today_ext = new MTouchTool ()) {
 					today_ext.Profile = Profile.iOS;
 					today_ext.Linker = MTouchLinker.DontLink; // faster
-					today_ext.References = service_ext.References;
+					AddFrameworksBindingLibrary (today_ext);
 					today_ext.CreateTemporaryCacheDirectory ();
 					today_ext.CreateTemporaryTodayExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{today_ext.References [0]}" });
 					today_ext.AssertExecute (MTouchAction.BuildSim, "build today extension");
