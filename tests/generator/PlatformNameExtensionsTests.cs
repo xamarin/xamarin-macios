@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using System.Linq;
 using System.IO;
 using NUnit.Framework;
 using ObjCRuntime;
@@ -70,6 +71,11 @@ namespace GeneratorTests {
 		[TestCase (PlatformName.MacCatalyst, "MD_MTOUCH_SDK_ROOT", new [] { "lib", "mono", "Xamarin.MacCatalyst", "Xamarin.MacCatalyst.dll" }, "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll")]
 		public void GetPath (PlatformName platformName, string envVar, string [] paths, string result)
 		{
+			// clean the paths using the OS new line
+			if (Path.DirectorySeparatorChar != '/') {
+				paths = paths.Select (p => p.Replace ('/', Path.DirectorySeparatorChar)).ToArray ();
+				result = result.Replace ('/', Path.DirectorySeparatorChar);
+			}
 			// get the env, test and reset
 			var env = Environment.GetEnvironmentVariable (envVar);
 			Environment.SetEnvironmentVariable (envVar, "");
