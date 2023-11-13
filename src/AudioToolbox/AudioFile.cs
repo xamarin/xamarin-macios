@@ -956,7 +956,7 @@ namespace AudioToolbox {
 		unsafe AudioStreamPacketDescription []? RealReadPacketData (bool useCache, long inStartingPacket, ref int nPackets, IntPtr buffer, ref int count, out AudioFileError error, AudioStreamPacketDescription [] descriptions)
 		{
 			OSStatus r;
-			fixed (AudioStreamPacketDescription* pdesc = &descriptions [0]) {
+			fixed (AudioStreamPacketDescription* pdesc = descriptions) {
 				r = AudioFileReadPacketData (Handle, useCache, ref count, pdesc, inStartingPacket, ref nPackets, buffer);
 			}
 
@@ -1018,7 +1018,7 @@ namespace AudioToolbox {
 			var descriptions = new AudioStreamPacketDescription [nPackets];
 			fixed (byte* bop = &buffer [offset]) {
 				OSStatus r;
-				fixed (AudioStreamPacketDescription* pdesc = &descriptions [0]) {
+				fixed (AudioStreamPacketDescription* pdesc = descriptions) {
 					r = AudioFileReadPacketData (Handle, useCache, ref count, pdesc, inStartingPacket, ref nPackets, (IntPtr) bop);
 				}
 				error = (AudioFileError) r;
@@ -1381,7 +1381,7 @@ namespace AudioToolbox {
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				unsafe {
-					fixed (byte* bp = &value [0]) {
+					fixed (byte* bp = value) {
 						SetProperty (AudioFileProperty.MagicCookieData, value.Length, (IntPtr) bp);
 					}
 				}

@@ -42,7 +42,7 @@ namespace Foundation {
 				throw new ArgumentNullException ("key");
 
 			unsafe {
-				fixed (byte* p = &buffer [0]) {
+				fixed (byte* p = buffer) {
 					EncodeBlock ((IntPtr) p, buffer.Length, key);
 				}
 			}
@@ -65,7 +65,7 @@ namespace Foundation {
 				throw new ArgumentException ("Reading would overrun buffer");
 
 			unsafe {
-				fixed (byte* p = &buffer [0]) {
+				fixed (byte* p = buffer) {
 					EncodeBlock ((IntPtr) p, buffer.Length, key);
 				}
 			}

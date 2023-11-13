@@ -91,7 +91,7 @@ namespace VideoToolbox {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ranges));
 
 			if (ranges.Length > 0)
-				fixed (CMTimeRange* first = &ranges [0]) {
+				fixed (CMTimeRange* first = ranges) {
 					return VTFrameSiloSetTimeRangesForNextPass (Handle, ranges.Length, (IntPtr) first);
 				}
 			else
