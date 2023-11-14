@@ -8,7 +8,7 @@ using ObjCRuntime;
 
 namespace ExecutionPolicy {
 
-	[Mac (10, 15), MacCatalyst (16, 0)]
+	[MacCatalyst (16, 0)]
 	[Native]
 	public enum EPDeveloperToolStatus : long {
 		NotDetermined = 0,
@@ -17,7 +17,7 @@ namespace ExecutionPolicy {
 		Authorized,
 	}
 
-	[Mac (10, 15), MacCatalyst (16, 0)]
+	[MacCatalyst (16, 0)]
 	[Native]
 	[ErrorDomain ("EPErrorDomain")]
 	public enum EPError : long {
@@ -25,7 +25,7 @@ namespace ExecutionPolicy {
 		NotADeveloperTool,
 	}
 
-	[Mac (10, 15), MacCatalyst (16, 0)]
+	[MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	interface EPDeveloperTool {
 
@@ -36,7 +36,7 @@ namespace ExecutionPolicy {
 		void RequestDeveloperToolAccess (Action<bool> handler);
 	}
 
-	[Mac (10, 15), MacCatalyst (16, 0)]
+	[MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	interface EPExecutionPolicy {
 

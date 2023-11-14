@@ -130,7 +130,6 @@ namespace CoreFoundation {
 		StripDiacritics,
 	}
 
-	[Mac (10, 12), iOS (10, 0), Watch (3, 0), TV (10, 0)]
 	[Introduced (PlatformName.MacCatalyst, 13, 0)]
 	public enum OSLogLevel : byte {
 		// These values must match the os_log_type_t enum in <os/log.h>.

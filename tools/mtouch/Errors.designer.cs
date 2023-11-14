@@ -3920,6 +3920,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keeping the dynamic registrar (by passing &apos;--optimize=-remove-dynamic-registrar&apos;) is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed..
+        /// </summary>
+        public static string MX2016 {
+            get {
+                return ResourceManager.GetString("MX2016", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not process XML description: {0}
         ///		.
         /// </summary>

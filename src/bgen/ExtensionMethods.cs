@@ -29,7 +29,7 @@ public static class ReflectionExtensions {
 	public static Type GetBaseType (Type type, Generator generator)
 	{
 		var bta = GetBaseTypeAttribute (type, generator);
-		var baseType = bta is not null ? bta.BaseType : generator.TypeManager.System_Object;
+		var baseType = bta is not null ? bta.BaseType : generator.TypeCache.System_Object;
 
 		return baseType;
 	}
@@ -89,7 +89,7 @@ public static class ReflectionExtensions {
 			return properties;
 
 		Type parentType = GetBaseType (type, generator);
-		if (parentType != generator.TypeManager.NSObject) {
+		if (parentType != generator.TypeCache.NSObject) {
 			if (generator.AttributeManager.HasAttribute<ModelAttribute> (parentType)) {
 				foreach (PropertyInfo pinfo in parentType.GetProperties (flags)) {
 					bool toadd = true;
@@ -150,7 +150,7 @@ public static class ReflectionExtensions {
 
 		Type parentType = GetBaseType (type, generator);
 
-		if (parentType != generator.TypeManager.NSObject) {
+		if (parentType != generator.TypeCache.NSObject) {
 			if (generator.AttributeManager.HasAttribute<ModelAttribute> (parentType))
 				foreach (MethodInfo minfo in parentType.GetMethods ())
 					if (generator.AttributeManager.HasAttribute<ExportAttribute> (minfo))

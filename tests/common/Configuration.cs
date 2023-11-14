@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
@@ -215,7 +216,7 @@ namespace Xamarin.Tests {
 			return result;
 		}
 
-		static IList<string> GetVariableArray (string variable, string @default = "")
+		public static IList<string> GetVariableArray (string variable, string @default = "")
 		{
 			// variables with more than one value are wrapped in ', get the var remove the '' and split
 			var value = GetVariable (variable, @default).Trim ('\'');
@@ -475,6 +476,12 @@ namespace Xamarin.Tests {
 		public static string GetSdkNuGetName (ApplePlatform platform)
 		{
 			var variableName = platform.AsString ().ToUpper () + "_NUGET_SDK_NAME";
+			return GetVariable (variableName, variableName + " not found");
+		}
+
+		public static string GetNuGetOsVersion (ApplePlatform platform)
+		{
+			var variableName = platform.AsString ().ToUpper () + "_NUGET_OS_VERSION";
 			return GetVariable (variableName, variableName + " not found");
 		}
 
@@ -1172,5 +1179,24 @@ namespace Xamarin.Tests {
 			Thread.Sleep (1000);
 		}
 
+		// Return true if the current machine can run ARM64 binaries.
+		static bool? canRunArm64;
+		public static bool CanRunArm64 {
+			get {
+				if (!canRunArm64.HasValue) {
+					int rv = 0;
+					IntPtr size = (IntPtr) sizeof (int);
+					if (sysctlbyname ("hw.optional.arm64", ref rv, ref size, IntPtr.Zero, IntPtr.Zero) == 0) {
+						canRunArm64 = rv == 1;
+					} else {
+						canRunArm64 = false;
+					}
+				}
+				return canRunArm64.Value;
+			}
+		}
+
+		[DllImport ("libc")]
+		static extern int sysctlbyname (string name, ref int value, ref IntPtr size, IntPtr zero, IntPtr zeroAgain);
 	}
 }

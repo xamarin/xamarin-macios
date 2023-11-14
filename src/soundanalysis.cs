@@ -21,7 +21,7 @@ using NativeHandle = System.IntPtr;
 namespace SoundAnalysis {
 
 	[ErrorDomain ("SNErrorDomain")]
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	enum SNErrorCode : long {
@@ -39,7 +39,7 @@ namespace SoundAnalysis {
 		Range = 2,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -67,7 +67,7 @@ namespace SoundAnalysis {
 
 	delegate void SNAudioFileAnalyzerAnalyzeHandler (bool didReachEndOfFile);
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -97,7 +97,7 @@ namespace SoundAnalysis {
 		void CancelAnalysis ();
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -110,7 +110,7 @@ namespace SoundAnalysis {
 		double Confidence { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -128,7 +128,7 @@ namespace SoundAnalysis {
 		SNClassification GetClassification (string identifier);
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -159,21 +159,21 @@ namespace SoundAnalysis {
 
 	interface ISNRequest { }
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNRequest { }
 
 	interface ISNResult { }
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNResult { }
 
 	interface ISNResultsObserving { }
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface SNResultsObserving {

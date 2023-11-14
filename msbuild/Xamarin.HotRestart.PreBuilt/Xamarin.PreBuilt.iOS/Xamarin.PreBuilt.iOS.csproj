@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-ios</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../../tests/common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>

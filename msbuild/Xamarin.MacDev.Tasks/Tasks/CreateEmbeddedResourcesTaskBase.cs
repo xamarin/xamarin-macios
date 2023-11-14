@@ -4,10 +4,10 @@ using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateEmbeddedResourcesTaskBase : Task {
-		public string SessionId { get; set; }
+using Xamarin.MacDev.Tasks;
 
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CreateEmbeddedResourcesTaskBase : XamarinTask {
 		[Required]
 		public ITaskItem [] BundleResources { get; set; }
 

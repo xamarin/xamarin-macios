@@ -40,8 +40,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public struct CVTime {
 

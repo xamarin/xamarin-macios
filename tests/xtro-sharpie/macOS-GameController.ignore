@@ -1,5 +1,3 @@
 # Dependency on HIDDriverKit: (BOOL)supportsHIDDevice:(IOHIDDeviceRef)device
-!missing-selector! +GCController::supportsHIDDevice: not bound
 
 # Dependency on CoreHaptics updates for Xcode 12 beta 3
-!missing-selector! GCDeviceHaptics::createEngineWithLocality: not bound

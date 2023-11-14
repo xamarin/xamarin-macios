@@ -116,7 +116,6 @@ namespace ClockKit {
 		void GetPlaceholderTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 
 		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-		[Watch (3, 0)]
 		[Export ("getLocalizableSampleTemplateForComplication:withHandler:")]
 		void GetLocalizableSampleTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 
@@ -761,7 +760,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeSimpleText {
 
@@ -779,7 +777,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeSimpleImage {
 
@@ -797,7 +794,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeRingText {
 
@@ -821,7 +817,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeRingImage {
 
@@ -845,7 +840,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeStackText {
 
@@ -869,7 +863,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeStackImage {
 
@@ -893,7 +886,6 @@ namespace ClockKit {
 	}
 
 	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
-	[Watch (3, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeColumnsText {
 
@@ -1010,17 +1002,14 @@ namespace ClockKit {
 		// but static methods are not great candidates for extensions methods
 		// so they are inlined inside the actual type
 
-		[Watch (3, 0)]
 		[Static]
 		[Export ("localizableTextProviderWithStringsFileTextKey:")]
 		CLKTextProvider CreateLocalizable (string textKey);
 
-		[Watch (3, 0)]
 		[Static]
 		[Export ("localizableTextProviderWithStringsFileTextKey:shortTextKey:")]
 		CLKTextProvider CreateLocalizable (string textKey, [NullAllowed] string shortTextKey);
 
-		[Watch (3, 0)]
 		[Static]
 		[Export ("localizableTextProviderWithStringsFileFormatKey:textProviders:")]
 		CLKTextProvider CreateLocalizable (string formatKey, CLKTextProvider [] textProviders);

@@ -330,17 +330,27 @@ stages:
 
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 # setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
-# Got to disable the lint check because azp yaml template engine does not allow use to do a multiline if :/ 
-# yamllint disable-line rule: line-length
-- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'), eq(parameters.forceInsertion, true))) }}:
-  - template: ./release/vs-insertion-prep.yml
-    parameters:
-      dependsOn: build_packages
-      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      pushNugets: ${{ parameters.pushNugets }}
+- ? ${{ if
+      and(
+        ne(variables['Build.Reason'], 'Schedule'),
+        or(
+          eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+          startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'),
+          startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'),
+          eq(parameters.forceInsertion, true)
+        )
+      )
+    }}
+  : - template: ./release/vs-insertion-prep.yml
+      parameters:
+        dependsOn: build_packages
+        stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        pushNugets: ${{ parameters.pushNugets }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
@@ -396,7 +406,7 @@ stages:
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
     testPool: '' # use the default
     useXamarinStorage: false
-    testsLabels: '--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+    testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
     statusContext: 'VSTS: simulator tests'
     makeTarget: 'jenkins'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
@@ -456,28 +466,6 @@ stages:
       displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
       statusContext: 'Windows Integration Tests'
-
-# iOS 32b tests are slow and do not have many machines, for that reason we are going just to run them in the Schedule builds.
-# This means we are going to get the translations AND the iOS 32b on those builds.
-#
-- ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
-  - template: ./tests/stage.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      testPrefix: 'iOS32b'
-      stageName: 'ios32b_device'
-      displayName: '${{ parameters.stageDisplayNamePrefix }}iOS32b Device Tests'
-      testPool: 'VSEng-Xamarin-QA'
-      useXamarinStorage: false
-      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
-      statusContext: 'VSTS: device tests iOS32b'
-      extraBotDemands: ['xismoke-32']
-      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-      keyringPass: $(pass--lab--mac--builder--keychain)
-      gitHubToken: $(Github.Token)
-      xqaCertPass: $(xqa--certificates--password)
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step

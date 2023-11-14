@@ -68,10 +68,20 @@ public class BindingTouch : IDisposable {
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
-	public TypeManager? typeManager;
-	public TypeManager TypeManager => typeManager!;
 	public Frameworks? Frameworks;
-	public AttributeManager? AttributeManager;
+
+	AttributeManager? attributeManager;
+	public AttributeManager AttributeManager => attributeManager!;
+
+	TypeManager? typeManager;
+	public TypeManager TypeManager => typeManager!;
+
+	NamespaceManager? namespaceManager;
+	public NamespaceManager NamespaceManager => namespaceManager!;
+
+	TypeCache? typeCache;
+	public TypeCache TypeCache => typeCache!;
+
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -478,13 +488,14 @@ public class BindingTouch : IDisposable {
 				return 1;
 			}
 
-			AttributeManager = new AttributeManager (this);
+			attributeManager ??= new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			typeManager ??= new (this, api, universe.CoreAssembly, baselib);
+			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
+			typeManager ??= new (this);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 #if NET
@@ -535,13 +546,13 @@ public class BindingTouch : IDisposable {
 					strong_dictionaries.Add (t);
 			}
 
-			var nsManager = new NamespaceManager (
-				this,
+			namespaceManager ??= new NamespaceManager (
+				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (this, nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
+			var g = new Generator (this, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
 				BaseDir = basedir ?? tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),
@@ -704,74 +715,5 @@ public class BindingTouch : IDisposable {
 	{
 		Dispose (disposing: true);
 		GC.SuppressFinalize (this);
-	}
-}
-
-static class ReferenceFixer {
-	public static void FixSDKReferences (string sdkRoot, string sdk_offset, List<string> references) => FixSDKReferences (Path.Combine (sdkRoot, sdk_offset), references);
-
-	public static void FixSDKReferences (string sdk_path, List<string> references, bool forceSystemDrawing = false)
-	{
-		FixRelativeReferences (sdk_path, references);
-		AddMissingRequiredReferences (sdk_path, references, forceSystemDrawing);
-	}
-
-	static bool ContainsReference (List<string> references, string name) => references.Any (v => Path.GetFileNameWithoutExtension (v) == name);
-	static void AddSDKReference (List<string> references, string sdk_path, string name) => references.Add (Path.Combine (sdk_path, name));
-
-	static void AddMissingRequiredReferences (string sdk_path, List<string> references, bool forceSystemDrawing = false)
-	{
-		foreach (var requiredLibrary in new string [] { "System", "mscorlib", "System.Core" }) {
-			if (!ContainsReference (references, requiredLibrary))
-				AddSDKReference (references, sdk_path, requiredLibrary + ".dll");
-		}
-		if (forceSystemDrawing && !ContainsReference (references, "System.Drawing"))
-			AddSDKReference (references, sdk_path, "System.Drawing.dll");
-	}
-
-	static bool ExistsInSDK (string sdk_path, string name) => File.Exists (Path.Combine (sdk_path, name));
-
-	static void FixRelativeReferences (string sdk_path, List<string> references)
-	{
-		foreach (var r in references.Where (x => ExistsInSDK (sdk_path, x + ".dll")).ToList ()) {
-			references.Remove (r);
-			AddSDKReference (references, sdk_path, r + ".dll");
-		}
-	}
-}
-
-class SearchPathsAssemblyResolver : MetadataAssemblyResolver {
-	readonly string [] libraryPaths;
-	readonly string [] references;
-
-	public SearchPathsAssemblyResolver (string [] libraryPaths, string [] references)
-	{
-		this.libraryPaths = libraryPaths;
-		this.references = references;
-	}
-
-	public override Assembly? Resolve (MetadataLoadContext context, AssemblyName assemblyName)
-	{
-		string? name = assemblyName.Name;
-		if (name is not null) {
-			foreach (var asm in context.GetAssemblies ()) {
-				if (asm.GetName ().Name == name)
-					return asm;
-			}
-
-			string dllName = name + ".dll";
-			foreach (var libraryPath in libraryPaths) {
-				string path = Path.Combine (libraryPath, dllName);
-				if (File.Exists (path)) {
-					return context.LoadFromAssemblyPath (path);
-				}
-			}
-			foreach (var reference in references) {
-				if (Path.GetFileName (reference).Equals (dllName, StringComparison.OrdinalIgnoreCase)) {
-					return context.LoadFromAssemblyPath (reference);
-				}
-			}
-		}
-		return null;
 	}
 }

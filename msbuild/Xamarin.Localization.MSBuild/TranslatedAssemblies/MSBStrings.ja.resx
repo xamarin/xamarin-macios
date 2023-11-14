@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>カスタム リンカー引数 '-{0}' を解析できませんでした: {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource アイテム '{0}' が存在しません。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi デバッガー設定のホスト IP を解決できませんでした。
         </value>

@@ -13,6 +13,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.Bundler;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
@@ -38,7 +39,7 @@ namespace Xamarin.MacDev.Tasks {
 	//   and a zip may contain symlinks for a different platform (and thus won't be needed). Example: an xcframework
 	//   with a framework for macOS will likely have symlinks, but that shouldn't prevent the xcframework from being
 	//   consumed in a build for iOS.
-	public abstract class ResolveNativeReferencesBase : XamarinTask {
+	public class ResolveNativeReferences : XamarinTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -99,6 +100,14 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		public override bool Execute ()
+		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			return ExecuteLocally ();
+		}
+
+		bool ExecuteLocally ()
 		{
 			var native_frameworks = new List<ITaskItem> ();
 			var createdFiles = new List<string> ();
@@ -496,6 +505,41 @@ namespace Xamarin.MacDev.Tasks {
 
 			log.LogError (MSBStrings.E0175 /* No matching framework found inside '{0}'. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'. */, xcframeworkPath, platformName, variant, architectures);
 			return false;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item)
+		{
+			// Don't copy any files to Windows, because
+			// 1. They're not used in Inputs/Outputs, so the lack of them won't affect anything
+			// 2. They may be directories, and as such we'd have to expand them to (potentially numerous and large) files to copy them (uselessly) to Windows.
+			// 3. They may contain symlinks, which may not work correctly on Windows.
+			return false;
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			var rv = new List<ITaskItem> ();
+			rv.AddRange (CreateItemsForAllFilesRecursively (NativeReferences));
+			foreach (var reference in References) {
+				var resourcesPackage = Path.Combine (Path.GetDirectoryName (reference.ItemSpec), Path.GetFileNameWithoutExtension (reference.ItemSpec)) + ".resources";
+				if (Directory.Exists (resourcesPackage)) {
+					var resources = CreateItemsForAllFilesRecursively (new string [] { resourcesPackage });
+					rv.AddRange (resources);
+					continue;
+				}
+				var zipPackage = resourcesPackage + ".zip";
+				if (File.Exists (zipPackage))
+					rv.Add (new TaskItem (zipPackage));
+			}
+			return rv;
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace Xharness.Jenkins {
 						switch (testPlatform) {
 						case TestPlatform.iOS_Unified:
 						case TestPlatform.iOS_TodayExtension64:
-							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS64);
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS);
 							break;
 						case TestPlatform.tvOS:
 							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS);

@@ -56,11 +56,14 @@
 		-e "s/@DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST@/$(DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST)/g" \
 		\
 		-e "s/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/g" \
+		\
+		-e "s/@DOTNET_TFM@/$(DOTNET_TFM)/g" \
+		-e "s/@DOTNET_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
 		$< > $@.tmp
 	$(Q) if ! diff $@ $@.tmp >/dev/null; then $(CP) $@.tmp $@; git diff "$@"; echo "The file $(TOP)/tools/common/SdkVersions.cs has been automatically re-generated; please commit the changes."; exit 1; fi
 	$(Q) touch $@
 
-../common/ProductConstants.cs: ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config $(TOP)/.git/index
+../common/ProductConstants.cs: ../common/ProductConstants.in.cs Makefile $(TOP)/Make.config $(GIT_DIRECTORY)/index
 	$(Q_GEN) sed \
 		-e "s/@IOS_VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
 		-e "s/@TVOS_VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \

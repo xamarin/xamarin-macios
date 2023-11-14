@@ -12,7 +12,7 @@ parameters:
 
 - name: testsLabels
   type: string
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 - name: label
   type: string
@@ -222,6 +222,13 @@ steps:
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
   timeoutInMinutes: 250
+
+# clean sims incase we were left in a strange state
+- bash: |
+    sudo xcrun simctl shutdown all
+    sudo xcrun simctl erase all
+  displayName: 'Clean simulators'
+  timeoutInMinutes: 20
 
 - template: ./run-tests.yml
   parameters:

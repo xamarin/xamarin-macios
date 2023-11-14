@@ -69,32 +69,6 @@
     <MtouchExtraArgs>--bitcode:asmonly</MtouchExtraArgs>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\%NAME%\iPhone\Release32-tvos</OutputPath>
-    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>ARM64</MtouchArch>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\%NAME%\iPhone\Release64-tvos</OutputPath>
-    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;FULL_AOT_RUNTIME;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>ARM64</MtouchArch>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Mono.Options" Version="6.6.0.161" />
     <PackageReference Include="System.Buffers" Version="4.5.0" />

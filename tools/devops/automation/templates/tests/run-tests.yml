@@ -5,7 +5,7 @@ parameters:
 
 - name: testsLabels
   type: string
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 - name: label
   type: string
@@ -135,8 +135,11 @@ steps:
 
 # expand all the prebuilt test dependencies
 - bash: |
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
     unzip -o $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+    ls -Rla@ .
+    xattr -s -c -r .
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Expand test libraries.
   timeoutInMinutes: 10
@@ -324,6 +327,7 @@ steps:
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
   env:
+    MACIOS_TEST_PREFIX: ${{ parameters.testPrefix }}
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
 # Be nice and clean behind you

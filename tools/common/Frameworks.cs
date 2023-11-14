@@ -278,10 +278,15 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "AVRouting", "AVRouting", 13,0},
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
+					{ "MetalFX", "MetalFX", 13, 0 },
 					{ "SharedWithYou", "SharedWithYou", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
 					{ "ThreadNetwork", "ThreadNetwork", 13,0 },
+
+					{ "Cinematic", "Cinematic", 14,0 },
+					{ "Symbols", "Symbols", 14, 0 },
+					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -342,7 +347,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "Accounts", "Accounts", 5 },
 				{ "GLKit", "GLKit", 5 },
-				{ "NewsstandKit", "NewsstandKit", 5, /* alwaysWeakLink: */ true }, // This framework was completely removed in iOS 17, so make sure existing apps that may link with NewsstandKit don't crash (by linking weakly). Ref: https://github.com/xamarin/xamarin-macios/issues/18606
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
@@ -455,9 +459,14 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "MetalFX", "MetalFX", new Version (16,0), NotAvailableInSimulator },
 				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
+
+				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
+				{ "Symbols", "Symbols", 17, 0 },
+				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -536,6 +545,8 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
 				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
+
+				{ "Symbols", "Symbols", 10, 0 },
 			};
 		}
 		return watch_frameworks;
@@ -633,6 +644,11 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 					{ "SharedWithYou", "SharedWithYou", 16,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },
+
+					{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
+					{ "Symbols", "Symbols", 17, 0 },
+					{ "NetworkExtension", "NetworkExtension", 17, 0 },
+		  { "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
 				};
 			}
 			return tvos_frameworks;
@@ -685,6 +701,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
+				case "Cinematic":
 #if !NET
 				case "iAd":
 				case "CHIP":

@@ -45,9 +45,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -61,9 +58,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -77,9 +71,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static bool IsDynamic (string utType)
 		{
@@ -100,9 +91,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static bool IsDeclared (string utType)
 		{
@@ -158,9 +146,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString Array */ UTTypeCopyAllTagsWithClass (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ tagClassStr);
@@ -173,9 +158,6 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static string? []? CopyAllTags (string uti, string tagClass)
 		{

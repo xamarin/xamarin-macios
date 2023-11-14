@@ -45,15 +45,59 @@ namespace UIKit {
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIRectClip")]
 		public extern static void RectClip (CGRect rect);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsBeginImageContext")]
 		public extern static void BeginImageContext (CGSize size);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsBeginImageContextWithOptions")]
 		public extern static void BeginImageContextWithOptions (CGSize size, [MarshalAs (UnmanagedType.I1)] bool opaque, nfloat scale);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern IntPtr UIGraphicsGetImageFromCurrentImageContext ();
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsEndImageContext")]
 		public extern static void EndImageContext ();
 
@@ -148,6 +192,17 @@ namespace UIKit {
 		public static void EndPDFContent () => EndPDFContext ();
 #endif
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
 		public static UIImage GetImageFromCurrentImageContext ()
 		{
 			using (var pool = new NSAutoreleasePool ()) {

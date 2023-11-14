@@ -4,12 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.iOS.Tasks {
-	public class PrepareObjCBindingNativeFrameworks : Task, ITaskCallback, ICancelableTask {
-		public string SessionId { get; set; }
-
+	public class PrepareObjCBindingNativeFrameworks : XamarinTask, ITaskCallback, ICancelableTask {
 		public ITaskItem [] ObjCBindingNativeFrameworks { get; set; }
 
 		public override bool Execute ()
@@ -32,23 +31,9 @@ namespace Xamarin.iOS.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (ObjCBindingNativeFrameworks is null)
-				yield break;
-
-			foreach (var nativeRef in ObjCBindingNativeFrameworks
-				.Where (x => Directory.Exists (x.ItemSpec))
-				.Select (x => x.ItemSpec))
-				foreach (var item in GetItemsFromNativeReference (nativeRef))
-					yield return item;
+			return CreateItemsForAllFilesRecursively (ObjCBindingNativeFrameworks);
 		}
 
 		public void Cancel () => BuildConnection.CancelAsync (BuildEngine4).Wait ();
-
-		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
-		{
-			foreach (var file in Directory.EnumerateFiles (folderPath, "*", SearchOption.AllDirectories)
-				.Select (x => new TaskItem (x)))
-				yield return file;
-		}
 	}
 }

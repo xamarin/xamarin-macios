@@ -35,10 +35,6 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 #endif
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {

@@ -28,6 +28,7 @@ partial class Frameworks {
 		"CarPlay",
 		"CFNetwork",
 		"Chip",
+		"Cinematic",
 		"ClassKit",
 		"CloudKit",
 		"Compression",
@@ -84,6 +85,7 @@ partial class Frameworks {
 		"Messages",
 		"MessageUI",
 		"Metal",
+		"MetalFX",
 		"MetalKit",
 		"MetalPerformanceShaders",
 		"MetalPerformanceShadersGraph",
@@ -115,6 +117,7 @@ partial class Frameworks {
 		"SceneKit",
 		"ScreenTime",
 		"Security",
+		"SensitiveContentAnalysis",
 		"SensorKit",
 		"SharedWithYou",
 		"SharedWithYouCore",
@@ -124,6 +127,7 @@ partial class Frameworks {
 		"Speech",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"ThreadNetwork",
 		"Twitter",
@@ -161,6 +165,7 @@ partial class Frameworks {
 		"CallKit",
 		"CFNetwork",
 		"Chip",
+		"Cinematic",
 		"ClassKit",
 		"CloudKit",
 		"Compression",
@@ -215,6 +220,7 @@ partial class Frameworks {
 		"MediaPlayer",
 		"MediaToolbox",
 		"Metal",
+		"MetalFX",
 		"MetalKit",
 		"MetalPerformanceShaders",
 		"MetalPerformanceShadersGraph",
@@ -251,6 +257,7 @@ partial class Frameworks {
 		"ScriptingBridge",
 		"SearchKit",
 		"Security",
+		"SensitiveContentAnalysis",
 		"ServiceManagement",
 		"SharedWithYou",
 		"SharedWithYouCore",
@@ -260,6 +267,7 @@ partial class Frameworks {
 		"Speech",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"ThreadNetwork",
 		"UniformTypeIdentifiers",
@@ -317,6 +325,7 @@ partial class Frameworks {
 		"SoundAnalysis",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"UIKit",
 		"UniformTypeIdentifiers",
 		"UserNotifications",
@@ -338,6 +347,7 @@ partial class Frameworks {
 		"BackgroundTasks",
 		"CFNetwork",
 		"Chip",
+		"Cinematic",
 		"CloudKit",
 		"Compression",
 		"CoreAnimation",
@@ -380,8 +390,10 @@ partial class Frameworks {
 		"MultipeerConnectivity",
 		"NaturalLanguage",
 		"Network",
+		"NetworkExtension",
 		"OpenGLES",
 		"OSLog",
+		"Phase",
 		"Photos",
 		"PhotosUI",
 		"ReplayKit",
@@ -393,6 +405,7 @@ partial class Frameworks {
 		"SoundAnalysis",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"TVMLKit",
 		"TVServices",
@@ -509,6 +522,7 @@ partial class Frameworks {
 		"SceneKit",
 		"ScreenTime",
 		"Security",
+		"SensitiveContentAnalysis",
 		"SensorKit",
 		"ServiceManagement",
 		"SharedWithYou",
@@ -519,6 +533,7 @@ partial class Frameworks {
 		"Speech",
 		"SpriteKit",
 		"StoreKit",
+		"Symbols",
 		"SystemConfiguration",
 		"ThreadNetwork",
 		"UIKit",
@@ -557,6 +572,7 @@ partial class Frameworks {
 	bool? _CarPlay;
 	bool? _CFNetwork;
 	bool? _Chip;
+	bool? _Cinematic;
 	bool? _ClassKit;
 	bool? _ClockKit;
 	bool? _CloudKit;
@@ -626,6 +642,7 @@ partial class Frameworks {
 	bool? _Messages;
 	bool? _MessageUI;
 	bool? _Metal;
+	bool? _MetalFX;
 	bool? _MetalKit;
 	bool? _MetalPerformanceShaders;
 	bool? _MetalPerformanceShadersGraph;
@@ -665,6 +682,7 @@ partial class Frameworks {
 	bool? _ScriptingBridge;
 	bool? _SearchKit;
 	bool? _Security;
+	bool? _SensitiveContentAnalysis;
 	bool? _SensorKit;
 	bool? _ServiceManagement;
 	bool? _SharedWithYou;
@@ -675,6 +693,7 @@ partial class Frameworks {
 	bool? _Speech;
 	bool? _SpriteKit;
 	bool? _StoreKit;
+	bool? _Symbols;
 	bool? _SystemConfiguration;
 	bool? _ThreadNetwork;
 	bool? _TVMLKit;
@@ -719,6 +738,7 @@ partial class Frameworks {
 	public bool HaveCarPlay { get { if (!_CarPlay.HasValue) _CarPlay = GetValue ("CarPlay"); return _CarPlay.Value; } }
 	public bool HaveCFNetwork { get { if (!_CFNetwork.HasValue) _CFNetwork = GetValue ("CFNetwork"); return _CFNetwork.Value; } }
 	public bool HaveChip { get { if (!_Chip.HasValue) _Chip = GetValue ("Chip"); return _Chip.Value; } }
+	public bool HaveCinematic { get { if (!_Cinematic.HasValue) _Cinematic = GetValue ("Cinematic"); return _Cinematic.Value; } }
 	public bool HaveClassKit { get { if (!_ClassKit.HasValue) _ClassKit = GetValue ("ClassKit"); return _ClassKit.Value; } }
 	public bool HaveClockKit { get { if (!_ClockKit.HasValue) _ClockKit = GetValue ("ClockKit"); return _ClockKit.Value; } }
 	public bool HaveCloudKit { get { if (!_CloudKit.HasValue) _CloudKit = GetValue ("CloudKit"); return _CloudKit.Value; } }
@@ -788,6 +808,7 @@ partial class Frameworks {
 	public bool HaveMessages { get { if (!_Messages.HasValue) _Messages = GetValue ("Messages"); return _Messages.Value; } }
 	public bool HaveMessageUI { get { if (!_MessageUI.HasValue) _MessageUI = GetValue ("MessageUI"); return _MessageUI.Value; } }
 	public bool HaveMetal { get { if (!_Metal.HasValue) _Metal = GetValue ("Metal"); return _Metal.Value; } }
+	public bool HaveMetalFX { get { if (!_MetalFX.HasValue) _MetalFX = GetValue ("MetalFX"); return _MetalFX.Value; } }
 	public bool HaveMetalKit { get { if (!_MetalKit.HasValue) _MetalKit = GetValue ("MetalKit"); return _MetalKit.Value; } }
 	public bool HaveMetalPerformanceShaders { get { if (!_MetalPerformanceShaders.HasValue) _MetalPerformanceShaders = GetValue ("MetalPerformanceShaders"); return _MetalPerformanceShaders.Value; } }
 	public bool HaveMetalPerformanceShadersGraph { get { if (!_MetalPerformanceShadersGraph.HasValue) _MetalPerformanceShadersGraph = GetValue ("MetalPerformanceShadersGraph"); return _MetalPerformanceShadersGraph.Value; } }
@@ -827,6 +848,7 @@ partial class Frameworks {
 	public bool HaveScriptingBridge { get { if (!_ScriptingBridge.HasValue) _ScriptingBridge = GetValue ("ScriptingBridge"); return _ScriptingBridge.Value; } }
 	public bool HaveSearchKit { get { if (!_SearchKit.HasValue) _SearchKit = GetValue ("SearchKit"); return _SearchKit.Value; } }
 	public bool HaveSecurity { get { if (!_Security.HasValue) _Security = GetValue ("Security"); return _Security.Value; } }
+	public bool HaveSensitiveContentAnalysis { get { if (!_SensitiveContentAnalysis.HasValue) _SensitiveContentAnalysis = GetValue ("SensitiveContentAnalysis"); return _SensitiveContentAnalysis.Value; } }
 	public bool HaveSensorKit { get { if (!_SensorKit.HasValue) _SensorKit = GetValue ("SensorKit"); return _SensorKit.Value; } }
 	public bool HaveServiceManagement { get { if (!_ServiceManagement.HasValue) _ServiceManagement = GetValue ("ServiceManagement"); return _ServiceManagement.Value; } }
 	public bool HaveSharedWithYou { get { if (!_SharedWithYou.HasValue) _SharedWithYou = GetValue ("SharedWithYou"); return _SharedWithYou.Value; } }
@@ -837,6 +859,7 @@ partial class Frameworks {
 	public bool HaveSpeech { get { if (!_Speech.HasValue) _Speech = GetValue ("Speech"); return _Speech.Value; } }
 	public bool HaveSpriteKit { get { if (!_SpriteKit.HasValue) _SpriteKit = GetValue ("SpriteKit"); return _SpriteKit.Value; } }
 	public bool HaveStoreKit { get { if (!_StoreKit.HasValue) _StoreKit = GetValue ("StoreKit"); return _StoreKit.Value; } }
+	public bool HaveSymbols { get { if (!_Symbols.HasValue) _Symbols = GetValue ("Symbols"); return _Symbols.Value; } }
 	public bool HaveSystemConfiguration { get { if (!_SystemConfiguration.HasValue) _SystemConfiguration = GetValue ("SystemConfiguration"); return _SystemConfiguration.Value; } }
 	public bool HaveThreadNetwork { get { if (!_ThreadNetwork.HasValue) _ThreadNetwork = GetValue ("ThreadNetwork"); return _ThreadNetwork.Value; } }
 	public bool HaveTVMLKit { get { if (!_TVMLKit.HasValue) _TVMLKit = GetValue ("TVMLKit"); return _TVMLKit.Value; } }

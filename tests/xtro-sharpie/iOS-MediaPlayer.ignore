@@ -44,3 +44,4 @@
 !missing-selector! MPMediaItem::title not bound
 !missing-selector! MPMediaItem::userGrouping not bound
 !missing-selector! MPMediaItem::isPreorder not bound
+!extra-null-allowed! 'System.Void MediaPlayer.MPRemoteCommand::RemoveTarget(Foundation.NSObject,ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0

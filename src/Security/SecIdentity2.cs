@@ -34,7 +34,6 @@ namespace Security {
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (5, 0)]
 #endif
@@ -94,13 +93,12 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -124,13 +122,12 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		// no [Async] as it can be called multiple times

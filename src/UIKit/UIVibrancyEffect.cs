@@ -37,7 +37,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #else
-		[iOS (10,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #endif
 		static public UIVibrancyEffect CreatePrimaryVibrancyEffectForNotificationCenter ()
@@ -51,7 +50,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("ios13.0", "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #else
-		[iOS (10,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.")]
 #endif
 		static public UIVibrancyEffect CreateSecondaryVibrancyEffectForNotificationCenter ()

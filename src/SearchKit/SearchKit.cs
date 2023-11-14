@@ -69,7 +69,7 @@ namespace SearchKit {
 				throw new ArgumentException ("ids should have as many elements as maxCount");
 
 			unsafe {
-				fixed (nint* p = &ids [0]) {
+				fixed (nint* p = ids) {
 					return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, out foundCount);
 				}
 			}
@@ -91,11 +91,11 @@ namespace SearchKit {
 					throw new ArgumentException ("scores should have as many elements as maxCount");
 			}
 			unsafe {
-				fixed (nint* p = &ids [0]) {
+				fixed (nint* p = ids) {
 					if (scores is null)
 						return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, IntPtr.Zero, waitTime, out foundCount);
 					else {
-						fixed (float* s = &scores [0]) {
+						fixed (float* s = scores) {
 							return SKSearchFindMatches (Handle, maxCount, (IntPtr) p, (IntPtr) s, waitTime, out foundCount);
 						}
 					}
@@ -568,10 +568,10 @@ namespace SearchKit {
 				nint [] ars = sentenceIndexOfSentences is null ? hack : sentenceIndexOfSentences;
 				nint [] arp = paragraphIndexOfSentences is null ? hack : paragraphIndexOfSentences;
 
-				fixed (nint* r = &arr [0]) {
-					fixed (nint* s = &ars [0]) {
-						fixed (nint* p = &arp [0]) {
-							fixed (nint* hp = &hack [0]) {
+				fixed (nint* r = arr) {
+					fixed (nint* s = ars) {
+						fixed (nint* p = arp) {
+							fixed (nint* hp = hack) {
 								return SKSummaryGetSentenceSummaryInfo (Handle, maxNumSentencesInSummary,
 													(IntPtr) (r == hp ? null : r),
 													(IntPtr) (s == hp ? null : s),
@@ -605,9 +605,9 @@ namespace SearchKit {
 				nint [] ar = rankOrderOfParagraphs is null ? hack : rankOrderOfParagraphs;
 				nint [] ap = paragraphIndexOfParagraphs is null ? hack : paragraphIndexOfParagraphs;
 
-				fixed (nint* r = &ar [0]) {
-					fixed (nint* p = &ap [0]) {
-						fixed (nint* hp = &hack [0]) {
+				fixed (nint* r = ar) {
+					fixed (nint* p = ap) {
+						fixed (nint* hp = hack) {
 							return SKSummaryGetParagraphSummaryInfo (Handle, maxNumParagraphsInSummary,
 												 (IntPtr) (r == hp ? null : r),
 												 (IntPtr) (p == hp ? null : p));
