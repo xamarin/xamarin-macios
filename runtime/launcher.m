@@ -226,7 +226,7 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 		[alert addButtonWithTitle:@"OK"];
 	}
 	NSInteger answer = [alert runModal];
-	[alert release];
+	objc_release (alert);
 	
 	if (request_mono && answer == NSAlertFirstButtonReturn) {
 		NSString *mono_download_url = @"https://www.mono-project.com/download/stable/";
