@@ -28,6 +28,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="4.7.2" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -135,7 +136,6 @@
     <Compile Include="..\tools\common\TargetFramework.cs" />
     <Compile Include="..\tools\common\StringUtils.cs" />
     <Compile Include="$(BuildDir)generator-frameworks.g.cs" />
-    <Compile Include="..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs" />
     <Compile Include="..\src\Foundation\AdviceAttribute.cs" />
     <Compile Include="..\src\Foundation\ExportAttribute.cs" />
     <Compile Include="..\src\Foundation\FieldAttribute.cs" />
