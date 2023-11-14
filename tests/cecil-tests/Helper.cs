@@ -324,37 +324,26 @@ namespace Cecil.Tests {
 			return false;
 		}
 
+		public static bool IsPubliclyVisible (this MemberReference member)
+		{
+			return member switch  {
+				PropertyDefinition pd => IsPubliclyVisible (pd),
+				EventDefinition ed => IsPubliclyVisible (ed),
+				MethodDefinition md => IsPubliclyVisible (md),
+				FieldDefinition fd => IsPubliclyVisible (fd),
+				TypeDefinition td => IsPubliclyVisible (td),
+				_ => throw new NotImplementedException (member.GetType ().FullName),
+			};
+		}
+
 		public static IEnumerable<MemberReference> EnumeratePublicMembers (this AssemblyDefinition assembly, Func<MemberReference, bool>? filter = null)
 		{
-			foreach (var item in assembly.EnumerateTypes (filter)) {
-				if (!IsPubliclyVisible (item))
-					continue;
-				yield return item;
-			}
-
-			foreach (var item in assembly.EnumerateFields (filter)) {
-				if (!IsPubliclyVisible (item))
-					continue;
-				yield return item;
-			}
-
-			foreach (var item in assembly.EnumerateMethods (filter)) {
-				if (!IsPubliclyVisible (item))
-					continue;
-				yield return item;
-			}
-
-			foreach (var item in assembly.EnumerateProperties (filter)) {
-				if (!IsPubliclyVisible (item))
-					continue;
-				yield return item;
-			}
-
-			foreach (var item in assembly.EnumerateEvents (filter)) {
-				if (!IsPubliclyVisible (item))
-					continue;
-				yield return item;
-			}
+			var visibleFilter = (MemberReference mr) => {
+				if (filter is not null && !filter (mr))
+					return false;
+				return IsPubliclyVisible (mr);
+			};
+			return EnumerateMembers (assembly, visibleFilter);
 		}
 
 		public static IEnumerable<ICustomAttributeProvider> EnumerateAttributeProviders (this TypeDefinition type, Func<ICustomAttributeProvider, bool>? filter = null)
