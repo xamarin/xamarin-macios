@@ -326,7 +326,7 @@ namespace Cecil.Tests {
 
 		public static bool IsPubliclyVisible (this MemberReference member)
 		{
-			return member switch  {
+			return member switch {
 				PropertyDefinition pd => IsPubliclyVisible (pd),
 				EventDefinition ed => IsPubliclyVisible (ed),
 				MethodDefinition md => IsPubliclyVisible (md),
