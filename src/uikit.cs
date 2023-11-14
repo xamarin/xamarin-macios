@@ -1560,7 +1560,7 @@ namespace UIKit {
 		[Export ("activityDidFinish:")]
 		void Finished (bool completed);
 
-		[Export ("activityCategory"), Static]
+		[Export ("activityCategory")]
 		UIActivityCategory Category { get; }
 	}
 
