@@ -82,6 +82,10 @@ namespace GeneratorTests {
 			var path = platformName.GetPath (paths);
 			Environment.SetEnvironmentVariable (envVar, env);
 
+			if (Path.DirectorySeparatorChar != '/') {
+				path = path.Replace (Path.DirectorySeparatorChar, '/');
+			}
+
 			Assert.AreEqual (result, path, platformName.GetPath (paths));
 		}
 	}
