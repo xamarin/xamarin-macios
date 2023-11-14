@@ -1,7 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+
+#nullable enable
 
 namespace Xamarin.Utils {
 	public static class PathUtils {
@@ -15,7 +18,12 @@ namespace Xamarin.Utils {
 			return (((uint) c - 'a') <= ((uint) 'z' - 'a')) ? (char) (c - 0x20) : c;
 		}
 
-		public static string EnsureTrailingSlash (this string path)
+#if NET
+		[return: NotNullIfNotNull (nameof (path))]
+#else
+		[return: NotNullIfNotNull ("path")]
+#endif
+		public static string? EnsureTrailingSlash (this string? path)
 		{
 			if (path is null)
 				return null;
@@ -32,8 +40,18 @@ namespace Xamarin.Utils {
 		[DllImport ("/usr/lib/libc.dylib")]
 		static extern IntPtr realpath (string path, IntPtr buffer);
 
-		public static string ResolveSymbolicLinks (string path)
+#if NET
+		[return: NotNullIfNotNull (nameof (path))]
+#else
+		[return: NotNullIfNotNull ("path")]
+#endif
+		public static string? ResolveSymbolicLinks (string? path)
 		{
+#if !NET
+			if (path is null)
+				return null;
+#endif
+
 			if (string.IsNullOrEmpty (path))
 				return path;
 
@@ -46,14 +64,14 @@ namespace Xamarin.Utils {
 			try {
 				buffer = Marshal.AllocHGlobal (PATHMAX);
 				var result = realpath (path, buffer);
-				return result == IntPtr.Zero ? path : Marshal.PtrToStringAuto (buffer);
+				return result == IntPtr.Zero ? path : Marshal.PtrToStringAuto (buffer)!;
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
 		}
 
-		public static string AbsoluteToRelative (string baseDirectory, string absolute)
+		public static string AbsoluteToRelative (string? baseDirectory, string absolute)
 		{
 			if (string.IsNullOrEmpty (baseDirectory))
 				return absolute;
@@ -149,7 +167,7 @@ namespace Xamarin.Utils {
 
 		public static string GetSymlinkTarget (string path)
 		{
-			byte [] buffer = null;
+			byte []? buffer = null;
 			int rv;
 			do {
 				buffer = new byte [(buffer?.Length ?? 0) + 1024];
@@ -241,8 +259,18 @@ namespace Xamarin.Utils {
 		}
 
 		// Replace any windows-style slashes with mac-style slashes.
-		public static string ConvertToMacPath (string path)
+#if NET
+		[return: NotNullIfNotNull (nameof (path))]
+#else
+		[return: NotNullIfNotNull ("path")]
+#endif
+		public static string? ConvertToMacPath (string? path)
 		{
+#if !NET
+			if (path is null)
+				return null;
+#endif
+
 			if (string.IsNullOrEmpty (path))
 				return path;
 
