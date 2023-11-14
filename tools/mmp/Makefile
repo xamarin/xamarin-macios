@@ -17,7 +17,7 @@ mmp.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mmp.csproj.inc
 
 $(MMP_DIR)/mmp.exe: $(mmp_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/Xamarin.Mac.sln "/t:mmp" $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
+	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" mmp.csproj /r $(XBUILD_VERBOSITY) /p:Configuration=$(MMP_CONF)
 
 MMP_TARGETS_DOTNET = \
 	$(DOTNET_DESTDIR)/$(osx-x64_NUGET_RUNTIME_NAME)/runtimes/osx-x64/native/Microsoft.macOS.registrar.a \

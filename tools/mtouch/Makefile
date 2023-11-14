@@ -234,7 +234,7 @@ mtouch.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mtouch.csproj.inc
 
 $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
-	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.iOS.sln "/t:mtouch" $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
+	$(Q_GEN) $(SYSTEM_MSBUILD) mtouch.csproj /r $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
 
 Constants.cs: Constants.cs.in Makefile $(TOP)/Make.config.inc
 	$(Q_GEN) sed \
