@@ -118,7 +118,7 @@ steps:
     set -x
     set -e
     cd xamarin-macios
-    TEST_PLATFORM=$(echo "${{ parameters.testPlatform }}"" | tr '[:upper:]' '[:lower:]')
+    TEST_PLATFORM=$(echo "${{ parameters.testPlatform }}" | tr '[:upper:]' '[:lower:]')
     ARGS=(--enable-xamarin)
     if test -n "$TEST_PLATFORM"; then
       ARGS+=("--disable-all-platforms")
