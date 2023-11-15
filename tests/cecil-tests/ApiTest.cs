@@ -27,7 +27,7 @@ namespace Cecil.Tests {
 			List<string>? failures = null;
 
 			if (!assembly.EnumerateTypes ((type) => type.Is ("ARKit", "ARConfiguration")).Any ())
-				Assert.Ignore ("This assembly doesn't contain ARKit.ARConfiguration");
+				Assert.Ignore (); // This assembly doesn't contain ARKit.ARConfiguration
 
 			var subclasses = assembly.EnumerateTypes ((type) => !type.Is ("ARKit", "ARConfiguration") && type.IsSubclassOf ("ARKit", "ARConfiguration"));
 			Assert.That (subclasses, Is.Not.Empty, "At least some subclasses");
