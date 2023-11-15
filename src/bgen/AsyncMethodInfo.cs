@@ -19,7 +19,7 @@ class AsyncMethodInfo : MemberInformation {
 		this.AsyncInitialParams = mi.GetParameters ().DropLast ();
 
 		var lastType = mi.GetParameters ().Last ().ParameterType;
-		if (!lastType.IsSubclassOf (generator.TypeManager.System_Delegate))
+		if (!lastType.IsSubclassOf (generator.TypeCache.System_Delegate))
 			throw new BindingException (1036, true, mi.DeclaringType?.FullName, mi.Name, lastType.FullName);
 		var cbParams = lastType.GetMethod ("Invoke")?.GetParameters () ?? Array.Empty<ParameterInfo> ();
 		AsyncCompletionParams = cbParams;

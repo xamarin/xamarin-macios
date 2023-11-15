@@ -294,7 +294,7 @@ namespace AudioToolbox {
 			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			unsafe {
-				fixed (byte* bp = &bytes [0]) {
+				fixed (byte* bp = bytes) {
 					return LastError = AudioFileStreamParseBytes (handle, bytes.Length, (IntPtr) bp, discontinuity ? (uint) 1 : (uint) 0);
 				}
 			}
@@ -312,7 +312,7 @@ namespace AudioToolbox {
 				throw new ArgumentException ("offset+count");
 
 			unsafe {
-				fixed (byte* bp = &bytes [0]) {
+				fixed (byte* bp = bytes) {
 					return LastError = AudioFileStreamParseBytes (handle, count, (IntPtr) (bp + offset), discontinuity ? (uint) 1 : (uint) 0);
 				}
 			}

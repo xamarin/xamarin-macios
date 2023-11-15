@@ -92,7 +92,7 @@ public class MemberInformation {
 		// declaration.  If this is an inlined method, then we need to see if this was
 		// also inlined in any of the base classes.
 		if (mi.DeclaringType != type) {
-			for (var baseType = ReflectionExtensions.GetBaseType (type, generator); baseType != Generator.TypeManager.System_Object; baseType = ReflectionExtensions.GetBaseType (baseType, generator)) {
+			for (var baseType = ReflectionExtensions.GetBaseType (type, generator); baseType != Generator.TypeCache.System_Object; baseType = ReflectionExtensions.GetBaseType (baseType, generator)) {
 				foreach (var baseMethod in gather.GetTypeContractMethods (baseType)) {
 					if (baseMethod.DeclaringType != baseType && baseMethod == mi) {
 						// We found a case, we need to flag it as new.
@@ -112,10 +112,10 @@ public class MemberInformation {
 	{
 		is_basewrapper_protocol_method = isBaseWrapperProtocolMethod;
 		foreach (ParameterInfo pi in mi.GetParameters ())
-			if (pi.ParameterType.IsSubclassOf (Generator.TypeManager.System_Delegate))
+			if (pi.ParameterType.IsSubclassOf (Generator.TypeCache.System_Delegate))
 				is_unsafe = true;
 
-		if (!is_unsafe && mi.ReturnType.IsSubclassOf (Generator.TypeManager.System_Delegate))
+		if (!is_unsafe && mi.ReturnType.IsSubclassOf (Generator.TypeCache.System_Delegate))
 			is_unsafe = true;
 
 		if (selector is not null) {
@@ -170,7 +170,7 @@ public class MemberInformation {
 	public MemberInformation (Generator generator, IMemberGatherer gather, PropertyInfo pi, Type type, bool is_interface_impl = false)
 		: this (generator, gather, pi, type, is_interface_impl, false, false, false)
 	{
-		if (pi.PropertyType.IsSubclassOf (Generator.TypeManager.System_Delegate))
+		if (pi.PropertyType.IsSubclassOf (Generator.TypeCache.System_Delegate))
 			is_unsafe = true;
 
 		var export = Generator.GetExportAttribute (pi, out wrap_method);

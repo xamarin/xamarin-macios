@@ -252,7 +252,7 @@ namespace AudioToolbox {
 			Debug.Assert (sizeof (AudioFormat) == type_size);
 
 			var data = new AudioFormat [size / type_size];
-			fixed (AudioFormat* ptr = &data [0]) {
+			fixed (AudioFormat* ptr = data) {
 				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.OutputFormatList, type_size, ref afi, ref size, ptr);
 				if (res != 0)
 					return null;
@@ -282,7 +282,7 @@ namespace AudioToolbox {
 				Debug.Assert (sizeof (AudioFormat) == type_size);
 
 				var data = new AudioFormat [size / type_size];
-				fixed (AudioFormat* ptr = &data [0]) {
+				fixed (AudioFormat* ptr = data) {
 					var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatList, type_size, ref afi, ref size, ptr);
 					if (res != 0)
 						return null;
@@ -1129,10 +1129,10 @@ namespace AudioToolbox {
 			int [] value;
 			AudioFormatError res;
 
-			fixed (IntPtr* ptr = &array [0]) {
+			fixed (IntPtr* ptr = array) {
 				value = new int [channels_count.Value];
 				var size = sizeof (int) * value.Length;
-				fixed (int* value_ptr = &value [0]) {
+				fixed (int* value_ptr = value) {
 					res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelMap, ptr_size, ptr, ref size, value_ptr);
 				}
 			}
@@ -1167,7 +1167,7 @@ namespace AudioToolbox {
 			float [,] value;
 			AudioFormatError res;
 
-			fixed (IntPtr* ptr = &array [0]) {
+			fixed (IntPtr* ptr = array) {
 				value = new float [channels_count_input.Value, channels_count_output.Value];
 				var size = sizeof (float) * channels_count_input.Value * channels_count_output.Value;
 				fixed (float* value_ptr = &value [0, 0]) {

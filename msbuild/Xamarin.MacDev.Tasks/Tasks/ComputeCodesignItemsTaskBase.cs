@@ -58,7 +58,7 @@ namespace Xamarin.MacDev.Tasks {
 			var output = new List<ITaskItem> ();
 
 			// Make sure AppBundleDir has a trailing slash
-			var appBundlePath = PathUtils.EnsureTrailingSlash (Path.GetFullPath (AppBundleDir));
+			var appBundlePath = PathUtils.EnsureTrailingSlash (Path.GetFullPath (AppBundleDir)!);
 
 			// Add the app bundles themselves
 			foreach (var bundle in CodesignBundle) {
@@ -238,7 +238,7 @@ namespace Xamarin.MacDev.Tasks {
 			var rv = new List<string> ();
 
 			// Canonicalize the app path, so string comparisons work later on
-			appPath = PathUtils.ResolveSymbolicLinks (Path.GetFullPath (appPath));
+			appPath = PathUtils.ResolveSymbolicLinks (Path.GetFullPath (appPath))!;
 
 			// Make sure path ends with trailing slash to ease logic
 			appPath = PathUtils.EnsureTrailingSlash (appPath);
