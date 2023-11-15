@@ -68,6 +68,16 @@ namespace Cecil.Tests {
 						continue;
 
 					if (member is MethodDefinition method) {
+						// Check parameter names
+						foreach (var param in method.Parameters) {
+							if (param.Index == 0 && method.IsExtensionMethod ())
+								continue;
+							if (!char.IsLower (param.Name [0])) {
+								var msg = $"The parameter '{param.Name}' in the method '{method.FullName}' has incorrect capitalization: first letter is not lower case.";
+								failures [msg] = new (msg, method.RenderLocation ());
+							}
+						}
+
 						// skip constructors
 						if (method.IsConstructor)
 							continue;
@@ -88,17 +98,6 @@ namespace Cecil.Tests {
 					if (!char.IsUpper (member.Name [0]) && !IsAcceptableCapitalization (member)) {
 						var msg = $"The {member.GetType ().Name.Replace ("Definition", "").ToLower ()} '{member.FullName}' has incorrect capitalization: first letter is not upper case.";
 						failures [msg] = new (msg, member.RenderLocation ());
-					}
-				}
-
-				foreach (var method in assembly.EnumerateMethods (Helper.IsPubliclyVisible)) {
-					foreach (var param in method.Parameters) {
-						if (param.Index == 0 && method.IsExtensionMethod ())
-							continue;
-						if (!char.IsLower (param.Name [0])) {
-							var msg = $"The parameter '{param.Name}' in the method '{method.FullName}' has incorrect capitalization: first letter is not lower case.";
-							failures [msg] = new (msg, method.RenderLocation ());
-						}
 					}
 				}
 			}
