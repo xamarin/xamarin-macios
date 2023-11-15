@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ObjCRuntime;
 
 #nullable enable
 
 static class ReferenceFixer {
-	public static void FixSDKReferences (string sdkRoot, string sdk_offset, List<string> references) => FixSDKReferences (Path.Combine (sdkRoot, sdk_offset), references);
+	public static void FixSDKReferences (PlatformName sdkRoot, string sdk_offset, List<string> references) => FixSDKReferences (sdkRoot.GetPath (sdk_offset), references);
 
 	public static void FixSDKReferences (string sdk_path, List<string> references, bool forceSystemDrawing = false)
 	{
