@@ -42,7 +42,7 @@ namespace Foundation {
 			return (NSData?) Runtime.GetNSObject (res);
 		}
 
-		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public unsafe extern static IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr* arg2, IntPtr* arg3);
 	}
 }
