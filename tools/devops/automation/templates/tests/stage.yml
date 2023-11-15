@@ -185,7 +185,7 @@ stages:
         labelWithPlatform: $(LABEL_WITH_PLATFORM)
         testsLabels: $(TESTS_LABELS)
         statusContext: $(STATUS_CONTEXT)
-        testPlatform:  $[lower($(TEST_PLATFORM))]
+        testPlatform:  ${{ lower($(TEST_PLATFORM)) }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         keyringPass: ${{ parameters.keyringPass }}
