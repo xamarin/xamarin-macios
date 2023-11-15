@@ -12,43 +12,37 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
 	public partial class NSUrlConnection {
 		const string selSendSynchronousRequestReturningResponseError = "sendSynchronousRequest:returningResponse:error:";
 
-		public unsafe static NSData SendSynchronousRequest (NSUrlRequest request, out NSUrlResponse response, out NSError error)
+		public unsafe static NSData? SendSynchronousRequest (NSUrlRequest request, out NSUrlResponse? response, out NSError? error)
 		{
-			IntPtr responseStorage = IntPtr.Zero;
-			IntPtr errorStorage = IntPtr.Zero;
+			var responseHandle = IntPtr.Zero;
+			var errorHandle = IntPtr.Zero;
 
-			void* resp = &responseStorage;
-			void* errp = &errorStorage;
-			IntPtr rhandle = (IntPtr) resp;
-			IntPtr ehandle = (IntPtr) errp;
+			IntPtr res;
+			unsafe {
+				res = objc_msgSend (
+					class_ptr,
+					Selector.GetHandle (selSendSynchronousRequestReturningResponseError),
+					request.Handle,
+					&responseHandle,
+					&errorHandle);
+			}
 
-#if NET
-			var res = Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (
-#else
-			var res = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (
-#endif
-				class_ptr,
-				Selector.GetHandle (selSendSynchronousRequestReturningResponseError),
-				request.Handle,
-				rhandle,
-				ehandle);
+			response = (NSUrlResponse?) Runtime.GetNSObject (responseHandle);
+			error = (NSError?) Runtime.GetNSObject (errorHandle);
 
-			if (responseStorage != IntPtr.Zero)
-				response = (NSUrlResponse) Runtime.GetNSObject (responseStorage);
-			else
-				response = null;
+			GC.KeepAlive (request);
 
-			if (errorStorage != IntPtr.Zero)
-				error = (NSError) Runtime.GetNSObject (errorStorage);
-			else
-				error = null;
-
-			return (NSData) Runtime.GetNSObject (res);
+			return (NSData?) Runtime.GetNSObject (res);
 		}
+
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
+		public unsafe extern static IntPtr objc_msgSend (IntPtr receiver, IntPtr selector, IntPtr arg1, IntPtr* arg2, IntPtr* arg3);
 	}
 }

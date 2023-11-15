@@ -39,5 +39,18 @@ namespace MonoTouchFixtures.Foundation {
 				c.Cancel ();
 			}
 		}
+
+		[Test]
+		public void SendSynchronousRequest ()
+		{
+			using var url = new NSUrl (NetworkResources.MicrosoftUrl);
+			using var request = new NSUrlRequest (url);
+			using var data = NSUrlConnection.SendSynchronousRequest (request, out var response, out var error);
+			Assert.IsNull (error, "Error");
+			Assert.IsNotNull (data, "Data");
+			Assert.IsNotNull (response, "Response");
+			response?.Dispose ();
+			error?.Dispose ();
+		}
 	}
 }
