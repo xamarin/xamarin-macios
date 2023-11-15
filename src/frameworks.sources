@@ -881,7 +881,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUnit.cs \
 	Foundation/NSUrl.cs \
 	Foundation/NSUrlComponents.cs \
-	Foundation/NSUrlConnection.cs \
 	Foundation/NSUrlCredential.cs \
 	Foundation/NSUrlDownload.cs \
 	Foundation/NSUrlProtectionSpace.cs \
