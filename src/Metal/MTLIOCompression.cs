@@ -88,7 +88,8 @@ namespace Metal {
 		[DllImport (Constants.MetalLibrary)]
 		static extern long MTLIOFlushAndDestroyCompressionContext (IntPtr context);
 
-		public MTLIOCompressionStatus FlushAndDestroy () {
+		public MTLIOCompressionStatus FlushAndDestroy ()
+		{
 			var result = (MTLIOCompressionStatus) MTLIOFlushAndDestroyCompressionContext (GetCheckedHandle ());
 #if NET
 			Class.ThrowOnInitFailure = false;
