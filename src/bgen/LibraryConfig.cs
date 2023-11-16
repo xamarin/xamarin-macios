@@ -7,6 +7,7 @@ using Xamarin.Utils;
 
 public class LibraryConfig {
 	List<string> libs = new List<string> ();
+	public bool skipSystemDrawing = false;
 	public PlatformName CurrentPlatform;
 	TargetFramework? target_framework;
 	public TargetFramework TargetFramework {
@@ -95,6 +96,113 @@ public class LibraryConfig {
 		if (!TargetFramework.IsValidFramework (target_framework.Value))
 			throw ErrorHelper.CreateError (70, target_framework.Value,
 				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+	}
+
+	public bool SetBaseLibDllAndReferences(ref string baselibdll, ref List<string> references) // TODO is ref good idea?
+	{
+		bool nostdlib = false; // TODO make sure default to false is recommended
+		if (!target_framework.HasValue)
+			throw ErrorHelper.CreateError(86);
+
+		switch (target_framework.Value.Platform)
+		{
+		case ApplePlatform.iOS:
+			CurrentPlatform = PlatformName.iOS;
+			nostdlib = true;
+			if (string.IsNullOrEmpty(baselibdll))
+				baselibdll = CurrentPlatform.GetPath( "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			if (!IsDotNet)
+			{
+				references.Add("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences(CurrentPlatform, "lib/mono/Xamarin.iOS", references);
+			}
+
+			break;
+		case ApplePlatform.TVOS:
+			CurrentPlatform = PlatformName.TvOS;
+			nostdlib = true;
+			if (string.IsNullOrEmpty(baselibdll))
+				baselibdll = CurrentPlatform.GetPath( "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
+			if (!IsDotNet)
+			{
+				references.Add("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences(CurrentPlatform, "lib/mono/Xamarin.TVOS", references);
+			}
+
+			break;
+		case ApplePlatform.WatchOS:
+			CurrentPlatform = PlatformName.WatchOS;
+			nostdlib = true;
+			if (string.IsNullOrEmpty(baselibdll))
+				baselibdll = CurrentPlatform.GetPath( "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
+			if (!IsDotNet)
+			{
+				references.Add("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences(CurrentPlatform, "lib/mono/Xamarin.WatchOS", references);
+			}
+
+			break;
+		case ApplePlatform.MacCatalyst:
+			CurrentPlatform = PlatformName.MacCatalyst;
+			nostdlib = true;
+			if (string.IsNullOrEmpty(baselibdll))
+				baselibdll = CurrentPlatform.GetPath( "lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
+			if (!IsDotNet)
+			{
+				// references.Add ("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences(CurrentPlatform, "lib/mono/Xamarin.MacCatalyst", references);
+			}
+
+			break;
+		case ApplePlatform.MacOSX:
+			CurrentPlatform = PlatformName.MacOSX;
+			nostdlib = true;
+			if (string.IsNullOrEmpty(baselibdll))
+			{
+				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
+					baselibdll = CurrentPlatform.GetPath( "lib", "reference", "mobile", "Xamarin.Mac.dll");
+				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full ||
+				         target_framework == TargetFramework.Xamarin_Mac_4_5_System)
+					baselibdll = CurrentPlatform.GetPath( "lib", "reference", "full", "Xamarin.Mac.dll");
+				else if (target_framework == TargetFramework.DotNet_macOS)
+					baselibdll = CurrentPlatform.GetPath( "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
+				else
+					throw ErrorHelper.CreateError(1053, target_framework);
+			}
+
+			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
+			{
+				skipSystemDrawing = true;
+				references.Add("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences(CurrentPlatform, "lib/mono/Xamarin.Mac", references);
+			}
+			else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full)
+			{
+				skipSystemDrawing = true;
+				references.Add("Facades/System.Drawing.Common");
+				ReferenceFixer.FixSDKReferences(CurrentPlatform, "lib/mono/4.5", references);
+			}
+			else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System)
+			{
+				skipSystemDrawing = false;
+				ReferenceFixer.FixSDKReferences("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5",
+					references, forceSystemDrawing: true);
+			}
+			else if (target_framework == TargetFramework.DotNet_macOS)
+			{
+				skipSystemDrawing = false;
+			}
+			else
+			{
+				throw ErrorHelper.CreateError(1053, target_framework);
+			}
+
+			break;
+		default:
+			throw ErrorHelper.CreateError(1053, target_framework);
+		}
+
+		return nostdlib;
 	}
 }
 
