@@ -444,8 +444,10 @@ public class BindingTouch : IDisposable {
 					references.ToArray ()),
 				"mscorlib"
 			);
+			Assembly? api = TryLoadApi (tmpass);
+			Assembly? baselib = TryLoadApi (baselibdll);
 
-			if (!TryLoadApi (tmpass, out Assembly api) || !TryLoadApi (baselibdll, out Assembly baselib))
+			if (api is null || baselib is null)
 				return 1;
 
 			attributeManager ??= new AttributeManager (this);
@@ -647,20 +649,19 @@ public class BindingTouch : IDisposable {
 			Console.WriteLine (output);
 	}
 
-	bool TryLoadApi (string name, out Assembly api)
+	Assembly? TryLoadApi (string? name)
 	{
-		api = null;
+		if (name is null)
+			return null;
 		try {
-			api = universe.LoadFromAssemblyPath (name);
+			return universe?.LoadFromAssemblyPath (name);
 		} catch (Exception e) {
 			if (Driver.Verbosity > 0)
 				Console.WriteLine (e);
 
 			Console.Error.WriteLine ("Error loading  {0}", name);
-			return false;
+			return null;
 		}
-
-		return true;
 	}
 
 	static string GetWorkDir ()
