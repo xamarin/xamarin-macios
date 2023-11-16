@@ -3999,14 +3999,14 @@ namespace Metal {
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandbuffer, IMTLBuffer indirectRangeBuffer, nuint indirectBufferOffset);
 
 		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
-#if NET
+#if NET && (MONOMAC || __MACCATALYST__)
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
 		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
 
 		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
-#if NET
+#if NET && (MONOMAC || __MACCATALYST__)
 		[Abstract]
 #endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
@@ -4462,28 +4462,28 @@ namespace Metal {
 		void SetTileVisibleFunctionTables (IMTLVisibleFunctionTable [] functionTables, NSRange range);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
-#if NET
+#if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("setVertexBuffer:offset:attributeStride:atIndex:")]
 		void SetVertexBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
-#if NET
+#if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("setVertexBuffers:offsets:attributeStrides:withRange:")]
 		void SetVertexBuffers (IntPtr buffers, IntPtr offsets, IntPtr strides, NSRange range);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
-#if NET
+#if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("setVertexBufferOffset:attributeStride:atIndex:")]
 		void SetVertexBufferOffset (nuint offset, nuint stride, nuint index);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
-#if NET
+#if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("setVertexBytes:length:attributeStride:atIndex:")]
@@ -5065,75 +5065,34 @@ namespace Metal {
 		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset);
 
-#if NET
 #if XAMCORE_5_0
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Abstract]
-#elif !TVOS
-		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
-		[Abstract]
-#else
-		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
-
-#else
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#endif
 		[Export ("newAccelerationStructureWithSize:")]
 		[return: NullAllowed, Release]
 		IMTLAccelerationStructure NewAccelerationStructure (nuint size);
 
-#if NET
-
 #if XAMCORE_5_0
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Abstract]
-#elif !TVOS
-		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
-		[Abstract]
-#else
-		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
-
-#else
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#endif
 		[Export ("newAccelerationStructureWithDescriptor:")]
 		[return: NullAllowed, Release]
 		IMTLAccelerationStructure NewAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
 
-#if NET
 #if XAMCORE_5_0
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Abstract]
-#elif !TVOS
-		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
-		[Abstract]
-#else
-		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
-
-#else
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#endif
 		[Export ("newAccelerationStructureWithSize:offset:")]
 		[return: NullAllowed, Release]
 		IMTLAccelerationStructure NewAccelerationStructure (nuint size, nuint offset);
 
-#if NET
 #if XAMCORE_5_0
-		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Abstract]
-#elif !TVOS
-		[Mac (13,0), iOS (16,0), NoTV, MacCatalyst (16,0)]
-		[Abstract]
-#else
-		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
 #endif
-
-#else
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-#endif
 		[Export ("newAccelerationStructureWithDescriptor:offset:")]
 		[return: NullAllowed, Release]
 		IMTLAccelerationStructure NewAccelerationStructure (MTLAccelerationStructureDescriptor descriptor, nuint offset);
@@ -6363,7 +6322,7 @@ namespace Metal {
 		void SetImageblock (nuint width, nuint height);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
-#if NET
+#if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("setKernelBuffer:offset:attributeStride:atIndex:")]
@@ -7002,7 +6961,9 @@ namespace Metal {
 		void WriteCompactedAccelerationStructureSize (IMTLAccelerationStructure accelerationStructure, IMTLBuffer buffer, nuint offset, MTLDataType sizeDataType);
 
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("refitAccelerationStructure:descriptor:destination:scratchBuffer:scratchBufferOffset:options:")]
 		void RefitAccelerationStructure (IMTLAccelerationStructure sourceAccelerationStructure, MTLAccelerationStructureDescriptor descriptor, [NullAllowed] IMTLAccelerationStructure destinationAccelerationStructure, [NullAllowed] IMTLBuffer scratchBuffer, nuint scratchBufferOffset, MTLAccelerationStructureRefitOptions options);
 
