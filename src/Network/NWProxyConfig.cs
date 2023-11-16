@@ -41,7 +41,7 @@ namespace Network {
 		{
 			if (firstHop is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (firstHop));
-			var handle = nw_proxy_config_create_relay (firstHop!.GetCheckedHandle (), secondHop?.GetHandle () ?? IntPtr.Zero);
+			var handle = nw_proxy_config_create_relay (firstHop.GetCheckedHandle (), secondHop.GetHandle ());
 			if (handle == NativeHandle.Zero)
 				return default;
 			return new NWProxyConfig (handle, owns: true);
@@ -62,15 +62,11 @@ namespace Network {
 			using var resourcePathPtr = new TransientString (relaysResourcePath);
 			var pinned = GCHandle.Alloc (gatewayKeyConfig, GCHandleType.Pinned);
 
-			unsafe {
-				try {
-					var handle = nw_proxy_config_create_oblivious_http (hop!.GetCheckedHandle (), resourcePathPtr, pinned.AddrOfPinnedObject (), (nuint) gatewayKeyConfig!.Length);
-					if (handle == NativeHandle.Zero)
-						return default;
-					return new NWProxyConfig (handle, owns: true);
-				} finally {
-					pinned.Free ();
-				}
+			fixed (byte* gatewayKeyConfigPointer = gatewayKeyConfig) {
+				var handle = nw_proxy_config_create_oblivious_http (hop.GetCheckedHandle (), resourcePathPtr, gatewayKeyPointer, (nuint) gatewayKeyConfig.Length);
+				if (handle == NativeHandle.Zero)
+					return default;
+				return new NWProxyConfig (handle, owns: true);
 			}
 		}
 
@@ -82,8 +78,7 @@ namespace Network {
 			if (proxyEndpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxyEndpoint));
 
-			var handle = nw_proxy_config_create_http_connect (proxyEndpoint!.GetCheckedHandle (),
-				options?.GetHandle () ?? IntPtr.Zero);
+			var handle = nw_proxy_config_create_http_connect (proxyEndpoint.GetCheckedHandle (), options.GetHandle ());
 			if (handle == NativeHandle.Zero)
 				return default;
 			return new NWProxyConfig (handle, true);
@@ -96,7 +91,7 @@ namespace Network {
 		{
 			if (endpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
-			var handle = nw_proxy_config_create_socksv5 (endpoint!.GetCheckedHandle ());
+			var handle = nw_proxy_config_create_socksv5 (endpoint.GetCheckedHandle ());
 			if (handle == NativeHandle.Zero)
 				return default;
 			return new NWProxyConfig (handle, true);

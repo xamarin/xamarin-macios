@@ -66,7 +66,7 @@ namespace Foundation {
 		}
 
 		/*
-				The following cannot be used unitl PR  https://github.com/xamarin/xamarin-macios/pull/7539 lands.
+				The following cannot be used until PR https://github.com/xamarin/xamarin-macios/pull/7539 lands.
 		#if NET
 				[SupportedOSPlatform ("ios17.0")]
 				[SupportedOSPlatform ("macos14.0")]

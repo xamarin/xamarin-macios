@@ -39,9 +39,7 @@ namespace Network {
 		public static NWRelayHop? Create (NWEndpoint? http3RelayEndpoint, NWEndpoint? http2RelayEndpoint,
 			NWProtocolOptions? relayTlsOptions)
 		{
-			var handle = nw_relay_hop_create (http3RelayEndpoint?.GetHandle () ?? IntPtr.Zero,
-				http2RelayEndpoint?.GetHandle () ?? IntPtr.Zero,
-				relayTlsOptions?.GetHandle () ?? IntPtr.Zero);
+			var handle = nw_relay_hop_create (http3RelayEndpoint.GetHandle (), http2RelayEndpoint.GetHandle (), relayTlsOptions.GetHandle ());
 			if (handle == NativeHandle.Zero)
 				return default;
 			return new NWRelayHop (handle, owns: true);
