@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace Xamarin.Bundler {
 	public static class FileCopier {
 		enum CopyFileFlags : uint {
@@ -64,16 +66,16 @@ namespace Xamarin.Bundler {
 		static extern int copyfile (string @from, string @to, IntPtr state, CopyFileFlags flags);
 
 		// This code is shared between our packaging tools (mmp\mtouch) and msbuild tasks
-		public delegate void LogCallback (int verbosity, string format, params object [] arguments);
-		public delegate void ReportErrorCallback (int code, string format, params object [] arguments);
+		public delegate void LogCallback (int verbosity, string format, params object? [] arguments);
+		public delegate void ReportErrorCallback (int code, string format, params object? [] arguments);
 
 		[ThreadStatic]
-		static LogCallback logCallback;
+		static LogCallback? logCallback;
 
 		[ThreadStatic]
-		static ReportErrorCallback reportErrorCallback;
+		static ReportErrorCallback? reportErrorCallback;
 
-		static void Log (int min_verbosity, string format, params object [] arguments)
+		static void Log (int min_verbosity, string format, params object? [] arguments)
 		{
 			if (logCallback is not null) {
 				logCallback (min_verbosity, format, arguments);
@@ -88,7 +90,7 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		static void ReportError (int code, string format, params object [] arguments)
+		static void ReportError (int code, string format, params object? [] arguments)
 		{
 			if (reportErrorCallback is not null) {
 				reportErrorCallback (code, format, arguments);
@@ -286,7 +288,7 @@ namespace Xamarin.Bundler {
 #endif
 
 			DateTime max_source = DateTime.MinValue;
-			string max_s = null;
+			string? max_s = null;
 
 			if (sources.Count () == 0 || targets.Count () == 0)
 				throw ErrorHelper.CreateError (1013, Errors.MT1013);
@@ -338,7 +340,7 @@ namespace Xamarin.Bundler {
 
 		internal static string strerror (int errno)
 		{
-			return Marshal.PtrToStringAuto (_strerror (errno));
+			return Marshal.PtrToStringAuto (_strerror (errno))!;
 		}
 	}
 }

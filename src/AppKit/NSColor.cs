@@ -191,7 +191,7 @@ namespace AppKit {
 				throw new ArgumentNullException ("components");
 
 			unsafe {
-				fixed (nfloat* componentsptr = &components [0]) {
+				fixed (nfloat* componentsptr = components) {
 					return _FromColorSpace (space, (IntPtr) componentsptr, components.Length);
 				}
 			}
@@ -201,7 +201,7 @@ namespace AppKit {
 		{
 			components = new nfloat [(int) ComponentCount];
 			unsafe {
-				fixed (nfloat* componentsptr = &components [0])
+				fixed (nfloat* componentsptr = components)
 					_GetComponents ((IntPtr) componentsptr);
 			}
 		}

@@ -8,77 +8,77 @@ using System.Diagnostics.CodeAnalysis;
 
 public class MarshalTypeList : List<MarshalType> {
 
-	public void Load (TypeManager typeManager, Frameworks frameworks)
+	public void Load (TypeCache typeCache, Frameworks frameworks)
 	{
-		Add (new MarshalType (typeManager.NSObject, create: "Runtime.GetNSObject (", closingCreate: ")!"));
-		Add (new MarshalType (typeManager.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
-		Add (new MarshalType (typeManager.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
-		if (typeManager.MusicSequence is not null)
-			Add (new MarshalType (typeManager.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
-		Add (typeManager.CGColor);
-		Add (typeManager.CGPath);
-		Add (typeManager.CGGradient);
-		Add (typeManager.CGContext);
-		Add (typeManager.CGPDFDocument);
-		Add (typeManager.CGPDFPage);
-		Add (typeManager.CGImage);
-		Add (typeManager.Class);
-		Add (typeManager.CFRunLoop);
-		Add (typeManager.CGColorSpace);
-		Add (typeManager.CGImageSource);
-		Add (typeManager.DispatchData);
-		Add (typeManager.DispatchQueue);
-		Add (typeManager.Protocol);
+		Add (new MarshalType (typeCache.NSObject, create: "Runtime.GetNSObject (", closingCreate: ")!"));
+		Add (new MarshalType (typeCache.Selector, create: "Selector.FromHandle (", closingCreate: ")!"));
+		Add (new MarshalType (typeCache.BlockLiteral, "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
+		if (typeCache.MusicSequence is not null)
+			Add (new MarshalType (typeCache.MusicSequence, create: "global::AudioToolbox.MusicSequence.Lookup ("));
+		Add (typeCache.CGColor);
+		Add (typeCache.CGPath);
+		Add (typeCache.CGGradient);
+		Add (typeCache.CGContext);
+		Add (typeCache.CGPDFDocument);
+		Add (typeCache.CGPDFPage);
+		Add (typeCache.CGImage);
+		Add (typeCache.Class);
+		Add (typeCache.CFRunLoop);
+		Add (typeCache.CGColorSpace);
+		Add (typeCache.CGImageSource);
+		Add (typeCache.DispatchData);
+		Add (typeCache.DispatchQueue);
+		Add (typeCache.Protocol);
 		if (frameworks.HaveCoreMidi)
-			Add (typeManager.MidiEndpoint);
+			Add (typeCache.MidiEndpoint);
 		if (frameworks.HaveCoreMedia) {
-			Add (typeManager.CMTimebase);
-			Add (typeManager.CMClock);
+			Add (typeCache.CMTimebase);
+			Add (typeCache.CMClock);
 		}
-		Add (typeManager.NSZone);
+		Add (typeCache.NSZone);
 		if (frameworks.HaveOpenGL) {
-			Add (typeManager.CGLContext);
-			Add (typeManager.CGLPixelFormat);
-			Add (typeManager.CVImageBuffer);
+			Add (typeCache.CGLContext);
+			Add (typeCache.CGLPixelFormat);
+			Add (typeCache.CVImageBuffer);
 		}
 		if (frameworks.HaveMediaToolbox)
-			Add (new MarshalType (typeManager.MTAudioProcessingTap!, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
+			Add (new MarshalType (typeCache.MTAudioProcessingTap!, create: "MediaToolbox.MTAudioProcessingTap.FromHandle("));
 		if (frameworks.HaveAddressBook) {
-			Add (typeManager.ABAddressBook);
-			Add (new MarshalType (typeManager.ABPerson!, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
-			Add (new MarshalType (typeManager.ABRecord!, create: "ABRecord.FromHandle (", closingCreate: ")!"));
+			Add (typeCache.ABAddressBook);
+			Add (new MarshalType (typeCache.ABPerson!, create: "(ABPerson) ABRecord.FromHandle (", closingCreate: ")!"));
+			Add (new MarshalType (typeCache.ABRecord!, create: "ABRecord.FromHandle (", closingCreate: ")!"));
 		}
 		if (frameworks.HaveCoreVideo) {
 			// owns `false` like ptr ctor https://github.com/xamarin/xamarin-macios/blob/6f68ab6f79c5f1d96d2cbb1e697330623164e46d/src/CoreVideo/CVBuffer.cs#L74-L90
-			Add (new MarshalType (typeManager.CVPixelBuffer!, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
+			Add (new MarshalType (typeCache.CVPixelBuffer!, create: "Runtime.GetINativeObject<CVPixelBuffer> (", closingCreate: ", false)!"));
 		}
-		Add (typeManager.CGLayer);
+		Add (typeCache.CGLayer);
 		if (frameworks.HaveCoreMedia)
-			Add (typeManager.CMSampleBuffer);
+			Add (typeCache.CMSampleBuffer);
 
 		if (frameworks.HaveCoreVideo) {
-			Add (typeManager.CVImageBuffer);
-			Add (typeManager.CVPixelBufferPool);
+			Add (typeCache.CVImageBuffer);
+			Add (typeCache.CVPixelBufferPool);
 		}
 		if (frameworks.HaveAudioUnit)
-			Add (typeManager.AudioComponent);
+			Add (typeCache.AudioComponent);
 		if (frameworks.HaveCoreMedia) {
-			Add (new MarshalType (typeManager.CMFormatDescription!, create: "CMFormatDescription.Create (", closingCreate: ")!"));
-			Add (typeManager.CMAudioFormatDescription);
-			Add (typeManager.CMVideoFormatDescription);
+			Add (new MarshalType (typeCache.CMFormatDescription!, create: "CMFormatDescription.Create (", closingCreate: ")!"));
+			Add (typeCache.CMAudioFormatDescription);
+			Add (typeCache.CMVideoFormatDescription);
 		}
 		if (frameworks.HaveAudioUnit)
-			Add (typeManager.AudioUnit);
-		Add (typeManager.SecIdentity);
-		Add (typeManager.SecIdentity2);
-		Add (typeManager.SecTrust);
-		Add (typeManager.SecTrust2);
-		Add (typeManager.SecProtocolOptions);
-		Add (typeManager.SecProtocolMetadata);
-		Add (typeManager.SecAccessControl);
-		Add (typeManager.AudioBuffers);
+			Add (typeCache.AudioUnit);
+		Add (typeCache.SecIdentity);
+		Add (typeCache.SecIdentity2);
+		Add (typeCache.SecTrust);
+		Add (typeCache.SecTrust2);
+		Add (typeCache.SecProtocolOptions);
+		Add (typeCache.SecProtocolMetadata);
+		Add (typeCache.SecAccessControl);
+		Add (typeCache.AudioBuffers);
 		if (frameworks.HaveAudioUnit) {
-			Add (typeManager.AURenderEventEnumerator);
+			Add (typeCache.AURenderEventEnumerator);
 		}
 	}
 

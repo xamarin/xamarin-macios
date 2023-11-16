@@ -194,6 +194,75 @@ namespace Xamarin.Utils {
 
 			return null;
 		}
+
+		public static bool IsPropertyAccessor (this MethodDefinition? accessor)
+		{
+			return FindProperty (accessor) is not null;
+		}
+
+		public static bool IsEventMethod (this MethodDefinition? method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			if (!method.DeclaringType.HasEvents)
+				return false;
+
+			foreach (var evt in method.DeclaringType.Events) {
+				if (evt.InvokeMethod == method)
+					return true;
+				if (evt.AddMethod == method)
+					return true;
+				if (evt.RemoveMethod == method)
+					return true;
+				if (!evt.HasOtherMethods)
+					continue;
+				if (evt.OtherMethods.Contains (method))
+					return true;
+			}
+
+			return false;
+		}
+
+		public static bool IsOperator (this MethodDefinition? method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			if (!method.IsStatic)
+				return false;
+
+			return method.Name.StartsWith ("op_", StringComparison.Ordinal);
+		}
+
+		public static bool IsExtensionMethod (this MethodDefinition? method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsStatic)
+				return false;
+
+			if (!method.HasParameters)
+				return false;
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Is ("System.Runtime.CompilerServices", "ExtensionAttribute")) {
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }
 

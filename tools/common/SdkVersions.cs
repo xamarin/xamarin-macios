@@ -155,4 +155,9 @@ namespace Xamarin {
 		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); } }
 	}
 #endif
+
+	static class DotNetVersions {
+		public const string Tfm = "net8.0";
+		public const string Version = "8.0";
+	}
 }
