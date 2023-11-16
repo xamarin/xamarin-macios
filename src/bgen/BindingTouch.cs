@@ -666,6 +666,22 @@ public class BindingTouch : IDisposable {
 			Console.WriteLine (output);
 	}
 
+	bool TryLoadApi (string name, out Assembly api)
+	{
+		api = null;
+		try {
+			api = universe.LoadFromAssemblyPath (name);
+		} catch (Exception e) {
+			if (Driver.Verbosity > 0)
+				Console.WriteLine (e);
+
+			Console.Error.WriteLine ("Error loading  {0}", name);
+			return false;
+		}
+
+		return true;
+	}
+
 	static string GetWorkDir ()
 	{
 		while (true) {
