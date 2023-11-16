@@ -114,6 +114,7 @@
     <Compile Include="..\src\bgen\GeneratedTypes.cs" />
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\Generator.PrintAttributes.cs" />
+    <Compile Include="..\src\bgen\LibraryConfig.cs" />
     <Compile Include="..\src\bgen\MarshalInfo.cs" />
     <Compile Include="..\src\bgen\MarshalTypeList.cs" />
     <Compile Include="..\src\bgen\MarshalType.cs" />
