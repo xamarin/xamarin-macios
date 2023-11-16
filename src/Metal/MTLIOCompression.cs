@@ -78,7 +78,7 @@ namespace Metal {
 
 		protected override void Dispose (bool disposing)
 		{
-			// only call th eparent if the user did not call FlushAndDestroy
+			// only call the parent if the user did not call FlushAndDestroy
 			if (disposing && Handle != NativeHandle.Zero && Owns) {
 				FlushAndDestroy ();
 			}
