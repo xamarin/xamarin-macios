@@ -3299,14 +3299,14 @@ public partial class Generator : IMemberGatherer {
 					var nullable = TypeManager.GetUnderlyingNullableType (et);
 					if (nullable is not null) {
 						var nt = TypeManager.FormatType (mi.DeclaringType, nullable);
-						convs.Append ($"{nt}* converted_{safe_name} = null;\n");
-						convs.Append ($"{nt} converted_{safe_name}_v = default ({nt});\n");
-						convs.Append ($"if ({safe_name}.HasValue) {{\n");
-						convs.Append ($"\tconverted_{safe_name}_v = {safe_name}.Value;\n");
-						convs.Append ($"\tconverted_{safe_name} = &converted_{safe_name}_v;\n");
-						convs.Append ("}\n");
-						by_ref_processing.AppendLine ($"if ({safe_name}.HasValue)");
-						by_ref_processing.AppendLine ($"\t{safe_name} = *converted_{safe_name};");
+						convs.AppendFormat ("{0}* converted_{1} = null;\n", nt, safe_name);
+						convs.AppendFormat ("{0} converted_{1}_v = default ({0});\n", nt, safe_name);
+						convs.AppendFormat ("if ({0}.HasValue) {1}\n", safe_name, "{");
+						convs.AppendFormat ("\tconverted_{0}_v = {0}.Value;\n", safe_name);
+						convs.AppendFormat ("\tconverted_{0} = &converted_{0}_v;\n", safe_name);
+						convs.AppendFormat ("{0}\n", "}");
+						by_ref_processing.AppendFormat ("if ({0}.HasValue)", safe_name).AppendLine ();
+						by_ref_processing.AppendFormat ("\t{0} = *converted_{0};", safe_name).AppendLine ();
 					}
 				}
 			}
