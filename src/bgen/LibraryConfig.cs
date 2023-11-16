@@ -97,7 +97,7 @@ public class LibraryConfig {
 				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
-	public bool SetBaseLibDllAndReferences(ref string baselibdll, ref PlatformName currentPlatform, ref List<string> references) // TODO is ref good idea?
+	public bool SetBaseLibDllAndReferences(ref string baselibdll, out PlatformName currentPlatform, ref List<string> references) // TODO is ref good idea?
 	{
 		bool nostdlib = false; // TODO make sure default to false is recommended
 		if (!target_framework.HasValue)
