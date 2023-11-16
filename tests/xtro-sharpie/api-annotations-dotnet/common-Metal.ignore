@@ -28,5 +28,4 @@
 !missing-protocol-member! MTLDevice::newIOHandleWithURL:compressionMethod:error: not found
 !missing-protocol-member! MTLDevice::newIOHandleWithURL:error: not found
 !incorrect-protocol-member! MTLAccelerationStructureCommandEncoder::refitAccelerationStructure:descriptor:destination:scratchBuffer:scratchBufferOffset:options: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLAccelerationStructureCommandEncoder::refitAccelerationStructure:descriptor:destination:scratchBuffer:scratchBufferOffset:options: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectComputeCommand::setKernelBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract

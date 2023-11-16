@@ -531,19 +531,16 @@ namespace Metal {
 	}
 #endif
 
-#if !TVOS
 #if NET
 	[SupportedOSPlatform ("maccatalyst14.0")]
 	[SupportedOSPlatform ("macos11.0")]
 	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("tvos16.1")]
 #else
 	[MacCatalyst (14, 0)]
 	[Mac (11, 0)]
 	[iOS (14, 0)]
-	[NoTV]
-#if TVOS
-	[Obsolete ("This API is not available on this platform.")]
-#endif
+	[TV (16, 1)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLAccelerationStructureSizes {
@@ -553,7 +550,6 @@ namespace Metal {
 
 		public nuint RefitScratchBufferSize;
 	}
-#endif
 
 #if NET
 	[SupportedOSPlatform ("ios16.0")]
