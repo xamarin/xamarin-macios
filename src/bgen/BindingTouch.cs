@@ -445,27 +445,8 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			Assembly api;
-			try {
-				api = universe.LoadFromAssemblyPath (tmpass);
-			} catch (Exception e) {
-				if (Driver.Verbosity > 0)
-					Console.WriteLine (e);
-
-				Console.Error.WriteLine ("Error loading API definition from {0}", tmpass);
+			if (!TryLoadApi (tmpass, out Assembly api) || !TryLoadApi (baselibdll, out Assembly baselib))
 				return 1;
-			}
-
-			Assembly baselib;
-			try {
-				baselib = universe.LoadFromAssemblyPath (baselibdll);
-			} catch (Exception e) {
-				if (Driver.Verbosity > 0)
-					Console.WriteLine (e);
-
-				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
-				return 1;
-			}
 
 			attributeManager ??= new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
