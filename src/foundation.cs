@@ -8270,8 +8270,8 @@ namespace Foundation {
 		[Export ("requiresDNSSECValidation")]
 		bool RequiresDnsSecValidation { get; set; }
 
-		// not yet ready, waigin on pr https://github.com/xamarin/xamarin-macios/pull/7539 to be fixed
-		// to land this and the manual pro[erty
+		// not yet ready, waiting on pr https://github.com/xamarin/xamarin-macios/pull/7539 to be fixed
+		// to land this and the manual property
 		// [Internal]
 		// [Export ("proxyConfigurations", ArgumentSemantic.Copy)]
 		// IntPtr[] _ProxyConfigurations { get; set; }
