@@ -1643,10 +1643,10 @@ partial class TestRuntime {
 		case SuccessException: throw new SuccessException (ex.Message, ex);
 		case IgnoreException: throw new IgnoreException (ex.Message, ex);
 		case AssertionException: throw new AssertionException (ex.Message, ex);
-		case InconclusiveException: throw new AssertionException (ex.Message, ex);
+		case InconclusiveException: throw new InconclusiveException (ex.Message, ex);
 		case ResultStateException: throw ex;
 		default:
-			Assert.NotNull (ex, message);
+			Assert.IsNull (ex, message);
 			break;
 		}
 	}
