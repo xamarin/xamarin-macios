@@ -1323,14 +1323,6 @@ public partial class Generator : IMemberGatherer {
 		NativeHandleType = binding_touch.IsDotNet ? "NativeHandle" : "IntPtr";
 	}
 
-	bool SkipGenerationOfType (Type t)
-	{
-		if (t.IsUnavailable (this))
-			return true;
-
-		return false;
-	}
-
 	public void Go ()
 	{
 		GeneratedTypes = new GeneratedTypes (this);
@@ -1364,7 +1356,7 @@ public partial class Generator : IMemberGatherer {
 		TypeManager.SetTypesThatMustAlwaysBeGloballyNamed (types);
 
 		foreach (Type t in types) {
-			if (SkipGenerationOfType (t))
+			if (t.IsUnavailable (this))
 				continue;
 
 			// We call lookup to build the hierarchy graph
@@ -1535,7 +1527,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		foreach (Type t in types) {
-			if (SkipGenerationOfType (t))
+			if (t.IsUnavailable (this))
 				continue;
 
 			Generate (t);
