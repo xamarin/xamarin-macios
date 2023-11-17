@@ -6042,7 +6042,7 @@ namespace Metal {
 		[Export ("indirectComputeCommandAtIndex:")]
 		IMTLIndirectComputeCommand GetIndirectComputeCommand (nuint commandIndex);
 
-		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16,0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
