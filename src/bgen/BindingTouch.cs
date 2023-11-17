@@ -41,7 +41,6 @@ using Xamarin.Bundler;
 using Xamarin.Utils;
 
 public class BindingTouch : IDisposable {
-
 #if NET
 	public static ApplePlatform [] AllPlatforms = new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst };
 	public static PlatformName [] AllPlatformNames = new PlatformName [] { PlatformName.iOS, PlatformName.MacOSX, PlatformName.TvOS, PlatformName.MacCatalyst };
@@ -79,7 +78,8 @@ public class BindingTouch : IDisposable {
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
 
-	LibraryManager libraryManager;
+	LibraryManager? libraryManager;
+	public LibraryManager LibraryManager => libraryManager!;
 
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
@@ -88,7 +88,7 @@ public class BindingTouch : IDisposable {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return libraryManager.TargetFramework; }
+		get { return LibraryManager.TargetFramework; }
 	}
 
 	public static string ToolName {
@@ -441,7 +441,7 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-target:library");
 		cargs.Add ("-nowarn:436");
 		cargs.Add ("-out:" + tmpass);
-		cargs.Add ("-r:" + libraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
+		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
 		cargs.AddRange (refs);
 		cargs.Add ("-r:" + baselibdll);
 		foreach (var def in defines)

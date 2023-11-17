@@ -97,7 +97,7 @@ public class LibraryManager {
 				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
-	public void SetBaseLibDllAndReferences(List<string> references, ref string baselibdll, out bool nostdlib, out PlatformName currentPlatform)
+	public void SetBaseLibDllAndReferences(List<string> references, ref string? baselibdll, out bool nostdlib, out PlatformName currentPlatform)
 	{
 		nostdlib = false;
 		if (!targetFramework.HasValue)
