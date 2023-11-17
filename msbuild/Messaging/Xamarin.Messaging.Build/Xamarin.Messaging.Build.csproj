@@ -7,6 +7,9 @@
     <NoWarn>$(NoWarn);MSB3277</NoWarn> <!-- warning MSB3277: Found conflicts between different versions of "System.IO.Compression" that could not be resolved. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <MonoMSBuildBinPath>/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/msbuild/Current/bin</MonoMSBuildBinPath>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Label="Messaging">

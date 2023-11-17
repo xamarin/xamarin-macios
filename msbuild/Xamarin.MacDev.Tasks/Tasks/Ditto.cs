@@ -5,6 +5,9 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public class Ditto : DittoTaskBase, ITaskCallback {
 		public override bool Execute ()

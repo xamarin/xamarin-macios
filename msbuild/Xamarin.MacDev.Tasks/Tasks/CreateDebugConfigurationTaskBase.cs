@@ -8,6 +8,9 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CreateDebugConfigurationTaskBase : XamarinTask {
 		#region Inputs
