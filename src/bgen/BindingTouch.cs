@@ -62,8 +62,6 @@ public class BindingTouch : IDisposable {
 	string? attributedll;
 	string compiled_api_definition_assembly = string.Empty;
 	bool noNFloatUsing;
-
-	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
@@ -162,7 +160,7 @@ public class BindingTouch : IDisposable {
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
 			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
-			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
+			{ "lib=", "Adds the directory to the search path for the compiler", v => libraryManager.Libraries.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
 			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
 				{
@@ -255,7 +253,7 @@ public class BindingTouch : IDisposable {
 			return 0;
 		}
 
-		nostdlib = libraryManager.SetBaseLibDllAndReferences (ref baselibdll, out CurrentPlatform, references);
+		libraryManager.SetBaseLibDllAndReferences (references, ref baselibdll, out nostdlib, out CurrentPlatform);
 
 		if (sources.Count > 0) {
 			api_sources.Insert (0, sources [0]);
@@ -278,7 +276,7 @@ public class BindingTouch : IDisposable {
 			outfile = firstApiDefinitionName + ".dll";
 
 		var refs = references.Select ((v) => "-r:" + v);
-		var paths = libs.Select ((v) => "-lib:" + v);
+		var paths = libraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
 			var tmpass = GetCompiledApiBindingsAssembly (tmpdir, refs, nostdlib, api_sources, core_sources, defines, paths);

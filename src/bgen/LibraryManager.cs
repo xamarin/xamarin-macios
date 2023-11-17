@@ -6,9 +6,9 @@ using Xamarin.Utils;
 #nullable enable
 
 public class LibraryManager {
-	List<string> libs = new List<string> ();
+	public List<string> Libraries = new List<string> ();
 	public bool skipSystemDrawing = false;
-	TargetFramework? targetFramework; // TODO fix casing on everything in this class
+	TargetFramework? targetFramework;
 	public TargetFramework TargetFramework {
 		get { return targetFramework!.Value; }
 	}
@@ -81,7 +81,7 @@ public class LibraryManager {
 				throw new BindingException (1047, currentPlatform);
 			}
 		}
-		foreach (var lib in libs)
+		foreach (var lib in Libraries)
 			yield return lib;
 	}
 
@@ -97,9 +97,9 @@ public class LibraryManager {
 				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
-	public bool SetBaseLibDllAndReferences(ref string baselibdll, out PlatformName currentPlatform, List<string> references) // TODO is ref good idea?
+	public void SetBaseLibDllAndReferences(List<string> references, ref string baselibdll, out bool nostdlib, out PlatformName currentPlatform) // TODO is ref good idea?
 	{
-		bool nostdlib = false; // TODO make sure default to false is recommended
+		nostdlib = false; // TODO make sure default to false is recommended
 		if (!targetFramework.HasValue)
 			throw ErrorHelper.CreateError(86);
 
@@ -200,8 +200,6 @@ public class LibraryManager {
 		default:
 			throw ErrorHelper.CreateError(1053, targetFramework);
 		}
-
-		return nostdlib;
 	}
 }
 
