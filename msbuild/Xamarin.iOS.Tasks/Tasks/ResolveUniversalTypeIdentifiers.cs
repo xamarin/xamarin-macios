@@ -9,6 +9,9 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
 	public class ResolveUniversalTypeIdentifiers : XamarinTask {
 		[Required]

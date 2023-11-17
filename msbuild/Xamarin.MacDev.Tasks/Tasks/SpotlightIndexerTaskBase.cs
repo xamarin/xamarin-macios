@@ -4,6 +4,9 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class SpotlightIndexerTaskBase : XamarinToolTask {
 		#region Inputs

@@ -11,6 +11,9 @@ using Xamarin.Localization.MSBuild;
 
 using SecKeychain = Xamarin.MacDev.Keychain;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class DetectSigningIdentityTaskBase : XamarinTask {
 		const string AutomaticProvision = "Automatic";
