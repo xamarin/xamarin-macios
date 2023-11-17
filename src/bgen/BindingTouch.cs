@@ -31,6 +31,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mono.Options;
 
@@ -444,10 +445,8 @@ public class BindingTouch : IDisposable {
 					references.ToArray ()),
 				"mscorlib"
 			);
-			Assembly? api = TryLoadApi (tmpass);
-			Assembly? baselib = TryLoadApi (baselibdll);
 
-			if (api is null || baselib is null)
+			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (baselibdll, out Assembly? baselib))
 				return 1;
 
 			attributeManager ??= new AttributeManager (this);
@@ -649,19 +648,21 @@ public class BindingTouch : IDisposable {
 			Console.WriteLine (output);
 	}
 
-	Assembly? TryLoadApi (string? name)
+	bool TryLoadApi (string? name, [NotNullWhen (true)] out Assembly? assembly)
 	{
-		if (name is null)
-			return null;
+		assembly = null;
+		if (string.IsNullOrEmpty (name))
+			return false;
 		try {
-			return universe?.LoadFromAssemblyPath (name);
+			assembly = universe?.LoadFromAssemblyPath (name);
 		} catch (Exception e) {
 			if (Driver.Verbosity > 0)
 				Console.WriteLine (e);
 
 			Console.Error.WriteLine ("Error loading  {0}", name);
-			return null;
 		}
+
+		return assembly is not null;
 	}
 
 	static string GetWorkDir ()
