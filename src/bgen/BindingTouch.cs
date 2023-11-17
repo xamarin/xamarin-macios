@@ -207,39 +207,20 @@ public class BindingTouch : IDisposable {
 
 	int Main3 (string [] args)
 	{
-		bool show_help = false;
-		bool zero_copy = false;
-		string? basedir = null;
-		string? tmpdir = null;
-		string? ns = null;
-		bool delete_temp = true, debug = false;
-		bool unsafef = true;
-		bool external = false;
-		bool public_mode = true;
-		bool nostdlib = false;
-		bool? inline_selectors = null;
-		List<string> sources;
-		var resources = new List<string> ();
-		var linkwith = new List<string> ();
-		var api_sources = new List<string> ();
-		var core_sources = new List<string> ();
-		var extra_sources = new List<string> ();
-		var defines = new List<string> ();
-		string? generate_file_list = null;
-		bool process_enums = false;
+		BindingTouchConfig config = new();
 
 		ErrorHelper.ClearWarningLevels ();
 
 		var os = new OptionSet () {
-			{ "h|?|help", "Displays the help", v => show_help = true },
+			{ "h|?|help", "Displays the help", v => config.show_help = true },
 			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
-			{ "outdir=", "Sets the output directory for the temporary binding files", v => { basedir = v; }},
+			{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.basedir = v; }},
 			{ "o|out=", "Sets the name of the output library", v => outfile = v },
-			{ "tmpdir=", "Sets the working directory for temp files", v => { tmpdir = v; delete_temp = false; }},
-			{ "debug", "Generates a debugging build of the binding", v => debug = true },
-			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
-			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
-			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
+			{ "tmpdir=", "Sets the working directory for temp files", v => { config.tmpdir = v; config.delete_temp = false; }},
+			{ "debug", "Generates a debugging build of the binding", v => config.debug = true },
+			{ "sourceonly=", "Only generates the source", v => config.generate_file_list = v },
+			{ "ns=", "Sets the namespace for storing helper classes", v => config.ns = v },
+			{ "unsafe", "Sets the unsafe flag for the build", v=> config.unsafef = true },
 			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
@@ -252,24 +233,24 @@ public class BindingTouch : IDisposable {
 			},
 			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
-			{ "d=", "Defines a symbol", v => defines.Add (v) },
-			{ "api=", "Adds a API definition source file", v => api_sources.Add (v) },
-			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (v) },
+			{ "d=", "Defines a symbol", v => config.defines.Add (v) },
+			{ "api=", "Adds a API definition source file", v => config.api_sources.Add (v) },
+			{ "s=", "Adds a source file required to build the API", v => config.core_sources.Add (v) },
 			{ "q", "Quiet", v => ErrorHelper.Verbosity-- },
 			{ "v", "Sets verbose mode", v => ErrorHelper.Verbosity++ },
-			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => extra_sources.Add (v) },
-			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => external = true },
-			{ "p", "Sets private mode", v => public_mode = false },
+			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => config.extra_sources.Add (v) },
+			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => config.external = true },
+			{ "p", "Sets private mode", v => config.public_mode = false },
 			{ "baselib=", "Sets the base library", v => baselibdll = v },
 			{ "attributelib=", "Sets the attribute library", v => attributedll = v },
-			{ "use-zero-copy", v=> zero_copy = true },
-			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
+			{ "use-zero-copy", v=> config.zero_copy = true },
+			{ "nostdlib", "Does not reference mscorlib.dll library", l => config.nostdlib = true },
 			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
 			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
-				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
+				v => config.inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
 			},
-			{ "process-enums", "Process enums as bindings, not external, types.", v => process_enums = true },
+			{ "process-enums", "Process enums as bindings, not external, types.", v => config.process_enums = true },
 			{ "link-with=,", "Link with a native library {0:FILE} to the binding, embedded as a resource named {1:ID}",
 				(path, id) => {
 					if (path is null || path.Length == 0)
@@ -278,11 +259,11 @@ public class BindingTouch : IDisposable {
 					if (id is null || id.Length == 0)
 						id = Path.GetFileName (path);
 
-					if (linkwith.Contains (id))
+					if (config.linkwith.Contains (id))
 						throw new Exception ("-link-with=FILE,ID cannot assign the same resource id to multiple libraries.");
 
-					resources.Add (string.Format ("-res:{0},{1}", path, id));
-					linkwith.Add (id);
+					config.resources.Add (string.Format ("-res:{0},{1}", path, id));
+					config.linkwith.Add (id);
 				}
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
@@ -323,14 +304,14 @@ public class BindingTouch : IDisposable {
 		};
 
 		try {
-			sources = os.Parse (args);
+			config.sources = os.Parse (args);
 		} catch (Exception e) {
 			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
 			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
 			return 1;
 		}
 
-		if (show_help) {
+		if (config.show_help) {
 			ShowHelp (os);
 			return 0;
 		}
@@ -341,7 +322,7 @@ public class BindingTouch : IDisposable {
 		switch (target_framework.Value.Platform) {
 		case ApplePlatform.iOS:
 			CurrentPlatform = PlatformName.iOS;
-			nostdlib = true;
+			config.nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			if (!IsDotNet) {
@@ -351,7 +332,7 @@ public class BindingTouch : IDisposable {
 			break;
 		case ApplePlatform.TVOS:
 			CurrentPlatform = PlatformName.TvOS;
-			nostdlib = true;
+			config.nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
 			if (!IsDotNet) {
@@ -361,7 +342,7 @@ public class BindingTouch : IDisposable {
 			break;
 		case ApplePlatform.WatchOS:
 			CurrentPlatform = PlatformName.WatchOS;
-			nostdlib = true;
+			config.nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
 			if (!IsDotNet) {
@@ -371,7 +352,7 @@ public class BindingTouch : IDisposable {
 			break;
 		case ApplePlatform.MacCatalyst:
 			CurrentPlatform = PlatformName.MacCatalyst;
-			nostdlib = true;
+			config.nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
 			if (!IsDotNet) {
@@ -381,7 +362,7 @@ public class BindingTouch : IDisposable {
 			break;
 		case ApplePlatform.MacOSX:
 			CurrentPlatform = PlatformName.MacOSX;
-			nostdlib = true;
+			config.nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll)) {
 				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "mobile", "Xamarin.Mac.dll");
@@ -414,22 +395,22 @@ public class BindingTouch : IDisposable {
 			throw ErrorHelper.CreateError (1053, target_framework);
 		}
 
-		if (sources.Count > 0) {
-			api_sources.Insert (0, sources [0]);
-			for (int i = 1; i < sources.Count; i++)
-				core_sources.Insert (i - 1, sources [i]);
+		if (config.sources.Count > 0) {
+			config.api_sources.Insert (0, config.sources [0]);
+			for (int i = 1; i < config.sources.Count; i++)
+				config.core_sources.Insert (i - 1, config.sources [i]);
 		}
 
-		if (api_sources.Count == 0) {
+		if (config.api_sources.Count == 0) {
 			Console.WriteLine ("Error: no api file provided");
 			ShowHelp (os);
 			return 1;
 		}
 
-		if (tmpdir is null)
-			tmpdir = GetWorkDir ();
+		if (config.tmpdir is null)
+			config.tmpdir = GetWorkDir ();
 
-		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (api_sources [0]);
+		string firstApiDefinitionName = Path.GetFileNameWithoutExtension (config.api_sources [0]);
 		firstApiDefinitionName = firstApiDefinitionName.Replace ('-', '_'); // This is not exhaustive, but common.
 		if (outfile is null)
 			outfile = firstApiDefinitionName + ".dll";
@@ -438,7 +419,7 @@ public class BindingTouch : IDisposable {
 		var paths = libs.Select ((v) => "-lib:" + v);
 
 		try {
-			var tmpass = GetCompiledApiBindingsAssembly (tmpdir, refs, nostdlib, api_sources, core_sources, defines, paths);
+			var tmpass = GetCompiledApiBindingsAssembly (config.tmpdir, refs, config.nostdlib, config.api_sources, config.core_sources, config.defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
 					GetLibraryDirectories ().ToArray (),
@@ -466,7 +447,7 @@ public class BindingTouch : IDisposable {
 #endif
 					continue;
 
-				if (!linkwith.Contains (linkWith.LibraryName)) {
+				if (!config.linkwith.Contains (linkWith.LibraryName)) {
 					Console.Error.WriteLine ("Missing native library {0}, please use `--link-with' to specify the path to this library.", linkWith.LibraryName);
 					return 1;
 				}
@@ -497,7 +478,7 @@ public class BindingTouch : IDisposable {
 			var types = new List<Type> ();
 			var strong_dictionaries = new List<Type> ();
 			foreach (var t in api.GetTypes ()) {
-				if ((process_enums && t.IsEnum) ||
+				if ((config.process_enums && t.IsEnum) ||
 					AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
 					AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
 					AttributeManager.HasAttribute<StaticAttribute> (t) ||
@@ -509,20 +490,20 @@ public class BindingTouch : IDisposable {
 
 			namespaceManager ??= new NamespaceManager (
 				CurrentPlatform,
-				ns ?? firstApiDefinitionName,
+				config.ns ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (this, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
-				BaseDir = basedir ?? tmpdir,
-				ZeroCopyStrings = zero_copy,
-				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),
+			var g = new Generator (this, config.public_mode, config.external, config.debug, types.ToArray (), strong_dictionaries.ToArray ()) {
+				BaseDir = config.basedir ?? config.tmpdir,
+				ZeroCopyStrings = config.zero_copy,
+				InlineSelectors = config.inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),
 			};
 
 			g.Go ();
 
-			if (generate_file_list is not null) {
-				using (var f = File.CreateText (generate_file_list)) {
+			if (config.generate_file_list is not null) {
+				using (var f = File.CreateText (config.generate_file_list)) {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
@@ -530,34 +511,34 @@ public class BindingTouch : IDisposable {
 			}
 
 			var cargs = new List<string> ();
-			if (unsafef)
+			if (config.unsafef)
 				cargs.Add ("-unsafe");
 			cargs.Add ("-target:library");
 			cargs.Add ("-out:" + outfile);
-			foreach (var def in defines)
+			foreach (var def in config.defines)
 				cargs.Add ("-define:" + def);
 #if NET
 			cargs.Add ("-define:NET");
 #endif
 			cargs.AddRange (g.GeneratedFiles);
-			cargs.AddRange (core_sources);
-			cargs.AddRange (extra_sources);
+			cargs.AddRange (config.core_sources);
+			cargs.AddRange (config.extra_sources);
 			cargs.AddRange (refs);
 			cargs.Add ("-r:" + baselibdll);
-			cargs.AddRange (resources);
-			if (nostdlib) {
+			cargs.AddRange (config.resources);
+			if (config.nostdlib) {
 				cargs.Add ("-nostdlib");
 				cargs.Add ("-noconfig");
 			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			AddNFloatUsing (cargs, tmpdir);
+			AddNFloatUsing (cargs, config.tmpdir);
 
-			Compile (cargs, 1000, tmpdir);
+			Compile (cargs, 1000, config.tmpdir);
 		} finally {
-			if (delete_temp)
-				Directory.Delete (tmpdir, true);
+			if (config.delete_temp)
+				Directory.Delete (config.tmpdir, true);
 		}
 		return 0;
 	}
