@@ -145,6 +145,7 @@
     <Compile Include="..\tools\common\NullableAttributes.cs">
       <Link>NullableAttributes.cs</Link>
     </Compile>
+    <Compile Include="bgen\Api.cs" />
     <Compile Include="bgen\Enums\AsyncMethodKind.cs" />
     <Compile Include="bgen\Enums\BodyOption.cs" />
     <Compile Include="bgen\Enums\ThreadCheck.cs" />

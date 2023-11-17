@@ -446,7 +446,7 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (baselibdll, out Assembly? baselib))
+			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) || !TryLoadApi (baselibdll, out Assembly? baselib))
 				return 1;
 
 			attributeManager ??= new AttributeManager (this);
@@ -455,10 +455,10 @@ public class BindingTouch : IDisposable {
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
+			typeCache ??= new (universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
 
-			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
+			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (apiAssembly)) {
 #if NET
 				if (string.IsNullOrEmpty (linkWith.LibraryName))
 #else
@@ -494,26 +494,14 @@ public class BindingTouch : IDisposable {
 				}
 			}
 
-			var types = new List<Type> ();
-			var strong_dictionaries = new List<Type> ();
-			foreach (var t in api.GetTypes ()) {
-				if ((process_enums && t.IsEnum) ||
-					AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
-					AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
-					AttributeManager.HasAttribute<StaticAttribute> (t) ||
-					AttributeManager.HasAttribute<PartialAttribute> (t))
-					types.Add (t);
-				if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
-					strong_dictionaries.Add (t);
-			}
-
+			var api = TypeManager.ParseApi (apiAssembly, process_enums);
 			namespaceManager ??= new NamespaceManager (
 				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (this, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
+			var g = new Generator (this, api, public_mode, external, debug) {
 				BaseDir = basedir ?? tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors ?? (CurrentPlatform != PlatformName.MacOSX),

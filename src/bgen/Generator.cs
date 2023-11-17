@@ -99,7 +99,7 @@ public partial class Generator : IMemberGatherer {
 	public string CoreServicesMap => CurrentPlatform.GetCoreServicesMap ();
 	public string PDFKitMap => CurrentPlatform.GetPDFKitMap ();
 
-	Type [] types, strong_dictionaries;
+	Api api;
 	bool debug;
 	bool external;
 	StreamWriter sw, m;
@@ -1311,14 +1311,13 @@ public partial class Generator : IMemberGatherer {
 		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo).ToGetter (pinfo);
 	}
 
-	public Generator (BindingTouch binding_touch, bool is_public_mode, bool external, bool debug, Type [] types, Type [] strong_dictionaries)
+	public Generator (BindingTouch binding_touch, Api api, bool is_public_mode, bool external, bool debug)
 	{
 		BindingTouch = binding_touch;
 		IsPublicMode = is_public_mode;
 		this.external = external;
 		this.debug = debug;
-		this.types = types;
-		this.strong_dictionaries = strong_dictionaries;
+		this.api = api;
 		basedir = ".";
 		NativeHandleType = binding_touch.IsDotNet ? "NativeHandle" : "IntPtr";
 	}
@@ -1360,10 +1359,9 @@ public partial class Generator : IMemberGatherer {
 			send_methods ["IntPtr_objc_msgSendSuper_IntPtr"] = "IntPtr_objc_msgSendSuper_IntPtr";
 		}
 
-		Array.Sort (types, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
-		TypeManager.SetTypesThatMustAlwaysBeGloballyNamed (types);
+		TypeManager.SetTypesThatMustAlwaysBeGloballyNamed (api.Types);
 
-		foreach (Type t in types) {
+		foreach (Type t in api.Types) {
 			if (SkipGenerationOfType (t))
 				continue;
 
@@ -1534,7 +1532,7 @@ public partial class Generator : IMemberGatherer {
 			selectors [t] = tselectors.Distinct ();
 		}
 
-		foreach (Type t in types) {
+		foreach (Type t in api.Types) {
 			if (SkipGenerationOfType (t))
 				continue;
 
@@ -1832,7 +1830,7 @@ public partial class Generator : IMemberGatherer {
 	//
 	void GenerateStrongDictionaryTypes ()
 	{
-		foreach (var dictType in strong_dictionaries) {
+		foreach (var dictType in api.StrongDictionaries) {
 			if (dictType.IsUnavailable (this))
 				continue;
 			var sa = AttributeManager.GetCustomAttribute<StrongDictionaryAttribute> (dictType);
@@ -4777,7 +4775,7 @@ public partial class Generator : IMemberGatherer {
 	// If a type comes from the assembly with the api definition we're processing.
 	bool IsApiType (Type type)
 	{
-		return type.Assembly == types [0].Assembly;
+		return type.Assembly == api.Types [0].Assembly;
 	}
 
 	bool IsRequired (MemberInfo provider, Attribute [] attributes = null)
@@ -5576,7 +5574,7 @@ public partial class Generator : IMemberGatherer {
 						continue;
 
 					string nonInterfaceName = protocolType.Name.Substring (1);
-					if (!types.Any (x => x.Name.Contains (nonInterfaceName)))
+					if (!api.Types.Any (x => x.Name.Contains (nonInterfaceName)))
 						continue;
 
 					if (is_category_class)
@@ -6672,7 +6670,7 @@ public partial class Generator : IMemberGatherer {
 			//
 			// Copy delegates from the API files into the output if they were declared there
 			//
-			var rootAssembly = types [0].Assembly;
+			var rootAssembly = api.Types [0].Assembly;
 			foreach (var deltype in trampolines.Keys.OrderBy (d => d.Name, StringComparer.Ordinal)) {
 				if (deltype.Assembly != rootAssembly)
 					continue;
