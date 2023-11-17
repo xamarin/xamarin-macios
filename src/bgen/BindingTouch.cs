@@ -79,7 +79,7 @@ public class BindingTouch : IDisposable {
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
 
-	LibraryManager libraryManager = new(); // TODO should this be a class variable or initialized in Main3?
+	LibraryManager libraryManager;
 
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
@@ -145,6 +145,8 @@ public class BindingTouch : IDisposable {
 		var defines = new List<string> ();
 		string? generate_file_list = null;
 		bool process_enums = false;
+
+		libraryManager = new();
 
 		ErrorHelper.ClearWarningLevels ();
 
