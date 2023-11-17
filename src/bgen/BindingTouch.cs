@@ -659,7 +659,7 @@ public class BindingTouch : IDisposable {
 			if (Driver.Verbosity > 0)
 				Console.WriteLine (e);
 
-			Console.Error.WriteLine ("Error loading  {0}", name);
+			Console.Error.WriteLine ("Error loading {0}", name);
 		}
 
 		return assembly is not null;
