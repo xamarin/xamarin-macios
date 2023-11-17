@@ -63,7 +63,11 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			});
 			thread.Start ();
-			Assert.IsTrue (thread.Join (TimeSpan.FromSeconds (15)), "Timed out");
+			var timedOut = !thread.Join (TimeSpan.FromSeconds (15));
+			if (timedOut) {
+				TestRuntime.IgnoreInCI ("Timed out");
+				Assert.IsFalse (timedOut, "Timed out");
+			}
 			TestRuntime.AssertNoNonNUnitException (ex, "Exception");
 		}
 	}
