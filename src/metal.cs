@@ -2157,7 +2157,7 @@ namespace Metal {
 #endif
 		[Export ("newIOFileHandleWithURL:error:")]
 		[return: NullAllowed]
-		IMTLIOFileHandle NewIOFileHandleWithURL (NSUrl url, [NullAllowed] out NSError error);
+		IMTLIOFileHandle CreateIOFileHandle (NSUrl url, [NullAllowed] out NSError error);
 
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
 #if XAMCORE_5_0
@@ -2165,7 +2165,7 @@ namespace Metal {
 #endif
 		[Export ("newIOFileHandleWithURL:compressionMethod:error:")]
 		[return: NullAllowed]
-		IMTLIOFileHandle NewIOFileHandleWithURL (NSUrl url, MTLIOCompressionMethod compressionMethod, [NullAllowed] out NSError error);
+		IMTLIOFileHandle CreateIOFileHandle (NSUrl url, MTLIOCompressionMethod compressionMethod, [NullAllowed] out NSError error);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
@@ -2186,7 +2186,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferBinding:")]
-		IMTLArgumentEncoder NewArgumentEncoder (IMTLBufferBinding bufferBinding);
+		IMTLArgumentEncoder CreateArgumentEncoder (IMTLBufferBinding bufferBinding);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
@@ -2194,7 +2194,7 @@ namespace Metal {
 #endif
 		[Export ("newIOCommandQueueWithDescriptor:error:")]
 		[return: NullAllowed]
-		IMTLIOCommandQueue NewIOCommandQueue (MTLIOCommandQueueDescriptor descriptor, [NullAllowed] out NSError error);
+		IMTLIOCommandQueue CreateIOCommandQueue (MTLIOCommandQueueDescriptor descriptor, [NullAllowed] out NSError error);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
@@ -2202,14 +2202,14 @@ namespace Metal {
 #endif
 		[Export ("newRenderPipelineStateWithMeshDescriptor:options:reflection:error:")]
 		[return: NullAllowed]
-		IMTLRenderPipelineState NewRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
+		IMTLRenderPipelineState CreateRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
 		[Export ("newRenderPipelineStateWithMeshDescriptor:options:completionHandler:")]
-		void NewRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
+		void CreateRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
@@ -5071,7 +5071,7 @@ namespace Metal {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Export ("newAccelerationStructureWithSize:")]
 		[return: NullAllowed, Release]
-		IMTLAccelerationStructure NewAccelerationStructure (nuint size);
+		IMTLAccelerationStructure CreateAccelerationStructure (nuint size);
 
 #if XAMCORE_5_0
 		[Abstract]
@@ -5079,7 +5079,7 @@ namespace Metal {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Export ("newAccelerationStructureWithDescriptor:")]
 		[return: NullAllowed, Release]
-		IMTLAccelerationStructure NewAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
+		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
 
 #if XAMCORE_5_0
 		[Abstract]
@@ -5087,7 +5087,7 @@ namespace Metal {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Export ("newAccelerationStructureWithSize:offset:")]
 		[return: NullAllowed, Release]
-		IMTLAccelerationStructure NewAccelerationStructure (nuint size, nuint offset);
+		IMTLAccelerationStructure CreateAccelerationStructure (nuint size, nuint offset);
 
 #if XAMCORE_5_0
 		[Abstract]
@@ -5095,7 +5095,7 @@ namespace Metal {
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 		[Export ("newAccelerationStructureWithDescriptor:offset:")]
 		[return: NullAllowed, Release]
-		IMTLAccelerationStructure NewAccelerationStructure (MTLAccelerationStructureDescriptor descriptor, nuint offset);
+		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor, nuint offset);
 	}
 
 	interface IMTLResource { }
@@ -6042,7 +6042,7 @@ namespace Metal {
 		[Export ("indirectComputeCommandAtIndex:")]
 		IMTLIndirectComputeCommand GetIndirectComputeCommand (nuint commandIndex);
 
-		[Mac (13, 0), iOS (16, 0)]
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16,0)]
 #if XAMCORE_5_0
 		[Abstract]
 #endif
@@ -7781,7 +7781,7 @@ namespace Metal {
 	[BaseType (typeof (NSObject))]
 	interface MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray {
 		[Export ("objectAtIndexedSubscript:")]
-		MTLAccelerationStructurePassSampleBufferAttachmentDescriptor ObjectAtIndexedSubscript (nuint attachmentIndex);
+		MTLAccelerationStructurePassSampleBufferAttachmentDescriptor GetObject (nuint attachmentIndex);
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLAccelerationStructurePassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);

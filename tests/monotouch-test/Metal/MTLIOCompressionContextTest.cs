@@ -21,14 +21,14 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void DefaultChunkSize ()
 		{
-			TestRuntime.AssertNotSimulator (); // metal api no supported on the sim
+			TestRuntime.AssertNotSimulator (); // metal api not supported on the sim
 			Assert.AreNotEqual (-1, MTLIOCompressionContext.DefaultChunkSize);
 		}
 
 		[Test]
 		public void CreateAndFlushTest ()
 		{
-			TestRuntime.AssertNotSimulator (); // metal api no supported on the sim
+			TestRuntime.AssertNotSimulator (); // metal api not supported on the sim
 			var outputPath = Path.GetTempFileName ();
 			try {
 				// create and flush, test should simple pass, no need to asserts
