@@ -363,17 +363,18 @@ public class TypeManager {
 	{
 		return t.IsSubclassOf (TypeCache.DictionaryContainerType) || (t.IsInterface && AttributeManager.HasAttribute<StrongDictionaryAttribute> (t));
 	}
-	
-	public Api ParseApi (Assembly api, bool processEnums){
+
+	public Api ParseApi (Assembly api, bool processEnums)
+	{
 		var types = new List<Type> ();
 		var strongDictionaries = new List<Type> ();
-		
+
 		foreach (var t in api.GetTypes ()) {
 			if ((processEnums && t.IsEnum) ||
 				AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
 				AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
 				AttributeManager.HasAttribute<StaticAttribute> (t) ||
-				AttributeManager.HasAttribute<PartialAttribute> (t)) 
+				AttributeManager.HasAttribute<PartialAttribute> (t))
 				// skip those types that are not available
 				types.Add (t);
 			if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
@@ -383,7 +384,7 @@ public class TypeManager {
 		// we should sort the types based on the full name
 		var typesArray = types.ToArray ();
 		Array.Sort (typesArray, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
-		
+
 		return new (typesArray, strongDictionaries.ToArray ());
 	}
 }
