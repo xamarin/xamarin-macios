@@ -5,6 +5,9 @@ using Xamarin.MacDev;
 using System.Linq;
 using Xamarin.MacDev.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
 	public abstract class WriteAssetPackManifestTaskBase : XamarinTask {
 		#region Inputs
