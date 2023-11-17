@@ -51,7 +51,6 @@ public class BindingTouch : IDisposable {
 #endif
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
-	public bool skipSystemDrawing;
 	public string? outfile;
 
 #if !NET
@@ -369,7 +368,7 @@ public class BindingTouch : IDisposable {
 			namespaceManager ??= new NamespaceManager (
 				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
-				skipSystemDrawing
+				libraryConfig.skipSystemDrawing
 			);
 
 			var g = new Generator (this, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
