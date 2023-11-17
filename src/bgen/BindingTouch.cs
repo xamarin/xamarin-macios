@@ -90,7 +90,7 @@ public class BindingTouch : IDisposable {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return libraryManager.target_framework!.Value; }
+		get { return libraryManager.TargetFramework; }
 	}
 
 	public static string ToolName {

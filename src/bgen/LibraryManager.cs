@@ -8,9 +8,9 @@ using Xamarin.Utils;
 public class LibraryManager {
 	List<string> libs = new List<string> ();
 	public bool skipSystemDrawing = false;
-	public TargetFramework? target_framework; // TODO fix casing on everything in this class
+	TargetFramework? targetFramework; // TODO fix casing on everything in this class
 	public TargetFramework TargetFramework {
-		get { return target_framework!.Value; }
+		get { return targetFramework!.Value; }
 	}
 	internal bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
@@ -34,14 +34,14 @@ public class LibraryManager {
 		case PlatformName.MacCatalyst:
 			return currentPlatform.GetPath ("lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
 		case PlatformName.MacOSX:
-			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+			if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				return currentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+			} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
 				return currentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+			} else if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return currentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else {
-				throw ErrorHelper.CreateError (1053, target_framework);
+				throw ErrorHelper.CreateError (1053, targetFramework);
 			}
 		default:
 			throw new BindingException (1047, currentPlatform);
@@ -65,16 +65,16 @@ public class LibraryManager {
 				yield return currentPlatform.GetPath ("lib", "mono", "Xamarin.MacCatalyst");
 				break;
 			case PlatformName.MacOSX:
-				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
 					yield return currentPlatform.GetPath ("lib", "reference", "full");
 					yield return currentPlatform.GetPath ("lib", "mono", "4.5");
-				} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
 					yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
 					yield return currentPlatform.GetPath ("lib", "mono", "4.5");
-				} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				} else if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 					yield return currentPlatform.GetPath ("lib", "mono", "Xamarin.Mac");
 				} else {
-					throw ErrorHelper.CreateError (1053, target_framework);
+					throw ErrorHelper.CreateError (1053, targetFramework);
 				}
 				break;
 			default:
@@ -90,20 +90,20 @@ public class LibraryManager {
 		TargetFramework tf;
 		if (!TargetFramework.TryParse (fx, out tf))
 			throw ErrorHelper.CreateError (68, fx);
-		target_framework = tf;
+		targetFramework = tf;
 
-		if (!TargetFramework.IsValidFramework (target_framework.Value))
-			throw ErrorHelper.CreateError (70, target_framework.Value,
+		if (!TargetFramework.IsValidFramework (targetFramework.Value))
+			throw ErrorHelper.CreateError (70, targetFramework.Value,
 				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
 	public bool SetBaseLibDllAndReferences(ref string baselibdll, out PlatformName currentPlatform, List<string> references) // TODO is ref good idea?
 	{
 		bool nostdlib = false; // TODO make sure default to false is recommended
-		if (!target_framework.HasValue)
+		if (!targetFramework.HasValue)
 			throw ErrorHelper.CreateError(86);
 
-		switch (target_framework.Value.Platform)
+		switch (targetFramework.Value.Platform)
 		{
 		case ApplePlatform.iOS:
 			currentPlatform = PlatformName.iOS;
@@ -158,47 +158,47 @@ public class LibraryManager {
 			nostdlib = true;
 			if (string.IsNullOrEmpty(baselibdll))
 			{
-				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
+				if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					baselibdll = currentPlatform.GetPath( "lib", "reference", "mobile", "Xamarin.Mac.dll");
-				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full ||
-				         target_framework == TargetFramework.Xamarin_Mac_4_5_System)
+				else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full ||
+				         targetFramework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = currentPlatform.GetPath( "lib", "reference", "full", "Xamarin.Mac.dll");
-				else if (target_framework == TargetFramework.DotNet_macOS)
+				else if (targetFramework == TargetFramework.DotNet_macOS)
 					baselibdll = currentPlatform.GetPath( "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
-					throw ErrorHelper.CreateError(1053, target_framework);
+					throw ErrorHelper.CreateError(1053, targetFramework);
 			}
 
-			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
+			if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 			{
 				skipSystemDrawing = true;
 				references.Add("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences(currentPlatform, "lib/mono/Xamarin.Mac", references);
 			}
-			else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full)
+			else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full)
 			{
 				skipSystemDrawing = true;
 				references.Add("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences(currentPlatform, "lib/mono/4.5", references);
 			}
-			else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System)
+			else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_System)
 			{
 				skipSystemDrawing = false;
 				ReferenceFixer.FixSDKReferences("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5",
 					references, forceSystemDrawing: true);
 			}
-			else if (target_framework == TargetFramework.DotNet_macOS)
+			else if (targetFramework == TargetFramework.DotNet_macOS)
 			{
 				skipSystemDrawing = false;
 			}
 			else
 			{
-				throw ErrorHelper.CreateError(1053, target_framework);
+				throw ErrorHelper.CreateError(1053, targetFramework);
 			}
 
 			break;
 		default:
-			throw ErrorHelper.CreateError(1053, target_framework);
+			throw ErrorHelper.CreateError(1053, targetFramework);
 		}
 
 		return nostdlib;
