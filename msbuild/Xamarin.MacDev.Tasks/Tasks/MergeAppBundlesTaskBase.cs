@@ -10,6 +10,9 @@ using Xamarin.Bundler;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	// This task will take two or more app bundles and merge them into a universal/fat app bundle.
 	// It will go through every file from the input app bundles and copy them to the output app bundle.
