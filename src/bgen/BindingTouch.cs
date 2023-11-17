@@ -97,6 +97,10 @@ public class BindingTouch : IDisposable {
 		get { return "bgen"; }
 	}
 
+	internal bool IsDotNet {
+		get { return TargetFramework.IsDotNet; }
+	}
+
 	static void ShowHelp (OptionSet os)
 	{
 		Console.WriteLine ("{0} - Mono Objective-C API binder", ToolName);
