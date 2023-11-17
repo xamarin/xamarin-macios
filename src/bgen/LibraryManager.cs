@@ -5,7 +5,7 @@ using Xamarin.Utils;
 
 #nullable enable
 
-public class LibraryConfig {
+public class LibraryManager {
 	List<string> libs = new List<string> ();
 	public bool skipSystemDrawing = false;
 	public TargetFramework? target_framework; // TODO fix casing on everything in this class

@@ -81,7 +81,7 @@ public class BindingTouch : IDisposable {
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
 
-	LibraryConfig libraryConfig = new(); // TODO should this be a class variable or initialized in Main3?
+	LibraryManager libraryManager = new(); // TODO should this be a class variable or initialized in Main3?
 
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
@@ -90,7 +90,7 @@ public class BindingTouch : IDisposable {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return libraryConfig.target_framework!.Value; }
+		get { return libraryManager.target_framework!.Value; }
 	}
 
 	public static string ToolName {
@@ -207,7 +207,7 @@ public class BindingTouch : IDisposable {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => libraryConfig.SetTargetFramework (v) },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => libraryManager.SetTargetFramework (v) },
 			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 					try {
 						if (!string.IsNullOrEmpty (v)) {
@@ -255,7 +255,7 @@ public class BindingTouch : IDisposable {
 			return 0;
 		}
 
-		nostdlib = libraryConfig.SetBaseLibDllAndReferences (ref baselibdll, out CurrentPlatform, references);
+		nostdlib = libraryManager.SetBaseLibDllAndReferences (ref baselibdll, out CurrentPlatform, references);
 
 		if (sources.Count > 0) {
 			api_sources.Insert (0, sources [0]);
@@ -284,7 +284,7 @@ public class BindingTouch : IDisposable {
 			var tmpass = GetCompiledApiBindingsAssembly (tmpdir, refs, nostdlib, api_sources, core_sources, defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
-					libraryConfig.GetLibraryDirectories (CurrentPlatform).ToArray (),
+					libraryManager.GetLibraryDirectories (CurrentPlatform).ToArray (),
 					references.ToArray ()),
 				"mscorlib"
 			);
@@ -315,7 +315,7 @@ public class BindingTouch : IDisposable {
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
-			universe.LoadFromAssemblyPath (libraryConfig.GetAttributeLibraryPath (attributedll, CurrentPlatform));
+			universe.LoadFromAssemblyPath (libraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
 
 			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
@@ -372,7 +372,7 @@ public class BindingTouch : IDisposable {
 			namespaceManager ??= new NamespaceManager (
 				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
-				libraryConfig.skipSystemDrawing
+				libraryManager.skipSystemDrawing
 			);
 
 			var g = new Generator (this, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()) {
@@ -441,7 +441,7 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-target:library");
 		cargs.Add ("-nowarn:436");
 		cargs.Add ("-out:" + tmpass);
-		cargs.Add ("-r:" + libraryConfig.GetAttributeLibraryPath (attributedll, CurrentPlatform));
+		cargs.Add ("-r:" + libraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
 		cargs.AddRange (refs);
 		cargs.Add ("-r:" + baselibdll);
 		foreach (var def in defines)
