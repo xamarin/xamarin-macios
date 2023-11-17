@@ -8,7 +8,7 @@ using Xamarin.Utils;
 public class LibraryConfig {
 	List<string> libs = new List<string> ();
 	public bool skipSystemDrawing = false;
-	TargetFramework? target_framework;
+	public TargetFramework? target_framework; // TODO fix casing on everything in this class
 	public TargetFramework TargetFramework {
 		get { return target_framework!.Value; }
 	}
@@ -16,7 +16,7 @@ public class LibraryConfig {
 		get { return TargetFramework.IsDotNet; }
 	}
 
-	public string GetAttributeLibraryPath (string attributedll, PlatformName currentPlatform)
+	public string GetAttributeLibraryPath (string? attributedll, PlatformName currentPlatform)
 	{
 		if (!string.IsNullOrEmpty (attributedll))
 			return attributedll!;

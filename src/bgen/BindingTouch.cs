@@ -41,7 +41,7 @@ using Xamarin.Bundler;
 using Xamarin.Utils;
 
 public class BindingTouch : IDisposable {
-	TargetFramework? target_framework;
+
 #if NET
 	public static ApplePlatform [] AllPlatforms = new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst };
 	public static PlatformName [] AllPlatformNames = new PlatformName [] { PlatformName.iOS, PlatformName.MacOSX, PlatformName.TvOS, PlatformName.MacCatalyst };
@@ -82,6 +82,8 @@ public class BindingTouch : IDisposable {
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
 
+	LibraryConfig libraryConfig = new(); // TODO should this be a class variable or initialized in Main3?
+
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
@@ -89,7 +91,7 @@ public class BindingTouch : IDisposable {
 	}
 
 	public TargetFramework TargetFramework {
-		get { return target_framework!.Value; }
+		get { return libraryConfig.target_framework!.Value; }
 	}
 
 	public static string ToolName {
@@ -136,14 +138,14 @@ public class BindingTouch : IDisposable {
 		case PlatformName.MacCatalyst:
 			return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
 		case PlatformName.MacOSX:
-			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+			if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+			} else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+			} else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else {
-				throw ErrorHelper.CreateError (1053, target_framework);
+				throw ErrorHelper.CreateError (1053, libraryConfig.target_framework);
 			}
 		default:
 			throw new BindingException (1047, CurrentPlatform);
@@ -167,16 +169,16 @@ public class BindingTouch : IDisposable {
 				yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.MacCatalyst");
 				break;
 			case PlatformName.MacOSX:
-				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 					yield return CurrentPlatform.GetPath ("lib", "reference", "full");
 					yield return CurrentPlatform.GetPath ("lib", "mono", "4.5");
-				} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				} else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 					yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
 					yield return CurrentPlatform.GetPath ("lib", "mono", "4.5");
-				} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				} else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 					yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.Mac");
 				} else {
-					throw ErrorHelper.CreateError (1053, target_framework);
+					throw ErrorHelper.CreateError (1053, libraryConfig.target_framework);
 				}
 				break;
 			default:
@@ -192,10 +194,10 @@ public class BindingTouch : IDisposable {
 		TargetFramework tf;
 		if (!TargetFramework.TryParse (fx, out tf))
 			throw ErrorHelper.CreateError (68, fx);
-		target_framework = tf;
+		libraryConfig.target_framework = tf;
 
-		if (!TargetFramework.IsValidFramework (target_framework.Value))
-			throw ErrorHelper.CreateError (70, target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+		if (!TargetFramework.IsValidFramework (libraryConfig.target_framework.Value))
+			throw ErrorHelper.CreateError (70, libraryConfig.target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
 	static int Main2 (string [] args)
@@ -286,7 +288,7 @@ public class BindingTouch : IDisposable {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => libraryConfig.SetTargetFramework (v) },
 			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 					try {
 						if (!string.IsNullOrEmpty (v)) {
@@ -334,10 +336,10 @@ public class BindingTouch : IDisposable {
 			return 0;
 		}
 
-		if (!target_framework.HasValue)
+		if (!libraryConfig.target_framework.HasValue)
 			throw ErrorHelper.CreateError (86);
 
-		switch (target_framework.Value.Platform) {
+		switch (libraryConfig.target_framework.Value.Platform) {
 		case ApplePlatform.iOS:
 			CurrentPlatform = PlatformName.iOS;
 			nostdlib = true;
@@ -382,35 +384,35 @@ public class BindingTouch : IDisposable {
 			CurrentPlatform = PlatformName.MacOSX;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll)) {
-				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
+				if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "mobile", "Xamarin.Mac.dll");
-				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
+				else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_Full || libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "full", "Xamarin.Mac.dll");
-				else if (target_framework == TargetFramework.DotNet_macOS)
+				else if (libraryConfig.target_framework == TargetFramework.DotNet_macOS)
 					baselibdll = CurrentPlatform.GetPath ("lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
-					throw ErrorHelper.CreateError (1053, target_framework);
+					throw ErrorHelper.CreateError (1053, libraryConfig.target_framework);
 			}
-			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+			if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
 				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/Xamarin.Mac", references);
-			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+			} else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				skipSystemDrawing = true;
 				references.Add ("Facades/System.Drawing.Common");
 				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/4.5", references);
-			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+			} else if (libraryConfig.target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
 				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing: true);
-			} else if (target_framework == TargetFramework.DotNet_macOS) {
+			} else if (libraryConfig.target_framework == TargetFramework.DotNet_macOS) {
 				skipSystemDrawing = false;
 			} else {
-				throw ErrorHelper.CreateError (1053, target_framework);
+				throw ErrorHelper.CreateError (1053, libraryConfig.target_framework);
 			}
 
 			break;
 		default:
-			throw ErrorHelper.CreateError (1053, target_framework);
+			throw ErrorHelper.CreateError (1053, libraryConfig.target_framework);
 		}
 
 		if (sources.Count > 0) {
@@ -440,7 +442,7 @@ public class BindingTouch : IDisposable {
 			var tmpass = GetCompiledApiBindingsAssembly (tmpdir, refs, nostdlib, api_sources, core_sources, defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
-					GetLibraryDirectories ().ToArray (),
+					libraryConfig.GetLibraryDirectories (CurrentPlatform).ToArray (),
 					references.ToArray ()),
 				"mscorlib"
 			);
@@ -471,7 +473,7 @@ public class BindingTouch : IDisposable {
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
-			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
+			universe.LoadFromAssemblyPath (libraryConfig.GetAttributeLibraryPath (attributedll, CurrentPlatform));
 
 			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
@@ -597,7 +599,7 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-target:library");
 		cargs.Add ("-nowarn:436");
 		cargs.Add ("-out:" + tmpass);
-		cargs.Add ("-r:" + GetAttributeLibraryPath ());
+		cargs.Add ("-r:" + libraryConfig.GetAttributeLibraryPath (attributedll, CurrentPlatform));
 		cargs.AddRange (refs);
 		cargs.Add ("-r:" + baselibdll);
 		foreach (var def in defines)
