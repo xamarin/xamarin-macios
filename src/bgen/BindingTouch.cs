@@ -147,7 +147,7 @@ public class BindingTouch : IDisposable {
 		string? generate_file_list = null;
 		bool process_enums = false;
 
-		libraryManager = new();
+		libraryManager = new ();
 
 		ErrorHelper.ClearWarningLevels ();
 
