@@ -74,7 +74,6 @@ public partial class Generator : IMemberGatherer {
 	List<Exception> exceptions = new List<Exception> ();
 
 	Dictionary<Type, IEnumerable<string>> selectors = new Dictionary<Type, IEnumerable<string>> ();
-	Dictionary<Type, bool> need_static = new Dictionary<Type, bool> ();
 	Dictionary<Type, bool> need_abstract = new Dictionary<Type, bool> ();
 	Dictionary<string, int> selector_use = new Dictionary<string, int> ();
 	Dictionary<string, string> selector_names = new Dictionary<string, string> ();
@@ -1403,8 +1402,6 @@ public partial class Generator : IMemberGatherer {
 
 					throw new BindingException (1018, true, t.FullName, pi.Name);
 				}
-				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
-					need_static [t] = true;
 
 #if NET
 				var is_abstract = false;
@@ -1453,7 +1450,6 @@ public partial class Generator : IMemberGatherer {
 					} else if (ba is not null) {
 						selector = ba.Selector;
 					} else if (attr is StaticAttribute) {
-						need_static [t] = true;
 						continue;
 					} else if (attr is InternalAttribute || attr is UnifiedInternalAttribute || attr is ProtectedAttribute) {
 						continue;
