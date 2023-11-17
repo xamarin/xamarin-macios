@@ -48,7 +48,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static unsafe extern OS_nw_proxy_config nw_proxy_config_create_oblivious_http (OS_nw_relay_hop relay, /* sbyte* */IntPtr relay_resource_path, /* byte* */ IntPtr gateway_key_config, nuint gateway_key_config_length);
+		static unsafe extern OS_nw_proxy_config nw_proxy_config_create_oblivious_http (OS_nw_relay_hop relay, /* sbyte* */IntPtr relay_resource_path, byte* gateway_key_config, nuint gateway_key_config_length);
 
 		public static NWProxyConfig? CreateObliviousHttp (NWRelayHop hop, string relaysResourcePath, byte [] gatewayKeyConfig)
 		{
@@ -62,11 +62,13 @@ namespace Network {
 			using var resourcePathPtr = new TransientString (relaysResourcePath);
 			var pinned = GCHandle.Alloc (gatewayKeyConfig, GCHandleType.Pinned);
 
-			fixed (byte* gatewayKeyConfigPointer = gatewayKeyConfig) {
-				var handle = nw_proxy_config_create_oblivious_http (hop.GetCheckedHandle (), resourcePathPtr, gatewayKeyPointer, (nuint) gatewayKeyConfig.Length);
-				if (handle == NativeHandle.Zero)
-					return default;
-				return new NWProxyConfig (handle, owns: true);
+			unsafe {
+				fixed (byte* gatewayKeyConfigPointer = gatewayKeyConfig) {
+					var handle = nw_proxy_config_create_oblivious_http (hop.GetCheckedHandle (), resourcePathPtr, gatewayKeyConfigPointer, (nuint) gatewayKeyConfig.Length);
+					if (handle == NativeHandle.Zero)
+						return default;
+					return new NWProxyConfig (handle, owns: true);
+				}
 			}
 		}
 
