@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 #nullable enable
 
-public class BindingTouchConfig
-{
+public class BindingTouchConfig {
 	public bool ShowHelp = false;
 	public bool UseZeroCopy = false;
 	public string? BindingFilesOutputDirectory = null;
@@ -15,13 +14,13 @@ public class BindingTouchConfig
 	public bool IsPublicMode = true;
 	public bool OmitStandardLibrary = false;
 	public bool? InlineSelectors = null;
-	public List<string> Sources = new();
-	public List<string> Resources = new();
-	public List<string> LinkWith = new();
-	public List<string> ApiSources = new();
-	public List<string> CoreSources = new();
-	public List<string> ExtraSources = new();
-	public List<string> Defines = new();
+	public List<string> Sources = new ();
+	public List<string> Resources = new ();
+	public List<string> LinkWith = new ();
+	public List<string> ApiSources = new ();
+	public List<string> CoreSources = new ();
+	public List<string> ExtraSources = new ();
+	public List<string> Defines = new ();
 	public string? GeneratedFileList = null;
 	public bool ProcessEnums = false;
 }

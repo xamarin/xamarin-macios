@@ -207,7 +207,7 @@ public class BindingTouch : IDisposable {
 
 	public OptionSet CreateOptionSet (BindingTouchConfig config)
 	{
-		return new OptionSet() {
+		return new OptionSet () {
 			{ "h|?|help", "Displays the help", v => config.ShowHelp = true },
 			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
 			{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.BindingFilesOutputDirectory = v; }},
@@ -304,7 +304,7 @@ public class BindingTouch : IDisposable {
 	{
 		ErrorHelper.ClearWarningLevels ();
 
-		BindingTouchConfig config = new();
+		BindingTouchConfig config = new ();
 		OptionSet os = CreateOptionSet (config);
 
 		try {
