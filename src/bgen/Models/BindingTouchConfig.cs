@@ -15,13 +15,13 @@ public class BindingTouchConfig
 	public bool public_mode = true;
 	public bool nostdlib = false;
 	public bool? inline_selectors = null;
-	public List<string> sources;
-	public List<string> resources = new List<string> ();
-	public List<string> linkwith = new List<string> ();
-	public List<string> api_sources = new List<string> ();
-	public List<string> core_sources = new List<string> ();
-	public List<string> extra_sources = new List<string> ();
-	public List<string> defines = new List<string> ();
+	public List<string> sources = new();
+	public List<string> resources = new();
+	public List<string> linkwith = new();
+	public List<string> api_sources = new();
+	public List<string> core_sources = new();
+	public List<string> extra_sources = new();
+	public List<string> defines = new();
 	public string? generate_file_list = null;
 	public bool process_enums = false;
 }

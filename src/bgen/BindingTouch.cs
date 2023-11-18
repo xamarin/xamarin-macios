@@ -205,13 +205,9 @@ public class BindingTouch : IDisposable {
 		return touch.Main3 (args);
 	}
 
-	int Main3 (string [] args)
+	public OptionSet CreateOptionSet (BindingTouchConfig config)
 	{
-		BindingTouchConfig config = new();
-
-		ErrorHelper.ClearWarningLevels ();
-
-		var os = new OptionSet () {
+		return new OptionSet() {
 			{ "h|?|help", "Displays the help", v => config.show_help = true },
 			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
 			{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.basedir = v; }},
@@ -302,6 +298,14 @@ public class BindingTouch : IDisposable {
 			{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
 			new Mono.Options.ResponseFileSource (),
 		};
+	}
+
+	int Main3 (string [] args)
+	{
+		ErrorHelper.ClearWarningLevels ();
+
+		BindingTouchConfig config = new();
+		OptionSet os = CreateOptionSet (config);
 
 		try {
 			config.sources = os.Parse (args);
