@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 public class BindingTouchConfig
 {
-	public bool show_help = false;
-	public bool zero_copy = false;
-	public string? basedir = null;
-	public string? tmpdir = null;
-	public string? ns = null;
-	public bool delete_temp = true;
-	public bool debug = false;
-	public bool unsafef = true;
-	public bool external = false;
-	public bool public_mode = true;
-	public bool nostdlib = false;
-	public bool? inline_selectors = null;
-	public List<string> sources = new();
-	public List<string> resources = new();
-	public List<string> linkwith = new();
-	public List<string> api_sources = new();
-	public List<string> core_sources = new();
-	public List<string> extra_sources = new();
-	public List<string> defines = new();
-	public string? generate_file_list = null;
-	public bool process_enums = false;
+	public bool ShowHelp = false;
+	public bool UseZeroCopy = false;
+	public string? BindingFilesOutputDirectory = null;
+	public string? TemporaryFileDirectory = null;
+	public string? HelperClassNamespace = null;
+	public bool DeleteTemporaryFiles = true;
+	public bool IsDebug = false;
+	public bool IsUnsafe = true;
+	public bool IsExternal = false;
+	public bool IsPublicMode = true;
+	public bool OmitStandardLibrary = false;
+	public bool? InlineSelectors = null;
+	public List<string> Sources = new();
+	public List<string> Resources = new();
+	public List<string> LinkWith = new();
+	public List<string> ApiSources = new();
+	public List<string> CoreSources = new();
+	public List<string> ExtraSources = new();
+	public List<string> Defines = new();
+	public string? GeneratedFileList = null;
+	public bool ProcessEnums = false;
 }
