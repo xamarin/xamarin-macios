@@ -13,6 +13,8 @@
     <BuildDir Condition="'$(BUILD_DIR)' == ''">build\</BuildDir>
     <LangVersion>latest</LangVersion>
     <NoWarn>8601,8618</NoWarn>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -109,13 +111,15 @@
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\Generator.PrintAttributes.cs" />
     <Compile Include="..\src\bgen\IMemberGatherer.cs" />
+<<<<<<< HEAD
     <Compile Include="..\src\bgen\LibraryManager.cs" />
     <Compile Include="..\src\bgen\NamespaceManager.cs" />
+=======
+>>>>>>> origin/main
     <Compile Include="..\src\bgen\Nomenclator.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\ReferenceFixer.cs" />
     <Compile Include="..\src\bgen\SearchPathsAssemblyResolver.cs" />
-    <Compile Include="..\src\bgen\TypeCache.cs" />
     <Compile Include="..\src\bgen\TypeManager.cs" />
     <Compile Include="..\tools\common\ApplePlatform.cs" />
     <Compile Include="..\tools\common\TargetFramework.cs" />
@@ -146,6 +150,8 @@
     <Compile Include="..\tools\common\NullableAttributes.cs">
       <Link>NullableAttributes.cs</Link>
     </Compile>
+    <Compile Include="bgen\Caches\NamespaceCache.cs" />
+    <Compile Include="bgen\Caches\TypeCache.cs" />
     <Compile Include="bgen\Enums\AsyncMethodKind.cs" />
     <Compile Include="bgen\Enums\BodyOption.cs" />
     <Compile Include="bgen\Enums\ThreadCheck.cs" />
@@ -162,6 +168,8 @@
     <Compile Include="bgen\Models\MemberInformation.cs" />
     <Compile Include="bgen\Models\TrampolineInfo.cs" />
     <Compile Include="bgen\Models\WrapPropMemberInformation.cs" />
+    <Compile Include="bgen\Caches\NamespaceCache.cs" />
+    <Compile Include="bgen\Caches\TypeCache.cs" />
     <Compile Include="bgen\Enums\AsyncMethodKind.cs" />
     <Compile Include="bgen\Enums\BodyOption.cs" />
     <Compile Include="bgen\Enums\ThreadCheck.cs" />

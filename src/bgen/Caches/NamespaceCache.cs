@@ -4,7 +4,7 @@ using ObjCRuntime;
 
 #nullable enable
 
-public class NamespaceManager {
+public class NamespaceCache {
 	PlatformName CurrentPlatform => Frameworks!.CurrentPlatform;
 	Frameworks? Frameworks { get; set; }
 
@@ -18,7 +18,7 @@ public class NamespaceManager {
 	public ICollection<string> ImplicitNamespaces { get; private set; }
 	public ICollection<string> NamespacesThatConflictWithTypes { get; private set; }
 
-	public NamespaceManager (PlatformName currentPlatform, string customObjCRuntimeNS, bool skipSystemDrawing)
+	public NamespaceCache (PlatformName currentPlatform, string customObjCRuntimeNS, bool skipSystemDrawing)
 	{
 		Frameworks = new (currentPlatform);
 		ObjCRuntime = String.IsNullOrEmpty (customObjCRuntimeNS)

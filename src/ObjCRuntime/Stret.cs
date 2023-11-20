@@ -30,6 +30,9 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 	class Stret {
 		static bool IsHomogeneousAggregateSmallEnough_Armv7k (Type t, int members)

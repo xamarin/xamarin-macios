@@ -73,8 +73,8 @@ public class BindingTouch : IDisposable {
 	TypeManager? typeManager;
 	public TypeManager TypeManager => typeManager!;
 
-	NamespaceManager? namespaceManager;
-	public NamespaceManager NamespaceManager => namespaceManager!;
+	NamespaceCache? namespaceCache;
+	public NamespaceCache NamespaceCache => namespaceCache!;
 
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
@@ -351,7 +351,7 @@ public class BindingTouch : IDisposable {
 					strong_dictionaries.Add (t);
 			}
 
-			namespaceManager ??= new NamespaceManager (
+			namespaceCache ??= new NamespaceCache (
 				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
 				libraryManager.skipSystemDrawing
