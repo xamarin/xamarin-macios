@@ -252,7 +252,6 @@ namespace Xharness.Jenkins {
 						await clone.CreateCopyAsync (jenkins.MainLog, processManager, task, HarnessConfiguration.RootDirectory);
 
 						var isMac = task.Platform.IsMac ();
-						var canSymlink = task.Platform.CanSymlink ();
 
 						if (!string.IsNullOrEmpty (bundler_arguments)) {
 							clone.Xml.AppendAppBundleExtraOptions (bundler_arguments);
@@ -282,8 +281,6 @@ namespace Xharness.Jenkins {
 						clone.Xml.SetNode (isMac ? "Profiling" : "MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
 						if (test_data.MonoNativeLinkMode != MonoNativeLinkMode.None) {
 							var mono_native_link = test_data.MonoNativeLinkMode;
-							if (!canSymlink && mono_native_link == MonoNativeLinkMode.Symlink)
-								mono_native_link = MonoNativeLinkMode.Static;
 							MonoNativeHelper.AddProjectDefines (clone.Xml, mono_native_link);
 						}
 						if (test_data.EnableSGenConc)
