@@ -53,6 +53,9 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 	internal static string NativeHandleType;
