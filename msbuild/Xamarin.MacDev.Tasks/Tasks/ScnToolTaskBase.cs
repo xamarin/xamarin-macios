@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
@@ -7,123 +9,66 @@ using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
-	public class ScnTool : XamarinToolTask {
-		string sdkDevPath;
-
+	public class ScnTool : XamarinTask {
 		#region Inputs
 
 		[Required]
-		public string IntermediateOutputPath { get; set; }
+		public string IntermediateOutputPath { get; set; } = string.Empty;
 
 		[Required]
-		public string InputScene { get; set; }
+		public ITaskItem [] ColladaAssets { get; set; } = Array.Empty<ITaskItem> ();
+
+		[Required]
+		public string DeviceSpecificIntermediateOutputPath { get; set; } = string.Empty;
 
 		public bool IsWatchApp { get; set; }
 
 		[Required]
-		public string OutputScene { get; set; }
+		public string ProjectDir { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkPlatform { get; set; }
+		public string ResourcePrefix { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkRoot { get; set; }
+		public string SdkPlatform { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkRoot { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath {
-			get { return sdkDevPath; }
-			set {
-				sdkDevPath = value;
+		public string SdkVersion { get; set; } = string.Empty;
 
-				SetEnvironmentVariable ("DEVELOPER_DIR", sdkDevPath);
-			}
-		}
+		[Required]
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		#endregion
 
-		string DevicePlatformBinDir {
-			get { return Path.Combine (SdkDevPath, "usr", "bin"); }
-		}
+		#region Outputs
+		[Output]
+		public ITaskItem [] BundleResources { get; set; } = Array.Empty<ITaskItem> ();
+		#endregion
 
-		protected virtual string OperatingSystem {
-			get {
-				return PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker);
-			}
-		}
-
-		protected override string ToolName {
-			get { return "scntool"; }
-		}
-
-		void SetEnvironmentVariable (string variableName, string value)
+		IList<string> GenerateCommandLineCommands (string inputScene, string outputScene)
 		{
-			var envVariables = EnvironmentVariables;
-			var index = -1;
+			var args = new List<string> ();
 
-			if (envVariables is null) {
-				envVariables = new string [1];
-				index = 0;
-			} else {
-				for (int i = 0; i < envVariables.Length; i++) {
-					if (envVariables [i].StartsWith (variableName + "=", StringComparison.Ordinal)) {
-						index = i;
-						break;
-					}
-				}
-
-				if (index < 0) {
-					Array.Resize<string> (ref envVariables, envVariables.Length + 1);
-					index = envVariables.Length - 1;
-				}
-			}
-
-			envVariables [index] = string.Format ("{0}={1}", variableName, value);
-
-			EnvironmentVariables = envVariables;
-		}
-
-		protected override string GenerateFullPathToTool ()
-		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
-
-			var path = Path.Combine (DevicePlatformBinDir, ToolExe);
-
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineArgumentBuilder ();
-
+			args.Add ("scntool");
 			args.Add ("--compress");
-			args.AddQuoted (InputScene);
+			args.Add (inputScene);
 			args.Add ("-o");
-			args.AddQuoted (OutputScene);
-			args.AddQuotedFormat ("--sdk-root={0}", SdkRoot);
-			args.AddQuotedFormat ("--target-build-dir={0}", IntermediateOutputPath);
+			args.Add (outputScene);
+			args.Add ($"--sdk-root={SdkRoot}");
+			args.Add ($"--target-build-dir={IntermediateOutputPath}");
 			if (AppleSdkSettings.XcodeVersion.Major >= 13) {
 				// I'm not sure which Xcode version these options are available in, but it's at least Xcode 13+
-				args.AddQuotedFormat ("--target-version={0}", SdkVersion);
-				args.AddQuotedFormat ("--target-platform={0}", PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp));
+				args.Add ($"--target-version={SdkVersion}");
+				args.Add ($"--target-platform={PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp)}");
 			} else {
-				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
+				args.Add ($"--target-version-{PlatformFrameworkHelper.GetOperatingSystem (TargetFrameworkMoniker)}={SdkVersion}");
 			}
 
-			return args.ToString ();
-		}
-
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			return args;
 		}
 
 		public override bool Execute ()
@@ -131,17 +76,37 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			Directory.CreateDirectory (Path.GetDirectoryName (OutputScene));
+			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
+			var listOfArguments = new List<(IList<string> Arguments, ITaskItem Input)> ();
+			var bundleResources = new List<ITaskItem> ();
+			foreach (var asset in ColladaAssets) {
+				var inputScene = asset.ItemSpec;
+				var outputScene = Path.Combine (DeviceSpecificIntermediateOutputPath, asset.GetMetadata ("LogicalName"));
+				var args = GenerateCommandLineCommands (inputScene, outputScene);
+				listOfArguments.Add (new (args, asset));
 
-			return base.Execute ();
+				Directory.CreateDirectory (Path.GetDirectoryName (outputScene));
+
+				var bundleResource = new TaskItem (outputScene);
+				asset.CopyMetadataTo (bundleResource);
+				bundleResource.SetMetadata ("Optimize", "false");
+				bundleResource.SetMetadata ("LogicalName", BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId)));
+				bundleResources.Add (bundleResource);
+			}
+
+			Parallel.ForEach (listOfArguments, (arg) => {
+				ExecuteAsync ("xcrun", arg.Arguments, sdkDevPath: SdkDevPath).Wait ();
+			});
+
+			BundleResources = bundleResources.ToArray ();
+
+			return !Log.HasLoggedErrors;
 		}
 
-		public override void Cancel ()
+		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-
-			base.Execute ();
 		}
 	}
 }
