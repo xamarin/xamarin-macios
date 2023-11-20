@@ -2197,15 +2197,6 @@ public partial class Generator : IMemberGatherer {
 		sw.Close ();
 	}
 
-
-	public void DumpChildren (int level, GeneratedType gt)
-	{
-		string prefix = new string ('\t', level);
-		Console.WriteLine ("{2} {0} - {1}", gt.Type.Name, gt.ImplementsAppearance ? "APPEARANCE" : "", prefix);
-		foreach (var c in (from s in gt.Children.OrderBy (s => s.Type.FullName, StringComparer.Ordinal) select s))
-			DumpChildren (level + 1, c);
-	}
-
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
 	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
@@ -6906,11 +6897,6 @@ public partial class Generator : IMemberGatherer {
 		if (name.EndsWith ("Notification", StringComparison.Ordinal))
 			return name.Substring (0, name.Length - "Notification".Length);
 		return name;
-	}
-
-	Type GetNotificationArgType (PropertyInfo pi)
-	{
-		return AttributeManager.GetCustomAttributes<NotificationAttribute> (pi) [0].Type;
 	}
 
 	//
