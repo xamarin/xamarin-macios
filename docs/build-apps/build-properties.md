@@ -11,6 +11,12 @@ MSBuild properties control the behavior of the
 They're specified within the project file, for example **MyApp.csproj**, within
 an MSBuild PropertyGroup.
 
+## AltoolPath
+
+The full path to the `altool` tool.
+
+The default behavior is to use `xcrun altool`.
+
 ## AppIcon
 
 The `AppIcon` item group can be used to specify an app icon for the app.
