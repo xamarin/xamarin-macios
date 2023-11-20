@@ -200,7 +200,7 @@ stages:
         
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
-  dependsOn: ${{ parameters.dependsOn }}
+  dependsOn: configure, ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
   jobs:
