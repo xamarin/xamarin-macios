@@ -1532,8 +1532,6 @@ public partial class Generator : IMemberGatherer {
 			Generate (t);
 		}
 
-		//DumpChildren (0, GeneratedType.Lookup (TypeCache.NSObject));
-
 		print (m, "\t}\n}");
 		m.Close ();
 
