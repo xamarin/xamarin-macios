@@ -2,6 +2,9 @@ using System;
 using System.Reflection;
 using System.Text;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 //
 // All the attributes in this file are compiled into two binaries:
 // * Xamarin.*.Attributes.dll: this assembly references the platform assemblies (mscorlib, etc), and is used when compiling the API definition.
