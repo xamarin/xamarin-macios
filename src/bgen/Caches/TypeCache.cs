@@ -283,11 +283,11 @@ public class TypeCache {
 		// init the NSValueCreateMap
 		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
 	}
-	
+
 	Dictionary<Type, string> BuildNSValueCreateMap (Frameworks frameworks)
 	{
 		var nsvalueCreateMap = new Dictionary<Type, string> {
-			[CGAffineTransform] = "CGAffineTransform", 
+			[CGAffineTransform] = "CGAffineTransform",
 			[NSRange] = "Range",
 			[CGVector] = "CGVector",
 			[SCNMatrix4] = "SCNMatrix4",

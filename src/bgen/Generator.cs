@@ -370,7 +370,7 @@ public partial class Generator : IMemberGatherer {
 		// If the above fails it's possible that it comes from another dll (like X.I.dll) so we look for the [Enum]Extensions class existence
 		return type.Assembly.GetType (type.FullName + "Extensions") is not null;
 	}
-	
+
 	string GetToBindAsWrapper (MethodInfo mi, MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
