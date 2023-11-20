@@ -1803,7 +1803,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_DetectSigningIdentityDependsOn)">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
-			CodesignProvision="$(CodesignProvision)"
 			CodesignEntitlements="$(CodesignEntitlements)"
 			CodesignRequireProvisioningProfile="$(CodesignRequireProvisioningProfile)"
 			Condition="'$(IsMacEnabled)' == 'true'"
