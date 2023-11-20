@@ -180,9 +180,24 @@ stages:
   dependsOn: ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
-  jobs:  
-  - template: ./common/configure.yml
+  jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
 
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    steps:
+    - template: ../common/configure.yml
+      parameters: 
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: true
+        
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
   dependsOn: ${{ parameters.dependsOn }}
