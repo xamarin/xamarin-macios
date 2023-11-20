@@ -43,7 +43,6 @@ namespace Xamarin.Linker {
 		public const string HealthKit = nameof (HealthKit);
 		public const string ImageCaptureCore = nameof (ImageCaptureCore);
 		public const string ImageKit = nameof (ImageKit);
-		public const string InputMethodKit = nameof (InputMethodKit);
 		public const string Intents = nameof (Intents);
 		public const string IOBluetooth = nameof (IOBluetooth);
 		public const string IOBluetoothUI = nameof (IOBluetoothUI);

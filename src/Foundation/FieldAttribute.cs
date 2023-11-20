@@ -28,6 +28,8 @@
 //
 using System;
 
+#nullable enable
+
 namespace Foundation {
 	[AttributeUsage (AttributeTargets.Property | AttributeTargets.Field)]
 	public sealed class FieldAttribute : Attribute {
@@ -41,6 +43,6 @@ namespace Foundation {
 			LibraryName = libraryName;
 		}
 		public string SymbolName { get; set; }
-		public string LibraryName { get; set; }
+		public string? LibraryName { get; set; }
 	}
 }
