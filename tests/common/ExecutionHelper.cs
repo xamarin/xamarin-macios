@@ -18,17 +18,17 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static string BuildXM (string project, string configuration = "IsDebug", string platform = "x86", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
+		public static string BuildXM (string project, string configuration = "Debug", string platform = "x86", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
 			return Build (project, ApplePlatform.MacOSX, configuration, platform, verbosity, timeout, arguments, targets);
 		}
 
-		public static string BuildXI (string project, string configuration = "IsDebug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
+		public static string BuildXI (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
 			return Build (project, ApplePlatform.iOS, configuration, platform, verbosity, timeout, arguments, targets);
 		}
 
-		static string Build (string project, ApplePlatform applePlatform, string configuration = "IsDebug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
+		static string Build (string project, ApplePlatform applePlatform, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null, string [] arguments = null, string targets = "Clean,Build")
 		{
 			return ExecutionHelper.Execute (ToolPath,
 				new string [] {
