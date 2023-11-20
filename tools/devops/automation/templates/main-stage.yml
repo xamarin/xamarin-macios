@@ -192,7 +192,7 @@ stages:
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
     steps:
-    - template: ../common/configure.yml
+    - template: common/configure.yml
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
