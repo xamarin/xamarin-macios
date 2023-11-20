@@ -63,7 +63,7 @@ public partial class Generator : IMemberGatherer {
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
-	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
+	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	Nomenclator nomenclator;
@@ -1341,7 +1341,7 @@ public partial class Generator : IMemberGatherer {
 
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
-		print (m, "namespace {0} {{", NamespaceManager.ObjCRuntime);
+		print (m, "namespace {0} {{", NamespaceCache.ObjCRuntime);
 		print (m, "\tstatic partial class Messaging {");
 
 		if (BindThirdPartyLibrary) {
@@ -2869,7 +2869,7 @@ public partial class Generator : IMemberGatherer {
 		print (w, "//\n// Auto-generated from generator.cs, do not edit\n//");
 		print (w, "// We keep references to objects, so warning 414 is expected\n");
 		print (w, "#pragma warning disable 414\n");
-		print (w, NamespaceManager.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
+		print (w, NamespaceCache.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
 		print (w, "");
 		print (w, "#nullable enable");
 		print (w, "");
@@ -2975,7 +2975,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (etype == TypeCache.Selector) {
 				exceptions.Add (ErrorHelper.CreateError (1066, mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
 			} else {
-				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
+				if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
 					cast_a = "CFArray.ArrayFromHandle<global::" + etype + ">(";
 				else
 					cast_a = "CFArray.ArrayFromHandle<" + TypeManager.FormatType (mi.DeclaringType, etype) + ">(";
@@ -3019,7 +3019,7 @@ public partial class Generator : IMemberGatherer {
 
 		string sig = supercall ? MakeSuperSig (mi, stret, aligned) : MakeSig (mi, stret, aligned);
 
-		sig = "global::" + NamespaceManager.Messaging + "." + sig;
+		sig = "global::" + NamespaceCache.Messaging + "." + sig;
 
 		string selector_field;
 		if (minfo.is_interface_impl || minfo.is_extension_method) {
@@ -3692,7 +3692,7 @@ public partial class Generator : IMemberGatherer {
 
 			print ("if (ret is not null)");
 			indent++;
-			print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", NamespaceManager.Messaging);
+			print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", NamespaceCache.Messaging);
 			indent--;
 		}
 
@@ -5439,7 +5439,7 @@ public partial class Generator : IMemberGatherer {
 		type_wants_zero_copy = AttributeManager.HasAttribute<ZeroCopyStringsAttribute> (type) || ZeroCopyStrings;
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (type);
 		// if we're inside a special namespace then default is non-thread safe, otherwise default is thread safe
-		if (NamespaceManager.UINamespaces.Contains (type.Namespace)) {
+		if (NamespaceCache.UINamespaces.Contains (type.Namespace)) {
 			// Any type inside these namespaces requires, by default, a thread check
 			// unless it has a [ThreadSafe] or [ThreadSafe (true)] attribute
 			type_needs_thread_checks = tsa is null || !tsa.Safe;
@@ -5512,7 +5512,7 @@ public partial class Generator : IMemberGatherer {
 			is_direct_binding_value = null;
 			is_direct_binding = null;
 			if (BindThirdPartyLibrary)
-				is_direct_binding_value = string.Format ("GetType ().Assembly == global::{0}.this_assembly", NamespaceManager.Messaging);
+				is_direct_binding_value = string.Format ("GetType ().Assembly == global::{0}.this_assembly", NamespaceCache.Messaging);
 			if (is_static_class || is_category_class || is_partial) {
 				base_type = TypeCache.System_Object;
 				if (!is_partial)
@@ -5767,7 +5767,7 @@ public partial class Generator : IMemberGatherer {
 								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
-							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceManager.Messaging);
+							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging);
 							sw.WriteLine ("\t\t\t");
 							if (is32BitNotSupported)
 								sw.WriteLine ("\t\t#endif");
@@ -5793,8 +5793,8 @@ public partial class Generator : IMemberGatherer {
 							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceManager.Messaging),
-														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceManager.Messaging));
+														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging),
+														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging));
 
 							WriteMarkDirtyIfDerived (sw, type);
 							if (is32BitNotSupported)
@@ -5824,8 +5824,8 @@ public partial class Generator : IMemberGatherer {
 								}
 								var indentation = 3;
 								WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceManager.Messaging),
-															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceManager.Messaging));
+															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceCache.Messaging),
+															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceCache.Messaging));
 								WriteMarkDirtyIfDerived (sw, type);
 							} else {
 								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
@@ -6464,7 +6464,7 @@ public partial class Generator : IMemberGatherer {
 							print ("return {0} is not null;", mi.Name.PascalCase ());
 							--indent;
 						}
-						print ("return global::" + NamespaceManager.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle) != 0;");
+						print ("return global::" + NamespaceCache.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle) != 0;");
 						--indent;
 						print ("}");
 
@@ -6595,12 +6595,12 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 				print ("public static {0}{1} Appearance {{", parent_implements_appearance ? "new " : "", appearance_type_name);
 				indent++;
-				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, NamespaceManager.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
+				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, NamespaceCache.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
 				print ("public static {0}{1} GetAppearance<T> () where T: {2} {{", parent_implements_appearance ? "new " : "", appearance_type_name, TypeName);
 				indent++;
-				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, NamespaceManager.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
+				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, NamespaceCache.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
 				print ("public static {0}{1} AppearanceWhenContainedIn (params Type [] containers)", parent_implements_appearance ? "new " : "", appearance_type_name);
