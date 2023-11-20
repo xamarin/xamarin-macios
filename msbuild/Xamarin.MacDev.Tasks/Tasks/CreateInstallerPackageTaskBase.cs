@@ -11,6 +11,9 @@ using System.Security.Cryptography.X509Certificates;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CreateInstallerPackageTaskBase : XamarinToolTask {
 		#region Inputs

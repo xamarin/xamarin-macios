@@ -9,7 +9,7 @@ public class TypeManager {
 	public BindingTouch BindingTouch;
 	Frameworks Frameworks { get; }
 	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
-	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
+	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
@@ -174,7 +174,7 @@ public class TypeManager {
 	public string FormatType (Type? usedIn, string @namespace, string name)
 	{
 		string tname;
-		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceManager.StandardNamespaces.Contains (@namespace))
+		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceCache.StandardNamespaces.Contains (@namespace))
 			tname = name;
 		else
 			tname = "global::" + @namespace + "." + name;
@@ -241,7 +241,7 @@ public class TypeManager {
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
-				 BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
+				 BindingTouch.NamespaceCache.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
 				 string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
@@ -301,13 +301,13 @@ public class TypeManager {
 
 		if (t.Namespace is not null) {
 			string ns = t.Namespace;
-			if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+			if (NamespaceCache.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
 				var targs = t.GetGenericArguments ();
 				if (targs.Length == 0)
 					return t.Name;
 				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
 			}
-			if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
+			if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (ns))
 				return "global::" + t.FullName;
 			if (t.Name == t.Namespace)
 				return "global::" + t.FullName;

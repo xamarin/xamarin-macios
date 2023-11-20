@@ -31,6 +31,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Mono.Options;
 
@@ -76,8 +77,8 @@ public class BindingTouch : IDisposable {
 	TypeManager? typeManager;
 	public TypeManager TypeManager => typeManager!;
 
-	NamespaceManager? namespaceManager;
-	public NamespaceManager NamespaceManager => namespaceManager!;
+	NamespaceCache? namespaceCache;
+	public NamespaceCache NamespaceCache => namespaceCache!;
 
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
@@ -124,24 +125,24 @@ public class BindingTouch : IDisposable {
 			return attributedll!;
 
 		if (IsDotNet)
-			return Path.Combine (GetSDKRoot (), "lib", "Xamarin.Apple.BindingAttributes.dll");
+			return CurrentPlatform.GetPath ("lib", "Xamarin.Apple.BindingAttributes.dll");
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
-			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
+			return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
 		case PlatformName.WatchOS:
-			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
+			return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
 		case PlatformName.TvOS:
-			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
+			return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
 		case PlatformName.MacCatalyst:
-			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
+			return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
 		case PlatformName.MacOSX:
 			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+				return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+				return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
 			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
-				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
+				return CurrentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else {
 				throw ErrorHelper.CreateError (1053, target_framework);
 			}
@@ -155,26 +156,26 @@ public class BindingTouch : IDisposable {
 		if (!IsDotNet) {
 			switch (CurrentPlatform) {
 			case PlatformName.iOS:
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.iOS");
+				yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.iOS");
 				break;
 			case PlatformName.WatchOS:
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
+				yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.WatchOS");
 				break;
 			case PlatformName.TvOS:
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
+				yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.TVOS");
 				break;
 			case PlatformName.MacCatalyst:
-				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.MacCatalyst");
+				yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.MacCatalyst");
 				break;
 			case PlatformName.MacOSX:
 				if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
-					yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
-					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+					yield return CurrentPlatform.GetPath ("lib", "reference", "full");
+					yield return CurrentPlatform.GetPath ("lib", "mono", "4.5");
 				} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 					yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
-					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+					yield return CurrentPlatform.GetPath ("lib", "mono", "4.5");
 				} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
-					yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
+					yield return CurrentPlatform.GetPath ("lib", "mono", "Xamarin.Mac");
 				} else {
 					throw ErrorHelper.CreateError (1053, target_framework);
 				}
@@ -185,27 +186,6 @@ public class BindingTouch : IDisposable {
 		}
 		foreach (var lib in libs)
 			yield return lib;
-	}
-
-	string GetSDKRoot ()
-	{
-		switch (CurrentPlatform) {
-		case PlatformName.iOS:
-		case PlatformName.WatchOS:
-		case PlatformName.TvOS:
-		case PlatformName.MacCatalyst:
-			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
-			if (string.IsNullOrEmpty (sdkRoot))
-				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
-			return sdkRoot;
-		case PlatformName.MacOSX:
-			var macSdkRoot = Environment.GetEnvironmentVariable ("XamarinMacFrameworkRoot");
-			if (string.IsNullOrEmpty (macSdkRoot))
-				macSdkRoot = "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
-			return macSdkRoot;
-		default:
-			throw new BindingException (1047, CurrentPlatform);
-		}
 	}
 
 	void SetTargetFramework (string fx)
@@ -363,40 +343,40 @@ public class BindingTouch : IDisposable {
 			CurrentPlatform = PlatformName.iOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			if (!IsDotNet) {
 				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.iOS", references);
+				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/Xamarin.iOS", references);
 			}
 			break;
 		case ApplePlatform.TVOS:
 			CurrentPlatform = PlatformName.TvOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
+				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
 			if (!IsDotNet) {
 				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.TVOS", references);
+				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/Xamarin.TVOS", references);
 			}
 			break;
 		case ApplePlatform.WatchOS:
 			CurrentPlatform = PlatformName.WatchOS;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
+				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
 			if (!IsDotNet) {
 				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.WatchOS", references);
+				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/Xamarin.WatchOS", references);
 			}
 			break;
 		case ApplePlatform.MacCatalyst:
 			CurrentPlatform = PlatformName.MacCatalyst;
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
+				baselibdll = CurrentPlatform.GetPath ("lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
 			if (!IsDotNet) {
 				// references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.MacCatalyst", references);
+				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/Xamarin.MacCatalyst", references);
 			}
 			break;
 		case ApplePlatform.MacOSX:
@@ -404,22 +384,22 @@ public class BindingTouch : IDisposable {
 			nostdlib = true;
 			if (string.IsNullOrEmpty (baselibdll)) {
 				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile)
-					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
+					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "mobile", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
-					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+					baselibdll = CurrentPlatform.GetPath ("lib", "reference", "full", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.DotNet_macOS)
-					baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
+					baselibdll = CurrentPlatform.GetPath ("lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
 					throw ErrorHelper.CreateError (1053, target_framework);
 			}
 			if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				skipSystemDrawing = true;
 				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/Xamarin.Mac", references);
+				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/Xamarin.Mac", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				skipSystemDrawing = true;
 				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (GetSDKRoot (), "lib/mono/4.5", references);
+				ReferenceFixer.FixSDKReferences (CurrentPlatform, "lib/mono/4.5", references);
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
 				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing: true);
@@ -466,27 +446,8 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			Assembly api;
-			try {
-				api = universe.LoadFromAssemblyPath (tmpass);
-			} catch (Exception e) {
-				if (Driver.Verbosity > 0)
-					Console.WriteLine (e);
-
-				Console.Error.WriteLine ("Error loading API definition from {0}", tmpass);
+			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (baselibdll, out Assembly? baselib))
 				return 1;
-			}
-
-			Assembly baselib;
-			try {
-				baselib = universe.LoadFromAssemblyPath (baselibdll);
-			} catch (Exception e) {
-				if (Driver.Verbosity > 0)
-					Console.WriteLine (e);
-
-				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
-				return 1;
-			}
 
 			attributeManager ??= new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
@@ -546,7 +507,7 @@ public class BindingTouch : IDisposable {
 					strong_dictionaries.Add (t);
 			}
 
-			namespaceManager ??= new NamespaceManager (
+			namespaceCache ??= new NamespaceCache (
 				CurrentPlatform,
 				ns ?? firstApiDefinitionName,
 				skipSystemDrawing
@@ -685,6 +646,23 @@ public class BindingTouch : IDisposable {
 		var output = string.Join (Environment.NewLine, compile_output.ToString ().Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
 		if (!string.IsNullOrEmpty (output))
 			Console.WriteLine (output);
+	}
+
+	bool TryLoadApi (string? name, [NotNullWhen (true)] out Assembly? assembly)
+	{
+		assembly = null;
+		if (string.IsNullOrEmpty (name))
+			return false;
+		try {
+			assembly = universe?.LoadFromAssemblyPath (name);
+		} catch (Exception e) {
+			if (Driver.Verbosity > 0)
+				Console.WriteLine (e);
+
+			Console.Error.WriteLine ("Error loading {0}", name);
+		}
+
+		return assembly is not null;
 	}
 
 	static string GetWorkDir ()

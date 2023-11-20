@@ -7,6 +7,9 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev {
 	public static class BundleResource {
 		static readonly HashSet<string> illegalDirectoryNames = new HashSet<string> (new [] {

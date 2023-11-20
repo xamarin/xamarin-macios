@@ -7,6 +7,9 @@ using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public class AttributeManager {
 	public BindingTouch BindingTouch;
 	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
