@@ -2394,11 +2394,6 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static bool PlatformHasIntroduced (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability)
-	{
-		return memberAvailability.Any (v => (v.Platform == platform && v is IntroducedAttribute));
-	}
-
 	static bool PlatformMarkedUnavailable (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability)
 	{
 		return memberAvailability.Any (v => (v.Platform == platform && v is UnavailableAttribute));
