@@ -1801,9 +1801,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_DetectSigningIdentityDependsOn)">
+		<PropertyGroup>
+			<_CodesignEntitlements Condition="'$(_CodesignEntitlements)' == '' And '$(_SdkIsSimulator)' != 'true'">$(CodesignEntitlement)</_CodesignEntitlements>
+			<_CodesignProvision Condition="'$(_CodesignProvision)' == '' And '$(_SdkIsSimulator)' != 'true'">$(CodesignProvision)</_CodesignProvision>
+			<_SigningKey Condition="'$(_SigningKey)' == '' And '$(_SdkIsSimulator)' != 'true'">$(_SpecifiedCodesignKey)</_SigningKey>
+		</PropertyGroup>
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
-			CodesignEntitlements="$(CodesignEntitlements)"
+			CodesignEntitlements="$(_CodesignEntitlements)"
 			CodesignRequireProvisioningProfile="$(CodesignRequireProvisioningProfile)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
@@ -1812,8 +1817,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			RequireCodeSigning="$(_RequireCodeSigning)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="$(_SdkPlatform)"
-			ProvisioningProfile="$(CodesignProvision)"
-			SigningKey="$(_SpecifiedCodesignKey)"
+			ProvisioningProfile="$(_CodesignProvision)"
+			SigningKey="$(_SigningKey)"
 			DetectedCodeSigningKey="$(_CodeSigningKey)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>

@@ -582,64 +582,7 @@ namespace Xamarin.MacDev.Tasks {
 					return !Log.HasLoggedErrors;
 				}
 			} else {
-				// Framework is either iOS, tvOS or watchOS
-				if (SdkIsSimulator) {
-					if (AppleSdkSettings.XcodeVersion.Major >= 8 && RequireProvisioningProfile) {
-						// Note: Starting with Xcode 8.0, we need to codesign iOS Simulator builds that enable Entitlements
-						// in order for them to run. The "-" key is a special value allowed by the codesign utility that
-						// allows us to get away with not having an actual codesign key.
-						DetectedCodeSigningKey = "-";
-
-						if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
-							identity.Profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
-
-							if (identity.Profile is null) {
-								Log.LogError (MSBStrings.E0140, PlatformName, ProvisioningProfile);
-								return false;
-							}
-
-							identity.AppId = ConstructValidAppId (identity.Profile, identity.BundleId);
-							if (identity.AppId is null) {
-								Log.LogError (MSBStrings.E0141, identity.BundleId, ProvisioningProfile);
-								return false;
-							}
-
-							provisioningProfileName = identity.Profile.Name;
-
-							DetectedProvisioningProfile = identity.Profile.Uuid;
-							DetectedDistributionType = identity.Profile.DistributionType.ToString ();
-						} else {
-							certs = new X509Certificate2 [0];
-
-							if ((profiles = GetProvisioningProfiles (platform, type, identity, certs)) is null)
-								return false;
-
-							if ((pairs = GetCodeSignIdentityPairs (profiles, certs)) is null)
-								return false;
-
-							var match = GetBestMatch (pairs, identity);
-							identity.Profile = match.Profile;
-							identity.AppId = match.AppId;
-
-							if (identity.Profile is not null) {
-								DetectedDistributionType = identity.Profile.DistributionType.ToString ();
-								DetectedProvisioningProfile = identity.Profile.Uuid;
-								provisioningProfileName = identity.Profile.Name;
-							}
-
-							DetectedAppId = identity.AppId;
-						}
-					} else {
-						// Note: Do not codesign. Codesigning seems to break the iOS Simulator in older versions of Xcode.
-						DetectedCodeSigningKey = null;
-					}
-
-					ReportDetectedCodesignInfo ();
-
-					return !Log.HasLoggedErrors;
-				}
-
-				if (!SdkIsSimulator && !RequireCodeSigning) {
+				if (SdkIsSimulator || !RequireCodeSigning) {
 					// The "-" key is a special value allowed by the codesign utility that
 					// allows us to get away with not having an actual codesign key.
 					DetectedCodeSigningKey = "-";
