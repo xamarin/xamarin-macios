@@ -226,8 +226,8 @@ namespace Darwin {
 				throw new ArgumentOutOfRangeException ("nEvents is larger than the number of elements in eventList", nameof (nEvents));
 
 			unsafe {
-				fixed (KernelEvent *cp = &changeList [0])
-					fixed (KernelEvent *ep = &eventList [0]) {
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList) {
 						if (timeout is null) {
 							return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero);
 						} else {
@@ -262,8 +262,8 @@ namespace Darwin {
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
 			
 			unsafe {
-				fixed (KernelEvent *cp = &changeList [0])
-					fixed (KernelEvent *ep = &eventList [0])
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList)
 						return kevent (handle, cp, nChanges, ep, nEvents, ref timeOut) != -1;
 			}
 		}
@@ -278,8 +278,8 @@ namespace Darwin {
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
 			
 			unsafe {
-				fixed (KernelEvent *cp = &changeList [0])
-					fixed (KernelEvent *ep = &eventList [0])
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList)
 						return kevent (handle, cp, nChanges, ep, nEvents, IntPtr.Zero) != -1;
 			}
 		}
@@ -288,8 +288,8 @@ namespace Darwin {
 		public bool KEvent (KernelEvent [] changeList, KernelEvent [] eventList, ref TimeSpec timeOut)
 		{
 			unsafe {
-				fixed (KernelEvent *cp = &changeList [0])
-					fixed (KernelEvent *ep = &eventList [0])
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList)
 						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, ref timeOut) != -1;
 			}
 		}
@@ -304,8 +304,8 @@ namespace Darwin {
 #endif
 		{
 			unsafe {
-				fixed (KernelEvent *cp = &changeList [0])
-					fixed (KernelEvent *ep = &eventList [0])
+				fixed (KernelEvent *cp = changeList)
+					fixed (KernelEvent *ep = eventList)
 #if NET
 						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero);
 #else

@@ -112,12 +112,6 @@ namespace Xamarin.Tests {
 					continue;
 
 				yield return record.Args;
-
-				if (record.Args is BuildFinishedEventArgs) {
-					// Skip over anything that follows
-					// https://github.com/xamarin/xamarin-macios/issues/18568
-					break;
-				}
 			}
 		}
 

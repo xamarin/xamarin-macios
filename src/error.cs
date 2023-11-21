@@ -15,6 +15,9 @@ using System.Reflection;
 
 using ProductException = BindingException;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 // Error allocation: the errors are listed (and documented) in $(TOP)/docs/website/generator-errors.md
 
 public class BindingException : Exception {

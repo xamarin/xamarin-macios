@@ -7,9 +7,12 @@ using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public class AttributeManager {
 	public BindingTouch BindingTouch;
-	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
+	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	public AttributeManager (BindingTouch binding_touch)
 	{
@@ -412,7 +415,7 @@ public class AttributeManager {
 			switch (attribute.ConstructorArguments [i].ArgumentType.FullName) {
 			case "System.Type":
 				if (value is not null) {
-					if (attribType.Assembly == typeof (TypeManager).Assembly) {
+					if (attribType.Assembly == typeof (TypeCache).Assembly) {
 						constructorArguments [i] = value;
 					} else {
 						constructorArguments [i] = System.Type.GetType (((Type) value).FullName);
@@ -433,7 +436,7 @@ public class AttributeManager {
 			var paramType = parameters [i].ParameterType;
 			switch (paramType.FullName) {
 			case "System.Type":
-				if (attribType.Assembly == typeof (TypeManager).Assembly) {
+				if (attribType.Assembly == typeof (TypeCache).Assembly) {
 					ctorTypes [i] = typeof (Type);
 				} else {
 					ctorTypes [i] = typeof (System.Type);
@@ -454,7 +457,7 @@ public class AttributeManager {
 		for (int i = 0; i < attribute.NamedArguments.Count; i++) {
 			var arg = attribute.NamedArguments [i];
 			var value = arg.TypedValue.Value;
-			if (arg.TypedValue.ArgumentType == TypeManager.System_String_Array) {
+			if (arg.TypedValue.ArgumentType == TypeCache.System_String_Array) {
 				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new string [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
