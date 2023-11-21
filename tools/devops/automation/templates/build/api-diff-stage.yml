@@ -35,22 +35,22 @@ parameters:
   type: string
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
+#- job: configure
+#  displayName: 'Configure build'
+#  pool:
+#    vmImage: windows-latest
 
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+#  variables:
+#    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+#    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+#    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
-  steps:
-  #- template: ../common/configure.yml
-  #  parameters: 
-  #    repositoryAlias: ${{ parameters.repositoryAlias }}
-  #    commit: ${{ parameters.commit }}
-  #    uploadArtifacts: false
+#  steps:
+#  - template: ../common/configure.yml
+#    parameters: 
+#      repositoryAlias: ${{ parameters.repositoryAlias }}
+#      commit: ${{ parameters.commit }}
+#      uploadArtifacts: false
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
