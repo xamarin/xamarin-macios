@@ -371,46 +371,6 @@ public partial class Generator : IMemberGatherer {
 		return type.Assembly.GetType (type.FullName + "Extensions") is not null;
 	}
 
-	Dictionary<Type, string> nsvalue_create_map;
-	Dictionary<Type, string> NSValueCreateMap {
-		get {
-			if (nsvalue_create_map is null) {
-				nsvalue_create_map = new Dictionary<Type, string> ();
-				nsvalue_create_map [TypeCache.CGAffineTransform] = "CGAffineTransform";
-				nsvalue_create_map [TypeCache.NSRange] = "Range";
-				nsvalue_create_map [TypeCache.CGVector] = "CGVector";
-				nsvalue_create_map [TypeCache.SCNMatrix4] = "SCNMatrix4";
-				nsvalue_create_map [TypeCache.CLLocationCoordinate2D] = "MKCoordinate";
-				nsvalue_create_map [TypeCache.SCNVector3] = "Vector";
-				nsvalue_create_map [TypeCache.SCNVector4] = "Vector";
-
-				nsvalue_create_map [TypeCache.CoreGraphics_CGPoint] = "CGPoint";
-				nsvalue_create_map [TypeCache.CoreGraphics_CGRect] = "CGRect";
-				nsvalue_create_map [TypeCache.CoreGraphics_CGSize] = "CGSize";
-
-				if (Frameworks.HaveUIKit) {
-					nsvalue_create_map [TypeCache.UIEdgeInsets] = "UIEdgeInsets";
-					nsvalue_create_map [TypeCache.UIOffset] = "UIOffset";
-					nsvalue_create_map [TypeCache.NSDirectionalEdgeInsets] = "DirectionalEdgeInsets";
-				}
-
-				if (TypeCache.MKCoordinateSpan is not null)
-					nsvalue_create_map [TypeCache.MKCoordinateSpan] = "MKCoordinateSpan";
-
-				if (Frameworks.HaveCoreMedia) {
-					nsvalue_create_map [TypeCache.CMTimeRange] = "CMTimeRange";
-					nsvalue_create_map [TypeCache.CMTime] = "CMTime";
-					nsvalue_create_map [TypeCache.CMTimeMapping] = "CMTimeMapping";
-					nsvalue_create_map [TypeCache.CMVideoDimensions] = "CMVideoDimensions";
-				}
-
-				if (Frameworks.HaveCoreAnimation)
-					nsvalue_create_map [TypeCache.CATransform3D] = "CATransform3D";
-			}
-			return nsvalue_create_map;
-		}
-	}
-
 	string GetToBindAsWrapper (MethodInfo mi, MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
@@ -450,7 +410,7 @@ public partial class Generator : IMemberGatherer {
 			temp = string.Format ("{3}new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast, nullCheck);
 		} else if (originalType == TypeCache.NSValue) {
 			var typeStr = string.Empty;
-			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
+			if (!TypeCache.NSValueCreateMap.TryGetValue (retType, out typeStr)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					typeStr = retType.Name;
@@ -478,7 +438,7 @@ public partial class Generator : IMemberGatherer {
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
 			} else if (arrType == TypeCache.NSValue && !isNullable) {
 				var typeStr = string.Empty;
-				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
+				if (!TypeCache.NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 						typeStr = retType.Name;
 					else
@@ -1530,8 +1490,6 @@ public partial class Generator : IMemberGatherer {
 			Generate (t);
 		}
 
-		//DumpChildren (0, GeneratedType.Lookup (TypeCache.NSObject));
-
 		print (m, "\t}\n}");
 		m.Close ();
 
@@ -2195,15 +2153,6 @@ public partial class Generator : IMemberGatherer {
 		sw.Close ();
 	}
 
-
-	public void DumpChildren (int level, GeneratedType gt)
-	{
-		string prefix = new string ('\t', level);
-		Console.WriteLine ("{2} {0} - {1}", gt.Type.Name, gt.ImplementsAppearance ? "APPEARANCE" : "", prefix);
-		foreach (var c in (from s in gt.Children.OrderBy (s => s.Type.FullName, StringComparer.Ordinal) select s))
-			DumpChildren (level + 1, c);
-	}
-
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
 	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
@@ -2399,11 +2348,6 @@ public partial class Generator : IMemberGatherer {
 				availability.Add (AttributeFactory.CreateNoVersionSupportedAttribute (platform));
 			}
 		}
-	}
-
-	static bool PlatformHasIntroduced (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability)
-	{
-		return memberAvailability.Any (v => (v.Platform == platform && v is IntroducedAttribute));
 	}
 
 	static bool PlatformMarkedUnavailable (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability)
@@ -6904,11 +6848,6 @@ public partial class Generator : IMemberGatherer {
 		if (name.EndsWith ("Notification", StringComparison.Ordinal))
 			return name.Substring (0, name.Length - "Notification".Length);
 		return name;
-	}
-
-	Type GetNotificationArgType (PropertyInfo pi)
-	{
-		return AttributeManager.GetCustomAttributes<NotificationAttribute> (pi) [0].Type;
 	}
 
 	//
