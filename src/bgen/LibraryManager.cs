@@ -5,10 +5,32 @@ using Xamarin.Utils;
 
 #nullable enable
 
+public record LibraryInfo (string AttributeDll, bool SkipSystemDrawing) {
+
+	public string AttributeDll { get; } = AttributeDll;
+	public TargetFramework TargetFramework { get; private set; }
+
+	public bool SkipSystemDrawing { get; } = SkipSystemDrawing;
+
+	public static TargetFramework SetTargetFramework (string fx)
+	{
+		TargetFramework tf;
+		if (!TargetFramework.TryParse (fx, out tf))
+			throw ErrorHelper.CreateError (68, fx);
+
+		if (!TargetFramework.IsValidFramework (tf))
+			throw ErrorHelper.CreateError (70, tf,
+				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+
+		return tf;
+	}
+}
+
 public class LibraryManager {
 	public List<string> Libraries = new List<string> ();
 	public bool skipSystemDrawing = false;
 	TargetFramework? targetFramework;
+
 	public TargetFramework TargetFramework {
 		get { return targetFramework!.Value; }
 	}
