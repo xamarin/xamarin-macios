@@ -13,6 +13,7 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval NET7_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET7_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval NET8_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET8_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
@@ -170,7 +171,7 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(
 define WorkloadTargets
 Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
+	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(5)" "$(6)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
 	$$(Q) mv $$@.tmp $$@
 
 Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
@@ -189,7 +190,7 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z),$(NET7_$(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z),$(NET7_$(platform)_NUGET_VERSION_NO_METADATA),$(NET8_$(platform)_NUGET_VERSION_NO_METADATA))))
 
 # Always use the commit distance as the third number in the VS component version, as it should always increase across all branches.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE).0))

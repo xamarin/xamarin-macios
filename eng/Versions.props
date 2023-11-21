@@ -20,5 +20,11 @@
     <MicrosoftmacOSSdkPackageVersion>13.3.7099</MicrosoftmacOSSdkPackageVersion>
     <MicrosoftiOSSdkPackageVersion>16.4.7099</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>16.4.7099</MicrosofttvOSSdkPackageVersion>
+
+    <!-- Currently these must be updated manually, there's no subscription to the .NET 8 versions of our packages -->
+    <MicrosoftMacCatalystSdknet80PackageVersion>17.0.8478</MicrosoftMacCatalystSdknet80PackageVersion>
+    <MicrosoftmacOSSdknet80PackageVersion>14.0.8478</MicrosoftmacOSSdknet80PackageVersion>
+    <MicrosoftiOSSdknet80PackageVersion>17.0.8478</MicrosoftiOSSdknet80PackageVersion>
+    <MicrosofttvOSSdknet80PackageVersion>17.0.8478</MicrosofttvOSSdknet80PackageVersion>
   </PropertyGroup>
 </Project>

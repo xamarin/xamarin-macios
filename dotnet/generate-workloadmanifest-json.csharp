@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 
 var args = Environment.GetCommandLineArgs ();
-var expectedArgumentCount = 6;
+var expectedArgumentCount = 7;
 if (args.Length != expectedArgumentCount + 3 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
 	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
 	// second arg the script itself
@@ -20,6 +20,7 @@ var argumentIndex = 3;
 var platform = args [argumentIndex++];
 var version = args [argumentIndex++];
 var net7Version = args [argumentIndex++];
+var net8Version = args [argumentIndex++];
 var runtimeIdentifiers = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var outputPath = args [argumentIndex++];
 var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -71,7 +72,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net8\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
-	writer.WriteLine ($"			\"version\": \"{version}\",");
+	writer.WriteLine ($"			\"version\": \"{net8Version}\",");
 	writer.WriteLine ($"			\"alias-to\": {{");
 	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Sdk\"");
 	writer.WriteLine ($"			}}");
@@ -95,7 +96,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"		}},");
 		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
-		writer.WriteLine ($"			\"version\": \"{version}\",");
+		writer.WriteLine ($"			\"version\": \"{net8Version}\",");
 		writer.WriteLine ($"			\"alias-to\": {{");
 		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk\",");
 		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk\",");
