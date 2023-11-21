@@ -35,22 +35,22 @@ parameters:
   type: string
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
+#- job: configure
+#  displayName: 'Configure build'
+#  pool:
+#    vmImage: windows-latest
 
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+#  variables:
+#    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+#    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+#    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
-  steps:
-  - template: ../common/configure.yml
-    parameters:
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      uploadArtifacts: true
+#  steps:
+#  - template: ../common/configure.yml
+#    parameters:
+#      repositoryAlias: ${{ parameters.repositoryAlias }}
+#      commit: ${{ parameters.commit }}
+#      uploadArtifacts: true
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -76,13 +76,13 @@ jobs:
   dependsOn:
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - AgentPoolSelector
-  - configure
+#  - configure
   displayName: 'Build macOS tests'
   timeoutInMinutes: 120
   variables:
-    DOTNET_PLATFORMS: $[ dependencies.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-    ENABLE_DOTNET: $[ dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
-    INCLUDE_XAMARIN_LEGACY: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
+    DOTNET_PLATFORMS: $[ stagestageDependencies.configure.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
+    ENABLE_DOTNET: $[ stagestageDependencies.configure.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
+    INCLUDE_XAMARIN_LEGACY: $[ stagestageDependencies.configure.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
@@ -91,11 +91,11 @@ jobs:
       AgentPoolComputed: $(PRBuildPool)
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stagestageDependencies.configure.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    RUN_MAC_TESTS: $[ dependencies.configure.outputs['decisions.RUN_MAC_TESTS'] ]
-  condition: ne(dependencies.configure.outputs['decisions.RUN_MAC_TESTS'],'')
+    RUN_MAC_TESTS: $[ stagestageDependencies.configure.configure.outputs['decisions.RUN_MAC_TESTS'] ]
+  condition: ne(stagestageDependencies.configure.configure.outputs['decisions.RUN_MAC_TESTS'],'')
   pool:
     name: $(AgentPoolComputed)
     demands:
