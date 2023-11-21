@@ -92,17 +92,17 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
-    DOTNET_PLATFORMS: $[ stagestageDependencies.configure.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-    ENABLE_DOTNET: $[ stageDependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
-    INCLUDE_DOTNET_IOS: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
-    INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
-    INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
-    INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
-    INCLUDE_LEGACY_IOS: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
-    INCLUDE_LEGACY_MAC: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
-    INCLUDE_LEGACY_TVOS: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
-    INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
-    INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
+    DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
+    ENABLE_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
+    INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+    INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+    INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+    INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+    INCLUDE_LEGACY_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_MAC: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
+    INCLUDE_LEGACY_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
+    INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
+    INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
@@ -116,18 +116,18 @@ jobs:
     # skip-nugets
     # skip-signing
     # run-sample-tests
-    BuildPackage: $[ stageDependencies.configure.outputs['labels.build_package'] ]
-    SkipPackages: $[ stageDependencies.configure.outputs['labels.skip_packages'] ]
-    SkipNugets: $[ stageDependencies.configure.outputs['labels.skip_nugets'] ]
-    SkipSigning: $[ stageDependencies.configure.outputs['labels.skip_signing'] ]
-    RunSampleTests: $[ stageDependencies.configure.outputs['labels.run_sample_tests'] ]
-    SkipApiComparison: $[ stageDependencies.configure.outputs['labels.skip_api_comparison'] ]
+    BuildPackage: $[ stageDependencies.configure_build.configure.outputs['labels.build_package'] ]
+    SkipPackages: $[ stageDependencies.configure_build.configure.outputs['labels.skip_packages'] ]
+    SkipNugets: $[ stageDependencies.configure_build.configure.outputs['labels.skip_nugets'] ]
+    SkipSigning: $[ stageDependencies.configure_build.configure.outputs['labels.skip_signing'] ]
+    RunSampleTests: $[ stageDependencies.configure_build.configure.outputs['labels.run_sample_tests'] ]
+    SkipApiComparison: $[ stageDependencies.configure_build.configure.outputs['labels.skip_api_comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ stageDependencies.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ stageDependencies.configure.outputs['labels.xharness_labels'] ]
-    RUN_MAC_TESTS: $[ stageDependencies.configure.outputs['decisions.RUN_MAC_TESTS'] ]
+    XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
+    RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:

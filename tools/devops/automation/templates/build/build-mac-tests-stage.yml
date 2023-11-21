@@ -80,9 +80,9 @@ jobs:
   displayName: 'Build macOS tests'
   timeoutInMinutes: 120
   variables:
-    DOTNET_PLATFORMS: $[ stageDependencies.configure.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
-    ENABLE_DOTNET: $[ stageDependencies.configure.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
-    INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
+    DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
+    ENABLE_DOTNET: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
+    INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
@@ -91,11 +91,11 @@ jobs:
       AgentPoolComputed: $(PRBuildPool)
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ stageDependencies.configure.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    RUN_MAC_TESTS: $[ stageDependencies.configure.configure.outputs['decisions.RUN_MAC_TESTS'] ]
-  condition: ne(stageDependencies.configure.configure.outputs['decisions.RUN_MAC_TESTS'],'')
+    RUN_MAC_TESTS: $[ stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'] ]
+  condition: ne(stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'],'')
   pool:
     name: $(AgentPoolComputed)
     demands:
