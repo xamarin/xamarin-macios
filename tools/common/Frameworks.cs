@@ -149,7 +149,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
-					{ "InputMethodKit", 10, 5 },
 					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },

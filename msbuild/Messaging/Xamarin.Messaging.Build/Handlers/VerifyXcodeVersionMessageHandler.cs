@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Messaging.Build.Contracts;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Messaging.Build {
 	public class VerifyXcodeVersionMessageHandler : RequestHandler<VerifyXcodeVersionMessage, VerifyXcodeVersionResult> {
 		protected override Task<VerifyXcodeVersionResult> ExecuteAsync (VerifyXcodeVersionMessage message)
