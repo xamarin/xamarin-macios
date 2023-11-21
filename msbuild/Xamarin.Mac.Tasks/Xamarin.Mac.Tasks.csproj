@@ -31,12 +31,7 @@
     <None Include="../Xamarin.Shared/*.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="../Versions.mac.g.cs" />
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
-
-  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.mac.g.cs" BeforeTargets="BeforeBuild">
-    <Exec Command="make -C .. Versions.mac.g.cs" />
-  </Target>
 </Project>
