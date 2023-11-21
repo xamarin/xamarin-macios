@@ -78,9 +78,7 @@ public class BindingTouch : IDisposable {
 
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
-
-	LibraryManager? libraryManager;
-	public LibraryManager LibraryManager => libraryManager!;
+	public LibraryManager LibraryManager { get; } = new LibraryManager ();
 
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
@@ -138,7 +136,7 @@ public class BindingTouch : IDisposable {
 			{ "unsafe", "Sets the unsafe flag for the build", v=> config.IsUnsafe = true },
 			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
-			{ "lib=", "Adds the directory to the search path for the compiler", v => libraryManager.Libraries.Add (v) },
+			{ "lib=", "Adds the directory to the search path for the compiler", v => LibraryManager.Libraries.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
 			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
 				{
@@ -183,7 +181,7 @@ public class BindingTouch : IDisposable {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => libraryManager.SetTargetFramework (v) },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => LibraryManager.SetTargetFramework (v) },
 			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 					try {
 						if (!string.IsNullOrEmpty (v)) {
@@ -222,7 +220,6 @@ public class BindingTouch : IDisposable {
 	int Main3 (string [] args)
 	{
 		ErrorHelper.ClearWarningLevels ();
-		LibraryManager = new();
 		BindingTouchConfig config = new ();
 		OptionSet os = CreateOptionSet (config);
 
@@ -239,7 +236,7 @@ public class BindingTouch : IDisposable {
 			return 0;
 		}
 
-		libraryManager.SetBaseLibDllAndReferences (references, ref baselibdll, out nostdlib, out CurrentPlatform);
+		LibraryManager.SetBaseLibDllAndReferences (references, ref baselibdll, out config.OmitStandardLibrary, out CurrentPlatform);
 
 		if (config.Sources.Count > 0) {
 			config.ApiSources.Insert (0, config.Sources [0]);
@@ -262,13 +259,13 @@ public class BindingTouch : IDisposable {
 			outfile = firstApiDefinitionName + ".dll";
 
 		var refs = references.Select ((v) => "-r:" + v);
-		var paths = libraryManager.Libraries.Select ((v) => "-lib:" + v);
+		var paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
 			var tmpass = GetCompiledApiBindingsAssembly (config.TemporaryFileDirectory, refs, config.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
-					libraryManager.GetLibraryDirectories (CurrentPlatform).ToArray (),
+					LibraryManager.GetLibraryDirectories (CurrentPlatform).ToArray (),
 					references.ToArray ()),
 				"mscorlib"
 			);
@@ -280,7 +277,7 @@ public class BindingTouch : IDisposable {
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
-			universe.LoadFromAssemblyPath (libraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
+			universe.LoadFromAssemblyPath (LibraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
 
 			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
@@ -337,7 +334,7 @@ public class BindingTouch : IDisposable {
 			namespaceCache ??= new NamespaceCache (
 				CurrentPlatform,
 				config.HelperClassNamespace ?? firstApiDefinitionName,
-				libraryManager.skipSystemDrawing
+				LibraryManager.skipSystemDrawing
 			);
 
 			var g = new Generator (this, config.IsPublicMode, config.IsExternal, config.IsDebug, types.ToArray (), strong_dictionaries.ToArray ()) {
