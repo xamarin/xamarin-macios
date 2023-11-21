@@ -8,13 +8,14 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ACToolTaskBase : XcodeCompilerToolTask {
+	public class ACTool : XcodeCompilerToolTask, ICancelableTask {
 		ITaskItem partialAppManifest;
 		string outputSpecs;
 
@@ -195,6 +196,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var intermediate = Path.Combine (IntermediateOutputPath, ToolName);
 			var intermediateBundleDir = Path.Combine (intermediate, "bundle");
 			var intermediateCloneDir = Path.Combine (intermediate, "cloned-assets");
@@ -442,6 +446,12 @@ namespace Xamarin.MacDev.Tasks {
 			OutputManifests = outputManifests.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
