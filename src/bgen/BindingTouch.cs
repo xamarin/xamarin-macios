@@ -431,7 +431,7 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (baselibdll, out Assembly? baselib))
+			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) || !TryLoadApi (baselibdll, out Assembly? baselib))
 				return 1;
 
 			attributeManager ??= new AttributeManager (this);
@@ -440,10 +440,10 @@ public class BindingTouch : IDisposable {
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
-			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
+			typeCache ??= new (universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
 
-			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
+			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (apiAssembly)) {
 #if NET
 				if (string.IsNullOrEmpty (linkWith.LibraryName))
 #else
@@ -479,26 +479,14 @@ public class BindingTouch : IDisposable {
 				}
 			}
 
-			var types = new List<Type> ();
-			var strong_dictionaries = new List<Type> ();
-			foreach (var t in api.GetTypes ()) {
-				if ((config.ProcessEnums && t.IsEnum) ||
-					AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
-					AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
-					AttributeManager.HasAttribute<StaticAttribute> (t) ||
-					AttributeManager.HasAttribute<PartialAttribute> (t))
-					types.Add (t);
-				if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
-					strong_dictionaries.Add (t);
-			}
-
+			var api = TypeManager.ParseApi (apiAssembly, config.ProcessEnums);
 			namespaceCache ??= new NamespaceCache (
 				CurrentPlatform,
 				config.HelperClassNamespace ?? firstApiDefinitionName,
 				skipSystemDrawing
 			);
 
-			var g = new Generator (this, config.IsPublicMode, config.IsExternal, config.IsDebug, types.ToArray (), strong_dictionaries.ToArray ()) {
+			var g = new Generator (this, api, config.IsPublicMode, config.IsExternal, config.IsDebug) {
 				BaseDir = config.BindingFilesOutputDirectory ?? config.TemporaryFileDirectory,
 				ZeroCopyStrings = config.UseZeroCopy,
 				InlineSelectors = config.InlineSelectors ?? (CurrentPlatform != PlatformName.MacOSX),
