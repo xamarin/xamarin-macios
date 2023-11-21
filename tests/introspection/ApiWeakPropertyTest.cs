@@ -44,6 +44,11 @@ namespace Introspection {
 			case "WeakMeasurementUnits":
 				// this is a weakly typed API (not a weak reference), so there's no [Export]
 				return property.DeclaringType.Name == "NSRulerView";
+#if !XAMCORE_5_0
+			case "WeakEnabled":
+				// this is from a strongly typed dictionary, and "Weak" here means nullable (bool) as opposed to a plain bool - and this is fixed in XAMCORE_5_0 so that the Enabled property is nullable and thus we won't need the WeakEnabled version anymore.
+				return property.DeclaringType.Name == "CTFontDescriptorAttributes";
+#endif
 			}
 			return false;
 		}
