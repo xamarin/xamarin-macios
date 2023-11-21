@@ -1399,20 +1399,23 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
-		public void BuildAndExecuteAppWithXCFrameworkWithStaticLibraryInRuntimesNativeDirectory (ApplePlatform platform, string runtimeIdentifier)
+		public void BuildAndExecuteAppWithXCFrameworkWithStaticLibraryInRuntimesNativeDirectory (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "AppWithXCFrameworkWithStaticLibraryInPackageReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifier);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
 			Assert.That (appExecutable, Does.Exist, "There is an executable");
 
-			ExecuteWithMagicWordAndAssert (appExecutable);
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				Assert.That (output, Does.Contain ("42"), "Execution");
+			}
 		}
 
 		[Test]
