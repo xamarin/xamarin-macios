@@ -175,7 +175,7 @@ stages:
       steps:
       - template: ./common/clean.yml
 
-- stage: configure
+- stage: configure_build
   displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
   dependsOn: ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
@@ -200,7 +200,7 @@ stages:
         
 - stage: build_packages
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
-  dependsOn: configure, ${{ parameters.dependsOn }}
+  dependsOn: configure_build, ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
   jobs:
