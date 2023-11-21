@@ -82,10 +82,10 @@ jobs:
       AgentPoolComputed: $(CIBuildPool)
     ${{ if eq(parameters.pool, 'pr') }}:
       AgentPoolComputed: $(PRBuildPool)
-    PR_ID: $[ stageDependencies.configure.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ stageDependencies.configure.configure.outputs['labels.xharness_labels'] ]
+    XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:
