@@ -113,7 +113,7 @@ jobs:
   displayName: 'Upload / Publish change detection results to VSDrops / GitHub'
   timeoutInMinutes: 1000
   dependsOn: # can start as soon as the api diff is done
-  - configure
+#  - configure
   - api_diff
   condition: succeededOrFailed()
   pool:
