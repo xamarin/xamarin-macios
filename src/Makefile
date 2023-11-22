@@ -1220,9 +1220,20 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll: $
 $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml | $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $$< $$@
 
-$($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $($(2)_DOTNET_BUILD_DIR)/doc
-	$$(Q_GEN) $(TOP)/tools/add-apple-links-to-docs.sh --assembly $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll --input $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml --output $$@
+$($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll build/.build-adr-stamp | $($(2)_DOTNET_BUILD_DIR)/doc
+ifdef ENABLE_XAMARIN
+	$(MAKE) run -C $(MACCORE_PATH)/tools/apple-doc-reader ASSEMBLY="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll)" INPUT="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml)" OUTPUT="$(abspath $$@)"
+else
+	$$(Q) $$(CP) $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $$@
+endif
 endef
+
+build/.build-adr-stamp:
+ifdef ENABLE_XAMARIN
+	$(Q) $(MAKE) build -C $(MACCORE_PATH)/tools/apple-doc-reader
+	$(Q) $(MAKE) create -C $(MACCORE_PATH)/tools/apple-doc-reader
+endif
+	$(Q) touch $@
 
 # Template variables:
 # 1: Platform (correct case)
