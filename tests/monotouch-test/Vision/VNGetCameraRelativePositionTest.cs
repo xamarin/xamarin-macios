@@ -28,29 +28,27 @@ using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
 #endif
 
-namespace MonoTouchFixtures.Vision
-{
+namespace MonoTouchFixtures.Vision {
 
 	[TestFixture]
-	[Preserve(AllMembers = true)]
-	public class VNGetCameraRelativePositionTest
-	{
+	[Preserve (AllMembers = true)]
+	public class VNGetCameraRelativePositionTest {
 		[SetUp]
-		public void SetUp()
+		public void SetUp ()
 		{
-			TestRuntime.AssertXcodeVersion(15, 0);
+			TestRuntime.AssertXcodeVersion (15, 0);
 		}
 
 		[Test]
-		public void GetCameraRelativePositionTest()
+		public void GetCameraRelativePositionTest ()
 		{
-			var requestHandler = new VNImageRequestHandler(NSBundle.MainBundle.GetUrlForResource ("full_body", "png"), new NSDictionary());
+			var requestHandler = new VNImageRequestHandler (NSBundle.MainBundle.GetUrlForResource ("full_body", "png"), new NSDictionary ());
 			var request = new VNDetectHumanBodyPose3DRequest ();
-			
-			var didPerform = requestHandler.Perform (new VNRequest[] { request }, out NSError error);
+
+			var didPerform = requestHandler.Perform (new VNRequest [] { request }, out NSError error);
 			Assert.Null (error, $"VNImageRequestHandler.Perform should not return an error {error}");
-			
-			var observation = request.Results?.Length > 0 ? request.Results[0] : null;
+
+			var observation = request.Results?.Length > 0 ? request.Results [0] : null;
 			Assert.NotNull (observation, "VNImageRequestHandler.Perform should return a result.");
 
 			Matrix4 expectedMatrix = new Matrix4 (
