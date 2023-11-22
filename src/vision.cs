@@ -4289,6 +4289,25 @@ namespace Vision {
 
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNImageTranslationAlignmentObservation [] Results { get; }
+
+		[Export("revision")]
+		VNTrackTranslationalImageRegistrationRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap("GetSupportedVersions<VNTrackTranslationalImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
+		VNTrackTranslationalImageRegistrationRequestRevision[] SupportedRevisions { get; }
+
+		[Static]
+		[Export("defaultRevision")]
+		VNTrackTranslationalImageRegistrationRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export("currentRevision")]
+		VNTrackTranslationalImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -4299,6 +4318,25 @@ namespace Vision {
 
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNImageHomographicAlignmentObservation [] Results { get; }
+
+		[Export("revision")]
+		VNTrackHomographicImageRegistrationRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap("GetSupportedVersions<VNTrackHomographicImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
+		VNTrackHomographicImageRegistrationRequestRevision[] SupportedRevisions { get; }
+
+		[Static]
+		[Export("defaultRevision")]
+		VNTrackHomographicImageRegistrationRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export("currentRevision")]
+		VNTrackHomographicImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -4360,6 +4398,25 @@ namespace Vision {
 
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNHumanBodyPose3DObservation [] Results { get; }
+
+		[Export("revision")]
+		VNDetectHumanBodyPose3DRequestRevision Revision { get; set; }
+
+		[Static]
+		[Export("supportedRevisions", ArgumentSemantic.Copy)]
+		NSIndexSet WeakSupportedRevisions { get; }
+
+		[Static]
+		[Wrap("GetSupportedVersions<VNDetectHumanBodyPose3DRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectHumanBodyPose3DRequestRevision[] SupportedRevisions { get; }
+
+		[Static]
+		[Export("defaultRevision")]
+		VNDetectHumanBodyPose3DRequestRevision DefaultRevision { get; }
+
+		[Static]
+		[Export("currentRevision")]
+		VNDetectHumanBodyPose3DRequestRevision CurrentRevision { get; }
 	}
 
 	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]

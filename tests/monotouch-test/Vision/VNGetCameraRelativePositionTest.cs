@@ -2,6 +2,12 @@
 
 #if !__WATCHOS__
 
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
+
 using System;
 using System.IO;
 using System.Collections;
