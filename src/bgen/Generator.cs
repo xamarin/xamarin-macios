@@ -3357,12 +3357,8 @@ public partial class Generator : IMemberGatherer {
 					if (etype.IsValueType) {
 						for (int i = 0; i < numberOfFixedStatements; i++)
 							convs.Append ("\t");
-						convs.AppendFormat ("if ({0}.Length > 0) {{\n", pi.Name);
 						numberOfFixedStatements++;
-						for (int i = 0; i < numberOfFixedStatements; i++)
-							convs.Append ("\t");
-						numberOfFixedStatements++;
-						convs.AppendFormat ("fixed ({0}* {1}Ptr = &{1}[0]) {{\n", pi.ParameterType.GetElementType ().Name, pi.Name);
+						convs.AppendFormat ("fixed ({0}* {1}Ptr = {1}) {{\n", pi.ParameterType.GetElementType ().Name, pi.Name);
 					} else if (null_allowed_override || AttributeManager.HasAttribute<NullAllowedAttribute> (pi)) {
 						convs.AppendFormat ("var nsa_{0} = {1} is null ? null : NSArray.FromNSObjects ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} is not null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
