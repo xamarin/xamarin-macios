@@ -1454,20 +1454,12 @@ namespace Xamarin.Tests {
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
-			var foundIL3050 = false;
 			rv.AssertNoWarnings ((evt) => {
-				if (evt.Code == "IL3050" && evt.Message == "<Module>..cctor(): Using member 'System.Enum.GetValues(Type)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. It might not be possible to create an array of the enum type at runtime. Use the GetValues<TEnum> overload or the GetValuesAsUnderlyingType method instead.") {
-					foundIL3050 = true;
-					return false;
-				}
-
 				if (platform == ApplePlatform.iOS && evt.Message?.Trim () == "Supported iPhone orientations have not been set")
 					return false;
 
 				return true;
 			});
-
-			Assert.IsTrue (foundIL3050, "IL3050 not found - update test code to remove the code to ignore the IL3050");
 		}
 
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)

@@ -250,6 +250,17 @@ namespace Mono.Tuner {
 			return GetOrCreateStaticConstructor (moduleType);
 		}
 
+		// We want to avoid `DynamicallyAccessedMemberTypes.All` because the semantics are different
+		// from `[Preserve (AllMembers = true)]`. Specifically, we don't want to preserve nested types.
+		// `All` would also keep unused private members of base types which `Preserve` also doesn't cover.
+		const DynamicallyAccessedMemberTypes allMemberTypes =
+			DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields
+			| DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties
+			| DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods
+			| DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors
+			| DynamicallyAccessedMemberTypes.PublicEvents | DynamicallyAccessedMemberTypes.NonPublicEvents
+			| DynamicallyAccessedMemberTypes.Interfaces;
+
 		void AddDynamicDependencyAttribute (TypeDefinition type, bool allMembers)
 		{
 			if (abr is null)
@@ -259,9 +270,11 @@ namespace Mono.Tuner {
 			abr.SetCurrentAssembly (type.Module.Assembly);
 
 			var moduleConstructor = GetOrCreateModuleConstructor (type.GetModule ());
-			var members = allMembers
-				? DynamicallyAccessedMemberTypes.All
-				: DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors;
+			var members = (type, allMembers) switch {
+				({ IsEnum: true }, _) => DynamicallyAccessedMemberTypes.PublicFields,
+				(_, false) => DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors,
+				(_, true) =>  allMemberTypes,
+			};
 			var attrib = abr.CreateDynamicDependencyAttribute (members, type);
 			moduleConstructor.CustomAttributes.Add (attrib);
 
