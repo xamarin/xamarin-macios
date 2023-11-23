@@ -4290,23 +4290,23 @@ namespace Vision {
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNImageTranslationAlignmentObservation [] Results { get; }
 
-		[Export("revision")]
+		[Export ("revision")]
 		VNTrackTranslationalImageRegistrationRequestRevision Revision { get; set; }
 
 		[Static]
-		[Export("supportedRevisions", ArgumentSemantic.Copy)]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[Static]
-		[Wrap("GetSupportedVersions<VNTrackTranslationalImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
-		VNTrackTranslationalImageRegistrationRequestRevision[] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNTrackTranslationalImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
+		VNTrackTranslationalImageRegistrationRequestRevision [] SupportedRevisions { get; }
 
 		[Static]
-		[Export("defaultRevision")]
+		[Export ("defaultRevision")]
 		VNTrackTranslationalImageRegistrationRequestRevision DefaultRevision { get; }
 
 		[Static]
-		[Export("currentRevision")]
+		[Export ("currentRevision")]
 		VNTrackTranslationalImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
@@ -4319,23 +4319,23 @@ namespace Vision {
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNImageHomographicAlignmentObservation [] Results { get; }
 
-		[Export("revision")]
+		[Export ("revision")]
 		VNTrackHomographicImageRegistrationRequestRevision Revision { get; set; }
 
 		[Static]
-		[Export("supportedRevisions", ArgumentSemantic.Copy)]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[Static]
-		[Wrap("GetSupportedVersions<VNTrackHomographicImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
-		VNTrackHomographicImageRegistrationRequestRevision[] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNTrackHomographicImageRegistrationRequestRevision> (WeakSupportedRevisions)")]
+		VNTrackHomographicImageRegistrationRequestRevision [] SupportedRevisions { get; }
 
 		[Static]
-		[Export("defaultRevision")]
+		[Export ("defaultRevision")]
 		VNTrackHomographicImageRegistrationRequestRevision DefaultRevision { get; }
 
 		[Static]
-		[Export("currentRevision")]
+		[Export ("currentRevision")]
 		VNTrackHomographicImageRegistrationRequestRevision CurrentRevision { get; }
 	}
 
@@ -4399,23 +4399,23 @@ namespace Vision {
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNHumanBodyPose3DObservation [] Results { get; }
 
-		[Export("revision")]
+		[Export ("revision")]
 		VNDetectHumanBodyPose3DRequestRevision Revision { get; set; }
 
 		[Static]
-		[Export("supportedRevisions", ArgumentSemantic.Copy)]
+		[Export ("supportedRevisions", ArgumentSemantic.Copy)]
 		NSIndexSet WeakSupportedRevisions { get; }
 
 		[Static]
-		[Wrap("GetSupportedVersions<VNDetectHumanBodyPose3DRequestRevision> (WeakSupportedRevisions)")]
-		VNDetectHumanBodyPose3DRequestRevision[] SupportedRevisions { get; }
+		[Wrap ("GetSupportedVersions<VNDetectHumanBodyPose3DRequestRevision> (WeakSupportedRevisions)")]
+		VNDetectHumanBodyPose3DRequestRevision [] SupportedRevisions { get; }
 
 		[Static]
-		[Export("defaultRevision")]
+		[Export ("defaultRevision")]
 		VNDetectHumanBodyPose3DRequestRevision DefaultRevision { get; }
 
 		[Static]
-		[Export("currentRevision")]
+		[Export ("currentRevision")]
 		VNDetectHumanBodyPose3DRequestRevision CurrentRevision { get; }
 	}
 
