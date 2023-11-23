@@ -206,11 +206,11 @@ namespace LinkAll.Attributes {
 			AssertHasStaticField ("B", 2);
 			AssertHasStaticField ("C", 4);
 
-			void AssertHasStaticField(string name, int value)
+			void AssertHasStaticField (string name, int value)
 			{
 				var field = enumType.GetField (name, BindingFlags.Public | BindingFlags.Static);
 				Assert.NotNull (field, name);
-				Assert.AreEqual (value, (int)field.GetValue (null), $"{name} == {value}");
+				Assert.AreEqual (value, (int) field.GetValue (null), $"{name} == {value}");
 			}
 		}
 	}
@@ -247,14 +247,13 @@ namespace LinkAll.Attributes {
 		}
 	}
 
-	[Preserve(AllMembers = true)]
-	public class ParentClass
-	{
+	[Preserve (AllMembers = true)]
+	public class ParentClass {
 		public enum NestedEnum { A, B };
 		public class NestedClass { }
 		public struct NestedStruct { }
 	}
 
-	[Preserve(AllMembers = true)]
+	[Preserve (AllMembers = true)]
 	public enum MyEnum { A = 1, B = 2, C = 4 }
 }
