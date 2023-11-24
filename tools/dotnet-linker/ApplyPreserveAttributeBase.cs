@@ -270,11 +270,15 @@ namespace Mono.Tuner {
 			abr.SetCurrentAssembly (type.Module.Assembly);
 
 			var moduleConstructor = GetOrCreateModuleConstructor (type.GetModule ());
-			var members = (type, allMembers) switch {
-				( { IsEnum: true }, _) => DynamicallyAccessedMemberTypes.PublicFields,
-				(_, false) => DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors,
-				(_, true) => allMemberTypes,
-			};
+			var members = allMembers
+				? allMemberTypes
+				: DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors;
+
+			// only preserve fields for enums
+			if (type.IsEnum) {
+				members = DynamicallyAccessedMemberTypes.PublicFields;
+			}
+
 			var attrib = abr.CreateDynamicDependencyAttribute (members, type);
 			moduleConstructor.CustomAttributes.Add (attrib);
 
