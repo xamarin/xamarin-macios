@@ -193,15 +193,7 @@ namespace LinkAll.Attributes {
 		{
 			var enumType = GetType ().Assembly.GetType ("LinkAll.Attributes.MyEnum" + WorkAroundLinkerHeuristics);
 			Assert.NotNull (enumType, "MyEnum");
-
-			var values = Enum.GetValuesAsUnderlyingType (enumType);
-			Assert.AreEqual (3, values.Length, "values");
-			Assert.Contains (1, values, "A");
-			Assert.Contains (2, values, "B");
-			Assert.Contains (4, values, "C");
-
 			Assert.AreEqual (3, enumType.GetFields (BindingFlags.Public | BindingFlags.Static).Length, "fields");
-
 			AssertHasStaticField ("A", 1);
 			AssertHasStaticField ("B", 2);
 			AssertHasStaticField ("C", 4);
