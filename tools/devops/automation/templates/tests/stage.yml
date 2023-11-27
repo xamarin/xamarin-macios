@@ -91,42 +91,43 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
+  - configure_build
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
   condition: and(succeeded(), ${{ parameters.condition }})
 
   jobs:
-  - ${{ if eq(parameters.parseLabels, true) }}:
-    - job: configure
-      displayName: 'Configure build'
-      pool:
-        vmImage: windows-latest
+#  - ${{ if eq(parameters.parseLabels, true) }}:
+#    - job: configure
+#      displayName: 'Configure build'
+#      pool:
+#        vmImage: windows-latest
+#
+#      variables:
+#        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+#        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+#        BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
 
-      variables:
-        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-        BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-      steps:
-      - template: ../common/configure.yml
-        parameters: 
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
-          uploadArtifacts: false
+#      steps:
+#      - template: ../common/configure.yml
+#        parameters: 
+#          repositoryAlias: ${{ parameters.repositoryAlias }}
+#          commit: ${{ parameters.commit }}
+#          uploadArtifacts: false
 
   - job: "tests"
     ${{ if eq(parameters.parseLabels, true) }}:
-      condition: ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
-    dependsOn:
-    - ${{ if eq(parameters.parseLabels, true) }}:
-      - configure
+      condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
+#    dependsOn:
+#    - ${{ if eq(parameters.parseLabels, true) }}:
+#      - configure
     displayName: 'Running tests:' 
     timeoutInMinutes: 1000
     variables:
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-      PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+      PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
       # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+      XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
       ${{ if eq(parameters.testPool, '') }}:
         AgentPoolComputed: $(PRBuildPool)
       ${{ else }}:
@@ -169,15 +170,15 @@ stages:
 
   - job: publish_test_results
     ${{ if eq(parameters.parseLabels, true) }}:
-      condition: and(ne(dependencies.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
+      condition: and(ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
     ${{ else }}:
       condition: succeededOrFailed()
     displayName: 'GitHub comment - Publish results'
     timeoutInMinutes: 1000
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - tests
-    - ${{ if eq(parameters.parseLabels, true) }}:
-      - configure
+#    - ${{ if eq(parameters.parseLabels, true) }}:
+#      - configure
     variables:
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
       ${{ each label in parameters.simTestsConfigurations }}:
@@ -202,13 +203,13 @@ stages:
 
   - job: publish_skipped_tests
     ${{ if eq(parameters.parseLabels, true) }}:
-      condition: eq(dependencies.configure.outputs['labels.skip_all_tests'], 'True')
+      condition: eq(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     ${{ else }}:
       condition: false
     displayName: 'GitHub comment - Skipped tests'
     timeoutInMinutes: 1000
-    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-    - configure
+#    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+#    - configure
 
     variables:
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]

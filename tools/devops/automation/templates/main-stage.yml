@@ -240,6 +240,7 @@ stages:
   condition: and(eq(dependencies.build_packages.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
   dependsOn:
   - build_packages
+  - configure_build
   jobs:
   - template: ./sign-and-notarized/prepare-pkg-stage.yml
     parameters:
@@ -268,7 +269,7 @@ stages:
     }}
   : - template: ./release/vs-insertion-prep.yml
       parameters:
-        dependsOn: build_packages
+        dependsOn: [ build_packages, configure_build ]
         stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
@@ -280,6 +281,7 @@ stages:
   condition: and(eq(dependencies.prepare_packages_legacy.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
   dependsOn:
   - prepare_packages_legacy
+  - configure_build
   jobs:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
