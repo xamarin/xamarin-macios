@@ -1,3 +1,4 @@
+#if !TVOS
 #nullable enable
 
 using System;
@@ -157,3 +158,4 @@ namespace CoreMidi {
 #endif
 	}
 }
+#endif
