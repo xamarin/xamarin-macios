@@ -2661,7 +2661,7 @@ public partial class Generator : IMemberGatherer {
 		var mi = minfo.Method;
 		var category_class = minfo.category_extension_type;
 		StringBuilder sb = new StringBuilder ();
-		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
+		string name = minfo.is_ctor ? Nomenclator.GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
 		PrintAttributes (minfo.mi, preserve: !alreadyPreserved, advice: true, bindAs: true, requiresSuper: true);
@@ -4566,18 +4566,7 @@ public partial class Generator : IMemberGatherer {
 		else
 			return !setter ? null : props.FirstOrDefault (prop => prop.GetSetMethod () == method);
 	}
-
-	public string GetGeneratedTypeName (Type type)
-	{
-		var bindOnType = AttributeManager.GetCustomAttributes<BindAttribute> (type);
-		if (bindOnType.Length > 0)
-			return bindOnType [0].Selector;
-		else if (type.IsGenericTypeDefinition)
-			return type.Name.Substring (0, type.Name.IndexOf ('`'));
-		else
-			return type.Name;
-	}
-
+	
 	void RenderDelegates (Dictionary<string, MethodInfo> delegateTypes)
 	{
 		// Group the delegates by namespace
@@ -5172,7 +5161,7 @@ public partial class Generator : IMemberGatherer {
 		if (type.Namespace is null)
 			ErrorHelper.Warning (1103, type.FullName);
 
-		var tn = GetGeneratedTypeName (type);
+		var tn = Nomenclator.GetGeneratedTypeName (type);
 		if (type.IsGenericType)
 			tn = tn + "_" + type.GetGenericArguments ().Length.ToString ();
 		return GetOutputStream (type.Namespace, tn);
@@ -5379,7 +5368,7 @@ public partial class Generator : IMemberGatherer {
 			type_needs_thread_checks = tsa is not null && !tsa.Safe;
 		}
 
-		string TypeName = GetGeneratedTypeName (type);
+		string TypeName = Nomenclator.GetGeneratedTypeName (type);
 		indent = 0;
 		var instance_fields_to_clear_on_dispose = new List<string> ();
 		var gtype = GeneratedTypes.Lookup (type);
@@ -6497,7 +6486,7 @@ public partial class Generator : IMemberGatherer {
 				string base_class;
 
 				if (parent_implements_appearance) {
-					var parent = GetGeneratedTypeName (gt.Parent);
+					var parent = Nomenclator.GetGeneratedTypeName (gt.Parent);
 					base_class = "global::" + gt.Parent.FullName + "." + parent + "Appearance";
 				} else
 					base_class = "UIAppearance";
