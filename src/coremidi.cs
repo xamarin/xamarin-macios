@@ -87,7 +87,7 @@ namespace CoreMidi {
 		PerNoteMgmt = 15,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15,0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIMessageType")]
 	public enum MidiMessageType : uint {
@@ -100,7 +100,7 @@ namespace CoreMidi {
 		UnknownF = 15,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15,0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISysExStatus")]
 	public enum MidiSysExStatus : uint {
@@ -112,7 +112,7 @@ namespace CoreMidi {
 		MixedDataSetPayload = 9,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (15,0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISystemStatus")]
 	public enum MidiSystemStatus : uint {
@@ -130,7 +130,7 @@ namespace CoreMidi {
 		SystemReset = 255,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15,0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDINoteAttribute")]
 	public enum MidiNoteAttribute : byte {
 		None = 0,
@@ -139,7 +139,7 @@ namespace CoreMidi {
 		Pitch = 3,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15,0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDIPerNoteManagementOptions")]
 	[Flags]
 	public enum MidiPerNoteManagementOptions : byte {
@@ -147,14 +147,14 @@ namespace CoreMidi {
 		Detach = 1 << 1,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15,0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDIProgramChangeOptions")]
 	[Flags]
 	public enum MidiProgramChangeOptions : byte {
 		BankValid = 1 << 0,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15,0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0)]
 	[NativeName ("MIDIUtilityStatus")]
 	public enum MidiUtilityStatus : uint {
 		Noop = 0,
