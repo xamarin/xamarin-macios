@@ -240,6 +240,7 @@ stages:
   condition: and(eq(dependencies.build_packages.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
   dependsOn:
   - build_packages
+  - configure_build
   jobs:
   - template: ./sign-and-notarized/prepare-pkg-stage.yml
     parameters:
@@ -253,23 +254,34 @@ stages:
 
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 # setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
-# Got to disable the lint check because azp yaml template engine does not allow use to do a multiline if :/ 
-# yamllint disable-line rule: line-length
-- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'), eq(parameters.forceInsertion, true))) }}:
-  - template: ./release/vs-insertion-prep.yml
-    parameters:
-      dependsOn: build_packages
-      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      pushNugets: ${{ parameters.pushNugets }}
+- ? ${{ if
+      and(
+        ne(variables['Build.Reason'], 'Schedule'),
+        or(
+          eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+          startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'),
+          startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'),
+          eq(parameters.forceInsertion, true)
+        )
+      )
+    }}
+  : - template: ./release/vs-insertion-prep.yml
+      parameters:
+        dependsOn: [ build_packages, configure_build ]
+        stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        pushNugets: ${{ parameters.pushNugets }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
   condition: and(eq(dependencies.prepare_packages_legacy.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
   dependsOn:
   - prepare_packages_legacy
+  - configure_build
   jobs:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
