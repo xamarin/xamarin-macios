@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 function show_help () {
 cat <<EOL
@@ -211,7 +211,7 @@ while test "x$1" != x; do
         echo "DOTNET_RUNTIME_PATH=$2" >> "$CONFIGURED_FILE"
         shift 2
         ;;
-    --ignore-uknown-params)
+    --ignore-unknown-params)
         echo "ignoring unknown parameters"
         IGNORE_UNNKOWN_PARAMS=true
         shift
@@ -228,8 +228,8 @@ while test "x$1" != x; do
     esac
 done
 
-[[ "$IGNORE_UNNKOWN_PARAMS" = false ]] && [[ -z "$UNKNOWN_PARAMETERS" ]] && exit 1
+[[ "$IGNORE_UNNKOWN_PARAMS" = false ]] && [[ -n "$UNKNOWN_PARAMETERS" ]] && exit 1
 
-[[ "$IGNORE_UNNKOWN_PARAMS" = true ]] && [[ -z "$UNKNOWN_PARAMETERS" ]] && echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
+[[ "$IGNORE_UNNKOWN_PARAMS" = true ]] && [[ -n "$UNKNOWN_PARAMETERS" ]] && echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
 
 exit 0
