@@ -11,10 +11,10 @@ using PlatformName = ObjCRuntime.PlatformName;
 #nullable disable
 
 public class AttributeManager {
-	
-	readonly Dictionary<System.Type, Type> typeLookup = new();
+
+	readonly Dictionary<System.Type, Type> typeLookup = new ();
 	TypeCache TypeCache { get; }
-	
+
 	public AttributeManager (TypeCache typeCache)
 	{
 		TypeCache = typeCache;
@@ -580,7 +580,7 @@ public class AttributeManager {
 			break;
 		case MemberInfo mi:
 			code = 1059;
-			args = new object [] { rv.Length, typeof (T).FullName, $"{mi.DeclaringType?.FullName}.{mi.Name}"};
+			args = new object [] { rv.Length, typeof (T).FullName, $"{mi.DeclaringType?.FullName}.{mi.Name}" };
 			break;
 		case Assembly ass:
 			code = 1085;
