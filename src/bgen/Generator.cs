@@ -4566,7 +4566,7 @@ public partial class Generator : IMemberGatherer {
 		else
 			return !setter ? null : props.FirstOrDefault (prop => prop.GetSetMethod () == method);
 	}
-	
+
 	void RenderDelegates (Dictionary<string, MethodInfo> delegateTypes)
 	{
 		// Group the delegates by namespace
