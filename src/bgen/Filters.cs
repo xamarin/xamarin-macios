@@ -64,7 +64,7 @@ public partial class Generator {
 			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
 			if (BindingTouch.IsDotNet) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
-			} else if (XamcoreVersion >= 3) {
+			} else if (CurrentPlatform.GetXamcoreVersion () >= 3) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
 			} else {
 				intptrctor_visibility = MethodAttributes.Public;
