@@ -135,6 +135,7 @@ public class TypeCache {
 	public Type? UIOffset { get; }
 	public Type? UIEdgeInsets { get; }
 	public Type? NSDirectionalEdgeInsets { get; }
+	public MetadataLoadContext Universe { get; }
 
 	public IReadOnlyDictionary<Type, string> NSValueCreateMap { get; }
 
@@ -142,8 +143,8 @@ public class TypeCache {
 	{
 		if (frameworks is null)
 			throw ErrorHelper.CreateError (3, currentPlatform);
-		if (universe is null)
-			throw ErrorHelper.CreateError (4, currentPlatform);
+
+		Universe = universe ?? throw ErrorHelper.CreateError (4, currentPlatform);
 
 		/* corlib */
 		System_Attribute = Lookup (corlibAssembly, "System", "Attribute");
@@ -170,7 +171,7 @@ public class TypeCache {
 #if NET
 		System_nint = Lookup (corlibAssembly, "System", "IntPtr");
 		System_nuint = Lookup (corlibAssembly, "System", "UIntPtr");
-		var interopAssembly = universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
+		var interopAssembly = Universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
 		System_nfloat = Lookup (interopAssembly, "System.Runtime.InteropServices", "NFloat");
 #else
 		System_nint = Lookup (platformAssembly, "System", "nint");
