@@ -28,9 +28,9 @@ namespace Xharness {
 			return target.Platform switch {
 				TestTarget.Simulator_iOS => "com.apple.CoreSimulator.SimDeviceType.iPhone-5s",
 				TestTarget.Simulator_iOS32 => "com.apple.CoreSimulator.SimDeviceType.iPhone-5s",
-				TestTarget.Simulator_iOS64 => GetiOSDeviceType (Version.Parse (target.OSVersion)),
+				TestTarget.Simulator_iOS64 => GetiOSDeviceType (Version.Parse (target.OSVersion!)),
 				TestTarget.Simulator_tvOS => "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p",
-				TestTarget.Simulator_watchOS => GetWatchOSDeviceType (Version.Parse (target.OSVersion)),
+				TestTarget.Simulator_watchOS => GetWatchOSDeviceType (Version.Parse (target.OSVersion!)),
 				_ => throw new Exception (string.Format ("Invalid simulator target: {0}", target))
 			};
 		}
