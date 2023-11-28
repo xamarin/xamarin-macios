@@ -91,20 +91,15 @@ namespace Metal {
 		public MTLIOCompressionStatus FlushAndDestroy ()
 		{
 			var result = (MTLIOCompressionStatus) MTLIOFlushAndDestroyCompressionContext (GetCheckedHandle ());
-#if NET
-			Class.ThrowOnInitFailure = false;
-			Handle = NativeHandle.Zero;
-			Class.ThrowOnInitFailure = true;
-#else
+
 			ClearHandle ();
-#endif
 			return result;
 		}
 
 		[DllImport (Constants.MetalLibrary)]
-		static extern long MTLIOCompressionContextDefaultChunkSize ();
+		static extern nint MTLIOCompressionContextDefaultChunkSize ();
 
-		public static long DefaultChunkSize => MTLIOCompressionContextDefaultChunkSize ();
+		public static nint DefaultChunkSize => MTLIOCompressionContextDefaultChunkSize ();
 
 	}
 }
