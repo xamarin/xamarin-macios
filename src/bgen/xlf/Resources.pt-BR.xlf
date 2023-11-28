@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
-  <file datatype="xml" source-language="en" target-language="ko" original="../Resources.resx">
+  <file datatype="xml" source-language="en" target-language="pt-BR" original="../Resources.resx">
     <body>
       <trans-unit id="BI0000">
         <source>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</source>
         <target state="new">Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="BI0001">
         <source>The .NET runtime could not load the {0} type. Message: {1}</source>
         <target state="new">The .NET runtime could not load the {0} type. Message: {1}</target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="BI0002">
         <source>Could not compile the API bindings.
@@ -19,11 +19,31 @@
         <target state="new">Could not compile the API bindings.
 		{0}
 		</target>
-        <note></note>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0003">
+        <source>Frameworks were not loaded for platform {0}.</source>
+        <target state="new">Frameworks were not loaded for platform {0}.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0004">
+        <source>Universe was not loaded for platform {0}.</source>
+        <target state="new">Universe was not loaded for platform {0}.</target>
+        <note />
       </trans-unit>
       <trans-unit id="BI0026">
         <source>Could not parse the command line argument '--warnaserror': {0}</source>
         <target state="new">Could not parse the command line argument '--warnaserror': {0}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0027">
+        <source>Could not parse the command line argument '{0}': {1}</source>
+        <target state="new">Could not parse the command line argument '{0}': {1}</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI0028">
+        <source>No C# compiler has been specified (using --compiler or --compile-command).</source>
+        <target state="new">No C# compiler has been specified (using --compiler or --compile-command).</target>
         <note />
       </trans-unit>
       <trans-unit id="BI0068">
@@ -68,7 +88,7 @@
         <target state="new">Could not compile the generated API bindings.	
 		{0}
 		</target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="BI1001">
         <source>Do not know how to make a trampoline for {0}</source>
@@ -277,7 +297,7 @@
       <trans-unit id="BI1041">
         <source>The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.		</source>
         <target state="new">The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.		</target>
-        <note></note>
+        <note />
       </trans-unit>
       <trans-unit id="BI1042">
         <source>Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal")</source>
@@ -479,6 +499,11 @@
       <trans-unit id="BI1081">
         <source>Unable to find the assembly '{0}'. Add it as a reference using its full path.</source>
         <target state="new">Unable to find the assembly '{0}'. Add it as a reference using its full path.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="BI1082">
+        <source>Selector name missing in [CoreImageFilterProperty] attribute on {0} property {1}</source>
+        <target state="new">Selector name missing in [CoreImageFilterProperty] attribute on {0} property {1}</target>
         <note />
       </trans-unit>
       <trans-unit id="BI1101">
