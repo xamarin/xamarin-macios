@@ -95,11 +95,6 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, MethodInfo> delegate_types = new Dictionary<string, MethodInfo> ();
 
 	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
-	public int XamcoreVersion => CurrentPlatform.GetXamcoreVersion ();
-	public string ApplicationClassName => CurrentPlatform.GetApplicationClassName ();
-	public string CoreImageMap => CurrentPlatform.GetCoreImageMap ();
-	public string CoreServicesMap => CurrentPlatform.GetCoreServicesMap ();
-	public string PDFKitMap => CurrentPlatform.GetPDFKitMap ();
 
 	Api api;
 	bool debug;
@@ -2653,7 +2648,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var attrib = attribs [0];
-		return XamcoreVersion >= attrib.Version;
+		return CurrentPlatform.GetXamcoreVersion () >= attrib.Version;
 	}
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo [] parameters, string extra = "", bool alreadyPreserved = false)
@@ -2661,7 +2656,7 @@ public partial class Generator : IMemberGatherer {
 		var mi = minfo.Method;
 		var category_class = minfo.category_extension_type;
 		StringBuilder sb = new StringBuilder ();
-		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
+		string name = minfo.is_ctor ? Nomenclator.GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
 		PrintAttributes (minfo.mi, preserve: !alreadyPreserved, advice: true, bindAs: true, requiresSuper: true);
@@ -4153,7 +4148,7 @@ public partial class Generator : IMemberGatherer {
 				if (!BindThirdPartyLibrary && pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
 					string delName = pi.Name.Substring (4);
 					if (SafeIsProtocolizedEventBacked (delName, type))
-						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", ApplicationClassName, string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
+						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", CurrentPlatform.GetApplicationClassName (), string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
 				}
 
 				if (not_implemented_attr is not null) {
@@ -4565,17 +4560,6 @@ public partial class Generator : IMemberGatherer {
 			return !getter ? null : props.FirstOrDefault (prop => prop.GetGetMethod () == method);
 		else
 			return !setter ? null : props.FirstOrDefault (prop => prop.GetSetMethod () == method);
-	}
-
-	public string GetGeneratedTypeName (Type type)
-	{
-		var bindOnType = AttributeManager.GetCustomAttributes<BindAttribute> (type);
-		if (bindOnType.Length > 0)
-			return bindOnType [0].Selector;
-		else if (type.IsGenericTypeDefinition)
-			return type.Name.Substring (0, type.Name.IndexOf ('`'));
-		else
-			return type.Name;
 	}
 
 	void RenderDelegates (Dictionary<string, MethodInfo> delegateTypes)
@@ -5172,7 +5156,7 @@ public partial class Generator : IMemberGatherer {
 		if (type.Namespace is null)
 			ErrorHelper.Warning (1103, type.FullName);
 
-		var tn = GetGeneratedTypeName (type);
+		var tn = Nomenclator.GetGeneratedTypeName (type);
 		if (type.IsGenericType)
 			tn = tn + "_" + type.GetGenericArguments ().Length.ToString ();
 		return GetOutputStream (type.Namespace, tn);
@@ -5287,14 +5271,14 @@ public partial class Generator : IMemberGatherer {
 			if (library_name [0] == '+') {
 				switch (library_name) {
 				case "+CoreImage":
-					library_name = CoreImageMap;
+					library_name = CurrentPlatform.GetCoreImageMap ();
 					break;
 				case "+CoreServices":
-					library_name = CoreServicesMap;
+					library_name = CurrentPlatform.GetCoreServicesMap ();
 					break;
 				case "+PDFKit":
 					library_name = "PdfKit";
-					library_path = PDFKitMap;
+					library_path = CurrentPlatform.GetPDFKitMap ();
 					break;
 				}
 			} else {
@@ -5379,7 +5363,7 @@ public partial class Generator : IMemberGatherer {
 			type_needs_thread_checks = tsa is not null && !tsa.Safe;
 		}
 
-		string TypeName = GetGeneratedTypeName (type);
+		string TypeName = Nomenclator.GetGeneratedTypeName (type);
 		indent = 0;
 		var instance_fields_to_clear_on_dispose = new List<string> ();
 		var gtype = GeneratedTypes.Lookup (type);
@@ -6181,7 +6165,7 @@ public partial class Generator : IMemberGatherer {
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
 						if (!BindThirdPartyLibrary) {
 							print ("if (Weak{0} is not null)", delName);
-							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", CurrentPlatform.GetApplicationClassName (), delName, delegateTypePropertyName);
 						}
 
 						print ("var del = {1} as _{0};", dtype.Name, delName);
@@ -6497,7 +6481,7 @@ public partial class Generator : IMemberGatherer {
 				string base_class;
 
 				if (parent_implements_appearance) {
-					var parent = GetGeneratedTypeName (gt.Parent);
+					var parent = Nomenclator.GetGeneratedTypeName (gt.Parent);
 					base_class = "global::" + gt.Parent.FullName + "." + parent + "Appearance";
 				} else
 					base_class = "UIAppearance";
