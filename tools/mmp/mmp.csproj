@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
+    <PackageReference Include="Microsoft.DotNet.XliffTasks" Version="1.0.0-beta.23526.1" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.mmp.cs" />
@@ -467,10 +468,6 @@
       <Link>tools\linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
-    <Compile Include="..\mtouch\Errors.designer.cs">
-      <Link>tools\mtouch\Errors.designer.cs</Link>
-      <DependentUpon>Errors.resx</DependentUpon>
-    </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
       <Link>tools\linker\ScanTypeReferenceStep.cs</Link>
     </Compile>
@@ -513,66 +510,36 @@
     <EmbeddedResource Include="Info.plist.tmpl">
       <LogicalName>Info.plist.tmpl</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\Errors.resx">
-      <Link>tools\mtouch\Errors.resx</Link>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../mtouch/Errors.resx">
+      <Type>Resx</Type>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Errors.designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.cs.resx">
-      <Link>tools\mtouch\Errors.cs.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.cs</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.de.resx">
-      <Link>tools\mtouch\Errors.de.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.de</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.es.resx">
-      <Link>tools\mtouch\Errors.es.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.es</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.fr.resx">
-      <Link>tools\mtouch\Errors.fr.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.fr</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.it.resx">
-      <Link>tools\mtouch\Errors.it.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.it</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ja.resx">
-      <Link>tools\mtouch\Errors.ja.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.ja</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ko.resx">
-      <Link>tools\mtouch\Errors.ko.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.ko</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pl.resx">
-      <Link>tools\mtouch\Errors.pl.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.pl</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.pt-BR.resx">
-      <Link>tools\mtouch\Errors.pt-BR.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.pt-BR</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.ru.resx">
-      <Link>tools\mtouch\Errors.ru.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.ru</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.tr.resx">
-      <Link>tools\mtouch\Errors.tr.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.tr</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hans.resx">
-      <Link>tools\mtouch\Errors.zh-Hans.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hans</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\mtouch\TranslatedAssemblies\Errors.zh-Hant.resx">
-      <Link>tools\mtouch\Errors.zh-Hant.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
+      <StronglyTypedFileName>Errors.designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>Xamarin.Bundler</StronglyTypedNamespace>
+      <StronglyTypedClassName>Errors</StronglyTypedClassName>
+      <GenerateResource>true</GenerateResource>
+      <PublicClass>true</PublicClass>
     </EmbeddedResource>
   </ItemGroup>
+
+  <!-- https://github.com/dotnet/arcade/issues/14239 -->
+  <Target Name="FixEmbeddedResources" AfterTargets="TranslateSourceFromXlf">
+   <ItemGroup>
+     <EmbeddedResource Update="@(EmbeddedResource)" Condition="'%(EmbeddedResource.XlfSource)' != ''">
+       <StronglyTypedClassName />
+       <StronglyTypedLanguage />
+       <StronglyTypedNamespace />
+       <StronglyTypedFileName />
+     </EmbeddedResource>
+   </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <None Include="Makefile" />
     <None Include="..\..\docs\website\mmp-errors.md">

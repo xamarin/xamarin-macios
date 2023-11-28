@@ -518,6 +518,7 @@
       <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
+    <PackageReference Include="Microsoft.DotNet.XliffTasks" Version="1.0.0-beta.23526.1" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -526,7 +527,6 @@
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>docs\website\mtouch-errors.md</Link>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
@@ -542,59 +542,20 @@
       <GenerateResource>true</GenerateResource>
       <PublicClass>true</PublicClass>
     </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.cs.resx">
-      <Link>Errors.cs.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.cs</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.de.resx">
-      <Link>Errors.de.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.de</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.es.resx">
-      <Link>Errors.es.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.es</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.fr.resx">
-      <Link>Errors.fr.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.fr</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.it.resx">
-      <Link>Errors.it.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.it</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.ja.resx">
-      <Link>Errors.ja.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.ja</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.ko.resx">
-      <Link>Errors.ko.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.ko</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.pl.resx">
-      <Link>Errors.pl.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.pl</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.pt-BR.resx">
-      <Link>Errors.pt-BR.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.pt-BR</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.ru.resx">
-      <Link>Errors.ru.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.ru</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.tr.resx">
-      <Link>Errors.tr.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.tr</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.zh-Hans.resx">
-      <Link>Errors.zh-Hans.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hans</ManifestResourceName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TranslatedAssemblies\Errors.zh-Hant.resx">
-      <Link>Errors.zh-Hant.resx</Link>
-      <ManifestResourceName>Xamarin.Bundler.Errors.zh-Hant</ManifestResourceName>
-    </EmbeddedResource>
   </ItemGroup>
+
+  <!-- https://github.com/dotnet/arcade/issues/14239 -->
+  <Target Name="FixEmbeddedResources" AfterTargets="TranslateSourceFromXlf">
+    <ItemGroup>
+      <EmbeddedResource Update="@(EmbeddedResource)" Condition="'%(EmbeddedResource.XlfSource)' != ''">
+        <StronglyTypedClassName />
+        <StronglyTypedLanguage />
+        <StronglyTypedNamespace />
+        <StronglyTypedFileName />
+      </EmbeddedResource>
+    </ItemGroup>
+  </Target>
+
   <Target Name="BuildSdkVersions" Inputs="../common/SdkVersions.in.cs;../common/ProductConstants.in.cs" Outputs="../common/SdkVersions.cs;../common/ProductConstants.cs">
     <Exec Command="make ../common/SdkVersions.cs ../common/ProductConstants.cs" />
   </Target>
