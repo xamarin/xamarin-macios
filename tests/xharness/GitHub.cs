@@ -43,7 +43,7 @@ namespace Xharness {
 		}
 
 		static HttpClient? static_client;
-		static bool TryDownloadData (string url, out byte[] data, out HttpResponseMessage response)
+		static bool TryDownloadData (string url, out byte [] data, out HttpResponseMessage response)
 		{
 			HttpClient client;
 			if (static_client is null)
