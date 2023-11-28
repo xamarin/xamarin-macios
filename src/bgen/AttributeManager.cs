@@ -582,9 +582,9 @@ public class AttributeManager {
 			code = 1059;
 			args = new object [] { rv.Length, typeof (T).FullName, $"{mi.DeclaringType?.FullName}.{mi.Name}" };
 			break;
-		case Assembly ass:
+		case Assembly assm:
 			code = 1085;
-			args = new object [] { rv.Length, typeof (T).FullName, $"{ass.FullName}" };
+			args = new object [] { rv.Length, typeof (T).FullName, $"{assm.FullName}" };
 			break;
 		case Module mod:
 			code = 1086;
