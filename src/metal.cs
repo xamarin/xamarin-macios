@@ -3998,16 +3998,32 @@ namespace Metal {
 		[Export ("executeCommandsInBuffer:indirectBuffer:indirectBufferOffset:")]
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandbuffer, IMTLBuffer indirectRangeBuffer, nuint indirectBufferOffset);
 
-		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
-#if NET && (MONOMAC || __MACCATALYST__)
+#if NET
+
+#if MONOMAC || __MACCATALYST__
+		[NoiOS, NoTV, MacCatalyst (15, 0)]
 		[Abstract]
+#else
+		[iOS (16,0), TV (16,0), NoMacCatalyst, NoMac]
+#endif
+
+#else
+		[iOS (16,0), TV (16,0), MacCatalyst (15,0)]
 #endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
 		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
 
-		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
-#if NET && (MONOMAC || __MACCATALYST__)
+#if NET
+
+#if MONOMAC || __MACCATALYST__
+		[NoiOS, NoTV, MacCatalyst (15, 0)]
 		[Abstract]
+#else
+		[iOS (16,0), TV (16,0), NoMacCatalyst, NoMac]
+#endif
+
+#else
+		[iOS (16,0), TV (16,0), MacCatalyst (15,0)]
 #endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
 		void MemoryBarrier (IMTLResource [] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
