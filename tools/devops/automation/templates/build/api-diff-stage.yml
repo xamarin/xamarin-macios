@@ -35,32 +35,13 @@ parameters:
   type: string
 
 jobs:
-
-- ${{ if eq(parameters.pool, 'automatic') }}:
-  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
-      vmImage: ubuntu-latest
-    steps:
-    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-
-    # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-    - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
-      parameters:
-        agentPoolPR: $(PRBuildPool)
-        agentPoolPRUrl: $(PRBuildPoolUrl)
-        agentPoolCI: $(CIBuildPool)
-        agentPoolCIUrl: $(CIBuildPoolUrl)
-
 # Detect changes
 - job: api_diff
-  dependsOn:
-  - ${{ if eq(parameters.pool, 'automatic') }}:
-    - AgentPoolSelector
   displayName: 'Detect API changes'
   timeoutInMinutes: 1000
   variables:
     ${{ if eq(parameters.pool, 'automatic') }}:
-      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
       AgentPoolComputed: $(CIBuildPool)
     ${{ if eq(parameters.pool, 'pr') }}:
