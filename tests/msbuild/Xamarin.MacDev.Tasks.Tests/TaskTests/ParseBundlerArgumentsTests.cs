@@ -227,5 +227,33 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, task.Verbosity, output.ToString ());
 		}
+
+		[TestCase ("--nowarn", "-1")]
+		[TestCase ("--nowarn:123", "123")]
+		[TestCase ("--nowarn:1,2,3", "1,2,3")]
+		[TestCase ("--nowarn:1 --nowarn:2", "1,2")]
+		[TestCase ("/nowarn:1 --nowarn:2", "1,2")]
+		[TestCase ("--nowarn:1 --nowarn", "1,-1")]
+		public void NoWarn (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.NoWarn, output);
+		}
+
+		[TestCase ("--warnaserror", "-1")]
+		[TestCase ("--warnaserror:123", "123")]
+		[TestCase ("--warnaserror:1,2,3", "1,2,3")]
+		[TestCase ("--warnaserror:1 --warnaserror:2", "1,2")]
+		[TestCase ("/warnaserror:1 --warnaserror:2", "1,2")]
+		[TestCase ("--warnaserror:1 --warnaserror", "1,-1")]
+		public void WarnAsError (string input, string output)
+		{
+			var task = CreateTask<CustomParseBundlerArguments> ();
+			task.ExtraArgs = input;
+			Assert.IsTrue (task.Execute (), input);
+			Assert.AreEqual (output, task.WarnAsError, output);
+		}
 	}
 }
