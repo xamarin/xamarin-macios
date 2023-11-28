@@ -4008,7 +4008,7 @@ namespace Metal {
 #endif
 
 #else
-		[iOS (16,0), TV (16,0), MacCatalyst (15,0)]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
 #endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
 		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
@@ -4023,7 +4023,7 @@ namespace Metal {
 #endif
 
 #else
-		[iOS (16,0), TV (16,0), MacCatalyst (15,0)]
+		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
 #endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
 		void MemoryBarrier (IMTLResource [] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
