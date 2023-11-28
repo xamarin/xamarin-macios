@@ -44,9 +44,9 @@ namespace GeneratorTests {
 		public void SetUp ()
 		{
 			testType = typeof (NSAnimationDelegate);
-			var runtimeAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
+			var runtimeAssemblies = Directory.GetFiles (RuntimeEnvironment.GetRuntimeDirectory (), "*.dll");
 			var resolver = new PathAssemblyResolver (runtimeAssemblies);
-			typeCache = new();
+			typeCache = new ();
 			attributeManager = new (typeCache.Object);
 			nomenclator = new (attributeManager.Object);
 		}

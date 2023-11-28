@@ -145,7 +145,7 @@ public class TypeCache {
 #pragma warning disable CS8618
 	public TypeCache () { }
 #pragma warning restore CS8618
-	
+
 	public TypeCache (MetadataLoadContext universe, Frameworks frameworks, PlatformName currentPlatform, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly, bool bindThirdPartyLibrary)
 	{
 		if (frameworks is null)
