@@ -139,6 +139,13 @@ public class TypeCache {
 
 	public IReadOnlyDictionary<Type, string> NSValueCreateMap { get; }
 
+	// this is a hack to get the tests moving fwd. We will need to 
+	// think in the future the api of this cache, we probably don't want
+	// to expose all the properties
+#pragma warning disable CS8618
+	public TypeCache () { }
+#pragma warning restore CS8618
+	
 	public TypeCache (MetadataLoadContext universe, Frameworks frameworks, PlatformName currentPlatform, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly, bool bindThirdPartyLibrary)
 	{
 		if (frameworks is null)
