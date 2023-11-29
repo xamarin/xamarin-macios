@@ -7,7 +7,7 @@ using Xamarin.Utils;
 
 public class LibraryInfo {
 	private LibraryInfo () { }
-	public string attributeDll { get; set; }
+	public string AttributeDll { get; set; }
 	public TargetFramework TargetFramework { get; set; }
 	public string baselibdll { get; set; }
 	public bool nostdlib { get; set; }
@@ -23,7 +23,7 @@ public class LibraryInfo {
 			SetTargetFramework (config.TargetFramework, libraryInfo);
 			libraryInfo.nostdlib =  DetermineOmitStdLibrary (config.OmitStandardLibrary, libraryInfo.TargetFramework.Platform);
 			libraryInfo.baselibdll = DetermineBaseLibDll (libraryInfo.TargetFramework, config.Baselibdll);
-			libraryInfo.attributeDll = config.Attributedll;
+			libraryInfo.AttributeDll = config.Attributedll;
 			AddAndFixReferences (libraryInfo, refs);
 			return libraryInfo;
 		}

@@ -76,7 +76,7 @@ public class BindingTouch : IDisposable {
 
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
-	public LibraryManager LibraryManager { get; } = new LibraryManager ();
+	public LibraryManager LibraryManager => new ();
 
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();

@@ -8,8 +8,8 @@ public class LibraryManager {
 	public List<string> Libraries = new List<string> ();
 	public string GetAttributeLibraryPath (LibraryInfo libraryInfo, PlatformName currentPlatform)
 	{
-		if (!string.IsNullOrEmpty (libraryInfo.attributeDll))
-			return libraryInfo.attributeDll!;
+		if (!string.IsNullOrEmpty (libraryInfo.AttributeDll))
+			return libraryInfo.AttributeDll!;
 
 		if (libraryInfo.IsDotNet)
 			return currentPlatform.GetPath ("lib", "Xamarin.Apple.BindingAttributes.dll");
