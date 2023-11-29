@@ -32,7 +32,7 @@ namespace Xharness.Jenkins.TestTasks {
 			if (!File.Exists (packages_conf)) {
 				var xml = new XmlDocument ();
 				xml.LoadWithoutNetworkAccess (csproj);
-				var packageref = xml.SelectSingleNode ("//*[local-name()='PackageReference' and @Include = 'NUnit.ConsoleRunner']");
+				var packageref = xml.SelectSingleNode ("//*[local-name()='PackageReference' and (@Include = 'NUnit.ConsoleRunner' or @Include = 'NUnit.Runners')]");
 				if (packageref is not null) {
 					isPackageRef = true;
 					version = packageref.Attributes ["Version"].InnerText;
@@ -76,7 +76,11 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 
 			if (is_packageref) {
-				testExecutable = Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
+				if (nunit_version [0] == '2') {
+					testExecutable = Path.Combine (HarnessConfiguration.RootDirectory, "..", "packages", "NUnit.Runners", nunit_version, "tools", "nunit-console.exe");
+				} else {
+					testExecutable = Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", $"nunit3-console-{nunit_version}");
+				}
 				if (!File.Exists (testExecutable))
 					throw new FileNotFoundException ($"The helper script to execute the unit tests does not exist: {testExecutable}");
 				workingDirectory = Path.GetDirectoryName (csproj);
