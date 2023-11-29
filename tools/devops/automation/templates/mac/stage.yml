@@ -40,8 +40,6 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_macos_tests
-  - configure_build
-  condition: and(succeeded(), ne(stageDependencies.configure_build.configure.outputs['decisions.RUN_MAC_TESTS'],''))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
