@@ -58,8 +58,6 @@ public class BindingTouch : IDisposable {
 #endif
 	string compiler = string.Empty;
 	string []? compile_command = null;
-	string? baselibdll;
-	string? attributedll;
 	string compiled_api_definition_assembly = string.Empty;
 	bool noNFloatUsing;
 	List<string> references = new List<string> ();
@@ -86,8 +84,10 @@ public class BindingTouch : IDisposable {
 		get { return ikvm_type_lookup; }
 	}
 
+	public LibraryInfo LibraryInfo;
+
 	public TargetFramework TargetFramework {
-		get { return LibraryManager.TargetFramework; }
+		get { return LibraryInfo.TargetFramework; }
 	}
 
 	public static string ToolName {
@@ -154,8 +154,8 @@ public class BindingTouch : IDisposable {
 			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => config.ExtraSources.Add (v) },
 			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => config.IsExternal = true },
 			{ "p", "Sets private mode", v => config.IsPublicMode = false },
-			{ "baselib=", "Sets the base library", v => baselibdll = v },
-			{ "attributelib=", "Sets the attribute library", v => attributedll = v },
+			{ "baselib=", "Sets the base library", v => config.Baselibdll = v },
+			{ "attributelib=", "Sets the attribute library", v => config.Attributedll = v },
 			{ "use-zero-copy", v=> config.UseZeroCopy = true },
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => config.OmitStandardLibrary = true },
 			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
@@ -181,7 +181,7 @@ public class BindingTouch : IDisposable {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => LibraryManager.SetTargetFramework (v) },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => config.TargetFramework = v },
 			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 					try {
 						if (!string.IsNullOrEmpty (v)) {
@@ -236,7 +236,8 @@ public class BindingTouch : IDisposable {
 			return 0;
 		}
 
-		LibraryManager.SetBaseLibDllAndReferences (references, ref baselibdll, out config.OmitStandardLibrary, out CurrentPlatform);
+		LibraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
+		CurrentPlatform = LibraryManager.DetermineCurrentPlatform (TargetFramework.Platform);
 
 		if (config.Sources.Count > 0) {
 			config.ApiSources.Insert (0, config.Sources [0]);
@@ -262,22 +263,22 @@ public class BindingTouch : IDisposable {
 		var paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
-			var tmpass = GetCompiledApiBindingsAssembly (config.TemporaryFileDirectory, refs, config.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines, paths);
+			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config.TemporaryFileDirectory, refs, LibraryInfo.nostdlib, config.ApiSources, config.CoreSources, config.Defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
-					LibraryManager.GetLibraryDirectories (CurrentPlatform).ToArray (),
+					LibraryManager.GetLibraryDirectories (LibraryInfo, CurrentPlatform).ToArray (),
 					references.ToArray ()),
 				"mscorlib"
 			);
 
-			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (baselibdll, out Assembly? baselib))
+			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (LibraryInfo.baselibdll, out Assembly? baselib))
 				return 1;
 
 			attributeManager ??= new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
-			universe.LoadFromAssemblyPath (LibraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
+			universe.LoadFromAssemblyPath (LibraryManager.GetAttributeLibraryPath (LibraryInfo, CurrentPlatform));
 
 			typeCache ??= new (universe, Frameworks, CurrentPlatform, api, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
 			typeManager ??= new (this);
@@ -334,7 +335,7 @@ public class BindingTouch : IDisposable {
 			namespaceCache ??= new NamespaceCache (
 				CurrentPlatform,
 				config.HelperClassNamespace ?? firstApiDefinitionName,
-				LibraryManager.skipSystemDrawing
+				LibraryManager.DetermineSkipSystemDrawing (LibraryInfo.TargetFramework)
 			);
 
 			var g = new Generator (this, config.IsPublicMode, config.IsExternal, config.IsDebug, types.ToArray (), strong_dictionaries.ToArray ()) {
@@ -367,14 +368,14 @@ public class BindingTouch : IDisposable {
 			cargs.AddRange (config.CoreSources);
 			cargs.AddRange (config.ExtraSources);
 			cargs.AddRange (refs);
-			cargs.Add ("-r:" + baselibdll);
+			cargs.Add ("-r:" + LibraryInfo.baselibdll);
 			cargs.AddRange (config.Resources);
-			if (config.OmitStandardLibrary) {
+			if (LibraryInfo.nostdlib) {
 				cargs.Add ("-nostdlib");
 				cargs.Add ("-noconfig");
 			}
-			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
-				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
+			if (!string.IsNullOrEmpty (Path.GetDirectoryName (LibraryInfo.baselibdll)))
+				cargs.Add ("-lib:" + Path.GetDirectoryName (LibraryInfo.baselibdll));
 
 			AddNFloatUsing (cargs, config.TemporaryFileDirectory);
 
@@ -387,7 +388,7 @@ public class BindingTouch : IDisposable {
 	}
 
 	// If anything is modified in this function, check if the _CompileApiDefinitions MSBuild target needs to be updated as well.
-	string GetCompiledApiBindingsAssembly (string tmpdir, IEnumerable<string> refs, bool nostdlib, List<string> api_sources, List<string> core_sources, List<string> defines, IEnumerable<string> paths)
+	string GetCompiledApiBindingsAssembly (LibraryInfo libraryInfo, string tmpdir, IEnumerable<string> refs, bool nostdlib, List<string> api_sources, List<string> core_sources, List<string> defines, IEnumerable<string> paths)
 	{
 		if (!string.IsNullOrEmpty (compiled_api_definition_assembly))
 			return compiled_api_definition_assembly;
@@ -403,9 +404,9 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-target:library");
 		cargs.Add ("-nowarn:436");
 		cargs.Add ("-out:" + tmpass);
-		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (attributedll, CurrentPlatform));
+		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (libraryInfo, CurrentPlatform));
 		cargs.AddRange (refs);
-		cargs.Add ("-r:" + baselibdll);
+		cargs.Add ("-r:" + libraryInfo.baselibdll);
 		foreach (var def in defines)
 			cargs.Add ("-define:" + def);
 #if NET
@@ -418,8 +419,8 @@ public class BindingTouch : IDisposable {
 		}
 		cargs.AddRange (api_sources);
 		cargs.AddRange (core_sources);
-		if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
-			cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
+		if (!string.IsNullOrEmpty (Path.GetDirectoryName (libraryInfo.baselibdll)))
+			cargs.Add ("-lib:" + Path.GetDirectoryName (libraryInfo.baselibdll));
 
 		AddNFloatUsing (cargs, tmpdir);
 

@@ -1,49 +1,17 @@
 using System.Collections.Generic;
-using System.Linq;
 using ObjCRuntime;
 using Xamarin.Utils;
 
 #nullable enable
 
-public record LibraryInfo (string AttributeDll, bool SkipSystemDrawing) {
-
-	public string AttributeDll { get; } = AttributeDll;
-	public TargetFramework TargetFramework { get; private set; }
-
-	public bool SkipSystemDrawing { get; } = SkipSystemDrawing;
-
-	public static TargetFramework SetTargetFramework (string fx)
-	{
-		TargetFramework tf;
-		if (!TargetFramework.TryParse (fx, out tf))
-			throw ErrorHelper.CreateError (68, fx);
-
-		if (!TargetFramework.IsValidFramework (tf))
-			throw ErrorHelper.CreateError (70, tf,
-				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
-
-		return tf;
-	}
-}
-
 public class LibraryManager {
 	public List<string> Libraries = new List<string> ();
-	public bool skipSystemDrawing = false;
-	TargetFramework? targetFramework;
-
-	public TargetFramework TargetFramework {
-		get { return targetFramework!.Value; }
-	}
-	internal bool IsDotNet {
-		get { return TargetFramework.IsDotNet; }
-	}
-
-	public string GetAttributeLibraryPath (string? attributedll, PlatformName currentPlatform)
+	public string GetAttributeLibraryPath (LibraryInfo libraryInfo, PlatformName currentPlatform)
 	{
-		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll!;
+		if (!string.IsNullOrEmpty (libraryInfo.attributeDll))
+			return libraryInfo.attributeDll!;
 
-		if (IsDotNet)
+		if (libraryInfo.IsDotNet)
 			return currentPlatform.GetPath ("lib", "Xamarin.Apple.BindingAttributes.dll");
 
 		switch (currentPlatform) {
@@ -56,23 +24,23 @@ public class LibraryManager {
 		case PlatformName.MacCatalyst:
 			return currentPlatform.GetPath ("lib", "bgen", "Xamarin.MacCatalyst.BindingAttributes.dll");
 		case PlatformName.MacOSX:
-			if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
+			if (libraryInfo.TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
 				return currentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
+			} else if (libraryInfo.TargetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
 				return currentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
-			} else if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+			} else if (libraryInfo.TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 				return currentPlatform.GetPath ("lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
 			} else {
-				throw ErrorHelper.CreateError (1053, targetFramework);
+				throw ErrorHelper.CreateError (1053, libraryInfo.TargetFramework);
 			}
 		default:
 			throw new BindingException (1047, currentPlatform);
 		}
 	}
 
-	public IEnumerable<string> GetLibraryDirectories (PlatformName currentPlatform)
+	public IEnumerable<string> GetLibraryDirectories (LibraryInfo libraryInfo, PlatformName currentPlatform)
 	{
-		if (!IsDotNet) {
+		if (!libraryInfo.IsDotNet) {
 			switch (currentPlatform) {
 			case PlatformName.iOS:
 				yield return currentPlatform.GetPath ("lib", "mono", "Xamarin.iOS");
@@ -87,16 +55,16 @@ public class LibraryManager {
 				yield return currentPlatform.GetPath ("lib", "mono", "Xamarin.MacCatalyst");
 				break;
 			case PlatformName.MacOSX:
-				if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				if (libraryInfo.TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
 					yield return currentPlatform.GetPath ("lib", "reference", "full");
 					yield return currentPlatform.GetPath ("lib", "mono", "4.5");
-				} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
+				} else if (libraryInfo.TargetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
 					yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
 					yield return currentPlatform.GetPath ("lib", "mono", "4.5");
-				} else if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				} else if (libraryInfo.TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
 					yield return currentPlatform.GetPath ("lib", "mono", "Xamarin.Mac");
 				} else {
-					throw ErrorHelper.CreateError (1053, targetFramework);
+					throw ErrorHelper.CreateError (1053, libraryInfo.TargetFramework);
 				}
 				break;
 			default:
@@ -107,105 +75,26 @@ public class LibraryManager {
 			yield return lib;
 	}
 
-	public void SetTargetFramework (string fx)
+	public static bool DetermineSkipSystemDrawing (TargetFramework targetFramework) =>
+		 targetFramework.Platform is ApplePlatform.MacOSX &&
+		       (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile ||
+		        targetFramework == TargetFramework.Xamarin_Mac_4_5_Full);
+
+	public static PlatformName DetermineCurrentPlatform (ApplePlatform applePlatform)
 	{
-		TargetFramework tf;
-		if (!TargetFramework.TryParse (fx, out tf))
-			throw ErrorHelper.CreateError (68, fx);
-		targetFramework = tf;
-
-		if (!TargetFramework.IsValidFramework (targetFramework.Value))
-			throw ErrorHelper.CreateError (70, targetFramework.Value,
-				string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
-	}
-
-	public void SetBaseLibDllAndReferences (List<string> references, ref string? baselibdll, out bool nostdlib, out PlatformName currentPlatform)
-	{
-		nostdlib = false;
-		if (!targetFramework.HasValue)
-			throw ErrorHelper.CreateError (86);
-
-		switch (targetFramework.Value.Platform) {
+		switch (applePlatform) {
 		case ApplePlatform.iOS:
-			currentPlatform = PlatformName.iOS;
-			nostdlib = true;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = currentPlatform.GetPath ("lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
-			if (!IsDotNet) {
-				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (currentPlatform, "lib/mono/Xamarin.iOS", references);
-			}
-
-			break;
+			return PlatformName.iOS;
 		case ApplePlatform.TVOS:
-			currentPlatform = PlatformName.TvOS;
-			nostdlib = true;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = currentPlatform.GetPath ("lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
-			if (!IsDotNet) {
-				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (currentPlatform, "lib/mono/Xamarin.TVOS", references);
-			}
-
-			break;
+			return PlatformName.TvOS;
 		case ApplePlatform.WatchOS:
-			currentPlatform = PlatformName.WatchOS;
-			nostdlib = true;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = currentPlatform.GetPath ("lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
-			if (!IsDotNet) {
-				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (currentPlatform, "lib/mono/Xamarin.WatchOS", references);
-			}
-
-			break;
+			return PlatformName.WatchOS;
 		case ApplePlatform.MacCatalyst:
-			currentPlatform = PlatformName.MacCatalyst;
-			nostdlib = true;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = currentPlatform.GetPath ("lib/mono/Xamarin.MacCatalyst/Xamarin.MacCatalyst.dll");
-			if (!IsDotNet) {
-				// references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (currentPlatform, "lib/mono/Xamarin.MacCatalyst", references);
-			}
-
-			break;
+			return PlatformName.MacCatalyst;
 		case ApplePlatform.MacOSX:
-			currentPlatform = PlatformName.MacOSX;
-			nostdlib = true;
-			if (string.IsNullOrEmpty (baselibdll)) {
-				if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile)
-					baselibdll = currentPlatform.GetPath ("lib", "reference", "mobile", "Xamarin.Mac.dll");
-				else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full ||
-						 targetFramework == TargetFramework.Xamarin_Mac_4_5_System)
-					baselibdll = currentPlatform.GetPath ("lib", "reference", "full", "Xamarin.Mac.dll");
-				else if (targetFramework == TargetFramework.DotNet_macOS)
-					baselibdll = currentPlatform.GetPath ("lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
-				else
-					throw ErrorHelper.CreateError (1053, targetFramework);
-			}
-
-			if (targetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
-				skipSystemDrawing = true;
-				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (currentPlatform, "lib/mono/Xamarin.Mac", references);
-			} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_Full) {
-				skipSystemDrawing = true;
-				references.Add ("Facades/System.Drawing.Common");
-				ReferenceFixer.FixSDKReferences (currentPlatform, "lib/mono/4.5", references);
-			} else if (targetFramework == TargetFramework.Xamarin_Mac_4_5_System) {
-				skipSystemDrawing = false;
-				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5",
-					references, forceSystemDrawing: true);
-			} else if (targetFramework == TargetFramework.DotNet_macOS) {
-				skipSystemDrawing = false;
-			} else {
-				throw ErrorHelper.CreateError (1053, targetFramework);
-			}
-
-			break;
+			return PlatformName.MacOSX;
 		default:
-			throw ErrorHelper.CreateError (1053, targetFramework);
+			return PlatformName.None;
 		}
 	}
 }

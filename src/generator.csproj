@@ -159,6 +159,7 @@
     <Compile Include="bgen\Extensions\TypeExtensions.cs" />
     <Compile Include="bgen\Models\AsyncMethodInfo.cs" />
     <Compile Include="bgen\Models\BindingTouchConfig.cs" />
+    <Compile Include="bgen\Models\LibraryInfo.cs" />
     <Compile Include="bgen\Models\MarshalInfo.cs" />
     <Compile Include="bgen\Models\MarshalType.cs" />
     <Compile Include="bgen\Models\MarshalTypeList.cs" />
