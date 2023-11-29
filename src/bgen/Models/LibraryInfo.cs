@@ -7,9 +7,9 @@ using Xamarin.Utils;
 
 public class LibraryInfo {
 	private LibraryInfo () { }
-	public string AttributeDll { get; set; }
+	public string? AttributeDll { get; set; }
 	public TargetFramework TargetFramework { get; set; }
-	public string BaseLibDll { get; set; }
+	public string? BaseLibDll { get; set; }
 	public bool OmitStandardLibrary { get; set; }
 
 	public bool IsDotNet {

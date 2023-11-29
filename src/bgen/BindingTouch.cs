@@ -84,7 +84,8 @@ public class BindingTouch : IDisposable {
 		get { return ikvm_type_lookup; }
 	}
 
-	public LibraryInfo LibraryInfo;
+	LibraryInfo? libraryInfo;
+	public LibraryInfo LibraryInfo => libraryInfo!;
 
 	public TargetFramework TargetFramework {
 		get { return LibraryInfo.TargetFramework; }
@@ -236,7 +237,7 @@ public class BindingTouch : IDisposable {
 			return 0;
 		}
 
-		LibraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
+		libraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
 		CurrentPlatform = LibraryManager.DetermineCurrentPlatform (TargetFramework.Platform);
 
 		if (config.Sources.Count > 0) {
