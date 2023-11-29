@@ -82,6 +82,7 @@ namespace Xamarin.MacDev.Tasks {
 			public bool Required;
 			public bool IsSimulator;
 			public bool? CodesignRequireProvisioningProfile;
+			public bool? RequireCodeSigning;
 
 			public override string ToString ()
 			{
@@ -93,13 +94,22 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			return new EntitlementTestCase []
 			{
-				new EntitlementTestCase { Name = nameof (EmptyEntitlements1), Entitlements = EmptyEntitlements1, Required = false, IsSimulator = true },
-				new EntitlementTestCase { Name = nameof (EmptyEntitlements2), Entitlements = EmptyEntitlements2, Required = false, IsSimulator = true },
-				new EntitlementTestCase { Name = nameof (EmptyEntitlements3), Entitlements = EmptyEntitlements3, Required = false, IsSimulator = true },
-				new EntitlementTestCase { Name = nameof (EmptyEntitlements4), Entitlements = EmptyEntitlements4, Required = false, IsSimulator = true },
-				new EntitlementTestCase { Name = nameof (NonEmptyEntitlements1), Entitlements = NonEmptyEntitlements1, Required = true, IsSimulator = true },
-				new EntitlementTestCase { Name = nameof (EmptyEntitlements1) + "_Required", Entitlements = EmptyEntitlements1, Required = true, IsSimulator = true, CodesignRequireProvisioningProfile = true },
-				new EntitlementTestCase { Name = nameof (NonEmptyEntitlements1) + "_NotRequired", Entitlements = NonEmptyEntitlements1, Required = false, IsSimulator = true, CodesignRequireProvisioningProfile = false },
+				// simulator
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements1), Entitlements = EmptyEntitlements1, IsSimulator = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements2), Entitlements = EmptyEntitlements2, IsSimulator = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements3), Entitlements = EmptyEntitlements3, IsSimulator = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements4), Entitlements = EmptyEntitlements4, IsSimulator = true },
+				new EntitlementTestCase { Name = nameof (NonEmptyEntitlements1), Entitlements = NonEmptyEntitlements1, IsSimulator = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements1) + "_Required", Entitlements = EmptyEntitlements1, IsSimulator = true, CodesignRequireProvisioningProfile = true },
+				new EntitlementTestCase { Name = nameof (NonEmptyEntitlements1) + "_NotRequired", Entitlements = NonEmptyEntitlements1, IsSimulator = true, CodesignRequireProvisioningProfile = false },
+				// device
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements1) + "_Device", Entitlements = EmptyEntitlements1, IsSimulator = false, RequireCodeSigning = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements2) + "_Device", Entitlements = EmptyEntitlements2, IsSimulator = false, RequireCodeSigning = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements3) + "_Device", Entitlements = EmptyEntitlements3, IsSimulator = false, RequireCodeSigning = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements4) + "_Device", Entitlements = EmptyEntitlements4, IsSimulator = false, RequireCodeSigning = true },
+				new EntitlementTestCase { Name = nameof (NonEmptyEntitlements1) + "_Device", Entitlements = NonEmptyEntitlements1, IsSimulator = false, RequireCodeSigning = true },
+				new EntitlementTestCase { Name = nameof (EmptyEntitlements1) + "_Required_Device", Entitlements = EmptyEntitlements1, IsSimulator = false, CodesignRequireProvisioningProfile = true, RequireCodeSigning = true },
+				new EntitlementTestCase { Name = nameof (NonEmptyEntitlements1) + "_NotRequired_Device", Entitlements = NonEmptyEntitlements1, IsSimulator = false, CodesignRequireProvisioningProfile = false, RequireCodeSigning = true },
 			};
 		}
 
@@ -112,23 +122,35 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (entitlementsPath, testCase.Entitlements);
 
 			var task = CreateTask (dir, simulator: testCase.IsSimulator);
+			task.BundleIdentifier = "com.tests.emptyentitlements";
 			task.CodesignEntitlements = new TaskItem (entitlementsPath);
 			task.SdkIsSimulator = testCase.IsSimulator;
 			if (testCase.CodesignRequireProvisioningProfile.HasValue)
 				task.CodesignRequireProvisioningProfile = testCase.CodesignRequireProvisioningProfile.Value.ToString ();
+			if (testCase.RequireCodeSigning.HasValue)
+				task.RequireCodeSigning = testCase.RequireCodeSigning.Value;
 
 			ExecuteTask (task);
 
-			if (testCase.Required) {
-				Assert.That (task.DetectedAppId, Is.Not.Null.And.Not.Empty, "DetectedAppId");
+			if (testCase.IsSimulator) {
+				Assert.AreEqual ("com.tests.emptyentitlements", task.DetectedAppId, "DetectedAppId");
 				Assert.AreEqual ("-", task.DetectedCodeSigningKey, "DetectedCodeSigningKey");
-				Assert.That (task.DetectedDistributionType, Is.EqualTo ("Development").Or.EqualTo ("AppStore"), "DetectedDistributionType");
-				Assert.That (task.DetectedProvisioningProfile, Is.Not.Null.And.Not.Empty, "DetectedProvisioningProfile");
+				Assert.That (task.DetectedDistributionType, Is.EqualTo ("Any"), "DetectedDistributionType");
+				Assert.That (task.DetectedProvisioningProfile, Is.Null, "DetectedProvisioningProfile");
 			} else {
-				Assert.IsNull (task.DetectedAppId, "DetectedAppId");
-				Assert.IsNull (task.DetectedCodeSigningKey, "DetectedCodeSigningKey");
-				Assert.AreEqual ("Any", task.DetectedDistributionType, "DetectedDistributionType");
-				Assert.IsNull (task.DetectedProvisioningProfile, "DetectedProvisioningProfile");
+				if (testCase.CodesignRequireProvisioningProfile != false) {
+					Assert.That (task.DetectedAppId, Does.EndWith (".com.tests.emptyentitlements"), "DetectedAppId");
+				} else {
+					Assert.AreEqual ("com.tests.emptyentitlements", task.DetectedAppId, "DetectedAppId");
+				}
+				Assert.That (task.DetectedCodeSigningKey, Has.Length.EqualTo ("20D63576DE3EA7BE419C18997CF948D759B43D53".Length), "DetectedCodeSigningKey");
+				if (testCase.CodesignRequireProvisioningProfile != false) {
+					Assert.That (task.DetectedDistributionType, Is.EqualTo ("Development").Or.EqualTo ("AppStore").Or.EqualTo ("Any"), "DetectedDistributionType");
+					Assert.That (task.DetectedProvisioningProfile, Is.Not.Null.And.Not.Empty, "DetectedProvisioningProfile");
+				} else {
+					Assert.That (task.DetectedDistributionType, Is.EqualTo ("Any"), "DetectedDistributionType");
+					Assert.That (task.DetectedProvisioningProfile, Is.Null, "DetectedProvisioningProfile");
+				}
 			}
 			Assert.AreEqual ($"{Xamarin.Tests.Configuration.XcodeLocation}/Toolchains/XcodeDefault.xctoolchain/usr/bin/codesign_allocate", task.DetectedCodesignAllocate, "DetectedCodesignAllocate");
 		}
