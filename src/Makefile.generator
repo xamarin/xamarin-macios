@@ -20,6 +20,13 @@ $(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(B
 	$(Q) printf 'exec $(DOTNET) "$$(dirname "$$0")"/bgen.dll $$@\n' > $@
 	$(Q) chmod +x $@
 
+# Serialize the building of the legacy bgen and the .NET version, because they can both try to restore the same NuGet package at the same time, and that runs into race conditions
+# This is done by adding a dependency from the legacy bgen to the .NET bgen, so the legacy bgen doesn't start building until the .NET one is done.
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef ENABLE_DOTNET
+$(BUILD_DIR)/common/bgen.exe: $(DOTNET_BUILD_DIR)/bgen/bgen
+endif
+endif
 
 define BGenTargets
 $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen

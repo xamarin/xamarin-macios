@@ -8,6 +8,9 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Threading = System.Threading.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class XamarinBuildTask : XamarinTask, ITaskCallback, ICancelableTask {
 		public bool KeepTemporaryOutput { get; set; }
