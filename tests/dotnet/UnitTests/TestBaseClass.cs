@@ -422,7 +422,7 @@ namespace Xamarin.Tests {
 			Assert.Fail ($"Expected {count} errors, got {errors.Count} errors: {message}.\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
 		}
 
-		public static void AssertErrorMessages (IList<BuildLogEvent> errors, params string[] errorMessages)
+		public static void AssertErrorMessages (IList<BuildLogEvent> errors, params string [] errorMessages)
 		{
 			if (errors.Count != errorMessages.Length) {
 				Assert.Fail ($"Expected {errorMessages.Length} errors, got {errors.Count} errors:\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
