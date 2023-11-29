@@ -17,9 +17,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Mono.CompilerServices.SymbolWriter" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
+    <PackageReference Include="NUnit" Version="2.6.4" />
+    <PackageReference Include="NUnit.Runners" Version="2.6.4" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
