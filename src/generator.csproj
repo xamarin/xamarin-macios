@@ -157,6 +157,7 @@
     <Compile Include="bgen\Extensions\PlatformNameExtensions.cs" />
     <Compile Include="bgen\Extensions\StringExtensions.cs" />
     <Compile Include="bgen\Extensions\TypeExtensions.cs" />
+    <Compile Include="bgen\Models\Api.cs" />
     <Compile Include="bgen\Models\AsyncMethodInfo.cs" />
     <Compile Include="bgen\Models\BindingTouchConfig.cs" />
     <Compile Include="bgen\Models\LibraryInfo.cs" />

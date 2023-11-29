@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Utils;
+using PathUtils = Xamarin.Utils.PathUtils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
