@@ -1,11 +1,15 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class ComputeBundleResourceOutputPathsTaskBase : XamarinTask {

@@ -4,6 +4,9 @@ using System.IO;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class OptimizeImageTaskBase : XamarinToolTask {
 		ITaskItem inputImage;

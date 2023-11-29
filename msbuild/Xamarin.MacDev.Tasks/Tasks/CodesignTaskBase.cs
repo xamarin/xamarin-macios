@@ -1,3 +1,4 @@
+
 using System;
 using System.IO;
 using System.Linq;
@@ -9,10 +10,14 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System.Collections.Generic;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CodesignTaskBase : XamarinTask {
+	public class Codesign : XamarinTask, ITaskCallback, ICancelableTask {
 		const string ToolName = "codesign";
 		const string MacOSDirName = "MacOS";
 		const string CodeSignatureDirName = "_CodeSignature";
@@ -263,7 +268,7 @@ namespace Xamarin.MacDev.Tasks {
 			return args;
 		}
 
-		void Codesign (SignInfo info)
+		void Sign (SignInfo info)
 		{
 			var item = info.Item;
 			var fileName = GetFullPathToTool ();
@@ -345,6 +350,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			try {
 				return ExecuteUnsafe ();
 			} catch (Exception e) {
@@ -461,7 +469,7 @@ namespace Xamarin.MacDev.Tasks {
 			for (var b = 0; b < buckets.Count; b++) {
 				var bucket = buckets [b];
 				Parallel.ForEach (bucket, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
-					Codesign (item);
+					Sign (item);
 
 					var files = GetCodesignedFiles (item.Item);
 					lock (codesignedFiles)
@@ -542,17 +550,29 @@ namespace Xamarin.MacDev.Tasks {
 			public ITaskItem Item;
 
 			IList<string> arguments;
-			public IList<string> GetCommandLineArguments (CodesignTaskBase task)
+			public IList<string> GetCommandLineArguments (Codesign task)
 			{
 				if (arguments is null)
 					arguments = task.GenerateCommandLineArguments (Item);
 				return arguments;
 			}
 
-			public string GetStampFileContents (CodesignTaskBase task)
+			public string GetStampFileContents (Codesign task)
 			{
 				return string.Join (" ", GetCommandLineArguments (task));
 			}
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

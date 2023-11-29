@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<!-- Disables the transitive restore of packages like Microsoft.AspNetCore.App.Ref, Microsoft.WindowsDesktop.App.Ref -->
 		<DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
+		<MSBuildStructuredLoggerPackageVersion>2.2.100</MSBuildStructuredLoggerPackageVersion>
 	</PropertyGroup>
 	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>

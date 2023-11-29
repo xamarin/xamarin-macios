@@ -8,6 +8,9 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	// A class to express what's shared/common between mtouch and mmp.
 	public abstract class BundlerToolTaskBase : XamarinToolTask {

@@ -1091,7 +1091,7 @@ JAVASCRIPTCORE_SOURCES = \
 # LocalAuthentication
 
 LOCALAUTHENTICATION_API_SOURCES = \
-	Localauthentication/LAEnums.cs \
+	LocalAuthentication/LAEnums.cs \
 
 # MapKit
 
@@ -1263,6 +1263,7 @@ MODELIO_SOURCES = \
 	ModelIO/MDLAnimatedQuaternion.cs \
 	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLMaterial.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
 	ModelIO/MDLTransformComponent.cs \

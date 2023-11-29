@@ -7,6 +7,9 @@ using Microsoft.Build.Utilities;
 using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.iOS.Windows;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.HotRestart.Tasks {
 	public class CodesignHotRestartApp : Task, ICancelableTask {
 		#region Inputs

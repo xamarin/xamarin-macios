@@ -37,6 +37,8 @@ using ObjCRuntime;
 
 using Xamarin.Utils;
 
+using NUnit.Framework;
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -1633,6 +1635,20 @@ partial class TestRuntime {
 		var valuePtr = Marshal.StringToHGlobalUni (value);
 		xamarin_log (valuePtr);
 		Marshal.FreeHGlobal (valuePtr);
+	}
+
+	public static void AssertNoNonNUnitException (Exception ex, string message)
+	{
+		switch (ex) {
+		case SuccessException: throw new SuccessException (ex.Message, ex);
+		case IgnoreException: throw new IgnoreException (ex.Message, ex);
+		case AssertionException: throw new AssertionException (ex.Message, ex);
+		case InconclusiveException: throw new InconclusiveException (ex.Message, ex);
+		case ResultStateException: throw ex;
+		default:
+			Assert.IsNull (ex, message);
+			break;
+		}
 	}
 }
 
