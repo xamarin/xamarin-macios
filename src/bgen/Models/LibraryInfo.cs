@@ -9,8 +9,8 @@ public class LibraryInfo {
 	private LibraryInfo () { }
 	public string AttributeDll { get; set; }
 	public TargetFramework TargetFramework { get; set; }
-	public string baselibdll { get; set; }
-	public bool nostdlib { get; set; }
+	public string BaseLibDll { get; set; }
+	public bool OmitStandardLibrary { get; set; }
 
 	public bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
@@ -21,8 +21,8 @@ public class LibraryInfo {
 		{
 			LibraryInfo libraryInfo = new();
 			SetTargetFramework (config.TargetFramework, libraryInfo);
-			libraryInfo.nostdlib =  DetermineOmitStdLibrary (config.OmitStandardLibrary, libraryInfo.TargetFramework.Platform);
-			libraryInfo.baselibdll = DetermineBaseLibDll (libraryInfo.TargetFramework, config.Baselibdll);
+			libraryInfo.OmitStandardLibrary =  DetermineOmitStdLibrary (config.OmitStandardLibrary, libraryInfo.TargetFramework.Platform);
+			libraryInfo.BaseLibDll = DetermineBaseLibDll (libraryInfo.TargetFramework, config.Baselibdll);
 			libraryInfo.AttributeDll = config.Attributedll;
 			AddAndFixReferences (libraryInfo, refs);
 			return libraryInfo;

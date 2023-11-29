@@ -263,7 +263,7 @@ public class BindingTouch : IDisposable {
 		var paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
-			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config.TemporaryFileDirectory, refs, LibraryInfo.nostdlib, config.ApiSources, config.CoreSources, config.Defines, paths);
+			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config.TemporaryFileDirectory, refs, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
 					LibraryManager.GetLibraryDirectories (LibraryInfo, CurrentPlatform).ToArray (),
@@ -271,7 +271,7 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (LibraryInfo.baselibdll, out Assembly? baselib))
+			if (!TryLoadApi (tmpass, out Assembly? api) || !TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
 				return 1;
 
 			attributeManager ??= new AttributeManager (this);
@@ -368,14 +368,14 @@ public class BindingTouch : IDisposable {
 			cargs.AddRange (config.CoreSources);
 			cargs.AddRange (config.ExtraSources);
 			cargs.AddRange (refs);
-			cargs.Add ("-r:" + LibraryInfo.baselibdll);
+			cargs.Add ("-r:" + LibraryInfo.BaseLibDll);
 			cargs.AddRange (config.Resources);
-			if (LibraryInfo.nostdlib) {
+			if (LibraryInfo.OmitStandardLibrary) {
 				cargs.Add ("-nostdlib");
 				cargs.Add ("-noconfig");
 			}
-			if (!string.IsNullOrEmpty (Path.GetDirectoryName (LibraryInfo.baselibdll)))
-				cargs.Add ("-lib:" + Path.GetDirectoryName (LibraryInfo.baselibdll));
+			if (!string.IsNullOrEmpty (Path.GetDirectoryName (LibraryInfo.BaseLibDll)))
+				cargs.Add ("-lib:" + Path.GetDirectoryName (LibraryInfo.BaseLibDll));
 
 			AddNFloatUsing (cargs, config.TemporaryFileDirectory);
 
@@ -406,7 +406,7 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-out:" + tmpass);
 		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (libraryInfo, CurrentPlatform));
 		cargs.AddRange (refs);
-		cargs.Add ("-r:" + libraryInfo.baselibdll);
+		cargs.Add ("-r:" + libraryInfo.BaseLibDll);
 		foreach (var def in defines)
 			cargs.Add ("-define:" + def);
 #if NET
@@ -419,8 +419,8 @@ public class BindingTouch : IDisposable {
 		}
 		cargs.AddRange (api_sources);
 		cargs.AddRange (core_sources);
-		if (!string.IsNullOrEmpty (Path.GetDirectoryName (libraryInfo.baselibdll)))
-			cargs.Add ("-lib:" + Path.GetDirectoryName (libraryInfo.baselibdll));
+		if (!string.IsNullOrEmpty (Path.GetDirectoryName (libraryInfo.BaseLibDll)))
+			cargs.Add ("-lib:" + Path.GetDirectoryName (libraryInfo.BaseLibDll));
 
 		AddNFloatUsing (cargs, tmpdir);
 
