@@ -28,10 +28,10 @@ namespace Metal {
 		MTLIOCompressionContext (NativeHandle handle, bool owns) : base (handle, owns) { }
 
 		[DllImport (Constants.MetalLibrary)]
-		static extern unsafe void MTLIOCompressionContextAppendData (void* context, void* data, nuint size);
+		static extern unsafe void MTLIOCompressionContextAppendData (IntPtr context, void* data, nuint size);
 
 		unsafe void AppendData (void* data, nuint size)
-			=> MTLIOCompressionContextAppendData ((void*) GetCheckedHandle (), data, size);
+			=> MTLIOCompressionContextAppendData (GetCheckedHandle (), data, size);
 
 		public void AppendData (byte [] data)
 		{
@@ -79,10 +79,10 @@ namespace Metal {
 		protected override void Dispose (bool disposing)
 		{
 			// only call the parent if the user did not call FlushAndDestroy
-			if (disposing && Handle != NativeHandle.Zero && Owns) {
+			if (Handle != NativeHandle.Zero && Owns) {
 				FlushAndDestroy ();
 			}
-			base.Dispose (false);
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.MetalLibrary)]
@@ -92,6 +92,7 @@ namespace Metal {
 		{
 			var result = (MTLIOCompressionStatus) MTLIOFlushAndDestroyCompressionContext (GetCheckedHandle ());
 
+			// clear the handle no matter what so that we do not try to call the flush a second time in the Dipose.
 			ClearHandle ();
 			return result;
 		}
