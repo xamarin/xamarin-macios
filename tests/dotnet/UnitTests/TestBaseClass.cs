@@ -414,5 +414,31 @@ namespace Xamarin.Tests {
 			entitlements = null;
 			return false;
 		}
+
+		public static void AssertErrorCount (IList<BuildLogEvent> errors, int count, string message)
+		{
+			if (errors.Count == count)
+				return;
+			Assert.Fail ($"Expected {count} errors, got {errors.Count} errors: {message}.\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
+		}
+
+		public static void AssertErrorMessages (IList<BuildLogEvent> errors, params string[] errorMessages)
+		{
+			if (errors.Count != errorMessages.Length) {
+				Assert.Fail ($"Expected {errorMessages.Length} errors, got {errors.Count} errors:\n\t{string.Join ("\n\t", errors.Select (v => v.Message?.TrimEnd ()))}");
+				return;
+			}
+
+			var failures = new List<string> ();
+			for (var i = 0; i < errorMessages.Length; i++) {
+				if (errors [i].Message != errorMessages [i]) {
+					failures.Add ($"\tUnexpected error message #{i}:\n\t\tExpected: {errorMessages [i]}\n\t\tActual: {errors [i].Message?.TrimEnd ()}");
+				}
+			}
+			if (!failures.Any ())
+				return;
+
+			Assert.Fail ($"Failure when comparing error messages:\n{string.Join ("\n", failures)}\n\tAll errors:\n\t\t{string.Join ("\n\t\t", errors.Select (v => v.Message?.TrimEnd ()))}");
+		}
 	}
 }
