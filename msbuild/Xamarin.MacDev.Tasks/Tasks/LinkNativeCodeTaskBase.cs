@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 
@@ -164,6 +165,8 @@ namespace Xamarin.MacDev.Tasks {
 					}
 				}
 			}
+
+			hasDylibs |= NativeReferences.Any (v => string.Equals (".dylib", Path.GetExtension (v.ItemSpec), StringComparison.OrdinalIgnoreCase));
 
 			if (hasDylibs) {
 				arguments.Add ("-rpath");
