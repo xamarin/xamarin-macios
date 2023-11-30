@@ -1,0 +1,5 @@
+!missing-field! SCStreamFrameInfoPresenterOverlayContentRect not bound
+!missing-selector! SCContentFilter::includeMenuBar not bound
+!missing-selector! SCContentFilter::setIncludeMenuBar: not bound
+!missing-selector! SCStreamConfiguration::includeChildWindows not bound
+!missing-selector! SCStreamConfiguration::setIncludeChildWindows: not bound

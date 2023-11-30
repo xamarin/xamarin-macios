@@ -14,12 +14,12 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "15.0";
-		public const string OSX = "14.0";
-		public const string iOS = "17.0";
-		public const string WatchOS = "10.0";
-		public const string TVOS = "17.0";
-		public const string MacCatalyst = "17.0";
+		public const string Xcode = "15.1";
+		public const string OSX = "14.2";
+		public const string iOS = "17.2";
+		public const string WatchOS = "10.2";
+		public const string TVOS = "17.2";
+		public const string MacCatalyst = "17.2";
 
 #if NET
 		public const string MinOSX = "10.15";
@@ -40,14 +40,14 @@ namespace Xamarin {
 		public const string MinWatchOSCompanionSimulator = "14.5";
 		public const string MinTVOSSimulator = "14.0";
 
-		public const string MaxiOSSimulator = "17.0";
-		public const string MaxWatchOSSimulator = "10.0";
-		public const string MaxWatchOSCompanionSimulator = "17.0";
-		public const string MaxTVOSSimulator = "17.0";
+		public const string MaxiOSSimulator = "17.2";
+		public const string MaxWatchOSSimulator = "10.2";
+		public const string MaxWatchOSCompanionSimulator = "17.2";
+		public const string MaxTVOSSimulator = "17.2";
 
-		public const string MaxiOSDeploymentTarget = "17.0";
-		public const string MaxWatchDeploymentTarget = "10.0";
-		public const string MaxTVOSDeploymentTarget = "17.0";
+		public const string MaxiOSDeploymentTarget = "17.2";
+		public const string MaxWatchDeploymentTarget = "10.2";
+		public const string MaxTVOSDeploymentTarget = "17.2";
 
 		public const string DefaultTargetPlatformVersioniOS = "17.0";
 		public const string DefaultTargetPlatformVersiontvOS = "17.0";
