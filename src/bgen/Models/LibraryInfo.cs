@@ -19,9 +19,9 @@ public class LibraryInfo {
 	public static class LibraryInfoBuilder {
 		public static LibraryInfo Build (List<string> refs, BindingTouchConfig config)
 		{
-			LibraryInfo libraryInfo = new();
+			LibraryInfo libraryInfo = new ();
 			SetTargetFramework (config.TargetFramework, libraryInfo);
-			libraryInfo.OmitStandardLibrary =  DetermineOmitStdLibrary (config.OmitStandardLibrary, libraryInfo.TargetFramework.Platform);
+			libraryInfo.OmitStandardLibrary = DetermineOmitStdLibrary (config.OmitStandardLibrary, libraryInfo.TargetFramework.Platform);
 			libraryInfo.BaseLibDll = DetermineBaseLibDll (libraryInfo.TargetFramework, config.Baselibdll);
 			libraryInfo.AttributeDll = config.Attributedll;
 			AddAndFixReferences (libraryInfo, refs);
@@ -43,10 +43,10 @@ public class LibraryInfo {
 			libraryInfo.TargetFramework = tf;
 		}
 
-		static bool DetermineOmitStdLibrary(bool? omitStandardLibary, ApplePlatform currentPlatform)
+		static bool DetermineOmitStdLibrary (bool? omitStandardLibary, ApplePlatform currentPlatform)
 		{
 			if (omitStandardLibary is not null)
-				return (bool)omitStandardLibary;
+				return (bool) omitStandardLibary;
 
 			switch (currentPlatform) {
 			case ApplePlatform.iOS:
@@ -79,7 +79,7 @@ public class LibraryInfo {
 				if (TargetFramework == TargetFramework.Xamarin_Mac_2_0_Mobile)
 					return currentPlatform.GetPath ("lib", "reference", "mobile", "Xamarin.Mac.dll");
 				if (TargetFramework == TargetFramework.Xamarin_Mac_4_5_Full ||
-				    TargetFramework == TargetFramework.Xamarin_Mac_4_5_System)
+					TargetFramework == TargetFramework.Xamarin_Mac_4_5_System)
 					return currentPlatform.GetPath ("lib", "reference", "full", "Xamarin.Mac.dll");
 				if (TargetFramework == TargetFramework.DotNet_macOS)
 					return currentPlatform.GetPath ("lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
