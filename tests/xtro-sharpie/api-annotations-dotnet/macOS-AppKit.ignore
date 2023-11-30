@@ -1140,10 +1140,6 @@
 !extra-enum-value! Managed value 2 for NSTickMarkPosition.Leading not found in native headers
 !extra-enum-value! Managed value 3 for NSTickMarkPosition.Trailing not found in native headers
 
-# bound as `const` not enums
-!extra-enum-value! Managed value 3 for NSBezelStyle.ThickSquare not found in native headers
-!extra-enum-value! Managed value 4 for NSBezelStyle.ThickerSquare not found in native headers
-
 ## NSUserInterfaceItemIdentifier -> NS_TYPED_EXTENSIBLE_ENUM
 !missing-field! NSOutlineViewDisclosureButtonKey not bound
 !missing-field! NSOutlineViewShowHideButtonKey not bound
