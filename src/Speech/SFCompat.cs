@@ -12,16 +12,16 @@ using NativeHandle = System.IntPtr;
 namespace Speech {
 
 	[Obsolete (Constants.ApiRemovedGeneral)]
-	public unsafe partial class SFAnalysisContextTag  {
+	public unsafe partial class SFAnalysisContextTag {
 
 		[Obsolete (Constants.ApiRemovedGeneral)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static NSString LeftContext => throw new PlatformNotSupportedException (Constants.ApiRemovedGeneral);
-		
+
 		[Obsolete (Constants.ApiRemovedGeneral)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static NSString RightContext => throw new PlatformNotSupportedException (Constants.ApiRemovedGeneral);
-		
+
 		[Obsolete (Constants.ApiRemovedGeneral)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static NSString SelectedText => throw new PlatformNotSupportedException (Constants.ApiRemovedGeneral);
