@@ -640,6 +640,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
 					{ "OSLog", "OSLog", 15,0 },
+					{ "CoreMidi", "CoreMIDI", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 					{ "SharedWithYou", "SharedWithYou", 16,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },

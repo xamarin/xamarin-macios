@@ -359,6 +359,7 @@ partial class Frameworks {
 		"CoreImage",
 		"CoreLocation",
 		"CoreMedia",
+		"CoreMidi",
 		"CoreML",
 		"CoreSpotlight",
 		"CoreText",

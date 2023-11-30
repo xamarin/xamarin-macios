@@ -1,3 +1,4 @@
+#if !TVOS
 // 
 // MidiThruConnection.cs
 //
@@ -184,3 +185,4 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
+#endif

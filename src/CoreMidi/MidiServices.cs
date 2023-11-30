@@ -1,3 +1,4 @@
+#if !TVOS
 //
 // MidiServices.cs: Implementation of the MidiObject base class and its derivates
 //
@@ -2574,3 +2575,4 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 }
+#endif
