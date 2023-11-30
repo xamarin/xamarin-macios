@@ -174,6 +174,37 @@ namespace LinkAll.Attributes {
 			Assert.IsNull (typeof (NSObject).Assembly.GetType ("AVFoundation.AVMediaTypes"), "AVMediaTypes");
 			Assert.IsNull (typeof (NSObject).Assembly.GetType ("AVFoundation.AVMediaTypesExtensions"), "AVMediaTypesExtensions");
 		}
+
+		[Test]
+		public void PreserveAllExcludesNestedTypes ()
+		{
+			var parentClass = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass" + WorkAroundLinkerHeuristics);
+			Assert.NotNull (parentClass, "ParentClass");
+			var nestedEnum = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass.NestedEnum" + WorkAroundLinkerHeuristics);
+			Assert.Null (nestedEnum, "NestedEnum");
+			var nestedStruct = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass.NestedStruct" + WorkAroundLinkerHeuristics);
+			Assert.Null (nestedStruct, "NestedStruct");
+			var nestedClass = GetType ().Assembly.GetType ("LinkAll.Attributes.ParentClass.NestedClass" + WorkAroundLinkerHeuristics);
+			Assert.Null (nestedClass, "NestedClass");
+		}
+
+		[Test]
+		public void PreserveAllKeepsEnumValues ()
+		{
+			var enumType = GetType ().Assembly.GetType ("LinkAll.Attributes.MyEnum" + WorkAroundLinkerHeuristics);
+			Assert.NotNull (enumType, "MyEnum");
+			Assert.AreEqual (3, enumType.GetFields (BindingFlags.Public | BindingFlags.Static).Length, "fields");
+			AssertHasStaticField ("A", 1);
+			AssertHasStaticField ("B", 2);
+			AssertHasStaticField ("C", 4);
+
+			void AssertHasStaticField (string name, int value)
+			{
+				var field = enumType.GetField (name, BindingFlags.Public | BindingFlags.Static);
+				Assert.NotNull (field, name);
+				Assert.AreEqual (value, (int) field.GetValue (null), $"{name} == {value}");
+			}
+		}
 	}
 
 	[Preserve (AllMembers = true)]
@@ -208,4 +239,13 @@ namespace LinkAll.Attributes {
 		}
 	}
 
+	[Preserve (AllMembers = true)]
+	public class ParentClass {
+		public enum NestedEnum { A, B };
+		public class NestedClass { }
+		public struct NestedStruct { }
+	}
+
+	[Preserve (AllMembers = true)]
+	public enum MyEnum { A = 1, B = 2, C = 4 }
 }
