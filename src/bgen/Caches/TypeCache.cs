@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using ObjCRuntime;
@@ -135,6 +136,8 @@ public class TypeCache {
 	public Type? UIEdgeInsets { get; }
 	public Type? NSDirectionalEdgeInsets { get; }
 
+	public IReadOnlyDictionary<Type, string> NSValueCreateMap { get; }
+
 	public TypeCache (MetadataLoadContext universe, Frameworks frameworks, PlatformName currentPlatform, Assembly apiAssembly, Assembly corlibAssembly, Assembly platformAssembly, bool bindThirdPartyLibrary)
 	{
 		if (frameworks is null)
@@ -266,7 +269,7 @@ public class TypeCache {
 			CVPixelBuffer = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBuffer");
 			CVPixelBufferPool = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBufferPool");
 		}
-		if (frameworks.HaveCoreMidi)
+		if (frameworks.HaveCoreMidi && frameworks.CurrentPlatform != PlatformName.TvOS) // the struct is not present on tvos
 			MidiEndpoint = ConditionalLookup (platformAssembly, "CoreMidi", "MidiEndpoint");
 		if (frameworks.HaveMapKit)
 			MKCoordinateSpan = ConditionalLookup (platformAssembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
@@ -277,6 +280,51 @@ public class TypeCache {
 			UIEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "UIEdgeInsets");
 			NSDirectionalEdgeInsets = ConditionalLookup (platformAssembly, "UIKit", "NSDirectionalEdgeInsets");
 		}
+		// init the NSValueCreateMap
+		NSValueCreateMap = BuildNSValueCreateMap (frameworks);
+	}
+
+	Dictionary<Type, string> BuildNSValueCreateMap (Frameworks frameworks)
+	{
+		var nsvalueCreateMap = new Dictionary<Type, string> {
+			[CGAffineTransform] = "CGAffineTransform",
+			[NSRange] = "Range",
+			[CGVector] = "CGVector",
+			[SCNMatrix4] = "SCNMatrix4",
+			[SCNVector3] = "Vector",
+			[SCNVector4] = "Vector",
+			[CoreGraphics_CGPoint] = "CGPoint",
+			[CoreGraphics_CGRect] = "CGRect",
+			[CoreGraphics_CGSize] = "CGSize"
+		};
+
+		if (CLLocationCoordinate2D is not null)
+			nsvalueCreateMap [CLLocationCoordinate2D] = "MKCoordinate";
+
+		if (frameworks.HaveUIKit) {
+			// we do know that the following keys are indeed present
+			nsvalueCreateMap [UIEdgeInsets!] = "UIEdgeInsets";
+			nsvalueCreateMap [UIOffset!] = "UIOffset";
+			nsvalueCreateMap [NSDirectionalEdgeInsets!] = "DirectionalEdgeInsets";
+		}
+
+		if (MKCoordinateSpan is not null) {
+			nsvalueCreateMap [MKCoordinateSpan] = "MKCoordinateSpan";
+		}
+
+		if (frameworks.HaveCoreMedia) {
+			// we do know that the following keys are indeed present
+			nsvalueCreateMap [CMTimeRange!] = "CMTimeRange";
+			nsvalueCreateMap [CMTime!] = "CMTime";
+			nsvalueCreateMap [CMTimeMapping!] = "CMTimeMapping";
+			nsvalueCreateMap [CMVideoDimensions!] = "CMVideoDimensions";
+		}
+
+		if (frameworks.HaveCoreAnimation) {
+			// we do know that the following keys are indeed present
+			nsvalueCreateMap [CATransform3D!] = "CATransform3D";
+		}
+		return nsvalueCreateMap;
 	}
 
 #if NET

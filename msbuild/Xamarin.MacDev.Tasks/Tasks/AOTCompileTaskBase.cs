@@ -10,12 +10,13 @@ using Microsoft.Build.Utilities;
 using Mono.Cecil;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class AOTCompileTaskBase : XamarinTask {
+	public class AOTCompile : XamarinTask, ITaskCallback, ICancelableTask {
 		public ITaskItem [] AotArguments { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
@@ -144,6 +145,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var inputs = new List<string> (Assemblies.Length);
 			for (var i = 0; i < Assemblies.Length; i++) {
 				var input = Path.GetFullPath (Assemblies [i].ItemSpec);
@@ -245,6 +249,24 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			var compiler = new TaskItem (AOTCompilerPath);
+			compiler.SetMetadata ("IsUnixExecutable", "true");
+
+			yield return compiler;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

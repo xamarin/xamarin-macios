@@ -1398,6 +1398,27 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		public void BuildAndExecuteAppWithXCFrameworkWithStaticLibraryInRuntimesNativeDirectory (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithXCFrameworkWithStaticLibraryInPackageReference";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				Assert.That (output, Does.Contain ("42"), "Execution");
+			}
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		public void BuildAndExecuteAppWithWinExeOutputType (ApplePlatform platform, string runtimeIdentifier)
 		{
@@ -1454,20 +1475,12 @@ namespace Xamarin.Tests {
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
-			var foundIL3050 = false;
 			rv.AssertNoWarnings ((evt) => {
-				if (evt.Code == "IL3050" && evt.Message == "<Module>..cctor(): Using member 'System.Enum.GetValues(Type)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. It might not be possible to create an array of the enum type at runtime. Use the GetValues<TEnum> overload or the GetValuesAsUnderlyingType method instead.") {
-					foundIL3050 = true;
-					return false;
-				}
-
 				if (platform == ApplePlatform.iOS && evt.Message?.Trim () == "Supported iPhone orientations have not been set")
 					return false;
 
 				return true;
 			});
-
-			Assert.IsTrue (foundIL3050, "IL3050 not found - update test code to remove the code to ignore the IL3050");
 		}
 
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
