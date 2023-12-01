@@ -228,8 +228,12 @@ while test "x$1" != x; do
     esac
 done
 
-[[ "$IGNORE_UNKNOWN_PARAMS" = false ]] && [[ -n "$UNKNOWN_PARAMETERS" ]] && exit 1
+if [[ "$IGNORE_UNKNOWN_PARAMS" = false ]] && [[ -n "$UNKNOWN_PARAMETERS" ]]; then
+    exit 1
+fi
 
-[[ "$IGNORE_UNKNOWN_PARAMS" = true ]] && [[ -n "$UNKNOWN_PARAMETERS" ]] && echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
+if [[ "$IGNORE_UNKNOWN_PARAMS" = true ]] && [[ -n "$UNKNOWN_PARAMETERS" ]]; then
+    echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
+fi
 
 exit 0
