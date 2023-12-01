@@ -60,7 +60,6 @@ public class BindingTouch : IDisposable {
 	string []? compile_command = null;
 	string compiled_api_definition_assembly = string.Empty;
 	bool noNFloatUsing;
-	List<string> libraries = new ();
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
@@ -77,7 +76,7 @@ public class BindingTouch : IDisposable {
 
 	TypeCache? typeCache;
 	public TypeCache TypeCache => typeCache!;
-	public LibraryManager LibraryManager => new ();
+	public LibraryManager LibraryManager = new ();
 
 	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
@@ -138,7 +137,7 @@ public class BindingTouch : IDisposable {
 			{ "unsafe", "Sets the unsafe flag for the build", v=> config.IsUnsafe = true },
 			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
-			{ "lib=", "Adds the directory to the search path for the compiler", v => libraries.Add (v) },
+			{ "lib=", "Adds the directory to the search path for the compiler", v => LibraryManager.Libraries.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
 			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
 				{
@@ -262,13 +261,13 @@ public class BindingTouch : IDisposable {
 			outfile = firstApiDefinitionName + ".dll";
 
 		var refs = references.Select ((v) => "-r:" + v);
-		var paths = libraries.Select ((v) => "-lib:" + v);
+		var paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
 			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config.TemporaryFileDirectory, refs, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines, paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
-					LibraryManager.GetLibraryDirectories (LibraryInfo, libraries, CurrentPlatform).ToArray (),
+					LibraryManager.GetLibraryDirectories (LibraryInfo, CurrentPlatform).ToArray (),
 					references.ToArray ()),
 				"mscorlib"
 			);
