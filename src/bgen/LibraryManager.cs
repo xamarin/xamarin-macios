@@ -5,7 +5,6 @@ using Xamarin.Utils;
 #nullable enable
 
 public class LibraryManager {
-	public List<string> Libraries = new List<string> ();
 	public string GetAttributeLibraryPath (LibraryInfo libraryInfo, PlatformName currentPlatform)
 	{
 		if (!string.IsNullOrEmpty (libraryInfo.AttributeDll))
@@ -38,7 +37,7 @@ public class LibraryManager {
 		}
 	}
 
-	public IEnumerable<string> GetLibraryDirectories (LibraryInfo libraryInfo, PlatformName currentPlatform)
+	public IEnumerable<string> GetLibraryDirectories (LibraryInfo libraryInfo, List<string> libraries, PlatformName currentPlatform)
 	{
 		if (!libraryInfo.IsDotNet) {
 			switch (currentPlatform) {
@@ -71,7 +70,7 @@ public class LibraryManager {
 				throw new BindingException (1047, currentPlatform);
 			}
 		}
-		foreach (var lib in Libraries)
+		foreach (var lib in libraries)
 			yield return lib;
 	}
 
