@@ -60,7 +60,7 @@ public class BindingTouch : IDisposable {
 	string []? compile_command = null;
 	string compiled_api_definition_assembly = string.Empty;
 	bool noNFloatUsing;
-	List<string> libraries = new();
+	List<string> libraries = new ();
 	List<string> references = new List<string> ();
 
 	public MetadataLoadContext? universe;
