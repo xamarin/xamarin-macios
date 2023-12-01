@@ -5,7 +5,7 @@ using Xamarin.Utils;
 #nullable enable
 
 public class LibraryManager {
-	public List<string> Libraries = new();
+	public List<string> Libraries = new ();
 	public string GetAttributeLibraryPath (LibraryInfo libraryInfo, PlatformName currentPlatform)
 	{
 		if (!string.IsNullOrEmpty (libraryInfo.AttributeDll))
