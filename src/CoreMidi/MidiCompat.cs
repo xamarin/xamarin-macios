@@ -1,3 +1,4 @@
+#if !TVOS
 #if !NET
 
 using System;
@@ -50,4 +51,5 @@ namespace CoreMidi {
 #endif
 
 }
+#endif
 #endif
