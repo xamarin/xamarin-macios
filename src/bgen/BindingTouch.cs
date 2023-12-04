@@ -84,10 +84,6 @@ public class BindingTouch : IDisposable {
 	public TypeCache TypeCache => typeCache!;
 
 	bool disposedValue;
-	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
-	internal Dictionary<System.Type, Type> IKVMTypeLookup {
-		get { return ikvm_type_lookup; }
-	}
 
 	public TargetFramework TargetFramework {
 		get { return target_framework!.Value; }
@@ -434,13 +430,13 @@ public class BindingTouch : IDisposable {
 			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) || !TryLoadApi (baselibdll, out Assembly? baselib))
 				return 1;
 
-			attributeManager ??= new AttributeManager (this);
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (GetAttributeLibraryPath ());
 
 			typeCache ??= new (universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
+			attributeManager ??= new (typeCache);
 			typeManager ??= new (this);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (apiAssembly)) {
