@@ -1558,10 +1558,10 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.MacCatalyst, "MtouchArch", "x64")]
-		[TestCase (ApplePlatform.iOS, "MtouchArch", "armv7s")]
-		[TestCase (ApplePlatform.TVOS, "MtouchArch", "arm64")]
-		[TestCase (ApplePlatform.MacOSX, "XamMacArch", "x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "MtouchArch", "x86_64")]
+		[TestCase (ApplePlatform.iOS, "MtouchArch", "ARMv7s")]
+		[TestCase (ApplePlatform.TVOS, "MtouchArch", "ARM64")]
+		[TestCase (ApplePlatform.MacOSX, "XamMacArch", "x86_64")]
 		public void InvalidArchProperty (ApplePlatform platform, string property, string value)
 		{
 			// Only keep this test around for .NET 9+10, after that we'll just assume everyone has removed the MtouchArch/XamMacArch properties from their project files,
@@ -1578,8 +1578,8 @@ namespace Xamarin.Tests {
 			properties [property] = value;
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.", errors [0].Message, "Error message");
+			AssertErrorCount (errors, 1, "Error count");
+			AssertErrorMessages (errors, $"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.");
 		}
 	}
 }
