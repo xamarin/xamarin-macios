@@ -298,19 +298,9 @@ public class BindingTouch : IDisposable {
 			attributeManager ??= new (typeCache);
 			typeManager ??= new (this);
 
-			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (apiAssembly)) {
-#if NET
-				if (string.IsNullOrEmpty (linkWith.LibraryName))
-#else
-				if (linkWith.LibraryName is null || string.IsNullOrEmpty (linkWith.LibraryName))
-#endif
-					continue;
-
-				if (!config.LinkWith.Contains (linkWith.LibraryName)) {
-					Console.Error.WriteLine ("Missing native library {0}, please use `--link-with' to specify the path to this library.", linkWith.LibraryName);
-					return 1;
-				}
-			}
+			// TODO will change
+			if (!TestLinkWith (apiAssembly, config))
+				return 1;
 
 			foreach (var r in references) {
 				// IKVM has a bug where it doesn't correctly compare assemblies, which means it
@@ -388,6 +378,29 @@ public class BindingTouch : IDisposable {
 				Directory.Delete (config.TemporaryFileDirectory, true);
 		}
 		return 0;
+	}
+
+	bool TestLinkWith(Assembly apiAssembly, BindingTouchConfig config)
+	{
+		foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute>(apiAssembly))
+		{
+#if NET
+				if (string.IsNullOrEmpty (linkWith.LibraryName))
+#else
+			if (linkWith.LibraryName is null || string.IsNullOrEmpty(linkWith.LibraryName))
+#endif
+				continue;
+
+			if (!config.LinkWith.Contains(linkWith.LibraryName))
+			{
+				Console.Error.WriteLine(
+					"Missing native library {0}, please use `--link-with' to specify the path to this library.",
+					linkWith.LibraryName);
+				return false; // return 1;
+			}
+		}
+
+		return true;
 	}
 
 	// If anything is modified in this function, check if the _CompileApiDefinitions MSBuild target needs to be updated as well.
