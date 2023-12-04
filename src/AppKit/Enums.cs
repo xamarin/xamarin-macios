@@ -1027,21 +1027,41 @@ namespace AppKit {
 	[Native]
 	public enum NSBezelStyle : ulong {
 		Automatic = 0,
+		Push = 1,
+		FlexiblePush = 2,
+		Disclosure = 5,
+		Circular = 7,
+		HelpButton = 9,
+		SmallSquare = 10,
+		Toolbar = 11,
+		AccessoryBarAction = 12,
+		AccessoryBar = 13,
+		PushDisclosure = 14,
+		Badge = 15,
+#if !XAMCORE_5_0
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'Push' instead.")]
 		Rounded = 1,
-		RegularSquare,
-		ThickSquare,
-		ThickerSquare,
-		Disclosure,
-		ShadowlessSquare,
-		Circular,
-		TexturedSquare,
-		HelpButton,
-		SmallSquare,
-		TexturedRounded,
-		RoundRect,
-		Recessed,
-		RoundedDisclosure,
-		Inline
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'FlexiblePush' instead.")]
+		RegularSquare = 2,
+		[Obsoleted (PlatformName.MacOSX, 10, 12, message: "Use 'FlexiblePush' instead.")]
+		ThickSquare = 3,
+		[Obsoleted (PlatformName.MacOSX, 10, 12, message: "Use 'FlexiblePush' instead.")]
+		ThickerSquare = 4,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'SmallSquare' instead.")]
+		ShadowlessSquare = 6,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'SmallSquare' instead.")]
+		TexturedSquare = 8,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'Toolbar' instead.")]
+		TexturedRounded = 11,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'AccessoryBarAction' instead.")]
+		RoundRect = 12,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'AccessoryBar' instead.")]
+		Recessed = 13,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'PushDisclosure' instead.")]
+		RoundedDisclosure = 14,
+		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "Use 'Badge' instead.")]
+		Inline = 15,
+#endif // !XAMCORE_5_0
 	}
 
 	[NoMacCatalyst]
