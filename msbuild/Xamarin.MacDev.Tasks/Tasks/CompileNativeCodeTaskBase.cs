@@ -7,13 +7,14 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CompileNativeCodeTaskBase : XamarinTask {
+	public class CompileNativeCode : XamarinTask, ICancelableTask, ITaskCallback {
 
 		#region Inputs
 		[Required]
@@ -36,6 +37,17 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				foreach (var info in CompileInfo) {
+					var outputFile = info.GetMetadata ("OutputFile");
+
+					if (!string.IsNullOrEmpty (outputFile))
+						info.SetMetadata ("OutputFile", outputFile.Replace ("\\", "/"));
+				}
+
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			}
+
 			var processes = new Task<Execution> [CompileInfo.Length];
 
 			for (var i = 0; i < CompileInfo.Length; i++) {
@@ -105,6 +117,27 @@ namespace Xamarin.MacDev.Tasks {
 			System.Threading.Tasks.Task.WaitAll (processes);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (IncludeDirectories is not null) {
+				foreach (var dir in IncludeDirectories) {
+					foreach (var file in Directory.EnumerateFiles (dir.ItemSpec, "*.*", SearchOption.AllDirectories)) {
+						yield return new TaskItem (file);
+					}
+				}
+			}
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

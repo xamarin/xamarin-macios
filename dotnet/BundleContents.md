@@ -266,3 +266,4 @@ The easiest way is to set `PublishFolderType` to `None`:
 * [.NET: build fails when referencing BenchmarkDotNet](https://github.com/xamarin/xamarin-macios/issues/12418)
 * [Having multiple .frameworks in a nuget package fails to build due to multiple info.plist files](https://github.com/xamarin/xamarin-macios/issues/12440)
 * [Automatically include .framework or .a files in the NuGet's runtimes/ios/native folder](https://github.com/xamarin/xamarin-macios/issues/11667)
+

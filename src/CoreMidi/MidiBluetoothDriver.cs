@@ -1,3 +1,4 @@
+#if !TVOS
 //
 // MidiBluetoothDriver.cs
 //
@@ -41,3 +42,4 @@ namespace CoreMidi {
 		public static int Disconnect (NSString uuid) => MIDIBluetoothDriverDisconnect (uuid.GetHandle ());
 	}
 }
+#endif
