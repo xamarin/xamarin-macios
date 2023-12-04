@@ -119,12 +119,12 @@ stages:
             *.nupkg
 
       - task: NuGetCommand@2
-        displayName: Publish Nugets to dotnet8
+        displayName: Publish Nugets to dotnet9
         inputs:
           command: push
           packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet8
+          publishFeedCredentials: dnceng-dotnet9
 
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -134,12 +134,12 @@ stages:
             *.nupkg
 
       - task: NuGetCommand@2
-        displayName: Publish VS MSI Nugets to dotnet8
+        displayName: Publish VS MSI Nugets to dotnet9
         inputs:
           command: push
           packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet8
+          publishFeedCredentials: dnceng-dotnet9
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob
