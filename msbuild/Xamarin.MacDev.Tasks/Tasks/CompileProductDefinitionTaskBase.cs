@@ -13,7 +13,7 @@ using Xamarin.Utils;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CompileProductDefinitionTaskBase : XamarinTask {
+	public class CompileProductDefinition : XamarinTask {
 		#region Inputs
 
 		public string ProductDefinition { get; set; }
