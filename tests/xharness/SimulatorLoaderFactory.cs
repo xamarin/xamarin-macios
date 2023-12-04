@@ -64,7 +64,7 @@ namespace Xharness {
 			companionDeviceType = null;
 
 			if (target.Platform == TestTarget.Simulator_watchOS) {
-				var companionVersion = minVersion ? SdkVersions.MinWatchOSCompanionSimulator : SdkVersions.MaxWatchOSCompanionSimulator;
+				var companionVersion = minVersion ? Xamarin.SdkVersions.MinWatchOSCompanionSimulator : Xamarin.SdkVersions.MaxWatchOSCompanionSimulator;
 				companionRuntime = "com.apple.CoreSimulator.SimRuntime.iOS-" + companionVersion.Replace ('.', '-');
 				companionDeviceType = GetiOSDeviceType (Version.Parse (companionVersion));
 			}

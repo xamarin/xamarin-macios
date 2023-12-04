@@ -77,7 +77,7 @@ namespace Xharness.Targets {
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.WatchOSContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
-			info_plist.SetMinimumOSVersion (Xamarin.SdkVersions.LegacyMinWatchOS);
+			info_plist.SetMinimumOSVersion (Xamarin.SdkVersions.MiniOS);
 			info_plist.Save (target_info_plist, Harness);
 		}
 
