@@ -41,6 +41,11 @@ using Foundation;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
+#if NET && XAMMACIOS_DEBUGGER
+using System.Diagnostics;
+using System.Threading;
+#endif
+
 public class BindingTouch : IDisposable {
 #if NET
 	public static ApplePlatform [] AllPlatforms = new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.TVOS, ApplePlatform.MacCatalyst };
@@ -106,6 +111,19 @@ public class BindingTouch : IDisposable {
 	public static int Main (string [] args)
 	{
 		try {
+#if NET && XAMMACIOS_DEBUGGER
+			// the following code will only be available for the macios
+			// developers to be able to debug the generator. This will
+			// block the generator until a debugger has attached to it
+			// our customers won't find any use for this.
+			var process = Process.GetCurrentProcess();
+			Console.WriteLine ($"Waiting for debugger to attach: ({ process.Id}) {process.ProcessName}");
+			while (!Debugger.IsAttached) {
+				Thread.Sleep (100);
+			}
+
+			Console.WriteLine ("Debugger attached");
+#endif
 			return Main2 (args);
 		} catch (Exception ex) {
 			ErrorHelper.Show (ex, false);

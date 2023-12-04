@@ -4,7 +4,10 @@
   <PropertyGroup>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <OutputType>Exe</OutputType>
-    <DefineConstants>DEBUG;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER;NET</DefineConstants>
+    <!-- help macios developers debug the generator during a build -->
+    <DefineConstants Condition="'$(XAMMACIOS_DEBUGGER)' != ''">XAMMACIOS_DEBUGGER;DEBUG;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER;NET</DefineConstants>
+    <!-- normal defines -->
+    <DefineConstants Condition="'$(XAMMACIOS_DEBUGGER)' == ''">DEBUG;BGENERATOR;NET_4_0;NO_AUTHENTICODE;STATIC;NO_SYMBOL_WRITER;NET</DefineConstants>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <Nullable>enable</Nullable>
   </PropertyGroup>
