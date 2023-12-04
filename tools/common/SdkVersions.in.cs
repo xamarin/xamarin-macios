@@ -24,7 +24,6 @@ namespace Xamarin {
 #if NET
 		public const string MinOSX = "@DOTNET_MIN_MACOS_SDK_VERSION@";
 		public const string MiniOS = "@DOTNET_MIN_IOS_SDK_VERSION@";
-		public const string MinWatchOS = "99.99"; // TODO not supported, many changes required to remove it
 		public const string MinTVOS = "@DOTNET_MIN_TVOS_SDK_VERSION@";
 		public const string MinMacCatalyst = "@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
 #else
@@ -75,7 +74,9 @@ namespace Xamarin {
 
 		public static Version MinOSXVersion { get { return new Version (MinOSX); } }
 		public static Version MiniOSVersion { get { return new Version (MiniOS); } }
+#if !NET
 		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); } }
+#endif
 		public static Version MinTVOSVersion { get { return new Version (MinTVOS); } }
 		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); } }
 
@@ -122,7 +123,9 @@ namespace Xamarin {
 			switch (app.Platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
+#if !NET
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+#endif
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
@@ -149,7 +152,9 @@ namespace Xamarin {
 			switch (platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
+#if !NET
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+#endif
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
