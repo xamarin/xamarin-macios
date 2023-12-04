@@ -2301,6 +2301,7 @@ TVOS_FRAMEWORKS =           \
 	CoreHaptics             \
 	CoreImage               \
 	CoreLocation            \
+	CoreMidi                \
 	CoreSpotlight			\
 	CoreText                \
 	ExternalAccessory       \

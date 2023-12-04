@@ -3,14 +3,16 @@ using System.IO;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CompileEntitlementsTaskBase : XamarinTask {
+	public class CompileEntitlements : XamarinTask, ITaskCallback, ICancelableTask {
 		bool warnedTeamIdentifierPrefix;
 		bool warnedAppIdentifierPrefix;
 
@@ -94,8 +96,12 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected virtual string DefaultEntitlementsPath {
+		string DefaultEntitlementsPath {
 			get {
+				if (ShouldExecuteRemotely ()) {
+					return "Entitlements.plist";
+				}
+
 				return Path.Combine (Sdks.GetAppleSdk (TargetFrameworkMoniker).GetSdkPath (SdkVersion, false), "Entitlements.plist");
 			}
 		}
@@ -440,6 +446,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			MobileProvisionPlatform platform;
 			MobileProvision? profile;
 			PDictionary template;
@@ -548,6 +557,24 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return true;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (!string.IsNullOrEmpty (Entitlements))
+				yield return new TaskItem (Entitlements);
+			else
+				yield return new TaskItem (DefaultEntitlementsPath);
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
