@@ -70,6 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 				TestRuntime.IgnoreInCI ("Timed out");
 				Assert.IsFalse (timedOut, "Timed out");
 			}
+			TestRuntime.IgnoreInCIIfBadNetwork (ex);
 			TestRuntime.AssertNoNonNUnitException (ex, "Exception");
 		}
 	}
