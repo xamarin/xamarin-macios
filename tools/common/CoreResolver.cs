@@ -98,6 +98,7 @@ namespace Xamarin.Bundler {
 						parameters.ReadSymbols = false;
 						parameters.SymbolReaderProvider = null;
 						assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
+						ErrorHelper.Show (ErrorHelper.CreateWarning (178, Errors.MX0178, fileName));
 					}
 				} catch (IOException ex) when (ex.GetType ().FullName == "Microsoft.Cci.Pdb.PdbException") { // Microsoft.Cci.Pdb.PdbException is not public, so we have to check the runtime type :/
 					symbolLoadFailure = true;
