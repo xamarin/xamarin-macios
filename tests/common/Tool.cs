@@ -354,7 +354,7 @@ namespace Xamarin.Tests {
 		public void AssertError (string prefix, int number, string message, string filename = null, int? linenumber = null)
 		{
 			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
-				Assert.Fail (string.Format ("The error '{0}{1:0000}' was not found in the output.", prefix, number));
+				Assert.Fail (string.Format ("The error '{0}{1:0000}' was not found in the output.\nFound {2}i:\n", prefix, number, string.Join ("\n", messages)));
 
 			var matches = messages.Where ((msg) => msg.Message == message);
 			if (!matches.Any ()) {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Foundation;
 
 #nullable enable
 
@@ -9,7 +10,7 @@ public class TypeManager {
 	public BindingTouch BindingTouch;
 	Frameworks Frameworks { get; }
 	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
-	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
+	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	Dictionary<Type, string>? nsnumberReturnMap;
@@ -174,7 +175,7 @@ public class TypeManager {
 	public string FormatType (Type? usedIn, string @namespace, string name)
 	{
 		string tname;
-		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceManager.StandardNamespaces.Contains (@namespace))
+		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceCache.StandardNamespaces.Contains (@namespace))
 			tname = name;
 		else
 			tname = "global::" + @namespace + "." + name;
@@ -241,7 +242,7 @@ public class TypeManager {
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
 			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
 		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
-				 BindingTouch.NamespaceManager.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
+				 BindingTouch.NamespaceCache.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
 				 string.IsNullOrEmpty (type.FullName))
 			tname = interfaceTag + type.Name;
 		else
@@ -301,13 +302,13 @@ public class TypeManager {
 
 		if (t.Namespace is not null) {
 			string ns = t.Namespace;
-			if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+			if (NamespaceCache.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
 				var targs = t.GetGenericArguments ();
 				if (targs.Length == 0)
 					return t.Name;
 				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
 			}
-			if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (ns))
+			if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (ns))
 				return "global::" + t.FullName;
 			if (t.Name == t.Namespace)
 				return "global::" + t.FullName;
@@ -361,5 +362,29 @@ public class TypeManager {
 	public bool IsDictionaryContainerType (Type t)
 	{
 		return t.IsSubclassOf (TypeCache.DictionaryContainerType) || (t.IsInterface && AttributeManager.HasAttribute<StrongDictionaryAttribute> (t));
+	}
+
+	public Api ParseApi (Assembly api, bool processEnums)
+	{
+		var types = new List<Type> ();
+		var strongDictionaries = new List<Type> ();
+
+		foreach (var t in api.GetTypes ()) {
+			if ((processEnums && t.IsEnum) ||
+				AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
+				AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
+				AttributeManager.HasAttribute<StaticAttribute> (t) ||
+				AttributeManager.HasAttribute<PartialAttribute> (t))
+				// skip those types that are not available
+				types.Add (t);
+			if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
+				strongDictionaries.Add (t);
+		}
+
+		// we should sort the types based on the full name
+		var typesArray = types.ToArray ();
+		Array.Sort (typesArray, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
+
+		return new (typesArray, strongDictionaries.ToArray ());
 	}
 }

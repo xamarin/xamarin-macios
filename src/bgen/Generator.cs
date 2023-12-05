@@ -53,6 +53,9 @@ using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public partial class Generator : IMemberGatherer {
 	internal bool IsPublicMode;
 	internal static string NativeHandleType;
@@ -60,7 +63,7 @@ public partial class Generator : IMemberGatherer {
 	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
 	public TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 	public AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
-	NamespaceManager NamespaceManager { get { return BindingTouch.NamespaceManager; } }
+	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
 	public TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
 	Nomenclator nomenclator;
@@ -74,7 +77,6 @@ public partial class Generator : IMemberGatherer {
 	List<Exception> exceptions = new List<Exception> ();
 
 	Dictionary<Type, IEnumerable<string>> selectors = new Dictionary<Type, IEnumerable<string>> ();
-	Dictionary<Type, bool> need_static = new Dictionary<Type, bool> ();
 	Dictionary<Type, bool> need_abstract = new Dictionary<Type, bool> ();
 	Dictionary<string, int> selector_use = new Dictionary<string, int> ();
 	Dictionary<string, string> selector_names = new Dictionary<string, string> ();
@@ -93,13 +95,8 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string, MethodInfo> delegate_types = new Dictionary<string, MethodInfo> ();
 
 	public PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
-	public int XamcoreVersion => CurrentPlatform.GetXamcoreVersion ();
-	public string ApplicationClassName => CurrentPlatform.GetApplicationClassName ();
-	public string CoreImageMap => CurrentPlatform.GetCoreImageMap ();
-	public string CoreServicesMap => CurrentPlatform.GetCoreServicesMap ();
-	public string PDFKitMap => CurrentPlatform.GetPDFKitMap ();
 
-	Type [] types, strong_dictionaries;
+	Api api;
 	bool debug;
 	bool external;
 	StreamWriter sw, m;
@@ -369,46 +366,6 @@ public partial class Generator : IMemberGatherer {
 		return type.Assembly.GetType (type.FullName + "Extensions") is not null;
 	}
 
-	Dictionary<Type, string> nsvalue_create_map;
-	Dictionary<Type, string> NSValueCreateMap {
-		get {
-			if (nsvalue_create_map is null) {
-				nsvalue_create_map = new Dictionary<Type, string> ();
-				nsvalue_create_map [TypeCache.CGAffineTransform] = "CGAffineTransform";
-				nsvalue_create_map [TypeCache.NSRange] = "Range";
-				nsvalue_create_map [TypeCache.CGVector] = "CGVector";
-				nsvalue_create_map [TypeCache.SCNMatrix4] = "SCNMatrix4";
-				nsvalue_create_map [TypeCache.CLLocationCoordinate2D] = "MKCoordinate";
-				nsvalue_create_map [TypeCache.SCNVector3] = "Vector";
-				nsvalue_create_map [TypeCache.SCNVector4] = "Vector";
-
-				nsvalue_create_map [TypeCache.CoreGraphics_CGPoint] = "CGPoint";
-				nsvalue_create_map [TypeCache.CoreGraphics_CGRect] = "CGRect";
-				nsvalue_create_map [TypeCache.CoreGraphics_CGSize] = "CGSize";
-
-				if (Frameworks.HaveUIKit) {
-					nsvalue_create_map [TypeCache.UIEdgeInsets] = "UIEdgeInsets";
-					nsvalue_create_map [TypeCache.UIOffset] = "UIOffset";
-					nsvalue_create_map [TypeCache.NSDirectionalEdgeInsets] = "DirectionalEdgeInsets";
-				}
-
-				if (TypeCache.MKCoordinateSpan is not null)
-					nsvalue_create_map [TypeCache.MKCoordinateSpan] = "MKCoordinateSpan";
-
-				if (Frameworks.HaveCoreMedia) {
-					nsvalue_create_map [TypeCache.CMTimeRange] = "CMTimeRange";
-					nsvalue_create_map [TypeCache.CMTime] = "CMTime";
-					nsvalue_create_map [TypeCache.CMTimeMapping] = "CMTimeMapping";
-					nsvalue_create_map [TypeCache.CMVideoDimensions] = "CMVideoDimensions";
-				}
-
-				if (Frameworks.HaveCoreAnimation)
-					nsvalue_create_map [TypeCache.CATransform3D] = "CATransform3D";
-			}
-			return nsvalue_create_map;
-		}
-	}
-
 	string GetToBindAsWrapper (MethodInfo mi, MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
@@ -448,7 +405,7 @@ public partial class Generator : IMemberGatherer {
 			temp = string.Format ("{3}new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast, nullCheck);
 		} else if (originalType == TypeCache.NSValue) {
 			var typeStr = string.Empty;
-			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
+			if (!TypeCache.NSValueCreateMap.TryGetValue (retType, out typeStr)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					typeStr = retType.Name;
@@ -476,7 +433,7 @@ public partial class Generator : IMemberGatherer {
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
 			} else if (arrType == TypeCache.NSValue && !isNullable) {
 				var typeStr = string.Empty;
-				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
+				if (!TypeCache.NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 						typeStr = retType.Name;
 					else
@@ -1311,24 +1268,15 @@ public partial class Generator : IMemberGatherer {
 		return AttributeManager.GetCustomAttribute<ExportAttribute> (pinfo).ToGetter (pinfo);
 	}
 
-	public Generator (BindingTouch binding_touch, bool is_public_mode, bool external, bool debug, Type [] types, Type [] strong_dictionaries)
+	public Generator (BindingTouch binding_touch, Api api, bool is_public_mode, bool external, bool debug)
 	{
 		BindingTouch = binding_touch;
 		IsPublicMode = is_public_mode;
 		this.external = external;
 		this.debug = debug;
-		this.types = types;
-		this.strong_dictionaries = strong_dictionaries;
+		this.api = api;
 		basedir = ".";
 		NativeHandleType = binding_touch.IsDotNet ? "NativeHandle" : "IntPtr";
-	}
-
-	bool SkipGenerationOfType (Type t)
-	{
-		if (t.IsUnavailable (this))
-			return true;
-
-		return false;
 	}
 
 	public void Go ()
@@ -1338,7 +1286,7 @@ public partial class Generator : IMemberGatherer {
 
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
-		print (m, "namespace {0} {{", NamespaceManager.ObjCRuntime);
+		print (m, "namespace {0} {{", NamespaceCache.ObjCRuntime);
 		print (m, "\tstatic partial class Messaging {");
 
 		if (BindThirdPartyLibrary) {
@@ -1360,11 +1308,10 @@ public partial class Generator : IMemberGatherer {
 			send_methods ["IntPtr_objc_msgSendSuper_IntPtr"] = "IntPtr_objc_msgSendSuper_IntPtr";
 		}
 
-		Array.Sort (types, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
-		TypeManager.SetTypesThatMustAlwaysBeGloballyNamed (types);
+		TypeManager.SetTypesThatMustAlwaysBeGloballyNamed (api.Types);
 
-		foreach (Type t in types) {
-			if (SkipGenerationOfType (t))
+		foreach (Type t in api.Types) {
+			if (t.IsUnavailable (this))
 				continue;
 
 			// We call lookup to build the hierarchy graph
@@ -1403,8 +1350,6 @@ public partial class Generator : IMemberGatherer {
 
 					throw new BindingException (1018, true, t.FullName, pi.Name);
 				}
-				if (AttributeManager.HasAttribute<StaticAttribute> (pi))
-					need_static [t] = true;
 
 #if NET
 				var is_abstract = false;
@@ -1453,7 +1398,6 @@ public partial class Generator : IMemberGatherer {
 					} else if (ba is not null) {
 						selector = ba.Selector;
 					} else if (attr is StaticAttribute) {
-						need_static [t] = true;
 						continue;
 					} else if (attr is InternalAttribute || attr is UnifiedInternalAttribute || attr is ProtectedAttribute) {
 						continue;
@@ -1534,14 +1478,12 @@ public partial class Generator : IMemberGatherer {
 			selectors [t] = tselectors.Distinct ();
 		}
 
-		foreach (Type t in types) {
-			if (SkipGenerationOfType (t))
+		foreach (Type t in api.Types) {
+			if (t.IsUnavailable (this))
 				continue;
 
 			Generate (t);
 		}
-
-		//DumpChildren (0, GeneratedType.Lookup (TypeCache.NSObject));
 
 		print (m, "\t}\n}");
 		m.Close ();
@@ -1832,7 +1774,7 @@ public partial class Generator : IMemberGatherer {
 	//
 	void GenerateStrongDictionaryTypes ()
 	{
-		foreach (var dictType in strong_dictionaries) {
+		foreach (var dictType in api.StrongDictionaries) {
 			if (dictType.IsUnavailable (this))
 				continue;
 			var sa = AttributeManager.GetCustomAttribute<StrongDictionaryAttribute> (dictType);
@@ -2206,15 +2148,6 @@ public partial class Generator : IMemberGatherer {
 		sw.Close ();
 	}
 
-
-	public void DumpChildren (int level, GeneratedType gt)
-	{
-		string prefix = new string ('\t', level);
-		Console.WriteLine ("{2} {0} - {1}", gt.Type.Name, gt.ImplementsAppearance ? "APPEARANCE" : "", prefix);
-		foreach (var c in (from s in gt.Children.OrderBy (s => s.Type.FullName, StringComparer.Ordinal) select s))
-			DumpChildren (level + 1, c);
-	}
-
 	// this attribute allows the linker to be more clever in removing unused code in bindings - without risking breaking user code
 	// only generate those for monotouch now since we can ensure they will be linked away before reaching the devices
 	public void GeneratedCode (StreamWriter sw, int tabs, bool optimizable = true)
@@ -2410,11 +2343,6 @@ public partial class Generator : IMemberGatherer {
 				availability.Add (AttributeFactory.CreateNoVersionSupportedAttribute (platform));
 			}
 		}
-	}
-
-	static bool PlatformHasIntroduced (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability)
-	{
-		return memberAvailability.Any (v => (v.Platform == platform && v is IntroducedAttribute));
 	}
 
 	static bool PlatformMarkedUnavailable (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability)
@@ -2720,7 +2648,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var attrib = attribs [0];
-		return XamcoreVersion >= attrib.Version;
+		return CurrentPlatform.GetXamcoreVersion () >= attrib.Version;
 	}
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo [] parameters, string extra = "", bool alreadyPreserved = false)
@@ -2728,7 +2656,7 @@ public partial class Generator : IMemberGatherer {
 		var mi = minfo.Method;
 		var category_class = minfo.category_extension_type;
 		StringBuilder sb = new StringBuilder ();
-		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
+		string name = minfo.is_ctor ? Nomenclator.GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
 		// Some codepaths already write preservation info
 		PrintAttributes (minfo.mi, preserve: !alreadyPreserved, advice: true, bindAs: true, requiresSuper: true);
@@ -2866,7 +2794,7 @@ public partial class Generator : IMemberGatherer {
 		print (w, "//\n// Auto-generated from generator.cs, do not edit\n//");
 		print (w, "// We keep references to objects, so warning 414 is expected\n");
 		print (w, "#pragma warning disable 414\n");
-		print (w, NamespaceManager.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
+		print (w, NamespaceCache.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
 		print (w, "");
 		print (w, "#nullable enable");
 		print (w, "");
@@ -2972,7 +2900,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (etype == TypeCache.Selector) {
 				exceptions.Add (ErrorHelper.CreateError (1066, mai.Type.FullName, mi.DeclaringType.FullName, mi.Name));
 			} else {
-				if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
+				if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (etype.Namespace))
 					cast_a = "CFArray.ArrayFromHandle<global::" + etype + ">(";
 				else
 					cast_a = "CFArray.ArrayFromHandle<" + TypeManager.FormatType (mi.DeclaringType, etype) + ">(";
@@ -3016,7 +2944,7 @@ public partial class Generator : IMemberGatherer {
 
 		string sig = supercall ? MakeSuperSig (mi, stret, aligned) : MakeSig (mi, stret, aligned);
 
-		sig = "global::" + NamespaceManager.Messaging + "." + sig;
+		sig = "global::" + NamespaceCache.Messaging + "." + sig;
 
 		string selector_field;
 		if (minfo.is_interface_impl || minfo.is_extension_method) {
@@ -3689,7 +3617,7 @@ public partial class Generator : IMemberGatherer {
 
 			print ("if (ret is not null)");
 			indent++;
-			print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", NamespaceManager.Messaging);
+			print ("global::{0}.void_objc_msgSend (ret.Handle, Selector.GetHandle (\"release\"));", NamespaceCache.Messaging);
 			indent--;
 		}
 
@@ -4220,7 +4148,7 @@ public partial class Generator : IMemberGatherer {
 				if (!BindThirdPartyLibrary && pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
 					string delName = pi.Name.Substring (4);
 					if (SafeIsProtocolizedEventBacked (delName, type))
-						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", ApplicationClassName, string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
+						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", CurrentPlatform.GetApplicationClassName (), string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
 				}
 
 				if (not_implemented_attr is not null) {
@@ -4634,17 +4562,6 @@ public partial class Generator : IMemberGatherer {
 			return !setter ? null : props.FirstOrDefault (prop => prop.GetSetMethod () == method);
 	}
 
-	public string GetGeneratedTypeName (Type type)
-	{
-		var bindOnType = AttributeManager.GetCustomAttributes<BindAttribute> (type);
-		if (bindOnType.Length > 0)
-			return bindOnType [0].Selector;
-		else if (type.IsGenericTypeDefinition)
-			return type.Name.Substring (0, type.Name.IndexOf ('`'));
-		else
-			return type.Name;
-	}
-
 	void RenderDelegates (Dictionary<string, MethodInfo> delegateTypes)
 	{
 		// Group the delegates by namespace
@@ -4777,7 +4694,7 @@ public partial class Generator : IMemberGatherer {
 	// If a type comes from the assembly with the api definition we're processing.
 	bool IsApiType (Type type)
 	{
-		return type.Assembly == types [0].Assembly;
+		return type.Assembly == api.Types [0].Assembly;
 	}
 
 	bool IsRequired (MemberInfo provider, Attribute [] attributes = null)
@@ -5239,7 +5156,7 @@ public partial class Generator : IMemberGatherer {
 		if (type.Namespace is null)
 			ErrorHelper.Warning (1103, type.FullName);
 
-		var tn = GetGeneratedTypeName (type);
+		var tn = Nomenclator.GetGeneratedTypeName (type);
 		if (type.IsGenericType)
 			tn = tn + "_" + type.GetGenericArguments ().Length.ToString ();
 		return GetOutputStream (type.Namespace, tn);
@@ -5354,14 +5271,14 @@ public partial class Generator : IMemberGatherer {
 			if (library_name [0] == '+') {
 				switch (library_name) {
 				case "+CoreImage":
-					library_name = CoreImageMap;
+					library_name = CurrentPlatform.GetCoreImageMap ();
 					break;
 				case "+CoreServices":
-					library_name = CoreServicesMap;
+					library_name = CurrentPlatform.GetCoreServicesMap ();
 					break;
 				case "+PDFKit":
 					library_name = "PdfKit";
-					library_path = PDFKitMap;
+					library_path = CurrentPlatform.GetPDFKitMap ();
 					break;
 				}
 			} else {
@@ -5436,7 +5353,7 @@ public partial class Generator : IMemberGatherer {
 		type_wants_zero_copy = AttributeManager.HasAttribute<ZeroCopyStringsAttribute> (type) || ZeroCopyStrings;
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (type);
 		// if we're inside a special namespace then default is non-thread safe, otherwise default is thread safe
-		if (NamespaceManager.UINamespaces.Contains (type.Namespace)) {
+		if (NamespaceCache.UINamespaces.Contains (type.Namespace)) {
 			// Any type inside these namespaces requires, by default, a thread check
 			// unless it has a [ThreadSafe] or [ThreadSafe (true)] attribute
 			type_needs_thread_checks = tsa is null || !tsa.Safe;
@@ -5446,7 +5363,7 @@ public partial class Generator : IMemberGatherer {
 			type_needs_thread_checks = tsa is not null && !tsa.Safe;
 		}
 
-		string TypeName = GetGeneratedTypeName (type);
+		string TypeName = Nomenclator.GetGeneratedTypeName (type);
 		indent = 0;
 		var instance_fields_to_clear_on_dispose = new List<string> ();
 		var gtype = GeneratedTypes.Lookup (type);
@@ -5509,7 +5426,7 @@ public partial class Generator : IMemberGatherer {
 			is_direct_binding_value = null;
 			is_direct_binding = null;
 			if (BindThirdPartyLibrary)
-				is_direct_binding_value = string.Format ("GetType ().Assembly == global::{0}.this_assembly", NamespaceManager.Messaging);
+				is_direct_binding_value = string.Format ("GetType ().Assembly == global::{0}.this_assembly", NamespaceCache.Messaging);
 			if (is_static_class || is_category_class || is_partial) {
 				base_type = TypeCache.System_Object;
 				if (!is_partial)
@@ -5576,7 +5493,7 @@ public partial class Generator : IMemberGatherer {
 						continue;
 
 					string nonInterfaceName = protocolType.Name.Substring (1);
-					if (!types.Any (x => x.Name.Contains (nonInterfaceName)))
+					if (!api.Types.Any (x => x.Name.Contains (nonInterfaceName)))
 						continue;
 
 					if (is_category_class)
@@ -5764,7 +5681,7 @@ public partial class Generator : IMemberGatherer {
 								sw.WriteLine ("\t\t\tIsDirectBinding = {0};", is_direct_binding_value);
 							if (debug)
 								sw.WriteLine ("\t\t\tConsole.WriteLine (\"{0}.ctor ()\");", TypeName);
-							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceManager.Messaging);
+							sw.WriteLine ("\t\t\tInitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging);
 							sw.WriteLine ("\t\t\t");
 							if (is32BitNotSupported)
 								sw.WriteLine ("\t\t#endif");
@@ -5790,8 +5707,8 @@ public partial class Generator : IMemberGatherer {
 							}
 							var indentation = 3;
 							WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceManager.Messaging),
-														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceManager.Messaging));
+														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend (this.Handle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging),
+														   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper (this.SuperHandle, global::ObjCRuntime.{0}), \"init\");", initSelector, NamespaceCache.Messaging));
 
 							WriteMarkDirtyIfDerived (sw, type);
 							if (is32BitNotSupported)
@@ -5821,8 +5738,8 @@ public partial class Generator : IMemberGatherer {
 								}
 								var indentation = 3;
 								WriteIsDirectBindingCondition (sw, ref indentation, is_direct_binding, is_direct_binding_value,
-															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceManager.Messaging),
-															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceManager.Messaging));
+															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSend_IntPtr (this.Handle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceCache.Messaging),
+															   () => string.Format ("InitializeHandle (global::{1}.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, {0}, coder.Handle), \"initWithCoder:\");", initWithCoderSelector, NamespaceCache.Messaging));
 								WriteMarkDirtyIfDerived (sw, type);
 							} else {
 								sw.WriteLine ("\t\t\tthrow new InvalidOperationException (\"Type does not conform to NSCoding\");");
@@ -6248,7 +6165,7 @@ public partial class Generator : IMemberGatherer {
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
 						if (!BindThirdPartyLibrary) {
 							print ("if (Weak{0} is not null)", delName);
-							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched (Weak{1}, {2});", CurrentPlatform.GetApplicationClassName (), delName, delegateTypePropertyName);
 						}
 
 						print ("var del = {1} as _{0};", dtype.Name, delName);
@@ -6461,7 +6378,7 @@ public partial class Generator : IMemberGatherer {
 							print ("return {0} is not null;", mi.Name.PascalCase ());
 							--indent;
 						}
-						print ("return global::" + NamespaceManager.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle) != 0;");
+						print ("return global::" + NamespaceCache.Messaging + ".bool_objc_msgSendSuper_IntPtr (SuperHandle, " + selRespondsToSelector + ", selHandle) != 0;");
 						--indent;
 						print ("}");
 
@@ -6564,7 +6481,7 @@ public partial class Generator : IMemberGatherer {
 				string base_class;
 
 				if (parent_implements_appearance) {
-					var parent = GetGeneratedTypeName (gt.Parent);
+					var parent = Nomenclator.GetGeneratedTypeName (gt.Parent);
 					base_class = "global::" + gt.Parent.FullName + "." + parent + "Appearance";
 				} else
 					base_class = "UIAppearance";
@@ -6592,12 +6509,12 @@ public partial class Generator : IMemberGatherer {
 				print ("}\n");
 				print ("public static {0}{1} Appearance {{", parent_implements_appearance ? "new " : "", appearance_type_name);
 				indent++;
-				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, NamespaceManager.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
+				print ("get {{ return new {0} (global::{1}.IntPtr_objc_msgSend (class_ptr, {2})); }}", appearance_type_name, NamespaceCache.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
 				print ("public static {0}{1} GetAppearance<T> () where T: {2} {{", parent_implements_appearance ? "new " : "", appearance_type_name, TypeName);
 				indent++;
-				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, NamespaceManager.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
+				print ("return new {0} (global::{1}.IntPtr_objc_msgSend (Class.GetHandle (typeof (T)), {2}));", appearance_type_name, NamespaceCache.Messaging, InlineSelectors ? "ObjCRuntime.Selector.GetHandle (\"appearance\")" : "UIAppearance.SelectorAppearance");
 				indent--;
 				print ("}\n");
 				print ("public static {0}{1} AppearanceWhenContainedIn (params Type [] containers)", parent_implements_appearance ? "new " : "", appearance_type_name);
@@ -6672,7 +6589,7 @@ public partial class Generator : IMemberGatherer {
 			//
 			// Copy delegates from the API files into the output if they were declared there
 			//
-			var rootAssembly = types [0].Assembly;
+			var rootAssembly = api.Types [0].Assembly;
 			foreach (var deltype in trampolines.Keys.OrderBy (d => d.Name, StringComparer.Ordinal)) {
 				if (deltype.Assembly != rootAssembly)
 					continue;
@@ -6915,11 +6832,6 @@ public partial class Generator : IMemberGatherer {
 		if (name.EndsWith ("Notification", StringComparison.Ordinal))
 			return name.Substring (0, name.Length - "Notification".Length);
 		return name;
-	}
-
-	Type GetNotificationArgType (PropertyInfo pi)
-	{
-		return AttributeManager.GetCustomAttributes<NotificationAttribute> (pi) [0].Type;
 	}
 
 	//

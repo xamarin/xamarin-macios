@@ -1376,8 +1376,9 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
-		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier)
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", false)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		public void BuildAndExecuteAppWithNativeDynamicLibrariesInPackageReference (ApplePlatform platform, string runtimeIdentifier, bool isNativeAot)
 		{
 			var project = "AppWithNativeDynamicLibrariesInPackageReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -1385,6 +1386,10 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifier);
+			if (isNativeAot) {
+				properties ["PublishAot"] = "true";
+				properties ["_IsPublishing"] = "true";
+			}
 			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
@@ -1395,6 +1400,27 @@ namespace Xamarin.Tests {
 			AssertThatDylibExistsAndIsReidentified (appPath, "/subdir/libtest.so");
 
 			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64")]
+		public void BuildAndExecuteAppWithXCFrameworkWithStaticLibraryInRuntimesNativeDirectory (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithXCFrameworkWithStaticLibraryInPackageReference";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = Path.Combine (appPath, "Contents", "MacOS", Path.GetFileNameWithoutExtension (project_path));
+			Assert.That (appExecutable, Does.Exist, "There is an executable");
+
+			if (CanExecute (platform, runtimeIdentifiers)) {
+				var output = ExecuteWithMagicWordAndAssert (appExecutable);
+				Assert.That (output, Does.Contain ("42"), "Execution");
+			}
 		}
 
 		[Test]
@@ -1454,20 +1480,12 @@ namespace Xamarin.Tests {
 
 			// Verify that we have no warnings, but unfortunately we still have some we haven't fixed yet.
 			// Ignore those, and fail the test if we stop getting them (so that we can update the test to not ignore them anymore).
-			var foundIL3050 = false;
 			rv.AssertNoWarnings ((evt) => {
-				if (evt.Code == "IL3050" && evt.Message == "<Module>..cctor(): Using member 'System.Enum.GetValues(Type)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. It might not be possible to create an array of the enum type at runtime. Use the GetValues<TEnum> overload or the GetValuesAsUnderlyingType method instead.") {
-					foundIL3050 = true;
-					return false;
-				}
-
 				if (platform == ApplePlatform.iOS && evt.Message?.Trim () == "Supported iPhone orientations have not been set")
 					return false;
 
 				return true;
 			});
-
-			Assert.IsTrue (foundIL3050, "IL3050 not found - update test code to remove the code to ignore the IL3050");
 		}
 
 		void AssertThatDylibExistsAndIsReidentified (string appPath, string dylibRelPath)
@@ -1545,10 +1563,10 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.MacCatalyst, "MtouchArch", "x64")]
-		[TestCase (ApplePlatform.iOS, "MtouchArch", "armv7s")]
-		[TestCase (ApplePlatform.TVOS, "MtouchArch", "arm64")]
-		[TestCase (ApplePlatform.MacOSX, "XamMacArch", "x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "MtouchArch", "x86_64")]
+		[TestCase (ApplePlatform.iOS, "MtouchArch", "ARMv7s")]
+		[TestCase (ApplePlatform.TVOS, "MtouchArch", "ARM64")]
+		[TestCase (ApplePlatform.MacOSX, "XamMacArch", "x86_64")]
 		public void InvalidArchProperty (ApplePlatform platform, string property, string value)
 		{
 			// Only keep this test around for .NET 9+10, after that we'll just assume everyone has removed the MtouchArch/XamMacArch properties from their project files,
@@ -1565,8 +1583,8 @@ namespace Xamarin.Tests {
 			properties [property] = value;
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.", errors [0].Message, "Error message");
+			AssertErrorCount (errors, 1, "Error count");
+			AssertErrorMessages (errors, $"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.");
 		}
 	}
 }

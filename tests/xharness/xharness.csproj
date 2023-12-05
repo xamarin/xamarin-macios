@@ -67,7 +67,7 @@
   <Import Project="../../eng/Versions.props" />
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.XHarness.iOS.Shared" Version="$(MicrosoftDotNetXHarnessiOSSharedPackageVersion)" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>

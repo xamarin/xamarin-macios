@@ -263,6 +263,7 @@ stages:
           startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'),
           eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'),
           eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net9.0'),
           eq(parameters.forceInsertion, true)
         )
       )

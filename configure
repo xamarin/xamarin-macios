@@ -51,7 +51,7 @@ EOL
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 CONFIGURED_FILE=configure.inc
-IGNORE_UNNKOWN_PARAMS=false
+IGNORE_UNKNOWN_PARAMS=false
 UNKNOWN_PARAMETERS=
 
 rm -f $CONFIGURED_FILE
@@ -213,7 +213,7 @@ while test "x$1" != x; do
         ;;
     --ignore-unknown-params)
         echo "ignoring unknown parameters"
-        IGNORE_UNNKOWN_PARAMS=true
+        IGNORE_UNKNOWN_PARAMS=true
         shift
         ;;
     --help|-h)
@@ -228,8 +228,12 @@ while test "x$1" != x; do
     esac
 done
 
-[[ "$IGNORE_UNNKOWN_PARAMS" = false ]] && [[ -n "$UNKNOWN_PARAMETERS" ]] && exit 1
+if [[ "$IGNORE_UNKNOWN_PARAMS" = false ]] && [[ -n "$UNKNOWN_PARAMETERS" ]]; then
+    exit 1
+fi
 
-[[ "$IGNORE_UNNKOWN_PARAMS" = true ]] && [[ -n "$UNKNOWN_PARAMETERS" ]] && echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
+if [[ "$IGNORE_UNKNOWN_PARAMS" = true ]] && [[ -n "$UNKNOWN_PARAMETERS" ]]; then
+    echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
+fi
 
 exit 0

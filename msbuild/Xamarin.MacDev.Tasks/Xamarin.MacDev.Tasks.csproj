@@ -8,10 +8,11 @@
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
     <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
     <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="compile" />

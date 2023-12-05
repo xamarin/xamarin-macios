@@ -14,10 +14,11 @@
     <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
     <NoWarn>$(NoWarn);NU1701</NoWarn> <!-- warning NU1701: Package 'BouncyCastle 1.8.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project. -->
     <NoWarn>$(NoWarn);MSB3246</NoWarn> <!-- Resolved file has a bad image, no metadata, or is otherwise inaccessible. System.BadImageFormatException: Assembly file 'xamarin-macios/packages/xamarin.ios.hotrestart.client/1.0.93/lib/netstandard2.0/ws2_32.dll' could not be opened - PE image doesn't contain managed metadata. -->
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="..\..\eng\Versions.props" />
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
