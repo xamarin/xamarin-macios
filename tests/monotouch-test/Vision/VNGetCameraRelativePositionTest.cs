@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.Vision {
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertNotSimulator();
+			TestRuntime.AssertNotSimulator ();
 			TestRuntime.AssertXcodeVersion (15, 0);
 		}
 
