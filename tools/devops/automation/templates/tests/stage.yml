@@ -96,30 +96,9 @@ stages:
   condition: and(succeeded(), ${{ parameters.condition }})
 
   jobs:
-#  - ${{ if eq(parameters.parseLabels, true) }}:
-#    - job: configure
-#      displayName: 'Configure build'
-#      pool:
-#        vmImage: windows-latest
-#
-#      variables:
-#        isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-#        isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-#        BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-#      steps:
-#      - template: ../common/configure.yml
-#        parameters: 
-#          repositoryAlias: ${{ parameters.repositoryAlias }}
-#          commit: ${{ parameters.commit }}
-#          uploadArtifacts: false
-
   - job: "tests"
     ${{ if eq(parameters.parseLabels, true) }}:
       condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
-#    dependsOn:
-#    - ${{ if eq(parameters.parseLabels, true) }}:
-#      - configure
     displayName: 'Running tests:' 
     timeoutInMinutes: 1000
     variables:
@@ -177,8 +156,6 @@ stages:
     timeoutInMinutes: 1000
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - tests
-#    - ${{ if eq(parameters.parseLabels, true) }}:
-#      - configure
     variables:
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
       ${{ each label in parameters.simTestsConfigurations }}:
@@ -208,8 +185,6 @@ stages:
       condition: false
     displayName: 'GitHub comment - Skipped tests'
     timeoutInMinutes: 1000
-#    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-#    - configure
 
     variables:
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]

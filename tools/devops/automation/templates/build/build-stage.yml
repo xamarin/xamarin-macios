@@ -47,23 +47,6 @@ parameters:
   type: string
 
 jobs:
-#- job: configure
-#  displayName: 'Configure build'
-#  pool:
-#    vmImage: windows-latest
-#
-#  variables:
-#    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-#    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-#    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-#
-#  steps:
-#  - template: ../common/configure.yml
-#    parameters: 
-#      repositoryAlias: ${{ parameters.repositoryAlias }}
-#      commit: ${{ parameters.commit }}
-#      uploadArtifacts: true
-
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
     pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
@@ -81,14 +64,12 @@ jobs:
 
 # This job performs the build of the nuget pkgs and the framework pkgs. There are two interesting dependencies in this job:
 #
-# - configure: Get the labels from gihub and populate the output.
 # - AgentPoolSelector: If the build was not manually triggered to use a specific pool, this job is used to decide if the build is using a 
 #                      private pool or a public one.
 - job: build
   dependsOn:
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - AgentPoolSelector
-  #- configure
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:

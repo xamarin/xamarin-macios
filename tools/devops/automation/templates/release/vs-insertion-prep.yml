@@ -42,23 +42,6 @@ stages:
     condition: eq(${{ parameters.isPR }}, false)
 
   jobs:
-  # - job: configure
-  #   displayName: 'Configure build'
-  #   pool:
-  #     vmImage: windows-latest
-
-  #   variables:
-  #     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  #     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-  #     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-  #   steps:
-  #   - template: ../common/configure.yml
-  #     parameters:
-  #       repositoryAlias: ${{ parameters.repositoryAlias }}
-  #       commit: ${{ parameters.commit }}
-  #       uploadArtifacts: false
-
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:

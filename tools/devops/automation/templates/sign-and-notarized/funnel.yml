@@ -25,25 +25,7 @@ parameters:
   default: '$(MaciosUploadPrefix)'
 
 jobs:
-# - job: configure
-#   displayName: 'Configure build'
-#   pool:
-#     vmImage: windows-latest
-
-#   variables:
-#     isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-#     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-#     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-#   steps:
-#   - template: ../common/configure.yml
-#     parameters:
-#       repositoryAlias: ${{ parameters.repositoryAlias }}
-#       commit: ${{ parameters.commit }}
-
 - job: funnel_job
-#  dependsOn:
-#  - configure
   displayName: 'Collect signed artifacts'
   condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
   timeoutInMinutes: 1000
@@ -190,7 +172,6 @@ jobs:
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
   dependsOn:
-#  - configure
   - upload_azure_blob
   condition: succeededOrFailed()
   variables:
