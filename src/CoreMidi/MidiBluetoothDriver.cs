@@ -28,7 +28,7 @@ namespace CoreMidi {
 		[SupportedOSPlatform ("tvos16.0")]
 		[SupportedOSPlatform ("macos13.0")]
 #else
-	[iOS (16, 0), Mac (13, 0), Watch (9, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), Watch (9, 0), TV (16, 0), MacCatalyst (16, 0), Watch (9,0)]
 #endif // NET
 	public partial class MidiBluetoothDriver {
 		[DllImport (Constants.CoreMidiLibrary)]

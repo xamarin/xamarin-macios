@@ -537,6 +537,7 @@ public class Frameworks : Dictionary<string, Framework> {
 #if !NET
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
+				{ "CoreMidi", "CoreMIDI", 8,0 },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},

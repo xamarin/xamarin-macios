@@ -277,7 +277,7 @@ public class TypeCache {
 			CVPixelBuffer = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBuffer");
 			CVPixelBufferPool = ConditionalLookup (platformAssembly, "CoreVideo", "CVPixelBufferPool");
 		}
-		if (frameworks.HaveCoreMidi && frameworks.CurrentPlatform != PlatformName.TvOS) // the struct is not present on tvos
+		if (frameworks.HaveCoreMidi && frameworks.CurrentPlatform != PlatformName.TvOS && frameworks.CurrentPlatform != PlatformName.WatchOS) // the struct is not present on tvos
 			MidiEndpoint = ConditionalLookup (platformAssembly, "CoreMidi", "MidiEndpoint");
 		if (frameworks.HaveMapKit)
 			MKCoordinateSpan = ConditionalLookup (platformAssembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);

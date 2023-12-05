@@ -2011,6 +2011,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
+	CoreMidi                \
 	CoreVideo               \
 	Compression             \
 	DeviceCheck             \
@@ -2054,7 +2055,6 @@ MACOS_FRAMEWORKS =          \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
@@ -2172,7 +2172,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -2301,7 +2300,6 @@ TVOS_FRAMEWORKS =           \
 	CoreHaptics             \
 	CoreImage               \
 	CoreLocation            \
-	CoreMidi                \
 	CoreSpotlight			\
 	CoreText                \
 	ExternalAccessory       \
@@ -2375,7 +2373,6 @@ MACCATALYST_FRAMEWORKS = \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
