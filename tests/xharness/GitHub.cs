@@ -4,10 +4,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
+
+#nullable enable
 
 namespace Xharness {
 	/// <summary>
@@ -36,14 +42,22 @@ namespace Xharness {
 			this.processManager = processManager;
 		}
 
-		static WebClient CreateClient ()
+		static HttpClient? static_client;
+		static bool TryDownloadData (string url, out byte [] data, out HttpResponseMessage response)
 		{
-			var client = new WebClient ();
-			client.Headers.Add (HttpRequestHeader.UserAgent, "xamarin");
+			HttpClient client;
+			if (static_client is null)
+				static_client = new HttpClient ();
+			client = static_client;
+
+			var request = new HttpRequestMessage (HttpMethod.Get, url);
+			request.Headers.Add ("UserAgent", "xamarin");
 			var xharness_github_token = Environment.GetEnvironmentVariable ("GITHUB_TOKEN");
 			if (!string.IsNullOrEmpty (xharness_github_token))
-				client.Headers.Add (HttpRequestHeader.Authorization, xharness_github_token);
-			return client;
+				request.Headers.Add ("Authorization", xharness_github_token);
+			response = client.Send (request, HttpCompletionOption.ResponseContentRead, default (CancellationToken));
+			data = response.Content.ReadAsByteArrayAsync ().Result;
+			return response.IsSuccessStatusCode;
 		}
 
 		public string GetPullRequestTargetBranch (int pullRequest)
@@ -58,7 +72,7 @@ namespace Xharness {
 			using (var reader = JsonReaderWriterFactory.CreateJsonReader (info, new XmlDictionaryReaderQuotas ())) {
 				var doc = new XmlDocument ();
 				doc.Load (reader);
-				return doc.SelectSingleNode ("/root/base/ref").InnerText;
+				return doc.SelectSingleNode ("/root/base/ref")!.InnerText;
 			}
 		}
 
@@ -69,7 +83,7 @@ namespace Xharness {
 				var doc = new XmlDocument ();
 				doc.Load (reader);
 				var rv = new List<string> ();
-				foreach (XmlNode node in doc.SelectNodes ("/root/labels/item/name")) {
+				foreach (XmlNode node in doc.SelectNodes ("/root/labels/item/name")!) {
 					rv.Add (node.InnerText);
 				}
 				return rv;
@@ -99,69 +113,72 @@ namespace Xharness {
 			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + "-remote-files.log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = CreateClient ()) {
-					var rv = new List<string> ();
-					var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}/files?per_page=100"; // 100 items per page is max
-					do {
-						byte [] data;
-						try {
-							data = client.DownloadData (url);
-						} catch (WebException we) {
-							harness.Log ("Could not load pull request files: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
+				var rv = new List<string> ();
+				var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}/files?per_page=100"; // 100 items per page is max
+				do {
+					byte [] data;
+					HttpResponseMessage response;
+					try {
+						if (!TryDownloadData (url, out data, out response)) {
+							harness.Log ("Unable to load pull request files:\n{0}", System.Text.Encoding.UTF8.GetString (data));
 							File.WriteAllText (path, string.Empty);
 							return new string [] { };
 						}
-						var reader = JsonReaderWriterFactory.CreateJsonReader (data, new XmlDictionaryReaderQuotas ());
-						var doc = new XmlDocument ();
-						doc.Load (reader);
-						foreach (XmlNode node in doc.SelectNodes ("/root/item/filename")) {
-							rv.Add (node.InnerText);
-						}
+					} catch (Exception we) {
+						harness.Log ("Could not load pull request files: {0}", we);
+						File.WriteAllText (path, string.Empty);
+						return new string [] { };
+					}
+					var reader = JsonReaderWriterFactory.CreateJsonReader (data, new XmlDictionaryReaderQuotas ());
+					var doc = new XmlDocument ();
+					doc.Load (reader);
+					foreach (XmlNode node in doc.SelectNodes ("/root/item/filename")!) {
+						rv.Add (node.InnerText);
+					}
 
-						url = null;
+					url = null;
 
-						var link = client.ResponseHeaders ["Link"];
-						try {
-							if (link is not null) {
-								var ltIdx = link.IndexOf ('<');
-								var gtIdx = link.IndexOf ('>', ltIdx + 1);
-								while (ltIdx >= 0 && gtIdx > ltIdx) {
-									var linkUrl = link.Substring (ltIdx + 1, gtIdx - ltIdx - 1);
-									if (link [gtIdx + 1] != ';')
-										break;
-									var commaIdx = link.IndexOf (',', gtIdx + 1);
-									string rel;
-									if (commaIdx != -1) {
-										rel = link.Substring (gtIdx + 3, commaIdx - gtIdx - 3);
-									} else {
-										rel = link.Substring (gtIdx + 3);
-									}
-
-									if (rel == "rel=\"next\"") {
-										url = linkUrl;
-										break;
-									}
-
-									if (commaIdx == -1)
-										break;
-
-									ltIdx = link.IndexOf ('<', commaIdx);
-									gtIdx = link.IndexOf ('>', ltIdx + 1);
+					var link = string.Join (";", response.Headers.GetValues ("Link"));
+					try {
+						if (link is not null) {
+							var ltIdx = link.IndexOf ('<');
+							var gtIdx = link.IndexOf ('>', ltIdx + 1);
+							while (ltIdx >= 0 && gtIdx > ltIdx) {
+								var linkUrl = link.Substring (ltIdx + 1, gtIdx - ltIdx - 1);
+								if (link [gtIdx + 1] != ';')
+									break;
+								var commaIdx = link.IndexOf (',', gtIdx + 1);
+								string rel;
+								if (commaIdx != -1) {
+									rel = link.Substring (gtIdx + 3, commaIdx - gtIdx - 3);
+								} else {
+									rel = link.Substring (gtIdx + 3);
 								}
+
+								if (rel == "rel=\"next\"") {
+									url = linkUrl;
+									break;
+								}
+
+								if (commaIdx == -1)
+									break;
+
+								ltIdx = link.IndexOf ('<', commaIdx);
+								gtIdx = link.IndexOf ('>', ltIdx + 1);
 							}
-						} catch (Exception e) {
-							harness.Log ("Could not paginate github response: {0}: {1}", link, e.Message);
 						}
-					} while (url is not null);
-					File.WriteAllLines (path, rv.ToArray ());
-					return rv;
-				}
+					} catch (Exception e) {
+						harness.Log ("Could not paginate github response: {0}: {1}", link, e.Message);
+					}
+				} while (url is not null);
+				File.WriteAllLines (path, rv.ToArray ());
+				return rv;
 			}
 
 			return File.ReadAllLines (path);
 		}
 
-		IEnumerable<string> GetModifiedFilesLocally (int pullRequest)
+		IEnumerable<string>? GetModifiedFilesLocally (int pullRequest)
 		{
 			var base_commit = $"origin/pull/{pullRequest}/merge^";
 			var head_commit = $"origin/pull/{pullRequest}/merge";
@@ -193,17 +210,18 @@ namespace Xharness {
 			var path = Path.Combine (harness.LogDirectory, "pr" + pullRequest + ".log");
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
-				using (var client = CreateClient ()) {
-					byte [] data;
-					try {
-						data = client.DownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}");
-						File.WriteAllBytes (path, data);
-						return data;
-					} catch (WebException we) {
-						harness.Log ("Could not load pull request info: {0}\n{1}", we, new StreamReader (we.Response.GetResponseStream ()).ReadToEnd ());
+				try {
+					if (!TryDownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}", out var data, out var _)) {
+						harness.Log ("Unable to load pull request info:\n{0}", Encoding.UTF8.GetString (data));
 						File.WriteAllText (path, string.Empty);
 						return new byte [0];
 					}
+					File.WriteAllBytes (path, data);
+					return data;
+				} catch (Exception we) {
+					harness.Log ("Could not load pull request info: {0}", we);
+					File.WriteAllText (path, string.Empty);
+					return new byte [0];
 				}
 			}
 			return File.ReadAllBytes (path);
