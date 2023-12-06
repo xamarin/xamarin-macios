@@ -117,7 +117,7 @@ public class BindingTouch : IDisposable {
 			// block the generator until a debugger has attached to it
 			// our customers won't find any use for this.
 			var process = Process.GetCurrentProcess();
-			Console.WriteLine ($"Waiting for debugger to attach: ({ process.Id}) {process.ProcessName}");
+			Console.WriteLine ($"Waiting for debugger to attach: ({ process.Id}) {process.ProcessName} { string.Join (" ", args)}");
 			while (!Debugger.IsAttached) {
 				Thread.Sleep (100);
 			}
