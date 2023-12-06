@@ -29,6 +29,8 @@ namespace Xharness {
 
 	public class GitHub : IVersionControlSystem {
 
+		const string PullsApiUrl = "https://api.github.com/repos/xamarin/xamarin-macios/pulls";
+
 		readonly IHarness harness;
 		readonly IProcessManager processManager;
 
@@ -42,13 +44,13 @@ namespace Xharness {
 			this.processManager = processManager;
 		}
 
-		static HttpClient? static_client;
+		static HttpClient? staticClient;
 		static bool TryDownloadData (string url, out byte [] data, out HttpResponseMessage response)
 		{
 			HttpClient client;
-			if (static_client is null)
-				static_client = new HttpClient ();
-			client = static_client;
+			if (staticClient is null)
+				staticClient = new HttpClient ();
+			client = staticClient;
 
 			var request = new HttpRequestMessage (HttpMethod.Get, url);
 			request.Headers.Add ("UserAgent", "xamarin");
@@ -114,7 +116,7 @@ namespace Xharness {
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
 				var rv = new List<string> ();
-				var url = $"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}/files?per_page=100"; // 100 items per page is max
+				var url = $"${PullsApiUrl}/{pullRequest}/files?per_page=100"; // 100 items per page is max
 				do {
 					byte [] data;
 					HttpResponseMessage response;
@@ -211,7 +213,7 @@ namespace Xharness {
 			if (!File.Exists (path)) {
 				Directory.CreateDirectory (harness.LogDirectory);
 				try {
-					if (!TryDownloadData ($"https://api.github.com/repos/xamarin/xamarin-macios/pulls/{pullRequest}", out var data, out var _)) {
+					if (!TryDownloadData ($"{PullsApiUrl}/{pullRequest}", out var data, out var _)) {
 						harness.Log ("Unable to load pull request info:\n{0}", Encoding.UTF8.GetString (data));
 						File.WriteAllText (path, string.Empty);
 						return new byte [0];
