@@ -35,22 +35,6 @@ parameters:
   type: string
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
-
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-  steps:
-  - template: ../common/configure.yml
-    parameters: 
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      uploadArtifacts: false
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -72,7 +56,6 @@ jobs:
   dependsOn:
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - AgentPoolSelector
-  - configure
   displayName: 'Detect API changes'
   timeoutInMinutes: 1000
   variables:
@@ -82,10 +65,10 @@ jobs:
       AgentPoolComputed: $(CIBuildPool)
     ${{ if eq(parameters.pool, 'pr') }}:
       AgentPoolComputed: $(PRBuildPool)
-    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+    XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:
@@ -113,7 +96,6 @@ jobs:
   displayName: 'Upload / Publish change detection results to VSDrops / GitHub'
   timeoutInMinutes: 1000
   dependsOn: # can start as soon as the api diff is done
-  - configure
   - api_diff
   condition: succeededOrFailed()
   pool:
