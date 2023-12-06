@@ -10,12 +10,13 @@ using TaskItem = Microsoft.Build.Utilities.TaskItem;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CompileSceneKitAssetsTaskBase : XamarinTask {
+	public class CompileSceneKitAssets : XamarinTask, ICancelableTask {
 		string toolExe;
 
 		#region Inputs
@@ -119,6 +120,16 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+
+				taskRunner.FixReferencedItems (SceneKitAssets);
+
+				FixUpRootedPaths (SceneKitAssets);
+
+				return taskRunner.RunAsync (this).Result;
+			}
+
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var intermediate = Path.Combine (IntermediateOutputPath, ToolName, AppBundleName);
 			var bundleResources = new List<ITaskItem> ();
@@ -201,6 +212,19 @@ namespace Xamarin.MacDev.Tasks {
 			BundleResources = bundleResources.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		void FixUpRootedPaths (ITaskItem [] sceneKitAssets)
+		{
+			foreach (var item in sceneKitAssets) {
+				item.ItemSpec = item.ItemSpec.Replace (":", "");
+			}
 		}
 	}
 }
