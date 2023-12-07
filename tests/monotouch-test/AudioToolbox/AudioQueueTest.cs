@@ -55,7 +55,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 #endif
 
 		[Test]
-		[Ignore ("Fails on some machines with undefined error code 5")]
 		public void ProcessingTap ()
 		{
 			var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
@@ -74,11 +73,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 					AudioQueueBuffer* buffer;
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (5000, out buffer), "#2");
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), "#3");
-					//Assert.AreEqual (AudioQueueStatus.Ok, aq.Start (), "#4");
+					Assert.AreEqual (AudioQueueStatus.Ok, aq.Start (), "#4");
 				}
 			}
 
-			//Assert.That (called, Is.True, "#10");
+			Assert.That (called, Is.True, "#10");
 		}
 
 		[Test]
