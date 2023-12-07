@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 
@@ -36,7 +37,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string MinimumOSVersion { get; set; }
 
-		public ITaskItem [] NativeReferences { get; set; }
+		public ITaskItem [] NativeReferences { get; set; } = Array.Empty<ITaskItem> ();
 
 		public ITaskItem [] Frameworks { get; set; }
 
@@ -78,7 +79,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var hasEmbeddedFrameworks = false;
 
-			if (NativeReferences?.Length > 0) {
+			if (NativeReferences.Length > 0) {
 				var linkerArguments = new LinkerOptions ();
 				linkerArguments.BuildNativeReferenceFlags (Log, NativeReferences);
 				foreach (var framework in linkerArguments.Frameworks) {
@@ -161,6 +162,8 @@ namespace Xamarin.MacDev.Tasks {
 					}
 				}
 			}
+
+			hasDylibs |= NativeReferences.Any (v => string.Equals (".dylib", Path.GetExtension (v.ItemSpec), StringComparison.OrdinalIgnoreCase));
 
 			if (hasDylibs) {
 				arguments.Add ("-rpath");
