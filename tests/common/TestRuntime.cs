@@ -137,10 +137,10 @@ partial class TestRuntime {
 	public static void IgnoreInCI (string message)
 	{
 		if (!IsInCI) {
-			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
+			Console.WriteLine ($"Not ignoring test, because not running in CI: {message}");
 			return;
 		}
-		Console.WriteLine ($"Ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
+		Console.WriteLine ($"Ignoring test, because not running in CI: {message}");
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
@@ -1480,6 +1480,16 @@ partial class TestRuntime {
 		IgnoreInCIIfDnsResolutionFailed (ex);
 	}
 
+	public static void IgnoreInCIIfBadNetwork (NSError? error)
+	{
+		if (error is null)
+			return;
+
+		IgnoreInCIIfNetworkConnectionLost (error);
+		IgnoreInCIIfNoNetworkConnection (error);
+		IgnoreInCIIfDnsResolutionFailed (error);
+	}
+
 	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
 	{
 		var se = FindInner<System.Net.Sockets.SocketException> (ex);
@@ -1496,6 +1506,11 @@ partial class TestRuntime {
 			return;
 
 		IgnoreInCI ($"Ignored due to DNS resolution failure '{se.Message}'");
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.CannotFindHost);
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
@@ -1529,14 +1544,36 @@ partial class TestRuntime {
 
 	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
 	{
-		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
 		if (!(ex is NSErrorException nex))
 			return;
 
-		if (nex.Code != (nint) (long) CFNetworkErrors.NetworkConnectionLost)
+		IgnoreInCIIfNetworkConnectionLost (nex.Error);
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (NSError error)
+	{
+		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
+		IgnoreNetworkError (error, CFNetworkErrors.NetworkConnectionLost);
+	}
+
+	public static void IgnoreInCIIfNoNetworkConnection (NSError error)
+	{
+		// Error Domain=NSURLErrorDomain Code=-1009 "The Internet connection appears to be offline."
+		IgnoreNetworkError (error, CFNetworkErrors.NotConnectedToInternet);
+	}
+
+	static void IgnoreNetworkError (NSError error, params CFNetworkErrors [] errors)
+	{
+		if (error is null)
 			return;
 
-		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
+		if (error.Domain != NSError.NSUrlErrorDomain && error.Domain != NSError.CFNetworkErrorDomain)
+			return;
+
+		foreach (var e in errors) {
+			if (error.Code == (nint) (long) e)
+				IgnoreInCI ($"Ignored due to network error: {error}");
+		}
 	}
 
 	static T? FindInner<T> (Exception? ex) where T : Exception
