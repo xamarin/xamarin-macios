@@ -14,11 +14,6 @@ parameters:
   type: string
   default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
 
-# string that contains the extra labels to pass to xharness to select the tests to execute.
-- name: testsLabels
-  type: string
-  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
-
 # name of the pool that contains the iOS devices
 - name: testPool
   type: string
