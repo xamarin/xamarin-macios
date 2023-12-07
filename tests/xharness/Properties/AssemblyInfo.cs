@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyDescription ("")]
-[assembly: AssemblyCopyright ("(C) Rolf Bjarne Kvinge")]
+[assembly: AssemblyCopyright ("Copyright 2015 - 2023 Microsoft Corp.")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 
