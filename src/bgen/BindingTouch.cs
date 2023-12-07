@@ -232,28 +232,9 @@ public class BindingTouch : IDisposable {
 		};
 	}
 
-	int Main3 (string [] args)
+	public bool TryInitializeApi (BindingTouchConfig config, out Api? api)
 	{
-		ErrorHelper.ClearWarningLevels ();
-		BindingTouchConfig config = new ();
-		OptionSet os = CreateOptionSet (config);
-
-		try {
-			config.Sources = os.Parse (args);
-		} catch (Exception e) {
-			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
-			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
-			return 1;
-		}
-
-		if (config.ShowHelp) {
-			ShowHelp (os);
-			return 0;
-		}
-
-		libraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
-		CurrentPlatform = LibraryManager.DetermineCurrentPlatform (TargetFramework.Platform);
-
+		api = null;
 		if (config.Sources.Count > 0) {
 			config.ApiSources.Insert (0, config.Sources [0]);
 			for (int i = 1; i < config.Sources.Count; i++)
@@ -262,8 +243,8 @@ public class BindingTouch : IDisposable {
 
 		if (config.ApiSources.Count == 0) {
 			Console.WriteLine ("Error: no api file provided");
-			ShowHelp (os);
-			return 1;
+			ShowHelp (config.os);
+			return false;
 		}
 
 		if (config.TemporaryFileDirectory is null)
@@ -274,11 +255,13 @@ public class BindingTouch : IDisposable {
 		if (outfile is null)
 			outfile = firstApiDefinitionName + ".dll";
 
-		var refs = references.Select ((v) => "-r:" + v);
-		var paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
+		config.refs = references.Select ((v) => "-r:" + v);
+		config.paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
-			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config.TemporaryFileDirectory, refs, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines, paths);
+			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config, config.TemporaryFileDirectory,
+				config.refs, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines,
+				config.paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
 					LibraryManager.GetLibraryDirectories (LibraryInfo, CurrentPlatform).ToArray (),
@@ -286,21 +269,23 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) || !TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
-				return 1;
+			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) ||
+			    !TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
+				return false;
 
 			Frameworks = new Frameworks (CurrentPlatform);
 
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (LibraryManager.GetAttributeLibraryPath (LibraryInfo, CurrentPlatform));
 
-			typeCache ??= new (universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib, BindThirdPartyLibrary);
-			attributeManager ??= new (typeCache);
-			typeManager ??= new (this);
+			typeCache ??= new(universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib,
+				BindThirdPartyLibrary);
+			attributeManager ??= new(typeCache);
+			typeManager ??= new(this);
 
 			// TODO will change
 			if (!TestLinkWith (apiAssembly, config))
-				return 1;
+				return false;
 
 			foreach (var r in references) {
 				// IKVM has a bug where it doesn't correctly compare assemblies, which means it
@@ -324,13 +309,58 @@ public class BindingTouch : IDisposable {
 				}
 			}
 
-			var api = TypeManager.ParseApi (apiAssembly, config.ProcessEnums);
+			api = TypeManager.ParseApi (apiAssembly, config.ProcessEnums);
 			namespaceCache ??= new NamespaceCache (
 				CurrentPlatform,
 				config.HelperClassNamespace ?? firstApiDefinitionName,
 				LibraryManager.DetermineSkipSystemDrawing (LibraryInfo.TargetFramework)
 			);
 
+
+		} catch (Exception ex) {
+			ErrorHelper.Show (ex);
+		}
+
+		return true;
+	}
+
+	int Main3 (string [] args)
+	{
+		ErrorHelper.ClearWarningLevels ();
+		BindingTouchConfig config = new ();
+		config.os = CreateOptionSet (config);
+
+		try {
+			config.Sources = config.os.Parse (args); // TODO lol that's a mess
+		} catch (Exception e) {
+			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
+			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
+			return 1;
+		}
+
+		if (config.ShowHelp) {
+			ShowHelp (config.os);
+			return 0;
+		}
+
+		libraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
+		CurrentPlatform = LibraryManager.DetermineCurrentPlatform (TargetFramework.Platform);
+
+		if (!TryInitializeApi (config, out Api? api))
+			return 1;
+
+		if (!TryGenerate (config, api))
+			return 1;
+
+		return 0;
+	}
+
+	bool TryGenerate (BindingTouchConfig config, Api? api)
+	{
+		if (api is null)
+			return false;
+
+		try {
 			var g = new Generator (this, api, config.IsPublicMode, config.IsExternal, config.IsDebug) {
 				BaseDir = config.BindingFilesOutputDirectory ?? config.TemporaryFileDirectory,
 				ZeroCopyStrings = config.UseZeroCopy,
@@ -344,7 +374,7 @@ public class BindingTouch : IDisposable {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
-				return 0;
+				return false; // TODO figure this out
 			}
 
 			var cargs = new List<string> ();
@@ -360,7 +390,7 @@ public class BindingTouch : IDisposable {
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (config.CoreSources);
 			cargs.AddRange (config.ExtraSources);
-			cargs.AddRange (refs);
+			cargs.AddRange (config.refs);
 			cargs.Add ("-r:" + LibraryInfo.BaseLibDll);
 			cargs.AddRange (config.Resources);
 			if (LibraryInfo.OmitStandardLibrary) {
@@ -377,7 +407,8 @@ public class BindingTouch : IDisposable {
 			if (config.DeleteTemporaryFiles)
 				Directory.Delete (config.TemporaryFileDirectory, true);
 		}
-		return 0;
+
+		return true;
 	}
 
 	bool TestLinkWith(Assembly apiAssembly, BindingTouchConfig config)
@@ -404,7 +435,7 @@ public class BindingTouch : IDisposable {
 	}
 
 	// If anything is modified in this function, check if the _CompileApiDefinitions MSBuild target needs to be updated as well.
-	string GetCompiledApiBindingsAssembly (LibraryInfo libraryInfo, string tmpdir, IEnumerable<string> refs, bool nostdlib, List<string> api_sources, List<string> core_sources, List<string> defines, IEnumerable<string> paths)
+	string GetCompiledApiBindingsAssembly (LibraryInfo libraryInfo, BindingTouchConfig config, string tmpdir, IEnumerable<string> refs, bool nostdlib, List<string> api_sources, List<string> core_sources, List<string> defines, IEnumerable<string> paths)
 	{
 		if (!string.IsNullOrEmpty (compiled_api_definition_assembly))
 			return compiled_api_definition_assembly;
@@ -421,7 +452,7 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-nowarn:436");
 		cargs.Add ("-out:" + tmpass);
 		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (libraryInfo, CurrentPlatform));
-		cargs.AddRange (refs);
+		cargs.AddRange (config.refs);
 		cargs.Add ("-r:" + libraryInfo.BaseLibDll);
 		foreach (var def in defines)
 			cargs.Add ("-define:" + def);
@@ -445,8 +476,10 @@ public class BindingTouch : IDisposable {
 		return tmpass;
 	}
 
-	void AddNFloatUsing (List<string> cargs, string tmpdir)
+	void AddNFloatUsing (List<string> cargs, string? tmpdir)
 	{
+		if (tmpdir is null)
+			return;
 #if NET
 		if (noNFloatUsing)
 			return;
@@ -456,8 +489,11 @@ public class BindingTouch : IDisposable {
 #endif
 	}
 
-	void Compile (List<string> arguments, int errorCode, string tmpdir)
+	void Compile (List<string> arguments, int errorCode, string? tmpdir)
 	{
+		if (tmpdir is null)
+			return;
+
 		var responseFile = Path.Combine (tmpdir, $"compile-{errorCode}.rsp");
 		// The /noconfig argument is not allowed in a response file, so don't put it there.
 		var responseFileArguments = arguments
