@@ -168,8 +168,6 @@
 !incorrect-protocol-member! MTLComputeCommandEncoder::setBuffers:offsets:attributeStrides:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setBytes:length:attributeStride:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::architecture is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newIOFileHandleWithURL:compressionMethod:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newIOFileHandleWithURL:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIndirectComputeCommand::setKernelBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIntersectionFunctionTable::setOpaqueCurveIntersectionFunctionWithSignature:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLIntersectionFunctionTable::setOpaqueCurveIntersectionFunctionWithSignature:withRange: is REQUIRED and should be abstract
@@ -193,7 +191,6 @@
 !incorrect-protocol-member! MTLDevice::heapAccelerationStructureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::heapAccelerationStructureSizeAndAlignWithSize: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newArgumentEncoderWithBufferBinding: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newIOCommandQueueWithDescriptor:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithMeshDescriptor:options:completionHandler: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::newRenderPipelineStateWithMeshDescriptor:options:reflection:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::sparseTileSizeInBytesForSparsePageSize: is REQUIRED and should be abstract
@@ -203,3 +200,25 @@
 !missing-protocol-member! MTLDevice::newIOHandleWithURL:compressionMethod:error: not found
 !missing-protocol-member! MTLDevice::newIOHandleWithURL:error: not found
 !incorrect-protocol-member! MTLAccelerationStructureCommandEncoder::refitAccelerationStructure:descriptor:destination:scratchBuffer:scratchBufferOffset:options: is REQUIRED and should be abstract
+
+# Ignore until we find a real usage for this APIs. At the moment of the writing they give problems
+# with the static registrar
+!missing-protocol! MTLIOCommandBuffer not bound
+!missing-protocol! MTLIOCommandQueue not bound
+!missing-protocol! MTLIOScratchBuffer not bound
+!missing-protocol! MTLIOScratchBufferAllocator not bound
+!missing-protocol-member! MTLDevice::newIOCommandQueueWithDescriptor:error: not found
+!missing-selector! MTLIOCommandQueueDescriptor::maxCommandBufferCount not bound
+!missing-selector! MTLIOCommandQueueDescriptor::maxCommandsInFlight not bound
+!missing-selector! MTLIOCommandQueueDescriptor::priority not bound
+!missing-selector! MTLIOCommandQueueDescriptor::scratchBufferAllocator not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandBufferCount: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandsInFlight: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setPriority: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setScratchBufferAllocator: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setType: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::type not bound
+!missing-type! MTLIOCommandQueueDescriptor not bound
+!missing-protocol! MTLIOFileHandle not bound
+!missing-protocol-member! MTLDevice::newIOFileHandleWithURL:compressionMethod:error: not found
+!missing-protocol-member! MTLDevice::newIOFileHandleWithURL:error: not found

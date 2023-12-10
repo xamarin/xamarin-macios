@@ -2151,22 +2151,6 @@ namespace Metal {
 		[Export ("architecture")]
 		MTLArchitecture Architecture { get; }
 
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
-#endif
-		[Export ("newIOFileHandleWithURL:error:")]
-		[return: NullAllowed]
-		IMTLIOFileHandle CreateIOFileHandle (NSUrl url, [NullAllowed] out NSError error);
-
-		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
-#if XAMCORE_5_0
-		[Abstract]
-#endif
-		[Export ("newIOFileHandleWithURL:compressionMethod:error:")]
-		[return: NullAllowed]
-		IMTLIOFileHandle CreateIOFileHandle (NSUrl url, MTLIOCompressionMethod compressionMethod, [NullAllowed] out NSError error);
-
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
 		[Abstract]
@@ -2187,14 +2171,6 @@ namespace Metal {
 #endif
 		[Export ("newArgumentEncoderWithBufferBinding:")]
 		IMTLArgumentEncoder CreateArgumentEncoder (IMTLBufferBinding bufferBinding);
-
-		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
-#if XAMCORE_5_0
-		[Abstract]
-#endif
-		[Export ("newIOCommandQueueWithDescriptor:error:")]
-		[return: NullAllowed]
-		IMTLIOCommandQueue CreateIOCommandQueue (MTLIOCommandQueueDescriptor descriptor, [NullAllowed] out NSError error);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
 #if XAMCORE_5_0
@@ -7370,134 +7346,6 @@ namespace Metal {
 		MTLPointerType BufferPointerType { get; }
 	}
 
-	interface IMTLIOFileHandle { }
-
-	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-	[Protocol]
-	interface MTLIOFileHandle {
-		[Abstract]
-		[NullAllowed, Export ("label")]
-		string Label { get; set; }
-	}
-
-	interface IMTLIOCommandBuffer { }
-
-	delegate void MTLIOCommandBufferHandler (IMTLIOCommandBuffer buffer);
-
-	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-	[Protocol]
-	interface MTLIOCommandBuffer {
-		[Abstract]
-		[Export ("addCompletedHandler:")]
-		void AddCompletedHandler (MTLIOCommandBufferHandler handler);
-
-		[Abstract]
-		[Export ("loadBytes:size:sourceHandle:sourceHandleOffset:")]
-		void LoadBytes (IntPtr bytes, nuint size, IMTLIOFileHandle sourceHandle, nuint sourceHandleOffset);
-
-		[Abstract]
-		[Export ("loadBuffer:offset:size:sourceHandle:sourceHandleOffset:")]
-		void LoadBuffer (IMTLBuffer buffer, nuint offset, nuint size, IMTLIOFileHandle sourceHandle, nuint sourceHandleOffset);
-
-		[Abstract]
-		[Export ("loadTexture:slice:level:size:sourceBytesPerRow:sourceBytesPerImage:destinationOrigin:sourceHandle:sourceHandleOffset:")]
-		void LoadTexture (IMTLTexture texture, nuint slice, nuint level, MTLSize size, nuint sourceBytesPerRow, nuint sourceBytesPerImage, MTLOrigin destinationOrigin, IMTLIOFileHandle sourceHandle, nuint sourceHandleOffset);
-
-		[Abstract]
-		[Export ("copyStatusToBuffer:offset:")]
-		void CopyStatus (IMTLBuffer buffer, nuint offset);
-
-		[Abstract]
-		[Export ("commit")]
-		void Commit ();
-
-		[Abstract]
-		[Export ("waitUntilCompleted")]
-		void WaitUntilCompleted ();
-
-		[Abstract]
-		[Export ("tryCancel")]
-		void TryCancel ();
-
-		[Abstract]
-		[Export ("addBarrier")]
-		void AddBarrier ();
-
-		[Abstract]
-		[Export ("pushDebugGroup:")]
-		void PushDebugGroup (string group);
-
-		[Abstract]
-		[Export ("popDebugGroup")]
-		void PopDebugGroup ();
-
-		[Abstract]
-		[Export ("enqueue")]
-		void Enqueue ();
-
-		[Abstract]
-		[Export ("waitForEvent:value:")]
-		void WaitForEvent (IMTLSharedEvent @event, ulong value);
-
-		[Abstract]
-		[Export ("signalEvent:value:")]
-		void SignalEvent (IMTLSharedEvent @event, ulong value);
-
-		[Abstract]
-		[NullAllowed, Export ("label")]
-		string Label { get; set; }
-
-		[Abstract]
-		[Export ("status")]
-		MTLIOStatus Status { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("error")]
-		NSError Error { get; }
-	}
-
-	interface IMTLIOCommandQueue { }
-
-	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-	[Protocol]
-	interface MTLIOCommandQueue {
-		[Abstract]
-		[Export ("enqueueBarrier")]
-		void EnqueueBarrier ();
-
-		[Abstract]
-		[Export ("commandBuffer")]
-		IMTLIOCommandBuffer CommandBuffer { get; }
-
-		[Abstract]
-		[Export ("commandBufferWithUnretainedReferences")]
-		IMTLIOCommandBuffer CommandBufferWithUnretainedReferences { get; }
-
-		[Abstract]
-		[NullAllowed, Export ("label")]
-		string Label { get; set; }
-	}
-
-	interface IMTLIOScratchBuffer { }
-
-	[Mac (13, 0), iOS (16, 0)]
-	[Protocol]
-	interface MTLIOScratchBuffer {
-		[Abstract]
-		[Export ("buffer")]
-		IMTLBuffer Buffer { get; }
-	}
-
-	interface IMTLIOScratchBufferAllocator { }
-
-	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-	[Protocol]
-	interface MTLIOScratchBufferAllocator {
-		[Abstract]
-		[Export ("newScratchBufferWithMinimumSize:")]
-		[return: NullAllowed, Release]
-		IMTLIOScratchBuffer Create (nuint minimumSize);
-	}
 
 	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
@@ -7801,26 +7649,6 @@ namespace Metal {
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLAccelerationStructurePassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);
-	}
-
-	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface MTLIOCommandQueueDescriptor : NSCopying {
-		[Export ("maxCommandBufferCount")]
-		nuint MaxCommandBufferCount { get; set; }
-
-		[Export ("priority", ArgumentSemantic.Assign)]
-		MTLIOPriority Priority { get; set; }
-
-		[Export ("type", ArgumentSemantic.Assign)]
-		MTLIOCommandQueueType Type { get; set; }
-
-		[Export ("maxCommandsInFlight")]
-		nuint MaxCommandsInFlight { get; set; }
-
-		[NullAllowed, Export ("scratchBufferAllocator", ArgumentSemantic.Retain)]
-		IMTLIOScratchBufferAllocator ScratchBufferAllocator { get; set; }
 	}
 
 	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
