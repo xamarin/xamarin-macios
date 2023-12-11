@@ -1,3 +1,4 @@
+#if !__WATCHOS__
 using System;
 using System.IO;
 using System.Diagnostics;
@@ -47,3 +48,4 @@ namespace MonoTouchFixtures.Metal {
 		}
 	}
 }
+#endif
