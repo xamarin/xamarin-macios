@@ -65,6 +65,7 @@ public class BindingTouch : IDisposable {
 	public MetadataLoadContext? universe;
 	public Frameworks? Frameworks;
 
+	Assembly? apiAssembly;
 	AttributeManager? attributeManager;
 	public AttributeManager AttributeManager => attributeManager!;
 
@@ -268,7 +269,7 @@ public class BindingTouch : IDisposable {
 				"mscorlib"
 			);
 
-			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) || !TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
+			if (!TryLoadApi (tmpass, out apiAssembly) || !TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
 				return 1;
 
 			Frameworks = new Frameworks (CurrentPlatform);
@@ -370,6 +371,11 @@ public class BindingTouch : IDisposable {
 				Directory.Delete (config.TemporaryFileDirectory, true);
 		}
 		return 0;
+	}
+
+	public bool IsApiAssembly (Assembly assembly)
+	{
+		return assembly == apiAssembly;
 	}
 
 	// If anything is modified in this function, check if the _CompileApiDefinitions MSBuild target needs to be updated as well.
