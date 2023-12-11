@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.Foundation {
 					using var request = new NSUrlRequest (url);
 					using var data = NSUrlConnection.SendSynchronousRequest (request, out var response, out var error);
 					TestRuntime.IgnoreInCIIfBadNetwork (error);
-					Assert.IsNull (error, $"Error: {error.Description}");
+					Assert.IsNull (error, $"Error: {error?.Description}");
 					Assert.IsNotNull (data, "Data");
 					Assert.IsNotNull (response, "Response");
 					response?.Dispose ();
