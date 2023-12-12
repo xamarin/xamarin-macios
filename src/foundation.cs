@@ -8271,7 +8271,7 @@ namespace Foundation {
 		bool RequiresDnsSecValidation { get; set; }
 
 		[Export ("proxyConfigurations", ArgumentSemantic.Copy)]
-		NSObject[] ProxyConfigurations { get; set; }
+		NSObject [] ProxyConfigurations { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
