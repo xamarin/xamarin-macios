@@ -11,7 +11,6 @@ namespace MonoTouchFixtures.Network {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NWRelayHopTests {
-		NWEndpoint? endpoint;
 		NWRelayHop? hop;
 
 		[OneTimeSetUp]
@@ -20,14 +19,13 @@ namespace MonoTouchFixtures.Network {
 		[SetUp]
 		public void SetUp ()
 		{
-			endpoint = NWEndpoint.Create ("https://github.com");
+			using var endpoint = NWEndpoint.Create ("https://github.com");
 			hop = NWRelayHop.Create (endpoint, null, null);
 		}
 
 		[TearDown]
 		public void TearDown ()
 		{
-			endpoint?.Dispose ();
 			hop?.Dispose ();
 		}
 

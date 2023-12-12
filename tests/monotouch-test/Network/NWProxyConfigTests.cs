@@ -39,39 +39,55 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void CreateRelayTest ()
 		{
-			config = null;
-			Assert.DoesNotThrow (
-				() => config = NWProxyConfig.CreateRelay (hop, null), "Throws");
-			Assert.NotNull (config, "Not null");
+			NWProxyConfig? capturedConfig = null;
+			try {
+				Assert.DoesNotThrow (
+					() => config = NWProxyConfig.CreateRelay (hop, null), "Throws");
+				Assert.NotNull (capturedConfig, "Not null");
+			} finally {
+				capturedConfig?.Dispose ();
+			}
 		}
 
 		[Test]
 		public void CreateObliviousHttpTest ()
 		{
-			config = null;
-			Assert.DoesNotThrow (
-				() => config = NWProxyConfig.CreateObliviousHttp (hop, "", new byte [0]), "Throws");
-			Assert.Null (config, "Not null");
+			NWProxyConfig? capturedConfig = null;
+			try {
+				Assert.DoesNotThrow (
+					() => capturedConfig = NWProxyConfig.CreateObliviousHttp (hop, "", new byte [0]), "Throws");
+				Assert.Null (capturedConfig, "Not null");
+			} finally {
+				capturedConfig?.Dispose ();
+			}
 		}
 
 		[Test]
 		public void CreateHttpConnectTest ()
 		{
-			config = null;
-			Assert.DoesNotThrow (
-				() => config = NWProxyConfig.CreateHttpConnect (endpoint, null),
-			"Throws");
-			Assert.NotNull (config, "Not null");
+			NWProxyConfig? capturedConfig = null;
+			try {
+				Assert.DoesNotThrow (
+					() => capturedConfig = NWProxyConfig.CreateHttpConnect (endpoint, null),
+				"Throws");
+				Assert.NotNull (capturedConfig, "Not null");
+			} finally {
+				capturedConfig?.Dispose ();
+			}
 		}
 
 		[Test]
 		public void CreateSocksV5Test ()
 		{
-			config = null;
-			Assert.DoesNotThrow (
-				() => config = NWProxyConfig.CreateSocksV5 (endpoint),
-			"Throws");
-			Assert.NotNull (config, "Not null");
+			NWProxyConfig? capturedConfig = null;
+			try {
+				Assert.DoesNotThrow (
+					() => capturedConfig = NWProxyConfig.CreateSocksV5 (endpoint),
+				"Throws");
+				Assert.NotNull (capturedConfig, "Not null");
+			} finally {
+				capturedConfig?.Dispose ();
+			}
 		}
 
 		[Test]
