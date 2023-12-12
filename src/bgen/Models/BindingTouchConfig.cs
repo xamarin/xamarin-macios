@@ -28,9 +28,7 @@ public class BindingTouchConfig {
 	public string? TargetFramework = null;
 	public string? Baselibdll = null;
 	public string? Attributedll = null;
-
-	public IEnumerable<string> paths;
-	public IEnumerable<string> refs;
-	public OptionSet os;
-
+	public IEnumerable<string> Paths = new List<string> ();
+	public IEnumerable<string> References = new List<string> ();
+	public OptionSet OptionSet = new();
 }

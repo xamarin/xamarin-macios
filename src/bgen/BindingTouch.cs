@@ -140,7 +140,7 @@ public class BindingTouch : IDisposable {
 	public bool TryCreateOptionSet (BindingTouchConfig config, string[] args)
 	{
 		try {
-			config.os = new OptionSet () {
+			config.OptionSet = new OptionSet () {
 				{ "h|?|help", "Displays the help", v => config.ShowHelp = true },
 				{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
 				{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.BindingFilesOutputDirectory = v; }},
@@ -231,7 +231,7 @@ public class BindingTouch : IDisposable {
 				{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
 				new Mono.Options.ResponseFileSource (),
 			};
-			config.Sources = config.os.Parse (args);
+			config.Sources = config.OptionSet.Parse (args);
 		} catch (Exception e) {
 			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
 			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
@@ -252,7 +252,7 @@ public class BindingTouch : IDisposable {
 
 		if (config.ApiSources.Count == 0) {
 			Console.WriteLine ("Error: no api file provided");
-			ShowHelp (config.os);
+			ShowHelp (config.OptionSet);
 			return false;
 		}
 
@@ -264,13 +264,13 @@ public class BindingTouch : IDisposable {
 		if (outfile is null)
 			outfile = firstApiDefinitionName + ".dll";
 
-		config.refs = references.Select ((v) => "-r:" + v);
-		config.paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
+		config.References = references.Select ((v) => "-r:" + v);
+		config.Paths = LibraryManager.Libraries.Select ((v) => "-lib:" + v);
 
 		try {
 			var tmpass = GetCompiledApiBindingsAssembly (LibraryInfo, config, config.TemporaryFileDirectory,
-				config.refs, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines,
-				config.paths);
+				config.References, LibraryInfo.OmitStandardLibrary, config.ApiSources, config.CoreSources, config.Defines,
+				config.Paths);
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
 					LibraryManager.GetLibraryDirectories (LibraryInfo, CurrentPlatform).ToArray (),
@@ -341,7 +341,7 @@ public class BindingTouch : IDisposable {
 			return 1;
 
 		if (config.ShowHelp) {
-			ShowHelp (config.os);
+			ShowHelp (config.OptionSet);
 			return 0;
 		}
 
@@ -389,7 +389,7 @@ public class BindingTouch : IDisposable {
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (config.CoreSources);
 			cargs.AddRange (config.ExtraSources);
-			cargs.AddRange (config.refs);
+			cargs.AddRange (config.References);
 			cargs.Add ("-r:" + LibraryInfo.BaseLibDll);
 			cargs.AddRange (config.Resources);
 			if (LibraryInfo.OmitStandardLibrary) {
@@ -403,7 +403,7 @@ public class BindingTouch : IDisposable {
 
 			Compile (cargs, 1000, config.TemporaryFileDirectory);
 		} finally {
-			if (config.DeleteTemporaryFiles)
+			if (config.DeleteTemporaryFiles && config.TemporaryFileDirectory is not null)
 				Directory.Delete (config.TemporaryFileDirectory, true);
 		}
 
@@ -451,7 +451,7 @@ public class BindingTouch : IDisposable {
 		cargs.Add ("-nowarn:436");
 		cargs.Add ("-out:" + tmpass);
 		cargs.Add ("-r:" + LibraryManager.GetAttributeLibraryPath (libraryInfo, CurrentPlatform));
-		cargs.AddRange (config.refs);
+		cargs.AddRange (config.References);
 		cargs.Add ("-r:" + libraryInfo.BaseLibDll);
 		foreach (var def in defines)
 			cargs.Add ("-define:" + def);
