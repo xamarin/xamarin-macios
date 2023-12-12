@@ -559,6 +559,7 @@ namespace Metal {
 #else
 	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), NoWatch]
 #endif
+	[NativeName ("MTLResourceID")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLResourceId {
 		public ulong Impl;
