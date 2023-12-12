@@ -137,99 +137,108 @@ public class BindingTouch : IDisposable {
 		return touch.Main3 (args);
 	}
 
-	public OptionSet CreateOptionSet (BindingTouchConfig config)
+	public bool TryCreateOptionSet (BindingTouchConfig config, string[] args)
 	{
-		return new OptionSet () {
-			{ "h|?|help", "Displays the help", v => config.ShowHelp = true },
-			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
-			{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.BindingFilesOutputDirectory = v; }},
-			{ "o|out=", "Sets the name of the output library", v => outfile = v },
-			{ "tmpdir=", "Sets the working directory for temp files", v => { config.TemporaryFileDirectory = v; config.DeleteTemporaryFiles = false; }},
-			{ "debug", "Generates a debugging build of the binding", v => config.IsDebug = true },
-			{ "sourceonly=", "Only generates the source", v => config.GeneratedFileList = v },
-			{ "ns=", "Sets the namespace for storing helper classes", v => config.HelperClassNamespace = v },
-			{ "unsafe", "Sets the unsafe flag for the build", v=> config.IsUnsafe = true },
-			{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
-			{ "r|reference=", "Adds a reference", v => references.Add (v) },
-			{ "lib=", "Adds the directory to the search path for the compiler", v => LibraryManager.Libraries.Add (v) },
-			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
-			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
-				{
-					if (!StringUtils.TryParseArguments (v, out compile_command, out var ex))
-						throw ErrorHelper.CreateError (27, "--compile-command", ex);
-				}
-			},
-			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
-			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
-			{ "d=", "Defines a symbol", v => config.Defines.Add (v) },
-			{ "api=", "Adds a API definition source file", v => config.ApiSources.Add (v) },
-			{ "s=", "Adds a source file required to build the API", v => config.CoreSources.Add (v) },
-			{ "q", "Quiet", v => ErrorHelper.Verbosity-- },
-			{ "v", "Sets verbose mode", v => ErrorHelper.Verbosity++ },
-			{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => config.ExtraSources.Add (v) },
-			{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => config.IsExternal = true },
-			{ "p", "Sets private mode", v => config.IsPublicMode = false },
-			{ "baselib=", "Sets the base library", v => config.Baselibdll = v },
-			{ "attributelib=", "Sets the attribute library", v => config.Attributedll = v },
-			{ "use-zero-copy", v=> config.UseZeroCopy = true },
-			{ "nostdlib", "Does not reference mscorlib.dll library", l => config.OmitStandardLibrary = true },
-			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
-			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
-			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
-				v => config.InlineSelectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
-			},
-			{ "process-enums", "Process enums as bindings, not external, types.", v => config.ProcessEnums = true },
-			{ "link-with=,", "Link with a native library {0:FILE} to the binding, embedded as a resource named {1:ID}",
-				(path, id) => {
-					if (path is null || path.Length == 0)
-						throw new Exception ("-link-with=FILE,ID requires a filename.");
-
-					if (id is null || id.Length == 0)
-						id = Path.GetFileName (path);
-
-					if (config.LinkWith.Contains (id))
-						throw new Exception ("-link-with=FILE,ID cannot assign the same resource id to multiple libraries.");
-
-					config.Resources.Add (string.Format ("-res:{0},{1}", path, id));
-					config.LinkWith.Add (id);
-				}
-			},
-			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
-			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => config.TargetFramework = v },
-			{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
-					try {
-						if (!string.IsNullOrEmpty (v)) {
-							foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error, int.Parse (code));
-						} else {
-							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
-						}
-					} catch (Exception ex) {
-						throw ErrorHelper.CreateError (26, ex.Message);
+		try {
+			config.os = new OptionSet () {
+				{ "h|?|help", "Displays the help", v => config.ShowHelp = true },
+				{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
+				{ "outdir=", "Sets the output directory for the temporary binding files", v => { config.BindingFilesOutputDirectory = v; }},
+				{ "o|out=", "Sets the name of the output library", v => outfile = v },
+				{ "tmpdir=", "Sets the working directory for temp files", v => { config.TemporaryFileDirectory = v; config.DeleteTemporaryFiles = false; }},
+				{ "debug", "Generates a debugging build of the binding", v => config.IsDebug = true },
+				{ "sourceonly=", "Only generates the source", v => config.GeneratedFileList = v },
+				{ "ns=", "Sets the namespace for storing helper classes", v => config.HelperClassNamespace = v },
+				{ "unsafe", "Sets the unsafe flag for the build", v=> config.IsUnsafe = true },
+				{ "core", "Use this to build product assemblies", v => BindThirdPartyLibrary = false },
+				{ "r|reference=", "Adds a reference", v => references.Add (v) },
+				{ "lib=", "Adds the directory to the search path for the compiler", v => LibraryManager.Libraries.Add (v) },
+				{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
+				{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
+					{
+						if (!StringUtils.TryParseArguments (v, out compile_command, out var ex))
+							throw ErrorHelper.CreateError (27, "--compile-command", ex);
 					}
-				}
-			},
-			{ "nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v => {
-					try {
-						if (!string.IsNullOrEmpty (v)) {
-							foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
-						} else {
-							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
-						}
-					} catch (Exception ex) {
-						throw ErrorHelper.CreateError (26, ex.Message);
+				},
+				{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
+				{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
+				{ "d=", "Defines a symbol", v => config.Defines.Add (v) },
+				{ "api=", "Adds a API definition source file", v => config.ApiSources.Add (v) },
+				{ "s=", "Adds a source file required to build the API", v => config.CoreSources.Add (v) },
+				{ "q", "Quiet", v => ErrorHelper.Verbosity-- },
+				{ "v", "Sets verbose mode", v => ErrorHelper.Verbosity++ },
+				{ "x=", "Adds the specified file to the build, used after the core files are compiled", v => config.ExtraSources.Add (v) },
+				{ "e", "Generates smaller classes that can not be subclassed (previously called 'external mode')", v => config.IsExternal = true },
+				{ "p", "Sets private mode", v => config.IsPublicMode = false },
+				{ "baselib=", "Sets the base library", v => config.Baselibdll = v },
+				{ "attributelib=", "Sets the attribute library", v => config.Attributedll = v },
+				{ "use-zero-copy", v=> config.UseZeroCopy = true },
+				{ "nostdlib", "Does not reference mscorlib.dll library", l => config.OmitStandardLibrary = true },
+				{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { }, true },
+				{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
+				{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)",
+					v => config.InlineSelectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
+				},
+				{ "process-enums", "Process enums as bindings, not external, types.", v => config.ProcessEnums = true },
+				{ "link-with=,", "Link with a native library {0:FILE} to the binding, embedded as a resource named {1:ID}",
+					(path, id) => {
+						if (path is null || path.Length == 0)
+							throw new Exception ("-link-with=FILE,ID requires a filename.");
+
+						if (id is null || id.Length == 0)
+							id = Path.GetFileName (path);
+
+						if (config.LinkWith.Contains (id))
+							throw new Exception ("-link-with=FILE,ID cannot assign the same resource id to multiple libraries.");
+
+						config.Resources.Add (string.Format ("-res:{0},{1}", path, id));
+						config.LinkWith.Add (id);
 					}
-				}
-			},
-			{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
-					noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
-				}
-			},
-			{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
-			new Mono.Options.ResponseFileSource (),
-		};
+				},
+				{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
+				{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
+				{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'Xamarin.iOS,v1.0', 'Xamarin.TVOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0', 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => config.TargetFramework = v },
+				{ "warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
+						try {
+							if (!string.IsNullOrEmpty (v)) {
+								foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+									ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error, int.Parse (code));
+							} else {
+								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
+							}
+						} catch (Exception ex) {
+							throw ErrorHelper.CreateError (26, ex.Message);
+						}
+					}
+				},
+				{ "nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v => {
+						try {
+							if (!string.IsNullOrEmpty (v)) {
+								foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+									ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
+							} else {
+								ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
+							}
+						} catch (Exception ex) {
+							throw ErrorHelper.CreateError (26, ex.Message);
+						}
+					}
+				},
+				{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
+						noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
+					}
+				},
+				{ "compiled-api-definition-assembly=", "An assembly with the compiled api definitions.", (v) => compiled_api_definition_assembly = v },
+				new Mono.Options.ResponseFileSource (),
+			};
+			config.Sources = config.os.Parse (args);
+		} catch (Exception e) {
+			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
+			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
+			return false;
+		}
+
+		return true;
 	}
 
 	public bool TryInitializeApi (BindingTouchConfig config, out Api? api)
@@ -283,7 +292,6 @@ public class BindingTouch : IDisposable {
 			attributeManager ??= new(typeCache);
 			typeManager ??= new(this);
 
-			// TODO will change
 			if (!TestLinkWith (apiAssembly, config))
 				return false;
 
@@ -328,15 +336,9 @@ public class BindingTouch : IDisposable {
 	{
 		ErrorHelper.ClearWarningLevels ();
 		BindingTouchConfig config = new ();
-		config.os = CreateOptionSet (config);
 
-		try {
-			config.Sources = config.os.Parse (args); // TODO lol that's a mess
-		} catch (Exception e) {
-			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
-			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
+		if (!TryCreateOptionSet (config, args))
 			return 1;
-		}
 
 		if (config.ShowHelp) {
 			ShowHelp (config.os);
@@ -346,10 +348,7 @@ public class BindingTouch : IDisposable {
 		libraryInfo = LibraryInfo.LibraryInfoBuilder.Build (references, config);
 		CurrentPlatform = LibraryManager.DetermineCurrentPlatform (TargetFramework.Platform);
 
-		if (!TryInitializeApi (config, out Api? api))
-			return 1;
-
-		if (!TryGenerate (config, api))
+		if (!TryInitializeApi (config, out Api? api) || !TryGenerate (config, api))
 			return 1;
 
 		return 0;
@@ -374,7 +373,7 @@ public class BindingTouch : IDisposable {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
-				return false; // TODO figure this out
+				return false;
 			}
 
 			var cargs = new List<string> ();
