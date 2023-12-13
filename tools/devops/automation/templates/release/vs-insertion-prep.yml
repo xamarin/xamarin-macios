@@ -1,4 +1,7 @@
 parameters:
+- name: buildStage
+  type: string
+
 - name: dependsOn
   type: object
   default: null
@@ -33,8 +36,8 @@ stages:
     dependsOn: ${{ parameters.dependsOn }}
     condition: and(
         or(
-          eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'),
-          eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')
+          eq(dependencies.${{ parameters.buildStage }}.result, 'Succeeded'),
+          eq(dependencies.${{ parameters.buildStage }}.result, 'SucceededWithIssues')
         ),
         eq(${{ parameters.isPR }}, false)
       )
@@ -50,7 +53,6 @@ stages:
       signType: Real
       usePipelineArtifactTasks: true
       condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
-      dependsOn: configure
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
