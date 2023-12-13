@@ -1567,7 +1567,11 @@ partial class TestRuntime {
 		if (error is null)
 			return;
 
+#if __WATCHOS__
+		if (error.Domain != NSError.NSUrlErrorDomain)
+#else
 		if (error.Domain != NSError.NSUrlErrorDomain && error.Domain != NSError.CFNetworkErrorDomain)
+#endif
 			return;
 
 		foreach (var e in errors) {
