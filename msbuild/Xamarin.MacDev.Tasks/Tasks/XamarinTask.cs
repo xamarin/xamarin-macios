@@ -96,13 +96,13 @@ namespace Xamarin.MacDev.Tasks {
 			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
-					return DotNetVersionConstants.Microsoft_iOS_Version;
+					return VersionConstants.Microsoft_iOS_Version;
 				case ApplePlatform.MacCatalyst:
-					return DotNetVersionConstants.Microsoft_MacCatalyst_Version;
+					return VersionConstants.Microsoft_MacCatalyst_Version;
 				case ApplePlatform.MacOSX:
-					return DotNetVersionConstants.Microsoft_macOS_Version;
+					return VersionConstants.Microsoft_macOS_Version;
 				case ApplePlatform.TVOS:
-					return DotNetVersionConstants.Microsoft_tvOS_Version;
+					return VersionConstants.Microsoft_tvOS_Version;
 				default:
 					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
