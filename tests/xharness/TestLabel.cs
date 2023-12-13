@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -115,12 +116,12 @@ namespace Xharness {
 	static class TestLabelExtensions {
 		static string GetLabel<T> (this T self) where T : Enum
 		{
-			var name = Enum.GetName (typeof (T), self);
-			var attr = typeof (T).GetField (name).GetCustomAttribute<LabelAttribute> ();
-			return attr.Label;
+			var name = Enum.GetName (typeof (T), self)!;
+			var attr = typeof (T).GetField (name)!.GetCustomAttribute<LabelAttribute> ();
+			return attr!.Label;
 		}
 
-		public static bool TryGetLabel<T> (this string self, out T? label) where T : Enum
+		public static bool TryGetLabel<T> (this string self, out T label) where T : struct, Enum
 		{
 #if NET
 			foreach (var obj in Enum.GetValues<T> ()) {

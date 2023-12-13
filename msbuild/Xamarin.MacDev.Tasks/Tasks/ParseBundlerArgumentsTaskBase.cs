@@ -42,6 +42,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string NoDSymUtil { get; set; }
 
 		[Output]
+		public string NoWarn { get; set; }
+
+		[Output]
 		public string Optimize { get; set; }
 
 		[Output]
@@ -62,6 +65,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public int Verbosity { get; set; }
+
+		[Output]
+		public string WarnAsError { get; set; }
 
 		[Output]
 		public ITaskItem [] XmlDefinitions { get; set; }
@@ -195,6 +201,24 @@ namespace Xamarin.MacDev.Tasks {
 						if (customLinkFlags is null)
 							customLinkFlags = new List<string> ();
 						customLinkFlags.AddRange (lf);
+						break;
+					case "warnaserror":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (WarnAsError)) {
+							WarnAsError = value;
+						} else {
+							WarnAsError += "," + value;
+						}
+						break;
+					case "nowarn":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (NoWarn)) {
+							NoWarn = value;
+						} else {
+							NoWarn += "," + value;
+						}
 						break;
 					default:
 						// Handle arguments like -vvv and -qqqq

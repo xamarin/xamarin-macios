@@ -7,12 +7,13 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ComputeBundleResourceOutputPathsTaskBase : XamarinTask {
+	public class ComputeBundleResourceOutputPaths : XamarinTask, ITaskCallback, ICancelableTask {
 		[Required]
 		public ITaskItem AppResourcesPath { get; set; }
 
@@ -34,6 +35,14 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+				RemoveDuplicates ();
+
+				return result;
+			}
+
 			var intermediate = Path.Combine (IntermediateOutputPath, "assetpacks");
 			var bundleResources = new List<ITaskItem> ();
 			var packs = new HashSet<string> ();
@@ -91,5 +100,41 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		void RemoveDuplicates ()
+		{
+			// Remove duplicated files 
+			var filteredOutput = new List<ITaskItem> ();
+
+			foreach (var item in BundleResourcesWithOutputPaths) {
+				var itemIsFromProjectReference = IsFromProjectReference (item);
+				var duplicate = filteredOutput.FirstOrDefault (i => i.GetMetadata ("OutputPath") == item.GetMetadata ("OutputPath"));
+
+				if (duplicate is not null) {
+					if (!IsFromProjectReference (duplicate) && itemIsFromProjectReference) {
+						filteredOutput.Remove (duplicate);
+					}
+				}
+
+				if (itemIsFromProjectReference || duplicate is null)
+					filteredOutput.Add (item);
+			}
+
+			BundleResourcesWithOutputPaths = filteredOutput.ToArray ();
+		}
+
+		bool IsFromProjectReference (ITaskItem item) => !string.IsNullOrEmpty (item.GetMetadata ("MSBuildSourceProjectFile"));
 	}
 }

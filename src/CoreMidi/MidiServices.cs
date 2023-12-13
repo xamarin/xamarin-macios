@@ -1,4 +1,4 @@
-#if !TVOS
+#if !TVOS && !WATCH
 //
 // MidiServices.cs: Implementation of the MidiObject base class and its derivates
 //

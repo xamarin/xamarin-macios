@@ -57,7 +57,7 @@ namespace Xharness.Jenkins {
 		public void SetEnabled (string label, bool value)
 		{
 			// there are two possible cases, either we are setting a test label OR a platform
-			if (label.TryGetLabel (out TestLabel tLabel)) {
+			if (label.TryGetLabel<TestLabel> (out var tLabel)) {
 				SetEnabled (tLabel, value);
 				// some labels overlap, not ideal, but is just a few
 				switch (tLabel) {
