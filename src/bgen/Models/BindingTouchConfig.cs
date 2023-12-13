@@ -30,5 +30,5 @@ public class BindingTouchConfig {
 	public string? Attributedll = null;
 	public IEnumerable<string> Paths = new List<string> ();
 	public IEnumerable<string> References = new List<string> ();
-	public OptionSet OptionSet = new();
+	public OptionSet OptionSet = new ();
 }

@@ -137,7 +137,7 @@ public class BindingTouch : IDisposable {
 		return touch.Main3 (args);
 	}
 
-	public bool TryCreateOptionSet (BindingTouchConfig config, string[] args)
+	public bool TryCreateOptionSet (BindingTouchConfig config, string [] args)
 	{
 		try {
 			config.OptionSet = new OptionSet () {
@@ -279,7 +279,7 @@ public class BindingTouch : IDisposable {
 			);
 
 			if (!TryLoadApi (tmpass, out Assembly? apiAssembly) ||
-			    !TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
+				!TryLoadApi (LibraryInfo.BaseLibDll, out Assembly? baselib))
 				return false;
 
 			Frameworks = new Frameworks (CurrentPlatform);
@@ -287,10 +287,10 @@ public class BindingTouch : IDisposable {
 			// Explicitly load our attribute library so that IKVM doesn't try (and fail) to find it.
 			universe.LoadFromAssemblyPath (LibraryManager.GetAttributeLibraryPath (LibraryInfo, CurrentPlatform));
 
-			typeCache ??= new(universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib,
+			typeCache ??= new (universe, Frameworks, CurrentPlatform, apiAssembly, universe.CoreAssembly, baselib,
 				BindThirdPartyLibrary);
-			attributeManager ??= new(typeCache);
-			typeManager ??= new(this);
+			attributeManager ??= new (typeCache);
+			typeManager ??= new (this);
 
 			if (!TestLinkWith (apiAssembly, config))
 				return false;
@@ -410,20 +410,18 @@ public class BindingTouch : IDisposable {
 		return true;
 	}
 
-	bool TestLinkWith(Assembly apiAssembly, BindingTouchConfig config)
+	bool TestLinkWith (Assembly apiAssembly, BindingTouchConfig config)
 	{
-		foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute>(apiAssembly))
-		{
+		foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (apiAssembly)) {
 #if NET
-				if (string.IsNullOrEmpty (linkWith.LibraryName))
+			if (string.IsNullOrEmpty (linkWith.LibraryName))
 #else
-			if (linkWith.LibraryName is null || string.IsNullOrEmpty(linkWith.LibraryName))
+			if (linkWith.LibraryName is null || string.IsNullOrEmpty (linkWith.LibraryName))
 #endif
 				continue;
 
-			if (!config.LinkWith.Contains(linkWith.LibraryName))
-			{
-				Console.Error.WriteLine(
+			if (!config.LinkWith.Contains (linkWith.LibraryName)) {
+				Console.Error.WriteLine (
 					"Missing native library {0}, please use `--link-with' to specify the path to this library.",
 					linkWith.LibraryName);
 				return false; // return 1;
