@@ -373,7 +373,7 @@ public class BindingTouch : IDisposable {
 					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
-				return false;
+				return true;
 			}
 
 			var cargs = new List<string> ();
