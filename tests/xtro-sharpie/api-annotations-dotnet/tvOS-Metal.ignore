@@ -1,83 +1,8 @@
-## New required members on existing protocols
-!incorrect-protocol-member! MTLBlitCommandEncoder::copyIndirectCommandBuffer:sourceRange:destination:destinationIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForCPUAccess:slice:level: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForGPUAccess: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeContentsForGPUAccess:slice:level: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::optimizeIndirectCommandBuffer:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::resetCommandsInBuffer:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDispatchType: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::encodeSignalEvent:value: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::encodeWaitForEvent:value: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::dispatchType is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithResources:count: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::memoryBarrierWithScope: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::setStageInRegionWithIndirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::maxArgumentBufferSamplerCount is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::maxBufferLength is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::minimumTextureBufferAlignmentForPixelFormat: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newEvent is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newIndirectCommandBufferWithDescriptor:maxCommandCount:options: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newSharedEvent is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newSharedEventWithHandle: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::allowGPUOptimizedContents is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffer:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffers:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineState:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputePipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineState:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineStates:withRange: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
-
-# Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
-
-# new methods added to a protocol, they will be abstract in XAMCORE_4
-!incorrect-protocol-member! MTLDevice::newBinaryArchiveWithDescriptor:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newDynamicLibrary:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newDynamicLibraryWithURL:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supportsCounterSampling: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supportsDynamicLibraries is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supportsPullModelInterpolation is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLLibrary::installName is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLLibrary::type is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::resolveCounters:inRange:destinationBuffer:destinationOffset: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLBlitCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::blitCommandEncoderWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::errorOptions is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandBuffer::logs is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLCommandQueue::commandBufferWithDescriptor: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLComputeCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::counterSets is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::newCounterSampleBufferWithDescriptor:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::sampleTimestamps:gpuTimestamp: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
-
-## added (catch up to iOS) in tvOS 14.5 but can't be made abstract without breaking changes
-!incorrect-protocol-member! MTLBinaryArchive::addTileRenderPipelineFunctionsWithDescriptor:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectRenderCommand::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectRenderCommand::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLIndirectRenderCommand::setRenderPipelineState: is REQUIRED and should be abstract
-
 # has to wait for XAMCORE_5_0
 !incorrect-protocol-member! MTLIndirectRenderCommand::setVertexBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::recommendedMaxWorkingSetSize is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLAccelerationStructureCommandEncoder::writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLDevice::supportsBCTextureCompression is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithResources:count:afterStages:beforeStages: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithScope:afterStages:beforeStages: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setMeshBufferOffset:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setMeshBuffers:offsets:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setMeshSamplerState:atIndex: is REQUIRED and should be abstract
@@ -106,6 +31,8 @@
 !incorrect-protocol-member! MTLIndirectCommandBuffer::gpuResourceID is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::gpuResourceID is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLResourceStateCommandEncoder::moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::isSparse is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::tailSizeInBytes is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setAccelerationStructure:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTable:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIntersectionFunctionTables:withRange: is REQUIRED and should be abstract
@@ -143,14 +70,6 @@
 !incorrect-protocol-member! MTLDevice::supportsShaderBarycentricCoordinates is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsVertexAmplificationCount: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::newAccelerationStructureWithSize: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::functionHandleWithFunction:stage: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::newIntersectionFunctionTableWithDescriptor:stage: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::newRenderPipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLRenderPipelineState::newVisibleFunctionTableWithDescriptor:stage: is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::compressionType is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::firstMipmapInTail is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::isSparse is REQUIRED and should be abstract
-!incorrect-protocol-member! MTLTexture::tailSizeInBytes is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setTileIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setTileVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setTileVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
@@ -159,6 +78,11 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::setVertexIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setVertexVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLRenderCommandEncoder::setVertexVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::functionHandleWithFunction:stage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::newIntersectionFunctionTableWithDescriptor:stage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::newRenderPipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::newVisibleFunctionTableWithDescriptor:stage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::compressionType is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::newAccelerationStructureWithDescriptor:offset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::newAccelerationStructureWithSize:offset: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLLibrary::newIntersectionFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
@@ -174,6 +98,12 @@
 !incorrect-protocol-member! MTLFunction::options is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLHeap::newAccelerationStructureWithDescriptor: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBuffer::gpuAddress is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithResources:count:afterStages:beforeStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::memoryBarrierWithScope:afterStages:beforeStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBufferOffset:attributeStride:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBuffers:offsets:attributeStrides:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexBytes:length:attributeStride:atIndex: is REQUIRED and should be abstract
 
 # deprecated but cannot be removed
 !unknown-native-enum! MTLArgumentAccess bound
