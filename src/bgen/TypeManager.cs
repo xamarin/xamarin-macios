@@ -6,6 +6,8 @@ using System.Reflection;
 #nullable enable
 
 public class TypeManager {
+	public Assembly ApiAssembly { get; }
+
 	Frameworks Frameworks { get; }
 
 	public Type System_Attribute { get; }
@@ -276,6 +278,7 @@ public class TypeManager {
 			throw ErrorHelper.CreateError (4, bindingTouch.CurrentPlatform);
 
 		Frameworks = bindingTouch.Frameworks;
+		ApiAssembly = apiAssembly;
 
 		/* corlib */
 		System_Attribute = Lookup (corlibAssembly, "System", "Attribute");
