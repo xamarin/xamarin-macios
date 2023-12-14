@@ -12,7 +12,7 @@ public class BindingTouchConfig {
 	public bool IsUnsafe = true;
 	public bool IsExternal = false;
 	public bool IsPublicMode = true;
-	public bool OmitStandardLibrary = false;
+	public bool? OmitStandardLibrary = null;
 	public bool? InlineSelectors = null;
 	public List<string> Sources = new ();
 	public List<string> Resources = new ();
@@ -23,4 +23,7 @@ public class BindingTouchConfig {
 	public List<string> Defines = new ();
 	public string? GeneratedFileList = null;
 	public bool ProcessEnums = false;
+	public string? TargetFramework = null;
+	public string? Baselibdll = null;
+	public string? Attributedll = null;
 }

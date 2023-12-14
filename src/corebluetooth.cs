@@ -623,9 +623,12 @@ namespace CoreBluetooth {
 		[Export ("peripheral:didReadRSSI:error:"), EventArgs ("CBRssi")]
 		void RssiRead (CBPeripheral peripheral, NSNumber rssi, [NullAllowed] NSError error);
 
-		// FIXME: TYPO: missing 's' (plural)
 		[Export ("peripheral:didDiscoverServices:"), EventArgs ("NSError", true)]
+#if XAMCORE_5_0
+		void DiscoveredServices (CBPeripheral peripheral, [NullAllowed] NSError error);
+#else
 		void DiscoveredService (CBPeripheral peripheral, [NullAllowed] NSError error);
+#endif
 
 		[Export ("peripheral:didDiscoverIncludedServicesForService:error:"), EventArgs ("CBService")]
 		void DiscoveredIncludedService (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);

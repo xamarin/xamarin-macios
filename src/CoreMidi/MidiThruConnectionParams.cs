@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 // 
 // MidiThruConnectionParams.cs: A C# wrapper around MidiThruConnectionParamsStruct
 //
@@ -387,3 +388,4 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
+#endif

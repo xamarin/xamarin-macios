@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CollectBundleResourcesTaskBase : XamarinTask {
+	public class CollectBundleResources : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		public ITaskItem [] BundleResources { get; set; }
@@ -43,6 +44,23 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		public override bool Execute ()
+		{
+			try {
+				if (ShouldExecuteRemotely ()) {
+					// Copy the bundle files to the build server
+					new TaskRunner (SessionId, BuildEngine4).CopyInputsAsync (this).Wait ();
+				}
+
+				// But execute locally
+				return ExecuteImpl ();
+			} catch (Exception ex) {
+				Log.LogErrorFromException (ex);
+
+				return false;
+			}
+		}
+
+		bool ExecuteImpl ()
 		{
 			var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 			var bundleResources = new List<ITaskItem> ();
@@ -108,6 +126,12 @@ namespace Xamarin.MacDev.Tasks {
 			BundleResourcesWithLogicalNames = bundleResources.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

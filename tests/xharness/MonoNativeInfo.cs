@@ -64,7 +64,7 @@ namespace Xharness {
 			case DevicePlatform.tvOS:
 				return Xamarin.SdkVersions.MinTVOS;
 			case DevicePlatform.watchOS:
-				return Xamarin.SdkVersions.MinWatchOS;
+				return Xamarin.SdkVersions.LegacyMinWatchOS;
 			case DevicePlatform.macOS:
 				return Xamarin.SdkVersions.MinOSX;
 			default:

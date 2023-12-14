@@ -8,6 +8,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
@@ -30,7 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 	// This task will also figure out a stamp file path we use to determine if
 	// something needs (re-)signing.
 	//
-	public abstract class ComputeCodesignItemsTaskBase : XamarinTask {
+	public class ComputeCodesignItems : XamarinTask, ITaskCallback, ICancelableTask {
 
 		[Required]
 		public string AppBundleDir { get; set; } = string.Empty;
@@ -55,6 +56,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var output = new List<ITaskItem> ();
 
 			// Make sure AppBundleDir has a trailing slash
@@ -293,6 +297,20 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return rv;
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		// This task does not create or modify any files, and it should only
+		// deal with files that are already on the mac, so no need to copy any
+		// files either way.
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

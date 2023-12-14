@@ -25,25 +25,7 @@ parameters:
   default: '$(MaciosUploadPrefix)'
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
-
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-  steps:
-  - template: ../common/configure.yml
-    parameters:
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-
 - job: funnel_job
-  dependsOn:
-  - configure
   displayName: 'Collect signed artifacts'
   condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
   timeoutInMinutes: 1000
@@ -53,7 +35,7 @@ jobs:
     clean: all
   variables:
     ${{ each pkg in parameters.packages }}:
-      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
+      ${{ pkg.conditionVariable }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
   steps:
 
@@ -168,7 +150,7 @@ jobs:
 
   variables:
     Parameters.outputStorageUri: ''
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
+    SKIP_NUGETS: $[ stageDependencies.configure_build.configuree.outputs['labels.skip_nugets'] ]
 
   pool:
     name: azurepipelines-EO
@@ -190,11 +172,10 @@ jobs:
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
   dependsOn:
-  - configure
   - upload_azure_blob
   condition: succeededOrFailed()
   variables:
-    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:

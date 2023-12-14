@@ -138,7 +138,7 @@ namespace Xharness {
 					// Many types of files below the csproj directory are included by default,
 					// which means that we have to include them manually in the cloned csproj,
 					// because the cloned project is stored in a very different directory.
-					var test_dir = System.IO.Path.GetDirectoryName (original_path);
+					var test_dir = System.IO.Path.GetDirectoryName (original_path)!;
 
 					var files = await HarnessConfiguration.ListFilesInGitAsync (log, test_dir, processManager);
 					foreach (var file in files) {
@@ -196,12 +196,12 @@ namespace Xharness {
 		void InlineSharedImports (XmlDocument doc, string original_path, Dictionary<string, string> variableSubstitution, string rootDirectory)
 		{
 			// Find Import nodes that point to a shared code file, load that shared file and inject it here.
-			var nodes = doc.SelectNodes ("//*[local-name() = 'Import']");
-			foreach (XmlNode node in nodes) {
+			var nodes = doc.SelectNodes ("//*[local-name() = 'Import']")!;
+			foreach (XmlNode? node in nodes) {
 				if (node is null)
 					continue;
 
-				var project = node.Attributes ["Project"].Value.Replace ('\\', '/');
+				var project = node.Attributes! ["Project"]!.Value!.Replace ('\\', '/');
 				var projectName = System.IO.Path.GetFileName (project);
 				if (projectName != "shared.csproj" && projectName != "shared.fsproj" && projectName != "shared-dotnet.csproj")
 					continue;
@@ -211,7 +211,7 @@ namespace Xharness {
 
 				project = project.Replace ("$(RootTestsDirectory)", rootDirectory);
 
-				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path), project);
+				var sharedProjectPath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (original_path)!, project);
 				// Check for variables that won't work correctly if the shared code is moved to a different file
 				var xml = File.ReadAllText (sharedProjectPath);
 				xml = xml.Replace ("$(MSBuildThisFileDirectory)", System.IO.Path.GetDirectoryName (sharedProjectPath) + System.IO.Path.DirectorySeparatorChar);
@@ -222,21 +222,21 @@ namespace Xharness {
 				import.LoadXmlWithoutNetworkAccess (xml);
 				// Inline any shared imports in the inlined shared import too
 				InlineSharedImports (import, sharedProjectPath, variableSubstitution, rootDirectory);
-				var importNodes = import.SelectSingleNode ("/Project").ChildNodes;
+				var importNodes = import.SelectSingleNode ("/Project")!.ChildNodes;
 				var previousNode = node;
 				foreach (XmlNode importNode in importNodes) {
 					var importedNode = doc.ImportNode (importNode, true);
-					previousNode.ParentNode.InsertAfter (importedNode, previousNode);
+					previousNode.ParentNode!.InsertAfter (importedNode, previousNode);
 					previousNode = importedNode;
 				}
-				node.ParentNode.RemoveChild (node);
+				node.ParentNode!.RemoveChild (node);
 
 				variableSubstitution ["_PlatformName"] = TestPlatform.ToPlatformName ();
 				variableSubstitution = doc.CollectAndEvaluateTopLevelProperties (variableSubstitution);
 			}
 		}
 
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return Name ?? base.ToString ();
 		}

@@ -37,6 +37,12 @@ using MidiObjectRef = System.Int32;
 using NativeHandle = System.IntPtr;
 #endif
 
+#if TVOS || WATCH
+using MidiEndpoint = System.Object;
+using MidiCIDeviceIdentification = System.Object;
+using MidiCIDeviceIdentification_Blittable = System.Object;
+#endif
+
 namespace CoreMidi {
 
 
@@ -51,7 +57,7 @@ namespace CoreMidi {
 		Anyone,
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIProtocolID")]
 	public enum MidiProtocolId {
@@ -59,7 +65,7 @@ namespace CoreMidi {
 		Protocol_2_0 = 2,
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDICVStatus")]
 	public enum MidiCVStatus : uint {
@@ -81,7 +87,7 @@ namespace CoreMidi {
 		PerNoteMgmt = 15,
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDIMessageType")]
 	public enum MidiMessageType : uint {
@@ -94,7 +100,7 @@ namespace CoreMidi {
 		UnknownF = 15,
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISysExStatus")]
 	public enum MidiSysExStatus : uint {
@@ -106,7 +112,7 @@ namespace CoreMidi {
 		MixedDataSetPayload = 9,
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), TV (15, 0), Watch (8, 0)]
 	[MacCatalyst (14, 0)]
 	[NativeName ("MIDISystemStatus")]
 	public enum MidiSystemStatus : uint {
@@ -124,7 +130,7 @@ namespace CoreMidi {
 		SystemReset = 255,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
 	[NativeName ("MIDINoteAttribute")]
 	public enum MidiNoteAttribute : byte {
 		None = 0,
@@ -133,7 +139,7 @@ namespace CoreMidi {
 		Pitch = 3,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
 	[NativeName ("MIDIPerNoteManagementOptions")]
 	[Flags]
 	public enum MidiPerNoteManagementOptions : byte {
@@ -141,14 +147,14 @@ namespace CoreMidi {
 		Detach = 1 << 1,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
 	[NativeName ("MIDIProgramChangeOptions")]
 	[Flags]
 	public enum MidiProgramChangeOptions : byte {
 		BankValid = 1 << 0,
 	}
 
-	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0)]
+	[iOS (16, 0), Mac (13, 0), MacCatalyst (16, 0), TV (15, 0), Watch (8, 0)]
 	[NativeName ("MIDIUtilityStatus")]
 	public enum MidiUtilityStatus : uint {
 		Noop = 0,
@@ -426,7 +432,7 @@ namespace CoreMidi {
 		MidiCIProfileSpecificDataHandler ProfileSpecificDataHandler { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDeviceInfo")]
 	[DisableDefaultCtor]
@@ -458,7 +464,7 @@ namespace CoreMidi {
 		NativeHandle Constructor (MidiEndpoint midiDestination, NSData manufacturer, NSData family, NSData modelNumber, NSData revisionLevel);
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIDiscoveredNode")]
 	[DisableDefaultCtor]
@@ -486,7 +492,7 @@ namespace CoreMidi {
 
 	delegate void MidiCIDiscoveryResponseDelegate (MidiCIDiscoveredNode [] discoveredNodes);
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Name = "MIDICIDiscoveryManager")]
@@ -501,7 +507,7 @@ namespace CoreMidi {
 
 	interface IMidiCIProfileResponderDelegate { }
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
@@ -525,7 +531,7 @@ namespace CoreMidi {
 		void HandleData (MidiCIProfile profile, byte channel, NSData inData);
 	}
 
-	[Mac (11, 0), iOS (14, 0)]
+	[Mac (11, 0), iOS (14, 0), NoTV, NoWatch]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject), Name = "MIDICIResponder")]
 	[DisableDefaultCtor]

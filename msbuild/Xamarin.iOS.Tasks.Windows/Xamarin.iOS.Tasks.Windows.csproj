@@ -18,7 +18,7 @@
   </PropertyGroup>
   <Import Project="..\..\eng\Versions.props" />
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
@@ -42,7 +42,7 @@
     </None>
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
     <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
-    <Compile Include="../Versions.ios.g.cs" />
+    <Compile Include="../Versions.g.cs" />
     <Compile Include="..\Xamarin.MacDev.Tasks\PublishFolderType.cs">
       <Link>PublishFolderType.cs</Link>
     </Compile>
@@ -66,8 +66,8 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 
-  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.ios.g.cs" BeforeTargets="BeforeBuild">
-    <Exec Command="make -C .. Versions.ios.g.cs" />
+  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.g.cs" BeforeTargets="BeforeBuild">
+    <Exec Command="make -C .. Versions.g.cs" />
   </Target>
 
   <!-- Replaces the reference assemblies by the runtime implementation -->

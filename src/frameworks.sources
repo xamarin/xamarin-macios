@@ -1175,6 +1175,7 @@ METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLIOCompression.cs \
 	Metal/MTLComputeCommandEncoder.cs \
 	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
@@ -2011,6 +2012,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
+	CoreMidi                \
 	CoreVideo               \
 	Compression             \
 	DeviceCheck             \
@@ -2054,7 +2056,6 @@ MACOS_FRAMEWORKS =          \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
@@ -2172,7 +2173,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -2374,7 +2374,6 @@ MACCATALYST_FRAMEWORKS = \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
