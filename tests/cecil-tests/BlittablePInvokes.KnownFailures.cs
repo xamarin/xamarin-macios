@@ -78,7 +78,6 @@ namespace Cecil.Tests {
 			"AudioToolbox.AudioQueueStatus AudioToolbox.OutputAudioQueue::AudioQueueSetOfflineRenderFormat(System.IntPtr,AudioToolbox.AudioStreamBasicDescription&,System.IntPtr)",
 			"AudioToolbox.AudioServicesError AudioToolbox.AudioServices::AudioServicesGetProperty(AudioToolbox.AudioServicesPropertyKey,System.UInt32,System.UInt32&,System.UInt32&,System.UInt32&)",
 			"AudioToolbox.AudioServicesError AudioToolbox.AudioServices::AudioServicesSetProperty(AudioToolbox.AudioServicesPropertyKey,System.UInt32,System.UInt32&,System.UInt32,System.UInt32&)",
-			"AudioToolbox.AudioServicesError AudioToolbox.SystemSound::AudioServicesCreateSystemSoundID(System.IntPtr,System.UInt32&)",
 			"AudioToolbox.MusicPlayerStatus AudioToolbox.MusicPlayer::MusicPlayerGetBeatsForHostTime(System.IntPtr,System.Int64,System.Double&)",
 			"AudioToolbox.MusicPlayerStatus AudioToolbox.MusicPlayer::MusicPlayerGetHostTimeForBeats(System.IntPtr,System.Double,System.Int64&)",
 			"AudioToolbox.MusicPlayerStatus AudioToolbox.MusicPlayer::MusicPlayerGetPlayRateScalar(System.IntPtr,System.Double&)",
