@@ -555,8 +555,6 @@ namespace Cecil.Tests {
 			"System.Int32 AudioToolbox.AudioFileGlobalInfo::AudioFileGetGlobalInfoSize(AudioToolbox.AudioFileGlobalProperty,System.UInt32,System.IntPtr,System.UInt32&)",
 			"System.Int32 AudioToolbox.AudioQueue::AudioQueueDispose(System.IntPtr,System.Boolean)",
 			"System.Int32 AudioToolbox.AudioQueue::AudioQueueGetParameter(System.IntPtr,AudioToolbox.AudioQueueParameter,System.Single&)",
-			"System.Int32 AudioToolbox.SoundBank::CopyInstrumentInfoFromSoundBank(System.IntPtr,System.IntPtr&)",
-			"System.Int32 AudioToolbox.SoundBank::CopyNameFromSoundBank(System.IntPtr,System.IntPtr&)",
 			"System.Int32 AudioUnit.AudioComponent::AudioComponentCopyConfigurationInfo(System.IntPtr,System.IntPtr&)",
 			"System.Int32 AudioUnit.AudioComponent::AudioComponentCopyName(System.IntPtr,System.IntPtr&)",
 			"System.Int32 AudioUnit.AudioComponent::AudioComponentGetDescription(System.IntPtr,AudioUnit.AudioComponentDescription&)",
