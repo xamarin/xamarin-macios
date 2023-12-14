@@ -10,18 +10,19 @@
 
 #if !__TVOS__ && !__WATCHOS__
 using System;
+using System.Diagnostics;
+using System.Linq;
 
 using Foundation;
 using CoreMidi;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreMidi {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	[Ignore ("https://github.com/xamarin/maccore/issues/1834")]
 	public class MidiThruConnectionTests {
-
 		[Test]
 		public void ConnectionCreateTest ()
 		{
@@ -45,9 +46,8 @@ namespace MonoTouchFixtures.CoreMidi {
 				HighNote = 8
 			};
 
-			MidiError err;
-			using (var connection = MidiThruConnection.Create ("com.xamarin.midi", cnnParams, out err)) {
-				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
+			using (var connection = MidiThruConnection.Create ($"com.xamarin.midi-{Process.GetCurrentProcess ().Id}", cnnParams, out var err)) {
+				Assert.AreEqual (MidiError.Ok, err, "midi connection error");
 				Assert.IsNotNull (connection, "midi connection should not be null");
 			}
 		}
@@ -76,12 +76,12 @@ namespace MonoTouchFixtures.CoreMidi {
 			};
 
 			MidiError err;
-			using (var connection = MidiThruConnection.Create ("com.xamarin.midi", cnnParams, out err)) {
-				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
+			using (var connection = MidiThruConnection.Create ($"com.xamarin.midi-{Process.GetCurrentProcess ().Id}", cnnParams, out err)) {
+				Assert.AreEqual (MidiError.Ok, err, "midi connection error");
 				Assert.IsNotNull (connection, "midi connection should not be null");
 
 				var gotParams = connection.GetParams (out err);
-				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
+				Assert.AreEqual (MidiError.Ok, err, "midi connection error");
 				// Test dynamic part of the struct
 				Assert.IsTrue (gotParams.Controls.Length == cnnParams.Controls.Length, "midi params objects should be the same amount");
 				for (var i = 0; i < gotParams.Controls.Length; i++) {
@@ -107,13 +107,13 @@ namespace MonoTouchFixtures.CoreMidi {
 				};
 
 				err = connection.SetParams (newParams);
-				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
+				Assert.AreEqual (MidiError.Ok, err, "midi connection error");
 
 				gotParams = connection.GetParams (out err);
-				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
+				Assert.AreEqual (MidiError.Ok, err, "midi connection error");
 				Assert.IsTrue (gotParams.FilterOutBeatClock, "FilterOutBeatClock should be true");
 				Assert.IsFalse (gotParams.FilterOutAllControls, "FilterOutAllControls should be false");
-				Assert.IsTrue (gotParams.HighNote == 5, "HighNote should be 5");
+				Assert.AreEqual (5, gotParams.HighNote, "HighNote should be 5");
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			using (var connection1 = MidiThruConnection.Create (ownerId, cnnParams1))
 			using (var connection2 = MidiThruConnection.Create (ownerId, cnnParams2)) {
 				var connections = MidiThruConnection.Find (ownerId, out var err);
-				Assert.IsTrue (err == MidiError.Ok, "midi connection error");
+				Assert.AreEqual (MidiError.Ok, err, "midi connection error");
 				Assert.NotNull (connections, "connections should not be null");
 				Assert.That (connections.Length, Is.EqualTo (2), "2 midi connections expected");
 			}

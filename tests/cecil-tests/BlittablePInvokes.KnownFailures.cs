@@ -728,7 +728,6 @@ namespace Cecil.Tests {
 			"System.Void CoreGraphics.CGPath::CGPathAddArc(System.IntPtr,CoreGraphics.CGAffineTransform*,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Runtime.InteropServices.NFloat,System.Boolean)",
 			"System.Void CoreGraphics.CGPDFDocument::CGPDFDocumentGetVersion(System.IntPtr,System.Int32&,System.Int32&)",
 			"System.Void CoreGraphics.CGRectExtensions::CGRectDivide(CoreGraphics.CGRect,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat,CoreGraphics.CGRectEdge)",
-			"System.Void CoreMidi.MidiThruConnectionParams::MIDIThruConnectionParamsInitialize(CoreMidi.MidiThruConnectionParamsStruct&)",
 			"System.Void CoreText.CTFontManager::CTFontManagerRegisterFontDescriptors(System.IntPtr,CoreText.CTFontManagerScope,System.Boolean,ObjCRuntime.BlockLiteral*)",
 			"System.Void CoreText.CTFontManager::CTFontManagerRegisterFontsWithAssetNames(System.IntPtr,System.IntPtr,CoreText.CTFontManagerScope,System.Boolean,ObjCRuntime.BlockLiteral*)",
 			"System.Void CoreText.CTFontManager::CTFontManagerRegisterFontURLs(System.IntPtr,CoreText.CTFontManagerScope,System.Boolean,ObjCRuntime.BlockLiteral*)",
