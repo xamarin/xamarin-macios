@@ -74,7 +74,23 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 17, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary, EntryPoint = "UIGraphicsBeginImageContextWithOptions")]
-		public extern static void BeginImageContextWithOptions (CGSize size, [MarshalAs (UnmanagedType.I1)] bool opaque, nfloat scale);
+		extern static void BeginImageContextWithOptions (CGSize size, byte opaque, nfloat scale);
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios17.0")]
+		[UnsupportedOSPlatform ("tvos17.0")]
+		[UnsupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Deprecated (PlatformName.iOS, 17, 0)]
+		[Deprecated (PlatformName.TvOS, 17, 0)]
+#endif
+		public static void BeginImageContextWithOptions (CGSize size, bool opaque, nfloat scale)
+		{
+			BeginImageContextWithOptions (size, opaque ? (byte) 1 : (byte) 0, scale);
+		}
 
 #if NET
 		[SupportedOSPlatform ("ios")]
