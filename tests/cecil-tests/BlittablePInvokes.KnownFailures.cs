@@ -76,8 +76,6 @@ namespace Cecil.Tests {
 			"AudioToolbox.AudioQueueStatus AudioToolbox.AudioQueueProcessingTap::AudioQueueProcessingTapGetSourceAudio(System.IntPtr,System.UInt32,AudioToolbox.AudioTimeStamp&,AudioToolbox.AudioQueueProcessingTapFlags&,System.UInt32&,System.IntPtr)",
 			"AudioToolbox.AudioQueueStatus AudioToolbox.OutputAudioQueue::AudioQueueOfflineRender(System.IntPtr,AudioToolbox.AudioTimeStamp&,AudioToolbox.AudioQueueBuffer*,System.Int32)",
 			"AudioToolbox.AudioQueueStatus AudioToolbox.OutputAudioQueue::AudioQueueSetOfflineRenderFormat(System.IntPtr,AudioToolbox.AudioStreamBasicDescription&,System.IntPtr)",
-			"AudioToolbox.AudioServicesError AudioToolbox.AudioServices::AudioServicesGetProperty(AudioToolbox.AudioServicesPropertyKey,System.UInt32,System.UInt32&,System.UInt32&,System.UInt32&)",
-			"AudioToolbox.AudioServicesError AudioToolbox.AudioServices::AudioServicesSetProperty(AudioToolbox.AudioServicesPropertyKey,System.UInt32,System.UInt32&,System.UInt32,System.UInt32&)",
 			"AudioToolbox.MusicPlayerStatus AudioToolbox.MusicSequence::MusicSequenceBarBeatTimeToBeats(System.IntPtr,AudioToolbox.CABarBeatTime,System.Double&)",
 			"AudioToolbox.MusicPlayerStatus AudioToolbox.MusicSequence::MusicSequenceBeatsToBarBeatTime(System.IntPtr,System.Double,System.Int32,AudioToolbox.CABarBeatTime&)",
 			"AudioToolbox.MusicPlayerStatus AudioToolbox.MusicSequence::MusicSequenceFileCreateData(System.IntPtr,AudioToolbox.MusicSequenceFileTypeID,AudioToolbox.MusicSequenceFileFlags,System.UInt16,System.IntPtr&)",
