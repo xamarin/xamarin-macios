@@ -241,7 +241,7 @@ public class BindingTouch : IDisposable {
 		return true;
 	}
 
-	public bool TryInitializeApi (BindingTouchConfig config, [NotNullWhen(true)] out Api? api)
+	public bool TryInitializeApi (BindingTouchConfig config, [NotNullWhen (true)] out Api? api)
 	{
 		api = null;
 		if (config.Sources.Count > 0) {
