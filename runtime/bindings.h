@@ -187,8 +187,6 @@ struct NMatrix4 {
 	Vector4f columns [4];
 };
 
-typedef struct NMatrix4 NMatrix4;
-
 struct NMatrix4d {
 	Vector4d columns [4];
 };
