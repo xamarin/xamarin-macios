@@ -68,7 +68,7 @@ namespace AudioToolbox {
 		unsafe static T []? GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format) where T : unmanaged
 		{
 			uint size;
-			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, sizeof (AudioFormatType), ref format, out size) != 0)
+			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, sizeof (AudioFormatType), &format, &size) != 0)
 				return null;
 
 			if (size == 0)
@@ -76,7 +76,7 @@ namespace AudioToolbox {
 
 			var data = new T [size / Marshal.SizeOf<T> ()];
 			fixed (T* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), ref format, ref size, (IntPtr) ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, sizeof (AudioFormatType), &format, &size, (IntPtr) ptr);
 				if (res != 0)
 					return null;
 			}
@@ -89,7 +89,7 @@ namespace AudioToolbox {
 
 	static partial class AudioFormatPropertyNative {
 		[DllImport (Constants.AudioToolboxLibrary)]
-		public unsafe extern static AudioFormatError AudioFormatGetProperty (AudioFormatProperty inPropertyID, int inSpecifierSize, AudioClassDescription* inSpecifier, ref int ioPropertyDataSize,
-			out uint outPropertyData);
+		public unsafe extern static AudioFormatError AudioFormatGetProperty (AudioFormatProperty inPropertyID, int inSpecifierSize, AudioClassDescription* inSpecifier, int* ioPropertyDataSize,
+			uint* outPropertyData);
 	}
 }
