@@ -1,7 +1,12 @@
 using System;
+using System.IO;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using Foundation;
 using Moq;
 using NUnit.Framework;
+using ObjCRuntime;
 
 namespace GeneratorTests {
 	[TestFixture]
@@ -31,7 +36,7 @@ namespace GeneratorTests {
 		}
 
 		Type testType = typeof (object);
-		Mock<BindingTouch> bindingTouch;
+		Mock<TypeCache> typeCache;
 		Mock<AttributeManager> attributeManager;
 		Nomenclator nomenclator;
 
@@ -39,8 +44,10 @@ namespace GeneratorTests {
 		public void SetUp ()
 		{
 			testType = typeof (NSAnimationDelegate);
-			bindingTouch = new ();
-			attributeManager = new (bindingTouch.Object);
+			var runtimeAssemblies = Directory.GetFiles (RuntimeEnvironment.GetRuntimeDirectory (), "*.dll");
+			var resolver = new PathAssemblyResolver (runtimeAssemblies);
+			typeCache = new ();
+			attributeManager = new (typeCache.Object);
 			nomenclator = new (attributeManager.Object);
 		}
 

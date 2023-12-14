@@ -87,6 +87,7 @@ namespace Introspection {
 			case "CAMetalLayer":
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
+			case "MTLIOCommandQueueDescriptor":
 			case "SWCollaborationActionHandler":
 			case "UISymbolEffectCompletionContext":
 				// Symbol not available in simulator - but works on BigSur (others might too)

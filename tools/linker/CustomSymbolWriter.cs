@@ -76,10 +76,7 @@ namespace Xamarin.Linker {
 		public ISymbolReaderProvider GetReaderProvider () => _symbolWriter.GetReaderProvider ();
 
 		public void Write (MethodDebugInformation info) => _symbolWriter.Write (info);
-#if NET
 		public void Write () => _symbolWriter.Write ();
-#endif
-
 		public void Dispose () => _symbolWriter.Dispose ();
 	}
 }

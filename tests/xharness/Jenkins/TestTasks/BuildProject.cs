@@ -104,7 +104,7 @@ namespace Xharness.Jenkins.TestTasks {
 				result.Add (fixPath);
 				// get all possible references
 				if (!Path.IsPathRooted (fixPath))
-					fixPath = Path.Combine (Path.GetDirectoryName (csproj), fixPath);
+					fixPath = Path.Combine (Path.GetDirectoryName (csproj)!, fixPath);
 				result.AddRange (GetNestedReferenceProjects (fixPath));
 			}
 			return result;

@@ -4509,8 +4509,8 @@ public class Dummy {
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
 			environment_variables ["USE_TCP_TUNNEL"] = null;
 
+			var executable = Path.Combine (Configuration.RootPath, "tests", "xharness", "bin", "Debug", Configuration.DotNetTfm, "xharness");
 			var args = new List<string> ();
-			args.Add (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"));
 			args.Add ("--run");
 			args.Add (csprojpath);
 			args.Add ("--target");
@@ -4521,7 +4521,7 @@ public class Dummy {
 			args.Add (Path.Combine (tmpdir, "log.txt"));
 			args.Add ("--configuration");
 			args.Add (configuration);
-			ExecutionHelper.Execute ("mono", args, environmentVariables: environment_variables);
+			ExecutionHelper.Execute (executable, args, environmentVariables: environment_variables);
 		}
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)

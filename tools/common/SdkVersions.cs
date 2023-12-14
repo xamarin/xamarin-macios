@@ -24,7 +24,6 @@ namespace Xamarin {
 #if NET
 		public const string MinOSX = "10.15";
 		public const string MiniOS = "11.0";
-		public const string MinWatchOS = "99.99"; // TODO not supported, many changes required to remove it
 		public const string MinTVOS = "11.0";
 		public const string MinMacCatalyst = "13.1";
 #else
@@ -34,6 +33,15 @@ namespace Xamarin {
 		public const string MinTVOS = "11.0";
 		public const string MinMacCatalyst = "13.1";
 #endif
+
+		public const string DotNetMinOSX = "10.15";
+		public const string DotNetMiniOS = "11.0";
+		public const string DotNetMinTVOS = "11.0";
+		public const string DotNetMinMacCatalyst = "13.1";
+		public const string LegacyMinOSX = "10.15";
+		public const string LegacyMiniOS = "11.0";
+		public const string LegacyMinWatchOS = "4.0";
+		public const string LegacyMinTVOS = "11.0";
 
 		public const string MiniOSSimulator = "14.3";
 		public const string MinWatchOSSimulator = "7.1";
@@ -66,7 +74,9 @@ namespace Xamarin {
 
 		public static Version MinOSXVersion { get { return new Version (MinOSX); } }
 		public static Version MiniOSVersion { get { return new Version (MiniOS); } }
+#if !NET
 		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); } }
+#endif
 		public static Version MinTVOSVersion { get { return new Version (MinTVOS); } }
 		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); } }
 
@@ -113,7 +123,9 @@ namespace Xamarin {
 			switch (app.Platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
+#if !NET
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+#endif
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
@@ -140,7 +152,9 @@ namespace Xamarin {
 			switch (platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
+#if !NET
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+#endif
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:

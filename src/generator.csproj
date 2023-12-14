@@ -111,6 +111,7 @@
     <Compile Include="..\src\bgen\Generator.cs" />
     <Compile Include="..\src\bgen\Generator.PrintAttributes.cs" />
     <Compile Include="..\src\bgen\IMemberGatherer.cs" />
+    <Compile Include="..\src\bgen\LibraryManager.cs" />
     <Compile Include="..\src\bgen\Nomenclator.cs" />
     <Compile Include="..\src\bgen\NullabilityInfoContext.cs" />
     <Compile Include="..\src\bgen\ReferenceFixer.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="bgen\Models\Api.cs" />
     <Compile Include="bgen\Models\AsyncMethodInfo.cs" />
     <Compile Include="bgen\Models\BindingTouchConfig.cs" />
+    <Compile Include="bgen\Models\LibraryInfo.cs" />
     <Compile Include="bgen\Models\MarshalInfo.cs" />
     <Compile Include="bgen\Models\MarshalType.cs" />
     <Compile Include="bgen\Models\MarshalTypeList.cs" />
