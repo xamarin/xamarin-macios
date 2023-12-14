@@ -241,7 +241,7 @@ public class BindingTouch : IDisposable {
 		return true;
 	}
 
-	public bool TryInitializeApi (BindingTouchConfig config, out Api? api)
+	public bool TryInitializeApi (BindingTouchConfig config, [NotNullWhen(true)] out Api? api)
 	{
 		api = null;
 		if (config.Sources.Count > 0) {
@@ -327,6 +327,7 @@ public class BindingTouch : IDisposable {
 
 		} catch (Exception ex) {
 			ErrorHelper.Show (ex);
+			return false;
 		}
 
 		return true;
@@ -354,11 +355,8 @@ public class BindingTouch : IDisposable {
 		return 0;
 	}
 
-	bool TryGenerate (BindingTouchConfig config, Api? api)
+	bool TryGenerate (BindingTouchConfig config, Api api)
 	{
-		if (api is null)
-			return false;
-
 		try {
 			var g = new Generator (this, api, config.IsPublicMode, config.IsExternal, config.IsDebug) {
 				BaseDir = config.BindingFilesOutputDirectory ?? config.TemporaryFileDirectory,
