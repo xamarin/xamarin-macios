@@ -213,9 +213,6 @@
     <Content Include="..\monotouch-test\Resources\square.gif">
       <Link>Resources\square.gif</Link>
     </Content>
-    <Content Include="..\monotouch-test\Resources\square.gif">
-      <Link>Resources\square.gif</Link>
-    </Content>
     <Content Include="..\monotouch-test\Resources\full_body.jpg">
       <Link>Resources\full_body.jpg</Link>
     </Content>
