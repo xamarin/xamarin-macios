@@ -385,6 +385,6 @@ public class TypeManager {
 		var typesArray = types.ToArray ();
 		Array.Sort (typesArray, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
 
-		return new (typesArray, strongDictionaries.ToArray ());
+		return new (typesArray, strongDictionaries.ToArray (), api);
 	}
 }
