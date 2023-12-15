@@ -330,8 +330,8 @@ namespace MonoTouchFixtures.Security {
 
 		void Trust_FullChain (SecTrust trust, SecPolicy policy, X509CertificateCollection certs)
 		{
-			// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
-			trust.SetVerifyDate (new DateTime (2023, 12, 15, 13, 48, 20, 314, 156, DateTimeKind.Utc));
+			// that certificate stopped being valid on December 15th, 2023 so we validate it with a date earlier than that
+			trust.SetVerifyDate (new DateTime (638382479747632240, DateTimeKind.Utc));
 
 			SecTrustResult trust_result = SecTrustResult.Unspecified;
 			var result = Evaluate (trust, out var trustError, true);
