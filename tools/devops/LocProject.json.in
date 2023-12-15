@@ -24,10 +24,10 @@
 			"LssFiles": []
 		  },
 		  {
-			"SourceFile": "@WORKING_DIRECTORY@/../../src/Resources.resx",
+			"SourceFile": "@WORKING_DIRECTORY@/../../src/bgen/Resources.resx",
 			"Languages": "",
 			"CopyOption": "LangIDOnName",
-			"OutputPath": "@WORKING_DIRECTORY@/../../src/TranslatedAssemblies",
+			"OutputPath": "@WORKING_DIRECTORY@/../../src/bgen/TranslatedAssemblies",
 			"LclFile": "",
 			"LciFile": "",
 			"Parser": "",
