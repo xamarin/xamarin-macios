@@ -96,13 +96,13 @@ namespace Xamarin.MacDev.Tasks {
 			get {
 				switch (Platform) {
 				case ApplePlatform.iOS:
-					return DotNetVersionConstants.Microsoft_iOS_Version;
+					return VersionConstants.Microsoft_iOS_Version;
 				case ApplePlatform.MacCatalyst:
-					return DotNetVersionConstants.Microsoft_MacCatalyst_Version;
+					return VersionConstants.Microsoft_MacCatalyst_Version;
 				case ApplePlatform.MacOSX:
-					return DotNetVersionConstants.Microsoft_macOS_Version;
+					return VersionConstants.Microsoft_macOS_Version;
 				case ApplePlatform.TVOS:
-					return DotNetVersionConstants.Microsoft_tvOS_Version;
+					return VersionConstants.Microsoft_tvOS_Version;
 				default:
 					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 				}
@@ -162,12 +162,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		internal protected static ReportErrorCallback GetFileCopierReportErrorCallback (TaskLoggingHelper log)
 		{
-			return new ReportErrorCallback ((int code, string format, object [] arguments) => {
+			return new ReportErrorCallback ((int code, string format, object? [] arguments) => {
 				FileCopierReportErrorCallback (log, code, format, arguments);
 			});
 		}
 
-		internal protected static void FileCopierReportErrorCallback (TaskLoggingHelper log, int code, string format, params object [] arguments)
+		internal protected static void FileCopierReportErrorCallback (TaskLoggingHelper log, int code, string format, params object? [] arguments)
 		{
 			log.LogError (format, arguments);
 		}
@@ -179,12 +179,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		internal protected static LogCallback GetFileCopierLogCallback (TaskLoggingHelper log)
 		{
-			return new LogCallback ((int min_verbosity, string format, object [] arguments) => {
+			return new LogCallback ((int min_verbosity, string format, object? [] arguments) => {
 				FileCopierLogCallback (log, min_verbosity, format, arguments);
 			});
 		}
 
-		protected static void FileCopierLogCallback (TaskLoggingHelper log, int min_verbosity, string format, params object [] arguments)
+		protected static void FileCopierLogCallback (TaskLoggingHelper log, int min_verbosity, string format, params object? [] arguments)
 		{
 			MessageImportance importance;
 			if (min_verbosity <= 0) {

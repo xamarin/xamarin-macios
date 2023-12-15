@@ -29,6 +29,9 @@ namespace Xamarin.Mac.Tests {
 			case "CryptoTokenKitLibrary":
 			case "FinderSyncLibrary":
 			case "HypervisorLibrary":
+#if !XAMCORE_5_0
+			case "InputMethodKitLibrary": // Removed very incomplete bindings for InputMethodKit, but the constant itself had to remain to keep binary compat.
+#endif
 				return LoadStatus.Acceptable;
 			}
 

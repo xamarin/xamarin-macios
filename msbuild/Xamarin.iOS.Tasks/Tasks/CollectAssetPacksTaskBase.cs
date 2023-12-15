@@ -8,6 +8,9 @@ using Microsoft.Build.Framework;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
 	public class CollectAssetPacks : XamarinTask, ICancelableTask {
 		#region Inputs

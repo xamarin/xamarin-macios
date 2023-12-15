@@ -15,13 +15,13 @@ namespace Xharness.Tests.Tests {
 													  TestPlatform.iOS_TodayExtension64,
 													  TestPlatform.iOS_Unified32,
 													  TestPlatform.iOS_Unified64,}) {
-						yield return new TestCaseData (platform).Returns ("iOS " + SdkVersions.MiniOSSimulator);
+						yield return new TestCaseData (platform).Returns ("iOS " + Xamarin.SdkVersions.MiniOSSimulator);
 					}
-					yield return new TestCaseData (TestPlatform.tvOS).Returns ("tvOS " + SdkVersions.MinTVOSSimulator);
+					yield return new TestCaseData (TestPlatform.tvOS).Returns ("tvOS " + Xamarin.SdkVersions.MinTVOSSimulator);
 					foreach (var platform in new [] { TestPlatform.watchOS,
 													  TestPlatform.watchOS_32,
 													  TestPlatform.watchOS_64_32}) {
-						yield return new TestCaseData (platform).Returns ("watchOS " + SdkVersions.MinWatchOSSimulator);
+						yield return new TestCaseData (platform).Returns ("watchOS " + Xamarin.SdkVersions.MinWatchOSSimulator);
 					}
 				}
 			}

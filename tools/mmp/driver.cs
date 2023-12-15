@@ -106,6 +106,8 @@ namespace Xamarin.Bundler {
 		public static bool LinkProhibitedFrameworks { get; private set; }
 		public static bool UseLegacyAssemblyResolution { get; private set; }
 
+		internal static Action Action { get => action; }
+
 		static string mono_prefix;
 		static string MonoPrefix {
 			get {

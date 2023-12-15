@@ -236,7 +236,7 @@ namespace Xharness.Targets {
 				templateName = Path.GetFileNameWithoutExtension (templateName);
 			templateName = Path.GetFileNameWithoutExtension (templateName);
 
-			if (templateName.Equals ("mono-native-mac"))
+			if (templateName.Equals ("mono-native-mac", StringComparison.Ordinal))
 				templateName = "mono-native";
 
 			if (!ShouldSkipProjectGeneration) {

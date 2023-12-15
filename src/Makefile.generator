@@ -14,12 +14,23 @@ $(BUILD_DIR)/generator.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common /restore
 
-$(DOTNET_BUILD_DIR)/bgen/bgen:  $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs | $(DOTNET_BUILD_DIR)/bgen
+# bgen.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
+$(DOTNET_BUILD_DIR)/bgen.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
+-include $(DOTNET_BUILD_DIR)/bgen.csproj.inc
+
+$(DOTNET_BUILD_DIR)/bgen/bgen:  $(bgen_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs | $(DOTNET_BUILD_DIR)/bgen
 	$(Q_DOTNET_BUILD) $(DOTNET) publish bgen/bgen.csproj $(DOTNET_BUILD_VERBOSITY) /p:Configuration=Debug /p:IntermediateOutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/obj/common/bgen)/ /p:OutputPath=$(abspath $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen/)/
 	$(Q) $(CP) $(DOTNET_BUILD_DIR)/IDE/bin/common/bgen/publish/* $(dir $@)
 	$(Q) printf 'exec $(DOTNET) "$$(dirname "$$0")"/bgen.dll $$@\n' > $@
 	$(Q) chmod +x $@
 
+# Serialize the building of the legacy bgen and the .NET version, because they can both try to restore the same NuGet package at the same time, and that runs into race conditions
+# This is done by adding a dependency from the legacy bgen to the .NET bgen, so the legacy bgen doesn't start building until the .NET one is done.
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef ENABLE_DOTNET
+$(BUILD_DIR)/common/bgen.exe: $(DOTNET_BUILD_DIR)/bgen/bgen
+endif
+endif
 
 define BGenTargets
 $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen/bgen: $(DOTNET_BUILD_DIR)/bgen/bgen | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen

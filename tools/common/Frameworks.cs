@@ -149,7 +149,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
-					{ "InputMethodKit", 10, 5 },
 					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
@@ -538,6 +537,7 @@ public class Frameworks : Dictionary<string, Framework> {
 #if !NET
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
+				{ "CoreMidi", "CoreMIDI", 8,0 },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
@@ -641,6 +641,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
 					{ "OSLog", "OSLog", 15,0 },
+					{ "CoreMidi", "CoreMIDI", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 					{ "SharedWithYou", "SharedWithYou", 16,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },

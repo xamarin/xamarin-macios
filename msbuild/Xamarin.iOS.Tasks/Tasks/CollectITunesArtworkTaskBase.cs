@@ -11,6 +11,9 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Localization.MSBuild;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
 	public class CollectITunesArtwork : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs

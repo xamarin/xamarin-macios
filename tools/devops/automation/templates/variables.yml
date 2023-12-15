@@ -14,7 +14,7 @@ variables:
 - name: AzDoBuildAccess.Token
   value: $(pat--xamarinc--build-access)
 - name: system.debug
-  value: true
+  value: false
 - name: SigningKeychain
   value: "builder.keychain"
 - name: VSDropsPrefix

@@ -45,7 +45,7 @@ partial class Frameworks {
 		"CoreLocation",
 		"CoreLocationUI",
 		"CoreMedia",
-		"CoreMIDI",
+		"CoreMidi",
 		"CoreML",
 		"CoreMotion",
 		"CoreNFC",
@@ -297,6 +297,7 @@ partial class Frameworks {
 		"CoreGraphics",
 		"CoreLocation",
 		"CoreMedia",
+		"CoreMidi",
 		"CoreML",
 		"CoreMotion",
 		"CoreText",
@@ -359,6 +360,7 @@ partial class Frameworks {
 		"CoreImage",
 		"CoreLocation",
 		"CoreMedia",
+		"CoreMidi",
 		"CoreML",
 		"CoreSpotlight",
 		"CoreText",
@@ -457,7 +459,7 @@ partial class Frameworks {
 		"CoreLocation",
 		"CoreLocationUI",
 		"CoreMedia",
-		"CoreMIDI",
+		"CoreMidi",
 		"CoreML",
 		"CoreMotion",
 		"CoreNFC",
@@ -591,7 +593,6 @@ partial class Frameworks {
 	bool? _CoreLocationUI;
 	bool? _CoreMedia;
 	bool? _CoreMidi;
-	bool? _CoreMIDI;
 	bool? _CoreML;
 	bool? _CoreMotion;
 	bool? _CoreNFC;
@@ -757,7 +758,6 @@ partial class Frameworks {
 	public bool HaveCoreLocationUI { get { if (!_CoreLocationUI.HasValue) _CoreLocationUI = GetValue ("CoreLocationUI"); return _CoreLocationUI.Value; } }
 	public bool HaveCoreMedia { get { if (!_CoreMedia.HasValue) _CoreMedia = GetValue ("CoreMedia"); return _CoreMedia.Value; } }
 	public bool HaveCoreMidi { get { if (!_CoreMidi.HasValue) _CoreMidi = GetValue ("CoreMidi"); return _CoreMidi.Value; } }
-	public bool HaveCoreMIDI { get { if (!_CoreMIDI.HasValue) _CoreMIDI = GetValue ("CoreMIDI"); return _CoreMIDI.Value; } }
 	public bool HaveCoreML { get { if (!_CoreML.HasValue) _CoreML = GetValue ("CoreML"); return _CoreML.Value; } }
 	public bool HaveCoreMotion { get { if (!_CoreMotion.HasValue) _CoreMotion = GetValue ("CoreMotion"); return _CoreMotion.Value; } }
 	public bool HaveCoreNFC { get { if (!_CoreNFC.HasValue) _CoreNFC = GetValue ("CoreNFC"); return _CoreNFC.Value; } }

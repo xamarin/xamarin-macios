@@ -24,6 +24,7 @@
 #if !__MACCATALYST__
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -47,14 +48,38 @@ namespace AppKit {
 		public static readonly float DarkGray = (float) 1 / 3.0f;
 
 		[DllImport (Constants.AppKitLibrary)]
-		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch);
+		extern unsafe static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, byte planar, byte* exactMatch);
 
-		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch)
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Call 'GetBestDepth' instead.")]
+		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch)
 		{
 			if (colorspace is null)
-				throw new ArgumentNullException ("colorspace");
+				throw new ArgumentNullException (nameof (colorspace));
 
-			return NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, planar, ref exactMatch);
+			var exactMatchValue = (byte) (exactMatch ? 1 : 0);
+			NSWindowDepth rv;
+			unsafe {
+				rv = NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, (byte) (planar ? 1 : 0), &exactMatchValue);
+			}
+			exactMatch = exactMatchValue != 0;
+			return rv;
+		}
+#endif
+
+		public static NSWindowDepth GetBestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, out bool exactMatch)
+		{
+			if (colorspace is null)
+				throw new ArgumentNullException (nameof (colorspace));
+
+			byte exactMatchValue = 0;
+			NSWindowDepth rv;
+			unsafe {
+				rv = NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, (byte) (planar ? 1 : 0), &exactMatchValue);
+			}
+			exactMatch = exactMatchValue != 0;
+			return rv;
 		}
 
 		[DllImport (Constants.AppKitLibrary)]

@@ -92,12 +92,12 @@ namespace Xharness.Tests.Jenkins {
 
 			logs.Setup (l => l.Create (
 				It.IsAny<string> (),
-				It.Is<string> (s => s.Equals ("Simulator Listing")),
+				It.Is<string> (s => s.Equals ("Simulator Listing", StringComparison.OrdinalIgnoreCase)),
 				null)).Returns (log.Object);
 
 			logs.Setup (l => l.Create (
 				It.IsAny<string> (),
-				It.Is<string> (s => s.Equals ("Device Listing")),
+				It.Is<string> (s => s.Equals ("Device Listing", StringComparison.OrdinalIgnoreCase)),
 				null)).Returns (log.Object);
 
 			log.SetupSet (l => l.Description = It.IsAny<string> ()).Verifiable ();
@@ -118,7 +118,7 @@ namespace Xharness.Tests.Jenkins {
 
 			await loader.LoadDevicesAsync ();
 			// validate that the log description will be set as expected
-			log.VerifySet (l => l.Description = It.Is<string> (s => s.Equals (expectedDescription)));
+			log.VerifySet (l => l.Description = It.Is<string> (s => s.Equals (expectedDescription, StringComparison.OrdinalIgnoreCase)));
 		}
 
 		[Test, TestCaseSource (typeof (TestCasesData), "GetSimulatorTestCases")]
@@ -128,7 +128,7 @@ namespace Xharness.Tests.Jenkins {
 
 			await loader.LoadSimulatorsAsync ();
 			// validate that the log description will be set as expected
-			log.VerifySet (l => l.Description = It.Is<string> (s => s.Equals (expectedDescription)));
+			log.VerifySet (l => l.Description = It.Is<string> (s => s.Equals (expectedDescription, StringComparison.OrdinalIgnoreCase)));
 		}
 
 	}

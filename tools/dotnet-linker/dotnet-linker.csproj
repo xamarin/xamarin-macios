@@ -195,9 +195,6 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\tuner\Mono.Tuner\Extensions.cs">
       <Link>external\mono-archive\Mono.Tuner\Extensions.cs</Link>
     </Compile>
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\I18nAssemblies.cs">
-      <Link>external\mono-archive\Linker\I18nAssemblies.cs</Link>
-    </Compile>
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\external\linker\src\linker\Linker\MethodDefinitionExtensions.cs">
       <Link>mono-archive\Linker\MethodDefinitionExtensions.cs</Link>
     </Compile>

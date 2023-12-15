@@ -1986,7 +1986,7 @@ xamarin_release_managed_ref (id self, bool user_type)
 
 	xamarin_handle_to_be_released = self;
 
-	[self release];
+	objc_release (self);
 
 	xamarin_handle_to_be_released = NULL;
 }
@@ -2726,7 +2726,7 @@ xamarin_vprintf (const char *format, va_list args)
 	NSLog (@"%@", message);	
 #endif
 
-	[message release];
+	objc_release (message);
 }
 
 void
@@ -3269,7 +3269,7 @@ xamarin_get_runtime_arch ()
 {
 	XamarinGCHandle *rv = [[XamarinGCHandle alloc] init];
 	rv->handle = h;
-	[rv autorelease];
+	objc_autorelease (rv);
 	return rv;
 }
 
