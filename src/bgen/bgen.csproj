@@ -57,9 +57,6 @@
     <Compile Include="$(RepositoryPath)\tools\common\Execution.cs">
       <Link>Execution.cs</Link>
     </Compile>
-    <Compile Include="Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="..\..\tools\common\Driver.execution.cs">
       <Link>Driver.execution.cs</Link>
     </Compile>
@@ -67,12 +64,6 @@
       <Link>SdkVersions.cs</Link>
     </Compile>
     <None Include="$(PkgMono_Options)\lib\netstandard2.0\Mono.Options.pdb" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
