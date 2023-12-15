@@ -5086,7 +5086,7 @@ public partial class Generator : IMemberGatherer {
 			if (sb.Length > 0)
 				sb.Append (", ");
 			sb.Append (iface.Namespace).Append ('.');
-			if (iface.Assembly.GetName ().Name == "temp")
+			if (IsApiAssembly (iface.Assembly))
 				sb.Append ('I');
 			else if (iface.IsClass)
 				sb.Append ('I');
@@ -5763,7 +5763,7 @@ public partial class Generator : IMemberGatherer {
 				string pname = protocolType.Name;
 				// the extra 'I' is only required for the bindings being built, if it comes from something already
 				// built (e.g. monotouch.dll) then the interface will alreadybe prefixed
-				if (protocolType.Assembly.GetName ().Name == "temp")
+				if (IsApiAssembly (protocolType.Assembly))
 					pname = "I" + pname;
 				var iface = FormatType (type, protocolType.Namespace, pname);
 				if (!implements_list.Contains (iface))
@@ -7262,4 +7262,10 @@ public partial class Generator : IMemberGatherer {
 			return provider?.ToString ();
 		}
 	}
+
+	public bool IsApiAssembly (Assembly assembly)
+	{
+		return assembly == TypeManager.ApiAssembly;
+	}
+
 }
