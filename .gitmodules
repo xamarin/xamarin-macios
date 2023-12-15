@@ -9,7 +9,7 @@
 [submodule "external/Touch.Unit"]
     path = external/Touch.Unit
     url = ../../xamarin/Touch.Unit.git
-    branch = net8.0
+    branch = main
 [submodule "external/Xamarin.MacDev"]
     path = external/Xamarin.MacDev
     url = ../../xamarin/Xamarin.MacDev
@@ -17,7 +17,7 @@
 [submodule "external/MonoTouch.Dialog"]
     path = external/MonoTouch.Dialog
     url = ../../xamarin/MonoTouch.Dialog
-    branch = net8.0
+    branch = dotnet
 [submodule "api-tools"]
     path = external/api-tools
     url = ../../xamarin/api-tools
