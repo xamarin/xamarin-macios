@@ -1128,6 +1128,7 @@
 	<Target Name="_FindAotCompiler" DependsOnTargets="_ComputeVariables">
 		<PropertyGroup>
 			<_XamarinAOTCompilerCachePath>$(DeviceSpecificIntermediateOutputPath)aot-compiler-path-$(NETCoreSdkVersion).txt</_XamarinAOTCompilerCachePath>
+			<_DotNetRootRemotePath Condition="'$(_DotNetRootRemoteDirectory)' != '' And '$(_DotNetRootRemotePath)' == ''">$(_DotNetRootRemoteDirectory)/dotnet</_DotNetRootRemotePath>
 		</PropertyGroup>
 
 		<!-- This task does not take a SessionId because we cache the path on Windows for remote builds to avoid a round-trip -->
@@ -1141,6 +1142,7 @@
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true' And '$(_XamarinAOTCompiler)' == ''"
+			DotNetPath="$(_DotNetRootRemotePath)"
 			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
