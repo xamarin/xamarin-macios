@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="default" xml:space="preserve">
+		<value>The error message for code {0} could not be found. Please report this missing message on GitHub at https://github.com/xamarin/xamarin-macios/issues/new</value>
+		<comment>
+			This is the default message when an error code can not be found.
+		</comment>
+	</data>
+  <data name="BI0000" xml:space="preserve">
+		<value>Unexpected error - Please fill a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
+  <data name="BI0001" xml:space="preserve">
+		<value>The .NET runtime could not load the {0} type. Message: {1}</value>
+	</data>
+  <data name="BI0002" xml:space="preserve">
+		<value>Could not compile the API bindings.
+		{0}
+		</value>
+	</data>
+  <data name="BI0003" xml:space="preserve">
+		<value>Frameworks were not loaded for platform {0}.</value>
+	</data>
+  <data name="BI0004" xml:space="preserve">
+		<value>Universe was not loaded for platform {0}.</value>
+	</data>
+  <data name="BI0026" xml:space="preserve">
+		<value>Could not parse the command line argument '--warnaserror': {0}</value>
+	</data>
+  <data name="BI0027" xml:space="preserve">
+		<value>Could not parse the command line argument '{0}': {1}</value>
+	</data>
+  <data name="BI0028" xml:space="preserve">
+		<value>No C# compiler has been specified (using --compiler or --compile-command).</value>
+	</data>
+  <data name="BI0068" xml:space="preserve">
+		<value>Invalid value for target framework: {0}.</value>
+	</data>
+  <data name="BI0070" xml:space="preserve">
+		<value>Invalid target framework: {0}. Valid target frameworks are: {1}.</value>
+	</data>
+  <data name="BI0086" xml:space="preserve">
+		<value>A target framework (--target-framework) must be specified.</value>
+	</data>
+  <data name="BI0087" xml:space="preserve">
+		<value>Xamarin.Mac Classic binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.Mac Unified binding project.</value>
+	</data>
+  <data name="BI0088" xml:space="preserve">
+		<value>Internal error: don't know how to create ref/out (input) code for {0} in {1}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</value>
+	</data>
+  <data name="BI0089" xml:space="preserve">
+		<value>Internal error: property {0} doesn't have neither a getter nor a setter.</value>
+	</data>
+  <data name="BI0099" xml:space="preserve">
+		<value>Internal error {0}. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).</value>
+	</data>
+  <data name="BI1000" xml:space="preserve">
+		<value>Could not compile the generated API bindings.	
+		{0}
+		</value>
+	</data>
+  <data name="BI1001" xml:space="preserve">
+		<value>Do not know how to make a trampoline for {0}</value>
+	</data>
+  <data name="BI1002" xml:space="preserve">
+		<value>Unknown kind {0} in method '{1}.{2}'</value>
+	</data>
+  <data name="BI1003" xml:space="preserve">
+		<value>The delegate method {0}.{1} needs to take at least one parameter</value>
+	</data>
+  <data name="BI1004" xml:space="preserve">
+		<value>The delegate method {0}.{1} is missing the [EventArgs] attribute (has {2} parameters)</value>
+	</data>
+  <data name="BI1005" xml:space="preserve">
+		<value>EventArgs in {0}.{1} attribute should not include the text `EventArgs' at the end</value>
+	</data>
+  <data name="BI1006" xml:space="preserve">
+		<value>The delegate method {0}.{1} is missing the [DelegateName] attribute (or EventArgs)</value>
+	</data>
+  <data name="BI1007" xml:space="preserve">
+		<value>Unknown attribute {0} on {1}.{2}</value>
+	</data>
+  <data name="BI1008" xml:space="preserve">
+		<value>[IsThreadStatic] is only valid on properties that are also [Static]</value>
+	</data>
+  <data name="BI1009" xml:space="preserve">
+		<value>No selector specified for method `{0}.{1}'</value>
+	</data>
+  <data name="BI1010" xml:space="preserve">
+		<value>No Export attribute on {0}.{1} property</value>
+	</data>
+  <data name="BI1011" xml:space="preserve">
+		<value>Do not know how to extract type {0}/{1} from an NSDictionary</value>
+	</data>
+  <data name="BI1012" xml:space="preserve">
+		<value>No Export or Bind attribute defined on {0}.{1}</value>
+	</data>
+  <data name="BI1013" xml:space="preserve">
+		<value>Unsupported type for Fields (string), you probably meant NSString</value>
+	</data>
+  <data name="BI1014" xml:space="preserve">
+		<value>Unsupported type for Fields: {0} for '{1}'.</value>
+	</data>
+  <data name="BI1015" xml:space="preserve">
+		<value>In class {0} You specified the Events property, but did not bind those to names with Delegates</value>
+	</data>
+  <data name="BI1016" xml:space="preserve">
+		<value>The delegate method {0}.{1} is missing the [DefaultValue] attribute</value>
+	</data>
+  <data name="BI1017" xml:space="preserve">
+		<value>Do not know how to make a signature for {0}</value>
+	</data>
+  <data name="BI1018" xml:space="preserve">
+		<value>No [Export] attribute on property {0}.{1}</value>
+	</data>
+  <data name="BI1019" xml:space="preserve">
+		<value>Invalid [NoDefaultValue] attribute on method '{0}.{1}'</value>
+	</data>
+  <data name="BI1020" xml:space="preserve">
+		<value>Unsupported type {0} used on exported method {1}.{2} -&gt; {3}</value>
+	</data>
+  <data name="BI1021" xml:space="preserve">
+		<value>Unsupported type for read/write Fields: {0} for {1}.{2}</value>
+	</data>
+  <data name="BI1022" xml:space="preserve">
+		<value>Model classes can not be categories</value>
+	</data>
+  <data name="BI1023" xml:space="preserve">
+		<value>The number of Events (Type) and Delegates (string) must match for `{0}`</value>
+	</data>
+  <data name="BI1024" xml:space="preserve">
+		<value>No selector specified for property '{0}.{1}'</value>
+	</data>
+  <data name="BI1025" xml:space="preserve">
+		<value>[Static] and [Protocol] are mutually exclusive ({0})</value>
+	</data>
+  <data name="BI1026" xml:space="preserve">
+		<value>`{0}`: Enums attributed with [{1}] must have an underlying type of `long` or `ulong`</value>
+	</data>
+  <data name="BI1027" xml:space="preserve">
+		<value>Support for ZeroCopy strings is not implemented. Strings will be marshalled as NSStrings.</value>
+	</data>
+  <data name="BI1028" xml:space="preserve">
+		<value>Internal sanity check failed, please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1029" xml:space="preserve">
+		<value>Internal error: invalid enum mode for type '{0}'</value>
+	</data>
+  <data name="BI1030" xml:space="preserve">
+		<value>{0} cannot have [BaseType(typeof({1}))] as it creates a circular dependency</value>
+	</data>
+  <data name="BI1031" xml:space="preserve">
+		<value>The [Target] attribute is not supported for the Unified API (found on the member '{0}.{1}'). For Objective-C categories, create an api definition interface with the [Category] attribute instead.</value>
+	</data>
+  <data name="BI1032" xml:space="preserve">
+		<value>No support for setters in StrongDictionary classes for type {0} in {1}.{2}</value>
+	</data>
+  <data name="BI1033" xml:space="preserve">
+		<value>Limitation: can not automatically create strongly typed dictionary for ({0}) the value type of the {1}.{2} property</value>
+		<comment>Generating a strongly typed dictionary for type '{0}' is not supported.
+{0} - the property type.
+{1} - the dictionary type.
+{2} - the property name.
+		</comment>
+	</data>
+  <data name="BI1034" xml:space="preserve">
+		<value>The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.</value>
+	</data>
+  <data name="BI1035" xml:space="preserve">
+		<value>The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.</value>
+	</data>
+  <data name="BI1036" xml:space="preserve">
+		<value>The last parameter in the method '{0}.{1}' must be a delegate (it's '{2}').</value>
+	</data>
+  <data name="BI1037" xml:space="preserve">
+		<value>The selector {0} on type {1} is found multiple times with both read only and write only versions, with no read/write version.</value>
+	</data>
+  <data name="BI1038" xml:space="preserve">
+		<value>The selector {0} on type {1} is found multiple times with different return types.</value>
+	</data>
+  <data name="BI1039" xml:space="preserve">
+		<value>The selector {0} on type {1} is found multiple times with different argument length {2} : {3}.</value>
+	</data>
+  <data name="BI1040" xml:space="preserve">
+		<value>The selector {0} on type {1} is found multiple times with different argument out states on argument {2}.</value>
+	</data>
+  <data name="BI1041" xml:space="preserve">
+		<value>The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.		</value>
+	</data>
+  <data name="BI1042" xml:space="preserve">
+		<value>Missing '[Field (LibraryName=value)]' for {0} (e.g."__Internal")</value>
+	</data>
+  <data name="BI1043" xml:space="preserve">
+		<value>Repeated overload {0} and no [DelegateApiNameAttribute] provided to generate property name on host class.</value>
+	</data>
+  <data name="BI1044" xml:space="preserve">
+		<value>Repeated name '{0}' provided in [DelegateApiNameAttribute].</value>
+	</data>
+  <data name="BI1045" xml:space="preserve">
+		<value>Only a single [DefaultEnumValue] attribute can be used inside enum {0}.</value>
+	</data>
+  <data name="BI1046" xml:space="preserve">
+		<value>The [Field] constant {0} cannot only be used once inside enum {1}.</value>
+	</data>
+  <data name="BI1047" xml:space="preserve">
+		<value>Unsupported platform: {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1048" xml:space="preserve">
+		<value>Unsupported type {0} decorated with [BindAs]</value>
+	</data>
+  <data name="BI1049" xml:space="preserve">
+		<value>Could not {0} type {1} from {2} {3} used on member {4} decorated with [BindAs].</value>
+	</data>
+  <data name="BI1050" xml:space="preserve">
+		<value>[BindAs] cannot be used inside Protocol or Model types. Type: {0}</value>
+	</data>
+  <data name="BI1051" xml:space="preserve">
+		<value>Internal error: Don't know how to get attributes for {0}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1052" xml:space="preserve">
+		<value>Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1053" xml:space="preserve">
+		<value>Internal error: unknown target framework '{0}'.</value>
+	</data>
+  <data name="BI1054" xml:space="preserve">
+		<value>Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1055" xml:space="preserve">
+		<value>Internal error: failed to convert type '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1056" xml:space="preserve">
+		<value>Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1057" xml:space="preserve">
+		<value>Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1058" xml:space="preserve">
+		<value>Internal error: could not find a constructor for the mock attribute '{0}'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1059" xml:space="preserve">
+		<value>Found {0} {1} attributes on the member {2}. At most one was expected.</value>
+	</data>
+  <data name="BI1060" xml:space="preserve">
+		<value>The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].</value>
+	</data>
+  <data name="BI1061" xml:space="preserve">
+		<value>The attribute '{0}' found on '{1}' is not a valid binding attribute. Please remove this attribute.</value>
+	</data>
+  <data name="BI1062" xml:space="preserve">
+		<value>The member '{0}.{1}' contains ref/out parameters and must not be decorated with [Async].</value>
+	</data>
+  <data name="BI1063" xml:space="preserve">
+		<value>The 'WrapAttribute' can only be used at the property or at getter/setter level at a given time. Property: '{0}.{1}'</value>
+	</data>
+  <data name="BI1064" xml:space="preserve">
+		<value>Unsupported ref/out parameter type '{0}' for the parameter '{1}' in {2}.{3}.</value>
+	</data>
+  <data name="BI1065" xml:space="preserve">
+		<value>Unsupported parameter type '{0}' for the parameter '{1}' in {2}.{3}.</value>
+	</data>
+  <data name="BI1066" xml:space="preserve">
+		<value>Unsupported return type '{0}' in {1}.{2}.</value>
+	</data>
+  <data name="BI1067" xml:space="preserve">
+		<value>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', but the inlined properties don't share the same accessors ('{4}' is read-only, while '${5}' is write-only).</value>
+	</data>
+  <data name="BI1068" xml:space="preserve">
+		<value>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', and the inlined properties use different selectors ({4}.{5} uses '{6}', and {7}.{8} uses '{9}'.</value>
+	</data>
+  <data name="BI1069" xml:space="preserve">
+		<value>The type '{0}' is trying to inline the methods binding the selector '{1}' from the protocols '{2}' and '{3}', using methods with different signatures ('{4}' vs '{5}').</value>
+	</data>
+  <data name="BI1070" xml:space="preserve">
+		<value>The type '{0}' is trying to inline the property '{1}' from the protocols '{2}' and '{3}', but the inlined properties are of different types ('{4}' is {5}, while '{6}' is {7}).</value>
+	</data>
+  <data name="BI1071" xml:space="preserve">
+		<value>The BindAs type for the member "{0}.{1}" must be an array when the member's type is an array.</value>
+	</data>
+  <data name="BI1072" xml:space="preserve">
+		<value>The BindAs type for the parameter "{0}" in the method "{1}.{2}" must be an array when the parameter's type is an array.</value>
+	</data>
+  <data name="BI1073" xml:space="preserve">
+		<value>Internal error: failed to instantiate mock attribute '{0}' (unknown type for the named argument #{1} ({2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+  <data name="BI1074" xml:space="preserve">
+		<value> Missing [CoreImageFilterProperty] attribute on {0} property {1}</value>
+	</data>
+  <data name="BI1075" xml:space="preserve">
+		<value>Unimplemented CoreImage property type {0}</value>
+	</data>
+  <data name="BI1076" xml:space="preserve">
+		<value>Unable to find selector for {0} on {1} on self or base class</value>
+	</data>
+  <data name="BI1077" xml:space="preserve">
+		<value>Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType</value>
+		<comment>A message for an asynchronous method with more than one result parameter. The following are literal names and should not be translated: ResultTypeName, ResultType
+{0} - The method name.
+		</comment>
+	</data>
+  <data name="BI1078" xml:space="preserve">
+		<value>{0} in method `{1}'</value>
+	</data>
+  <data name="BI1079" xml:space="preserve">
+		<value>{0} in parameter `{1}' from {2}.{3}</value>
+	</data>
+  <data name="BI1080" xml:space="preserve">
+		<value>Unsupported type 'ref/out {0}' decorated with [BindAs]</value>
+	</data>
+  <data name="BI1081" xml:space="preserve">
+		<value>Unable to find the assembly '{0}'. Add it as a reference using its full path.</value>
+	</data>
+  <data name="BI1082" xml:space="preserve">
+		<value>Selector name missing in [CoreImageFilterProperty] attribute on {0} property {1}</value>
+	</data>
+  <data name="BI1083" xml:space="preserve">
+		<value>Found {0} {1} attributes on the method {2}'s parameter #{3} ({4}). At most one was expected.</value>
+	</data>
+  <data name="BI1084" xml:space="preserve">
+		<value>Found {0} {1} attributes on the type {2}. At most one was expected.</value>
+	</data>
+  <data name="BI1085" xml:space="preserve">
+		<value>Found {0} {1} attributes on the assembly {2}. At most one was expected.</value>
+	</data>
+  <data name="BI1086" xml:space="preserve">
+		<value>Found {0} {1} attributes on the module {2}. At most one was expected.</value>
+	</data>
+  <data name="BI1101" xml:space="preserve">
+		<value>Trying to use a string as a [Target]</value>
+	</data>
+  <data name="BI1102" xml:space="preserve">
+		<value>Using the deprecated 'EventArgs' for a delegate signature in {0}.{1}, please use 'DelegateName' instead.</value>
+	</data>
+  <data name="BI1103" xml:space="preserve">
+		<value>'{0}' does not live under a namespace; namespaces are a highly recommended .NET best practice</value>
+	</data>
+  <data name="BI1104" xml:space="preserve">
+		<value>Could not load the referenced library '{0}': {1}.</value>
+	</data>
+  <data name="BI1105" xml:space="preserve">
+		<value>Potential selector/argument mismatch [Export ("{0}")] has {1} arguments and {2} has {3} arguments</value>
+	</data>
+  <data name="BI1106" xml:space="preserve">
+		<value>The parameter {2} in the method {0}.{1} exposes a model ({3}). Please expose the corresponding protocol type instead ({4}.I{5}).</value>
+	</data>
+  <data name="BI1107" xml:space="preserve">
+		<value>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>
+	</data>
+  <data name="BI1108" xml:space="preserve">
+		<value>The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.</value>
+	</data>
+  <data name="BI1109" xml:space="preserve">
+		<value>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>
+	</data>
+  <data name="BI1110" xml:space="preserve">
+		<value>The property {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>
+	</data>
+  <data name="BI1111" xml:space="preserve">
+		<value>Interface '{0}' on '{1}' is being ignored as it is not a protocol. Did you mean '{2}' instead?</value>
+	</data>
+  <data name="BI1112" xml:space="preserve">
+		<value>Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.</value>
+	</data>
+  <data name="BI1113" xml:space="preserve">
+		<value>BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.</value>
+	</data>
+  <data name="BI1114" xml:space="preserve">
+		<value>Binding error: test unable to find property: {0} on {1}</value>
+	</data>
+  <data name="BI1115" xml:space="preserve">
+		<value>The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].</value>
+	</data>
+  <data name="BI1116" xml:space="preserve">
+		<value>The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.</value>
+	</data>
+  <data name="BI1117" xml:space="preserve">
+		<value>The member '{0}' is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.</value>
+	</data>
+  <data name="BI1118" xml:space="preserve">
+		<value>[NullAllowed] should not be used on methods, like '{0}', but only on properties, parameters and return values.</value>
+	</data>
+  <data name="BI1119" xml:space="preserve">
+		<value>Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.</value>
+	</data>
+</root>
