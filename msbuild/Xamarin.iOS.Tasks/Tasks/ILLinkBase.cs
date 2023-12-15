@@ -24,10 +24,15 @@ namespace Xamarin.iOS.Tasks {
 		[Output]
 		public ITaskItem [] LinkedItems { get; set; } = Array.Empty<ITaskItem> ();
 
+		public string DotNetPath { get; set; } = string.Empty;
+
 		public override bool Execute ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			if (!string.IsNullOrEmpty (DotNetPath))
+				Environment.SetEnvironmentVariable ("DOTNET_HOST_PATH", DotNetPath);
 
 			var result = base.Execute ();
 
