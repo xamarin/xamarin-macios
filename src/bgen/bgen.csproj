@@ -67,20 +67,6 @@
     </Compile>
     <None Include="$(PkgMono_Options)\lib\netstandard2.0\Mono.Options.pdb" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>..\Resources.Designer.cs</LastGenOutput>
-      <StronglyTypedFileName>..\Resources.Designer.cs</StronglyTypedFileName>
-      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
-      <StronglyTypedNamespace>bgen</StronglyTypedNamespace>
-      <StronglyTypedClassName>Resources</StronglyTypedClassName>
-      <ManifestResourceName>bgen.Resources</ManifestResourceName>
-      <GenerateResource>true</GenerateResource>
-      <PublicClass>false</PublicClass>
-    </EmbeddedResource>
-  </ItemGroup>
-
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
     <StartArguments />
