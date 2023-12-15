@@ -22,6 +22,16 @@
 			"LciFile": "",
 			"Parser": "",
 			"LssFiles": []
+		  },
+		  {
+			"SourceFile": "@WORKING_DIRECTORY@/../../src/Resources.resx",
+			"Languages": "",
+			"CopyOption": "LangIDOnName",
+			"OutputPath": "@WORKING_DIRECTORY@/../../src/TranslatedAssemblies",
+			"LclFile": "",
+			"LciFile": "",
+			"Parser": "",
+			"LssFiles": []
 		  }
 		],
 		"LssFiles": [],
