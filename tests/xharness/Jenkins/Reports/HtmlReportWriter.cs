@@ -43,7 +43,7 @@ namespace Xharness.Jenkins.Reports {
 
 		string GetResourcePath (string resource)
 		{
-			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
+			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location)!;
 			return Path.Combine (executingDir, resource);
 		}
 
@@ -239,7 +239,7 @@ namespace Xharness.Jenkins.Reports {
 						previous_test_runs = "\t<li>Previous test runs\t\t<ul>Loading ...</ul></li>";
 						ThreadPool.QueueUserWorkItem ((v) => {
 							var sb = new StringBuilder ();
-							var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)).
+							var previous = Directory.GetDirectories (Path.GetDirectoryName (jenkins.LogDirectory)!).
 									Select ((v) => Path.Combine (v, "index.html")).
 										Where (File.Exists);
 							if (previous.Any ()) {
@@ -441,7 +441,7 @@ namespace Xharness.Jenkins.Reports {
 
 								log.Flush ();
 								var exists = File.Exists (fileLog.FullPath);
-								string log_type = System.Web.MimeMapping.GetMimeMapping (fileLog.FullPath);
+								string log_type = GetMimeMapping (fileLog.FullPath);
 								string log_target;
 								switch (log_type) {
 								case "text/xml":
@@ -475,8 +475,7 @@ namespace Xharness.Jenkins.Reports {
 									List<string> fails;
 									try {
 										using (var reader = fileLog.GetReader ()) {
-											Tuple<long, object> data;
-											if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+											if (!log_data.TryGetValue (log, out var data) || data.Item1 != reader.BaseStream.Length) {
 												summary = string.Empty;
 												fails = new List<string> ();
 												while (!reader.EndOfStream) {
@@ -514,14 +513,13 @@ namespace Xharness.Jenkins.Reports {
 										if (!string.IsNullOrEmpty (summary))
 											writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message?.AsHtml (), ex.StackTrace?.AsHtml ());
 									}
 								} else if (log.Description == LogType.BuildLog.ToString ()) {
 									HashSet<string> errors;
 									try {
 										using (var reader = fileLog.GetReader ()) {
-											Tuple<long, object> data;
-											if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+											if (!log_data.TryGetValue (log, out var data) || data.Item1 != reader.BaseStream.Length) {
 												errors = new HashSet<string> ();
 												while (!reader.EndOfStream) {
 													string? line = reader.ReadLine ()?.Trim ();
@@ -550,7 +548,7 @@ namespace Xharness.Jenkins.Reports {
 											writer.WriteLine ("</div>");
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message.AsHtml (), ex.StackTrace.AsHtml ());
+										writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}: {1}</span><br />", ex.Message?.AsHtml (), ex.StackTrace?.AsHtml ());
 									}
 								} else if (log.Description == LogType.NUnitResult.ToString () || log.Description == LogType.XmlLog.ToString ()) {
 									try {
@@ -560,7 +558,7 @@ namespace Xharness.Jenkins.Reports {
 											}
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()} : {ex.StackTrace.AsHtml ()}</span><br />");
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message?.AsHtml ()} : {ex.StackTrace?.AsHtml ()}</span><br />");
 									}
 								} else if (log.Description == LogType.TrxLog.ToString ()) {
 									try {
@@ -568,7 +566,7 @@ namespace Xharness.Jenkins.Reports {
 											resultParser.GenerateTestReport (writer, fileLog.FullPath, jargon);
 										}
 									} catch (Exception ex) {
-										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message.AsHtml ()}</span><br />");
+										writer.WriteLine ($"<span style='padding-left: 15px;'>Could not parse {log.Description}: {ex.Message?.AsHtml ()}</span><br />");
 									}
 								}
 							}
@@ -640,6 +638,14 @@ namespace Xharness.Jenkins.Reports {
 			writer.WriteLine ("</div>");
 			writer.WriteLine ("</body>");
 			writer.WriteLine ("</html>");
+		}
+
+		static string GetMimeMapping (string value)
+		{
+			var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider ();
+			if (provider.TryGetContentType (value, out var contentType))
+				return contentType;
+			return "application/octet-stream";
 		}
 
 		static string LinkEncode (string path)

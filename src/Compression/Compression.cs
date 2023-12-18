@@ -23,9 +23,6 @@ namespace Compression {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 #endif
 	public partial class CompressionStream : Stream {
 		private const int DefaultBufferSize = 8192;

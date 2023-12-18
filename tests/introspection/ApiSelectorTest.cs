@@ -231,6 +231,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CIFilterGenerator":
+				switch (selectorName) {
+				case "filterGenerator":
+				case "filterGeneratorWithContentsOfURL:":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {
@@ -1229,6 +1238,10 @@ namespace Introspection {
 			// SharedWithYouCore
 			case "initWithLocalIdentifier:":
 			case "initWithCollaborationIdentifier:":
+				return true;
+			// CloudKit
+			case "initWithExcludedZoneIDs:":
+			case "initWithZoneIDs:":
 				return true;
 			default:
 				return false;

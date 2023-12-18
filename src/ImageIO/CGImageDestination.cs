@@ -87,9 +87,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 #endif
 		public bool ShouldExcludeGPS { get; set; }
 
@@ -392,29 +389,19 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern void CGImageDestinationAddAuxiliaryDataInfo (IntPtr /* CGImageDestinationRef* */ idst, IntPtr /* CFStringRef* */ auxiliaryImageDataType, IntPtr /* CFDictionaryRef* */ auxiliaryDataInfoDictionary);
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		public void AddAuxiliaryDataInfo (CGImageAuxiliaryDataType auxiliaryImageDataType, CGImageAuxiliaryDataInfo? auxiliaryDataInfo)
 		{

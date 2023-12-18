@@ -59,14 +59,12 @@ namespace AudioUnit {
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (10, 13)]
-	[iOS (11, 0)]
 #endif
 #if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
@@ -127,14 +125,12 @@ namespace AudioUnit {
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (10, 13)]
-	[iOS (11, 0)]
 #endif
 #if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
@@ -465,7 +461,6 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos11.0")]
 #else
-		[Mac (10,11)]
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
@@ -478,7 +473,6 @@ namespace AudioUnit {
 		[UnsupportedOSPlatform ("tvos")]
 		[ObsoletedOSPlatform ("macos11.0")]
 #else
-		[Mac (10,11)]
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		public AppKit.NSImage? GetIcon ()
@@ -672,42 +666,36 @@ namespace AudioUnit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[NoWatch]
 		[NoTV]
-		[Mac (10,13)]
-		[iOS (11,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[NoWatch]
 		[NoTV]
-		[Mac (10,13)]
-		[iOS (11,0)]
 #endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[NoWatch]
 		[NoTV]
-		[Mac (10,13)]
-		[iOS (11,0)]
 #endif
 		public AudioComponentInfo[]? ComponentList {
 			get {

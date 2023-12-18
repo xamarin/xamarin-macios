@@ -48,7 +48,7 @@ namespace AppKit {
 			_GetLineDash (IntPtr.Zero, out length, out phase);
 
 			pattern = new nfloat [length];
-			fixed (nfloat* ptr = &pattern [0])
+			fixed (nfloat* ptr = pattern)
 				_GetLineDash ((IntPtr) ptr, out length, out phase);
 		}
 
@@ -57,7 +57,7 @@ namespace AppKit {
 			if (pattern is null)
 				throw new ArgumentNullException ("pattern");
 
-			fixed (nfloat* ptr = &pattern [0])
+			fixed (nfloat* ptr = pattern)
 				_SetLineDash ((IntPtr) ptr, pattern.Length, phase);
 		}
 
@@ -69,7 +69,7 @@ namespace AppKit {
 			// Create output with 3 elements at first
 			points = new CGPoint [3];
 
-			fixed (CGPoint* ptr = &points [0])
+			fixed (CGPoint* ptr = points)
 				bpe = _ElementAt (index, (IntPtr) ptr);
 
 			if (bpe != NSBezierPathElement.CurveTo) {
@@ -88,7 +88,7 @@ namespace AppKit {
 			if (points.Length < 1)
 				throw new ArgumentException ("points array is empty");
 
-			fixed (CGPoint* ptr = &points [0])
+			fixed (CGPoint* ptr = points)
 				_SetAssociatedPointsAtIndex ((IntPtr) ptr, index);
 		}
 
@@ -99,7 +99,7 @@ namespace AppKit {
 			if (points.Length < 1)
 				throw new ArgumentException ("points array is empty");
 
-			fixed (CGPoint* ptr = &points [0])
+			fixed (CGPoint* ptr = points)
 				_AppendPathWithPoints ((IntPtr) ptr, points.Length);
 		}
 
@@ -118,7 +118,7 @@ namespace AppKit {
 			if (glyphs.Length < 1)
 				throw new ArgumentException ("glyphs array is empty");
 
-			fixed (uint* ptr = &glyphs [0])
+			fixed (uint* ptr = glyphs)
 				_AppendPathWithGlyphs ((IntPtr) ptr, glyphs.Length, font);
 		}
 #endif
@@ -126,8 +126,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		public unsafe void Append (uint [] glyphs, NSFont font)
 		{
@@ -136,7 +134,7 @@ namespace AppKit {
 			if (glyphs.Length < 1)
 				throw new ArgumentException ("glyphs array is empty");
 
-			fixed (uint* ptr = &glyphs [0])
+			fixed (uint* ptr = glyphs)
 				_AppendBezierPathWithCGGlyphs ((IntPtr) ptr, glyphs.Length, font);
 		}
 	}

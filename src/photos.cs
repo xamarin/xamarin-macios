@@ -8,6 +8,7 @@ using CoreImage;
 using CoreMedia;
 using ImageIO;
 using System;
+using UniformTypeIdentifiers;
 #if !MONOMAC
 using UIKit;
 using NSImage = Foundation.NSObject; // help [NoiOS] and [NoTV]
@@ -21,9 +22,6 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Photos {
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
@@ -41,9 +39,6 @@ namespace Photos {
 		NSData Data { get; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[DisableDefaultCtor] // Crashes mac introspection test
@@ -91,23 +86,19 @@ namespace Photos {
 		[Export ("favorite")]
 		bool Favorite { [Bind ("isFavorite")] get; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("burstIdentifier", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		string BurstIdentifier { get; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("burstSelectionTypes")]
 		PHAssetBurstSelectionType BurstSelectionTypes { get; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("representsBurst")]
 		bool RepresentsBurst { get; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("canPerformEditOperation:")]
 		bool CanPerformEditOperation (PHAssetEditOperation editOperation);
@@ -116,7 +107,6 @@ namespace Photos {
 		[Export ("fetchAssetsInAssetCollection:options:")]
 		PHFetchResult FetchAssets (PHAssetCollection assetCollection, [NullAllowed] PHFetchOptions options);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fetchAssetsWithMediaType:options:")]
@@ -131,13 +121,11 @@ namespace Photos {
 		[return: NullAllowed]
 		PHFetchResult FetchKeyAssets (PHAssetCollection assetCollection, [NullAllowed] PHFetchOptions options);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fetchAssetsWithBurstIdentifier:options:")]
 		PHFetchResult FetchAssets (string burstIdentifier, [NullAllowed] PHFetchOptions options);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("fetchAssetsWithOptions:")]
@@ -152,12 +140,10 @@ namespace Photos {
 		[Export ("fetchAssetsWithALAssetURLs:options:")]
 		PHFetchResult FetchAssets (NSUrl [] assetUrls, [NullAllowed] PHFetchOptions options);
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("sourceType", ArgumentSemantic.Assign)]
 		PHAssetSourceType SourceType { get; }
 
-		[TV (11, 0), iOS (11, 0), Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
@@ -179,9 +165,6 @@ namespace Photos {
 		bool HasAdjustments { get; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[PHAssetChangeRequest init]: unrecognized selector sent to instance 0x8165d150
 	[BaseType (typeof (PHChangeRequest))]
@@ -236,9 +219,6 @@ namespace Photos {
 
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHAssetChangeRequest))]
 	[DisableDefaultCtor]
@@ -262,9 +242,6 @@ namespace Photos {
 	[MacCatalyst (13, 1)]
 	delegate void PHProgressHandler (double progress, ref bool stop);
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crashes: -[PHAssetResource init]: unrecognized selector sent to instance 0x7f9e15884e90
@@ -286,7 +263,6 @@ namespace Photos {
 		[Export ("assetResourcesForAsset:")]
 		PHAssetResource [] GetAssetResources (PHAsset forAsset);
 
-		[iOS (9, 1)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("assetResourcesForLivePhoto:")]
@@ -303,9 +279,6 @@ namespace Photos {
 		nint PixelHeight { get; }
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHAssetResourceCreationOptions : NSCopying {
@@ -319,9 +292,6 @@ namespace Photos {
 		bool ShouldMoveFile { get; set; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingInputRequestOptions {
@@ -347,9 +317,6 @@ namespace Photos {
 
 	delegate void PHContentEditingHandler (PHContentEditingInput contentEditingInput, NSDictionary requestStatusInfo);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (PHAsset))]
@@ -362,9 +329,6 @@ namespace Photos {
 		void CancelContentEditingInputRequest (nuint requestID);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHChangeRequest))]
 	[DisableDefaultCtor] // fails when calling ToString (see below) and there are (static) API to create them
@@ -414,9 +378,6 @@ namespace Photos {
 		void MoveAssets (NSIndexSet fromIndexes, nuint toIndex);
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -436,9 +397,6 @@ namespace Photos {
 		void CancelDataRequest (int requestID);
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHAssetResourceRequestOptions : NSCopying {
@@ -449,9 +407,6 @@ namespace Photos {
 		Action<double> ProgressHandler { get; set; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHChange {
@@ -465,9 +420,6 @@ namespace Photos {
 		PHFetchResultChangeDetails GetFetchResultChangeDetails (PHFetchResult obj);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHObjectChangeDetails {
@@ -486,23 +438,17 @@ namespace Photos {
 		bool ObjectWasDeleted { get; }
 	}
 
-	[iOS (8, 0)] // This class is introduced in iOS (13,0) but is decorated with iOS(8,0) since PHCollectionListChangeRequest 
-				 // supports iOS (8,0) and iOS (13,0) only supports 64 bits, not 32 bits
+	// supports iOS (8,0) and iOS (13,0) only supports 64 bits, not 32 bits
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	// include the availability attributes to any new member (and don't trust the type-level ones)
 	interface PHChangeRequest { }
 
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	delegate void PHChangeDetailEnumerator (nuint fromIndex, nuint toIndex);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchResultChangeDetails {
@@ -548,9 +494,6 @@ namespace Photos {
 		PHFetchResultChangeDetails ChangeDetails (PHFetchResult fromResult, PHFetchResult toResult, PHObject [] changedObjects);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
@@ -566,7 +509,6 @@ namespace Photos {
 		[Export ("canContainCollections", ArgumentSemantic.Assign)]
 		bool CanContainCollections { get; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("localizedTitle", ArgumentSemantic.Strong)]
 		[NullAllowed]
@@ -584,9 +526,6 @@ namespace Photos {
 		PHFetchResult FetchTopLevelUserCollections ([NullAllowed] PHFetchOptions options);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHCollection))]
 	interface PHAssetCollection {
@@ -662,9 +601,6 @@ namespace Photos {
 		PHAssetCollection GetTransientAssetCollection (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHCollection))]
 	interface PHCollectionList {
@@ -725,9 +661,6 @@ namespace Photos {
 		PHCollectionList CreateTransientCollectionList (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHChangeRequest))]
 	[DisableDefaultCtor] // sometimes crash when calling 'description'
@@ -785,9 +718,6 @@ namespace Photos {
 		void MoveChildCollections (NSIndexSet indexes, nuint toIndex);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingInput {
@@ -837,26 +767,19 @@ namespace Photos {
 		[NullAllowed, Export ("avAsset", ArgumentSemantic.Strong)]
 		AVAsset AvAsset { get; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("audiovisualAsset", ArgumentSemantic.Strong)]
 		AVAsset AudiovisualAsset { get; }
 
-		[iOS (10, 0), Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("livePhoto", ArgumentSemantic.Strong)]
 		PHLivePhoto LivePhoto { get; }
 
-		[TV (11, 0), iOS (11, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
@@ -873,11 +796,21 @@ namespace Photos {
 
 		[Export ("renderedContentURL", ArgumentSemantic.Copy)]
 		NSUrl RenderedContentUrl { get; }
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("defaultRenderedContentType", ArgumentSemantic.Copy)]
+		UTType DefaultRenderedContentType { get; }
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportedRenderedContentTypes", ArgumentSemantic.Copy)]
+		UTType [] SupportedRenderedContentTypes { get; }
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("renderedContentURLForType:error:")]
+		[return: NullAllowed]
+		NSUrl GetRenderedContentUrl (UTType type, [NullAllowed] out NSError error);
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHFetchOptions : NSCopying {
@@ -893,7 +826,6 @@ namespace Photos {
 		[Export ("includeHiddenAssets")]
 		bool IncludeHiddenAssets { get; set; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("includeAllBurstAssets", ArgumentSemantic.Assign)]
 		bool IncludeAllBurstAssets { get; set; }
@@ -901,24 +833,18 @@ namespace Photos {
 		[Export ("wantsIncrementalChangeDetails", ArgumentSemantic.Assign)]
 		bool WantsIncrementalChangeDetails { get; set; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("includeAssetSourceTypes", ArgumentSemantic.Assign)]
 		PHAssetSourceType IncludeAssetSourceTypes { get; set; }
 
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("fetchLimit", ArgumentSemantic.Assign)]
 		nuint FetchLimit { get; set; }
 	}
 
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	delegate void PHFetchResultEnumerator (NSObject element, nuint elementIndex, out bool stop);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling 'description' and seems to be only returned from iOS (not user created)
@@ -975,9 +901,6 @@ namespace Photos {
 
 	delegate void PHAssetImageProgressHandler (double progress, NSError error, out bool stop, NSDictionary info);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageRequestOptions : NSCopying {
@@ -1003,16 +926,17 @@ namespace Photos {
 		[Export ("progressHandler", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		PHAssetImageProgressHandler ProgressHandler { get; set; }
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("allowSecondaryDegradedImage")]
+		bool AllowSecondaryDegradedImage { get; set; }
 	}
 
 	delegate void PHAssetVideoProgressHandler (double progress, NSError error, out bool stop, NSDictionary info);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
-	interface PHVideoRequestOptions {
+	interface PHVideoRequestOptions : NSCopying {
 
 		[Export ("networkAccessAllowed", ArgumentSemantic.Assign)]
 		bool NetworkAccessAllowed { [Bind ("isNetworkAccessAllowed")] get; set; }
@@ -1028,9 +952,6 @@ namespace Photos {
 		PHAssetVideoProgressHandler ProgressHandler { get; set; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PHImageKeys {
@@ -1067,9 +988,6 @@ namespace Photos {
 	delegate void PHImageManagerRequestLivePhoto (PHLivePhoto livePhoto, NSDictionary info);
 	delegate void PHImageManagerRequestImageDataHandler ([NullAllowed] NSData imageData, [NullAllowed] string dataUti, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary info);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHImageManager {
@@ -1092,17 +1010,14 @@ namespace Photos {
 		[Export ("requestImageDataForAsset:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestImageData (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageDataHandler handler);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestPlayerItemForVideo:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestPlayerItem (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestPlayerHandler resultHandler);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestExportSessionForVideo:options:exportPreset:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestExportSession (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, string exportPreset, PHImageManagerRequestExportHandler resultHandler);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestAVAssetForVideo:options:resultHandler:")]
 #if NET
@@ -1114,13 +1029,11 @@ namespace Photos {
 		[Field ("PHImageManagerMaximumSize")]
 		CGSize MaximumSize { get; }
 
-		[iOS (9, 1)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestLivePhotoForAsset:targetSize:contentMode:options:resultHandler:")]
 		int /* PHImageRequestID = int32_t */ RequestLivePhoto (PHAsset asset, CGSize targetSize, PHImageContentMode contentMode, [NullAllowed] PHLivePhotoRequestOptions options, PHImageManagerRequestLivePhoto resultHandler);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestImageDataAndOrientationForAsset:options:resultHandler:")]
 		int RequestImageDataAndOrientation (PHAsset asset, [NullAllowed] PHImageRequestOptions options, PHImageManagerRequestImageDataHandler resultHandler);
@@ -1132,9 +1045,6 @@ namespace Photos {
 	delegate void PHImageDataHandler (NSData data, NSString dataUti, UIImageOrientation orientation, NSDictionary info);
 #endif
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHImageManager))]
 	interface PHCachingImageManager {
@@ -1152,9 +1062,6 @@ namespace Photos {
 		void StopCaching ();
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
@@ -1168,18 +1075,12 @@ namespace Photos {
 		string LocalIdentifier { get; }
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PHObject))]
 	interface PHObjectPlaceholder {
 
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	[Model]
@@ -1193,7 +1094,7 @@ namespace Photos {
 
 	interface IPHPhotoLibraryAvailabilityObserver { }
 
-	[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface PHPhotoLibraryAvailabilityObserver {
@@ -1205,9 +1106,6 @@ namespace Photos {
 
 	delegate void PHPhotoLibraryCancellableChangeHandler (out bool cancel);
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: -[PHPhotoLibrary init] unsupported
@@ -1258,17 +1156,17 @@ namespace Photos {
 		[Export ("unregisterChangeObserver:")]
 		void UnregisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("unavailabilityReason", ArgumentSemantic.Strong)]
 		NSError UnavailabilityReason { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("registerAvailabilityObserver:")]
 		void Register (IPHPhotoLibraryAvailabilityObserver observer);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("unregisterAvailabilityObserver:")]
 		void Unregister (IPHPhotoLibraryAvailabilityObserver observer);
@@ -1289,7 +1187,6 @@ namespace Photos {
 		PHPersistentChangeToken CurrentChangeToken { get; }
 	}
 
-	[Mac (10, 13)]
 	[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[Category]
 	[BaseType (typeof (PHPhotoLibrary))]
@@ -1327,12 +1224,9 @@ namespace Photos {
 		NSString LocalIdentifierNotFound { get; }
 	}
 
-	[iOS (9, 1)]
-	[TV (10, 0)]
 #if MONOMAC
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 #endif
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying
@@ -1343,22 +1237,17 @@ namespace Photos {
 		[Export ("size")]
 		CGSize Size { get; }
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
 		int RequestLivePhoto (NSUrl [] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, Action<PHLivePhoto, NSDictionary> resultHandler);
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("cancelLivePhotoRequestWithRequestID:")]
 		void CancelLivePhotoRequest (int requestID);
 	}
 
-	[iOS (9, 1)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface PHLivePhotoRequestOptions : NSCopying {
@@ -1371,15 +1260,11 @@ namespace Photos {
 		[NullAllowed, Export ("progressHandler", ArgumentSemantic.Copy)]
 		PHAssetImageProgressHandler ProgressHandler { get; set; }
 
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("version", ArgumentSemantic.Assign)]
 		PHImageRequestOptionsVersion Version { get; set; }
 	}
 
-	[iOS (9, 1)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PHLivePhotoInfo {
@@ -1399,9 +1284,6 @@ namespace Photos {
 	delegate CIImage PHLivePhotoFrameProcessingBlock2 (IPHLivePhotoFrame frame, ref NSError error);
 #endif
 
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NS_UNAVAILABLE
@@ -1445,8 +1327,6 @@ namespace Photos {
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
@@ -1465,8 +1345,6 @@ namespace Photos {
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
@@ -1478,9 +1356,6 @@ namespace Photos {
 
 	interface IPHLivePhotoFrame { }
 
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface PHLivePhotoFrame {
@@ -1501,9 +1376,6 @@ namespace Photos {
 		nfloat RenderScale { get; }
 	}
 
-	[iOS (11, 0)]
-	[TV (11, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	[Internal]
@@ -1512,16 +1384,12 @@ namespace Photos {
 		NSString ShouldRenderAtPlaybackTimeKey { get; }
 	}
 
-	[iOS (11, 0)]
-	[TV (11, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("PHLivePhotoEditingOptionKeys")]
 	interface PHLivePhotoEditingOption {
 		bool ShouldRenderAtPlaybackTime { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -1531,12 +1399,10 @@ namespace Photos {
 		[Export ("projectExtensionData")]
 		NSData ProjectExtensionData { get; }
 
-		[Mac (10, 14)]
 		[Export ("hasProjectPreview")]
 		bool HasProjectPreview { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -1556,16 +1422,13 @@ namespace Photos {
 		[Export ("setKeyAsset:")]
 		void SetKeyAsset ([NullAllowed] PHAsset keyAsset);
 
-		[Mac (10, 14)]
 		[Export ("setProjectPreviewImage:")]
 		void SetProjectPreviewImage (NSImage previewImage);
 
-		[Mac (10, 14)]
 		[Export ("removeAssets:")]
 		void RemoveAssets (PHAsset [] /*id<NSFastEnumeration>*/ assets); //a collection of PHAsset objects
 	}
 
-	[Mac (10, 13)]
 	[TV (15, 0)]
 	[iOS (15, 0)]
 	[MacCatalyst (15, 0)]

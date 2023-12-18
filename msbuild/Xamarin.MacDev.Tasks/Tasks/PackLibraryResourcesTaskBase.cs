@@ -6,6 +6,9 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class PackLibraryResourcesTaskBase : XamarinTask {
 		#region Inputs

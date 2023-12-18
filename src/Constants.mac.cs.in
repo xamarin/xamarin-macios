@@ -37,5 +37,8 @@ namespace ObjCRuntime {
 		public const string ApplicationServicesCoreGraphicsLibrary = "/System/Library/Frameworks/ApplicationServices.framework/Frameworks/CoreGraphics.framework/CoreGraphics";
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
+#if !XAMCORE_5_0
+		public const string InputMethodKitLibrary = "/System/Library/Frameworks/InputMethodKit.framework/InputMethodKit";
+#endif
 	}
 }

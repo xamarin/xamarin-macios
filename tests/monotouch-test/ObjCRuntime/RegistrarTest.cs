@@ -111,7 +111,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			// It's not safe to remove the dynamic registrar in monotouch-test (by design; some of the tested API makes it unsafe, and the linker correctly detects this),
 			// so the dynamic registrar will only be removed if manually requested.
 			// Also removal of the dynamic registrar is not supported in XM
-#if OPTIMIZEALL && !__MACOS__
+#if (OPTIMIZEALL && !__MACOS__) || NATIVEAOT
 			var shouldBeRemoved = true;
 #else
 			var shouldBeRemoved = false;
@@ -2246,7 +2246,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if __MACOS__
+		// This test uses Assembly.LoadFrom, which isn't supported with NativeAOT
+#if __MACOS__ && !NATIVEAOT
 		[Test]
 		public void CustomUserTypeWithDynamicallyLoadedAssembly ()
 		{
@@ -5740,7 +5741,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__TVOS__
 #endif // !__WATCHOS__
 
-#if HAS_COREMIDI
+#if HAS_COREMIDI && !__TVOS__
 	// This type exports methods with 'MidiThruConnectionEndpoint' parameters, which is a struct with different casing in Objective-C ("MIDI...")
 	class ExportedMethodWithStructWithManagedCasing : NSObject {
 		[Export ("doSomething:")]

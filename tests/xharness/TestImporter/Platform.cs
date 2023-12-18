@@ -32,7 +32,7 @@ namespace Xharness.TestImporter {
 			case Platform.TvOS:
 				return global::Xamarin.SdkVersions.MinTVOS;
 			case Platform.WatchOS:
-				return global::Xamarin.SdkVersions.MinWatchOS;
+				return global::Xamarin.SdkVersions.LegacyMinWatchOS;
 			default:
 				throw new NotImplementedException (@this.ToString ());
 			}

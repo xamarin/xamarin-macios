@@ -28,10 +28,6 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10, 10)]
-	[iOS (8, 0)]
-	[TV (10, 2)]
 #endif
 	public class VTMultiPassStorage : NativeObject {
 		bool closed;

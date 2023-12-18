@@ -5,19 +5,20 @@ using System;
 using System.IO;
 using System.Linq;
 using Xamarin.Localization.MSBuild;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
-	public class ResolveUniversalTypeIdentifiers : Task {
+	public class ResolveUniversalTypeIdentifiers : XamarinTask {
 		[Required]
 		public ITaskItem [] ImageAssets { get; set; }
 
 		[Required]
 		public string ProjectDir { get; set; }
-
-		[Required]
-		public string SessionId { get; set; }
 
 		public override bool Execute ()
 		{

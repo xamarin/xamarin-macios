@@ -65,6 +65,9 @@
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>external\ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>external\SdkVersions.cs</Link>
+    </Compile>
     <Compile Include="..\..\tools\common\TargetFramework.cs">
       <Link>external\TargetFramework.cs</Link>
     </Compile>

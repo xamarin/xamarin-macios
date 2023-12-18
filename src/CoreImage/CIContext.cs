@@ -99,8 +99,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 12)]
 #endif
 		public bool? PriorityRequestLow {
 			get {
@@ -140,9 +138,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public bool? CacheIntermediates {
 			get {
@@ -156,12 +151,11 @@ namespace CoreImage {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 #endif
 		public bool? AllowLowPower {
 			get {
@@ -199,8 +193,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public CIContext (CIContextOptions options) :
 			this (options?.Dictionary)

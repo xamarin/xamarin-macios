@@ -16,20 +16,20 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
-    <MtouchArch>x86_64,i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'iPhone' ">
-    <MtouchArch>ARM64,ARMv7</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <MtouchDebug>True</MtouchDebug>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64'  ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>False</DebugSymbols>
     <Optimize>True</Optimize>
     <MtouchDebug>False</MtouchDebug>

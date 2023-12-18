@@ -14,7 +14,6 @@ namespace CoreTelephony {
 	}
 
 	[NoMacCatalyst]
-	[iOS (9, 0)]
 	[Native]
 	public enum CTCellularDataRestrictedState : ulong {
 		Unknown,
@@ -29,5 +28,7 @@ namespace CoreTelephony {
 		Unknown,
 		Fail,
 		Success,
+		[iOS (17, 0)]
+		Cancel,
 	}
 }

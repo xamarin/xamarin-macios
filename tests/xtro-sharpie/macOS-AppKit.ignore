@@ -624,7 +624,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::MakeUntitledDocument(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDocumentController::OpenUntitledDocument(System.Boolean,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSDraggingInfo::get_DraggingSource()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSEPSImageRep::FromData(Foundation.NSData)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEvent::AddGlobalMonitorForEventsMatchingMask(AppKit.NSEventMask,AppKit.GlobalEventHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSEvent::AddLocalMonitorForEventsMatchingMask(AppKit.NSEventMask,AppKit.LocalEventHandler)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSFontDescriptor::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
@@ -643,7 +642,6 @@
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSPasteboardWriting::GetPasteboardPropertyListForType(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSResponder::SupplementalTargetForAction(ObjCRuntime.Selector,Foundation.NSObject)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSResponder::ValidRequestorForSendType(System.String,System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject AppKit.NSSpeechSynthesizer::ObjectForProperty(System.String,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSStoryboard::InstantiateInitialController()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSTableViewDataSource::GetObjectValue(AppKit.NSTableView,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'Foundation.NSObject AppKit.NSTableViewDataSource::GetObjectValue(AppKit.NSTableView,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on return type
@@ -702,8 +700,6 @@
 !missing-null-allowed! 'System.Boolean AppKit.NSSeguePerforming::ShouldPerformSegue(System.String,Foundation.NSObject)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSSlider::AcceptsFirstMouse(AppKit.NSEvent)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSSound::SetName(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Boolean AppKit.NSSpeechSynthesizer::SetObjectforProperty(Foundation.NSObject,System.String,Foundation.NSError&)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Boolean AppKit.NSSpeechSynthesizer::SetVoice(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Boolean AppKit.NSTableViewDelegate::ShouldEditTableColumn(AppKit.NSTableView,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSTableViewDelegate::ShouldSelectTableColumn(AppKit.NSTableView,AppKit.NSTableColumn)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean AppKit.NSTableViewDelegate::ShouldShowCellExpansion(AppKit.NSTableView,AppKit.NSTableColumn,System.nint)' is missing an [NullAllowed] on parameter #1
@@ -767,7 +763,6 @@
 !missing-null-allowed! 'System.String AppKit.NSSharingService::get_AccountName()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSharingService::get_MessageBody()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSound::GetName()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String AppKit.NSSpeechSynthesizer::GetVoice()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSpellChecker::GetCorrection(Foundation.NSRange,System.String,System.String,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSSpellChecker::GetLanguage(Foundation.NSRange,System.String,Foundation.NSOrthography)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.String AppKit.NSStoryboardSegue::get_Identifier()' is missing an [NullAllowed] on return type
@@ -1027,7 +1022,6 @@
 !missing-null-allowed! 'System.Void AppKit.NSSound::set_PlaybackDeviceID(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSpeechRecognizer::set_Commands(System.String[])' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSpeechRecognizer::set_DisplayedCommandsTitle(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void AppKit.NSSpeechSynthesizer::.ctor(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSpellChecker::set_SubstitutionsPanelAccessoryViewController(AppKit.NSViewController)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSSplitView::set_AutosaveName(System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void AppKit.NSStatusItem::set_AutosaveName(System.String)' is missing an [NullAllowed] on parameter #0
@@ -1271,14 +1265,9 @@
 !extra-enum-value! Managed value 2048 for NSWindowStyle.Unscaled not found in native headers
 
 # Will be deprecated in a future release 
-!deprecated-attribute-missing! NSColorWell::isBordered missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSColorWell::setBordered: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWindow::setShowsToolbarButton: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWindow::showsToolbarButton missing a [Deprecated] attribute
+
+# we cannot add a breaking change until xamr 5
+!incorrect-protocol-member! NSAccessibility::accessibilityAttributedUserInputLabels is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::accessibilityUserInputLabels is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityAttributedUserInputLabels: is REQUIRED and should be abstract
+!incorrect-protocol-member! NSAccessibility::setAccessibilityUserInputLabels: is REQUIRED and should be abstract
