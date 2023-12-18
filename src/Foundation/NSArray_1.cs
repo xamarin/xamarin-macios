@@ -48,7 +48,7 @@ namespace Foundation {
 		{
 		}
 
-		static public NSArray<TKey>? FromNSObjects (params TKey [] items)
+		static public NSArray<TKey> FromNSObjects (params TKey [] items)
 		{
 			if (items is null)
 				throw new ArgumentNullException (nameof (items));
@@ -56,7 +56,7 @@ namespace Foundation {
 			return FromNSObjects (items.Length, items);
 		}
 
-		static public NSArray<TKey>? FromNSObjects (int count, params TKey [] items)
+		static public NSArray<TKey> FromNSObjects (int count, params TKey [] items)
 		{
 			if (items is null)
 				throw new ArgumentNullException (nameof (items));
@@ -71,7 +71,7 @@ namespace Foundation {
 				Marshal.WriteIntPtr (buf, (int) (i * IntPtr.Size), h);
 			}
 			IntPtr ret = NSArray.FromObjects (buf, count);
-			var arr = Runtime.GetNSObject<NSArray<TKey>> (ret);
+			var arr = Runtime.GetNSObject<NSArray<TKey>> (ret)!;
 			Marshal.FreeHGlobal (buf);
 			return arr;
 		}

@@ -7,12 +7,13 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateDebugConfigurationTaskBase : XamarinTask {
+	public class CreateDebugConfiguration : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
@@ -34,6 +35,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var ips = DebugIPAddresses?.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 			var path = Path.Combine (AppBundleDir, "MonoTouchDebugConfiguration.txt");
 			var added = new HashSet<string> ();
@@ -71,6 +75,12 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
