@@ -28240,11 +28240,11 @@ namespace AppKit {
 	interface NSUserInterfaceItemSearching {
 		[Abstract]
 		[Export ("searchForItemsWithSearchString:resultLimit:matchedItemHandler:")]
-		void SearchForItems (string searchString, nint resultLimit, Action<NSObject[]> matchedItemHandler);
+		void SearchForItems (string searchString, nint resultLimit, Action<NSObject []> matchedItemHandler);
 
 		[Abstract]
 		[Export ("localizedTitlesForItem:")]
-		string[] GetLocalizedTitles (NSObject forItem);
+		string [] GetLocalizedTitles (NSObject forItem);
 
 		[Export ("performActionForItem:")]
 		void PerformAction (NSObject forItem);
@@ -28253,5 +28253,5 @@ namespace AppKit {
 		void ShowAllHelpTopics (string searchString);
 	}
 
-	interface INSUserInterfaceItemSearching {}
+	interface INSUserInterfaceItemSearching { }
 }
