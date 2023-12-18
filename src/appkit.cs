@@ -872,6 +872,23 @@ namespace AppKit {
 		[Mac (14, 0)]
 		[Export ("yieldActivationToApplicationWithBundleIdentifier:")]
 		void YieldActivation (string toApplicationWithBundleIdentifier);
+
+		// From the NSUserInterfaceItemSearching category
+		[Export ("registerUserInterfaceItemSearchHandler:")]
+		void RegisterUserInterfaceItemSearchHandler (INSUserInterfaceItemSearching handler);
+
+		[Export ("unregisterUserInterfaceItemSearchHandler:")]
+		void UnregisterUserInterfaceItemSearchHandler (INSUserInterfaceItemSearching handler);
+
+		[Export ("searchString:inUserInterfaceItemString:searchRange:foundRange:")]
+		bool SearchStringInUserInterface (string searchString, string stringToSearch, NSRange searchRange, out NSRange foundRange);
+
+		// From the NSApplicationHelpExtension category
+		[Export ("activateContextHelpMode:")]
+		void ActivateContextHelpMode ([NullAllowed] NSObject sender);
+
+		[Export ("showHelp:")]
+		void ShowHelp ([NullAllowed] NSObject sender);
 	}
 
 	[NoMacCatalyst]
@@ -28215,4 +28232,26 @@ namespace AppKit {
 		void EstablishConnection ();
 	}
 
+	[NoMacCatalyst]
+	[Protocol]
+	// This protocol is a candidate for [Model] as well, but the OS will check whether 'showAllHelpTopicsForSearchString:' is implemented
+	// and behave differentely depending on the result. This is not possible to achieve with the generated [Model] class (all selectors
+	// are always implemented), so to avoid potential confusion just offer the protocol interface for developers to use.
+	interface NSUserInterfaceItemSearching {
+		[Abstract]
+		[Export ("searchForItemsWithSearchString:resultLimit:matchedItemHandler:")]
+		void SearchForItems (string searchString, nint resultLimit, Action<NSObject[]> matchedItemHandler);
+
+		[Abstract]
+		[Export ("localizedTitlesForItem:")]
+		string[] GetLocalizedTitles (NSObject forItem);
+
+		[Export ("performActionForItem:")]
+		void PerformAction (NSObject forItem);
+
+		[Export ("showAllHelpTopicsForSearchString:")]
+		void ShowAllHelpTopics (string searchString);
+	}
+
+	interface INSUserInterfaceItemSearching {}
 }
