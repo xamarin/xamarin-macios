@@ -45,9 +45,16 @@ namespace MonoTouchFixtures.Security {
 		// this will try again a few times (giving the network request a chance to get back)
 		static SecTrustResult Evaluate (SecTrust trust, bool expect_recoverable = false)
 		{
+			return Evaluate (trust, out var _, expect_recoverable);
+		}
+
+		static SecTrustResult Evaluate (SecTrust trust, out NSError? error, bool expect_recoverable = false)
+		{
+			error = null;
 			SecTrustResult result = SecTrustResult.Deny;
 			for (int i = 0; i < 8; i++) {
-				result = trust.Evaluate ();
+				trust.Evaluate (out error);
+				result = trust.GetTrustResult ();
 				if (result != SecTrustResult.RecoverableTrustFailure || expect_recoverable)
 					return result;
 				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (i));
@@ -275,7 +282,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			X509CertificateCollection certs = new X509CertificateCollection ();
 			certs.Add (new X509Certificate (CertificateTest.mail_google_com));
-			certs.Add (new X509Certificate (CertificateTest.thawte_sgc_ca));
+			certs.Add (new X509Certificate (CertificateTest.gts_ca_1c3));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
 				Trust_NoRoot (trust, policy);
@@ -286,20 +293,19 @@ namespace MonoTouchFixtures.Security {
 		{
 			// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
 			trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
-			// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
+			// iOS is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
 			// so it returns RecoverableTrustFailure and that affects the Count of trust later (it does not add to what we provided)
-			var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
-			var result = Evaluate (trust, ios9);
-			Assert.That (result, Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "Evaluate");
+			var result = Evaluate (trust, out var trustError, true);
+			Assert.That (result, Is.EqualTo (SecTrustResult.RecoverableTrustFailure), $"Evaluate: {trustError}");
 			// Evalute must be called prior to Count (Apple documentation)
-			Assert.That (trust.Count, Is.EqualTo (ios9 ? 2 : 3), "Count");
+			Assert.That (trust.Count, Is.EqualTo (3), "Count");
 
 			using (SecKey pkey = trust.GetPublicKey ()) {
 				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
 			if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
 				using (SecKey key = trust.GetKey ()) {
-					Assert.That (key.BlockSize, Is.EqualTo (128), "BlockSize");
+					Assert.That (key.BlockSize, Is.EqualTo (32), "BlockSize");
 					Assert.That (CFGetRetainCount (key.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(key)");
 				}
 			}
@@ -314,8 +320,8 @@ namespace MonoTouchFixtures.Security {
 		{
 			X509CertificateCollection certs = new X509CertificateCollection ();
 			certs.Add (new X509Certificate (CertificateTest.mail_google_com));
-			certs.Add (new X509Certificate (CertificateTest.thawte_sgc_ca));
-			certs.Add (new X509Certificate (CertificateTest.verisign_class3_root));
+			certs.Add (new X509Certificate (CertificateTest.gts_ca_1c3));
+			certs.Add (new X509Certificate (CertificateTest.gts_root_r1));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
 				Trust_FullChain (trust, policy, certs);
@@ -324,21 +330,12 @@ namespace MonoTouchFixtures.Security {
 
 		void Trust_FullChain (SecTrust trust, SecPolicy policy, X509CertificateCollection certs)
 		{
-			// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
-			trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
+			// that certificate stopped being valid on December 15th, 2023 so we validate it with a date earlier than that
+			trust.SetVerifyDate (new DateTime (638382479747632240, DateTimeKind.Utc));
 
 			SecTrustResult trust_result = SecTrustResult.Unspecified;
-			var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
-			var ios10 = TestRuntime.CheckXcodeVersion (8, 0);
-			var ios11 = TestRuntime.CheckXcodeVersion (9, 0);
-			var ios13 = TestRuntime.CheckXcodeVersion (11, 0);
-			if (ios10)
-				trust_result = SecTrustResult.FatalTrustFailure;
-			// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
-			else if (ios9)
-				trust_result = SecTrustResult.RecoverableTrustFailure;
-			var result = Evaluate (trust, true);
-			Assert.That (result, Is.EqualTo (trust_result), "Evaluate");
+			var result = Evaluate (trust, out var trustError, true);
+			Assert.That (result, Is.EqualTo (trust_result), $"Evaluate: {trustError}");
 
 			// Evalute must be called prior to Count (Apple documentation)
 			Assert.That (trust.Count, Is.EqualTo (3), "Count");
@@ -350,69 +347,23 @@ namespace MonoTouchFixtures.Security {
 			}
 			using (SecCertificate sc2 = trust [1]) {
 				Assert.That (CFGetRetainCount (sc2.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc2)");
-				Assert.That (sc2.SubjectSummary, Is.EqualTo ("Thawte SGC CA"), "SubjectSummary(sc2)");
+				Assert.That (sc2.SubjectSummary, Is.EqualTo ("GTS CA 1C3"), "SubjectSummary(sc2)");
 			}
 			using (SecCertificate sc3 = trust [2]) {
 				Assert.That (CFGetRetainCount (sc3.Handle), Is.GreaterThanOrEqualTo ((nint) 2), "RetainCount(sc3)");
-				Assert.That (sc3.SubjectSummary, Is.EqualTo ("Class 3 Public Primary Certification Authority"), "SubjectSummary(sc3)");
+				Assert.That (sc3.SubjectSummary, Is.EqualTo ("GTS Root R1"), "SubjectSummary(sc3)");
 			}
 
-			if (TestRuntime.CheckXcodeVersion (5, 0)) {
-				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult");
+			Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult");
 
-				trust.SetAnchorCertificates (certs);
-				Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
+			trust.SetAnchorCertificates (certs);
+			Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
 
-#if __MACOS__
-				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15)) {
-					trust_result = SecTrustResult.RecoverableTrustFailure;
-				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 13)) {
-					trust_result = SecTrustResult.Unspecified;
-				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {
-					trust_result = SecTrustResult.Invalid;
-				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 11)) {
-					trust_result = SecTrustResult.RecoverableTrustFailure;
-				} else {
-					trust_result = SecTrustResult.Unspecified;
-				}
-#else
+			// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
+			Assert.That (trust.GetTrustResult (), Is.EqualTo (SecTrustResult.Unspecified), "GetTrustResult-2");
 
-				if (ios13)
-					trust_result = SecTrustResult.RecoverableTrustFailure;
-				else if (ios11)
-					trust_result = SecTrustResult.Unspecified;
-				else
-					trust_result = SecTrustResult.Invalid;
-#endif
-
-				// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
-				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
-			}
-			if (TestRuntime.CheckXcodeVersion (12, 0)) {
-				// old certificate (built in our tests) was not quite up to spec and it eventually became important
-				Assert.False (trust.Evaluate (out var error), "Evaluate");
-				Assert.NotNull (error, "error");
-				// We have different error messages that all contain mail.google.com and some different text.
-				Assert.That (error.LocalizedDescription, Does.Contain ("mail.google.com"), "LocalizedDescription");
-			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
-				Assert.False (trust.Evaluate (out var error), "Evaluate");
-				Assert.NotNull (error, "error");
-				Assert.That (error.LocalizedDescription, Does.Contain ("\"mail.google.com\",\"Thawte SGC CA\",\"Class 3 Public Primary Certification Authority\" certificates do not meet pinning requirements"));
-				var underlyingError = (NSError) error.UserInfo [NSError.UnderlyingErrorKey];
-				// Error is:
-				// Certificate 0 “mail.google.com” has errors: Key size is not permitted for this use, SSL hostname does not match name(s) in certificate, Signature hash algorithm is not permitted for this use;Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use;Certificate 2 “Class 3 Public Primary Certification Authority” has errors: Key size is not permitted for this use;
-				// But the exact format can vary
-				// watchOS reports this:
-				// Certificate 0 “mail.google.com” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use, SSL hostname does not match name(s) in certificate;Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use;Certificate 2 “Class 3 Public Primary Certification Authority” has errors: Key size is not permitted for this use;
-				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 0 “mail.google.com” has errors: "));
-				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Key size is not permitted for this use"));
-				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("SSL hostname does not match name(s) in certificate").Or.Contain ("Signature hash algorithm is not permitted for this use"));
-				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use"));
-				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 2 “Class 3 Public Primary Certification Authority” has errors:"));
-			} else if (TestRuntime.CheckXcodeVersion (10, 0)) {
-				Assert.True (trust.Evaluate (out var error), "Evaluate");
-				Assert.Null (error, "error");
-			}
+			Assert.True (trust.Evaluate (out var error), $"Evaluate: {error}");
+			Assert.Null (error, "error");
 		}
 
 		[Test]
@@ -430,7 +381,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			X509Certificate2Collection certs = new X509Certificate2Collection ();
 			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));
-			certs.Add (new X509Certificate2 (CertificateTest.thawte_sgc_ca));
+			certs.Add (new X509Certificate2 (CertificateTest.gts_ca_1c3));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
 				Trust_NoRoot (trust, policy);
@@ -442,8 +393,8 @@ namespace MonoTouchFixtures.Security {
 		{
 			X509Certificate2Collection certs = new X509Certificate2Collection ();
 			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));
-			certs.Add (new X509Certificate2 (CertificateTest.thawte_sgc_ca));
-			certs.Add (new X509Certificate2 (CertificateTest.verisign_class3_root));
+			certs.Add (new X509Certificate2 (CertificateTest.gts_ca_1c3));
+			certs.Add (new X509Certificate2 (CertificateTest.gts_root_r1));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
 				Trust_FullChain (trust, policy, certs);
@@ -457,8 +408,8 @@ namespace MonoTouchFixtures.Security {
 
 			X509Certificate2Collection certs = new X509Certificate2Collection ();
 			certs.Add (new X509Certificate2 (CertificateTest.mail_google_com));
-			certs.Add (new X509Certificate2 (CertificateTest.thawte_sgc_ca));
-			certs.Add (new X509Certificate2 (CertificateTest.verisign_class3_root));
+			certs.Add (new X509Certificate2 (CertificateTest.gts_ca_1c3));
+			certs.Add (new X509Certificate2 (CertificateTest.gts_root_r1));
 			using (var policy = SecPolicy.CreateSslPolicy (true, "mail.google.com"))
 			using (var trust = new SecTrust (certs, policy)) {
 				var a = new NSArray<NSData> ();
