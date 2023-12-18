@@ -12,7 +12,6 @@ using ObjCRuntime;
 namespace MultipeerConnectivity {
 
 	// NSInteger -> MCSession.h
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCSessionSendDataMode : long {
@@ -21,7 +20,6 @@ namespace MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCSession.h
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCSessionState : long {
@@ -31,7 +29,6 @@ namespace MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCSession.h
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MCEncryptionPreference : long {
@@ -41,7 +38,6 @@ namespace MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCError.h
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native ("MCErrorCode")]
 	[ErrorDomain ("MCErrorDomain")]

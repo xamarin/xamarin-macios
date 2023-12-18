@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (5, 0);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
-			var url = new NSUrl ("https://www.microsoft.com");
+			var url = new NSUrl (NetworkResources.Httpbin.PostUrl);
 			var tmpfile = Path.GetTempFileName ();
 			File.WriteAllText (tmpfile, "TMPFILE");
 			var file_url = NSUrl.FromFilename (tmpfile);

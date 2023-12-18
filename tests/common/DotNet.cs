@@ -186,6 +186,14 @@ namespace Xamarin.Tests {
 				args.Add ($"/bl:{binlogPath}");
 				Console.WriteLine ($"Binlog: {binlogPath}");
 
+				// Work around https://github.com/dotnet/msbuild/issues/8845
+				args.Add ("/v:diag");
+				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+				// vb does not have preview lang, so we force it to latest
+				if (project.EndsWith (".vbproj", StringComparison.OrdinalIgnoreCase))
+					args.Add ("/p:LangVersion=latest");
+				// End workaround
+
 				if (msbuildParallelism.HasValue) {
 					if (msbuildParallelism.Value) {
 						args.Add ("-maxcpucount"); // this means "use as many processes as there are cpus"

@@ -57,7 +57,6 @@ namespace Social {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Tencent Weibo SDK instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use Tencent Weibo SDK instead.")]
 		[Field ("SLServiceTypeTencentWeibo")]
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use Tencent Weibo SDK instead.")]
 		NSString TencentWeibo { get; }
@@ -66,7 +65,6 @@ namespace Social {
 		[Field ("SLServiceTypeLinkedIn")]
 		[NoiOS]
 		[NoMacCatalyst]
-		[Mac (10, 9)]
 		NSString LinkedIn { get; }
 	}
 
@@ -150,8 +148,6 @@ namespace Social {
 		bool RemoveAllUrls ();
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SocialViewController))]
 	interface SLComposeServiceViewController : SocialTextViewDelegate {
@@ -225,7 +221,6 @@ namespace Social {
 
 
 	[NoMac]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated

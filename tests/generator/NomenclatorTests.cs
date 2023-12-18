@@ -1,7 +1,12 @@
 using System;
+using System.IO;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using Foundation;
 using Moq;
 using NUnit.Framework;
+using ObjCRuntime;
 
 namespace GeneratorTests {
 	[TestFixture]
@@ -31,7 +36,7 @@ namespace GeneratorTests {
 		}
 
 		Type testType = typeof (object);
-		Mock<BindingTouch> bindingTouch;
+		Mock<TypeCache> typeCache;
 		Mock<AttributeManager> attributeManager;
 		Nomenclator nomenclator;
 
@@ -39,8 +44,10 @@ namespace GeneratorTests {
 		public void SetUp ()
 		{
 			testType = typeof (NSAnimationDelegate);
-			bindingTouch = new ();
-			attributeManager = new (bindingTouch.Object);
+			var runtimeAssemblies = Directory.GetFiles (RuntimeEnvironment.GetRuntimeDirectory (), "*.dll");
+			var resolver = new PathAssemblyResolver (runtimeAssemblies);
+			typeCache = new ();
+			attributeManager = new (typeCache.Object);
 			nomenclator = new (attributeManager.Object);
 		}
 
@@ -199,6 +206,32 @@ namespace GeneratorTests {
 			Assert.AreEqual ("GenericTrampolineArity1V0", name1, "name1");
 			Assert.AreEqual ("GenericTrampolineArity1V1", name2, "name2");
 			Assert.AreNotEqual (name1, name2, "equal");
+		}
+
+		[Test]
+		public void GetGeneratedTypeNameType ()
+		{
+			attributeManager.Setup (am => am.GetCustomAttributes<BindAttribute> (It.IsAny<Type> ()))
+				.Returns (Array.Empty<BindAttribute> ());
+			Assert.AreEqual ("NSAnimationDelegate", nomenclator.GetGeneratedTypeName (typeof (NSAnimationDelegate)));
+		}
+
+		[Test]
+		public void GetGeneratedTypeNameGenericType ()
+		{
+			attributeManager.Setup (am => am.GetCustomAttributes<BindAttribute> (It.IsAny<Type> ()))
+				.Returns (Array.Empty<BindAttribute> ());
+			Assert.AreEqual ("GenericTrampoline", nomenclator.GetGeneratedTypeName (typeof (GenericTrampoline<string>).GetGenericTypeDefinition ()));
+		}
+
+		[Test]
+		public void GetGeneratedTypeNameBindAttribute ()
+		{
+			var selectorName = "selectorName";
+			var attr = new BindAttribute (selectorName);
+			attributeManager.Setup (am => am.GetCustomAttributes<BindAttribute> (It.IsAny<Type> ()))
+				.Returns (new [] { attr });
+			Assert.AreEqual (selectorName, nomenclator.GetGeneratedTypeName (typeof (NSAnimationDelegate)));
 		}
 	}
 }

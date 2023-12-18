@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Mono.Cecil;
@@ -29,10 +30,20 @@ namespace Cecil.Tests {
 		}
 
 		static MethodDefinition? GetConstructor (TypeDefinition type, params (string Namespace, string Name) [] parameterTypes)
+			=> GetConstructor (type, out _, parameterTypes);
+
+		static MethodDefinition? GetConstructor (TypeDefinition type, out string? selectorName, params (string Namespace, string Name) [] parameterTypes)
 		{
+			selectorName = null;
 			foreach (var ctor in type.Methods) {
-				if (IsMatch (ctor, parameterTypes))
+				if (IsMatch (ctor, parameterTypes)) {
+					// retrieve the selectorName if possible
+					var exportAttr = ctor.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Is ("Foundation", "ExportAttribute"));
+					if (exportAttr is not null) {
+						selectorName = (string) exportAttr.ConstructorArguments [0].Value!;
+					}
 					return ctor;
+				}
 			}
 			return null;
 		}
@@ -270,12 +281,12 @@ namespace Cecil.Tests {
 						var isNSObjectSubclass = SubclassesNSObject (type);
 
 						// Find the constructors constructors we care about
-						var intptrCtor = GetConstructor (type, ("System", "IntPtr"));
+						var intptrCtor = GetConstructor (type, out var intptrCtorSelector, ("System", "IntPtr"));
 						var intptrBoolCtor = GetConstructor (type, ("System", "IntPtr"), ("System", "Boolean"));
 						var nativeHandleCtor = GetConstructor (type, ("ObjCRuntime", "NativeHandle"));
 						var nativeHandleBoolCtor = GetConstructor (type, ("ObjCRuntime", "NativeHandle"), ("System", "Boolean"));
 
-						if (intptrCtor is not null) {
+						if (intptrCtor is not null && intptrCtorSelector == "init:") {
 							if (IsVisible (intptrCtor)) {
 								var msg = $"{type}: (IntPtr) constructor found. It should not exist.";
 								Console.WriteLine ($"{GetLocation (intptrCtor)}{msg}");

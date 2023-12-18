@@ -35,7 +35,7 @@ namespace UIKit {
 				return;
 			}
 			unsafe {
-				fixed (nfloat* fp = &values [0]) {
+				fixed (nfloat* fp = values) {
 					SetLineDash ((IntPtr) fp, values.Length, phase);
 				}
 			}

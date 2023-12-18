@@ -456,8 +456,8 @@ namespace Xamarin.iOS.Tasks {
 				var path = nativeRef.ItemSpec;
 				// look for frameworks, if the library is part of one then bring all related files
 				var dir = Path.GetDirectoryName (path);
-				if ((Path.GetExtension (dir) == ".framework") && Directory.Exists (dir)) {
-					foreach (var item in GetItemsFromNativeReference (dir)) {
+				if (Path.GetExtension (dir) == ".framework") {
+					foreach (var item in CreateItemsForAllFilesRecursively (dir)) {
 						// don't return the native library itself (it's the original input, not something additional)
 						if (item.ItemSpec != path)
 							yield return item;
@@ -486,14 +486,6 @@ namespace Xamarin.iOS.Tasks {
 				if (File.Exists (configFile))
 					yield return new TaskItem (configFile);
 			}
-		}
-
-		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
-		{
-			foreach (var file in Directory
-				.EnumerateFiles (folderPath, "*", SearchOption.AllDirectories)
-				.Select (x => new TaskItem (x)))
-				yield return file;
 		}
 	}
 }

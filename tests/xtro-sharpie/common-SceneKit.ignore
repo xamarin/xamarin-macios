@@ -18,6 +18,7 @@
 !incorrect-protocol-member! SCNSceneRenderer::setTemporalAntialiasingEnabled: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::setUsesReverseZ: is REQUIRED and should be abstract
 !incorrect-protocol-member! SCNSceneRenderer::usesReverseZ is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::workingColorSpace is REQUIRED and should be abstract
 
 ## same for SCNActionable, it is required member of a protocol added to .NET
 !incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract

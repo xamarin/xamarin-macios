@@ -24,6 +24,7 @@
 #if !__MACCATALYST__
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -47,14 +48,38 @@ namespace AppKit {
 		public static readonly float DarkGray = (float) 1 / 3.0f;
 
 		[DllImport (Constants.AppKitLibrary)]
-		extern static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch);
+		extern unsafe static NSWindowDepth NSBestDepth (IntPtr colorspaceHandle, nint bitsPerSample, nint bitsPerPixel, byte planar, byte* exactMatch);
 
-		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, [MarshalAs (UnmanagedType.I1)] bool planar, [MarshalAs (UnmanagedType.I1)] ref bool exactMatch)
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Call 'GetBestDepth' instead.")]
+		public static NSWindowDepth BestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, ref bool exactMatch)
 		{
 			if (colorspace is null)
-				throw new ArgumentNullException ("colorspace");
+				throw new ArgumentNullException (nameof (colorspace));
 
-			return NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, planar, ref exactMatch);
+			var exactMatchValue = (byte) (exactMatch ? 1 : 0);
+			NSWindowDepth rv;
+			unsafe {
+				rv = NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, (byte) (planar ? 1 : 0), &exactMatchValue);
+			}
+			exactMatch = exactMatchValue != 0;
+			return rv;
+		}
+#endif
+
+		public static NSWindowDepth GetBestDepth (NSString colorspace, nint bitsPerSample, nint bitsPerPixel, bool planar, out bool exactMatch)
+		{
+			if (colorspace is null)
+				throw new ArgumentNullException (nameof (colorspace));
+
+			byte exactMatchValue = 0;
+			NSWindowDepth rv;
+			unsafe {
+				rv = NSBestDepth (colorspace.Handle, bitsPerSample, bitsPerPixel, (byte) (planar ? 1 : 0), &exactMatchValue);
+			}
+			exactMatch = exactMatchValue != 0;
+			return rv;
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -130,7 +155,7 @@ namespace AppKit {
 			if (rects is null)
 				throw new ArgumentNullException ("rects");
 			unsafe {
-				fixed (CGRect* ptr = &rects [0])
+				fixed (CGRect* ptr = rects)
 					RectFillList (ptr, rects.Length);
 			}
 		}
@@ -205,8 +230,8 @@ namespace AppKit {
 			if (sides.Length != grays.Length)
 				throw new ArgumentOutOfRangeException ("grays", "Both array parameters must have the same length");
 			unsafe {
-				fixed (NSRectEdge* ptr = &sides [0])
-				fixed (nfloat* ptr2 = &grays [0])
+				fixed (NSRectEdge* ptr = sides)
+				fixed (nfloat* ptr2 = grays)
 					return DrawTiledRects (aRect, clipRect, ptr, ptr2, sides.Length);
 			}
 		}

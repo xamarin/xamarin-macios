@@ -194,8 +194,16 @@ namespace Xamarin.MacDev.Tasks {
 					return;
 				var nr = new TaskItem (item);
 				nr.ItemSpec = GetActualLibrary (frameworkPath);
-				nr.SetMetadata ("Kind", "Framework");
-				nr.SetMetadata ("PublishFolderType", "AppleFramework");
+				if (nr.ItemSpec.EndsWith (".a", StringComparison.OrdinalIgnoreCase)) {
+					nr.SetMetadata ("Kind", "Static");
+					nr.SetMetadata ("PublishFolderType", "StaticLibrary");
+				} else if (nr.ItemSpec.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase)) {
+					nr.SetMetadata ("Kind", "Dynamic");
+					nr.SetMetadata ("PublishFolderType", "DynamicLibrary");
+				} else {
+					nr.SetMetadata ("Kind", "Framework");
+					nr.SetMetadata ("PublishFolderType", "AppleFramework");
+				}
 				nr.SetMetadata ("RelativePath", Path.Combine (FrameworksDirectory, Path.GetFileName (Path.GetDirectoryName (nr.ItemSpec))));
 				native_frameworks.Add (nr);
 				return;
@@ -524,6 +532,22 @@ namespace Xamarin.MacDev.Tasks {
 			return false;
 		}
 
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			var rv = new List<ITaskItem> ();
+			rv.AddRange (CreateItemsForAllFilesRecursively (NativeReferences));
+			foreach (var reference in References) {
+				var resourcesPackage = Path.Combine (Path.GetDirectoryName (reference.ItemSpec), Path.GetFileNameWithoutExtension (reference.ItemSpec)) + ".resources";
+				if (Directory.Exists (resourcesPackage)) {
+					var resources = CreateItemsForAllFilesRecursively (new string [] { resourcesPackage });
+					rv.AddRange (resources);
+					continue;
+				}
+				var zipPackage = resourcesPackage + ".zip";
+				if (File.Exists (zipPackage))
+					rv.Add (new TaskItem (zipPackage));
+			}
+			return rv;
+		}
 	}
 }

@@ -17,7 +17,6 @@ using Xamarin.Utils;
 namespace Cecil.Tests {
 	public partial class BlittablePInvokes {
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"AppKit.NSWindowDepth AppKit.NSGraphics::NSBestDepth(System.IntPtr,System.IntPtr,System.IntPtr,System.Boolean,System.Boolean&)",
 			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetPropertyInfo(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.Boolean&)",
 			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileWritePackets(System.IntPtr,System.Boolean,System.Int32,AudioToolbox.AudioStreamPacketDescription[],System.Int64,System.Int32&,System.IntPtr)",
 			"AudioToolbox.AudioFileStreamStatus AudioToolbox.AudioFileStream::AudioFileStreamGetPropertyInfo(System.IntPtr,AudioToolbox.AudioFileStreamProperty,System.Int32&,System.Boolean&)",
@@ -207,7 +206,6 @@ namespace Cecil.Tests {
 			"System.Boolean CoreServices.FSEvent::FSEventsPurgeEventsForDeviceUpToEventId(System.UInt64,System.UInt64)",
 			"System.Boolean CoreServices.FSEventStream::FSEventStreamStart(System.IntPtr)",
 			"System.Boolean CoreText.CTFont::CTFontGetGlyphsForCharacters(System.IntPtr,System.Char[],System.UInt16[],System.IntPtr)",
-			"System.Boolean CoreText.CTFontDescriptor::CTFontDescriptorMatchFontDescriptorsWithProgressHandler(System.IntPtr,System.IntPtr,method System.Boolean *(CoreText.CTFontDescriptorMatchingState,System.IntPtr))",
 			"System.Boolean CoreText.CTFontManager::CTFontManagerIsSupportedFont(System.IntPtr)",
 			"System.Boolean CoreText.CTFontManager::CTFontManagerRegisterFontsForURL(System.IntPtr,CoreText.CTFontManagerScope,System.IntPtr&)",
 			"System.Boolean CoreText.CTFontManager::CTFontManagerRegisterFontsForURLs(System.IntPtr,CoreText.CTFontManagerScope,System.IntPtr&)",

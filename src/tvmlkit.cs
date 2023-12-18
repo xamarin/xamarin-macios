@@ -29,9 +29,7 @@ namespace TVMLKit {
 		Left,
 		Center,
 		Right,
-		[TV (11, 0)]
 		Leading,
-		[TV (11, 0)]
 		Trailing,
 	}
 
@@ -57,17 +55,11 @@ namespace TVMLKit {
 		BottomRight,
 		Header,
 		Footer,
-		[TV (11, 0)]
 		Leading,
-		[TV (11, 0)]
 		Trailing,
-		[TV (11, 0)]
 		TopLeading,
-		[TV (11, 0)]
 		TopTrailing,
-		[TV (11, 0)]
 		BottomLeading,
-		[TV (11, 0)]
 		BottomTrailing,
 	}
 
@@ -85,14 +77,12 @@ namespace TVMLKit {
 		None,
 		Subtree,
 #if NET
-		[TV (10,0)]
 		Styles,
 		Children,
 		Self,
 #else
 		Children,
 		Self,
-		[TV (10, 0)]
 		Styles,
 #endif
 	}
@@ -723,7 +713,6 @@ namespace TVMLKit {
 		[Export ("margin")]
 		UIEdgeInsets Margin { get; }
 
-		[TV (10, 0)]
 		[Export ("focusMargin")]
 		UIEdgeInsets FocusMargin { get; }
 
@@ -862,12 +851,10 @@ namespace TVMLKit {
 		[return: NullAllowed]
 		NSUrl GetUrlForResource (string resourceName);
 
-		[TV (9, 2)]
 		[Export ("imageForResource:")]
 		[return: NullAllowed]
 		UIImage GetImageForResource (string resourceName);
 
-		[TV (10, 0)]
 		[Export ("collectionViewCellClassForElement:")]
 		[return: NullAllowed]
 		Class GetCollectionViewCellClass (TVViewElement element);

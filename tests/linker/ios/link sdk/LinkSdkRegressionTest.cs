@@ -163,6 +163,9 @@ namespace LinkSdk {
 		// http://bugzilla.xamarin.com/show_bug.cgi?id=865
 		public void Bug865_CanOpenUrl ()
 		{
+			if (TestRuntime.CheckXcodeVersion (15, 0))
+				Assert.Ignore ("NSUrl was fixed with Xcode 15.0");
+
 			Assert.False (UIApplication.SharedApplication.CanOpenUrl (null), "null");
 			// the above should not throw an ArgumentNullException
 			// and that's important because NSUrl.FromString and NSUrl.ctor(string) differs
@@ -857,7 +860,7 @@ namespace LinkSdk {
 		string TestFolder (Environment.SpecialFolder folder, bool supported = true, bool? exists = true, bool readOnly = false)
 		{
 			var path = Environment.GetFolderPath (folder);
-			Assert.That (path.Length > 0, Is.EqualTo (supported), folder.ToString ());
+			Assert.That (path.Length > 0, Is.EqualTo (supported), $"SpecialFolder: {folder.ToString ()} Path: {path} Supported: {supported}");
 			if (!supported)
 				return path;
 
@@ -881,6 +884,30 @@ namespace LinkSdk {
 
 		[Test]
 		public void SpecialFolder ()
+		{
+			try {
+				SpecialFolderImpl ();
+			} catch (Exception e) {
+#if NET
+				Console.WriteLine ($"An exception occurred in this test: {e}");
+				Console.WriteLine ($"Dumping info about various directories:");
+				foreach (var value in Enum.GetValues<NSSearchPathDirectory> ().OrderBy (v => v.ToString ())) {
+					var urls = NSFileManager.DefaultManager.GetUrls (value, NSSearchPathDomain.User);
+					Console.WriteLine ($"NSFileManager.GetUrls ({value} = {(int) value}) returned {urls.Length} results:");
+					foreach (var url in urls)
+						Console.WriteLine ($"    {url.Path}");
+				}
+
+				foreach (var value in Enum.GetValues<Environment.SpecialFolder> ().OrderBy (v => v.ToString ()))
+					Console.WriteLine ($"SpecialFolder '{value}' => {Environment.GetFolderPath (value)}");
+#endif
+
+				// Throw the original exception so that the test actually fails.
+				throw;
+			}
+		}
+
+		void SpecialFolderImpl ()
 		{
 			// iOS8 changes the rules of the game
 			var fm = NSFileManager.DefaultManager;
@@ -950,10 +977,10 @@ namespace LinkSdk {
 #endif
 			path = TestFolder (Environment.SpecialFolder.MyMusic, exists: myExists);
 
-#if __MACOS__
+#if __MACOS__ && !NET8_0_OR_GREATER
 			path = TestFolder (Environment.SpecialFolder.MyVideos, supported: false);
 #else
-			path = TestFolder (Environment.SpecialFolder.MyVideos, exists: false);
+			path = TestFolder (Environment.SpecialFolder.MyVideos, exists: myExists);
 #endif
 
 			path = TestFolder (Environment.SpecialFolder.DesktopDirectory, exists: myExists);
@@ -1030,13 +1057,23 @@ namespace LinkSdk {
 			bool tvos = false;
 #endif
 
+#if __MACOS__ && NET8_0_OR_GREATER
+			path = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+			if (string.IsNullOrEmpty (path) && TestRuntime.IsInCI) {
+				// ignore this
+			} else {
+				path = TestFolder (Environment.SpecialFolder.MyDocuments);
+				Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
+			}
+#else
 			// and some stuff is read/write
 			path = TestFolder (Environment.SpecialFolder.MyDocuments);
-#if __MACOS__
+#if __MACOS__ && !NET8_0_OR_GREATER
 			Assert.That (path, Is.EqualTo (home), "path - MyDocuments");
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - MyDocuments");
 #endif
+#endif // __MACOS__ && NET8_0_OR_GREATER
 
 #if NET
 			path = TestFolder (Environment.SpecialFolder.ApplicationData, exists: null /* may or may not exist */);
@@ -1044,14 +1081,22 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.ApplicationData);
 #endif
 #if __MACOS__
+#if NET8_0_OR_GREATER
+			Assert.That (path, Is.EqualTo (Path.Combine (home, "Library", "Application Support")), "path - ApplicationData");
+#else
 			Assert.That (path, Is.EqualTo (Path.Combine (home, ".config")), "path - ApplicationData");
+#endif
 #else
 			Assert.That (path, Is.EqualTo (docs + "/.config"), "path - ApplicationData");
 #endif
 
 			path = TestFolder (Environment.SpecialFolder.LocalApplicationData);
 #if __MACOS__
+#if NET8_0_OR_GREATER
+			Assert.That (path, Is.EqualTo (Path.Combine (home, "Library", "Application Support")), "path - ApplicationData");
+#else
 			Assert.That (path, Is.EqualTo (Path.Combine (home, ".local", "share")), "path - LocalApplicationData");
+#endif
 #else
 			Assert.That (path, Is.EqualTo (docs), "path - LocalApplicationData");
 #endif

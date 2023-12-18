@@ -111,4 +111,15 @@ namespace BackgroundTasks {
 		void GetPending (Action<BGTaskRequest []> completionHandler);
 	}
 
+	[TV (17, 0), NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (BGProcessingTask))]
+	interface BGHealthResearchTask { }
+
+	[TV (17, 0), NoWatch, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (BGProcessingTaskRequest))]
+	interface BGHealthResearchTaskRequest {
+		[Export ("protectionTypeOfRequiredData")]
+		string ProtectionTypeOfRequiredData { get; set; }
+	}
+
 }

@@ -11,3 +11,5 @@
 !missing-type! CMAmbientPressureData not bound
 !missing-type! CMRecordedRotationRateData not bound
 !missing-type! CMRotationRateData not bound
+
+# added in 13 and deprecated in 14 so we will just ignore them

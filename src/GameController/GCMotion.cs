@@ -19,12 +19,11 @@ namespace GameController {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 13, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 15)]
 	[Introduced (PlatformName.TvOS, 13, 0)]
 #endif
 	public struct GCAcceleration {
@@ -34,12 +33,11 @@ namespace GameController {
 	}
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 13, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 15)]
 	[Introduced (PlatformName.TvOS, 13, 0)]
 #endif
 	public struct GCRotationRate {
@@ -50,12 +48,11 @@ namespace GameController {
 
 #if NET
 	[SupportedOSPlatform ("ios13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Introduced (PlatformName.iOS, 13, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 15)]
 	[Introduced (PlatformName.TvOS, 13, 0)]
 #endif
 	public struct GCQuaternion {

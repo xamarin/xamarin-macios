@@ -169,11 +169,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 #endif
 		public void Activate ()
 		{
@@ -185,11 +180,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 #endif
 		[DllImport (Constants.libcLibrary)]
 		extern static void dispatch_activate (/* dispatch_object_t */ IntPtr @object);
@@ -243,11 +233,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 #endif
 		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
@@ -586,9 +571,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 #endif
 		public DispatchQualityOfService GetQualityOfService (out int relative_priority)
 		{
@@ -603,9 +585,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 #endif
 		public DispatchQualityOfService QualityOfService {
 			get {
@@ -631,11 +610,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 #endif
 		static IntPtr dispatch_queue_create_with_target (string label, IntPtr attr, IntPtr target)
 		{
@@ -739,9 +713,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 10)]
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.libcLibrary)]
 		unsafe extern static /* dispatch_qos_class_t */ DispatchQualityOfService dispatch_queue_get_qos_class (/* dispatch_queue_t */ IntPtr queue, /* int *_Nullable */ int* relative_priority);
@@ -800,11 +771,6 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#else
-			[Mac (10, 12)]
-			[iOS (10, 0)]
-			[TV (10, 0)]
-			[Watch (3, 0)]
 #endif
 			public bool IsInitiallyInactive { get; set; }
 
@@ -813,11 +779,6 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#else
-			[Mac (10, 12)]
-			[iOS (10, 0)]
-			[TV (10, 0)]
-			[Watch (3, 0)]
 #endif
 			public AutoreleaseFrequency? AutoreleaseFrequency { get; set; }
 
@@ -826,9 +787,6 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
-#else
-			[Mac (10, 10)]
-			[iOS (8, 0)]
 #endif
 			public int RelativePriority { get; set; }
 
@@ -837,9 +795,6 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
 			[SupportedOSPlatform ("maccatalyst")]
-#else
-			[Mac (10, 10)]
-			[iOS (8, 0)]
 #endif
 			public DispatchQualityOfService? QualityOfService { get; set; }
 
@@ -866,11 +821,6 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#else
-			[Mac (10, 12)]
-			[iOS (10, 0)]
-			[TV (10, 0)]
-			[Watch (3, 0)]
 #endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_initially_inactive (/* dispatch_queue_attr_t _Nullable */ IntPtr attr);
@@ -879,11 +829,6 @@ namespace CoreFoundation {
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("tvos")]
-#else
-			[Mac (10, 12)]
-			[iOS (10, 0)]
-			[TV (10, 0)]
-			[Watch (3, 0)]
 #endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_autorelease_frequency (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_autorelease_frequency_t */ nuint frequency);
@@ -891,9 +836,6 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("ios")]
-#else
-			[Mac (10, 10)]
-			[iOS (8, 0)]
 #endif
 			[DllImport (Constants.libcLibrary)]
 			static extern /* dispatch_queue_attr_t */ IntPtr dispatch_queue_attr_make_with_qos_class (/* dispatch_queue_attr_t _Nullable */ IntPtr attr, /* dispatch_qos_class_t */ DispatchQualityOfService qos_class, int relative_priority);
@@ -904,11 +846,6 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 12)]
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 #endif
 		[Native]
 		public enum AutoreleaseFrequency : ulong /* unsigned long */

@@ -4,11 +4,46 @@
 		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
 		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
 		
+		<!-- HotRestartAppBundlePath: the app bundle that will be signed. Any files that must be signed or present at app startup must be in this directory before the _CodesignHotRestartAppBundle target -->
+		<!-- This property is calculated in the _ComputeHotRestartAppBundlePath target -->
+
+		<!-- HotRestartSignedAppOutputDir: the main location of all the final files. It contains the Payload dir + the contents dir used for incremental deployments. -->
 		<HotRestartSignedAppOutputDir Condition="'$(HotRestartSignedAppOutputDir)' == ''">$(TEMP)\Xamarin\HotRestart\Signing\$(_AppBundleName)$(AppBundleExtension)\out\</HotRestartSignedAppOutputDir>
+
+		<!-- HotRestartPayloadDir: it essentially contains the final signed app bundle, that we then zip it to create an IPA file. The app bundle in this folder is the result of re-signing the one in HotRestartAppBundlePath + adding the .contents dir. -->
 		<HotRestartPayloadDir>$(HotRestartSignedAppOutputDir)Payload\</HotRestartPayloadDir>
+
+		<!--
+
+			This is the location of the signed app bundle.
+
+			Nothing should be put in this directory directly by the targets, because:
+				1. This directory will be cleared before signing (the _PrepareHotRestartAppBundle target);
+				   anything in this directory before this point will be deleted.
+				2. After signing, it shouldn't change (because that would invalidate the signature).
+
+		-->
 		<HotRestartSignedAppDir>$(HotRestartPayloadDir)$(_AppBundleName).app\</HotRestartSignedAppDir>
+		<!--
+
+			HotRestartContentDir and HotRestartAppContentDir:
+
+			These two are virtually the same but used for different purposes.
+			The Content dir contains the files that don't need to be shipped
+			in the root of the app bundle, and don't need to be signed. This
+			files can then be pushed to the app individually without needing
+			to redeploy the app, making things much faster. This usually
+			contains assemblies, like the app project one.
+			HotRestartAppContentDir is the location of the Content dir inside
+			the signed app bundle (in case we need to re-deploy the whole
+			app). HotRestartContentDir has the same content with some stamp
+			files to detect which file can be incrementally pushed to the app
+			(in case we don't need to re-deploy the app)
+
+		-->
 		<HotRestartContentDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).content\</HotRestartContentDir>
 		<HotRestartAppContentDir>$(HotRestartSignedAppDir)$(_AppBundleName).content\</HotRestartAppContentDir>
+
 		<HotRestartContentStampDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).stamp\</HotRestartContentStampDir>
 		<HotRestartIPAPath>$(HotRestartSignedAppOutputDir)$(_AppBundleName).ipa</HotRestartIPAPath>
 

@@ -14,7 +14,7 @@ using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ComputeBundleLocationTaskBase : XamarinTask {
+	public class ComputeBundleLocation : XamarinTask {
 		// not required because this can be the root directory (so an empty string)
 		public string AssemblyDirectory { get; set; } = string.Empty;
 

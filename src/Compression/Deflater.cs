@@ -123,7 +123,7 @@ namespace Compression {
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("outputbuffer length must be bigger than 0");
 			lock (SyncLock) {
-				fixed (byte* bufPtr = &outputBuffer [0]) {
+				fixed (byte* bufPtr = outputBuffer) {
 					_compression_struct.Destination = (IntPtr) bufPtr;
 					_compression_struct.DestinationSize = outputBuffer.Length;
 

@@ -146,10 +146,8 @@ namespace VideoToolbox {
 		H263Profile0Level10,
 		H263Profile0Level45,
 		H263Profile3Level45,
-		[Mac (10, 13), iOS (11, 0), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		HevcMainAutoLevel,
-		[Mac (10, 13), iOS (11, 0), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		HevcMain10AutoLevel,
 	}
@@ -253,7 +251,6 @@ namespace VideoToolbox {
 		}
 	}
 
-	[iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	public enum VTScalingMode {
 		Unset,
@@ -263,7 +260,6 @@ namespace VideoToolbox {
 		Trim
 	}
 
-	[iOS (9, 0)]
 	[MacCatalyst (13, 1)]
 	public enum VTDownsamplingMode {
 		Unset,
