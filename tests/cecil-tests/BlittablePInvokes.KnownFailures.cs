@@ -17,7 +17,6 @@ using Xamarin.Utils;
 namespace Cecil.Tests {
 	public partial class BlittablePInvokes {
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"AppKit.NSWindowDepth AppKit.NSGraphics::NSBestDepth(System.IntPtr,System.IntPtr,System.IntPtr,System.Boolean,System.Boolean&)",
 			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetPropertyInfo(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.Boolean&)",
 			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileWritePackets(System.IntPtr,System.Boolean,System.Int32,AudioToolbox.AudioStreamPacketDescription[],System.Int64,System.Int32&,System.IntPtr)",
 			"AudioToolbox.AudioFileStreamStatus AudioToolbox.AudioFileStream::AudioFileStreamGetPropertyInfo(System.IntPtr,AudioToolbox.AudioFileStreamProperty,System.Int32&,System.Boolean&)",

@@ -45,8 +45,6 @@
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Contracts\" />
-    <Compile Include="../Versions.ios.g.cs" />
-
     <None Include="../Xamarin.Shared/NoCode.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -74,10 +72,6 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 
-  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.ios.g.cs" BeforeTargets="BeforeBuild">
-    <Exec Command="make -C .. Versions.ios.g.cs" />
-  </Target>
-  
   <!-- Replaces the ProtectedData assembly by the runtime implementation -->
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>

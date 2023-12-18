@@ -92,6 +92,8 @@ ifeq ($(CONFIG),Release)
 RUNTIMEIDENTIFIERS=osx-x64;osx-arm64
 else ifneq ($(UNIVERSAL),)
 RUNTIMEIDENTIFIERS=osx-x64;osx-arm64
+else ifeq ($(shell arch),arm64)
+RUNTIMEIDENTIFIERS=osx-arm64
 else
 RUNTIMEIDENTIFIERS=osx-x64
 endif
