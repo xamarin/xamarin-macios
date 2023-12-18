@@ -36,6 +36,7 @@ namespace Xamarin.Tests {
 		public string? BaseLibrary;
 		public string? AttributeLibrary;
 		public bool ReferenceBclByDefault = true;
+		public string? CompiledApiDefinitionAssembly = null;
 #else
 		public string BaseLibrary = None;
 		public string AttributeLibrary = None;
@@ -133,6 +134,11 @@ namespace Xamarin.Tests {
 			if (CompileCommand.Count > 0) {
 				sb.Add ($"--compile-command");
 				sb.Add (string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.ToArray ())));
+			}
+
+			if (CompiledApiDefinitionAssembly is not null) {
+				sb.Add ($"--compiled-api-definition-assembly");
+				sb.Add (CompiledApiDefinitionAssembly);
 			}
 #endif
 

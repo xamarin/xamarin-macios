@@ -39,8 +39,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public class CVPixelBufferAttributes : DictionaryContainer {
 #if !COREBUILD
@@ -211,8 +209,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public bool? MetalCompatibility {
 			set {

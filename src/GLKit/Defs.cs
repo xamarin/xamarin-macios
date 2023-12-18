@@ -137,8 +137,6 @@ namespace GLKit {
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' instead.")]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct GLKVertexAttributeParameters {

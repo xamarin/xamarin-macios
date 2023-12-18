@@ -15,7 +15,7 @@ namespace StoreKit {
 		Failed,
 		Restored,
 		[MacCatalyst (13, 1)]
-		[iOS (8, 0)] Deferred
+		Deferred
 	}
 
 	// untyped enum and not used in API - so it _could_ be an `int`
@@ -67,7 +67,6 @@ namespace StoreKit {
 	}
 
 	[Watch (7, 0)]
-	[iOS (9, 3)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : long {
@@ -78,20 +77,17 @@ namespace StoreKit {
 	}
 
 	[Watch (7, 0)]
-	[iOS (9, 3)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
 		None = 0,
 		MusicCatalogPlayback = 1 << 0,
-		[NoTV, iOS (10, 1)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
-	[iOS (11, 0)]
-	[TV (11, 0)]
 	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -102,7 +98,7 @@ namespace StoreKit {
 		Hide,
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
+	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
@@ -112,7 +108,7 @@ namespace StoreKit {
 		Year,
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
+	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {

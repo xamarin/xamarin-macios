@@ -10,14 +10,6 @@
 			<PkgPackageDir Condition="'$(PkgPackageDir)' == '' And '$(PkgPackagePath)' == ''">$(PublishDir)</PkgPackageDir>
 		</PropertyGroup>
 
-		<!-- Unfortunately we can't set a default runtime identifier when publishing, because by the time we know we're publishing,
-		     it's too late to change the runtime identifier. This means that we'll have to make it mandatory to specify a runtime
-		     identifier when publishing for a mobile platform (iOS, tvOS), because the default runtime identifier is for the simulator. -->
-		<Error
-			Text="A runtime identifier must be specified in order to publish this project."
-			Condition="'$(_XamarinUsingDefaultRuntimeIdentifier)' == 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')"
-		/>
-
 		<!-- It's mandatory to specify a runtime identifier for device when publishing for a mobile platform (iOS, tvOS). -->
 		<Error
 			Text="A runtime identifier for a device architecture must be specified in order to publish this project. '$(RuntimeIdentifier)' is a simulator architecture."

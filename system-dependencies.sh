@@ -328,13 +328,37 @@ function download_xcode_platforms ()
 	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
 
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+	if ! $SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
 		echo "##vso[task.logissue type=warning;sourcepath=system-dependencies.sh]Failed to download all simulator platforms, this may result in problems executing tests in the simulator."
 		set -x
+	else
+		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
+	
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+
+	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+	log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+
+	# This is a workaround for a bug in Xcode 15 where we need to open the platforms panel for it to register the simulators.
+	log "Executing 'open xcpref://Xcode.PreferencePane.Platforms'"
+	log "Killing Xcode"
+	pkill -9 "Xcode" || log "Xcode was not running."
+	log "Opening Xcode preferences panel"
+	open xcpref://Xcode.PreferencePane.Platforms
+	log "waiting 10 secs for Xcode to open the preferences panel"
+	sleep 10
+	log "Killing Xcode"
+	pkill -9 "Xcode" || log "Xcode was not running."
+	log "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
+
 	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 }
 

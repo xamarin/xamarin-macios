@@ -47,6 +47,10 @@ namespace Introspection {
 			case "MTKModelIOVertexDescriptorFromMetal":
 			case "MTKModelIOVertexFormatFromMetal":
 			case "MTKMetalVertexFormatFromModelIO":
+			case "MTLIOCompressionContextAppendData":
+			case "MTLIOCreateCompressionContext":
+			case "MTLIOFlushAndDestroyCompressionContext":
+			case "MTLIOCompressionContextDefaultChunkSize":
 			case "MPSImageBatchIncrementReadCount":
 			case "MPSImageBatchSynchronize":
 			case "MPSImageBatchResourceSize":

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
@@ -12,6 +12,9 @@
       <Link>Frameworks.cs</Link>
     </Compile>
     <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
     <Compile Include="..\..\..\tools\common\StringUtils.cs">

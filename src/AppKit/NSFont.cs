@@ -24,8 +24,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		public unsafe CGRect [] GetBoundingRects (CGGlyph [] glyphs)
 		{
@@ -35,8 +33,8 @@ namespace AppKit {
 				throw new ArgumentException ("glyphs array is empty");
 
 			CGRect [] bounds = new CGRect [glyphs.Length];
-			fixed (CGRect* boundsPtr = &bounds [0]) {
-				fixed (CGGlyph* glyphsPtr = &glyphs [0]) {
+			fixed (CGRect* boundsPtr = bounds) {
+				fixed (CGGlyph* glyphsPtr = glyphs) {
 					_GetBoundingRects ((IntPtr) boundsPtr, (IntPtr) glyphsPtr, (nuint) glyphs.Length);
 				}
 			}
@@ -46,8 +44,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		public unsafe CGSize [] GetAdvancements (CGGlyph [] glyphs)
 		{
@@ -57,8 +53,8 @@ namespace AppKit {
 				throw new ArgumentException ("glyphs array is empty");
 
 			CGSize [] advancements = new CGSize [glyphs.Length];
-			fixed (CGSize* advancementsPtr = &advancements [0]) {
-				fixed (CGGlyph* glyphsPtr = &glyphs [0]) {
+			fixed (CGSize* advancementsPtr = advancements) {
+				fixed (CGGlyph* glyphsPtr = glyphs) {
 					_GetAdvancements ((IntPtr) advancementsPtr, (IntPtr) glyphsPtr, (nuint) glyphs.Length);
 				}
 			}
@@ -205,8 +201,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 11)]
 #endif
 		public static NSFont? SystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
@@ -229,8 +223,6 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 11)]
 #endif
 		public static NSFont? MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
@@ -239,10 +231,8 @@ namespace AppKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 15)]
 #endif
 		public static NSFont? MonospacedSystemFont (nfloat fontSize, nfloat weight)
 		{

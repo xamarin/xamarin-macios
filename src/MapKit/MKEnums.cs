@@ -22,7 +22,6 @@ namespace MapKit {
 	// NSUInteger -> MKDirectionsTypes.h
 	[NoWatch]
 	[Native]
-	[TV (9, 2)]
 	[MacCatalyst (13, 1)]
 	public enum MKDirectionsTransportType : ulong {
 		Automobile = 1 << 0,
@@ -32,7 +31,6 @@ namespace MapKit {
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9, 2)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -42,16 +40,12 @@ namespace MapKit {
 		Hybrid,
 		SatelliteFlyover,
 		HybridFlyover,
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		MutedStandard,
 	}
 
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
-	[TV (9, 2)]
 	[MacCatalyst (13, 1)]
 	public enum MKDistanceFormatterUnits : ulong {
 		Default,
@@ -62,7 +56,6 @@ namespace MapKit {
 
 	// NSUInteger -> MKDistanceFormatter.h
 	[Native]
-	[TV (9, 2)]
 	[MacCatalyst (13, 1)]
 	public enum MKDistanceFormatterUnitStyle : ulong {
 		Default = 0,
@@ -71,8 +64,7 @@ namespace MapKit {
 	}
 
 	// NSInteger -> MKMapView.h
-	[TV (9, 2)]
-	[NoWatch]
+	[Watch (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKOverlayLevel : long {
@@ -81,7 +73,6 @@ namespace MapKit {
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9, 2)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -117,7 +108,6 @@ namespace MapKit {
 	}
 
 	// NSUInteger -> MKTypes.h
-	[TV (9, 2)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -132,9 +122,7 @@ namespace MapKit {
 #endif
 	}
 
-	[TV (9, 2)]
 	[NoWatch]
-	[iOS (9, 3)]
 	[Native]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'MKLocalSearchCompleterResultType' instead.")]
@@ -146,10 +134,7 @@ namespace MapKit {
 		Only
 	}
 
-	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKAnnotationViewCollisionMode : long {
@@ -162,9 +147,7 @@ namespace MapKit {
 		None,
 	}
 
-	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11, 0)]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -173,10 +156,7 @@ namespace MapKit {
 		Trailing,
 	}
 
-	[TV (11, 0)]
 	[NoWatch]
-	[iOS (11, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKFeatureVisibility : long {
@@ -186,7 +166,7 @@ namespace MapKit {
 	}
 
 	[Flags]
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKLocalSearchCompleterResultType : ulong {
@@ -196,7 +176,7 @@ namespace MapKit {
 	}
 
 	[Flags]
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MKLocalSearchResultType : ulong {
@@ -251,7 +231,7 @@ namespace MapKit {
 	}
 
 #if !WATCH
-	[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), NoWatch, iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum MKPointOfInterestCategory {
 

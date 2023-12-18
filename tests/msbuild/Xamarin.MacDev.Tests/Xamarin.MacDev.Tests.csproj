@@ -13,8 +13,8 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.11.1" />
     <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.846" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\mtouch\Cache.cs">
@@ -28,6 +28,9 @@
     </Compile>
     <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
       <Link>external\ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>external\SdkVersions.cs</Link>
     </Compile>
     <Compile Include="..\..\..\tools\common\TargetFramework.cs">
       <Link>external\TargetFramework.cs</Link>

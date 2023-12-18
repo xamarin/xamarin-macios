@@ -61,7 +61,6 @@ namespace Foundation {
 		Other = 1000
 	}
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	public enum NSItemDownloadingStatus {
 		[Field (null)]
@@ -77,8 +76,6 @@ namespace Foundation {
 		NotDownloaded,
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	public enum NSStringTransform {
 		[Field ("NSStringTransformLatinToKatakana")]
@@ -130,7 +127,7 @@ namespace Foundation {
 		StripDiacritics,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (11, 0)]
+	[NoWatch, NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum NSUrlSessionMultipathServiceType : long {

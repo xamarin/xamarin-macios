@@ -97,4 +97,14 @@ public class Nomenclator {
 
 	public void ForgetDelegateApiNames ()
 		=> repeatedDelegateApiNames.Clear ();
+
+	public string GetGeneratedTypeName (Type type)
+	{
+		var bindOnType = attributeManager.GetCustomAttributes<BindAttribute> (type);
+		if (bindOnType.Length > 0)
+			return bindOnType [0].Selector;
+		if (type.IsGenericTypeDefinition)
+			return type.Name.Substring (0, type.Name.IndexOf ('`'));
+		return type.Name;
+	}
 }

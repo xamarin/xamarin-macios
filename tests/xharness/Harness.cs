@@ -464,18 +464,15 @@ namespace Xharness {
 				});
 			}
 
-			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, flavor, RootDirectory, Log);
-				var macTestProject = new MacTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
-					MonoNativeInfo = monoNativeInfo,
-					Name = monoNativeInfo.ProjectName,
-					Platform = "AnyCPU",
-					Ignore = !INCLUDE_XAMARIN_LEGACY,
+			var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, RootDirectory, Log);
+			var macTestProject = new MacTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
+				MonoNativeInfo = monoNativeInfo,
+				Name = monoNativeInfo.ProjectName,
+				Platform = "AnyCPU",
+				Ignore = !INCLUDE_XAMARIN_LEGACY,
 
-				};
-
-				MacTestProjects.Add (macTestProject);
-			}
+			};
+			MacTestProjects.Add (macTestProject);
 
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);
 			MacTestProjects.AddRange (monoImportTestFactory.GetMacBclTargets ());
@@ -588,16 +585,12 @@ namespace Xharness {
 				Configurations = new string [] { "Debug", "Release" },
 			});
 
-			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
-				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, flavor, RootDirectory, Log);
-				var iosTestProject = new iOSTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath) {
-					MonoNativeInfo = monoNativeInfo,
-					Name = monoNativeInfo.ProjectName,
-					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
-				};
-
-				IOSTestProjects.Add (iosTestProject);
-			}
+			var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, RootDirectory, Log);
+			var iosTestProject = new iOSTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath) {
+				MonoNativeInfo = monoNativeInfo,
+				Name = monoNativeInfo.ProjectName,
+			};
+			IOSTestProjects.Add (iosTestProject);
 
 			// add all the tests that are using the precompiled mono assemblies
 			var monoImportTestFactory = new BCLTestImportTargetFactory (this);

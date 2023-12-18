@@ -8,9 +8,13 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateAssetPackManifestTaskBase : XamarinTask {
+	public class CreateAssetPackManifest : XamarinTask, ICancelableTask {
 		const double DownloadPriorityInterval = 0.90;
 		const double TopDownloadPriority = 0.95;
 
@@ -39,6 +43,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var manifestPath = Path.Combine (AppBundleDir.ItemSpec, "AssetPackManifestTemplate.plist");
 			var onDemandResourcesPath = Path.Combine (AppBundleDir.ItemSpec, "OnDemandResources.plist");
 			var onDemandResourcesDir = Path.Combine (OutputPath, "OnDemandResources");
@@ -164,6 +171,12 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

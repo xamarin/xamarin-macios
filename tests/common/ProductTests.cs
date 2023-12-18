@@ -105,6 +105,7 @@ namespace Xamarin.Tests {
 
 						Version version;
 						Version alternate_version = null;
+						Version alternate_version2 = null;
 						Version mono_native_compat_version;
 						Version alternate_mono_native_compat_version = null;
 						Version mono_native_unified_version;
@@ -120,29 +121,22 @@ namespace Xamarin.Tests {
 							break;
 						case MachO.LoadCommands.MiniPhoneOS:
 							version = SdkVersions.MiniOSVersion;
-							if (slice.IsDynamicLibrary && device) {
-								if (version.Major < 7)
-									version = new Version (7, 0, 0); // dylibs are supported starting with iOS 7.
-								alternate_version = new Version (8, 0, 0); // some iOS dylibs also have min OS 8.0 (if they're used as frameworks as well).
-							} else if (slice.Architecture == MachO.Architectures.ARM64) {
-								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
-							} else if (slice.IsDynamicLibrary && !device) {
-								version = new Version (8, 0, 0);
-								alternate_version = new Version (7, 0, 0);
-							}
+							alternate_version = new Version (7, 0, 0); // some libs from mono are still iOS 7.0
 							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							alternate_mono_native_compat_version = new Version (7, 0, 0); // Xcode 12.4 built binaries
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
-							mono_native_compat_version = version;
+							alternate_version = new Version (9, 0, 0); // some libs from mono are still tvOS 9.0
+							mono_native_compat_version = new Version (9, 0, 0);
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
 							alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
-							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
+							alternate_version2 = new Version (2, 0, 0); // some libs from mono are still watchOS 2.0
+							mono_native_compat_version = new Version (2, 0, 0);
 							mono_native_unified_version = new Version (5, 0, 0);
 							if (device)
 								alternate_mono_native_unified_version = new Version (5, 1, 0); // armv7k has 5.0, arm64_32 has 5.1
@@ -156,6 +150,8 @@ namespace Xamarin.Tests {
 						mono_native_unified_version = mono_native_unified_version.WithBuild ();
 						if (alternate_version is null)
 							alternate_version = version;
+						if (alternate_version2 is null)
+							alternate_version2 = version;
 						if (alternate_mono_native_unified_version is null)
 							alternate_mono_native_unified_version = mono_native_unified_version;
 						if (alternate_mono_native_compat_version is null)
@@ -173,8 +169,8 @@ namespace Xamarin.Tests {
 								failed.Add ($"Unexpected minOS version (expected {mono_native_unified_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						default:
-							if (version != lc_min_version && alternate_version != lc_min_version)
-								failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
+							if (version != lc_min_version && alternate_version != lc_min_version && alternate_version2 != lc_min_version)
+								failed.Add ($"Unexpected minOS version (expected {version}, alternatively {alternate_version} or {alternate_version2}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						}
 						any_load_command = true;

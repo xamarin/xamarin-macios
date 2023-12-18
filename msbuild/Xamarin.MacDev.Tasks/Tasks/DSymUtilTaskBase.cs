@@ -6,10 +6,12 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Messaging.Build.Client;
+
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class DSymUtilTaskBase : XamarinTask {
+	public class DSymUtil : XamarinTask, ITaskCallback {
 		#region Inputs
 
 		// This can also be specified as metadata on the Executable item (as 'DSymDir')
@@ -34,6 +36,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var contentFiles = new List<ITaskItem> ();
 
 			// We're not executing multiple dsymutil processes in parallel, because
@@ -73,5 +78,11 @@ namespace Xamarin.MacDev.Tasks {
 			if (Directory.Exists (contentsDir))
 				contentFiles.AddRange (Directory.EnumerateFiles (contentsDir).Select (x => new TaskItem (x)).ToArray ());
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => Executable.Contains (item);
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

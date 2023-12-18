@@ -162,6 +162,11 @@ namespace Xamarin.Linker {
 			if (modified)
 				abr.SaveCurrentAssembly ();
 
+			// TODO: Move this to a separate "MakeEverythingWorkWithNativeAOTStep" linker step
+			if (App.XamarinRuntime == XamarinRuntime.NativeAOT && Configuration.Profile.IsProductAssembly (assembly)) {
+				ImplementNSObjectRegisterToggleRefMethodStub ();
+			}
+
 			abr.ClearCurrentAssembly ();
 		}
 
@@ -291,7 +296,7 @@ namespace Xamarin.Linker {
 			infos.Add (new TrampolineInfo (callback, method, name));
 
 			// If the target method is marked, then we must mark the trampoline as well.
-			method.CustomAttributes.Add (CreateDynamicDependencyAttribute (callbackType, callback.Name));
+			method.CustomAttributes.Add (abr.CreateDynamicDependencyAttribute (callback.Name, callbackType));
 
 			callback.AddParameter ("pobj", abr.System_IntPtr);
 
@@ -1120,14 +1125,6 @@ namespace Xamarin.Linker {
 			return unmanagedCallersAttribute;
 		}
 
-		CustomAttribute CreateDynamicDependencyAttribute (TypeDefinition type, string member)
-		{
-			var attribute = new CustomAttribute (abr.DynamicDependencyAttribute_ctor__String_Type);
-			attribute.ConstructorArguments.Add (new CustomAttributeArgument (abr.System_String, member));
-			attribute.ConstructorArguments.Add (new CustomAttributeArgument (abr.System_Type, type));
-			return attribute;
-		}
-
 		void GenerateConversionToManaged (MethodDefinition method, ILProcessor il, TypeReference inputType, TypeReference outputType, string descriptiveMethodName, int parameter, out TypeReference nativeCallerType)
 		{
 			// This is a mirror of the native method xamarin_generate_conversion_to_managed (for the dynamic registrar).
@@ -1377,6 +1374,24 @@ namespace Xamarin.Linker {
 			il.Emit (OpCodes.Ret);
 
 			return clonedCtor;
+		}
+
+		void ImplementNSObjectRegisterToggleRefMethodStub ()
+		{
+			// The NSObject.RegisterToggleRef method is a Mono icall that is unused in NativeAOT.
+			// The method isn't included on all platforms but when it is present, we need to modify it
+			// so that ILC can trim it and it doesn't report the following warning:
+			// 
+			//    ILC: Method '[Microsoft.iOS]Foundation.NSObject.RegisterToggleRef(NSObject,native int,bool)' will always throw because:
+			//         Invalid IL or CLR metadata in 'Void Foundation.NSObject.RegisterToggleRef(Foundation.NSObject, IntPtr, Boolean)'
+			//
+			if (abr.TryGet_NSObject_RegisterToggleRef (out var registerToggleRef)) {
+				registerToggleRef!.IsPublic = false;
+				registerToggleRef!.IsInternalCall = false;
+
+				registerToggleRef!.CreateBody (out var il);
+				il.Emit (OpCodes.Ret);
+			}
 		}
 	}
 }

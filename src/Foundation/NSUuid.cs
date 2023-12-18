@@ -21,7 +21,7 @@ namespace Foundation {
 				throw new ArgumentException ("length must be at least 16 bytes");
 
 			unsafe {
-				fixed (byte* p = &bytes [0]) {
+				fixed (byte* p = bytes) {
 					IntPtr ptr = (IntPtr) p;
 
 					if (IsDirectBinding) {
