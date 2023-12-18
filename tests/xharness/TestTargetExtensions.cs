@@ -29,11 +29,11 @@ namespace Xharness {
 		public static TestTargetOs GetTargetOs (this TestTarget target, bool minVersion)
 		{
 			return target switch {
-				TestTarget.Simulator_iOS32 => new TestTargetOs (target, minVersion ? SdkVersions.MiniOSSimulator : "10.3"),
-				TestTarget.Simulator_iOS64 => new TestTargetOs (target, minVersion ? SdkVersions.MiniOSSimulator : SdkVersions.MaxiOSSimulator),
-				TestTarget.Simulator_iOS => new TestTargetOs (target, minVersion ? SdkVersions.MiniOSSimulator : SdkVersions.MaxiOSSimulator),
-				TestTarget.Simulator_tvOS => new TestTargetOs (target, minVersion ? SdkVersions.MinTVOSSimulator : SdkVersions.MaxTVOSSimulator),
-				TestTarget.Simulator_watchOS => new TestTargetOs (target, minVersion ? SdkVersions.MinWatchOSSimulator : SdkVersions.MaxWatchOSSimulator),
+				TestTarget.Simulator_iOS32 => new TestTargetOs (target, minVersion ? Xamarin.SdkVersions.MiniOSSimulator : "10.3"),
+				TestTarget.Simulator_iOS64 => new TestTargetOs (target, minVersion ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.MaxiOSSimulator),
+				TestTarget.Simulator_iOS => new TestTargetOs (target, minVersion ? Xamarin.SdkVersions.MiniOSSimulator : Xamarin.SdkVersions.MaxiOSSimulator),
+				TestTarget.Simulator_tvOS => new TestTargetOs (target, minVersion ? Xamarin.SdkVersions.MinTVOSSimulator : Xamarin.SdkVersions.MaxTVOSSimulator),
+				TestTarget.Simulator_watchOS => new TestTargetOs (target, minVersion ? Xamarin.SdkVersions.MinWatchOSSimulator : Xamarin.SdkVersions.MaxWatchOSSimulator),
 				_ => throw new Exception (string.Format ("Invalid simulator target: {0}", target))
 			};
 

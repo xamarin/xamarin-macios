@@ -960,6 +960,9 @@
 		<value>watchOS için geçersiz HttpMessageHandler `{0}`. Geçerli tek değer NSUrlSessionHandler.
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>NativeAOT kullanılırken dinamik kayıt şirketi desteklenmediğinden ( '--optimize=-remove-dynamic-registrar' geçirilerek) dinamik kayıt şirketi korunamaz. Dinamik kayıt desteği yine de kaldırılacak.</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>XML açıklaması işlenemedi: {0}
 		</value>
@@ -1104,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>'{1}' bütünleştirilmiş koduna {0} uygulanamadı
 		</value>

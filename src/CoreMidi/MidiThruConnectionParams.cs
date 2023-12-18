@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 // 
 // MidiThruConnectionParams.cs: A C# wrapper around MidiThruConnectionParamsStruct
 //
@@ -303,7 +304,7 @@ namespace CoreMidi {
 			else {
 				Controls = new MidiControlTransform [connectionParams.NumControlTransforms];
 				unsafe {
-					fixed (void* arrAddr = &Controls [0])
+					fixed (void* arrAddr = Controls)
 						Buffer.MemoryCopy ((void*) bufferEnd, arrAddr, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
 				}
 			}
@@ -316,7 +317,7 @@ namespace CoreMidi {
 				unsafe {
 					for (int i = 0; i < connectionParams.NumMaps; i++) {
 						Maps [i].Value = new byte [128];
-						fixed (void* arrAddr = &Maps [i].Value [0])
+						fixed (void* arrAddr = Maps [i].Value)
 							Buffer.MemoryCopy ((void*) bufferEnd, arrAddr, 128, 128);
 					}
 				}
@@ -360,7 +361,7 @@ namespace CoreMidi {
 
 				if (connectionParams.NumControlTransforms > 0) {
 					unsafe {
-						fixed (void* arrAddr = &Controls! [0])
+						fixed (void* arrAddr = Controls)
 							Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, controlsSize * connectionParams.NumControlTransforms, controlsSize * connectionParams.NumControlTransforms);
 					}
 				}
@@ -370,7 +371,7 @@ namespace CoreMidi {
 					bufferEnd = IntPtr.Add (bufferEnd, controlsSize * connectionParams.NumControlTransforms);
 					unsafe {
 						for (int i = 0; i < connectionParams.NumMaps; i++) {
-							fixed (void* arrAddr = &Maps! [i].Value [0])
+							fixed (void* arrAddr = Maps! [i].Value)
 								Buffer.MemoryCopy (arrAddr, (void*) bufferEnd, 128, 128);
 							bufferEnd += 128;
 						}
@@ -387,3 +388,4 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
+#endif

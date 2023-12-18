@@ -86,7 +86,6 @@ namespace CoreLocation {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (10, 0)]
 		[Mac (11,0)]
 #endif
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)

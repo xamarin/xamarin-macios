@@ -8,8 +8,10 @@
 	<string>com.xamarin.introspection</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.9</string>
+	<string>10.15</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>LSApplicationCategoryType</key>

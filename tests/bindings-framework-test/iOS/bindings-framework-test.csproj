@@ -22,7 +22,7 @@
     <LangVersion>latest</LangVersion>
     <RootTestsDirectory>..\..</RootTestsDirectory>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' Or '$(Configuration)' == 'Debug64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>

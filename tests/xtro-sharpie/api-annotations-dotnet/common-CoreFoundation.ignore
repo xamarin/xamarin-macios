@@ -951,3 +951,4 @@
 !missing-field! kCFURLVolumeMountFromLocationKey not bound
 !missing-field! kCFURLVolumeSubtypeKey not bound
 !missing-field! kCFURLVolumeTypeNameKey not bound
+!missing-field! kCFURLDirectoryEntryCountKey not bound

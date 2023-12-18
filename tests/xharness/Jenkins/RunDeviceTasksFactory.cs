@@ -47,7 +47,7 @@ namespace Xharness.Jenkins {
 
 				if (createiOS) {
 					var build64 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
-						ProjectConfiguration = "Debug64",
+						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhone",
 						Platform = TestPlatform.iOS_Unified64,
 						TestName = project.Name,
@@ -66,7 +66,7 @@ namespace Xharness.Jenkins {
 					if (createTodayExtension) {
 						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
 						var buildToday = new MSBuildTask (jenkins: jenkins, testProject: todayProject, processManager: processManager) {
-							ProjectConfiguration = "Debug64",
+							ProjectConfiguration = "Debug",
 							ProjectPlatform = "iPhone",
 							Platform = TestPlatform.iOS_TodayExtension64,
 							TestName = project.Name,
@@ -106,28 +106,9 @@ namespace Xharness.Jenkins {
 
 				if (createwatchOS) {
 					var watchOSProject = project.GenerateVariations ? project.AsWatchOSProject () : project;
-					if (!project.SkipwatchOS32Variation) {
-						var buildWatch32 = new MSBuildTask (jenkins: jenkins, testProject: watchOSProject, processManager: processManager) {
-							ProjectConfiguration = "Debug32",
-							ProjectPlatform = "iPhone",
-							Platform = TestPlatform.watchOS_32,
-							TestName = project.Name,
-						};
-						buildWatch32.CloneTestProject (jenkins.MainLog, processManager, watchOSProject, HarnessConfiguration.RootDirectory);
-						projectTasks.Add (new RunDeviceTask (
-							jenkins: jenkins,
-							devices: jenkins.Devices,
-							buildTask: buildWatch32,
-							processManager: processManager,
-							tunnelBore: jenkins.TunnelBore,
-							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
-							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.watchOS) });
-					}
-
 					if (!project.SkipwatchOSARM64_32Variation) {
 						var buildWatch64_32 = new MSBuildTask (jenkins: jenkins, testProject: watchOSProject, processManager: processManager) {
-							ProjectConfiguration = "Release64_32", // We don't support Debug for ARM64_32 yet.
+							ProjectConfiguration = "Release", // We don't support Debug for ARM64_32 yet.
 							ProjectPlatform = "iPhone",
 							Platform = TestPlatform.watchOS_64_32,
 							TestName = project.Name,

@@ -405,12 +405,9 @@ namespace Security {
 		PKCS1 = 1,
 
 		[NoMac]
-		[TV (10, 0)]
-		[Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		OAEP = 2,
 
-		[iOS (8, 3)]
 		[MacCatalyst (13, 1)]
 		Raw = 0x4000,
 
@@ -462,8 +459,6 @@ namespace Security {
 	}
 
 	// convenience enum mapping to kSecUseAuthenticationUI* fields
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	public enum SecAuthenticationUI {
 		NotSet = -1,
@@ -488,8 +483,6 @@ namespace Security {
 		Skip
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	public enum SecTokenID {
 		None = 0,
@@ -498,10 +491,6 @@ namespace Security {
 		SecureEnclave,
 	}
 
-	[Watch (3, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SecKeyOperationType : long {

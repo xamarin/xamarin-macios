@@ -321,6 +321,12 @@ namespace Foundation {
 		{
 #if NET && __MACOS__
 			Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
+#elif NET
+			if (Runtime.IsCoreCLR) {
+				Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
+			} else {
+				RegisterToggleRef (obj, handle, isCustomType);
+			}
 #else
 			RegisterToggleRef (obj, handle, isCustomType);
 #endif
@@ -525,6 +531,11 @@ namespace Foundation {
 
 		bool DynamicConformsToProtocol (NativeHandle protocol)
 		{
+#if NET
+			if (Runtime.IsNativeAOT)
+				throw Runtime.CreateNativeAOTNotSupportedException ();
+#endif
+
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
 			foreach (AdoptsAttribute adopts in adoptedProtocols) {
 				if (adopts.ProtocolHandle == protocol)

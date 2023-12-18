@@ -92,8 +92,6 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public VTColorPrimaries DestinationColorPrimaries {
 			get {
@@ -137,8 +135,6 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public VTTransferFunction DestinationTransferFunction {
 			get {

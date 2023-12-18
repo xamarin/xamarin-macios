@@ -518,7 +518,7 @@ namespace AudioToolbox {
 						return returnOne;
 					}
 
-					fixed (AudioStreamPacketDescription* pdesc = &packetDescription [0]) {
+					fixed (AudioStreamPacketDescription* pdesc = packetDescription) {
 						var returnTwo = AudioConverterFillComplexBuffer (Handle, &FillComplexBufferShared, this_ptr, (IntPtr)packetSizePtr, (IntPtr) outputData, (IntPtr) pdesc);
 						outputDataPacketSize = packetSize;
 						return returnTwo;
@@ -529,7 +529,7 @@ namespace AudioToolbox {
 					return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr) outputData, IntPtr.Zero);
 
 				unsafe {
-					fixed (AudioStreamPacketDescription* pdesc = &packetDescription [0]) {
+					fixed (AudioStreamPacketDescription* pdesc = packetDescription) {
 						return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr) outputData, (IntPtr) pdesc);
 					}
 				}

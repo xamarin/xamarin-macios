@@ -14,45 +14,53 @@ using MonoTouch;
 
 namespace Xamarin {
 	static class SdkVersions {
-		public const string Xcode = "14.3.1";
-		public const string OSX = "13.3";
-		public const string iOS = "16.4";
-		public const string WatchOS = "9.4";
-		public const string TVOS = "16.4";
-		public const string MacCatalyst = "16.4";
+		public const string Xcode = "15.0";
+		public const string OSX = "14.0";
+		public const string iOS = "17.0";
+		public const string WatchOS = "10.0";
+		public const string TVOS = "17.0";
+		public const string MacCatalyst = "17.0";
 
 #if NET
-		public const string MinOSX = "10.14";
-		public const string MiniOS = "10.0";
-		public const string MinWatchOS = "99.99"; // TODO not supported, many changes required to remove it
-		public const string MinTVOS = "10.0";
+		public const string MinOSX = "10.15";
+		public const string MiniOS = "11.0";
+		public const string MinTVOS = "11.0";
 		public const string MinMacCatalyst = "13.1";
 #else
-		public const string MinOSX = "10.9";
-		public const string MiniOS = "7.0";
-		public const string MinWatchOS = "2.0";
-		public const string MinTVOS = "9.0";
+		public const string MinOSX = "10.15";
+		public const string MiniOS = "11.0";
+		public const string MinWatchOS = "4.0";
+		public const string MinTVOS = "11.0";
 		public const string MinMacCatalyst = "13.1";
 #endif
 
-		public const string MiniOSSimulator = "13.7";
-		public const string MinWatchOSSimulator = "7.0";
+		public const string DotNetMinOSX = "10.15";
+		public const string DotNetMiniOS = "11.0";
+		public const string DotNetMinTVOS = "11.0";
+		public const string DotNetMinMacCatalyst = "13.1";
+		public const string LegacyMinOSX = "10.15";
+		public const string LegacyMiniOS = "11.0";
+		public const string LegacyMinWatchOS = "4.0";
+		public const string LegacyMinTVOS = "11.0";
+
+		public const string MiniOSSimulator = "14.3";
+		public const string MinWatchOSSimulator = "7.1";
 		public const string MinWatchOSCompanionSimulator = "14.5";
-		public const string MinTVOSSimulator = "13.4";
+		public const string MinTVOSSimulator = "14.0";
 
-		public const string MaxiOSSimulator = "16.4";
-		public const string MaxWatchOSSimulator = "9.4";
-		public const string MaxWatchOSCompanionSimulator = "16.4";
-		public const string MaxTVOSSimulator = "16.4";
+		public const string MaxiOSSimulator = "17.0";
+		public const string MaxWatchOSSimulator = "10.0";
+		public const string MaxWatchOSCompanionSimulator = "17.0";
+		public const string MaxTVOSSimulator = "17.0";
 
-		public const string MaxiOSDeploymentTarget = "16.4";
-		public const string MaxWatchDeploymentTarget = "9.4";
-		public const string MaxTVOSDeploymentTarget = "16.4";
+		public const string MaxiOSDeploymentTarget = "17.0";
+		public const string MaxWatchDeploymentTarget = "10.0";
+		public const string MaxTVOSDeploymentTarget = "17.0";
 
-		public const string DefaultTargetPlatformVersioniOS = "16.1";
-		public const string DefaultTargetPlatformVersiontvOS = "16.1";
-		public const string DefaultTargetPlatformVersionmacOS = "13.0";
-		public const string DefaultTargetPlatformVersionMacCatalyst = "16.1";
+		public const string DefaultTargetPlatformVersioniOS = "17.0";
+		public const string DefaultTargetPlatformVersiontvOS = "17.0";
+		public const string DefaultTargetPlatformVersionmacOS = "14.0";
+		public const string DefaultTargetPlatformVersionMacCatalyst = "17.0";
 
 		public static Version OSXVersion { get { return new Version (OSX); } }
 		public static Version iOSVersion { get { return new Version (iOS); } }
@@ -66,7 +74,9 @@ namespace Xamarin {
 
 		public static Version MinOSXVersion { get { return new Version (MinOSX); } }
 		public static Version MiniOSVersion { get { return new Version (MiniOS); } }
+#if !NET
 		public static Version MinWatchOSVersion { get { return new Version (MinWatchOS); } }
+#endif
 		public static Version MinTVOSVersion { get { return new Version (MinTVOS); } }
 		public static Version MinMacCatalystVersion { get { return new Version (MinMacCatalyst); } }
 
@@ -113,7 +123,9 @@ namespace Xamarin {
 			switch (app.Platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
+#if !NET
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+#endif
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
@@ -140,7 +152,9 @@ namespace Xamarin {
 			switch (platform) {
 			case ApplePlatform.MacOSX: return MinOSXVersion;
 			case ApplePlatform.iOS: return MiniOSVersion;
+#if !NET
 			case ApplePlatform.WatchOS: return MinWatchOSVersion;
+#endif
 			case ApplePlatform.TVOS: return MinTVOSVersion;
 			case ApplePlatform.MacCatalyst: return MinMacCatalystVersion;
 			default:
@@ -155,4 +169,9 @@ namespace Xamarin {
 		public static Version MinimumMonoVersion { get { return new Version (MinimumMono); } }
 	}
 #endif
+
+	static class DotNetVersions {
+		public const string Tfm = "net8.0";
+		public const string Version = "8.0";
+	}
 }

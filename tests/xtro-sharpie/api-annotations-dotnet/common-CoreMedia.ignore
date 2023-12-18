@@ -251,7 +251,6 @@
 !missing-pinvoke! CMBufferQueueGetEndPresentationTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetFirstDecodeTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetFirstPresentationTimeStamp is not bound
-!missing-pinvoke! CMBufferQueueGetHead is not bound
 !missing-pinvoke! CMBufferQueueGetMaxPresentationTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetMinDecodeTimeStamp is not bound
 !missing-pinvoke! CMBufferQueueGetMinPresentationTimeStamp is not bound

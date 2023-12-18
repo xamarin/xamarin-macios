@@ -23,9 +23,6 @@ namespace SceneKit {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 #endif
 	public static class SCNJavaScript {
 		[DllImport (Constants.SceneKitLibrary)]

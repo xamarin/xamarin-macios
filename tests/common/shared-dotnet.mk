@@ -82,6 +82,8 @@ ifeq ($(CONFIG),Release)
 RUNTIMEIDENTIFIERS=maccatalyst-x64;maccatalyst-arm64
 else ifneq ($(UNIVERSAL),)
 RUNTIMEIDENTIFIERS=maccatalyst-x64;maccatalyst-arm64
+else ifeq ($(shell arch),arm64)
+RUNTIMEIDENTIFIERS=maccatalyst-arm64
 else
 RUNTIMEIDENTIFIERS=maccatalyst-x64
 endif
@@ -90,6 +92,8 @@ ifeq ($(CONFIG),Release)
 RUNTIMEIDENTIFIERS=osx-x64;osx-arm64
 else ifneq ($(UNIVERSAL),)
 RUNTIMEIDENTIFIERS=osx-x64;osx-arm64
+else ifeq ($(shell arch),arm64)
+RUNTIMEIDENTIFIERS=osx-arm64
 else
 RUNTIMEIDENTIFIERS=osx-x64
 endif
@@ -121,6 +125,10 @@ else
 EXECUTABLE="unknown-executable-platform-$(PLATFORM)"
 endif
 
+ifneq ($(PUBLISHAOT)$(NATIVEAOT),)
+NATIVEAOT_ARGUMENTS=/p:PublishAot=true /p:_IsPublishing=true
+endif
+
 prepare:
 	@# nothing to do here right now
 
@@ -139,13 +147,13 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) $(UNIVERSAL_ARGUMENT)
+	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) $(UNIVERSAL_ARGUMENT) $(NATIVEAOT_ARGUMENTS)
 
 run: prepare
-	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) $(UNIVERSAL_ARGUMENT) -t:Run
+	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) $(UNIVERSAL_ARGUMENT) $(NATIVEAOT_ARGUMENTS) -t:Run
 
 run-bare:
-	$(Q) $(EXECUTABLE) --autostart --autoexit
+	$(Q) $(EXECUTABLE) --autostart --autoexit $(RUN_ARGUMENTS)
 
 print-executable:
 	@echo $(EXECUTABLE)

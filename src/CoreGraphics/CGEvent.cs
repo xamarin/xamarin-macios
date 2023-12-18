@@ -508,7 +508,7 @@ namespace CoreGraphics {
 			if (CGGetEventTapList (0, null, out count) != 0)
 				return null;
 			var result = new CGEventTapInformation [count];
-			fixed (CGEventTapInformation *p = &result [0]){
+			fixed (CGEventTapInformation *p = result){
 				if (CGGetEventTapList (count, p, out count) != 0)
 					return null;
 			}

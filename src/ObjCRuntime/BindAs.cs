@@ -78,7 +78,7 @@ namespace ObjCRuntime {
 						item = NSNull.Null.Handle;
 					ptrs [i] = item;
 				}
-				fixed (void* ptr = &ptrs[0]) {
+				fixed (void* ptr = ptrs) {
 					arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects ((IntPtr) ptr, count))!;
 				}
 			}

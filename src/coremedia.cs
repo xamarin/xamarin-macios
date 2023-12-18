@@ -22,7 +22,7 @@ namespace CoreMedia {
 
 	[Static]
 	[Internal]
-	[Mac (10, 9), Watch (6, 0)]
+	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	interface CMTextMarkupAttributesKeys {
 		[Internal]
@@ -143,67 +143,56 @@ namespace CoreMedia {
 		[Field ("kCMSampleBufferAttachmentKey_DroppedFrameReason")]
 		NSString DroppedFrameReason { get; }
 
-		[iOS (9, 0)]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_StillImageLensStabilizationInfo")]
 		NSString StillImageLensStabilizationInfo { get; }
 
-		[iOS (9, 0)]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Active")]
 		NSString BufferLensStabilizationInfo_Active { get; }
 
-		[iOS (9, 0)]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_OutOfRange")]
 		NSString BufferLensStabilizationInfo_OutOfRange { get; }
 
-		[iOS (9, 0)]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Unavailable")]
 		NSString BufferLensStabilizationInfo_Unavailable { get; }
 
-		[iOS (9, 0)]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferLensStabilizationInfo_Off")]
 		NSString BufferLensStabilizationInfo_Off { get; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalLevelInfo")]
 		NSString HevcTemporalLevelInfoKey { get; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCTemporalSubLayerAccess")]
 		NSString HevcTemporalSubLayerAccessKey { get; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCStepwiseTemporalSubLayerAccess")]
 		NSString HevcStepwiseTemporalSubLayerAccessKey { get; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_HEVCSyncSampleNALUnitType")]
 		NSString HevcSyncSampleNalUnitTypeKey { get; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix")]
 		NSString CameraIntrinsicMatrixKey { get; }
 
-		[iOS (13, 0), Mac (10, 15), TV (13, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleAttachmentKey_AudioIndependentSampleDecoderRefreshCount")]
 		NSString AudioIndependentSampleDecoderRefreshCountKey { get; }
 
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCMSampleBufferAttachmentKey_ForceKeyFrame")]
 		NSString ForceKeyFrameKey { get; }
@@ -229,32 +218,26 @@ namespace CoreMedia {
 		int SampleReferenceByteOffset { get; set; }
 		NSNumber GradualDecoderRefresh { get; set; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[StrongDictionary]
 		CMHevcTemporalLevelInfoSettings HevcTemporalLevelInfo { get; set; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		bool HevcTemporalSubLayerAccess { get; set; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		bool HevcStepwiseTemporalSubLayerAccess { get; set; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		int HevcSyncSampleNalUnitType { get; set; }
 
-		[iOS (11, 0), Mac (10, 13), TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		NSData CameraIntrinsicMatrix { get; set; }
 
-		[iOS (13, 0), Mac (10, 15), TV (13, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		nint AudioIndependentSampleDecoderRefreshCount { get; set; }
 
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		bool ForceKeyFrame { get; set; }
 
@@ -265,7 +248,7 @@ namespace CoreMedia {
 	}
 
 	[Internal]
-	[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (6, 0)]
+	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface CMHevcTemporalLevelInfoKeys {
@@ -292,7 +275,7 @@ namespace CoreMedia {
 		NSString LevelIndexKey { get; }
 	}
 
-	[iOS (11, 0), Mac (10, 13), TV (11, 0), Watch (6, 0)]
+	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("CMHevcTemporalLevelInfoKeys")]
 	interface CMHevcTemporalLevelInfoSettings {

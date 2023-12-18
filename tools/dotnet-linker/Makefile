@@ -3,7 +3,7 @@ TOP=../..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
-BUILD_DIR=bin/Debug/net7.0
+BUILD_DIR=bin/Debug/$(DOTNET_TFM)
 
 DOTNET_TARGETS += \
 	$(BUILD_DIR)/dotnet-linker.dll \

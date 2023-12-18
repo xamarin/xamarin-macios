@@ -198,8 +198,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public event EventHandler PrimaryActionTriggered {
 			add {

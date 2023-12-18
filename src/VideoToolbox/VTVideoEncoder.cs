@@ -22,9 +22,6 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
-#else
-	[iOS (8, 0)]
-	[TV (10, 2)]
 #endif
 	public class VTVideoEncoder {
 
@@ -55,72 +52,66 @@ namespace VideoToolbox {
 		public string EncoderName { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
 		public ulong? GpuRegistryId { get; private set; } // optional, same type as `[MTLDevice registryID]`
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
 		public NSDictionary? SupportedSelectionProperties { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
 		public NSNumber? PerformanceRating { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
 		public NSNumber? QualityRating { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
 		public bool? InstanceLimit { get; private set; }
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
@@ -224,13 +215,9 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
-		[iOS (11, 0)]
-		[TV (11, 0)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		static extern /* OSStatus */ VTStatus VTCopySupportedPropertyDictionaryForEncoder (
@@ -244,13 +231,9 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
-		[iOS (11, 0)]
-		[TV (11, 0)]
 #endif
 		public static VTSupportedEncoderProperties? GetSupportedEncoderProperties (int width, int height, CMVideoCodecType codecType, NSDictionary? encoderSpecification = null)
 		{
@@ -278,13 +261,9 @@ namespace VideoToolbox {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios11.0")]
-	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10, 13)]
-	[iOS (11, 0)]
-	[TV (11, 0)]
 #endif
 	public class VTSupportedEncoderProperties {
 		public string? EncoderId { get; set; }

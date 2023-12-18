@@ -99,8 +99,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus CopyInstrumentInfoFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFSArrayRef */ ref IntPtr outInstrumentInfo);
@@ -110,8 +108,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public static InstrumentInfo []? GetInstrumentInfo (NSUrl url)
 		{
