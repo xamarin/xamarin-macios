@@ -44,6 +44,10 @@ namespace Metal {
 
 	interface IMTLCommandEncoder { }
 
+	[Deprecated (PlatformName.MacOSX, 13, 0)]
+	[Deprecated (PlatformName.iOS, 16, 0)]
+	[Deprecated (PlatformName.TvOS, 16, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLArgument {
@@ -218,6 +222,13 @@ namespace Metal {
 		[return: NullAllowed]
 		[return: Release]
 		IMTLBuffer CreateRemoteBuffer (IMTLDevice device);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuAddress")]
+		ulong GpuAddress { get; }
 	}
 
 	[NoWatch]
@@ -393,10 +404,19 @@ namespace Metal {
 		void PopDebugGroup ();
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (14, 0), Mac (11, 0), iOS (13, 0), TV (16,0)]
 		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#elif !TVOS
+		[MacCatalyst (14, 0), Mac (11, 0), iOS (13, 0), NoTV]
+		[Abstract] // @required but we can't add abstract members in C# and keep binary compatibility
+#else
+		[NoMacCatalyst, NoMac, NoiOS, TV (16,0)]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[Mac (11, 0), iOS (13, 0), NoTV]
+
+#else
+		[MacCatalyst (14, 0), Mac (11, 0), iOS (13, 0), TV (16, 0)]
+#endif
 		[NullAllowed, Export ("resourceStateCommandEncoder")]
 		IMTLResourceStateCommandEncoder ResourceStateCommandEncoder { get; }
 
@@ -432,21 +452,46 @@ namespace Metal {
 		[Export ("blitCommandEncoderWithDescriptor:")]
 		IMTLBlitCommandEncoder CreateBlitCommandEncoder (MTLBlitPassDescriptor blitPassDescriptor);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("resourceStateCommandEncoderWithDescriptor:")]
 		IMTLResourceStateCommandEncoder CreateResourceStateCommandEncoder (MTLResourceStatePassDescriptor resourceStatePassDescriptor);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("accelerationStructureCommandEncoder")]
 		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder ();
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("accelerationStructureCommandEncoderWithDescriptor:")]
+		IMTLAccelerationStructureCommandEncoder CreateAccelerationStructureCommandEncoder (MTLAccelerationStructurePassDescriptor descriptor);
 	}
 
 	interface IMTLCommandQueue { }
@@ -493,6 +538,7 @@ namespace Metal {
 	[MacCatalyst (13, 1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLComputeCommandEncoder : MTLCommandEncoder {
+
 		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 #if NET
@@ -688,57 +734,139 @@ namespace Metal {
 		void SampleCounters (MTLCounterSampleBuffer sampleBuffer, nuint sampleIndex, bool barrier);
 #endif
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setVisibleFunctionTable:atBufferIndex:")]
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint bufferIndex);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setVisibleFunctionTables:withBufferRange:")]
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable [] visibleFunctionTables, NSRange range);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setIntersectionFunctionTable:atBufferIndex:")]
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setIntersectionFunctionTables:withBufferRange:")]
 		void SetIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTables, NSRange range);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setAccelerationStructure:atBufferIndex:")]
 		void SetAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setBuffer:offset:attributeStride:atIndex:")]
+		void SetBuffer (IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setBuffers:offsets:attributeStrides:withRange:")]
+		void SetBuffers (IntPtr /* IMTLBuffer[] */ buffers, IntPtr /* nuint[] */ offsets, IntPtr /* nuint[] */ strides, NSRange range);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setBufferOffset:attributeStride:atIndex:")]
+		void SetBufferOffset (nuint offset, nuint stride, nuint index);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setBytes:length:attributeStride:atIndex:")]
+		void SetBytes (IntPtr bytes, nuint length, nuint stride, nuint index);
 
 	}
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLComputePipelineReflection {
+
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("arguments")]
 #if NET
 		MTLArgument [] Arguments { get; }
 #else
 		NSObject [] Arguments { get; }
 #endif
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("bindings")]
+		IMTLBinding [] Bindings { get; }
 	}
 
 	interface IMTLComputePipelineState { }
@@ -787,40 +915,84 @@ namespace Metal {
 		[Export ("supportIndirectCommandBuffers")]
 		bool SupportIndirectCommandBuffers { get; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("functionHandleWithFunction:")]
 		IMTLFunctionHandle CreateFunctionHandle (IMTLFunction function);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newComputePipelineStateWithAdditionalBinaryFunctions:error:")]
 		[return: Release]
 		IMTLComputePipelineState CreateComputePipelineState (IMTLFunction [] functions, [NullAllowed] out NSError error);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newVisibleFunctionTableWithDescriptor:")]
 		[return: Release]
 		IMTLVisibleFunctionTable CreateVisibleFunctionTable (MTLVisibleFunctionTableDescriptor descriptor);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newIntersectionFunctionTableWithDescriptor:")]
 		[return: Release]
 		IMTLIntersectionFunctionTable CreateIntersectionFunctionTable (MTLIntersectionFunctionTableDescriptor descriptor);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
 	}
 
 	interface IMTLBlitCommandEncoder { }
@@ -943,17 +1115,17 @@ namespace Metal {
 		[Export ("optimizeIndirectCommandBuffer:withRange:")]
 		void Optimize (IMTLIndirectCommandBuffer indirectCommandBuffer, NSRange range);
 
-#if NET && !__MACOS__ && !__MACCATALYST__
+#if NET && !__MACOS__ && !__MACCATALYST__ && !TVOS
 		[Abstract]
 #endif
-		[Mac (11, 0), NoTV, iOS (13, 0), MacCatalyst (15, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("getTextureAccessCounters:region:mipLevel:slice:resetCounters:countersBuffer:countersBufferOffset:")]
 		void GetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice, bool resetCounters, IMTLBuffer countersBuffer, nuint countersBufferOffset);
 
-#if NET && !__MACOS__ && !__MACCATALYST__
+#if NET && !__MACOS__ && !__MACCATALYST__ && !TVOS
 		[Abstract]
 #endif
-		[Mac (11, 0), NoTV, iOS (13, 0), MacCatalyst (15, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("resetTextureAccessCounters:region:mipLevel:slice:")]
 		void ResetTextureAccessCounters (IMTLTexture texture, MTLRegion region, nuint mipLevel, nuint slice);
 
@@ -1047,7 +1219,7 @@ namespace Metal {
 		[Export ("headless")]
 		bool Headless { [Bind ("isHeadless")] get; }
 
-		[NoiOS, NoTV, NoWatch, MacCatalyst (15, 0)]
+		[iOS (17, 0), TV (17, 0), NoWatch, MacCatalyst (15, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -1474,54 +1646,99 @@ namespace Metal {
 		void CreateRenderPipelineState (MTLTileRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
 		[Abstract]
+#elif !TVOS
+		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
+		[Abstract]
+#else
+		[NoMac, NoMacCatalyst, TV (16,0), NoiOS]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 13, 4)]
-		[NoTV, iOS (13, 0)]
+
+#else
+		[MacCatalyst (13, 4), TV (16, 0), iOS (13, 0)]
+#endif
 		[Export ("supportsVertexAmplificationCount:")]
 		bool SupportsVertexAmplification (nuint count);
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
 		[Abstract]
+#elif !TVOS
+		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
+		[Abstract]
+#else
+		[NoMac, NoMacCatalyst, TV (16,0), NoiOS]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 13, 4)]
-		[NoTV, iOS (13, 0)]
+
+#else
+		[MacCatalyst (13, 4), TV (16, 0), iOS (13, 0)]
+#endif
 		[Export ("supportsRasterizationRateMapWithLayerCount:")]
 		bool SupportsRasterizationRateMap (nuint layerCount);
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (14, 0), Mac (11, 0), TV (16,0), iOS (13, 0)]
 		[Abstract]
+#elif !TVOS
+		[MacCatalyst (14, 0), Mac (11, 0), NoTV, iOS (13, 0)]
+		[Abstract]
+#else
+		[NoMacCatalyst, NoMac, TV (16,0), NoiOS]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[Mac (11, 0), NoTV, iOS (13, 0)]
+
+#else
+		[MacCatalyst (14, 0), Mac (11, 0), TV (16, 0), iOS (13, 0)]
+#endif
 		[Export ("sparseTileSizeWithTextureType:pixelFormat:sampleCount:")]
 		MTLSize GetSparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount);
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (14, 0), Mac (11, 0), TV (16,0), iOS (13, 0)]
 		[Abstract]
+#elif !TVOS
+		[MacCatalyst (14, 0), Mac (11, 0), NoTV, iOS (13, 0)]
+		[Abstract]
+#else
+		[NoMacCatalyst, NoMac, TV (16,0), NoiOS]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[Mac (11, 0), NoTV, iOS (13, 0)]
+
+#else
+		[MacCatalyst (14, 0), Mac (11, 0), TV (16, 0), iOS (13, 0)]
+#endif
 		[Export ("sparseTileSizeInBytes")]
 		nuint SparseTileSizeInBytes { get; }
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
 		[Abstract]
+#elif !TVOS
+		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
+		[Abstract]
+#else
+		[NoMac, NoMacCatalyst, TV (16,0), NoiOS]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 13, 4)]
-		[NoTV, iOS (13, 0)]
+
+#else
+		[MacCatalyst (13, 4), TV (16, 0), iOS (13, 0)]
+#endif
 		[Export ("newRasterizationRateMapWithDescriptor:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLRasterizationRateMap CreateRasterizationRateMap (MTLRasterizationRateMapDescriptor descriptor);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[Mac (11, 0), NoTV, iOS (13, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0)]
 		[Export ("convertSparseTileRegions:toPixelRegions:withTileSize:numRegions:")]
 		void ConvertSparseTileRegions (IntPtr tileRegions, IntPtr pixelRegions, MTLSize tileSize, nuint numRegions);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[Mac (11, 0), NoTV, iOS (13, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0)]
 		[Export ("convertSparsePixelRegions:toTileRegions:withTileSize:alignmentMode:numRegions:")]
 		void ConvertSparsePixelRegions (IntPtr pixelRegions, IntPtr tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions);
 
@@ -1549,9 +1766,19 @@ namespace Metal {
 		bool BarycentricCoordsSupported { [Bind ("areBarycentricCoordsSupported")] get; }
 
 #if NET
+#if XAMCORE_5_0
+		[iOS (14, 0), TV (16,0), NoMacCatalyst]
 		[Abstract]
-#endif
+#elif !TVOS
 		[iOS (14, 0), NoTV, NoMacCatalyst]
+		[Abstract]
+#else
+		[NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[iOS (14, 0), TV (16, 0), NoMacCatalyst]
+#endif
 		[Export ("supportsShaderBarycentricCoordinates")]
 		bool SupportsShaderBarycentricCoordinates { get; }
 
@@ -1639,25 +1866,40 @@ namespace Metal {
 		[Export ("locationNumber")]
 		nuint LocationNumber { get; }
 
-		[Mac (11, 0), NoTV]
-		[iOS (14, 5)]
-		[MacCatalyst (14, 5)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), TV (16,0), iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
+		[Abstract]
+#else
+		[NoMac, TV (16,0), NoiOS, NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), TV (16, 0), iOS (14, 5), MacCatalyst (14, 5)]
 #endif
 		[Export ("supports32BitFloatFiltering")]
 		bool Supports32BitFloatFiltering { get; }
 
-		[Mac (11, 0), NoTV]
-		[iOS (14, 5)]
-		[MacCatalyst (14, 5)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), TV (16,0), iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
+		[Abstract]
+#else
+		[NoMac, TV (16,0), NoiOS, NoMacCatalyst]
+#endif
+#else
+		[Mac (11, 0), TV (16, 0), iOS (14, 5), MacCatalyst (14, 5)]
 #endif
 		[Export ("supports32BitMSAA")]
 		bool Supports32BitMsaa { get; }
 
-		[NoiOS, Mac (11, 0), NoTV]
+		[Mac (11, 0), iOS (16, 4), TV (16, 4), NoMacCatalyst]
 		[NoMacCatalyst]
 #if NET
 		[Abstract]
@@ -1719,57 +1961,110 @@ namespace Metal {
 		[return: Release]
 		IMTLBinaryArchive CreateBinaryArchive (MTLBinaryArchiveDescriptor descriptor, [NullAllowed] out NSError error);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (!6,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("supportsRaytracing")]
 		bool SupportsRaytracing { get; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("accelerationStructureSizesWithDescriptor:")]
 #pragma warning disable 0618 // warning CS0618: 'MTLAccelerationStructureSizes' is obsolete: 'This API is not available on this platform.'
 		MTLAccelerationStructureSizes CreateAccelerationStructureSizes (MTLAccelerationStructureDescriptor descriptor);
 #pragma warning restore
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newAccelerationStructureWithSize:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLAccelerationStructure CreateAccelerationStructure (nuint size);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+		
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newAccelerationStructureWithDescriptor:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("supportsFunctionPointers")]
 		bool SupportsFunctionPointers { get; }
 
-		[Mac (11, 0), NoTV]
-		[iOS (14, 5)]
-		[MacCatalyst (14, 5)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), TV (16,0), iOS (14, 5), MacCatalyst (14, 5)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), NoTV, iOS (14, 5), MacCatalyst (14, 5)]
+		[Abstract]
+#else
+		[NoMac, TV (16,0), NoiOS, NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), TV (16, 0), iOS (14, 5), MacCatalyst (14, 5)]
 #endif
 		[Export ("supportsQueryTextureLOD")]
 		bool SupportsQueryTextureLod { get; }
@@ -1782,23 +2077,53 @@ namespace Metal {
 		bool SupportsRenderDynamicLibraries { get; }
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0)]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
+		[Abstract]
+#else
+		[NoMac, NoiOS, NoMacCatalyst, TV (16,0)]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0)]
+#endif
 		[Export ("supportsRaytracingFromRender")]
 		bool SupportsRaytracingFromRender { get; }
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0)]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV]
+		[Abstract]
+#else
+		[NoMac, NoiOS, NoMacCatalyst, TV (16,0)]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0)]
+#endif
 		[Export ("supportsPrimitiveMotionBlur")]
 		bool SupportsPrimitiveMotionBlur { get; }
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16,0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, NoMacCatalyst, TV (16,0), NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0), NoWatch]
+#endif
 		[Export ("supportsFunctionPointersFromRender")]
 		bool SupportsFunctionPointersFromRender { get; }
 
@@ -1818,6 +2143,78 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		[Export ("newLibraryWithStitchedDescriptor:completionHandler:")]
 		void CreateLibrary (MTLStitchedLibraryDescriptor descriptor, Action<IMTLLibrary, NSError> completionHandler);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("architecture")]
+		MTLArchitecture Architecture { get; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("heapAccelerationStructureSizeAndAlignWithDescriptor:")]
+		MTLSizeAndAlign GetHeapAccelerationStructureSizeAndAlign (MTLAccelerationStructureDescriptor descriptor);
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("heapAccelerationStructureSizeAndAlignWithSize:")]
+		MTLSizeAndAlign GetHeapAccelerationStructureSizeAndAlign (nuint size);
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("newArgumentEncoderWithBufferBinding:")]
+		IMTLArgumentEncoder CreateArgumentEncoder (IMTLBufferBinding bufferBinding);
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("newRenderPipelineStateWithMeshDescriptor:options:reflection:error:")]
+		[return: NullAllowed]
+		IMTLRenderPipelineState CreateRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("newRenderPipelineStateWithMeshDescriptor:options:completionHandler:")]
+		void CreateRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, MTLNewRenderPipelineStateWithReflectionCompletionHandler completionHandler);
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("sparseTileSizeInBytesForSparsePageSize:")]
+		nuint GetSparseTileSizeInBytes (MTLSparsePageSize sparsePageSize);
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("sparseTileSizeWithTextureType:pixelFormat:sampleCount:sparsePageSize:")]
+		MTLSize GetSparseTileSize (MTLTextureType textureType, MTLPixelFormat pixelFormat, nuint sampleCount, MTLSparsePageSize sparsePageSize);
+
+		[NoiOS, Mac (13, 3), NoTV, NoMacCatalyst]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("maximumConcurrentCompilationTaskCount")]
+		nuint MaximumConcurrentCompilationTaskCount { get; }
+
+		[NoiOS, Mac (13, 3), NoTV, NoMacCatalyst]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("shouldMaximizeConcurrentCompilation")]
+		bool ShouldMaximizeConcurrentCompilation { get; set; }
+
 	}
 
 	interface IMTLDrawable { }
@@ -1941,6 +2338,10 @@ namespace Metal {
 		[Abstract, Export ("mipmapLevelCount")]
 		nuint MipmapLevelCount { get; }
 
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Abstract, Export ("sampleCount")]
 		nuint SampleCount { get; }
 
@@ -1958,9 +2359,19 @@ namespace Metal {
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; }
 
-		[NoMac, iOS (15, 0), NoMacCatalyst, NoTV, NoWatch]
 #if NET
+#if XAMCORE_5_0
+		[Mac (12,5), iOS (15, 0), NoMacCatalyst, TV (16,0), NoWatch]
 		[Abstract]
+#elif !TVOS
+		[Mac (12,5), iOS (15, 0), NoMacCatalyst, NoTV, NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, NoMacCatalyst, TV (16,0), NoWatch]
+#endif
+
+#else
+		[Mac (12, 5), iOS (15, 0), NoMacCatalyst, TV (16, 0), NoWatch]
 #endif
 		[Export ("compressionType")]
 		MTLTextureCompressionType CompressionType { get; }
@@ -2038,21 +2449,21 @@ namespace Metal {
 		[Abstract]
 #endif
 
-		[Mac (11, 0), NoTV, iOS (13, 0), MacCatalyst (15, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("firstMipmapInTail")]
 		nuint FirstMipmapInTail { get; }
 
-#if NET && !__MACOS__ && !__MACCATALYST__
+#if NET && !__MACOS__ && !__MACCATALYST__ && !TVOS
 		[Abstract]
 #endif
-		[Mac (11, 0), NoTV, iOS (13, 0), MacCatalyst (15, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("tailSizeInBytes")]
 		nuint TailSizeInBytes { get; }
 
-#if NET && !__MACOS__ && !__MACCATALYST__
+#if NET && !__MACOS__ && !__MACCATALYST__ && !TVOS
 		[Abstract]
 #endif
-		[Mac (11, 0), NoTV, iOS (13, 0), MacCatalyst (15, 0)]
+		[Mac (11, 0), TV (16, 0), iOS (13, 0), MacCatalyst (15, 0)]
 		[Export ("isSparse")]
 		bool IsSparse { get; }
 
@@ -2091,6 +2502,13 @@ namespace Metal {
 		[return: NullAllowed]
 		[return: Release]
 		IMTLTexture CreateRemoteTexture (IMTLDevice device);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
 	}
 
 
@@ -2116,6 +2534,10 @@ namespace Metal {
 		[Export ("mipmapLevelCount")]
 		nuint MipmapLevelCount { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("sampleCount")]
 		nuint SampleCount { get; set; }
 
@@ -2153,7 +2575,7 @@ namespace Metal {
 		[Export ("allowGPUOptimizedContents")]
 		bool AllowGpuOptimizedContents { get; set; }
 
-		[NoMac, iOS (15, 0), NoMacCatalyst, NoTV, NoWatch]
+		[Mac (12, 5), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 		[Export ("compressionType")]
 		MTLTextureCompressionType CompressionType { get; set; }
 
@@ -2207,7 +2629,7 @@ namespace Metal {
 		[Export ("lodAverage")]
 		bool LodAverage { get; set; }
 
-		[iOS (14, 0), NoTV, NoWatch]
+		[iOS (14, 0), TV (17, 0), NoWatch]
 		[MacCatalyst (14, 0)]
 		[Export ("borderColor", ArgumentSemantic.Assign)]
 		MTLSamplerBorderColor BorderColor { get; set; }
@@ -2236,6 +2658,13 @@ namespace Metal {
 
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2258,6 +2687,10 @@ namespace Metal {
 		[NullAllowed]
 		MTLVertexDescriptor VertexDescriptor { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("sampleCount")]
 		nuint SampleCount { get; set; }
 
@@ -2345,7 +2778,7 @@ namespace Metal {
 		bool SupportIndirectCommandBuffers { get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
-		[NoTV, iOS (13, 0)]
+		[TV (17, 0), iOS (13, 0)]
 		[Export ("maxVertexAmplificationCount")]
 		nuint MaxVertexAmplificationCount { get; set; }
 
@@ -2455,39 +2888,116 @@ namespace Metal {
 		bool SupportIndirectCommandBuffers { get; }
 
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), NoWatch, MacCatalyst (15, 0)]
+#endif
 		[Export ("functionHandleWithFunction:stage:")]
 		[return: NullAllowed]
 		IMTLFunctionHandle FunctionHandleWithFunction (IMTLFunction function, MTLRenderStages stage);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (!6,0), NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), NoWatch, MacCatalyst (15, 0)]
+#endif
 		[Export ("newVisibleFunctionTableWithDescriptor:stage:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLVisibleFunctionTable NewVisibleFunctionTableWithDescriptor (MTLVisibleFunctionTableDescriptor descriptor, MTLRenderStages stage);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), NoWatch, MacCatalyst (15, 0)]
+#endif
 		[Export ("newIntersectionFunctionTableWithDescriptor:stage:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLIntersectionFunctionTable NewIntersectionFunctionTableWithDescriptor (MTLIntersectionFunctionTableDescriptor descriptor, MTLRenderStages stage);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), NoWatch, MacCatalyst (15, 0)]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, NoWatch, MacCatalyst (15, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoWatch, NoMacCatalyst]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), NoWatch, MacCatalyst (15, 0)]
+#endif
 		[Export ("newRenderPipelineStateWithAdditionalBinaryFunctions:error:")]
 		[return: NullAllowed]
 		[return: Release]
 		IMTLRenderPipelineState NewRenderPipelineStateWithAdditionalBinaryFunctions (MTLRenderPipelineFunctionsDescriptor additionalBinaryFunctions, [NullAllowed] out NSError error);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Abstract]
+		[Export ("meshThreadExecutionWidth")]
+		nuint MeshThreadExecutionWidth { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Abstract]
+		[Export ("maxTotalThreadgroupsPerMeshGrid")]
+		nuint MaxTotalThreadgroupsPerMeshGrid { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Abstract]
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("maxTotalThreadsPerMeshThreadgroup")]
+		nuint MaxTotalThreadsPerMeshThreadgroup { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("maxTotalThreadsPerObjectThreadgroup")]
+		nuint MaxTotalThreadsPerObjectThreadgroup { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("objectThreadExecutionWidth")]
+		nuint ObjectThreadExecutionWidth { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -2743,10 +3253,19 @@ namespace Metal {
 		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (nuint bufferIndex, [NullAllowed] out MTLArgument reflection);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("options")]
 		MTLFunctionOptions Options { get; }
@@ -2812,18 +3331,36 @@ namespace Metal {
 		IMTLFunction CreateFunction (MTLFunctionDescriptor descriptor, [NullAllowed] out NSError error);
 
 		// protocol, so no Async
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newIntersectionFunctionWithDescriptor:completionHandler:")]
 		void CreateIntersectionFunction (MTLIntersectionFunctionDescriptor descriptor, Action<IMTLFunction, NSError> completionHandler);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+		
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("newIntersectionFunctionWithDescriptor:error:")]
 		[return: NullAllowed]
@@ -2885,6 +3422,22 @@ namespace Metal {
 		[Mac (11, 0), iOS (13, 0), TV (14, 0)]
 		[Export ("preserveInvariance")]
 		bool PreserveInvariance { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+		[Export ("optimizationLevel", ArgumentSemantic.Assign)]
+		MTLLibraryOptimizationLevel OptimizationLevel { get; set; }
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), TV (16, 4)]
+		[Export ("compileSymbolVisibility", ArgumentSemantic.Assign)]
+		MTLCompileSymbolVisibility CompileSymbolVisibility { get; set; }
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), TV (16, 4)]
+		[Export ("allowReferencingUndefinedSymbols")]
+		bool AllowReferencingUndefinedSymbols { get; set; }
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4), TV (16, 4)]
+		[Export ("maxTotalThreadsPerThreadgroup")]
+		nuint MaxTotalThreadsPerThreadgroup { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -3421,16 +3974,32 @@ namespace Metal {
 		[Export ("executeCommandsInBuffer:indirectBuffer:indirectBufferOffset:")]
 		void ExecuteCommands (IMTLIndirectCommandBuffer indirectCommandbuffer, IMTLBuffer indirectRangeBuffer, nuint indirectBufferOffset);
 
-		[NoiOS, NoTV, MacCatalyst (15, 0)]
 #if NET
+
+#if MONOMAC || __MACCATALYST__
+		[NoiOS, NoTV, MacCatalyst (15, 0)]
 		[Abstract]
+#else
+		[iOS (16,0), TV (16,0), NoMacCatalyst, NoMac]
+#endif
+
+#else
+		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
 #endif
 		[Export ("memoryBarrierWithScope:afterStages:beforeStages:")]
 		void MemoryBarrier (MTLBarrierScope scope, MTLRenderStages after, MTLRenderStages before);
 
-		[NoiOS, NoTV, MacCatalyst (15, 0)]
 #if NET
+
+#if MONOMAC || __MACCATALYST__
+		[NoiOS, NoTV, MacCatalyst (15, 0)]
 		[Abstract]
+#else
+		[iOS (16,0), TV (16,0), NoMacCatalyst, NoMac]
+#endif
+
+#else
+		[iOS (16, 0), TV (16, 0), MacCatalyst (15, 0)]
 #endif
 		[Export ("memoryBarrierWithResources:count:afterStages:beforeStages:")]
 		void MemoryBarrier (IMTLResource [] resources, nuint count, MTLRenderStages after, MTLRenderStages before);
@@ -3562,10 +4131,19 @@ namespace Metal {
 		void SetThreadgroupMemoryLength (nuint length, nuint offset, nuint index);
 
 #if NET
+#if XAMCORE_5_0
+		[MacCatalyst (13, 4), TV (16,0), iOS (13, 0)]
 		[Abstract]
+#elif !TVOS
+		[MacCatalyst (13, 4), NoTV, iOS (13, 0)]
+		[Abstract]
+#else
+		[NoMacCatalyst, TV (16,0), NoiOS, NoMac]
 #endif
-		[Introduced (PlatformName.MacCatalyst, 13, 4)]
-		[NoTV, iOS (13, 0)]
+
+#else
+		[MacCatalyst (13, 4), TV (16, 0), iOS (13, 0)]
+#endif
 		[Export ("setVertexAmplificationCount:viewMappings:")]
 		void SetVertexAmplificationCount (nuint count, MTLVertexAmplificationViewMapping viewMappings);
 
@@ -3614,109 +4192,462 @@ namespace Metal {
 #endif
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setVertexVisibleFunctionTable:atBufferIndex:")]
 		void SetVertexVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setVertexVisibleFunctionTables:withBufferRange:")]
 		void SetVertexVisibleFunctionTables (IMTLVisibleFunctionTable [] functionTables, NSRange range);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setVertexIntersectionFunctionTable:atBufferIndex:")]
 		void SetVertexIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setVertexIntersectionFunctionTables:withBufferRange:")]
 		void SetVertexIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTable, NSRange range);
 
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setVertexAccelerationStructure:atBufferIndex:")]
 		void SetVertexAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setFragmentAccelerationStructure:atBufferIndex:")]
 		void SetFragmentAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setFragmentIntersectionFunctionTable:atBufferIndex:")]
 		void SetFragmentIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
+
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setFragmentIntersectionFunctionTables:withBufferRange:")]
 		void SetFragmentIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTable, NSRange range);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setFragmentVisibleFunctionTable:atBufferIndex:")]
 		void SetFragmentVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setFragmentVisibleFunctionTables:withBufferRange:")]
 		void SetFragmentVisibleFunctionTables (IMTLVisibleFunctionTable [] functionTables, NSRange range);
 
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setTileAccelerationStructure:atBufferIndex:")]
 		void SetTileAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint bufferIndex);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setTileIntersectionFunctionTable:atBufferIndex:")]
 		void SetTileIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint bufferIndex);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setTileIntersectionFunctionTables:withBufferRange:")]
 		void SetTileIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTable, NSRange range);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setTileVisibleFunctionTable:atBufferIndex:")]
 		void SetTileVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable functionTable, nuint bufferIndex);
 
 #if NET
+#if XAMCORE_5_0
+		[Mac (12, 0), iOS (15, 0), TV (16,0), MacCatalyst (15, 0), NoWatch]
 		[Abstract]
-#endif
+#elif !TVOS
 		[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst, NoWatch]
+#endif
+
+#else
+		[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
+#endif
 		[Export ("setTileVisibleFunctionTables:withBufferRange:")]
 		void SetTileVisibleFunctionTables (IMTLVisibleFunctionTable [] functionTables, NSRange range);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setVertexBuffer:offset:attributeStride:atIndex:")]
+		void SetVertexBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setVertexBuffers:offsets:attributeStrides:withRange:")]
+		void SetVertexBuffers (IntPtr buffers, IntPtr offsets, IntPtr strides, NSRange range);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setVertexBufferOffset:attributeStride:atIndex:")]
+		void SetVertexBufferOffset (nuint offset, nuint stride, nuint index);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setVertexBytes:length:attributeStride:atIndex:")]
+		void SetVertexBytes (IntPtr bytes, nuint length, nuint stride, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
+		void DrawMeshThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("drawMeshThreadgroupsWithIndirectBuffer:indirectBufferOffset:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
+		void DrawMeshThreadgroups (IMTLBuffer indirectBuffer, nuint indirectBufferOffset, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
+		void DrawMeshThreads (MTLSize threadsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshBufferOffset:atIndex:")]
+		void SetMeshBufferOffset (nuint offset, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshBuffers:offsets:withRange:")]
+		void SetMeshBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshTexture:atIndex:")]
+		void SetMeshTexture ([NullAllowed] IMTLTexture texture, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshTextures:withRange:")]
+		void SetMeshTextures (IntPtr textures, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshSamplerState:atIndex:")]
+		void SetMeshSamplerState ([NullAllowed] IMTLSamplerState sampler, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshSamplerStates:withRange:")]
+		void SetMeshSamplerStates (IntPtr samplers, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshSamplerState:lodMinClamp:lodMaxClamp:atIndex:")]
+		void SetMeshSamplerState ([NullAllowed] IMTLSamplerState sampler, float lodMinClamp, float lodMaxClamp, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
+		void SetMeshSamplerStates (IntPtr samplers, IntPtr lodMinClamps, IntPtr lodMaxClamps, NSRange range);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectBuffer:offset:atIndex:")]
+		void SetObjectBuffer (IMTLBuffer buffer, nuint offset, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectBufferOffset:atIndex:")]
+		void SetObjectBufferOffset (nuint offset, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectBuffers:offsets:withRange:")]
+		void SetObjectBuffers (IntPtr buffers, IntPtr offsets, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectBytes:length:atIndex:")]
+		void SetObjectBytes (IntPtr bytes, nuint length, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshBuffer:offset:atIndex:")]
+		void SetMeshBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshBytes:length:atIndex:")]
+		void SetMeshBytes (IntPtr bytes, nuint length, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectSamplerState:atIndex:")]
+		void SetObjectSamplerState ([NullAllowed] IMTLSamplerState sampler, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectSamplerState:lodMinClamp:lodMaxClamp:atIndex:")]
+		void SetObjectSamplerState ([NullAllowed] IMTLSamplerState sampler, float lodMinClamp, float lodMaxClamp, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectSamplerStates:lodMinClamps:lodMaxClamps:withRange:")]
+		void SetObjectSamplerStates (IntPtr samplers, IntPtr lodMinClamps, IntPtr lodMaxClamps, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectSamplerStates:withRange:")]
+		void SetObjectSamplerStates (IntPtr samplers, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectTexture:atIndex:")]
+		void SetObjectTexture ([NullAllowed] IMTLTexture texture, nuint index);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectTextures:withRange:")]
+		void SetObjectTextures (IntPtr textures, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectThreadgroupMemoryLength:atIndex:")]
+		void SetObjectThreadgroupMemoryLength (nuint length, nuint index);
 	}
 
 	[MacCatalyst (13, 1)]
@@ -3754,6 +4685,10 @@ namespace Metal {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPipelineReflection {
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("vertexArguments")]
 		[NullAllowed]
 #if NET
@@ -3762,6 +4697,10 @@ namespace Metal {
 		NSObject [] VertexArguments { get; }
 #endif
 
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("fragmentArguments")]
 		[NullAllowed]
 #if NET
@@ -3770,11 +4709,35 @@ namespace Metal {
 		NSObject [] FragmentArguments { get; }
 #endif
 
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Mac (11, 0), NoWatch]
 		[TV (14, 5)]
 		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("tileArguments")]
 		MTLArgument [] TileArguments { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("vertexBindings")]
+		IMTLBinding [] VertexBindings { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("fragmentBindings")]
+		IMTLBinding [] FragmentBindings { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("tileBindings")]
+		IMTLBinding [] TileBindings { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("objectBindings")]
+		IMTLBinding [] ObjectBindings { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("meshBindings")]
+		IMTLBinding [] MeshBindings { get; }
 	}
 
 	[MacCatalyst (13, 1)]
@@ -3951,7 +4914,7 @@ namespace Metal {
 		*/
 
 		[Introduced (PlatformName.MacCatalyst, 13, 4)]
-		[NoTV, iOS (13, 0)]
+		[TV (17, 0), iOS (13, 0)]
 		[NullAllowed, Export ("rasterizationRateMap", ArgumentSemantic.Strong)]
 		IMTLRasterizationRateMap RasterizationRateMap { get; set; }
 
@@ -3987,6 +4950,10 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (15, 0)]
 		[Export ("type", ArgumentSemantic.Assign)]
 		MTLHeapType Type { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("sparsePageSize", ArgumentSemantic.Assign)]
+		MTLSparsePageSize SparsePageSize { get; set; }
 
 	}
 
@@ -4089,6 +5056,38 @@ namespace Metal {
 		[return: NullAllowed]
 		[return: Release]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset);
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("newAccelerationStructureWithSize:")]
+		[return: NullAllowed, Release]
+		IMTLAccelerationStructure CreateAccelerationStructure (nuint size);
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("newAccelerationStructureWithDescriptor:")]
+		[return: NullAllowed, Release]
+		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor);
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("newAccelerationStructureWithSize:offset:")]
+		[return: NullAllowed, Release]
+		IMTLAccelerationStructure CreateAccelerationStructure (nuint size, nuint offset);
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Export ("newAccelerationStructureWithDescriptor:offset:")]
+		[return: NullAllowed, Release]
+		IMTLAccelerationStructure CreateAccelerationStructure (MTLAccelerationStructureDescriptor descriptor, nuint offset);
 	}
 
 	interface IMTLResource { }
@@ -4230,12 +5229,12 @@ namespace Metal {
 		[NullAllowed, Export ("linkedFunctions", ArgumentSemantic.Copy)]
 		MTLLinkedFunctions LinkedFunctions { get; set; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
+		[Mac (11, 0), iOS (14, 0), TV (17, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("supportAddingBinaryFunctions")]
 		bool SupportAddingBinaryFunctions { get; set; }
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
+		[Mac (11, 0), iOS (14, 0), TV (17, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("maxCallStackDepth")]
 		nuint MaxCallStackDepth { get; set; }
@@ -4579,42 +5578,88 @@ namespace Metal {
 		[Export ("setComputePipelineStates:withRange:")]
 		void SetComputePipelineStates (IMTLComputePipelineState [] pipelines, NSRange range);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setAccelerationStructure:atIndex:")]
 		void SetAccelerationStructure ([NullAllowed] IMTLAccelerationStructure accelerationStructure, nuint index);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setVisibleFunctionTable:atIndex:")]
 		void SetVisibleFunctionTable ([NullAllowed] IMTLVisibleFunctionTable visibleFunctionTable, nuint index);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setVisibleFunctionTables:withRange:")]
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable [] visibleFunctionTables, NSRange range);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setIntersectionFunctionTable:atIndex:")]
 		void SetIntersectionFunctionTable ([NullAllowed] IMTLIntersectionFunctionTable intersectionFunctionTable, nuint index);
 
-		[Mac (11, 0), iOS (14, 0), NoTV]
-		[MacCatalyst (14, 0)]
 #if NET
+#if XAMCORE_5_0
+		[Mac (11, 0), iOS (14, 0), TV (16,0), MacCatalyst (14, 0)]
 		[Abstract]
+#elif !TVOS
+		[Mac (11, 0), iOS (14, 0), NoTV, MacCatalyst (14, 0)]
+		[Abstract]
+#else
+		[NoMac, NoiOS, TV (16,0), NoMacCatalyst]
+#endif
+
+#else
+		[Mac (11, 0), iOS (14, 0), TV (16, 0), MacCatalyst (14, 0)]
 #endif
 		[Export ("setIntersectionFunctionTables:withRange:")]
 		void SetIntersectionFunctionTables (IMTLIntersectionFunctionTable [] intersectionFunctionTables, NSRange range);
@@ -4725,7 +5770,7 @@ namespace Metal {
 		[NullAllowed, Export ("binaryArchives", ArgumentSemantic.Copy)]
 		IMTLBinaryArchive [] BinaryArchives { get; set; }
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 		[Export ("supportAddingBinaryFunctions")]
 		bool SupportAddingBinaryFunctions { get; set; }
 
@@ -4733,7 +5778,7 @@ namespace Metal {
 		[Export ("preloadedLibraries", ArgumentSemantic.Copy)]
 		IMTLDynamicLibrary [] PreloadedLibraries { get; set; }
 
-		[Mac (11, 0), iOS (14, 0), MacCatalyst (15, 0), NoTV, NoWatch]
+		[Mac (11, 0), iOS (14, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 		[Export ("maxCallStackDepth")]
 		nuint MaxCallStackDepth { get; set; }
 
@@ -4853,6 +5898,62 @@ namespace Metal {
 		[Abstract]
 		[Export ("reset")]
 		void Reset ();
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setVertexBuffer:offset:attributeStride:atIndex:")]
+		void SetVertexBuffer (IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectThreadgroupMemoryLength:atIndex:")]
+		void SetObjectThreadgroupMemoryLength (nuint length, nuint index);
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setObjectBuffer:offset:atIndex:")]
+		void SetObjectBuffer (IMTLBuffer buffer, nuint offset, nuint index);
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setMeshBuffer:offset:atIndex:")]
+		void SetMeshBuffer (IMTLBuffer buffer, nuint offset, nuint index);
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("drawMeshThreadgroups:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
+		void DrawMeshThreadgroups (MTLSize threadgroupsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("drawMeshThreads:threadsPerObjectThreadgroup:threadsPerMeshThreadgroup:")]
+		void DrawMeshThreads (MTLSize threadsPerGrid, MTLSize threadsPerObjectThreadgroup, MTLSize threadsPerMeshThreadgroup);
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setBarrier")]
+		void SetBarrier ();
+
+		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("clearBarrier")]
+		void ClearBarrier ();
 	}
 
 	[iOS (12, 0), TV (12, 0)]
@@ -4880,6 +5981,31 @@ namespace Metal {
 		[MacCatalyst (14, 0)]
 		[Export ("maxKernelBufferBindCount")]
 		nuint MaxKernelBufferBindCount { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("maxKernelThreadgroupMemoryBindCount")]
+		nuint MaxKernelThreadgroupMemoryBindCount { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("maxObjectBufferBindCount")]
+		nuint MaxObjectBufferBindCount { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("maxMeshBufferBindCount")]
+		nuint MaxMeshBufferBindCount { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("maxObjectThreadgroupMemoryBindCount")]
+		nuint MaxObjectThreadgroupMemoryBindCount { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportDynamicAttributeStride")]
+		bool SupportDynamicAttributeStride { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportRayTracing")]
+		bool SupportRayTracing { get; set; }
+
 	}
 
 	interface IMTLIndirectCommandBuffer { }
@@ -4907,6 +6033,13 @@ namespace Metal {
 		[MacCatalyst (13, 1)]
 		[Export ("indirectComputeCommandAtIndex:")]
 		IMTLIndirectComputeCommand GetIndirectComputeCommand (nuint commandIndex);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceID { get; }
 	}
 
 	[iOS (13, 0), TV (13, 0)]
@@ -4922,7 +6055,7 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[NoTV, iOS (13, 0)]
+	[TV (16, 0), iOS (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRasterizationRateSampleArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -4933,7 +6066,7 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[NoTV, iOS (13, 0)]
+	[TV (16, 0), iOS (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRasterizationRateMapDescriptor : NSCopying {
 		[Static]
@@ -4973,7 +6106,7 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[NoTV, iOS (13, 0)]
+	[TV (16, 0), iOS (13, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MTLRasterizationRateLayerDescriptor : NSCopying {
@@ -5014,7 +6147,7 @@ namespace Metal {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[NoTV, iOS (13, 0)]
+	[TV (16, 0), iOS (13, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLRasterizationRateLayerArray {
 		[Export ("objectAtIndexedSubscript:")]
@@ -5028,7 +6161,7 @@ namespace Metal {
 	interface IMTLRasterizationRateMap { }
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
-	[NoTV, iOS (13, 0)]
+	[TV (16, 0), iOS (13, 0)]
 	[Protocol]
 	interface MTLRasterizationRateMap {
 		[Abstract]
@@ -5075,7 +6208,7 @@ namespace Metal {
 	interface IMTLResourceStateCommandEncoder { }
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Mac (11, 0), iOS (13, 0), NoTV]
+	[Mac (11, 0), iOS (13, 0), TV (16, 0)]
 	[Protocol]
 	interface MTLResourceStateCommandEncoder : MTLCommandEncoder {
 #if !MONOMAC && !__MACCATALYST__
@@ -5107,6 +6240,13 @@ namespace Metal {
 #endif
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:")]
+		void MoveTextureMappings (IMTLTexture sourceTexture, nuint sourceSlice, nuint sourceLevel, MTLOrigin sourceOrigin, MTLSize sourceSize, IMTLTexture destinationTexture, nuint destinationSlice, nuint destinationLevel, MTLOrigin destinationOrigin);
 	}
 
 	[iOS (13, 0), TV (13, 0)]
@@ -5172,6 +6312,13 @@ namespace Metal {
 #endif
 		[Export ("setImageblockWidth:height:")]
 		void SetImageblock (nuint width, nuint height);
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setKernelBuffer:offset:attributeStride:atIndex:")]
+		void SetKernelBuffer (IMTLBuffer buffer, nuint offset, nuint stride, nuint index);
 	}
 
 	interface IMTLCounter { }
@@ -5255,16 +6402,21 @@ namespace Metal {
 	[MacCatalyst (14, 0)]
 	interface IMTLAccelerationStructure { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
 	interface MTLAccelerationStructure : MTLResource {
 		[Abstract]
 		[Export ("size")]
 		nuint Size { get; }
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+		[Abstract]
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
@@ -5286,15 +6438,16 @@ namespace Metal {
 		MTLAccelerationStructureBoundingBoxGeometryDescriptor Create ();
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLAccelerationStructureDescriptor : NSCopying {
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
 		[Export ("usage", ArgumentSemantic.Assign)]
 		MTLAccelerationStructureUsage Usage { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLAccelerationStructureGeometryDescriptor : NSCopying {
@@ -5310,9 +6463,25 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), NoWatch, MacCatalyst (15, 0)]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), NoWatch, MacCatalyst (16, 0)]
+		[NullAllowed, Export ("primitiveDataBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer PrimitiveDataBuffer { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), NoWatch, MacCatalyst (16, 0)]
+		[Export ("primitiveDataBufferOffset")]
+		nuint PrimitiveDataBufferOffset { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), NoWatch, MacCatalyst (16, 0)]
+		[Export ("primitiveDataStride")]
+		nuint PrimitiveDataStride { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), NoWatch, MacCatalyst (16, 0)]
+		[Export ("primitiveDataElementSize")]
+		nuint PrimitiveDataElementSize { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
 	interface MTLAccelerationStructureTriangleGeometryDescriptor {
@@ -5340,6 +6509,18 @@ namespace Metal {
 		[Static]
 		[Export ("descriptor")]
 		MTLAccelerationStructureTriangleGeometryDescriptor Create ();
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+		[Export ("vertexFormat", ArgumentSemantic.Assign)]
+		MTLAttributeFormat VertexFormat { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+		[NullAllowed, Export ("transformationMatrixBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer TransformationMatrixBuffer { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
+		[Export ("transformationMatrixBufferOffset")]
+		nuint TransformationMatrixBufferOffset { get; set; }
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
@@ -5469,7 +6650,7 @@ namespace Metal {
 		IMTLBinaryArchive [] BinaryArchives { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLAccelerationStructureDescriptor))]
@@ -5493,7 +6674,7 @@ namespace Metal {
 		[Export ("descriptor")]
 		MTLInstanceAccelerationStructureDescriptor Create ();
 
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 		[Export ("instanceDescriptorType", ArgumentSemantic.Assign)]
 		MTLAccelerationStructureInstanceDescriptorType InstanceDescriptorType { get; set; }
 
@@ -5510,13 +6691,13 @@ namespace Metal {
 		nuint MotionTransformCount { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLFunctionDescriptor))]
 	interface MTLIntersectionFunctionDescriptor : NSCopying { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -5541,7 +6722,7 @@ namespace Metal {
 		[NullAllowed, Export ("functions", ArgumentSemantic.Copy)]
 		IMTLFunction [] Functions { get; set; }
 
-		[NoTV]
+		[TV (17, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("binaryFunctions", ArgumentSemantic.Copy)]
 		IMTLFunction [] BinaryFunctions { get; set; }
@@ -5570,7 +6751,7 @@ namespace Metal {
 		nuint MotionTransformCount { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (MTLAccelerationStructureDescriptor))]
@@ -5635,7 +6816,7 @@ namespace Metal {
 
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -5648,7 +6829,7 @@ namespace Metal {
 		MTLResourceStatePassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLResourceStatePassSampleBufferAttachmentDescriptor : NSCopying {
@@ -5662,7 +6843,7 @@ namespace Metal {
 		nuint EndOfEncoderSampleIndex { get; set; }
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface MTLResourceStatePassSampleBufferAttachmentDescriptorArray {
@@ -5674,7 +6855,7 @@ namespace Metal {
 
 	}
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -5689,7 +6870,7 @@ namespace Metal {
 
 	interface IMTLFunctionHandle { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
 	interface MTLFunctionHandle {
@@ -5708,7 +6889,7 @@ namespace Metal {
 
 	interface IMTLAccelerationStructureCommandEncoder { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
 	interface MTLAccelerationStructureCommandEncoder : MTLCommandEncoder {
@@ -5770,11 +6951,19 @@ namespace Metal {
 		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoWatch]
 		[Export ("writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType:")]
 		void WriteCompactedAccelerationStructureSize (IMTLAccelerationStructure accelerationStructure, IMTLBuffer buffer, nuint offset, MTLDataType sizeDataType);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("refitAccelerationStructure:descriptor:destination:scratchBuffer:scratchBufferOffset:options:")]
+		void RefitAccelerationStructure (IMTLAccelerationStructure sourceAccelerationStructure, MTLAccelerationStructureDescriptor descriptor, [NullAllowed] IMTLAccelerationStructure destinationAccelerationStructure, [NullAllowed] IMTLBuffer scratchBuffer, nuint scratchBufferOffset, MTLAccelerationStructureRefitOptions options);
+
 	}
 
 	interface IMTLVisibleFunctionTable { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
 	interface MTLVisibleFunctionTable : MTLResource {
@@ -5785,11 +6974,18 @@ namespace Metal {
 		[Abstract]
 		[Export ("setFunctions:withRange:")]
 		void SetFunctions (IMTLFunctionHandle [] functions, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
 	}
 
 	interface IMTLIntersectionFunctionTable { }
 
-	[Mac (11, 0), iOS (14, 0), NoTV]
+	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
 	interface MTLIntersectionFunctionTable : MTLResource {
@@ -5824,6 +7020,25 @@ namespace Metal {
 		[Abstract]
 		[Export ("setVisibleFunctionTables:withBufferRange:")]
 		void SetVisibleFunctionTables (IMTLVisibleFunctionTable [] functionTables, NSRange bufferRange);
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setOpaqueCurveIntersectionFunctionWithSignature:atIndex:")]
+		void SetOpaqueCurveIntersectionFunction (MTLIntersectionFunctionSignature signature, nuint index);
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("setOpaqueCurveIntersectionFunctionWithSignature:withRange:")]
+		void SetOpaqueCurveIntersectionFunction (MTLIntersectionFunctionSignature signature, NSRange range);
+
+		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("gpuResourceID")]
+		MTLResourceId GpuResourceId { get; }
 	}
 
 	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
@@ -5931,7 +7146,7 @@ namespace Metal {
 		IMTLFunction [] Functions { get; set; }
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+	[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface MTLRenderPipelineFunctionsDescriptor : NSCopying {
 		[NullAllowed, Export ("vertexAdditionalBinaryFunctions", ArgumentSemantic.Copy)]
@@ -5944,7 +7159,7 @@ namespace Metal {
 		IMTLFunction [] TileAdditionalBinaryFunctions { get; set; }
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+	[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface MTLMotionKeyframeData {
 		[NullAllowed, Export ("buffer", ArgumentSemantic.Retain)]
@@ -6020,7 +7235,7 @@ namespace Metal {
 		NativeHandle Constructor (string name, IMTLFunctionStitchingNode [] arguments, MTLFunctionStitchingFunctionNode [] controlDependencies);
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+	[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
 	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
 	interface MTLAccelerationStructureMotionTriangleGeometryDescriptor {
 		[Export ("vertexBuffers", ArgumentSemantic.Copy)]
@@ -6044,9 +7259,21 @@ namespace Metal {
 		[Static]
 		[Export ("descriptor")]
 		MTLAccelerationStructureMotionTriangleGeometryDescriptor Create ();
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Export ("vertexFormat", ArgumentSemantic.Assign)]
+		MTLAttributeFormat VertexFormat { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[NullAllowed, Export ("transformationMatrixBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer TransformationMatrixBuffer { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+		[Export ("transformationMatrixBufferOffset")]
+		nuint TransformationMatrixBufferOffset { get; set; }
 	}
 
-	[Mac (12, 0), iOS (15, 0), NoTV, MacCatalyst (15, 0), NoWatch]
+	[Mac (12, 0), iOS (15, 0), TV (16, 0), MacCatalyst (15, 0), NoWatch]
 	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
 	interface MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor {
 		[Export ("boundingBoxBuffers", ArgumentSemantic.Copy)]
@@ -6062,4 +7289,390 @@ namespace Metal {
 		[Export ("descriptor")]
 		MTLAccelerationStructureMotionBoundingBoxGeometryDescriptor Create ();
 	}
+
+	interface IMTLBinding { }
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[Protocol]
+	interface MTLBinding {
+		[Abstract]
+		[Export ("name")]
+		string Name { get; }
+
+		[Abstract]
+		[Export ("type")]
+		MTLBindingType Type { get; }
+
+		[Abstract]
+		[Export ("access")]
+		MTLBindingAccess Access { get; }
+
+		[Abstract]
+		[Export ("index")]
+		nuint Index { get; }
+
+		[Abstract]
+		[Export ("used")]
+		bool Used { [Bind ("isUsed")] get; }
+
+		[Abstract]
+		[Export ("argument")]
+		bool Argument { [Bind ("isArgument")] get; }
+	}
+
+	interface IMTLBufferBinding { }
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[Protocol]
+	interface MTLBufferBinding : MTLBinding {
+		[Abstract]
+		[Export ("bufferAlignment")]
+		nuint BufferAlignment { get; }
+
+		[Abstract]
+		[Export ("bufferDataSize")]
+		nuint BufferDataSize { get; }
+
+		[Abstract]
+		[Export ("bufferDataType")]
+		MTLDataType BufferDataType { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("bufferStructType")]
+		MTLStructType BufferStructType { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("bufferPointerType")]
+		MTLPointerType BufferPointerType { get; }
+	}
+
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[Protocol]
+	interface MTLObjectPayloadBinding : MTLBinding {
+		[Abstract]
+		[Export ("objectPayloadAlignment")]
+		nuint ObjectPayloadAlignment { get; }
+
+		[Abstract]
+		[Export ("objectPayloadDataSize")]
+		nuint ObjectPayloadDataSize { get; }
+	}
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[Protocol]
+	interface MTLTextureBinding : MTLBinding {
+		[Abstract]
+		[Export ("textureType")]
+		MTLTextureType TextureType { get; }
+
+		[Abstract]
+		[Export ("textureDataType")]
+		MTLDataType TextureDataType { get; }
+
+		[Abstract]
+		[Export ("depthTexture")]
+		bool DepthTexture { [Bind ("isDepthTexture")] get; }
+
+		[Abstract]
+		[Export ("arrayLength")]
+		nuint ArrayLength { get; }
+	}
+
+	[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
+	interface MTLAccelerationStructureCurveGeometryDescriptor {
+		[NullAllowed, Export ("controlPointBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer ControlPointBuffer { get; set; }
+
+		[Export ("controlPointBufferOffset")]
+		nuint ControlPointBufferOffset { get; set; }
+
+		[Export ("controlPointCount")]
+		nuint ControlPointCount { get; set; }
+
+		[Export ("controlPointStride")]
+		nuint ControlPointStride { get; set; }
+
+		[Export ("controlPointFormat", ArgumentSemantic.Assign)]
+		MTLAttributeFormat ControlPointFormat { get; set; }
+
+		[NullAllowed, Export ("radiusBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer RadiusBuffer { get; set; }
+
+		[Export ("radiusBufferOffset")]
+		nuint RadiusBufferOffset { get; set; }
+
+		[Export ("radiusFormat", ArgumentSemantic.Assign)]
+		MTLAttributeFormat RadiusFormat { get; set; }
+
+		[Export ("radiusStride")]
+		nuint RadiusStride { get; set; }
+
+		[NullAllowed, Export ("indexBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer IndexBuffer { get; set; }
+
+		[Export ("indexBufferOffset")]
+		nuint IndexBufferOffset { get; set; }
+
+		[Export ("indexType", ArgumentSemantic.Assign)]
+		MTLIndexType IndexType { get; set; }
+
+		[Export ("segmentCount")]
+		nuint SegmentCount { get; set; }
+
+		[Export ("segmentControlPointCount")]
+		nuint SegmentControlPointCount { get; set; }
+
+		[Export ("curveType", ArgumentSemantic.Assign)]
+		MTLCurveType CurveType { get; set; }
+
+		[Export ("curveBasis", ArgumentSemantic.Assign)]
+		MTLCurveBasis CurveBasis { get; set; }
+
+		[Export ("curveEndCaps", ArgumentSemantic.Assign)]
+		MTLCurveEndCaps CurveEndCaps { get; set; }
+
+		[Static]
+		[Export ("descriptor")]
+		MTLAccelerationStructureCurveGeometryDescriptor GetDescriptor ();
+	}
+
+	[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (MTLAccelerationStructureGeometryDescriptor))]
+	interface MTLAccelerationStructureMotionCurveGeometryDescriptor {
+		[Export ("controlPointBuffers", ArgumentSemantic.Copy)]
+		MTLMotionKeyframeData [] ControlPointBuffers { get; set; }
+
+		[Export ("controlPointCount")]
+		nuint ControlPointCount { get; set; }
+
+		[Export ("controlPointStride")]
+		nuint ControlPointStride { get; set; }
+
+		[Export ("controlPointFormat", ArgumentSemantic.Assign)]
+		MTLAttributeFormat ControlPointFormat { get; set; }
+
+		[Export ("radiusBuffers", ArgumentSemantic.Copy)]
+		MTLMotionKeyframeData [] RadiusBuffers { get; set; }
+
+		[Export ("radiusFormat", ArgumentSemantic.Assign)]
+		MTLAttributeFormat RadiusFormat { get; set; }
+
+		[Export ("radiusStride")]
+		nuint RadiusStride { get; set; }
+
+		[NullAllowed, Export ("indexBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer IndexBuffer { get; set; }
+
+		[Export ("indexBufferOffset")]
+		nuint IndexBufferOffset { get; set; }
+
+		[Export ("indexType", ArgumentSemantic.Assign)]
+		MTLIndexType IndexType { get; set; }
+
+		[Export ("segmentCount")]
+		nuint SegmentCount { get; set; }
+
+		[Export ("segmentControlPointCount")]
+		nuint SegmentControlPointCount { get; set; }
+
+		[Export ("curveType", ArgumentSemantic.Assign)]
+		MTLCurveType CurveType { get; set; }
+
+		[Export ("curveBasis", ArgumentSemantic.Assign)]
+		MTLCurveBasis CurveBasis { get; set; }
+
+		[Export ("curveEndCaps", ArgumentSemantic.Assign)]
+		MTLCurveEndCaps CurveEndCaps { get; set; }
+
+		[Static]
+		[Export ("descriptor")]
+		MTLAccelerationStructureMotionCurveGeometryDescriptor GetDescriptor ();
+	}
+
+	[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLArchitecture : NSCopying {
+		[Export ("name")]
+		string Name { get; }
+	}
+
+	[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (MTLAccelerationStructureDescriptor))]
+	interface MTLIndirectInstanceAccelerationStructureDescriptor {
+		[NullAllowed, Export ("instanceDescriptorBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer InstanceDescriptorBuffer { get; set; }
+
+		[Export ("instanceDescriptorBufferOffset")]
+		nuint InstanceDescriptorBufferOffset { get; set; }
+
+		[Export ("instanceDescriptorStride")]
+		nuint InstanceDescriptorStride { get; set; }
+
+		[Export ("maxInstanceCount")]
+		nuint MaxInstanceCount { get; set; }
+
+		[NullAllowed, Export ("instanceCountBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer InstanceCountBuffer { get; set; }
+
+		[Export ("instanceCountBufferOffset")]
+		nuint InstanceCountBufferOffset { get; set; }
+
+		[Export ("instanceDescriptorType", ArgumentSemantic.Assign)]
+		MTLAccelerationStructureInstanceDescriptorType InstanceDescriptorType { get; set; }
+
+		[NullAllowed, Export ("motionTransformBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer MotionTransformBuffer { get; set; }
+
+		[Export ("motionTransformBufferOffset")]
+		nuint MotionTransformBufferOffset { get; set; }
+
+		[Export ("maxMotionTransformCount")]
+		nuint MaxMotionTransformCount { get; set; }
+
+		[NullAllowed, Export ("motionTransformCountBuffer", ArgumentSemantic.Retain)]
+		IMTLBuffer MotionTransformCountBuffer { get; set; }
+
+		[Export ("motionTransformCountBufferOffset")]
+		nuint MotionTransformCountBufferOffset { get; set; }
+
+		[Static]
+		[Export ("descriptor")]
+		MTLIndirectInstanceAccelerationStructureDescriptor GetDescriptor ();
+	}
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLMeshRenderPipelineDescriptor : NSCopying {
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+
+		[NullAllowed, Export ("objectFunction", ArgumentSemantic.Strong)]
+		IMTLFunction ObjectFunction { get; set; }
+
+		[NullAllowed, Export ("meshFunction", ArgumentSemantic.Strong)]
+		IMTLFunction MeshFunction { get; set; }
+
+		[NullAllowed, Export ("fragmentFunction", ArgumentSemantic.Strong)]
+		IMTLFunction FragmentFunction { get; set; }
+
+		[Export ("maxTotalThreadsPerObjectThreadgroup")]
+		nuint MaxTotalThreadsPerObjectThreadgroup { get; set; }
+
+		[Export ("maxTotalThreadsPerMeshThreadgroup")]
+		nuint MaxTotalThreadsPerMeshThreadgroup { get; set; }
+
+		[Export ("objectThreadgroupSizeIsMultipleOfThreadExecutionWidth")]
+		bool ObjectThreadgroupSizeIsMultipleOfThreadExecutionWidth { get; set; }
+
+		[Export ("meshThreadgroupSizeIsMultipleOfThreadExecutionWidth")]
+		bool MeshThreadgroupSizeIsMultipleOfThreadExecutionWidth { get; set; }
+
+		[Export ("payloadMemoryLength")]
+		nuint PayloadMemoryLength { get; set; }
+
+		[Export ("maxTotalThreadgroupsPerMeshGrid")]
+		nuint MaxTotalThreadgroupsPerMeshGrid { get; set; }
+
+		[Export ("objectBuffers")]
+		MTLPipelineBufferDescriptorArray ObjectBuffers { get; }
+
+		[Export ("meshBuffers")]
+		MTLPipelineBufferDescriptorArray MeshBuffers { get; }
+
+		[Export ("fragmentBuffers")]
+		MTLPipelineBufferDescriptorArray FragmentBuffers { get; }
+
+		[Export ("rasterSampleCount")]
+		nuint RasterSampleCount { get; set; }
+
+		[Export ("alphaToCoverageEnabled")]
+		bool AlphaToCoverageEnabled { [Bind ("isAlphaToCoverageEnabled")] get; set; }
+
+		[Export ("alphaToOneEnabled")]
+		bool AlphaToOneEnabled { [Bind ("isAlphaToOneEnabled")] get; set; }
+
+		[Export ("rasterizationEnabled")]
+		bool RasterizationEnabled { [Bind ("isRasterizationEnabled")] get; set; }
+
+		[Export ("maxVertexAmplificationCount")]
+		nuint MaxVertexAmplificationCount { get; set; }
+
+		[Export ("colorAttachments")]
+		MTLRenderPipelineColorAttachmentDescriptorArray ColorAttachments { get; }
+
+		[Export ("depthAttachmentPixelFormat", ArgumentSemantic.Assign)]
+		MTLPixelFormat DepthAttachmentPixelFormat { get; set; }
+
+		[Export ("stencilAttachmentPixelFormat", ArgumentSemantic.Assign)]
+		MTLPixelFormat StencilAttachmentPixelFormat { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[Export ("supportIndirectCommandBuffers")]
+		bool SupportIndirectCommandBuffers { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("objectLinkedFunctions", ArgumentSemantic.Copy)]
+		MTLLinkedFunctions ObjectLinkedFunctions { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("meshLinkedFunctions", ArgumentSemantic.Copy)]
+		MTLLinkedFunctions MeshLinkedFunctions { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("fragmentLinkedFunctions", ArgumentSemantic.Copy)]
+		MTLLinkedFunctions FragmentLinkedFunctions { get; set; }
+
+		[Export ("reset")]
+		void Reset ();
+	}
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLAccelerationStructurePassSampleBufferAttachmentDescriptor : NSCopying {
+		[NullAllowed, Export ("sampleBuffer", ArgumentSemantic.Retain)]
+		IMTLCounterSampleBuffer SampleBuffer { get; set; }
+
+		[Export ("startOfEncoderSampleIndex")]
+		nuint StartOfEncoderSampleIndex { get; set; }
+
+		[Export ("endOfEncoderSampleIndex")]
+		nuint EndOfEncoderSampleIndex { get; set; }
+	}
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray {
+		[Export ("objectAtIndexedSubscript:")]
+		MTLAccelerationStructurePassSampleBufferAttachmentDescriptor GetObject (nuint attachmentIndex);
+
+		[Export ("setObject:atIndexedSubscript:")]
+		void SetObject ([NullAllowed] MTLAccelerationStructurePassSampleBufferAttachmentDescriptor attachment, nuint attachmentIndex);
+	}
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
+	interface MTLAccelerationStructurePassDescriptor : NSCopying {
+		[Static]
+		[Export ("accelerationStructurePassDescriptor")]
+		MTLAccelerationStructurePassDescriptor AccelerationStructurePassDescriptor { get; }
+
+		[Export ("sampleBufferAttachments")]
+		MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray SampleBufferAttachments { get; }
+	}
+
+	[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
+	[Protocol]
+	interface MTLThreadgroupBinding : MTLBinding {
+		[Abstract]
+		[Export ("threadgroupMemoryAlignment")]
+		nuint ThreadgroupMemoryAlignment { get; }
+
+		[Abstract]
+		[Export ("threadgroupMemoryDataSize")]
+		nuint ThreadgroupMemoryDataSize { get; }
+	}
+
+
 }
