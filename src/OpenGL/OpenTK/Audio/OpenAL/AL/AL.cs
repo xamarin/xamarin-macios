@@ -251,7 +251,7 @@ namespace OpenTK.Audio.OpenAL
         {
             unsafe
             {
-                fixed (float* ptr = &values[0])
+                fixed (float* ptr = values)
                 {
                     ListenerPrivate(param, ptr);
                 }
@@ -276,7 +276,7 @@ namespace OpenTK.Audio.OpenAL
 
             unsafe
             {
-                fixed (float* ptr = &temp[0])
+                fixed (float* ptr = temp)
                 {
                     ListenerPrivate(param, ptr);
                 }
@@ -332,7 +332,7 @@ namespace OpenTK.Audio.OpenAL
             float[] pinned = new float[6]; // should lose scope when the function exits
             unsafe
             {
-                fixed (float* ptr = &pinned[0])
+                fixed (float* ptr = pinned)
                 {
                     GetListener(param, ptr);
 

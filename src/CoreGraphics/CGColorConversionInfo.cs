@@ -27,11 +27,6 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Watch (3, 0)]
-	[Mac (10, 12)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 #if NET
@@ -50,11 +45,6 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Watch (3, 0)]
-	[Mac (10, 12)]
 #endif
 	public partial class CGColorConversionInfo : NativeObject {
 		[Preserve (Conditional = true)]
@@ -162,12 +152,11 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
@@ -186,12 +175,11 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.14.6")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14, 6)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
@@ -202,12 +190,11 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]

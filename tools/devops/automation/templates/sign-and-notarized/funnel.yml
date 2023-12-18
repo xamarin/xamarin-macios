@@ -25,25 +25,7 @@ parameters:
   default: '$(MaciosUploadPrefix)'
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
-
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-  steps:
-  - template: ../common/configure.yml
-    parameters:
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-
 - job: funnel_job
-  dependsOn:
-  - configure
   displayName: 'Collect signed artifacts'
   condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
   timeoutInMinutes: 1000
@@ -53,7 +35,7 @@ jobs:
     clean: all
   variables:
     ${{ each pkg in parameters.packages }}:
-      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
+      ${{ pkg.conditionVariable }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
   steps:
 
@@ -130,6 +112,25 @@ jobs:
       artifactName: '${{ parameters.uploadPrefix }}package-internal'
     continueOnError: true
 
+  # download msbuild.zip and bundle.zip to the 'package' dir, so that they're uploaded into the 'package' artifact,
+  # since we later depend on these files being there later.
+  - task: DownloadPipelineArtifact@2
+    displayName: Download msbuild.zip and bundle.zip
+    inputs:
+      patterns: |
+        not-signed-package/msbuild.zip
+        not-signed-package/bundle.zip
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/not-signed-package
+
+  - bash: |
+      set -x
+      set -e
+      ls -la "$BUILD_SOURCESDIRECTORY"/not-signed-package
+      cp "$BUILD_SOURCESDIRECTORY"/not-signed-package/not-signed-package/*.zip "$BUILD_SOURCESDIRECTORY"/package
+      ls -la "$BUILD_SOURCESDIRECTORY"/package
+    displayName: Copy msbuild.zip and bundle.zip to the package artifact
+
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Build Artifacts (notarized)'
     inputs:
@@ -149,7 +150,7 @@ jobs:
 
   variables:
     Parameters.outputStorageUri: ''
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
+    SKIP_NUGETS: $[ stageDependencies.configure_build.configuree.outputs['labels.skip_nugets'] ]
 
   pool:
     name: azurepipelines-EO
@@ -171,11 +172,10 @@ jobs:
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
   dependsOn:
-  - configure
   - upload_azure_blob
   condition: succeededOrFailed()
   variables:
-    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:

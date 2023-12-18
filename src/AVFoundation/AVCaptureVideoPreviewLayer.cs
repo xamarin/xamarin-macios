@@ -18,8 +18,6 @@ namespace AVFoundation {
 			[SupportedOSPlatform ("ios")]
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
-#else
-			[iOS (8, 0)]
 #endif
 			WithNoConnection,
 		}

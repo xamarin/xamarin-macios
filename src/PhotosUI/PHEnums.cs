@@ -4,9 +4,6 @@ using ObjCRuntime;
 
 namespace PhotosUI {
 
-	[Mac (10, 12)]
-	[TV (10, 0)]
-	[iOS (9, 1)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHLivePhotoViewPlaybackStyle : long {
@@ -17,7 +14,6 @@ namespace PhotosUI {
 
 #if MONOMAC
 	[NoiOS][NoTV][NoMacCatalyst]
-	[Mac (10,12)]
 	[Native]
 	public enum PHLivePhotoViewContentMode : long {
 		AspectFit,
@@ -25,8 +21,6 @@ namespace PhotosUI {
 	}
 #else
 	[NoMac]
-	[TV (10, 0)]
-	[iOS (9, 1)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags] // NS_OPTIONS
@@ -39,7 +33,6 @@ namespace PhotosUI {
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
-	[Mac (10, 14)]
 	[NoMacCatalyst]
 	public enum PHProjectCategory {
 		[Field ("PHProjectCategoryBook")]
@@ -56,7 +49,6 @@ namespace PhotosUI {
 		WallDecor,
 		[Field ("PHProjectCategoryOther")]
 		Other,
-		[Mac (10, 14, 2)]
 		[NoMacCatalyst]
 		[Field ("PHProjectCategoryUndefined")]
 		Undefined,
@@ -71,5 +63,23 @@ namespace PhotosUI {
 		Automatic = 0,
 		Current = 1,
 		Compatible = 2,
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum PHPickerMode : long {
+		Default = 0,
+		Compact = 1,
+	}
+
+	[Flags, NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Native]
+	public enum PHPickerCapabilities : ulong {
+		None = 0,
+		Search = 1 << 0,
+		StagingArea = 1 << 1,
+		CollectionNavigation = 1 << 2,
+		SelectionActions = 1 << 3,
+		SensitivityAnalysisIntervention = 1uL << 4,
 	}
 }

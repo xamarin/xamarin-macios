@@ -17,8 +17,6 @@ using ObjCRuntime;
 
 namespace SceneKit {
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native] // untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 	[ErrorDomain ("SCNErrorDomain")]
@@ -26,8 +24,6 @@ namespace SceneKit {
 		ProgramCompilationError = 1,
 	}
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNGeometryPrimitiveType : long {
@@ -35,39 +31,29 @@ namespace SceneKit {
 		TriangleStrip,
 		Line,
 		Point,
-		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		Polygon
 	}
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNTransparencyMode : long {
 		AOne,
 		RgbZero,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		SingleLayer = 2,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		DualLayer = 3,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		Default = AOne,
 	}
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNCullMode : long {
 		Back, Front
 	}
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNFilterMode : long {
@@ -76,8 +62,6 @@ namespace SceneKit {
 		Linear
 	}
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNWrapMode : long {
@@ -88,8 +72,6 @@ namespace SceneKit {
 		Mirror
 	}
 
-	[Watch (3, 0)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNSceneSourceStatus : long {
@@ -100,9 +82,6 @@ namespace SceneKit {
 		Complete = 16
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 9)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNChamferMode : long {
@@ -111,9 +90,6 @@ namespace SceneKit {
 		Back
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 9)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNMorpherCalculationMode : long {
@@ -121,9 +97,6 @@ namespace SceneKit {
 		Additive
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNActionTimingMode : long {
@@ -133,9 +106,6 @@ namespace SceneKit {
 		EaseInEaseOut
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNShadowMode : long {
@@ -144,9 +114,6 @@ namespace SceneKit {
 		Modulated
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNPhysicsBodyType : long {
@@ -155,9 +122,6 @@ namespace SceneKit {
 		Kinematic
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNPhysicsFieldScope : long {
@@ -165,9 +129,6 @@ namespace SceneKit {
 		OutsideExtent
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleSortingMode : long {
@@ -178,9 +139,6 @@ namespace SceneKit {
 		YoungestFirst
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleBlendMode : long {
@@ -192,9 +150,6 @@ namespace SceneKit {
 		Replace
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleOrientationMode : long {
@@ -204,9 +159,6 @@ namespace SceneKit {
 		BillboardYAligned
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleBirthLocation : long {
@@ -215,9 +167,6 @@ namespace SceneKit {
 		Vertex
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleBirthDirection : long {
@@ -226,9 +175,6 @@ namespace SceneKit {
 		Random
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleImageSequenceAnimationMode : long {
@@ -237,9 +183,6 @@ namespace SceneKit {
 		AutoReverse
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleInputMode : long {
@@ -248,9 +191,6 @@ namespace SceneKit {
 		OverOtherProperty
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleModifierStage : long {
@@ -260,9 +200,6 @@ namespace SceneKit {
 		PostCollision
 	}
 
-	[Watch (3, 0)]
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNParticleEvent : long {
@@ -298,7 +235,6 @@ namespace SceneKit {
 		Any, Closest, All,
 	}
 
-	[Watch (3, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNAntialiasingMode : ulong {
@@ -315,7 +251,6 @@ namespace SceneKit {
 #endif
 	}
 
-	[Watch (3, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNPhysicsCollisionCategory : ulong {
@@ -325,9 +260,6 @@ namespace SceneKit {
 		All = UInt64.MaxValue
 	}
 
-	[Watch (3, 0)]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNBillboardAxis : ulong {
@@ -337,9 +269,6 @@ namespace SceneKit {
 		All = (X | Y | Z)
 	}
 
-	[Watch (3, 0)]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNReferenceLoadingPolicy : long {
@@ -347,9 +276,6 @@ namespace SceneKit {
 		OnDemand = 1
 	}
 
-	[Watch (3, 0)]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNBlendMode : long {
@@ -359,14 +285,10 @@ namespace SceneKit {
 		Multiply = 3,
 		Screen = 4,
 		Replace = 5,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		Max = 6,
 	}
 
-	[Watch (3, 0)]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -378,26 +300,18 @@ namespace SceneKit {
 		ShowLightExtents = 1 << 3,
 		ShowPhysicsFields = 1 << 4,
 		ShowWireframe = 1 << 5,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		RenderAsWireframe = 1 << 6,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		ShowSkeletons = 1 << 7,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		ShowCreases = 1 << 8,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		ShowConstraints = 1 << 9,
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		ShowCameras = 1 << 10,
 	}
 
-	[Watch (3, 0)]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNRenderingApi : ulong {
@@ -416,9 +330,6 @@ namespace SceneKit {
 #endif
 	}
 
-	[Watch (3, 0)]
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNBufferFrequency : long {
@@ -427,8 +338,6 @@ namespace SceneKit {
 		Shadable = 2,
 	}
 
-	[Watch (3, 0)]
-	[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNMovabilityHint : long {
@@ -436,7 +345,6 @@ namespace SceneKit {
 		Movable
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -449,7 +357,6 @@ namespace SceneKit {
 		All = 15,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNInteractionMode : long {
@@ -462,7 +369,6 @@ namespace SceneKit {
 		Truck,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNFillMode : ulong {
@@ -470,7 +376,7 @@ namespace SceneKit {
 		Lines = 1,
 	}
 
-	[NoWatch, Mac (10, 13), iOS (11, 0)]
+	[NoWatch]
 	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -479,7 +385,6 @@ namespace SceneKit {
 		PNTriangles,
 		Phong,
 	}
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNHitTestSearchMode : long {
@@ -488,7 +393,6 @@ namespace SceneKit {
 		Any = 2,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNCameraProjectionDirection : long {
@@ -496,7 +400,6 @@ namespace SceneKit {
 		Horizontal = 1,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNNodeFocusBehavior : long {
@@ -505,7 +408,7 @@ namespace SceneKit {
 		Focusable,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightProbeType : long {
@@ -513,7 +416,7 @@ namespace SceneKit {
 		Radiance = 1,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightProbeUpdateType : long {
@@ -521,7 +424,7 @@ namespace SceneKit {
 		Realtime = 1,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNLightAreaType : long {
@@ -529,8 +432,6 @@ namespace SceneKit {
 		Polygon = 4,
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	public enum SCNPhysicsShapeType {
 		ConvexHull,

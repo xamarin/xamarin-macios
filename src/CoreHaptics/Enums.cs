@@ -14,7 +14,7 @@ using ObjCRuntime;
 
 namespace CoreHaptics {
 
-	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[iOS (13, 0), TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CHHapticEventParameterId {
 		[Field ("CHHapticEventParameterIDHapticIntensity")]
@@ -48,7 +48,7 @@ namespace CoreHaptics {
 		AudioBrightness,
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[iOS (13, 0), TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CHHapticDynamicParameterId {
 		[Field ("CHHapticDynamicParameterIDHapticIntensityControl")]
@@ -88,7 +88,7 @@ namespace CoreHaptics {
 		AudioReleaseTimeControl,
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[iOS (13, 0), TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CHHapticEventType {
 		[Field ("CHHapticEventTypeHapticTransient")]
@@ -104,7 +104,7 @@ namespace CoreHaptics {
 		AudioCustom,
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[iOS (13, 0), TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CHHapticErrorCode : long {
@@ -134,7 +134,7 @@ namespace CoreHaptics {
 		MemoryError = -4899,
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[iOS (13, 0), TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CHHapticEngineFinishedAction : long {
@@ -142,7 +142,7 @@ namespace CoreHaptics {
 		LeaveEngineRunning = 2,
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (14, 0)]
+	[iOS (13, 0), TV (14, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum CHHapticEngineStoppedReason : long {

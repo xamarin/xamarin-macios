@@ -99,6 +99,12 @@ enum XamarinTriState : int {
 
 extern bool mono_use_llvm; // this is defined inside mono
 
+#if defined (NATIVEAOT)
+#define SUPPORTS_DYNAMIC_REGISTRATION 0
+#else
+#define SUPPORTS_DYNAMIC_REGISTRATION 1
+#endif
+
 #if DEBUG
 extern bool xamarin_gc_pump;
 #endif
@@ -121,7 +127,9 @@ extern bool xamarin_is_gc_coop;
 extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
 extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 extern enum XamarinLaunchMode xamarin_launch_mode;
+#if SUPPORTS_DYNAMIC_REGISTRATION
 extern bool xamarin_supports_dynamic_registration;
+#endif
 extern const char *xamarin_runtime_configuration_name;
 extern enum XamarinNativeLinkMode xamarin_libmono_native_link_mode;
 extern const char** xamarin_runtime_libraries;

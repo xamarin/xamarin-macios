@@ -11,6 +11,9 @@ using Xamarin.Localization.MSBuild;
 
 using SecKeychain = Xamarin.MacDev.Keychain;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class DetectSigningIdentityTaskBase : XamarinTask {
 		const string AutomaticProvision = "Automatic";
@@ -102,8 +105,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string BundleIdentifier { get; set; }
 
-		public string CodesignProvision { get; set; }
-
 		public ITaskItem CodesignEntitlements { get; set; }
 
 		public string CodesignRequireProvisioningProfile { get; set; }
@@ -161,7 +162,7 @@ namespace Xamarin.MacDev.Tasks {
 							break;
 						case ApplePlatform.MacCatalyst:
 						case ApplePlatform.MacOSX:
-							requireProvisioningProfile = !string.IsNullOrEmpty (CodesignProvision);
+							requireProvisioningProfile = !string.IsNullOrEmpty (ProvisioningProfile);
 							break;
 						default:
 							throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));

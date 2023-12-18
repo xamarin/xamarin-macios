@@ -198,11 +198,13 @@ namespace ObjCRuntime {
 			FrameworksPath = Path.Combine (basePath, "Frameworks");
 		}
 
+#if !NET
 		[Preserve]
 		static IntPtr GetNullableType (IntPtr type)
 		{
 			return AllocGCHandle (Registrar.GetNullableType ((Type) GetGCHandleTarget (type)!));
 		}
+#endif // !NET
 #endif // !COREBUILD
 	}
 }

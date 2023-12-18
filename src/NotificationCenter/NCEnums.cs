@@ -10,8 +10,6 @@ using UIKit;
 
 namespace NotificationCenter {
 
-	[iOS (8, 0)]
-	[Mac (10, 10)]
 	[Deprecated (PlatformName.iOS, 14, 0)]
 	[Deprecated (PlatformName.MacOSX, 11, 0)]
 	[Native]
@@ -21,7 +19,6 @@ namespace NotificationCenter {
 		Failed
 	}
 
-	[iOS (10, 0)]
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 14, 0)]
 	[Native]

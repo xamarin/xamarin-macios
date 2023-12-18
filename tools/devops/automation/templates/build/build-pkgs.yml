@@ -137,6 +137,13 @@ steps:
         artifactName: '${{ parameters.uploadPrefix }}package-test-libraries'
       continueOnError: true
 
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Build.props'
+      inputs:
+        targetPath: $(Build.SourcesDirectory)/xamarin-macios/Build.props
+        artifactName: '${{ parameters.uploadPrefix }}Build.props'
+      continueOnError: true
+
     - ${{ if eq(parameters.uploadBinlogs, true) }}:
       # Copy all the binlogs to a separate directory, keeping directory structure.
       - script: |

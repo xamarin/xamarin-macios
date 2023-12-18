@@ -12,3 +12,27 @@ Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
 // provisionator knows how to deal with this items
 Item ("@MONO_PACKAGE@");
 Item ("@MIN_SHARPIE_URL@");
+
+var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "Library", "Preferences", "Xamarin", "Settings.plist");
+Item ("Override Apple SDK Settings")
+	.Action (item => {
+		DeleteSafe (appleSdkOverride);
+		CreateSetting (appleSdkOverride, "AppleSdkRoot", GetSelectedXcodePath ());
+		Console.WriteLine ($"New iOS SDK Location: {GetSettingValue (appleSdkOverride, "AppleSdkRoot")}");
+	});
+
+void DeleteSafe (string file)
+{
+	if (File.Exists (file))
+		File.Delete (file);
+}
+
+void CreateSetting (string settingFile, string key, string value)
+{
+	Exec ("defaults", "write", settingFile, key, value);
+}
+
+string GetSettingValue (string settingFile, string keyName)
+{
+	return Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
+}

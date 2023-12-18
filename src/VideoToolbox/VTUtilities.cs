@@ -24,10 +24,6 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10, 11)]
-	[iOS (9, 0)]
-	[TV (10, 2)]
 #endif
 	public static class VTUtilities {
 		[DllImport (Constants.VideoToolboxLibrary)]

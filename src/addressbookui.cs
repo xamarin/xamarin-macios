@@ -83,17 +83,14 @@ namespace AddressBookUI {
 		[Export ("peoplePickerDelegate", ArgumentSemantic.Assign)]
 		NSObject WeakDelegate { get; set; }
 
-		[iOS (8, 0)]
 		[Export ("predicateForEnablingPerson", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPredicate PredicateForEnablingPerson { get; set; }
 
-		[iOS (8, 0)]
 		[Export ("predicateForSelectionOfPerson", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPredicate PredicateForSelectionOfPerson { get; set; }
 
-		[iOS (8, 0)]
 		[Export ("predicateForSelectionOfProperty", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPredicate PredicateForSelectionOfProperty { get; set; }
@@ -168,7 +165,7 @@ namespace AddressBookUI {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
-	[Static, iOS (8, 0)]
+	[Static]
 	interface ABPersonPredicateKey {
 		[Field ("ABPersonBirthdayProperty")]
 		NSString Birthday { get; }

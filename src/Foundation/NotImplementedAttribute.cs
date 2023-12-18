@@ -9,6 +9,8 @@
 
 using System;
 
+#nullable enable
+
 namespace Foundation {
 	//
 	// This is designed to be applied to setter methods in
@@ -21,6 +23,6 @@ namespace Foundation {
 	public class NotImplementedAttribute : Attribute {
 		public NotImplementedAttribute () { }
 		public NotImplementedAttribute (string message) { Message = message; }
-		public string Message { get; set; }
+		public string? Message { get; set; }
 	}
 }

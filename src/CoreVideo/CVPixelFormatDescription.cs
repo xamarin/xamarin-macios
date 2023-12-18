@@ -40,8 +40,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Watch (4, 0)]
 #endif
 	public static class CVPixelFormatDescription {
 #if !COREBUILD
@@ -77,9 +75,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static readonly NSString ContainsRgb;
 #if NET
@@ -87,9 +82,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static readonly NSString ContainsYCbCr;
 
@@ -98,9 +90,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeKey;
 #if NET
@@ -108,9 +97,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeFullRangeKey;
 #if NET
@@ -118,9 +104,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeVideoRangeKey;
 #if NET
@@ -128,9 +111,6 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 10)]
 #endif
 		public static readonly NSString ComponentRangeWideRangeKey;
 
@@ -143,7 +123,6 @@ namespace CoreVideo {
 		[iOS (12, 0)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
-		[Mac (10, 14)]
 #endif
 		public static readonly NSString ContainsGrayscaleKey;
 

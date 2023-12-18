@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>사용자 지정 링커 인수 '-{0}'을(를) 구문 분석할 수 없습니다. {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 항목 '{0}'이(가) 없습니다.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi 디버거 설정의 호스트 IP를 확인할 수 없습니다.
         </value>
