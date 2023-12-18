@@ -161,7 +161,8 @@ namespace MonoTouchFixtures.Network {
 				"clear match domains");
 		}
 
-		void EnumberateDomains (string? domain) {
+		void EnumberateDomains (string? domain)
+		{
 			if (domain is not null)
 				foundDomains.Add (domain);
 		}
