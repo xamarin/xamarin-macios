@@ -7,6 +7,9 @@ using Xamarin.Messaging.Build.Client;
 using System.Security;
 using System.Reactive.Linq;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Microsoft.Build.Tasks {
 	public class Exec : ExecBase, ITaskCallback {
 		public string ServerPassword { get; set; }

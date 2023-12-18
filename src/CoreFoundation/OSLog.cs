@@ -40,11 +40,6 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
-#else
-	[Mac (10, 12)]
-	[iOS (10, 0)]
-	[Watch (3, 0)]
-	[TV (10, 0)]
 #endif
 	public sealed class OSLog : NativeObject {
 

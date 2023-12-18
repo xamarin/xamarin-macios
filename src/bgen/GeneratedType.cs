@@ -20,7 +20,7 @@ public class GeneratedType {
 				ImplementsAppearance = true;
 		}
 		var btype = ReflectionExtensions.GetBaseType (Type, generator);
-		if (btype != generator.TypeManager.System_Object) {
+		if (btype != generator.TypeCache.System_Object) {
 			Parent = btype;
 			// protected against a StackOverflowException - bug #19751
 			// it does not protect against large cycles (but good against copy/paste errors)

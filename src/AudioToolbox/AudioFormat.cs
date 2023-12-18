@@ -64,7 +64,7 @@ namespace AudioToolbox {
 			if (formatList.Length < 2)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatList));
 
-			fixed (AudioFormat* item = &formatList [0]) {
+			fixed (AudioFormat* item = formatList) {
 				uint index;
 				int size = sizeof (uint);
 				var ptr_size = sizeof (AudioFormat) * formatList.Length;

@@ -64,3 +64,6 @@
 
 # normal pattern accept null delegate and unit tests shows it works just fine
 !extra-null-allowed! 'System.Void SceneKit.SCNAvoidOccluderConstraint::set_Delegate(SceneKit.ISCNAvoidOccluderConstraintDelegate)' has a extraneous [NullAllowed] on parameter #0
+
+## we cannot add abstract members to existing SCNSceneRenderer protocols (breaking changes)
+!incorrect-protocol-member! SCNSceneRenderer::workingColorSpace is REQUIRED and should be abstract

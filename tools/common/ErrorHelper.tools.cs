@@ -73,6 +73,16 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static void ParseWarningLevel (WarningLevel level, string value)
+		{
+			if (string.IsNullOrEmpty (value)) {
+				SetWarningLevel (level);
+			} else {
+				foreach (var code in value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+					SetWarningLevel (level, int.Parse (code));
+			}
+		}
+
 		public static void SetLocation (Application app, ProductException ex, MethodDefinition method, Instruction instruction = null)
 		{
 			if (!method.HasBody)

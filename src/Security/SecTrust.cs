@@ -100,8 +100,6 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] out bool /* Boolean* */ allowFetch);
@@ -111,8 +109,6 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ allowFetch);
@@ -122,8 +118,6 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public bool NetworkFetchAllowed {
 			get {
@@ -235,13 +229,12 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -267,13 +260,12 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -328,7 +320,6 @@ namespace Security {
 #else
 		[Watch (5, 0)]
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
@@ -343,7 +334,6 @@ namespace Security {
 #else
 		[Watch (5, 0)]
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		public bool Evaluate (out NSError? error)
@@ -358,8 +348,6 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFDictionaryRef */ SecTrustCopyResult (IntPtr /* SecTrustRef */ trust);
@@ -369,8 +357,6 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public NSDictionary GetResult ()
 		{
@@ -382,8 +368,6 @@ namespace Security {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetOCSPResponse (IntPtr /* SecTrustRef */ trust, IntPtr /* CFTypeRef */ responseData);
@@ -394,8 +378,6 @@ namespace Security {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		void SetOCSPResponse (IntPtr ocsp)
 		{
@@ -450,13 +432,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios12.1.1")]
 		[SupportedOSPlatform ("tvos12.1.1")]
-		[SupportedOSPlatform ("macos10.14.2")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 1, 1)]
 		[Watch (5, 1, 1)]
 		[TV (12, 1, 1)]
-		[Mac (10, 14, 2)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
@@ -464,13 +445,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios12.1.1")]
 		[SupportedOSPlatform ("tvos12.1.1")]
-		[SupportedOSPlatform ("macos10.14.2")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 1, 1)]
 		[Watch (5, 1, 1)]
 		[TV (12, 1, 1)]
-		[Mac (10, 14, 2)]
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
@@ -484,13 +464,12 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios12.1.1")]
 		[SupportedOSPlatform ("tvos12.1.1")]
-		[SupportedOSPlatform ("macos10.14.2")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 1, 1)]
 		[Watch (5, 1, 1)]
 		[TV (12, 1, 1)]
-		[Mac (10, 14, 2)]
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
 		{

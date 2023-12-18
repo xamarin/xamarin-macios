@@ -30,7 +30,7 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (bytes));
 
 			unsafe {
-				fixed (byte* p = &bytes [0]) {
+				fixed (byte* p = bytes) {
 					AppendBytes ((IntPtr) p, (nuint) bytes.Length);
 				}
 			}

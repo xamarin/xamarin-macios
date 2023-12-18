@@ -40,29 +40,6 @@
     <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
     <CodeSignProvision>Automatic</CodeSignProvision>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugARM64|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\arm64\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMMAC_TESTS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
-    <TlsProvider>Default</TlsProvider>
-    <LinkMode>None</LinkMode>
-    <XamMacArch>ARM64</XamMacArch>
-    <CodeSigningKey>Mac Developer</CodeSigningKey>
-    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
-    <CodeSignProvision>Automatic</CodeSignProvision>
-    <MmpDebug>true</MmpDebug>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\x86\Release</OutputPath>
@@ -78,23 +55,6 @@
     <TlsProvider>Default</TlsProvider>
     <LinkMode>None</LinkMode>
     <XamMacArch>x86_64</XamMacArch>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseARM64|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\arm64\Release</OutputPath>
-    <DefineConstants>MONOMAC;XAMMAC_TESTS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>0</WarningLevel>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
-    <TlsProvider>Default</TlsProvider>
-    <LinkMode>None</LinkMode>
-    <XamMacArch>ARM64</XamMacArch>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -167,6 +127,9 @@
     </Compile>
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

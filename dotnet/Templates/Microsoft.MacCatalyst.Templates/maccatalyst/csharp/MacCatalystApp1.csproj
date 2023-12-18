@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-maccatalyst</TargetFramework>
+    <TargetFramework>net8.0-maccatalyst</TargetFramework>
     <!-- The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
          When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifer>.
          The App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;

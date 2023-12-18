@@ -106,6 +106,8 @@ namespace Xamarin.Bundler {
 		public static bool LinkProhibitedFrameworks { get; private set; }
 		public static bool UseLegacyAssemblyResolution { get; private set; }
 
+		internal static Action Action { get => action; }
+
 		static string mono_prefix;
 		static string MonoPrefix {
 			get {
@@ -1011,6 +1013,10 @@ namespace Xamarin.Bundler {
 						args.Add ("-isysroot");
 						args.Add (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"));
 					}
+
+					// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+					if (XcodeVersion.Major >= 15 && !App.DisableAutomaticLinkerSelection)
+						args.Add ("-Wl,-ld_classic");
 
 					if (App.RequiresPInvokeWrappers) {
 						var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;

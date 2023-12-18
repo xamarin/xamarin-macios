@@ -23,12 +23,10 @@ namespace CoreSpotlight {
 
 		// Manually deal with these properties until we get BindAs working
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (11,0)]
 #endif
 		public bool? IsUserCreated { 
 			get {
@@ -39,12 +37,10 @@ namespace CoreSpotlight {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (11,0)]
 #endif
 		public bool? IsUserOwned {
 			get {
@@ -55,12 +51,10 @@ namespace CoreSpotlight {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (11,0)]
 #endif
 		public bool? IsUserCurated { 
 			get {

@@ -87,7 +87,9 @@ namespace Introspection {
 			case "CAMetalLayer":
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
+			case "MTLIOCommandQueueDescriptor":
 			case "SWCollaborationActionHandler":
+			case "UISymbolEffectCompletionContext":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
@@ -133,6 +135,11 @@ namespace Introspection {
 			case "UILayoutGuideAspectFitting":
 			case "UISceneWindowingBehaviors":
 				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+			case "ASCredentialIdentity":
+			case "ASCredentialRequest":
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
@@ -502,6 +509,14 @@ namespace Introspection {
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
 					return true;
+				// XCode1 5
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "NSCursor":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -754,6 +769,15 @@ namespace Introspection {
 				case "VSUserAccount": // Conformance not in headers
 				case "PKInk":
 					return true;
+				// Xcode1 5
+				case "NSCompositeAttributeDescription":
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
+				case "CKSyncEngineState":
+				case "NSCursor":
+					return true;
 				}
 				break;
 			case "NSCopying":
@@ -839,6 +863,12 @@ namespace Introspection {
 				case "NSMergePolicy":
 				case "NSPropertyMapping":
 				case "UIWindowSceneActivationConfiguration":
+					return true;
+				// Xcode 15
+				case "CKSyncEnginePendingDatabaseChange":
+				case "CKSyncEnginePendingRecordZoneChange":
+				case "CKSyncEnginePendingZoneDelete":
+				case "CKSyncEnginePendingZoneSave":
 					return true;
 				}
 				break;

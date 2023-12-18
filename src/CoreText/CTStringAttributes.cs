@@ -208,9 +208,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public CGColor? BackgroundColor {
 			get {
@@ -251,13 +248,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public float? TrackingAdjustment {
@@ -336,11 +332,6 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
-		[Watch (3, 0)]
-		[TV (10, 0)]
 #endif
 		public int? HorizontalInVerticalForms {
 			get {
@@ -355,15 +346,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
 #endif
 		public float? BaselineOffset {
 			get { return Adapter.GetSingleValue (Dictionary, CTStringAttributeKey.BaselineOffset); }

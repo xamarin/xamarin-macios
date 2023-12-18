@@ -129,6 +129,7 @@ struct MTRegistrationMap {
 	int skipped_map_count;
 	int protocol_wrapper_count;
 	int protocol_count;
+	void **classHandles;
 };
 
 typedef struct {
@@ -458,6 +459,10 @@ public:
 #define MONO_THREAD_DETACH \
 	} while (0)
 #endif
+
+void objc_release (id value);
+id objc_retain (id value);
+id objc_autorelease (id value);
 
 #ifdef __cplusplus
 } /* extern "C" */

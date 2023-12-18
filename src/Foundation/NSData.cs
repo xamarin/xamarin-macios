@@ -81,7 +81,7 @@ namespace Foundation {
 				return FromBytes (IntPtr.Zero, 0);
 
 			unsafe {
-				fixed (byte* ptr = &buffer [0]) {
+				fixed (byte* ptr = buffer) {
 					return FromBytes ((IntPtr) ptr, (nuint) buffer.Length);
 				}
 			}
@@ -111,7 +111,7 @@ namespace Foundation {
 			int n;
 			try {
 				unsafe {
-					fixed (byte* ptr = &buffer [0]) {
+					fixed (byte* ptr = buffer) {
 						while ((n = stream.Read (buffer, 0, buffer.Length)) != 0)
 							ret.AppendBytes ((IntPtr) ptr, (nuint) n);
 					}

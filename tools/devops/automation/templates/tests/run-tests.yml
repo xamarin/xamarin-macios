@@ -58,9 +58,7 @@ steps:
 - bash: |
     make -C src build/generator-frameworks.g.cs
     make -C src build/ios/Constants.cs
-    make -C msbuild Versions.dotnet.g.cs
-    make -C msbuild Versions.ios.g.cs
-    make -C msbuild Versions.mac.g.cs
+    make -C msbuild Versions.g.cs
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Generate constants files 
   timeoutInMinutes: 15
@@ -116,8 +114,11 @@ steps:
 
 # expand all the prebuilt test dependencies
 - bash: |
-    ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
     unzip -o $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+    ls -Rla@ .
+    xattr -s -c -r .
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Expand test libraries.
   timeoutInMinutes: 10
@@ -309,6 +310,7 @@ steps:
   condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
   env:
+    MACIOS_TEST_PREFIX: ${{ parameters.testPrefix }}
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
 
 # Be nice and clean behind you

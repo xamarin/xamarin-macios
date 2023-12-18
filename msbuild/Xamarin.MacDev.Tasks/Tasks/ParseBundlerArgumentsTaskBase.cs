@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class ParseBundlerArgumentsTaskBase : XamarinTask {
@@ -38,6 +42,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string NoDSymUtil { get; set; }
 
 		[Output]
+		public string NoWarn { get; set; }
+
+		[Output]
 		public string Optimize { get; set; }
 
 		[Output]
@@ -58,6 +65,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public int Verbosity { get; set; }
+
+		[Output]
+		public string WarnAsError { get; set; }
 
 		[Output]
 		public ITaskItem [] XmlDefinitions { get; set; }
@@ -192,7 +202,36 @@ namespace Xamarin.MacDev.Tasks {
 							customLinkFlags = new List<string> ();
 						customLinkFlags.AddRange (lf);
 						break;
+					case "warnaserror":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (WarnAsError)) {
+							WarnAsError = value;
+						} else {
+							WarnAsError += "," + value;
+						}
+						break;
+					case "nowarn":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (NoWarn)) {
+							NoWarn = value;
+						} else {
+							NoWarn += "," + value;
+						}
+						break;
 					default:
+						// Handle arguments like -vvv and -qqqq
+						if (value.Length == 0 && name.Length > 1 && name.All (ch => ch == name [0])) {
+							switch (name [0]) {
+							case 'v':
+								Verbosity += name.Length;
+								continue;
+							case 'q':
+								Verbosity -= name.Length;
+								continue;
+							}
+						}
 						Log.LogMessage (MessageImportance.Low, "Skipping unknown argument '{0}' with value '{1}'", name, value);
 						break;
 					}

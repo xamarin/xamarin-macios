@@ -1669,15 +1669,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
-		[Mac (10, 13)]
-		[Watch (4, 0)]
-		[TV (11, 0)]
 #endif
 		public bool? Hidden {
 			get { return Adapter.GetBoolValue (Dictionary, CTFontVariationAxisKey.Hidden); }
@@ -2090,12 +2085,11 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
 #endif
@@ -2108,12 +2102,11 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
 #endif

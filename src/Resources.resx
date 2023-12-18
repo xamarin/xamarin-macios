@@ -529,6 +529,22 @@
 		<value>Selector name missing in [CoreImageFilterProperty] attribute on {0} property {1}</value>
 	</data>
 
+	<data name="BI1083" xml:space="preserve">
+		<value>Found {0} {1} attributes on the method {2}'s parameter #{3} ({4}). At most one was expected.</value>
+	</data>
+
+	<data name="BI1084" xml:space="preserve">
+		<value>Found {0} {1} attributes on the type {2}. At most one was expected.</value>
+	</data>
+
+	<data name="BI1085" xml:space="preserve">
+		<value>Found {0} {1} attributes on the assembly {2}. At most one was expected.</value>
+	</data>
+
+	<data name="BI1086" xml:space="preserve">
+		<value>Found {0} {1} attributes on the module {2}. At most one was expected.</value>
+	</data>
+
 	<data name="BI1101" xml:space="preserve">
 		<value>Trying to use a string as a [Target]</value>
 	</data>

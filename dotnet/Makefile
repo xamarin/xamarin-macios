@@ -12,7 +12,7 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval NET6_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET6_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval NET7_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET7_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
@@ -31,7 +31,6 @@ $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.Versions.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Microsoft.$(1).Sdk.targets \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.DefaultItems.targets \
-	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.MultiTarget.targets \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.Publish.targets \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.TargetFrameworkInference.props \
 	$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/targets/Xamarin.Shared.Sdk.props \
@@ -108,7 +107,7 @@ endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CopyTargetsWindows,$(platform))))
 
 define VersionsTemplate
-targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
+targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.template.props Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
@@ -119,6 +118,8 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
 		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
 		-e 's/@RUNTIME_PACK_RUNTIME_IDENTIFIERS@/$(4)/g' \
+		-e 's/@XCODE_IS_PREVIEW@/$(XCODE_IS_PREVIEW)/g' \
+		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -166,25 +167,15 @@ Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
 
-define SharedAfterTargetsTemplate
-Microsoft.$(1).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets: targets/Xamarin.Shared.Sdk.MultiTarget.template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index
-	$$(Q_GEN) sed \
-		-e "s/@NET6_NUGET_VERSION_NO_METADATA@/$2/g" \
-		$$< > $$@.tmp
-	$$(Q) mv $$@.tmp $$@
-endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SharedAfterTargetsTemplate,$(platform),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA))))
-
 define WorkloadTargets
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
-	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(4)" "$$(DOTNET_$(5)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
+	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Workloads/WorkloadManifest.$(1).template.targets Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index | Workloads/Microsoft.NET.Sdk.$(1)
-	$$(Q_GEN) sed \
-		-e "s/@NUGET_VERSION_NO_METADATA@/$3/g" \
-		$$< > $$@.tmp
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+	$$(Q) rm -f $$@.tmp
+	$$(Q_GEN) ./generate-workloadmanifest-targets.csharp "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)" "net7.0"
 	$$(Q) mv $$@.tmp $$@
 
 Workloads/Microsoft.NET.Sdk.$(1)/LICENSE: $(TOP)/LICENSE | Workloads/Microsoft.NET.Sdk.$(1)
@@ -198,7 +189,7 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr a-z A-Z),$(NET7_$(platform)_NUGET_VERSION_NO_METADATA))))
 
 # Always use the commit distance as the third number in the VS component version, as it should always increase across all branches.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE).0))
@@ -216,16 +207,9 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
-$(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
-	$(Q) $(CP) $< $@
-
-$(DOTNET_NUPKG_DIR)/SignList.targets: Workloads/SignList.targets
-	$(Q) $(CP) $< $@
-
 TEMPLATED_FILES = \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.Versions.props) \
 	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Microsoft.$(platform).Sdk.SupportedTargetPlatforms.props) \
-	$(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Sdk/targets/Xamarin.Shared.Sdk.MultiTarget.targets) \
 
 ifdef NupkgWindowsDefinition
 nupkgs/$($(1)_NUGET_WINDOWS_SDK_NAME).%.nupkg: CURRENT_VERSION_NO_METADATA=$($(2)_WINDOWS_NUGET_VERSION_NO_METADATA)
@@ -288,7 +272,7 @@ pack-$(shell echo $(1) | tr A-Z a-z): $$(RUNTIME_PACKS_$(1)) $$(REF_PACKS_$(1)) 
 endef
 $(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(eval $(call PacksDefinitions,$(platform))))
 
-TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(DOTNET_NUPKG_DIR)/SignList.xml $(DOTNET_NUPKG_DIR)/SignList.targets $(SDK_PACKS_WINDOWS)
+TARGETS += $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS) $(DOTNET_NUPKG_DIR)/vs-workload.props $(SDK_PACKS_WINDOWS)
 
 define InstallWorkload
 # .NET comes with a workload for us, but we don't want that, we want our own. So delete the workload that comes with .NET.

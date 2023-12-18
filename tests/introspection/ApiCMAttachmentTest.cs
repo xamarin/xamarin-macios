@@ -253,6 +253,8 @@ namespace Introspection {
 					return true;
 #endif
 				return false;
+			case "MTLIOCompressionContext":
+				return true;
 			default:
 				return false;
 			}

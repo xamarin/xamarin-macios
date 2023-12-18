@@ -960,6 +960,9 @@
 		<value>watchOS 的 HttpMessageHandler `{0}` 無效。唯一有效的值為 NSUrlSessionHandler。
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>無法保留動態註冊機構 (傳遞 '--optimize=-remove-dynamic-registrar')，因為使用 NativeAOT 時不支援動態註冊機構。動態註冊的支援仍然會移除。</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>無法處理 XML 描述: {0}
 		</value>
@@ -1104,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>無法 {0} 組件 '{1}'
 		</value>

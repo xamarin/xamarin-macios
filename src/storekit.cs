@@ -95,7 +95,7 @@ namespace StoreKit {
 		long ContentLength { get; }
 #endif
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("expectedContentLength")]
 		long ExpectedContentLength { get; }
@@ -137,12 +137,10 @@ namespace StoreKit {
 		[Static]
 		void DeleteContentForProduct (string productId);
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
 
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("transaction")]
 		SKPaymentTransaction Transaction { get; }
@@ -179,20 +177,17 @@ namespace StoreKit {
 		[Export ("quantity")]
 		nint Quantity { get; }
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		string ApplicationUsername { get; }
 
-		[iOS (8, 3), Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
 
 		[iOS (12, 2)]
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; [NotImplemented ("Not available on SKPayment, only available on SKMutablePayment")] set; }
@@ -230,21 +225,18 @@ namespace StoreKit {
 		[Override]
 		NSData RequestData { get; set; }
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed] // by default this property is null
 		[Export ("applicationUsername", ArgumentSemantic.Copy)]
 		[New]
 		string ApplicationUsername { get; set; }
 
-		[iOS (8, 3), Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Export ("simulatesAskToBuyInSandbox")]
 		bool SimulatesAskToBuyInSandbox { get; set; }
 
 		[iOS (12, 2)]
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("paymentDiscount", ArgumentSemantic.Copy)]
 		SKPaymentDiscount PaymentDiscount { get; set; }
@@ -268,7 +260,6 @@ namespace StoreKit {
 		[Export ("restoreCompletedTransactions")]
 		void RestoreCompletedTransactions ();
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		[Export ("restoreCompletedTransactionsWithApplicationUsername:")]
 		void RestoreCompletedTransactions ([NullAllowed] string username);
@@ -320,19 +311,19 @@ namespace StoreKit {
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		ISKPaymentQueueDelegate Delegate { get; set; }
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("storefront")]
@@ -387,7 +378,6 @@ namespace StoreKit {
 		}
 #endif
 
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("isDownloadable")]
 		bool IsDownloadable { get; }
@@ -404,7 +394,6 @@ namespace StoreKit {
 		[Export ("contentLengths")]
 		NSNumber [] ContentLengths { get; }
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Export ("downloadContentLengths")]
 		NSNumber [] DownloadContentLengths { get; }
@@ -416,29 +405,27 @@ namespace StoreKit {
 		[Export ("contentVersion")]
 		string ContentVersion { get; }
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Export ("downloadContentVersion")]
 		string DownloadContentVersion { get; }
 
-		[iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
+		[iOS (11, 2), TV (11, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subscriptionPeriod")]
 		SKProductSubscriptionPeriod SubscriptionPeriod { get; }
 
-		[iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
+		[iOS (11, 2), TV (11, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("introductoryPrice")]
 		SKProductDiscount IntroductoryPrice { get; }
 
-		[iOS (12, 0), TV (12, 0), Mac (10, 14)]
+		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("subscriptionGroupIdentifier")]
 		string SubscriptionGroupIdentifier { get; }
 
 		[iOS (12, 2)]
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("discounts")]
 		SKProductDiscount [] Discounts { get; }
@@ -479,15 +466,12 @@ namespace StoreKit {
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[Mac (11, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("paymentQueue:shouldAddStorePayment:forProduct:")]
 		bool ShouldAddStorePayment (SKPaymentQueue queue, SKPayment payment, SKProduct product);
 
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
@@ -578,7 +562,6 @@ namespace StoreKit {
 	}
 
 	[Watch (6, 2)]
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (SKRequest))]
 	interface SKReceiptRefreshRequest {
@@ -597,7 +580,6 @@ namespace StoreKit {
 		SKReceiptProperties ReceiptProperties { get; }
 	}
 
-	[Mac (10, 9)]
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Static, Internal]
@@ -711,13 +693,10 @@ namespace StoreKit {
 	[StrongDictionary ("SKStoreProductParameterKey")]
 	interface StoreProductParameters {
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("ProductIdentifier")]
 		string ProductIdentifier { get; set; }
 
-		[iOS (8, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("ProviderToken")]
 		string ProviderToken { get; set; }
@@ -766,29 +745,22 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterITunesItemIdentifier")]
 		NSString ITunesItemIdentifier { get; }
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterProductIdentifier")]
 		NSString ProductIdentifier { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAffiliateToken")]
 		NSString AffiliateToken { get; }
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterCampaignToken")]
 		NSString CampaignToken { get; }
 
-		[iOS (8, 3)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterProviderToken")]
 		NSString ProviderToken { get; }
 
-		[iOS (9, 3)]
-		[TV (9, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKStoreProductParameterAdvertisingPartnerToken")]
 		NSString AdvertisingPartnerToken { get; }
@@ -803,7 +775,7 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkCampaignIdentifier")]
 		NSString AdNetworkCampaignIdentifier { get; }
 
-		[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, NoTV]
+		[NoMac, iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (17, 0)]
 		[Field ("SKStoreProductParameterAdNetworkSourceIdentifier")]
 		NSString AdNetworkSourceIdentifier { get; }
 
@@ -837,7 +809,6 @@ namespace StoreKit {
 		NSString CustomProductPageIdentifier { get; }
 	}
 
-	[iOS (10, 1)]
 	[NoMac]
 	[NoWatch]
 	[NoTV] // __TVOS_PROHIBITED
@@ -860,7 +831,6 @@ namespace StoreKit {
 	[MacCatalyst (13, 1)]
 	interface ISKCloudServiceSetupViewControllerDelegate { }
 
-	[iOS (10, 1)]
 	[NoMac]
 	[NoWatch]
 	[NoTV] // __TVOS_PROHIBITED on the only member + SKCloudServiceSetupViewController is not in tvOS
@@ -873,7 +843,7 @@ namespace StoreKit {
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (10, 1)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("SKCloudServiceSetupOptionsKeys")]
 	interface SKCloudServiceSetupOptions {
@@ -887,21 +857,18 @@ namespace StoreKit {
 		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
 		nint ITunesItemIdentifier { get; set; }
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		string AffiliateToken { get; set; }
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		string CampaignToken { get; set; }
 
-		[iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		string MessageIdentifier { get; set; }
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (10, 1)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[Internal, Static]
 	interface SKCloudServiceSetupOptionsKeys {
@@ -911,24 +878,21 @@ namespace StoreKit {
 		[Field ("SKCloudServiceSetupOptionsITunesItemIdentifierKey")]
 		NSString ITunesItemIdentifierKey { get; }
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKCloudServiceSetupOptionsAffiliateTokenKey")]
 		NSString AffiliateTokenKey { get; }
 
-		[iOS (10, 3)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKCloudServiceSetupOptionsCampaignTokenKey")]
 		NSString CampaignTokenKey { get; }
 
-		[iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("SKCloudServiceSetupOptionsMessageIdentifierKey")]
 		NSString MessageIdentifierKey { get; }
 	}
 
 	[NoMac]
-	[NoWatch, NoTV, iOS (10, 1)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	enum SKCloudServiceSetupAction {
 		[Field ("SKCloudServiceSetupActionSubscribe")]
@@ -936,7 +900,7 @@ namespace StoreKit {
 	}
 
 	[NoMac]
-	[NoWatch, iOS (11, 0), TV (11, 0)]
+	[NoWatch]
 	[MacCatalyst (13, 1)]
 	enum SKCloudServiceSetupMessageIdentifier {
 		[Field ("SKCloudServiceSetupMessageIdentifierJoin")]
@@ -949,7 +913,7 @@ namespace StoreKit {
 		PlayMusic,
 	}
 
-	[Mac (11, 0), Watch (7, 0), iOS (9, 3), TV (9, 2)]
+	[Mac (11, 0), Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKCloudServiceController {
@@ -966,8 +930,6 @@ namespace StoreKit {
 		[Export ("requestStorefrontIdentifierWithCompletionHandler:")]
 		void RequestStorefrontIdentifier (Action<NSString, NSError> completionHandler);
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("requestStorefrontCountryCodeWithCompletionHandler:")]
@@ -977,7 +939,6 @@ namespace StoreKit {
 		[Export ("requestCapabilitiesWithCompletionHandler:")]
 		void RequestCapabilities (Action<SKCloudServiceCapability, NSError> completionHandler);
 
-		[iOS (10, 3), TV (10, 2)]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'RequestUserToken' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'RequestUserToken' instead.")]
 		[MacCatalyst (13, 1)]
@@ -986,8 +947,6 @@ namespace StoreKit {
 		[Export ("requestPersonalizationTokenForClientToken:withCompletionHandler:")]
 		void RequestPersonalizationToken (string clientToken, Action<NSString, NSError> completionHandler);
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("requestUserTokenForDeveloperToken:completionHandler:")]
@@ -1001,8 +960,6 @@ namespace StoreKit {
 		[Field ("SKCloudServiceCapabilitiesDidChangeNotification")]
 		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("SKStorefrontCountryCodeDidChangeNotification")]
@@ -1011,7 +968,7 @@ namespace StoreKit {
 
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[NoWatch, iOS (11, 0), TV (11, 0), Mac (11, 0)]
+	[NoWatch, Mac (11, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // static Default property is the only documented way to get the controller
 	interface SKProductStorePromotionController {
@@ -1036,7 +993,6 @@ namespace StoreKit {
 		void Update (SKProduct [] storePromotionOrder, [NullAllowed] Action<NSError> completionHandler);
 	}
 
-	[iOS (10, 3), Mac (10, 14)]
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -1057,7 +1013,7 @@ namespace StoreKit {
 		void RequestReview (UIWindowScene windowScene);
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
+	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductSubscriptionPeriod {
@@ -1069,7 +1025,7 @@ namespace StoreKit {
 		SKProductPeriodUnit Unit { get; }
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2), Mac (10, 13, 2)]
+	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface SKProductDiscount {
@@ -1082,7 +1038,6 @@ namespace StoreKit {
 
 		[iOS (12, 2)]
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("identifier")]
 		string Identifier { get; }
@@ -1098,7 +1053,6 @@ namespace StoreKit {
 
 		[iOS (12, 2)]
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("type")]
 		SKProductDiscountType Type { get; }
@@ -1161,7 +1115,6 @@ namespace StoreKit {
 
 	[iOS (12, 2)]
 	[TV (12, 2)]
-	[Mac (10, 14, 4)]
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1189,7 +1142,6 @@ namespace StoreKit {
 	[Watch (6, 2)]
 	[iOS (12, 2)]
 	[TV (12, 2)]
-	[Mac (10, 14, 4)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountType : long {
@@ -1197,7 +1149,6 @@ namespace StoreKit {
 		Subscription,
 	}
 
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 	[Watch (6, 2)]
@@ -1215,7 +1166,7 @@ namespace StoreKit {
 
 	interface ISKPaymentQueueDelegate { }
 
-	[Watch (6, 2), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 2), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
@@ -1241,18 +1192,15 @@ namespace StoreKit {
 	[NoWatch]
 	[NoiOS]
 	[NoTV]
-	[Mac (10, 15)]
 	[NoMacCatalyst]
 	delegate void SKArcadeServiceRegisterHandler (NSData randomFromFP, uint /* uint32_t */ randomFromFPLength, NSData cmacOfAppPid, uint /* uint32_t */ cmacOfAppPidLength, NSError error);
 
 	[NoWatch]
 	[NoiOS]
 	[NoTV]
-	[Mac (10, 15)]
 	[NoMacCatalyst]
 	delegate void SKArcadeServiceSubscriptionHandler (NSData subscriptionStatus, uint /* uint32_t */ subscriptionStatusLength, NSData cmacOfNonce, uint /* uint32_t */ cmacOfNonceLength, NSError error);
 
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[TV (13, 0)]
 	[NoWatch]
