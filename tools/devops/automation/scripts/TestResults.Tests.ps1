@@ -33,7 +33,7 @@ Describe "TestResults tests" {
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - iOS",
         "TEST_PREFIX": "simulator_dotnettests_iOS",
         "TEST_PLATFORM": "iOS",
-        "TEST_CATEGORY": "!MultiPlatform"
+        "TEST_FILTER": "Category != MultiPlatform"
     },
     "dotnettests_macOS":
     {
@@ -43,7 +43,7 @@ Describe "TestResults tests" {
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - macOS",
         "TEST_PREFIX": "simulator_dotnettests_macOS",
         "TEST_PLATFORM": "macOS",
-        "TEST_CATEGORY": "!MultiPlatform"
+        "TEST_FILTER": "Category != MultiPlatform"
     },
     "dotnettests_tvOS":
     {
@@ -53,7 +53,7 @@ Describe "TestResults tests" {
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - tvOS",
         "TEST_PREFIX": "simulator_dotnettests_tvOS",
         "TEST_PLATFORM": "tvOS",
-        "TEST_CATEGORY": "!MultiPlatform"
+        "TEST_FILTER": "Category != MultiPlatform"
     },
     "dotnettests_MacCatalyst":
     {
@@ -63,7 +63,7 @@ Describe "TestResults tests" {
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - MacCatalyst",
         "TEST_PREFIX": "simulator_dotnettests_MacCatalyst",
         "TEST_PLATFORM": "MacCatalyst",
-        "TEST_CATEGORY": "!MultiPlatform"
+        "TEST_FILTER": "Category != MultiPlatform"
     },
     "dotnettests_Multiple":
     {
@@ -73,7 +73,7 @@ Describe "TestResults tests" {
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - Multiple",
         "TEST_PREFIX": "simulator_dotnettests_Multiple",
         "TEST_PLATFORM": "",
-        "TEST_CATEGORY": "MultiPlatform"
+        "TEST_FILTER": "Category = MultiPlatform"
     }
 }
 "@
