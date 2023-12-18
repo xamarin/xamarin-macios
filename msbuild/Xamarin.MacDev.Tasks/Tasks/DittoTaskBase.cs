@@ -11,7 +11,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
-	public class DittoTask : XamarinToolTask, ITaskCallback {
+	public class Ditto : XamarinToolTask, ITaskCallback {
 		#region Inputs
 
 		public string? AdditionalArguments { get; set; }
