@@ -16,6 +16,7 @@ namespace MonoTouchFixtures.Network {
 		NWRelayHop? hop;
 		NWEndpoint? endpoint;
 		NWProxyConfig? config;
+		List<string> foundDomains;
 
 		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (15, 0);
@@ -26,6 +27,7 @@ namespace MonoTouchFixtures.Network {
 			endpoint = NWEndpoint.Create ("https://github.com");
 			hop = NWRelayHop.Create (endpoint, null, null);
 			config = NWProxyConfig.CreateHttpConnect (endpoint, null);
+			foundDomains = new List<string> ();
 		}
 
 		[TearDown]
@@ -42,7 +44,7 @@ namespace MonoTouchFixtures.Network {
 			NWProxyConfig? capturedConfig = null;
 			try {
 				Assert.DoesNotThrow (
-					() => config = NWProxyConfig.CreateRelay (hop, null), "Throws");
+					() => capturedConfig = NWProxyConfig.CreateRelay (hop, null), "Throws");
 				Assert.NotNull (capturedConfig, "Not null");
 			} finally {
 				capturedConfig?.Dispose ();
@@ -159,6 +161,11 @@ namespace MonoTouchFixtures.Network {
 				"clear match domains");
 		}
 
+		void EnumberateDomains (string? domain) {
+			if (domain is not null)
+				foundDomains.Add (domain);
+		}
+
 		[Test]
 		public void EnumerateMatchDomainsTest ()
 		{
@@ -167,14 +174,7 @@ namespace MonoTouchFixtures.Network {
 				config.AddMatchDomain (d);
 			}
 
-			// enumerate takes a cb that we will use to add the found domain to a list
-			// that has been captured, then we compare the sizes
-			var foundDomains = new List<string> ();
-			Action<string?> cb = s => {
-				if (s is not null)
-					foundDomains.Add (s);
-			};
-			config.EnumerateMatchDomains (cb);
+			config.EnumerateMatchDomains (EnumberateDomains);
 			Asserts.AreEqual (domains.Length, foundDomains.Count, "Domain count");
 		}
 
@@ -185,15 +185,7 @@ namespace MonoTouchFixtures.Network {
 			foreach (var d in domains) {
 				config.AddExcludedDomain (d);
 			}
-
-			// enumerate takes a cb that we will use to add the found domain to a list
-			// that has been captured, then we compare the sizes
-			var foundDomains = new List<string> ();
-			Action<string?> cb = s => {
-				if (s is not null)
-					foundDomains.Add (s);
-			};
-			config.EnumerateExcludedDomains (cb);
+			config.EnumerateExcludedDomains (EnumberateDomains);
 			Asserts.AreEqual (domains.Length, foundDomains.Count, "Domain count");
 		}
 	}

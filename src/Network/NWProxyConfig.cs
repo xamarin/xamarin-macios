@@ -178,6 +178,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateMatchDomains (Action<string?> handler)
 		{
 			if (handler is null)
@@ -215,6 +216,7 @@ namespace Network {
 			}
 		}
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateExcludedDomains (Action<string?> handler)
 		{
 			if (handler is null)
