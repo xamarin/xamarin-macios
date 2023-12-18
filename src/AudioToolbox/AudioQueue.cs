@@ -77,9 +77,6 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		CannotStartYet = -66665,
 
@@ -1076,7 +1073,7 @@ namespace AudioToolbox {
 					return;
 
 				unsafe {
-					fixed (byte* bp = &value [0]) {
+					fixed (byte* bp = value) {
 						SetProperty (AudioQueueProperty.MagicCookie, value.Length, (IntPtr) bp);
 					}
 				}

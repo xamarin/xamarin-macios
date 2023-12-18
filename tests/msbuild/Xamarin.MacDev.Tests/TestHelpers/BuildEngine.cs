@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Utils;
+using PathUtils = Xamarin.Utils.PathUtils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
@@ -144,14 +145,7 @@ namespace Xamarin.Tests {
 			WarningsEvents.Clear ();
 			MessageEvents.Clear ();
 
-			var reader = new BinLogReader ();
-			foreach (var record in reader.ReadRecords (log)) {
-				if (record is null)
-					continue;
-				var args = record.Args;
-				if (args is null)
-					continue;
-
+			foreach (var args in BinLog.ReadBuildEvents (log)) {
 				bool verbose = false;
 				if (args is TaskStartedEventArgs tsea) {
 					if (verbose)

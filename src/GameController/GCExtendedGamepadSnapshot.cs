@@ -29,7 +29,6 @@ namespace GameController {
 	[ObsoletedOSPlatform ("ios12.2", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 	[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'GCExtendedGamepadSnapshotData' instead.")]
@@ -66,9 +65,9 @@ namespace GameController {
 		public float /* float_t = float */ RightTrigger;
 
 		// radar: https://trello.com/c/7FoGTORD (GCExtendedGamepadSnapShotDataV100 struct size / alignment not backward compatible)
-		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
+		// [TV (12, 1), iOS (12, 1)]
 		// public bool LeftThumbstickButton;
-		// [TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
+		// [TV (12, 1), iOS (12, 1)]
 		// public bool RightThumbstickButton;
 
 #if NET
@@ -143,7 +142,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("ios12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -152,7 +151,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
 		[iOS (12, 2)]
-		[Mac (10, 14, 4)]
 		[TV (12, 2)]
 #endif
 		[MarshalAs (UnmanagedType.I1)]
@@ -160,7 +158,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -169,7 +167,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		[MarshalAs (UnmanagedType.I1)]
@@ -177,7 +174,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -186,7 +183,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		[MarshalAs (UnmanagedType.I1)]
@@ -194,7 +190,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -203,7 +199,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
@@ -212,7 +207,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -221,7 +216,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1", "Use 'GCExtendedGamepadSnapshotData' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		public NSData? ToNSData ()
@@ -242,7 +236,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -251,7 +245,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
@@ -267,7 +260,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -276,7 +269,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("maccatalyst13.1")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		public static bool TryGetExtendedSnapShotData (NSData? data, out GCExtendedGamepadSnapshotData snapshotData)

@@ -20,7 +20,6 @@ namespace Foundation {
 		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
-		[Mac (10, 9)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 #endif
 		public NSUserDefaults (string name) : this (name, NSUserDefaultsType.UserName)

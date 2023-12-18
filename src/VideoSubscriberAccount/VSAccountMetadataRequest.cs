@@ -14,9 +14,6 @@ namespace VideoSubscriberAccount {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (10, 1)]
-		[iOS (10, 2)]
 #endif
 		public VSAccountProviderAuthenticationScheme [] SupportedAuthenticationSchemes {
 			get {

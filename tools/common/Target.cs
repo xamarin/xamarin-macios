@@ -693,20 +693,22 @@ namespace Xamarin.Bundler {
 			var assembly_location_count = 0;
 			var enable_llvm = (abi & Abi.LLVM) != 0;
 
-			register_assemblies.AppendLine ("\tGCHandle exception_gchandle = INVALID_GCHANDLE;");
-			foreach (var s in assemblies) {
-				if (!s.IsAOTCompiled)
-					continue;
+			if (app.XamarinRuntime != XamarinRuntime.NativeAOT) {
+				register_assemblies.AppendLine ("\tGCHandle exception_gchandle = INVALID_GCHANDLE;");
+				foreach (var s in assemblies) {
+					if (!s.IsAOTCompiled)
+						continue;
 
-				var info = s.AssemblyDefinition.Name.Name;
-				info = EncodeAotSymbol (info);
-				assembly_externs.Append ("extern void *mono_aot_module_").Append (info).AppendLine ("_info;");
-				assembly_aot_modules.Append ("\tmono_aot_register_module (mono_aot_module_").Append (info).AppendLine ("_info);");
+					var info = s.AssemblyDefinition.Name.Name;
+					info = EncodeAotSymbol (info);
+					assembly_externs.Append ("extern void *mono_aot_module_").Append (info).AppendLine ("_info;");
+					assembly_aot_modules.Append ("\tmono_aot_register_module (mono_aot_module_").Append (info).AppendLine ("_info);");
 
-				string sname = s.FileName;
-				if (assembly_name != sname && IsBoundAssembly (s)) {
-					register_assemblies.Append ("\txamarin_open_and_register (\"").Append (sname).Append ("\", &exception_gchandle);").AppendLine ();
-					register_assemblies.AppendLine ("\txamarin_process_managed_exception_gchandle (exception_gchandle);");
+					string sname = s.FileName;
+					if (assembly_name != sname && IsBoundAssembly (s)) {
+						register_assemblies.Append ("\txamarin_open_and_register (\"").Append (sname).Append ("\", &exception_gchandle);").AppendLine ();
+						register_assemblies.AppendLine ("\txamarin_process_managed_exception_gchandle (exception_gchandle);");
+					}
 				}
 			}
 
@@ -803,6 +805,8 @@ namespace Xamarin.Bundler {
 				} else {
 					sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
 				}
+			} else if (app.XamarinRuntime == XamarinRuntime.NativeAOT) {
+				// don't call mono_jit_set_aot_mode
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {
@@ -858,7 +862,8 @@ namespace Xamarin.Bundler {
 			// Do this last, so that the app developer can override any other environment variable we set.
 			foreach (var kvp in app.EnvironmentVariables)
 				sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
-			sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
+			if (app.XamarinRuntime != XamarinRuntime.NativeAOT)
+				sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");
 #if NET
 			sw.WriteLine ("\txamarin_runtime_configuration_name = {0};", string.IsNullOrEmpty (app.RuntimeConfigurationFile) ? "NULL" : $"\"{app.RuntimeConfigurationFile}\"");
 #endif

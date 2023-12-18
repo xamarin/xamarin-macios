@@ -7,7 +7,7 @@ using CoreFoundation;
 
 namespace Network {
 
-	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NWErrorDomain {
@@ -20,7 +20,7 @@ namespace Network {
 		Tls = 3,
 	}
 
-	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -36,7 +36,7 @@ namespace Network {
 		IntPtr _DefaultStream { get; }
 	}
 
-	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
@@ -47,7 +47,7 @@ namespace Network {
 		IntPtr _SendIdempotentContent { get; }
 	}
 
-	[TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[TV (12, 0), iOS (12, 0)]
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]

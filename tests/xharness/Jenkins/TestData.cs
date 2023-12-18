@@ -23,5 +23,6 @@ namespace Xharness.Jenkins {
 		public string XamMacArch;
 		public string RuntimeIdentifier;
 		public string Registrar;
+		public bool PublishAot; // NativeAOT
 	}
 }

@@ -10,8 +10,6 @@ using Foundation;
 
 namespace ReplayKit {
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native ("RPRecordingErrorCode")]
@@ -58,7 +56,6 @@ namespace ReplayKit {
 	}
 
 	[NoiOS]
-	[TV (10, 0)]
 	[NoMac]
 	[NoMacCatalyst]
 	[Native]
@@ -68,8 +65,6 @@ namespace ReplayKit {
 	}
 
 	[Native]
-	[iOS (10, 0)]
-	[TV (10, 0)]
 	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	public enum RPSampleBufferType : long {
@@ -79,7 +74,6 @@ namespace ReplayKit {
 	}
 
 	[Native]
-	[iOS (11, 0)]
 	[NoTV]
 	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]

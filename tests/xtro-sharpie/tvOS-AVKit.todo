@@ -1,0 +1,7 @@
+!missing-enum-value! AVKitError native value AVKitErrorRecordingFailed = -1200 not bound
+!missing-null-allowed! 'System.Void AVKit.AVPlayerViewController::set_InfoViewActions(UIKit.UIAction[])' is missing an [NullAllowed] on parameter #0
+!missing-protocol! AVContinuityDevicePickerViewControllerDelegate not bound
+!missing-selector! +AVContinuityDevicePickerViewController::isSupported not bound
+!missing-selector! AVContinuityDevicePickerViewController::delegate not bound
+!missing-selector! AVContinuityDevicePickerViewController::setDelegate: not bound
+!missing-type! AVContinuityDevicePickerViewController not bound

@@ -4,10 +4,13 @@ using System.Text;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateEmbeddedResourcesTaskBase : Task {
-		public string SessionId { get; set; }
+using Xamarin.MacDev.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
+namespace Xamarin.MacDev.Tasks {
+	public class CreateEmbeddedResources : XamarinTask {
 		[Required]
 		public ITaskItem [] BundleResources { get; set; }
 
@@ -35,6 +38,17 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				foreach (var bundleResource in this.BundleResources) {
+					var logicalName = bundleResource.GetMetadata ("LogicalName");
+
+					if (!string.IsNullOrEmpty (logicalName)) {
+						logicalName = logicalName.Replace ("\\", "/");
+						bundleResource.SetMetadata ("LogicalName", logicalName);
+					}
+				}
+			}
+
 			EmbeddedResources = new ITaskItem [BundleResources.Length];
 
 			for (int i = 0; i < BundleResources.Length; i++) {

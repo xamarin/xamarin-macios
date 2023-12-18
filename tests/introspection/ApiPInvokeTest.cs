@@ -161,7 +161,7 @@ namespace Introspection {
 					if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 						continue;
 #if __IOS__
-					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+					libname = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
 #else
 					libname = null;
 #endif
@@ -251,7 +251,7 @@ namespace Introspection {
 						if (MonoNativeConfig.LinkMode == MonoNativeLinkMode.None)
 							continue;
 #if __IOS__
-						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Compat, MonoNativeConfig.LinkMode);
+						path = MonoNativeConfig.GetPInvokeLibraryName (MonoNativeFlavor.Unified, MonoNativeConfig.LinkMode);
 #else
 						path = null;
 #endif

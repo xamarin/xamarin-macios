@@ -2846,35 +2846,11 @@ namespace Registrar {
 			}
 		}
 
-		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
+		List<ObjCType>? all_types = null;
+		List<ObjCType> GetAllTypes (List<Exception> exceptions)
 		{
-			List<Exception> exceptions = new List<Exception> ();
-			List<ObjCMember> skip = new List<ObjCMember> ();
-
-			var map = new AutoIndentStringBuilder (1);
-			var map_init = new AutoIndentStringBuilder ();
-			var map_dict = new CSToObjCMap (); // maps CS type to ObjC type name and index
-			var map_entries = 0;
-			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
-			var protocols = new List<ProtocolInfo> ();
-
-			var i = 0;
-
-			bool needs_protocol_map = false;
-			// Check if we need the protocol map.
-			// We don't need it if the linker removed the method ObjCRuntime.Runtime.GetProtocolForType,
-			// or if we're not registering protocols.
-			if (App.Optimizations.RegisterProtocols == true) {
-				var asm = input_assemblies.FirstOrDefault ((v) => v.Name.Name == PlatformAssembly);
-				needs_protocol_map = asm?.MainModule.GetType ("ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
-			}
-
-			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
-
-			initialization_method = GetInitializationMethodName (single_assembly);
-			map_init.AppendLine ($"void {initialization_method} () {{");
-
-			// Select the types that needs to be registered.
+			if (all_types is not null)
+				return all_types;
 			var allTypes = new List<ObjCType> ();
 			foreach (var @class in Types.Values) {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
@@ -2924,6 +2900,76 @@ namespace Registrar {
 
 				allTypes.Add (@class);
 			}
+			all_types = allTypes;
+			return all_types;
+		}
+
+		CSToObjCMap type_map_dictionary;
+		public CSToObjCMap GetTypeMapDictionary (List<Exception> exceptions)
+		{
+			if (type_map_dictionary is not null)
+				return type_map_dictionary;
+
+			var allTypes = GetAllTypes (exceptions);
+			var map_dict = new CSToObjCMap ();
+
+			foreach (var @class in allTypes) {
+				if (!@class.IsProtocol && !@class.IsCategory) {
+					var name = GetAssemblyQualifiedName (@class.Type);
+					@class.ClassMapIndex = map_dict.Count;
+					map_dict [name] = new ObjCNameIndex (@class.ExportedName, @class.ClassMapIndex);
+				}
+			}
+
+			type_map_dictionary = map_dict;
+			return type_map_dictionary;
+		}
+
+		public void Rewrite ()
+		{
+#if NET
+			if (App.Optimizations.RedirectClassHandles == true) {
+				var exceptions = new List<Exception> ();
+				var map_dict = GetTypeMapDictionary (exceptions);
+				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
+				var result = rewriter.Process ();
+				if (!string.IsNullOrEmpty (result)) {
+					Driver.Log (5, $"Not redirecting class handles because {result}");
+				}
+				ErrorHelper.ThrowIfErrors (exceptions);
+			}
+#endif
+		}
+
+		void Specialize (AutoIndentStringBuilder sb, out string initialization_method)
+		{
+			List<Exception> exceptions = new List<Exception> ();
+			List<ObjCMember> skip = new List<ObjCMember> ();
+
+			var map = new AutoIndentStringBuilder (1);
+			var map_init = new AutoIndentStringBuilder ();
+			var map_dict = new CSToObjCMap (); // maps CS type to ObjC type name and index
+			var protocol_wrapper_map = new Dictionary<uint, Tuple<ObjCType, uint>> ();
+			var protocols = new List<ProtocolInfo> ();
+
+			var i = 0;
+
+			bool needs_protocol_map = false;
+			// Check if we need the protocol map.
+			// We don't need it if the linker removed the method ObjCRuntime.Runtime.GetProtocolForType,
+			// or if we're not registering protocols.
+			if (App.Optimizations.RegisterProtocols == true) {
+				var asm = input_assemblies.FirstOrDefault ((v) => v.Name.Name == PlatformAssembly);
+				needs_protocol_map = asm?.MainModule.GetType ("ObjCRuntime", "Runtime")?.Methods.Any ((v) => v.Name == "GetProtocolForType") == true;
+			}
+
+			map.AppendLine ("static MTClassMap __xamarin_class_map [] = {");
+
+			initialization_method = GetInitializationMethodName (single_assembly);
+			map_init.AppendLine ($"void {initialization_method} () {{");
+
+			// Select the types that needs to be registered.
+			var allTypes = GetAllTypes (exceptions);
 
 			if (string.IsNullOrEmpty (single_assembly)) {
 				foreach (var assembly in GetAssemblies ())
@@ -2931,6 +2977,9 @@ namespace Registrar {
 			} else {
 				registered_assemblies.Add (new (GetAssemblies ().Single (v => GetAssemblyName (v) == single_assembly), single_assembly));
 			}
+
+			// Don't need this dictionary, but do need ClassMapIndex
+			GetTypeMapDictionary (exceptions);
 
 			foreach (var @class in allTypes) {
 				var isPlatformType = IsPlatformType (@class.Type);
@@ -2952,9 +3001,8 @@ namespace Registrar {
 					map.AppendLine ("{{ NULL, 0x{1:X} /* #{3} '{0}' => '{2}' */, (MTTypeFlags) ({4}) /* {5} */ }},",
 									@class.ExportedName,
 									token_ref,
-									GetAssemblyQualifiedName (@class.Type), map_entries,
+									GetAssemblyQualifiedName (@class.Type), @class.ClassMapIndex,
 									(int) flags, flags);
-					map_dict [GetAssemblyQualifiedName (@class.Type)] = new ObjCNameIndex (@class.ExportedName, map_entries++);
 
 					bool use_dynamic;
 
@@ -2985,7 +3033,10 @@ namespace Registrar {
 						get_class = string.Format ("[{0} class]", EncodeNonAsciiCharacters (@class.ExportedName));
 					}
 
-					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, i++);
+					map_init.AppendLine ("__xamarin_class_map [{1}].handle = {0};", get_class, @class.ClassMapIndex);
+					if (App.Optimizations.RedirectClassHandles == true)
+						map_init.AppendLine ("__xamarin_class_handles [{0}] = __xamarin_class_map [{0}].handle;", @class.ClassMapIndex);
+					i++;
 				}
 
 
@@ -3217,6 +3268,8 @@ namespace Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
+			if (App.Optimizations.RedirectClassHandles == true)
+				map.AppendLine ("static void *__xamarin_class_handles [{0}];", i);
 			if (skipped_types.Count > 0) {
 				map.AppendLine ("static const MTManagedClassMap __xamarin_skipped_map [] = {");
 				foreach (var skipped in skipped_types) {
@@ -3307,7 +3360,11 @@ namespace Registrar {
 			map.AppendLine ("{0},", full_token_reference_count);
 			map.AppendLine ("{0},", skipped_types.Count);
 			map.AppendLine ("{0},", protocol_wrapper_map.Count);
-			map.AppendLine ("{0}", needs_protocol_map ? protocols.Count : 0);
+			map.AppendLine ("{0},", needs_protocol_map ? protocols.Count : 0);
+			if (App.Optimizations.RedirectClassHandles == true)
+				map.AppendLine ("&__xamarin_class_handles [0]");
+			else
+				map.AppendLine ("(void **)0");
 			map.AppendLine ("};");
 
 
@@ -3316,15 +3373,6 @@ namespace Registrar {
 
 			sb.WriteLine (map.ToString ());
 			sb.WriteLine (map_init.ToString ());
-#if NET
-			if (App.Optimizations.RedirectClassHandles == true) {
-				var rewriter = new Rewriter (map_dict, GetAssemblies (), LinkContext);
-				var result = rewriter.Process ();
-				if (!string.IsNullOrEmpty (result)) {
-					Driver.Log (5, $"Not redirecting class handles because {result}");
-				}
-			}
-#endif
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
@@ -3442,6 +3490,12 @@ namespace Registrar {
 				sb.AppendLine ("}");
 				return true;
 			case Trampoline.CopyWithZone2:
+#if NET
+				// Managed Static Registrar handles CopyWithZone2 in GenerateCallToUnmanagedCallersOnlyMethod
+				if (LinkContext.App.Registrar == RegistrarMode.ManagedStatic) {
+					return false;
+				}
+#endif
 				sb.AppendLine ("-(id) copyWithZone: (NSZone *) zone");
 				sb.AppendLine ("{");
 				sb.AppendLine ("return xamarin_copyWithZone_trampoline2 (self, _cmd, zone);");
@@ -3490,6 +3544,7 @@ namespace Registrar {
 			case Trampoline.X86_DoubleABI_StretTrampoline:
 			case Trampoline.StaticStret:
 			case Trampoline.Stret:
+			case Trampoline.CopyWithZone2:
 				switch (method.NativeReturnType.FullName) {
 				case "System.Int64":
 					rettype = "long long";
@@ -4369,6 +4424,14 @@ namespace Registrar {
 				sb.WriteLine ($"bool call_super = false;");
 			if (hasReturnType)
 				sb.WriteLine ($"{callbackReturnType} rv = {{ 0 }};");
+			if (method.CurrentTrampoline == Trampoline.CopyWithZone2) {
+				sb.WriteLine ("id p0 = (id)zone;");
+				sb.WriteLine ("GCHandle gchandle;");
+				sb.WriteLine ("enum XamarinGCHandleFlags flags = XamarinGCHandleFlags_None;");
+				sb.WriteLine ("gchandle = xamarin_get_gchandle_with_flags (self, &flags);");
+				sb.WriteLine ("if (gchandle != INVALID_GCHANDLE)");
+				sb.Indent ().WriteLine ("xamarin_set_gchandle_with_flags (self, INVALID_GCHANDLE, XamarinGCHandleFlags_None);").Unindent ();
+			}
 
 			if (!staticCall) {
 				sb.WriteLine ($"static {ucoEntryPoint}_function {ucoEntryPoint};");
@@ -4390,6 +4453,11 @@ namespace Registrar {
 
 			if (isCtor) {
 				GenerateCallToSuperForConstructor (sb, method, exceptions);
+			}
+
+			if (method.CurrentTrampoline == Trampoline.CopyWithZone2) {
+				sb.WriteLine ("if (gchandle != INVALID_GCHANDLE)");
+				sb.Indent ().WriteLine ("xamarin_set_gchandle_with_flags (self, gchandle, flags);").Unindent ();
 			}
 
 			if (hasReturnType)

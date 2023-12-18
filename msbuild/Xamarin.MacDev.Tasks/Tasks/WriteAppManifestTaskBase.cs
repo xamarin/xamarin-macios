@@ -34,7 +34,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (AppManifests.Length > 1)
-				CompileAppManifestTaskBase.MergePartialPLists (this, plist, AppManifests.Skip (1));
+				CompileAppManifest.MergePartialPLists (this, plist, AppManifests.Skip (1));
 
 			// Remove any IDE specific keys we don't want in the final app manifest.
 			plist.Remove (ManifestKeys.XSLaunchImageAssets);

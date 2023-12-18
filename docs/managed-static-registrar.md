@@ -13,8 +13,8 @@ exported method signatures, but in general it's expected that method calls
 from native code to managed code will be faster.
 
 In order to make the managed static registrar easily testable and debuggable,
-it's also implemented for the other runtimes as well (Mono and CoreCLR as
-well), as well as when not using AOT in any form.
+it's also implemented for the other runtimes as well (Mono and CoreCLR), even
+when not using AOT in any form.
 
 ## Design
 
@@ -24,7 +24,7 @@ For each method exported to Objective-C, the managed static registrar will
 generate a managed method we'll call directly from native code, and which does
 all the marshalling.
 
-This method will have the [UnmanagedCallersOnly] attribute, so that it doesn't
+This method will have the `[UnmanagedCallersOnly]` attribute, so that it doesn't
 need any additional marshalling from the managed runtime - which makes it
 possible to obtain a native function pointer for it. It will also have a
 native entry point, which means that for AOT we can just directly call it from
@@ -214,7 +214,7 @@ This is the `ObjCRuntime.IManagedRegistrar.LookupUnmanagedFunction` method.
 
 Preliminary testing shows the following:
 
-### macOS
+### macOS
 
 Calling an exported managed method from Objective-C is 3-6x faster for simple method signatures.
 

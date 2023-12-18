@@ -77,6 +77,7 @@ namespace Xamarin.Tests {
 					return platform != ApplePlatform.MacOSX;
 				case "libSystem.Native.dylib":
 				case "libSystem.Net.Security.Native.dylib":
+				case "libSystem.Globalization.Native.dylib":
 				case "libSystem.IO.Compression.Native.dylib":
 				case "libSystem.Security.Cryptography.Native.Apple.dylib":
 				case "mscorlib.dll":

@@ -791,16 +791,17 @@ namespace Introspection {
 		{
 			AttributesMessageTypoRules (t, t.Name, ref totalErrors);
 
-			foreach (var f in t.GetFields ())
+			var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
+			foreach (var f in t.GetFields (flags))
 				AttributesMessageTypoRules (f, t.Name, ref totalErrors);
 
-			foreach (var p in t.GetProperties ())
+			foreach (var p in t.GetProperties (flags))
 				AttributesMessageTypoRules (p, t.Name, ref totalErrors);
 
-			foreach (var m in t.GetMethods ())
+			foreach (var m in t.GetMethods (flags))
 				AttributesMessageTypoRules (m, t.Name, ref totalErrors);
 
-			foreach (var e in t.GetEvents ())
+			foreach (var e in t.GetEvents (flags))
 				AttributesMessageTypoRules (e, t.Name, ref totalErrors);
 
 			foreach (var nt in t.GetNestedTypes ())
@@ -1063,6 +1064,10 @@ namespace Introspection {
 				case "SdkVersion":
 					Assert.True (Version.TryParse (s, out _), fi.Name);
 					break;
+#if !XAMCORE_5_0
+				case "NewsstandKitLibrary": // Removed from iOS, but we have to keep the constant around for binary compatibility.
+					break;
+#endif
 #if !NET
 #if __TVOS__
 				case "PassKitLibrary": // not part of tvOS
@@ -1078,6 +1083,7 @@ namespace Introspection {
 							Assert.True (CheckLibrary (s), fi.Name);
 					break;
 #if !__MACOS__
+				case "CinematicLibrary":
 				case "ThreadNetworkLibrary":
 				case "MediaSetupLibrary":
 				case "MLComputeLibrary":
@@ -1090,6 +1096,20 @@ namespace Introspection {
 				case "MetalPerformanceShadersLibrary":
 				case "MetalPerformanceShadersGraphLibrary":
 					// not supported in tvOS (12.1) simulator so load fails
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
+				case "PhaseLibrary":
+					// framework support for tvOS was added in xcode 15
+					// but not supported on tvOS simulator so load fails
+					if (TestRuntime.IsSimulatorOrDesktop)
+						break;
+					goto default;
+#endif
+				case "MetalFXLibrary":
+#if __TVOS__
+					goto default;
+#else
 					if (TestRuntime.IsSimulatorOrDesktop)
 						break;
 					goto default;

@@ -59,3 +59,7 @@
 # API introduced and deprecated at the same time in Xcode 12
 
 # Existing enums with name changes relevant only to Swift
+
+# API requires new marshal directive which needs to be manually tested (ideally via sample)
+!missing-selector! VNHumanBodyPose3DObservation::getCameraRelativePosition:forJointName:error: not bound
+

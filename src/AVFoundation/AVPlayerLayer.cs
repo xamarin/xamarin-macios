@@ -21,9 +21,6 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public CVPixelBufferAttributes? PixelBufferAttributes {
 			get {

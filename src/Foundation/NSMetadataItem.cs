@@ -95,9 +95,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 9)]
 #endif
 		public NSString? ContentType {
 			get {
@@ -110,9 +107,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 9)]
 #endif
 		public NSString? []? ContentTypeTree {
 			get {
@@ -154,8 +148,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 #if NET
 		public NSItemDownloadingStatus UbiquitousItemDownloadingStatus {
@@ -242,8 +234,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemDownloadingError {
 			get {
@@ -256,8 +246,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public NSError? UbiquitousItemUploadingError {
 			get {
@@ -270,9 +258,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 #if NET
 		public bool? UbiquitousItemDownloadRequested {
@@ -293,9 +278,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 #if NET
 		public bool? UbiquitousItemIsExternalDocument {
@@ -316,9 +298,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 9)]
 #endif
 		public NSString? UbiquitousItemContainerDisplayName {
 			get {
@@ -331,9 +310,6 @@ namespace Foundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 9)]
 #endif
 		public NSUrl? UbiquitousItemUrlInLocalContainer {
 			get {
@@ -351,7 +327,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Keywords {
 			get {
@@ -368,7 +343,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Title {
 			get {
@@ -385,7 +359,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Authors {
 			get {
@@ -402,7 +375,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Editors {
 			get {
@@ -419,7 +391,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Participants {
 			get {
@@ -436,7 +407,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Projects {
 			get {
@@ -453,7 +423,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? DownloadedDate {
 			get {
@@ -470,7 +439,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? WhereFroms {
 			get {
@@ -487,7 +455,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Comment {
 			get {
@@ -504,7 +471,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Copyright {
 			get {
@@ -521,7 +487,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? LastUsedDate {
 			get {
@@ -538,7 +503,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? ContentCreationDate {
 			get {
@@ -555,7 +519,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? ContentModificationDate {
 			get {
@@ -572,7 +535,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? DateAdded {
 			get {
@@ -589,7 +551,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? DurationSeconds {
 			get {
@@ -606,7 +567,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? ContactKeywords {
 			get {
@@ -623,7 +583,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Version {
 			get {
@@ -640,7 +599,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? PixelHeight {
 			get {
@@ -657,7 +615,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? PixelWidth {
 			get {
@@ -674,7 +631,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? PixelCount {
 			get {
@@ -691,7 +647,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ColorSpace {
 			get {
@@ -708,7 +663,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? BitsPerSample {
 			get {
@@ -725,7 +679,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? FlashOnOff {
 			get {
@@ -742,7 +695,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? FocalLength {
 			get {
@@ -759,7 +711,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? AcquisitionMake {
 			get {
@@ -776,7 +727,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? AcquisitionModel {
 			get {
@@ -793,7 +743,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? IsoSpeed {
 			get {
@@ -810,7 +759,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? Orientation {
 			get {
@@ -827,7 +775,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? LayerNames {
 			get {
@@ -844,7 +791,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? WhiteBalance {
 			get {
@@ -861,7 +807,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? Aperture {
 			get {
@@ -878,7 +823,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ProfileName {
 			get {
@@ -895,7 +839,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? ResolutionWidthDpi {
 			get {
@@ -912,7 +855,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? ResolutionHeightDpi {
 			get {
@@ -929,7 +871,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? ExposureMode {
 			get {
@@ -946,7 +887,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? ExposureTimeSeconds {
 			get {
@@ -963,7 +903,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ExifVersion {
 			get {
@@ -980,7 +919,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? CameraOwner {
 			get {
@@ -997,7 +935,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? FocalLength35mm {
 			get {
@@ -1014,7 +951,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? LensModel {
 			get {
@@ -1031,7 +967,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ExifGpsVersion {
 			get {
@@ -1048,7 +983,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? Altitude {
 			get {
@@ -1065,7 +999,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? Latitude {
 			get {
@@ -1082,7 +1015,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? Longitude {
 			get {
@@ -1099,7 +1031,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? Speed {
 			get {
@@ -1116,7 +1047,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? Timestamp {
 			get {
@@ -1133,7 +1063,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsTrack {
 			get {
@@ -1150,7 +1079,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? ImageDirection {
 			get {
@@ -1167,7 +1095,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? NamedLocation {
 			get {
@@ -1184,7 +1111,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? GpsStatus {
 			get {
@@ -1201,7 +1127,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? GpsMeasureMode {
 			get {
@@ -1218,7 +1143,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsDop {
 			get {
@@ -1235,7 +1159,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? GpsMapDatum {
 			get {
@@ -1252,7 +1175,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsDestLatitude {
 			get {
@@ -1269,7 +1191,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsDestLongitude {
 			get {
@@ -1286,7 +1207,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsDestBearing {
 			get {
@@ -1303,7 +1223,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsDestDistance {
 			get {
@@ -1320,7 +1239,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? GpsProcessingMethod {
 			get {
@@ -1337,7 +1255,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? GpsAreaInformation {
 			get {
@@ -1354,7 +1271,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? GpsDateStamp {
 			get {
@@ -1371,7 +1287,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? GpsDifferental {
 			get {
@@ -1388,7 +1303,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Codecs {
 			get {
@@ -1405,7 +1319,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? MediaTypes {
 			get {
@@ -1422,7 +1335,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? Streamable {
 			get {
@@ -1439,7 +1351,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? TotalBitRate {
 			get {
@@ -1456,7 +1367,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? VideoBitRate {
 			get {
@@ -1473,7 +1383,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? AudioBitRate {
 			get {
@@ -1490,7 +1399,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? DeliveryType {
 			get {
@@ -1507,7 +1415,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Album {
 			get {
@@ -1524,7 +1431,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? HasAlphaChannel {
 			get {
@@ -1541,7 +1447,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? RedEyeOnOff {
 			get {
@@ -1558,7 +1463,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? MeteringMode {
 			get {
@@ -1575,7 +1479,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? MaxAperture {
 			get {
@@ -1592,7 +1495,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? FNumber {
 			get {
@@ -1609,7 +1511,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ExposureProgram {
 			get {
@@ -1626,7 +1527,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ExposureTimeString {
 			get {
@@ -1643,7 +1543,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Headline {
 			get {
@@ -1660,7 +1559,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Instructions {
 			get {
@@ -1677,7 +1575,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? City {
 			get {
@@ -1694,7 +1591,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? StateOrProvince {
 			get {
@@ -1711,7 +1607,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Country {
 			get {
@@ -1728,7 +1623,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? TextContent {
 			get {
@@ -1745,7 +1639,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? AudioSampleRate {
 			get {
@@ -1762,7 +1655,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? AudioChannelCount {
 			get {
@@ -1779,7 +1671,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? Tempo {
 			get {
@@ -1796,7 +1687,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? KeySignature {
 			get {
@@ -1813,7 +1703,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? TimeSignature {
 			get {
@@ -1830,7 +1719,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? AudioEncodingApplication {
 			get {
@@ -1847,7 +1735,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Composer {
 			get {
@@ -1864,7 +1751,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Lyricist {
 			get {
@@ -1881,7 +1767,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? AudioTrackNumber {
 			get {
@@ -1898,7 +1783,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? RecordingDate {
 			get {
@@ -1915,7 +1799,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? MusicalGenre {
 			get {
@@ -1932,7 +1815,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? IsGeneralMidiSequence {
 			get {
@@ -1949,7 +1831,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? RecordingYear {
 			get {
@@ -1966,7 +1847,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Organizations {
 			get {
@@ -1983,7 +1863,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Languages {
 			get {
@@ -2000,7 +1879,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Rights {
 			get {
@@ -2017,7 +1895,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Publishers {
 			get {
@@ -2034,7 +1911,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Contributors {
 			get {
@@ -2051,7 +1927,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Coverage {
 			get {
@@ -2068,7 +1943,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Subject {
 			get {
@@ -2085,7 +1959,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Theme {
 			get {
@@ -2102,7 +1975,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Description {
 			get {
@@ -2119,7 +1991,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Identifier {
 			get {
@@ -2136,7 +2007,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Audiences {
 			get {
@@ -2153,7 +2023,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public nint? NumberOfPages {
 			get {
@@ -2170,7 +2039,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? PageWidth {
 			get {
@@ -2187,7 +2055,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? PageHeight {
 			get {
@@ -2204,7 +2071,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? SecurityMethod {
 			get {
@@ -2221,7 +2087,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Creator {
 			get {
@@ -2238,7 +2103,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? EncodingApplications {
 			get {
@@ -2255,7 +2119,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public NSDate? DueDate {
 			get {
@@ -2272,7 +2135,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public double? StarRating {
 			get {
@@ -2289,7 +2151,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? PhoneNumbers {
 			get {
@@ -2306,7 +2167,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? EmailAddresses {
 			get {
@@ -2323,7 +2183,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? InstantMessageAddresses {
 			get {
@@ -2340,7 +2199,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Kind {
 			get {
@@ -2357,7 +2215,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Recipients {
 			get {
@@ -2374,7 +2231,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? FinderComment {
 			get {
@@ -2391,7 +2247,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Fonts {
 			get {
@@ -2408,7 +2263,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? AppleLoopsRoot {
 			get {
@@ -2425,7 +2279,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? AppleLoopsKeyFilterType {
 			get {
@@ -2442,7 +2295,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? AppleLoopsLoopMode {
 			get {
@@ -2459,7 +2311,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? AppleLoopDescriptors {
 			get {
@@ -2476,7 +2327,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? MusicalInstrumentCategory {
 			get {
@@ -2493,7 +2343,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? MusicalInstrumentName {
 			get {
@@ -2510,7 +2359,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? CFBundleIdentifier {
 			get {
@@ -2527,7 +2375,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Information {
 			get {
@@ -2544,7 +2391,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Director {
 			get {
@@ -2561,7 +2407,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Producer {
 			get {
@@ -2578,7 +2423,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? Genre {
 			get {
@@ -2595,7 +2439,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? Performers {
 			get {
@@ -2612,7 +2455,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? OriginalFormat {
 			get {
@@ -2629,7 +2471,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? OriginalSource {
 			get {
@@ -2646,7 +2487,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? AuthorEmailAddresses {
 			get {
@@ -2663,7 +2503,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? RecipientEmailAddresses {
 			get {
@@ -2680,7 +2519,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? AuthorAddresses {
 			get {
@@ -2697,7 +2535,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? RecipientAddresses {
 			get {
@@ -2714,7 +2551,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? IsLikelyJunk {
 			get {
@@ -2731,7 +2567,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? ExecutableArchitectures {
 			get {
@@ -2748,7 +2583,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? ExecutablePlatform {
 			get {
@@ -2765,7 +2599,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public string? []? ApplicationCategories {
 			get {
@@ -2782,7 +2615,6 @@ namespace Foundation {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10, 9)]
 #endif
 		public bool? IsApplicationManaged {
 			get {

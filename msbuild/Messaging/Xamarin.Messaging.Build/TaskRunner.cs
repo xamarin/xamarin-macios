@@ -9,6 +9,9 @@ using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Build.Properties;
 using Xamarin.Messaging.Build.Serialization;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Messaging.Build {
 	internal class TaskRunner : ITaskRunner {
 		static readonly ITracer tracer = Tracer.Get<TaskRunner> ();

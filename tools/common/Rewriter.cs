@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Tuner;
 using ClassRedirector;
 using Mono.Linker;
 
@@ -12,20 +13,30 @@ using Mono.Linker;
 namespace ClassRedirector {
 #if NET
 	public class Rewriter {
+		// Rewriter exists to do three things:
+		// 0. For each class identified by the static registrar,
+		//    write a public field that will contain its class handle and
+		//    The fields and static initializer will live in
+		//    ObjRuntime.Runtime.ClassHandles
+		//   write a static initializer to initialize that field.
+		// 1. Remove class_ptr fields and rewrite all usages of it
+		//    to the static field in ClassHandles
+		// 2. Strip out the static initializer from each class, and if
+		//    possible, remove the static initializer itself.
 		const string runtimeName = "ObjCRuntime.Runtime";
 		const string classHandleName = "ObjCRuntime.Runtime/ClassHandles";
-		const string mtClassMapName = "ObjCRuntime.Runtime/MTClassMap";
 		const string nativeHandleName = "ObjCRuntime.NativeHandle";
 		const string initClassHandlesName = "InitializeClassHandles";
+		const string setHandleName = "SetHandle";
 		const string classPtrName = "class_ptr";
 		CSToObjCMap map;
 		string pathToXamarinAssembly;
 		Dictionary<string, FieldDefinition> csTypeToFieldDef = new Dictionary<string, FieldDefinition> ();
 		IEnumerable<AssemblyDefinition> assemblies;
 		AssemblyDefinition xamarinAssembly;
-		Xamarin.Tuner.DerivedLinkContext linkContext;
+		Xamarin.Tuner.DerivedLinkContext derivedLinkContext;
 
-		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? linkContext)
+		public Rewriter (CSToObjCMap map, IEnumerable<AssemblyDefinition> assembliesToPatch, Xamarin.Tuner.DerivedLinkContext? derivedLinkContext)
 		{
 			this.map = map;
 			this.assemblies = assembliesToPatch;
@@ -36,24 +47,34 @@ namespace ClassRedirector {
 				xamarinAssembly = xasm;
 				pathToXamarinAssembly = xamarinAssembly.MainModule.FileName;
 			}
-			if (linkContext is null) {
-				throw new Exception ("Rewriter needs a valid link context.");
+			if (derivedLinkContext is null) {
+				throw new Exception ("Rewriter needs a valid derived link context.");
 			} else {
-				this.linkContext = linkContext;
+				this.derivedLinkContext = derivedLinkContext;
 			}
-
 		}
 
 		public string Process ()
 		{
 			Dictionary<string, FieldDefinition> classMap;
 			try {
+				// make the fields and static initializer for
+				// the fields. If this fails, there have been
+				// no changes, so no harm, no foul, just
+				// report it. The things that would
+				// cause this to fail are heinously
+				// catastrophic like not being able to
+				// find the type NativeHandle and its
+				// attendent methods. How is *anything*
+				// supposed to work with that in play?
 				classMap = CreateClassHandles ();
 			} catch (Exception e) {
 				// if this throws, no changes are made to the assemblies
 				// so it's safe to log it on the far side.
 				return e.Message;
 			}
+			// The second pass is to fix up all the usages
+			// of class_ptr
 			PatchClassPtrUsage (classMap);
 			return "";
 		}
@@ -71,34 +92,45 @@ namespace ClassRedirector {
 			var initMethod = classHandles.Methods.FirstOrDefault (m => m.Name == initClassHandlesName);
 			if (initMethod is null)
 				throw new Exception ($"Unable to find {initClassHandlesName} method in {classHandles.Name}");
+			var setHandleMethod = classHandles.Methods.FirstOrDefault (m => m.Name == setHandleName);
+			if (setHandleMethod is null)
+				throw new Exception ($"Unable to find {setHandleName} method in {classHandles.Name}");
 
 			var processor = initMethod.Body.GetILProcessor ();
 
-			var mtClassMapDef = LocateMTClassMap (module);
-			if (mtClassMapDef is null)
-				throw new Exception ($"Unable to find {mtClassMapName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
-
 			var nativeHandle = LocateNativeHandle (module);
-			if (nativeHandle is null)
+			if (nativeHandle is null) {
 				throw new Exception ($"Unable to find {nativeHandleName} in Module {module.Name} File {module.FileName}, assembly {xamarinAssembly.Name}");
+			}
 
 			var nativeHandleOpImplicit = FindOpImplicit (nativeHandle);
-			if (nativeHandleOpImplicit is null)
+			if (nativeHandleOpImplicit is null) {
 				throw new Exception ($"Unable to find implicit cast in {nativeHandleName}");
+			}
 
+			// no work to do
 			if (map.Count () == 0)
 				return classMap;
 
+			processor.Clear ();
+			processor.Append (Instruction.Create (OpCodes.Nop));
 			foreach (var nameIndexPair in map) {
-				var csName = nameIndexPair.Key;
+				var csName = TrimClassName (nameIndexPair.Key);
 				var nameIndex = nameIndexPair.Value;
 				var fieldDef = AddPublicStaticField (classHandles, nameIndex.ObjCName, nativeHandle);
-				AddInitializer (nativeHandleOpImplicit, processor, mtClassMapDef, nameIndex.MapIndex, fieldDef);
+				AddInitializer (processor, nameIndex.MapIndex, fieldDef, setHandleMethod);
 				classMap [csName] = fieldDef;
 			}
+			processor.Append (Instruction.Create (OpCodes.Ret));
 
 			MarkForSave (xamarinAssembly);
 			return classMap;
+		}
+
+		static string TrimClassName (string str)
+		{
+			var index = str.LastIndexOf (", ");
+			return index < 0 ? str : str.Remove (index);
 		}
 
 		MethodDefinition? FindOpImplicit (TypeDefinition nativeHandle)
@@ -107,37 +139,18 @@ namespace ClassRedirector {
 				m.Parameters.Count == 1 && m.Parameters [0].ParameterType == nativeHandle.Module.TypeSystem.IntPtr);
 		}
 
-		void AddInitializer (MethodReference nativeHandleOpImplicit, ILProcessor il, TypeDefinition mtClassMapDef, int index, FieldDefinition fieldDef)
+		void AddInitializer (ILProcessor il, int index, FieldDefinition staticFieldTarget, MethodDefinition setHandleMethod)
 		{
-			// Assuming that we have a method that looks like this:
-			// internal static unsafe void InitializeClassHandles (MTClassMap* map)
-			// {
-			// }
-			// We should have a compiled method that looks like this:
-			// nop
-			// ret
-			//
-			// For each handle that we define, we should add the following instructions:
-			// ldarg.0
-			// ldc.i4 index
-			// conv.i
-			// sizeof ObjCRuntime.Runtime.MTClassMap
-			// mul
-			// add
-			// ldfld ObjCRuntime.Runtime.MTClassMap.handle
-			// call ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)
-			// stsfld fieldDef
-			var handleRef = mtClassMapDef.Fields.First (f => f.Name == "handle");
-			var last = il.Body.Instructions.Last ();
-			il.InsertBefore (last, Instruction.Create (OpCodes.Ldarg_0));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Ldc_I4, index));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Conv_I));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Sizeof, mtClassMapDef));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Mul));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Add));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Ldfld, handleRef));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Call, nativeHandleOpImplicit));
-			il.InsertBefore (last, Instruction.Create (OpCodes.Stsfld, fieldDef));
+			il.Append (Instruction.Create (OpCodes.Ldsflda, staticFieldTarget));
+			il.Append (Instruction.Create (OpCodes.Stloc_1));
+			il.Append (Instruction.Create (OpCodes.Ldc_I4, index));
+			il.Append (Instruction.Create (OpCodes.Ldloc_1));
+			il.Append (Instruction.Create (OpCodes.Conv_U));
+			il.Append (Instruction.Create (OpCodes.Ldarg_0));
+			il.Append (Instruction.Create (OpCodes.Call, setHandleMethod));
+			il.Append (Instruction.Create (OpCodes.Ldc_I4, 0));
+			il.Append (Instruction.Create (OpCodes.Conv_U));
+			il.Append (Instruction.Create (OpCodes.Stloc_1));
 		}
 
 		FieldDefinition AddPublicStaticField (TypeDefinition inType, string fieldName, TypeReference fieldType)
@@ -162,11 +175,6 @@ namespace ClassRedirector {
 			return AllTypes (module).FirstOrDefault (t => t.FullName == classHandleName);
 		}
 
-		TypeDefinition? LocateMTClassMap (ModuleDefinition module)
-		{
-			return AllTypes (module).FirstOrDefault (t => t.FullName == mtClassMapName);
-		}
-
 		void PatchClassPtrUsage (Dictionary<string, FieldDefinition> classMap)
 		{
 			foreach (var assem in assemblies) {
@@ -182,32 +190,32 @@ namespace ClassRedirector {
 		{
 			var dirty = false;
 			foreach (var cl in AllTypes (module)) {
+				// generic classes leave class_ptr references
+				// behind that we (apparently) can't find
+				if (cl.HasGenericParameters) {
+					continue;
+				}
 				if (classMap.TryGetValue (cl.FullName, out var classPtrField)) {
-					dirty = true;
-					// if this doesn't throw, it will
-					// always change the contents of an
-					// assembly
-					PatchClassPtrUsage (cl, classPtrField);
+					var madeChanges = PatchClassPtrUsage (cl, classPtrField);
+					dirty = dirty || madeChanges;
 				}
 			}
 			return dirty;
 		}
 
-		void PatchClassPtrUsage (TypeDefinition cl, FieldDefinition classPtrField)
+		bool PatchClassPtrUsage (TypeDefinition cl, FieldDefinition classPtrField)
 		{
 			var class_ptr = cl.Fields.FirstOrDefault (f => f.Name == classPtrName);
 			if (class_ptr is null) {
-				throw new Exception ($"Error processing class {cl.FullName} - no {classPtrName} field.");
+				return false;
 			}
-
 			// step 1: remove the field
 			cl.Fields.Remove (class_ptr);
-
 			// step 2: remove init code from cctor
 			RemoveCCtorInit (cl, class_ptr);
-
 			// step 3: patch every method
 			PatchMethods (cl, class_ptr, classPtrField);
+			return true;
 		}
 
 		void PatchMethods (TypeDefinition cl, FieldDefinition classPtr, FieldDefinition classPtrField)
@@ -219,13 +227,38 @@ namespace ClassRedirector {
 
 		void PatchMethod (MethodDefinition method, FieldDefinition classPtr, FieldDefinition classPtrField)
 		{
-			var il = method.Body.GetILProcessor ();
-			for (int i = 0; i < method.Body.Instructions.Count; i++) {
-				var instr = method.Body.Instructions [i];
-				if (instr.OpCode == OpCodes.Ldsfld && instr.Operand == classPtr) {
-					il.Replace (instr, Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField)));
+			var body = method.Body;
+			if (body is null)
+				return;
+			var il = body.GetILProcessor ();
+			body.SimplifyMacros ();
+			for (var i = 0; i < body.Instructions.Count; i++) {
+				var old = body.Instructions [i];
+				if (old.OpCode == OpCodes.Ldsfld && old.Operand == classPtr) {
+					var @new = Instruction.Create (OpCodes.Ldsfld, method.Module.ImportReference (classPtrField));
+					ReplaceAndPatch (body, il, i, @new);
 				}
 			}
+			body.OptimizeMacros ();
+		}
+
+		static bool PatchReferences (MethodBody body, Instruction old, Instruction @new)
+		{
+			bool changed = false;
+			foreach (var instruction in body.Instructions) {
+				if (instruction.Operand is Instruction target && target == old) {
+					instruction.Operand = @new;
+					changed = true;
+				} else if (instruction.Operand is Instruction [] targets) {
+					for (int i = 0; i < targets.Length; i++) {
+						if (targets [i] == old) {
+							@targets [i] = @new;
+							changed = true;
+						}
+					}
+				}
+			}
+			return changed;
 		}
 
 		void RemoveCCtorInit (TypeDefinition cl, FieldDefinition class_ptr)
@@ -233,12 +266,13 @@ namespace ClassRedirector {
 			var cctor = cl.Methods.FirstOrDefault (m => m.Name == ".cctor");
 			if (cctor is null)
 				return; // no static init - should never happen, but we can deal.
-
-			var il = cctor.Body.GetILProcessor ();
+			var body = cctor.Body;
+			var il = body.GetILProcessor ();
+			body.SimplifyMacros ();
 			Instruction? stsfld = null;
 			int i = 0;
-			for (; i < il.Body.Instructions.Count; i++) {
-				var instr = il.Body.Instructions [i];
+			for (; i < body.Instructions.Count; i++) {
+				var instr = body.Instructions [i];
 				// look for
 				// stsfld class_ptr
 				if (instr.OpCode == OpCodes.Stsfld && instr.Operand == class_ptr) {
@@ -259,20 +293,21 @@ namespace ClassRedirector {
 			var isLdStr = IsLdStr (il, i - 2);
 
 			if (isGetClassHandle && isLdStr) {
-				il.RemoveAt (i);
-				il.RemoveAt (i - 1);
-				il.RemoveAt (i - 2);
+				RemoveAndMaybeNoOp (body, il, i);
+				RemoveAndMaybeNoOp (body, il, i - 1);
+				RemoveAndMaybeNoOp (body, il, i - 2);
 			} else if (isGetClassHandle) {
 				// don't know how the string got on the stack, so at least get rid of the
 				// call to GetClassHandle by nopping it out. This still leaves the string on
 				// the stack, so pop it.
-				il.Replace (il.Body.Instructions [i - 1], Instruction.Create (OpCodes.Nop));
+				ReplaceAndPatch (body, il, i - 1, Instruction.Create (OpCodes.Nop));
 				// can't remove all three, so just pop the IntPtr.
-				il.Replace (il.Body.Instructions [i], Instruction.Create (OpCodes.Pop));
+				ReplaceAndPatch (body, il, i, Instruction.Create (OpCodes.Pop));
 			} else {
 				// can't remove all three, so just pop the IntPtr.
-				il.Replace (il.Body.Instructions [i], Instruction.Create (OpCodes.Pop));
+				ReplaceAndPatch (body, il, i, Instruction.Create (OpCodes.Pop));
 			}
+			body.OptimizeMacros ();
 
 			// if we're left with exactly 1 instruction and it's a return,
 			// then we can get rid of the entire method
@@ -287,6 +322,24 @@ namespace ClassRedirector {
 				if (cctor.Body.Instructions.Last ().OpCode == OpCodes.Ret &&
 					cctor.Body.Instructions.First ().OpCode == OpCodes.Nop)
 					cl.Methods.Remove (cctor);
+			}
+		}
+
+		void ReplaceAndPatch (MethodBody body, ILProcessor il, int index, Instruction @new)
+		{
+			var old = body.Instructions [index];
+			PatchReferences (body, old, @new);
+			il.Replace (index, @new);
+		}
+
+		void RemoveAndMaybeNoOp (MethodBody body, ILProcessor il, int index)
+		{
+			var old = body.Instructions [index];
+			var @new = Instruction.Create (OpCodes.Nop);
+			if (PatchReferences (body, old, @new)) {
+				il.Replace (index, @new);
+			} else {
+				il.Remove (old);
 			}
 		}
 
@@ -329,10 +382,15 @@ namespace ClassRedirector {
 
 		void MarkForSave (AssemblyDefinition assembly)
 		{
-			var annotations = linkContext.Annotations;
-			var action = annotations.GetAction (assembly);
-			if (action == AssemblyAction.Copy)
-				annotations.SetAction (assembly, AssemblyAction.Save);
+			var annotations = derivedLinkContext.Annotations;
+			if (!annotations.HasAction (assembly)) {
+				annotations.SetAction (assembly, AssemblyAction.Link);
+			} else {
+				var action = annotations.GetAction (assembly);
+				if (action != AssemblyAction.Link) {
+					annotations.SetAction (assembly, AssemblyAction.Save);
+				}
+			}
 		}
 	}
 #endif
