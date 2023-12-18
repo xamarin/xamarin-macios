@@ -139,7 +139,6 @@ namespace QuickLook {
 		[return: NullAllowed]
 		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
 
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("previewController:transitionViewForPreviewItem:"), DelegateName ("QLTransitionView"), DefaultValue (null)]
 		[return: NullAllowed]
@@ -277,7 +276,6 @@ namespace QuickLook {
 	}
 
 	[NoMac]
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface QLPreviewingController {

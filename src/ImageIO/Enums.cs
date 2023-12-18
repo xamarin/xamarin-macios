@@ -49,8 +49,6 @@ namespace ImageIO {
 
 	// untyped enum / #defines
 	// used with kCGImagePropertyPNGCompressionFilter
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	public enum CGImagePropertyPngFilters {
@@ -62,7 +60,7 @@ namespace ImageIO {
 		Paeth = 0x80
 	}
 
-	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	public enum CGImageAnimationStatus {
 		Ok = 0,

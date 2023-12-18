@@ -89,5 +89,15 @@ namespace GeneratorTests {
 		[TestCase ("t", "T")]
 		public void CapitalizeTest (string input, string output)
 			=> Assert.AreEqual (output, input.Capitalize ());
+
+		[TestCase ("ArityTest", "ArityTest")]
+		[TestCase ("Arity`Test", "Arity")]
+		[TestCase ("Arity`", "Arity")]
+		[TestCase ("`Arity", "`Arity")]
+		[TestCase ("A`rity", "A")]
+		[TestCase ("`", "`")]
+		[TestCase (null, null)]
+		public void RemoveArityTest (string input, string output)
+			=> Assert.AreEqual (output, input.RemoveArity ());
 	}
 }

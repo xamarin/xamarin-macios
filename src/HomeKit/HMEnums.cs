@@ -4,8 +4,6 @@ using Foundation;
 
 namespace HomeKit {
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("HMErrorCode")]
 	public enum HMError : long {
@@ -122,8 +120,6 @@ namespace HomeKit {
 
 
 	// conveniance enum (ObjC uses NSString)
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	public enum HMCharacteristicType {
 		None,
@@ -247,92 +243,74 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeLockManagementAutoSecureTimeout")]
 		LockManagementAutoSecureTimeout,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeAirParticulateDensity")]
 		AirParticulateDensity,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeAirParticulateSize")]
 		AirParticulateSize,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeAirQuality")]
 		AirQuality,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeBatteryLevel")]
 		BatteryLevel,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCarbonDioxideDetected")]
 		CarbonDioxideDetected,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCarbonDioxideLevel")]
 		CarbonDioxideLevel,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCarbonDioxidePeakLevel")]
 		CarbonDioxidePeakLevel,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCarbonMonoxideDetected")]
 		CarbonMonoxideDetected,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCarbonMonoxideLevel")]
 		CarbonMonoxideLevel,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCarbonMonoxidePeakLevel")]
 		CarbonMonoxidePeakLevel,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeChargingState")]
 		ChargingState,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeContactState")]
 		ContactState,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentSecuritySystemState")]
 		CurrentSecuritySystemState,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentHorizontalTilt")]
 		CurrentHorizontalTilt,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentLightLevel")]
 		CurrentLightLevel,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentPosition")]
 		CurrentPosition,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentVerticalTilt")]
 		CurrentVerticalTilt,
 
-		[iOS (9, 0)]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'HMAccessory.FirmwareVersion' instead.")]
@@ -341,339 +319,277 @@ namespace HomeKit {
 		[Field ("HMCharacteristicTypeFirmwareVersion")]
 		FirmwareVersion,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeHardwareVersion")]
 		HardwareVersion,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeHoldPosition")]
 		HoldPosition,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeInputEvent")]
 		InputEvent,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeLeakDetected")]
 		LeakDetected,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeOccupancyDetected")]
 		OccupancyDetected,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeOutputState")]
 		OutputState,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypePositionState")]
 		PositionState,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSmokeDetected")]
 		SmokeDetected,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSoftwareVersion")]
 		SoftwareVersion,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeStatusActive")]
 		StatusActive,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeStatusFault")]
 		StatusFault,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeStatusJammed")]
 		StatusJammed,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeStatusLowBattery")]
 		StatusLowBattery,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeStatusTampered")]
 		StatusTampered,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetSecuritySystemState")]
 		TargetSecuritySystemState,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetHorizontalTilt")]
 		TargetHorizontalTilt,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetPosition")]
 		TargetPosition,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetVerticalTilt")]
 		TargetVerticalTilt,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeStreamingStatus")]
 		StreamingStatus,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSetupStreamEndpoint")]
 		SetupStreamEndpoint,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSupportedVideoStreamConfiguration")]
 		SupportedVideoStreamConfiguration,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSupportedAudioStreamConfiguration")]
 		SupportedAudioStreamConfiguration,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSupportedRTPConfiguration")]
 		SupportedRtpConfiguration,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSelectedStreamConfiguration")]
 		SelectedStreamConfiguration,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeVolume")]
 		Volume,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeMute")]
 		Mute,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeNightVision")]
 		NightVision,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeOpticalZoom")]
 		OpticalZoom,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeDigitalZoom")]
 		DigitalZoom,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeImageRotation")]
 		ImageRotation,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		ImageMirroring,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeActive")]
 		Active,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentAirPurifierState")]
 		CurrentAirPurifierState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetAirPurifierState")]
 		TargetAirPurifierState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentFanState")]
 		CurrentFanState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentHeaterCoolerState")]
 		CurrentHeaterCoolerState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentHumidifierDehumidifierState")]
 		CurrentHumidifierDehumidifierState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentSlatState")]
 		CurrentSlatState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeWaterLevel")]
 		WaterLevel,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeFilterChangeIndication")]
 		FilterChangeIndication,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeFilterLifeLevel")]
 		FilterLifeLevel,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeFilterResetChangeIndication")]
 		FilterResetChangeIndication,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeLockPhysicalControls")]
 		LockPhysicalControls,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSwingMode")]
 		SwingMode,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetHeaterCoolerState")]
 		TargetHeaterCoolerState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetHumidifierDehumidifierState")]
 		TargetHumidifierDehumidifierState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetFanState")]
 		TargetFanState,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSlatType")]
 		SlatType,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeCurrentTilt")]
 		CurrentTilt,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeTargetTilt")]
 		TargetTilt,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeOzoneDensity")]
 		OzoneDensity,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeNitrogenDioxideDensity")]
 		NitrogenDioxideDensity,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSulphurDioxideDensity")]
 		SulphurDioxideDensity,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypePM2_5Density")]
 		PM2_5Density,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypePM10Density")]
 		PM10Density,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeVolatileOrganicCompoundDensity")]
 		VolatileOrganicCompoundDensity,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeDehumidifierThreshold")]
 		DehumidifierThreshold,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeHumidifierThreshold")]
 		HumidifierThreshold,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeSecuritySystemAlarmType")]
 		SecuritySystemAlarmType,
 
-		[iOS (10, 3), Watch (3, 2), TV (10, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeLabelNamespace")]
 		LabelNamespace,
 
-		[iOS (10, 3), Watch (3, 2), TV (10, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeLabelIndex")]
 		LabelIndex,
 
-		[iOS (11, 0), Watch (4, 0), TV (11, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMCharacteristicTypeColorTemperature")]
 		ColorTemperature,
@@ -710,8 +626,6 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HMCharacteristicMetadataUnits {
 		None,
@@ -719,24 +633,17 @@ namespace HomeKit {
 		Fahrenheit,
 		Percentage,
 		ArcDegree,
-		[iOS (8, 3)]
 		[MacCatalyst (13, 1)]
 		Seconds,
-		[iOS (9, 3)]
-		[Watch (2, 2)]
 		[MacCatalyst (13, 1)]
 		Lux,
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		PartsPerMillion,
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		MicrogramsPerCubicMeter,
 	}
 
 	// conveniance enum (ObjC uses NSString)
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Flags]
 	public enum HMServiceType {
@@ -769,158 +676,128 @@ namespace HomeKit {
 		[Field ("HMServiceTypeLockManagement")]
 		LockManagement,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeAirQualitySensor")]
 		AirQualitySensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeBattery")]
 		Battery,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeCarbonDioxideSensor")]
 		CarbonDioxideSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeCarbonMonoxideSensor")]
 		CarbonMonoxideSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeContactSensor")]
 		ContactSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeDoor")]
 		Door,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeHumiditySensor")]
 		HumiditySensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeLeakSensor")]
 		LeakSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeLightSensor")]
 		LightSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeMotionSensor")]
 		MotionSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeOccupancySensor")]
 		OccupancySensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeSecuritySystem")]
 		SecuritySystem,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeStatefulProgrammableSwitch")]
 		StatefulProgrammableSwitch,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeStatelessProgrammableSwitch")]
 		StatelessProgrammableSwitch,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeSmokeSensor")]
 		SmokeSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeTemperatureSensor")]
 		TemperatureSensor,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeWindow")]
 		Window,
 
-		[iOS (9, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeWindowCovering")]
 		WindowCovering,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeCameraRTPStreamManagement")]
 		CameraRtpStreamManagement,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeCameraControl")]
 		CameraControl,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeMicrophone")]
 		Microphone,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeSpeaker")]
 		Speaker,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeDoorbell")]
 		Doorbell,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeAirPurifier")]
 		AirPurifier,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeVentilationFan")]
 		VentilationFan,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeFilterMaintenance")]
 		FilterMaintenance,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeHeaterCooler")]
 		HeaterCooler,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeHumidifierDehumidifier")]
 		HumidifierDehumidifier,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeSlats")]
 		Slats,
 
-		[iOS (10, 3), Watch (3, 2), TV (10, 2)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMServiceTypeLabel")]
 		Label,
@@ -942,8 +819,6 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HMCharacteristicMetadataFormat {
 		None,
@@ -961,8 +836,6 @@ namespace HomeKit {
 		Tlv8
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueDoorState : long {
@@ -973,8 +846,6 @@ namespace HomeKit {
 		Stopped
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueHeatingCooling : long {
@@ -984,8 +855,6 @@ namespace HomeKit {
 		Auto
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueRotationDirection : long {
@@ -993,8 +862,6 @@ namespace HomeKit {
 		CounterClockwise
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTemperatureUnit : long {
@@ -1002,8 +869,6 @@ namespace HomeKit {
 		Fahrenheit
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLockMechanismState : long {
@@ -1013,8 +878,6 @@ namespace HomeKit {
 		Unknown
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("HMCharacteristicValueLockMechanismLastKnownAction")]
 	// in iOS 8.3 this was renamed HMCharacteristicValueLockMechanismLastKnownAction but that would be a breaking change for us
@@ -1032,8 +895,6 @@ namespace HomeKit {
 		LastKnownActionUnsecuredUsingPhysicalMovement,
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native ("HMCharacteristicValueAirParticulateSize")]
 	public enum HMCharacteristicValueAirParticulate : long {
@@ -1041,8 +902,6 @@ namespace HomeKit {
 		Size10
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentSecuritySystemState : long {
@@ -1053,8 +912,6 @@ namespace HomeKit {
 		Triggered
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValuePositionState : long {
@@ -1063,8 +920,6 @@ namespace HomeKit {
 		Stopped
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetSecuritySystemState : long {
@@ -1074,87 +929,87 @@ namespace HomeKit {
 		Disarm
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueBatteryStatus : long {
 		Normal = 0,
 		Low
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueJammedStatus : long {
 		None = 0,
 		Jammed
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTamperedStatus : long {
 		None = 0,
 		Tampered
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLeakStatus : long {
 		None = 0,
 		Detected
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueSmokeDetectionStatus : long {
 		None = 0,
 		Detected
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueChargingState : long {
 		None = 0,
 		InProgress,
-		[iOS (10, 2), Watch (3, 1, 1), TV (10, 1)]
+		[Watch (3, 1, 1)]
 		[MacCatalyst (14, 0)]
 		NotChargeable,
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueContactState : long {
 		Detected = 0,
 		None,
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueStatusFault : long {
 		NoFault = 0,
 		GeneralFault
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCarbonMonoxideDetectionStatus : long {
 		NotDetected = 0,
 		Detected
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCarbonDioxideDetectionStatus : long {
 		NotDetected = 0,
 		Detected
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueOccupancyStatus : long {
 		NotOccupied = 0,
 		Occupied
 	}
 
-	[Watch (3, 0), TV (10, 0), iOS (10, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueSecuritySystemAlarmType : long {
 		NoAlarm = 0,
@@ -1162,8 +1017,6 @@ namespace HomeKit {
 	}
 
 	// conveniance enum (ObjC uses NSString)
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HMActionSetType {
 		Unknown = -1,
@@ -1172,13 +1025,10 @@ namespace HomeKit {
 		HomeDeparture,
 		HomeArrival,
 		UserDefined,
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (13, 1)]
 		TriggerOwned,
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	// conveniance enum (ObjC uses NSString)
 	public enum HMAccessoryCategoryType {
@@ -1234,47 +1084,39 @@ namespace HomeKit {
 		[Field ("HMAccessoryCategoryTypeWindowCovering")]
 		WindowCovering,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeRangeExtender")]
 		RangeExtender,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeIPCamera")]
 		IPCamera,
 
-		[iOS (10, 0), Watch (3, 0)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
 		VideoDoorbell,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeAirPurifier")]
 		AirPurifier,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeAirHeater")]
 		AirHeater,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeAirConditioner")]
 		AirConditioner,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeAirHumidifier")]
 		AirHumidifier,
 
 		[Watch (3, 1, 1)]
-		[iOS (10, 2), TV (10, 1)]
 		[MacCatalyst (14, 0)]
 		[Field ("HMAccessoryCategoryTypeAirDehumidifier")]
 		AirDehumidifier,
@@ -1295,8 +1137,6 @@ namespace HomeKit {
 		ShowerHead,
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	public enum HMSignificantEvent {
 
@@ -1316,8 +1156,6 @@ namespace HomeKit {
 		Authorized = 1 << 2,
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueAirQuality : long {
@@ -1329,8 +1167,6 @@ namespace HomeKit {
 		Poor
 	}
 
-	[iOS (10, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCameraStreamState : ulong {
@@ -1340,8 +1176,6 @@ namespace HomeKit {
 		NotStreaming = 4
 	}
 
-	[iOS (10, 0)]
-	[TV (10, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCameraAudioStreamSetting : ulong {
@@ -1351,7 +1185,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLockPhysicalControlsState : long {
 		NotLocked = 0,
@@ -1359,7 +1193,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentAirPurifierState : long {
 		Inactive = 0,
@@ -1368,7 +1202,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetAirPurifierState : long {
 		Manual = 0,
@@ -1376,7 +1210,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentSlatState : long {
 		Stationary = 0,
@@ -1385,7 +1219,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueSlatType : long {
 		Horizontal = 0,
@@ -1393,7 +1227,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueFilterChange : long {
 		NotNeeded = 0,
@@ -1401,7 +1235,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentFanState : long {
 		Inactive = 0,
@@ -1410,7 +1244,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetFanState : long {
 		Manual = 0,
@@ -1418,7 +1252,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeaterCoolerState : long {
 		Inactive = 0,
@@ -1428,7 +1262,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetHeaterCoolerState : long {
 		Automatic = 0,
@@ -1437,7 +1271,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHumidifierDehumidifierState : long {
 		Inactive = 0,
@@ -1447,7 +1281,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueTargetHumidifierDehumidifierState : long {
 		Automatic = 0,
@@ -1456,7 +1290,7 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueSwingMode : long {
 		Disabled = 0,
@@ -1464,7 +1298,6 @@ namespace HomeKit {
 	}
 
 	[Watch (3, 1, 1)]
-	[TV (10, 1), iOS (10, 2)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueActivationState : long {
@@ -1472,7 +1305,7 @@ namespace HomeKit {
 		Active,
 	}
 
-	[Watch (3, 2), TV (10, 2), iOS (10, 3), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueInputEvent : long {
 		SinglePress = 0,
@@ -1480,14 +1313,14 @@ namespace HomeKit {
 		LongPress,
 	}
 
-	[Watch (3, 2), TV (10, 2), iOS (10, 3), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMCharacteristicValueLabelNamespace : long {
 		Dot = 0,
 		Numeral,
 	}
 
-	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMEventTriggerActivationState : ulong {
 		Disabled = 0,
@@ -1497,7 +1330,7 @@ namespace HomeKit {
 		Enabled = 4,
 	}
 
-	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMHomeHubState : ulong {
 		NotAvailable = 0,
@@ -1505,7 +1338,7 @@ namespace HomeKit {
 		Disconnected,
 	}
 
-	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMPresenceEventType : ulong {
 		EveryEntry = 1,
@@ -1516,7 +1349,7 @@ namespace HomeKit {
 		NotAtHome = LastExit,
 	}
 
-	[Watch (4, 0), TV (11, 0), iOS (11, 0), MacCatalyst (14, 0)]
+	[MacCatalyst (14, 0)]
 	[Native]
 	public enum HMPresenceEventUserType : ulong {
 		CurrentUser = 1,
@@ -1556,7 +1389,7 @@ namespace HomeKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[TV (10, 0), NoMac, iOS (8, 0)]
+	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetDoorState : long {
 		Open = 0,
@@ -1564,7 +1397,7 @@ namespace HomeKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[TV (10, 0), NoMac, iOS (8, 0)]
+	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeatingCooling : long {
 		Off = 0,
@@ -1573,7 +1406,7 @@ namespace HomeKit {
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[TV (10, 0), NoMac, iOS (8, 0)]
+	[NoMac]
 	[Native]
 	public enum HMCharacteristicValueTargetLockMechanismState : long {
 		Unsecured = 0,

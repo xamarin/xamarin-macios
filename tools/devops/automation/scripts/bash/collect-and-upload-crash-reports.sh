@@ -9,10 +9,16 @@ if ! test -d "$HOME/Library/Logs/DiagnosticReports"; then
 elif [[ "$(find "$HOME/Library/Logs/DiagnosticReports" -type f | wc -l)" -eq 0 ]]; then
   echo "No crash reports found"  # nothing to do
 else
-  zip -9rj "$SYSTEM_DEFAULTWORKINGDIRECTORY/crash-reports.zip" "$HOME/Library/Logs/DiagnosticReports"
-  if test -f "$SYSTEM_DEFAULTWORKINGDIRECTORY/crash-reports.zip"; then
+  if test -n "$MACIOS_UPLOAD_PREFIX"; then
+    FILENAME="${MACIOS_UPLOAD_PREFIX}-"
+  elif test -n "$MACIOS_TEST_PREFIX"; then
+    FILENAME="$FILENAME${MACIOS_TEST_PREFIX}-"
+  fi
+  FILENAME="${FILENAME}crash-reports-$SYSTEM_STAGEDISPLAYNAME-$SYSTEM_JOBATTEMPT"
+  zip -9rj "$SYSTEM_DEFAULTWORKINGDIRECTORY/$FILENAME.zip" "$HOME/Library/Logs/DiagnosticReports"
+  if test -f "$SYSTEM_DEFAULTWORKINGDIRECTORY/$FILENAME.zip"; then
     set +x
-    echo "##vso[artifact.upload containerfolder=CrashReports;artifactname=${MACIOS_UPLOAD_PREFIX}crash-reports-$SYSTEM_STAGEDISPLAYNAME-$BUILD_BUILDID-$SYSTEM_JOBATTEMPT]$SYSTEM_DEFAULTWORKINGDIRECTORY/crash-reports.zip"
+    echo "##vso[artifact.upload containerfolder=CrashReports;artifactname=CrashReports]$SYSTEM_DEFAULTWORKINGDIRECTORY/$FILENAME.zip"
     set -x
   fi
 fi

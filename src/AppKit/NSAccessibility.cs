@@ -28,15 +28,11 @@ namespace AppKit {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-#else
-	[Mac (10, 9)] // but the field/notifications are in 10.9
 #endif
 	public partial class NSAccessibility {
 #if !COREBUILD
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGRect NSAccessibilityFrameInView (NativeHandle parentView, CGRect frame);
@@ -48,8 +44,6 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGPoint NSAccessibilityPointInView (NativeHandle parentView, CGPoint point);

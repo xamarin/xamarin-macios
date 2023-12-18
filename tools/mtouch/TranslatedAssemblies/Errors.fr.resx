@@ -960,6 +960,9 @@
 		<value>HttpMessageHandler '{0}' non valide pour watchOS. La seule valeur valide est NSUrlSessionHandler.
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Il n’est pas possible de conserver le bureau d’enregistrement dynamique (en passant ’--optimize=-remove-dynamic-registrar’), car le bureau d’enregistrement dynamique n’est pas pris en charge lors de l’utilisation de NativeAOT. La prise en charge de l’inscription dynamique sera toujours supprimée.</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>Impossible de traiter la description XML : {0}
 		</value>
@@ -1104,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>Impossible de {0} l'assembly '{1}'
 		</value>

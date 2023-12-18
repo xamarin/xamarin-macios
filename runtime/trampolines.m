@@ -110,7 +110,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 			} else if (xamarin_is_class_array (r_klass)) {
 				NSArray *rv = xamarin_managed_array_to_nsarray ((MonoArray *) retval, NULL, r_klass, exception_gchandle);
 				if (retain && rv)
-					[rv retain];
+					objc_retain (rv);
 				returnValue = rv;
 			} else if (xamarin_is_class_nsobject (r_klass)) {
 				id i = xamarin_get_handle (retval, exception_gchandle);
@@ -172,9 +172,9 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 
 					xamarin_framework_peer_waypoint ();
 
-					[i retain];
+					objc_retain (i);
 					if (!retain)
-						[i autorelease];
+						objc_autorelease (i);
 
 					mt_dummy_use (retval);
 					returnValue = i;
@@ -196,7 +196,7 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 							return returnValue;
 						if (retained) {
 							id i = (id) returnValue;
-							[i autorelease];
+							objc_autorelease (i);
 						}
 					}
 				}
@@ -850,7 +850,7 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, GCHandle gc_handle, enum Xama
 		obj->flags = flags;
 		obj->native_object = self;
 		objc_setAssociatedObject (self, associated_key, obj, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-		[obj release];
+		objc_release (obj);
 	}
 
 	if (obj != NULL) {

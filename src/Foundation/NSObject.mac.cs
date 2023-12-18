@@ -61,7 +61,6 @@ namespace Foundation {
 		static IntPtr ib = Dlfcn.dlopen (Constants.IOBluetoothLibrary, 1);
 		static IntPtr bu = Dlfcn.dlopen (Constants.IOBluetoothUILibrary, 1);
 		static IntPtr ca = Dlfcn.dlopen (Constants.CoreAudioKitLibrary, 1);
-		static IntPtr im = Dlfcn.dlopen (Constants.InputMethodKitLibrary, 1);
 		static IntPtr ol = Dlfcn.dlopen (Constants.OpenALLibrary, 1);
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);

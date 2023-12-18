@@ -19,12 +19,10 @@ namespace WatchKit {
 			get { return WKAccessibilityIsVoiceOverRunning (); }
 		}
 
-		[Watch (4,0)]
 		[DllImport (Constants.WatchKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool WKAccessibilityIsReduceMotionEnabled ();
 
-		[Watch (4,0)]
 		static public bool IsReduceMotionEnabled {
 			get { return WKAccessibilityIsReduceMotionEnabled (); }
 		}

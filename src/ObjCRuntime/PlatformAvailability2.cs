@@ -20,6 +20,9 @@
 using System;
 using System.Text;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 	[Flags]
 	public enum PlatformArchitecture : byte {

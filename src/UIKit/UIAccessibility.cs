@@ -63,8 +63,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSObject */ IntPtr UIAccessibilityFocusedElement (IntPtr assistiveTechnologyIdentifier);
@@ -73,8 +71,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static NSObject FocusedElement (string assistiveTechnologyIdentifier)
 		{
@@ -87,8 +83,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -98,8 +92,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static bool IsShakeToUndoEnabled {
 			get {
@@ -293,8 +285,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -304,8 +294,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public static bool DarkerSystemColorsEnabled {
 			get {
@@ -314,7 +302,6 @@ namespace UIKit {
 		}
 
 #if !NET
-		[iOS (8, 0)]
 		[Obsolete ("Use 'DarkerSystemColorsEnabled' instead.")]
 		public static bool DarkerSystemColosEnabled {
 			get {
@@ -327,8 +314,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -338,8 +323,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public static bool IsBoldTextEnabled {
 			get {
@@ -375,8 +358,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -386,8 +367,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsGrayscaleEnabled {
 			get {
@@ -399,8 +378,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -410,8 +387,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsReduceMotionEnabled {
 			get {
@@ -469,8 +444,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -480,8 +453,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsReduceTransparencyEnabled {
 			get {
@@ -493,8 +464,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -504,8 +473,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsSwitchControlRunning {
 			get {
@@ -517,8 +484,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -528,8 +493,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsSpeakSelectionEnabled {
 			get {
@@ -541,8 +504,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -552,8 +513,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsSpeakScreenEnabled {
 			get {
@@ -565,9 +524,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
@@ -577,9 +533,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
 #endif
 		public static bool IsAssistiveTouchRunning {
 			get {
@@ -636,8 +589,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
@@ -646,8 +597,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public static UIAccessibilityHearingDeviceEar HearingDevicePairedEar {
 			get {

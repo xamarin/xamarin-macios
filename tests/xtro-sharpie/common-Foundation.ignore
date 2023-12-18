@@ -188,7 +188,6 @@
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
 !missing-enum! NSBinarySearchingOptions not bound
 !missing-enum! NSMachPortOptions not bound
-!missing-enum! NSNetServicesError not bound
 !missing-enum! NSPointerFunctionsOptions not bound
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
@@ -544,7 +543,6 @@
 !missing-selector! NSLocale::alternateQuotationEndDelimiter not bound
 !missing-selector! NSLocale::collationIdentifier not bound
 !missing-selector! NSLocale::collatorIdentifier not bound
-!missing-selector! NSLocale::countryCode not bound
 !missing-selector! NSLocale::currencyCode not bound
 !missing-selector! NSLocale::currencySymbol not bound
 !missing-selector! NSLocale::decimalSeparator not bound
@@ -975,9 +973,6 @@
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateBySettingUnit(Foundation.NSCalendarUnit,System.nint,Foundation.NSDate,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateForWeekOfYear(System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::DateFromComponents(Foundation.NSDateComponents)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSCalendarUnit,System.nint,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,Foundation.NSDateComponents,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDate Foundation.NSCalendar::FindNextDateAfterDateMatching(Foundation.NSDate,System.nint,System.nint,System.nint,Foundation.NSCalendarOptions)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateComponents::get_Date()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSDateFormatter::Parse(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSDate Foundation.NSFileVersion::get_ModificationDate()' is missing an [NullAllowed] on return type
@@ -1355,6 +1350,10 @@
 !missing-selector! +NSAttributedString::localizedAttributedStringWithFormat: not bound
 !missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options: not bound
 !missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context: not bound
+!missing-selector! NSAttributedString::initWithFormat:options:locale:context:arguments: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:context: not bound
+!missing-selector! +NSAttributedString::localizedAttributedStringWithFormat:options:context: not bound
 
 # ignore because we did not add nullallowed but are using ref
 # https://github.com/xamarin/xamarin-macios/issues/15577
@@ -1402,3 +1401,10 @@
 !missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
 !missing-type! NSOrderedCollectionChange not bound
 !missing-type! NSOrderedCollectionDifference not bound
+
+# we provide a static method instead of the constructor since there are two of them
+!missing-selector! NSURL::initWithString:encodingInvalidCharacters: not bound
+!missing-selector! NSURLComponents::initWithString:encodingInvalidCharacters: not bound
+
+# it is used in the selectors that support vargs and thefore cannot be used with out bindings
+!missing-field! NSInflectionConceptsKey not bound

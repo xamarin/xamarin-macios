@@ -1,8 +1,0 @@
-!deprecated-attribute-missing! LSCopyAllRoleHandlersForContentType missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSCopyApplicationURLsForBundleIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSCopyApplicationURLsForURL missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSCopyDefaultApplicationURLForContentType missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSCopyDefaultApplicationURLForURL missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSCopyDefaultRoleHandlerForContentType missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSSetDefaultHandlerForURLScheme missing a [Deprecated] attribute
-!deprecated-attribute-missing! LSSetDefaultRoleHandlerForContentType missing a [Deprecated] attribute

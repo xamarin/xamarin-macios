@@ -17,7 +17,6 @@ namespace GameKit {
 	public partial class GKMatchRequest {
 
 #if !NET
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Use 'RecipientResponseHandler' property.")]
 #else
 		[Obsolete ("Use 'RecipientResponseHandler' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

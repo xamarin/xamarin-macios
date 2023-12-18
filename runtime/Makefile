@@ -22,7 +22,7 @@ SHIPPED_HEADERS +=         \
 	xamarin/monovm-bridge.h \
 	xamarin/coreclr-bridge.h \
 
-SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m monovm-bridge.m coreclr-bridge.m
+SHARED_SOURCES += mono-runtime.m bindings.m bindings-generated.m shared.m runtime.m trampolines.m trampolines-invoke.m xamarin-support.m nsstring-localization.m trampolines-varargs.m monovm-bridge.m coreclr-bridge.m nativeaot-bridge.m
 SHARED_I386_SOURCES += trampolines-i386.m trampolines-i386-asm.s trampolines-i386-objc_msgSend.s trampolines-i386-objc_msgSendSuper.s trampolines-i386-objc_msgSend_stret.s trampolines-i386-objc_msgSendSuper_stret.s
 SHARED_X86_64_SOURCES += trampolines-x86_64.m trampolines-x86_64-asm.s trampolines-x86_64-objc_msgSend.s trampolines-x86_64-objc_msgSendSuper.s trampolines-x86_64-objc_msgSend_stret.s trampolines-x86_64-objc_msgSendSuper_stret.s
 SHARED_ARM64_SOURCES += trampolines-arm64.m trampolines-arm64-asm.s trampolines-arm64-objc_msgSend.s trampolines-arm64-objc_msgSendSuper.s
@@ -71,7 +71,7 @@ bindings-generated.m: bindings-generator.exe
 app-main.m watchextension-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
-product.h: product.in.h Makefile $(TOP)/.git/index
+product.h: product.in.h Makefile $(GIT_DIRECTORY)/index
 	$(Q) sed -e 's/@PRODUCT_HASH@/$(CURRENT_HASH_LONG)/' $< > $@.tmp
 	$(Q) mv $@.tmp $@
 #
@@ -167,7 +167,11 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call FrameworkTemplate,watchos,WATCHOS,armv7k arm64_32))
+else
+$(eval $(call FrameworkTemplate,watchos,WATCHOS,arm64_32))
+endif
 endif
 $(eval $(call FrameworkTemplate,watchsimulator,WATCHSIMULATOR,x86))
 endif
@@ -238,7 +242,11 @@ endif
 
 ifdef INCLUDE_WATCH
 ifdef INCLUDE_DEVICE
+ifdef WATCHOS_SUPPORTS_32BIT_DEVICE_ARCHITECTURES
 $(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k arm64_32))
+else
+$(eval $(call PlatformTemplate,watchos,WATCHOS,arm64_32))
+endif
 endif
 $(eval $(call PlatformTemplate,watchsimulator,WATCHSIMULATOR,x86 x86_64))
 endif
@@ -454,6 +462,11 @@ MAC_LIBS =                   \
 #    This is used when using the CoreCLR runtime instead of Mono.
 #    CORECLR_RUNTIME is defined for these versions of libxamarin.
 #
+# libxamarin-nativeaot.a:
+#    This is used when using NativeAOT.
+#    CORECLR_RUNTIME is defined for these versions of libxamarin (because the nativeaot bridge shares *a lot* of code with the coreclr bridge)
+#    NATIVEAOT is defined for these versions of libxamarin
+#
 
 ifdef INCLUDE_XAMARIN_LEGACY
 all-local:: $(TARGETS)
@@ -614,6 +627,15 @@ endef
 
 $(foreach platform,$(DOTNET_CORECLR_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetCoreClrLibTemplate,$(platform),$(rid)))))
 
+define DotNetNativeAotLibTemplate
+DOTNET_TARGETS += \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot.a \
+	$(DOTNET_DESTDIR)/$($(2)_NUGET_RUNTIME_NAME)/runtimes/$(2)/native/libxamarin-dotnet-nativeaot-debug.a \
+
+endef
+
+$(foreach platform,$(DOTNET_NATIVEAOT_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetNativeAotLibTemplate,$(platform),$(rid)))))
+
 # a few lookup tables, because the data we have is not always in the format we need it
 DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
 DOTNET_iphoneos_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
@@ -704,6 +726,8 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_DEBUG,-dotnet-debug,,.mono)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR,-dotnet-coreclr,_CORECLR)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR_DEBUG,-dotnet-coreclr-debug,_CORECLR)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_NATIVEAOT,-dotnet-nativeaot,_NATIVEAOT,.mono)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_NATIVEAOT_DEBUG,-dotnet-nativeaot-debug,_NATIVEAOT,.mono)))))
 
 #
 # DotNetLibExtensionTemplate builds lib[tv]extension.a
@@ -731,6 +755,7 @@ endef
 
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibExtensionTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),,-dotnet,,)))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibExtensionTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR,-dotnet-coreclr,_CORECLR)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibExtensionTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_NATOVEAOT,-dotnet-nativeaot,_NATOVEAOT)))))
 
 dotnet: $(DOTNET_TARGETS)
 

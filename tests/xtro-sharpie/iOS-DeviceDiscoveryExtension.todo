@@ -46,3 +46,5 @@
 !missing-selector! DDDevice::setMediaContentTitle: not bound
 !missing-selector! DDDevice::setMediaPlaybackState: not bound
 !missing-selector! DDDeviceEvent::eventType not bound
+!missing-selector! DDDevice::setSupportsGrouping: not bound
+!missing-selector! DDDevice::supportsGrouping not bound

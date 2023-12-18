@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
 	public class DataItem {
 		[JsonProperty ("universal-type-identifier", NullValueHandling = NullValueHandling.Ignore)]

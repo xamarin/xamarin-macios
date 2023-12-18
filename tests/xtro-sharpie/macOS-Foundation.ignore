@@ -575,3 +575,6 @@
 !missing-selector! NSXMLDTDNode::init not bound
 !missing-selector! NSXMLNode::detach not bound
 !missing-selector! NSXMLNode::init not bound
+!missing-enum! NSNetServicesError not bound
+
+!unknown-native-enum! NSBundleExecutableArchitecture bound
