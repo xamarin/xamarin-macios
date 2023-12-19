@@ -95,6 +95,12 @@ public class AttributeManager {
 			return typeof (Foundation.ProtocolAttribute);
 		case "Foundation.RegisterAttribute":
 			return typeof (Foundation.RegisterAttribute);
+#if NET
+		case "Foundation.RequiredMemberAttribute":
+			return typeof (Foundation.RequiredMemberAttribute);
+		case "Foundation.OptionalMemberAttribute":
+			return typeof (Foundation.OptionalMemberAttribute);
+#endif
 		case "IgnoredInDelegateAttribute":
 			return typeof (IgnoredInDelegateAttribute);
 		case "InternalAttribute":
@@ -614,6 +620,23 @@ public class AttributeManager {
 			break;
 		}
 		return ErrorHelper.CreateError (code, args);
+	}
+
+	public virtual T GetCustomAttribute<T> (ICustomAttributeProvider provider, Attribute [] attributes) where T : System.Attribute
+	{
+		if (attributes is null)
+			return GetCustomAttribute<T> (provider);
+
+		T attrib = null;
+		foreach (var a in attributes) {
+			if (a is T t) {
+				if (attrib is not null)
+					throw GetTooManyAttributeFoundException<T> (provider, attributes.Length);
+				attrib = t;
+			}
+		}
+
+		return attrib;
 	}
 
 	public virtual bool HasNativeAttribute (ICustomAttributeProvider provider)
