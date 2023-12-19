@@ -58,9 +58,7 @@ steps:
 - bash: |
     make -C src build/generator-frameworks.g.cs
     make -C src build/ios/Constants.cs
-    make -C msbuild Versions.dotnet.g.cs
-    make -C msbuild Versions.ios.g.cs
-    make -C msbuild Versions.mac.g.cs
+    make -C msbuild Versions.g.cs
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Generate constants files 
   timeoutInMinutes: 15
