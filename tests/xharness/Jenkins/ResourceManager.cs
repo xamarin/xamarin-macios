@@ -20,8 +20,7 @@ namespace Xharness.Jenkins {
 			List<Resource> resources = new List<Resource> ();
 			lock (deviceResources) {
 				foreach (var device in devices) {
-					Resource res;
-					if (!deviceResources.TryGetValue (device.UDID, out res))
+					if (!deviceResources.TryGetValue (device.UDID, out var res))
 						deviceResources.Add (device.UDID, res = new Resource (device.UDID, 1, device.Name));
 					resources.Add (res);
 				}

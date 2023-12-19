@@ -248,7 +248,7 @@ namespace GeneratorTests {
 			bgen.Profile = profile;
 			bgen.CreateTemporaryBinding (File.ReadAllText (Path.Combine (Configuration.SourceRoot, "tests", "generator", "bi1059.cs")));
 			bgen.AssertExecuteError ("build");
-			bgen.AssertError (1059, "Found 2 Foundation.PreserveAttribute attributes on the member the type BI1059. At most one was expected.");
+			bgen.AssertError (1084, "Found 2 Foundation.PreserveAttribute attributes on the type BI1059. At most one was expected.");
 		}
 
 		[Test]

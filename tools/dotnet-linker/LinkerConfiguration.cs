@@ -226,6 +226,13 @@ namespace Xamarin.Linker {
 					if (!TryParseOptionalBoolean (value, out Application.AotFloat32))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
 					break;
+				case "NoWarn":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid WarnAsError '{value}' in {linker_file}", ex);
+					}
+					break;
 				case "Optimize":
 					user_optimize_flags = value;
 					break;
@@ -309,6 +316,13 @@ namespace Xamarin.Linker {
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
 					Driver.Verbosity += verbosity;
+					break;
+				case "WarnAsError":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Error, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid WarnAsError '{value}' in {linker_file}", ex);
+					}
 					break;
 				case "XamarinRuntime":
 					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))

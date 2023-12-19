@@ -29,13 +29,8 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.12.0" />
     <PackageReference Include="NUnit.Extension.NUnitV2ResultWriter" Version="3.6.0" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MTouch.cs" />

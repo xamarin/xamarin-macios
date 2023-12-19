@@ -1,4 +1,4 @@
-#if !TVOS
+#if !TVOS && !WATCH
 // 
 // MidiThruConnectionParams.cs: A C# wrapper around MidiThruConnectionParamsStruct
 //

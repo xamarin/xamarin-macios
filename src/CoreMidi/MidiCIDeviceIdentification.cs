@@ -1,4 +1,4 @@
-#if !TVOS
+#if !TVOS && !WATCH
 #nullable enable
 
 using System;

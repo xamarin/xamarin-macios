@@ -30,7 +30,7 @@ namespace Xharness.Jenkins {
 
 			using var reader = log.GetReader ();
 			while (!reader.EndOfStream) {
-				string line = reader.ReadLine ();
+				var line = reader.ReadLine ();
 				if (line is null)
 					continue;
 				//go over errors and return true as soon as we find one that matches

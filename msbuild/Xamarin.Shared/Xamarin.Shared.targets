@@ -1937,12 +1937,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="NoSymbolStrip"/>
 			<Output TaskParameter="NoDSymUtil" PropertyName="NoDSymUtil"/>
+			<Output TaskParameter="NoWarn" PropertyName="_BundlerNoWarn" />
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
 			<Output TaskParameter="Registrar" PropertyName="Registrar" />
 			<Output TaskParameter="RequirePInvokeWrappers" PropertyName="_RequirePInvokeWrappers" />
 			<Output TaskParameter="SkipMarkingNSObjectsInUserAssemblies" PropertyName="_SkipMarkingNSObjectsInUserAssemblies" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
+			<Output TaskParameter="WarnAsError" PropertyName="_BundlerWarnAsError" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
 		</ParseBundlerArguments>

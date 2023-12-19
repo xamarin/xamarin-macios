@@ -12,7 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
     <PackageReference Include="Microsoft.Build" Version="15.9.20" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Framework" Version="16.8.0" IncludeAssets="compile" />
@@ -66,8 +66,8 @@
     <Compile Include="..\..\tools\common\NullableAttributes.cs">
       <Link>external\NullableAttributes.cs</Link>
     </Compile>
-    <Compile Include="..\Versions.dotnet.g.cs">
-      <Link>Versions.dotnet.g.cs</Link>
+    <Compile Include="..\Versions.g.cs">
+      <Link>Versions.g.cs</Link>
     </Compile>
     <Compile Remove="Errors.designer.cs" /> <!-- The 'CoreResGen' target will add it again from the EmbeddedResource item, this avoids a warning about the file being compiled twice -->
     <Compile Include="..\..\tools\common\SdkVersions.cs">

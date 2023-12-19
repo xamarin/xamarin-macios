@@ -44,11 +44,15 @@ Usage: configure [options]
     --disable-legacy-xamarin Disable building the legacy version of Xamarin.iOS/Xamarin.Mac.
 
     --custom-dotnet=[artifacts] Use a locally built version of dotnet/runtime. See docs/CORECLR.md for detailed instructions about how to build dotnet/runtime from source.
+
+    --ignore-unknown-params  alters the default behavior to not return an non-zero exit code when an unknown parameter is provided.
 EOL
 }
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 CONFIGURED_FILE=configure.inc
+IGNORE_UNKNOWN_PARAMS=false
+UNKNOWN_PARAMETERS=
 
 rm -f $CONFIGURED_FILE
 
@@ -146,7 +150,7 @@ while test "x$1" != x; do
         shift
         ;;
     --disable-xamarin)
-    echo "ENABLE_XAMARIN=" >> $CONFIGURED_FILE
+        echo "ENABLE_XAMARIN=" >> $CONFIGURED_FILE
         shift
         ;;
     --disable-packaged-llvm)
@@ -207,14 +211,29 @@ while test "x$1" != x; do
         echo "DOTNET_RUNTIME_PATH=$2" >> "$CONFIGURED_FILE"
         shift 2
         ;;
+    --ignore-unknown-params)
+        echo "ignoring unknown parameters"
+        IGNORE_UNKNOWN_PARAMS=true
+        shift
+        ;;
     --help|-h)
         show_help
         exit 0
         ;;
     *)
         echo "Unknown configure argument $1" >&2
+        UNKNOWN_PARAMETERS="$UNKNOWN_PARAMETERS $1"
         shift
         ;;
     esac
 done
+
+if [[ "$IGNORE_UNKNOWN_PARAMS" = false ]] && [[ -n "$UNKNOWN_PARAMETERS" ]]; then
+    exit 1
+fi
+
+if [[ "$IGNORE_UNKNOWN_PARAMS" = true ]] && [[ -n "$UNKNOWN_PARAMETERS" ]]; then
+    echo "The following parameters were ignored: $UNKNOWN_PARAMETERS"
+fi
+
 exit 0

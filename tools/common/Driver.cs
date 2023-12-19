@@ -117,24 +117,14 @@ namespace Xamarin.Bundler {
 			options.Add ("xml=", "Provide an extra XML definition file to the linker.", v => app.Definitions.Add (v));
 			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v => {
 				try {
-					if (!string.IsNullOrEmpty (v)) {
-						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error, int.Parse (code));
-					} else {
-						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
-					}
+					ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Error, v);
 				} catch (Exception ex) {
 					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--warnaserror", ex.Message);
 				}
 			});
 			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v => {
 				try {
-					if (!string.IsNullOrEmpty (v)) {
-						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
-					} else {
-						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
-					}
+					ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, v);
 				} catch (Exception ex) {
 					throw ErrorHelper.CreateError (26, ex, Errors.MX0026, "--nowarn", ex.Message);
 				}
