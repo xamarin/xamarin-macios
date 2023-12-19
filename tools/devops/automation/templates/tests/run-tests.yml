@@ -206,6 +206,7 @@ steps:
 # we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
 
 - pwsh: |
+    Write-Host $host.Version 
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
