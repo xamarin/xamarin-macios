@@ -7094,9 +7094,6 @@ namespace AppKit {
 		[return: NullAllowed]
 		NSFontDescriptor Create (NSFontDescriptorSystemDesign design);
 
-#if !XAMCORE_5_0
-		[Sealed]
-#endif
 		[Export ("fontDescriptorWithDesign:")]
 		[return: NullAllowed]
 		NSFontDescriptor Create (NSString design);
