@@ -3330,15 +3330,15 @@ public partial class Generator : IMemberGatherer {
 				if (pi.IsOut) {
 					by_ref_init.AppendFormat ("{1} {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName (), NativeHandleType);
 				} else {
-					by_ref_init.AppendFormat ("{1} {0}Value = ", pi.Name.GetSafeParamName (), NativeHandleType);
+					by_ref_init.AppendFormat ("var {0}Value = ", pi.Name.GetSafeParamName ());
 					if (isString) {
 						by_ref_init.AppendFormat ("NSString.CreateNative ({0}, true);\n", pi.Name.GetSafeParamName ());
-						by_ref_init.AppendFormat ("{1} {0}OriginalValue = {0}Value;\n", pi.Name.GetSafeParamName (), NativeHandleType);
+						by_ref_init.AppendFormat ("var {0}OriginalValue = {0}Value;\n", pi.Name.GetSafeParamName ());
 					} else if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
 						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = NSArray.FromNSObjects ({0});\n", pi.Name.GetSafeParamName ()));
 						by_ref_init.AppendFormat ("{0}ArrayValue is null ? NativeHandle.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
 					} else if (isArrayOfString) {
-						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = {0} is null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
+						by_ref_init.Insert (0, string.Format ("NSArray? {0}ArrayValue = {0} is null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
 						by_ref_init.AppendFormat ("{0}ArrayValue is null ? NativeHandle.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
 					} else if (isNSObject || isINativeObjectSubclass) {
 						by_ref_init.AppendFormat ("{0} is null ? NativeHandle.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());

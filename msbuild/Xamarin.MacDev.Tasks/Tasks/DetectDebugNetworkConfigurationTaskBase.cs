@@ -11,12 +11,13 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class DetectDebugNetworkConfigurationBase : XamarinTask {
+	public class DetectDebugNetworkConfiguration : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
@@ -39,6 +40,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			if (SdkIsSimulator) {
 				DebugIPAddresses = IPAddress.Loopback.ToString ();
 			} else if (DebugOverWiFi) {
@@ -90,6 +94,12 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogTaskProperty ("DebugIPAddresses", DebugIPAddresses);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
