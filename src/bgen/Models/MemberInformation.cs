@@ -13,11 +13,11 @@ public class MemberInformation {
 	internal readonly WrapPropMemberInformation? wpmi;
 	public readonly bool is_abstract;
 	public readonly bool is_protected;
-	public readonly bool is_internal;
+	public bool is_internal;
 	public readonly bool is_override;
 	public readonly bool is_new;
 	public readonly bool is_sealed;
-	public readonly bool is_static;
+	public bool is_static;
 	public readonly bool is_thread_static;
 	public readonly bool is_autorelease;
 	public readonly bool is_wrapper;
@@ -34,6 +34,7 @@ public class MemberInformation {
 	public bool is_interface_impl;
 	public bool is_extension_method;
 	public bool is_protocol_member;
+	public bool? is_protocol_member_required;
 	public bool is_appearance;
 	public bool is_model;
 	public bool is_ctor;
@@ -41,8 +42,12 @@ public class MemberInformation {
 	public bool is_type_sealed;
 	public string? selector;
 	public string? wrap_method;
+	public bool call_protocol_implementation_method;
+	public bool is_protocol_implementation_method;
 	public string is_forced_owns;
 	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
+	public string? method_name_prefix;
+	public bool generate_is_async_overload;
 
 	public MethodInfo? Method { get { return mi as MethodInfo; } }
 	public PropertyInfo? Property { get { return mi as PropertyInfo; } }
@@ -66,6 +71,7 @@ public class MemberInformation {
 		is_type_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi.DeclaringType);
 		is_return_release = methodInfo is not null && AttributeManager.HasAttribute<ReleaseAttribute> (methodInfo.ReturnParameter);
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
+		generate_is_async_overload = AttributeManager.HasAttribute<AsyncAttribute> (mi);
 
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (mi);
 		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
@@ -204,6 +210,9 @@ public class MemberInformation {
 
 	public string GetVisibility ()
 	{
+		if (is_protocol_implementation_method)
+			return "internal";
+
 		if (is_interface_impl || is_extension_method)
 			return "public";
 
@@ -225,8 +234,10 @@ public class MemberInformation {
 			mods += "";
 		} else if (is_ctor && is_protocol_member) {
 			mods += "static ";
-		} else if (is_static || is_category_extension || is_extension_method) {
+		} else if (is_static || is_category_extension || is_extension_method || is_protocol_implementation_method) {
 			mods += "static ";
+		} else if (is_protocol_member) {
+			mods += "virtual ";
 		} else if (is_abstract) {
 #if NET
 			mods += "virtual ";

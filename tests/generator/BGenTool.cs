@@ -16,7 +16,7 @@ using Xamarin.Utils;
 #nullable enable
 
 namespace Xamarin.Tests {
-	class BGenTool : Tool {
+	public class BGenTool : Tool {
 		public const string None = "None";
 		AssemblyDefinition? assembly;
 

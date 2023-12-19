@@ -49,6 +49,10 @@ namespace Foundation {
 				informal_until = value;
 			}
 		}
+
+#if !XAMCORE_5_0
+		public bool BackwardsCompatibleCodeGeneration { get; set; } = true;
+#endif
 	}
 
 	[AttributeUsage (AttributeTargets.Interface, AllowMultiple = true)]
@@ -71,5 +75,16 @@ namespace Foundation {
 		public string? GetterSelector { get; set; }
 		public string? SetterSelector { get; set; }
 		public ArgumentSemantic ArgumentSemantic { get; set; }
+	}
+
+	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
+	public sealed class RequiredMemberAttribute : Attribute {
+	}
+
+	// There's already an OptionalAttribute in System.Runtime.InteropServices, so I went with
+	// "OptionalMemberAttribute" - and in that case it prefered "RequiredMemberAttribute" instead
+	// of "RequiredAttribute" just to keep the symmetry.
+	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
+	public sealed class OptionalMemberAttribute : Attribute {
 	}
 }

@@ -2,7 +2,6 @@
 !missing-type! MTLFunctionStitchingAttributeAlwaysInline not bound
 
 # needs to wait for xamcore 5
-!incorrect-protocol-member! MTLComputeCommandEncoder::setBuffer:offset:attributeStride:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setBufferOffset:attributeStride:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setBuffers:offsets:attributeStrides:withRange: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLComputeCommandEncoder::setBytes:length:attributeStride:atIndex: is REQUIRED and should be abstract
