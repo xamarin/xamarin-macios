@@ -60,7 +60,6 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (gatewayKeyConfig));
 
 			using var resourcePathPtr = new TransientString (relaysResourcePath);
-			var pinned = GCHandle.Alloc (gatewayKeyConfig, GCHandleType.Pinned);
 
 			unsafe {
 				fixed (byte* gatewayKeyConfigPointer = gatewayKeyConfig) {
