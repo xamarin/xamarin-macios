@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 using CoreFoundation;
 using Foundation;
@@ -47,7 +48,7 @@ namespace MonoTouchFixtures.Security {
 				// add the new certificate
 				SecStatusCode rc = SecKeyChain.Add (rec);
 				// Try again a few times if we get SecStatusCode.DuplicateItem - we might be running in parallel with another test run in another process.
-				var attempts = 10;
+				var attemptsLeft = 10;
 				while (rc == SecStatusCode.DuplicateItem && attemptsLeft-- > 0) {
 					Thread.Sleep (100);
 					rc = SecKeyChain.Add (rec);
