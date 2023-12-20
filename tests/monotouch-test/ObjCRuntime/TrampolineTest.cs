@@ -194,6 +194,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("https://github.com/dotnet/runtime/issues/96063")]
+#endif
 		public void FloatingPointStretTrampolineTest ()
 		{
 			CGRect rect, rect2, rect3, rect4;
