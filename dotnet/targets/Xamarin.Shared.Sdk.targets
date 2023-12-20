@@ -233,6 +233,7 @@
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
 			_CreatePkgInfo;
+			_CreateAssetPackManifest;
 			_SmeltMetal;
 			_TemperMetal;
 			_DetectAppManifest;
