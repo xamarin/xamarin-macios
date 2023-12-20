@@ -37,6 +37,10 @@ parameters:
   default: '$(MaciosUploadPrefix)'
 
 steps:
+- bash: |
+    brew update
+    brew upgrade powershell –cask
+  displayName: Install powershell
 
 - bash: |
     set -e
@@ -55,6 +59,7 @@ steps:
     Write-Host "##vso[task.setvariable variable=IOS_DESTDIR]/"
     Write-Host "##vso[task.setvariable variable=TESTS_USE_SYSTEM]true"
   displayName: Set SDK destination dirs 
+
 
 # remove any old processes that might have been left behind.
 - pwsh: |
