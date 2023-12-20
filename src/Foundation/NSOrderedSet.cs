@@ -34,6 +34,9 @@ using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSOrderedSet : IEnumerable<NSObject> {

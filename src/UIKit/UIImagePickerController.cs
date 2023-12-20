@@ -17,6 +17,9 @@ using Photos;
 using System;
 using System.Drawing;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UIImagePickerController {
 		//

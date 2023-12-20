@@ -18,6 +18,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	// helper enum - not part of Apple API
