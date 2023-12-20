@@ -73,6 +73,8 @@ namespace GameKit {
 	interface UIWindow {}
 #endif
 
+	interface IGKVoiceChatClient { }
+
 	[NoMac]
 	[NoWatch] // only exposed thru GKVoiceChatService (not in 3.0)
 	[NoTV]
@@ -122,8 +124,7 @@ namespace GameKit {
 
 		[NullAllowed] // by default this property is null
 		[Export ("client", ArgumentSemantic.Assign)]
-		[Protocolize]
-		GKVoiceChatClient Client { get; set; }
+		IGKVoiceChatClient Client { get; set; }
 
 		[Export ("startVoiceChatWithParticipantID:error:")]
 		bool StartVoiceChat (string participantID, out NSError error);
@@ -185,8 +186,7 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKSessionDelegate Delegate { get; set; }
+		IGKSessionDelegate Delegate { get; set; }
 
 		[Export ("sessionID")]
 		string SessionID { get; }
@@ -767,6 +767,8 @@ namespace GameKit {
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 	}
 
+	interface IGKLeaderboardViewControllerDelegate { }
+
 	[NoWatch]
 	[NoTV]
 	[NoMacCatalyst]
@@ -800,8 +802,7 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKLeaderboardViewControllerDelegate Delegate { get; set; }
+		IGKLeaderboardViewControllerDelegate Delegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("category",
@@ -933,11 +934,11 @@ namespace GameKit {
 
 		[MacCatalyst (13, 1)]
 		[Export ("registerListener:")]
-		void RegisterListener ([Protocolize] GKLocalPlayerListener listener);
+		void RegisterListener (IGKLocalPlayerListener listener);
 
 		[MacCatalyst (13, 1)]
 		[Export ("unregisterListener:")]
-		void UnregisterListener ([Protocolize] GKLocalPlayerListener listener);
+		void UnregisterListener (IGKLocalPlayerListener listener);
 
 		[MacCatalyst (13, 1)]
 		[Export ("unregisterAllListeners")]
@@ -1096,8 +1097,7 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKMatchDelegate Delegate { get; set; }
+		IGKMatchDelegate Delegate { get; set; }
 
 		[Export ("expectedPlayerCount")]
 		nint ExpectedPlayerCount { get; }
@@ -1148,6 +1148,8 @@ namespace GameKit {
 		[Export ("sendData:toPlayers:dataMode:error:")]
 		bool SendData (NSData data, GKPlayer [] players, GKMatchSendDataMode mode, out NSError error);
 	}
+
+	interface IGKMatchDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -1496,8 +1498,7 @@ namespace GameKit {
 
 		[NullAllowed]
 		[Wrap ("WeakMatchmakerDelegate")]
-		[Protocolize]
-		GKMatchmakerViewControllerDelegate MatchmakerDelegate { get; set; }
+		IGKMatchmakerViewControllerDelegate MatchmakerDelegate { get; set; }
 
 		[Export ("matchRequest", ArgumentSemantic.Strong)]
 		GKMatchRequest MatchRequest { get; }
@@ -1552,6 +1553,8 @@ namespace GameKit {
 		[Export ("canStartWithMinimumPlayers")]
 		bool CanStartWithMinimumPlayers { get; set; }
 	}
+
+	interface IGKMatchmakerViewControllerDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -1821,6 +1824,8 @@ namespace GameKit {
 		NSNumber RarityPercent { get; }
 	}
 
+	interface IGKAchievementViewControllerDelegate { }
+
 	[NoWatch]
 	[NoTV]
 	[NoMacCatalyst]
@@ -1857,8 +1862,7 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKAchievementViewControllerDelegate Delegate { get; set; }
+		IGKAchievementViewControllerDelegate Delegate { get; set; }
 	}
 
 	[NoiOS]
@@ -1908,8 +1912,7 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[Wrap ("WeakComposeViewDelegate")]
-		[Protocolize]
-		GKFriendRequestComposeViewControllerDelegate ComposeViewDelegate { get; set; }
+		IGKFriendRequestComposeViewControllerDelegate ComposeViewDelegate { get; set; }
 
 		[Export ("maxNumberOfRecipients")]
 		[Static]
@@ -1930,6 +1933,8 @@ namespace GameKit {
 		[Export ("setMessage:")]
 		void SetMessage ([NullAllowed] string message);
 	}
+
+	interface IGKFriendRequestComposeViewControllerDelegate { }
 
 	[NoWatch]
 	[NoTV]
@@ -1995,6 +2000,8 @@ namespace GameKit {
 		NSDate TimeoutDate { get; }
 	}
 
+	interface IGKTurnBasedEventHandlerDelegate { }
+
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2045,8 +2052,7 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKTurnBasedEventHandlerDelegate Delegate { get; set; }
+		IGKTurnBasedEventHandlerDelegate Delegate { get; set; }
 
 		[Export ("sharedTurnBasedEventHandler"), Static]
 		GKTurnBasedEventHandler SharedTurnBasedEventHandler { get; }
@@ -2267,9 +2273,10 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKTurnBasedMatchmakerViewControllerDelegate Delegate { get; set; }
+		IGKTurnBasedMatchmakerViewControllerDelegate Delegate { get; set; }
 	}
+
+	interface IGKTurnBasedMatchmakerViewControllerDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -2434,8 +2441,7 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKGameCenterControllerDelegate Delegate { get; set; }
+		IGKGameCenterControllerDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use '.ctor (GKGameCenterViewControllerState)' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use '.ctor (GKGameCenterViewControllerState)' instead.")]
@@ -2471,6 +2477,8 @@ namespace GameKit {
 		string LeaderboardIdentifier { get; set; }
 	}
 
+	interface IGKGameCenterControllerDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Model]
@@ -2495,12 +2503,13 @@ namespace GameKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKChallengeEventHandlerDelegate Delegate { get; set; }
+		IGKChallengeEventHandlerDelegate Delegate { get; set; }
 
 		[Export ("challengeEventHandler"), Static]
 		GKChallengeEventHandler Instance { get; }
 	}
+
+	interface IGKChallengeEventHandlerDelegate { }
 
 	[NoWatch]
 	[NoTV]
@@ -2614,6 +2623,8 @@ namespace GameKit {
 		[NullAllowed]
 		NSDate ReplyDate { get; }
 	}
+
+	interface IGKLocalPlayerListener { }
 
 	[MacCatalyst (13, 1)]
 	[Model, Protocol, BaseType (typeof (NSObject))]
@@ -2901,6 +2912,8 @@ namespace GameKit {
 	[Protocol]
 	interface GKViewController {
 	}
+
+	interface IGKSessionDelegate { }
 
 	[NoTV]
 	[NoWatch] // only exposed thru GKSession (not in 3.0)

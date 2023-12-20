@@ -238,8 +238,7 @@ namespace ContactsUI {
 		string [] DisplayedKeys { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		[Protocolize]
-		CNContactPickerDelegate Delegate { get; set; }
+		ICNContactPickerDelegate Delegate { get; set; }
 
 		[Export ("showRelativeToRect:ofView:preferredEdge:")]
 		void Show (CGRect positioningRect, NSView positioningView, NSRectEdge preferredEdge);

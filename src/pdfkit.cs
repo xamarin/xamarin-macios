@@ -1356,8 +1356,7 @@ namespace PdfKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PdfDocumentDelegate Delegate { get; set; }
+		IPdfDocumentDelegate Delegate { get; set; }
 
 		[Export ("dataRepresentation")]
 		[return: NullAllowed]
@@ -1488,6 +1487,8 @@ namespace PdfKit {
 		NSPrintOperation GetPrintOperation ([NullAllowed] NSPrintInfo printInfo, PdfPrintScalingMode scaleMode, bool doRotate);
 #pragma warning restore
 	}
+
+	interface IPdfDocumentDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "PDFDocumentDelegate")]
@@ -1968,8 +1969,7 @@ namespace PdfKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PdfViewDelegate Delegate { get; set; }
+		IPdfViewDelegate Delegate { get; set; }
 
 		[Export ("scaleFactor")]
 		nfloat ScaleFactor { get; set; }
@@ -2194,6 +2194,8 @@ namespace PdfKit {
 		[Export ("PDFAnnotationHit")]
 		PdfAnnotation AnnotationHit { get; }
 	}
+
+	interface IPdfViewDelegate { }
 
 	//Verify delegate methods.  There are default actions (not just return null ) that should occur
 	//if the delegate does not implement the method.

@@ -19,8 +19,7 @@ namespace Test {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SharedDelegate Delegate { get; set; }
+		ISharedDelegate Delegate { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]

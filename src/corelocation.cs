@@ -229,8 +229,7 @@ namespace CoreLocation {
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (CLLocationManagerDelegate) })]
 	partial interface CLLocationManager {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		CLLocationManagerDelegate Delegate { get; set; }
+		ICLLocationManagerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -585,6 +584,8 @@ namespace CoreLocation {
 		[Export ("requestHistoricalLocationsWithPurposeKey:sampleCount:completionHandler:")]
 		void RequestHistoricalLocations (string purposeKey, nint sampleCount, RequestHistoricalLocationsCompletionHandler handler);
 	}
+
+	interface ICLLocationManagerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

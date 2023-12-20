@@ -52,6 +52,7 @@ public class ForcedTypeAttribute : Attribute {
 	public bool Owns;
 }
 
+#if !XAMCORE_5_0
 // Used to flag a type as needing to be turned into a protocol on output for Unified
 // For example:
 //   [Protocolize, Wrap ("WeakDelegate")]
@@ -66,6 +67,7 @@ public class ForcedTypeAttribute : Attribute {
 //
 // To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for NET, etc
 //
+[Obsolete ("This attribute no longer has any effect; do no use")]
 public class ProtocolizeAttribute : Attribute {
 	public ProtocolizeAttribute ()
 	{
@@ -79,6 +81,7 @@ public class ProtocolizeAttribute : Attribute {
 
 	public int Version { get; set; }
 }
+#endif
 
 // Used to mark if a type is not a wrapper type.
 public class SyntheticAttribute : Attribute {

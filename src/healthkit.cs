@@ -3581,8 +3581,7 @@ namespace HealthKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		HKWorkoutSessionDelegate Delegate { get; set; }
+		IHKWorkoutSessionDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -3675,6 +3674,8 @@ namespace HealthKit {
 		[Async]
 		void StopMirroringToCompanionDevice (Action<bool, NSError> completion);
 	}
+
+	interface IHKWorkoutSessionDelegate { }
 
 	[Mac (13, 0)]
 	[iOS (17, 0)]

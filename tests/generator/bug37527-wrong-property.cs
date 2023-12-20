@@ -19,7 +19,6 @@ namespace Test {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SharedDelegate TestProperty { get; set; }
+		ISharedDelegate TestProperty { get; set; }
 	}
 }

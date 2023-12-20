@@ -978,8 +978,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSCacheDelegate Delegate { get; set; }
+		INSCacheDelegate Delegate { get; set; }
 
 		[Export ("totalCostLimit")]
 		nuint TotalCostLimit { get; set; }
@@ -990,6 +989,8 @@ namespace Foundation {
 		[Export ("evictsObjectsWithDiscardedContent")]
 		bool EvictsObjectsWithDiscardedContent { get; set; }
 	}
+
+	interface INSCacheDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2763,6 +2764,8 @@ namespace Foundation {
 
 	interface INSMutableCopying { }
 
+	interface INSKeyedArchiverDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2782,6 +2785,8 @@ namespace Foundation {
 		[Export ("archiver:willReplaceObject:withObject:"), EventArgs ("NSArchiveReplace")]
 		void ReplacingObject (NSKeyedArchiver archiver, NSObject oldObject, NSObject newObject);
 	}
+
+	interface INSKeyedUnarchiverDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2871,8 +2876,7 @@ namespace Foundation {
 		NSPropertyListFormat PropertyListFormat { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSKeyedArchiverDelegate Delegate { get; set; }
+		INSKeyedArchiverDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -2979,8 +2983,7 @@ namespace Foundation {
 		void FinishDecoding ();
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSKeyedUnarchiverDelegate Delegate { get; set; }
+		INSKeyedUnarchiverDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -3081,8 +3084,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSMetadataQueryDelegate Delegate { get; set; }
+		INSMetadataQueryDelegate Delegate { get; set; }
 
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		[NullAllowed] // by default this property is null
@@ -3904,6 +3906,8 @@ namespace Foundation {
 		[Field ("NSMetadataQueryUpdateRemovedItemsKey")]
 		NSString QueryUpdateRemovedItemsKey { get; }
 	}
+
+	interface INSMetadataQueryDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -5892,8 +5896,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSUserActivityDelegate Delegate { get; set; }
+		INSUserActivityDelegate Delegate { get; set; }
 
 		[Export ("addUserInfoEntriesFromDictionary:")]
 		void AddUserInfoEntries (NSDictionary otherDictionary);
@@ -6029,6 +6032,8 @@ namespace Foundation {
 		[Field ("NSUserActivityTypeBrowsingWeb")]
 		NSString BrowsingWeb { get; }
 	}
+
+	interface INSUserActivityDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -7389,21 +7394,21 @@ namespace Foundation {
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSUrlSession' instead.")]
 		[Export ("connectionWithRequest:delegate:")]
 		[Static]
-		NSUrlConnection FromRequest (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NSUrlConnection FromRequest (NSUrlRequest request, [NullAllowed] INSUrlConnectionDelegate connectionDelegate);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		NativeHandle Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed] INSUrlConnectionDelegate connectionDelegate);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:startImmediately:")]
-		NativeHandle Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed] INSUrlConnectionDelegate connectionDelegate, bool startImmediately);
 
 		[Export ("start")]
 		void Start ();
@@ -7458,6 +7463,8 @@ namespace Foundation {
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName = "SendRequestAsync")]
 		void SendAsynchronousRequest (NSUrlRequest request, NSOperationQueue queue, NSUrlConnectionDataResponse completionHandler);
 	}
+
+	interface INSUrlConnectionDelegate { }
 
 	[BaseType (typeof (NSObject), Name = "NSURLConnectionDelegate")]
 	[Model]
@@ -7707,8 +7714,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSUrlSessionDelegate Delegate { get; }
+		INSUrlSessionDelegate Delegate { get; }
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		NSUrlSessionConfiguration Configuration { get; }
@@ -8937,8 +8943,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSStreamDelegate Delegate { get; set; }
+		INSStreamDelegate Delegate { get; set; }
 
 #if NET
 		[Abstract]
@@ -9063,6 +9068,8 @@ namespace Foundation {
 		[Static, Export ("getStreamsToHostWithName:port:inputStream:outputStream:")]
 		void GetStreamsToHost (string hostname, nint port, out NSInputStream inputStream, out NSOutputStream outputStream);
 	}
+
+	interface INSStreamDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -11538,8 +11545,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSNetServiceDelegate Delegate { get; set; }
+		INSNetServiceDelegate Delegate { get; set; }
 
 #if NET
 		[Export ("scheduleInRunLoop:forMode:")]
@@ -11631,6 +11637,8 @@ namespace Foundation {
 		bool IncludesPeerToPeer { get; set; }
 	}
 
+	interface INSNetServiceDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Model, BaseType (typeof (NSObject))]
@@ -11678,8 +11686,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSNetServiceBrowserDelegate Delegate { get; set; }
+		INSNetServiceBrowserDelegate Delegate { get; set; }
 
 #if NET
 		[Export ("scheduleInRunLoop:forMode:")]
@@ -11719,6 +11726,8 @@ namespace Foundation {
 		[Export ("includesPeerToPeer")]
 		bool IncludesPeerToPeer { get; set; }
 	}
+
+	interface INSNetServiceBrowserDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -12837,8 +12846,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate"), NullAllowed]
-		[Protocolize]
-		NSPortDelegate Delegate { get; set; }
+		INSPortDelegate Delegate { get; set; }
 
 		[Export ("scheduleInRunLoop:forMode:")]
 		void ScheduleInRunLoop (NSRunLoop runLoop, NSString runLoopMode);
@@ -12861,6 +12869,8 @@ namespace Foundation {
 		bool SendBeforeDate (NSDate limitDate, nuint msgID, [NullAllowed] NSMutableArray components, [NullAllowed] NSPort receivePort, nuint headerSpaceReserved);
 #pragma warning restore 618
 	}
+
+	interface INSPortDelegate { }
 
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
@@ -12960,9 +12970,10 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate"), NullAllowed]
-		[Protocolize]
-		NSMachPortDelegate Delegate { get; set; }
+		INSMachPortDelegate Delegate { get; set; }
 	}
+
+	interface INSMachPortDelegate { }
 
 	[Model, BaseType (typeof (NSPortDelegate))]
 	[Protocol]
@@ -13418,17 +13429,16 @@ namespace Foundation {
 	interface NSFileCoordinator {
 		[Static, Export ("addFilePresenter:")]
 		[PostGet ("FilePresenters")]
-		void AddFilePresenter ([Protocolize] NSFilePresenter filePresenter);
+		void AddFilePresenter (INSFilePresenter filePresenter);
 
 		[Static]
 		[Export ("removeFilePresenter:")]
 		[PostGet ("FilePresenters")]
-		void RemoveFilePresenter ([Protocolize] NSFilePresenter filePresenter);
+		void RemoveFilePresenter (INSFilePresenter filePresenter);
 
 		[Static]
 		[Export ("filePresenters", ArgumentSemantic.Copy)]
-		[Protocolize]
-		NSFilePresenter [] FilePresenters { get; }
+		INSFilePresenter [] FilePresenters { get; }
 
 		[DesignatedInitializer]
 		[Export ("initWithFilePresenter:")]
@@ -13626,9 +13636,8 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
 		[NullAllowed]
-		NSFileManagerDelegate Delegate { get; set; }
+		INSFileManagerDelegate Delegate { get; set; }
 
 		[Export ("setAttributes:ofItemAtPath:error:")]
 		bool SetAttributes (NSDictionary attributes, string path, out NSError error);
@@ -13821,6 +13830,8 @@ namespace Foundation {
 		[Async, Export ("getFileProviderServicesForItemAtURL:completionHandler:")]
 		void GetFileProviderServices (NSUrl url, Action<NSDictionary<NSString, NSFileProviderService>, NSError> completionHandler);
 	}
+
+	interface INSFileManagerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -15332,9 +15343,10 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSConnectionDelegate Delegate { get; set; }
+		INSConnectionDelegate Delegate { get; set; }
 	}
+
+	interface INSConnectionDelegate { }
 
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSXpcConnection' instead.")]
 	[NoMacCatalyst]
@@ -15901,8 +15913,7 @@ namespace Foundation {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		NSUserNotificationCenterDelegate Delegate { get; set; }
+		INSUserNotificationCenterDelegate Delegate { get; set; }
 
 		[Export ("scheduledNotifications", ArgumentSemantic.Copy)]
 		NSUserNotification [] ScheduledNotifications { get; set; }
@@ -15930,6 +15941,8 @@ namespace Foundation {
 		[PostGet ("DeliveredNotifications")]
 		void RemoveAllDeliveredNotifications ();
 	}
+
+	interface INSUserNotificationCenterDelegate { }
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
