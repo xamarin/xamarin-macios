@@ -1488,6 +1488,7 @@ partial class TestRuntime {
 		IgnoreInCIIfNetworkConnectionLost (error);
 		IgnoreInCIIfNoNetworkConnection (error);
 		IgnoreInCIIfDnsResolutionFailed (error);
+		IgnoreInCIIfTimedOut (error);
 	}
 
 	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
@@ -1511,6 +1512,11 @@ partial class TestRuntime {
 	public static void IgnoreInCIIfDnsResolutionFailed (NSError error)
 	{
 		IgnoreNetworkError (error, CFNetworkErrors.CannotFindHost);
+	}
+
+	public static void IgnoreInCIIfTimedOut (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.TimedOut);
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
