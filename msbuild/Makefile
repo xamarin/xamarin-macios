@@ -38,6 +38,7 @@ ALL_SOURCES:= \
 	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.cs) \
 	$(wildcard $(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/*.csproj) \
 	Versions.g.cs \
+	$(wildcard $(TOP)/tools/common/*.cs) \
 
 CONFIG      = Debug
 TARGETFRAMEWORK = netstandard2.0
