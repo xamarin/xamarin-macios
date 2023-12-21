@@ -58,6 +58,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void ProcessingTap ()
 		{
+			TestRuntime.AssertNotVirtualMachine (); // this test doesn't seem to work in a virtual machine
 			var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 			AudioQueueStatus ret;
 			bool called = false;
@@ -65,30 +66,19 @@ namespace MonoTouchFixtures.AudioToolbox {
 			using (var tap = aq.CreateProcessingTap (
 				delegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags, AudioBuffers data)
 				{
-					TestRuntime.NSLog ($"Callback! {audioQueueTap} numberOfFrames: {numberOfFrames} timeStamp: {timeStamp} flags: {flags} data: {data}");
 					called = true;
 					timeStamp = default (AudioTimeStamp);
-					Thread.Sleep (100);
-					TestRuntime.NSLog ($"Slept!");
 					return numberOfFrames;
 				}, AudioQueueProcessingTapFlags.PreEffects, out ret)) {
-				TestRuntime.NSLog ($"A");
 				Assert.AreEqual (AudioQueueStatus.Ok, ret, "#1");
 
-				TestRuntime.NSLog ($"B");
 				unsafe {
 					AudioQueueBuffer* buffer;
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (50000, out buffer), "#2");
-					TestRuntime.NSLog ($"C");
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), "#3");
-					TestRuntime.NSLog ($"D");
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.Start (), "#4");
-					TestRuntime.NSLog ($"E");
 				}
-				TestRuntime.NSLog ($"F");
 			}
-
-			TestRuntime.NSLog ($"G");
 
 			Assert.That (called, Is.True, "#10");
 		}
