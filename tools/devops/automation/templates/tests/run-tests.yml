@@ -39,7 +39,7 @@ parameters:
 steps:
 - bash: |
     brew update
-    brew upgrade powershell –cask
+    brew upgrade powershell
   displayName: Install powershell
 
 - bash: |
