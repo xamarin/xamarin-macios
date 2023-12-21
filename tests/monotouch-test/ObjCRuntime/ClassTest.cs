@@ -119,7 +119,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class DirtyType : NSObject {
-			public void MarkDirty ()
+			public new void MarkDirty ()
 			{
 				base.MarkDirty ();
 			}

@@ -219,7 +219,6 @@ namespace MonoTouchFixtures.Foundation {
 			IntPtr objptr;
 			IntPtr keyptr;
 
-			NSString obj, key;
 			NSString v;
 
 			try {

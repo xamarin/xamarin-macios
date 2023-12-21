@@ -458,7 +458,6 @@ namespace MonoTests.System.Net.Http {
 #endif
 
 			bool validationCbWasExecuted = false;
-			bool customValidationCbWasExecuted = false;
 			bool invalidServicePointManagerCbWasExcuted = false;
 			Type expectedExceptionType = null;
 			HttpResponseMessage result = null;
@@ -580,6 +579,7 @@ namespace MonoTests.System.Net.Http {
 				}
 			}
 			Assert.IsNull (ex);
+			Assert.IsTrue (servicePointManagerCbWasExcuted, "Executed");
 		}
 
 #if NET
