@@ -233,7 +233,7 @@
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
 			_CreatePkgInfo;
-			_CreateAssetPackManifest;
+			_CreateAssetPackManifestMobile;
 			_SmeltMetal;
 			_TemperMetal;
 			_DetectAppManifest;
@@ -273,6 +273,8 @@
 			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_CreateAssetPackManifestMobile" Condition="'$(_PlatformName)' != 'macOS'" DependsOnTargets="_CreateAssetPackManifest" />
 
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
 	<Target Name="_ComputePublishTrimmed">
