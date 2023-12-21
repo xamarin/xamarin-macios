@@ -419,7 +419,7 @@ function New-TestResults {
         [int]
         $Attempt
     )
-    return [TestResult]::new($Path, $Status, $Label, $Title, $Platform, $Context, $Attempt)
+    return [TestResult]::new($Path, $Status, [TestConfiguration]::new($Label, $Title, $Platform, $Context), $Attempt)
 }
 
 <#
