@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			using var ep = MidiEndpoint.GetDestination (0);
 			Assert.NotNull (ep, "EndPoint");
 
-			var mevent = new byte[] { 0x90, 0x40, 0x70 };
+			var mevent = new byte [] { 0x90, 0x40, 0x70 };
 			using var client = new MidiClient ($"outputclient-{Process.GetCurrentProcess ().Id}");
 			using var port = client.CreateOutputPort ($"outputport-{Process.GetCurrentProcess ().Id}");
 			unsafe {
