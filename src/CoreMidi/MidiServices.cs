@@ -40,6 +40,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -771,7 +772,7 @@ namespace CoreMidi {
 #if !COREBUILD
 		public long TimeStamp;
 		IntPtr byteptr;
-		byte [] bytes = Array.Empty<byte> ();
+		byte []? bytes;
 		int start;
 		public ushort Length;
 
@@ -827,7 +828,7 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte [] ByteArray {
+		internal byte []? ByteArray {
 			get { return bytes; }
 		}
 
@@ -927,7 +928,7 @@ namespace CoreMidi {
 				dest += 8;
 				Marshal.WriteInt16 (buffer, dest, (short) packet_size);
 				dest += 2;
-				if (packet.ByteArray is null || packet.ByteArray.Length < 1) {
+				if (packet.ByteArray is null) {
 					Buffer.MemoryCopy ((void*) packet.BytePointer, (void*) (buffer + dest), packet_size, packet_size);
 				} else {
 					Marshal.Copy (packet.ByteArray, packet.start, buffer + dest, packet_size);
