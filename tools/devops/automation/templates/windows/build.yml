@@ -125,17 +125,9 @@ steps:
   displayName: Relocate Build.props
   workingDirectory: $(Build.SourcesDirectory)
 
-# get and expand the needed libs for monotouch
-- task: DownloadPipelineArtifact@2
-  displayName: Download test libraries dependencies
-  inputs:
-    patterns: '**/package-test-libraries.zip'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts/tmp
-
 # this step replaces the test-libraries dir
 - pwsh: |
-    $zip = "$(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
+    $zip = "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip"
     $target = "$(Build.SourcesDirectory)/xamarin-macios"
     Expand-Archive -Force $zip -DestinationPath $target
     Get-ChildItem "$target" -Recurse
