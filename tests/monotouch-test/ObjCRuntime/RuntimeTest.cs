@@ -272,7 +272,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 			[Export ("release")]
-			new void Release ()
+			void Release ()
 			{
 				if (enabled)
 					deallocated ();

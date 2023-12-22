@@ -28,7 +28,7 @@ namespace monotouchtest.Network {
 			NWPath finalPath = null;
 			bool isPathUpdated = false;
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => {
 
 				monitor.SnapshotHandler = ((path) => {
 					if (path is not null) {
