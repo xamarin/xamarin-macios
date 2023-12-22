@@ -70,15 +70,16 @@ namespace MonoTouchFixtures.Vision {
 		}
 
 		[Test]
-		public void KeepValueMethodsAliveTest () {
+		public void KeepValueMethodsAliveTest ()
+		{
 			// When running the app with the --optimize:all property, the Value extension methods of
 			// the VNHumanBodyPose3DObservationJointName smart enum are linked away and results in a
 			// build failure.
 			// As a temp workaround, this test will ensure that the GetValue method is getting used
 			// to prevent the linker from removing this method.
 
-			var getValue = VNHumanBodyPose3DObservationJointNameExtensions.GetValue((NSString)"CenterHead");
-			Assert.NotNull(getValue, "VNHumanBodyPose3DObservationJointNameExtensions.GetValue should not return null");
+			var getValue = VNHumanBodyPose3DObservationJointNameExtensions.GetValue ((NSString) "CenterHead");
+			Assert.NotNull (getValue, "VNHumanBodyPose3DObservationJointNameExtensions.GetValue should not return null");
 		}
 	}
 }
