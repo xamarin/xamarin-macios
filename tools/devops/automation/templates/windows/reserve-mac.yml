@@ -98,3 +98,7 @@ steps:
   timeoutInMinutes: 45
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/prepare-for-remote-tests.sh
+  displayName: 'Prepare for remote tests'
+  continueOnError: true
