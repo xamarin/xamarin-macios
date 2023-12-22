@@ -51,6 +51,8 @@ namespace Introspection {
 #endif // !NET
 			case "ASAuthorizationProviderExtensionRegistrationHandler":
 				return true;
+			case "GCPhysicalInputSource":
+				return true;
 			default:
 				return base.Skip (type);
 			}

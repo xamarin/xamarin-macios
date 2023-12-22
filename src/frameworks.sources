@@ -907,9 +907,11 @@ GAMECONTROLLER_CORE_SOURCES = \
 	GameController/GCMotion.cs \
 
 GAMECONTROLLER_SOURCES = \
+	GameController/GCButtonElementName.cs \
 	GameController/GCExtendedGamepadSnapshot.cs \
 	GameController/GCGamepadSnapshot.cs \
 	GameController/GCMicroGamepadSnapshot.cs \
+	GameController/GCPhysicalInputElementCollection_2.cs \
 
 # GameKit
 

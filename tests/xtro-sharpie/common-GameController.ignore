@@ -1,7 +1,25 @@
 # There are issues with the Generic Types listed here: https://github.com/xamarin/xamarin-macios/issues/15725
 
-# After GCPhysicalInputElementCollection is fixed, we can uncomment the below
-# !missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration
+!missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration
 
-# Ignore these protocols since they are marked with 'objc_non_runtime_protocol'
-# and are being used as NSStrings
+# we need to wait for XAMCORE_5_0
+!incorrect-protocol-member! GCAxisInput::sources is REQUIRED and should be abstract
+!incorrect-protocol-member! GCDevicePhysicalInputState::axes is REQUIRED and should be abstract
+!incorrect-protocol-member! GCDevicePhysicalInputState::buttons is REQUIRED and should be abstract
+!incorrect-protocol-member! GCDevicePhysicalInputState::dpads is REQUIRED and should be abstract
+!incorrect-protocol-member! GCDevicePhysicalInputState::elements is REQUIRED and should be abstract
+!incorrect-protocol-member! GCDevicePhysicalInputState::switches is REQUIRED and should be abstract
+!incorrect-protocol-member! GCLinearInput::sources is REQUIRED and should be abstract
+!incorrect-protocol-member! GCPressedStateInput::sources is REQUIRED and should be abstract
+!incorrect-protocol-member! GCRelativeInput::sources is REQUIRED and should be abstract
+!incorrect-protocol-member! GCSwitchPositionInput::sources is REQUIRED and should be abstract
+!incorrect-protocol-member! GCTouchedStateInput::sources is REQUIRED and should be abstract
+
+# this is when interop with swift makes our bindings and tests scream a little, the following protocols are implementations
+# of RawRepresentable (https://developer.apple.com/documentation/swift/rawrepresentable). We should be able to set them as 
+# subclasses of NSString without issues.
+!missing-protocol! GCAxisElementName not bound
+!missing-protocol! GCButtonElementName not bound
+!missing-protocol! GCDirectionPadElementName not bound
+!missing-protocol! GCPhysicalInputElementName not bound
+!missing-protocol! GCSwitchElementName not bound
