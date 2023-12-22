@@ -32,6 +32,12 @@ parameters:
   type: string
   default: HEAD
 
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -60,6 +66,8 @@ stages:
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
         macPool: ${{ parameters.macPool }}
+        gitHubToken: ${{ parameters.gitHubToken }}
+        xqaCertPass: ${{ parameters.xqaCertPass }}
 
   - job: run_tests
     dependsOn:
@@ -87,3 +95,5 @@ stages:
         commit: ${{ parameters.commit }}
         isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}
+        gitHubToken: ${{ parameters.gitHubToken }}
+        xqaCertPass: ${{ parameters.xqaCertPass }}

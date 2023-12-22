@@ -12,6 +12,11 @@ parameters:
   type: string
   default: HEAD
 
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
 
 steps:
 - template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
@@ -31,6 +36,19 @@ steps:
     echo "##vso[task.setvariable variable=AGENT_IP;isOutput=true]$macip"
   name: macInfo
   displayName: Set agent information
+
+- bash: ./install-qa-provisioning-profiles.sh -v
+  displayName: 'Add build provisioning profiles'
+  timeoutInMinutes: 30
+  continueOnError: true # should not stop the build
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
