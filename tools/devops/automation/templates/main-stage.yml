@@ -360,6 +360,8 @@ stages:
       displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
       statusContext: 'Windows Integration Tests'
+      gitHubToken: $(Github.Token)
+      xqaCertPass: $(xqa--certificates--password)
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step
