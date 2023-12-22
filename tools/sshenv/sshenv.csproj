@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SSH.NET" Version="2020.0.2" />
+		<PackageReference Include="Mono.Options" Version="6.12.0.148" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\common\StringUtils.cs">
+			<Link>StringUtils.cs</Link>
+		</Compile>
+	</ItemGroup>
+</Project>
