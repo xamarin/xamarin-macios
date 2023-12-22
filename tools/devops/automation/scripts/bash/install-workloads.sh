@@ -98,3 +98,5 @@ $DOTNET workload install --from-rollback-file "$ROLLBACK_PATH" --source "$DOTNET
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET_DIR)
 DOTNET_DIR=${var#*=}
 ls -lR "$DOTNET_DIR"
+ls -laRL "$BUILD_SOURCESDIRECTORY/xamarin-macios/builds" || true
+
