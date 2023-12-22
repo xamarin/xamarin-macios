@@ -70,3 +70,7 @@ steps:
     provisioning_extra_args: '-vvvv'
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/prepare-for-remote-tests.sh
+  displayName: 'Prepare for remote tests'
+  continueOnError: true
