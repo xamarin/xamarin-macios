@@ -18,12 +18,12 @@ namespace GameController {
 	[SupportedOSPlatform ("maccatalyst16.0")]
 	[SupportedOSPlatform ("macos13.0")]
 	[SupportedOSPlatform ("tvos16.0")]
-#else 
-	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+#else
+	[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 #endif
 	[Register ("GCPhysicalInputElementCollection", SkipRegistration = true)]
 	public sealed partial class GCPhysicalInputElementCollection<TKey, TValue> : GCPhysicalInputElementCollection
-		where TKey : NSString 
+		where TKey : NSString
 		where TValue : class, IGCPhysicalInputElement {
 
 		public GCPhysicalInputElementCollection (NSObjectFlag coder)
@@ -38,7 +38,7 @@ namespace GameController {
 			=> Runtime.GetINativeObject<TValue> (_ObjectForKeyedSubscript (key), false);
 
 		public NSEnumerator<IGCPhysicalInputElement> ElementEnumerator
-			=> Runtime.GetNSObject<NSEnumerator<IGCPhysicalInputElement>> (_ElementEnumerator)!; 
+			=> Runtime.GetNSObject<NSEnumerator<IGCPhysicalInputElement>> (_ElementEnumerator)!;
 
 	}
 }

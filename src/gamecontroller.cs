@@ -507,7 +507,7 @@ namespace GameController {
 		[Export ("shouldMonitorBackgroundEvents")]
 		bool ShouldMonitorBackgroundEvents { get; set; }
 
-		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17,0)]
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("input", ArgumentSemantic.Strong)]
 		GCControllerLiveInput Input { get; }
 	}
@@ -2041,11 +2041,10 @@ namespace GameController {
 		SlopeFeedbackFinished,
 	}
 
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Flags]
 	[Native]
-	public enum GCPhysicalInputSourceDirection : ulong
-	{
+	public enum GCPhysicalInputSourceDirection : ulong {
 		NotApplicable = 0x0,
 		Up = (1uL << 0),
 		Right = (1uL << 1),
@@ -2181,11 +2180,11 @@ namespace GameController {
 		[Export ("updateConfigurationForElement:configuration:")]
 		void UpdateConfiguration (string element, GCVirtualControllerElementUpdateBlock configuration);
 
-		[iOS (17,0)]
+		[iOS (17, 0)]
 		[Export ("setValue:forButtonElement:")]
 		void SetValue (nfloat value, string element);
 
-		[iOS (17,0)]
+		[iOS (17, 0)]
 		[Export ("setPosition:forDirectionPadElement:")]
 		void SetPosition (CGPoint position, string element);
 	}
@@ -2337,11 +2336,10 @@ namespace GameController {
 		float MaximumDegreesOfRotation { get; }
 	}
 
-	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(NSObject))]
+	[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GCPhysicalInputElementCollection
-	{
+	interface GCPhysicalInputElementCollection {
 		[Export ("count")]
 		nuint Count { get; }
 
@@ -2360,7 +2358,7 @@ namespace GameController {
 		IntPtr _ElementEnumerator { get; }
 	}
 
-	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	interface GCPhysicalInputElementCollection<K, V> : GCPhysicalInputElementCollection { }
 
 	interface IGCDevicePhysicalInputState { }
@@ -2380,7 +2378,7 @@ namespace GameController {
 
 	*/
 
-	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	enum GCInputElementName {
 		[NoTV, NoiOS]
 		[Field ("GCInputShifter")]
@@ -2421,101 +2419,101 @@ namespace GameController {
 
 	*/
 
-	[TV (14,0), Mac (11,0), iOS (14,0), MacCatalyst (14,0)]
+	[TV (14, 0), Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0)]
 	enum GCInputButtonName {
-		[Mac (11,0), iOS(14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonA")]
 		ButtonA,
 
-		[Mac (11,0), iOS(14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonB")]
 		ButtonB,
 
-		[Mac (11,0), iOS(14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonX")]
 		ButtonX,
 
-		[Mac(11,0), iOS(14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonY")]
-		ButtonY, 
+		ButtonY,
 
-		[Mac(11,0), iOS(14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputLeftShoulder")]
-		LeftShoulder, 
+		LeftShoulder,
 
-		[Mac (11,0), iOS (14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputRightShoulder")]
 		RightShoulder,
 
-		[Mac (11,0), iOS (14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputLeftTrigger")]
 		LeftTrigger,
 
-		[Mac(11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputRightTrigger")]
 		RightTrigger,
 
-		[Mac(11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputLeftThumbstickButton")]
-		LeftThumbstickButton, 
+		LeftThumbstickButton,
 
-		[Mac (11,0), iOS (14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputRightThumbstickButton")]
-		RightThumbstickButton, 
+		RightThumbstickButton,
 
-		[Mac (11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonHome")]
 		Home,
 
-		[Mac (11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonMenu")]
 		Menu,
 
-		[Mac (11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonOptions")]
 		Options,
 
-		[Mac (12,0), iOS(15,0), TV(15,0)]
+		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
 		[Field ("GCInputButtonShare")]
 		Share,
 
-		[Mac (11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputXboxPaddleOne")]
 		XboxPaddleOne,
 
-		[Mac (11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputXboxPaddleTwo")]
-		XboxPaddleTwo, 
+		XboxPaddleTwo,
 
-		[Mac (11,0), iOS (14,0), TV (14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputXboxPaddleThree")]
-		XboxPaddleThree, 
+		XboxPaddleThree,
 
-		[Mac (11,0), iOS(14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputXboxPaddleFour")]
-		XboxPaddleFour, 
+		XboxPaddleFour,
 
-		[Mac (11,0), iOS (14,0), TV(14,0)]
+		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputDualShockTouchpadButton")]
-		DualShockTouchpadButton, 
+		DualShockTouchpadButton,
 
-		[Mac (13,0), MacCatalyst (16,0), NoiOS, NoTV]
+		[Mac (13, 0), MacCatalyst (16, 0), NoiOS, NoTV]
 		[Field ("GCInputPedalAccelerator")]
-		PedalAccelerator, 
+		PedalAccelerator,
 
-		[Mac (13,0), MacCatalyst (16,0), NoiOS, NoTV]
+		[Mac (13, 0), MacCatalyst (16, 0), NoiOS, NoTV]
 		[Field ("GCInputPedalBrake")]
-		PedalBrake, 
+		PedalBrake,
 
-		[Mac (13,0), MacCatalyst (16,0), NoiOS, NoTV]
+		[Mac (13, 0), MacCatalyst (16, 0), NoiOS, NoTV]
 		[Field ("GCInputPedalClutch")]
 		PedalClutch,
 
-		[Mac (13,0), MacCatalyst (16,0), NoiOS, NoTV]
+		[Mac (13, 0), MacCatalyst (16, 0), NoiOS, NoTV]
 		[Field ("GCInputLeftPaddle")]
-		LeftPaddle, 
+		LeftPaddle,
 
-		[Mac (13,0), MacCatalyst (16,0), NoiOS, NoTV]
+		[Mac (13, 0), MacCatalyst (16, 0), NoiOS, NoTV]
 		[Field ("GCInputRightPaddle")]
 		RightPaddle,
 	}
@@ -2523,10 +2521,10 @@ namespace GameController {
 	/*
 		GAMECONTROLLER_EXTERN GCInputAxisName GCInputSteeringWheel API_AVAILABLE(macos(13.0), macCatalyst(16.0)) API_UNAVAILABLE(ios, tvos);
 	*/
-	[Mac (13,0), MacCatalyst (16,0), NoiOS, NoTV]
+	[Mac (13, 0), MacCatalyst (16, 0), NoiOS, NoTV]
 	enum GCInputAxisName {
 		[Field ("GCInputSteeringWheel")]
-		SteeringWheel, 
+		SteeringWheel,
 	}
 
 	/*
@@ -2538,23 +2536,23 @@ namespace GameController {
 		GAMECONTROLLER_EXTERN GCInputDirectionPadName GCInputDualShockTouchpadTwo API_AVAILABLE(macos(11.0), ios(14.0), tvos(14.0));
 	 */
 
-	[Mac (11,0), iOS(14,0), TV(14,0), MacCatalyst (14,0)]
+	[Mac (11, 0), iOS (14, 0), TV (14, 0), MacCatalyst (14, 0)]
 	enum GCInputDirectionPadName {
 
-		[Field ("GCInputDirectionPad")] 
-		DirectionPad, 
+		[Field ("GCInputDirectionPad")]
+		DirectionPad,
 
-		[Field ("GCInputLeftThumbstick")] 
-		LeftThumbstick, 
+		[Field ("GCInputLeftThumbstick")]
+		LeftThumbstick,
 
-		[Field ("GCInputRightThumbstick")] 
-		RightThumbstick, 
+		[Field ("GCInputRightThumbstick")]
+		RightThumbstick,
 
 		[Field ("GCInputDualShockTouchpadOne")]
-		DualShockTouchpadOne, 
+		DualShockTouchpadOne,
 
 		[Field ("GCInputDualShockTouchpadTwo")]
-		DualShockTouchpadTwo, 
+		DualShockTouchpadTwo,
 	}
 
 	[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), NoWatch, TV (16, 0)]
@@ -2974,24 +2972,22 @@ namespace GameController {
 		NSString DidChangeNotification { get; }
 	}
 
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
-	[BaseType (typeof(NSObject))]
-	interface GCControllerInputState : GCDevicePhysicalInput {}
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface GCControllerInputState : GCDevicePhysicalInput { }
 
-	[TV (17,0), Mac (14,0), iOS (17,0),  MacCatalyst (17,0)]
-	[BaseType (typeof(GCControllerInputState))]
-	interface GCControllerLiveInput : GCDevicePhysicalInput
-	{
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (GCControllerInputState))]
+	interface GCControllerLiveInput : GCDevicePhysicalInput {
 		[NullAllowed, Export ("unmappedInput")]
 		GCControllerLiveInput UnmappedInput { get; }
 	}
-	
 
-	[TV (17,0), Mac (14,0), iOS (17,0), MacCatalyst (17,0)]
+
+	[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
-	interface GCPhysicalInputSource
-	{
+	[BaseType (typeof (NSObject))]
+	interface GCPhysicalInputSource {
 		[Abstract]
 		[Export ("elementAliases", ArgumentSemantic.Copy)]
 		NSSet<NSString> ElementAliases { get; }
