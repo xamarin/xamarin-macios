@@ -58,8 +58,8 @@ namespace Foundation {
 		public unsafe static NSComparisonResult Compare (ref NSDecimal left, ref NSDecimal right)
 		{
 			return (NSComparisonResult) (long) NSDecimalCompare (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref left),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref right));
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
@@ -68,8 +68,8 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			NSDecimalRound (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref number),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number),
 				scale,
 				(nuint) (ulong) mode);
 		}
@@ -79,8 +79,8 @@ namespace Foundation {
 		public unsafe static NSCalculationError Normalize (ref NSDecimal number1, ref NSDecimal number2)
 		{
 			return (NSCalculationError) (ulong) NSDecimalNormalize (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref number1),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref number2));
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number1),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number2));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
@@ -89,9 +89,9 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			return (NSCalculationError) (ulong) NSDecimalAdd (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref left),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref right),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
 				(nuint) (ulong) mode);
 		}
 
@@ -101,9 +101,9 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			return (NSCalculationError) (ulong) NSDecimalSubtract (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref left),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref right),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
 				(nuint) (ulong) mode);
 		}
 
@@ -113,9 +113,9 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			return (NSCalculationError) (ulong) NSDecimalMultiply (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref left),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref right),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
 				(nuint) (ulong) mode);
 		}
 
@@ -125,9 +125,9 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			return (NSCalculationError) (ulong) NSDecimalDivide (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref left),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref right),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
 				(nuint) (ulong) mode);
 		}
 
@@ -137,8 +137,8 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			return (NSCalculationError) (ulong) NSDecimalPower (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref number),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number),
 				power,
 				(nuint) (ulong) mode);
 		}
@@ -149,8 +149,8 @@ namespace Foundation {
 		{
 			result = default (NSDecimal);
 			return (NSCalculationError) (ulong) NSDecimalMultiplyByPowerOf10 (
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref result),
-				(NSDecimal *) Unsafe.AsPointer<NSDecimal> (ref number),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number),
 				power10,
 				(nuint) (ulong) mode);
 		}
