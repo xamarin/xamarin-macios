@@ -49,7 +49,7 @@ namespace MonoTouchFixtures.Vision {
 		[Test]
 		public void GetCameraRelativePositionTest ()
 		{
-			var requestHandler = new VNImageRequestHandler (NSBundle.MainBundle.GetUrlForResource ("full_body", "png"), new NSDictionary ());
+			var requestHandler = new VNImageRequestHandler (NSBundle.MainBundle.GetUrlForResource ("full_body", "jpg"), new NSDictionary ());
 			var request = new VNDetectHumanBodyPose3DRequest ();
 
 			var didPerform = requestHandler.Perform (new VNRequest [] { request }, out NSError error);
@@ -67,6 +67,18 @@ namespace MonoTouchFixtures.Vision {
 			var position = observation.GetCameraRelativePosition (out var modelPositionOut, VNHumanBodyPose3DObservationJointName.CenterHead, out NSError observationError);
 			Assert.Null (observationError, $"GetCameraRelativePosition should not return an error {observationError}");
 			Assert.That (modelPositionOut, Is.EqualTo (expectedMatrix), "VNVector3DGetCameraRelativePosition result is not equal to expected matrix");
+		}
+
+		[Test]
+		public void KeepValueMethodsAliveTest () {
+			// When running the app with the --optimize:all property, the Value extension methods of
+			// the VNHumanBodyPose3DObservationJointName smart enum are linked away and results in a
+			// build failure.
+			// As a temp workaround, this test will ensure that the GetValue method is getting used
+			// to prevent the linker from removing this method.
+
+			var getValue = VNHumanBodyPose3DObservationJointNameExtensions.GetValue((NSString)"CenterHead");
+			Assert.NotNull(getValue, "VNHumanBodyPose3DObservationJointNameExtensions.GetValue should not return null");
 		}
 	}
 }
