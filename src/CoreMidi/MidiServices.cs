@@ -835,6 +835,9 @@ namespace CoreMidi {
 			get { return byteptr; }
 		}
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This property may return a pointer to a managed object, and this pointer is never safe to use. Use ByteArray or BytePointer instead.")]
 		public IntPtr Bytes {
 			get {
 				if (bytes is null || bytes.Length < 1)
@@ -846,6 +849,7 @@ namespace CoreMidi {
 				}
 			}
 		}
+#endif
 
 		internal static int GetPacketLength (int payload_length)
 		{
