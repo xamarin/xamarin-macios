@@ -46,6 +46,11 @@ parameters:
   type: string
   default: ''
 
+- name: stageDependenciesJson
+  type: string
+  default: ''
+
+
 steps:
 
 - template: ../common/checkout.yml
@@ -76,6 +81,7 @@ steps:
           -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
           -TestPrefix "${{ parameters.testPrefix }}" `
           -Dependencies "$Env:DEPENDENCIES" `
+          -StageDependencies "$Env:STAGE_DEPENDENCIES" `
           -UploadPrefix "${{  parameters.uploadPrefix }}" `
           -Context "$Env:CONTEXT" `
           -VSDropsIndex $vsdropsIndex
@@ -95,6 +101,7 @@ steps:
       }
   env:
     DEPENDENCIES: ${{ parameters.dependenciesJson }}
+    STAGE_DEPENDENCIES: ${{ parameters.stageDependenciesJson }}
     CONTEXT: ${{ parameters.statusContext }}
     DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)
