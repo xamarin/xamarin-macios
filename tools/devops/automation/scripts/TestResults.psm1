@@ -437,6 +437,9 @@ function New-ParallelTestsResults {
         [Parameter(Mandatory)]
         [string]
         $Dependencies,
+        [Parameter(Mandatory)]
+        [string]
+        $StageDependencies,        
         [string]
         $UploadPrefix="",
         [string]
@@ -448,8 +451,9 @@ function New-ParallelTestsResults {
     Write-Host "Dependencies:`n$($Dependencies)"
 
     $dep = $Dependencies | ConvertFrom-Json -AsHashtable
+    $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
 
-    $matrix = $dep.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
+    $matrix = $stageDep.configure_build.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
     $suites = [ordered]@{}
     foreach ($title in $matrix.Keys) {
         Write-Host "Got title: $title"
@@ -534,7 +538,7 @@ function New-ParallelTestsResults {
 
             $platform = $testConfig.Platform
             $title = $testConfig.Title
-            if ($testResult -eq $null) {
+            if ($null -eq $testResult) {
                 $result = [TestResult]::new($null, "None", $testConfig, -1)
             } else {
                 $status = $testResult.Status

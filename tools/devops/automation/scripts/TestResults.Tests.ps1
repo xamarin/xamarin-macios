@@ -117,10 +117,16 @@ Describe "TestResults tests" {
       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
     }
-  },
-  "configure": {
-    "outputs": {
+  }
+}
+"@
+        $stageDependencies = @"
+{    
+  "configure_build": {
+    "configure": {
+      "outputs": {
         "test_matrix.TEST_MATRIX": "$($matrix.Replace("`n", "\n").Replace("`"", "\`""))"
+      }
     }
   }
 }
@@ -141,11 +147,6 @@ Describe "TestResults tests" {
       "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
       "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
       "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
-    }
-  },
-  "configure": {
-    "outputs": {
-        "test_matrix.TEST_MATRIX": "$($matrix.Replace("`n", "\n").Replace("`"", "\`""))"
     }
   }
 }
@@ -374,7 +375,7 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
 
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -452,7 +453,7 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 

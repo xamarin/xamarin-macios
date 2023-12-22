@@ -154,6 +154,7 @@ stages:
       vmImage: ubuntu-latest
     variables:
       VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
+      VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     condition: always()
     steps:
     - checkout: none
@@ -174,6 +175,7 @@ stages:
     variables:
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
       DEPENDENCIES: $[ convertToJson(dependencies) ]
+      STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     pool:
       vmImage: 'windows-latest'
       workspace:
