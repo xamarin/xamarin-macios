@@ -458,7 +458,6 @@ namespace MonoTests.System.Net.Http {
 #endif
 
 			bool validationCbWasExecuted = false;
-			bool customValidationCbWasExecuted = false;
 			bool invalidServicePointManagerCbWasExcuted = false;
 			Type expectedExceptionType = null;
 			HttpResponseMessage result = null;
@@ -539,7 +538,7 @@ namespace MonoTests.System.Net.Http {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
-			bool servicePointManagerCbWasExcuted = false;
+			// bool servicePointManagerCbWasExcuted = false;
 
 			var handler = GetHandler (handlerType);
 			if (handler is NSUrlSessionHandler ns) {
@@ -548,12 +547,12 @@ namespace MonoTests.System.Net.Http {
 #else
 				ns.TrustOverride += (a, b) => {
 #endif
-					servicePointManagerCbWasExcuted = true;
+					// servicePointManagerCbWasExcuted = true;
 					return true;
 				};
 			} else {
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
-					servicePointManagerCbWasExcuted = true;
+					// servicePointManagerCbWasExcuted = true;
 					return true;
 				};
 			}
@@ -580,6 +579,7 @@ namespace MonoTests.System.Net.Http {
 				}
 			}
 			Assert.IsNull (ex);
+			// Assert.IsTrue (servicePointManagerCbWasExcuted, "Executed");
 		}
 
 #if NET
