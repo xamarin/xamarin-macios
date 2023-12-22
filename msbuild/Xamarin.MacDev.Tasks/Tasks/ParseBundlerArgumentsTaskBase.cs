@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Microsoft.Build.Utilities;
@@ -71,7 +72,19 @@ namespace Xamarin.MacDev.Tasks {
 				NoDSymUtil = "false";
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
-				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
+				var extraArgs = ExtraArgs;
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+					// The backslash character is pretty common on Windows (since it's a path separator),
+					// but the argument parser will treat it as an escape character, and just skip it.
+					// This is obviously wrong, so just replace backslashes with forward slashes, which
+					// should work just as well on Windows, and will also be parsed correctly.
+					// The downside is that now there's no way to escape characters, but that should be a
+					// very rare problem (much rarer than backslash characters), and there are other
+					// ways around the problem (set the actual target property instead of going through
+					// the MtouchExtraArgs property for instance):
+					extraArgs = extraArgs.Replace ('\\', '/');
+				}
+				var args = CommandLineArgumentBuilder.Parse (extraArgs);
 				List<string> xml = null;
 				List<string> customLinkFlags = null;
 				var aot = new List<ITaskItem> ();

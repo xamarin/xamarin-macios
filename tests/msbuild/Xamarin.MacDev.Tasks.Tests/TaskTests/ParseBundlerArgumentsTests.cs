@@ -175,6 +175,7 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("-xml:dummy", null, "dummy")]
 		[TestCase ("/xml:dummy", null, "dummy")]
 		[TestCase ("/xml:dummy1 /xml:dummy2", null, "dummy1;dummy2")]
+		[TestCase ("/xml:/path/a /xml:/path/b", null, "/path/a;/path/b")]
 		public void XmlDefinitions (string input, string existing, string output)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
