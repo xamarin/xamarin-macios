@@ -2050,7 +2050,7 @@ namespace GameController {
 		Up = (1uL << 0),
 		Right = (1uL << 1),
 		Down = (1uL << 2),
-		Left = (1uL << 3)
+		Left = (1uL << 3),
 	}
 
 	[TV (14, 5)]
