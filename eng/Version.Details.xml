@@ -1,30 +1,55 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.206-servicing.23254.11">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.101-servicing.23614.6">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>ccc5191a306acdad77bbfea6675886dc72bf9454</Sha>
+      <Sha>461c7766428ba2782725d89d95d3f4f414ff8c92</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.23062.2" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
-      <Uri>https://github.com/dotnet/linker</Uri>
-      <Sha>19fa656d35252ccf926e6a6d783b16a2f094aaef</Sha>
+    <Dependency Name="Microsoft.NET.ILLink" Version="8.0.0-rtm.23524.7">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>59edaad404d1b8e47080015ae8d0787f94c970df</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
+      <Sha>5535e31a712343a63f5d7d796cd874e563e5ac14</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>8042d61b17540e49e53569e3728d2faa1c596583</Sha>
+      <Sha>5535e31a712343a63f5d7d796cd874e563e5ac14</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
-      <Sha>d47e49e9c1e173ac90821f7e89cc38e710274241</Sha>
+      <Sha>3f1acb59718cadf111a0a796681e3d3509bb3381</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.5" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>7fa7119c1cdf1290aabb2391c3eee6ed42f8851d</Sha>
+      <Sha>2406616d0e3a31d80b326e27c156955bfa41c791</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="7.0.7">
+    <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23509.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+      <Uri>https://github.com/dotnet/cecil</Uri>
+      <Sha>45dd3a73dd5b64b010c4251303b3664bb30df029</Sha>
+    </Dependency>
+    <!-- This is a subscription of the .NET 7 versions of our packages -->
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7099">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>c70a2f50f88ee470d197d2b4fff3de5b75237a0d</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>ad24dacc5b51b83dc4b716cebe70c9f871f57270</Sha>
+      <Sha>59edaad404d1b8e47080015ae8d0787f94c970df</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
@@ -36,9 +61,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="8.0.0-prerelease.23456.2">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.23616.1">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>a3a749a7056623c665bba226fe843152f413f044</Sha>
+      <Sha>71422c1795f1b6e04feb507ec96a91b25354a2ff</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

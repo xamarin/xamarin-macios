@@ -19,7 +19,7 @@ using NativeHandle = System.IntPtr;
 namespace AutomaticAssessmentConfiguration {
 
 	[ErrorDomain ("AEAssessmentErrorDomain")]
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum AEAssessmentErrorCode : long {
@@ -36,7 +36,7 @@ namespace AutomaticAssessmentConfiguration {
 		Punctuation = 1 << 1,
 	}
 
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	interface AEAssessmentConfiguration : NSCopying {
@@ -103,7 +103,7 @@ namespace AutomaticAssessmentConfiguration {
 		void SetConfiguration (AEAssessmentParticipantConfiguration configuration, AEAssessmentApplication application);
 	}
 
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -139,7 +139,7 @@ namespace AutomaticAssessmentConfiguration {
 
 	interface IAEAssessmentSessionDelegate { }
 
-	[Mac (10, 15, 4), iOS (13, 4)]
+	[iOS (13, 4)]
 	[MacCatalyst (14, 0)]
 #if NET
 	[Protocol, Model]
@@ -172,7 +172,20 @@ namespace AutomaticAssessmentConfiguration {
 
 	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface AEAssessmentApplication : NSCopying {
+		[NoiOS]
+		[MacCatalyst (15, 0)]
+		[Export ("initWithBundleIdentifier:")]
+		NativeHandle Constructor (string bundleIdentifier);
+
+		[NoiOS]
+		[NoMacCatalyst] // header says it's available in Mac Catalyst, Apple's documentation + xtro says it's not, so don't add it for now.
+		[Export ("initWithBundleIdentifier:teamIdentifier:")]
+		NativeHandle Constructor (string bundleIdentifier, [NullAllowed] string TeamIdentifier);
+
 		[Export ("bundleIdentifier")]
 		string BundleIdentifier { get; }
 

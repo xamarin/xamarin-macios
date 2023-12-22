@@ -10,6 +10,7 @@ namespace NetworkExtension {
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos17.0")]
 #endif
 	public class NEVpnConnectionStartOptions : DictionaryContainer {
 

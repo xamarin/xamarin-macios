@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 #nullable enable
 
 using System;
@@ -18,7 +19,6 @@ namespace CoreMidi {
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]
@@ -45,7 +45,6 @@ namespace CoreMidi {
 #else
 	[NoWatch]
 	[NoTV]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 #endif
 	[NativeName ("MIDICIDeviceIdentification")]
@@ -159,3 +158,4 @@ namespace CoreMidi {
 #endif
 	}
 }
+#endif

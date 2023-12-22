@@ -14,8 +14,6 @@ using ObjCRuntime;
 #nullable enable
 
 namespace WebKit {
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationType : long {
@@ -27,8 +25,6 @@ namespace WebKit {
 		Other = -1
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationActionPolicy : long {
@@ -40,8 +36,6 @@ namespace WebKit {
 		Download,
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKNavigationResponsePolicy : long {
@@ -53,8 +47,6 @@ namespace WebKit {
 		Download,
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKUserScriptInjectionTime : long {
@@ -62,8 +54,6 @@ namespace WebKit {
 		AtDocumentEnd
 	}
 
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[ErrorDomain ("WKErrorDomain")]
@@ -95,14 +85,12 @@ namespace WebKit {
 #if NET
 	[NoMac]
 #endif
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum WKSelectionGranularity : long {
 		Dynamic, Character
 	}
 
-	[iOS (10, 0)]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -120,8 +108,6 @@ namespace WebKit {
 		All = UInt64.MaxValue
 	}
 
-	[iOS (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]

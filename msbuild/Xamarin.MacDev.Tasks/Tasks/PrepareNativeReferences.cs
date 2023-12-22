@@ -36,27 +36,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
 		{
-			if (NativeReferences is null)
-				yield break;
-
-			foreach (var nativeRef in NativeReferences
-				.Where (x => Directory.Exists (x.ItemSpec))
-				.Select (x => x.ItemSpec))
-				foreach (var item in GetItemsFromNativeReference (nativeRef))
-					yield return item;
+			return CreateItemsForAllFilesRecursively (NativeReferences);
 		}
 
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-		}
-
-		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
-		{
-			foreach (var file in Directory.EnumerateFiles (folderPath, "*", SearchOption.AllDirectories)
-				.Select (x => new TaskItem (x)))
-				yield return file;
 		}
 	}
 }

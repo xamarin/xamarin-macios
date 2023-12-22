@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 //
 // MidiServices.cs: Implementation of the MidiObject base class and its derivates
 //
@@ -1664,11 +1665,10 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public string? NameConfigurationDictionary {
@@ -2575,3 +2575,4 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 }
+#endif

@@ -4,9 +4,6 @@ using Foundation;
 
 namespace Photos {
 	// NSInteger -> PHImageManager.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageContentMode : long {
@@ -16,9 +13,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageRequestOptionsVersion : long {
@@ -28,9 +22,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : long {
@@ -40,9 +31,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : long {
@@ -52,9 +40,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHVideoRequestOptionsVersion : long {
@@ -63,9 +48,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PHImageManager.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHVideoRequestOptionsDeliveryMode : long {
@@ -76,9 +58,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHCollectionListType : long {
@@ -91,9 +70,6 @@ namespace Photos {
 		SmartFolder = 3
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHCollectionListSubtype : long {
@@ -125,9 +101,6 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHCollectionEditOperation : long {
@@ -142,9 +115,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetCollectionType : long {
@@ -159,9 +129,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetCollectionSubtype : long {
@@ -182,33 +149,20 @@ namespace Photos {
 		SmartAlbumBursts = 207,
 		SmartAlbumSlomoVideos = 208,
 		SmartAlbumUserLibrary = 209,
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumSelfPortraits = 210,
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumScreenshots = 211,
-		[iOS (10, 2), TV (10, 1)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumDepthEffect = 212,
-		[iOS (10, 3), TV (10, 2)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumLivePhotos = 213,
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumAnimated = 214,
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumLongExposures = 215,
 		[iOS (13, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		SmartAlbumUnableToUpload = 216,
 		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
@@ -220,9 +174,6 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetEditOperation : long {
@@ -233,9 +184,6 @@ namespace Photos {
 	}
 
 	// NSInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetMediaType : long {
@@ -246,9 +194,6 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -256,13 +201,10 @@ namespace Photos {
 		None = 0,
 		PhotoPanorama = (1 << 0),
 		PhotoHDR = (1 << 1),
-		[iOS (9, 0)]
 		[MacCatalyst (13, 1)]
 		Screenshot = (1 << 2),
-		[iOS (9, 1)]
 		[MacCatalyst (13, 1)]
 		PhotoLive = (1 << 3),
-		[iOS (10, 2), TV (10, 1), Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		PhotoDepthEffect = (1 << 4),
 		VideoStreamed = (1 << 16),
@@ -272,9 +214,6 @@ namespace Photos {
 	}
 
 	// NSUInteger -> PhotosTypes.h
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -284,9 +223,6 @@ namespace Photos {
 		UserPick = (1 << 1)
 	}
 
-	[iOS (8, 0)]
-	[TV (10, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAuthorizationStatus : long {
@@ -301,9 +237,6 @@ namespace Photos {
 		Limited,
 	}
 
-	[iOS (9, 0)]
-	[Mac (10, 12)]
-	[TV (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetResourceType : long {
@@ -315,23 +248,22 @@ namespace Photos {
 		FullSizeVideo = 6,
 		AdjustmentData = 7,
 		AdjustmentBasePhoto = 8,
-		[iOS (9, 1)]
 		[MacCatalyst (13, 1)]
 		PairedVideo = 9,
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		FullSizePairedVideo = 10,
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		AdjustmentBasePairedVideo = 11,
-		[Mac (10, 15), iOS (13, 0), TV (13, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		AdjustmentBaseVideo = 12,
+		[iOS (17, 0), TV (17, 0)]
+		[MacCatalyst (17, 0), Mac (14, 0)]
+		PhotoProxy = 19,
 	}
 
-	[iOS (9, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetSourceType : ulong {
@@ -341,9 +273,6 @@ namespace Photos {
 		iTunesSynced = (1 << 2)
 	}
 
-	[iOS (10, 0)]
-	[TV (10, 0)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHLivePhotoFrameType : long {
@@ -351,8 +280,6 @@ namespace Photos {
 		Video
 	}
 
-	[TV (11, 0), iOS (11, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHAssetPlaybackStyle : long {
@@ -364,7 +291,6 @@ namespace Photos {
 		VideoLooping = 5,
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -375,7 +301,6 @@ namespace Photos {
 		Subtitle,
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -395,7 +320,6 @@ namespace Photos {
 		ProjectExtension = 26,
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -408,7 +332,6 @@ namespace Photos {
 	}
 
 	[NoMacCatalyst]
-	[Mac (10, 12)]
 	[NoiOS]
 	[NoTV]
 	[Native ("PHLivePhotoEditingErrorCode")]
@@ -420,7 +343,6 @@ namespace Photos {
 		Aborted,
 	}
 
-	[Mac (10, 14)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -437,7 +359,7 @@ namespace Photos {
 	}
 
 	[ErrorDomain ("PHPhotosErrorDomain")]
-	[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PHPhotosError : long {

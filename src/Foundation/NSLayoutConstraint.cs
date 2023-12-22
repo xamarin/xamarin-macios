@@ -70,7 +70,7 @@ namespace UIKit
 							views = new NSMutableDictionary ();
 						views [nskey] = (NSObject) value;
 						continue;
-					} else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View)))) {
+					} else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (View))) != 0) {
 						if (views is null)
 							views = new NSMutableDictionary ();
 						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
@@ -78,7 +78,7 @@ namespace UIKit
 					}
 #if !MONOMAC
 					// This requires UILayoutSupport class which is not exist on Mac
-					else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name))) {
+					else if (value is INativeObject && Messaging.bool_objc_msgSend_IntPtr (((INativeObject) value).Handle, Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle (typeof (UILayoutSupport).Name)) != 0) {
 						if (views is null)
 							views = new NSMutableDictionary ();
 						views.LowlevelSetObject (((INativeObject) value).Handle, nskey.Handle);
@@ -123,8 +123,6 @@ namespace UIKit
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
 		{
@@ -136,8 +134,6 @@ namespace UIKit
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
 		{

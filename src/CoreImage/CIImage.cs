@@ -62,8 +62,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public bool? AutoAdjustCrop;
 #if NET
@@ -71,8 +69,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public bool? AutoAdjustLevel;
 

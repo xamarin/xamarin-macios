@@ -29,12 +29,11 @@ namespace ImageIO {
 		public delegate void CGImageSourceAnimationHandler (nint index, CGImage image, out bool stop);
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
@@ -43,12 +42,11 @@ namespace ImageIO {
 		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageAtURLWithBlock ( /* CFURLRef */ IntPtr url, /* CFDictionaryRef _iio_Nullable */ IntPtr options, /* CGImageSourceAnimationHandler */ BlockLiteral* block);
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
@@ -57,12 +55,11 @@ namespace ImageIO {
 		unsafe static extern /* OSStatus */ CGImageAnimationStatus CGAnimateImageDataWithBlock ( /* CFDataRef _Nonnull */ IntPtr data, /* CFDictionaryRef _Nullable */ IntPtr options, /* CGImageSourceAnimationHandler _Nonnull */ BlockLiteral* block);
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]
@@ -92,12 +89,11 @@ namespace ImageIO {
 		}
 
 #if NET
-        [SupportedOSPlatform ("macos10.15")]
+        [SupportedOSPlatform ("macos")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
         [SupportedOSPlatform ("maccatalyst")]
 #else
-		[Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
 		[Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.TvOS, 13, 0, PlatformArchitecture.All)]
 		[Introduced (PlatformName.WatchOS, 6, 0, PlatformArchitecture.All)]

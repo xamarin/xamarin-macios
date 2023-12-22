@@ -32,8 +32,6 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		[Obsolete ("Use 'MPPlayableContentDataSource_Extensions.GetContentItemAsync' instead.")]
 		public unsafe virtual Task<MPContentItem> GetContentItemAsync (string identifier)

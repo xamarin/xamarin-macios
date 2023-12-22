@@ -8,11 +8,15 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
 using SecKeychain = Xamarin.MacDev.Keychain;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
-	public abstract class DetectSigningIdentityTaskBase : XamarinTask {
+	public class DetectSigningIdentity : XamarinTask, ITaskCallback, ICancelableTask {
 		const string AutomaticProvision = "Automatic";
 		const string AutomaticAdHocProvision = "Automatic:AdHoc";
 		const string AutomaticAppStoreProvision = "Automatic:AppStore";
@@ -102,8 +106,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string BundleIdentifier { get; set; }
 
-		public string CodesignProvision { get; set; }
-
 		public ITaskItem CodesignEntitlements { get; set; }
 
 		public string CodesignRequireProvisioningProfile { get; set; }
@@ -161,7 +163,7 @@ namespace Xamarin.MacDev.Tasks {
 							break;
 						case ApplePlatform.MacCatalyst:
 						case ApplePlatform.MacOSX:
-							requireProvisioningProfile = !string.IsNullOrEmpty (CodesignProvision);
+							requireProvisioningProfile = !string.IsNullOrEmpty (ProvisioningProfile);
 							break;
 						default:
 							throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
@@ -521,6 +523,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var type = MobileProvisionDistributionType.Any;
 			var identity = new CodeSignIdentity ();
 			MobileProvisionPlatform platform;
@@ -744,6 +749,18 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

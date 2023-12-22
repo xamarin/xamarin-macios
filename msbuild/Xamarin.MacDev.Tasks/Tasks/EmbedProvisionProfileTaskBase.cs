@@ -4,10 +4,14 @@ using System.IO;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
-	public abstract class EmbedProvisionProfileTaskBase : XamarinTask {
+	public class EmbedProvisionProfile : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -40,6 +44,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var profile = MobileProvisionIndex.GetMobileProvision (GetMobileProvisionPlatform (), ProvisioningProfile);
 
 			if (profile is null) {

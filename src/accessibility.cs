@@ -7,6 +7,8 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
+#nullable enable
+
 namespace Accessibility {
 
 	[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
@@ -134,6 +136,11 @@ namespace Accessibility {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityCustomContent", ArgumentSemantic.Copy)]
 		AXCustomContent [] AccessibilityCustomContent { get; set; }
+
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[NullAllowed, Export ("accessibilityCustomContentBlock", ArgumentSemantic.Copy)]
+		Func<AXCustomContent []?> AccessibilityCustomContentHandler { get; set; }
+
 	}
 
 	interface IAXDataAxisDescriptor { }
@@ -336,4 +343,23 @@ namespace Accessibility {
 		[Export ("accessibilityBrailleMapRenderer", ArgumentSemantic.Copy)]
 		Action<AXBrailleMap> AccessibilityBrailleMapRenderer { get; set; }
 	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Static]
+	[Partial]
+	partial interface AXAnimatedImagesUtilities {
+		[Notification]
+		[Field ("AXAnimatedImagesEnabledDidChangeNotification")]
+		NSString AnimatedImagesEnabledDidChangeNotification { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Static]
+	[Partial]
+	partial interface AXPrefers {
+		[Notification]
+		[Field ("AXPrefersHorizontalTextLayoutDidChangeNotification")]
+		NSString HorizontalTextLayoutDidChangeNotification { get; }
+	}
+
 }

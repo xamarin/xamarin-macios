@@ -1,7 +1,6 @@
 # Added but deprecated, so there is not point to add them
 !missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: not found
 !missing-protocol-member! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: not found
-!missing-selector! CLBeaconRegion::initWithUUID:identifier: not bound
 !extra-enum-value! Managed value 4 for CLAuthorizationStatus.AuthorizedWhenInUse is available for the current platform while the value in the native header is not
 
 # Fixed in .NET

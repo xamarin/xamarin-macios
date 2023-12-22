@@ -41,7 +41,11 @@ namespace NearbyInteraction {
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NIDiscoveryToken : NSCopying, NSSecureCoding { }
+	interface NIDiscoveryToken : NSCopying, NSSecureCoding {
+		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("deviceCapabilities", ArgumentSemantic.Copy)]
+		INIDeviceCapability DeviceCapabilities { get; }
+	}
 
 	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
 	[MacCatalyst (14, 0)]
@@ -57,6 +61,10 @@ namespace NearbyInteraction {
 		[NoWatch, iOS (16, 0), MacCatalyst (16, 0), NoTV, NoMac]
 		[Export ("cameraAssistanceEnabled")]
 		bool CameraAssistanceEnabled { [Bind ("isCameraAssistanceEnabled")] get; set; }
+
+		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("extendedDistanceMeasurementEnabled")]
+		bool ExtendedDistanceMeasurementEnabled { [Bind ("isExtendedDistanceMeasurementEnabled")] get; set; }
 	}
 
 	[Watch (8, 0), NoTV, NoMac, iOS (14, 0)]
@@ -231,6 +239,13 @@ namespace NearbyInteraction {
 		[Abstract]
 		[Export ("supportsCameraAssistance")]
 		bool SupportsCameraAssistance { get; }
+
+		[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[Export ("supportsExtendedDistanceMeasurement")]
+		bool SupportsExtendedDistanceMeasurement { get; }
 	}
 
 	[Watch (9, 0), NoTV, NoMac, iOS (16, 0), MacCatalyst (16, 0)]

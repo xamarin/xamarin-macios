@@ -23,6 +23,7 @@ namespace Xamarin.Linker {
 		public List<Abi> Abis = new List<Abi> ();
 		public string AOTCompiler = string.Empty;
 		public string AOTOutputDirectory = string.Empty;
+		public string DedupAssembly = string.Empty;
 		public string CacheDirectory { get; private set; } = string.Empty;
 		public Version? DeploymentTarget { get; private set; }
 		public HashSet<string> FrameworkAssemblies { get; private set; } = new HashSet<string> ();
@@ -146,6 +147,9 @@ namespace Xamarin.Linker {
 				case "AOTOutputDirectory":
 					AOTOutputDirectory = value;
 					break;
+				case "DedupAssembly":
+					DedupAssembly = value;
+					break;
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
@@ -221,6 +225,13 @@ namespace Xamarin.Linker {
 				case "MtouchFloat32":
 					if (!TryParseOptionalBoolean (value, out Application.AotFloat32))
 						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					break;
+				case "NoWarn":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Disable, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid WarnAsError '{value}' in {linker_file}", ex);
+					}
 					break;
 				case "Optimize":
 					user_optimize_flags = value;
@@ -305,6 +316,13 @@ namespace Xamarin.Linker {
 					if (!int.TryParse (value, out var verbosity))
 						throw new InvalidOperationException ($"Invalid Verbosity '{value}' in {linker_file}");
 					Driver.Verbosity += verbosity;
+					break;
+				case "WarnAsError":
+					try {
+						ErrorHelper.ParseWarningLevel (ErrorHelper.WarningLevel.Error, value);
+					} catch (Exception ex) {
+						throw new InvalidOperationException ($"Invalid WarnAsError '{value}' in {linker_file}", ex);
+					}
 					break;
 				case "XamarinRuntime":
 					if (!Enum.TryParse<XamarinRuntime> (value, out var rv))
@@ -418,6 +436,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 				Console.WriteLine ($"    AOTArguments: {string.Join (", ", Application.AotArguments)}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
+				Console.WriteLine ($"    DedupAssembly: {DedupAssembly}");
 				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");

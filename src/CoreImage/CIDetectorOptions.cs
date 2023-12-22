@@ -24,9 +24,6 @@ namespace CoreImage {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public int? MaxFeatureCount { get; set; }
 

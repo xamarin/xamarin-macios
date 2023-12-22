@@ -16,7 +16,7 @@ namespace Xharness {
 				tVOS: Xamarin.SdkVersions.TVOS,
 				minOSX: Xamarin.SdkVersions.MinOSX,
 				miniOS: Xamarin.SdkVersions.MiniOS,
-				minWatchOS: Xamarin.SdkVersions.MinWatchOS,
+				minWatchOS: Xamarin.SdkVersions.LegacyMinWatchOS,
 				minTVOS: Xamarin.SdkVersions.MinTVOS,
 				miniOSSimulator: Xamarin.SdkVersions.MiniOSSimulator,
 				minWatchOSSimulator: Xamarin.SdkVersions.MinWatchOSSimulator,

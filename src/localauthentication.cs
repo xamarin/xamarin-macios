@@ -9,8 +9,6 @@ using NativeHandle = System.IntPtr;
 
 namespace LocalAuthentication {
 
-	[Mac (10, 13, 2)]
-	[iOS (11, 0)]
 	[NoWatch]
 	[NoTV]
 	[MacCatalyst (13, 1)]
@@ -18,7 +16,6 @@ namespace LocalAuthentication {
 	public enum LABiometryType : long {
 		None,
 		TouchId,
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		FaceId,
 #if !NET
@@ -26,13 +23,14 @@ namespace LocalAuthentication {
 		[Obsolete ("Use 'FaceId' instead.")]
 		TypeFaceId = FaceId,
 #endif
+		[iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+		OpticId = 1L << 2,
 	}
 
-	[iOS (8, 0), Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	delegate void LAContextReplyHandler (bool success, NSError error);
 
-	[iOS (8, 0), Mac (10, 10), NoTV] // ".objc_class_name_LAContext", referenced from: '' not found
+	[NoTV] // ".objc_class_name_LAContext", referenced from: '' not found
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface LAContext {
@@ -43,7 +41,7 @@ namespace LocalAuthentication {
 		string LocalizedFallbackTitle { get; set; }
 
 #if !NET
-		[iOS (8, 3), NoTV]
+		[NoTV]
 		[Field ("LAErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -55,75 +53,62 @@ namespace LocalAuthentication {
 		[Export ("evaluatePolicy:localizedReason:reply:")]
 		void EvaluatePolicy (LAPolicy policy, string localizedReason, LAContextReplyHandler reply);
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("setCredential:type:")]
 		bool SetCredentialType ([NullAllowed] NSData credential, LACredentialType type);
 
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("isCredentialSet:")]
 		bool IsCredentialSet (LACredentialType type);
 
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("evaluateAccessControl:operation:localizedReason:reply:")]
 		void EvaluateAccessControl (SecAccessControl accessControl, LAAccessControlOperation operation, string localizedReason, Action<bool, NSError> reply);
 
 
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("evaluatedPolicyDomainState")]
 		[NullAllowed]
 		NSData EvaluatedPolicyDomainState { get; }
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
-		[iOS (9, 0)]
-		[Mac (10, 12, 4)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 12, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("touchIDAuthenticationAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 
-		[iOS (8, 3), Deprecated (PlatformName.iOS, 9, 0)]
-		[Mac (10, 10, 3), Deprecated (PlatformName.MacOSX, 10, 11)]
+		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		[NullAllowed]
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
 
-		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoWatch, NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }
 
-		[Watch (9, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (9, 0), NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("interactionNotAllowed")]
 		bool InteractionNotAllowed { get; set; }
 
-		[Mac (10, 13, 2)]
-		[iOS (11, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("biometryType")]

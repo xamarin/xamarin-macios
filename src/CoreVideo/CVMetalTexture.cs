@@ -32,7 +32,6 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (8, 0)]
 	[Mac (12, 0)]
 	[MacCatalyst (15, 0)]
 #endif
@@ -76,7 +75,7 @@ namespace CoreVideo {
 			upperLeft = new float [2];
 
 			unsafe {
-				fixed (float* ll = &lowerLeft [0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft [0]) {
+				fixed (float* ll = lowerLeft, lr = lowerRight, ur = upperRight, ul = upperLeft) {
 					CVMetalTextureGetCleanTexCoords (Handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
 				}
 			}

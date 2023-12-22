@@ -136,11 +136,6 @@ namespace Xharness.Targets {
 
 		protected virtual void ProcessProject ()
 		{
-			if (!IsMultiArchitecture && IsExe) {
-				inputProject.DeleteConfiguration ("iPhone", "Debug32");
-				inputProject.DeleteConfiguration ("iPhone", "Debug64");
-			}
-
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + Suffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + Suffix);
 
@@ -241,7 +236,7 @@ namespace Xharness.Targets {
 				templateName = Path.GetFileNameWithoutExtension (templateName);
 			templateName = Path.GetFileNameWithoutExtension (templateName);
 
-			if (templateName.Equals ("mono-native-mac"))
+			if (templateName.Equals ("mono-native-mac", StringComparison.Ordinal))
 				templateName = "mono-native";
 
 			if (!ShouldSkipProjectGeneration) {

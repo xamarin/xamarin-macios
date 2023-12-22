@@ -96,7 +96,6 @@ namespace Foundation {
 		AdditionalActionClicked = 4
 	}
 
-	[Mac (10, 11)]
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Native]
 	[Flags]
