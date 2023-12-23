@@ -1,17 +1,20 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	// This task takes an itemgroup of frameworks, and filters out frameworks that aren't dynamic libraries.
-	public abstract class FilterStaticFrameworksTaskBase : XamarinTask {
+	public class FilterStaticFrameworks : XamarinTask, ITaskCallback {
 		public bool OnlyFilterFrameworks { get; set; }
 
 		[Output]
@@ -19,6 +22,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			if (FrameworkToPublish is not null && FrameworkToPublish.Length > 0) {
 				var list = FrameworkToPublish.ToList ();
 				for (var i = list.Count - 1; i >= 0; i--) {
@@ -56,6 +62,27 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (FrameworkToPublish is not null) {
+				foreach (var item in FrameworkToPublish) {
+					var fw = item.ItemSpec;
+					// Copy all the files from the framework to the mac (copying only the executable won't work if it's just a symlink to elsewhere)
+					if (File.Exists (fw))
+						fw = Path.GetDirectoryName (fw);
+					if (!Directory.Exists (fw))
+						continue;
+					foreach (var file in Directory.EnumerateFiles (fw, "*.*", SearchOption.AllDirectories)) {
+						yield return new TaskItem (file);
+					}
+				}
+			}
 		}
 	}
 }

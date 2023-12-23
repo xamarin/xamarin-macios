@@ -69,7 +69,6 @@ namespace monotouchtest {
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
 
-			const ulong address = 0;
 			const float newValue = 10f;
 
 			bool recordingObserverInvoked = false;
