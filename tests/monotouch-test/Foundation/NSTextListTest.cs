@@ -25,7 +25,6 @@ namespace MonoTouchFixtures.Foundation {
 		[TestCase ("•")]
 		public void Constructor_CustomFormat (string format)
 		{
-			bool makeUnorderedList = false;
 			var textList = new NSTextList (format);
 			Assert.AreEqual (format, textList.CustomMarkerFormat, "CustomMarkerFormat");
 #if NET
@@ -40,7 +39,6 @@ namespace MonoTouchFixtures.Foundation {
 		[TestCase ("•", NSTextListOptions.PrependEnclosingMarker)]
 		public void Constructor_CustomFormat_2 (string format, NSTextListOptions options)
 		{
-			bool makeUnorderedList = false;
 			var textList = new NSTextList (format, options);
 			Assert.AreEqual (format, textList.CustomMarkerFormat, "CustomMarkerFormat");
 #if NET
@@ -56,7 +54,6 @@ namespace MonoTouchFixtures.Foundation {
 		[TestCase (NSTextListMarkerFormats.Box, NSTextListOptions.PrependEnclosingMarker)]
 		public void Constructor_TypedFormat_2 (NSTextListMarkerFormats format, NSTextListOptions options)
 		{
-			bool makeUnorderedList = false;
 			var textList = new NSTextList (format, options);
 			Assert.AreEqual ((string) format.GetConstant ()!, textList.CustomMarkerFormat, "CustomMarkerFormat");
 #if NET
@@ -71,7 +68,6 @@ namespace MonoTouchFixtures.Foundation {
 		[TestCase (NSTextListMarkerFormats.Diamond)]
 		public void Constructor_TypedFormat (NSTextListMarkerFormats format)
 		{
-			bool makeUnorderedList = false;
 			var textList = new NSTextList (format);
 			Assert.AreEqual ((string) format.GetConstant ()!, textList.CustomMarkerFormat, "CustomMarkerFormat");
 #if NET
