@@ -27,7 +27,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CreateTap ()
 		{
 			tapCalled = false;
-			var psn = (IntPtr) 2; // kCurrentProcess
 			using var tapPort = CGEvent.CreateTap (CGEventTapLocation.AnnotatedSession, CGEventTapPlacement.HeadInsert, CGEventTapOptions.Default, CGEventMask.KeyDown, callBack, IntPtr.Zero);
 			Assert.IsFalse (tapCalled, "tap was mistakenly called.");
 		}

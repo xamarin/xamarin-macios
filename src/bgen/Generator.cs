@@ -3330,15 +3330,15 @@ public partial class Generator : IMemberGatherer {
 				if (pi.IsOut) {
 					by_ref_init.AppendFormat ("{1} {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName (), NativeHandleType);
 				} else {
-					by_ref_init.AppendFormat ("{1} {0}Value = ", pi.Name.GetSafeParamName (), NativeHandleType);
+					by_ref_init.AppendFormat ("var {0}Value = ", pi.Name.GetSafeParamName ());
 					if (isString) {
 						by_ref_init.AppendFormat ("NSString.CreateNative ({0}, true);\n", pi.Name.GetSafeParamName ());
-						by_ref_init.AppendFormat ("{1} {0}OriginalValue = {0}Value;\n", pi.Name.GetSafeParamName (), NativeHandleType);
+						by_ref_init.AppendFormat ("var {0}OriginalValue = {0}Value;\n", pi.Name.GetSafeParamName ());
 					} else if (isArrayOfNSObject || isArrayOfINativeObjectSubclass) {
 						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = NSArray.FromNSObjects ({0});\n", pi.Name.GetSafeParamName ()));
 						by_ref_init.AppendFormat ("{0}ArrayValue is null ? NativeHandle.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
 					} else if (isArrayOfString) {
-						by_ref_init.Insert (0, string.Format ("NSArray {0}ArrayValue = {0} is null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
+						by_ref_init.Insert (0, string.Format ("NSArray? {0}ArrayValue = {0} is null ? null : NSArray.FromStrings ({0});\n", pi.Name.GetSafeParamName ()));
 						by_ref_init.AppendFormat ("{0}ArrayValue is null ? NativeHandle.Zero : {0}ArrayValue.Handle;\n", pi.Name.GetSafeParamName ());
 					} else if (isNSObject || isINativeObjectSubclass) {
 						by_ref_init.AppendFormat ("{0} is null ? NativeHandle.Zero : {0}.Handle;\n", pi.Name.GetSafeParamName ());
@@ -4147,7 +4147,7 @@ public partial class Generator : IMemberGatherer {
 				// generated delegate. We check CheckForEventAndDelegateMismatches global to disable the checks
 				if (!BindThirdPartyLibrary && pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
 					string delName = pi.Name.Substring (4);
-					if (SafeIsProtocolizedEventBacked (delName, type))
+					if (SafeIsProtocolEventBacked (delName, type))
 						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", CurrentPlatform.GetApplicationClassName (), string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
 				}
 
@@ -6120,7 +6120,7 @@ public partial class Generator : IMemberGatherer {
 					//     See xamcore/test/apitest/DerivedEventTest.cs for specific tests
 
 					// Does this delegate qualify for this treatment. We fall back on the old "wrong" codegen if not.
-					bool isProtocolizedEventBacked = IsProtocolizedEventBacked (delName, type);
+					bool isProtocolEventBacked = IsProtocolEventBacked (delName, type);
 
 					// The name of the the generated virtual property that specifies the type of the leaf most internal delegate
 					string delegateTypePropertyName = GetDelegateTypePropertyName (delName);
@@ -6136,7 +6136,7 @@ public partial class Generator : IMemberGatherer {
 
 					bool hasKeepRefUntil = bta.KeepRefUntil is not null;
 
-					if (isProtocolizedEventBacked) {
+					if (isProtocolEventBacked) {
 						// The generated virtual type property and creation virtual method
 						string generatedTypeOverrideType = shouldOverride ? "override" : "virtual";
 						print ("internal {0} Type {1}", generatedTypeOverrideType, delegateTypePropertyName);
@@ -6151,15 +6151,15 @@ public partial class Generator : IMemberGatherer {
 					}
 
 					if (!hasKeepRefUntil)
-						print ("{0}_{1} Ensure{1} ()", isProtocolizedEventBacked ? "internal " : "", dtype.Name);
+						print ("{0}_{1} Ensure{1} ()", isProtocolEventBacked ? "internal " : "", dtype.Name);
 					else {
 						print ("static System.Collections.ArrayList? instances;");
-						print ("{0}_{1} Ensure{1} (object oref)", isProtocolizedEventBacked ? "internal " : "", dtype.Name);
+						print ("{0}_{1} Ensure{1} (object oref)", isProtocolEventBacked ? "internal " : "", dtype.Name);
 					}
 
 					print ("{"); indent++;
 
-					if (isProtocolizedEventBacked) {
+					if (isProtocolEventBacked) {
 						// If our delegate not null and it isn't the same type as our property
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
@@ -6202,7 +6202,7 @@ public partial class Generator : IMemberGatherer {
 
 					print ("#pragma warning disable 672");
 					print ("[Register]");
-					if (isProtocolizedEventBacked)
+					if (isProtocolEventBacked)
 						print ("internal class _{0} : {1}I{2} {{ ", dtype.Name, shouldOverride ? "_" + interfaceName + ", " : "NSObject, ", dtype.Name);
 					else
 						print ("sealed class _{0} : {1} {{ ", dtype.Name, TypeManager.RenderType (dtype));
@@ -6216,7 +6216,7 @@ public partial class Generator : IMemberGatherer {
 						print ("public _{0} () {{ IsDirectBinding = false; }}\n", dtype.Name);
 
 
-					string shouldOverrideDelegateString = isProtocolizedEventBacked ? "" : "override ";
+					string shouldOverrideDelegateString = isProtocolEventBacked ? "" : "override ";
 
 					string previous_miname = null;
 					int miname_count = 0;
@@ -6252,7 +6252,7 @@ public partial class Generator : IMemberGatherer {
 							print ("internal {0}? {1};", Nomenclator.GetDelegateName (mi), miname);
 
 						print ("[Preserve (Conditional = true)]");
-						if (isProtocolizedEventBacked)
+						if (isProtocolEventBacked)
 							print ("[Export (\"{0}\")]", FindSelector (dtype, mi));
 
 						print ("public {0}{1} {2} ({3})", shouldOverrideDelegateString, TypeManager.RenderType (mi.ReturnType), mi.Name, RenderParameterDecl (pars));
@@ -6693,17 +6693,17 @@ public partial class Generator : IMemberGatherer {
 		return "GetInternalEvent" + delName + "Type";
 	}
 
-	bool SafeIsProtocolizedEventBacked (string propertyName, Type type)
+	bool SafeIsProtocolEventBacked (string propertyName, Type type)
 	{
-		return CoreIsProtocolizedEventBacked (propertyName, type, false);
+		return CoreIsProtocolEventBacked (propertyName, type, false);
 	}
 
-	bool IsProtocolizedEventBacked (string propertyName, Type type)
+	bool IsProtocolEventBacked (string propertyName, Type type)
 	{
-		return CoreIsProtocolizedEventBacked (propertyName, type, true);
+		return CoreIsProtocolEventBacked (propertyName, type, true);
 	}
 
-	bool CoreIsProtocolizedEventBacked (string propertyName, Type type, bool shouldThrowOnNotFound)
+	bool CoreIsProtocolEventBacked (string propertyName, Type type, bool shouldThrowOnNotFound)
 	{
 		PropertyInfo pi = type.GetProperty (propertyName);
 		BaseTypeAttribute bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
@@ -6738,7 +6738,7 @@ public partial class Generator : IMemberGatherer {
 				return false;
 		}
 
-		return Protocolize (pi) && bta.Events is not null && bta.Events.Any (x => x.Name == pi.PropertyType.Name);
+		return (Protocolize (pi) || IsProtocolInterface (pi.DeclaringType)) && bta.Events is not null && bta.Events.Any (x => x.Name == pi.PropertyType.Name);
 	}
 
 	string FindSelector (Type type, MethodInfo mi)
