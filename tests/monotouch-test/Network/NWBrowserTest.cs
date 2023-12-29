@@ -91,7 +91,7 @@ namespace MonoTouchFixtures.Network {
 			var changesEvent = new AutoResetEvent (false);
 			var browserReady = new AutoResetEvent (false);
 			var finalEvent = new AutoResetEvent (false);
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => {
 				// start the browser, before the listener
 				browser.SetStateChangesHandler ((st, er) => {
 					// assert here with a `st` of `Fail`
