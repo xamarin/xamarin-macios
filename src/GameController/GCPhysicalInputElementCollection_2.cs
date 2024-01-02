@@ -31,10 +31,10 @@ namespace GameController {
 		{
 		}
 
-		public TValue? ElementForAlias (TKey alias)
+		public TValue? GetElement (TKey alias)
 			=> Runtime.GetINativeObject<TValue> (_ObjectForKeyedSubscript (alias), false);
 
-		public TValue? ObjectForKeyedSubscript (TKey key)
+		public TValue? GetObject (TKey keyedSubscript)
 			=> Runtime.GetINativeObject<TValue> (_ObjectForKeyedSubscript (key), false);
 
 		public NSEnumerator<IGCPhysicalInputElement> ElementEnumerator

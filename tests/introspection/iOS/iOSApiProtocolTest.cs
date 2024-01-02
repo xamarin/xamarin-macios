@@ -145,7 +145,6 @@ namespace Introspection {
 				break;
 			case "GCPhysicalInputSource":
 				return true;
-				break;
 			}
 
 			return base.Skip (type);

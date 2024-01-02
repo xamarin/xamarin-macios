@@ -2182,11 +2182,11 @@ namespace GameController {
 
 		[iOS (17, 0)]
 		[Export ("setValue:forButtonElement:")]
-		void SetValue (nfloat value, string element);
+		void SetValue (nfloat value, string buttonElement);
 
 		[iOS (17, 0)]
 		[Export ("setPosition:forDirectionPadElement:")]
-		void SetPosition (CGPoint position, string element);
+		void SetPosition (CGPoint position, string padDirectionElement);
 	}
 
 	[NoTV, NoMac, NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
@@ -2463,19 +2463,19 @@ namespace GameController {
 
 		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonHome")]
-		Home,
+		ButtonHome,
 
 		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonMenu")]
-		Menu,
+		ButtonMenu,
 
 		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputButtonOptions")]
-		Options,
+		ButtonOptions,
 
 		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
 		[Field ("GCInputButtonShare")]
-		Share,
+		ButtonShare,
 
 		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
 		[Field ("GCInputXboxPaddleOne")]
