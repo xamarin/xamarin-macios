@@ -19,6 +19,12 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: githubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
 steps:
 
 - template: ../common/checkout.yml

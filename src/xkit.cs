@@ -13,6 +13,12 @@ using CoreGraphics;
 using CGGlyph = System.UInt16;
 using NSGlyph = System.UInt32;
 
+#if HAS_WEBKIT
+using WebKit;
+#else
+using WebPreferences = Foundation.NSObject;
+#endif
+
 #if !MONOMAC
 using NSColor = UIKit.UIColor;
 using NSFont = UIKit.UIFont;
@@ -4209,9 +4215,6 @@ namespace UIKit {
 		NSTextListElement ParentElement { get; }
 	}
 
-#if !XAMCORE_5_0
-	[Internal]
-#endif
 	enum NSAttributedStringDocumentType {
 		[DefaultEnumValue]
 		[Field (null)]
@@ -4406,59 +4409,99 @@ namespace UIKit {
 		NSString DefaultFontExcludedDocumentAttribute { get; }
 	}
 
+	[StrongDictionary (nameof (NSAttributedStringDocumentReadingOptionKey), Suffix = "DocumentOption")]
+	interface NSAttributedStringDocumentReadingOptions {
+		NSAttributedStringDocumentType DocumentType { get; set; }
+
+		// It's not documented which attributes go in this dictionary.
+		NSDictionary DefaultAttributes { get; set; }
+
+		NSStringEncoding CharacterEncoding { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		WebPreferences WebPreferences { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		NSObject WebResourceLoadDelegate { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		NSUrl BaseUrl { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string TextEncodingName { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		float TextSizeMultiplier { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		float Timeout { get; set; }
+
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
+		NSTextScalingType TargetTextScaling { get; set; }
+
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+		[TV (13, 0)]
+		[Watch (6, 0)]
+		NSTextScalingType SourceTextScaling { get; set; }
+	}
+
 	[Static]
 	[Internal]
 	interface NSAttributedStringDocumentReadingOptionKey {
 		[MacCatalyst (13, 1)]
 		[Field ("NSDocumentTypeDocumentOption")]
-		NSString NSDocumentTypeDocumentOption { get; }
+		NSString DocumentTypeDocumentOption { get; }
 
 		[MacCatalyst (13, 1)]
 		[Field ("NSDefaultAttributesDocumentOption")]
-		NSString NSDefaultAttributesDocumentOption { get; }
+		NSString DefaultAttributesDocumentOption { get; }
 
 		[MacCatalyst (13, 1)]
 		[Field ("NSCharacterEncodingDocumentOption")]
-		NSString NSCharacterEncodingDocumentOption { get; }
+		NSString CharacterEncodingDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSWebPreferencesDocumentOption")]
-		NSString NSWebPreferencesDocumentOption { get; }
+		NSString WebPreferencesDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSWebResourceLoadDelegateDocumentOption")]
-		NSString NSWebResourceLoadDelegateDocumentOption { get; }
+		NSString WebResourceLoadDelegateDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSBaseURLDocumentOption")]
-		NSString NSBaseURLDocumentOption { get; }
+		NSString BaseUrlDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSTextEncodingNameDocumentOption")]
-		NSString NSTextEncodingNameDocumentOption { get; }
+		NSString TextEncodingNameDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSTextSizeMultiplierDocumentOption")]
-		NSString NSTextSizeMultiplierDocumentOption { get; }
+		NSString TextSizeMultiplierDocumentOption { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSTimeoutDocumentOption")]
-		NSString NSTimeoutDocumentOption { get; }
+		NSString TimeoutDocumentOption { get; }
 
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSTargetTextScalingDocumentOption")]
-		NSString NSTargetTextScalingDocumentOption { get; }
+		NSString TargetTextScalingDocumentOption { get; }
 
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSSourceTextScalingDocumentOption")]
-		NSString NSSourceTextScalingDocumentOption { get; }
+		NSString SourceTextScalingDocumentOption { get; }
 
 		// comes from webkit
 		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
 		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
-		NSString NSReadAccessUrlDocumentOption { get; }
+		NSString ReadAccessUrlDocumentOption { get; }
 
 	}
 }

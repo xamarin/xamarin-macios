@@ -9,6 +9,9 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 	public static partial class ErrorHelper {
 		public static ApplePlatform Platform;

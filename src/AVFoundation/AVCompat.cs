@@ -237,7 +237,7 @@ namespace AVFoundation {
 			throw new NotImplementedException ();
 		}
 
-		public virtual void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
+		public virtual void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError? error)
 		{
 			throw new NotImplementedException ();
 		}

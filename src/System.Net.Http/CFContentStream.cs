@@ -40,6 +40,9 @@ using CoreServices;
 using CoreFoundation;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace System.Net.Http {
 	class BufferData {
 		public byte [] Buffer;
