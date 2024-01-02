@@ -28,6 +28,7 @@
 //
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -53,74 +54,117 @@ namespace Foundation {
 
 #if !COREBUILD
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nint NSDecimalCompare (ref NSDecimal left, ref NSDecimal right);
-		public static NSComparisonResult Compare (ref NSDecimal left, ref NSDecimal right)
+		unsafe static extern nint NSDecimalCompare (NSDecimal* left, NSDecimal* right);
+		public unsafe static NSComparisonResult Compare (ref NSDecimal left, ref NSDecimal right)
 		{
-			return (NSComparisonResult) (long) NSDecimalCompare (ref left, ref right);
+			return (NSComparisonResult) (long) NSDecimalCompare (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern void NSDecimalRound (out NSDecimal result, ref NSDecimal number, nint scale, nuint mode);
-		public static void Round (out NSDecimal result, ref NSDecimal number, nint scale, NSRoundingMode mode)
+		unsafe static extern void NSDecimalRound (NSDecimal* result, NSDecimal* number, nint scale, nuint mode);
+		public unsafe static void Round (out NSDecimal result, ref NSDecimal number, nint scale, NSRoundingMode mode)
 		{
-			NSDecimalRound (out result, ref number, scale, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			NSDecimalRound (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number),
+				scale,
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalNormalize (ref NSDecimal number1, ref NSDecimal number2);
-		public static NSCalculationError Normalize (ref NSDecimal number1, ref NSDecimal number2)
+		unsafe static extern nuint NSDecimalNormalize (NSDecimal* number1, NSDecimal* number2);
+		public unsafe static NSCalculationError Normalize (ref NSDecimal number1, ref NSDecimal number2)
 		{
-			return (NSCalculationError) (ulong) NSDecimalNormalize (ref number1, ref number2);
+			return (NSCalculationError) (ulong) NSDecimalNormalize (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number1),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number2));
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalAdd (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
-		public static NSCalculationError Add (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
+		static unsafe extern nuint NSDecimalAdd (NSDecimal* result, NSDecimal* left, NSDecimal* right, nuint mode);
+		public unsafe static NSCalculationError Add (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError) (ulong) NSDecimalAdd (out result, ref left, ref right, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			return (NSCalculationError) (ulong) NSDecimalAdd (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalSubtract (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
-		public static NSCalculationError Subtract (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
+		unsafe static extern nuint NSDecimalSubtract (NSDecimal* result, NSDecimal* left, NSDecimal* right, nuint mode);
+		public unsafe static NSCalculationError Subtract (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError) (ulong) NSDecimalSubtract (out result, ref left, ref right, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			return (NSCalculationError) (ulong) NSDecimalSubtract (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalMultiply (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
-		public static NSCalculationError Multiply (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
+		static unsafe extern nuint NSDecimalMultiply (NSDecimal* result, NSDecimal* left, NSDecimal* right, nuint mode);
+		public unsafe static NSCalculationError Multiply (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError) (ulong) NSDecimalMultiply (out result, ref left, ref right, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			return (NSCalculationError) (ulong) NSDecimalMultiply (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalDivide (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, nuint mode);
-		public static NSCalculationError Divide (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
+		unsafe static extern nuint NSDecimalDivide (NSDecimal* result, NSDecimal* left, NSDecimal* right, nuint mode);
+		public unsafe static NSCalculationError Divide (out NSDecimal result, ref NSDecimal left, ref NSDecimal right, NSRoundingMode mode)
 		{
-			return (NSCalculationError) (ulong) NSDecimalDivide (out result, ref left, ref right, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			return (NSCalculationError) (ulong) NSDecimalDivide (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref left),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref right),
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalPower (out NSDecimal result, ref NSDecimal number, nint power, nuint mode);
-		public static NSCalculationError Power (out NSDecimal result, ref NSDecimal number, nint power, NSRoundingMode mode)
+		unsafe static extern nuint NSDecimalPower (NSDecimal* result, NSDecimal* number, nint power, nuint mode);
+		public unsafe static NSCalculationError Power (out NSDecimal result, ref NSDecimal number, nint power, NSRoundingMode mode)
 		{
-			return (NSCalculationError) (ulong) NSDecimalPower (out result, ref number, power, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			return (NSCalculationError) (ulong) NSDecimalPower (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number),
+				power,
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern nuint NSDecimalMultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, nuint mode);
-		public static NSCalculationError MultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, NSRoundingMode mode)
+		unsafe static extern nuint NSDecimalMultiplyByPowerOf10 (NSDecimal* result, NSDecimal* number, short power10, nuint mode);
+		public unsafe static NSCalculationError MultiplyByPowerOf10 (out NSDecimal result, ref NSDecimal number, short power10, NSRoundingMode mode)
 		{
-			return (NSCalculationError) (ulong) NSDecimalMultiplyByPowerOf10 (out result, ref number, power10, (nuint) (ulong) mode);
+			result = default (NSDecimal);
+			return (NSCalculationError) (ulong) NSDecimalMultiplyByPowerOf10 (
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref result),
+				(NSDecimal*) Unsafe.AsPointer<NSDecimal> (ref number),
+				power10,
+				(nuint) (ulong) mode);
 		}
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern IntPtr NSDecimalString (ref NSDecimal value, /* _Nullable */ IntPtr locale);
+		unsafe static extern IntPtr NSDecimalString (NSDecimal* value, /* _Nullable */ IntPtr locale);
 
 		public override string ToString ()
 		{
-			return new NSString (NSDecimalString (ref this, NSLocale.CurrentLocale.Handle));
+			unsafe {
+				fixed (NSDecimal* self = &this) {
+					return new NSString (NSDecimalString (self, NSLocale.CurrentLocale.Handle));
+				}
+			}
 		}
 
 		public static NSDecimal operator + (NSDecimal left, NSDecimal right)
