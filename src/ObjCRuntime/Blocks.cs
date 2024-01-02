@@ -38,6 +38,9 @@ using ObjCRuntime;
 using Xamarin.Bundler;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 // http://clang.llvm.org/docs/Block-ABI-Apple.html
 
 namespace ObjCRuntime {

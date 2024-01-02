@@ -21002,6 +21002,7 @@ namespace UIKit {
 		[Export ("frame")]
 		CGRect Frame { get; }
 
+		[NullAllowed]
 		[NoWatch, NoTV, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("focusEffect", ArgumentSemantic.Copy)]
 		UIFocusEffect FocusEffect { get; }
@@ -21330,6 +21331,7 @@ namespace UIKit {
 		[NullAllowed, Export ("focusItemContainer")]
 		IUIFocusItemContainer FocusItemContainer { get; }
 
+		[NullAllowed]
 		[NoTV, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("focusGroupIdentifier")]
@@ -25754,6 +25756,7 @@ namespace UIKit {
 #if XAMCORE_5_0
 		[Abstract]
 #endif
+		[NullAllowed]
 		[Export ("localizedAttributedSuggestion")]
 		NSAttributedString LocalizedAttributedSuggestion { get; }
 
