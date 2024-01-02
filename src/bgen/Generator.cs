@@ -6097,6 +6097,8 @@ public partial class Generator : IMemberGatherer {
 					string delName = bta.Delegates [delidx++];
 					delName = delName.StartsWith ("Weak", StringComparison.Ordinal) ? delName.Substring (4) : delName;
 
+					var isWeakBacked = HasProperty (type, "Weak" + delName);
+
 					// Here's the problem:
 					//    If you have two or more types in an inheritence structure in the binding that expose events
 					//    they can fight over who's generated delegate gets used if you use the events at both level.
@@ -6150,7 +6152,7 @@ public partial class Generator : IMemberGatherer {
 
 					print ("{"); indent++;
 
-					if (isProtocolEventBacked) {
+					if (isProtocolEventBacked && isWeakBacked) {
 						// If our delegate not null and it isn't the same type as our property
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
@@ -6679,6 +6681,18 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	// Searches base types as well
+	bool HasProperty (Type type, string propertyName)
+	{
+		while (type is not null) {
+			if (type.GetProperty (propertyName) is not null)
+				return true;
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			type = bta?.BaseType;
+		}
+		return false;
+	}
+
 	static string GetDelegateTypePropertyName (string delName)
 	{
 		return "GetInternalEvent" + delName + "Type";
@@ -6729,7 +6743,17 @@ public partial class Generator : IMemberGatherer {
 				return false;
 		}
 
-		return (Protocolize (pi) || IsProtocolInterface (pi.DeclaringType)) && bta.Events is not null && bta.Events.Any (x => x.Name == pi.PropertyType.Name);
+		if (bta.Events is null)
+			return false;
+
+		Type protocolType;
+		if (Protocolize (pi)) {
+			protocolType = pi.PropertyType;
+		} else if (!IsProtocolInterface (pi.DeclaringType, true, out protocolType)) {
+			return false;
+		}
+
+		return bta.Events.Any (x => x.Name == protocolType.Name);
 	}
 
 	string FindSelector (Type type, MethodInfo mi)
@@ -6761,6 +6785,8 @@ public partial class Generator : IMemberGatherer {
 		if (shouldOverride) {
 			Type parentType = GetParentTypeWithSameNamedDelegate (bta, delName);
 			PropertyInfo parentProperty = parentType.GetProperty (delName);
+			if (IsProtocolInterface (parentProperty.PropertyType))
+				return parentProperty.PropertyType.Name.Substring (1);
 			return parentProperty.PropertyType.Name;
 		}
 		return currentTypeName;
