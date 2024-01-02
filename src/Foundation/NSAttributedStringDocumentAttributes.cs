@@ -21,6 +21,7 @@ using UIKit;
 #if !COREBUILD && HAS_WEBKIT
 using WebKit;
 #endif
+using ObjCRuntime;
 
 #if !COREBUILD
 #if __MACOS__
@@ -207,20 +208,19 @@ namespace Foundation {
 		// documentation is unclear if an NSString or an NSUrl should be used...
 		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public NSUrl? ReadAccessUrl {
 			get {
-				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption);
+				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.ReadAccessUrlDocumentOption);
 			}
 			set {
-				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSReadAccessUrlDocumentOption, value);
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.ReadAccessUrlDocumentOption, value);
 			}
 		}
 #endif // !TVOS && !WATCH
@@ -234,10 +234,10 @@ namespace Foundation {
 #endif // NET
 		public WebPreferences? WebPreferences {
 			get {
-				return GetNativeValue<WebPreferences> (NSAttributedStringDocumentReadingOptionKey.NSWebPreferencesDocumentOption);
+				return GetNativeValue<WebPreferences> (NSAttributedStringDocumentReadingOptionKey.WebPreferencesDocumentOption);
 			}
 			set {
-				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSWebPreferencesDocumentOption, value);
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.WebPreferencesDocumentOption, value);
 			}
 		}
 #endif // !__MACOS__
@@ -251,10 +251,10 @@ namespace Foundation {
 #endif // NET
 		public NSObject? WebResourceLoadDelegate {
 			get {
-				return GetNativeValue<NSObject> (NSAttributedStringDocumentReadingOptionKey.NSWebResourceLoadDelegateDocumentOption);
+				return GetNativeValue<NSObject> (NSAttributedStringDocumentReadingOptionKey.WebResourceLoadDelegateDocumentOption);
 			}
 			set {
-				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSWebResourceLoadDelegateDocumentOption, value);
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.WebResourceLoadDelegateDocumentOption, value);
 			}
 		}
 #endif // !__MACOS__
@@ -268,10 +268,10 @@ namespace Foundation {
 #endif // NET
 		public NSUrl? BaseUrl {
 			get {
-				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.NSBaseURLDocumentOption);
+				return GetNativeValue<NSUrl> (NSAttributedStringDocumentReadingOptionKey.BaseUrlDocumentOption);
 			}
 			set {
-				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.NSBaseURLDocumentOption, value);
+				SetNativeValue (NSAttributedStringDocumentReadingOptionKey.BaseUrlDocumentOption, value);
 			}
 		}
 #endif // !__MACOS__
@@ -285,10 +285,10 @@ namespace Foundation {
 #endif // NET
 		public string? TextEncodingName {
 			get {
-				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.NSTextEncodingNameDocumentOption);
+				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.TextEncodingNameDocumentOption);
 			}
 			set {
-				SetStringValue (NSAttributedStringDocumentReadingOptionKey.NSTextEncodingNameDocumentOption, value);
+				SetStringValue (NSAttributedStringDocumentReadingOptionKey.TextEncodingNameDocumentOption, value);
 			}
 		}
 #endif // !__MACOS__
@@ -302,10 +302,10 @@ namespace Foundation {
 #endif // NET
 		public float? TextSizeMultiplier {
 			get {
-				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.NSTextSizeMultiplierDocumentOption);
+				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.TextSizeMultiplierDocumentOption);
 			}
 			set {
-				SetNumberValue (NSAttributedStringDocumentReadingOptionKey.NSTextSizeMultiplierDocumentOption, value);
+				SetNumberValue (NSAttributedStringDocumentReadingOptionKey.TextSizeMultiplierDocumentOption, value);
 			}
 		}
 #endif // !__MACOS__
@@ -319,10 +319,10 @@ namespace Foundation {
 #endif // NET
 		public float? Timeout {
 			get {
-				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.NSTimeoutDocumentOption);
+				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.TimeoutDocumentOption);
 			}
 			set {
-				SetNumberValue (NSAttributedStringDocumentReadingOptionKey.NSTimeoutDocumentOption, value);
+				SetNumberValue (NSAttributedStringDocumentReadingOptionKey.TimeoutDocumentOption, value);
 			}
 		}
 #endif // !__MACOS__

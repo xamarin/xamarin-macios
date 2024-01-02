@@ -1,5 +1,7 @@
 #!/bin/bash -eux
 
+env | sort
+
 set -o pipefail
 IFS=$'\n\t '
 

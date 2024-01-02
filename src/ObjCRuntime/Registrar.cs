@@ -51,6 +51,9 @@ using ProductException = ObjCRuntime.RuntimeException;
 [assembly: Preserve (typeof (System.Action<string>))]
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 //
 // This file cannot use any cecil code, since it's also compiled into Xamarin.[iOS|Mac].dll
 //
@@ -134,6 +137,7 @@ namespace Registrar {
 			public IntPtr Handle;
 #else
 			public TType ProtocolWrapperType;
+			public int ClassMapIndex;
 #endif
 
 			public Dictionary<string, ObjCField> Fields;

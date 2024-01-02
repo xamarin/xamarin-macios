@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>No se han podido analizar los argumentos del enlazador personalizado "-{0}": {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>El elemento NativeResource ''{0}'' no existe.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>No se pudieron resolver las direcciones IP del host para la configuración del depurador Wi-Fi.
         </value>
@@ -1209,6 +1215,32 @@
         <value>El ensamblado illink no existe: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>El ensamblado {0} no proporciona metadatos 'ObjectFile'.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>El {0} de ensamblado se pasó varias veces como un ensamblado de entrada (al que se hace referencia desde {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>No se pudo compilar AOT {0}, el compilador de AOT se cerró con código {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>Se encontró un ciclo de referencia de ensamblado relacionado con el ensamblado {0}.</value>
+        <comment>
+            {0}: the path to an assembly
         </comment>
     </data>
 </root>

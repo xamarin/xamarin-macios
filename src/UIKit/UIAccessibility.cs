@@ -18,6 +18,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	// helper enum - not part of Apple API
@@ -37,23 +40,21 @@ namespace UIKit {
 	public static partial class UIAccessibility {
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* BOOL */ bool UIAccessibilityIsVoiceOverRunning ();
+		extern static /* BOOL */ byte UIAccessibilityIsVoiceOverRunning ();
 
 		static public bool IsVoiceOverRunning {
 			get {
-				return UIAccessibilityIsVoiceOverRunning ();
+				return UIAccessibilityIsVoiceOverRunning () != 0;
 			}
 		}
 
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* BOOL */ bool UIAccessibilityIsMonoAudioEnabled ();
+		extern static /* BOOL */ byte UIAccessibilityIsMonoAudioEnabled ();
 
 		static public bool IsMonoAudioEnabled {
 			get {
-				return UIAccessibilityIsMonoAudioEnabled ();
+				return UIAccessibilityIsMonoAudioEnabled () != 0;
 			}
 		}
 
@@ -63,8 +64,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSObject */ IntPtr UIAccessibilityFocusedElement (IntPtr assistiveTechnologyIdentifier);
@@ -73,8 +72,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static NSObject FocusedElement (string assistiveTechnologyIdentifier)
 		{
@@ -87,56 +84,48 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* BOOL */ bool UIAccessibilityIsShakeToUndoEnabled ();
+		extern static /* BOOL */ byte UIAccessibilityIsShakeToUndoEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static bool IsShakeToUndoEnabled {
 			get {
-				return UIAccessibilityIsShakeToUndoEnabled ();
+				return UIAccessibilityIsShakeToUndoEnabled () != 0;
 			}
 		}
 
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* BOOL */ bool UIAccessibilityIsClosedCaptioningEnabled ();
+		extern static /* BOOL */ byte UIAccessibilityIsClosedCaptioningEnabled ();
 
 		static public bool IsClosedCaptioningEnabled {
 			get {
-				return UIAccessibilityIsClosedCaptioningEnabled ();
+				return UIAccessibilityIsClosedCaptioningEnabled () != 0;
 			}
 		}
 
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* BOOL */ bool UIAccessibilityIsInvertColorsEnabled ();
+		extern static /* BOOL */ byte UIAccessibilityIsInvertColorsEnabled ();
 
 		static public bool IsInvertColorsEnabled {
 			get {
-				return UIAccessibilityIsInvertColorsEnabled ();
+				return UIAccessibilityIsInvertColorsEnabled () != 0;
 			}
 		}
 
 		// UIAccessibility.h
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* BOOL */ bool UIAccessibilityIsGuidedAccessEnabled ();
+		extern static /* BOOL */ byte UIAccessibilityIsGuidedAccessEnabled ();
 
 		static public bool IsGuidedAccessEnabled {
 			get {
-				return UIAccessibilityIsGuidedAccessEnabled ();
+				return UIAccessibilityIsGuidedAccessEnabled () != 0;
 			}
 		}
 
@@ -237,7 +226,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ BlockLiteral* completionHandler);
+		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ byte enable, /* void(^completionHandler)(BOOL didSucceed) */ BlockLiteral* completionHandler);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -255,7 +244,7 @@ namespace UIKit {
 				using var block = new BlockLiteral ();
 				block.SetupBlock (callback, completionHandler);
 #endif
-				UIAccessibilityRequestGuidedAccessSession (enable, &block);
+				UIAccessibilityRequestGuidedAccessSession (enable ? (byte) 1 : (byte) 0, &block);
 			}
 		}
 
@@ -293,32 +282,26 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityDarkerSystemColorsEnabled ();
+		static extern byte UIAccessibilityDarkerSystemColorsEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public static bool DarkerSystemColorsEnabled {
 			get {
-				return UIAccessibilityDarkerSystemColorsEnabled ();
+				return UIAccessibilityDarkerSystemColorsEnabled () != 0;
 			}
 		}
 
 #if !NET
-		[iOS (8, 0)]
 		[Obsolete ("Use 'DarkerSystemColorsEnabled' instead.")]
 		public static bool DarkerSystemColosEnabled {
 			get {
-				return UIAccessibilityDarkerSystemColorsEnabled ();
+				return UIAccessibilityDarkerSystemColorsEnabled () != 0;
 			}
 		}
 #endif
@@ -327,23 +310,18 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsBoldTextEnabled ();
+		static extern byte UIAccessibilityIsBoldTextEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		public static bool IsBoldTextEnabled {
 			get {
-				return UIAccessibilityIsBoldTextEnabled ();
+				return UIAccessibilityIsBoldTextEnabled () != 0;
 			}
 		}
 
@@ -357,8 +335,7 @@ namespace UIKit {
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityButtonShapesEnabled ();
+		static extern byte UIAccessibilityButtonShapesEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
@@ -369,29 +346,24 @@ namespace UIKit {
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 #endif
-		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
+		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled () != 0;
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsGrayscaleEnabled ();
+		static extern byte UIAccessibilityIsGrayscaleEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsGrayscaleEnabled {
 			get {
-				return UIAccessibilityIsGrayscaleEnabled ();
+				return UIAccessibilityIsGrayscaleEnabled () != 0;
 			}
 		}
 
@@ -399,23 +371,18 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsReduceMotionEnabled ();
+		static extern byte UIAccessibilityIsReduceMotionEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsReduceMotionEnabled {
 			get {
-				return UIAccessibilityIsReduceMotionEnabled ();
+				return UIAccessibilityIsReduceMotionEnabled () != 0;
 			}
 		}
 
@@ -429,8 +396,7 @@ namespace UIKit {
 		[MacCatalyst (14, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityPrefersCrossFadeTransitions ();
+		static extern byte UIAccessibilityPrefersCrossFadeTransitions ();
 
 #if NET
 		[SupportedOSPlatform ("tvos14.0")]
@@ -441,7 +407,7 @@ namespace UIKit {
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 #endif
-		public static bool PrefersCrossFadeTransitions => UIAccessibilityPrefersCrossFadeTransitions ();
+		public static bool PrefersCrossFadeTransitions => UIAccessibilityPrefersCrossFadeTransitions () != 0;
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -452,8 +418,7 @@ namespace UIKit {
 		[TV (13, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsVideoAutoplayEnabled ();
+		static extern byte UIAccessibilityIsVideoAutoplayEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -463,29 +428,24 @@ namespace UIKit {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
-		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled ();
+		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled () != 0;
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsReduceTransparencyEnabled ();
+		static extern byte UIAccessibilityIsReduceTransparencyEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsReduceTransparencyEnabled {
 			get {
-				return UIAccessibilityIsReduceTransparencyEnabled ();
+				return UIAccessibilityIsReduceTransparencyEnabled () != 0;
 			}
 		}
 
@@ -493,23 +453,18 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsSwitchControlRunning ();
+		static extern byte UIAccessibilityIsSwitchControlRunning ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsSwitchControlRunning {
 			get {
-				return UIAccessibilityIsSwitchControlRunning ();
+				return UIAccessibilityIsSwitchControlRunning () != 0;
 			}
 		}
 
@@ -517,23 +472,18 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsSpeakSelectionEnabled ();
+		static extern byte UIAccessibilityIsSpeakSelectionEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsSpeakSelectionEnabled {
 			get {
-				return UIAccessibilityIsSpeakSelectionEnabled ();
+				return UIAccessibilityIsSpeakSelectionEnabled () != 0;
 			}
 		}
 
@@ -541,23 +491,18 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsSpeakScreenEnabled ();
+		static extern byte UIAccessibilityIsSpeakScreenEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		static public bool IsSpeakScreenEnabled {
 			get {
-				return UIAccessibilityIsSpeakScreenEnabled ();
+				return UIAccessibilityIsSpeakScreenEnabled () != 0;
 			}
 		}
 
@@ -565,25 +510,18 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
+		static extern byte UIAccessibilityIsAssistiveTouchRunning ();
 
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
 #endif
 		public static bool IsAssistiveTouchRunning {
 			get {
-				return UIAccessibilityIsAssistiveTouchRunning ();
+				return UIAccessibilityIsAssistiveTouchRunning () != 0;
 			}
 		}
 
@@ -596,8 +534,7 @@ namespace UIKit {
 		[TV (13, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityShouldDifferentiateWithoutColor ();
+		static extern byte UIAccessibilityShouldDifferentiateWithoutColor ();
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -607,7 +544,7 @@ namespace UIKit {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
-		public static bool ShouldDifferentiateWithoutColor => UIAccessibilityShouldDifferentiateWithoutColor ();
+		public static bool ShouldDifferentiateWithoutColor => UIAccessibilityShouldDifferentiateWithoutColor () != 0;
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -618,8 +555,7 @@ namespace UIKit {
 		[TV (13, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIAccessibilityIsOnOffSwitchLabelsEnabled ();
+		static extern byte UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
@@ -629,15 +565,13 @@ namespace UIKit {
 		[iOS (13, 0)]
 		[TV (13, 0)]
 #endif
-		public static bool IsOnOffSwitchLabelsEnabled => UIAccessibilityIsOnOffSwitchLabelsEnabled ();
+		public static bool IsOnOffSwitchLabelsEnabled => UIAccessibilityIsOnOffSwitchLabelsEnabled () != 0;
 
 #if !TVOS
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
@@ -646,8 +580,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public static UIAccessibilityHearingDeviceEar HearingDevicePairedEar {
 			get {

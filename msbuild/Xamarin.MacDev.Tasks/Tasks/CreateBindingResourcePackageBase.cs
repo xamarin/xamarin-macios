@@ -12,6 +12,9 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CreateBindingResourcePackageBase : XamarinTask {
 		[Required]
@@ -35,6 +38,13 @@ namespace Xamarin.MacDev.Tasks {
 			if (NativeReferences.Length == 0) {
 				// Nothing to do here
 				return true;
+			}
+
+			var nonexistent = NativeReferences.Where (v => !(Directory.Exists (v.ItemSpec) || File.Exists (v.ItemSpec)));
+			if (nonexistent.Any ()) {
+				foreach (var nonex in nonexistent)
+					Log.LogError (MSBStrings.E0190 /* The NativeResource item '{0}' does not exist. */, nonex.ItemSpec);
+				return false;
 			}
 
 			var compress = false;

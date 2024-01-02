@@ -77,6 +77,7 @@ namespace Xamarin.Tests {
 					return platform != ApplePlatform.MacOSX;
 				case "libSystem.Native.dylib":
 				case "libSystem.Net.Security.Native.dylib":
+				case "libSystem.Globalization.Native.dylib":
 				case "libSystem.IO.Compression.Native.dylib":
 				case "libSystem.Security.Cryptography.Native.Apple.dylib":
 				case "mscorlib.dll":
@@ -303,11 +304,8 @@ namespace Xamarin.Tests {
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "Touch.Client.dll"));
 			if (includeDebugFiles)
 				expectedFiles.Add (Path.Combine (assemblyDirectory, "Touch.Client.pdb"));
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, hasPdb: false, includeDebugFiles: includeDebugFiles);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "runtimeconfig.bin"));
-
-			if (platform == ApplePlatform.MacOSX)
-				expectedFiles.Add (Path.Combine ("Contents", "MonoBundle", "createdump"));
 
 			switch (platform) {
 			case ApplePlatform.iOS:
@@ -437,11 +435,11 @@ namespace Xamarin.Tests {
 		}
 
 
-		static void AddMultiRidAssembly (ApplePlatform platform, List<string> expectedFiles, string assemblyDirectory, string assemblyName, string [] runtimeIdentifiers, bool forceSingleRid = false, bool hasPdb = true, bool addConfig = false, bool includeDebugFiles = false)
+		static void AddMultiRidAssembly (ApplePlatform platform, List<string> expectedFiles, string assemblyDirectory, string assemblyName, string [] runtimeIdentifiers, bool forceSingleRid = false, bool addConfig = false, bool includeDebugFiles = false)
 		{
 			if (forceSingleRid || runtimeIdentifiers.Length == 1) {
 				expectedFiles.Add (Path.Combine (assemblyDirectory, $"{assemblyName}.dll"));
-				if (hasPdb && includeDebugFiles)
+				if (includeDebugFiles)
 					expectedFiles.Add (Path.Combine (assemblyDirectory, $"{assemblyName}.pdb"));
 				if (addConfig)
 					expectedFiles.Add (Path.Combine (assemblyDirectory, $"{assemblyName}.dll.config"));
@@ -450,7 +448,7 @@ namespace Xamarin.Tests {
 				foreach (var rid in runtimeIdentifiers) {
 					expectedFiles.Add (Path.Combine (Path.Combine (assemblyDirectory, ".xamarin", $"{rid}")));
 					expectedFiles.Add (Path.Combine (Path.Combine (assemblyDirectory, ".xamarin", $"{rid}", $"{assemblyName}.dll")));
-					if (hasPdb && includeDebugFiles)
+					if (includeDebugFiles)
 						expectedFiles.Add (Path.Combine (Path.Combine (assemblyDirectory, ".xamarin", $"{rid}", $"{assemblyName}.pdb")));
 					if (addConfig)
 						expectedFiles.Add (Path.Combine (Path.Combine (assemblyDirectory, ".xamarin", $"{rid}", $"{assemblyName}.dll.config")));

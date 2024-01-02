@@ -1,4 +1,7 @@
 parameters:
+- name: buildStage
+  type: string
+
 - name: dependsOn
   type: object
   default: null
@@ -33,8 +36,8 @@ stages:
     dependsOn: ${{ parameters.dependsOn }}
     condition: and(
         or(
-          eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'),
-          eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')
+          eq(dependencies.${{ parameters.buildStage }}.result, 'Succeeded'),
+          eq(dependencies.${{ parameters.buildStage }}.result, 'SucceededWithIssues')
         ),
         eq(${{ parameters.isPR }}, false)
       )
@@ -42,22 +45,6 @@ stages:
     condition: eq(${{ parameters.isPR }}, false)
 
   jobs:
-  - job: configure
-    displayName: 'Configure build'
-    pool:
-      vmImage: windows-latest
-
-    variables:
-      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-
-    steps:
-    - template: ../common/configure.yml
-      parameters:
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        uploadArtifacts: false
-
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
@@ -65,8 +52,7 @@ stages:
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
       usePipelineArtifactTasks: true
-      condition: "eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
-      dependsOn: configure
+      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
   - template: nuget-msi-convert/job/v3.yml@yaml-templates
@@ -81,14 +67,30 @@ stages:
       binlogsArtifactName: ${{ parameters.uploadPrefix }}nuget-msi-convert-binlogs
       signType: Real
       useDateTimeVersion: true
-      condition: "eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      postConvertSteps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
+          downloadPath: $(Build.StagingDirectory)\sign-verify
+          patterns: |
+            **/SignVerifyIgnore.txt
+
+      - task: MicroBuildCodesignVerify@3
+        displayName: verify signed msi content
+        inputs:
+          TargetFolders: |
+            $(Build.StagingDirectory)\bin\manifests
+            $(Build.StagingDirectory)\bin\manifests-multitarget
+          ExcludeSNVerify: true
+          ApprovalListPathForCerts: $(Build.StagingDirectory)\sign-verify\SignVerifyIgnore.txt
 
   - ${{ if eq(parameters.pushNugets, true) }}:
     # Check - "xamarin-macios (Prepare Release Push NuGets)"
     - job: push_signed_nugets
       displayName: Push NuGets
       dependsOn: nuget_convert
-      condition: "eq(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
+      condition: "ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')"
       variables:
         skipNugetSecurityAnalysis: true
       pool:
@@ -102,12 +104,12 @@ stages:
             *.nupkg
 
       - task: NuGetCommand@2
-        displayName: Publish Nugets to dotnet7
+        displayName: Publish Nugets to dotnet8
         inputs:
           command: push
           packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet7
+          publishFeedCredentials: dnceng-dotnet8
 
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -117,12 +119,12 @@ stages:
             *.nupkg
 
       - task: NuGetCommand@2
-        displayName: Publish VS MSI Nugets to dotnet7
+        displayName: Publish VS MSI Nugets to dotnet8
         inputs:
           command: push
           packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet7
+          publishFeedCredentials: dnceng-dotnet8
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob

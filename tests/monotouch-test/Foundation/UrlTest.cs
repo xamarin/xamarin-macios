@@ -80,7 +80,12 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromString ()
 		{
-			Assert.Null (NSUrl.FromString (bad_uri), "invalid");
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = NSUrl.FromString (bad_uri))
+					Assert.NotNull (bad_uri, "invalid");
+			} else {
+				Assert.Null (NSUrl.FromString (bad_uri), "invalid");
+			}
 
 			using (var url = NSUrl.FromString (good_uri)) {
 				Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -98,7 +103,12 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Ctor_string ()
 		{
-			Assert.Throws<Exception> (() => new NSUrl (bad_uri), "exception");
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = new NSUrl (bad_uri))
+					Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+			} else {
+				Assert.Throws<Exception> (() => new NSUrl (bad_uri), "exception");
+			}
 
 			using (var url = new NSUrl (good_uri)) {
 				Assert.That (url.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -110,11 +120,19 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			const string bug6597 = "http://www.bing.com/images/search?q=雅詩蘭黛";
 
-			// does not work - From* static methods returns null for invalid URL
-			Assert.Null (NSUrl.FromString (bug6597), "1");
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				Assert.NotNull (NSUrl.FromString (bug6597), "1");
 
-			// does not work - handle is null (as a .NET .ctor can't return null like ObjC init can do)
-			Assert.Throws<Exception> (() => new NSUrl (bug6597), "exception");
+				using (var url = new NSUrl (bug6597))
+					Assert.NotNull (url, "exception");
+			} else {
+				// does not work - From* static methods returns null for invalid URL
+				Assert.Null (NSUrl.FromString (bug6597), "1");
+
+				// does not work - handle is null (as a .NET .ctor can't return null like ObjC init can do)
+				Assert.Throws<Exception> (() => new NSUrl (bug6597), "exception");
+			}
+
 
 			// works
 			using (var s = new NSString (bug6597))
@@ -145,8 +163,13 @@ namespace MonoTouchFixtures.Foundation {
 			// simulator: /Users/poupou/Library/Application Support/iPhone Simulator/6.0/Applications/DCFB542F-1D37-4ADC-9046-BB0D26ABB3A3/monotouchtest.app
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand Left.wav");
 
-			// initWithString: will fail with spaces
-			Assert.Throws<Exception> (() => new NSUrl (file), "1");
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = NSUrl.FromString (file))
+					Assert.NotNull (url, "1");
+			} else {
+				// initWithString: will fail with spaces
+				Assert.Throws<Exception> (() => new NSUrl (file), "1");
+			}
 
 			using (var url2 = new NSUrl (file, false)) {
 				// initFileURLWithPath:isDirectory: will always works (both sim or devices)
@@ -272,8 +295,15 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			string bad = "Server 1/Custom View/Analog Schedule!@#$%^&&%$#@";
 
+#pragma warning disable SYSLIB0013 // warning SYSLIB0013: 'Uri.EscapeUriString(string)' is obsolete: 'Uri.EscapeUriString can corrupt the Uri string in some cases. Consider using Uri.EscapeDataString for query string components instead.'
 			string bad_url = Uri.EscapeUriString (bad);
-			Assert.Null (NSUrl.FromString (bad_url), "bad");
+#pragma warning restore
+			if (TestRuntime.CheckXcodeVersion (15, 0)) {
+				using (var url = NSUrl.FromString (bad_url))
+					Assert.NotNull (bad_url, "bad");
+			} else {
+				Assert.Null (NSUrl.FromString (bad_url), "bad");
+			}
 
 			string converted = ((NSString) bad).CreateStringByAddingPercentEscapes (NSStringEncoding.UTF8);
 			using (var url = NSUrl.FromString (converted)) {
@@ -285,7 +315,9 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestEqualOperatorSameInstace ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com"))
+#pragma warning disable CS1718 // warning CS1718: Comparison made to same variable; did you mean to compare something else?
 				Assert.IsTrue (url == url);
+#pragma warning restore
 
 		}
 

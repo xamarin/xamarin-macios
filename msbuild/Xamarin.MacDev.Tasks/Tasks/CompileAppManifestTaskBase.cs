@@ -7,12 +7,13 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CompileAppManifestTaskBase : XamarinTask {
+	public class CompileAppManifest : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		// Single-project property that maps to CFBundleIdentifier for Apple platforms
@@ -99,6 +100,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			PDictionary plist;
 
 			var appManifest = AppManifest?.ItemSpec;
@@ -652,6 +656,28 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogMessage (MessageImportance.Low, MSBStrings.M0018);
 				ats.SetBooleanOrRemove (ManifestKeys.NSAllowsArbitraryLoads, true);
 			}
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item)
+		{
+			// We don't want to copy partial generated manifest files unless they exist and have a non-zero length
+			if (PartialAppManifests is not null && PartialAppManifests.Contains (item)) {
+				var finfo = new FileInfo (item.ItemSpec);
+				if (!finfo.Exists || finfo.Length == 0)
+					return false;
+			}
+
+			return true;
+		}
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

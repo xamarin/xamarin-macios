@@ -2712,10 +2712,13 @@
       </Item>
       <Item ItemId=";MT4178" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.]D;]A;		]]></Val>
+          <Val><![CDATA[The class '{0}' will not be registered because the {1} framework has been removed from the {2} SDK.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[WatchKit 프레임워크가 iOS SDK에서 제거되었으므로 '{0}' 클래스가 등록되지 않습니다.]D;]A;		]]></Val>
+            <Val><![CDATA[{1} 프레임워크가 {2} SDK에서 제거되었으므로 '{0}' 클래스는 등록되지 않습니다.]D;]A;		]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The class '{0}' will not be registered because the WatchKit framework has been removed from the iOS SDK.]D;]A;		]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -3373,6 +3376,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MX1307" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not extract the native framework '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[리소스 '{2}'이(가) 포함되어 있지 않기 때문에 '{1}' 어셈블리에서 네이티브 프레임워크 '{0}'을(를) 추출할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX1308" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not extract the native library '{0}' from the assembly '{1}', because it doesn't contain the resource '{2}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[리소스 '{2}'이(가) 포함되어 있지 않기 때문에 '{1}' 어셈블리에서 네이티브 라이브러리 '{0}'을(를) 추출할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MX1502" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[One or more reference(s) to type '{0}' already exists inside '{1}' before linking]D;]A;		]]></Val>
@@ -3450,6 +3471,15 @@
           <Val><![CDATA[Definitions from '{0}' could not be parsed.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA['{0}'의 정의를 구문 분석할 수 없습니다.]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX2016" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Keeping the dynamic registrar (by passing '--optimize=-remove-dynamic-registrar') is not possible, because the dynamic registrar is not supported when using NativeAOT. Support for dynamic registration will still be removed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[NativeAOT를 사용할 때는 동적 등록 기관이 지원되지 않으므로 '--optimize=-remove-dynamic-registrar'를 전달하여 동적 등록 기관을 유지할 수 없습니다. 동적 등록에 대한 지원은 여전히 제거될 예정입니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3558,6 +3588,15 @@
           <Val><![CDATA[Unable to compute the block signature for the type '{0}': {1}]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA['{0}' 형식에 대한 블록 서명을 계산할 수 없습니다. {1}]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX4189" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The class '{0}' will not be registered because it has been removed from the {1} SDK.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA['{0}' 클래스는 {1} SDK에서 제거되었으므로 등록되지 않습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -3831,6 +3870,15 @@
           <Val><![CDATA[Could not find the type 'ObjCRuntime.__Registrar__' in the assembly '{0}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[어셈블리 '{0}'에서 'ObjCRuntime.__Registrar__' 형식을 찾을 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX8056" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Failed to marshal the Objective-C object 0x{0} (type: {1}). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance of generic type {2}.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Objective-C 개체 0x{0}(형식: {1})을 마샬링하지 못했습니다. 이 개체에 대한 기존 관리되는 인스턴스를 찾을 수 없으며 제네릭 형식 {2}의 새 관리되는 인스턴스를 만들 수도 없습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

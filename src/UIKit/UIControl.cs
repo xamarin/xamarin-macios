@@ -15,6 +15,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	[Register]
 	class UIControlEventProxy : NSObject {
@@ -198,8 +201,6 @@ namespace UIKit {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public event EventHandler PrimaryActionTriggered {
 			add {

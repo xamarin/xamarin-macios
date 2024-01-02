@@ -819,8 +819,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		static unsafe public CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight)
 		{
@@ -832,8 +830,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform transform)
 		{
@@ -848,8 +844,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public unsafe void AddRoundedRect (CGAffineTransform transform, CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{
@@ -861,8 +855,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public unsafe void AddRoundedRect (CGRect rect, nfloat cornerWidth, nfloat cornerHeight)
 		{

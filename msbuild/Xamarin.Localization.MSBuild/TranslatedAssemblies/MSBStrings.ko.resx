@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>사용자 지정 링커 인수 '-{0}'을(를) 구문 분석할 수 없습니다. {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 항목 '{0}'이(가) 없습니다.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi 디버거 설정의 호스트 IP를 확인할 수 없습니다.
         </value>
@@ -1209,6 +1215,32 @@
         <value>잘못된 어셈블리가 없습니다. '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>{0} 어셈블리는 'ObjectFile' 메타데이터를 제공하지 않습니다.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>{0} 어셈블리가 입력 어셈블리로 여러 번 전달되었습니다({1}에서 참조됨).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT 컴파일 {0}에 실패했습니다. AOT 컴파일러가 코드 {1}과(와) 함께 종료되었습니다.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>{0} 어셈블리와 관련된 어셈블리 참조 주기를 발견했습니다.</value>
+        <comment>
+            {0}: the path to an assembly
         </comment>
     </data>
 </root>

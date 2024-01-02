@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Impossible d’analyser le ou les arguments de l’éditeur de liens personnalisés « -{0} » : {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>L'élément NativeResource « {0} » n'existe pas.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Impossible de résoudre les adresses IP des hôtes pour les paramètres du débogueur Wi-Fi.
         </value>
@@ -1206,9 +1212,35 @@
         <value>La tâche « {0} » n’a pas reçu de valeur pour le paramètre « {1} », ce qui est requis lors de la génération sur cette plateforme.</value>
     </data>
   <data name="E7115" xml:space="preserve">
-        <value>L’assembly illink n’existe pas : '{0}'.</value>
+        <value>L’assembly illink n’existe pas : '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>L’assemblée {0} ne fournit pas de métadonnées 'ObjectFile'.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>L’assemblée {0} a été passé plusieurs fois en tant qu’assemblée d'entrée (référencé à partir de {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Échec de la compilation AOT {0}, le compilateur AOT s'est arrêté avec le code {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>A rencontré un cycle de référence d'assemblage lié à l'assemblage {0}.</value>
+        <comment>
+            {0}: the path to an assembly
         </comment>
     </data>
 </root>

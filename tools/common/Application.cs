@@ -30,6 +30,9 @@ using PlatformResolver = Xamarin.Linker.DotNetResolver;
 #error Invalid defines
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 
 	public enum BuildTarget {
@@ -40,7 +43,6 @@ namespace Xamarin.Bundler {
 
 	public enum MonoNativeMode {
 		None,
-		Compat,
 		Unified,
 	}
 
@@ -126,7 +128,9 @@ namespace Xamarin.Bundler {
 		}
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
+#if !NET
 		public I18nAssemblies I18n;
+#endif
 		public List<string> WarnOnTypeRef = new List<string> ();
 
 		public bool? EnableCoopGC;
@@ -169,6 +173,9 @@ namespace Xamarin.Bundler {
 		public bool EnableBitCode { get { return BitCodeMode != BitCodeMode.None; } }
 
 		public bool SkipMarkingNSObjectsInUserAssemblies { get; set; }
+
+		// check if needs to be removed: https://github.com/xamarin/xamarin-macios/issues/18693
+		public bool DisableAutomaticLinkerSelection { get; set; }
 
 		// assembly_build_targets describes what kind of native code each assembly should be compiled into for mobile targets (iOS, tvOS, watchOS).
 		// An assembly can be compiled into: static object (.o), dynamic library (.dylib) or a framework (.framework).
@@ -540,6 +547,7 @@ namespace Xamarin.Bundler {
 				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 
+#if !NET
 		public void ParseI18nAssemblies (string i18n)
 		{
 			var assemblies = I18nAssemblies.None;
@@ -558,6 +566,7 @@ namespace Xamarin.Bundler {
 
 			I18n = assemblies;
 		}
+#endif
 
 		public bool IsTodayExtension {
 			get {
@@ -916,21 +925,8 @@ namespace Xamarin.Bundler {
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
-				MonoNativeMode = DeploymentTarget.Major >= 10 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
-				break;
 			case ApplePlatform.WatchOS:
-				if (IsArchEnabled (Abis, Abi.ARM64_32)) {
-					MonoNativeMode = MonoNativeMode.Unified;
-				} else {
-					MonoNativeMode = DeploymentTarget.Major >= 3 ? MonoNativeMode.Unified : MonoNativeMode.Compat;
-				}
-				break;
 			case ApplePlatform.MacOSX:
-				if (DeploymentTarget >= new Version (10, 12))
-					MonoNativeMode = MonoNativeMode.Unified;
-				else
-					MonoNativeMode = MonoNativeMode.Compat;
-				break;
 			case ApplePlatform.MacCatalyst:
 				MonoNativeMode = MonoNativeMode.Unified;
 				break;
@@ -947,8 +943,6 @@ namespace Xamarin.Bundler {
 					return "libmono-native";
 
 				return "libmono-native-unified";
-			case MonoNativeMode.Compat:
-				return "libmono-native-compat";
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"Invalid mono native type: '{MonoNativeMode}'");
 			}
@@ -1528,13 +1522,13 @@ namespace Xamarin.Bundler {
 
 		public IList<string> GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
 		{
-			GetAotArguments (filename, abi, outputDir, outputFile, llvmOutputFile, dataFile, out var processArguments, out var aotArguments);
+			GetAotArguments (filename, abi, outputDir, outputFile, llvmOutputFile, dataFile, null, out var processArguments, out var aotArguments);
 			processArguments.Add (string.Join (",", aotArguments));
 			processArguments.Add (filename);
 			return processArguments;
 		}
 
-		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, out List<string> processArguments, out List<string> aotArguments, string llvm_path = null)
+		public void GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile, bool? isDedupAssembly, out List<string> processArguments, out List<string> aotArguments, string llvm_path = null)
 		{
 			string fname = Path.GetFileName (filename);
 			processArguments = new List<string> ();
@@ -1569,6 +1563,18 @@ namespace Xamarin.Bundler {
 			aotArguments.Add ($"data-outfile={dataFile}");
 			aotArguments.Add ("static");
 			aotArguments.Add ("asmonly");
+			// This method is used in legacy build as well, where dedup is not supported. 
+			// Variable isDedupAssembly could have the following values:
+			// - NULL means that dedup is not enabled
+			// - FALSE means that dedup-skip flag should be passed for all assemblies except a container assemblt
+			// - TRUE means that dedup-include flag should be passed for the container assembly
+			if (isDedupAssembly.HasValue) {
+				if (isDedupAssembly.Value) {
+					aotArguments.Add ($"dedup-include={fname}");
+				} else {
+					aotArguments.Add ($"dedup-skip");
+				}
+			}
 			if (app.LibMonoLinkMode == AssemblyBuildTarget.StaticObject || !Driver.IsDotNet)
 				aotArguments.Add ("direct-icalls");
 			aotArguments.AddRange (app.AotArguments);

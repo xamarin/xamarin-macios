@@ -1343,6 +1343,10 @@ namespace Introspection {
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
+			// Cinematic.CNDecision
+			case "initWithTime:detectionGroupID:strong:":
+			case "initWithTime:detectionID:strong:":
+				return true;
 			default:
 				return base.SkipInit (selector, m);
 			}

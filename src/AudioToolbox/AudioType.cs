@@ -84,13 +84,12 @@ namespace AudioToolbox {
 		Flac = 0x666c6163, // 'flac'
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13, 0)]
-		[Mac (10, 15)]
 		[TV (13, 0)]
 #endif
 		LatmInLoas = 0x6c6f6173, // 'loas'
@@ -253,7 +252,7 @@ namespace AudioToolbox {
 			Debug.Assert (sizeof (AudioFormat) == type_size);
 
 			var data = new AudioFormat [size / type_size];
-			fixed (AudioFormat* ptr = &data [0]) {
+			fixed (AudioFormat* ptr = data) {
 				var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.OutputFormatList, type_size, ref afi, ref size, ptr);
 				if (res != 0)
 					return null;
@@ -283,7 +282,7 @@ namespace AudioToolbox {
 				Debug.Assert (sizeof (AudioFormat) == type_size);
 
 				var data = new AudioFormat [size / type_size];
-				fixed (AudioFormat* ptr = &data [0]) {
+				fixed (AudioFormat* ptr = data) {
 					var res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatList, type_size, ref afi, ref size, ptr);
 					if (res != 0)
 						return null;
@@ -377,9 +376,6 @@ namespace AudioToolbox {
 		}
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	[Flags]
 	public enum AudioChannelFlags : uint { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -835,6 +831,87 @@ namespace AudioToolbox {
 		Logic_Atmos_7_1_6 = (203U << 16) | 14,
 
 		DiscreteInOrder = (147 << 16) | 0,                       // needs to be ORed with the actual number of channels  
+
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_3_0 = AC3_3_0,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_4_0 = Wave_4_0_B,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_5_0 = (212U << 16) | 5,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_5_1 = (213U << 16) | 6,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_6_1 = (214U << 16) | 7,
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+#else
+		[Mac (14, 0)]
+		[Watch (10, 0)]
+		[iOS (17, 0)]
+		[TV (17, 0)]
+		[MacCatalyst (17, 0)]
+#endif
+		Ogg_7_1 = (215U << 16) | 8,
+
 		Unknown = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
@@ -1052,10 +1129,10 @@ namespace AudioToolbox {
 			int [] value;
 			AudioFormatError res;
 
-			fixed (IntPtr* ptr = &array [0]) {
+			fixed (IntPtr* ptr = array) {
 				value = new int [channels_count.Value];
 				var size = sizeof (int) * value.Length;
-				fixed (int* value_ptr = &value [0]) {
+				fixed (int* value_ptr = value) {
 					res = AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.ChannelMap, ptr_size, ptr, ref size, value_ptr);
 				}
 			}
@@ -1090,7 +1167,7 @@ namespace AudioToolbox {
 			float [,] value;
 			AudioFormatError res;
 
-			fixed (IntPtr* ptr = &array [0]) {
+			fixed (IntPtr* ptr = array) {
 				value = new float [channels_count_input.Value, channels_count_output.Value];
 				var size = sizeof (float) * channels_count_input.Value * channels_count_output.Value;
 				fixed (float* value_ptr = &value [0, 0]) {
@@ -1171,9 +1248,6 @@ namespace AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
-#if !NET
-	[Watch (3, 0)]
-#endif
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,

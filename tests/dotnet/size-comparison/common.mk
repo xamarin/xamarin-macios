@@ -23,8 +23,10 @@ PROJECT_NEW_FILE?=./dotnet/$(PROJECT_NEW_NAME).csproj
 PROJECT_OLD_APP?=./oldnet/bin/iPhone/Release/$(PROJECT_NEW_NAME).app
 PROJECT_NEW_APP?=./dotnet/bin/iPhone/Release/$(DOTNET_TFM)-ios/ios-arm64/$(PROJECT).app
 
+APPCOMPARE?=appcompare
+
 report:
-	appcompare \
+	$(APPCOMPARE) \
 		$(abspath $(PROJECT_OLD_APP)) \
 		$(abspath $(PROJECT_NEW_APP)) \
 		--output-markdown $(abspath ./report.md) \

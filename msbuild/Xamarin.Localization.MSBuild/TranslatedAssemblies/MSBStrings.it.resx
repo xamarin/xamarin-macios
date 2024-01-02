@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Non è stato possibile analizzare gli argomenti del linker personalizzati '-{0}': {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>L'elemento NativeResource "{0}" non esiste.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Non è stato possibile risolvere gli indirizzi IP host per le impostazioni del debugger Wi-Fi.
         </value>
@@ -1209,6 +1215,32 @@
         <value>L'assembly illink non esiste: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>L'assembly {0} non fornisce metadati 'ObjectFile'.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>L'assembly {0} è stato incluso più volte come assembly di input (riferimento da {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Non è stato possibile eseguire la compilazione AOT di {0}. Il compilatore AOT è terminato con codice {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>È stato rilevato un ciclo di riferimento dell'assembly correlato all'assembly {0}.</value>
+        <comment>
+            {0}: the path to an assembly
         </comment>
     </data>
 </root>

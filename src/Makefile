@@ -86,6 +86,10 @@ DOTNET_REFERENCES = \
 DOTNET_OR_GREATER_DEFINES:=$(foreach version,$(shell seq 6 $(firstword $(subst ., ,$(subst net,,$(DOTNET_TFM))))),/define:NET$(version)_0_OR_GREATER)
 DOTNET_FLAGS=/noconfig /nostdlib+ /deterministic /features:strict /nologo /target:library /debug /unsafe /define:NET /define:NET_TODO /define:XAMCORE_3_0 $(DOTNET_OR_GREATER_DEFINES) $(DOTNET_REFERENCES)
 
+ifeq ($(XCODE_IS_STABLE),true)
+DOTNET_FLAGS+=/define:XCODE_IS_STABLE
+endif
+
 DOTNET_COMPILER=$(DOTNET_BUILD_DIR)/compiler
 DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)) --lib=$(DOTNET_BCL_DIR) -attributelib:$(DOTNET_BINDING_ATTRIBUTES) $(DOTNET_REFERENCES)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
@@ -726,7 +730,7 @@ $(WATCH_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.watch.cs.in Makefile $(TOP
 		-e "s/@WATCH_SDK_VERSION@/$(WATCH_SDK_VERSION)/g" \
 		$< > $@
 
-$(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(TOP)/.git/HEAD | $(WATCH_BUILD_DIR)
+$(WATCH_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(GIT_DIRECTORY)/HEAD | $(WATCH_BUILD_DIR)
 	$(call Q_PROF_GEN,watch) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.WatchOS|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
@@ -929,7 +933,7 @@ $(TVOS_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.tvos.cs.in Makefile $(TOP)/
 		-e "s/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/g" \
 		$< > $@
 
-$(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(TOP)/.git/HEAD | $(TVOS_BUILD_DIR)
+$(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(GIT_DIRECTORY)/HEAD | $(TVOS_BUILD_DIR)
 	$(call Q_PROF_GEN,tvos) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.TVOS|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
@@ -1095,7 +1099,7 @@ $(MACCATALYST_BUILD_DIR)/Constants.cs: $(TOP)/src/Constants.maccatalyst.cs.in Ma
 		-e "s/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g" \
 		$< > $@
 
-$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(TOP)/.git/HEAD | $(MACCATALYST_BUILD_DIR)
+$(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.config  $(GIT_DIRECTORY)/HEAD | $(MACCATALYST_BUILD_DIR)
 	$(call Q_PROF_GEN,maccatalyst) sed \
 		-e 's|@PRODUCT_NAME@|Xamarin.MacCatalyst|g' \
 		-e 's|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g' \
@@ -1170,6 +1174,8 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.s
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
 		$($(2)_CORE_DEFINES) \
 		$($(2)_DOTNET_CORE_SOURCES) \
+		-nullable+ \
+		-warnaserror:nullable \
 		-out:$$@
 
 $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
@@ -1188,12 +1194,12 @@ $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.source
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
 		> $$@
 
-DOTNET_TARGETS += \
+DOTNET_TARGETS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll \
 	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll \
 	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml \
 
-DOTNET_TARGETS_DIRS += \
+DOTNET_TARGETS_DIRS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR) \
 	$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
@@ -1267,18 +1273,19 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		-warnaserror:$(NULLABILITY_WARNINGS) \
+		-nullable+ \
 		$$($(2)_DOTNET_SOURCES) \
 		@$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
 		-out:$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
 
 dotnet-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll
 
-DOTNET_TARGETS += \
+DOTNET_TARGETS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
 	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll) \
 	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb) \
 
-DOTNET_TARGETS_DIRS += \
+DOTNET_TARGETS_DIRS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
 	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
@@ -1287,6 +1294,11 @@ $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)
 
 $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).pdb | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $$< $$@
+
+DOTNET_TARGETS += $$(DOTNET_TARGETS_$(3))
+DOTNET_TARGETS_DIRS += $$(DOTNET_TARGETS_DIRS_$(3))
+
+dotnet-$(3):: $$(DOTNET_TARGETS_$(3))
 
 endef
 
@@ -1322,7 +1334,7 @@ $(DOTNET_COMPILER): Makefile $(TOP)/Make.config | $(DOTNET_BUILD_DIR)
 	$(Q) chmod +x $@
 
 GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/legacy/bin/Debug/generate-frameworks-constants.exe
-DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/dotnet/bin/Debug/net7.0/generate-frameworks-constants.dll
+DOTNET_GENERATE_FRAMEWORKS_CONSTANTS=generate-frameworks-constants/dotnet/bin/Debug/$(DOTNET_TFM)/generate-frameworks-constants.dll
 
 $(GENERATE_FRAMEWORKS_CONSTANTS): $(wildcard generate-frameworks-constants/*.cs*) $(TOP)/tools/common/Frameworks.cs Makefile
 	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r generate-frameworks-constants/legacy/generate-frameworks-constants.csproj $(MSBUILD_VERBOSITY)

@@ -19,7 +19,7 @@
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' Or '$(Configuration)' == 'Debug64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -29,7 +29,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release64_32' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
@@ -44,6 +44,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="Xamarin.iOS" />
     <PackageReference Include="NUnitLite" Version="3.12.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -84,6 +85,9 @@
     </Compile>
     <Compile Include="..\..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="..\RuntimeTest.cs" />
     <Compile Include="..\CodeBehind.cs" />

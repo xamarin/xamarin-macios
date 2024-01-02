@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev {
 	/// <summary>
 	/// Builds a process argument string.

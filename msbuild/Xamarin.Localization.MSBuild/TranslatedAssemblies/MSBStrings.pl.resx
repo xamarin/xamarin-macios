@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Nie można przeanalizować niestandardowych argumentów konsolidatora „-{0}”: {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>Element NativeResource „{0}” nie istnieje.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Nie można rozpoznać adresów IP hosta dla ustawień debugera WiFi.
         </value>
@@ -1209,6 +1215,32 @@
         <value>Zestaw plików illink nie istnieje „{0}”.</value>
         <comment>
             {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>Zestaw {0} nie udostępnia metadanych „ObjectFile”.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>Zestaw {0} został przekazany wiele razy jako zestaw wejściowy (przywoływany z {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Nie można skompilować drzewa obiektów aplikacji {0}. Kompilator drzewa obiektów aplikacji zakończył pracę z kodem {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>Napotkano cykl odwołania do zestawu powiązany z zestawem {0}.</value>
+        <comment>
+            {0}: the path to an assembly
         </comment>
     </data>
 </root>

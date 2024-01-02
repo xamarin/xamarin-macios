@@ -158,14 +158,14 @@ namespace WatchKit {
 		Bottom
 	}
 
-	[Watch (2, 1), NoiOS]
+	[NoiOS]
 	[Native]
 	public enum WKInterfaceLayoutDirection : long {
 		LeftToRight,
 		RightToLeft
 	}
 
-	[Watch (2, 1), NoiOS]
+	[NoiOS]
 	[Native]
 	public enum WKInterfaceSemanticContentAttribute : long {
 		Unspecified,
@@ -175,7 +175,6 @@ namespace WatchKit {
 		ForceRightToLeft
 	}
 
-	[Watch (3, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKApplicationState : long {
@@ -184,7 +183,6 @@ namespace WatchKit {
 		Background
 	}
 
-	[Watch (3, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKGestureRecognizerState : long {
@@ -197,7 +195,6 @@ namespace WatchKit {
 		Recognized
 	}
 
-	[Watch (3, 0)]
 	[NoiOS]
 	[Native]
 	[Flags]
@@ -208,7 +205,6 @@ namespace WatchKit {
 		Down = 1 << 3
 	}
 
-	[Watch (3, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKInterfaceDeviceWristLocation : long {
@@ -216,7 +212,6 @@ namespace WatchKit {
 		Right
 	}
 
-	[Watch (3, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKInterfaceDeviceCrownOrientation : long {
@@ -224,7 +219,6 @@ namespace WatchKit {
 		Right
 	}
 
-	[Watch (3, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKWaterResistanceRating : long {
@@ -234,7 +228,6 @@ namespace WatchKit {
 		WR100,
 	}
 
-	[Watch (4, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKSnapshotReason : long {
@@ -245,7 +238,6 @@ namespace WatchKit {
 		AppBackgrounded,
 	}
 
-	[Watch (4, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKPageOrientation : long {
@@ -253,7 +245,6 @@ namespace WatchKit {
 		Vertical,
 	}
 
-	[Watch (4, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKInterfaceScrollPosition : long {
@@ -262,7 +253,6 @@ namespace WatchKit {
 		Bottom,
 	}
 
-	[Watch (4, 0)]
 	[NoiOS]
 	[Native]
 	public enum WKInterfaceDeviceBatteryState : long {

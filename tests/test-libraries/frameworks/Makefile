@@ -22,7 +22,7 @@ COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions shared.c -Wall -frame
 iphonesimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)
 iphoneos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)
 tvsimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)
-tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=9.0 -fembed-bitcode -isysroot $(DEVICETV_SDK)
+tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=9.0 -isysroot $(DEVICETV_SDK)
 maccatalyst_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) $(MACCATALYST_COMMON_CFLAGS)
 mac_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk
 

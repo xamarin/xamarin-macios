@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>無法解壓縮檔案 '{0}'。請從原生的 '解壓縮' 命令，檢閱組建記錄檔以了解更多資訊。</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>無法從組件 '{1}' 擷取原生架構 '{0}'，因為它不包含資源 '{2}'。</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>無法從組件 '{1}' 擷取原生程式庫 '{0}'，因為它不包含資源 '{2}'。</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>參考中缺少必要的 'Xamarin.Mac.dll' 組件
 		</value>
@@ -953,6 +959,9 @@
   <data name="MT2015" xml:space="preserve">
 		<value>watchOS 的 HttpMessageHandler `{0}` 無效。唯一有效的值為 NSUrlSessionHandler。
 		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>無法保留動態註冊機構 (傳遞 '--optimize=-remove-dynamic-registrar')，因為使用 NativeAOT 時不支援動態註冊機構。動態註冊的支援仍然會移除。</value>
 	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>無法處理 XML 描述: {0}
@@ -1098,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>無法 {0} 組件 '{1}'
 		</value>
@@ -1518,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>因為已從 iOS SDK 移除 WatchKit 架構，所以將不會登錄類別 '{0}'。
+		<value>因為已從 {2} SDK 移除 {1} 架構，所以將不會登錄類別 '{0}'。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1541,6 +1559,9 @@
 	</data>
   <data name="MX4188" xml:space="preserve">
 		<value>無法計算類型 '{0}' 的區塊簽章: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>因為類別 '{0}' 已從 {1} SDK 移除，所以不會登錄其。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 '{0}' 編譯器。請安裝 Xcode [命令列工具] 元件
@@ -1812,5 +1833,8 @@
 	</data>
   <data name="MX8055" xml:space="preserve">
 		<value>在組件 '{0}' 中找不到類型 'ObjCRuntime.__Registrar__'。</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>無法封送 Objective-C 物件 0x{0} (類型: {1})。找不到此物件的現有受控執行個體，也無法建立泛型型別 {2} 的新受控執行個體。</value>
 	</data>
 </root>

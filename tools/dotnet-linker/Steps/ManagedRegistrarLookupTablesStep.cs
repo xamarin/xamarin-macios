@@ -159,6 +159,8 @@ namespace Xamarin.Linker {
 
 			il.InsertBefore (lastInstruction, il.Create (OpCodes.Newobj, registrarType.GetDefaultInstanceConstructor ()));
 			il.InsertBefore (lastInstruction, il.Create (OpCodes.Call, abr.RegistrarHelper_Register));
+
+			Annotations.Mark (moduleConstructor);
 		}
 
 		List<TypeData> GetTypesToRegister (TypeDefinition registrarType, AssemblyTrampolineInfo info)
@@ -188,7 +190,8 @@ namespace Xamarin.Linker {
 			types.RemoveAll (v => IsTrimmed (v.Definition));
 
 			// We also want all the protocol wrapper types
-			foreach (var type in registrarType.Module.Types) {
+			var allTypes = IterateTypes (registrarType.Module.Types);
+			foreach (var type in allTypes) {
 				if (IsTrimmed (type))
 					continue;
 				var wrapperType = StaticRegistrar.GetProtocolAttributeWrapperType (type);
@@ -202,6 +205,17 @@ namespace Xamarin.Linker {
 				info.RegisterType (types [i].Definition, (uint) i);
 
 			return types;
+		}
+
+		IEnumerable<TypeDefinition> IterateTypes (IEnumerable<TypeDefinition> types)
+		{
+			foreach (var type in types) {
+				yield return type;
+				if (type.HasNestedTypes) {
+					foreach (var td in IterateTypes (type.NestedTypes))
+						yield return td;
+				}
+			}
 		}
 
 		IEnumerable<TypeDefinition> GetRelevantTypes (Func<TypeDefinition, bool> isRelevant)

@@ -898,6 +898,13 @@
         <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
     </data>
 
+    <data name="E0190" xml:space="preserve">
+        <value>The NativeResource item '{0}' does not exist.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
+
     <data name="E7001" xml:space="preserve">
         <value>Could not resolve host IPs for WiFi debugger settings.
         </value>

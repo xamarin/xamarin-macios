@@ -9,6 +9,9 @@ using Mono.Cecil.Cil;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 	public static partial class ErrorHelper {
 		public static ApplePlatform Platform;
@@ -70,6 +73,16 @@ namespace Xamarin.Bundler {
 				warning_levels [code.Value] = level;
 			} else {
 				warning_levels [-1] = level; // code -1: all codes.
+			}
+		}
+
+		public static void ParseWarningLevel (WarningLevel level, string value)
+		{
+			if (string.IsNullOrEmpty (value)) {
+				SetWarningLevel (level);
+			} else {
+				foreach (var code in value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+					SetWarningLevel (level, int.Parse (code));
 			}
 		}
 

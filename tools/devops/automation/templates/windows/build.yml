@@ -19,6 +19,12 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: githubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
 steps:
 
 - template: ../common/checkout.yml
@@ -64,7 +70,8 @@ steps:
   continueOnError: true
 
 # This task fixes errors such as these:
-#     error MSB4242: SDK Resolver Failure: "The SDK resolver "NuGetSdkResolver" failed while attempting to resolve the SDK "Microsoft.Build.NoTargets/3.3.0". Exception: "NuGet.Packaging.Core.PackagingException: Unable to find fallback package folder 'D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages'.
+#     error MSB4242: SDK Resolver Failure: "The SDK resolver "NuGetSdkResolver" failed while attempting to resolve the SDK "Microsoft.Build.NoTargets/3.3.0".
+#                    Exception: "NuGet.Packaging.Core.PackagingException: Unable to find fallback package folder 'D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages'.
 - pwsh: |
     try {
       New-Item -Path "D:\Program Files (x86)\Microsoft SDKs\" -Name "NuGetPackages" -ItemType "directory"
@@ -105,6 +112,20 @@ steps:
       -t:Install
   displayName: 'Install workloads'
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download Build.props
+  inputs:
+    patterns: '**/Build.props'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts/tmp
+
+- pwsh: |
+    $path = "$(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}Build.props/Build.props"
+    Write-Host "Move $path to xamarin-macios"
+    mv $path ./xamarin-macios
+  displayName: Relocate Build.props
+  workingDirectory: $(Build.SourcesDirectory)
+
 # get and expand the needed libs for monotouch
 - task: DownloadPipelineArtifact@2
   displayName: Download test libraries dependencies
@@ -126,18 +147,33 @@ steps:
 - pwsh: |
     & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         nuget push `
-        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Debug\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
+        "$(Build.SourcesDirectory)\xamarin-macios\tests\test-libraries\nugets\FrameworksInRuntimesNativeDirectory\bin\Release\Xamarin.Tests.FrameworksInRuntimesNativeDirectory.1.0.0.nupkg" `
         --source "$(Build.SourcesDirectory)\xamarin-macios\tests\.nuget\packages"
   displayName: 'Build dependencies for .NET tests'
   continueOnError: true
 
 - pwsh: |
+    $runsettings = @"
+    <?xml version="1.0" encoding="utf-8"?>
+    <RunSettings>
+      <RunConfiguration>
+        <DotNetHostPath>$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe</DotNetHostPath>
+      </RunConfiguration>
+    </RunSettings>
+    "@
+    Set-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings -Value $runsettings
+    Get-Content -Path $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings | Write-Host
+  displayName: 'Create runsettings for .NET tests'
+
+- pwsh: |
+    $Env:PATH = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet;$env:PATH"
     $Env:DOTNET = "$(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe"
     & $(Build.SourcesDirectory)\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
         test `
         "$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/UnitTests/DotNetUnitTests.csproj" `
         --filter Category=Windows `
         --verbosity quiet `
+        --settings $(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/config.runsettings `
         "--results-directory:$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/" `
         "--logger:console;verbosity=detailed" `
         "--logger:trx;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.trx" `

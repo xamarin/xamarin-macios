@@ -2,6 +2,9 @@ using System;
 using System.Reflection;
 using System.Text;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 //
 // All the attributes in this file are compiled into two binaries:
 // * Xamarin.*.Attributes.dll: this assembly references the platform assemblies (mscorlib, etc), and is used when compiling the API definition.
@@ -243,14 +246,17 @@ public class InternalAttribute : Attribute {
 	public InternalAttribute () { }
 }
 
+#if !XAMCORE_5_0
 // This is a conditional "Internal" method, that flags methods as internal only when
 // compiling with Unified, otherwise, this is ignored.
 //
 // In addition, UnifiedInternal members automatically get an underscore after their name
 // so [UnifiedInternal] void Foo(); becomes "Foo_()"
+[Obsolete ("This attribute no longer has any effect; do no use")]
 public class UnifiedInternalAttribute : Attribute {
 	public UnifiedInternalAttribute () { }
 }
+#endif
 
 // When applied to a method or property, flags the resulting generated code as internal
 public sealed class ProtectedAttribute : Attribute {

@@ -19,4 +19,7 @@
 		<value>Info.plist file does not exist under {0}, please rebuild your project</value>
 		<comment>0: path</comment>
     </data>
+	<data name="HotRestartStaticLibraryNotSupported" xml:space="preserve">
+		<value>Linking with a static library is not supported when using Hot Restart.</value>
+	</data>
 </root>

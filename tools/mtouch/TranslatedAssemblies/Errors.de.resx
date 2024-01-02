@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>Die Datei „{0}“ konnte nicht dekomprimiert werden. Überprüfen Sie das Buildprotokoll auf weitere Informationen aus dem nativen Befehl „unzip“.</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Das systemeigene Framework "{0}" konnte nicht aus der Assembly "{1}" extrahiert werden, da es die Ressource "{2}" nicht enthält.</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Die systemeigene Bibliothek "{0}" konnte nicht aus der Assembly "{1}" extrahiert werden, da sie die Ressource "{2}" nicht enthält.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>Die erforderliche Assembly "Xamarin.Mac.dll" fehlt in den Verweisen.
 		</value>
@@ -953,6 +959,9 @@
   <data name="MT2015" xml:space="preserve">
 		<value>Ungültiger HttpMessageHandler "{0}" für watchOS. Der einzige gültige Wert ist "NSUrlSessionHandler".
 		</value>
+	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Das Beibehalten der dynamischen Registrierungsstelle (durch Übergabe von "--optimize=-remove-dynamic-registrar") ist nicht möglich, weil die dynamische Registrierungsstelle bei Verwendung von NativeAOT nicht unterstützt wird. Die Unterstützung für die dynamische Registrierung wird trotzdem entfernt.</value>
 	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>XML-Beschreibung konnte nicht verarbeitet werden: {0}
@@ -1098,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>{1} der Assembly "{0}" nicht möglich.
 		</value>
@@ -1518,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>Die Klasse "{0}" wird nicht registriert, weil das WatchKit-Framework aus dem iOS SDK entfernt wurde.
+		<value>Die Klasse "{0}" wird nicht registriert, da das Framework "{1}" aus dem SDK "{2}" entfernt wurde.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1541,6 +1559,9 @@
 	</data>
   <data name="MX4188" xml:space="preserve">
 		<value>Die Blocksignatur für den Typ „{0}“ kann nicht berechnet werden: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>Die Klasse "{0}" wird nicht registriert, da sie aus dem SDK "{1}" entfernt wurde.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Der Compiler "{0}" fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
@@ -1812,5 +1833,8 @@
 	</data>
   <data name="MX8055" xml:space="preserve">
 		<value>Der Typ „ObjCRuntime.__Registrar__“ wurde in der Assembly „{0}“ nicht gefunden.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Fehler beim Marshallen des Objective-C-Objekts 0x{0} (Typ: {1}). Für dieses Objekt wurde keine vorhandene verwaltete Instanz gefunden, und es war auch nicht möglich, eine neue verwaltete Instanz des generischen Typs "{2}" zu erstellen.</value>
 	</data>
 </root>

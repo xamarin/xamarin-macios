@@ -19,10 +19,6 @@ namespace Security {
 		Tls_1_1 = 7,
 		Tls_1_2 = 8,
 		Dtls_1_0 = 9,
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		Tls_1_3 = 10,
 		Dtls_1_2 = 11,
@@ -34,7 +30,7 @@ namespace Security {
 		All = 6,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	// CF_ENUM(uint16_t, tls_protocol_version_t)
 	[NativeName ("tls_protocol_version_t")]
@@ -47,7 +43,7 @@ namespace Security {
 		Dtls12 = 65277,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_t)
 	[NativeName ("tls_ciphersuite_t")]
@@ -80,7 +76,7 @@ namespace Security {
 		Chacha20Poly1305Sha256 = 4867
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_group_t)
 	[NativeName ("tls_ciphersuite_group_t")]
@@ -186,36 +182,23 @@ namespace Security {
 		BreakOnCertRequested,
 		BreakOnClientAuth,
 
-		[Mac (10, 9)]
 		[MacCatalyst (13, 1)]
 		FalseStart,
 
 		SendOneByteRecord,
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		AllowServerIdentityChange = 5,
 
-		[iOS (8, 1)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		Fallback = 6,
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		BreakOnClientHello = 7,
 
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 		[MacCatalyst (13, 1)]
 		AllowRenegotiation = 8,
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
-		[Watch (4, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		EnableSessionTickets = 9,
 	}

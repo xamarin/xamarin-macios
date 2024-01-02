@@ -18,7 +18,6 @@ namespace AppKit {
 		}
 
 #if !NET
-		[Mac (10, 11)]
 		[Obsolete ("Use 'GetLayoutAttributes' instead.")]
 		public virtual NSCollectionViewLayoutAttributes? GetLayoutAttributest (string kind, NSIndexPath indexPath)
 		{

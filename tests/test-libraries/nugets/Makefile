@@ -1,4 +1,7 @@
 TOP=../../..
-SUBDIRS=FrameworksInRuntimesNativeDirectory DynamicLibrariesInRuntimesNativeDirectory
+SUBDIRS = \
+	FrameworksInRuntimesNativeDirectory \
+	DynamicLibrariesInRuntimesNativeDirectory \
+	XCFrameworkWithStaticLibraryInRuntimesNativeDirectory \
 
 include $(TOP)/Make.config

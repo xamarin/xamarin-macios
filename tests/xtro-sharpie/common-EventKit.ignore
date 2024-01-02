@@ -1,3 +1,4 @@
 ## extra value so the enum is easier to create
 !extra-enum-value! Managed value 0 for EKWeekday.NotSet not found in native headers
 ## `Last` value can change overtime - which would be a breaking change for us
+!missing-enum-value! EKErrorCode native value EKErrorLast = 37 not bound

@@ -724,6 +724,12 @@
   <data name="E0189" xml:space="preserve">
         <value>Özel bağlayıcı bağımsız değişkenleri '-{0}' ayrıştırılamadı: {1}</value>
     </data>
+  <data name="E0190" xml:space="preserve">
+        <value>'{0}' NativeResource öğesi mevcut değil.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
+    </data>
   <data name="E7001" xml:space="preserve">
         <value>Wi-Fi hata ayıklayıcısı ayarları için konak IP'leri çözümlenemedi.
         </value>
@@ -1209,6 +1215,32 @@
         <value>illink derlemesi yok: '{0}'.</value>
         <comment>
             {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>{0} bütünleştirilmiş kodu 'ObjectFile' meta verileri sağlamadı.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>Bütünleştirilmiş kod {0} bir giriş bütünleştirilmiş kodu olarak birden çok kez geçirildi ({1} bütünleştirilmiş kodundan başvuruldu).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT derlemesi {0} başarısız, AOT derleyicisinden {1} koduyla çıkıldı.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
+        </comment>
+    </data>
+  <data name="E7119" xml:space="preserve">
+        <value>{0} bütünleştirilmiş koduyla ilgili bir bütünleştirilmiş kod başvuru döngüsüyle karşılaşıldı.</value>
+        <comment>
+            {0}: the path to an assembly
         </comment>
     </data>
 </root>

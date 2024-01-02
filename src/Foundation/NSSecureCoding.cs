@@ -54,15 +54,15 @@ namespace Foundation {
 			if (secure_coding == IntPtr.Zero)
 				return false;
 #if MONOMAC
-			if (!Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("conformsToProtocol:"), secure_coding))
+			if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("conformsToProtocol:"), secure_coding) == 0)
 				return false;
 
-			return Messaging.bool_objc_msgSend (ptr, Selector.GetHandle ("supportsSecureCoding"));
+			return Messaging.bool_objc_msgSend (ptr, Selector.GetHandle ("supportsSecureCoding")) != 0;
 #else
-			if (!Messaging.bool_objc_msgSend_IntPtr (ptr, selConformsToProtocolHandle, secure_coding))
+			if (Messaging.bool_objc_msgSend_IntPtr (ptr, selConformsToProtocolHandle, secure_coding) == 0)
 				return false;
 
-			return Messaging.bool_objc_msgSend (ptr, selSupportsSecureCodingHandle);
+			return Messaging.bool_objc_msgSend (ptr, selSupportsSecureCodingHandle) != 0;
 #endif
 		}
 	}

@@ -18,6 +18,9 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Mac.Tasks {
 	public class Mmp : BundlerToolTaskBase {
 		protected override string ToolName {

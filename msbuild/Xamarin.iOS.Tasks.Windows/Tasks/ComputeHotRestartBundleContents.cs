@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.MacDev.Tasks;
 
 #nullable enable
@@ -24,7 +25,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		public string HotRestartContentStampDir { get; set; } = string.Empty;
 
 		[Required]
-		public string HotRestartSignedAppDir { get; set; } = string.Empty;
+		public string HotRestartAppBundlePath { get; set; } = string.Empty;
 
 		[Required]
 		public string RelativeAppBundlePath { get; set; } = string.Empty;
@@ -46,7 +47,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		public ITaskItem [] HotRestartContentDirContents { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
-		public ITaskItem [] HotRestartSignedAppDirContents { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] HotRestartAppBundleContents { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -107,7 +108,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 		{
 			var appContentDirContents = new List<ITaskItem> ();
 			var contentDirContents = new List<ITaskItem> ();
-			var signedAppDirContents = new List<ITaskItem> ();
+			var appBundleContents = new List<ITaskItem> ();
 
 			foreach (var item in ResolvedFileToPublish) {
 				var publishFolderType = item.GetPublishFolderType ();
@@ -125,14 +126,14 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 					if (string.Equals (filename + ".framework", dirname, StringComparison.OrdinalIgnoreCase))
 						item.ItemSpec = Path.GetDirectoryName (item.ItemSpec);
 					// These have to be signed
-					signedAppDirContents.Add (CopyWithDestinationAndStamp (item, HotRestartSignedAppDir));
+					appBundleContents.Add (CopyWithDestinationAndStamp (item, HotRestartAppBundlePath));
 					break;
 				case PublishFolderType.PlugIns:
 				case PublishFolderType.DynamicLibrary:
 				case PublishFolderType.PluginLibrary:
 				case PublishFolderType.XpcServices:
 					// These have to be signed
-					signedAppDirContents.Add (CopyWithDestinationAndStamp (item, HotRestartSignedAppDir));
+					appBundleContents.Add (CopyWithDestinationAndStamp (item, HotRestartAppBundlePath));
 					break;
 
 				case PublishFolderType.Unset: // Don't copy unknown stuff anywhere
@@ -140,11 +141,13 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				case PublishFolderType.Unknown: // Don't copy unknown stuff anywhere
 				case PublishFolderType.AppleBindingResourcePackage: // These aren't copied to the bundle
 				case PublishFolderType.CompressedAppleBindingResourcePackage: // These aren't copied to the bundle
-				case PublishFolderType.StaticLibrary: // These aren't copied to the bundle
 				case PublishFolderType.CompressedAppleFramework: // Shouldn't really happen? Should be uncompresed by the time we get here.
 				case PublishFolderType.CompressedPlugIns: // Shouldn't really happen? Should be uncompresed by the time we get here.
 				case PublishFolderType.CompressedXpcServices: // Shouldn't really happen? Should be uncompresed by the time we get here.
 					Log.LogMessage (MessageImportance.Low, $"    Skipped {item.ItemSpec} because PublishFolderType={publishFolderType} items aren't copied to the app bundle.");
+					continue;
+				case PublishFolderType.StaticLibrary: // These aren't copied to the bundle
+					Log.LogWarning (null, null, null, item.ItemSpec, 0, 0, 0, 0, Resources.HotRestartStaticLibraryNotSupported);
 					continue;
 				default:
 					Log.LogMessage (MessageImportance.Low, $"    Skipped {item.ItemSpec} because of unknown PublishFolderType={publishFolderType}.");
@@ -154,11 +157,11 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 
 			appContentDirContents = ExpandDirectories (appContentDirContents);
 			contentDirContents = ExpandDirectories (contentDirContents);
-			signedAppDirContents = ExpandDirectories (signedAppDirContents);
+			appBundleContents = ExpandDirectories (appBundleContents);
 
 			HotRestartAppContentDirContents = appContentDirContents.ToArray ();
 			HotRestartContentDirContents = contentDirContents.ToArray ();
-			HotRestartSignedAppDirContents = signedAppDirContents.ToArray ();
+			HotRestartAppBundleContents = appBundleContents.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}

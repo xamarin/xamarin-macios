@@ -34,6 +34,8 @@ ACCELERATE_SOURCES = \
 
 ACCESSIBILITY_SOURCES = \
 	Accessibility/AXHearingUtilities.cs \
+	Accessibility/AXAnimatedImagesUtilities.cs \
+	Accessibility/AXPrefers.cs \
 
 # Accounts
 
@@ -370,6 +372,8 @@ CLOUDKIT_SOURCES = \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
 	CloudKit/CKUserIdentityLookupInfo.cs \
+	CloudKit/CKSyncEngineFetchChangesScope.cs \
+	CloudKit/CKSyncEngineSendChangesScope.cs \
 
 # CFNetwork
 
@@ -378,6 +382,10 @@ CFNETWORK_SOURCES = \
 	CFNetwork/CFHTTPMessage.cs \
 	CFNetwork/CFHTTPStream.cs \
 	CFNetwork/CFHost.cs \
+
+# Cinematic
+CINEMATIC_SOURCES = \
+	Cinematic/CNDecision.cs \
 
 # Compression
 
@@ -614,6 +622,7 @@ COREMIDI_SOURCES = \
 
 COREML_SOURCES = \
 	CoreML/MLDictionaryFeatureProvider.cs \
+	CoreML/MLModel.cs \
 	CoreML/MLMultiArray.cs \
 	CoreML/MLMultiArrayConstraint.cs \
 
@@ -1082,7 +1091,7 @@ JAVASCRIPTCORE_SOURCES = \
 # LocalAuthentication
 
 LOCALAUTHENTICATION_API_SOURCES = \
-	Localauthentication/LAEnums.cs \
+	LocalAuthentication/LAEnums.cs \
 
 # MapKit
 
@@ -1166,6 +1175,7 @@ METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLIOCompression.cs \
 	Metal/MTLComputeCommandEncoder.cs \
 	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
@@ -1178,6 +1188,9 @@ METAL_SOURCES = \
 	Metal/MTLResourceStateCommandEncoder.cs \
 	Metal/MTLResourceStatePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLVertexDescriptor.cs \
+
+# MetalFX
+
 
 # MetalKit
 
@@ -1251,6 +1264,7 @@ MODELIO_SOURCES = \
 	ModelIO/MDLAnimatedQuaternion.cs \
 	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLMaterial.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
 	ModelIO/MDLTransformComponent.cs \
@@ -1363,8 +1377,8 @@ NETWORKEXTENSION_SOURCES = \
 
 # NewsstandKit
 
-NEWSSTANDKIT_API_SOURCES = \
-	NewsstandKit/Enums.cs \
+NEWSSTANDKIT_SOURCES = \
+	NewsstandKit/Compat.cs \
 
 # NotificationCenter
 
@@ -1434,6 +1448,7 @@ PASSKIT_API_SOURCES = \
 	
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
+	PassKit/PKPayLaterView.cs	\
 	PassKit/PKPaymentRequest.cs	\
 	PassKit/PKShareablePassMetadata.cs \
 
@@ -1997,6 +2012,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
+	CoreMidi                \
 	CoreVideo               \
 	Compression             \
 	DeviceCheck             \
@@ -2007,6 +2023,7 @@ COMMON_FRAMEWORKS =         \
 	OSLog                   \
 	SceneKit                \
 	ShazamKit               \
+	Symbols                 \
 	SoundAnalysis 			\
 	SpriteKit               \
 	StoreKit				\
@@ -2029,6 +2046,7 @@ MACOS_FRAMEWORKS =          \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	ClassKit                \
 	CloudKit                \
 	Contacts                \
@@ -2038,7 +2056,6 @@ MACOS_FRAMEWORKS =          \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
@@ -2073,6 +2090,7 @@ MACOS_FRAMEWORKS =          \
 	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
+	MetalFX                 \
 	MetalKit                \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \
@@ -2104,6 +2122,7 @@ MACOS_FRAMEWORKS =          \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
+	SensitiveContentAnalysis \
 	ServiceManagement       \
 	Security                \
 	SharedWithYou           \
@@ -2142,6 +2161,7 @@ IOS_FRAMEWORKS =         \
 	CarPlay \
 	CFNetwork \
 	Chip \
+	Cinematic \
 	ClassKit \
 	CloudKit \
 	Contacts \
@@ -2153,7 +2173,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -2187,6 +2206,7 @@ IOS_FRAMEWORKS =         \
 	Messages \
 	MessageUI \
 	Metal \
+	MetalFX \
 	MetalKit \
 	MetalPerformanceShaders \
 	MetalPerformanceShadersGraph \
@@ -2214,6 +2234,7 @@ IOS_FRAMEWORKS =         \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	SharedWithYou \
 	SharedWithYouCore \
@@ -2273,6 +2294,7 @@ TVOS_FRAMEWORKS =           \
 	BackgroundTasks         \
 	CFNetwork               \
 	Chip                    \
+	Cinematic              \
 	CloudKit                \
 	CoreAnimation           \
 	CoreGraphics            \
@@ -2303,7 +2325,9 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	MultipeerConnectivity   \
+	NetworkExtension        \
 	OpenGLES                \
+	Phase                   \
 	Photos                  \
 	PhotosUI                \
 	ReplayKit               \
@@ -2350,7 +2374,6 @@ MACCATALYST_FRAMEWORKS = \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -2406,6 +2429,7 @@ MACCATALYST_FRAMEWORKS = \
 	SafariServices \
 	ScreenTime \
 	Security \
+	SensitiveContentAnalysis \
 	SensorKit \
 	ServiceManagement \
 	SharedWithYou \
