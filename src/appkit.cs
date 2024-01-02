@@ -7086,9 +7086,17 @@ namespace AppKit {
 		[Export ("requiresFontAssetRequest")]
 		bool RequiresFontAssetRequest { get; }
 
-		[Export ("fontDescriptorWithDesign:")]
+#if XAMCORE_5_0
+		[Wrap ("Create (design.GetConstant ()!)")]
+#else
+		[Wrap ("Create (design.GetConstant ()!)", IsVirtual = true)]
+#endif
 		[return: NullAllowed]
 		NSFontDescriptor Create (NSFontDescriptorSystemDesign design);
+
+		[Export ("fontDescriptorWithDesign:")]
+		[return: NullAllowed]
+		NSFontDescriptor Create (NSString design);
 
 		[Mac (11, 0)]
 		[Static]
