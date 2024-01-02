@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void ProcessingTap ()
 		{
 			TestRuntime.AssertNotVirtualMachine (); // this test doesn't seem to work in a virtual machine
-			var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
+			using var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 			AudioQueueStatus ret;
 			bool called = false;
 
@@ -70,6 +70,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 					timeStamp = default (AudioTimeStamp);
 					return numberOfFrames;
 				}, AudioQueueProcessingTapFlags.PreEffects, out ret)) {
+				if (ret == AudioQueueStatus.InvalidDevice)
+					Assert.Inconclusive ("Could not find a valid device.");
 				Assert.AreEqual (AudioQueueStatus.Ok, ret, "#1");
 
 				unsafe {
@@ -81,6 +83,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 
 			Assert.That (called, Is.True, "#10");
+			Assert.AreEqual (AudioQueueStatus.Ok, aq.Stop (true), "#5 - Stop");
 		}
 
 		[Test]
