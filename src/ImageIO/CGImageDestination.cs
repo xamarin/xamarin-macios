@@ -301,14 +301,13 @@ namespace ImageIO {
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageDestinationFinalize (/* CGImageDestinationRef __nonnull */ IntPtr idst);
+		extern static byte CGImageDestinationFinalize (/* CGImageDestinationRef __nonnull */ IntPtr idst);
 
 		public bool Close ()
 		{
 			var success = CGImageDestinationFinalize (Handle);
 			Dispose ();
-			return success;
+			return success != 0;
 		}
 
 #if NET
@@ -355,10 +354,9 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGImageDestinationCopyImageSource (/* CGImageDestinationRef __nonnull */ IntPtr idst,
+		unsafe extern static byte CGImageDestinationCopyImageSource (/* CGImageDestinationRef __nonnull */ IntPtr idst,
 			/* CGImageSourceRef __nonnull */ IntPtr image, /* CFDictionaryRef __nullable */ IntPtr options,
-			/* CFErrorRef* */ out IntPtr err);
+			/* CFErrorRef* */ IntPtr* err);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -371,9 +369,13 @@ namespace ImageIO {
 		{
 			if (image is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (image));
-			var result = CGImageDestinationCopyImageSource (Handle, image.Handle, options.GetHandle (), out var err);
+			byte result;
+			IntPtr err;
+			unsafe {
+				result = CGImageDestinationCopyImageSource (Handle, image.Handle, options.GetHandle (), &err);
+			}
 			error = Runtime.GetNSObject<NSError> (err);
-			return result;
+			return result != 0;
 		}
 
 #if NET

@@ -6,6 +6,9 @@ using System;
 using CoreGraphics;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public partial class UIPopoverPresentationController {

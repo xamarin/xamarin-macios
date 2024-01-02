@@ -5,6 +5,9 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 
 	// infrastucture code - not intended to be used directly by user code

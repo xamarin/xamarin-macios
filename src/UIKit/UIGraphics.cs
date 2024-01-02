@@ -14,6 +14,9 @@ using ObjCRuntime;
 using System;
 using System.ComponentModel;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 #if XAMCORE_5_0

@@ -41,6 +41,9 @@ using ClassRedirector;
 // This way we can add nullability attributes to new code in this file without getting warnings about these attributes.
 #pragma warning disable 8632 // warning CS8632: The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Registrar {
 	/*
 	 * This class will automatically detect lines starting/ending with curly braces,
