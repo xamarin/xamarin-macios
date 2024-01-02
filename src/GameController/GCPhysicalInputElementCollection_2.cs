@@ -35,7 +35,7 @@ namespace GameController {
 			=> Runtime.GetINativeObject<TValue> (_ObjectForKeyedSubscript (alias), false);
 
 		public TValue? GetObject (TKey keyedSubscript)
-			=> Runtime.GetINativeObject<TValue> (_ObjectForKeyedSubscript (key), false);
+			=> Runtime.GetINativeObject<TValue> (_ObjectForKeyedSubscript (keyedSubscript), false);
 
 		public NSEnumerator<IGCPhysicalInputElement> ElementEnumerator
 			=> Runtime.GetNSObject<NSEnumerator<IGCPhysicalInputElement>> (_ElementEnumerator)!;
