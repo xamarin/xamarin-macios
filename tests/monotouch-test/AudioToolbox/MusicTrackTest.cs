@@ -44,6 +44,25 @@ namespace MonoTouchFixtures.AudioToolbox {
 		{
 			Assert.That (track.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			Assert.That (track.Sequence, Is.Not.Null, "Sequence");
+
+			Assert.IsFalse (track.MuteStatus, "MuteStatus");
+			track.MuteStatus = true;
+			Assert.IsTrue (track.MuteStatus, "MuteStatus B");
+			track.MuteStatus = false;
+			Assert.IsFalse (track.MuteStatus, "MuteStatus C");
+
+			Assert.IsFalse (track.SoloStatus, "SoloStatus");
+			track.SoloStatus = true;
+			Assert.IsTrue (track.SoloStatus, "SoloStatus B");
+			track.SoloStatus = false;
+			Assert.IsFalse (track.SoloStatus, "SoloStatus C");
+
+			Assert.AreEqual (0.0f, track.TrackLength, "TrackLength");
+			var originalTrackLength = track.TrackLength;
+			track.TrackLength = 1.32f;
+			Assert.AreEqual (1.32f, track.TrackLength, "TrackLength B");
+			track.TrackLength = originalTrackLength;
+			Assert.AreEqual (0.0f, track.TrackLength, "TrackLength C");
 		}
 
 		[Test]

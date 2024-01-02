@@ -1399,7 +1399,7 @@ public partial class Generator : IMemberGatherer {
 						selector = ba.Selector;
 					} else if (attr is StaticAttribute) {
 						continue;
-					} else if (attr is InternalAttribute || attr is UnifiedInternalAttribute || attr is ProtectedAttribute) {
+					} else if (attr is InternalAttribute || attr is ProtectedAttribute) {
 						continue;
 					} else if (attr is NeedsAuditAttribute) {
 						continue;
@@ -2698,7 +2698,6 @@ public partial class Generator : IMemberGatherer {
 
 			sb.Append (" ");
 		}
-		// Unified internal methods automatically get a _ appended
 		if (minfo.is_extension_method && minfo.Method.IsSpecialName) {
 			if (name.StartsWith ("get_", StringComparison.Ordinal))
 				name = "Get" + name.Substring (4);
@@ -2706,8 +2705,6 @@ public partial class Generator : IMemberGatherer {
 				name = "Set" + name.Substring (4);
 		}
 		sb.Append (name);
-		if (minfo.is_unified_internal)
-			sb.Append ("_");
 		sb.Append (" (");
 
 		bool comma = false;
@@ -3863,7 +3860,6 @@ public partial class Generator : IMemberGatherer {
 		string wrap;
 		var export = GetExportAttribute (pi, out wrap);
 		var minfo = new MemberInformation (this, this, pi, type, is_interface_impl);
-		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
 		Type inlinedType = pi.DeclaringType == type ? null : type;
 		minfo.protocolize = Protocolize (pi);
@@ -3899,13 +3895,12 @@ public partial class Generator : IMemberGatherer {
 			print_generated_code ();
 			PrintPropertyAttributes (pi, minfo.type);
 			PrintAttributes (pi, preserve: true, advice: true);
-			print ("{0} {1}{2}{3} {4}{5} {{",
+			print ("{0} {1}{2}{3} {4} {{",
 				   mod,
 				   minfo.GetModifiers (),
 				   (minfo.protocolize ? "I" : "") + TypeManager.FormatType (pi.DeclaringType, pi.PropertyType),
 				   nullable ? "?" : String.Empty,
-					pi.Name.GetSafeParamName (),
-				   use_underscore ? "_" : "");
+					pi.Name.GetSafeParamName ());
 			indent++;
 			if (generate_getter) {
 #if !NET
@@ -3996,13 +3991,12 @@ public partial class Generator : IMemberGatherer {
 			propertyTypeName = TypeManager.FormatType (pi.DeclaringType, pi.PropertyType);
 		}
 
-		print ("{0} {1}{2}{3} {4}{5} {{",
+		print ("{0} {1}{2}{3} {4} {{",
 			   mod,
 			   minfo.GetModifiers (),
 			   propertyTypeName,
 				nullable ? "?" : "",
-				pi.Name.GetSafeParamName (),
-			   use_underscore ? "_" : "");
+				pi.Name.GetSafeParamName ());
 		indent++;
 
 		if (minfo.has_inner_wrap_attribute) {
@@ -5895,8 +5889,6 @@ public partial class Generator : IMemberGatherer {
 					var fieldAttr = AttributeManager.GetCustomAttribute<FieldAttribute> (field_pi);
 					ComputeLibraryName (fieldAttr, type, field_pi.Name, out string library_name, out string library_path);
 
-					bool is_unified_internal = field_pi.IsUnifiedInternal (this);
-
 					string fieldTypeName;
 					string smartEnumTypeName = null;
 					if (IsSmartEnum (field_pi.PropertyType)) {
@@ -5924,11 +5916,10 @@ public partial class Generator : IMemberGatherer {
 					if (AttributeManager.HasAttribute<NotificationAttribute> (field_pi))
 						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 
-					print ("{0} static {1}{2} {3}{4} {{", field_pi.IsInternal (this) ? "internal" : "public",
+					print ("{0} static {1}{2} {3} {{", field_pi.IsInternal (this) ? "internal" : "public",
 						smartEnumTypeName ?? fieldTypeName,
 						nullable ? "?" : "",
-						field_pi.Name,
-						is_unified_internal ? "_" : "");
+						field_pi.Name);
 					indent++;
 
 					PrintAttributes (field_pi, platform: true);

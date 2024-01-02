@@ -25,6 +25,9 @@
 
 using System;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public unsafe partial class NSNetService {
