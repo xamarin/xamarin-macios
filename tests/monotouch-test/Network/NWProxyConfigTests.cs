@@ -189,6 +189,15 @@ namespace MonoTouchFixtures.Network {
 			config.EnumerateExcludedDomains (EnumberateDomains);
 			Asserts.AreEqual (domains.Length, foundDomains.Count, "Domain count");
 		}
+
+		[Test]
+		public void DefaultSessionConfigurationProxyConfigurationsTests () {
+			var defaultConfig = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			Assert.AreEqual (0, defaultConfig.ProxyConfigurations.Length, "getter");
+
+			defaultConfig.ProxyConfigurations = new [] { config };
+			Assert.AreEqual (1, defaultConfig.ProxyConfigurations.Length, "setter");
+		}
 	}
 }
 #endif

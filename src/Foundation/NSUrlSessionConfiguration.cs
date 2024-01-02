@@ -5,6 +5,7 @@
 //     Manuel de la Pena <mandel@microsoft.com>
 using System;
 using ObjCRuntime;
+using Network;
 
 using Foundation;
 
@@ -64,40 +65,33 @@ namespace Foundation {
 			return config;
 		}
 
-		/*
-				The following cannot be used until PR https://github.com/xamarin/xamarin-macios/pull/7539 lands.
-		#if NET
-				[SupportedOSPlatform ("ios17.0")]
-				[SupportedOSPlatform ("macos14.0")]
-				[SupportedOSPlatform ("maccatalyst17.0")]
-				[SupportedOSPlatform ("tvos17.0")]
-		#else
-				[TV (17,0), Watch (10,0), iOS (17,0), Mac (14,0), MacCatalyst (17,0)]
-		#endif
-				 public NWProxyConfig[] ProxyConfigurations { 
-					 get {
-						 var proxyConfigurations = _ProxyConfigurations;
-						 if (proxyConfigurations is null)
-							 return Array.Empty<NWProxyConfig> ();
-						 var result = new NWProxyConfig [proxyConfigurations.Length];
-						 for (int i = 0; i < proxyConfigurations.Length; i++) {
-							 result [i] = new NWProxyConfig (proxyConfigurations [i], owns: false);
-						 }
-						 return result;
-					 }
-					 set {
-						 if (value is null) {
-							 _ProxyConfigurations = Array.Empty<IntPtr> ();
-							 return;
-						 }
-						 var proxyConfigurations = new IntPtr [value.Length];
-						 for (int i = 0; i < value.Length; i++) {
-							 proxyConfigurations [i] = value [i].GetHandle ();
-						 }
-						 _ProxyConfigurations = proxyConfigurations;
-					 }
-				 }
-		*/
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+#else
+		[TV (17,0), Watch (10,0), iOS (17,0), Mac (14,0), MacCatalyst (17,0)]
+#endif
+		public NWProxyConfig[] ProxyConfigurations { 
+			get {
+				var proxyConfigurations = _ProxyConfigurations;
+				if (proxyConfigurations.Count == 0)
+					return Array.Empty<NWProxyConfig> ();
+				var result = new NWProxyConfig [proxyConfigurations.Count];
+				for (nuint i = 0; i < proxyConfigurations.Count; i++) {
+					result [i] = new NWProxyConfig (proxyConfigurations.ValueAt(i), owns: false);
+				}
+				return result;
+			}
+			set {
+				if (value.Length == 0) {
+					_ProxyConfigurations = new NSArray ();
+					return;
+				}
+				_ProxyConfigurations = NSArray.FromNSObjects(value);
+			}
+		}
 
 	}
 }
