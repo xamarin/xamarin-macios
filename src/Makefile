@@ -1174,6 +1174,8 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.s
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
 		$($(2)_CORE_DEFINES) \
 		$($(2)_DOTNET_CORE_SOURCES) \
+		-nullable+ \
+		-warnaserror:nullable \
 		-out:$$@
 
 $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
@@ -1271,6 +1273,7 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		-warnaserror:$(NULLABILITY_WARNINGS) \
+		-nullable+ \
 		$$($(2)_DOTNET_SOURCES) \
 		@$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
 		-out:$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \

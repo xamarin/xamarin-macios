@@ -9,6 +9,9 @@
 using System;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 	public delegate void MarshalObjectiveCExceptionHandler (object sender, MarshalObjectiveCExceptionEventArgs args);
 

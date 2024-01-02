@@ -19,6 +19,9 @@ using ObjCRuntime;
 using UIKit;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Registrar {
 	// Somewhere to put shared code between the old and the new dynamic registrars.
 	// Putting code in either of those classes will increase the executable size,
