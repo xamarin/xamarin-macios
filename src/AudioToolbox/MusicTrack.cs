@@ -278,12 +278,15 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetSequence (/* MusicTrack */ IntPtr inTrack, /* MusicSequence* */ out IntPtr outSequence);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetSequence (/* MusicTrack */ IntPtr inTrack, /* MusicSequence* */ IntPtr* outSequence);
 
 		public MusicSequence? Sequence {
 			get {
-				if (MusicTrackGetSequence (Handle, out var seqHandle) == MusicPlayerStatus.Success)
-					return MusicSequence.Lookup (seqHandle);
+				IntPtr seqHandle;
+				unsafe {
+					if (MusicTrackGetSequence (Handle, &seqHandle) == MusicPlayerStatus.Success)
+						return MusicSequence.Lookup (seqHandle);
+				}
 				return null;
 			}
 		}
@@ -298,11 +301,15 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, out MidiEndpointRef outEndpoint);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, MidiEndpointRef* outEndpoint);
 
 		public MusicPlayerStatus GetDestMidiEndpoint (out MidiEndpoint? outEndpoint)
 		{
-			var result = MusicTrackGetDestMIDIEndpoint (Handle, out var midiHandle);
+			MidiEndpointRef midiHandle;
+			MusicPlayerStatus result;
+			unsafe {
+				result = MusicTrackGetDestMIDIEndpoint (Handle, &midiHandle);
+			}
 			outEndpoint = (result == MusicPlayerStatus.Success)? new MidiEndpoint (midiHandle): null;
 			return result;
 		}
@@ -317,16 +324,16 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void* inData, /* UInt32 */ int inLength);
+		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, byte* inData, /* UInt32 */ int inLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, ref double inData, /* UInt32 */ int inLength);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, double* inData, /* UInt32 */ int inLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void* outData, /* UInt32* */ ref int ioLength);
+		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, byte* outData, /* UInt32* */ int* ioLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, ref double outData, /* UInt32* */ ref int ioLength);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, double* outData, /* UInt32* */ int* ioLength);
 
 		// internal use only - it's a UInt32 in the API
 		enum SequenceTrackProperty {
@@ -344,13 +351,14 @@ namespace AudioToolbox {
 				byte val;
 				unsafe {
 					int len = 1;
-					MusicTrackGetProperty (Handle, SequenceTrackProperty.MuteStatus, &val, ref len);
+					MusicTrackGetProperty (Handle, SequenceTrackProperty.MuteStatus, &val, &len);
 					return val != 0;
 				}
 			}
 			set {
 				unsafe {
-					MusicTrackSetProperty (Handle, SequenceTrackProperty.MuteStatus, &value, 1);
+					var val = value ? (byte) 1 : (byte) 0;
+					MusicTrackSetProperty (Handle, SequenceTrackProperty.MuteStatus, &val, 1);
 				}
 			}
 		}
@@ -360,13 +368,14 @@ namespace AudioToolbox {
 				byte val;
 				unsafe {
 					int len = 1;
-					MusicTrackGetProperty (Handle, SequenceTrackProperty.SoloStatus, &val, ref len);
+					MusicTrackGetProperty (Handle, SequenceTrackProperty.SoloStatus, &val, &len);
 					return val != 0;
 				}
 			}
 			set {
 				unsafe {
-					MusicTrackSetProperty (Handle, SequenceTrackProperty.SoloStatus, &value, 1);
+					var val = value ? (byte) 1 : (byte) 0;
+					MusicTrackSetProperty (Handle, SequenceTrackProperty.SoloStatus, &val, 1);
 				}
 			}
 		}
@@ -375,11 +384,15 @@ namespace AudioToolbox {
 			get {
 				double value = 0;
 				int len = sizeof (double);
-				MusicTrackGetProperty (Handle, SequenceTrackProperty.TrackLength, ref value, ref len);
+				unsafe {
+					MusicTrackGetProperty (Handle, SequenceTrackProperty.TrackLength, &value, &len);
+				}
 				return value;
 			}
 			set {
-				MusicTrackSetProperty (Handle, SequenceTrackProperty.TrackLength, ref value, sizeof (double));
+				unsafe {
+					MusicTrackSetProperty (Handle, SequenceTrackProperty.TrackLength, &value, sizeof (double));
+				}
 			}
 		}
 
