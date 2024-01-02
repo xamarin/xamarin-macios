@@ -75,6 +75,7 @@ namespace MonoTouchFixtures.Vision {
 			// When running the app with the --optimize:all property, the Value extension methods of
 			// the VNHumanBodyPose3DObservationJointName smart enum are linked away and results in a
 			// build failure.
+			// This is https://github.com/xamarin/xamarin-macios/issues/19712
 			// As a temp workaround, this test will ensure that the GetValue method is getting used
 			// to prevent the linker from removing this method.
 
