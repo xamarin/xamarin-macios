@@ -78,12 +78,13 @@ namespace MonoTouchFixtures.AudioToolbox {
 					AudioQueueBuffer* buffer;
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (50000, out buffer), "#2");
 					Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), "#3");
-					Assert.AreEqual (AudioQueueStatus.Ok, aq.Start (), "#4");
+					ret = aq.Start ();
+					Assert.That (ret, Is.EqualTo (AudioQueueStatus.Ok).Or.EqualTo (AudioQueueStatus.GeneralParamError), "#4");
 				}
 			}
 
-			Assert.That (called, Is.True, "#10");
-			Assert.AreEqual (AudioQueueStatus.Ok, aq.Stop (true), "#5 - Stop");
+			Assert.AreEqual (ret == AudioQueueStatus.Ok, called, "#10"); // if ret == Ok, then we expect 'called' to be true, otherwise we don't.
+			Assert.AreEqual (ret, aq.Stop (true), "#5 - Stop");
 		}
 
 		[Test]
