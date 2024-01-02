@@ -85,6 +85,16 @@ namespace AudioToolbox {
 		DataFormatError = 0x666d743f,   // 'fmt?'
 		UnsupportedProperty = 0x70726F70,  // 'prop'
 
+		// AudioCodecErrors
+		UnspecifiedError = 0x77686174, // 'what'
+		UnknownPropertyError = 0x77686f3f, // 'who?'
+		BadPropertySizeError = 0x2173697a, // '!siz'
+		IllegalOperationError = 0x6e6f7065, // 'nope'
+		UnsupportedFormatError = 0x21646174, // '!dat'
+		StateError = 0x21737474, // '!stt'
+		NotEnoughBufferSpaceError = 0x21627566, // '!buf'
+		BadDataError = 0x62616461, // 'bada'
+
 		// From kAudio_
 		GeneralParamError = -50
 	}
