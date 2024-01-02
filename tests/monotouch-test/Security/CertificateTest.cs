@@ -465,7 +465,6 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void GenerateKeyPairTest ()
 		{
-			NSError error;
 			SecKey private_key;
 			SecKey public_key;
 			var att = new SecPublicPrivateKeyAttrs ();

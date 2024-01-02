@@ -188,24 +188,25 @@ namespace MonoTouchFixtures.Security {
 
 		void Protocol (SecProtocol protocol)
 		{
+			var account = $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 			var rec = CreateSecRecord (SecKind.InternetPassword,
-				account: $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}"
+				account: account
 			);
 			try {
 				SecKeyChain.Remove (rec); // it might already exists (or not)
 
 				rec = CreateSecRecord (SecKind.InternetPassword,
-					account: "Protocol",
+					account: account,
 					valueData: NSData.FromString ("Password"),
 					protocol: protocol,
 					server: "www.xamarin.com"
 				);
 
-				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
+				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), $"Add: {protocol}");
 
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsRecord (rec, out code);
-				Assert.That (code, Is.EqualTo (SecStatusCode.Success), "QueryAsRecord");
+				Assert.That (code, Is.EqualTo (SecStatusCode.Success), $"QueryAsRecord: {protocol}");
 
 				Assert.That (match.Protocol, Is.EqualTo (protocol), "Protocol");
 			} finally {
