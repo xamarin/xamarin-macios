@@ -588,7 +588,6 @@ namespace Cecil.Tests {
 			"System.Int32 Security.SslContext::SSLCopyALPNProtocols(System.IntPtr,System.IntPtr&)",
 			"System.Int32 Security.SslContext::SSLSetSessionTicketsEnabled(System.IntPtr,System.Boolean)",
 			"System.Int32 SystemConfiguration.NetworkReachability::SCNetworkReachabilityGetFlags(System.IntPtr,SystemConfiguration.NetworkReachabilityFlags&)",
-			"System.Int32 UIKit.UIApplication::xamarin_UIApplicationMain(System.Int32,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr&)",
 			"System.IntPtr Accelerate.vImage::vImageBoxConvolve_ARGB8888(Accelerate.vImageBuffer&,Accelerate.vImageBuffer&,System.IntPtr,System.IntPtr,System.IntPtr,System.UInt32,System.UInt32,Accelerate.Pixel8888,Accelerate.vImageFlags)",
 			"System.IntPtr Accelerate.vImage::vImageBoxConvolve_ARGB8888(Accelerate.vImageBuffer&,Accelerate.vImageBuffer&,System.IntPtr,System.IntPtr,System.IntPtr,System.UInt32,System.UInt32,Accelerate.Pixel8888*,Accelerate.vImageFlags)",
 			"System.IntPtr Accelerate.vImage::vImageBoxConvolve_Planar8(Accelerate.vImageBuffer&,Accelerate.vImageBuffer&,System.IntPtr,System.IntPtr,System.IntPtr,System.UInt32,System.UInt32,System.Byte,Accelerate.vImageFlags)",
