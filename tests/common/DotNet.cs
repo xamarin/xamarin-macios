@@ -216,12 +216,16 @@ namespace Xamarin.Tests {
 						msg.AppendLine ($"'dotnet {verb}' failed with exit code {rv.ExitCode}");
 						msg.AppendLine ($"Full command: {Executable} {StringUtils.FormatArguments (args)}");
 #if !MSBUILD_TASKS
-						var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
-						if (errors.Any ()) {
-							var errorsToList = errors.Take (10).ToArray ();
-							msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
-							foreach (var error in errorsToList)
-								msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+						try {
+							var errors = BinLog.GetBuildLogErrors (binlogPath).ToArray ();
+							if (errors.Any ()) {
+								var errorsToList = errors.Take (10).ToArray ();
+								msg.AppendLine ($"Listing first {errorsToList.Length} error(s) (of {errors.Length} error(s)):");
+								foreach (var error in errorsToList)
+									msg.AppendLine ($"    {string.Join ($"{Environment.NewLine}        ", error.ToString ().Split ('\n', '\r'))}");
+							}
+						} catch (Exception e) {
+							msg.AppendLine ($"Failed to list errors: {e}");
 						}
 #endif
 						Assert.Fail (msg.ToString ());
