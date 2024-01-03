@@ -217,11 +217,7 @@ function Install-DotNetOnRemoteMac {
     Invoke-SshEnvUpload  @SharedArguments -ThrowIfError $true  -Source $UploadDirectory -Target "/Users/$RemoteUserName/remote_build_testing"
 
     Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false ls -la "/Users/$RemoteUserName/remote_build_testing"
-    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false cat /Users/$RemoteUserName/remote_build_testing/configuration.json
-    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $true  chmod +x /Users/$RemoteUserName/remote_build_testing/install-on-mac.sh
-    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false cat /Users/$RemoteUserName/remote_build_testing/install-on-mac.sh
-    #Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false hexdump -C /Users/$RemoteUserName/remote_build_testing/install-on-mac.sh
-    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $true  /bin/bash -eux -- /Users/$RemoteUserName/remote_build_testing/install-on-mac.sh
+    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $true  "$SourcesDirectory/xamarin-macios/tests/dotnet/Windows/install-on-mac.sh" "/Users/$RemoteUserName/remote_build_testing"
     Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false ls -la "/Users/$RemoteUserName"
     Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false ls -la "/Users/$RemoteUserName/remote_build_testing"
 }
@@ -247,7 +243,6 @@ function New-RemoteMacInstallDirectory {
 
     Copy-Item -Path "$SourcesDirectory/xamarin-macios/NuGet.config" -Destination "$uploadDirectory/NuGet.config"
     Copy-Item -Path "$SourcesDirectory/xamarin-macios/global.json" -Destination "$uploadDirectory/global.json"
-    Copy-Item -Path "$SourcesDirectory/xamarin-macios/tests/dotnet/Windows/install-on-mac.sh" -Destination "$uploadDirectory/install-on-mac.sh"
     Copy-Item -Path "$ArtifactsDirectory/WorkloadRollback/WorkloadRollback.json" -Destination "$uploadDirectory/WorkloadRollback.json"
     Copy-Item -Path "$ArtifactsDirectory/build-configuration/configuration.json" -Destination "$uploadDirectory/configuration.json"
     Copy-Item -Path "$ArtifactsDirectory/not-signed-package/*.nupkg" -Destination "$uploadDirectory/nupkg"
