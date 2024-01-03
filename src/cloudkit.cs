@@ -2258,6 +2258,10 @@ namespace CloudKit {
 		[Internal]
 		[Export ("initWithExcludedZoneIDs:")]
 		NativeHandle _InitWithExcludedZoneIds (NSSet<CKRecordZoneID> zoneIds);
+
+		[Watch (10,2), TV (17,2), MacCatalyst (17,2), Mac (14,2), iOS (17,2)]
+		[Export ("containsZoneID:")]
+		bool Contains (CKRecordZoneID zoneId);
 	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
@@ -2491,7 +2495,13 @@ namespace CloudKit {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (CKSyncEngineEvent))]
-	interface CKSyncEngineWillFetchChangesEvent { }
+	interface CKSyncEngineWillFetchChangesEvent {
+
+		[Watch (10, 2), TV (17, 2), MacCatalyst (17, 2), Mac (14, 2), iOS (17, 2)]
+		[Export ("context", ArgumentSemantic.Strong)]
+		CKSyncEngineFetchChangesContext Context { get; }
+
+	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (CKSyncEngineEvent))]
@@ -2569,7 +2579,13 @@ namespace CloudKit {
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (CKSyncEngineEvent))]
-	interface CKSyncEngineDidFetchChangesEvent { }
+	interface CKSyncEngineDidFetchChangesEvent {
+
+		[Watch (10, 2), TV (17, 2), MacCatalyst (17, 2), Mac (14, 2), iOS (17, 2)]
+		[Export ("context", ArgumentSemantic.Strong)]
+		CKSyncEngineFetchChangesContext Context { get; }
+
+	}
 
 	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[BaseType (typeof (CKSyncEngineEvent))]
