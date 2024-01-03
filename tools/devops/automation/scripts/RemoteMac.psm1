@@ -217,7 +217,7 @@ function Install-DotNetOnRemoteMac {
     Invoke-SshEnvUpload  @SharedArguments -ThrowIfError $true  -Source $UploadDirectory -Target "/Users/$RemoteUserName/remote_build_testing"
 
     Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false ls -la "/Users/$RemoteUserName/remote_build_testing"
-    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $true  "$SourcesDirectory/xamarin-macios/tests/dotnet/Windows/install-on-mac.sh" "/Users/$RemoteUserName/remote_build_testing"
+    Invoke-SshEnvCommand @SharedArguments -ThrowIfError $true  "$Env:MAC_AGENT_BUILD_SOURCESDIRECTORY/xamarin-macios/tests/dotnet/Windows/install-on-mac.sh" "/Users/$RemoteUserName/remote_build_testing"
     Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false ls -la "/Users/$RemoteUserName"
     Invoke-SshEnvCommand @SharedArguments -ThrowIfError $false ls -la "/Users/$RemoteUserName/remote_build_testing"
 }
