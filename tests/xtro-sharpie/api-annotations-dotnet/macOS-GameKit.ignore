@@ -1,5 +1,2 @@
-# The parent enum GKVoiceChatService is not available in macOS 
-# so to be honest it does not make much sense to expose this constant on macOS
-# nor the below protocols
-
-# This selector does not exist in macOS, confirmed by intro.
+# NullAllowed makes sense
+!extra-null-allowed! 'System.Void GameKit.GKMatchmaker::FindMatchedPlayers(GameKit.GKMatchRequest,System.Action`2<GameKit.GKMatchedPlayers,Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1

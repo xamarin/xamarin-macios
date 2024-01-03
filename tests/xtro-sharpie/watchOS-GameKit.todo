@@ -1,11 +1,3 @@
 !missing-selector! GKAchievementDescription::rarityPercent not bound
-!missing-enum-value! GKError native value GKErrorICloudUnavailable = 35 not bound
-!missing-enum-value! GKError native value GKErrorLockdownMode = 36 not bound
-!missing-selector! GKMatchRequest::properties not bound
-!missing-selector! GKMatchRequest::queueName not bound
-!missing-selector! GKMatchRequest::recipientProperties not bound
-!missing-selector! GKMatchRequest::setProperties: not bound
-!missing-selector! GKMatchRequest::setQueueName: not bound
-!missing-selector! GKMatchRequest::setRecipientProperties: not bound
 !unknown-native-enum! GKMatchSendDataMode bound
 !unknown-native-enum! GKVoiceChatPlayerState bound
