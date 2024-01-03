@@ -74,6 +74,8 @@ namespace CoreLocation {
 		Unknown,
 		Satisfied,
 		Unsatisfied,
+		[NoWatch, Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), NoTV]
+		Unmonitored,
 	}
 
 	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
