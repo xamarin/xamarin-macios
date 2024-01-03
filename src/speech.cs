@@ -391,17 +391,4 @@ namespace Speech {
 		[Async]
 		void PrepareCustomModel (NSUrl asset, string clientIdentifier, SFSpeechLanguageModelConfiguration configuration, bool ignoresCache, Action<NSError> completion);
 	}
-
-	[Partial]
-	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
-	interface SFAnalysisContextTag {
-		[Field ("SFAnalysisContextTagLeftContext")]
-		NSString LeftContext { get; }
-
-		[Field ("SFAnalysisContextTagRightContext")]
-		NSString RightContext { get; }
-
-		[Field ("SFAnalysisContextTagSelectedText")]
-		NSString SelectedText { get; }
-	}
 }

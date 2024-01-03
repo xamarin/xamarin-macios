@@ -12,3 +12,20 @@
 !missing-selector! GKLeaderboardEntry::score not bound
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 !missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound
+!missing-enum-value! GKError native value GKErrorICloudUnavailable = 35 not bound
+!missing-enum-value! GKError native value GKErrorLockdownMode = 36 not bound
+!missing-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler: not found
+!missing-selector! GKMatch::playerProperties not bound
+!missing-selector! GKMatch::properties not bound
+!missing-selector! GKMatchedPlayers::playerProperties not bound
+!missing-selector! GKMatchedPlayers::players not bound
+!missing-selector! GKMatchedPlayers::properties not bound
+!missing-selector! GKMatchmaker::findMatchedPlayers:withCompletionHandler: not bound
+!missing-selector! GKMatchmaker::queryQueueActivity:withCompletionHandler: not bound
+!missing-selector! GKMatchRequest::properties not bound
+!missing-selector! GKMatchRequest::queueName not bound
+!missing-selector! GKMatchRequest::recipientProperties not bound
+!missing-selector! GKMatchRequest::setProperties: not bound
+!missing-selector! GKMatchRequest::setQueueName: not bound
+!missing-selector! GKMatchRequest::setRecipientProperties: not bound
+!missing-type! GKMatchedPlayers not bound

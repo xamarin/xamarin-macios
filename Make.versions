@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=17.0.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=9.0.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=17.2.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=9.2.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -65,11 +65,11 @@ MAC_PACKAGE_VERSION=9.0.0.$(MAC_COMMIT_DISTANCE)
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 
-IOS_NUGET_OS_VERSION=17.0
-TVOS_NUGET_OS_VERSION=17.0
-WATCHOS_NUGET_OS_VERSION=10.0
-MACOS_NUGET_OS_VERSION=14.0
-MACCATALYST_NUGET_OS_VERSION=17.0
+IOS_NUGET_OS_VERSION=17.2
+TVOS_NUGET_OS_VERSION=17.2
+WATCHOS_NUGET_OS_VERSION=10.2
+MACOS_NUGET_OS_VERSION=14.2
+MACCATALYST_NUGET_OS_VERSION=17.2
 
 
 # Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
