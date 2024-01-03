@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
@@ -14,12 +12,8 @@ namespace Xamarin.MacDev.Tasks {
 				var rv = taskRunner.RunAsync (this).Result;
 
 				// Copy the zipped file back to Windows.
-				if (rv) {
-					Log.LogWarning ($"Pre path: {OutputFile.ItemSpec} exists: {File.Exists (OutputFile.ItemSpec)}");
-					OutputFile = new TaskItem (OutputFile.ItemSpec.Replace ('\\', '/'));
-					Log.LogWarning ($"Post path: {OutputFile.ItemSpec} exists: {File.Exists (OutputFile.ItemSpec)}");
+				if (rv)
 					taskRunner.GetFileAsync (this, OutputFile.ItemSpec).Wait ();
-				}
 
 				return rv;
 			}
