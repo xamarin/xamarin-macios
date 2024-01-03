@@ -12058,7 +12058,8 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Don't call -[UIPresentationController init].
-	partial interface UIPresentationController : UIAppearanceContainer, UITraitEnvironment, UIContentContainer, UIFocusEnvironment {
+	partial interface UIPresentationController : UIAppearanceContainer, UITraitEnvironment, UIContentContainer, UIFocusEnvironment
+		, UITraitChangeObservable {
 		[Export ("initWithPresentedViewController:presentingViewController:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (UIViewController presentedViewController, [NullAllowed] UIViewController presentingViewController);
@@ -16290,6 +16291,7 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIResponder))]
 	interface UIView : UIAppearance, UIAppearanceContainer, UIAccessibility, UIDynamicItem, NSCoding, UIAccessibilityIdentification, UITraitEnvironment, UICoordinateSpace, UIFocusItem, UIFocusItemContainer
+		, UITraitChangeObservable
 #if !TVOS
 		, UILargeContentViewerItem, UIPopoverPresentationControllerSourceItem
 #endif
@@ -17080,7 +17082,8 @@ namespace UIKit {
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIResponder))]
-	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment, NSExtensionRequestHandling {
+	interface UIViewController : NSCoding, UIAppearanceContainer, UIContentContainer, UITraitEnvironment, UIFocusEnvironment, NSExtensionRequestHandling
+		, UITraitChangeObservable {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -18216,19 +18219,57 @@ namespace UIKit {
 		[return: NullAllowed]
 		NSObject GetObject (IUIObjectTraitDefinition trait);
 
+#if !XAMCORE_5_0
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("changedTraitsFromTraitCollection:")]
+		[Obsolete ("Use 'GetChangedTraits2' instead.")]
 		NSSet<IUITraitDefinition> GetChangedTraits ([NullAllowed] UITraitCollection traitCollection);
+#endif
+
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("changedTraitsFromTraitCollection:")]
+#if XAMCORE_5_0
+		NSSet<Class> GetChangedTraits ([NullAllowed] UITraitCollection traitCollection);
+#else
+		[Sealed]
+		NSSet<Class> GetChangedTraits2 ([NullAllowed] UITraitCollection traitCollection);
+#endif
+
+#if !XAMCORE_5_0
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("systemTraitsAffectingColorAppearance")]
+		[Obsolete ("Use 'SystemTraitsAffectingColorAppearance2' instead.")]
+		IUITraitDefinition [] SystemTraitsAffectingColorAppearance { get; }
+#endif
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("systemTraitsAffectingColorAppearance")]
-		IUITraitDefinition [] SystemTraitsAffectingColorAppearance { get; }
+#if XAMCORE_5_0
+		Class [] SystemTraitsAffectingColorAppearance { get; }
+#else
+		[Sealed]
+		Class [] SystemTraitsAffectingColorAppearance2 { get; }
+#endif
+
+#if !XAMCORE_5_0
+		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("systemTraitsAffectingImageLookup")]
+		[Obsolete ("Use 'SystemTraitsAffectingImageLookup2' instead.")]
+		IUITraitDefinition [] SystemTraitsAffectingImageLookup { get; }
+#endif
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Static]
 		[Export ("systemTraitsAffectingImageLookup")]
-		IUITraitDefinition [] SystemTraitsAffectingImageLookup { get; }
+#if XAMCORE_5_0
+		Class [] SystemTraitsAffectingImageLookup { get; }
+#else
+		[Sealed]
+		Class [] SystemTraitsAffectingImageLookup2 { get; }
+#endif
 
 		[Watch (10, 0), TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 		[Export ("typesettingLanguage")]
@@ -24044,7 +24085,8 @@ namespace UIKit {
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIScene))]
 	[DisableDefaultCtor]
-	interface UIWindowScene {
+	interface UIWindowScene :
+		UITraitChangeObservable {
 
 		[Export ("initWithSession:connectionOptions:")]
 		[DesignatedInitializer]
@@ -28378,11 +28420,21 @@ namespace UIKit {
 	interface UITraitOverrides : UIMutableTraits {
 		[Abstract]
 		[Export ("containsTrait:")]
+#if XAMCORE_5_0
+		bool ContainsTrait (Class trait);
+#else
+		[Obsolete ("Use 'ContainsTrait<T> ()', 'ContainsTrait (Type)' or 'ContainsTrait (Class)' instead.")]
 		bool ContainsTrait (IUITraitDefinition trait);
+#endif
 
 		[Abstract]
 		[Export ("removeTrait:")]
+#if XAMCORE_5_0
+		void RemoveTrait (Class trait);
+#else
+		[Obsolete ("Use 'RemoveTrait<T> ()', 'RemoveTrait (Type)' or 'RemoveTrait (Class)' instead.")]
 		void RemoveTrait (IUITraitDefinition trait);
+#endif
 	}
 
 	[iOS (17, 0), TV (17, 0), Watch (10, 0), MacCatalyst (17, 0)]
@@ -28484,21 +28536,41 @@ namespace UIKit {
 	[NoWatch, TV (17, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	[Protocol]
 	interface UITraitChangeObservable {
+#if XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("registerForTraitChanges:withHandler:")]
+#if XAMCORE_5_0
+		IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, Action<IUITraitEnvironment, UITraitCollection> handler);
+#else
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.")]
 		IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Action<IUITraitEnvironment, UITraitCollection> handler);
+#endif
 
+#if XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("registerForTraitChanges:withTarget:action:")]
+#if XAMCORE_5_0
+		IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, NSObject target, Selector action);
+#else
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], NSObject, Selector)' method instead.")]
 		IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, NSObject target, Selector action);
+#endif
 
+#if XAMCORE_5_0
 		[Abstract]
+#endif
 		[Export ("registerForTraitChanges:withAction:")]
+#if XAMCORE_5_0
+		IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, Selector action);
+#else
+		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Selector)' method instead.")]
 		IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Selector action);
+#endif
 
 		[Abstract]
 		[Export ("unregisterForTraitChanges:")]
 		void UnregisterForTraitChanges (IUITraitChangeRegistration registration);
 	}
-
 }
