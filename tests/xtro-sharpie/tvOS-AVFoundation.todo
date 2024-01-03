@@ -1136,14 +1136,8 @@
 !missing-selector! AVExternalStorageDeviceDiscoverySession::externalStorageDevices not bound
 !missing-type! AVExternalStorageDevice not bound
 !missing-type! AVExternalStorageDeviceDiscoverySession not bound
-!missing-enum! AVAudioSessionRenderingMode not bound
 !missing-enum! CMTagCollectionVideoOutputPreset not bound
-!missing-field! AVAudioSessionRenderingCapabilitiesChangeNotification not bound
-!missing-field! AVAudioSessionRenderingModeChangeNotification not bound
-!missing-field! AVAudioSessionRenderingModeNewRenderingModeKey not bound
 !missing-pinvoke! CMTagCollectionCreateWithVideoOutputPreset is not bound
-!missing-selector! AVAudioSession::renderingMode not bound
-!missing-selector! AVAudioSession::supportedOutputChannelLayouts not bound
 !missing-selector! AVPlayer::setVideoOutput: not bound
 !missing-selector! AVPlayer::videoOutput not bound
 !missing-selector! AVPlayerVideoOutput::copyTaggedBufferGroupForHostTime:presentationTimeStamp:activeConfiguration: not bound
