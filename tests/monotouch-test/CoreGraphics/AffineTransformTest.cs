@@ -560,7 +560,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public unsafe void SizeOfTest ()
 		{
-			Assert.AreEqual (sizeof (CGAffineTransform), Marshal.SizeOf (typeof (CGAffineTransform)));
+			Assert.AreEqual (sizeof (CGAffineTransform), Marshal.SizeOf<CGAffineTransform> ());
 		}
 
 		[Test]
