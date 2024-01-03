@@ -244,7 +244,7 @@ namespace CoreMidi {
 		byte ChannelMap_13;
 		byte ChannelMap_14;
 		byte ChannelMap_15;
-		public byte[] ChannelMap {
+		public byte [] ChannelMap {
 			get {
 				return new byte [] {
 					ChannelMap_00, ChannelMap_01, ChannelMap_02, ChannelMap_03, ChannelMap_04, ChannelMap_05, ChannelMap_06, ChannelMap_07,
@@ -334,7 +334,7 @@ namespace CoreMidi {
 
 		public MidiThruConnectionEndpoint []? Sources {
 			get { return connectionParams.Sources; }
-			set { connectionParams.Sources = value;	}
+			set { connectionParams.Sources = value; }
 		}
 
 		public MidiThruConnectionEndpoint []? Destinations {

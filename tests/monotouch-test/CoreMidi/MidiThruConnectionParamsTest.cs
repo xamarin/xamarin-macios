@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.CoreMidi {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class MidiThruConnectionParamsTests {
-		static byte[] DefaultStruct {
+		static byte [] DefaultStruct {
 			get {
 				return new byte [] {
 					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			}
 		}
 
-		static byte[] DefaultChannelMap {
+		static byte [] DefaultChannelMap {
 			get {
 				return new byte [] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 			}
@@ -523,7 +523,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 			// Set to a big array; the field with the number of controls is a UInt16, so overflow by one
 			var toobigArray = new MidiControlTransform [1 + (int) ushort.MaxValue];
-			var ex = Assert.Throws<ArgumentOutOfRangeException>(() => { p.Controls = toobigArray; }, "Controls 4");
+			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.Controls = toobigArray; }, "Controls 4");
 			Assert.AreEqual ($"A maximum of {ushort.MaxValue} controls are allowed (Parameter 'value')", ex?.Message, "Controls 4b");
 
 			// Set to the maximum sized array; the field with the number of maps is a UInt16, so create exactly that
@@ -564,7 +564,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 			// Set to a too big array; the field with the number of maps is a UInt16, so overflow by one
 			var toobigArray = new MidiValueMap [1 + (int) ushort.MaxValue];
-			var ex = Assert.Throws<ArgumentOutOfRangeException>(() => { p.Maps = toobigArray; }, "Maps 4");
+			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.Maps = toobigArray; }, "Maps 4");
 			Assert.AreEqual ($"A maximum of {ushort.MaxValue} maps are allowed (Parameter 'value')", ex?.Message, "Maps 4b");
 
 			// Set to the maximum sized array; the field with the number of maps is a UInt16, so create exactly that
@@ -907,7 +907,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			AreEqual (expectedStruct5b, GetData (p), "ReadStruct Maps 5b");
 		}
 
-		static void AreEqual (MidiThruConnectionEndpoint[] expected, MidiThruConnectionEndpoint[] actual, string message)
+		static void AreEqual (MidiThruConnectionEndpoint [] expected, MidiThruConnectionEndpoint [] actual, string message)
 		{
 			if (expected is null && actual is null)
 				return;
@@ -935,7 +935,7 @@ namespace MonoTouchFixtures.CoreMidi {
 						 $"Actual: [MidiTransform (Transform = {actual.Transform}; Param = {actual.Param}");
 		}
 
-		static void AreEqual (MidiValueMap[] expected, MidiValueMap[] actual, string message)
+		static void AreEqual (MidiValueMap [] expected, MidiValueMap [] actual, string message)
 		{
 			if (expected is null && actual is null)
 				return;
@@ -945,7 +945,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			}
 		}
 
-		static void AreEqual (byte[] expected, byte[] actual, string message)
+		static void AreEqual (byte [] expected, byte [] actual, string message)
 		{
 			if (expected is null && actual is null)
 				return;
@@ -974,13 +974,13 @@ namespace MonoTouchFixtures.CoreMidi {
 			var failureCount = 0;
 			for (var i = 0; i < Math.Max (expected.Length, actual.Length) && failureCount < 100; i++) {
 				if (i >= expected.Length) {
-					actualString += $"\n\texpected[{i}] = out of range; actual[{i}] = 0x{actual[i]:x2}";
+					actualString += $"\n\texpected[{i}] = out of range; actual[{i}] = 0x{actual [i]:x2}";
 					failureCount++;
 				} else if (i >= actual.Length) {
-					actualString += $"\n\texpected[{i}] = 0x{expected[i]:x2}; actual[{i}] = out of range";
+					actualString += $"\n\texpected[{i}] = 0x{expected [i]:x2}; actual[{i}] = out of range";
 					failureCount++;
 				} else if (actual [i] != expected [i]) {
-					actualString += $"\n\texpected[{i}] = 0x{expected[i]:x2}; actual[{i}] = 0x{actual[i]:x2}";
+					actualString += $"\n\texpected[{i}] = 0x{expected [i]:x2}; actual[{i}] = 0x{actual [i]:x2}";
 					failureCount++;
 				}
 			}
@@ -996,14 +996,14 @@ namespace MonoTouchFixtures.CoreMidi {
 						 $"Actual:   {actualString}\n");
 		}
 
-		byte[] GetData (MidiThruConnectionParams p)
+		byte [] GetData (MidiThruConnectionParams p)
 		{
-			var obj = typeof (MidiThruConnectionParams).GetMethod ("WriteStruct", BindingFlags.NonPublic | BindingFlags.Instance).Invoke (p, new object [] {});
+			var obj = typeof (MidiThruConnectionParams).GetMethod ("WriteStruct", BindingFlags.NonPublic | BindingFlags.Instance).Invoke (p, new object [] { });
 			var data = (NSData) obj;
 			return data.ToArray ();
 		}
 
-		MidiThruConnectionParams SetData (byte[] data)
+		MidiThruConnectionParams SetData (byte [] data)
 		{
 			object boxedParams = new MidiThruConnectionParams ();
 			using var obj = NSData.FromArray (data);
