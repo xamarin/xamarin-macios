@@ -181,6 +181,9 @@
     <BundleResource Include="$(MonoTouchTestDirectory)\Resources\square.gif">
       <Link>Resources\square.gif</Link>
     </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\full_body.jpg">
+      <Link>Resources\full_body.jpg</Link>
+    </BundleResource>
   </ItemGroup>
   <ItemGroup>
     <Metal Include="$(MonoTouchTestDirectory)\Resources\metal-sample.metal" Condition="'$(_SdkIsSimulator)' != 'true'">

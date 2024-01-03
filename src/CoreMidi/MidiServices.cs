@@ -791,7 +791,7 @@ namespace CoreMidi {
 #if !COREBUILD
 		public long TimeStamp;
 		IntPtr byteptr;
-		byte [] bytes = Array.Empty<byte> ();
+		byte []? bytes;
 		int start;
 		public ushort Length;
 
@@ -847,7 +847,7 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte [] ByteArray {
+		internal byte []? ByteArray {
 			get { return bytes; }
 		}
 
