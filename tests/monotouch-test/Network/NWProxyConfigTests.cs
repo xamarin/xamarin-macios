@@ -191,7 +191,8 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void DefaultSessionConfigurationProxyConfigurationsTests () {
+		public void DefaultSessionConfigurationProxyConfigurationsTests ()
+		{
 			var defaultConfig = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 			Assert.AreEqual (0, defaultConfig.ProxyConfigurations.Length, "getter");
 

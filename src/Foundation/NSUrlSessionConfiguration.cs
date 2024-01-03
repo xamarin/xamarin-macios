@@ -71,16 +71,16 @@ namespace Foundation {
 		[SupportedOSPlatform ("maccatalyst17.0")]
 		[SupportedOSPlatform ("tvos17.0")]
 #else
-		[TV (17,0), Watch (10,0), iOS (17,0), Mac (14,0), MacCatalyst (17,0)]
+		[TV (17, 0), Watch (10, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 #endif
-		public NWProxyConfig[] ProxyConfigurations { 
+		public NWProxyConfig [] ProxyConfigurations {
 			get {
 				var proxyConfigurations = _ProxyConfigurations;
 				if (proxyConfigurations.Count == 0)
 					return Array.Empty<NWProxyConfig> ();
 				var result = new NWProxyConfig [proxyConfigurations.Count];
 				for (nuint i = 0; i < proxyConfigurations.Count; i++) {
-					result [i] = new NWProxyConfig (proxyConfigurations.ValueAt(i), owns: false);
+					result [i] = new NWProxyConfig (proxyConfigurations.ValueAt (i), owns: false);
 				}
 				return result;
 			}
@@ -89,7 +89,7 @@ namespace Foundation {
 					_ProxyConfigurations = new NSArray ();
 					return;
 				}
-				_ProxyConfigurations = NSArray.FromNSObjects(value);
+				_ProxyConfigurations = NSArray.FromNSObjects (value);
 			}
 		}
 
