@@ -76,7 +76,7 @@ namespace Foundation {
 		public NWProxyConfig [] ProxyConfigurations {
 			get => NSArray.ArrayFromHandleFunc (_ProxyConfigurations, handle => new NWProxyConfig (handle, owns: false));
 			set {
-				var arr = NSArray.FromNSObjects(value);
+				var arr = NSArray.FromNSObjects (value);
 				_ProxyConfigurations = arr.Handle;
 				GC.KeepAlive (arr);
 			}
