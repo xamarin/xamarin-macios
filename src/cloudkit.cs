@@ -2259,7 +2259,7 @@ namespace CloudKit {
 		[Export ("initWithExcludedZoneIDs:")]
 		NativeHandle _InitWithExcludedZoneIds (NSSet<CKRecordZoneID> zoneIds);
 
-		[Watch (10,2), TV (17,2), MacCatalyst (17,2), Mac (14,2), iOS (17,2)]
+		[Watch (10, 2), TV (17, 2), MacCatalyst (17, 2), Mac (14, 2), iOS (17, 2)]
 		[Export ("containsZoneID:")]
 		bool Contains (CKRecordZoneID zoneId);
 	}

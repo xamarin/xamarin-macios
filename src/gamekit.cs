@@ -1105,7 +1105,7 @@ namespace GameKit {
 
 		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
 		[NullAllowed, Export ("playerProperties")]
-		NSDictionary<GKPlayer, NSDictionary <NSString, NSObject>> PlayerProperties { get; }
+		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> PlayerProperties { get; }
 
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'SendDataToAllPlayers (NSData, GKPlayer[] players, GKMatchSendDataMode mode, NSError error)' instead.")]
@@ -3031,7 +3031,7 @@ namespace GameKit {
 		NSDictionary<NSString, NSObject> Properties { get; }
 
 		[Export ("players")]
-		GKPlayer[] Players { get; }
+		GKPlayer [] Players { get; }
 
 		[NullAllowed, Export ("playerProperties")]
 		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> PlayerProperties { get; }
