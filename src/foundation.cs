@@ -8273,7 +8273,7 @@ namespace Foundation {
 
 		[Internal]
 		[Export ("proxyConfigurations", ArgumentSemantic.Copy)]
-		NSArray _ProxyConfigurations { get; set; }
+		IntPtr _ProxyConfigurations { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]

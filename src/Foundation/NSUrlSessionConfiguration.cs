@@ -74,22 +74,11 @@ namespace Foundation {
 		[TV (17, 0), Watch (10, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 #endif
 		public NWProxyConfig [] ProxyConfigurations {
-			get {
-				var proxyConfigurations = _ProxyConfigurations;
-				if (proxyConfigurations.Count == 0)
-					return Array.Empty<NWProxyConfig> ();
-				var result = new NWProxyConfig [proxyConfigurations.Count];
-				for (nuint i = 0; i < proxyConfigurations.Count; i++) {
-					result [i] = new NWProxyConfig (proxyConfigurations.ValueAt (i), owns: false);
-				}
-				return result;
-			}
+			get => NSArray.ArrayFromHandleFunc (_ProxyConfigurations, handle => new NWProxyConfig (handle, owns: false));
 			set {
-				if (value.Length == 0) {
-					_ProxyConfigurations = new NSArray ();
-					return;
-				}
-				_ProxyConfigurations = NSArray.FromNSObjects (value);
+				var arr = NSArray.FromNSObjects(value);
+				_ProxyConfigurations = arr.Handle;
+				GC.KeepAlive (arr);
 			}
 		}
 
