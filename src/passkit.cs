@@ -2529,7 +2529,7 @@ namespace PassKit {
 		[Export ("dateOfBirthElement")]
 		PKIdentityElement DateOfBirthElement { get; }
 
-		[iOS (17, 2)]
+		[iOS (17, 2), MacCatalyst (17, 2)]
 		[Static]
 		[Export ("sexElement")]
 		PKIdentityElement SexElement { get; }

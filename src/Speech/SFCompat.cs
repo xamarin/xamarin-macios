@@ -12,6 +12,7 @@ using NativeHandle = System.IntPtr;
 namespace Speech {
 
 	[Obsolete (Constants.ApiRemovedGeneral)]
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	public unsafe partial class SFAnalysisContextTag {
 
 		[Obsolete (Constants.ApiRemovedGeneral)]
