@@ -49,6 +49,12 @@ namespace MonoTouchFixtures.CoreMidi {
 			}
 		}
 
+#if NET
+		string ParameterSuffix = " (Parameter 'value')";
+#else
+		string ParameterSuffix = "\nParameter name: value";
+#endif
+
 		[Test]
 		public void ParamsTest ()
 		{
@@ -102,7 +108,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 			// Set to more than 8 sources
 			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.Sources = new MidiThruConnectionEndpoint [9]; }, "Sources 4");
-			Assert.AreEqual ("A maximum of 8 endpoints are allowed (Parameter 'value')", ex.Message, "Sources 4b");
+			Assert.AreEqual ($"A maximum of 8 endpoints are allowed{ParameterSuffix}", ex.Message, "Sources 4b");
 		}
 
 		[Test]
@@ -128,7 +134,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 			// Set to more than 8 destinations
 			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.Destinations = new MidiThruConnectionEndpoint [9]; }, "Sources 4");
-			Assert.AreEqual ("A maximum of 8 endpoints are allowed (Parameter 'value')", ex.Message, "Destinations 4b");
+			Assert.AreEqual ($"A maximum of 8 endpoints are allowed{ParameterSuffix}", ex.Message, "Destinations 4b");
 		}
 
 		[Test]
@@ -189,7 +195,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 			// Set to more than 16 channels
 			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.ChannelMap = new byte [] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 }; }, "ChannelMap 4");
-			Assert.AreEqual ("A maximum of 16 channels are allowed (Parameter 'value')", ex.Message, "ChannelMap 4b");
+			Assert.AreEqual ($"A maximum of 16 channels are allowed{ParameterSuffix}", ex.Message, "ChannelMap 4b");
 		}
 
 		[Test]
@@ -524,7 +530,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			// Set to a big array; the field with the number of controls is a UInt16, so overflow by one
 			var toobigArray = new MidiControlTransform [1 + (int) ushort.MaxValue];
 			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.Controls = toobigArray; }, "Controls 4");
-			Assert.AreEqual ($"A maximum of {ushort.MaxValue} controls are allowed (Parameter 'value')", ex?.Message, "Controls 4b");
+			Assert.AreEqual ($"A maximum of {ushort.MaxValue} controls are allowed{ParameterSuffix}", ex?.Message, "Controls 4b");
 
 			// Set to the maximum sized array; the field with the number of maps is a UInt16, so create exactly that
 			var bigArray = new MidiControlTransform [ushort.MaxValue];
@@ -565,7 +571,7 @@ namespace MonoTouchFixtures.CoreMidi {
 			// Set to a too big array; the field with the number of maps is a UInt16, so overflow by one
 			var toobigArray = new MidiValueMap [1 + (int) ushort.MaxValue];
 			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { p.Maps = toobigArray; }, "Maps 4");
-			Assert.AreEqual ($"A maximum of {ushort.MaxValue} maps are allowed (Parameter 'value')", ex?.Message, "Maps 4b");
+			Assert.AreEqual ($"A maximum of {ushort.MaxValue} maps are allowed{ParameterSuffix}", ex?.Message, "Maps 4b");
 
 			// Set to the maximum sized array; the field with the number of maps is a UInt16, so create exactly that
 			var bigArray = new MidiValueMap [ushort.MaxValue];
@@ -1019,7 +1025,7 @@ namespace MonoTouchFixtures.CoreMidi {
 
 			var bytes = new byte [42];
 			var ex = Assert.Throws<ArgumentOutOfRangeException> (() => { map.Value = bytes; }, "Invalid byte array");
-			Assert.AreEqual ("The length of the Value array must be 128 (Parameter 'value')", ex.Message, "Ex Message");
+			Assert.AreEqual ($"The length of the Value array must be 128{ParameterSuffix}", ex.Message, "Ex Message");
 
 			bytes = new byte [128];
 			bytes [42] = 36;
