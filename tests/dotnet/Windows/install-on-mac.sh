@@ -28,7 +28,7 @@ for req in ${REQUIRED_FILES[@]}; do
 		echo "The file $reqfile doesn't exist."
 		exit 1
 	fi
-fi
+done
 
 cd "$REMOTE_BUILD_TESTING_DIR"
 
