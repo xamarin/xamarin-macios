@@ -1046,7 +1046,7 @@ public partial class Generator : IMemberGatherer {
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"{0}\")]", entry_point);
 		}
 
-		var returnType = need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi), true);
+		var returnType = (need_stret && aligned) ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi), true);
 		if (returnType == "bool")
 			returnType = "byte";
 		else if (returnType == "char")
@@ -1054,7 +1054,7 @@ public partial class Generator : IMemberGatherer {
 
 		print (m, "\t\tpublic unsafe extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
 			   returnType, method_name, b.ToString (),
-			   need_stret ? (aligned ? "IntPtr" : TypeManager.FormatTypeUsedIn ("ObjCRuntime", mi.ReturnType)) + "* retval, " : "");
+			   (need_stret && aligned) ? "IntPtr* retval, " : "");
 	}
 
 	bool IsNativeEnum (Type type)
@@ -2956,15 +2956,14 @@ public partial class Generator : IMemberGatherer {
 		if (ShouldMarshalNativeExceptions (mi))
 			args += ", &exception_gchandle";
 
-		if (stret) {
-			string ret_val = aligned ? "(IntPtr*) aligned_ret" : "&ret";
+		if (stret && aligned) {
+			var ret_val = "(IntPtr*) aligned_ret";
 			if (minfo.is_static)
 				print ("{0} ({5}, class_ptr, {3}{4});", sig, "/*unusued*/", "/*unusued*/", selector_field, args, ret_val);
 			else
 				print ("{0} ({5}, {1}{2}, {3}{4});", sig, target_name, handle, selector_field, args, ret_val);
 
-			if (aligned)
-				print ("aligned_assigned = true;");
+			print ("aligned_assigned = true;");
 		} else {
 			bool returns = mi.ReturnType != TypeCache.System_Void && mi.Name != "Constructor";
 			string cast_a = "", cast_b = "";
