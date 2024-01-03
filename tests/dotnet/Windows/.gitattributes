@@ -1,3 +1,0 @@
-# bash scripts should always be lf
-
-*.sh		text eol=lf
