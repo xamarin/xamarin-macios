@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
@@ -57,6 +58,7 @@ namespace NetworkExtension {
 
 	[Obsolete (Constants.ApiRemovedGeneral)]
 	[Register ("NEFailureHandlerProvider", SkipRegistration = true)]
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	public class NEFailureHandlerProvider : NEProvider {
 		public override NativeHandle ClassHandle => throw new PlatformNotSupportedException (Constants.ApiRemovedGeneral);
 
