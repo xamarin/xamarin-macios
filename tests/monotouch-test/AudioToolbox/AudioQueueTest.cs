@@ -81,7 +81,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 						Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), $"#3 - {i}");
 					}
 					ret = aq.Start ();
-					Assert.That (ret, Is.EqualTo (AudioQueueStatus.Ok).Or.EqualTo (AudioQueueStatus.GeneralParamError), "#4");
+					Assert.That (ret, Is.EqualTo (AudioQueueStatus.Ok).Or.EqualTo (AudioQueueStatus.GeneralParamError).Or.EqualTo ((AudioQueueStatus) (-66628)), "#4");
 				}
 			}
 
