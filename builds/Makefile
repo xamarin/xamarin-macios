@@ -84,6 +84,19 @@ downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
 
+# Create a symlink with a persistent (non-version-dependent) name
+# The dependency on the stamp file is to ensure the symlink is re-created
+# when the .NET version changes.
+all-local:: downloads/dotnet
+dotnet:: downloads/dotnet
+downloads/dotnet: .stamp-dotnet-symlink-$(DOTNET_VERSION)
+	$(Q) mkdir -p downloads
+	$(Q) rm -f $@
+	$(Q) ln -s $(abspath downloads/$(DOTNET_INSTALL_NAME)) $@
+
+.stamp-dotnet-symlink-$(DOTNET_VERSION): Makefile
+	$(Q) touch $@
+
 # This is just a helpful target to print the url to the .pkg to download and install the current .NET version into the system.
 print-dotnet-pkg-urls: dotnet-install.sh
 	$(Q) rm -f $@-found-it.stamp
@@ -156,7 +169,7 @@ DOTNET_DOWNLOADS = \
 	.stamp-download-dotnet-packages \
 	.stamp-install-t4 \
 
-dotnet: $(DOTNET_DOWNLOADS)
+dotnet:: $(DOTNET_DOWNLOADS)
 all-local:: $(DOTNET_DOWNLOADS)
 
 clean-local::
