@@ -16,6 +16,9 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public static partial class UIGuidedAccessRestriction {
@@ -50,7 +53,7 @@ namespace UIKit {
 		[iOS (12,2)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		static unsafe extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* completion);
+		static unsafe extern void UIGuidedAccessConfigureAccessibilityFeatures (/* UIGuidedAccessAccessibilityFeature */ nuint features, byte enabled, BlockLiteral* completion);
 
 #if NET
 		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
@@ -106,7 +109,7 @@ namespace UIKit {
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (UIGuidedAccessConfigureAccessibilityFeaturesTrampoline.Handler, completionHandler);
 #endif
-				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled, &block);
+				UIGuidedAccessConfigureAccessibilityFeatures ((nuint) (ulong) features, enabled ? (byte) 1 : (byte) 0, &block);
 			}
 		}
 

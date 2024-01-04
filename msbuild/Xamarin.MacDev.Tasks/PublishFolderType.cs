@@ -21,6 +21,8 @@ namespace Xamarin.MacDev.Tasks {
 		DynamicLibrary, // link with + copy to app bundle
 		PluginLibrary, // copy to app bundle (but not link with main executable)
 		StaticLibrary, // link with (but not copy to app bundle)
+		XpcServices,
+		CompressedXpcServices,
 		Unknown,
 	}
 
@@ -35,7 +37,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (string.IsNullOrEmpty (value))
 				return PublishFolderType.Unset;
 
-			if (!Enum.TryParse<PublishFolderType> (value, out var result))
+			if (!Enum.TryParse<PublishFolderType> (value, true, out var result))
 				result = PublishFolderType.Unknown;
 
 			return result;

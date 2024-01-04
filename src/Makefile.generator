@@ -14,6 +14,11 @@ $(BUILD_DIR)/generator.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs
 	$(Q_GEN) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(XBUILD_VERBOSITY) /p:Configuration=Debug generator.csproj /p:IntermediateOutputPath=$(BUILD_DIR)/IDE/obj/common/ /p:OutputPath=$(BUILD_DIR)/common /restore
 
+# copy generator.csproj to the build dir so that we can use our shared .csproj.inc target from rules.mk to create generator.csproj.inc
+# we need any generated files in this directory to go into the build directory, and the shared target will output the csproj.inc into the same directory as the csproj
+$(DOTNET_BUILD_DIR)/bgen.csproj: $(BUILD_DIR)/generator.csproj | $(BUILD_DIR)
+	$(Q) $(CP) $< $@
+
 # bgen.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
 $(DOTNET_BUILD_DIR)/bgen.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include $(DOTNET_BUILD_DIR)/bgen.csproj.inc
@@ -43,8 +48,12 @@ $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/bgen: bgen/bgen.dotnet | $(DO
 $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib
 	$$(Q) $$(CP) $$< $$@
 	$$(Q) $$(CP) $$(<:.dll=.pdb) $$(@:.dll=.pdb)
+
+dotnet-$(2):: $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen/bgen
+dotnet-$(2):: $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/bgen
+dotnet-$(2):: $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BGenTargets,$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BGenTargets,$(platform),$(shell echo $(platform) | tr '[:upper:]' '[:lower:]'))))
 
 DOTNET_TARGETS += \
 	$(DOTNET_BUILD_DIR)/bgen/bgen \
