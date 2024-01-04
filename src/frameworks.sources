@@ -1630,6 +1630,11 @@ SOCIAL_SOURCES = \
 	Social/SLComposeViewController.cs \
 	Social/SLRequest.cs \
 
+# Speech
+
+SPEECH_SOURCES = \
+	Speech/SFCompat.cs \
+
 # SpriteKit
 
 SPRITEKIT_API_SOURCES = \

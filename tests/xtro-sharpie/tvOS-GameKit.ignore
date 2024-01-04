@@ -15,3 +15,5 @@
 !missing-selector! GKLeaderboardEntry::formattedScore not bound
 !missing-selector! GKLeaderboardEntry::rank not bound
 !missing-selector! GKLeaderboardEntry::score not bound
+# NullAllowed makes sense
+!extra-null-allowed! 'System.Void GameKit.GKMatchmaker::FindMatchedPlayers(GameKit.GKMatchRequest,System.Action`2<GameKit.GKMatchedPlayers,Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1

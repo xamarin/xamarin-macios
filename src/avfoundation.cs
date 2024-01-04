@@ -2324,6 +2324,10 @@ namespace AVFoundation {
 		[Export ("IOBufferDuration")]
 		double IOBufferDuration { get; }
 
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Export ("supportedOutputChannelLayouts")]
+		AVAudioChannelLayout [] SupportedOutputChannelLayouts { get; }
+
 		[NoWatch, NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("setInputGain:error:")]
@@ -2694,6 +2698,26 @@ namespace AVFoundation {
 		[Watch (8, 0), TV (15, 0), NoMac, iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("AVAudioSessionSpatialPlaybackCapabilitiesChangedNotification")]
 		NSString SpatialPlaybackCapabilitiesChangedNotification { get; }
+
+		[Notification (typeof (RenderingModeChangeNotificationEventArgs))]
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Field ("AVAudioSessionRenderingModeChangeNotification")]
+		NSString RenderingModeChangeNotification { get; }
+
+		[Notification]
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Field ("AVAudioSessionRenderingCapabilitiesChangeNotification")]
+		NSString RenderingCapabilitiesChangeNotification { get; }
+
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Export ("renderingMode")]
+		AVAudioSessionRenderingMode RenderingMode { get; }
+	}
+
+	[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+	interface RenderingModeChangeNotificationEventArgs {
+		[Export ("AVAudioSessionRenderingModeNewRenderingModeKey")]
+		AVAudioSessionRenderingMode NewRenderingMode { get; }
 	}
 
 	[NoMac]
