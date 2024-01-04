@@ -50,7 +50,11 @@ namespace MonoTouchFixtures.CoreMidi {
 		}
 
 #if NET
+#if RELEASE
+		string ParameterSuffix = " Arg_ParamName_Name, value";
+#else
 		string ParameterSuffix = " (Parameter 'value')";
+#endif
 #else
 		string ParameterSuffix = "\nParameter name: value";
 #endif
