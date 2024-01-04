@@ -58,7 +58,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void ProcessingTap ()
 		{
-			TestRuntime.AssertNotVirtualMachine (); // this test doesn't seem to work in a virtual machine
+			TestRuntime.AssertNotVirtualMachine (); // this test doesn't seem to work well in a virtual machine
 			using var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
 			AudioQueueStatus ret;
 			bool called = false;
@@ -86,7 +86,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 
 			Assert.AreEqual (ret == AudioQueueStatus.Ok, called, "#10"); // if ret == Ok, then we expect 'called' to be true, otherwise we don't.
-			Assert.Tha (aq.Stop (true), Is.EqualTo (ret).Or.EqualTo (AudioQueueStatus.Ok), "#5 - Stop");
+			Assert.That (aq.Stop (true), Is.EqualTo (ret).Or.EqualTo (AudioQueueStatus.Ok), "#5 - Stop");
 		}
 
 		[Test]
