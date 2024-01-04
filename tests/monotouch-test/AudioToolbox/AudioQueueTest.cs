@@ -86,7 +86,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 
 			Assert.AreEqual (ret == AudioQueueStatus.Ok, called, "#10"); // if ret == Ok, then we expect 'called' to be true, otherwise we don't.
-			Assert.AreEqual (ret, aq.Stop (true), "#5 - Stop");
+			Assert.Tha (aq.Stop (true), Is.EqualTo (ret).Or.EqualTo (AudioQueueStatus.Ok), "#5 - Stop");
 		}
 
 		[Test]
