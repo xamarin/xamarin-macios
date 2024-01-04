@@ -63,6 +63,13 @@ namespace MonoTouchFixtures.AudioToolbox {
 			AudioQueueStatus ret;
 			bool called = false;
 
+			unsafe {
+				for (var i = 0; i < 3; i++) {
+					AudioQueueBuffer* buffer;
+					Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (4096, out buffer), $"AllocateBuffer - {i}");
+					Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), $"EnqueueBuffer - {i}");
+				}
+			}
 			using (var tap = aq.CreateProcessingTap (
 				delegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags, AudioBuffers data)
 				{
@@ -72,20 +79,17 @@ namespace MonoTouchFixtures.AudioToolbox {
 				}, AudioQueueProcessingTapFlags.PreEffects, out ret)) {
 				if (ret == AudioQueueStatus.InvalidDevice)
 					Assert.Inconclusive ("Could not find a valid device.");
-				Assert.AreEqual (AudioQueueStatus.Ok, ret, "#1");
+				Assert.AreEqual (AudioQueueStatus.Ok, ret, "CreateProcessingTap");
 
-				unsafe {
-					for (var i = 0; i < 3; i++) {
-						AudioQueueBuffer* buffer;
-						Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (4096, out buffer), $"#2 - {i}");
-						Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), $"#3 - {i}");
-					}
-					ret = aq.Start ();
-					Assert.That (ret, Is.EqualTo (AudioQueueStatus.Ok).Or.EqualTo (AudioQueueStatus.GeneralParamError).Or.EqualTo ((AudioQueueStatus) (-66628)), "#4");
-				}
+				ret = aq.Start ();
+				Assert.That (ret, Is.EqualTo (AudioQueueStatus.Ok).Or.EqualTo (AudioQueueStatus.GeneralParamError).Or.EqualTo ((AudioQueueStatus) (-66628)), "#4");
 			}
 
-			Assert.AreEqual (ret == AudioQueueStatus.Ok, called, "#10"); // if ret == Ok, then we expect 'called' to be true, otherwise we don't.
+			if (called) {
+				Assert.AreEqual (ret, AudioQueueStatus.Ok, "Called A");
+			} else {
+				Assert.AreNotEqual (ret, AudioQueueStatus.Ok, "Called B");
+			}
 			Assert.That (aq.Stop (true), Is.EqualTo (ret).Or.EqualTo (AudioQueueStatus.Ok), "#5 - Stop");
 		}
 
