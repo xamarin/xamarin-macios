@@ -42,6 +42,9 @@ using CoreServices;
 #endif
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public enum NSStreamSocketSecurityLevel {
 		None, SslV2, SslV3, TlsV1, NegotiatedSsl, Unknown

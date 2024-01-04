@@ -567,3 +567,9 @@
 # added and deprecated on xcode 15
 !missing-selector! UIControlUIControl::contextMenuInteraction:previewForDismissingMenuWithConfiguration: not bound
 !missing-selector! UIControlUIControl::contextMenuInteraction:previewForHighlightingMenuWithConfiguration: not bound
+
+# these were bound with an incorrect signature, and made optional so that customers wouldn't have to implement methods with broken signatures.
+# this is fixed in XAMCORE_5_0
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withTarget:action: is REQUIRED and should be abstract
