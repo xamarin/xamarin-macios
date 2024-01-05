@@ -322,25 +322,25 @@ namespace ImageIO {
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceUpdateData (/* CGImageSourceRef __nonnull */ IntPtr isrc,
-			/* CFDataRef __nonnull */ IntPtr data, [MarshalAs (UnmanagedType.I1)] bool final);
+			/* CFDataRef __nonnull */ IntPtr data, byte final);
 
 		public void UpdateData (NSData data, bool final)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-			CGImageSourceUpdateData (Handle, data.Handle, final);
+			CGImageSourceUpdateData (Handle, data.Handle, final ? (byte) 1 : (byte) 0);
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceUpdateDataProvider (/* CGImageSourceRef __nonnull */ IntPtr handle,
 			/* CGDataProviderRef __nonnull */ IntPtr dataProvider,
-			[MarshalAs (UnmanagedType.I1)] bool final);
+			byte final);
 
 		public void UpdateDataProvider (CGDataProvider provider, bool final)
 		{
 			if (provider is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (provider));
-			CGImageSourceUpdateDataProvider (Handle, provider.Handle, final);
+			CGImageSourceUpdateDataProvider (Handle, provider.Handle, final ? (byte) 1 : (byte) 0);
 		}
 
 		// note: CGImageSourceStatus is always an int (4 bytes) so it's ok to use in the pinvoke declaration

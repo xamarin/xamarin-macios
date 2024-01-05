@@ -18,6 +18,29 @@
     <CodesignEntitlements Condition="'$(Platform)' == 'iPhoneSimulator'">$(MonoTouchTestDirectory)\Entitlements.plist</CodesignEntitlements>
 
     <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DEBUG</DefineConstants>
+
+    <!-- warning CA1422: This call site is reachable on: '...': we use APIs that aren't available on a certain OS platform all the time (in some cases to verify any broken behavior), so ignore such warnings -->
+    <NoWarn>$(NoWarn);CA1422</NoWarn>
+
+    <!-- warning CS0618: '...' is obsolete: we test obsolete APIs all the time, so ignore obsolete warnings -->
+    <NoWarn>$(NoWarn);CS0618</NoWarn>
+
+    <!--
+      warning CS0436: The type 'ApplePlatform' in 'xamarin-macios/tests/../tools/common/ApplePlatform.cs' conflicts with the imported type 'ApplePlatform' in 'EmbeddedResources, Version=1.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065'. Using the type defined in 'xamarin-macios/tests/../tools/common/ApplePlatform.cs'
+
+      We get the 'ApplePlatform' enum from two referenced projects, which causes a type resolution failure unless this project also has the type (in which case this project's type wins the type resolution) - but that triggers the CS0436 warning, so ignore it.
+    -->
+    <NoWarn>$(NoWarn);CS0436</NoWarn>
+
+    <!-- Ignore nullability warnings until we can get around to fixing them -->
+    <NoWarn>$(NoWarn);nullable</NoWarn>
+
+    <!-- warning CS8981: The type name 'pfloat' only contains lower-cased ascii characters. Such names may become reserved for the language. -->
+    <!-- if this one becomes a problem we can easily fix it with a search&replace -->
+    <NoWarn>$(NoWarn);CS8981</NoWarn>
+
+    <!-- warning CS8002: Referenced assembly 'Touch.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name. -->
+    <NoWarn>$(NoWarn);CS8002</NoWarn>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
@@ -157,6 +180,9 @@
     </BundleResource>
     <BundleResource Include="$(MonoTouchTestDirectory)\Resources\square.gif">
       <Link>Resources\square.gif</Link>
+    </BundleResource>
+    <BundleResource Include="$(MonoTouchTestDirectory)\Resources\full_body.jpg">
+      <Link>Resources\full_body.jpg</Link>
     </BundleResource>
   </ItemGroup>
   <ItemGroup>

@@ -36,6 +36,9 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 #if false // https://github.com/xamarin/xamarin-macios/issues/15577

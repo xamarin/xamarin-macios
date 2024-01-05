@@ -291,14 +291,20 @@ namespace AudioToolbox {
 		unsafe static extern void AudioServicesPlaySystemSoundWithCompletion (uint inSystemSoundID, BlockLiteral* inCompletionBlock);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AudioServicesError AudioServicesCreateSystemSoundID (IntPtr fileUrl, out uint soundId);
+		unsafe static extern AudioServicesError AudioServicesCreateSystemSoundID (IntPtr fileUrl, uint* soundId);
 
 		static uint Create (NSUrl fileUrl)
 		{
+			AudioServicesError error;
+			uint soundId;
+
 			if (fileUrl is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
-			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
+			unsafe {
+				error = AudioServicesCreateSystemSoundID (fileUrl.Handle, &soundId);
+			}
+
 			if (error != AudioServicesError.None)
 				throw new InvalidOperationException (string.Format ("Could not create system sound ID for url {0}; error={1}",
 							fileUrl, error));
@@ -312,10 +318,15 @@ namespace AudioToolbox {
 
 		public static SystemSound? FromFile (NSUrl fileUrl)
 		{
+			AudioServicesError error;
+			uint soundId;
+
 			if (fileUrl is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 
-			var error = AudioServicesCreateSystemSoundID (fileUrl.Handle, out var soundId);
+			unsafe {
+				error = AudioServicesCreateSystemSoundID (fileUrl.Handle, &soundId);
+			}
 			if (error != AudioServicesError.None)
 				return null;
 			return new SystemSound (soundId, true);
@@ -323,11 +334,16 @@ namespace AudioToolbox {
 
 		public static SystemSound? FromFile (string filename)
 		{
+			AudioServicesError error;
+			uint soundId;
+
 			if (filename is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
 
 			using (var url = new NSUrl (filename)) {
-				var error = AudioServicesCreateSystemSoundID (url.Handle, out var soundId);
+				unsafe {
+					error = AudioServicesCreateSystemSoundID (url.Handle, &soundId);
+				}
 				if (error != AudioServicesError.None)
 					return null;
 				return new SystemSound (soundId, true);

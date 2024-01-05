@@ -5,6 +5,9 @@ using Intents;
 using ObjCRuntime;
 using UIKit;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Intents {
 
 	public partial class INSetProfileInCarIntent {

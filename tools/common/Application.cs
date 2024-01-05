@@ -30,6 +30,9 @@ using PlatformResolver = Xamarin.Linker.DotNetResolver;
 #error Invalid defines
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 
 	public enum BuildTarget {
