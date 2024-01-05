@@ -9,6 +9,7 @@
 
 #if !__WATCHOS__
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Foundation;
@@ -59,16 +60,24 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void ProcessingTap ()
 		{
 			TestRuntime.AssertNotVirtualMachine (); // this test doesn't seem to work well in a virtual machine
+			// TestRuntime.RequestMicrophonePermission ();
+
 			using var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
+			aq.InputCompleted += (object sender, InputCompletedEventArgs ea) =>
+			{
+				Console.WriteLine ($"InputCompleted ({sender}, 0x{ea.IntPtrBuffer:X} TimeStamp: {ea.TimeStamp} PacketDescriptions: {ea.PacketDescriptions}");
+				unsafe {
+					var q = aq.EnqueueBuffer (ea.UnsafeBuffer);
+					Console.WriteLine ($"    Enqueue: {q}");
+				}
+			};
 			AudioQueueStatus ret;
 			bool called = false;
 
 			unsafe {
-				for (var i = 0; i < 3; i++) {
-					AudioQueueBuffer* buffer;
-					Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (4096, out buffer), $"AllocateBuffer - {i}");
-					Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), $"EnqueueBuffer - {i}");
-				}
+				AudioQueueBuffer* buffer;
+				Assert.AreEqual (AudioQueueStatus.Ok, aq.AllocateBuffer (4096, out buffer), $"AllocateBuffer");
+				Assert.AreEqual (AudioQueueStatus.Ok, aq.EnqueueBuffer (buffer), $"EnqueueBuffer");
 			}
 			using (var tap = aq.CreateProcessingTap (
 				delegate (AudioQueueProcessingTap audioQueueTap, uint numberOfFrames, ref AudioTimeStamp timeStamp, ref AudioQueueProcessingTapFlags flags, AudioBuffers data)
@@ -77,6 +86,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 					timeStamp = default (AudioTimeStamp);
 					return numberOfFrames;
 				}, AudioQueueProcessingTapFlags.PreEffects, out ret)) {
+				Console.WriteLine ($"ret: {ret}");
 				if (ret == AudioQueueStatus.InvalidDevice)
 					Assert.Inconclusive ("Could not find a valid device.");
 				Assert.AreEqual (AudioQueueStatus.Ok, ret, "CreateProcessingTap");
