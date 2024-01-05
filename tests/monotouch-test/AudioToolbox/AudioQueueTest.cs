@@ -60,11 +60,10 @@ namespace MonoTouchFixtures.AudioToolbox {
 		public void ProcessingTap ()
 		{
 			TestRuntime.AssertNotVirtualMachine (); // this test doesn't seem to work well in a virtual machine
-			// TestRuntime.RequestMicrophonePermission ();
+													// TestRuntime.RequestMicrophonePermission ();
 
 			using var aq = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
-			aq.InputCompleted += (object sender, InputCompletedEventArgs ea) =>
-			{
+			aq.InputCompleted += (object sender, InputCompletedEventArgs ea) => {
 				Console.WriteLine ($"InputCompleted ({sender}, 0x{ea.IntPtrBuffer:X} TimeStamp: {ea.TimeStamp} PacketDescriptions: {ea.PacketDescriptions}");
 				unsafe {
 					var q = aq.EnqueueBuffer (ea.UnsafeBuffer);
