@@ -22,6 +22,8 @@ namespace Test {
 		ISharedDelegate Delegate { get; set; }
 	}
 
+	public interface ISharedDelegate {}
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
