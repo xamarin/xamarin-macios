@@ -20,7 +20,7 @@ namespace Test {
 		IUIPopoverPresentationControllerDelegate Delegate { get; set; }
 	}
 
-	public interface IUIPopoverPresentationControllerDelegate {}
+	public interface IUIPopoverPresentationControllerDelegate { }
 
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
