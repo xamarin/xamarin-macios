@@ -392,6 +392,28 @@ namespace Speech {
 		void PrepareCustomModel (NSUrl asset, string clientIdentifier, SFSpeechLanguageModelConfiguration configuration, bool ignoresCache, Action<NSError> completion);
 	}
 
+
+	[NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+#if !XAMCORE_5_0
+	enum SFAnalysisContextTagEnum
+#else
+	enum SFAnalysisContextTag
+#endif
+	{
+		[Field ("SFAnalysisContextTagLeftContext")]
+		LeftContext,
+
+		[Field ("SFAnalysisContextTagRightContext")]
+		RightContext,
+
+		[Field ("SFAnalysisContextTagSelectedText")]
+		SelectedText,
+	}
+
+#if !XAMCORE_5_0
+	[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Not present on macOS.")]
+	[Obsoleted (PlatformName.iOS, 17, 0, message: "Use SFAnalysisContextTagEnum instead.")]
+	[Obsoleted (PlatformName.MacCatalyst, 17, 0, message: "Use SFAnalysisContextTagEnum instead.")]
 	[Partial]
 	[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
 	interface SFAnalysisContextTag {
@@ -404,4 +426,6 @@ namespace Speech {
 		[Field ("SFAnalysisContextTagSelectedText")]
 		NSString SelectedText { get; }
 	}
+#endif
+
 }
