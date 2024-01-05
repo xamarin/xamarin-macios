@@ -9,6 +9,7 @@ DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET_DIR)/template-packs
 TMP_PKG_DIR=_pkg
 
 DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
+DOTNET_PLATFORMS_LOWERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr A-Z a-z)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
@@ -387,11 +388,9 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARG
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
 
 install-system-$(3): $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
-	$(Q) echo "Installing $$<..."
-	$(Q) sudo installer -pkg "$$<" -target / $$(INSTALLER_VERBOSITY)
-	$(Q) echo "Installed $$<"
-	$(Q) echo "Execute this in the project directory to be built for NuGet to find the runtime packs:"
-	$(Q) echo "    nuget sources add -Name local-macios-packages -ConfigFile NuGet.config -Source file://$(abspath $(DOTNET_NUPKG_DIR))"
+	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
+	$(Q) cd $(HOME) && sudo dotnet workload remove $(3)
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(3) -v diag
 
 INSTALL_SYSTEM_PACKAGE_TARGETS += install-system-$(3)
 endef
@@ -498,10 +497,9 @@ clean-templates:
 	$(Q) rm -f -- $(TEMPLATE_PACKS)
 
 install-system:
-	@# We don't want to execute these in parallel
-	@for target in $(INSTALL_SYSTEM_PACKAGE_TARGETS); do \
-		$(MAKE) $$target; \
-	done
+	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
+	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
