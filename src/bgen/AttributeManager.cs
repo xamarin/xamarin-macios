@@ -14,13 +14,13 @@ public class AttributeManager {
 
 	readonly Dictionary<System.Type, Type> typeLookup = new ();
 
-	readonly HashSet<string> ignoredAttributes = new() {
+	readonly HashSet<string> ignoredAttributes = new () {
 		"Microsoft.CodeAnalysis.EmbeddedAttribute",
 		"System.Runtime.CompilerServices.NullableAttribute",
 		"System.Runtime.CompilerServices.NullableContextAttribute",
 		"System.Runtime.CompilerServices.NativeIntegerAttribute",
 	};
-		
+
 	TypeCache TypeCache { get; }
 
 	public AttributeManager (TypeCache typeCache)
