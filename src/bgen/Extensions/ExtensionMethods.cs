@@ -120,25 +120,17 @@ public static class ReflectionExtensions {
 
 	public static bool IsInternal (this MemberInfo mi, Generator generator)
 	{
-		return generator.AttributeManager.HasAttribute<InternalAttribute> (mi)
-			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
-	}
-
-	public static bool IsUnifiedInternal (this MemberInfo mi, Generator generator)
-	{
-		return (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi));
+		return generator.AttributeManager.HasAttribute<InternalAttribute> (mi);
 	}
 
 	public static bool IsInternal (this PropertyInfo pi, Generator generator)
 	{
-		return generator.AttributeManager.HasAttribute<InternalAttribute> (pi)
-			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (pi));
+		return generator.AttributeManager.HasAttribute<InternalAttribute> (pi);
 	}
 
 	public static bool IsInternal (this Type type, Generator generator)
 	{
-		return generator.AttributeManager.HasAttribute<InternalAttribute> (type)
-			|| (generator.AttributeManager.HasAttribute<UnifiedInternalAttribute> (type));
+		return generator.AttributeManager.HasAttribute<InternalAttribute> (type);
 	}
 
 	public static List<MethodInfo> GatherMethods (this Type type, BindingFlags flags, Generator generator)
