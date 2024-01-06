@@ -40,6 +40,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string ResourceDirectory { get; set; } = string.Empty;
 
 		[Required]
+		public string XpcServicesDirectory { get; set; } = string.Empty;
+
+		[Required]
 		public ITaskItem []? ResolvedFileToPublish { get; set; }
 
 		[Output]
@@ -136,6 +139,13 @@ namespace Xamarin.MacDev.Tasks {
 					break;
 				case PublishFolderType.CompressedPlugIns:
 					relativePath = PlugInsDirectory;
+					virtualProjectPath = string.Empty;
+					break;
+				case PublishFolderType.XpcServices:
+					relativePath = XpcServicesDirectory;
+					break;
+				case PublishFolderType.CompressedXpcServices:
+					relativePath = XpcServicesDirectory;
 					virtualProjectPath = string.Empty;
 					break;
 				case PublishFolderType.RootDirectory:

@@ -4,6 +4,9 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 #if MONOMAC || __MACCATALYST__

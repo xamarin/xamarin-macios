@@ -2472,11 +2472,11 @@ namespace AVFoundation {
 		[Field ("AVAudioSessionPortVirtual")]
 		NSString PortVirtual { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionLocationUpper")]
-		NSString LocationUpper { get; }
+		[Internal, Field ("AVAudioSessionLocationUpper")]
+		NSString LocationUpper_ { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionLocationLower")]
-		NSString LocationLower { get; }
+		[Internal, Field ("AVAudioSessionLocationLower")]
+		NSString LocationLower_ { get; }
 
 		[NoMac]
 		[MacCatalyst (13, 1)]
@@ -2560,17 +2560,17 @@ namespace AVFoundation {
 		[Export ("maximumOutputNumberOfChannels")]
 		nint MaximumOutputNumberOfChannels { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionOrientationTop")]
-		NSString OrientationTop { get; }
+		[Internal, Field ("AVAudioSessionOrientationTop")]
+		NSString OrientationTop_ { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionOrientationBottom")]
-		NSString OrientationBottom { get; }
+		[Internal, Field ("AVAudioSessionOrientationBottom")]
+		NSString OrientationBottom_ { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionOrientationFront")]
-		NSString OrientationFront { get; }
+		[Internal, Field ("AVAudioSessionOrientationFront")]
+		NSString OrientationFront_ { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionOrientationBack")]
-		NSString OrientationBack { get; }
+		[Internal, Field ("AVAudioSessionOrientationBack")]
+		NSString OrientationBack_ { get; }
 
 		[MacCatalyst (13, 1)]
 		[Field ("AVAudioSessionOrientationLeft")]
@@ -2580,14 +2580,14 @@ namespace AVFoundation {
 		[Field ("AVAudioSessionOrientationRight")]
 		NSString OrientationRight { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionPolarPatternOmnidirectional")]
-		NSString PolarPatternOmnidirectional { get; }
+		[Internal, Field ("AVAudioSessionPolarPatternOmnidirectional")]
+		NSString PolarPatternOmnidirectional_ { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionPolarPatternCardioid")]
-		NSString PolarPatternCardioid { get; }
+		[Internal, Field ("AVAudioSessionPolarPatternCardioid")]
+		NSString PolarPatternCardioid_ { get; }
 
-		[UnifiedInternal, Field ("AVAudioSessionPolarPatternSubcardioid")]
-		NSString PolarPatternSubcardioid { get; }
+		[Internal, Field ("AVAudioSessionPolarPatternSubcardioid")]
+		NSString PolarPatternSubcardioid_ { get; }
 
 		[NoWatch, NoTV, NoMac, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
@@ -2786,23 +2786,23 @@ namespace AVFoundation {
 
 		[NoWatch]
 		[MacCatalyst (13, 1)]
-		[UnifiedInternal, Export ("supportedPolarPatterns"), NullAllowed]
-		NSString [] SupportedPolarPatterns { get; }
+		[Internal, Export ("supportedPolarPatterns"), NullAllowed]
+		NSString [] SupportedPolarPatterns_ { get; }
 
 		[NoWatch]
 		[MacCatalyst (13, 1)]
-		[UnifiedInternal, Export ("selectedPolarPattern", ArgumentSemantic.Copy), NullAllowed]
-		NSString SelectedPolarPattern { get; }
+		[Internal, Export ("selectedPolarPattern", ArgumentSemantic.Copy), NullAllowed]
+		NSString SelectedPolarPattern_ { get; }
 
 		[NoWatch]
 		[MacCatalyst (13, 1)]
-		[UnifiedInternal, Export ("preferredPolarPattern", ArgumentSemantic.Copy), NullAllowed]
-		NSString PreferredPolarPattern { get; }
+		[Internal, Export ("preferredPolarPattern", ArgumentSemantic.Copy), NullAllowed]
+		NSString PreferredPolarPattern_ { get; }
 
 		[NoWatch]
 		[MacCatalyst (13, 1)]
-		[UnifiedInternal, Export ("setPreferredPolarPattern:error:")]
-		bool SetPreferredPolarPattern ([NullAllowed] NSString pattern, out NSError outError);
+		[Internal, Export ("setPreferredPolarPattern:error:")]
+		bool SetPreferredPolarPattern_ ([NullAllowed] NSString pattern, out NSError outError);
 
 	}
 
