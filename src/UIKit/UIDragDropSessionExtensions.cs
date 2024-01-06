@@ -13,6 +13,9 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public static class UIDragDropSessionExtensions {

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 
 	public static class TypeConverter {

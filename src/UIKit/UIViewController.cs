@@ -20,6 +20,9 @@ using iAd;
 using ObjCRuntime;
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UIViewController : IEnumerable {
 
