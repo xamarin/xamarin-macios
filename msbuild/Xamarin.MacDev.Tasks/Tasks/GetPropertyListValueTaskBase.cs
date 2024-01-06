@@ -10,7 +10,7 @@ using Xamarin.Localization.MSBuild;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class GetPropertyListValueTaskBase : Task {
+	public class GetPropertyListValue : Task {
 		#region Inputs
 
 		[Required]

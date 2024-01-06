@@ -36,6 +36,9 @@ using UIKit;
 
 using CoreText;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSMutableAttributedString {

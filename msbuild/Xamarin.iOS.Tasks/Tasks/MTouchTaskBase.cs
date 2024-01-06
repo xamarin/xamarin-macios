@@ -303,7 +303,7 @@ namespace Xamarin.iOS.Tasks {
 			}
 
 			gcc.BuildNativeReferenceFlags (Log, NativeReferences);
-			gcc.Arguments.AddQuoted (LinkNativeCodeTaskBase.GetEmbedEntitlementsInExecutableLinkerFlags (CompiledEntitlements));
+			gcc.Arguments.AddQuoted (LinkNativeCode.GetEmbedEntitlementsInExecutableLinkerFlags (CompiledEntitlements));
 
 			foreach (var framework in gcc.Frameworks)
 				args.AddQuotedLine ($"--framework={Path.GetFullPath (framework)}");

@@ -48,8 +48,12 @@ $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/bgen: bgen/bgen.dotnet | $(DO
 $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll: $(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib
 	$$(Q) $$(CP) $$< $$@
 	$$(Q) $$(CP) $$(<:.dll=.pdb) $$(@:.dll=.pdb)
+
+dotnet-$(2):: $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/bgen/bgen
+dotnet-$(2):: $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/bin/bgen
+dotnet-$(2):: $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/lib/Xamarin.Apple.BindingAttributes.dll
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BGenTargets,$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BGenTargets,$(platform),$(shell echo $(platform) | tr '[:upper:]' '[:lower:]'))))
 
 DOTNET_TARGETS += \
 	$(DOTNET_BUILD_DIR)/bgen/bgen \

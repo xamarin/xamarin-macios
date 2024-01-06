@@ -1,4 +1,36 @@
 # the following are binded manualy as NativeObject
+!missing-protocol! OS_nw_advertise_descriptor not bound
+!missing-protocol! OS_nw_browse_descriptor not bound
+!missing-protocol! OS_nw_browse_result not bound
+!missing-protocol! OS_nw_browser not bound
+!missing-protocol! OS_nw_connection not bound
+!missing-protocol! OS_nw_connection_group not bound
+!missing-protocol! OS_nw_content_context not bound
+!missing-protocol! OS_nw_data_transfer_report not bound
+!missing-protocol! OS_nw_endpoint not bound
+!missing-protocol! OS_nw_error not bound
+!missing-protocol! OS_nw_establishment_report not bound
+!missing-protocol! OS_nw_ethernet_channel not bound
+!missing-protocol! OS_nw_framer not bound
+!missing-protocol! OS_nw_group_descriptor not bound
+!missing-protocol! OS_nw_interface not bound
+!missing-protocol! OS_nw_listener not bound
+!missing-protocol! OS_nw_object not bound
+!missing-protocol! OS_nw_parameters not bound
+!missing-protocol! OS_nw_path not bound
+!missing-protocol! OS_nw_path_monitor not bound
+!missing-protocol! OS_nw_privacy_context not bound
+!missing-protocol! OS_nw_protocol_definition not bound
+!missing-protocol! OS_nw_protocol_metadata not bound
+!missing-protocol! OS_nw_protocol_options not bound
+!missing-protocol! OS_nw_protocol_stack not bound
+!missing-protocol! OS_nw_proxy_config not bound
+!missing-protocol! OS_nw_relay_hop not bound
+!missing-protocol! OS_nw_resolution_report not bound
+!missing-protocol! OS_nw_resolver_config not bound
+!missing-protocol! OS_nw_txt_record not bound
+!missing-protocol! OS_nw_ws_request not bound
+!missing-protocol! OS_nw_ws_response not bound
 
 
 # no need, please see comment: https://github.com/xamarin/xamarin-macios/pull/4251#issuecomment-410815837

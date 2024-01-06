@@ -1174,6 +1174,8 @@ $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll: $($(2)_DOTNET_CORE_SOURCES) frameworks.s
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
 		$($(2)_CORE_DEFINES) \
 		$($(2)_DOTNET_CORE_SOURCES) \
+		-nullable+ \
+		-warnaserror:nullable \
 		-out:$$@
 
 $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources: $(DOTNET_GENERATOR) $($(2)_DOTNET_APIS) $($(2)_DOTNET_BUILD_DIR)/core-$(3).dll $(DOTNET_BINDING_ATTRIBUTES) $($(2)_DOTNET_BUILD_DIR)/$(3).rsp | $($(2)_DOTNET_BUILD_DIR)/generated-sources
@@ -1192,12 +1194,12 @@ $($(2)_DOTNET_BUILD_DIR)/$(3).rsp: Makefile Makefile.generator frameworks.source
 		@$(RSP_DIR)/dotnet/$(3)-defines-dotnet.rsp \
 		> $$@
 
-DOTNET_TARGETS += \
+DOTNET_TARGETS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll \
 	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll \
 	$(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml \
 
-DOTNET_TARGETS_DIRS += \
+DOTNET_TARGETS_DIRS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR) \
 	$($(2)_DOTNET_BUILD_DIR)/generated-sources \
 	$($(2)_DOTNET_BUILD_DIR)/ref \
@@ -1220,9 +1222,20 @@ $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll: $
 $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml | $(DOTNET_DESTDIR)/$($(2)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)
 	$(Q) $(CP) $$< $$@
 
-$($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll | $($(2)_DOTNET_BUILD_DIR)/doc
-	$$(Q_GEN) $(TOP)/tools/add-apple-links-to-docs.sh --assembly $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll --input $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml --output $$@
+$($(2)_DOTNET_BUILD_DIR)/doc/Microsoft.$(1).xml: $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll build/.build-adr-stamp | $($(2)_DOTNET_BUILD_DIR)/doc
+ifdef ENABLE_XAMARIN
+	$(MAKE) run -C $(MACCORE_PATH)/tools/apple-doc-reader ASSEMBLY="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).dll)" INPUT="$(abspath $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml)" OUTPUT="$(abspath $$@)"
+else
+	$$(Q) $$(CP) $($(2)_DOTNET_BUILD_DIR)/ref/Microsoft.$(1).xml $$@
+endif
 endef
+
+build/.build-adr-stamp:
+ifdef ENABLE_XAMARIN
+	$(Q) $(MAKE) build -C $(MACCORE_PATH)/tools/apple-doc-reader
+	$(Q) $(MAKE) create -C $(MACCORE_PATH)/tools/apple-doc-reader
+endif
+	$(Q) touch $@
 
 # Template variables:
 # 1: Platform (correct case)
@@ -1271,18 +1284,19 @@ $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1)%dll $($(2)_DOTNET_BUILD_DIR)/$(4)/M
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
 		-res:$($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		-warnaserror:$(NULLABILITY_WARNINGS) \
+		-nullable+ \
 		$$($(2)_DOTNET_SOURCES) \
 		@$($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources \
 		-out:$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
 
 dotnet-$(3):: $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll
 
-DOTNET_TARGETS += \
+DOTNET_TARGETS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).dll \
 	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).dll) \
 	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb) \
 
-DOTNET_TARGETS_DIRS += \
+DOTNET_TARGETS_DIRS_$(3) += \
 	$($(2)_DOTNET_BUILD_DIR)/$(4) \
 	$(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
 
@@ -1291,6 +1305,11 @@ $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)
 
 $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM)/Microsoft.$(1).pdb): $($(2)_DOTNET_BUILD_DIR)/$(4)/Microsoft.$(1).pdb | $(foreach rid,$(DOTNET_$(2)_RUNTIME_IDENTIFIERS_$(4)),$(DOTNET_DESTDIR)/$($(rid)_NUGET_RUNTIME_NAME)/runtimes/$(rid)/lib/$(DOTNET_TFM))
 	$(Q) $(CP) $$< $$@
+
+DOTNET_TARGETS += $$(DOTNET_TARGETS_$(3))
+DOTNET_TARGETS_DIRS += $$(DOTNET_TARGETS_DIRS_$(3))
+
+dotnet-$(3):: $$(DOTNET_TARGETS_$(3))
 
 endef
 
