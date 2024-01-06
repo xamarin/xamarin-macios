@@ -246,14 +246,17 @@ public class InternalAttribute : Attribute {
 	public InternalAttribute () { }
 }
 
+#if !XAMCORE_5_0
 // This is a conditional "Internal" method, that flags methods as internal only when
 // compiling with Unified, otherwise, this is ignored.
 //
 // In addition, UnifiedInternal members automatically get an underscore after their name
 // so [UnifiedInternal] void Foo(); becomes "Foo_()"
+[Obsolete ("This attribute no longer has any effect; do no use")]
 public class UnifiedInternalAttribute : Attribute {
 	public UnifiedInternalAttribute () { }
 }
+#endif
 
 // When applied to a method or property, flags the resulting generated code as internal
 public sealed class ProtectedAttribute : Attribute {

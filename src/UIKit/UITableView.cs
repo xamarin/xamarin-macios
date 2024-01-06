@@ -13,6 +13,9 @@ using MapKit;
 using UIKit;
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UITableView {
 		public UITableViewSource Source {

@@ -6,10 +6,12 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Messaging.Build.Client;
+
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class GetFileSystemEntriesTaskBase : XamarinTask {
+	public class GetFileSystemEntries : XamarinTask, ICancelableTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -38,6 +40,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var searchOption = Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 			var entries = new List<ITaskItem> ();
 			foreach (var item in DirectoryPath) {
@@ -60,5 +65,43 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (!CopyFromWindows)
+				return Enumerable.Empty<ITaskItem> ();
+
+			// TaskRunner doesn't know how to copy directories to Mac, so list each file.
+			var rv = new List<string> ();
+			foreach (var path in DirectoryPath) {
+				var spec = path.ItemSpec;
+				if (!Directory.Exists (spec))
+					continue;
+
+				var files = Directory.GetFiles (spec, "*", SearchOption.AllDirectories);
+				foreach (var file in files) {
+					// Only copy non-empty files, so that we don't end up
+					// copying an empty file that happens to be an output file
+					// from a previous target (and thus overwriting that file
+					// on Windows).
+					var finfo = new FileInfo (file);
+					if (!finfo.Exists || finfo.Length == 0)
+						continue;
+					rv.Add (file);
+				}
+			}
+
+			return rv.Select (f => new TaskItem (f));
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
 	}
 }

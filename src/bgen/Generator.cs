@@ -1046,7 +1046,7 @@ public partial class Generator : IMemberGatherer {
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"{0}\")]", entry_point);
 		}
 
-		var returnType = need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi), true);
+		var returnType = (need_stret && aligned) ? "void" : ParameterGetMarshalType (new MarshalInfo (this, mi), true);
 		if (returnType == "bool")
 			returnType = "byte";
 		else if (returnType == "char")
@@ -1054,7 +1054,7 @@ public partial class Generator : IMemberGatherer {
 
 		print (m, "\t\tpublic unsafe extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
 			   returnType, method_name, b.ToString (),
-			   need_stret ? (aligned ? "IntPtr" : TypeManager.FormatTypeUsedIn ("ObjCRuntime", mi.ReturnType)) + "* retval, " : "");
+			   (need_stret && aligned) ? "IntPtr* retval, " : "");
 	}
 
 	bool IsNativeEnum (Type type)
@@ -1399,7 +1399,7 @@ public partial class Generator : IMemberGatherer {
 						selector = ba.Selector;
 					} else if (attr is StaticAttribute) {
 						continue;
-					} else if (attr is InternalAttribute || attr is UnifiedInternalAttribute || attr is ProtectedAttribute) {
+					} else if (attr is InternalAttribute || attr is ProtectedAttribute) {
 						continue;
 					} else if (attr is NeedsAuditAttribute) {
 						continue;
@@ -2698,7 +2698,6 @@ public partial class Generator : IMemberGatherer {
 
 			sb.Append (" ");
 		}
-		// Unified internal methods automatically get a _ appended
 		if (minfo.is_extension_method && minfo.Method.IsSpecialName) {
 			if (name.StartsWith ("get_", StringComparison.Ordinal))
 				name = "Get" + name.Substring (4);
@@ -2706,8 +2705,6 @@ public partial class Generator : IMemberGatherer {
 				name = "Set" + name.Substring (4);
 		}
 		sb.Append (name);
-		if (minfo.is_unified_internal)
-			sb.Append ("_");
 		sb.Append (" (");
 
 		bool comma = false;
@@ -2959,15 +2956,14 @@ public partial class Generator : IMemberGatherer {
 		if (ShouldMarshalNativeExceptions (mi))
 			args += ", &exception_gchandle";
 
-		if (stret) {
-			string ret_val = aligned ? "(IntPtr*) aligned_ret" : "&ret";
+		if (stret && aligned) {
+			var ret_val = "(IntPtr*) aligned_ret";
 			if (minfo.is_static)
 				print ("{0} ({5}, class_ptr, {3}{4});", sig, "/*unusued*/", "/*unusued*/", selector_field, args, ret_val);
 			else
 				print ("{0} ({5}, {1}{2}, {3}{4});", sig, target_name, handle, selector_field, args, ret_val);
 
-			if (aligned)
-				print ("aligned_assigned = true;");
+			print ("aligned_assigned = true;");
 		} else {
 			bool returns = mi.ReturnType != TypeCache.System_Void && mi.Name != "Constructor";
 			string cast_a = "", cast_b = "";
@@ -3863,7 +3859,6 @@ public partial class Generator : IMemberGatherer {
 		string wrap;
 		var export = GetExportAttribute (pi, out wrap);
 		var minfo = new MemberInformation (this, this, pi, type, is_interface_impl);
-		bool use_underscore = minfo.is_unified_internal;
 		var mod = minfo.GetVisibility ();
 		Type inlinedType = pi.DeclaringType == type ? null : type;
 		minfo.protocolize = Protocolize (pi);
@@ -3899,13 +3894,12 @@ public partial class Generator : IMemberGatherer {
 			print_generated_code ();
 			PrintPropertyAttributes (pi, minfo.type);
 			PrintAttributes (pi, preserve: true, advice: true);
-			print ("{0} {1}{2}{3} {4}{5} {{",
+			print ("{0} {1}{2}{3} {4} {{",
 				   mod,
 				   minfo.GetModifiers (),
 				   (minfo.protocolize ? "I" : "") + TypeManager.FormatType (pi.DeclaringType, pi.PropertyType),
 				   nullable ? "?" : String.Empty,
-					pi.Name.GetSafeParamName (),
-				   use_underscore ? "_" : "");
+					pi.Name.GetSafeParamName ());
 			indent++;
 			if (generate_getter) {
 #if !NET
@@ -3996,13 +3990,12 @@ public partial class Generator : IMemberGatherer {
 			propertyTypeName = TypeManager.FormatType (pi.DeclaringType, pi.PropertyType);
 		}
 
-		print ("{0} {1}{2}{3} {4}{5} {{",
+		print ("{0} {1}{2}{3} {4} {{",
 			   mod,
 			   minfo.GetModifiers (),
 			   propertyTypeName,
 				nullable ? "?" : "",
-				pi.Name.GetSafeParamName (),
-			   use_underscore ? "_" : "");
+				pi.Name.GetSafeParamName ());
 		indent++;
 
 		if (minfo.has_inner_wrap_attribute) {
@@ -5895,8 +5888,6 @@ public partial class Generator : IMemberGatherer {
 					var fieldAttr = AttributeManager.GetCustomAttribute<FieldAttribute> (field_pi);
 					ComputeLibraryName (fieldAttr, type, field_pi.Name, out string library_name, out string library_path);
 
-					bool is_unified_internal = field_pi.IsUnifiedInternal (this);
-
 					string fieldTypeName;
 					string smartEnumTypeName = null;
 					if (IsSmartEnum (field_pi.PropertyType)) {
@@ -5924,11 +5915,10 @@ public partial class Generator : IMemberGatherer {
 					if (AttributeManager.HasAttribute<NotificationAttribute> (field_pi))
 						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 
-					print ("{0} static {1}{2} {3}{4} {{", field_pi.IsInternal (this) ? "internal" : "public",
+					print ("{0} static {1}{2} {3} {{", field_pi.IsInternal (this) ? "internal" : "public",
 						smartEnumTypeName ?? fieldTypeName,
 						nullable ? "?" : "",
-						field_pi.Name,
-						is_unified_internal ? "_" : "");
+						field_pi.Name);
 					indent++;
 
 					PrintAttributes (field_pi, platform: true);
@@ -6106,6 +6096,8 @@ public partial class Generator : IMemberGatherer {
 					string delName = bta.Delegates [delidx++];
 					delName = delName.StartsWith ("Weak", StringComparison.Ordinal) ? delName.Substring (4) : delName;
 
+					var isWeakBacked = HasProperty (type, "Weak" + delName);
+
 					// Here's the problem:
 					//    If you have two or more types in an inheritence structure in the binding that expose events
 					//    they can fight over who's generated delegate gets used if you use the events at both level.
@@ -6159,7 +6151,7 @@ public partial class Generator : IMemberGatherer {
 
 					print ("{"); indent++;
 
-					if (isProtocolEventBacked) {
+					if (isProtocolEventBacked && isWeakBacked) {
 						// If our delegate not null and it isn't the same type as our property
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
@@ -6688,6 +6680,18 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	// Searches base types as well
+	bool HasProperty (Type type, string propertyName)
+	{
+		while (type is not null) {
+			if (type.GetProperty (propertyName) is not null)
+				return true;
+			var bta = ReflectionExtensions.GetBaseTypeAttribute (type, this);
+			type = bta?.BaseType;
+		}
+		return false;
+	}
+
 	static string GetDelegateTypePropertyName (string delName)
 	{
 		return "GetInternalEvent" + delName + "Type";
@@ -6738,7 +6742,17 @@ public partial class Generator : IMemberGatherer {
 				return false;
 		}
 
-		return (Protocolize (pi) || IsProtocolInterface (pi.DeclaringType)) && bta.Events is not null && bta.Events.Any (x => x.Name == pi.PropertyType.Name);
+		if (bta.Events is null)
+			return false;
+
+		Type protocolType;
+		if (Protocolize (pi)) {
+			protocolType = pi.PropertyType;
+		} else if (!IsProtocolInterface (pi.DeclaringType, true, out protocolType)) {
+			return false;
+		}
+
+		return bta.Events.Any (x => x.Name == protocolType.Name);
 	}
 
 	string FindSelector (Type type, MethodInfo mi)
@@ -6770,6 +6784,8 @@ public partial class Generator : IMemberGatherer {
 		if (shouldOverride) {
 			Type parentType = GetParentTypeWithSameNamedDelegate (bta, delName);
 			PropertyInfo parentProperty = parentType.GetProperty (delName);
+			if (IsProtocolInterface (parentProperty.PropertyType))
+				return parentProperty.PropertyType.Name.Substring (1);
 			return parentProperty.PropertyType.Name;
 		}
 		return currentTypeName;

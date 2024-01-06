@@ -14,7 +14,6 @@ public class MemberInformation {
 	public readonly bool is_abstract;
 	public readonly bool is_protected;
 	public readonly bool is_internal;
-	public readonly bool is_unified_internal;
 	public readonly bool is_override;
 	public readonly bool is_new;
 	public readonly bool is_sealed;
@@ -57,7 +56,6 @@ public class MemberInformation {
 		is_abstract = AttributeManager.HasAttribute<AbstractAttribute> (mi) && mi.DeclaringType == type;
 		is_protected = AttributeManager.HasAttribute<ProtectedAttribute> (mi);
 		is_internal = mi.IsInternal (generator);
-		is_unified_internal = AttributeManager.HasAttribute<UnifiedInternalAttribute> (mi);
 		is_override = AttributeManager.HasAttribute<OverrideAttribute> (mi) || !Generator.MemberBelongsToType (mi.DeclaringType, type);
 		is_new = AttributeManager.HasAttribute<NewAttribute> (mi);
 		is_sealed = AttributeManager.HasAttribute<SealedAttribute> (mi);
