@@ -48,7 +48,7 @@
 
 	</Target>
 
-	<Target Name="_CollectHotRestartBundleContent" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns">
+	<Target Name="_CollectHotRestartBundleContent" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns;_CollectDecompressedXpcServices">
 		<!-- Collect everything to put in the app bundle, except static frameworks -->
 		<FilterStaticFrameworks
 			OnlyFilterFrameworks="true"

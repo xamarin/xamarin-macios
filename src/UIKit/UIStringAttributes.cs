@@ -37,6 +37,9 @@ using CoreGraphics;
 using CoreText;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public class UIStringAttributes : DictionaryContainer {

@@ -29,6 +29,9 @@ using System.Diagnostics;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 #if NET

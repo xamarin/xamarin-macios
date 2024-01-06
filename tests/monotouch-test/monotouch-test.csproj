@@ -296,6 +296,7 @@
     <BundleResource Include="compressed_zip" />
     <BundleResource Include="example.pac" />
     <BundleResource Include="Resources\square.gif" />
+    <BundleResource Include="Resources\full_body.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
