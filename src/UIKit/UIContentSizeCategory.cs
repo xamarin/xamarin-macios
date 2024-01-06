@@ -41,8 +41,7 @@ namespace UIKit {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool UIContentSizeCategoryIsAccessibilityCategory (IntPtr /* NSString */ category);
+		static extern byte UIContentSizeCategoryIsAccessibilityCategory (IntPtr /* NSString */ category);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -55,7 +54,7 @@ namespace UIKit {
 			if (c1 is null)
 				throw new ArgumentException ($"Unknown 'UIContentSizeCategory' value");
 
-			return UIContentSizeCategoryIsAccessibilityCategory (c1.Handle);
+			return UIContentSizeCategoryIsAccessibilityCategory (c1.Handle) != 0;
 		}
 	}
 }

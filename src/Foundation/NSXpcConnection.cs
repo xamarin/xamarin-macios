@@ -22,6 +22,9 @@
 using System;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSXpcConnection : NSObject {
 		public TProtocol CreateRemoteObjectProxy<TProtocol> ()

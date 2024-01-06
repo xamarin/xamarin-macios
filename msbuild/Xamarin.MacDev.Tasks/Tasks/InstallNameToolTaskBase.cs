@@ -1,15 +1,18 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.Build.Framework;
+
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class InstallNameToolTaskBase : XamarinTask {
+	public class InstallNameTool : XamarinTask, ITaskCallback {
 		[Required]
 		public ITaskItem [] DynamicLibrary { get; set; }
 
@@ -23,6 +26,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var processes = new Task [DynamicLibrary.Length];
 			ReidentifiedDynamicLibrary = new ITaskItem [DynamicLibrary.Length];
 
@@ -61,5 +67,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

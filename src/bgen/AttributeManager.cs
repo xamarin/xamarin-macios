@@ -212,8 +212,6 @@ public class AttributeManager {
 			return typeof (ThreadSafeAttribute);
 		case "TransientAttribute":
 			return typeof (TransientAttribute);
-		case "UnifiedInternalAttribute":
-			return typeof (UnifiedInternalAttribute);
 		case "Visibility":
 			return typeof (Visibility);
 		case "WrapAttribute":

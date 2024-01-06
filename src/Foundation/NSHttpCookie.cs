@@ -23,6 +23,9 @@ using ObjCRuntime;
 using System;
 using System.Net;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSHttpCookie {
 		// same order as System.Net.Cookie

@@ -11,6 +11,9 @@ using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public class UIFontAttributes : DictionaryContainer {

@@ -29,6 +29,9 @@ using UIKit;
 #endif
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 	// iOS versions are stored in the lower 4 bytes an Mac versions in
 	// the higher 4 bytes. Each 4 byte version has the format AAJJNNSS

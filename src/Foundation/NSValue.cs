@@ -31,6 +31,9 @@ using System.Runtime.InteropServices;
 
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSValue : NSObject {
 #if !COREBUILD

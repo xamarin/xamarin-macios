@@ -10,6 +10,9 @@ using Registrar;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public class Framework {
 	public string Namespace;
 	public string Name; // this is the name to pass to the linker when linking. This can be an umbrella framework.

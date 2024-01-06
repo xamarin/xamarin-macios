@@ -19,6 +19,9 @@ using View = AppKit.NSView;
 using View = UIKit.UIView;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 #if MONOMAC
 namespace AppKit
 #else
