@@ -62,9 +62,9 @@ namespace Xamarin.Tests {
 			return Execute ("restore", project, properties, false);
 		}
 
-		public static ExecutionResult AssertBuild (string project, Dictionary<string, string>? properties = null)
+		public static ExecutionResult AssertBuild (string project, Dictionary<string, string>? properties = null, TimeSpan? timeout = null, bool? quiet = null)
 		{
-			return Execute ("build", project, properties, true);
+			return Execute ("build", project, properties, true, timeout: timeout, quiet: quiet);
 		}
 
 		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string>? properties = null)
@@ -113,7 +113,7 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null, TimeSpan? timeout = null, bool? quiet = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -188,7 +188,8 @@ namespace Xamarin.Tests {
 
 				// Work around https://github.com/dotnet/msbuild/issues/8845
 				args.Add ("/v:diag");
-				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+				if (quiet != false)
+					args.Add ("/consoleloggerparameters:Verbosity=Quiet");
 				// vb does not have preview lang, so we force it to latest
 				if (project.EndsWith (".vbproj", StringComparison.OrdinalIgnoreCase))
 					args.Add ("/p:LangVersion=latest");
@@ -206,7 +207,8 @@ namespace Xamarin.Tests {
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
 				var output = new StringBuilder ();
-				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
+				timeout ??= TimeSpan.FromMinutes (10);
+				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: timeout).Result;
 				if (assert_success && rv.ExitCode != 0) {
 					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
