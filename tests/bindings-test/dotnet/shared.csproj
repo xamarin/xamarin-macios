@@ -10,6 +10,14 @@
     <RootTestsDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\..\..'))</RootTestsDirectory>
     <BindingsTestDirectory>$(RootTestsDirectory)\bindings-test</BindingsTestDirectory>
     <TestLibrariesDirectory>$(RootTestsDirectory)\test-libraries</TestLibrariesDirectory>
+
+    <!-- warning CS8981: The type name 'pfloat' only contains lower-cased ascii characters. Such names may become reserved for the language. -->
+    <!-- if this one becomes a problem we can easily fix it with a search&replace -->
+    <NoWarn>$(NoWarn);CS8981</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />

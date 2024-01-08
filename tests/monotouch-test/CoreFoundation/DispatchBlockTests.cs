@@ -140,6 +140,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				db.Cancel ();
 				Assert.AreNotEqual ((nint) 0, db.TestCancel (), "TestCancel 2");
 				Assert.IsTrue (db.Cancelled, "Cancelled 2");
+				Assert.IsFalse (called, "Called"); // The dispatch block was never submitted to a dispatch queue, so it shouldn't have executed.
 			}
 		}
 

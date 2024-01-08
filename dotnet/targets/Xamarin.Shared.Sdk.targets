@@ -233,6 +233,7 @@
 			_CopyResourcesToBundle;
 			_CompileCoreMLModels;
 			_CreatePkgInfo;
+			_CreateAssetPackManifestMobile;
 			_SmeltMetal;
 			_TemperMetal;
 			_DetectAppManifest;
@@ -272,6 +273,8 @@
 			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
+
+	<Target Name="_CreateAssetPackManifestMobile" Condition="'$(_PlatformName)' != 'macOS'" DependsOnTargets="_CreateAssetPackManifest" />
 
 	<!-- PublishTrimmed must be calculated as part of a target because IsMacEnabled on Windows will be set after connecting to the Mac -->
 	<Target Name="_ComputePublishTrimmed">
@@ -798,7 +801,7 @@
 	</Target>
 
 	<Target Name="_CopyDirectoriesToBundle"
-		DependsOnTargets="_CollectDecompressedPlugins;_ComputeFrameworkFilesToPublish"
+		DependsOnTargets="_CollectDecompressedPlugins;_ComputeFrameworkFilesToPublish;_CollectDecompressedXpcServices"
 		Inputs="@(_DirectoriesToPublish)"
 		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
@@ -1855,6 +1858,7 @@
 			ResolvedFileToPublish="@(ResolvedFileToPublish)"
 			ResourceDirectory="$(_AppResourcesRelativePath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			XpcServicesDirectory="$(_AppXpcServicesRelativePath)"
 		>
 			<Output TaskParameter="UpdatedResolvedFileToPublish" ItemName="_UpdatedResolvedFileToPublish" />
 		</ComputeBundleLocation>
@@ -1880,7 +1884,7 @@
 
 			<!-- plugins are not copied to the app bundle by using the built-in .NET logic of ResolvedFileToPublish due to symlinks -->
 			<_PlugIns Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'PlugIns'" />
-			<_PlugIns Update="@(_PlugIns">
+			<_PlugIns Update="@(_PlugIns)">
 				<!-- Set TargetDirectory and SourceDirectory for all plugins we have to publish -->
 				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)%(RelativePath)</TargetDirectory>
 				<SourceDirectory>%(Identity)</SourceDirectory>
@@ -1892,6 +1896,21 @@
 			<!-- compressed plugins are uncompressed, but the compressed file is not copied to the app bundle -->
 			<_CompressedPlugIns Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedPlugIns'" />
 			<ResolvedFileToPublish Remove="@(_CompressedPlugIns)" />
+
+			<!-- xpc services are not copied to the app bundle by using the built-in .NET logic of ResolvedFileToPublish due to symlinks -->
+			<_XpcServices Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'XpcServices'" />
+			<_XpcServices Update="@(_XpcServices)">
+				<!-- Set TargetDirectory and SourceDirectory for all plugins we have to publish -->
+				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)%(RelativePath)</TargetDirectory>
+				<SourceDirectory>%(Identity)</SourceDirectory>
+			</_XpcServices>
+			<_DirectoriesToPublish Include="@(_XpcServices)" />
+			<!-- Finally remove from ResolvedFileToPublish -->
+			<ResolvedFileToPublish Remove="@(_XpcServices)" />
+
+			<!-- compressed xpc services are uncompressed, but the compressed file is not copied to the app bundle -->
+			<_CompressedXpcServices Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'CompressedXpcServices'" />
+			<ResolvedFileToPublish Remove="@(_CompressedXpcServices)" />
 
 			<!-- we link with static libraries, but we don't copy them to the app bundle -->
 			<_ResolvedFileToPublish_StaticLibrary Include="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.PublishFolderType)' == 'StaticLibrary'" />
@@ -2014,6 +2033,49 @@
 		</ItemGroup>
 	</Target>
 
+	<Target Name="_DecompressXpcServices"
+		Inputs="@(_CompressedXpcServices)"
+		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
+		Outputs="@(_CompressedXpcServices -> '$(_IntermediateDecompressionDir)%(Filename)%(Extension).stamp')"
+		>
+
+		<ItemGroup>
+			<_CompressedXpcServices Update="@(_CompressedXpcServices)">
+				<ExtractionPath>$([MSBuild]::EnsureTrailingSlash('$(_IntermediateDecompressionDir)%(_CompressedXpcServices.Filename)%(_CompressedXpcServices.Extension)'))</ExtractionPath>
+			</_CompressedXpcServices>
+		</ItemGroup>
+
+		<!-- This task is executed from Windows as well when using HotRestart -->
+		<Unzip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
+			ZipFilePath="%(_CompressedXpcServices.Identity)"
+			ExtractionPath="%(_CompressedXpcServices.ExtractionPath)"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Unzip>
+	</Target>
+
+	<Target Name="_CollectDecompressedXpcServices"
+		DependsOnTargets="_DecompressXpcServices"
+		>
+
+		<ItemGroup>
+			<!-- Set TargetDirectory and SourceDirectory for all directories we have to publish -->
+			<_DecompressedXpcServices Include="@(_CompressedXpcServices -> '%(ExtractionPath)')" PublishFolderType="XpcServices" />
+		</ItemGroup>
+		<ItemGroup>
+			<_DecompressedXpcServices Update="@(_DecompressedXpcServices)">
+				<TargetDirectory>$(_RelativePublishDir)$(_RelativeAppBundlePath)$(_AppXpcServicesRelativePath)</TargetDirectory>
+				<SourceDirectory>%(ExtractionPath)</SourceDirectory>
+			</_DecompressedXpcServices>
+		</ItemGroup>
+
+		<ItemGroup>
+			<_DirectoriesToPublish Include="@(_DecompressedXpcServices)" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_VerifyValidOutputType">
 		<Error Text="WinExe is not a valid output type for $(_PlatformName)" Condition="'$(OutputType)' == 'WinExe'"/>
 	</Target>
@@ -2041,6 +2103,8 @@
 		<MlaunchPath Condition="'$(MlaunchPath)' == '' And '$(_MlaunchPath)' != ''">$(_MlaunchPath)</MlaunchPath>
 		<MlaunchPath Condition="'$(MlaunchPath)' == ''">$(_XamarinSdkRootDirectory)tools\bin\mlaunch</MlaunchPath>
 		<_MlaunchPath Condition="'$(_MlaunchPath)' == ''">$(MlaunchPath)</_MlaunchPath>
+		<!-- this is the path to mlaunch relative to the root of the .NET installation -->
+		<_RelativeMlaunchPath Condition="'$(_RelativeMlaunchPath)' == ''">$(_XamarinRelativeSdkRootDirectory)tools\bin\mlaunch</_RelativeMlaunchPath>
 	</PropertyGroup>
 
 	<Target Name="ComputeMlaunchInstallArguments" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName;_DetectAppManifest;_ComputeMlaunchInstallArguments" />

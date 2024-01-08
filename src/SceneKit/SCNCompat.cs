@@ -93,7 +93,7 @@ namespace SceneKit {
 		}
 
 		[Obsolete ("Use 'SCNSceneRenderer_Extensions.PresentSceneAsync' instead.")]
-		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode pointOfView)
+		public unsafe virtual Task PresentSceneAsync (SCNScene scene, global::SpriteKit.SKTransition transition, SCNNode? pointOfView)
 		{
 			return SCNSceneRenderer_Extensions.PresentSceneAsync (this, scene, transition, pointOfView);
 		}

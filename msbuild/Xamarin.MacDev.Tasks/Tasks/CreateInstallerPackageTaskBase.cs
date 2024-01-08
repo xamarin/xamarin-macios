@@ -15,7 +15,7 @@ using Xamarin.Localization.MSBuild;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateInstallerPackageTaskBase : XamarinToolTask {
+	public class CreateInstallerPackage : XamarinToolTask {
 		#region Inputs
 		[Required]
 		public string OutputDirectory { get; set; }

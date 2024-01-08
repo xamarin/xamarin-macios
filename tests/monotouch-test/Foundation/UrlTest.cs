@@ -295,7 +295,9 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			string bad = "Server 1/Custom View/Analog Schedule!@#$%^&&%$#@";
 
+#pragma warning disable SYSLIB0013 // warning SYSLIB0013: 'Uri.EscapeUriString(string)' is obsolete: 'Uri.EscapeUriString can corrupt the Uri string in some cases. Consider using Uri.EscapeDataString for query string components instead.'
 			string bad_url = Uri.EscapeUriString (bad);
+#pragma warning restore
 			if (TestRuntime.CheckXcodeVersion (15, 0)) {
 				using (var url = NSUrl.FromString (bad_url))
 					Assert.NotNull (bad_url, "bad");
@@ -313,7 +315,9 @@ namespace MonoTouchFixtures.Foundation {
 		public void TestEqualOperatorSameInstace ()
 		{
 			using (var url = NSUrl.FromString ("http://www.xamarin.com"))
+#pragma warning disable CS1718 // warning CS1718: Comparison made to same variable; did you mean to compare something else?
 				Assert.IsTrue (url == url);
+#pragma warning restore
 
 		}
 

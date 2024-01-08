@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSDirectoryEnumerator : IEnumerator<NSString>, IEnumerator<string>, IEnumerator {
 		NSObject current;
