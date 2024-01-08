@@ -50,12 +50,16 @@ namespace UIKit {
 		// We link with __Internal here so that this function is interposable from third-party native libraries.
 		// See: https://github.com/xamarin/MicrosoftInTune/issues/3 for an example.
 		[DllImport ("__Internal")]
-		extern static int xamarin_UIApplicationMain (int argc, /* char[]* */ IntPtr argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName, out IntPtr gchandle);
+		unsafe extern static int xamarin_UIApplicationMain (int argc, /* char[]* */ IntPtr argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName, IntPtr* gchandle);
 
 		static int UIApplicationMain (int argc, /* char[]* */ string []? argv, /* NSString* */ IntPtr principalClassName, /* NSString* */ IntPtr delegateClassName)
 		{
 			var strArr = TransientString.AllocStringArray (argv);
-			var rv = xamarin_UIApplicationMain (argc, strArr, principalClassName, delegateClassName, out var gchandle);
+			IntPtr gchandle;
+			int rv;
+			unsafe {
+				rv = xamarin_UIApplicationMain (argc, strArr, principalClassName, delegateClassName, &gchandle);
+			}
 			TransientString.FreeStringArray (strArr, argv?.Length ?? 0);
 			Runtime.ThrowException (gchandle);
 			return rv;
