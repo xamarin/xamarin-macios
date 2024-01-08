@@ -2080,14 +2080,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Items" ItemName="_CodesignAppExtensionBundle" />
 		</ReadItemsFromFile>
 		<ItemGroup>
-			<_CodesignBundle Include="@(_CodesignAppExtensionBundle->'$(_AppBundleName)$(AppBundleExtension)/$(_AppPlugInsRelativePath)%(Identity)')" />
+			<_CodesignBundle Include="@(_CodesignAppExtensionBundle->'$(_AppBundleName)$(AppBundleExtension)/%(BundleRelativePath)%(Identity)')" />
 		</ItemGroup>
 		<!-- Get items to sign from app extensions -->
 		<ReadItemsFromFile File="@(_ResolvedAppExtensionReferences->'%(Identity)\..\codesign.items')" Condition="Exists('%(Identity)\..\codesign.items')">
 			<Output TaskParameter="Items" ItemName="_CodesignAppExtensionItem" />
 		</ReadItemsFromFile>
 		<ItemGroup>
-			<_CodesignItems Include="@(_CodesignAppExtensionItem->'$(_AppBundleName)$(AppBundleExtension)/$(_AppPlugInsRelativePath)%(Identity)')" />
+			<_CodesignItems Include="@(_CodesignAppExtensionItem->'$(_AppBundleName)$(AppBundleExtension)/%(BundleRelativePath)%(Identity)')" />
 		</ItemGroup>
 
 		<!-- Get app bundles to sign from watch apps -->
@@ -2121,6 +2121,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<CodesignUseSecureTimestamp Condition="'%(_CustomCodesignBundle.CodesignUseSecureTimestamp)' == ''">$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
 				<RequireCodeSigning Condition="'%(_CustomCodesignBundle.RequireCodeSigning)' == ''">$(_RequireCodeSigning)</RequireCodeSigning>
 				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+				<BundleRelativePath Condition="'%(_CustomCodesignBundle.BundleRelativePath)' == ''">$(_AppPlugInsRelativePath)</BundleRelativePath>
 			</_CustomCodesignBundle>
 			<_CodesignBundle Include="@(_CustomCodesignBundle)" />
 		</ItemGroup>
@@ -2140,6 +2141,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
 				<RequireCodeSigning>$(_RequireCodeSigning)</RequireCodeSigning>
 				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+				<BundleRelativePath Condition="'$(IsAppExtension)' == 'true' and '$(IsXPCService)' != 'true'">$(_AppPlugInsRelativePath)</BundleRelativePath>
+				<BundleRelativePath Condition="'$(IsAppExtension)' == 'true' and '$(IsXPCService)' == 'true'">$(_AppXpcServicesRelativePath)</BundleRelativePath>
 			</_CodesignBundle>
 
 			<!-- Set the SourceProjectPath metadata on all items that don't have it already -->
@@ -2586,6 +2589,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_PostProcessingItem Include="$([System.IO.Path]::GetFileName('$(AppBundleDir)'))/$(_NativeExecutableRelativePath)" Condition="'$(IsWatchApp)' != 'true'">
 				<SymbolFile>$(_SymbolsListFullPath)</SymbolFile>
 				<DSymName>$(_AppBundleName)$(AppBundleExtension).dSYM</DSymName>
+				<IsXPCService>$(IsXpcService)</IsXPCService>
+				<IsAppExtension>$(IsAppExtension)</IsAppExtension>
 			</_PostProcessingItem>
 
 			<_PostProcessingItem>
@@ -2600,7 +2605,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			</_PostProcessingItem>
 
 			<!-- Add any items from app extensions -->
-			<_PostProcessingItem Include="@(_AppExtensionPostProcessingItems -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppPlugInsRelativePath)%(Identity)')" Condition="@(_AppExtensionPostProcessingItems->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
+			<_PostProcessingAppExtensions Include="@(_AppExtensionPostProcessingItems)" Condition="'%(_AppExtensionPostProcessingItems.IsAppExtension)' == 'true' And '%(_AppExtensionPostProcessingItems.IsXPCService)' != 'true'" />
+			<_PostProcessingXpcServices Include="@(_AppExtensionPostProcessingItems)" Condition="'%(_AppExtensionPostProcessingItems.IsAppExtension)' == 'true' And '%(_AppExtensionPostProcessingItems.IsXPCService)' == 'true'" />
+			<_PostProcessingItem Include="@(_PostProcessingAppExtensions -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppPlugInsRelativePath)%(Identity)')" Condition="@(_PostProcessingAppExtensions->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
+			<_PostProcessingItem Include="@(_PostProcessingXpcServices -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppXpcServicesRelativePath)%(Identity)')" Condition="@(_PostProcessingXpcServices->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
 
 			<!-- Add any items from watch app -->
 			<!-- We must update metadata with paths relative to the root of the app bundle to be relative to the root of the current app bundle -->
@@ -2850,6 +2858,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\PlugIns\</_AppPlugInsRelativePath>
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">PlugIns\</_AppPlugInsRelativePath>
 			<_AppPlugInsPath>$(_AppBundlePath)$(_AppPlugInsRelativePath)</_AppPlugInsPath>
+
+			<_AppXpcServicesRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\XPCServices\</_AppXpcServicesRelativePath>
+			<_AppXpcServicesRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">XPCServices\</_AppXpcServicesRelativePath>
+			<_AppXpcServicesPath>$(_AppBundlePath)$(_AppXpcServicesRelativePath)</_AppXpcServicesPath>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->

@@ -290,6 +290,10 @@ namespace Cecil.Tests {
 
 		bool IsBlittableValueType (AssemblyDefinition assembly, TypeReference type, StringBuilder result, Dictionary<string, BlitAndReason> blitCache)
 		{
+			if (type.IsByReference) {
+				result.Append ($" {type.Name}: Type is an out or ref type.\n");
+				return false;
+			}
 			TypeDefinition? typeDefinition = type.Resolve ();
 			if (typeDefinition is null) {
 				result.Append ($" {type.FullName}: Unable to load type.");

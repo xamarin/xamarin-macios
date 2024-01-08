@@ -16,6 +16,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
+using ObjCRuntime;
+
 #if NET
 using VectorFloat4 = global::System.Numerics.Vector4;
 #else
@@ -35,6 +37,7 @@ namespace OpenTK
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
+	[NativeName ("simd_float4x4")]
 	public struct NMatrix4 : IEquatable<NMatrix4> {
 		public float M11;
 		public float M21;

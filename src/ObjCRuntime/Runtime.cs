@@ -31,6 +31,10 @@ using AppKit;
 using NativeHandle = System.IntPtr;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
 namespace ObjCRuntime {
 
 	public partial class Runtime {
@@ -1490,7 +1494,11 @@ namespace ObjCRuntime {
 			ctorArguments [0] = ptr;
 #endif
 
-			return (T) ctor.Invoke (ctorArguments);
+			var obj = ctor.Invoke (ctorArguments);
+			if (obj is T rv)
+				return rv;
+
+			throw new InvalidCastException ($"Unable to cast object of type '{obj.GetType ().FullName}' to type '{typeof (T).FullName}'.");
 
 #if NET
 			// It isn't possible to call T._Xamarin_ConstructNSObject (...) directly from the parent function. For some

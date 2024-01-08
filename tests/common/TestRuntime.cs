@@ -43,6 +43,8 @@ using NUnit.Framework;
 using NativeHandle = System.IntPtr;
 #endif
 
+#nullable enable
+
 partial class TestRuntime {
 
 	[DllImport (Constants.CoreFoundationLibrary)]
@@ -78,7 +80,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")))!;
 #endif
 	}
 
@@ -91,7 +93,7 @@ partial class TestRuntime {
 	[System.Runtime.InteropServices.DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 	static extern int Gestalt (int selector, out int result);
 
-	static Version version;
+	static Version? version;
 
 	public static Version OSXVersion {
 		get {
@@ -190,10 +192,9 @@ partial class TestRuntime {
 
 	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
 	{
-#if __MACOS__ || __MACCATALYST__
-		return;
-#endif
+#if !(__MACOS__ || __MACCATALYST__)
 		NUnit.Framework.Assert.Ignore (message);
+#endif
 	}
 
 	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
@@ -1244,7 +1245,7 @@ partial class TestRuntime {
 			});
 		}
 
-		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ())) {
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ()!)) {
 		case AVAuthorizationStatus.Restricted:
 		case AVAuthorizationStatus.Denied:
 			if (assert_granted)
@@ -1437,7 +1438,7 @@ partial class TestRuntime {
 #else
 		const string fieldName = "flags";
 #endif
-		return (byte) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+		return (byte) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic)!.GetValue (obj)!;
 	}
 
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
@@ -1488,6 +1489,7 @@ partial class TestRuntime {
 		IgnoreInCIIfNetworkConnectionLost (error);
 		IgnoreInCIIfNoNetworkConnection (error);
 		IgnoreInCIIfDnsResolutionFailed (error);
+		IgnoreInCIIfTimedOut (error);
 	}
 
 	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
@@ -1511,6 +1513,11 @@ partial class TestRuntime {
 	public static void IgnoreInCIIfDnsResolutionFailed (NSError error)
 	{
 		IgnoreNetworkError (error, CFNetworkErrors.CannotFindHost);
+	}
+
+	public static void IgnoreInCIIfTimedOut (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.TimedOut);
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
