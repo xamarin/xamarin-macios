@@ -1126,17 +1126,55 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net6.0");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			// This is to prevent this type of errors:
+			//     Unable to find package Microsoft.NETCore.App.Ref with version (= 6.0.27)
+			// which happens when we don't have a feed for the Microsoft.NETCore.App.Ref version in question
+			// (the specific package version may in fact not exist yet - which happens sometimes for maestro bumps,
+			// and if that happens, we can do nothing but wait, which may take a while).
+			// This works around the problem by just skipping the reference to the Microsoft.NETCore.App.Ref package,
+			// which we don't need for this test anyway.
+			properties ["DisableImplicitFrameworkReferences"] = "true";
 
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
-			Assert.AreEqual (1, errors.Count, "Error Count");
-			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
 
-			// With multi targeting, this happens instead:
-			// // Due to an implementation detail in .NET, the same error message is shown twice.
-			// Assert.AreEqual (2, errors.Count, "Error Count");
-			// Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
-			// Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
+			// Due to an implementation detail in .NET, the same error message is shown twice.
+			var targetFramework = $"net6.0-{platform.AsString ().ToLowerInvariant ()}";
+			AssertErrorMessages (errors,
+				$"The workload '{targetFramework}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.",
+				$"The workload '{targetFramework}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void BuildNetFutureApp (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			// Builds an app with a higher .NET version than we support (for instance 'net9.0-ios' when we support 'net8.0-ios')
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var majorNetVersion = Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major;
+			var netVersion = $"net{majorNetVersion + 1}.0";
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: netVersion);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var targetFramework = platform.ToFramework (netVersion);
+			properties ["TargetFramework"] = targetFramework;
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
+
+			AssertErrorMessages (errors,
+				$"The current .NET SDK does not support targeting .NET {majorNetVersion + 1}.0.  Either target .NET {majorNetVersion}.0 or lower, or use a version of the .NET SDK that supports .NET {majorNetVersion + 1}.0. Download the .NET SDK from https://aka.ms/dotnet/download");
 		}
 
 		[Test]
