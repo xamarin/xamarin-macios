@@ -233,6 +233,8 @@ steps:
     Write-Host "Mac agent pool: $Env:MAC_AGENT_POOL"
     Write-Host "Mac agent name: $Env:MAC_AGENT_NAME"
     Write-Host "Mac agent IP: $Env:MAC_AGENT_IP"
+    Write-Host "Mac agent SYSTEM_DEFAULTWORKINGDIRECTORY: $Env:MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY"
+    Write-Host "Mac agent BUILD_SOURCESDIRECTORY: $Env:MAC_AGENT_BUILD_SOURCESDIRECTORY"
   displayName: Run tests
 
 # Upload all the binlogs
