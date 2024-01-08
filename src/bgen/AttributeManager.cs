@@ -13,6 +13,14 @@ using PlatformName = ObjCRuntime.PlatformName;
 public class AttributeManager {
 
 	readonly Dictionary<System.Type, Type> typeLookup = new ();
+
+	readonly HashSet<string> ignoredAttributes = new () {
+		"Microsoft.CodeAnalysis.EmbeddedAttribute",
+		"System.Runtime.CompilerServices.NullableAttribute",
+		"System.Runtime.CompilerServices.NullableContextAttribute",
+		"System.Runtime.CompilerServices.NativeIntegerAttribute",
+	};
+
 	TypeCache TypeCache { get; }
 
 	public AttributeManager (TypeCache typeCache)
@@ -250,7 +258,7 @@ public class AttributeManager {
 	}
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
-	Type ConvertTypeToMeta (System.Type type, ICustomAttributeProvider provider)
+	Type ConvertTypeToMeta (System.Type type)
 	{
 		if (!typeLookup.TryGetValue (type, out var rv)) {
 			// Brute force: look everywhere.
@@ -259,14 +267,18 @@ public class AttributeManager {
 			// Report a warning if we find the same type in multiple assemblies though.
 			var assemblies = TypeCache.Universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
-				var lookup = asm.GetType (type.Namespace + "." + type.Name);
+				var typeName = type.Name;
+				if (type.Namespace is not null)
+					typeName = type.Namespace + "." + typeName;
+				var lookup = asm.GetType (typeName);
 				if (lookup is null)
 					continue;
 				if (lookup.Assembly != asm) {
 					// Apparently looking for type X in assembly A can return type X from assembly B... ignore those.
 					continue;
 				}
-				if (rv is not null) {
+				// we will just throw if we do find a type multiple times but if it was not injected by the compiler.
+				if (rv is not null && !ignoredAttributes.Contains (rv.FullName)) {
 					ErrorHelper.Warning (1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
 					break; // no need to report this more than once
 				}
@@ -399,11 +411,13 @@ public class AttributeManager {
 		if (convertedAttributes.Any ())
 			return convertedAttributes.OfType<T> ();
 
-		var expectedType = ConvertTypeToMeta (typeof (T), provider);
-		if (attribute.GetAttributeType () != expectedType && !attribute.GetAttributeType ().IsSubclassOf (expectedType))
+		var expectedType = ConvertTypeToMeta (typeof (T));
+		var attributeType = ConvertTypeToMeta (attribute.GetAttributeType ());
+		// == when comparing types uses reference equality, which is what we want here.
+		if (attributeType != expectedType && !attributeType.IsSubclassOf (expectedType))
 			return Enumerable.Empty<T> ();
 
-		System.Type attribType = ConvertTypeFromMeta (attribute.GetAttributeType (), provider);
+		System.Type attribType = ConvertTypeFromMeta (attributeType, provider);
 
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
 
@@ -488,12 +502,8 @@ public class AttributeManager {
 		for (int i = 0; i < attributes.Count; i++) {
 
 			// special compiler attribtues not usable from C#
-			switch (attributes [i].GetAttributeType ().FullName) {
-			case "System.Runtime.CompilerServices.NullableAttribute":
-			case "System.Runtime.CompilerServices.NullableContextAttribute":
-			case "System.Runtime.CompilerServices.NativeIntegerAttribute":
+			if (ignoredAttributes.Contains (attributes [i].GetAttributeType ().FullName))
 				continue;
-			}
 
 			foreach (var attrib in CreateAttributeInstance<T> (attributes [i], provider)) {
 				if (list is null)
@@ -534,16 +544,18 @@ public class AttributeManager {
 
 	public virtual bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
-		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
+		var attributeType = ConvertTypeToMeta (typeof (T));
 		var attribs = GetAttributes (provider);
 		if (attribs is null || attribs.Count == 0)
 			return false;
 
 		for (int i = 0; i < attribs.Count; i++) {
 			var attrib = attribs [i];
-			if (attrib.GetAttributeType () == attribute_type)
+			// == when comparing types uses reference equality, which is what we want here.
+			var currentType = ConvertTypeToMeta (attrib.GetAttributeType ());
+			if (currentType == attributeType)
 				return true;
-			if (attrib.GetAttributeType ().IsSubclassOf (attribute_type))
+			if (currentType.IsSubclassOf (attributeType))
 				return true;
 		}
 
