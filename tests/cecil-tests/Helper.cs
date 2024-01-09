@@ -70,7 +70,7 @@ namespace Cecil.Tests {
 					Console.WriteLine ($"    {failureToString (failure)}");
 			}
 
-			// Ratehr than doing an Assert.IsEmpty, which produces a horendows error message, we'll do an Assert.Multiple which generates a 
+			// Ratehr than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
 			// nice enumerated output of all the failures.
 			Assert.Multiple (() => {
 				// fail for each of the new failures
