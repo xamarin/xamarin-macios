@@ -199,6 +199,14 @@ steps:
   env:
     XMA_PASSWORD: $(XMA.Password)
 
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
+  displayName: 'Fetch remote binlogs'
+  timeoutInMinutes: 5
+  condition: always()
+  continueOnError: true
+  env:
+    XMA_PASSWORD: $(XMA.Password)
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $configFile = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
