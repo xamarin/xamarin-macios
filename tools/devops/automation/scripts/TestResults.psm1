@@ -486,7 +486,7 @@ function New-ParallelTestsResults {
         if ($name.EndsWith(".TESTS_LABEL")) {
             $label = $outputs[$name]
             $title = $name.Substring(0, $name.IndexOf('.'))
-            $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") }
+            $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") } | Select-Object -Last 1
             $botKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_BOT") }
             $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
             $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }

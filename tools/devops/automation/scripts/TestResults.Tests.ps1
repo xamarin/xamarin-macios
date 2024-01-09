@@ -79,46 +79,71 @@ Describe "TestResults tests" {
 "@
         $dependencies = @"
 {
-  "tests": {
-    "outputs": {
-      "cecil.bash21.TESTS_BOT": "xambot-1199.Ventura",
-      "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-      "cecil.bash21.TESTS_LABEL": "cecil",
-      "cecil.bash21.TESTS_PLATFORM": "",
-      "cecil.bash21.TESTS_ATTEMPT": "1",
-
-      "dotnettests_tvOS.runTests.TESTS_BOT": "XAMMINI-006.Ventura",
-      "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Failed",
-      "dotnettests_tvOS.runTests.TESTS_LABEL": "dotnettests",
-      "dotnettests_tvOS.runTests.TESTS_PLATFORM": "tvOS",
-      "dotnettests_tvOS.runTests.TESTS_ATTEMPT": "1",
-
-      "dotnettests_MacCatalyst.runTests.TESTS_BOT": "XAMMINI-013.Ventura",
-      "dotnettests_MacCatalyst.runTests.TESTS_JOBSTATUS": "Failed",
-      "dotnettests_MacCatalyst.runTests.TESTS_LABEL": "dotnettests",
-      "dotnettests_MacCatalyst.runTests.TESTS_PLATFORM": "MacCatalyst",
-      "dotnettests_MacCatalyst.runTests.TESTS_ATTEMPT": "1",
-
-      "dotnettests_macOS.runTests.TESTS_BOT": "XAMMINI-011.Ventura",
-      "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Failed",
-      "dotnettests_macOS.runTests.TESTS_LABEL": "dotnettests",
-      "dotnettests_macOS.runTests.TESTS_PLATFORM": "macOS",
-      "dotnettests_macOS.runTests.TESTS_ATTEMPT": "1",
-
-      "dotnettests_iOS.runTests.TESTS_BOT": "XAMMINI-010.Ventura",
-      "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Failed",
-      "dotnettests_iOS.runTests.TESTS_LABEL": "dotnettests",
-      "dotnettests_iOS.runTests.TESTS_PLATFORM": "iOS",
-      "dotnettests_iOS.runTests.TESTS_ATTEMPT": "1",
-
-      "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
-      "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
-      "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
-      "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
-      "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+    "tests": {
+        "outputs": {
+        "cecil.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "cecil.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "cecil.Bash23.TESTS_ATTEMPT": "1",
+        "cecil.Bash23.TESTS_BOT": "XAMMINI-013.Ventura",
+        "cecil.Bash23.TESTS_JOBSTATUS": "Failed",
+        "cecil.Bash23.TESTS_LABEL": "cecil",
+        "cecil.Bash23.TESTS_PLATFORM": "",
+        "cecil.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+        "dotnettests_tvOS.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "dotnettests_tvOS.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "dotnettests_tvOS.Bash23.TESTS_ATTEMPT": "1",
+        "dotnettests_tvOS.Bash23.TESTS_BOT": "XAMMINI-012.Ventura",          
+        "dotnettests_tvOS.Bash23.TESTS_JOBSTATUS": "Failed",
+        "dotnettests_tvOS.Bash23.TESTS_LABEL": "dotnettests",
+        "dotnettests_tvOS.Bash23.TESTS_PLATFORM": "",
+        "dotnettests_tvOS.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Succeeded",
+        "dotnettests_MacCatalyst.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "dotnettests_MacCatalyst.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "dotnettests_MacCatalyst.Bash23.TESTS_ATTEMPT": "1",
+        "dotnettests_MacCatalyst.Bash23.TESTS_BOT": "XAMBOT-1023.Ventura",
+        "dotnettests_MacCatalyst.Bash23.TESTS_JOBSTATUS": "Failed",
+        "dotnettests_MacCatalyst.Bash23.TESTS_LABEL": "dotnettests",
+        "dotnettests_MacCatalyst.Bash23.TESTS_PLATFORM": "",
+        "dotnettests_MacCatalyst.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "dotnettests_macOS.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "dotnettests_macOS.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "dotnettests_macOS.Bash23.TESTS_ATTEMPT": "1",
+        "dotnettests_macOS.Bash23.TESTS_BOT": "XAMMINI-015.Ventura",
+        "dotnettests_macOS.Bash23.TESTS_JOBSTATUS": "Failed",
+        "dotnettests_macOS.Bash23.TESTS_LABEL": "dotnettests",
+        "dotnettests_macOS.Bash23.TESTS_PLATFORM": "",
+        "dotnettests_macOS.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "dotnettests_macOS.runTests.TESTS_JOBSTATUS": "Succeeded",
+        "dotnettests_iOS.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "dotnettests_iOS.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "dotnettests_iOS.Bash23.TESTS_ATTEMPT": "1",
+        "dotnettests_iOS.Bash23.TESTS_BOT": "XAMMINI-014.Ventura",
+        "dotnettests_iOS.Bash23.TESTS_JOBSTATUS": "Failed",
+        "dotnettests_iOS.Bash23.TESTS_LABEL": "dotnettests",
+        "dotnettests_iOS.Bash23.TESTS_PLATFORM": "",
+        "dotnettests_iOS.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "dotnettests_iOS.runTests.TESTS_JOBSTATUS": "Succeeded",
+        "dotnettests_Multiple.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "dotnettests_Multiple.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "dotnettests_Multiple.Bash23.TESTS_ATTEMPT": "1",
+        "dotnettests_Multiple.Bash23.TESTS_BOT": "XAMMINI-010.Ventura",
+        "dotnettests_Multiple.Bash23.TESTS_JOBSTATUS": "Failed",
+        "dotnettests_Multiple.Bash23.TESTS_LABEL": "dotnettests",
+        "dotnettests_Multiple.Bash23.TESTS_PLATFORM": "",
+        "dotnettests_Multiple.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded"
+      },
+      "identifier": null,
+      "name": "tests",
+      "attempt": 1,
+      "startTime": null,
+      "finishTime": null,
+      "state": "NotStarted",
+      "result": "Failed"
     }
-  }
-}
+  }  
 "@
         $stageDependencies = @"
 {    
@@ -134,21 +159,36 @@ Describe "TestResults tests" {
 
         $dependenciesWithMissingResults = @"
 {
-  "tests": {
-    "outputs": {
-      "cecil.runTests.TESTS_BOT": "xambot-1199.Ventura",
-      "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
-      "cecil.runTests.TESTS_LABEL": "cecil",
-      "cecil.runTests.TESTS_PLATFORM": "",
-      "cecil.runTests.TESTS_ATTEMPT": "1",
+    "tests": {
+        "outputs": {
+        "cecil.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "cecil.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "cecil.Bash23.TESTS_ATTEMPT": "1",
+        "cecil.Bash23.TESTS_BOT": "XAMMINI-013.Ventura",
+        "cecil.Bash23.TESTS_JOBSTATUS": "Failed",
+        "cecil.Bash23.TESTS_LABEL": "cecil",
+        "cecil.Bash23.TESTS_PLATFORM": "",
+        "cecil.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
 
-      "dotnettests_Multiple.runTests.TESTS_BOT": "XAMMINI-008.Ventura",
-      "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
-      "dotnettests_Multiple.runTests.TESTS_LABEL": "dotnettests",
-      "dotnettests_Multiple.runTests.TESTS_PLATFORM": "Multiple",
-      "dotnettests_Multiple.runTests.TESTS_ATTEMPT": "1",
+        "dotnettests_Multiple.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "dotnettests_Multiple.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "dotnettests_Multiple.Bash23.TESTS_ATTEMPT": "1",
+        "dotnettests_Multiple.Bash23.TESTS_BOT": "XAMMINI-010.Ventura",
+        "dotnettests_Multiple.Bash23.TESTS_JOBSTATUS": "Failed",
+        "dotnettests_Multiple.Bash23.TESTS_LABEL": "dotnettests",
+        "dotnettests_Multiple.Bash23.TESTS_PLATFORM": "",
+        "dotnettests_Multiple.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded"
+        },
+        "identifier": null,
+        "name": "tests",
+        "attempt": 1,
+        "startTime": null,
+        "finishTime": null,
+        "state": "NotStarted",
+        "result": "Failed"
     }
-  }
 }
 "@
     }
@@ -391,36 +431,9 @@ Describe "TestResults tests" {
             $content | Should -Be "# Test results
 :x: Tests failed on context
 
-0 tests crashed, 4 tests failed, 8 tests passed.
+0 tests crashed, 1 tests failed, 21 tests passed.
 
 ## Failures
-
-### :x: dotnettests tests (iOS)
-
-<summary>1 tests failed, 0 tests passed.</summary>
-<details>
-
-</details>
-
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
-
-### :x: dotnettests tests (macOS)
-
-<summary>1 tests failed, 0 tests passed.</summary>
-<details>
-
-</details>
-
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-
-### :x: dotnettests tests (tvOS)
-
-<summary>1 tests failed, 0 tests passed.</summary>
-<details>
-
-</details>
-
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 ### :x: dotnettests tests (MacCatalyst)
 
@@ -434,6 +447,9 @@ Describe "TestResults tests" {
 ## Successes
 
 :white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
@@ -469,36 +485,9 @@ Describe "TestResults tests" {
             $content | Should -Be "# Test results
 :x: Tests failed on context
 
-0 tests crashed, 8 tests failed, 14 tests passed.
+0 tests crashed, 5 tests failed, 27 tests passed.
 
 ## Failures
-
-### :x: dotnettests tests (iOS)
-
-<summary>1 tests failed, 0 tests passed.</summary>
-<details>
-
-</details>
-
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
-
-### :x: dotnettests tests (macOS)
-
-<summary>1 tests failed, 0 tests passed.</summary>
-<details>
-
-</details>
-
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-
-### :x: dotnettests tests (tvOS)
-
-<summary>1 tests failed, 0 tests passed.</summary>
-<details>
-
-</details>
-
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 ### :x: dotnettests tests (MacCatalyst)
 
@@ -512,6 +501,9 @@ Describe "TestResults tests" {
 ## Successes
 
 :white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
