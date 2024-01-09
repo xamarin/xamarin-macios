@@ -1152,7 +1152,6 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[Ignore ("Ignore due to issue: https://github.com/xamarin/xamarin-macios/issues/18655")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
@@ -1167,9 +1166,6 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net7.0");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-
-			// This property is needed until https://github.com/xamarin/xamarin-macios/pull/18411 has been merged and we can use the resulting packages.
-			properties ["_RequiresILLinkPack"] = "true";
 
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
