@@ -37,7 +37,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"description\": \".NET SDK Workload for building {platform} applications.\",");
 	writer.WriteLine ($"			\"packs\": [");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
-	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net70\",");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net7\",");
 	if (hasWindows) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
 	}
