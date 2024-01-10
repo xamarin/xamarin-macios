@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Xml;
 
 using Mono.Cecil;
 
@@ -1541,15 +1542,13 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void InvalidTargetPlatformVersion (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			// Pick a target platform version we don't support (such as iOS 6.66).
 			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + "6.66";
-			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
-			var validTargetPlatformVersions = supportedApiVersion.Where (v => v.StartsWith (Configuration.DotNetTfm + "-", StringComparison.Ordinal)).Select (v => v.Substring (Configuration.DotNetTfm.Length + 1));
+			var supportedApiVersions = GetSupportedApiVersions (platform);
 
 			var project = "MultiTargetingLibrary";
 			var project_path = GetProjectPath (project, platform: platform);
@@ -1558,8 +1557,72 @@ namespace Xamarin.Tests {
 			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', validTargetPlatformVersions)}", errors [0].Message, "Error message");
+			AssertErrorMessages (errors, $"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', supportedApiVersions)}");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void UnsupportedTargetPlatformVersion (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// Pick a target platform version that we don't really support,
+			// but don't show an error in .NET 8 because of backwards compat.
+			// The earliest target OS version should do.g
+			var minSupportedOSVersion = GetSupportedOSVersions (platform).First ();
+			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + minSupportedOSVersion;
+			var supportedApiVersions = GetSupportedApiVersions (platform, isCompat: false);
+
+			var project = "MultiTargetingLibrary";
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
+
+			if (IsTargetPlatformVersionCompatEnabled) {
+				var rv = DotNet.AssertBuild (project_path, properties);
+				var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+				AssertWarningMessages (warnings, $"{minSupportedOSVersion} is not a valid TargetPlatformVersion for {platform.AsString ()}. This warning will become an error in future versions of the {platform.AsString ()} workload. Valid versions include:\n{string.Join ('\n', supportedApiVersions)}");
+			} else {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"{minSupportedOSVersion} is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', supportedApiVersions)}");
+			}
+		}
+
+		bool IsTargetPlatformVersionCompatEnabled {
+			get => Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major < 9;
+		}
+
+		string [] GetSupportedApiVersions (ApplePlatform platform, bool? isCompat = null)
+		{
+			if (isCompat is null)
+				isCompat = IsTargetPlatformVersionCompatEnabled;
+			if (isCompat.Value)
+				return GetSupportedOSVersions (platform);
+
+			var supportedApiVersions = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			return supportedApiVersions
+				.Where (v => v.StartsWith (Configuration.DotNetTfm + "-", StringComparison.Ordinal))
+				.Select (v => v.Substring (Configuration.DotNetTfm.Length + 1))
+				.ToArray ();
+		}
+
+		string [] GetSupportedOSVersions (ApplePlatform platform)
+		{
+			var plistPath = Path.Combine (Configuration.SourceRoot, platform == ApplePlatform.MacOSX ? "Versions-mac.plist.in" : "Versions-ios.plist.in");
+			var doc = new XmlDocument ();
+			doc.Load (plistPath);
+			var query = $"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform.AsString ()}']/following-sibling::array[1]/string";
+			Console.WriteLine ($"Query: {query} Nodes: {doc.SelectNodes (query)!.Cast<XmlNode> ().Count ()}");
+			return doc
+				.SelectNodes (query)!
+				.Cast<XmlNode> ()
+				.Select (v => v.InnerText)
+				.ToArray ();
 		}
 
 		[Test]

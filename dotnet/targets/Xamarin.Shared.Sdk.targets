@@ -2096,6 +2096,20 @@
 		<Error Condition="'$(_IsValidRuntimeIdentifier)' != 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
 	</Target>
 
+	<!-- This target can be removed in .NET 9 (when we stop supporting the compat logic to make the invalid TPV just a warning instead of an error) -->
+	<Target Name="_XamarinValidateTargetPlatformVersion"
+		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets"
+		Condition="'@(_RealSdkSupportedTargetPlatformVersion)' != '' And '$(ValidateTargetPlatformVersion)' != 'false'"
+		>
+		<ItemGroup>
+			<_RealTargetPlatformVersion Include="@(_RealSdkSupportedTargetPlatformVersion)" Condition="'@(_RealSdkSupportedTargetPlatformVersion)' != '' And $([MSBuild]::VersionEquals(%(Identity), $(TargetPlatformVersion)))" />
+		</ItemGroup>
+		<PropertyGroup>
+			<_IsCompatTargetPlatformVersion Condition="'@(_RealTargetPlatformVersion)' == ''">true</_IsCompatTargetPlatformVersion>
+		</PropertyGroup>
+		<Warning Condition="'$(_IsCompatTargetPlatformVersion)' == 'true'" Text="$(TargetPlatformVersion) is not a valid TargetPlatformVersion for $(_PlatformName). This warning will become an error in future versions of the $(_PlatformName) workload. Valid versions include:%0a@(_RealSdkSupportedTargetPlatformVersion, '%0a')" />
+	</Target>
+
 	<!-- Install & Run -->
 
 	<PropertyGroup>
