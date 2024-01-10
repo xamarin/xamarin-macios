@@ -515,7 +515,7 @@ function New-ParallelTestsResults {
             if ($tests.Contains($label)) {
                 $testInfo = $tests[$label]
             } else {
-                $testInfo = [ordered]@{}
+                $testInfo = [System.Collections.SortedList]::new()
                 $tests[$label] = $testInfo
             }
             $testInfo[$title] = $testResult
