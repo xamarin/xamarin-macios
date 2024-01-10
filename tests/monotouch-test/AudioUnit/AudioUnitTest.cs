@@ -86,9 +86,9 @@ namespace MonoTouchFixtures.AudioUnit {
 		[Test]
 		public unsafe void TestSizeOf ()
 		{
-			Assert.AreEqual (sizeof (AudioFormat), Marshal.SizeOf (typeof (AudioFormat)));
-			Assert.AreEqual (sizeof (AudioValueRange), Marshal.SizeOf (typeof (AudioValueRange)));
-			Assert.AreEqual (sizeof (AudioClassDescription), Marshal.SizeOf (typeof (AudioClassDescription)));
+			Assert.AreEqual (sizeof (AudioFormat), Marshal.SizeOf<AudioFormat> ());
+			Assert.AreEqual (sizeof (AudioValueRange), Marshal.SizeOf<AudioValueRange> ());
+			Assert.AreEqual (sizeof (AudioClassDescription), Marshal.SizeOf<AudioClassDescription> ());
 		}
 	}
 }

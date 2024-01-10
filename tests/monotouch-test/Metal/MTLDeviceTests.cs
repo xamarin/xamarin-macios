@@ -96,7 +96,11 @@ namespace MonoTouchFixtures.Metal {
 
 			// Apple claims that "Indirect command buffers" are available with MTLGPUFamilyCommon2, but it crashes on at least one machine.
 			// Log what the current device supports, just to have it in the log.
+#if NET
+			foreach (MTLFeatureSet fs in Enum.GetValues<MTLFeatureSet> ()) {
+#else
 			foreach (MTLFeatureSet fs in Enum.GetValues (typeof (MTLFeatureSet))) {
+#endif
 				Console.WriteLine ($"This device supports feature set: {fs}: {device.SupportsFeatureSet (fs)}");
 			}
 			if (TestRuntime.CheckXcodeVersion (11, 0)) {

@@ -38,6 +38,7 @@ using CoreFoundation;
 using Foundation;
 using CoreGraphics;
 using UniformTypeIdentifiers;
+using Network;
 #if HAS_APPCLIP
 using AppClip;
 #endif
@@ -8269,6 +8270,10 @@ namespace Foundation {
 		[MacCatalyst (16, 0)]
 		[Export ("requiresDNSSECValidation")]
 		bool RequiresDnsSecValidation { get; set; }
+
+		[Internal]
+		[Export ("proxyConfigurations", ArgumentSemantic.Copy)]
+		IntPtr _ProxyConfigurations { get; set; }
 	}
 
 	[MacCatalyst (13, 1)]
