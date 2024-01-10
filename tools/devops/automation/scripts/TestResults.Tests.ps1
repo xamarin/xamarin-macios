@@ -16,15 +16,6 @@ Describe "TestResults tests" {
         $attempt = 1
         $matrix = @"
 {
-    "cecil":
-    {
-        "LABEL": "cecil",
-        "TESTS_LABELS": "--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-cecil-tests",
-        "LABEL_WITH_PLATFORM": "cecil",
-        "STATUS_CONTEXT": "VSTS: simulator tests - cecil",
-        "TEST_PREFIX": "simulator_cecil",
-        "TEST_PLATFORM": ""
-    },
     "dotnettests_iOS":
     {
         "LABEL": "dotnettests",
@@ -74,6 +65,15 @@ Describe "TestResults tests" {
         "TEST_PREFIX": "simulator_dotnettests_Multiple",
         "TEST_PLATFORM": "",
         "TEST_FILTER": "Category = MultiPlatform"
+    },
+    "cecil":
+    {
+        "LABEL": "cecil",
+        "TESTS_LABELS": "--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-cecil-tests",
+        "LABEL_WITH_PLATFORM": "cecil",
+        "STATUS_CONTEXT": "VSTS: simulator tests - cecil",
+        "TEST_PREFIX": "simulator_cecil",
+        "TEST_PLATFORM": ""
     }
 }
 "@
@@ -81,15 +81,7 @@ Describe "TestResults tests" {
 {
     "tests": {
         "outputs": {
-        "cecil.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
-        "cecil.DownloadPipelineArtifact1.BuildNumber": "8894907",
-        "cecil.Bash23.TESTS_ATTEMPT": "1",
-        "cecil.Bash23.TESTS_BOT": "XAMMINI-013.Ventura",
-        "cecil.Bash23.TESTS_JOBSTATUS": "Failed",
-        "cecil.Bash23.TESTS_LABEL": "cecil",
-        "cecil.Bash23.TESTS_PLATFORM": "",
-        "cecil.DownloadPipelineArtifact2.BuildNumber": "8894907",
-        "cecil.runTests.TESTS_JOBSTATUS": "Succeeded",
+        "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Succeeded",
         "dotnettests_tvOS.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
         "dotnettests_tvOS.DownloadPipelineArtifact1.BuildNumber": "8894907",
         "dotnettests_tvOS.Bash23.TESTS_ATTEMPT": "1",
@@ -98,7 +90,6 @@ Describe "TestResults tests" {
         "dotnettests_tvOS.Bash23.TESTS_LABEL": "dotnettests",
         "dotnettests_tvOS.Bash23.TESTS_PLATFORM": "",
         "dotnettests_tvOS.DownloadPipelineArtifact2.BuildNumber": "8894907",
-        "dotnettests_tvOS.runTests.TESTS_JOBSTATUS": "Succeeded",
         "dotnettests_MacCatalyst.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
         "dotnettests_MacCatalyst.DownloadPipelineArtifact1.BuildNumber": "8894907",
         "dotnettests_MacCatalyst.Bash23.TESTS_ATTEMPT": "1",
@@ -133,7 +124,16 @@ Describe "TestResults tests" {
         "dotnettests_Multiple.Bash23.TESTS_LABEL": "dotnettests",
         "dotnettests_Multiple.Bash23.TESTS_PLATFORM": "",
         "dotnettests_Multiple.DownloadPipelineArtifact2.BuildNumber": "8894907",
-        "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded"
+        "dotnettests_Multiple.runTests.TESTS_JOBSTATUS": "Succeeded",
+        "cecil.fix_commit.GIT_HASH": "fa3d1deb4e2d0ac358f2e0ac80e3d305ca541848",
+        "cecil.DownloadPipelineArtifact1.BuildNumber": "8894907",
+        "cecil.Bash23.TESTS_ATTEMPT": "1",
+        "cecil.Bash23.TESTS_BOT": "XAMMINI-013.Ventura",
+        "cecil.Bash23.TESTS_JOBSTATUS": "Failed",
+        "cecil.Bash23.TESTS_LABEL": "cecil",
+        "cecil.Bash23.TESTS_PLATFORM": "",
+        "cecil.DownloadPipelineArtifact2.BuildNumber": "8894907",
+        "cecil.runTests.TESTS_JOBSTATUS": "Succeeded"
       },
       "identifier": null,
       "name": "tests",
@@ -449,8 +449,8 @@ Describe "TestResults tests" {
 :white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
@@ -503,8 +503,8 @@ Describe "TestResults tests" {
 :white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 :white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "

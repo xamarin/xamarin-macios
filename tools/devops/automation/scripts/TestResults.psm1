@@ -524,7 +524,7 @@ function New-ParallelTestsResults {
     }
 
     $testResults = [System.Collections.ArrayList]@()
-    foreach ($suite in $suites) {
+    foreach ($suite in $suites.Values | Sort-Object -Property Label) {
         $label = $suite.Label
         Write-Host "Processing results for $label with $($suite.TestConfigurations.Length) configurations"
         foreach ($testConfig in $suite.TestConfigurations | Sort-Object -Property Title) {
