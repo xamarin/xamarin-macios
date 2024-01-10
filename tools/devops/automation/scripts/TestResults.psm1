@@ -10,6 +10,11 @@ class TestSuite {
     {
         $this.Label = $label
     }
+
+    [string]
+    ToString() {
+        return $this.Label
+    }
 }
 
 class TestConfiguration {
@@ -29,6 +34,11 @@ class TestConfiguration {
         $this.Title = $title
         $this.Platform = $platform
         $this.Context = $context
+    }
+    
+    [string]
+    ToString() {
+        return "$($this.Suite.Label) : $($this.Title) - $($this.Platform) - $($this.Context)"
     }
 }
 
@@ -458,7 +468,7 @@ function New-ParallelTestsResults {
     foreach ($title in $matrix.Keys) {
         Write-Host "Got title: $title"
         $entry = $matrix[$title]
-        Write-Host "Got title: $title with entry: $entry"
+        Write-Host "Got title: $title with entry: $( $entry | ConvertTo-Json -Depth 100 )"
         $platform = $entry["TEST_PLATFORM"]
         $label = $entry["LABEL"]
 
@@ -470,15 +480,14 @@ function New-ParallelTestsResults {
         }
         $testConfig = [TestConfiguration]::new($suite, $title, $platform, "$Context - $title")
         $suite.TestConfigurations += $testConfig
-        Write-Host "Added test config:"
-        Write-Host $testConfig
-        Write-Host "To suite:"
-        Write-Host $suite
-        Write-Host "Which now has $($suite.TestConfigurations.Length) configuration: $($suite.TestConfigurations)"
+        Write-Host "Added test config: $( $testConfig.Title )"
+        Write-Host "To suite: $( $suite.Label )"
+        Write-Host "Which now has $($suite.TestConfigurations.Length) configuration:"
+        Write-Host $( $suite.TestConfigurations | Select-Object -ExpandProperty Title )
     }
 
     Write-Host "Test suites:"
-    Write-Host $suites
+    Write-Host $suites.Keys
 
     $outputs = $dep.tests.outputs
     $tests = [ordered]@{}
@@ -486,7 +495,7 @@ function New-ParallelTestsResults {
         if ($name.EndsWith(".TESTS_LABEL")) {
             $label = $outputs[$name]
             $title = $name.Substring(0, $name.IndexOf('.'))
-            $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") } | Select-Object -Last 1
+            $statusKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_JOBSTATUS") } | Sort-Object | Select-Object -Last 1
             $botKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_BOT") }
             $platformKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_PLATFORM") }
             $attemptKey = $outputs.Keys | Where-Object { $_.StartsWith($title + ".") -and $_.EndsWith("." + "TESTS_ATTEMPT") }
