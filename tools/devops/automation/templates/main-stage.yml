@@ -114,10 +114,10 @@ parameters:
 - name: testConfigurations
   type: object
   default: [
-    # {
-    #   label: bcl,
-    #   splitByPlatforms: false,
-    # },
+    {
+      label: bcl,
+      splitByPlatforms: false,
+    },
     {
       label: cecil,
       splitByPlatforms: false,
@@ -130,66 +130,66 @@ parameters:
       containsDotNetTests: true,
       containsLegacyTests: false,
     },
-    # {
-    #   label: fsharp,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: framework,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: generator,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: interdependent-binding-projects,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: install-source,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: introspection,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: linker,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: mac-binding-project,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: mmp,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: mononative,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: monotouch,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: msbuild,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: mtouch,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: xammac,
-    #   splitByPlatforms: false,
-    # },
-    # {
-    #   label: xtro,
-    #   splitByPlatforms: false,
-    # },
+    {
+      label: fsharp,
+      splitByPlatforms: false,
+    },
+    {
+      label: framework,
+      splitByPlatforms: false,
+    },
+    {
+      label: generator,
+      splitByPlatforms: false,
+    },
+    {
+      label: interdependent-binding-projects,
+      splitByPlatforms: false,
+    },
+    {
+      label: install-source,
+      splitByPlatforms: false,
+    },
+    {
+      label: introspection,
+      splitByPlatforms: false,
+    },
+    {
+      label: linker,
+      splitByPlatforms: false,
+    },
+    {
+      label: mac-binding-project,
+      splitByPlatforms: false,
+    },
+    {
+      label: mmp,
+      splitByPlatforms: false,
+    },
+    {
+      label: mononative,
+      splitByPlatforms: false,
+    },
+    {
+      label: monotouch,
+      splitByPlatforms: false,
+    },
+    {
+      label: msbuild,
+      splitByPlatforms: false,
+    },
+    {
+      label: mtouch,
+      splitByPlatforms: false,
+    },
+    {
+      label: xammac,
+      splitByPlatforms: false,
+    },
+    {
+      label: xtro,
+      splitByPlatforms: false,
+    },
   ]
 
 - name: deviceTestsConfigurations
