@@ -464,7 +464,7 @@ function New-ParallelTestsResults {
     $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
 
     $matrix = $stageDep.configure_build.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
-    $suites = [ordered]@{}
+    $suites = [System.Collections.SortedList]::new()
     foreach ($title in $matrix.Keys) {
         Write-Host "Got title: $title"
         $entry = $matrix[$title]
@@ -490,7 +490,7 @@ function New-ParallelTestsResults {
     Write-Host $suites.Keys
 
     $outputs = $dep.tests.outputs
-    $tests = [ordered]@{}
+    $tests = [System.Collections.SortedList]::new()
     foreach ($name in $outputs.Keys) {
         if ($name.EndsWith(".TESTS_LABEL")) {
             $label = $outputs[$name]
