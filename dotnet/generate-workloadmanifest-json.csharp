@@ -37,7 +37,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"description\": \".NET SDK Workload for building {platform} applications.\",");
 	writer.WriteLine ($"			\"packs\": [");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
-	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net7.0\",");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net70\",");
 	if (hasWindows) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
 	}
@@ -63,7 +63,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
 	writer.WriteLine ($"		}},");
-	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net7.0\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net7\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
 	writer.WriteLine ($"			\"version\": \"{net7Version}\",");
 	writer.WriteLine ($"			\"alias-to\": {{");
@@ -80,7 +80,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
 		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
-		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net7.0\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
 		writer.WriteLine ($"			\"version\": \"{net7Version}\",");
 		writer.WriteLine ($"			\"alias-to\": {{");

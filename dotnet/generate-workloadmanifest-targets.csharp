@@ -40,7 +40,10 @@ using (var writer = new StreamWriter (outputPath)) {
 		var sep = tfv.IndexOfAny (new char [] { '-', '_' });
 		if (sep >= 0)
 			tfv = tfv.Substring (0, sep);
-		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\" />");
+		var workloadVersion = tfm;
+		if (tfv [0] == '7')
+			workloadVersion = tfm.Replace (".0", "");
+		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\" />");
 	}
 	if (hasWindows) {
 		writer.WriteLine ();
@@ -49,7 +52,10 @@ using (var writer = new StreamWriter (outputPath)) {
 			var sep = tfv.IndexOfAny (new char [] { '-', '_' });
 			if (sep >= 0)
 				tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
+			var workloadVersion = tfm;
+			if (tfv [0] == '7')
+				workloadVersion = tfm.Replace (".0", "");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
 	}
 	writer.WriteLine ($"	</ImportGroup>");
