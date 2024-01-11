@@ -2,12 +2,12 @@
   <!--Package versions-->
   <PropertyGroup>
     <!-- Versions updated by maestro -->
-    <MicrosoftDotnetSdkInternalPackageVersion>7.0.313-servicing.24059.30</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>7.0.313-servicing.24060.10</MicrosoftDotnetSdkInternalPackageVersion>
     <MicrosoftNETILLinkTasksPackageVersion>7.0.100-1.23401.1</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>7.0.14</MicrosoftNETCoreAppRefPackageVersion>
-    <MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>7.0.14</MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>7.0.15</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>7.0.15</MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
     <MicrosoftDotNetCecilPackageVersion>0.11.4-alpha.23113.1</MicrosoftDotNetCecilPackageVersion>
     <!-- Manually updated versions -->
