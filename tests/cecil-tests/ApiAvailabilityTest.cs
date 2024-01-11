@@ -16,14 +16,15 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiAvailabilityTest {
 
-		public record ObsoletedFailure  : IComparable {
+		public record ObsoletedFailure : IComparable {
 
 			public string Key { get; }
-			public ICustomAttributeProvider Api {get;}
+			public ICustomAttributeProvider Api { get; }
 			public OSPlatformAttributes [] Obsoleted { get; }
 			public OSPlatformAttributes [] Supported { get; }
 
-			public ObsoletedFailure (string key, ICustomAttributeProvider api, OSPlatformAttributes [] obsoleted, OSPlatformAttributes [] supported) {
+			public ObsoletedFailure (string key, ICustomAttributeProvider api, OSPlatformAttributes [] obsoleted, OSPlatformAttributes [] supported)
+			{
 				Key = key;
 				Api = api;
 				Obsoleted = obsoleted;
@@ -33,7 +34,8 @@ namespace Cecil.Tests {
 			public override string ToString ()
 				=> $"{Key}: {Api} is obsoleted on {string.Join (", ", Obsoleted.Select (v => v.Platform))} but not on {string.Join (", ", Supported.Select (v => v.Platform))}";
 
-			public int CompareTo (object? obj) {
+			public int CompareTo (object? obj)
+			{
 				if (obj is not ObsoletedFailure other)
 					return -1;
 				return Key.CompareTo (other.Key);
