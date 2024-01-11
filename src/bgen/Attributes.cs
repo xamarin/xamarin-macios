@@ -67,7 +67,7 @@ public class ForcedTypeAttribute : Attribute {
 //
 // To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for NET, etc
 //
-[Obsolete ("This attribute no longer has any effect; do no use")]
+[Obsolete ("This attribute no longer has any effect; do not use")]
 public class ProtocolizeAttribute : Attribute {
 	public ProtocolizeAttribute ()
 	{
