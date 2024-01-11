@@ -460,8 +460,8 @@ function New-ParallelTestsResults {
 
     Write-Host "Dependencies:`n$($Dependencies)"
     Write-Host "Test Summaries:"
-    Dir $Path -Recurse *.md | Select-Object -Property FullName
-    
+    Get-ChildItem $Path -Recurse *.md | Select-Object -Property FullName | Format-Table | Out-String | Write-Host
+
     $dep = $Dependencies | ConvertFrom-Json -AsHashtable
     $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
 
