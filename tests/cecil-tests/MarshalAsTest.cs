@@ -15,12 +15,15 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class MarshalAsTest {
+
+		private HashSet<string> knownIssues = new HashSet<string> {};
+
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void TestAssembly (AssemblyInfo info)
 		{
 			var assembly = info.Assembly;
-			var failedMethods = new List<string> ();
+			var failedMethods = new HashSet<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();
 			foreach (var m in assembly.EnumerateMethods ((m) => m.HasPInvokeInfo)) {
@@ -31,7 +34,7 @@ namespace Cecil.Tests {
 				}
 			}
 
-			Assert.That (failedMethods, Is.Empty, "Methods with bool return type / parameters and no MarshalAs attribute.");
+			Helper.AssertFailures (failedMethods, knownIssues, nameof (MarshalAsTest), "Methods with bool return type / parameters and no MarshalAs attribute.");
 		}
 
 		static void AddFailure (ref List<string>? failures, string failure)
