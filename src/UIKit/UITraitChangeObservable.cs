@@ -142,8 +142,8 @@ namespace UIKit {
 
 
 #if !XAMCORE_5_0
-		[BindingImpl (BindingImplOptions.Optimizable)]
 #if !NET
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			// The manual block code is somewhat annoying to implement, so at least don't do it twice (once for .NET and once for legacy Xamarin) unless we really need to.
@@ -156,6 +156,7 @@ namespace UIKit {
 		/// <param name="traits">The traits to observe.</param>
 		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, [BlockProxy (typeof (ObjCRuntime.Trampolines.IUITraitChangeObservable_RegisterForTraitChanges_NIDAction))] global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
 			global::UIKit.UIApplication.EnsureUIThread ();

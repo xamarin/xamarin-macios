@@ -521,7 +521,6 @@
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>docs\website\mtouch-errors.md</Link>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">
