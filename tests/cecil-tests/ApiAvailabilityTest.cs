@@ -385,7 +385,7 @@ namespace Cecil.Tests {
 				}
 			}
 
-			Helper.AssertFailures (failures, knownConsistencyIssues, nameof(AttributeConsistency), "API with inconsistent availability attributes");
+			Helper.AssertFailures (failures, knownConsistencyIssues, nameof (AttributeConsistency), "API with inconsistent availability attributes");
 		}
 
 		static bool IsEnumField (ICustomAttributeProvider api)
