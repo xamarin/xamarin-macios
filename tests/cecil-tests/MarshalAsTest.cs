@@ -16,7 +16,7 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class MarshalAsTest {
 
-		private HashSet<string> knownIssues = new HashSet<string> {};
+		private HashSet<string> knownIssues = new HashSet<string> { };
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblyDefinitions))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
