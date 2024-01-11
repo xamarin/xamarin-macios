@@ -48,6 +48,9 @@ XIOS_RID = ios-arm64
 
 $(XIOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s iphoneos$(IOS_SDK_VERSION) -a $(XIOS_ARCH) \
+	-exclude FactoryOTAWifiUtils \
+	-exclude FactoryOTALogger \
+	-exclude FactoryOTANetworkUtils \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
