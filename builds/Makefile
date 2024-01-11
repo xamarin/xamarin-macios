@@ -1141,27 +1141,23 @@ $(DOTNET_DESTDIR)/$(MACOS_NUGET_SDK_NAME)/Versions.plist: $(TOP)/Versions-mac.pl
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" -e "s/@MIN_XM_MONO_VERSION@//g" $< > $@.tmp
 	$(Q) mv $@.tmp $@
 
-$(DOTNET_DESTDIR)/$(MACOS_NUGET_SDK_NAME)/tools/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(DOTNET_DESTDIR)/$(MACOS_NUGET_SDK_NAME)/tools
-	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@.tmp
-	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@.tmp
-	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@.tmp
-	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@.tmp
-	$(Q) mv $@.tmp $@
-
-define BuildInfo
+define VersionInfo
 $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)
 	$$(Q) $(TOP)/versions-check.csharp $$< "$(DOTNET_MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(DOTNET_MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" $$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(filter-out macOS,$(DOTNET_PLATFORMS)),$(eval $(call VersionInfo,$(platform))))
 
+define BuildInfo
 $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools
-	$$(Q_GEN) echo "Version: $$(IOS_PACKAGE_VERSION)" > $$@.tmp
+	$$(Q_GEN) echo "Version: $$($(2)_NUGET_VERSION)" > $$@.tmp
 	$$(Q) echo "Hash: $$(shell git log --oneline -1 --pretty=%h)" >> $$@.tmp
 	$$(Q) echo "Branch: $$(CURRENT_BRANCH)" >> $$@.tmp
 	$$(Q) echo "Build date: $$(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 endef
-$(foreach platform,$(filter-out macOS,$(DOTNET_PLATFORMS)),$(eval $(call BuildInfo,$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BuildInfo,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 $(DOTNET_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@
