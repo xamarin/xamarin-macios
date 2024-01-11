@@ -143,11 +143,11 @@ parameters:
       splitByPlatforms: false,
     },
     {
-      label: interdependent-binding-projects,
+      label: interdependent_binding_projects,
       splitByPlatforms: false,
     },
     {
-      label: install-source,
+      label: install_source,
       splitByPlatforms: false,
     },
     {
@@ -159,7 +159,7 @@ parameters:
       splitByPlatforms: false,
     },
     {
-      label: mac-binding-project,
+      label: mac_binding_project,
       splitByPlatforms: false,
     },
     {
