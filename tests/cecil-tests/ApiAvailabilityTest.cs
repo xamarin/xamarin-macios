@@ -15,6 +15,34 @@ using Xamarin.Tests;
 namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiAvailabilityTest {
+
+		public record ObsoletedFailure : IComparable {
+
+			public string Key { get; }
+			public ICustomAttributeProvider Api { get; }
+			public OSPlatformAttributes [] Obsoleted { get; }
+			public OSPlatformAttributes [] Supported { get; }
+
+			public ObsoletedFailure (string key, ICustomAttributeProvider api, OSPlatformAttributes [] obsoleted, OSPlatformAttributes [] supported)
+			{
+				Key = key;
+				Api = api;
+				Obsoleted = obsoleted;
+				Supported = supported;
+			}
+
+			public override string ToString ()
+				=> $"{Key}: {Api} is obsoleted on {string.Join (", ", Obsoleted.Select (v => v.Platform))} but not on {string.Join (", ", Supported.Select (v => v.Platform))}";
+
+			public int CompareTo (object? obj)
+			{
+				if (obj is not ObsoletedFailure other)
+					return -1;
+				return Key.CompareTo (other.Key);
+			}
+
+		}
+
 		// This test will flag any API that's only obsoleted on some platforms.
 		[Test]
 		public void FindMissingObsoleteAttributes ()
@@ -23,7 +51,7 @@ namespace Cecil.Tests {
 
 			var harvestedInfo = Helper.MappedNetApi;
 
-			var failures = new Dictionary<string, (string Key, ICustomAttributeProvider Api, OSPlatformAttributes [] Obsoleted, OSPlatformAttributes [] Supported)> ();
+			var failures = new Dictionary<string, ObsoletedFailure> ();
 			var mismatchedObsoleteMessages = new List<string> ();
 			foreach (var kvp in harvestedInfo) {
 				var attributes = kvp.Value.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
@@ -42,7 +70,7 @@ namespace Cecil.Tests {
 				if (!notObsoletedNorUnsupported.Any ())
 					continue;
 
-				var failure = (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
+				var failure = new ObsoletedFailure (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
 				failures [failure.Key] = failure;
 
 				var obsoleteMessages = obsoleted.Select (v => v.Obsoleted?.Message).Distinct ().ToArray ();

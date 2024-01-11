@@ -50,7 +50,7 @@ namespace Cecil.Tests {
 			AssertFailures<string> (currentFailures, knownFailures, nameOfKnownFailureSet, message, (v) => v);
 		}
 
-		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString) where T : notnull
+		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString) where T : notnull, IComparable
 		{
 			var newFailures = currentFailures.Where (v => !knownFailures.Contains (v.Key)).Select (v => v.Value).ToArray ();
 			var fixedFailures = knownFailures.Except (currentFailures.Select (v => v.Key).ToHashSet ());
