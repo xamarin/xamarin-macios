@@ -45,8 +45,7 @@ namespace MetalKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		MTKViewDelegate Delegate { get; set; }
+		IMTKViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -145,6 +144,8 @@ namespace MetalKit {
 		[Export ("depthStencilStorageMode", ArgumentSemantic.Assign)]
 		MTLStorageMode DepthStencilStorageMode { get; set; }
 	}
+
+	interface IMTKViewDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]

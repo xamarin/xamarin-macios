@@ -619,13 +619,14 @@ namespace UIKit {
 		double UpdateInterval { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIAccelerometerDelegate Delegate { get; set; }
+		IUIAccelerometerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 	}
+
+	interface IUIAccelerometerDelegate { }
 
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -1401,8 +1402,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIActionSheetDelegate Delegate { get; set; }
+		IUIActionSheetDelegate Delegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("title", ArgumentSemantic.Copy)]
@@ -1830,8 +1830,7 @@ namespace UIKit {
 		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] IUIAlertViewDelegate viewDelegate, [NullAllowed] string cancelButtonTitle, IntPtr otherButtonTitles, IntPtr mustBeNull, IntPtr mustAlsoBeNull);
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIAlertViewDelegate Delegate { get; set; }
+		IUIAlertViewDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -2300,8 +2299,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIApplicationDelegate Delegate { get; set; }
+		IUIApplicationDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use UIView's 'UserInteractionEnabled' property instead.")]
@@ -3435,6 +3433,8 @@ namespace UIKit {
 		CGRect ConvertRectFromCoordinateSpace (CGRect rect, IUICoordinateSpace coordinateSpace);
 	}
 
+	interface IUIApplicationDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[NoMac, NoWatch]
@@ -4177,15 +4177,13 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UICollectionViewDelegate Delegate { get; set; }
+		IUICollectionViewDelegate Delegate { get; set; }
 
 		[Export ("dataSource", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDataSource { get; set; }
 
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		UICollectionViewDataSource DataSource { get; set; }
+		IUICollectionViewDataSource DataSource { get; set; }
 
 		[Export ("backgroundView", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -4468,6 +4466,8 @@ namespace UIKit {
 
 	}
 
+	interface IUICollectionViewDataSource { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -4506,6 +4506,8 @@ namespace UIKit {
 		[Export ("collectionView:indexPathForIndexTitle:atIndex:")]
 		NSIndexPath GetIndexPath (UICollectionView collectionView, string title, nint atIndex);
 	}
+
+	interface IUICollectionViewDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -6094,8 +6096,7 @@ namespace UIKit {
 		NSObject WeakCollisionDelegate { get; set; }
 
 		[Wrap ("WeakCollisionDelegate")]
-		[Protocolize]
-		UICollisionBehaviorDelegate CollisionDelegate { get; set; }
+		IUICollisionBehaviorDelegate CollisionDelegate { get; set; }
 
 		[Export ("addItem:")]
 		void AddItem (IUIDynamicItem dynamicItem);
@@ -6123,6 +6124,8 @@ namespace UIKit {
 		[Export ("removeAllBoundaries")]
 		void RemoveAllBoundaries ();
 	}
+
+	interface IUICollisionBehaviorDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -6271,6 +6274,8 @@ namespace UIKit {
 
 	}
 
+	interface IUIDynamicAnimatorDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -6311,8 +6316,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIDynamicAnimatorDelegate Delegate { get; set; }
+		IUIDynamicAnimatorDelegate Delegate { get; set; }
 
 		[Export ("addBehavior:")]
 		[PostGet ("Behaviors")]
@@ -6963,8 +6967,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIGestureRecognizerDelegate Delegate { get; set; }
+		IUIGestureRecognizerDelegate Delegate { get; set; }
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -7106,6 +7109,8 @@ namespace UIKit {
 		[Export ("pressesCancelled:withEvent:")]
 		void PressesCancelled (NSSet<UIPress> presses, UIPressesEvent evt);
 	}
+
+	interface IUIGestureRecognizerDelegate { }
 
 	[NoWatch]
 	[NoMac]
@@ -7834,16 +7839,14 @@ namespace UIKit {
 		NSObject WeakInputDelegate { get; set; }
 
 		[Wrap ("WeakInputDelegate")]
-		[Protocolize]
-		UITextInputDelegate InputDelegate { get; set; }
+		IUITextInputDelegate InputDelegate { get; set; }
 
 		[Abstract]
 		[Export ("tokenizer")]
 		NSObject WeakTokenizer { get; }
 
 		[Wrap ("WeakTokenizer")]
-		[Protocolize]
-		UITextInputTokenizer Tokenizer { get; }
+		IUITextInputTokenizer Tokenizer { get; }
 
 		[Export ("textInputView")]
 		UIView TextInputView { get; }
@@ -8046,6 +8049,8 @@ namespace UIKit {
 		[Export ("trailingBarButtonGroups", ArgumentSemantic.Copy), NullAllowed]
 		UIBarButtonItemGroup [] TrailingBarButtonGroups { get; set; }
 	}
+
+	interface IUITextInputTokenizer { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -10426,8 +10431,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIDocumentInteractionControllerDelegate Delegate { get; set; }
+		IUIDocumentInteractionControllerDelegate Delegate { get; set; }
 
 		// default value is null but it cannot be set back to null
 		// NSInternalInconsistencyException Reason: UIDocumentInteractionController: invalid scheme (null).  Only the file scheme is supported.
@@ -10472,6 +10476,8 @@ namespace UIKit {
 		[Export ("gestureRecognizers")]
 		UIGestureRecognizer [] GestureRecognizers { get; }
 	}
+
+	interface IUIDocumentInteractionControllerDelegate { }
 
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -10839,8 +10845,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UINavigationBarDelegate Delegate { get; set; }
+		IUINavigationBarDelegate Delegate { get; set; }
 
 		[Appearance]
 		[Export ("translucent", ArgumentSemantic.Assign)]
@@ -10986,6 +10991,8 @@ namespace UIKit {
 		[Export ("behavioralStyle", ArgumentSemantic.Assign)]
 		UIBehavioralStyle BehavioralStyle { get; }
 	}
+
+	interface IUINavigationBarDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -11287,8 +11294,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UINavigationControllerDelegate Delegate { get; set; }
+		IUINavigationControllerDelegate Delegate { get; set; }
 
 		[Field ("UINavigationControllerHideShowBarDuration")]
 		nfloat HideShowBarDuration { get; }
@@ -11332,6 +11338,8 @@ namespace UIKit {
 		[Export ("barHideOnTapGestureRecognizer", ArgumentSemantic.UnsafeUnretained)]
 		UITapGestureRecognizer BarHideOnTapGestureRecognizer { get; }
 	}
+
+	interface IUINavigationControllerDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -11502,15 +11510,13 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPageViewControllerDelegate Delegate { get; set; }
+		IUIPageViewControllerDelegate Delegate { get; set; }
 
 		[Export ("dataSource", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDataSource { get; set; }
 
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		UIPageViewControllerDataSource DataSource { get; set; }
+		IUIPageViewControllerDataSource DataSource { get; set; }
 
 		[Export ("transitionStyle")]
 		UIPageViewControllerTransitionStyle TransitionStyle { get; }
@@ -11546,6 +11552,8 @@ namespace UIKit {
 		NSString OptionInterPageSpacingKey { get; }
 	}
 
+	interface IUIPageViewControllerDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -11578,6 +11586,8 @@ namespace UIKit {
 		[DefaultValue (UIInterfaceOrientation.Portrait)]
 		UIInterfaceOrientation GetPreferredInterfaceOrientationForPresentation (UIPageViewController pageViewController);
 	}
+
+	interface IUIPageViewControllerDataSource { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -11888,8 +11898,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPickerViewDelegate Delegate { get; set; }
+		IUIPickerViewDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
@@ -11934,6 +11943,8 @@ namespace UIKit {
 		[Export ("tableView:cellForRowAtIndexPath:")]
 		UITableViewCell GetCell (UITableView tableView, NSIndexPath indexPath);
 	}
+
+	interface IUIPickerViewDelegate { }
 
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -12080,8 +12091,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIAdaptivePresentationControllerDelegate Delegate { get; set; }
+		IUIAdaptivePresentationControllerDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the 'TraitOverrides' property instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the 'TraitOverrides' property instead.")]
@@ -12799,8 +12809,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIScrollViewDelegate Delegate { get; set; }
+		IUIScrollViewDelegate Delegate { get; set; }
 
 		[Export ("bounces")]
 		bool Bounces { get; set; }
@@ -12950,6 +12959,8 @@ namespace UIKit {
 		bool AllowsKeyboardScrolling { get; set; }
 	}
 
+	interface IUIScrollViewDelegate { }
+
 	[NoMac, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -13042,8 +13053,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UISearchBarDelegate Delegate { get; set; }
+		IUISearchBarDelegate Delegate { get; set; }
 
 		[Export ("text", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -13210,6 +13220,8 @@ namespace UIKit {
 		new bool LookToDictateEnabled { [Bind ("isLookToDictateEnabled")] get; set; }
 	}
 
+	interface IUISearchBarDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIBarPositioningDelegate))]
@@ -13297,8 +13309,7 @@ namespace UIKit {
 		NSObject WeakSearchResultsUpdater { get; set; }
 
 		[Wrap ("WeakSearchResultsUpdater")]
-		[Protocolize]
-		UISearchResultsUpdating SearchResultsUpdater { get; set; }
+		IUISearchResultsUpdating SearchResultsUpdater { get; set; }
 
 		[Export ("active", ArgumentSemantic.UnsafeUnretained)]
 		bool Active { [Bind ("isActive")] get; set; }
@@ -13307,8 +13318,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UISearchControllerDelegate Delegate { get; set; }
+		IUISearchControllerDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'ObscuresBackgroundDuringPresentation' instead.")]
 		[NoTV]
@@ -13378,6 +13388,8 @@ namespace UIKit {
 
 	}
 
+	interface IUISearchControllerDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -13423,8 +13435,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UISearchDisplayDelegate Delegate { get; set; }
+		IUISearchDisplayDelegate Delegate { get; set; }
 
 		[Export ("active")]
 		bool Active { [Bind ("isActive")] get; set; }
@@ -13446,16 +13457,14 @@ namespace UIKit {
 		NSObject SearchResultsWeakDataSource { get; set; }
 
 		[Wrap ("SearchResultsWeakDataSource")]
-		[Protocolize]
-		UITableViewDataSource SearchResultsDataSource { get; set; }
+		IUITableViewDataSource SearchResultsDataSource { get; set; }
 
 		[Export ("searchResultsDelegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
 		NSObject SearchResultsWeakDelegate { get; set; }
 
 		[Wrap ("SearchResultsWeakDelegate")]
-		[Protocolize]
-		UITableViewDelegate SearchResultsDelegate { get; set; }
+		IUITableViewDelegate SearchResultsDelegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("searchResultsTitle", ArgumentSemantic.Copy)]
@@ -13467,6 +13476,8 @@ namespace UIKit {
 		[Export ("navigationItem")]
 		UINavigationItem NavigationItem { get; }
 	}
+
+	interface IUISearchDisplayDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -13535,6 +13546,8 @@ namespace UIKit {
 		[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 		bool ShouldReloadForSearchScope (UISearchDisplayController controller, nint forSearchOption);
 	}
+
+	interface IUISearchResultsUpdating { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -13967,8 +13980,7 @@ namespace UIKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		UITabBarDelegate Delegate { get; set; }
+		IUITabBarDelegate Delegate { get; set; }
 
 		[Export ("items", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -14118,13 +14130,14 @@ namespace UIKit {
 		UITabBar TabBar { get; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UITabBarControllerDelegate Delegate { get; set; }
+		IUITabBarControllerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 	}
+
+	interface IUITabBarDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -14155,6 +14168,8 @@ namespace UIKit {
 		[Export ("tabBar:didEndCustomizingItems:changed:"), EventArgs ("UITabBarFinalItems")]
 		void DidEndCustomizingItems (UITabBar tabbar, UITabBarItem [] items, bool changed);
 	}
+
+	interface IUITabBarControllerDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -14351,8 +14366,7 @@ namespace UIKit {
 		NSObject WeakDataSource { get; set; }
 
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		UITableViewDataSource DataSource { get; set; }
+		IUITableViewDataSource DataSource { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[New]
@@ -14361,8 +14375,7 @@ namespace UIKit {
 
 		[Wrap ("WeakDelegate")]
 		[New]
-		[Protocolize]
-		UITableViewDelegate Delegate { get; set; }
+		IUITableViewDelegate Delegate { get; set; }
 
 		[Export ("rowHeight")]
 		nfloat RowHeight { get; set; }
@@ -15193,6 +15206,8 @@ namespace UIKit {
 		UIRefreshControl RefreshControl { get; set; }
 	}
 
+	interface IUITableViewDataSource { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -15241,6 +15256,8 @@ namespace UIKit {
 		[Export ("tableView:moveRowAtIndexPath:toIndexPath:")]
 		void MoveRow (UITableView tableView, NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath);
 	}
+
+	interface IUITableViewDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -15634,8 +15651,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UITextFieldDelegate Delegate { get; set; }
+		IUITextFieldDelegate Delegate { get; set; }
 
 		[Export ("background", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -15752,6 +15768,8 @@ namespace UIKit {
 		NSObject InteractionState { get; set; }
 	}
 
+	interface IUITextFieldDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -15843,8 +15861,7 @@ namespace UIKit {
 
 		[Wrap ("WeakDelegate")]
 		[New]
-		[Protocolize]
-		UITextViewDelegate Delegate { get; set; }
+		IUITextViewDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[New]
@@ -15957,6 +15974,8 @@ namespace UIKit {
 		[Export ("borderStyle", ArgumentSemantic.Assign)]
 		UITextViewBorderStyle BorderStyle { get; set; }
 	}
+
+	interface IUITextViewDelegate { }
 
 	[BaseType (typeof (UIScrollViewDelegate))]
 	[NoMac, NoWatch]
@@ -16121,8 +16140,7 @@ namespace UIKit {
 		UIToolbarAppearance CompactScrollEdgeAppearance { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIToolbarDelegate Delegate { get; set; }
+		IUIToolbarDelegate Delegate { get; set; }
 	}
 
 	interface IUITimingCurveProvider { }
@@ -16143,6 +16161,8 @@ namespace UIKit {
 		[NullAllowed, Export ("springTimingParameters")]
 		UISpringTimingParameters SpringTimingParameters { get; }
 	}
+
+	interface IUIToolbarDelegate { }
 
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -16252,9 +16272,8 @@ namespace UIKit {
 		bool CanEditVideoAtPath (string path);
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
 		// id<UINavigationControllerDelegate, UIVideoEditorControllerDelegate>
-		UIVideoEditorControllerDelegate Delegate { get; set; }
+		IUIVideoEditorControllerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -16269,6 +16288,8 @@ namespace UIKit {
 		[Export ("videoQuality")]
 		UIImagePickerControllerQualityType VideoQuality { get; set; }
 	}
+
+	interface IUIVideoEditorControllerDelegate { }
 
 	// id<UINavigationControllerDelegate, UIVideoEditorControllerDelegate>
 	[BaseType (typeof (UINavigationControllerDelegate))]
@@ -17584,8 +17605,7 @@ namespace UIKit {
 		NSObject WeakTransitioningDelegate { get; set; }
 
 		[Wrap ("WeakTransitioningDelegate")]
-		[Protocolize]
-		UIViewControllerTransitioningDelegate TransitioningDelegate { get; set; }
+		IUIViewControllerTransitioningDelegate TransitioningDelegate { get; set; }
 
 		[NoTV]
 		[MacCatalyst (13, 1)]
@@ -18352,6 +18372,8 @@ namespace UIKit {
 	}
 	interface IUIViewControllerInteractiveTransitioning { }
 
+	interface IUIViewControllerTransitioningDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Model, BaseType (typeof (NSObject))]
@@ -18542,8 +18564,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIWebViewDelegate Delegate { get; set; }
+		IUIWebViewDelegate Delegate { get; set; }
 
 		[Export ("loadRequest:")]
 		void LoadRequest (NSUrlRequest r);
@@ -18626,6 +18647,8 @@ namespace UIKit {
 		[Export ("allowsLinkPreview")]
 		bool AllowsLinkPreview { get; set; }
 	}
+
+	interface IUIWebViewDelegate { }
 
 	[NoMacCatalyst, NoWatch]
 	[NoTV]
@@ -18902,8 +18925,7 @@ namespace UIKit {
 		UIViewController [] ViewControllers { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UISplitViewControllerDelegate Delegate { get; set; }
+		IUISplitViewControllerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -19003,6 +19025,8 @@ namespace UIKit {
 		[Export ("primaryBackgroundStyle", ArgumentSemantic.Assign)]
 		UISplitViewControllerBackgroundStyle PrimaryBackgroundStyle { get; set; }
 	}
+
+	interface IUISplitViewControllerDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -19364,8 +19388,7 @@ namespace UIKit {
 		UIView [] PassthroughViews { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPopoverControllerDelegate Delegate { get; set; }
+		IUIPopoverControllerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -19399,6 +19422,8 @@ namespace UIKit {
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		UIColor BackgroundColor { get; set; }
 	}
+
+	interface IUIPopoverControllerDelegate { }
 
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
@@ -19436,8 +19461,7 @@ namespace UIKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		UIPopoverPresentationControllerDelegate Delegate { get; set; }
+		IUIPopoverPresentationControllerDelegate Delegate { get; set; }
 
 		[Export ("permittedArrowDirections", ArgumentSemantic.UnsafeUnretained)]
 		UIPopoverArrowDirection PermittedArrowDirections { get; set; }
@@ -19482,6 +19506,8 @@ namespace UIKit {
 		[NullAllowed]
 		IUIPopoverPresentationControllerSourceItem SourceItem { get; set; }
 	}
+
+	interface IUIAdaptivePresentationControllerDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -19535,6 +19561,8 @@ namespace UIKit {
 		[Export ("presentationControllerDidAttemptToDismiss:")]
 		void DidAttemptToDismiss (UIPresentationController presentationController);
 	}
+
+	interface IUIPopoverPresentationControllerDelegate { }
 
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -19640,8 +19668,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPrinterPickerControllerDelegate Delegate { get; set; }
+		IUIPrinterPickerControllerDelegate Delegate { get; set; }
 
 		[Static, Export ("printerPickerControllerWithInitiallySelectedPrinter:")]
 		UIPrinterPickerController FromPrinter ([NullAllowed] UIPrinter printer);
@@ -19661,6 +19688,8 @@ namespace UIKit {
 		[Export ("dismissAnimated:")]
 		void Dismiss (bool animated);
 	}
+
+	interface IUIPrinterPickerControllerDelegate { }
 
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
@@ -19758,6 +19787,8 @@ namespace UIKit {
 		UIPrintFormatter [] PrintFormattersForPage (nint index);
 	}
 
+	interface IUIPrintInteractionControllerDelegate { }
+
 	[NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -19807,8 +19838,7 @@ namespace UIKit {
 	[DisableDefaultCtor]
 	interface UIPrintInteractionController {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPrintInteractionControllerDelegate Delegate { get; set; }
+		IUIPrintInteractionControllerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -20685,8 +20715,7 @@ namespace UIKit {
 		NativeHandle Constructor (NSUrl url, UIDocumentPickerMode mode);
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIDocumentMenuDelegate Delegate { get; set; }
+		IUIDocumentMenuDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -20695,6 +20724,8 @@ namespace UIKit {
 		[Async]
 		void AddOption (string title, [NullAllowed] UIImage image, UIDocumentMenuOrder order, Action completionHandler);
 	}
+
+	interface IUIDocumentMenuDelegate { }
 
 	[NoWatch]
 	[NoTV]
@@ -20768,8 +20799,7 @@ namespace UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIDocumentPickerDelegate Delegate { get; set; }
+		IUIDocumentPickerDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
@@ -20790,6 +20820,8 @@ namespace UIKit {
 		[NullAllowed, Export ("directoryURL", ArgumentSemantic.Copy)]
 		NSUrl DirectoryUrl { get; set; }
 	}
+
+	interface IUIDocumentPickerDelegate { }
 
 	[NoWatch]
 	[NoTV]
