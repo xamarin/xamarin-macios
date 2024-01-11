@@ -8,3 +8,6 @@
 
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+
+# NullAllowed makes sense
+!extra-null-allowed! 'System.Void GameKit.GKMatchmaker::FindMatchedPlayers(GameKit.GKMatchRequest,System.Action`2<GameKit.GKMatchedPlayers,Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1

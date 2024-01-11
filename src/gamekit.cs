@@ -1102,6 +1102,14 @@ namespace GameKit {
 		[Export ("expectedPlayerCount")]
 		nint ExpectedPlayerCount { get; }
 
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[NullAllowed, Export ("properties")]
+		NSDictionary<NSString, NSObject> Properties { get; }
+
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[NullAllowed, Export ("playerProperties")]
+		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> PlayerProperties { get; }
+
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'SendDataToAllPlayers (NSData, GKPlayer[] players, GKMatchSendDataMode mode, NSError error)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'SendDataToAllPlayers (NSData, GKPlayer[] players, GKMatchSendDataMode mode, NSError error)' instead.")]
@@ -1341,6 +1349,18 @@ namespace GameKit {
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'GKMatchmakerViewController.MatchmakingMode' instead.")]
 		[Export ("restrictToAutomatch")]
 		bool RestrictToAutomatch { get; set; }
+
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[NullAllowed, Export ("queueName")]
+		string QueueName { get; set; }
+
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[NullAllowed, Export ("properties", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Properties { get; set; }
+
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[NullAllowed, Export ("recipientProperties", ArgumentSemantic.Copy)]
+		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> RecipientProperties { get; set; }
 	}
 
 	[NoWatch]
@@ -1416,6 +1436,11 @@ namespace GameKit {
 		[Async]
 		void QueryActivity ([NullAllowed] GKQueryHandler completionHandler);
 
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[Async]
+		[Export ("queryQueueActivity:withCompletionHandler:")]
+		void QueryQueueActivity (string queueName, [NullAllowed] Action<nint, NSError> completionHandler);
+
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("matchForInvite:completionHandler:")]
@@ -1454,6 +1479,11 @@ namespace GameKit {
 		[Export ("findPlayersForHostedRequest:withCompletionHandler:")]
 		[Async]
 		void FindPlayersForHostedRequest (GKMatchRequest request, [NullAllowed] Action<GKPlayer [], NSError> completionHandler);
+
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[Async]
+		[Export ("findMatchedPlayers:withCompletionHandler:")]
+		void FindMatchedPlayers (GKMatchRequest request, [NullAllowed] Action<GKMatchedPlayers, NSError> completionHandler);
 
 		// Not truly an [Async] method since the handler can be called multiple times, for each player found
 		[MacCatalyst (13, 1)]
@@ -1602,6 +1632,11 @@ namespace GameKit {
 		[MacCatalyst (13, 1)]
 		[Export ("matchmakerViewController:hostedPlayerDidAccept:"), EventArgs ("GKMatchmakingPlayer")]
 		void HostedPlayerDidAccept (GKMatchmakerViewController viewController, GKPlayer playerID);
+
+		[TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[IgnoredInDelegate]
+		[Export ("matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:")]
+		void GetMatchProperties (GKMatchmakerViewController viewController, GKPlayer recipient, Action<NSDictionary<NSString, NSObject>> completionHandler);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -3026,5 +3061,19 @@ namespace GameKit {
 
 		[Export ("leaderboardID", ArgumentSemantic.Strong)]
 		string LeaderboardId { get; set; }
+	}
+
+	[TV (17, 2), NoWatch, Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+	[BaseType (typeof (NSObject))]
+	interface GKMatchedPlayers {
+
+		[NullAllowed, Export ("properties")]
+		NSDictionary<NSString, NSObject> Properties { get; }
+
+		[Export ("players")]
+		GKPlayer [] Players { get; }
+
+		[NullAllowed, Export ("playerProperties")]
+		NSDictionary<GKPlayer, NSDictionary<NSString, NSObject>> PlayerProperties { get; }
 	}
 }
