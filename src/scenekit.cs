@@ -4056,7 +4056,10 @@ namespace SceneKit {
 		[Wrap ("WeakShaderModifiers")]
 		SCNShaderModifiers ShaderModifiers { get; set; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), Watch (8, 0)]
+#if !NET
+		[Watch (8, 0)]
+#endif
+		[Mac (12, 0), iOS (15, 0), TV (15, 0)]
 		[MacCatalyst (15, 0)]
 		[NullAllowed] // by default this property is null
 		[Export ("minimumLanguageVersion", ArgumentSemantic.Retain)]

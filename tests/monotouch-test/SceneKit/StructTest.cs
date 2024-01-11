@@ -45,7 +45,6 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void Vector ()
 		{
-			var v = new SCNVector4 ();
 			var u = SCNVector4.UnitX;
 			u.X = 2;
 			Assert.That (SCNVector4.UnitX, Is.Not.EqualTo (u), "UnitX");

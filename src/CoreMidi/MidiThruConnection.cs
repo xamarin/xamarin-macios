@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 // 
 // MidiThruConnection.cs
 //
@@ -62,10 +63,10 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		static extern /* OSStatus */ MidiError MIDIThruConnectionCreate (
+		unsafe static extern /* OSStatus */ MidiError MIDIThruConnectionCreate (
 			/* CFStringRef */ IntPtr inPersistentOwnerID, /* can be null */
 			/* CFDataRef */ IntPtr inConnectionParams,
-			/* MIDIThruConnectionRef* */ out MidiThruConnectionRef outConnection);
+			/* MIDIThruConnectionRef* */ MidiThruConnectionRef* outConnection);
 
 		public static MidiThruConnection? Create (string persistentOwnerID, MidiThruConnectionParams connectionParams, out MidiError error)
 		{
@@ -74,7 +75,9 @@ namespace CoreMidi {
 			using (var data = connectionParams.WriteStruct ()) {
 				var retStr = CFString.CreateNative (persistentOwnerID);
 				try {
-					error = MIDIThruConnectionCreate (retStr, data.Handle, out ret);
+					unsafe {
+						error = MIDIThruConnectionCreate (retStr, data.Handle, &ret);
+					}
 				} finally {
 					CFString.ReleaseNative (retStr);
 				}
@@ -93,9 +96,9 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		static extern /* OSStatus */ MidiError MIDIThruConnectionGetParams (
+		unsafe static extern /* OSStatus */ MidiError MIDIThruConnectionGetParams (
 			/* MIDIThruConnectionRef* */ MidiThruConnectionRef connection,
-			/* CFDataRef */ out IntPtr outConnectionParams);
+			/* CFDataRef */ IntPtr* outConnectionParams);
 
 		public MidiThruConnectionParams? GetParams (out MidiError error)
 		{
@@ -103,7 +106,9 @@ namespace CoreMidi {
 				throw new ObjectDisposedException ("MidiThruConnection");
 
 			IntPtr ret;
-			error = MIDIThruConnectionGetParams (Handle, out ret);
+			unsafe {
+				error = MIDIThruConnectionGetParams (Handle, &ret);
+			}
 			if (error != MidiError.Ok || ret == IntPtr.Zero)
 				return null;
 			using (var data = Runtime.GetNSObject<NSData> (ret, true)) {
@@ -140,9 +145,9 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		static extern /* OSStatus */ MidiError MIDIThruConnectionFind (
+		unsafe static extern /* OSStatus */ MidiError MIDIThruConnectionFind (
 			/* CFStringRef* */ IntPtr inPersistentOwnerID,
-			/* CFDataRef */ out IntPtr outConnectionList);
+			/* CFDataRef */ IntPtr* outConnectionList);
 
 		public static MidiThruConnection []? Find (string persistentOwnerID, out MidiError error)
 		{
@@ -152,7 +157,9 @@ namespace CoreMidi {
 			IntPtr ret;
 			var persistentOwnerIDHandle = CFString.CreateNative (persistentOwnerID);
 			try {
-				error = MIDIThruConnectionFind (persistentOwnerIDHandle, out ret);
+				unsafe {
+					error = MIDIThruConnectionFind (persistentOwnerIDHandle, &ret);
+				}
 			} finally {
 				CFString.ReleaseNative (persistentOwnerIDHandle);
 			}
@@ -184,3 +191,4 @@ namespace CoreMidi {
 	}
 #endif // !COREBUILD
 }
+#endif

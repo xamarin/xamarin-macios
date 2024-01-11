@@ -58,9 +58,7 @@ steps:
 - bash: |
     make -C src build/generator-frameworks.g.cs
     make -C src build/ios/Constants.cs
-    make -C msbuild Versions.dotnet.g.cs
-    make -C msbuild Versions.ios.g.cs
-    make -C msbuild Versions.mac.g.cs
+    make -C msbuild Versions.g.cs
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Generate constants files 
   timeoutInMinutes: 15
@@ -106,19 +104,11 @@ steps:
   displayName: Build test dependencies
   timeoutInMinutes: 30
 
-# download the prebuilt test dependencies
-- task: DownloadPipelineArtifact@2
-  displayName: Download test libraries dependencies 
-  inputs:
-    patterns: '**/package-test-libraries.zip'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts/tmp
-
 # expand all the prebuilt test dependencies
 - bash: |
-    ls -Rla@ $(Build.SourcesDirectory)/artifacts/tmp
-    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
-    unzip -o $(Build.SourcesDirectory)/artifacts/tmp/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
+    ls -Rla@ $(Build.SourcesDirectory)/artifacts
+    xattr -s -c -r $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip
+    unzip -o $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package-test-libraries/package-test-libraries.zip -d .
     ls -Rla@ .
     xattr -s -c -r .
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios

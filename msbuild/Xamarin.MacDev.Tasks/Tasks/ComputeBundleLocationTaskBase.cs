@@ -14,7 +14,7 @@ using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ComputeBundleLocationTaskBase : XamarinTask {
+	public class ComputeBundleLocation : XamarinTask {
 		// not required because this can be the root directory (so an empty string)
 		public string AssemblyDirectory { get; set; } = string.Empty;
 
@@ -38,6 +38,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		// not required because this can be the root directory (so an empty string)
 		public string ResourceDirectory { get; set; } = string.Empty;
+
+		[Required]
+		public string XpcServicesDirectory { get; set; } = string.Empty;
 
 		[Required]
 		public ITaskItem []? ResolvedFileToPublish { get; set; }
@@ -136,6 +139,13 @@ namespace Xamarin.MacDev.Tasks {
 					break;
 				case PublishFolderType.CompressedPlugIns:
 					relativePath = PlugInsDirectory;
+					virtualProjectPath = string.Empty;
+					break;
+				case PublishFolderType.XpcServices:
+					relativePath = XpcServicesDirectory;
+					break;
+				case PublishFolderType.CompressedXpcServices:
+					relativePath = XpcServicesDirectory;
 					virtualProjectPath = string.Empty;
 					break;
 				case PublishFolderType.RootDirectory:

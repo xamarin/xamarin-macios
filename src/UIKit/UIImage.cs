@@ -104,7 +104,7 @@ namespace UIKit {
 			byte [] buffer = new byte [stream.Length];
 			stream.Read (buffer, 0, buffer.Length);
 			unsafe {
-				fixed (byte* p = &buffer [0]) {
+				fixed (byte* p = buffer) {
 					var data = NSData.FromBytes ((IntPtr) p, (uint) stream.Length);
 					return LoadFromData (data);
 				}

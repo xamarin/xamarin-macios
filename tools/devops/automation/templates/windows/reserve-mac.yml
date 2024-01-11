@@ -12,6 +12,15 @@ parameters:
   type: string
   default: HEAD
 
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
 
 steps:
 - template:  sdk-unified/steps/checkout/v1.yml@yaml-templates
@@ -32,6 +41,19 @@ steps:
   name: macInfo
   displayName: Set agent information
 
+- bash: ./install-qa-provisioning-profiles.sh -v
+  displayName: 'Add build provisioning profiles'
+  timeoutInMinutes: 30
+  continueOnError: true # should not stop the build
+  workingDirectory: $(Build.SourcesDirectory)/maccore/tools
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
@@ -41,3 +63,27 @@ steps:
     $agent = $vsts.Agents.GetAgent($pool, "$(Agent.Name)")
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable macOS bot from pool"
+
+- bash: make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops provision-xcode.csx
+  displayName: 'Generate Xcode provisioning csx file'
+
+- task: xamops.azdevex.provisionator-task.provisionator@2
+  displayName: 'Provision Xcode'
+  inputs:
+    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/provision-xcode.csx
+    provisioning_extra_args: '-vvvv'
+    github_token: ${{ parameters.gitHubToken }}
+  timeoutInMinutes: 250
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+  displayName: 'Install .NET + workloads'
+  timeoutInMinutes: 45
+  env:
+    MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}

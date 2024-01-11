@@ -6,8 +6,9 @@
 
 		<_ShortPackageVersion>@NUGET_VERSION_NO_METADATA@</_ShortPackageVersion>
 		<_PackageVersion>@NUGET_VERSION_FULL@</_PackageVersion>
-		<_DefaultTargetPlatformVersion>@DEFAULT_TARGET_PLATFORM_VERSION@</_DefaultTargetPlatformVersion>
+		<_XamarinTargetPlatformVersion>@TARGET_PLATFORM_VERSION@</_XamarinTargetPlatformVersion>
 		<_XamarinIsPreviewRelease>@XCODE_IS_PREVIEW@</_XamarinIsPreviewRelease>
+		<_XamarinDotNetVersion>@DOTNET_TFM@</_XamarinDotNetVersion>
 	</PropertyGroup>
 
 	<ItemGroup>@VALID_RUNTIME_IDENTIFIERS@

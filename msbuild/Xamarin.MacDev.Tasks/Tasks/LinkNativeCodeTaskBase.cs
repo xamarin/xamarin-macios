@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
-	public abstract class LinkNativeCodeTaskBase : XamarinTask {
+	public class LinkNativeCode : XamarinTask, ITaskCallback {
+		string outputPath;
 
 		#region Inputs
 		public ITaskItem [] LinkerFlags { get; set; }
@@ -36,7 +42,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string MinimumOSVersion { get; set; }
 
-		public ITaskItem [] NativeReferences { get; set; }
+		public ITaskItem [] NativeReferences { get; set; } = Array.Empty<ITaskItem> ();
 
 		public ITaskItem [] Frameworks { get; set; }
 
@@ -52,6 +58,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				outputPath = PathUtils.ConvertToMacPath (Path.GetDirectoryName (OutputFile));
+
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			}
+
 			try {
 				return ExecuteUnsafe ();
 			} catch (Exception e) {
@@ -78,7 +90,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var hasEmbeddedFrameworks = false;
 
-			if (NativeReferences?.Length > 0) {
+			if (NativeReferences.Length > 0) {
 				var linkerArguments = new LinkerOptions ();
 				linkerArguments.BuildNativeReferenceFlags (Log, NativeReferences);
 				foreach (var framework in linkerArguments.Frameworks) {
@@ -162,6 +174,8 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
+			hasDylibs |= NativeReferences.Any (v => string.Equals (".dylib", Path.GetExtension (v.ItemSpec), StringComparison.OrdinalIgnoreCase));
+
 			if (hasDylibs) {
 				arguments.Add ("-rpath");
 				arguments.Add (DylibRPath ?? "@executable_path");
@@ -237,5 +251,13 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 		}
+
+		// We should avoid copying files from the output path because those already exist on the Mac
+		// and the ones on Windows are empty, so we will break the build
+		public bool ShouldCopyToBuildServer (ITaskItem item) => !PathUtils.ConvertToMacPath (item.ItemSpec).StartsWith (outputPath);
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

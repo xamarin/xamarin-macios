@@ -5,6 +5,7 @@
 //     Manuel de la Pena <mandel@microsoft.com>
 using System;
 using ObjCRuntime;
+using Network;
 
 using Foundation;
 
@@ -62,6 +63,23 @@ namespace Foundation {
 			var config = NSUrlSessionConfiguration._CreateBackgroundSessionConfiguration (identifier);
 			config.SessionType = SessionConfigurationType.Background;
 			return config;
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("tvos17.0")]
+#else
+		[TV (17, 0), Watch (10, 0), iOS (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
+#endif
+		public NWProxyConfig [] ProxyConfigurations {
+			get => NSArray.ArrayFromHandleFunc (_ProxyConfigurations, handle => new NWProxyConfig (handle, owns: false));
+			set {
+				var arr = NSArray.FromNSObjects (value);
+				_ProxyConfigurations = arr.Handle;
+				GC.KeepAlive (arr);
+			}
 		}
 
 	}

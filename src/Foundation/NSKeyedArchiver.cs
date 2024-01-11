@@ -26,6 +26,9 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSKeyedArchiver {

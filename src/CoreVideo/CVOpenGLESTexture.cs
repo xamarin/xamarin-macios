@@ -117,7 +117,7 @@ namespace CoreVideo {
 			upperLeft = new float [2];
 
 			unsafe {
-				fixed (float *ll = &lowerLeft[0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft[0]){
+				fixed (float *ll = lowerLeft, lr = lowerRight, ur = upperRight, ul = upperLeft){
 					CVOpenGLESTextureGetCleanTexCoords (handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
 				}
 			}

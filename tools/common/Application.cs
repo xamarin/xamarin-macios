@@ -30,6 +30,9 @@ using PlatformResolver = Xamarin.Linker.DotNetResolver;
 #error Invalid defines
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Bundler {
 
 	public enum BuildTarget {
@@ -125,7 +128,9 @@ namespace Xamarin.Bundler {
 		}
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
+#if !NET
 		public I18nAssemblies I18n;
+#endif
 		public List<string> WarnOnTypeRef = new List<string> ();
 
 		public bool? EnableCoopGC;
@@ -542,6 +547,7 @@ namespace Xamarin.Bundler {
 				InterpretedAssemblies.AddRange (value.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 
+#if !NET
 		public void ParseI18nAssemblies (string i18n)
 		{
 			var assemblies = I18nAssemblies.None;
@@ -560,6 +566,7 @@ namespace Xamarin.Bundler {
 
 			I18n = assemblies;
 		}
+#endif
 
 		public bool IsTodayExtension {
 			get {

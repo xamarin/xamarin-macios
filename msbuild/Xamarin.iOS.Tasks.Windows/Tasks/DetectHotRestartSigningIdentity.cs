@@ -8,6 +8,9 @@ using Microsoft.Build.Utilities;
 using Xamarin.iOS.Windows;
 using Xamarin.MacDev;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.HotRestart.Tasks {
 	public class DetectHotRestartSigningIdentity : Task {
 		static readonly string ProvisioningPath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData), "Xamarin", "iOS", "Provisioning");

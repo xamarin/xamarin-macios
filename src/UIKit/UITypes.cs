@@ -15,6 +15,9 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -120,12 +123,11 @@ namespace UIKit {
 		}
 
 		[DllImport (Constants.UIKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool UIFloatRangeIsInfinite (UIFloatRange range);
+		extern static byte UIFloatRangeIsInfinite (UIFloatRange range);
 
 		public bool IsInfinite {
 			get {
-				return UIFloatRangeIsInfinite (this);
+				return UIFloatRangeIsInfinite (this) != 0;
 			}
 		}
 

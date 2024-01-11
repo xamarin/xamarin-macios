@@ -40,12 +40,17 @@ namespace Cecil.Tests {
 			return ad;
 		}
 
+		public static void AssertFailures (HashSet<string>? currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message)
+		{
+			AssertFailures<string> (currentFailures?.ToDictionary (v => v) ?? new Dictionary<string, string> (), knownFailures, nameOfKnownFailureSet, message, (v) => v);
+		}
+
 		public static void AssertFailures (Dictionary<string, string> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message)
 		{
 			AssertFailures<string> (currentFailures, knownFailures, nameOfKnownFailureSet, message, (v) => v);
 		}
 
-		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString)
+		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString) where T : notnull
 		{
 			var newFailures = currentFailures.Where (v => !knownFailures.Contains (v.Key)).Select (v => v.Value).ToArray ();
 			var fixedFailures = knownFailures.Except (currentFailures.Select (v => v.Key).ToHashSet ());
@@ -65,12 +70,20 @@ namespace Cecil.Tests {
 					Console.WriteLine ($"    {failureToString (failure)}");
 			}
 
-			Assert.IsEmpty (newFailures, $"Failures: {message}");
+			// Rather than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
+			// nice enumerated output of all the failures.
+			Assert.Multiple (() => {
+				// fail for each of the new failures
+				foreach (var failure in newFailures) {
+					Assert.Fail (failure.ToString ());
+				}
 
-			// The list of known failures often doesn't separate based on platform, which means that we might not see all the known failures
-			// unless we're currently building for all platforms. As such, only verify the list of known failures if we're building for all platforms.
-			if (!Configuration.AnyIgnoredPlatforms ())
-				Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
+				// The list of known failures often doesn't separate based on platform, which means that we might not see all the known failures
+				// unless we're currently building for all platforms. As such, only verify the list of known failures if we're building for all platforms.
+				if (!Configuration.AnyIgnoredPlatforms ())
+					Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
+			});
+
 		}
 
 		// Enumerates all the methods in the assembly, for all types (including nested types), potentially providing a custom filter function.
@@ -217,6 +230,128 @@ namespace Cecil.Tests {
 
 			foreach (var item in assembly.EnumerateEvents (filter))
 				yield return item;
+		}
+
+		public static IEnumerable<MemberReference> EnumerateMembers (this AssemblyDefinition assembly, Func<MemberReference, bool>? filter = null)
+		{
+			foreach (var item in assembly.EnumerateTypes (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateFields (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateMethods (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateProperties (filter))
+				yield return item;
+
+			foreach (var item in assembly.EnumerateEvents (filter))
+				yield return item;
+		}
+
+		public static bool IsPubliclyVisible (this TypeDefinition type)
+		{
+			if (type.IsNested) {
+				if (type.IsNestedAssembly || type.IsNestedFamilyAndAssembly || type.IsNestedPrivate)
+					return false;
+				return IsPubliclyVisible (type.DeclaringType);
+			}
+
+			return type.IsPublic;
+		}
+
+		public static bool IsPubliclyVisible (this FieldDefinition field)
+		{
+			if (!IsPubliclyVisible (field.DeclaringType))
+				return false;
+
+			var visibility = field.Attributes & FieldAttributes.FieldAccessMask;
+			switch (visibility) {
+			case FieldAttributes.Private:
+			case FieldAttributes.FamANDAssem:
+			case FieldAttributes.Assembly:
+				return false;
+			case FieldAttributes.Family:
+			case FieldAttributes.FamORAssem:
+			case FieldAttributes.Public:
+				return true;
+			default:
+				throw new NotImplementedException ($"Unknown visibility: {visibility}");
+			}
+		}
+
+		public static bool IsPubliclyVisible (this MethodDefinition method)
+		{
+			if (!IsPubliclyVisible (method.DeclaringType))
+				return false;
+
+			var visibility = method.Attributes & MethodAttributes.MemberAccessMask;
+			switch (visibility) {
+			case MethodAttributes.Private:
+			case MethodAttributes.FamANDAssem:
+			case MethodAttributes.Assembly:
+				return false;
+			case MethodAttributes.Family:
+			case MethodAttributes.FamORAssem:
+			case MethodAttributes.Public:
+				return true;
+			default:
+				throw new NotImplementedException ($"Unknown visibility: {visibility}");
+			}
+		}
+
+		public static bool IsPubliclyVisible (this EventDefinition evt)
+		{
+			if (!IsPubliclyVisible (evt.DeclaringType))
+				return false;
+
+			var invokeMethod = evt.InvokeMethod;
+			if (invokeMethod is not null && IsPubliclyVisible (invokeMethod))
+				return true;
+			var addMethod = evt.AddMethod;
+			if (addMethod is not null && IsPubliclyVisible (addMethod))
+				return true;
+			var removeMethod = evt.RemoveMethod;
+			if (removeMethod is not null && IsPubliclyVisible (removeMethod))
+				return true;
+			return false;
+		}
+
+		public static bool IsPubliclyVisible (this PropertyDefinition property)
+		{
+			if (!IsPubliclyVisible (property.DeclaringType))
+				return false;
+
+			var getter = property.GetMethod;
+			if (getter is not null && IsPubliclyVisible (getter))
+				return true;
+			var setter = property.SetMethod;
+			if (setter is not null && IsPubliclyVisible (setter))
+				return true;
+			return false;
+		}
+
+		public static bool IsPubliclyVisible (this MemberReference member)
+		{
+			return member switch {
+				PropertyDefinition pd => IsPubliclyVisible (pd),
+				EventDefinition ed => IsPubliclyVisible (ed),
+				MethodDefinition md => IsPubliclyVisible (md),
+				FieldDefinition fd => IsPubliclyVisible (fd),
+				TypeDefinition td => IsPubliclyVisible (td),
+				_ => throw new NotImplementedException (member.GetType ().FullName),
+			};
+		}
+
+		public static IEnumerable<MemberReference> EnumeratePublicMembers (this AssemblyDefinition assembly, Func<MemberReference, bool>? filter = null)
+		{
+			var visibleFilter = (MemberReference mr) => {
+				if (filter is not null && !filter (mr))
+					return false;
+				return IsPubliclyVisible (mr);
+			};
+			return EnumerateMembers (assembly, visibleFilter);
 		}
 
 		public static IEnumerable<ICustomAttributeProvider> EnumerateAttributeProviders (this TypeDefinition type, Func<ICustomAttributeProvider, bool>? filter = null)
@@ -419,7 +554,7 @@ namespace Cecil.Tests {
 			return string.Empty;
 		}
 
-		public static string RenderLocation (this ICustomAttributeProvider provider)
+		public static string RenderLocation (this object provider)
 		{
 			if (provider is IMemberDefinition md)
 				return RenderLocation (md);

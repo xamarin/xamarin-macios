@@ -7,13 +7,25 @@ using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
-public class AttributeManager {
-	public BindingTouch BindingTouch;
-	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
-	public AttributeManager (BindingTouch binding_touch)
+public class AttributeManager {
+
+	readonly Dictionary<System.Type, Type> typeLookup = new ();
+
+	readonly HashSet<string> ignoredAttributes = new () {
+		"Microsoft.CodeAnalysis.EmbeddedAttribute",
+		"System.Runtime.CompilerServices.NullableAttribute",
+		"System.Runtime.CompilerServices.NullableContextAttribute",
+		"System.Runtime.CompilerServices.NativeIntegerAttribute",
+	};
+
+	TypeCache TypeCache { get; }
+
+	public AttributeManager (TypeCache typeCache)
 	{
-		BindingTouch = binding_touch;
+		TypeCache = typeCache;
 	}
 
 	Type LookupReflectionType (string fullname, ICustomAttributeProvider provider)
@@ -208,8 +220,6 @@ public class AttributeManager {
 			return typeof (ThreadSafeAttribute);
 		case "TransientAttribute":
 			return typeof (TransientAttribute);
-		case "UnifiedInternalAttribute":
-			return typeof (UnifiedInternalAttribute);
 		case "Visibility":
 			return typeof (Visibility);
 		case "WrapAttribute":
@@ -248,31 +258,33 @@ public class AttributeManager {
 	}
 
 	// This method gets the IKVM.Reflection.Type for a System.Type.
-	Type ConvertTypeToMeta (System.Type type, ICustomAttributeProvider provider)
+	Type ConvertTypeToMeta (System.Type type)
 	{
-		var ikvm_type_lookup = BindingTouch.IKVMTypeLookup;
-
-		if (!ikvm_type_lookup.TryGetValue (type, out var rv)) {
+		if (!typeLookup.TryGetValue (type, out var rv)) {
 			// Brute force: look everywhere.
 			// Due to how types move around between assemblies in .NET 5 it gets complicated
 			// to figure out which assembly each type comes from, so just look in every assembly.
 			// Report a warning if we find the same type in multiple assemblies though.
-			var assemblies = BindingTouch.universe.GetAssemblies ();
+			var assemblies = TypeCache.Universe.GetAssemblies ();
 			foreach (var asm in assemblies) {
-				var lookup = asm.GetType (type.Namespace + "." + type.Name);
+				var typeName = type.Name;
+				if (type.Namespace is not null)
+					typeName = type.Namespace + "." + typeName;
+				var lookup = asm.GetType (typeName);
 				if (lookup is null)
 					continue;
 				if (lookup.Assembly != asm) {
 					// Apparently looking for type X in assembly A can return type X from assembly B... ignore those.
 					continue;
 				}
-				if (rv is not null) {
+				// we will just throw if we do find a type multiple times but if it was not injected by the compiler.
+				if (rv is not null && !ignoredAttributes.Contains (rv.FullName)) {
 					ErrorHelper.Warning (1119, /*"Internal error: found the same type ({0}) in multiple assemblies ({1} and {2}). Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", */type.FullName, rv.AssemblyQualifiedName, lookup.AssemblyQualifiedName);
 					break; // no need to report this more than once
 				}
 				rv = lookup;
 			}
-			ikvm_type_lookup [type] = rv;
+			typeLookup [type] = rv;
 		}
 		if (rv is null)
 			throw ErrorHelper.CreateError (1055, type.AssemblyQualifiedName);
@@ -399,11 +411,13 @@ public class AttributeManager {
 		if (convertedAttributes.Any ())
 			return convertedAttributes.OfType<T> ();
 
-		var expectedType = ConvertTypeToMeta (typeof (T), provider);
-		if (attribute.GetAttributeType () != expectedType && !attribute.GetAttributeType ().IsSubclassOf (expectedType))
+		var expectedType = ConvertTypeToMeta (typeof (T));
+		var attributeType = ConvertTypeToMeta (attribute.GetAttributeType ());
+		// == when comparing types uses reference equality, which is what we want here.
+		if (attributeType != expectedType && !attributeType.IsSubclassOf (expectedType))
 			return Enumerable.Empty<T> ();
 
-		System.Type attribType = ConvertTypeFromMeta (attribute.GetAttributeType (), provider);
+		System.Type attribType = ConvertTypeFromMeta (attributeType, provider);
 
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
 
@@ -412,7 +426,7 @@ public class AttributeManager {
 			switch (attribute.ConstructorArguments [i].ArgumentType.FullName) {
 			case "System.Type":
 				if (value is not null) {
-					if (attribType.Assembly == typeof (TypeManager).Assembly) {
+					if (attribType.Assembly == typeof (TypeCache).Assembly) {
 						constructorArguments [i] = value;
 					} else {
 						constructorArguments [i] = System.Type.GetType (((Type) value).FullName);
@@ -433,7 +447,7 @@ public class AttributeManager {
 			var paramType = parameters [i].ParameterType;
 			switch (paramType.FullName) {
 			case "System.Type":
-				if (attribType.Assembly == typeof (TypeManager).Assembly) {
+				if (attribType.Assembly == typeof (TypeCache).Assembly) {
 					ctorTypes [i] = typeof (Type);
 				} else {
 					ctorTypes [i] = typeof (System.Type);
@@ -454,7 +468,7 @@ public class AttributeManager {
 		for (int i = 0; i < attribute.NamedArguments.Count; i++) {
 			var arg = attribute.NamedArguments [i];
 			var value = arg.TypedValue.Value;
-			if (arg.TypedValue.ArgumentType == TypeManager.System_String_Array) {
+			if (arg.TypedValue.ArgumentType == TypeCache.System_String_Array) {
 				var typed_values = ((IEnumerable<CustomAttributeTypedArgument>) arg.TypedValue.Value).ToArray ();
 				var arr = new string [typed_values.Length];
 				for (int a = 0; a < arr.Length; a++)
@@ -488,12 +502,8 @@ public class AttributeManager {
 		for (int i = 0; i < attributes.Count; i++) {
 
 			// special compiler attribtues not usable from C#
-			switch (attributes [i].GetAttributeType ().FullName) {
-			case "System.Runtime.CompilerServices.NullableAttribute":
-			case "System.Runtime.CompilerServices.NullableContextAttribute":
-			case "System.Runtime.CompilerServices.NativeIntegerAttribute":
+			if (ignoredAttributes.Contains (attributes [i].GetAttributeType ().FullName))
 				continue;
-			}
 
 			foreach (var attrib in CreateAttributeInstance<T> (attributes [i], provider)) {
 				if (list is null)
@@ -510,27 +520,22 @@ public class AttributeManager {
 
 	public virtual T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
 	{
-		return FilterAttributes<T> (GetIKVMAttributes (provider), provider);
+		return FilterAttributes<T> (GetAttributes (provider), provider);
 	}
 
-	static IList<CustomAttributeData> GetIKVMAttributes (ICustomAttributeProvider provider)
-	{
-		if (provider is null)
-			return null;
-		if (provider is MemberInfo member)
-			return member.GetCustomAttributesData ();
-		if (provider is Assembly assembly)
-			return assembly.GetCustomAttributesData ();
-		if (provider is ParameterInfo pinfo)
-			return pinfo.GetCustomAttributesData ();
-		if (provider is Module module)
-			return module.GetCustomAttributesData ();
-		throw new BindingException (1051, true, provider.GetType ().FullName);
-	}
+	static IList<CustomAttributeData> GetAttributes (ICustomAttributeProvider provider)
+		=> provider switch {
+			null => null,
+			MemberInfo member => member.GetCustomAttributesData (),
+			Assembly assembly => assembly.GetCustomAttributesData (),
+			ParameterInfo pinfo => pinfo.GetCustomAttributesData (),
+			Module module => module.GetCustomAttributesData (),
+			_ => throw new BindingException (1051, true, provider.GetType ().FullName)
+		};
 
 	public static bool HasAttribute (ICustomAttributeProvider provider, string type_name)
 	{
-		var attribs = GetIKVMAttributes (provider);
+		var attribs = GetAttributes (provider);
 		for (int i = 0; i < attribs.Count; i++)
 			if (attribs [i].GetAttributeType ().Name == type_name)
 				return true;
@@ -539,16 +544,18 @@ public class AttributeManager {
 
 	public virtual bool HasAttribute<T> (ICustomAttributeProvider provider) where T : Attribute
 	{
-		var attribute_type = ConvertTypeToMeta (typeof (T), provider);
-		var attribs = GetIKVMAttributes (provider);
+		var attributeType = ConvertTypeToMeta (typeof (T));
+		var attribs = GetAttributes (provider);
 		if (attribs is null || attribs.Count == 0)
 			return false;
 
 		for (int i = 0; i < attribs.Count; i++) {
 			var attrib = attribs [i];
-			if (attrib.GetAttributeType () == attribute_type)
+			// == when comparing types uses reference equality, which is what we want here.
+			var currentType = ConvertTypeToMeta (attrib.GetAttributeType ());
+			if (currentType == attributeType)
 				return true;
-			if (attrib.GetAttributeType ().IsSubclassOf (attribute_type))
+			if (currentType.IsSubclassOf (attributeType))
 				return true;
 		}
 
@@ -566,23 +573,39 @@ public class AttributeManager {
 		if (rv.Length == 1)
 			return rv [0];
 
-		string name = (provider as MemberInfo)?.Name;
-		if (provider is ParameterInfo) {
-			var pi = (ParameterInfo) provider;
-			name = $"the method {pi.Member.DeclaringType.FullName}.{pi.Member.Name}'s parameter #{pi.Position} ({pi.Name})";
-		} else if (provider is Type type) {
-			name = $"the type {type.FullName}";
-		} else if (provider is MemberInfo) {
-			var mi = (MemberInfo) provider;
-			name = $"the member {mi.DeclaringType.FullName}.{mi.Name}";
-		} else if (provider is Assembly) {
-			name = $"the assembly {((Assembly) provider).FullName}";
-		} else if (provider is Module) {
-			name = $"the module {((Module) provider).FullyQualifiedName}";
-		} else {
-			name = $"the member {provider.ToString ()}";
+		int code;
+		object [] args;
+		// each type of provider has its own error. This is because each exception has its own message that 
+		// must be correctly translated.
+		switch (provider) {
+		case ParameterInfo pi:
+			code = 1083;
+			args = new object [] {
+				rv.Length, typeof (T).FullName, $"{pi.Member.DeclaringType.FullName}.{pi.Member.Name}", pi.Position, pi.Name
+			};
+			break;
+		case Type type:
+			code = 1084;
+			args = new object [] { rv.Length, typeof (T).FullName, type.FullName };
+			break;
+		case MemberInfo mi:
+			code = 1059;
+			args = new object [] { rv.Length, typeof (T).FullName, $"{mi.DeclaringType?.FullName}.{mi.Name}" };
+			break;
+		case Assembly assm:
+			code = 1085;
+			args = new object [] { rv.Length, typeof (T).FullName, $"{assm.FullName}" };
+			break;
+		case Module mod:
+			code = 1086;
+			args = new object [] { rv.Length, typeof (T).FullName, $"{mod.FullyQualifiedName}" };
+			break;
+		default:
+			code = 1059;
+			args = new object [] { rv.Length, typeof (T).FullName, provider.ToString () };
+			break;
 		}
-		throw ErrorHelper.CreateError (1059, rv.Length, typeof (T).FullName, name);
+		throw ErrorHelper.CreateError (code, args);
 	}
 
 	public virtual bool HasNativeAttribute (ICustomAttributeProvider provider)

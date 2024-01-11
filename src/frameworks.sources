@@ -1091,7 +1091,7 @@ JAVASCRIPTCORE_SOURCES = \
 # LocalAuthentication
 
 LOCALAUTHENTICATION_API_SOURCES = \
-	Localauthentication/LAEnums.cs \
+	LocalAuthentication/LAEnums.cs \
 
 # MapKit
 
@@ -1175,6 +1175,7 @@ METAL_SOURCES = \
 	Metal/MTLArgumentEncoder.cs \
 	Metal/MTLBlitPassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLCompat.cs \
+	Metal/MTLIOCompression.cs \
 	Metal/MTLComputeCommandEncoder.cs \
 	Metal/MTLComputePassSampleBufferAttachmentDescriptorArray.cs \
 	Metal/MTLDevice.cs \
@@ -1263,6 +1264,7 @@ MODELIO_SOURCES = \
 	ModelIO/MDLAnimatedQuaternion.cs \
 	ModelIO/MDLAnimatedValueTypes.cs \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLMaterial.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLTransform.cs \
 	ModelIO/MDLTransformComponent.cs \
@@ -1322,14 +1324,17 @@ NETWORK_SOURCES = \
 	Network/NWPrivacyContext.cs	\
 	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
+	Network/NWProxyConfig.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
 	Network/NWPathMonitor.cs		\
+	Network/NWPrivacyContext.cs		\
 	Network/NWProtocolDefinition.cs		\
 	Network/NWProtocolMetadata.cs		\
 	Network/NWProtocolOptions.cs		\
 	Network/NWProtocolStack.cs			\
 	Network/NWQuicMetadata.cs			\
+	Network/NWRelayHop.cs			\
 	Network/NWResolutionReport.cs \
 	Network/NWResolverConfig.cs			\
 	Network/NWTcpMetadata.cs \
@@ -1779,6 +1784,8 @@ UIKIT_SOURCES = \
 	UIKit/UITextAttributes.cs \
 	UIKit/UITextField.cs \
 	UIKit/UITextView.cs \
+	UIKit/UITraitChangeObservable.cs \
+	UIKit/UITraitOverrides.cs \
 	UIKit/UITraitCollection.cs \
 	UIKit/UIToolbar.cs \
 	UIKit/UIVibrancyEffect.cs \
@@ -2010,6 +2017,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	CoreMedia               \
 	CoreML                  \
+	CoreMidi                \
 	CoreVideo               \
 	Compression             \
 	DeviceCheck             \
@@ -2053,7 +2061,6 @@ MACOS_FRAMEWORKS =          \
 	CoreGraphics            \
 	CoreImage               \
 	CoreLocation            \
-	CoreMidi                \
 	CoreMotion		\
 	CoreServices            \
 	CoreSpotlight           \
@@ -2171,7 +2178,6 @@ IOS_FRAMEWORKS =         \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \
@@ -2373,7 +2379,6 @@ MACCATALYST_FRAMEWORKS = \
 	CoreImage \
 	CoreLocation \
 	CoreLocationUI \
-	CoreMIDI \
 	CoreMotion \
 	CoreNFC \
 	CoreSpotlight \

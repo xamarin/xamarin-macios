@@ -4,8 +4,43 @@
 
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Xml;
+
+static class NativeMethods {
+	[DllImport ("__Internal", SetLastError = true)]
+	static extern int kill (int pid, int signal);
+
+	public static void Abort (this Process process)
+	{
+		var exitTimeout = TimeSpan.FromSeconds (60);
+		var pid = process.Id;
+		Console.WriteLine ($"kill ({pid}, 6);");
+		var rv = kill (pid, 6 /* SIGABRT - this triggers a crash report */);
+		if (rv != 0) {
+			// This might randomly happen, because there's a race condition here: we waited for the process to exit,
+			// the timeout occurred so we decided to kill the process, and *then* the process exited, before we got
+			// around to kill it. In that case, the kill call would fail.
+			Console.WriteLine ($"Failed to execute 'kill -6 {pid}'. errno = {Marshal.GetLastWin32Error ()} - process already exited?");
+			return;
+		}
+		var watch = Stopwatch.StartNew ();
+		while (watch.Elapsed < exitTimeout) {
+			Console.WriteLine ($"kill ({pid}, 0);");
+			rv = kill (pid, 0); // check if pid is still alive (valid)
+			if (rv != 0) {
+				// Nope it's not, so it must have terminated.
+				return;
+			}
+			Thread.Sleep (50);
+		}
+
+		// Send SIGKILL - time to finish it off.
+		Console.WriteLine ($"kill ({pid}, 9);");
+		kill (pid, 9);
+	}
+}
 
 var args = Environment.GetCommandLineArgs ();
 var initialArgumentCount = 3;
@@ -38,7 +73,7 @@ for (var attempt = 0; attempt < maxLaunchAttempts; attempt++) {
 		} else if (!File.Exists (launchTimeoutFile)) {
 			Console.WriteLine ($"Launch timed out after {launchTimeout.TotalSeconds} seconds.");
 			launchTimedOut.Set ();
-			p.Kill ();
+			p.Abort ();
 		}
 	}) {
 		IsBackground = true,
@@ -59,7 +94,7 @@ for (var attempt = 0; attempt < maxLaunchAttempts; attempt++) {
 
 		if (!p.WaitForExit ((int) executionTimeout.TotalMilliseconds)) {
 			Console.WriteLine ($"Execution timed out after {executionTimeout.TotalSeconds} seconds.");
-			p.Kill ();
+			p.Abort ();
 			p.WaitForExit ();
 		}
 

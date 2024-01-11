@@ -175,12 +175,48 @@ stages:
       steps:
       - template: ./common/clean.yml
 
-
-- stage: build_packages
-  displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
+- stage: configure_build
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
   dependsOn: ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  jobs:
+  
+  - ${{ if eq(parameters.pool, 'automatic') }}:
+    - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+      pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+        vmImage: ubuntu-latest
+      steps:
+      - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+      # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+      - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
+        parameters:
+          agentPoolPR: $(PRBuildPool)
+          agentPoolPRUrl: $(PRBuildPoolUrl)
+          agentPoolCI: $(CIBuildPool)
+          agentPoolCIUrl: $(CIBuildPoolUrl)
+
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    steps:
+    - template: common/configure.yml
+      parameters: 
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: true
+        
+- stage: build_packages
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
+  dependsOn: [ configure_build ]
   jobs:
   - template: ./build/build-stage.yml
     parameters:
@@ -200,9 +236,7 @@ stages:
 
 - stage: build_macos_tests
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build macOS tests'
-  dependsOn: ${{ parameters.dependsOn }}
-  ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
-    condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  dependsOn: [ configure_build ]
   jobs:
   - template: ./build/build-mac-tests-stage.yml
     parameters:
@@ -222,6 +256,7 @@ stages:
   condition: and(eq(dependencies.build_packages.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
   dependsOn:
   - build_packages
+  - configure_build
   jobs:
   - template: ./sign-and-notarized/prepare-pkg-stage.yml
     parameters:
@@ -235,23 +270,36 @@ stages:
 
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 # setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
-# Got to disable the lint check because azp yaml template engine does not allow use to do a multiline if :/ 
-# yamllint disable-line rule: line-length
-- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'), eq(parameters.forceInsertion, true))) }}:
-  - template: ./release/vs-insertion-prep.yml
-    parameters:
-      dependsOn: build_packages
-      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      pushNugets: ${{ parameters.pushNugets }}
+- ? ${{ if
+      and(
+        ne(variables['Build.Reason'], 'Schedule'),
+        or(
+          eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+          startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'),
+          startsWith(variables['Build.SourceBranch'], 'refs/heads/release-test/'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net8.0'),
+          eq(variables['Build.SourceBranch'], 'refs/heads/net9.0'),
+          eq(parameters.forceInsertion, true)
+        )
+      )
+    }}
+  : - template: ./release/vs-insertion-prep.yml
+      parameters:
+        buildStage: build_packages
+        dependsOn: [ build_packages, configure_build ]
+        stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        pushNugets: ${{ parameters.pushNugets }}
 
 - stage: funnel
   displayName: '${{ parameters.stageDisplayNamePrefix }}Collect signed artifacts'
   condition: and(eq(dependencies.prepare_packages_legacy.result, 'Succeeded'), eq('${{ parameters.enableLegacySigning }}', true))
   dependsOn:
   - prepare_packages_legacy
+  - configure_build
   jobs:
   - template: ./sign-and-notarized/funnel.yml
     parameters:
@@ -267,9 +315,7 @@ stages:
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
-    dependsOn: ${{ parameters.dependsOn }}
-    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
-      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+    dependsOn: [ configure_build ]
     jobs:
     - template: ./build/api-diff-stage.yml
       parameters:
@@ -360,6 +406,8 @@ stages:
       displayName: '${{ parameters.stageDisplayNamePrefix }}Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
       statusContext: 'Windows Integration Tests'
+      gitHubToken: $(Github.Token)
+      xqaCertPass: $(xqa--certificates--password)
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step

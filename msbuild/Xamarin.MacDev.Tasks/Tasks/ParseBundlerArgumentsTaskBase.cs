@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +7,9 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class ParseBundlerArgumentsTaskBase : XamarinTask {
@@ -39,6 +43,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string NoDSymUtil { get; set; }
 
 		[Output]
+		public string NoWarn { get; set; }
+
+		[Output]
 		public string Optimize { get; set; }
 
 		[Output]
@@ -61,6 +68,9 @@ namespace Xamarin.MacDev.Tasks {
 		public int Verbosity { get; set; }
 
 		[Output]
+		public string WarnAsError { get; set; }
+
+		[Output]
 		public ITaskItem [] XmlDefinitions { get; set; }
 
 		public override bool Execute ()
@@ -72,7 +82,19 @@ namespace Xamarin.MacDev.Tasks {
 				NoDSymUtil = "false";
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
-				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
+				var extraArgs = ExtraArgs;
+				if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+					// The backslash character is pretty common on Windows (since it's a path separator),
+					// but the argument parser will treat it as an escape character, and just skip it.
+					// This is obviously wrong, so just replace backslashes with forward slashes, which
+					// should work just as well on Windows, and will also be parsed correctly.
+					// The downside is that now there's no way to escape characters, but that should be a
+					// very rare problem (much rarer than backslash characters), and there are other
+					// ways around the problem (set the actual target property instead of going through
+					// the MtouchExtraArgs property for instance):
+					extraArgs = extraArgs.Replace ('\\', '/');
+				}
+				var args = CommandLineArgumentBuilder.Parse (extraArgs);
 				List<string> xml = null;
 				List<string> customLinkFlags = null;
 				var aot = new List<ITaskItem> ();
@@ -192,6 +214,24 @@ namespace Xamarin.MacDev.Tasks {
 						if (customLinkFlags is null)
 							customLinkFlags = new List<string> ();
 						customLinkFlags.AddRange (lf);
+						break;
+					case "warnaserror":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (WarnAsError)) {
+							WarnAsError = value;
+						} else {
+							WarnAsError += "," + value;
+						}
+						break;
+					case "nowarn":
+						if (!hasValue)
+							value = "-1"; // all warnings
+						if (string.IsNullOrEmpty (NoWarn)) {
+							NoWarn = value;
+						} else {
+							NoWarn += "," + value;
+						}
 						break;
 					default:
 						// Handle arguments like -vvv and -qqqq

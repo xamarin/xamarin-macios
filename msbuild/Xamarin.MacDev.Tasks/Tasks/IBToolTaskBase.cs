@@ -7,10 +7,14 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.MacDev.Tasks {
-	public abstract class IBToolTaskBase : XcodeCompilerToolTask {
+	public class IBTool : XcodeCompilerToolTask, ICancelableTask {
 		static readonly string [] WatchAppExtensions = { "-glance.plist", "-notification.plist" };
 
 		#region Inputs
@@ -403,6 +407,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			if (IsWatchApp && AppleSdkSettings.XcodeVersion < new Version (6, 2)) {
 				Log.LogError (MSBStrings.E0160, AppleSdkSettings.XcodeVersion);
 
@@ -472,6 +479,12 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogTaskProperty ("OutputManifests Output", OutputManifests);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

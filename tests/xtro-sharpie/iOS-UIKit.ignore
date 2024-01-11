@@ -651,3 +651,9 @@
 # not really needed, seems that xtro is confused
 !missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
 !missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
+
+# these were bound with an incorrect signature, and made optional so that customers wouldn't have to implement methods with broken signatures.
+# this is fixed in XAMCORE_5_0
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withTarget:action: is REQUIRED and should be abstract

@@ -8,6 +8,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
@@ -21,6 +22,7 @@ namespace Xamarin.MacDev.Tasks {
 	//
 	// * All *.dylib and *.metallib files
 	// * All *.framework directories
+	// * All *.xpc directories
 	//
 	// In both cases we iterate over what we find in the app bundle instead of
 	// relying on what the msbuild tasks built and copied in the app bundle,
@@ -30,7 +32,7 @@ namespace Xamarin.MacDev.Tasks {
 	// This task will also figure out a stamp file path we use to determine if
 	// something needs (re-)signing.
 	//
-	public abstract class ComputeCodesignItemsTaskBase : XamarinTask {
+	public class ComputeCodesignItems : XamarinTask, ITaskCallback, ICancelableTask {
 
 		[Required]
 		public string AppBundleDir { get; set; } = string.Empty;
@@ -55,10 +57,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var output = new List<ITaskItem> ();
 
 			// Make sure AppBundleDir has a trailing slash
-			var appBundlePath = PathUtils.EnsureTrailingSlash (Path.GetFullPath (AppBundleDir));
+			var appBundlePath = PathUtils.EnsureTrailingSlash (Path.GetFullPath (AppBundleDir)!);
 
 			// Add the app bundles themselves
 			foreach (var bundle in CodesignBundle) {
@@ -102,10 +107,13 @@ namespace Xamarin.MacDev.Tasks {
 			// Find all:
 			//	- *.dylib and *.metallib files
 			//	- *.framework directories
+			//  - *.xpc directories
 			foreach (var bundle in CodesignBundle) {
 				var bundlePath = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (appBundlePath)), bundle.ItemSpec);
 				var filesToSign = FindFilesToSign (bundlePath);
 				foreach (var lib in filesToSign) {
+					if (Array.Find (CodesignItems, (v) => string.Equals (v.ItemSpec, lib, StringComparison.OrdinalIgnoreCase)) is not null)
+						continue;
 					var relativeLib = Path.Combine (AppBundleDir, lib.Substring (appBundlePath.Length));
 					var item = new TaskItem (relativeLib);
 					bundle.CopyMetadataTo (item);
@@ -238,7 +246,7 @@ namespace Xamarin.MacDev.Tasks {
 			var rv = new List<string> ();
 
 			// Canonicalize the app path, so string comparisons work later on
-			appPath = PathUtils.ResolveSymbolicLinks (Path.GetFullPath (appPath));
+			appPath = PathUtils.ResolveSymbolicLinks (Path.GetFullPath (appPath))!;
 
 			// Make sure path ends with trailing slash to ease logic
 			appPath = PathUtils.EnsureTrailingSlash (appPath);
@@ -246,6 +254,7 @@ namespace Xamarin.MacDev.Tasks {
 			string dylibDirectory;
 			string metallibDirectory;
 			string frameworksDirectory;
+			string xpcDirectory;
 			switch (Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -253,12 +262,14 @@ namespace Xamarin.MacDev.Tasks {
 				dylibDirectory = appPath;
 				metallibDirectory = appPath;
 				frameworksDirectory = Path.Combine (appPath, "Frameworks");
+				xpcDirectory = Path.Combine (appPath, "XPCServices");
 				break;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				dylibDirectory = Path.Combine (appPath, "Contents");
 				metallibDirectory = Path.Combine (appPath, "Contents", "Resources");
 				frameworksDirectory = Path.Combine (appPath, "Contents", "Frameworks");
+				xpcDirectory = Path.Combine (appPath, "Contents", "XPCServices");
 				break;
 			default:
 				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
@@ -289,10 +300,28 @@ namespace Xamarin.MacDev.Tasks {
 					// We only find *.frameworks inside the Frameworks subdirectory, not recursively
 					// (not quite sure if this is the right thing to do, but it's what we've been doing so far).
 					rv.Add (entry);
+				} else if (entry.EndsWith (".xpc", StringComparison.OrdinalIgnoreCase)) {
+					// We find *.xpc inside the XPCServices subdirectory recursively (as opposed to for *.framework just above),
+					// because 'codesign' fails if there are any *.xpc bundles in a subdirectory.
+					rv.Add (entry);
 				}
 			}
 
 			return rv;
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		// This task does not create or modify any files, and it should only
+		// deal with files that are already on the mac, so no need to copy any
+		// files either way.
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

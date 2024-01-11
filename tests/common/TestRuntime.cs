@@ -37,9 +37,13 @@ using ObjCRuntime;
 
 using Xamarin.Utils;
 
+using NUnit.Framework;
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
+
+#nullable enable
 
 partial class TestRuntime {
 
@@ -76,7 +80,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")))!;
 #endif
 	}
 
@@ -89,7 +93,7 @@ partial class TestRuntime {
 	[System.Runtime.InteropServices.DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
 	static extern int Gestalt (int selector, out int result);
 
-	static Version version;
+	static Version? version;
 
 	public static Version OSXVersion {
 		get {
@@ -135,10 +139,10 @@ partial class TestRuntime {
 	public static void IgnoreInCI (string message)
 	{
 		if (!IsInCI) {
-			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
+			Console.WriteLine ($"Not ignoring test, because not running in CI: {message}");
 			return;
 		}
-		Console.WriteLine ($"Ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
+		Console.WriteLine ($"Ignoring test, because not running in CI: {message}");
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
@@ -188,10 +192,9 @@ partial class TestRuntime {
 
 	public static void AssertDesktop (string message = "This test only runs on Desktops (macOS or MacCatalyst).")
 	{
-#if __MACOS__ || __MACCATALYST__
-		return;
-#endif
+#if !(__MACOS__ || __MACCATALYST__)
 		NUnit.Framework.Assert.Ignore (message);
+#endif
 	}
 
 	public static void AssertNotDesktop (string message = "This test does not run on Desktops (macOS or MacCatalyst).")
@@ -1242,7 +1245,7 @@ partial class TestRuntime {
 			});
 		}
 
-		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ())) {
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ()!)) {
 		case AVAuthorizationStatus.Restricted:
 		case AVAuthorizationStatus.Denied:
 			if (assert_granted)
@@ -1435,7 +1438,7 @@ partial class TestRuntime {
 #else
 		const string fieldName = "flags";
 #endif
-		return (byte) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+		return (byte) typeof (NSObject).GetField (fieldName, BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic)!.GetValue (obj)!;
 	}
 
 	// Determine if linkall was enabled by checking if an unused class in this assembly is still here.
@@ -1478,6 +1481,17 @@ partial class TestRuntime {
 		IgnoreInCIIfDnsResolutionFailed (ex);
 	}
 
+	public static void IgnoreInCIIfBadNetwork (NSError? error)
+	{
+		if (error is null)
+			return;
+
+		IgnoreInCIIfNetworkConnectionLost (error);
+		IgnoreInCIIfNoNetworkConnection (error);
+		IgnoreInCIIfDnsResolutionFailed (error);
+		IgnoreInCIIfTimedOut (error);
+	}
+
 	public static void IgnoreInCIIfDnsResolutionFailed (Exception ex)
 	{
 		var se = FindInner<System.Net.Sockets.SocketException> (ex);
@@ -1494,6 +1508,16 @@ partial class TestRuntime {
 			return;
 
 		IgnoreInCI ($"Ignored due to DNS resolution failure '{se.Message}'");
+	}
+
+	public static void IgnoreInCIIfDnsResolutionFailed (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.CannotFindHost);
+	}
+
+	public static void IgnoreInCIIfTimedOut (NSError error)
+	{
+		IgnoreNetworkError (error, CFNetworkErrors.TimedOut);
 	}
 
 	public static void IgnoreInCIIfForbidden (Exception ex)
@@ -1527,14 +1551,40 @@ partial class TestRuntime {
 
 	public static void IgnoreInCIIfNetworkConnectionLost (Exception ex)
 	{
-		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
 		if (!(ex is NSErrorException nex))
 			return;
 
-		if (nex.Code != (nint) (long) CFNetworkErrors.NetworkConnectionLost)
+		IgnoreInCIIfNetworkConnectionLost (nex.Error);
+	}
+
+	public static void IgnoreInCIIfNetworkConnectionLost (NSError error)
+	{
+		// <Foundation.NSErrorException: Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost." UserInfo ...
+		IgnoreNetworkError (error, CFNetworkErrors.NetworkConnectionLost);
+	}
+
+	public static void IgnoreInCIIfNoNetworkConnection (NSError error)
+	{
+		// Error Domain=NSURLErrorDomain Code=-1009 "The Internet connection appears to be offline."
+		IgnoreNetworkError (error, CFNetworkErrors.NotConnectedToInternet);
+	}
+
+	static void IgnoreNetworkError (NSError error, params CFNetworkErrors [] errors)
+	{
+		if (error is null)
 			return;
 
-		IgnoreInCI ($"Ignored due to CFNetwork error {(CFNetworkErrors) (long) nex.Code}");
+#if __WATCHOS__
+		if (error.Domain != NSError.NSUrlErrorDomain)
+#else
+		if (error.Domain != NSError.NSUrlErrorDomain && error.Domain != NSError.CFNetworkErrorDomain)
+#endif
+			return;
+
+		foreach (var e in errors) {
+			if (error.Code == (nint) (long) e)
+				IgnoreInCI ($"Ignored due to network error: {error}");
+		}
 	}
 
 	static T? FindInner<T> (Exception? ex) where T : Exception
@@ -1633,6 +1683,20 @@ partial class TestRuntime {
 		var valuePtr = Marshal.StringToHGlobalUni (value);
 		xamarin_log (valuePtr);
 		Marshal.FreeHGlobal (valuePtr);
+	}
+
+	public static void AssertNoNonNUnitException (Exception ex, string message)
+	{
+		switch (ex) {
+		case SuccessException: throw new SuccessException (ex.Message, ex);
+		case IgnoreException: throw new IgnoreException (ex.Message, ex);
+		case AssertionException: throw new AssertionException (ex.Message, ex);
+		case InconclusiveException: throw new InconclusiveException (ex.Message, ex);
+		case ResultStateException: throw ex;
+		default:
+			Assert.IsNull (ex, message);
+			break;
+		}
 	}
 }
 

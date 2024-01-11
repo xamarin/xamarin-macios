@@ -20,7 +20,7 @@ namespace Xharness {
 		public static void SetProperty (this XmlDocument csproj, string key, string value)
 		{
 			// Set all existing properties
-			var xmlNodeList = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']/*[local-name() = '" + key + "']").Cast<XmlNode> ();
+			var xmlNodeList = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']/*[local-name() = '" + key + "']")!.Cast<XmlNode> ();
 			foreach (var item in xmlNodeList)
 				item.InnerText = value;
 
@@ -54,7 +54,7 @@ namespace Xharness {
 		static int IndexOf (this XmlNodeList @this, XmlNode node)
 		{
 			for (var i = 0; i < @this.Count; i++) {
-				if ((object) node == (object) @this [i])
+				if ((object?) node == (object?) @this [i])
 					return i;
 			}
 			return -1;
@@ -64,16 +64,16 @@ namespace Xharness {
 		{
 			// Is the last property group Condition-less? If so, return it.
 			// Definition of last: the last PropertyGroup before an Import node (or last in file if there are no Import nodes)
-			var propertyGroups = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']").Cast<XmlElement> ();
-			var imports = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'Import']").Cast<XmlElement> ();
+			var propertyGroups = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']")!.Cast<XmlElement> ();
+			var imports = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'Import']")!.Cast<XmlElement> ();
 			if (propertyGroups.Any ()) {
 				XmlElement? last = null;
 
 				if (imports.Any ()) {
 					var firstImport = imports.First ();
-					var firstImportIndex = firstImport.ParentNode.ChildNodes.IndexOf (firstImport);
+					var firstImportIndex = firstImport.ParentNode!.ChildNodes.IndexOf (firstImport);
 					foreach (var pg in propertyGroups) {
-						var pgIndex = pg.ParentNode.ChildNodes.IndexOf (pg);
+						var pgIndex = pg.ParentNode!.ChildNodes.IndexOf (pg);
 						if (pgIndex < firstImportIndex) {
 							last = pg;
 						} else {
@@ -91,12 +91,12 @@ namespace Xharness {
 			// Create a new PropertyGroup, and add it either:
 			// * Just before the first Import node
 			// * If no Import node, then after the last PropertyGroup.
-			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']");
+			var projectNode = csproj.SelectSingleNode ("//*[local-name() = 'Project']")!;
 			var newPropertyGroup = csproj.CreateElement ("PropertyGroup", csproj.GetNamespace ());
 			if (imports.Any ()) {
 				projectNode.InsertBefore (newPropertyGroup, imports.First ());
 			} else {
-				var lastPropertyGroup = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']").Cast<XmlNode> ().Last ();
+				var lastPropertyGroup = csproj.SelectNodes ("/*[local-name() = 'Project']/*[local-name() = 'PropertyGroup']")!.Cast<XmlNode> ().Last ();
 				projectNode.InsertAfter (newPropertyGroup, lastPropertyGroup);
 			}
 			projectNode.InsertBefore (csproj.CreateComment ($" This property group was created by xharness "), newPropertyGroup);
@@ -155,8 +155,10 @@ namespace Xharness {
 		public static Dictionary<string, string> CollectAndEvaluateTopLevelProperties (this XmlDocument doc, Dictionary<string, string> forcedProperties)
 		{
 			var collectedProperties = new Dictionary<string, string> (forcedProperties);
-			var properties = doc.SelectNodes ("/Project/*[local-name() = 'PropertyGroup' and not(@Condition)]//*");
-			foreach (XmlNode prop in properties) {
+			var properties = doc.SelectNodes ("/Project/*[local-name() = 'PropertyGroup' and not(@Condition)]//*")!;
+			foreach (XmlNode? prop in properties) {
+				if (prop is null)
+					continue;
 				if (!forcedProperties.ContainsKey (prop.Name))
 					collectedProperties [prop.Name] = prop.InnerText.EvaluateAsMSBuildText (collectedProperties);
 			}
@@ -247,8 +249,8 @@ namespace Xharness {
 					var root = HarnessConfiguration.RootDirectory;
 					if (input.Contains (root)) {
 						input = input.Replace (root, "$(RootTestsDirectory)");
-					} else if (input.Contains (Path.GetDirectoryName (root))) {
-						input = input.Replace (Path.GetDirectoryName (root), "$(RootTestsDirectory)/..");
+					} else if (input.Contains (Path.GetDirectoryName (root)!)) {
+						input = input.Replace (Path.GetDirectoryName (root)!, "$(RootTestsDirectory)/..");
 					}
 
 					if (input == "")
@@ -272,7 +274,7 @@ namespace Xharness {
 			foreach (var key in nodes_with_variables) {
 				var nodes = csproj.SelectElementNodes (key);
 				foreach (var node in nodes) {
-					node.InnerText = node.InnerText.Replace ("${ProjectDir}", StringUtils.Quote (HarnessConfiguration.InjectRootTestsDirectory (Path.GetFullPath (Path.GetDirectoryName (project_path)))));
+					node.InnerText = node.InnerText.Replace ("${ProjectDir}", StringUtils.Quote (HarnessConfiguration.InjectRootTestsDirectory (Path.GetFullPath (Path.GetDirectoryName (project_path)!))));
 				}
 			}
 
@@ -281,8 +283,10 @@ namespace Xharness {
 				var attrib = kvp.Attribute;
 				var skipLogicalName = kvp.SkipLogicalName;
 				var nodes = csproj.SelectElementNodes (element);
-				foreach (XmlNode node in nodes) {
-					var a = node.Attributes [attrib];
+				foreach (XmlNode? node in nodes) {
+					if (node is null)
+						continue;
+					var a = node.Attributes? [attrib];
 					if (a is null)
 						continue;
 

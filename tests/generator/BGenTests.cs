@@ -8,7 +8,9 @@ using NUnit.Framework;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Xamarin;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace GeneratorTests {
 	[TestFixture ()]
@@ -1434,6 +1436,45 @@ namespace GeneratorTests {
 		{
 			BuildFile (Profile.iOS, "tests/internal-delegate.cs");
 		}
+
+#if NET
+		[Test]
+		public void Issue19612 ()
+		{
+			var profile = Profile.iOS;
+			var filename = Path.Combine (Configuration.SourceRoot, "tests", "generator", "issue19612.cs");
+
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+
+			// Compile the temporary assembly and pass the compiled assembly to the generator instead
+			// of relying on the generator to compile.
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var tmpassembly = Path.Combine (tmpdir, "temporaryAssembly.dll");
+			var cscArguments = new List<string> ();
+			if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var cscCommand, out var ex))
+				throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
+			cscArguments.AddRange (cscCommand);
+			var cscExecutable = cscArguments [0];
+			cscArguments.RemoveAt (0);
+			cscArguments.Add (filename);
+			cscArguments.Add ($"/out:{tmpassembly}");
+			cscArguments.Add ("/target:library");
+			cscArguments.Add ($"/r:{Path.Combine (Configuration.DotNetBclDir, "System.Runtime.dll")}");
+			var tf = TargetFramework.Parse (BGenTool.GetTargetFramework (profile));
+			cscArguments.Add ($"/r:{Configuration.GetBindingAttributePath (tf)}");
+			cscArguments.Add ($"/r:{Configuration.GetBaseLibrary (tf)}");
+			var rv = ExecutionHelper.Execute (cscExecutable, cscArguments);
+			Assert.AreEqual (0, rv, "CSC exit code");
+
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.CompiledApiDefinitionAssembly = tmpassembly;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.CreateTemporaryBinding (filename);
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
+#endif
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{

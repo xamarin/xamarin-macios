@@ -1,15 +1,20 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
+
+// Disable until we get around to enable + fix any issues.
+#nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class GetDirectoriesTaskBase : XamarinTask {
+	public class GetDirectories : XamarinTask, ITaskCallback, ICancelableTask {
 		[Required]
 		public string Path { get; set; }
 
@@ -24,6 +29,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var path = Path.Replace ('\\', '/').TrimEnd ('/');
 			var exclude = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
@@ -65,6 +73,18 @@ namespace Xamarin.MacDev.Tasks {
 			Directories = items.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
