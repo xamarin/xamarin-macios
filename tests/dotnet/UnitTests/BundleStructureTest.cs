@@ -282,8 +282,6 @@ namespace Xamarin.Tests {
 			}
 
 			// misc other files not directly related to the test itself
-			if (!isCoreCLR)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "icudt.dat"));
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "BundleStructure", runtimeIdentifiers, addConfig: true, includeDebugFiles: includeDebugFiles);
 			if (platform != ApplePlatform.MacOSX)
 				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: true, includeDebugFiles: includeDebugFiles);
