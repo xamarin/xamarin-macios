@@ -1460,10 +1460,11 @@
 			<!-- CFNetwork is required by xamarin_start_wwan -->
 			<_NativeExecutableFrameworks Include="CFNetwork" Condition="'$(_PlatformName)' == 'iOS'" />
 
-			<!-- Mono requires zlib, iconv, and the "Compression framework" -->
+			<!-- Mono requires zlib, iconv, icucore, and the "Compression framework" -->
 			<_MainLinkerFlags Include="-lz" />
 			<_MainLinkerFlags Include="-liconv" />
 			<_MainLinkerFlags Include="-lcompression" />
+			<_MainLinkerFlags Include="-licucore" />
 
 			<!-- In some cases ld may crash if -lobjc isn't passed -->
 			<_MainLinkerFlags Include="-lobjc" />
