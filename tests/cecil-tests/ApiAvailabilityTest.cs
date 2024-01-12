@@ -271,13 +271,15 @@ namespace Cecil.Tests {
 			"UIKit.UIStringDrawing.StringSize(System.String, UIKit.UIFont, System.Runtime.InteropServices.NFloat, UIKit.UILineBreakMode)",
 		};
 
+		HashSet<string> knownConsistencyIssues = new HashSet<string> { };
+
 		// This test verifies that the SupportedOSPlatform and UnavailableOSPlatform/ObsoletedOSplatform attributes are consistent.
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void AttributeConsistency (AssemblyInfo info)
 		{
 			var assembly = info.Assembly;
 			var platform = info.Platform;
-			var failures = new List<string> ();
+			var failures = new HashSet<string> ();
 
 			foreach (var api in assembly.EnumerateAttributeProviders ()) {
 				var availability = api.GetAvailabilityAttributes (platform);
@@ -375,19 +377,15 @@ namespace Cecil.Tests {
 
 					// Check that the member must be marked unsupported if the type is
 					if (apiUnsupportedAttribute is not null && memberSupportedAttribute is not null && memberUnsupportedAttribute is null)
-						failures.Add ($"[FAIL] {member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
+						failures.Add ($"{member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
 
 					// Check that the member isn't supported before the type.
 					if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
-						failures.Add ($"[FAIL] in {member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
+						failures.Add ($"{member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
 				}
 			}
 
-			if (failures.Count == 0)
-				return;
-			var msg = $"{failures.Count} API with inconsistent availability attributes:" + "\n\t" + string.Join ("\n\t", failures);
-			Console.WriteLine (msg);
-			Assert.Fail (msg);
+			Helper.AssertFailures (failures, knownConsistencyIssues, nameof (AttributeConsistency), "API with inconsistent availability attributes");
 		}
 
 		static bool IsEnumField (ICustomAttributeProvider api)
