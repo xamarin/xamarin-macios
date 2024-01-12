@@ -15,17 +15,6 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public override bool RestoreNugets {
-			get {
-				if (TestProject.IsDotNetProject) // 'dotnet build' will restore
-					return false;
-				if (TestProject.TestPlatform == TestPlatform.MacCatalyst)
-					return false; // we have to do 'msbuild /r'
-				return base.RestoreNugets;
-			}
-			set => base.RestoreNugets = value;
-		}
-
 		public override void SetEnvironmentVariables (Process process)
 		{
 			base.SetEnvironmentVariables (process);
