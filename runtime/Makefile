@@ -637,9 +637,9 @@ endef
 $(foreach platform,$(DOTNET_NATIVEAOT_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call DotNetNativeAotLibTemplate,$(platform),$(rid)))))
 
 # a few lookup tables, because the data we have is not always in the format we need it
-DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
-DOTNET_iphoneos_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
-DOTNET_tvsimulator_DYLIB_FLAGS=-lmonosgen-2.0 -licudata -licui18n -licuuc -framework UIKit
+DOTNET_iphonesimulator_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_iphoneos_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
+DOTNET_tvsimulator_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
 DOTNET_tvos_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
 DOTNET_maccatalyst_DYLIB_FLAGS=-lmonosgen-2.0 -framework UIKit
 DOTNET_mac_DYLIB_FLAGS=-lcoreclr
