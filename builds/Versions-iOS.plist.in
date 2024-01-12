@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MonoVersion</key>
+	<string>@MONO_VERSION@</string>
+	<key>KnownVersions</key>
+	<dict>
+		<key>iOS</key>
+		<array>
+			<string>11.0</string>
+			<string>11.1</string>
+			<string>11.2</string>
+			<string>11.3</string>
+			<string>11.4</string>
+			<string>12.0</string>
+			<string>12.1</string>
+			<string>12.2</string>
+			<string>12.3</string>
+			<string>12.4</string>
+			<string>13.0</string>
+			<string>13.1</string>
+			<string>13.2</string>
+			<string>13.3</string>
+			<string>13.4</string>
+			<string>13.5</string>
+			<string>13.6</string>
+			<string>14.0</string>
+			<string>14.1</string>
+			<string>14.2</string>
+			<string>14.3</string>
+			<string>14.4</string>
+			<string>14.5</string>
+			<string>15.0</string>
+			<string>15.2</string>
+			<string>15.4</string>
+			<string>16.0</string>
+			<string>16.1</string>
+			<string>16.2</string>
+			<string>16.4</string>
+			<string>17.0</string>
+		</array>
+	</dict>
+	<key>RecommendedXcodeVersion</key>
+	<string>@XCODE_VERSION@</string>
+	<key>MinExtensionVersion</key>
+	<dict>
+		<key>iOS</key>
+		<dict>
+			<key>com.apple.ui-services</key>
+			<string>8.0</string>
+			<key>com.apple.services</key>
+			<string>8.0</string>
+			<key>com.apple.keyboard-service</key>
+			<string>8.0</string>
+			<key>com.apple.fileprovider-ui</key>
+			<string>8.0</string>
+			<key>com.apple.fileprovider-nonui</key>
+			<string>8.0</string>
+			<key>com.apple.photo-editing</key>
+			<string>8.0</string>
+			<key>com.apple.share-services</key>
+			<string>8.0</string>
+			<key>com.apple.widget-extension</key>
+			<string>8.0</string>
+			<key>com.apple.watchkit</key>
+			<string>8.2</string>
+			<key>com.apple.AudioUnit-UI</key>
+			<string>8.2</string>
+			<key>com.apple.AudioUnit</key>
+			<string>8.0</string>
+			<key>com.apple.Safari.content-blocker</key>
+			<string>9.0</string>
+			<key>com.apple.Safari.sharedlinks-service</key>
+			<string>9.0</string>
+			<key>com.apple.spotlight.index</key>
+			<string>9.0</string>
+			<key>com.apple.networkextension.packet-tunnel</key>
+			<string>9.0</string>
+			<key>com.apple.callkit.call-directory</key>
+			<string>10.0</string>
+			<key>com.apple.intents-service</key>
+			<string>10.0</string>
+			<key>com.apple.intents-ui-service</key>
+			<string>10.0</string>
+			<key>com.apple.message-payload-provider</key>
+			<string>10.0</string>
+			<key>com.apple.usernotifications.content-extension</key>
+			<string>10.0</string>
+			<key>com.apple.usernotifications.service</key>
+			<string>10.0</string>
+			<key>com.apple.authentication-services-credential-provider-ui</key>
+			<string>12.0</string>
+		</dict>
+	</dict>
+	<key>Features</key>
+	<array>
+		<string>mlaunch-launchdevbundleid</string>
+		<string>mlaunch-observe-extension</string>
+		<string>mlaunch-launch-simulator</string>
+		<string>mlaunch-install-progress</string>
+		<string>mlaunch-watchos-complications</string>
+		<string>mlaunch-wireless-devices</string>
+		<string>http-client-handlers</string>
+		<string>mono-symbol-archive</string>
+		<string>sgen-concurrent-gc</string> <!-- this means experimental support for the concurrent GC -->
+		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
+		<string>arm64_32</string>
+		<string>altool</string>
+		<string>maccatalyst</string>
+	</array>
+	<key>Optimizations</key>
+	<dict>
+		<!-- The key is the value to be passed to mtouch. The string is a very short description. Any IDE UI should also point to the documentation for the optimizations. -->
+		<key>inline-intptr-size</key>
+		<string>Inline IntPtr.Size</string>
+		<key>inline-runtime-arch</key>
+		<string>Inline NSObject.IsDirectBinding</string>
+		<key>dead-code-elimination</key>
+		<string>Dead code elimination</string>
+		<key>remove-uithread-checks</key>
+		<string>Remove UI thread checks</string>
+	</dict>
+</dict>
+</plist>
