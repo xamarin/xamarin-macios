@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MonoVersion</key>
+	<string>@MONO_VERSION@</string>
+	<key>MinimumSystemMono</key>
+	<string>@MIN_XM_MONO_VERSION@</string>
+	<key>KnownVersions</key>
+	<dict>
+		<key>macOS</key>
+		<array>
+			<string>10.15</string>
+			<string>10.16</string>
+			<string>11.0</string>
+			<string>11.1</string>
+			<string>11.2</string>
+			<string>11.3</string>
+			<string>12.0</string>
+			<string>12.1</string>
+			<string>12.3</string>
+			<string>13.0</string>
+			<string>13.1</string>
+			<string>13.3</string>
+			<string>14.0</string>
+			<string>14.2</string>
+		</array>
+	</dict>
+	<key>RecommendedXcodeVersion</key>
+	<string>@XCODE_VERSION@</string>
+	<key>MinExtensionVersion</key>
+	<dict>
+		<key>macOS</key>
+		<dict>
+			<key>com.apple.FinderSync</key>
+			<string>10.10</string>
+			<key>com.apple.share-services</key>
+			<string>10.10</string>
+			<key>com.apple.widget-extension</key>
+			<string>10.10</string>
+			<key>com.apple.networkextension.packet-tunnel</key>
+			<string>10.11</string>
+		</dict>
+	</dict>
+	<key>Features</key>
+	<array>
+		<string>http-client-handlers</string>
+		<string>mono-symbol-archive</string>
+		<string>sgen-concurrent-gc</string> <!-- this means experimental support for the concurrent GC -->
+		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
+		<string>link-platform</string>
+		<string>hybrid-aot</string>
+		<string>64-bit-only</string>
+		<string>altool</string>
+	</array>
+	<key>Optimizations</key>
+	<dict>
+		<!-- The key is the value to be passed to mmp. The string is a very short description. Any IDE UI should also point to the documentation for the optimizations. -->
+		<key>inline-intptr-size</key>
+		<string>Inline IntPtr.Size</string>
+		<key>inline-runtime-arch</key>
+		<string>Inline Runtime.Arch</string>
+		<key>inline-isdirectbinding</key>
+		<string>Inline NSObject.IsDirectBinding</string>
+		<key>dead-code-elimination</key>
+		<string>Dead code elimination</string>
+		<key>remove-uithread-checks</key>
+		<string>Remove UI thread checks</string>
+	</dict>
+</dict>
+</plist>
