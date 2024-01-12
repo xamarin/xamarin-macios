@@ -1,0 +1,95 @@
+# contains the stage used to run all governance related jobs
+
+parameters:
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
+stages:
+- stage: governance_checks
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
+  dependsOn: [ configure_build ]
+
+  jobs:
+  - job: apiscan
+    displayName: 'APIScan:' 
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+      INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+      INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+      INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+
+    strategy:
+      matrix:
+        iOS:
+          INCLUDE: $(INCLUDE_DOTNET_IOS)
+          PLATFORM: iOS
+          SECRET: $(ApiScanSecretiOS)
+          VERSION: 17.0
+        tvOS:
+          INCLUDE: $(INCLUDE_DOTNET_TVOS)
+          PLATFORM: tvOS
+          SECRET: $(ApiScanSecretiOS)
+          VERSION: 17.0
+        macCatalyst:
+          INCLUDE: $(INCLUDE_DOTNET_MACCATALYST)
+          PLATFORM: macCatalyst
+          SECRET: $(ApiScanSecretiOS)
+          VERSION: 17.0
+        macOS:
+          INCLUDE: $(INCLUDE_DOTNET_MACOS)
+          PLATFORM: macOS
+          SECRET: $(ApiScanSecretmacOS)
+          VERSION: 14.0
+
+    steps:
+    - template: ./apiscan.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+  - job: general_governance
+    displayName: 'Governance Checks'
+    pool:
+      vmImage: windows-latest
+
+    steps:
+    - template: ./general.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+  - job: tsa_upload 
+    displayName: 'TSA Upload'
+    dependsOn: [ general_governance, apiscan ]
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+      INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+      INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+      INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+
+    steps:
+    - template: ./tsa-upload.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}

@@ -1,0 +1,34 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- pwsh: |
+    Write-Output "APIScan was skipped on $(PLATFORM) because it was not included in the build. INCLUDE == $(INCLUDE)"
+  displayName: "Skipped"
+  condition: ne(variables.INCLUDE, '1')
+
+- pwsh: |
+    Write-Output "APIScan on $Env:PLATFORM."
+  displayName: "APISCan"
+  condition: eq(variables.INCLUDE, '1')
