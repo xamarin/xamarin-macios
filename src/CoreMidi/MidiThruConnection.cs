@@ -73,13 +73,9 @@ namespace CoreMidi {
 			MidiThruConnectionRef ret;
 
 			using (var data = connectionParams.WriteStruct ()) {
-				var retStr = CFString.CreateNative (persistentOwnerID);
-				try {
-					unsafe {
-						error = MIDIThruConnectionCreate (retStr, data.Handle, &ret);
-					}
-				} finally {
-					CFString.ReleaseNative (retStr);
+				using var retStr = new TransientCFString (persistentOwnerID);
+				unsafe {
+					error = MIDIThruConnectionCreate (retStr, data.Handle, &ret);
 				}
 			}
 
@@ -155,13 +151,9 @@ namespace CoreMidi {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (persistentOwnerID));
 
 			IntPtr ret;
-			var persistentOwnerIDHandle = CFString.CreateNative (persistentOwnerID);
-			try {
-				unsafe {
-					error = MIDIThruConnectionFind (persistentOwnerIDHandle, &ret);
-				}
-			} finally {
-				CFString.ReleaseNative (persistentOwnerIDHandle);
+			using var persistentOwnerIDHandle = new TransientCFString (persistentOwnerID);
+			unsafe {
+				error = MIDIThruConnectionFind (persistentOwnerIDHandle, &ret);
 			}
 			using (var data = Runtime.GetNSObject<NSData> (ret)) {
 				if (data is null)

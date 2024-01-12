@@ -16,7 +16,7 @@ if (args.Length != expectedArgumentCount) {
 var idx = 0;
 var platform = args [idx++];
 var outputPath = args [idx++];
-var plistPath = platform == "macOS" ? "../Versions-mac.plist.in" : "../Versions-ios.plist.in";
+var plistPath = $"../builds/Versions-{platform}.plist.in"
 
 var doc = new XmlDocument ();
 doc.Load (plistPath);

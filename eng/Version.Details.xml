@@ -1,30 +1,30 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.102-servicing.24054.10">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.102-servicing.24060.42">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>2f83a5e7bb3f5dd64aafa9b318f9962096834cf2</Sha>
+      <Sha>5e12b89c162aeca1ee3244be8ede3b3109938d17</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="8.0.0-rtm.23524.7">
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>59edaad404d1b8e47080015ae8d0787f94c970df</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="8.0.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>5535e31a712343a63f5d7d796cd874e563e5ac14</Sha>
+      <Sha>bf5e279d9239bfef5bb1b8d6212f1b971c434606</Sha>
     </Dependency>
     <!-- Set TRACKING_DOTNET_RUNTIME_SEPARATELY to something in Make.config if removing the CoherentParentDependency on Microsoft.Dotnet.Sdk.Internal -->
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>5535e31a712343a63f5d7d796cd874e563e5ac14</Sha>
+      <Sha>bf5e279d9239bfef5bb1b8d6212f1b971c434606</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="8.0.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
-      <Sha>3f1acb59718cadf111a0a796681e3d3509bb3381</Sha>
+      <Sha>8e941eb42f819adb116b881195158b3887a70a1c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>2406616d0e3a31d80b326e27c156955bfa41c791</Sha>
+      <Sha>201f4dae9d1a1e105d8ba86d7ece61eed1f665e0</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Cecil" Version="0.11.4-alpha.23509.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/cecil</Uri>

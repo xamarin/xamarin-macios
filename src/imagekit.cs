@@ -87,8 +87,7 @@ namespace ImageKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		IKCameraDeviceViewDelegate Delegate { get; set; }
+		IIKCameraDeviceViewDelegate Delegate { get; set; }
 
 		[Export ("cameraDevice", ArgumentSemantic.Assign)]
 		ICCameraDevice CameraDevice { get; set; }
@@ -184,6 +183,8 @@ namespace ImageKit {
 		void SetShowStatusInfoAsWindowSubtitle (bool value);
 	}
 
+	interface IIKCameraDeviceViewDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -207,8 +208,7 @@ namespace ImageKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		IKDeviceBrowserViewDelegate Delegate { get; set; }
+		IIKDeviceBrowserViewDelegate Delegate { get; set; }
 
 		[Export ("displaysLocalCameras")]
 		bool DisplaysLocalCameras { get; set; }
@@ -228,6 +228,8 @@ namespace ImageKit {
 		[Export ("selectedDevice")]
 		ICDevice SelectedDevice { get; }
 	}
+
+	interface IIKDeviceBrowserViewDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -431,8 +433,7 @@ namespace ImageKit {
 		NSObject WeakDataSource { get; set; }
 
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		IKImageBrowserDataSource DataSource { get; set; }
+		IIKImageBrowserDataSource DataSource { get; set; }
 
 		[Export ("reloadData")]
 		void ReloadData ();
@@ -441,8 +442,7 @@ namespace ImageKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		IKImageBrowserDelegate Delegate { get; set; }
+		IIKImageBrowserDelegate Delegate { get; set; }
 
 		//@category IKImageBrowserView (IKAppearance)
 		[Export ("cellsStyleMask")]
@@ -458,7 +458,7 @@ namespace ImageKit {
 		CALayer ForegroundLayer { get; set; }
 
 		[Export ("newCellForRepresentedItem:")]
-		IKImageBrowserCell NewCell ([Protocolize] IKImageBrowserItem representedItem);
+		IKImageBrowserCell NewCell (IIKImageBrowserItem representedItem);
 
 		[Export ("cellForItemAtIndex:")]
 		IKImageBrowserCell GetCellAt (nint itemIndex);
@@ -539,8 +539,7 @@ namespace ImageKit {
 
 		//@category IKImageBrowserView (IKDragNDrop)
 		[Export ("draggingDestinationDelegate", ArgumentSemantic.Weak)]
-		[Protocolize]
-		NSDraggingDestination DraggingDestinationDelegate { get; set; }
+		INSDraggingDestination DraggingDestinationDelegate { get; set; }
 
 		[Export ("indexAtLocationOfDroppedItem")]
 		nint GetIndexAtLocationOfDroppedItem ();
@@ -573,6 +572,8 @@ namespace ImageKit {
 		[Field ("IKImageBrowserCellsSubtitleAttributesKey")]
 		NSString CellsSubtitleAttributesKey { get; }
 	}
+
+	interface IIKImageBrowserDataSource { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -698,6 +699,8 @@ namespace ImageKit {
 
 	interface IIKImageBrowserItem { }
 
+	interface IIKImageBrowserDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (IsInformal = true)]
@@ -723,8 +726,7 @@ namespace ImageKit {
 		IKImageEditPanel SharedPanel { get; }
 
 		[Export ("dataSource", ArgumentSemantic.Assign), NullAllowed]
-		[Protocolize]
-		IKImageEditPanelDataSource DataSource { get; set; }
+		IIKImageEditPanelDataSource DataSource { get; set; }
 
 #if !XAMCORE_5_0
 		[Obsolete ("Use the 'FilterArray' property instead.")]
@@ -738,6 +740,8 @@ namespace ImageKit {
 		[Export ("reloadData")]
 		void ReloadData ();
 	}
+
+	interface IIKImageEditPanelDataSource { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -977,8 +981,7 @@ namespace ImageKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		IKSaveOptionsDelegate Delegate { get; set; }
+		IIKSaveOptionsDelegate Delegate { get; set; }
 
 		[Export ("initWithImageProperties:imageUTType:")]
 		NativeHandle Constructor (NSDictionary imageProperties, string imageUTType);
@@ -993,6 +996,8 @@ namespace ImageKit {
 		[Export ("rememberLastSetting")]
 		bool RememberLastSetting { get; set; }
 	}
+
+	interface IIKSaveOptionsDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1011,8 +1016,7 @@ namespace ImageKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		IKScannerDeviceViewDelegate Delegate { get; set; }
+		IIKScannerDeviceViewDelegate Delegate { get; set; }
 
 		[Export ("scannerDevice", ArgumentSemantic.Assign)]
 		ICScannerDevice ScannerDevice { get; set; }
@@ -1051,6 +1055,8 @@ namespace ImageKit {
 		NSUrl PostProcessApplication { get; set; }
 	}
 
+	interface IIKScannerDeviceViewDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1084,7 +1090,7 @@ namespace ImageKit {
 		double AutoPlayDelay { get; set; }
 
 		[Export ("runSlideshowWithDataSource:inMode:options:")]
-		void RunSlideshow ([Protocolize] IKSlideshowDataSource dataSource, string slideshowMode, NSDictionary slideshowOptions);
+		void RunSlideshow (IIKSlideshowDataSource dataSource, string slideshowMode, NSDictionary slideshowOptions);
 
 		[Export ("stopSlideshow:")]
 		void StopSlideshow (NSObject sender);
@@ -1151,6 +1157,8 @@ namespace ImageKit {
 		[Field ("IK_PhotosBundleIdentifier")]
 		NSString PhotosBundleIdentifier { get; }
 	}
+
+	interface IIKSlideshowDataSource { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

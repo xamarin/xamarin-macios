@@ -1,14 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
+
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class OptimizeImageTaskBase : XamarinToolTask {
+	public class OptimizeImage : XamarinToolTask, ITaskCallback {
 		ITaskItem inputImage;
 		ITaskItem outputImage;
 
@@ -83,6 +87,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var result = true;
 
 			for (var index = 0; index < this.InputImages.Length && index < this.OutputImages.Length; index++) {
@@ -100,6 +107,20 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return result;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => !OutputImages.Contains (item);
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public override void Cancel ()
+		{
+			base.Cancel ();
+
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

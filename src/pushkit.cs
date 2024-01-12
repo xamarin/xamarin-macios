@@ -38,8 +38,7 @@ namespace PushKit {
 	[DisableDefaultCtor]
 	interface PKPushRegistry {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PKPushRegistryDelegate Delegate { get; set; }
+		IPKPushRegistryDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -81,6 +80,8 @@ namespace PushKit {
 		[Field ("PKPushTypeFileProvider")]
 		NSString FileProvider { get; }
 	}
+
+	interface IPKPushRegistryDelegate { }
 
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]

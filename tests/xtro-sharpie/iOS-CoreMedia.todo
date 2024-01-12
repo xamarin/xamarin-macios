@@ -104,3 +104,8 @@
 !missing-pinvoke! CMTagMakeWithOSTypeValue is not bound
 !missing-pinvoke! CMTagMakeWithSInt64Value is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCopyTagCollectionArray is not bound
+!missing-field! kCMFormatDescriptionExtension_HasAdditionalViews not bound
+!missing-field! kCMFormatDescriptionExtension_HasLeftStereoEyeView not bound
+!missing-field! kCMFormatDescriptionExtension_HasRightStereoEyeView not bound
+!missing-field! kCMFormatDescriptionExtension_LogTransferFunction not bound
+!missing-field! kCMFormatDescriptionLogTransferFunction_AppleLog not bound

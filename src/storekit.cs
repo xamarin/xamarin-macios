@@ -268,10 +268,10 @@ namespace StoreKit {
 		void FinishTransaction (SKPaymentTransaction transaction);
 
 		[Export ("addTransactionObserver:")]
-		void AddTransactionObserver ([Protocolize] SKPaymentTransactionObserver observer);
+		void AddTransactionObserver (ISKPaymentTransactionObserver observer);
 
 		[Export ("removeTransactionObserver:")]
-		void RemoveTransactionObserver ([Protocolize] SKPaymentTransactionObserver observer);
+		void RemoveTransactionObserver (ISKPaymentTransactionObserver observer);
 
 		[Export ("transactions")]
 		SKPaymentTransaction [] Transactions { get; }
@@ -538,8 +538,7 @@ namespace StoreKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SKRequestDelegate Delegate { get; set; }
+		ISKRequestDelegate Delegate { get; set; }
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -547,6 +546,8 @@ namespace StoreKit {
 		[Export ("start")]
 		void Start ();
 	}
+
+	interface ISKRequestDelegate { }
 
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
@@ -608,8 +609,7 @@ namespace StoreKit {
 
 		[Wrap ("WeakDelegate")]
 		[New]
-		[Protocolize]
-		SKProductsRequestDelegate Delegate { get; set; }
+		ISKProductsRequestDelegate Delegate { get; set; }
 	}
 
 	[Watch (6, 2)]
@@ -622,6 +622,8 @@ namespace StoreKit {
 		[Export ("invalidProductIdentifiers")]
 		string [] InvalidProducts { get; }
 	}
+
+	interface ISKProductsRequestDelegate { }
 
 	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
@@ -652,8 +654,7 @@ namespace StoreKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SKStoreProductViewControllerDelegate Delegate { get; set; }
+		ISKStoreProductViewControllerDelegate Delegate { get; set; }
 
 		[Export ("loadProductWithParameters:completionBlock:")]
 		[Internal]
@@ -676,6 +677,8 @@ namespace StoreKit {
 		[Wrap ("LoadProduct (parameters.GetDictionary ()!, impression, callback)")]
 		void LoadProduct (StoreProductParameters parameters, SKAdImpression impression, [NullAllowed] Action<bool, NSError> callback);
 	}
+
+	interface ISKStoreProductViewControllerDelegate { }
 
 	[Mac (11, 0), NoTV, NoWatch]
 	[MacCatalyst (13, 1)]
