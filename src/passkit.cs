@@ -2510,6 +2510,11 @@ namespace PassKit {
 		[Export ("documentExpirationDateElement")]
 		PKIdentityElement DocumentExpirationDateElement { get; }
 
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Static]
+		[Export ("documentDHSComplianceStatusElement")]
+		PKIdentityElement DocumentDhsComplianceStatusElement { get; }
+
 		[Static]
 		[Export ("documentNumberElement")]
 		PKIdentityElement DocumentNumberElement { get; }
@@ -2525,6 +2530,11 @@ namespace PassKit {
 		[Static]
 		[Export ("dateOfBirthElement")]
 		PKIdentityElement DateOfBirthElement { get; }
+
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Static]
+		[Export ("sexElement")]
+		PKIdentityElement SexElement { get; }
 
 		[Static]
 		[Export ("ageThresholdElementWithAge:")]

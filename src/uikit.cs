@@ -12744,6 +12744,9 @@ namespace UIKit {
 		[NullAllowed, Export ("focusedItem", ArgumentSemantic.Weak)]
 		IUIFocusItem FocusedItem { get; }
 
+		[Deprecated (PlatformName.iOS, 17, 2, message: "Use 'UITraitCollection.SceneCaptureState' property instead.")]
+		[Deprecated (PlatformName.TvOS, 17, 2, message: "Use 'UITraitCollection.SceneCaptureState' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 2, message: "Use 'UITraitCollection.SceneCaptureState' property instead.")]
 		[MacCatalyst (13, 1)]
 		[Export ("captured")]
 		bool Captured { [Bind ("isCaptured")] get; }
