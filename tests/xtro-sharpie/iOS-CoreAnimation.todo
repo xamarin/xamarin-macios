@@ -15,7 +15,6 @@
 !missing-type! CARenderer not bound
 !missing-protocol! CAMetalDisplayLinkDelegate not bound
 !missing-selector! +CAEDRMetadata::HLGMetadataWithAmbientViewingEnvironment: not bound
-!missing-selector! +CATransaction::batch not bound
 !missing-selector! CALayer::setWantsExtendedDynamicRangeContent: not bound
 !missing-selector! CALayer::wantsExtendedDynamicRangeContent not bound
 !missing-selector! CAMetalDisplayLink::addToRunLoop:forMode: not bound

@@ -477,3 +477,5 @@
 !missing-pinvoke! CMVideoFormatDescriptionCopyTagCollectionArray is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionBlockBuffer is not bound
 !missing-pinvoke! CMVideoFormatDescriptionCreateFromBigEndianImageDescriptionData is not bound
+!missing-field! kCMFormatDescriptionExtension_LogTransferFunction not bound
+!missing-field! kCMFormatDescriptionLogTransferFunction_AppleLog not bound

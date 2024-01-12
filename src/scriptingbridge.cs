@@ -144,8 +144,7 @@ namespace ScriptingBridge {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SBApplicationDelegate Delegate { get; set; }
+		ISBApplicationDelegate Delegate { get; set; }
 
 		[Export ("launchFlags")]
 		LSLaunchFlags LaunchFlags { get; set; }
@@ -156,6 +155,8 @@ namespace ScriptingBridge {
 		[Export ("timeout")]
 		nint Timeout { get; set; }
 	}
+
+	interface ISBApplicationDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

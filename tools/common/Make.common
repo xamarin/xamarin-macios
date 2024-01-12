@@ -1,6 +1,6 @@
 # We check in SdkVersions.cs so that it's easier to use this file when building tests on Windows.
 
-../common/SdkVersions.cs: ../common/SdkVersions.in.cs Makefile $(TOP)/Make.config
+../common/SdkVersions.cs: ../common/SdkVersions.in.cs Makefile $(TOP)/Make.config $(TOP)/Make.versions
 	$(Q_GEN) sed \
 		-e 's/@IOS_SDK_VERSION@/$(IOS_SDK_VERSION)/g' -e 's/@WATCHOS_SDK_VERSION@/$(WATCH_SDK_VERSION)/' -e 's/@TVOS_SDK_VERSION@/$(TVOS_SDK_VERSION)/' -e 's/@MACOS_SDK_VERSION@/$(MACOS_SDK_VERSION)/' \
 		-e 's/@MACCATALYST_SDK_VERSION@/$(MACCATALYST_SDK_VERSION)/g' \

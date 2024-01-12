@@ -38,7 +38,6 @@ public class MemberInformation {
 	public bool is_ctor;
 	public bool is_return_release;
 	public bool is_type_sealed;
-	public bool protocolize;
 	public string? selector;
 	public string? wrap_method;
 	public string is_forced_owns;

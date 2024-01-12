@@ -184,8 +184,6 @@ public class AttributeManager {
 			return typeof (PrivateDefaultCtorAttribute);
 		case "ProtectedAttribute":
 			return typeof (ProtectedAttribute);
-		case "ProtocolizeAttribute":
-			return typeof (ProtocolizeAttribute);
 		case "SealedAttribute":
 			return typeof (SealedAttribute);
 		case "StaticAttribute":
