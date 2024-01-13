@@ -55,7 +55,7 @@ namespace MonoTouchFixtures.NaturalLanguage {
 			TestRuntime.AssertXcodeVersion (11, 0);
 			using (var tagger = new NLTagger (NLTagScheme.LexicalClass) { String = Text }) {
 #if NET
-				foreach (var scheme in typeof (NLTagScheme).GetEnumValues ()) {
+				foreach (var scheme in Enum.GetValues<NLTagScheme> ()) {
 #else
 				foreach (NLTagScheme scheme in Enum.GetValues (typeof (NLTagScheme))) {
 #endif

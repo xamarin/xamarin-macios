@@ -192,6 +192,10 @@ namespace PushToTalk {
 
 		[Export ("channelManager:failedToStopTransmittingInChannelWithUUID:error:")]
 		void FailedToStopTransmittingInChannel (PTChannelManager channelManager, NSUuid channelUuid, NSError error);
+
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Export ("incomingServiceUpdatePushForChannelManager:channelUUID:pushPayload:isHighPriority:remainingHighPriorityBudget:withCompletionHandler:")]
+		void IncomingServiceUpdatePush (PTChannelManager channelManager, NSUuid channelUuid, NSDictionary<NSString, NSObject> pushPayload, bool isHighPriority, nint remainingHighPriorityBudget, Action completion);
 	}
 
 	interface IPTChannelRestorationDelegate { }

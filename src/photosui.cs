@@ -76,8 +76,7 @@ namespace PhotosUI {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		PHLivePhotoViewDelegate Delegate { get; set; }
+		IPHLivePhotoViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -127,6 +126,8 @@ namespace PhotosUI {
 		[Export ("contentsRect", ArgumentSemantic.Assign)]
 		CGRect ContentsRect { get; set; }
 	}
+
+	interface IPHLivePhotoViewDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]

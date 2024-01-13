@@ -215,6 +215,7 @@ namespace Introspection {
 				case "CKSyncEnginePendingRecordZoneChange":
 				case "CKSyncEnginePendingZoneDelete":
 				case "CKSyncEnginePendingZoneSave":
+				case "PKContact":
 					return true;
 				}
 				break;

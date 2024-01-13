@@ -913,8 +913,7 @@ namespace WatchKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		WKExtensionDelegate Delegate { get; set; }
+		IWKExtensionDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -982,6 +981,8 @@ namespace WatchKit {
 		[Notification, Field ("WKApplicationDidEnterBackgroundNotification")]
 		NSString DidEnterBackgroundNotification { get; }
 	}
+
+	interface IWKExtensionDelegate { }
 
 	[NoiOS]
 	[Protocol]
