@@ -225,8 +225,7 @@ namespace AVKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		AVPlayerViewControllerDelegate Delegate { get; set; }
+		IAVPlayerViewControllerDelegate Delegate { get; set; }
 
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
@@ -353,6 +352,8 @@ namespace AVKit {
 		[Export ("selectSpeed:")]
 		void SelectSpeed (AVPlaybackSpeed speed);
 	}
+
+	interface IAVPlayerViewControllerDelegate { }
 
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -615,8 +616,7 @@ namespace AVKit {
 		[Mac (12, 0)]
 		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		AVPlayerViewDelegate Delegate { get; set; }
+		IAVPlayerViewDelegate Delegate { get; set; }
 
 		[Mac (12, 0)]
 		[NoMacCatalyst]
@@ -1030,6 +1030,8 @@ namespace AVKit {
 		[Export ("pictureInPictureControllerShouldProhibitBackgroundAudioPlayback:")]
 		bool ShouldProhibitBackgroundAudioPlayback (AVPictureInPictureController pictureInPictureController);
 	}
+
+	interface IAVPlayerViewDelegate { }
 
 	[Mac (12, 0), NoiOS, NoTV, NoMacCatalyst]
 #if NET

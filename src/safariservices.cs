@@ -115,8 +115,7 @@ namespace SafariServices {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SFSafariViewControllerDelegate Delegate { get; set; }
+		ISFSafariViewControllerDelegate Delegate { get; set; }
 
 		[MacCatalyst (13, 1)]
 		[NullAllowed]
@@ -141,6 +140,8 @@ namespace SafariServices {
 		[Export ("prewarmConnectionsToURLs:")]
 		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl [] urls);
 	}
+
+	interface ISFSafariViewControllerDelegate { }
 
 	[NoMac]
 	[MacCatalyst (13, 1)]

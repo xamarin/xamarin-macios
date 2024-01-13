@@ -14,7 +14,6 @@
 !missing-selector! CARenderer::updateBounds not bound
 !missing-type! CARenderer not bound
 !missing-protocol! CAMetalDisplayLinkDelegate not bound
-!missing-selector! +CATransaction::batch not bound
 !missing-selector! CAMetalDisplayLink::addToRunLoop:forMode: not bound
 !missing-selector! CAMetalDisplayLink::delegate not bound
 !missing-selector! CAMetalDisplayLink::initWithMetalLayer: not bound
