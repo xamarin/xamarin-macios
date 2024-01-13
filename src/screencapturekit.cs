@@ -136,6 +136,10 @@ namespace ScreenCaptureKit {
 		[Mac (14, 0)]
 		[Field ("SCStreamFrameInfoBoundingRect")]
 		NSString BoundingRect { get; }
+
+		[Mac (14, 2)]
+		[Field ("SCStreamFrameInfoPresenterOverlayContentRect")]
+		NSString PresenterOverlayContentRect { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -266,6 +270,7 @@ namespace ScreenCaptureKit {
 
 		// per docs, the following selectors are available for 12.3+
 		// but return types are SCStreamType and SCShareableContentStyle are 14.0+
+		[Deprecated (PlatformName.MacOSX, 14, 2, message: "Use 'Style' instead.")]
 		[Mac (14, 0)]
 		[Export ("streamType")]
 		SCStreamType StreamType { get; }
@@ -281,6 +286,10 @@ namespace ScreenCaptureKit {
 		[Mac (14, 0)]
 		[Export ("contentRect")]
 		CGRect ContentRect { get; }
+
+		[Mac (14, 2)]
+		[Export ("includeMenuBar")]
+		bool IncludeMenuBar { get; set; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]
@@ -383,6 +392,10 @@ namespace ScreenCaptureKit {
 		[Mac (14, 0)]
 		[Export ("presenterOverlayPrivacyAlertSetting", ArgumentSemantic.Assign)]
 		SCPresenterOverlayAlertSetting PresenterOverlayPrivacyAlertSetting { get; set; }
+
+		[Mac (14, 2)]
+		[Export ("includeChildWindows")]
+		bool IncludeChildWindows { get; set; }
 	}
 
 	[NoiOS, NoTV, NoWatch, Mac (12, 3), NoMacCatalyst]

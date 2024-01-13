@@ -59,27 +59,24 @@ namespace QuickLook {
 		NSObject WeakDataSource { get; set; }
 
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		QLPreviewControllerDataSource DataSource { get; set; }
+		IQLPreviewControllerDataSource DataSource { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		QLPreviewControllerDelegate Delegate { get; set; }
+		IQLPreviewControllerDelegate Delegate { get; set; }
 
 		[Export ("currentPreviewItemIndex")]
 		nint CurrentPreviewItemIndex { get; set; }
 
 		[Export ("currentPreviewItem")]
-		[Protocolize]
 		[NullAllowed]
-		QLPreviewItem CurrentPreviewItem { get; }
+		IQLPreviewItem CurrentPreviewItem { get; }
 
 		[Static]
 		[Export ("canPreviewItem:")]
-		bool CanPreviewItem ([Protocolize] QLPreviewItem item);
+		bool CanPreviewItem (IQLPreviewItem item);
 
 		[Export ("reloadData")]
 		void ReloadData ();
@@ -87,6 +84,8 @@ namespace QuickLook {
 		[Export ("refreshCurrentPreviewItem")]
 		void RefreshCurrentPreviewItem ();
 	}
+
+	interface IQLPreviewControllerDataSource { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -100,8 +99,7 @@ namespace QuickLook {
 
 		[Abstract]
 		[Export ("previewController:previewItemAtIndex:")]
-		[return: Protocolize]
-		QLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
+		IQLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
 	}
 
 	[NoMac]
@@ -113,6 +111,8 @@ namespace QuickLook {
 		UpdateContents,
 		CreateCopy,
 	}
+
+	interface IQLPreviewControllerDelegate { }
 
 	[NoMac]
 	[MacCatalyst (13, 1)]
@@ -127,17 +127,17 @@ namespace QuickLook {
 		void DidDismiss (QLPreviewController controller);
 
 		[Export ("previewController:shouldOpenURL:forPreviewItem:"), DelegateName ("QLOpenUrl"), DefaultValue (false)]
-		bool ShouldOpenUrl (QLPreviewController controller, NSUrl url, [Protocolize] QLPreviewItem item);
+		bool ShouldOpenUrl (QLPreviewController controller, NSUrl url, IQLPreviewItem item);
 
 #if !MONOMAC
 		// UIView and UIImage do not exists in MonoMac
 
 		[Export ("previewController:frameForPreviewItem:inSourceView:"), DelegateName ("QLFrame"), DefaultValue (typeof (CGRect))]
-		CGRect FrameForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, ref UIView view);
+		CGRect FrameForPreviewItem (QLPreviewController controller, IQLPreviewItem item, ref UIView view);
 
 		[Export ("previewController:transitionImageForPreviewItem:contentRect:"), DelegateName ("QLTransition"), DefaultValue (null)]
 		[return: NullAllowed]
-		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
+		UIImage TransitionImageForPreviewItem (QLPreviewController controller, IQLPreviewItem item, CGRect contentRect);
 
 		[MacCatalyst (13, 1)]
 		[Export ("previewController:transitionViewForPreviewItem:"), DelegateName ("QLTransitionView"), DefaultValue (null)]

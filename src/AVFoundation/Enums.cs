@@ -1562,4 +1562,15 @@ namespace AVFoundation {
 		ExposureModeChanged = 1uL << 2,
 	}
 
+	[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+	[Native]
+	public enum AVAudioSessionRenderingMode : long {
+		NotApplicable = 0,
+		MonoStereo = 1,
+		Surround = 2,
+		SpatialAudio = 3,
+		DolbyAudio = 4,
+		DolbyAtmos = 5,
+	}
+
 }

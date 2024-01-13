@@ -167,11 +167,6 @@ public class TypeManager {
 		return FormatTypeUsedIn (usedIn?.Namespace, type);
 	}
 
-	public string FormatType (Type? usedIn, Type type, bool protocolized)
-	{
-		return FormatTypeUsedIn (usedIn?.Namespace, type, protocolized);
-	}
-
 	public string FormatType (Type? usedIn, string @namespace, string name)
 	{
 		string tname;
@@ -183,7 +178,7 @@ public class TypeManager {
 		return tname;
 	}
 
-	public string FormatTypeUsedIn (string? usedInNamespace, Type? type, bool protocolized = false)
+	public string FormatTypeUsedIn (string? usedInNamespace, Type? type)
 	{
 		if (type is null)
 			throw new BindingException (1065, true);
@@ -231,7 +226,6 @@ public class TypeManager {
 		}
 
 
-		var interfaceTag = protocolized == true ? "I" : "";
 		string tname;
 		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
 		// work with nested/nested/nested classes. But we are not writing a general solution because:
@@ -240,13 +234,13 @@ public class TypeManager {
 		//    so we only solve the problem we have, no more.
 		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
 		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
-			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
+			tname = $"global::{type.Namespace}.{parentClass}{type.Name}";
 		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
 				 BindingTouch.NamespaceCache.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
 				 string.IsNullOrEmpty (type.FullName))
-			tname = interfaceTag + type.Name;
+			tname = type.Name;
 		else
-			tname = $"global::{type.Namespace}.{parentClass}{interfaceTag}{type.Name}";
+			tname = $"global::{type.Namespace}.{parentClass}{type.Name}";
 
 		var targs = type.GetGenericArguments ();
 		if (targs.Length > 0) {

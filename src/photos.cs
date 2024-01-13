@@ -1081,6 +1081,8 @@ namespace Photos {
 
 	}
 
+	interface IPHPhotoLibraryChangeObserver { }
+
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	[Model]
@@ -1151,10 +1153,10 @@ namespace Photos {
 		bool PerformChangesAndWait (Action changeHandler, out NSError error);
 
 		[Export ("registerChangeObserver:")]
-		void RegisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
+		void RegisterChangeObserver (IPHPhotoLibraryChangeObserver observer);
 
 		[Export ("unregisterChangeObserver:")]
-		void UnregisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
+		void UnregisterChangeObserver (IPHPhotoLibraryChangeObserver observer);
 
 		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
