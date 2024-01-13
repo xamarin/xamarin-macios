@@ -150,7 +150,8 @@ namespace GameKit {
 		NotAuthorized = 32,
 		ConnectionTimeout = 33,
 		ApiObsolete = 34,
-
+		ICloudUnavailable = 35,
+		LockdownMode = 36,
 		FriendListDescriptionMissing = 100,
 		FriendListRestricted = 101,
 		FriendListDenied = 102,

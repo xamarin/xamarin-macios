@@ -186,6 +186,8 @@ namespace Introspection {
 				case "GKBasePlayer":
 				case "GKLocalPlayer":
 				case "GKPlayer":
+				case "PKDisbursementRequest":
+				case "PKContact":
 					return true;
 				}
 				break;

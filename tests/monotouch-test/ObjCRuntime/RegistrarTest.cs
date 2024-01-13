@@ -1009,7 +1009,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #if NET
 			public virtual void TestNativeEnum1 (NSWritingDirection twd)
 			{
-				Assert.That (Enum.GetValues (typeof (NSWritingDirection)), Contains.Item (twd), "TestNativeEnum1");
+				Assert.That (Enum.GetValues<NSWritingDirection> (), Contains.Item (twd), "TestNativeEnum1");
 			}
 #else
 			public virtual void TestNativeEnum1 (UITextWritingDirection twd)
@@ -1034,7 +1034,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("testNativeEnum3:a:b:")]
 			public virtual void TestNativeEnum1 (NSWritingDirection twd, int a, long b)
 			{
-				Assert.That (Enum.GetValues (typeof (NSWritingDirection)), Contains.Item (twd), "TestNativeEnum3");
+				Assert.That (Enum.GetValues<NSWritingDirection> (), Contains.Item (twd), "TestNativeEnum3");
 				Assert.AreEqual (31415, a, "TestNativeEnum3 a");
 				Assert.AreEqual (3141592, b, "TestNativeEnum3 b");
 			}
