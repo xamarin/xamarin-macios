@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Mono.Options;
+
 #nullable enable
 
 public class BindingTouchConfig {
@@ -26,4 +28,7 @@ public class BindingTouchConfig {
 	public string? TargetFramework = null;
 	public string? Baselibdll = null;
 	public string? Attributedll = null;
+	public IEnumerable<string> Paths = new List<string> ();
+	public IEnumerable<string> References = new List<string> ();
+	public OptionSet OptionSet = new ();
 }

@@ -75,8 +75,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCSessionDelegate Delegate { get; set; }
+		IMCSessionDelegate Delegate { get; set; }
 
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
@@ -109,6 +108,8 @@ namespace MultipeerConnectivity {
 
 		#endregion
 	}
+
+	interface IMCSessionDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -158,8 +159,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCNearbyServiceAdvertiserDelegate Delegate { get; set; }
+		IMCNearbyServiceAdvertiserDelegate Delegate { get; set; }
 
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
@@ -173,6 +173,8 @@ namespace MultipeerConnectivity {
 	}
 
 	delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
+
+	interface IMCNearbyServiceAdvertiserDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -210,8 +212,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCNearbyServiceBrowserDelegate Delegate { get; set; }
+		IMCNearbyServiceBrowserDelegate Delegate { get; set; }
 
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
@@ -259,8 +260,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCBrowserViewControllerDelegate Delegate { get; set; }
+		IMCBrowserViewControllerDelegate Delegate { get; set; }
 
 		[Export ("minimumNumberOfPeers", ArgumentSemantic.Assign)]
 		nuint MinimumNumberOfPeers { get; set; }
@@ -277,6 +277,8 @@ namespace MultipeerConnectivity {
 		[Export ("session")]
 		MCSession Session { get; }
 	}
+
+	interface IMCBrowserViewControllerDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -321,8 +323,7 @@ namespace MultipeerConnectivity {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MCAdvertiserAssistantDelegate Delegate { get; set; }
+		IMCAdvertiserAssistantDelegate Delegate { get; set; }
 
 		[Export ("start")]
 		void Start ();
@@ -330,6 +331,8 @@ namespace MultipeerConnectivity {
 		[Export ("stop")]
 		void Stop ();
 	}
+
+	interface IMCAdvertiserAssistantDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

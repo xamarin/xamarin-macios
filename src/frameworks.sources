@@ -1635,6 +1635,11 @@ SOCIAL_SOURCES = \
 	Social/SLComposeViewController.cs \
 	Social/SLRequest.cs \
 
+# Speech
+
+SPEECH_SOURCES = \
+	Speech/SFCompat.cs \
+
 # SpriteKit
 
 SPRITEKIT_API_SOURCES = \
@@ -1932,6 +1937,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
 	ObjCRuntime/NativeNameAttribute.cs \
+	ObjCRuntime/TransientCFString.cs \
 	ObjCRuntime/TransientString.cs \
 	ObjCRuntime/NFloat.cs \
 	ObjCRuntime/ObsoleteConstants.cs \

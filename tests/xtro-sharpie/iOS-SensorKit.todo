@@ -45,3 +45,4 @@
 !missing-type! SRSpeechMetrics not bound
 !missing-type! SRWristTemperature not bound
 !missing-type! SRWristTemperatureSession not bound
+!missing-selector! SRSpeechMetrics::timeSinceAudioStart not bound

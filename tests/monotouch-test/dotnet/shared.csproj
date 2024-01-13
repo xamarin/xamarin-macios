@@ -41,6 +41,10 @@
 
     <!-- warning CS8002: Referenced assembly 'Touch.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null' does not have a strong name. -->
     <NoWarn>$(NoWarn);CS8002</NoWarn>
+
+    <!-- We're warning-free, so let's make sure we stay that way -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="$(RootTestsDirectory)/common/shared-dotnet.csproj" />
