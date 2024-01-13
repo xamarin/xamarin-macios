@@ -828,7 +828,7 @@ public static class Asserts {
 			AreEqual (expected.M34, actual.M34, out var d34) &
 			AreEqual (expected.M44, actual.M44, out var d44)) {
 
-			var size = Marshal.SizeOf (typeof (SCNMatrix4));
+			var size = Marshal.SizeOf<SCNMatrix4> ();
 			unsafe {
 				byte* e = (byte*) (void*) &expected;
 				byte* a = (byte*) (void*) &actual;

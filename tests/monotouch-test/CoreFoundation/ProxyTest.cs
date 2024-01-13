@@ -175,7 +175,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.XamarinUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
@@ -217,7 +216,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
@@ -288,7 +286,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.XamarinUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
@@ -327,7 +324,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var targetUri = NetworkResources.MicrosoftUri;
 
 			Exception ex;
-			bool foundProxies;
 			// similar to the other tests, but we want to ensure that the async/await API works
 			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {

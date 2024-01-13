@@ -9,12 +9,13 @@ using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class MetalTaskBase : XamarinToolTask {
+	public class Metal : XamarinToolTask {
 		#region Inputs
 
 		[Required]
@@ -85,6 +86,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			if (AppleSdkSettings.XcodeVersion.Major >= 11)
 				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
 			return base.Execute ();
@@ -132,6 +136,14 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
+		}
+
+		public override void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+
+			base.Cancel ();
 		}
 	}
 }

@@ -305,6 +305,8 @@ namespace PassKit {
 	delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
 	delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem [] summaryItems);
 
+	interface IPKPaymentAuthorizationViewControllerDelegate { }
+
 	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -416,8 +418,7 @@ namespace PassKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PKPaymentAuthorizationViewControllerDelegate Delegate { get; set; }
+		IPKPaymentAuthorizationViewControllerDelegate Delegate { get; set; }
 
 		[Static, Export ("canMakePayments")]
 		bool CanMakePayments { get; }
@@ -758,9 +759,10 @@ namespace PassKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PKAddPassesViewControllerDelegate Delegate { get; set; }
+		IPKAddPassesViewControllerDelegate Delegate { get; set; }
 	}
+
+	interface IPKAddPassesViewControllerDelegate { }
 
 	[NoMac] // under `TARGET_OS_IPHONE`
 	[NoWatch]
@@ -867,8 +869,8 @@ namespace PassKit {
 #endif
 
 		[Wrap ("WeakDelegate")]
-		[NullAllowed, Protocolize]
-		PKAddPaymentPassViewControllerDelegate Delegate { get; set; }
+		[NullAllowed]
+		IPKAddPaymentPassViewControllerDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -2508,6 +2510,11 @@ namespace PassKit {
 		[Export ("documentExpirationDateElement")]
 		PKIdentityElement DocumentExpirationDateElement { get; }
 
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Static]
+		[Export ("documentDHSComplianceStatusElement")]
+		PKIdentityElement DocumentDhsComplianceStatusElement { get; }
+
 		[Static]
 		[Export ("documentNumberElement")]
 		PKIdentityElement DocumentNumberElement { get; }
@@ -2523,6 +2530,11 @@ namespace PassKit {
 		[Static]
 		[Export ("dateOfBirthElement")]
 		PKIdentityElement DateOfBirthElement { get; }
+
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Static]
+		[Export ("sexElement")]
+		PKIdentityElement SexElement { get; }
 
 		[Static]
 		[Export ("ageThresholdElementWithAge:")]

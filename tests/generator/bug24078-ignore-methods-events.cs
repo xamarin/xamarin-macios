@@ -17,9 +17,10 @@ namespace Test {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		UIPopoverPresentationControllerDelegate Delegate { get; set; }
+		IUIPopoverPresentationControllerDelegate Delegate { get; set; }
 	}
+
+	public interface IUIPopoverPresentationControllerDelegate { }
 
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
