@@ -1154,6 +1154,8 @@ namespace WebKit {
 	partial interface DomEntityReference {
 	}
 
+	interface IDomEventTarget { }
+
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject), Name = "DOMEventTarget")]
@@ -1182,12 +1184,10 @@ namespace WebKit {
 		string Type { get; }
 
 		[Export ("target", ArgumentSemantic.Retain)]
-		[Protocolize]
-		DomEventTarget Target { get; }
+		IDomEventTarget Target { get; }
 
 		[Export ("currentTarget", ArgumentSemantic.Retain)]
-		[Protocolize]
-		DomEventTarget CurrentTarget { get; }
+		IDomEventTarget CurrentTarget { get; }
 
 		[Export ("eventPhase")]
 		DomEventPhase EventPhase { get; }
@@ -1202,8 +1202,7 @@ namespace WebKit {
 		UInt64 TimeStamp { get; }
 
 		[Export ("srcElement", ArgumentSemantic.Retain)]
-		[Protocolize]
-		DomEventTarget SourceElement { get; }
+		IDomEventTarget SourceElement { get; }
 
 		[Export ("returnValue")]
 		bool ReturnValue { get; set; }
@@ -1381,13 +1380,13 @@ namespace WebKit {
 #if !XAMCORE_3_0
 		[Obsolete ("Use the constructor instead.")]
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
-		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
+		void InitEvent (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, IDomEventTarget relatedTarget);
 #endif
 #if !XAMCORE_3_0
 		[Sealed] // Just to avoid the duplicate selector error
 #endif
 		[Export ("initMouseEvent:canBubble:cancelable:view:detail:screenX:screenY:clientX:clientY:ctrlKey:altKey:shiftKey:metaKey:button:relatedTarget:")]
-		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, [Protocolize] DomEventTarget relatedTarget);
+		NativeHandle Constructor (string eventType, bool canBubble, bool cancelable, DomAbstractView view, int /* int, not NSInteger */ detail, int /* int, not NSInteger */ screenX, int /* int, not NSInteger */ screenY, int /* int, not NSInteger */ clientX, int /* int, not NSInteger */ clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, IDomEventTarget relatedTarget);
 
 		[Export ("screenX")]
 		int ScreenX { get; } /* int, not NSInteger */
@@ -1417,8 +1416,7 @@ namespace WebKit {
 		ushort Button { get; }
 
 		[Export ("relatedTarget", ArgumentSemantic.Retain)]
-		[Protocolize]
-		DomEventTarget RelatedTarget { get; }
+		IDomEventTarget RelatedTarget { get; }
 
 		[Export ("offsetX")]
 		int OffsetX { get; } /* int, not NSInteger */
@@ -1895,8 +1893,7 @@ namespace WebKit {
 		NSData Data { get; }
 
 		[Export ("representation")]
-		[Protocolize]
-		WebDocumentRepresentation Representation { get; }
+		IWebDocumentRepresentation Representation { get; }
 
 		[Export ("webFrame")]
 		WebFrame WebFrame { get; }
@@ -1937,6 +1934,8 @@ namespace WebKit {
 		[Export ("addSubresource:")]
 		void AddSubresource (WebResource subresource);
 	}
+
+	interface IWebDocumentRepresentation { }
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -2012,6 +2011,8 @@ namespace WebKit {
 	[BaseType (typeof (NSUrlDownload))]
 	partial interface WebDownload {
 	}
+
+	interface IWebDownloadDelegate { }
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -2095,6 +2096,8 @@ namespace WebKit {
 		[Export ("javaScriptContext", ArgumentSemantic.Strong)]
 		JSContext JavaScriptContext { get; }
 	}
+
+	interface IWebFrameLoadDelegate { }
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -2282,6 +2285,8 @@ namespace WebKit {
 
 	interface IWebOpenPanelResultListener { }
 
+	interface IWebPolicyDelegate { }
+
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
@@ -2461,6 +2466,8 @@ namespace WebKit {
 		string FrameName { get; }
 	}
 
+	interface IWebResourceLoadDelegate { }
+
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
 	[BaseType (typeof (NSObject))]
@@ -2494,6 +2501,8 @@ namespace WebKit {
 		[Export ("webView:plugInFailedWithError:dataSource:"), EventArgs ("WebResourcePluginError")]
 		void OnPlugInFailed (WebView sender, NSError error, WebDataSource dataSource);
 	}
+
+	interface IWebUIDelegate { }
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
@@ -2816,36 +2825,31 @@ namespace WebKit {
 		NSObject WeakResourceLoadDelegate { get; set; }
 
 		[Wrap ("WeakResourceLoadDelegate")]
-		[Protocolize]
-		WebResourceLoadDelegate ResourceLoadDelegate { get; set; }
+		IWebResourceLoadDelegate ResourceLoadDelegate { get; set; }
 
 		[Export ("downloadDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDownloadDelegate { get; set; }
 
 		[Wrap ("WeakDownloadDelegate")]
-		[Protocolize]
-		WebDownloadDelegate DownloadDelegate { get; set; }
+		IWebDownloadDelegate DownloadDelegate { get; set; }
 
 		[Export ("frameLoadDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakFrameLoadDelegate { get; set; }
 
 		[Wrap ("WeakFrameLoadDelegate")]
-		[Protocolize]
-		WebFrameLoadDelegate FrameLoadDelegate { get; set; }
+		IWebFrameLoadDelegate FrameLoadDelegate { get; set; }
 
 		[Export ("UIDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakUIDelegate { get; set; }
 
 		[Wrap ("WeakUIDelegate")]
-		[Protocolize]
-		WebUIDelegate UIDelegate { get; set; }
+		IWebUIDelegate UIDelegate { get; set; }
 
 		[Export ("policyDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakPolicyDelegate { get; set; }
 
 		[Wrap ("WeakPolicyDelegate")]
-		[Protocolize]
-		WebPolicyDelegate PolicyDelegate { get; set; }
+		IWebPolicyDelegate PolicyDelegate { get; set; }
 
 		[Export ("textSizeMultiplier")]
 		float TextSizeMultiplier { get; set; } /* float, not CGFloat */
@@ -4646,6 +4650,8 @@ namespace WebKit {
 		void NavigationResponseDidBecomeDownload (WKWebView webView, WKNavigationResponse navigationResponse, WKDownload download);
 	}
 
+	interface IWKNavigationDelegate { }
+
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKNavigationResponse {
@@ -5094,6 +5100,8 @@ namespace WebKit {
 		void WillDismissEditMenu (WKWebView webView, IUIEditMenuInteractionAnimating animator);
 	}
 
+	interface IWKUIDelegate { }
+
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface WKUserContentController : NSSecureCoding {
@@ -5108,7 +5116,7 @@ namespace WebKit {
 		void RemoveAllUserScripts ();
 
 		[Export ("addScriptMessageHandler:name:")]
-		void AddScriptMessageHandler ([Protocolize] WKScriptMessageHandler scriptMessageHandler, string name);
+		void AddScriptMessageHandler (IWKScriptMessageHandler scriptMessageHandler, string name);
 
 		[Mac (11, 0), iOS (14, 0)]
 		[MacCatalyst (14, 0)]
@@ -5210,16 +5218,14 @@ namespace WebKit {
 		NSObject WeakNavigationDelegate { get; set; }
 
 		[Wrap ("WeakNavigationDelegate")]
-		[Protocolize]
-		WKNavigationDelegate NavigationDelegate { get; set; }
+		IWKNavigationDelegate NavigationDelegate { get; set; }
 
 		[Export ("UIDelegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		NSObject WeakUIDelegate { get; set; }
 
 		[Wrap ("WeakUIDelegate")]
-		[Protocolize]
-		WKUIDelegate UIDelegate { get; set; }
+		IWKUIDelegate UIDelegate { get; set; }
 
 		[Export ("backForwardList", ArgumentSemantic.Strong)]
 		WKBackForwardList BackForwardList { get; }

@@ -2,31 +2,31 @@ using Xamarin.Tests;
 
 namespace Xamarin.Utils {
 	public static class ApplePlatformExtensionsWithVersions {
-		public static string ToFrameworkWithDefaultVersion (this ApplePlatform @this)
+		public static string ToFrameworkWithPlatformVersion (this ApplePlatform @this)
 		{
 			var netVersion = Configuration.DotNetTfm;
-			var defaultTargetPlatformVersion = GetDefaultTargetPlatformVersion (@this);
+			var targetPlatformVersion = GetTargetPlatformVersion (@this);
 			switch (@this) {
 			case ApplePlatform.iOS:
-				return netVersion + "-ios" + defaultTargetPlatformVersion;
+				return netVersion + "-ios" + targetPlatformVersion;
 			case ApplePlatform.MacOSX:
-				return netVersion + "-macos" + defaultTargetPlatformVersion;
+				return netVersion + "-macos" + targetPlatformVersion;
 			case ApplePlatform.TVOS:
-				return netVersion + "-tvos" + defaultTargetPlatformVersion;
+				return netVersion + "-tvos" + targetPlatformVersion;
 			case ApplePlatform.MacCatalyst:
-				return netVersion + "-maccatalyst" + defaultTargetPlatformVersion;
+				return netVersion + "-maccatalyst" + targetPlatformVersion;
 			default:
 				return "Unknown";
 			}
 		}
 
-		public static string GetDefaultTargetPlatformVersion (this ApplePlatform @this)
+		public static string GetTargetPlatformVersion (this ApplePlatform @this)
 		{
 			switch (@this) {
-			case ApplePlatform.iOS: return SdkVersions.DefaultTargetPlatformVersioniOS;
-			case ApplePlatform.TVOS: return SdkVersions.DefaultTargetPlatformVersiontvOS;
-			case ApplePlatform.MacOSX: return SdkVersions.DefaultTargetPlatformVersionmacOS;
-			case ApplePlatform.MacCatalyst: return SdkVersions.DefaultTargetPlatformVersionMacCatalyst;
+			case ApplePlatform.iOS: return SdkVersions.TargetPlatformVersioniOS;
+			case ApplePlatform.TVOS: return SdkVersions.TargetPlatformVersiontvOS;
+			case ApplePlatform.MacOSX: return SdkVersions.TargetPlatformVersionmacOS;
+			case ApplePlatform.MacCatalyst: return SdkVersions.TargetPlatformVersionMacCatalyst;
 			default:
 				return "Unknown";
 			}

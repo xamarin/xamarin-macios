@@ -136,6 +136,8 @@ Please go to [[FieldAttribute]](https://developer.xamarin.com/guides/cross-platf
 
 ### <a name='BI1034'/>BI1034: The [Protocolize] attribute is set on the property *.*, but the property's type (*) is not a protocol.
 
+This error is no longer shown.
+
 ### <a name='BI1035'/>BI1035: The property * on class * is hiding a property from a parent class * but the selectors do not match.
 
 ### <a name='BI1036'/>BI1036: The last parameter in the method '*.*' must be a delegate (it's '*').
@@ -282,6 +284,8 @@ If the property is inlined from a protocol then the `[Export]` value, prefixed w
 ### <a name='BI1107'/>BI1107: The return type of the method *.* exposes a model (*). Please expose the corresponding protocol type instead (*.I*).
 
 ### <a name='BI1108'/>BI1108: The [Protocolize] attribute is applied to the return type of the method *.*, but the return type (*) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.
+
+This error is no longer shown.
 
 ### <a name='BI1109'/>BI1109: The return type of the method *.* exposes a model (*). Please expose the corresponding protocol type instead (*.I*).
 

@@ -17,9 +17,10 @@ namespace Xamarin.BindingTests {
 				if (TestRuntime.IsLinkAll) {
 #if OPTIMIZEALL && __MACOS__
 					return false;
-#endif
+#else
 					if (!Runtime.DynamicRegistrationSupported)
 						return false;
+#endif
 				}
 
 

@@ -40,9 +40,10 @@ namespace EventKitUI {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		EKEventViewDelegate Delegate { get; set; }
+		IEKEventViewDelegate Delegate { get; set; }
 	}
+
+	interface IEKEventViewDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -67,8 +68,7 @@ namespace EventKitUI {
 		NSObject WeakEditViewDelegate { get; set; }
 
 		[Wrap ("WeakEditViewDelegate")]
-		[Protocolize]
-		EKEventEditViewDelegate EditViewDelegate { get; set; }
+		IEKEventEditViewDelegate EditViewDelegate { get; set; }
 
 		[Export ("eventStore")]
 		EKEventStore EventStore { get; set; }
@@ -80,6 +80,8 @@ namespace EventKitUI {
 		[Export ("cancelEditing")]
 		void CancelEditing ();
 	}
+
+	interface IEKEventEditViewDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -120,8 +122,7 @@ namespace EventKitUI {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		EKCalendarChooserDelegate Delegate { get; set; }
+		IEKCalendarChooserDelegate Delegate { get; set; }
 
 		[Export ("showsDoneButton")]
 		bool ShowsDoneButton { get; set; }
@@ -133,6 +134,8 @@ namespace EventKitUI {
 		[Export ("selectedCalendars", ArgumentSemantic.Copy)]
 		NSSet SelectedCalendars { get; set; }
 	}
+
+	interface IEKCalendarChooserDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
