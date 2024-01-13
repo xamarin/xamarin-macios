@@ -8,6 +8,7 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Bundler;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
@@ -27,7 +28,7 @@ namespace Xamarin.MacDev.Tasks {
 	// 4) Directories are copied as is, since they can't have different content.
 	// 5) If symlinks point to different files, an error is raised.
 	// 6) Any other files will cause errors to be raised.
-	public abstract partial class MergeAppBundlesTaskBase : XamarinTask {
+	public partial class MergeAppBundles : XamarinTask {
 
 		#region Inputs
 		// This is a list of files (filename only, no path, will match any file with the given name in the app bundle)
@@ -66,7 +67,7 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		class Entry {
-			public MergeAppBundlesTaskBase Task;
+			public MergeAppBundles Task;
 			public Entries AppBundle;
 			public string RelativePath;
 			public FileType Type;
@@ -231,6 +232,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			if (InputAppBundles.Length == 0) {
 				Log.LogError (MSBStrings.E7073 /* At least one app bundle must be specified. */);
 				return false;
@@ -250,13 +254,13 @@ namespace Xamarin.MacDev.Tasks {
 				return !Log.HasLoggedErrors;
 			}
 
-			if (!MergeAppBundles ())
+			if (!Merge ())
 				return false;
 
 			return !Log.HasLoggedErrors;
 		}
 
-		bool MergeAppBundles ()
+		bool Merge ()
 		{
 			// Some validation
 			foreach (var input in InputAppBundles) {
@@ -473,6 +477,12 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return FileType.Other;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

@@ -454,8 +454,7 @@ namespace MapKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MKMapViewDelegate Delegate { get; set; }
+		IMKMapViewDelegate Delegate { get; set; }
 
 		[Export ("mapType")]
 		MKMapType MapType { get; set; }
@@ -761,6 +760,8 @@ namespace MapKit {
 		NSString ClusterAnnotationViewReuseIdentifier { get; }
 	}
 
+	interface IMKMapViewDelegate { }
+
 	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -985,8 +986,7 @@ namespace MapKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MKReverseGeocoderDelegate Delegate { get; set; }
+		IMKReverseGeocoderDelegate Delegate { get; set; }
 
 #if !XAMCORE_5_0
 		[Obsolete ("Use the 'Coordinate' property instead.")]
@@ -1009,6 +1009,8 @@ namespace MapKit {
 		[Export ("placemark")]
 		MKPlacemark Placemark { get; }
 	}
+
+	interface IMKReverseGeocoderDelegate { }
 
 #pragma warning disable 618
 	[NoMac]
@@ -2039,8 +2041,7 @@ namespace MapKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		MKLocalSearchCompleterDelegate Delegate { get; set; }
+		IMKLocalSearchCompleterDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -2064,6 +2065,8 @@ namespace MapKit {
 		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
 		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 	}
+
+	interface IMKLocalSearchCompleterDelegate { }
 
 	[NoWatch]
 	[NoWatch]

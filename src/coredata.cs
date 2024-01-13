@@ -569,8 +569,7 @@ namespace CoreData {
 		NativeHandle Constructor (NSFetchRequest fetchRequest, NSManagedObjectContext context, [NullAllowed] string sectionNameKeyPath, [NullAllowed] string name);
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSFetchedResultsControllerDelegate Delegate { get; set; }
+		INSFetchedResultsControllerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -631,6 +630,8 @@ namespace CoreData {
 		[Export ("deleteCacheWithName:")]
 		void DeleteCache ([NullAllowed] string name);
 	}
+
+	interface INSFetchedResultsControllerDelegate { }
 
 	[NoMac]
 	[MacCatalyst (13, 1)]
