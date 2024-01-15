@@ -18319,10 +18319,12 @@ namespace Foundation {
 		// [Export ("TextLayoutSectionsAttribute")]
 		// NSTextLayoutSection[] TextLayout { get; set; }
 
-		[iOS (13, 0)][Mac (10, 15)]
+		[iOS (13, 0)]
+		[Mac (10, 15)]
 		NSTextScalingType TextScaling { get; set; }
 
-		[iOS (13, 0)][Mac (10, 15)]
+		[iOS (13, 0)]
+		[Mac (10, 15)]
 		NSTextScalingType SourceTextScaling { get; set; }
 
 		[iOS (13, 0)]
@@ -18350,7 +18352,7 @@ namespace Foundation {
 		string Author { get; set; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		string[] Keywords { get; set; }
+		string [] Keywords { get; set; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		string Comment { get; set; }
@@ -18386,7 +18388,7 @@ namespace Foundation {
 		float BottomMargin { get; set; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
-		string[] ExcludedElements { get; set; }
+		string [] ExcludedElements { get; set; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		string TextEncodingName { get; set; }
