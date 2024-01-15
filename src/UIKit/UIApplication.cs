@@ -82,22 +82,18 @@ namespace UIKit {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
 		{
-			var p = CFString.CreateNative (principalClassName);
-			var d = CFString.CreateNative (delegateClassName);
+			using var p = new TransientCFString (principalClassName);
+			using var d = new TransientCFString (delegateClassName);
 			Initialize ();
 			UIApplicationMain (args?.Length ?? 0, args, p, d);
-			CFString.ReleaseNative (d);
-			CFString.ReleaseNative (p);
 		}
 
 		public static void Main (string []? args, Type? principalClass, Type? delegateClass)
 		{
-			var p = principalClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (principalClass).Name);
-			var d = delegateClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (delegateClass).Name);
+			using var p = new TransientCFString (principalClass is null ? null : new Class (principalClass).Name);
+			using var d = new TransientCFString (delegateClass is null ? null : new Class (delegateClass).Name);
 			Initialize ();
 			UIApplicationMain (args?.Length ?? 0, args, p, d);
-			CFString.ReleaseNative (d);
-			CFString.ReleaseNative (p);
 		}
 
 		public static void Main (string []? args)

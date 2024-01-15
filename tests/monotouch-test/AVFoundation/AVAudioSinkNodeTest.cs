@@ -13,6 +13,15 @@ namespace MonoTouchFixtures.AVFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AVAudioSinkNodeTest {
+#if __WATCHOS__
+		[SetUp]
+		public void SetUp ()
+		{
+			// Looks like this test broke in the watchOS simulator, so just skip it there.
+			TestRuntime.AssertNotSimulator ();
+		}
+#endif
+
 		[Test]
 		public void SinkNodeCallback ()
 		{

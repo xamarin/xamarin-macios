@@ -330,9 +330,7 @@
 		</comment>
 	</data>
 		
-	<data name="BI1034" xml:space="preserve">
-		<value>The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.</value>
-	</data>
+	<!-- BI1034 (no longer used): The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol. -->
 
 	<data name="BI1035" xml:space="preserve">
 		<value>The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.</value>
@@ -573,9 +571,7 @@
 		<value>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>
 	</data>
 
-	<data name="BI1108" xml:space="preserve">
-		<value>The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.</value>
-	</data>
+	<!-- BI1108 (no longer used): The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute. -->
 
 	<data name="BI1109" xml:space="preserve">
 		<value>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>

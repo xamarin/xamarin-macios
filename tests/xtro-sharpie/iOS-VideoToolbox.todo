@@ -13,3 +13,5 @@
 !missing-pinvoke! VTDecompressionSessionSetMultiImageCallback is not bound
 !missing-pinvoke! VTIsStereoMVHEVCDecodeSupported is not bound
 !missing-pinvoke! VTIsStereoMVHEVCEncodeSupported is not bound
+!missing-field! kVTCompressionPropertyKey_HasLeftStereoEyeView not bound
+!missing-field! kVTCompressionPropertyKey_HasRightStereoEyeView not bound

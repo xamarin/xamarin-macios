@@ -32,8 +32,7 @@ namespace HomeKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		HMHomeManagerDelegate Delegate { get; set; }
+		IHMHomeManagerDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.MacOSX, 13, 0, message: "No longer supported.")]
 		[Deprecated (PlatformName.iOS, 16, 1, message: "No longer supported.")]
@@ -75,6 +74,8 @@ namespace HomeKit {
 		[Export ("authorizationStatus")]
 		HMHomeManagerAuthorizationStatus AuthorizationStatus { get; }
 	}
+
+	interface IHMHomeManagerDelegate { }
 
 	[MacCatalyst (14, 0)]
 	[Model, Protocol]
@@ -130,8 +131,7 @@ namespace HomeKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		HMAccessoryDelegate Delegate { get; set; }
+		IHMAccessoryDelegate Delegate { get; set; }
 
 		[Export ("reachable")]
 		bool Reachable { [Bind ("isReachable")] get; }
@@ -208,6 +208,8 @@ namespace HomeKit {
 		bool SupportsIdentify { get; }
 	}
 
+	interface IHMAccessoryDelegate { }
+
 	[MacCatalyst (14, 0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -256,8 +258,7 @@ namespace HomeKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		HMAccessoryBrowserDelegate Delegate { get; set; }
+		IHMAccessoryBrowserDelegate Delegate { get; set; }
 
 		[Export ("discoveredAccessories", ArgumentSemantic.Copy)]
 		HMAccessory [] DiscoveredAccessories { get; }
@@ -268,6 +269,8 @@ namespace HomeKit {
 		[Export ("stopSearchingForNewAccessories")]
 		void StopSearchingForNewAccessories ();
 	}
+
+	interface IHMAccessoryBrowserDelegate { }
 
 	[NoTV]
 	[NoMacCatalyst]
@@ -581,8 +584,7 @@ namespace HomeKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		HMHomeDelegate Delegate { get; set; }
+		IHMHomeDelegate Delegate { get; set; }
 
 		[Export ("name")]
 		string Name { get; }
@@ -819,6 +821,8 @@ namespace HomeKit {
 		[Export ("supportsAddingNetworkRouter")]
 		bool SupportsAddingNetworkRouter { get; }
 	}
+
+	interface IHMHomeDelegate { }
 
 	[MacCatalyst (14, 0)]
 	[Model, Protocol]
