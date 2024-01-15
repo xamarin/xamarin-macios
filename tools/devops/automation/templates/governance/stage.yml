@@ -16,6 +16,15 @@ parameters:
   type: string
   default: ''
 
+- name: platforms
+  type: object
+  default: {
+    'iOS': 'ApiScanSecretiOS',
+    'tvOS': 'ApiScanSecretiOS',
+    'macCatalyst': 'ApiScanSecretiOS',
+    'macOS': 'ApiScanSecretmacOS'
+  }
+
 stages:
 - stage: governance_checks
   displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
@@ -28,33 +37,18 @@ stages:
       vmImage: windows-latest
 
     variables:
-      INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
-      INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
-      INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
-      INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+      ${{ each p in parameters.platforms }}:
+        INCLUDE_DOTNET_${{ upper(p.key) }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_${{ upper(p.key)}}'] ]
+        INCLUDE_DOTNET_${{ upper(p.key) }}_VERSION: 17.0
 
     strategy:
       matrix:
-        iOS:
-          INCLUDE: $(INCLUDE_DOTNET_IOS)
-          PLATFORM: iOS
-          SECRET: $(ApiScanSecretiOS)
-          VERSION: 17.0
-        tvOS:
-          INCLUDE: $(INCLUDE_DOTNET_TVOS)
-          PLATFORM: tvOS
-          SECRET: $(ApiScanSecretiOS)
-          VERSION: 17.0
-        macCatalyst:
-          INCLUDE: $(INCLUDE_DOTNET_MACCATALYST)
-          PLATFORM: macCatalyst
-          SECRET: $(ApiScanSecretiOS)
-          VERSION: 17.0
-        macOS:
-          INCLUDE: $(INCLUDE_DOTNET_MACOS)
-          PLATFORM: macOS
-          SECRET: $(ApiScanSecretmacOS)
-          VERSION: 14.0
+        ${{ each p in parameters.platforms }}:
+          ${{ upper(p.key) }}:
+            INCLUDE: $(INCLUDE_DOTNET_${{ upper(p.key) }})
+            PLATFORM: ${{ p.key }}
+            SECRET: $(p.value)
+            VERSION: $(INCLUDE_DOTNET_${{ upper(p.key) }}_VERSION)
 
     steps:
     - template: ./apiscan.yml
