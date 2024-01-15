@@ -169,23 +169,6 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #endif // NET
-		public string? TextEncodingName {
-			get {
-				return GetStringValue (NSAttributedStringDocumentReadingOptionKey.TextEncodingNameDocumentOption);
-			}
-			set {
-				SetStringValue (NSAttributedStringDocumentReadingOptionKey.TextEncodingNameDocumentOption, value);
-			}
-		}
-#endif // !__MACOS__
-
-#if __MACOS__
-#if NET
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
-#endif // NET
 		public float? TextSizeMultiplier {
 			get {
 				return GetFloatValue (NSAttributedStringDocumentReadingOptionKey.TextSizeMultiplierDocumentOption);
