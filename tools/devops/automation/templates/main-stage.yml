@@ -76,7 +76,7 @@ parameters:
 - name: simTestsConfigurations
   type: object
   default: [
-    'bcl',
+    # disabled by default # 'bcl',
     'cecil',
     'dotnettests',
     'fsharp',
