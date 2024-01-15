@@ -2612,14 +2612,4 @@ namespace NetworkExtension {
 		[Async]
 		void LoadAllManagersFromPreferences (Action<NSArray<NERelayManager>, NSError> completionHandler);
 	}
-
-	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
-	[BaseType (typeof (NEProvider))]
-	[DisableDefaultCtor]
-	interface NEFailureHandlerProvider {
-		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0)]
-		[Export ("handleFailure:completionHandler:")]
-		[Async]
-		void HandleFailure (NSError error, Action completionHandler);
-	}
 }

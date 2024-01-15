@@ -120,9 +120,16 @@ namespace Xamarin.Utils {
 			if (provider?.HasCustomAttributes != true)
 				return false;
 
-			foreach (var attrib in provider.CustomAttributes)
-				if (IsObsoleteAttribute (attrib))
-					return true;
+			foreach (var attrib in provider.CustomAttributes) {
+				if (!IsObsoleteAttribute (attrib))
+					continue;
+
+				// The compiler will emit a fake Obsolete attribute for ref structs. Ignore those Obsolete attributes, because the type isn't really obsolete.
+				if (attrib.HasConstructorArguments && attrib.ConstructorArguments [0].Value is string obsoleteMessage && obsoleteMessage == "Types with embedded references are not supported in this version of your compiler.")
+					continue;
+
+				return true;
+			}
 
 			return false;
 		}

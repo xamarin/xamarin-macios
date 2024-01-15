@@ -9,7 +9,7 @@ using Xamarin.MacDev.Tasks;
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class ParseBundlerArgumentsTests : TestBase {
-		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase { }
+		class CustomParseBundlerArguments : ParseBundlerArguments { }
 
 		[Test]
 		public void NoExtraArgs ()
@@ -175,7 +175,13 @@ namespace Xamarin.MacDev.Tasks {
 		[TestCase ("-xml:dummy", null, "dummy")]
 		[TestCase ("/xml:dummy", null, "dummy")]
 		[TestCase ("/xml:dummy1 /xml:dummy2", null, "dummy1;dummy2")]
+		[TestCase ("/xml:/path/a /xml:/path/b", null, "/path/a;/path/b")]
 		public void XmlDefinitions (string input, string existing, string output)
+		{
+			XmlDefinitionsTest (input, existing, output);
+		}
+
+		void XmlDefinitionsTest (string input, string existing, string output)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
 			if (existing is not null)
@@ -183,6 +189,14 @@ namespace Xamarin.MacDev.Tasks {
 			task.ExtraArgs = input;
 			Assert.IsTrue (task.Execute (), input);
 			Assert.AreEqual (output, string.Join (";", task.XmlDefinitions.Select (v => v.ItemSpec).ToArray ()), output);
+		}
+
+		[TestCase ("/xml:\\path\\a /xml:/path/b", null, "/path/a;/path/b")]
+		public void XmlDefinitionsWindows (string input, string existing, string output)
+		{
+			if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+				Assert.Ignore ("This test is only applicable on Windows");
+			XmlDefinitionsTest (input, existing, output);
 		}
 
 		[TestCase ("--custom_bundle_name", "")]

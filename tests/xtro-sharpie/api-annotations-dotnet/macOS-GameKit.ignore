@@ -15,3 +15,5 @@
 # This selector does not exist (respond?) in macOS either
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
 
+# NullAllowed makes sense
+!extra-null-allowed! 'System.Void GameKit.GKMatchmaker::FindMatchedPlayers(GameKit.GKMatchRequest,System.Action`2<GameKit.GKMatchedPlayers,Foundation.NSError>)' has a extraneous [NullAllowed] on parameter #1

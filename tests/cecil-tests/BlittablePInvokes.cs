@@ -176,10 +176,39 @@ namespace Cecil.Tests {
 			public string Reason;
 		}
 
+		public record NonBlittablePInvokesFailure : IComparable {
+			public string Message { get; }
+			public string Location { get; }
+			public string Reason { get; }
+
+			public NonBlittablePInvokesFailure (string message, string location, string reason)
+			{
+				Message = message;
+				Location = location;
+				Reason = reason;
+			}
+
+			public override string ToString ()
+			{
+				if (string.IsNullOrEmpty (Location)) {
+					return $"{Message} - {Reason}";
+				}
+				return $"{Message} - {Reason} at {Location}";
+			}
+
+			public int CompareTo (object? obj)
+			{
+				if (obj is NonBlittablePInvokesFailure other)
+					// both the message and location have to be equal.
+					return ToString ().CompareTo (other.ToString ());
+				return -1;
+			}
+		}
+
 		[Test]
 		public void CheckForNonBlittablePInvokes ()
 		{
-			var failures = new Dictionary<string, (string Message, string Location)> ();
+			var failures = new Dictionary<string, NonBlittablePInvokesFailure> ();
 			var pinvokes = new List<(AssemblyDefinition Assembly, MethodDefinition Method)> ();
 
 			foreach (var info in Helper.NetPlatformImplementationAssemblyDefinitions)
@@ -190,7 +219,7 @@ namespace Cecil.Tests {
 			var blitCache = new Dictionary<string, BlitAndReason> ();
 			var results = pinvokes.Select (pi => IsMethodBlittable (pi.Assembly, pi.Method, blitCache)).Where (r => !r.IsBlittable).ToArray ();
 			foreach (var result in results) {
-				failures [result.Method.FullName] = new (result.Method.FullName, result.Method.RenderLocation ());
+				failures [result.Method.FullName] = new (result.Method.FullName, result.Method.RenderLocation (), result.Result.ToString ());
 			}
 
 			Helper.AssertFailures (failures, knownFailuresPInvokes, nameof (knownFailuresPInvokes), "In the file tests/cecil-tests/BlittablePInvokes.cs, read the guide carefully.", (v) => $"{v.Location}: {v.Message}");
@@ -203,14 +232,11 @@ namespace Cecil.Tests {
 			var types = TypesFromMethod (method);
 			foreach (var typeIndex in types) {
 				if (!IsTypeBlittable (assembly, typeIndex.Type, typeIndex.Provider, localResult, blitCache)) {
-					if (result.IsBlittable) {
-						result.IsBlittable = false;
-						result.Result.Append ($"    The P/Invoke {method.FullName} has been marked as non-blittable for the following reasons:\n");
-					}
+					result.IsBlittable &= false;
 					if (typeIndex.Index < 0) {
-						result.Result.Append ($"        The return type is");
+						result.Result.Append ($"The return type is");
 					} else {
-						result.Result.Append ($"        Parameter index {typeIndex.Index} is");
+						result.Result.Append ($"Parameter index {typeIndex.Index} is");
 					}
 					result.Result.Append ($" {typeIndex.Type}: {localResult.ToString ()}\n");
 				}

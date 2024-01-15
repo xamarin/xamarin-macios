@@ -37,7 +37,9 @@ namespace MonoTouchFixtures.CoreMedia {
 			var type = typeof (CMCustomBlockAllocator).GetNestedType ("CMBlockBufferCustomBlockSource", BindingFlags.NonPublic);
 			Assert.NotNull (type, "CMBlockBufferCustomBlockSource");
 			// it's 28 (not 32) bytes when executed on 64bits iOS, which implies it's packed to 4 bytes
+#pragma warning disable IL3050 // Using member 'System.Runtime.InteropServices.Marshal.SizeOf(Type)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. Marshalling code for the object might not be available. Use the SizeOf<T> overload instead.
 			Assert.That (Marshal.SizeOf (type), Is.EqualTo (4 + 3 * IntPtr.Size), "Size");
+#pragma warning restore IL3050
 		}
 
 		[Test]

@@ -714,8 +714,7 @@ namespace SceneKit {
 	interface SCNCameraController {
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
-		[Protocolize]
-		SCNCameraControllerDelegate Delegate { get; set; }
+		ISCNCameraControllerDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("pointOfView", ArgumentSemantic.Retain)]
 		SCNNode PointOfView { get; set; }
@@ -1906,8 +1905,7 @@ namespace SceneKit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Wrap ("WeakRendererDelegate")]
-		[Protocolize]
-		SCNNodeRendererDelegate RendererDelegate { get; set; }
+		ISCNNodeRendererDelegate RendererDelegate { get; set; }
 
 		[Static, Export ("node")]
 		SCNNode Create ();
@@ -2402,6 +2400,8 @@ namespace SceneKit {
 		//void Rotate (Quaternion worldRotation, NVector3 worldTarget);
 	}
 
+	interface ISCNNodeRendererDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -2487,8 +2487,7 @@ namespace SceneKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SCNProgramDelegate Delegate { get; set; }
+		ISCNProgramDelegate Delegate { get; set; }
 
 		[Static, Export ("program")]
 		SCNProgram Create ();
@@ -2528,6 +2527,8 @@ namespace SceneKit {
 		[Export ("library", ArgumentSemantic.Retain)]
 		IMTLLibrary Library { get; set; }
 	}
+
+	interface ISCNProgramDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -3055,8 +3056,7 @@ namespace SceneKit {
 		NSObject WeakSceneRendererDelegate { get; set; }
 
 		[Wrap ("WeakSceneRendererDelegate")]
-		[Protocolize]
-		SCNSceneRendererDelegate SceneRendererDelegate { get; set; }
+		ISCNSceneRendererDelegate SceneRendererDelegate { get; set; }
 
 		[Abstract]
 		[Export ("playing")]
@@ -3301,6 +3301,8 @@ namespace SceneKit {
 		[Export ("workingColorSpace")]
 		CGColorSpace WorkingColorSpace { get; }
 	}
+
+	interface ISCNSceneRendererDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -4389,8 +4391,7 @@ namespace SceneKit {
 		NSObject WeakContactDelegate { get; set; }
 
 		[Wrap ("WeakContactDelegate")]
-		[Protocolize]
-		SCNPhysicsContactDelegate ContactDelegate { get; set; }
+		ISCNPhysicsContactDelegate ContactDelegate { get; set; }
 
 		[Export ("addBehavior:")]
 		void AddBehavior (SCNPhysicsBehavior behavior);
@@ -4526,6 +4527,8 @@ namespace SceneKit {
 		[Export ("sweepTestFraction")]
 		nfloat SweepTestFraction { get; }
 	}
+
+	interface ISCNPhysicsContactDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]

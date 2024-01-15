@@ -1608,8 +1608,7 @@ namespace AVFoundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate"), NullAllowed]
-		[Protocolize]
-		AVAudioPlayerDelegate Delegate { get; set; }
+		IAVAudioPlayerDelegate Delegate { get; set; }
 
 		[Export ("url"), NullAllowed]
 		NSUrl Url { get; }
@@ -1685,6 +1684,8 @@ namespace AVFoundation {
 		[NullAllowed, Export ("currentDevice")]
 		string CurrentDevice { get; set; }
 	}
+
+	interface IAVAudioPlayerDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -1845,8 +1846,7 @@ namespace AVFoundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate"), NullAllowed]
-		[Protocolize]
-		AVAudioRecorderDelegate Delegate { get; set; }
+		IAVAudioRecorderDelegate Delegate { get; set; }
 
 #if !XAMCORE_5_0
 		[Obsolete ("Use the 'CurrentTime' property instead.")]
@@ -1890,6 +1890,8 @@ namespace AVFoundation {
 		[Export ("format")]
 		AVAudioFormat Format { get; }
 	}
+
+	interface IAVAudioRecorderDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -1983,13 +1985,12 @@ namespace AVFoundation {
 
 		[NoWatch, NoMac]
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
 		[NullAllowed]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'AVAudioSession.Notification.Observe*' methods instead.")]
-		AVAudioSessionDelegate Delegate { get; set; }
+		IAVAudioSessionDelegate Delegate { get; set; }
 
 		[NoMac]
 		[MacCatalyst (13, 1)]
@@ -2323,6 +2324,10 @@ namespace AVFoundation {
 		[MacCatalyst (13, 1)]
 		[Export ("IOBufferDuration")]
 		double IOBufferDuration { get; }
+
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Export ("supportedOutputChannelLayouts")]
+		AVAudioChannelLayout [] SupportedOutputChannelLayouts { get; }
 
 		[NoWatch, NoMac]
 		[MacCatalyst (13, 1)]
@@ -2694,6 +2699,26 @@ namespace AVFoundation {
 		[Watch (8, 0), TV (15, 0), NoMac, iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("AVAudioSessionSpatialPlaybackCapabilitiesChangedNotification")]
 		NSString SpatialPlaybackCapabilitiesChangedNotification { get; }
+
+		[Notification (typeof (RenderingModeChangeNotificationEventArgs))]
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Field ("AVAudioSessionRenderingModeChangeNotification")]
+		NSString RenderingModeChangeNotification { get; }
+
+		[Notification]
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Field ("AVAudioSessionRenderingCapabilitiesChangeNotification")]
+		NSString RenderingCapabilitiesChangeNotification { get; }
+
+		[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+		[Export ("renderingMode")]
+		AVAudioSessionRenderingMode RenderingMode { get; }
+	}
+
+	[TV (17, 2), NoWatch, NoMac, iOS (17, 2), NoMacCatalyst]
+	interface RenderingModeChangeNotificationEventArgs {
+		[Export ("AVAudioSessionRenderingModeNewRenderingModeKey")]
+		AVAudioSessionRenderingMode NewRenderingMode { get; }
 	}
 
 	[NoMac]
@@ -2835,6 +2860,8 @@ namespace AVFoundation {
 		[Export ("AVAudioSessionRouteChangePreviousRouteKey")]
 		AVAudioSessionRouteDescription PreviousRoute { get; }
 	}
+
+	interface IAVAudioSessionDelegate { }
 
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 6, 0)]
@@ -4095,8 +4122,7 @@ namespace AVFoundation {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("customVideoCompositor", ArgumentSemantic.Copy), NullAllowed]
-		[Protocolize]
-		AVVideoCompositing CustomVideoCompositor { get; }
+		IAVVideoCompositing CustomVideoCompositor { get; }
 	}
 
 	[NoWatch]
@@ -4326,8 +4352,7 @@ namespace AVFoundation {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("customVideoCompositor", ArgumentSemantic.Copy), NullAllowed]
-		[Protocolize]
-		AVVideoCompositing CustomVideoCompositor { get; }
+		IAVVideoCompositing CustomVideoCompositor { get; }
 	}
 
 	[NoWatch]
@@ -4336,20 +4361,21 @@ namespace AVFoundation {
 	[DisableDefaultCtor] // no valid handle, docs now says "You do not create resource loader objects yourself."
 	interface AVAssetResourceLoader {
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
-		[Protocolize]
-		AVAssetResourceLoaderDelegate Delegate { get; }
+		IAVAssetResourceLoaderDelegate Delegate { get; }
 
 		[Export ("delegateQueue"), NullAllowed]
 		DispatchQueue DelegateQueue { get; }
 
 		[Export ("setDelegate:queue:")]
-		void SetDelegate ([Protocolize][NullAllowed] AVAssetResourceLoaderDelegate resourceLoaderDelegate, [NullAllowed] DispatchQueue delegateQueue);
+		void SetDelegate ([NullAllowed] IAVAssetResourceLoaderDelegate resourceLoaderDelegate, [NullAllowed] DispatchQueue delegateQueue);
 
 		// AVAssetResourceLoader (AVAssetResourceLoaderContentKeySupport) Category
 		[MacCatalyst (13, 1)]
 		[Export ("preloadsEligibleContentKeys")]
 		bool PreloadsEligibleContentKeys { get; set; }
 	}
+
+	interface IAVAssetResourceLoaderDelegate { }
 
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
@@ -8764,8 +8790,7 @@ namespace AVFoundation {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("customVideoCompositor", ArgumentSemantic.Copy)]
-		[Protocolize]
-		AVVideoCompositing CustomVideoCompositor { get; }
+		IAVVideoCompositing CustomVideoCompositor { get; }
 
 		// DOC: Use the values from AVAudioTimePitchAlgorithm class.
 		[MacCatalyst (13, 1)]
@@ -8893,6 +8918,8 @@ namespace AVFoundation {
 		NSString AudioTimePitchAlgorithm { get; set; }
 	}
 
+	interface IAVVideoCompositing { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Model, BaseType (typeof (NSObject))]
@@ -8967,7 +8994,7 @@ namespace AVFoundation {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("isValidForAsset:timeRange:validationDelegate:")]
-		bool IsValidForAsset ([NullAllowed] AVAsset asset, CMTimeRange timeRange, [Protocolize][NullAllowed] AVVideoCompositionValidationHandling validationDelegate);
+		bool IsValidForAsset ([NullAllowed] AVAsset asset, CMTimeRange timeRange, [NullAllowed] IAVVideoCompositionValidationHandling validationDelegate);
 
 		[MacCatalyst (13, 1)]
 		[Static, Export ("videoCompositionWithPropertiesOfAsset:")]
@@ -9030,6 +9057,8 @@ namespace AVFoundation {
 		[Export ("newPixelBuffer")]
 		CVPixelBuffer CreatePixelBuffer ();
 	}
+
+	interface IAVVideoCompositionValidationHandling { }
 
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
@@ -9823,7 +9852,7 @@ namespace AVFoundation {
 		NSString [] AvailableOutputFileTypes ();
 
 		[Export ("startRecordingToOutputFileURL:outputFileType:recordingDelegate:")]
-		void StartRecording (NSUrl outputFileUrl, string fileType, [Protocolize] AVCaptureFileOutputRecordingDelegate recordingDelegate);
+		void StartRecording (NSUrl outputFileUrl, string fileType, IAVCaptureFileOutputRecordingDelegate recordingDelegate);
 	}
 
 	[NoiOS, NoWatch, NoTV, NoMacCatalyst]
@@ -10044,8 +10073,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureVideoDataOutput {
 		[NullAllowed, Export ("sampleBufferDelegate")]
-		[Protocolize]
-		AVCaptureVideoDataOutputSampleBufferDelegate SampleBufferDelegate { get; }
+		IAVCaptureVideoDataOutputSampleBufferDelegate SampleBufferDelegate { get; }
 
 		[NullAllowed, Export ("sampleBufferCallbackQueue")]
 		DispatchQueue SampleBufferCallbackQueue { get; }
@@ -10149,8 +10177,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureAudioDataOutput {
 		[NullAllowed, Export ("sampleBufferDelegate")]
-		[Protocolize]
-		AVCaptureAudioDataOutputSampleBufferDelegate SampleBufferDelegate { get; }
+		IAVCaptureAudioDataOutputSampleBufferDelegate SampleBufferDelegate { get; }
 
 		[NullAllowed, Export ("sampleBufferCallbackQueue")]
 		DispatchQueue SampleBufferCallbackQueue { get; }
@@ -10271,7 +10298,7 @@ namespace AVFoundation {
 		NSUrl OutputFileURL { get; } // FIXME: should have been Url.
 
 		[Export ("startRecordingToOutputFileURL:recordingDelegate:")]
-		void StartRecordingToOutputFile (NSUrl outputFileUrl, [Protocolize] AVCaptureFileOutputRecordingDelegate recordingDelegate);
+		void StartRecordingToOutputFile (NSUrl outputFileUrl, IAVCaptureFileOutputRecordingDelegate recordingDelegate);
 
 		[Export ("stopRecording")]
 		void StopRecording ();
@@ -10330,8 +10357,7 @@ namespace AVFoundation {
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureMetadataOutput {
 		[NullAllowed, Export ("metadataObjectsDelegate")]
-		[Protocolize]
-		AVCaptureMetadataOutputObjectsDelegate Delegate { get; }
+		IAVCaptureMetadataOutputObjectsDelegate Delegate { get; }
 
 		[NullAllowed, Export ("metadataObjectsCallbackQueue")]
 		DispatchQueue CallbackQueue { get; }
@@ -10344,12 +10370,14 @@ namespace AVFoundation {
 		NSString [] WeakMetadataObjectTypes { get; set; }
 
 		[Export ("setMetadataObjectsDelegate:queue:")]
-		void SetDelegate ([NullAllowed][Protocolize] AVCaptureMetadataOutputObjectsDelegate objectsDelegate, [NullAllowed] DispatchQueue objectsCallbackQueue);
+		void SetDelegate ([NullAllowed] IAVCaptureMetadataOutputObjectsDelegate objectsDelegate, [NullAllowed] DispatchQueue objectsCallbackQueue);
 
 		[Export ("rectOfInterest", ArgumentSemantic.Copy)]
 		CGRect RectOfInterest { get; set; }
 
 	}
+
+	interface IAVCaptureMetadataOutputObjectsDelegate { }
 
 	[NoWatch]
 	[NoTV]
@@ -13077,8 +13105,7 @@ namespace AVFoundation {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Export ("customVideoCompositor", ArgumentSemantic.Copy), NullAllowed]
-		[Protocolize]
-		AVVideoCompositing CustomVideoCompositor { get; }
+		IAVVideoCompositing CustomVideoCompositor { get; }
 
 		[MacCatalyst (13, 1)]
 		[Export ("audioTimePitchAlgorithm", ArgumentSemantic.Copy)]
@@ -13335,8 +13362,7 @@ namespace AVFoundation {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		AVPlayerItemMetadataOutputPushDelegate Delegate { get; }
+		IAVPlayerItemMetadataOutputPushDelegate Delegate { get; }
 
 		[Export ("delegateQueue"), NullAllowed]
 		DispatchQueue DelegateQueue { get; }
@@ -13345,8 +13371,10 @@ namespace AVFoundation {
 		double AdvanceIntervalForDelegateInvocation { get; set; }
 
 		[Export ("setDelegate:queue:")]
-		void SetDelegate ([Protocolize][NullAllowed] AVPlayerItemMetadataOutputPushDelegate pushDelegate, [NullAllowed] DispatchQueue delegateQueue);
+		void SetDelegate ([NullAllowed] IAVPlayerItemMetadataOutputPushDelegate pushDelegate, [NullAllowed] DispatchQueue delegateQueue);
 	}
+
+	interface IAVPlayerItemMetadataOutputPushDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Watch (6, 0)]
@@ -13569,8 +13597,7 @@ namespace AVFoundation {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		AVPlayerItemOutputPullDelegate Delegate { get; }
+		IAVPlayerItemOutputPullDelegate Delegate { get; }
 
 		[Export ("delegateQueue"), NullAllowed]
 		DispatchQueue DelegateQueue { get; }
@@ -13600,11 +13627,13 @@ namespace AVFoundation {
 		IntPtr WeakCopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay);
 
 		[Export ("setDelegate:queue:")]
-		void SetDelegate ([Protocolize][NullAllowed] AVPlayerItemOutputPullDelegate delegateClass, [NullAllowed] DispatchQueue delegateQueue);
+		void SetDelegate ([NullAllowed] IAVPlayerItemOutputPullDelegate delegateClass, [NullAllowed] DispatchQueue delegateQueue);
 
 		[Export ("requestNotificationOfMediaDataChangeWithAdvanceInterval:")]
 		void RequestNotificationOfMediaDataChange (double advanceInterval);
 	}
+
+	interface IAVPlayerItemOutputPullDelegate { }
 
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
@@ -13629,6 +13658,8 @@ namespace AVFoundation {
 		void OutputSequenceWasFlushed (AVPlayerItemOutput output);
 	}
 
+	interface IAVPlayerItemLegibleOutputPushDelegate { }
+
 	[Watch (6, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (AVPlayerItemOutputPushDelegate))]
@@ -13649,11 +13680,10 @@ namespace AVFoundation {
 		NativeHandle Constructor (NSNumber [] subtypesFourCCcodes);
 
 		[Export ("setDelegate:queue:")]
-		void SetDelegate ([Protocolize][NullAllowed] AVPlayerItemLegibleOutputPushDelegate delegateObject, [NullAllowed] DispatchQueue delegateQueue);
+		void SetDelegate ([NullAllowed] IAVPlayerItemLegibleOutputPushDelegate delegateObject, [NullAllowed] DispatchQueue delegateQueue);
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Copy)]
-		[Protocolize]
-		AVPlayerItemLegibleOutputPushDelegate Delegate { get; }
+		IAVPlayerItemLegibleOutputPushDelegate Delegate { get; }
 
 		[NullAllowed, Export ("delegateQueue", ArgumentSemantic.Copy)]
 		DispatchQueue DelegateQueue { get; }
@@ -14480,8 +14510,7 @@ namespace AVFoundation {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		AVSpeechSynthesizerDelegate Delegate { get; set; }
+		IAVSpeechSynthesizerDelegate Delegate { get; set; }
 
 		[Export ("speaking")]
 		bool Speaking { [Bind ("isSpeaking")] get; }
@@ -14521,6 +14550,8 @@ namespace AVFoundation {
 		[NullAllowed, Export ("outputChannels", ArgumentSemantic.Retain)]
 		AVAudioSessionChannelDescription [] OutputChannels { get; set; }
 	}
+
+	interface IAVSpeechSynthesizerDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Model]

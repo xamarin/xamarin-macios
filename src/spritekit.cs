@@ -642,8 +642,7 @@ namespace SpriteKit {
 
 		[MacCatalyst (13, 1)]
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		SKSceneDelegate Delegate { get; set; }
+		ISKSceneDelegate Delegate { get; set; }
 
 		[MacCatalyst (13, 1)]
 		[Export ("audioEngine", ArgumentSemantic.Retain)]
@@ -657,6 +656,8 @@ namespace SpriteKit {
 		[NullAllowed, Export ("listener", ArgumentSemantic.Weak)]
 		SKNode Listener { get; set; }
 	}
+
+	interface ISKSceneDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -2747,6 +2748,8 @@ namespace SpriteKit {
 
 	}
 
+	interface ISKPhysicsContactDelegate { }
+
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2780,8 +2783,7 @@ namespace SpriteKit {
 		NSObject WeakContactDelegate { get; set; }
 
 		[Wrap ("WeakContactDelegate")]
-		[Protocolize]
-		SKPhysicsContactDelegate ContactDelegate { get; set; }
+		ISKPhysicsContactDelegate ContactDelegate { get; set; }
 
 		[Export ("addJoint:")]
 		void AddJoint (SKPhysicsJoint joint);

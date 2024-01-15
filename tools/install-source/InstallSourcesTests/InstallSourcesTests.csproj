@@ -22,9 +22,6 @@
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="MonoPathManglerTest.cs" />
     <Compile Include="XamarinSourcesPathManglerTest.cs" />
     <Compile Include="OpenTKManglerTest.cs" />

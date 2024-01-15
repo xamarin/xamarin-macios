@@ -1,14 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
+
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class OptimizePropertyListTaskBase : XamarinToolTask {
+	public class OptimizePropertyList : XamarinToolTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -54,9 +58,26 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			Directory.CreateDirectory (Path.GetDirectoryName (Output.ItemSpec));
 
 			return base.Execute ();
+		}
+
+		public bool ShouldCopyToBuildServer (Microsoft.Build.Framework.ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (Microsoft.Build.Framework.ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public override void Cancel ()
+		{
+			base.Cancel ();
+
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

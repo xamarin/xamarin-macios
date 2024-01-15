@@ -1,17 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class MetalLibTaskBase : XamarinToolTask {
+	public class MetalLib : XamarinToolTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -83,6 +86,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var dir = Path.GetDirectoryName (OutputLibrary);
 
 			if (!Directory.Exists (dir))
@@ -92,6 +98,20 @@ namespace Xamarin.MacDev.Tasks {
 				EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"SDKROOT={SdkRoot}");
 
 			return base.Execute ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		public override void Cancel ()
+		{
+			base.Cancel ();
+
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

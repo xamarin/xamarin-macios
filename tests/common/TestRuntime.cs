@@ -80,7 +80,7 @@ partial class TestRuntime {
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return CFString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")))!;
 #endif
 	}
 
@@ -1245,7 +1245,7 @@ partial class TestRuntime {
 			});
 		}
 
-		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ())) {
+		switch (AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ()!)) {
 		case AVAuthorizationStatus.Restricted:
 		case AVAuthorizationStatus.Denied:
 			if (assert_granted)

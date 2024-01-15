@@ -4,16 +4,13 @@ using System.IO;
 using System.Text;
 
 try {
-	var args = Environment.GetCommandLineArgs ();
-	var defaultArgumentCount = 3;
-	var actualArgumentCount = 2;
-	if (args.Length != defaultArgumentCount + actualArgumentCount) {
-		Console.WriteLine ($"Need {actualArgumentCount} arguments, got {args.Length - defaultArgumentCount} arguments");
+	var args = Args;
+	var expectedArgumentCount = 2;
+	if (args.Length != expectedArgumentCount) {
+		Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length} arguments");
 		Environment.Exit (1);
 		return;
 	}
-
-	args = args.Skip (defaultArgumentCount).ToArray ();
 
 	var output = args [0];
 	var frameworks = args [1].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
