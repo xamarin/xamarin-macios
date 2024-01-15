@@ -76,10 +76,8 @@ stages:
       vmImage: windows-latest
 
     variables:
-      INCLUDE_DOTNET_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
-      INCLUDE_DOTNET_TVOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
-      INCLUDE_DOTNET_MACCATALYST: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
-      INCLUDE_DOTNET_MACOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+      ${{ each p in parameters.platforms }}:
+        INCLUDE_DOTNET_${{ upper(p.key) }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_${{ upper(p.key)}}'] ]
 
     steps:
     - template: ./tsa-upload.yml
