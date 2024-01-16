@@ -62,7 +62,8 @@ if test -n "$INCLUDE_XAMARIN_LEGACY"; then
 fi
 TEST_SUITES+=(build-monotouch-test)
 
-if test -n "$BUILD_REVISION"; then
+# Don't build in parallel in CI, it fails randomly due to trying to write to the same files.
+if test -z "$BUILD_REVISION"; then
 	MAKE_FLAGS=-j
 fi
 
