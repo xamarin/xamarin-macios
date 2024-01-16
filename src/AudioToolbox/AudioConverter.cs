@@ -758,7 +758,7 @@ namespace AudioToolbox {
 		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, out uint outPropertyData)
 		{
 			outPropertyData = default (uint);
-			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int *) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (uint *) Unsafe.AsPointer<uint> (ref outPropertyData));
+			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int*) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (uint*) Unsafe.AsPointer<uint> (ref outPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -768,7 +768,7 @@ namespace AudioToolbox {
 		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, out int outPropertyData)
 		{
 			outPropertyData = default (int);
-			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int *) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (int *) Unsafe.AsPointer<int> (ref outPropertyData));
+			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int*) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (int*) Unsafe.AsPointer<int> (ref outPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -778,17 +778,17 @@ namespace AudioToolbox {
 		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, out double outPropertyData)
 		{
 			outPropertyData = default (double);
-			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int *) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (double *) Unsafe.AsPointer<double> (ref outPropertyData));
+			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int*) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (double*) Unsafe.AsPointer<double> (ref outPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe static extern AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
 			int* ioPropertyDataSize, byte* outPropertyData);
 
-		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, byte[] outPropertyData)
+		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, byte [] outPropertyData)
 		{
 			fixed (byte* outPropertyDataPtr = outPropertyData)
-				return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int *) Unsafe.AsPointer<int> (ref ioPropertyDataSize), outPropertyDataPtr);
+				return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int*) Unsafe.AsPointer<int> (ref ioPropertyDataSize), outPropertyDataPtr);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -798,7 +798,7 @@ namespace AudioToolbox {
 		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, out AudioConverterPrimeInfo outPropertyData)
 		{
 			outPropertyData = default (AudioConverterPrimeInfo);
-			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int *) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (AudioConverterPrimeInfo *) Unsafe.AsPointer<AudioConverterPrimeInfo> (ref outPropertyData));
+			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int*) Unsafe.AsPointer<int> (ref ioPropertyDataSize), (AudioConverterPrimeInfo*) Unsafe.AsPointer<AudioConverterPrimeInfo> (ref outPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -807,7 +807,7 @@ namespace AudioToolbox {
 
 		unsafe static AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, ref int ioPropertyDataSize, IntPtr outPropertyData)
 		{
-			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int *) Unsafe.AsPointer<int> (ref ioPropertyDataSize), outPropertyData);
+			return AudioConverterGetProperty (inAudioConverter, inPropertyID, (int*) Unsafe.AsPointer<int> (ref ioPropertyDataSize), outPropertyData);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -832,7 +832,7 @@ namespace AudioToolbox {
 		unsafe static AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
 			int inPropertyDataSize, ref uint inPropertyData)
 		{
-			return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, (uint *) Unsafe.AsPointer<uint> (ref inPropertyData));
+			return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, (uint*) Unsafe.AsPointer<uint> (ref inPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -842,7 +842,7 @@ namespace AudioToolbox {
 		unsafe static AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
 			int inPropertyDataSize, ref int inPropertyData)
 		{
-			return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, (int *) Unsafe.AsPointer<int> (ref inPropertyData));
+			return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, (int*) Unsafe.AsPointer<int> (ref inPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -851,14 +851,14 @@ namespace AudioToolbox {
 
 		unsafe static AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, int inPropertyDataSize, ref double inPropertyData)
 		{
-			return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, (double *) Unsafe.AsPointer<double> (ref inPropertyData));
+			return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, (double*) Unsafe.AsPointer<double> (ref inPropertyData));
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		unsafe static extern AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
 			int inPropertyDataSize, byte* inPropertyData);
 
-		unsafe static AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, int inPropertyDataSize, byte[] inPropertyData)
+		unsafe static AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID, int inPropertyDataSize, byte [] inPropertyData)
 		{
 			fixed (byte* inPropertyDataPtr = inPropertyData)
 				return AudioConverterSetProperty (inAudioConverter, inPropertyID, inPropertyDataSize, inPropertyDataPtr);
