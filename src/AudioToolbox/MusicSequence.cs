@@ -246,7 +246,7 @@ namespace AudioToolbox {
 
 			index = 0;
 			unsafe {
-				return MusicSequenceGetTrackIndex (Handle, track.Handle, (int *) Unsafe.AsPointer<int> (ref index));
+				return MusicSequenceGetTrackIndex (Handle, track.Handle, (int*) Unsafe.AsPointer<int> (ref index));
 			}
 		}
 
@@ -353,7 +353,7 @@ namespace AudioToolbox {
 		{
 			barBeatTime = default (CABarBeatTime);
 			unsafe {
-				return MusicSequenceBeatsToBarBeatTime (Handle, beats, subbeatDivisor, (CABarBeatTime *) Unsafe.AsPointer<CABarBeatTime> (ref barBeatTime));
+				return MusicSequenceBeatsToBarBeatTime (Handle, beats, subbeatDivisor, (CABarBeatTime*) Unsafe.AsPointer<CABarBeatTime> (ref barBeatTime));
 			}
 		}
 
@@ -363,7 +363,7 @@ namespace AudioToolbox {
 		{
 			beats = 0;
 			unsafe {
-				return MusicSequenceBarBeatTimeToBeats (Handle, barBeatTime, (double *) Unsafe.AsPointer<double> (ref beats));
+				return MusicSequenceBarBeatTimeToBeats (Handle, barBeatTime, (double*) Unsafe.AsPointer<double> (ref beats));
 			}
 		}
 
