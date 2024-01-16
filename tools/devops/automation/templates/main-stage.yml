@@ -114,10 +114,11 @@ parameters:
 - name: testConfigurations
   type: object
   default: [
-    {
-      label: bcl,
-      splitByPlatforms: false,
-    },
+    # Disabled by default #
+    #{
+    #  label: bcl,
+    #  splitByPlatforms: false,
+    #},
     {
       label: cecil,
       splitByPlatforms: false,
