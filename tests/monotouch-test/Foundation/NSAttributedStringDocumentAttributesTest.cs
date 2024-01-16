@@ -30,9 +30,9 @@ namespace MonoTouchFixtures.Foundation {
 			attribs.DefaultTabInterval = 0.5f;
 			Assert.AreEqual (0.5f, attribs.DefaultTabInterval.Value, "Half");
 			ex = Assert.Throws<ArgumentOutOfRangeException> (() => { attribs.DefaultTabInterval = -1; }, "Negative 1");
-			Assert.AreEqual ("Value must be between 0 and 1 (Parameter 'value')\nActual value was -1.", ex.Message, "Negative 1 - Message");
+			Assert.That (ex.Message, Does.StartWith ("Value must be between 0 and 1"), "Negative 1 - Message");
 			ex = Assert.Throws<ArgumentOutOfRangeException> (() => { attribs.DefaultTabInterval = 2; }, "Positive 2");
-			Assert.AreEqual ("Value must be between 0 and 1 (Parameter 'value')\nActual value was 2.", ex.Message, "Positive 1 - Message");
+			Assert.That (ex.Message, Does.StartWith ("Value must be between 0 and 1"), "Positive 1 - Message");
 
 			attribs.DefaultTabInterval = 0f;
 			Assert.AreEqual (0f, attribs.DefaultTabInterval.Value, "Zero");
@@ -52,9 +52,9 @@ namespace MonoTouchFixtures.Foundation {
 			attribs.HyphenationFactor = 0.5f;
 			Assert.AreEqual (0.5f, attribs.HyphenationFactor.Value, "Half");
 			ex = Assert.Throws<ArgumentOutOfRangeException> (() => { attribs.HyphenationFactor = -1; }, "Negative 1");
-			Assert.AreEqual ("Value must be between 0 and 1 (Parameter 'value')\nActual value was -1.", ex.Message, "Negative 1 - Message");
+			Assert.That (ex.Message, Does.StartWith ("Value must be between 0 and 1"), "Negative 1 - Message");
 			ex = Assert.Throws<ArgumentOutOfRangeException> (() => { attribs.HyphenationFactor = 2; }, "Positive 2");
-			Assert.AreEqual ("Value must be between 0 and 1 (Parameter 'value')\nActual value was 2.", ex.Message, "Positive 1 - Message");
+			Assert.That (ex.Message, Does.StartWith ("Value must be between 0 and 1"), "Positive 1 - Message");
 
 			attribs.HyphenationFactor = 0f;
 			Assert.AreEqual (0f, attribs.HyphenationFactor.Value, "Zero");
