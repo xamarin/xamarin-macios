@@ -555,7 +555,7 @@ function New-ParallelTestsResults {
                 $status = $testResult.Status
                 $testAttempt = $testResult.Attempt
 
-                $testSummaryPath = Join-Path "$Path" "${UploadPrefix}TestSummary-$($TestPrefix.Replace('-','_'))$title-$testAttempt" "TestSummary.md"
+                $testSummaryPath = Join-Path "$Path" "${UploadPrefix}TestSummary-$TestPrefix$($title.Replace('-','_'))-$testAttempt" "TestSummary.md"
 
                 Write-Host "`t`tTest results for $label on attempt $testAttempt is '$status' in $testSummaryPath"
 
