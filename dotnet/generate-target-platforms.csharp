@@ -1,24 +1,22 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
 
 // arguments are: <platform> <outputPath>
 
 using System.IO;
 using System.Xml;
 
-var args = Environment.GetCommandLineArgs ();
+var args = Args;
 var expectedArgumentCount = 2;
-if (args.Length != expectedArgumentCount + 2 /* 2 default arguments (executable + script) + 'expectedArgumentCount' arguments we're interested in */) {
-	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
-	// second arg the script itself
-	// then comes the ones we care about
-	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length - 2}");
+if (args.Length != expectedArgumentCount) {
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
 	Environment.Exit (1);
 	return;
 }
 
-var platform = args [2];
-var outputPath = args [3];
-var plistPath = platform == "macOS" ? "../Versions-mac.plist.in" : "../Versions-ios.plist.in";
+var idx = 0;
+var platform = args [idx++];
+var outputPath = args [idx++];
+var plistPath = $"../builds/Versions-{platform}.plist.in"
 
 var doc = new XmlDocument ();
 doc.Load (plistPath);

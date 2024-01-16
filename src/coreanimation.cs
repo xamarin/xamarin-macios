@@ -480,8 +480,7 @@ namespace CoreAnimation {
 		NSObject WeakDelegate { get; [PostSnippet (@"SetCALayerDelegate (value as CALayerDelegate);", Optimizable = true)] set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		CALayerDelegate Delegate { get; set; }
+		ICALayerDelegate Delegate { get; set; }
 
 		[Export ("shadowColor")]
 		[NullAllowed]
@@ -1063,6 +1062,8 @@ namespace CoreAnimation {
 		[Export ("allowsFontSubpixelQuantization")]
 		bool AllowsFontSubpixelQuantization { get; set; }
 	}
+
+	interface ICALayerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

@@ -575,8 +575,7 @@ namespace GLKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GLKViewDelegate Delegate { get; set; }
+		IGLKViewDelegate Delegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("context", ArgumentSemantic.Retain)]
@@ -618,6 +617,8 @@ namespace GLKit {
 		[Export ("deleteDrawable")]
 		void DeleteDrawable ();
 	}
+
+	interface IGLKViewDelegate { }
 
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]
@@ -674,13 +675,14 @@ namespace GLKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GLKViewControllerDelegate Delegate { get; set; }
+		IGLKViewControllerDelegate Delegate { get; set; }
 
 		// Pseudo-documented, if the user overrides it, call this instead of the delegate method
 		[Export ("update")]
 		void Update ();
 	}
+
+	interface IGLKViewControllerDelegate { }
 
 	[NoMac]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'Metal' instead.")]

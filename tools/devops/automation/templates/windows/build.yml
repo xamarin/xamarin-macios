@@ -165,6 +165,7 @@ steps:
         "--logger:html;LogFileName=$(Build.SourcesDirectory)/xamarin-macios/jenkins-results/windows-dotnet-tests.html" `
         "-bl:$(Build.SourcesDirectory)/xamarin-macios/tests/dotnet/Windows/run-dotnet-tests.binlog"
   displayName: 'Run .NET tests'
+  timeoutInMinutes: 30
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1

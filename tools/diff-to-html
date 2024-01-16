@@ -1,4 +1,4 @@
-#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp -s
 
 using System.IO;
 using System.Reflection;
@@ -72,18 +72,17 @@ Func<string, string> ParseDiff = (string diff) =>
 	return result.ToString ();
 };
 
-var args = Environment.GetCommandLineArgs ();
-if (args.Length != 4 /* 2 default + 2 real */) {
-	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
-	// second arg the script itself
-	// then comes the ones we care about
-	Console.WriteLine ("Need 2 arguments, got {0}", args.Length - 2);
+var args = Args;
+var expectedArgumentCount = 2;
+if (args.Length != expectedArgumentCount) {
+	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
 	Environment.Exit (1);
 	return;
 }
 
-var input = args [2];
-var output = args [3];
+var idx = 0;
+var input = args [idx++];
+var output = args [idx++];
 
 var diff = ParseDiff (File.ReadAllText (input));
 diff = @"

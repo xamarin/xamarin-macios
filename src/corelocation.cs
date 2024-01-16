@@ -74,6 +74,8 @@ namespace CoreLocation {
 		Unknown,
 		Satisfied,
 		Unsatisfied,
+		[NoWatch, Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), NoTV]
+		Unmonitored,
 	}
 
 	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
@@ -229,8 +231,7 @@ namespace CoreLocation {
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (CLLocationManagerDelegate) })]
 	partial interface CLLocationManager {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		CLLocationManagerDelegate Delegate { get; set; }
+		ICLLocationManagerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -585,6 +586,8 @@ namespace CoreLocation {
 		[Export ("requestHistoricalLocationsWithPurposeKey:sampleCount:completionHandler:")]
 		void RequestHistoricalLocations (string purposeKey, nint sampleCount, RequestHistoricalLocationsCompletionHandler handler);
 	}
+
+	interface ICLLocationManagerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
