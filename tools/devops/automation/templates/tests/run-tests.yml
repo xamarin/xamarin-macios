@@ -87,17 +87,6 @@ steps:
   displayName: Generate constants files 
   timeoutInMinutes: 15
 
-- bash: |
-    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
-  displayName: "Remove artifacts"
-  condition: always()
-
-- task: DownloadPipelineArtifact@2
-  displayName: Download artifacts
-  inputs:
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
-
 - pwsh: >-
     ./set_xtro_workloads.ps1
     -WorkloadPath "$(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}WorkloadRollback/WorkloadRollback.json"
