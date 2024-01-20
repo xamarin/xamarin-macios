@@ -4,20 +4,19 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
-var args = Environment.GetCommandLineArgs ();
+var args = Args;
 string dir;
-var defaultArgumentCount = 3;
-var scriptPath = args [defaultArgumentCount - 1];
+var scriptPath = Environment.GetCommandLineArgs () [1];
 var rootDir = Path.GetDirectoryName (Path.GetDirectoryName (Path.GetFullPath (scriptPath)));
 var downloadMarkdownPath = Path.Combine (rootDir, "DOWNLOADS.md");
 
-if (args.Length > defaultArgumentCount + 1) {
+if (args.Length > 1) {
 	Console.Error.WriteLine ($"At most one argument can be specified (the path to the xamarinhq/updater-release-xml checkout)");
 	Environment.Exit (1);
 	return;
-} else if (args.Length == defaultArgumentCount + 1) {
+} else if (args.Length == 1) {
 	// First argument can be the path to the xamarinhq/updater-release-xml checkout
-	dir = args [defaultArgumentCount];
+	dir = args [0];
 } else {
 	// Otherwise assume it's next to the parent/parent directory of the current xamarin-macios' checkout
 	dir = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (rootDir))), "updater-release-xml");
