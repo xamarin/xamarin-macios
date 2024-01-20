@@ -53,6 +53,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.That (ss.IsUISound, Is.True, "#1");
 				Assert.That (ss.CompletePlaybackIfAppDies, Is.False, "#2");
+
+				ss.CompletePlaybackIfAppDies = true;
+				ss.IsUISound = false;
+				Assert.That (ss.IsUISound, Is.False, "#1 B");
+				Assert.That (ss.CompletePlaybackIfAppDies, Is.True, "#2 B");
+
+				ss.CompletePlaybackIfAppDies = false;
+				ss.IsUISound = true;
+				Assert.That (ss.IsUISound, Is.True, "#1 C");
+				Assert.That (ss.CompletePlaybackIfAppDies, Is.False, "#2 C");
 			}
 		}
 

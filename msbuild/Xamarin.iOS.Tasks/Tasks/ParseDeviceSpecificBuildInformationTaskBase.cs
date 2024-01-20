@@ -13,7 +13,7 @@ using Xamarin.Localization.MSBuild;
 #nullable disable
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class ParseDeviceSpecificBuildInformationTaskBase : XamarinTask {
+	public class ParseDeviceSpecificBuildInformation : XamarinTask {
 		#region Inputs
 
 		[Required]
