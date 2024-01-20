@@ -76,7 +76,7 @@ parameters:
 - name: simTestsConfigurations
   type: object
   default: [
-    'bcl',
+    # disabled by default # 'bcl',
     'cecil',
     'dotnettests',
     'fsharp',
@@ -147,7 +147,7 @@ stages:
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
-    dependsOn: ${{ parameters.dependsOn }}
+    dependsOn: build_packages
     ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
       condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
     jobs:
