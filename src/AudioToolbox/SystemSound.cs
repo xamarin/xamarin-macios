@@ -101,8 +101,12 @@ namespace AudioToolbox {
 			get {
 				uint out_size = sizeof (uint);
 				uint data;
+				AudioServicesError res;
+				var soundId = this.soundId;
 
-				var res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), ref soundId, out out_size, out data);
+				unsafe {
+					res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), &soundId, &out_size, &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 
@@ -111,8 +115,12 @@ namespace AudioToolbox {
 
 			set {
 				uint data = value ? (uint) 1 : 0;
+				AudioServicesError res;
+				var soundId = this.soundId;
 
-				var res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), ref soundId, sizeof (uint), ref data);
+				unsafe {
+					res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.IsUISound, sizeof (AudioServicesPropertyKey), &soundId, sizeof (uint), &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 			}
@@ -122,8 +130,11 @@ namespace AudioToolbox {
 			get {
 				uint out_size = sizeof (uint);
 				uint data;
-
-				var res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), ref soundId, out out_size, out data);
+				AudioServicesError res;
+				var soundId = this.soundId;
+				unsafe {
+					res = AudioServices.AudioServicesGetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), &soundId, &out_size, &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 
@@ -132,8 +143,11 @@ namespace AudioToolbox {
 
 			set {
 				uint data = value ? (uint) 1 : 0;
-
-				var res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), ref soundId, sizeof (uint), ref data);
+				AudioServicesError res;
+				var soundId = this.soundId;
+				unsafe {
+					res = AudioServices.AudioServicesSetProperty (AudioServicesPropertyKey.CompletePlaybackIfAppDies, sizeof (AudioServicesPropertyKey), &soundId, sizeof (uint), &data);
+				}
 				if (res != AudioServicesError.None)
 					throw new ArgumentException (res.ToString ());
 			}

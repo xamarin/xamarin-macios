@@ -8,19 +8,13 @@ using System.IO;
 using System.Xml;
 
 try {
-	var args = Environment.GetCommandLineArgs ();
-	var defaultArgumentsCount = 3;
+	var args = Args;
 	var expectedArgumentCount = 11;
-	if (args.Length != defaultArgumentsCount + expectedArgumentCount) {
-		// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
-		// second arg the script itself
-		// then comes the ones we care about
-		Console.WriteLine ("Need 11 arguments, got {0}", args.Length - 2);
+	if (args.Length != expectedArgumentCount) {
+		Console.WriteLine ("Need 11 arguments, got {0}", args.Length);
 		Environment.Exit (1);
 		return;
 	}
-
-	args = args.Skip (defaultArgumentsCount).ToArray ();
 
 	var plistPath = args [0];
 	var iOSMin = args [1];

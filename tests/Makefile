@@ -346,7 +346,7 @@ runner: $(XHARNESS_EXECUTABLE)
 # installed on the system.
 vsts-device-tests: $(XHARNESS_EXECUTABLE)
 	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
-	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
+	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 verify-system-vsmac-xcode-match:
 	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \
