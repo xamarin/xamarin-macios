@@ -24,7 +24,7 @@ using NativeHandle = System.IntPtr;
 
 namespace UIKit {
 	public partial interface IUITraitChangeObservable {
-		static Class [] ToClasses (params Type [] traits)
+		private static Class [] ToClasses (params Type [] traits)
 		{
 			if (traits is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
@@ -206,7 +206,7 @@ namespace UIKit {
 			return Runtime.GetINativeObject<IUITraitChangeRegistration> (NativeHandle_objc_msgSend_NativeHandle_NativeHandle (this.Handle, Selector.GetHandle ("registerForTraitChanges:withAction:"), nsa_traits.Handle, action.Handle), false)!;
 		}
 
-		static Class [] ToClasses (IUITraitDefinition [] traits)
+		private static Class [] ToClasses (IUITraitDefinition [] traits)
 		{
 			if (traits is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
@@ -238,13 +238,13 @@ namespace UIKit {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
-		extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2);
+		private extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
-		extern unsafe static NativeHandle NativeHandle_objc_msgSend_NativeHandle_BlockLiteral (IntPtr receiver, IntPtr selector, NativeHandle arg1, BlockLiteral* arg2);
+		private extern unsafe static NativeHandle NativeHandle_objc_msgSend_NativeHandle_BlockLiteral (IntPtr receiver, IntPtr selector, NativeHandle arg1, BlockLiteral* arg2);
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
-		extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2, NativeHandle arg3);
+		private extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2, NativeHandle arg3);
 #endif // !XAMCORE_5_0
 	}
 }
