@@ -1122,6 +1122,23 @@ namespace Xamarin.Tests {
 				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}
 
+		public static void IgnoreIfNotOnMacOS ()
+		{
+			IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform.OSX);
+		}
+
+		public static void IgnoreIfNotOnWindows ()
+		{
+			IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform.Windows);
+		}
+
+		public static void IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform platform)
+		{
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (platform))
+				return;
+			Assert.Ignore ($"This test is only applicable on {platform}");
+		}
+
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
 		{
 			string dir;
