@@ -3,7 +3,7 @@
 		<!-- Disables the transitive restore of packages like Microsoft.AspNetCore.App.Ref, Microsoft.WindowsDesktop.App.Ref -->
 		<DisableTransitiveFrameworkReferenceDownloads>true</DisableTransitiveFrameworkReferenceDownloads>
 		<MonoCecilPackageVersion>0.11.5</MonoCecilPackageVersion>
-		<MSBuildStructuredLoggerPackageVersion>2.2.149</MSBuildStructuredLoggerPackageVersion>
+		<MSBuildStructuredLoggerPackageVersion>2.2.158</MSBuildStructuredLoggerPackageVersion>
 	</PropertyGroup>
 	<Import Project="Build.props" Condition="Exists('Build.props')" />
 </Project>
