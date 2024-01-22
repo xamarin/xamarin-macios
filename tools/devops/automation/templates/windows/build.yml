@@ -194,8 +194,8 @@ steps:
   timeoutInMinutes: 30
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $configFile = "$(Build.SourcesDirectory)\artifacts\build-configuration\configuration.json"
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    $configFile = "$(Build.SourcesDirectory)\\artifacts\\build-configuration\\${{ parameters.uploadPrefix }}configuration.json"
     $config = Import-BuildConfiguration -ConfigFile $configFile
     $config | Write-Host
   name: configuration
