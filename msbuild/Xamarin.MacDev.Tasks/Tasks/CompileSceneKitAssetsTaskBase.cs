@@ -123,7 +123,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ()) {
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
-				taskRunner.FixReferencedItems (SceneKitAssets);
+				taskRunner.FixReferencedItems (this, SceneKitAssets);
 
 				FixUpRootedPaths (SceneKitAssets);
 
