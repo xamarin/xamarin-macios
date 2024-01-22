@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string ResourcePrefix { get; set; }
 
 		[Required]
-		public ITaskItem [] SceneKitAssets { get; set; }
+		public ITaskItem [] SceneKitAssets { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
 		public string SdkDevPath { get; set; }
@@ -220,7 +220,7 @@ namespace Xamarin.MacDev.Tasks {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
-		void FixUpRootedPaths (ITaskItem [] sceneKitAssets)
+		void FixUpRootedPaths (ITaskItem[] sceneKitAssets)
 		{
 			foreach (var item in sceneKitAssets) {
 				item.ItemSpec = item.ItemSpec.Replace (":", "");

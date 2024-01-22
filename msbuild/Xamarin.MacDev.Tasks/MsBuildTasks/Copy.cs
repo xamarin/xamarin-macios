@@ -9,7 +9,9 @@ namespace Microsoft.Build.Tasks {
 
 			var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
-			taskRunner.FixReferencedItems (this, SourceFiles);
+			if (SourceFiles?.Any () == true) {
+				taskRunner.FixReferencedItems (this, SourceFiles);
+			}
 
 			return taskRunner.RunAsync (this).Result;
 		}
