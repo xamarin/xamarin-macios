@@ -7,11 +7,13 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
+using Xamarin.Messaging.Build.Client;
+
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class PrepareNativeReferencesTaskBase : XamarinTask {
+	public class PrepareNativeReferences : XamarinTask, ITaskCallback, ICancelableTask {
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
@@ -89,8 +91,29 @@ namespace Xamarin.MacDev.Tasks {
 			builder.Append ('"');
 		}
 
+		bool ExecuteRemotely ()
+		{
+			var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+
+			try {
+				var success = taskRunner.RunAsync (this).Result;
+
+				if (success && LinkWithAttributes is not null)
+					taskRunner.GetFileAsync (this, LinkWithAttributes.ItemSpec).Wait ();
+
+				return success;
+			} catch (Exception ex) {
+				Log.LogErrorFromException (ex);
+
+				return false;
+			}
+		}
+
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return ExecuteRemotely ();
+
 			if (NativeReferences is null || NativeReferences.Length == 0)
 				return !Log.HasLoggedErrors;
 
@@ -152,6 +175,21 @@ namespace Xamarin.MacDev.Tasks {
 			LinkWithAttributes = new TaskItem (linkWithPath);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			return CreateItemsForAllFilesRecursively (NativeReferences);
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

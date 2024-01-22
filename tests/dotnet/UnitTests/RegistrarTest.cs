@@ -3,21 +3,24 @@ using Mono.Cecil;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class RegistrarTest : TestBaseClass {
-		[TestCase (ApplePlatform.MacCatalyst, true)]
-		[TestCase (ApplePlatform.MacOSX, true)]
-		[TestCase (ApplePlatform.iOS, false)]
-		[TestCase (ApplePlatform.TVOS, false)]
-		public void InvalidStaticRegistrarValidation (ApplePlatform platform, bool validated)
+		// This test does evil things that the AOT runtime complains about, so it only works when not running the AOT compiler (aka x64 when using Mono).
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, null, true)]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64", false)]
+		public void InvalidStaticRegistrarValidation (ApplePlatform platform, string? runtimeIdentifiers, bool validated)
 		{
 			var project = "MyRegistrarApp";
 			var configuration = "Debug";
-			var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+
+			runtimeIdentifiers ??= GetDefaultRuntimeIdentifier (platform);
+
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
 
 			var projectPath = GetProjectPath (project, platform: platform);
 			Clean (projectPath);
-			var properties = GetDefaultProperties ();
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["Registrar"] = "static";
 			// enable the linker (so that the main assembly is modified)
 			properties ["LinkMode"] = "full";
