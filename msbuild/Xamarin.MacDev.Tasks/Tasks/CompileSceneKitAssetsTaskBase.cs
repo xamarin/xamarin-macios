@@ -220,7 +220,7 @@ namespace Xamarin.MacDev.Tasks {
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
-		void FixUpRootedPaths (ITaskItem[] sceneKitAssets)
+		void FixUpRootedPaths (ITaskItem [] sceneKitAssets)
 		{
 			foreach (var item in sceneKitAssets) {
 				item.ItemSpec = item.ItemSpec.Replace (":", "");
