@@ -31,9 +31,9 @@
       <Sha>45dd3a73dd5b64b010c4251303b3664bb30df029</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7132">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7133">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>94c4fe7d438743aeaf52204e862832faf168c238</Sha>
+      <Sha>89b5748139337af347c722f9378204e31ccec01e</Sha>
     </Dependency>
     <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7132">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
