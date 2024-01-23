@@ -17,19 +17,6 @@ using Xamarin.Utils;
 namespace Cecil.Tests {
 	public partial class BlittablePInvokes {
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterConvertBuffer(System.IntPtr,System.Int32,System.Byte[],System.Int32&,System.Byte[])",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,AudioToolbox.AudioConverterPrimeInfo&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.Byte[])",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.Double&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.Int32&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.IntPtr)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.UInt32&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterGetPropertyInfo(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32&,System.Boolean&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterNew(AudioToolbox.AudioStreamBasicDescription&,AudioToolbox.AudioStreamBasicDescription&,System.IntPtr&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterNewSpecific(AudioToolbox.AudioStreamBasicDescription&,AudioToolbox.AudioStreamBasicDescription&,System.Int32,AudioToolbox.AudioClassDescription[]&,System.IntPtr&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterSetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32,System.Double&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterSetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32,System.Int32&)",
-			"AudioToolbox.AudioConverterError AudioToolbox.AudioConverter::AudioConverterSetProperty(System.IntPtr,AudioToolbox.AudioConverterPropertyID,System.Int32,System.UInt32&)",
 			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileOpenURL(System.IntPtr,System.Byte,AudioToolbox.AudioFileType,System.IntPtr&)",
 			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileSetProperty(System.IntPtr,AudioToolbox.AudioFileProperty,System.Int32,AudioToolbox.AudioFilePacketTableInfo&)",
 			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileWritePackets(System.IntPtr,System.Boolean,System.Int32,AudioToolbox.AudioStreamPacketDescription[],System.Int64,System.Int32&,System.IntPtr)",
