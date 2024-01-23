@@ -42,20 +42,15 @@ static class NativeMethods {
 	}
 }
 
-var args = Environment.GetCommandLineArgs ();
-var initialArgumentCount = 3;
-if (args.Length <= initialArgumentCount + 1 /* 3 default arguments (executable + script + -s) */) {
-	// first arg is "/Library/Frameworks/Mono.framework/Versions/4.8.0/lib/mono/4.5/csharp.exe"
-	// second arg the script itself
-	// third argument is -s
-	// then comes the ones we care about
-	Console.WriteLine ($"Need two arguments (the timeout + the command to launch), got {args.Length - initialArgumentCount} argument(s)");
+var args = Args;
+if (args.Length <= 1) {
+	Console.WriteLine ($"Need two arguments (the timeout + the command to launch), got {args.Length} argument(s)");
 	Environment.Exit (1);
 	return;
 }
 
 var launchTimeout = TimeSpan.FromSeconds (10); // must launch within a few seconds.
-var argIndex = initialArgumentCount;
+var argIndex = 0;
 var executionTimeout = TimeSpan.FromSeconds (int.Parse (args [argIndex++]));
 var commands = args.Skip (argIndex).ToArray ();
 
