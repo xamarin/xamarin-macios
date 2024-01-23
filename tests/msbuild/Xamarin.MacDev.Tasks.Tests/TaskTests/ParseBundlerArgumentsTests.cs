@@ -9,7 +9,7 @@ using Xamarin.MacDev.Tasks;
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class ParseBundlerArgumentsTests : TestBase {
-		class CustomParseBundlerArguments : ParseBundlerArgumentsTaskBase { }
+		class CustomParseBundlerArguments : ParseBundlerArguments { }
 
 		[Test]
 		public void NoExtraArgs ()

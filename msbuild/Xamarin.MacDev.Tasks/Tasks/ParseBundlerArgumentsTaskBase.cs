@@ -12,7 +12,7 @@ using Xamarin.Utils;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ParseBundlerArgumentsTaskBase : XamarinTask {
+	public class ParseBundlerArguments : XamarinTask {
 		public string ExtraArgs { get; set; }
 
 		[Output]
