@@ -20,7 +20,8 @@ var plistPath = $"../builds/Versions-{platform}.plist.in"
 
 var doc = new XmlDocument ();
 doc.Load (plistPath);
-var nodes = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string");
+var knownVersions = doc.SelectNodes ($"/plist/dict/key[text()='KnownVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string").Cast<XmlNode> ().Select (v => v.InnerText).ToArray ();
+var supportedTargetPlatformVersions = doc.SelectNodes ($"/plist/dict/key[text()='SupportedTargetPlatformVersions']/following-sibling::dict[1]/key[text()='{platform}']/following-sibling::array[1]/string").Cast<XmlNode> ().Select (v => v.InnerText).ToArray ();
 
 var minSdkVersionName = $"DOTNET_MIN_{platform.ToUpper ()}_SDK_VERSION";
 var minSdkVersionString = File.ReadAllLines ("../Make.config").Single (v => v.StartsWith (minSdkVersionName + "=", StringComparison.Ordinal)).Substring (minSdkVersionName.Length + 1);
@@ -32,11 +33,11 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ("<Project>");
 	writer.WriteLine ("\t<ItemGroup>");
 
-	foreach (XmlNode n in nodes) {
-		var version = n.InnerText;
-		if (Version.Parse (version) < minSdkVersion)
-			continue;
-		writer.WriteLine ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{n.InnerText}\" />");
+	foreach (var version in supportedTargetPlatformVersions) {
+		writer.Write ($"\t\t<{platform}SdkSupportedTargetPlatformVersion Include=\"{version}\" ");
+		if (!knownVersions.Contains (version))
+			writer.Write ($"DefineConstantsOnly=\"true\" ");
+		writer.WriteLine ("/>");
 	}
 
 	writer.WriteLine ("\t</ItemGroup>");
