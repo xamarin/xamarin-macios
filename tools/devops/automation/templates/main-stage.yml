@@ -123,7 +123,7 @@ parameters:
       label: cecil,
       splitByPlatforms: false,
       containsDotNetTests: true,
-      containsLegacyTests: true,
+      containsLegacyTests: false,
     },
     {
       label: dotnettests,
@@ -134,62 +134,92 @@ parameters:
     {
       label: fsharp,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: framework,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: generator,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: interdependent-binding-projects,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: install-source,
       splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
     },
     {
       label: introspection,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: linker,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: mac-binding-project,
       splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
     },
     {
       label: mmp,
       splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
     },
     {
       label: mononative,
       splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
     },
     {
       label: monotouch,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: msbuild,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
     {
       label: mtouch,
       splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
     },
     {
       label: xammac,
       splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
     },
     {
       label: xtro,
       splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
     },
   ]
 
