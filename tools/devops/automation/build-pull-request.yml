@@ -139,15 +139,15 @@ parameters:
       ]
     },
     {
-      stageName: 'mac_14_m1',
-      displayName: 'M1 - Mac Sonoma (14)',
+      stageName: 'mac_14_x64',
+      displayName: 'X64 - Mac Sonoma (14)',
       macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
       useImage: false,
-      statusContext: 'M1 - Mac Sonoma (14)',
+      statusContext: 'X64 - Mac Sonoma (14)',
       demands: [
         "Agent.OS -equals Darwin",
         "macOS.Name -equals Sonoma",
-        "macOS.Architecture -equals arm64",
+        "macOS.Architecture -equals x64",
         "Agent.HasDevices -equals False",
         "Agent.IsPaired -equals False"
       ]
