@@ -167,6 +167,31 @@ Describe 'Get-TestConfiguration' {
 
   }
 
+  It 'suceeds when no dotnet platforms enabled' {
+    $EnabledPlatforms = ""
+
+    $config = Get-TestConfiguration `
+      -TestConfigurations $TestConfigurations `
+      -SupportedPlatforms $SupportedPlatforms `
+      -EnabledPlatforms $EnabledPlatforms `
+      -TestsLabels "extra-test-labels" `
+      -StatusContext "status-context" `
+      -TestPrefix "test-prefix_"
+    Write-Host $config
+    $config | Should -Be @"
+{
+  "cecil": {
+    "LABEL": "cecil",
+    "TESTS_LABELS": "extra-test-labels,run-cecil-tests",
+    "LABEL_WITH_PLATFORM": "cecil",
+    "STATUS_CONTEXT": "status-context - cecil",
+    "TEST_PREFIX": "test-prefix_cecil",
+    "TEST_PLATFORM": ""
+  }
+}
+"@
+}
+
   It 'does not generate tvOS tests for dotnettests' {
 
       $EnabledPlatforms = "iOS macOS MacCatalyst"

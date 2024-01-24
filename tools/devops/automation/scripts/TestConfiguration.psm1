@@ -106,9 +106,9 @@ function Get-TestConfiguration {
         [string]
         $SupportedPlatforms,
 
-        [string]
         [Parameter(Mandatory)]
         [string]
+        [AllowEmptyString()]
         $EnabledPlatforms,
 
         $TestsLabels,
