@@ -1,6 +1,7 @@
 class TestConfiguration {
     [object] $testConfigurations
     [object] $supportedPlatforms
+    [string[]] $enabledPlatforms
     [string] $testsLabels
     [string] $statusContext
     [string] $testPrefix
@@ -8,11 +9,13 @@ class TestConfiguration {
     TestConfiguration (
         [object] $testConfigurations,
         [object] $supportedPlatforms,
+        [string[]] $enabledPlatforms,
         [string] $testsLabels,
         [string] $statusContext,
         [string] $testPrefix) {
         $this.testConfigurations = $testConfigurations
         $this.supportedPlatforms = $supportedPlatforms
+        $this.enabledPlatforms = $enabledPlatforms
         $this.testsLabels = $testsLabels
         $this.statusContext = $statusContext
         $this.testPrefix = $testPrefix
@@ -30,7 +33,9 @@ class TestConfiguration {
             $vars["LABEL"] = $label
             $vars["TESTS_LABELS"] = "$($this.testsLabels),run-$($label)-tests"
             if ($splitByPlatforms -eq "True") {
-                foreach ($platformConfig in $this.supportedPlatforms) {
+                foreach ($platform in $this.enabledPlatforms) {
+                    Write-Host "platform: $platform"
+                    $platformConfig = $this.supportedPlatforms | Where-Object { $_.platform -eq $platform }
                     $platform = $platformConfig.platform
 
                     $runThisPlatform = $false
@@ -94,6 +99,10 @@ function Get-TestConfiguration {
         $SupportedPlatforms,
 
         [string]
+        [Parameter(Mandatory)]
+        [string]
+        $EnabledPlatforms,
+
         $TestsLabels,
 
         [string]
@@ -105,8 +114,8 @@ function Get-TestConfiguration {
 
     $objTestConfigurations = ConvertFrom-Json -InputObject $TestConfigurations
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
-
-    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $TestsLabels, $StatusContext, $TestPrefix)
+    $arrEnabledPlatforms = -split $EnabledPlatforms
+    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext, $TestPrefix)
     return $config.Create()
 }
 

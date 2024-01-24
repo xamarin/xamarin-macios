@@ -71,6 +71,7 @@ steps:
     $testMatrix = Get-TestConfiguration `
       -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
       -SupportedPlatforms "$Env:SUPPORTED_PLATFORMS" `
+      -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS" `
       -TestsLabels "${{ parameters.testsLabels }}" `
       -StatusContext "${{ parameters.statusContext }}" `
       -TestPrefix "${{ parameters.testPrefix }}"

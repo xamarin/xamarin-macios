@@ -2,12 +2,12 @@
 TestConfiguration unit tests.
 #>
 
-Import-Module ./TestConfiguration -Force
+$ScriptDir = Split-Path -parent $MyInvocation.MyCommand.Path
+Import-Module $ScriptDir/TestConfiguration.psm1 -Force
 
 Describe 'Get-TestConfiguration' {
-    Context 'import' {
-        It 'gets the right values' {
-            $TestConfigurations = @"
+  BeforeAll {
+    $TestConfigurations = @"
 [
   {
     "label": "cecil",
@@ -23,8 +23,8 @@ Describe 'Get-TestConfiguration' {
   }
 ]
 "@
-
-            $SupportedPlatforms = @"
+    
+                $SupportedPlatforms = @"
 [
   {
     "platform": "iOS",
@@ -58,16 +58,60 @@ Describe 'Get-TestConfiguration' {
   }
 ]
 "@
+    
+  }
 
-            $config = Get-TestConfiguration `
-              -TestConfigurations $TestConfigurations `
-              -SupportedPlatforms $SupportedPlatforms `
-              -TestsLabels "extra-test-labels" `
-              -StatusContext "status-context" `
-              -TestPrefix "test-prefix"
+  It 'does not generate tvOS tests for dotnettests' {
 
-            #Write-Host "Test Config: $config"
-        }
+      $EnabledPlatforms = "iOS macOS MacCatalyst"
 
-    }
+      $config = Get-TestConfiguration `
+        -TestConfigurations $TestConfigurations `
+        -SupportedPlatforms $SupportedPlatforms `
+        -EnabledPlatforms $EnabledPlatforms `
+        -TestsLabels "extra-test-labels" `
+        -StatusContext "status-context" `
+        -TestPrefix "test-prefix"
+      Write-Host $config
+      $config | Should -Be @"
+{
+  "cecil": {
+    "LABEL": "cecil",
+    "TESTS_LABELS": "extra-test-labels,run-cecil-tests",
+    "LABEL_WITH_PLATFORM": "cecil",
+    "STATUS_CONTEXT": "status-context - cecil",
+    "TEST_PREFIX": "test-prefixcecil",
+    "TEST_PLATFORM": ""
+  },
+  "dotnettests_iOS": {
+    "LABEL": "dotnettests",
+    "TESTS_LABELS": "extra-test-labels,run-dotnettests-tests",
+    "LABEL_WITH_PLATFORM": "dotnettests_iOS",
+    "STATUS_CONTEXT": "status-context - dotnettests - iOS",
+    "TEST_PREFIX": "test-prefixdotnettests_iOS",
+    "TEST_PLATFORM": "iOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "dotnettests_macOS": {
+    "LABEL": "dotnettests",
+    "TESTS_LABELS": "extra-test-labels,run-dotnettests-tests",
+    "LABEL_WITH_PLATFORM": "dotnettests_macOS",
+    "STATUS_CONTEXT": "status-context - dotnettests - macOS",
+    "TEST_PREFIX": "test-prefixdotnettests_macOS",
+    "TEST_PLATFORM": "macOS",
+    "TEST_FILTER": "Category != MultiPlatform"
+  },
+  "dotnettests_MacCatalyst": {
+    "LABEL": "dotnettests",
+    "TESTS_LABELS": "extra-test-labels,run-dotnettests-tests",
+    "LABEL_WITH_PLATFORM": "dotnettests_MacCatalyst",
+    "STATUS_CONTEXT": "status-context - dotnettests - MacCatalyst",
+    "TEST_PREFIX": "test-prefixdotnettests_MacCatalyst",
+    "TEST_PLATFORM": "MacCatalyst",
+    "TEST_FILTER": "Category != MultiPlatform"
+  }
+}
+"@
+  }
+
 }
