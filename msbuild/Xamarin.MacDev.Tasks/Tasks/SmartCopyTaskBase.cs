@@ -18,7 +18,7 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem DestinationFolder { get; set; }
 
 		[Required]
-		public ITaskItem [] SourceFiles { get; set; }
+		public ITaskItem [] SourceFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
