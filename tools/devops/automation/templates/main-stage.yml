@@ -175,12 +175,32 @@ stages:
       steps:
       - template: ./common/clean.yml
 
-
-- stage: build_packages
-  displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
+- stage: configure_build
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Configure'
   dependsOn: ${{ parameters.dependsOn }}
   ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
     condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+
+    steps:
+    - template: common/configure.yml
+      parameters: 
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+        uploadArtifacts: true
+        
+- stage: build_packages
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Build'
+  dependsOn: [ configure_build ]
   jobs:
   - template: ./build/build-stage.yml
     parameters:
@@ -200,9 +220,7 @@ stages:
 
 - stage: build_macos_tests
   displayName: '${{ parameters.stageDisplayNamePrefix }}Build macOS tests'
-  dependsOn: ${{ parameters.dependsOn }}
-  ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
-    condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+  dependsOn: [ configure_build ]
   jobs:
   - template: ./build/build-mac-tests-stage.yml
     parameters:
@@ -267,9 +285,7 @@ stages:
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: '${{ parameters.stageDisplayNamePrefix }}API diff'
-    dependsOn: ${{ parameters.dependsOn }}
-    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
-      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+    dependsOn: [ configure_build ]
     jobs:
     - template: ./build/api-diff-stage.yml
       parameters:
