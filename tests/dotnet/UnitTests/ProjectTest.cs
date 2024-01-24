@@ -1569,5 +1569,38 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', validTargetPlatformVersions)}", errors [0].Message, "Error message");
 		}
+
+		[Test]
+		// The trailing semi-colon for single-arch platforms is significant:
+		// it means we'll use "RuntimeIdentifiers" (plural) instead of "RuntimeIdentifier" (singular)
+		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64;")]
+		public void StrippedRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["NoSymbolStrip"] = "false";
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (appExecutable);
+
+			var symbols = Configuration.GetNativeSymbols (appExecutable);
+			Assert.That (symbols, Does.Contain ("_xamarin_mono_object_retain"), "xamarin_mono_object_retain");
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				Assert.That (symbols, Does.Contain ("_xamarin_UIApplicationMain"), "xamarin_UIApplicationMain");
+				break;
+			}
+		}
+
 	}
 }
