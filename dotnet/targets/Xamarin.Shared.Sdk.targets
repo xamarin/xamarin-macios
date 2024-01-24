@@ -364,7 +364,7 @@
 			Properties="
 				RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);
 				_CodesignItemsPath=%(_RuntimeIdentifiersAsItems.RidSpecificCodesignItemsPath);
-				_MtouchSymbolsList=%(_RuntimeIdentifiersAsItems.RidSpecificSymbolsList);
+				_MtouchSymbolsList=%(_RuntimeIdentifiersAsItems.RidSpecificSymbolsListPath);
 				_UserFrameworksWithoutDebugSymbolsPath=%(_RuntimeIdentifiersAsItems.RidSpecificUserFrameworksWithoutDebugSymbolsPath);
 				$(_RidSpecificProperties);
 				">
