@@ -33,6 +33,14 @@ class TestConfiguration {
             $vars["LABEL"] = $label
             $vars["TESTS_LABELS"] = "$($this.testsLabels),run-$($label)-tests"
             if ($splitByPlatforms -eq "True") {
+                if ($this.enabledPlatforms.Length -eq 0) {
+                    Write-Host "No enabled platforms, skipping $label"
+                    continue
+                }
+                if ($this.enabledPlatforms.Length -gt 1) {
+                    Write-Host "Multiple platform enabled"
+                    $this.enabledPlatforms = $this.enabledPlatforms += "Multiple"
+                }
                 foreach ($platform in $this.enabledPlatforms) {
                     Write-Host "platform: $platform"
                     $platformConfig = $this.supportedPlatforms | Where-Object { $_.platform -eq $platform }
