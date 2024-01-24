@@ -6,9 +6,10 @@ using System.IO.Compression;
 #nullable enable
 
 namespace Xamarin.Tests {
-	[Category ("Windows")]
+	[TestFixture]
 	public class WindowsTest : TestBaseClass {
 
+		[Category ("Windows")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void BundleStructureWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
 		{
