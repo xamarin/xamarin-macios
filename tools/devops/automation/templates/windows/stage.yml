@@ -93,8 +93,6 @@ stages:
       MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY'] ]
       MAC_AGENT_BUILD_SOURCESDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_BUILD_SOURCESDIRECTORY'] ]
       MAC_AGENT_USER: builder
-      DEVOPS_DEPENDENCIES: $[ convertToJson(dependencies) ]
-      DEVOPS_STAGEDEPENDENCIES: $[ convertToJson(stageDependencies) ]
 
     steps:
     - template: build.yml
