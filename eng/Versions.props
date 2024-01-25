@@ -18,7 +18,7 @@
     <!-- This is a subscription of the .NET 8 versions of our packages -->
     <MicrosoftMacCatalystSdkPackageVersion>17.2.8011</MicrosoftMacCatalystSdkPackageVersion>
     <MicrosoftmacOSSdkPackageVersion>14.2.8011</MicrosoftmacOSSdkPackageVersion>
-    <MicrosoftiOSSdkPackageVersion>17.2.8011</MicrosoftiOSSdkPackageVersion>
+    <MicrosoftiOSSdkPackageVersion>17.2.8016</MicrosoftiOSSdkPackageVersion>
     <MicrosofttvOSSdkPackageVersion>17.2.8011</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>
