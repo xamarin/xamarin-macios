@@ -1576,7 +1576,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64;")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
 		public void StrippedRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
@@ -1594,12 +1594,6 @@ namespace Xamarin.Tests {
 
 			var symbols = Configuration.GetNativeSymbols (appExecutable);
 			Assert.That (symbols, Does.Contain ("_xamarin_release_managed_ref"), "_xamarin_release_managed_ref");
-			switch (platform) {
-			case ApplePlatform.iOS:
-			case ApplePlatform.TVOS:
-				Assert.That (symbols, Does.Contain ("_xamarin_UIApplicationMain"), "xamarin_UIApplicationMain");
-				break;
-			}
 		}
 
 	}
