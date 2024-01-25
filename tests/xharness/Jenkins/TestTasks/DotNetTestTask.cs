@@ -23,7 +23,8 @@ namespace Xharness.Jenkins.TestTasks {
 					"test",
 					BuildTask.ProjectFile,
 					"--results-directory:" + Logs.Directory,
-					"--logger:console;verbosity=detailed",
+					// Showing verbose logging in the terminal may cause spurious test failures: https://github.com/microsoft/vstest/issues/4852.
+					// "--logger:console;verbosity=detailed",
 					"--logger:trx;LogFileName=" + Path.GetFileName (trx.FullPath),
 					"--logger:html;LogFileName=" + Path.GetFileName (html.FullPath)
 				};
