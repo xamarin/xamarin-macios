@@ -1607,7 +1607,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
-			ExecuteWithMagicWordAndAssert (appExecutable);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var symbols = Configuration.GetNativeSymbols (appExecutable);
 			Assert.That (symbols, Does.Contain ("_xamarin_mono_object_retain"), "xamarin_mono_object_retain");
