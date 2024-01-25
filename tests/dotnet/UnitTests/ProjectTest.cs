@@ -854,20 +854,6 @@ namespace Xamarin.Tests {
 				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
 		}
 
-		void AssertThatLinkerExecuted (ExecutionResult result)
-		{
-			var output = BinLog.PrintToString (result.BinLogPath);
-			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
-		}
-
-		void AssertThatLinkerDidNotExecute (ExecutionResult result)
-		{
-			var output = BinLog.PrintToString (result.BinLogPath);
-			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
-		}
-
 		void AssertAppContents (ApplePlatform platform, string app_directory)
 		{
 			var info_plist_path = GetInfoPListPath (platform, app_directory);

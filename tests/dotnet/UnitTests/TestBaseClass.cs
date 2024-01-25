@@ -440,5 +440,20 @@ namespace Xamarin.Tests {
 
 			Assert.Fail ($"Failure when comparing error messages:\n{string.Join ("\n", failures)}\n\tAll errors:\n\t\t{string.Join ("\n\t\t", errors.Select (v => v.Message?.TrimEnd ()))}");
 		}
+
+		public void AssertThatLinkerExecuted (ExecutionResult result)
+		{
+			var output = BinLog.PrintToString (result.BinLogPath);
+			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
+		public void AssertThatLinkerDidNotExecute (ExecutionResult result)
+		{
+			var output = BinLog.PrintToString (result.BinLogPath);
+			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
+			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
+		}
+
 	}
 }
