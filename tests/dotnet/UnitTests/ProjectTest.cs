@@ -1610,7 +1610,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
 			var symbols = Configuration.GetNativeSymbols (appExecutable);
-			Assert.That (symbols, Does.Contain ("_xamarin_mono_object_retain"), "xamarin_mono_object_retain");
+			Assert.That (symbols, Does.Contain ("_xamarin_release_managed_ref"), "_xamarin_release_managed_ref");
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
