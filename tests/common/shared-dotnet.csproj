@@ -60,6 +60,12 @@
 		<CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
 	</PropertyGroup>
 
+	<!-- Logic for NativeAOT -->
+	<PropertyGroup Condition="'$(PublishAot)' == 'true' And '$(_IsPublishing)' == 'true'">
+		<!-- Define NATIVEAOT when using NativeAOT -->
+		<DefineConstants>$(DefineConstants);NATIVEAOT</DefineConstants>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="NUnitLite" Version="3.12.0" Condition="'$(ExcludeNUnitLiteReference)' != 'true'" />
 		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" Condition="'$(ExcludeTouchUnitReference)' != 'true'" />
