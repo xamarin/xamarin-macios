@@ -307,6 +307,7 @@ namespace Xharness.Jenkins {
 						if (publishaot) {
 							clone.Xml.SetProperty ("PublishAot", "true");
 							clone.Xml.SetProperty ("_IsPublishing", "true"); // quack like "dotnet publish", otherwise PublishAot=true has no effect.
+							clone.Xml.SetProperty ("IlcTreatWarningsAsErrors", "false"); // We're enabling warnaserror by default, but we're not warning-free for ILC (especially for NUnit), so disable warnaserror for ILC - https://github.com/xamarin/xamarin-macios/issues/19911
 						}
 						clone.Xml.Save (clone.Path);
 					});
