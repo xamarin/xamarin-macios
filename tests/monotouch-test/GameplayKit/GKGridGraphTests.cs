@@ -14,7 +14,9 @@ using System;
 using System.Collections.Generic;
 
 using Foundation;
+
 using GameplayKit;
+
 using NUnit.Framework;
 
 #if NET

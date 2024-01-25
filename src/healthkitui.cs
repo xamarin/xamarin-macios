@@ -1,10 +1,15 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
+
 using CoreGraphics;
+
 using Foundation;
+
 using HealthKit;
+
 using ObjCRuntime;
+
 using UIKit;
 
 #if !NET

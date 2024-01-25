@@ -23,6 +23,7 @@
 using System;
 
 using NUnit.Framework;
+
 using Xamarin.Tests;
 
 namespace Introspection {

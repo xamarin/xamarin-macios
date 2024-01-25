@@ -14,7 +14,9 @@ using System;
 using System.Runtime.InteropServices;
 
 using Foundation;
+
 using Metal;
+
 using MetalPerformanceShaders;
 
 using NUnit.Framework;

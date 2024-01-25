@@ -10,7 +10,9 @@
 #if !(NET && __MACOS__)
 #if !TVOS
 using System;
+
 using Foundation;
+
 using ObjCRuntime;
 
 namespace Intents {

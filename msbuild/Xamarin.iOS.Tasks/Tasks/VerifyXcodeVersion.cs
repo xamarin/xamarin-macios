@@ -1,10 +1,13 @@
 using System;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
+
 using Threading = System.Threading.Tasks;
 
 namespace Xamarin.iOS.Tasks {

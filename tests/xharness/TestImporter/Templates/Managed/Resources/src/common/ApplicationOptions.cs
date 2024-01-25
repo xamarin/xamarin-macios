@@ -1,7 +1,10 @@
 // Modified version of the TouchOptions found in 
 using System;
+
 using Foundation;
+
 using Mono.Options;
+
 using Xamarin.iOS.UnitTests;
 
 namespace BCLTests {

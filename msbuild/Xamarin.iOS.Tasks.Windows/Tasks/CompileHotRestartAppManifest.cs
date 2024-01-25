@@ -1,8 +1,10 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using System;
 using System.IO;
 using System.Linq;
+
 using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.MacDev;
 

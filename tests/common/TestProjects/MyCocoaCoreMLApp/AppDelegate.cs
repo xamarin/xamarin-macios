@@ -1,8 +1,11 @@
 using System;
 
 using AppKit;
+
 using CoreGraphics;
+
 using CoreVideo;
+
 using Foundation;
 
 namespace MyCocoaCoreMLApp {

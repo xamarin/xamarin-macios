@@ -1,7 +1,10 @@
 #nullable enable
 using System.IO;
+
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
+
 using NUnit.Framework;
+
 using Xharness.Jenkins;
 
 namespace Xharness.Tests.Jenkins {

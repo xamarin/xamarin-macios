@@ -5,8 +5,11 @@
 //
 
 using System;
+
 using Foundation;
+
 using NaturalLanguage;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.NaturalLanguage {

@@ -10,8 +10,11 @@
 #if HAS_EVENTKITUI
 
 using System;
+
 using EventKitUI;
+
 using Foundation;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.EventKitUI {

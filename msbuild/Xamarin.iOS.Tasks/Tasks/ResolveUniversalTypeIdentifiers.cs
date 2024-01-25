@@ -1,9 +1,12 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Newtonsoft.Json;
+
 using System;
 using System.IO;
 using System.Linq;
+
 using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;

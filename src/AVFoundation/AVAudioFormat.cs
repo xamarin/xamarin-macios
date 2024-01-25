@@ -12,8 +12,11 @@
 // In both of these cases, the NSObject Equals/GetHashCode implementation works fine, so we can ignore these warnings.
 
 using AudioToolbox;
+
 using Foundation;
+
 using ObjCRuntime;
+
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

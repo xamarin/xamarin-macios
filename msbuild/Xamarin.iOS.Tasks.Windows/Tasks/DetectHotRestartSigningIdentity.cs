@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.iOS.Windows;
 using Xamarin.MacDev;
 

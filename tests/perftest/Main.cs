@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 
 using AppKit;
+
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Exporters.Csv;
@@ -13,6 +14,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
+
 using Perfolizer.Horology;
 
 namespace PerfTest {

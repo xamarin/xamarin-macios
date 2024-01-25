@@ -4,6 +4,7 @@ using System;
 
 using Mono.Cecil;
 using Mono.Linker.Steps;
+
 using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {

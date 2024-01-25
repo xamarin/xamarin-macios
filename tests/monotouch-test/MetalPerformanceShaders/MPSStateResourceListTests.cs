@@ -13,7 +13,9 @@
 using System;
 
 using Foundation;
+
 using Metal;
+
 using MetalPerformanceShaders;
 
 using NUnit.Framework;

@@ -1,5 +1,7 @@
 using System.Collections;
+
 using Microsoft.DotNet.XHarness.iOS.Shared;
+
 using NUnit.Framework;
 
 namespace Xharness.Tests.Tests {

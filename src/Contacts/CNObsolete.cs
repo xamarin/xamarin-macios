@@ -7,7 +7,9 @@
 #if !XAMCORE_3_0
 
 using System;
+
 using Foundation;
+
 using ObjCRuntime;
 
 namespace Contacts {

@@ -10,8 +10,11 @@
 #if !__WATCHOS__ && !MONOMAC
 
 using System;
+
 using Foundation;
+
 using NUnit.Framework;
+
 using UIKit;
 
 namespace MonoTouchFixtures.UIKit {

@@ -1,6 +1,7 @@
 using System;
 
 using AppKit;
+
 using Foundation;
 
 namespace MyCocoaApp {

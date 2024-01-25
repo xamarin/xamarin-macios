@@ -1,6 +1,9 @@
 using AppKit;
+
 using FinderSync;
+
 using Foundation;
+
 using Social;
 
 namespace FinderExtensionTest {

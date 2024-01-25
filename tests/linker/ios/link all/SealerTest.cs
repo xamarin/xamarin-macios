@@ -1,7 +1,9 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
 using System;
+
 using Foundation;
+
 using NUnit.Framework;
 
 namespace Linker.Sealer {

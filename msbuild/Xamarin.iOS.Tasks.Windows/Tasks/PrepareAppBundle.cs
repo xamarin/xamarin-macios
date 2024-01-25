@@ -1,7 +1,9 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using System.IO;
 using System.IO.Compression;
+
 using Xamarin.iOS.Windows;
 using Xamarin.MacDev;
 

@@ -1,4 +1,5 @@
 using System;
+
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness {

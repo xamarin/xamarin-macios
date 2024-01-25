@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corp
 
 using System;
+
 using Microsoft.Build.Framework;
+
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {

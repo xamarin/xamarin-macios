@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections;
+
 using NUnit.Framework;
+
 using ObjCRuntime;
 
 namespace GeneratorTests {

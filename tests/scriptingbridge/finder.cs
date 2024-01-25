@@ -1,5 +1,7 @@
 using Foundation;
+
 using ObjCRuntime;
+
 using ScriptingBridge;
 
 namespace Finder {

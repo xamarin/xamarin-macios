@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
+
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
+
 using Threading = System.Threading.Tasks;
 
 // Disable until we get around to enable + fix any issues.

@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 using Microsoft.Build.Utilities;
+
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Build.Properties;
 using Xamarin.Messaging.Build.Serialization;

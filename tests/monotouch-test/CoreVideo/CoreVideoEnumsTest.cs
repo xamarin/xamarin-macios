@@ -10,8 +10,11 @@
 #if !__WATCHOS__
 
 using System;
+
 using CoreVideo;
+
 using Foundation;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreVideo {

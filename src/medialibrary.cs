@@ -22,7 +22,9 @@
 using System;
 
 using AppKit;
+
 using Foundation;
+
 using ObjCRuntime;
 
 #if !NET

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Clang;
 using Clang.Ast;
+
 using Mono.Cecil;
 
 namespace Extrospection {

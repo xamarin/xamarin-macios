@@ -5,6 +5,7 @@
 #nullable enable
 
 using Foundation;
+
 using System;
 
 namespace CoreMotion {

@@ -5,7 +5,9 @@
 //
 
 using System;
+
 using Foundation;
+
 using ObjCRuntime;
 
 // Both CFHttpStream and CFHTTPMessage are in CFNetwork.framework, no idea why they ended up in CoreServices when they were bound.

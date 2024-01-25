@@ -1,5 +1,7 @@
 using System;
+
 using NUnit.Framework;
+
 using Xamarin.Utils;
 
 namespace Xamarin.Tests.Utils {

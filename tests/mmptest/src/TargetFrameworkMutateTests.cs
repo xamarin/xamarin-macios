@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+
 using NUnit.Framework;
+
 using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests {

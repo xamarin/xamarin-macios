@@ -2,8 +2,11 @@
 // Copyright 2019 Microsoft Corporation
 
 using System;
+
 using CoreGraphics;
+
 using Foundation;
+
 using ObjCRuntime;
 
 #if !NET

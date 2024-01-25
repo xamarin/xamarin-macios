@@ -4,6 +4,7 @@ using System.Text;
 
 #if MTOUCH || MMP || BUNDLER
 using Mono.Cecil;
+
 using Xamarin.Linker;
 #else
 using System.Net.Http;

@@ -8,7 +8,9 @@
 //
 
 using System.Globalization;
+
 using Foundation;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {

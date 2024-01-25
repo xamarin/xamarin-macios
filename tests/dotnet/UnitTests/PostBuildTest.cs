@@ -1,5 +1,6 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
+
 using Mono.Cecil;
 
 namespace Xamarin.Tests {

@@ -9,8 +9,11 @@
 
 using System;
 using System.Collections.Generic;
+
 using Foundation;
+
 using NaturalLanguage;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.NaturalLanguage {

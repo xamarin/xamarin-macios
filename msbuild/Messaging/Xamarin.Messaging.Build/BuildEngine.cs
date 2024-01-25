@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+
 using Microsoft.Build.Framework;
+
 using Xamarin.Messaging.Build.Contracts;
 
 namespace Xamarin.Messaging.Build {

@@ -12,7 +12,9 @@
 using System;
 
 using Foundation;
+
 using HealthKit;
+
 using NUnit.Framework;
 #if MONOMAC
 using AppKit;

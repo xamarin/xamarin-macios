@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging;

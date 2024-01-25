@@ -1,4 +1,5 @@
 using System;
+
 using Foundation;
 
 namespace Bug52570ClassInternal {

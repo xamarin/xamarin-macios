@@ -10,7 +10,9 @@
 #if !__WATCHOS__
 
 using CoreAnimation;
+
 using Foundation;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreAnimation {

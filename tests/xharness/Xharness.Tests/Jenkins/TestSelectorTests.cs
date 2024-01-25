@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+
 using Moq;
+
 using NUnit.Framework;
+
 using Xharness.Jenkins;
 
 namespace Xharness.Tests.Jenkins {

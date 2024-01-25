@@ -10,8 +10,11 @@
 #if !__WATCHOS__
 
 using System;
+
 using Foundation;
+
 using JavaScriptCore;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.JavascriptCore {

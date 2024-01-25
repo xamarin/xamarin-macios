@@ -4,9 +4,13 @@
 
 using System;
 using System.Drawing;
+
 using CoreGraphics;
+
 using Foundation;
+
 using MapKit;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MapKit {

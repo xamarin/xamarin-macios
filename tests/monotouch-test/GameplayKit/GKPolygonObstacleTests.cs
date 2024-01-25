@@ -13,7 +13,9 @@
 using System;
 
 using Foundation;
+
 using GameplayKit;
+
 using NUnit.Framework;
 
 #if NET

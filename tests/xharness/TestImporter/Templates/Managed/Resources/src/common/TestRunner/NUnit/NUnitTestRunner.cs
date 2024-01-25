@@ -12,7 +12,9 @@ using Foundation;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
+
 using NUnitLite.Runner;
+
 using NUnitTest = NUnit.Framework.Internal.Test;
 
 namespace Xamarin.iOS.UnitTests.NUnit {

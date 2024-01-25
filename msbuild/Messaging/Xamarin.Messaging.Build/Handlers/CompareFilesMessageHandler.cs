@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Client;
 

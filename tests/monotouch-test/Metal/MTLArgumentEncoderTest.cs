@@ -1,7 +1,9 @@
 #if !__WATCHOS__
 
 using System;
+
 using Foundation;
+
 using Metal;
 
 using NUnit.Framework;

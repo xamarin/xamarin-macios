@@ -4,9 +4,13 @@
 
 using System;
 using System.Runtime.InteropServices;
+
 using CoreGraphics;
+
 using Foundation;
+
 using Metal;
+
 using ObjCRuntime;
 
 namespace MetalPerformanceShaders {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
 using Xamarin.Messaging.Build.Contracts;
 using Xamarin.Messaging.Client;
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 
 using AppKit;
+
 using Foundation;
 
 namespace Xamarin.Mac.Linker.Test {

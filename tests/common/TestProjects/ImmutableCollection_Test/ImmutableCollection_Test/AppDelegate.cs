@@ -1,5 +1,7 @@
 using AppKit;
+
 using Foundation;
+
 using System;
 
 namespace ImmutableCollection_Test {

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;

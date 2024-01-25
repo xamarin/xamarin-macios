@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 using AppKit;
+
 using ObjCRuntime;
 
 namespace Xamarin.Mac.Linker.Test {

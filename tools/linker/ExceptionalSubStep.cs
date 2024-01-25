@@ -1,8 +1,10 @@
 // Copyright 2016 Xamarin Inc.
 
 using System;
+
 using Mono.Cecil;
 using Mono.Tuner;
+
 using Xamarin.Bundler;
 
 using Xamarin.Tuner;

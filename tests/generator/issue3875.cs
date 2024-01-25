@@ -1,4 +1,5 @@
 using Foundation;
+
 using ObjCRuntime;
 namespace Issue3875 {
 	[Protocol, Model]

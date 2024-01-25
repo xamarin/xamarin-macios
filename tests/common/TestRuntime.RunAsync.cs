@@ -9,12 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using CoreGraphics;
+
 using Foundation;
 
 using NUnit.Framework;
 
 #if HAS_UIKIT
 using UIKit;
+
 using XColor = UIKit.UIColor;
 using XImage = UIKit.UIImage;
 using XImageView = UIKit.UIImageView;

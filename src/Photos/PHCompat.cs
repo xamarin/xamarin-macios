@@ -4,9 +4,13 @@
 #nullable enable
 
 using System;
+
 using CoreImage;
+
 using Foundation;
+
 using ImageIO;
+
 using ObjCRuntime;
 
 namespace Photos {

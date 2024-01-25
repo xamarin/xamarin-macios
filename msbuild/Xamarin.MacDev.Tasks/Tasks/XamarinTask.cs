@@ -9,6 +9,7 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
+
 using static Xamarin.Bundler.FileCopier;
 
 #nullable enable

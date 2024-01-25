@@ -2,6 +2,7 @@ using System;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.Localization.MSBuild;
 
 // Disable until we get around to enable + fix any issues.

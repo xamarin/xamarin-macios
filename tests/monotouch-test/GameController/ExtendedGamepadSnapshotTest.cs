@@ -10,11 +10,13 @@
 #if !__WATCHOS__
 
 using System;
+
 using Foundation;
 #if !MONOMAC
 using UIKit;
 #endif
 using GameController;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameController {

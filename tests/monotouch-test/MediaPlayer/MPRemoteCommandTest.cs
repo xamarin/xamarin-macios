@@ -9,8 +9,11 @@
 //
 
 using System;
+
 using Foundation;
+
 using MediaPlayer;
+
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaPlayer {

@@ -1,5 +1,6 @@
 #if !NET
 using System;
+
 using PlatformArchitecture = ObjCRuntime.PlatformArchitecture;
 using PlatformName = ObjCRuntime.PlatformName;
 

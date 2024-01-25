@@ -27,7 +27,9 @@
 
 using System;
 using System.Runtime.InteropServices;
+
 using CoreFoundation;
+
 using ObjCRuntime;
 
 namespace IOSurface {
