@@ -68,7 +68,7 @@ class TestConfiguration {
                     # set platform-specific variables
                     $platformVars["LABEL_WITH_PLATFORM"] = "$($label)_$($platform)"
                     $platformVars["STATUS_CONTEXT"] = "$($this.statusContext) - $($label) - $($platform)"
-                    $platformVars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)_$($platform)"
+                    $platformVars["TEST_PREFIX"] = "$($this.testPrefix)$($underscoredLabel)_$($platform.ToLower())"
                     if ($platform -eq "Multiple") {
                         $platformVars["TEST_PLATFORM"] = ""
                         $platformVars["TEST_FILTER"] = "Category = MultiPlatform"
