@@ -25,6 +25,11 @@ namespace Xamarin.MacDev.Tasks {
 	public class CompileEntitlementsTaskTests : TestBase {
 		CustomCompileEntitlements CreateEntitlementsTask (out string compiledEntitlements)
 		{
+			return CreateEntitlementsTask (out compiledEntitlements, out var _);
+		}
+
+		CustomCompileEntitlements CreateEntitlementsTask (out string compiledEntitlements, out string archivedEntitlements)
+		{
 			var task = CreateTask<CustomCompileEntitlements> ();
 
 			task.AppBundleDir = AppBundlePath;
@@ -37,6 +42,7 @@ namespace Xamarin.MacDev.Tasks {
 			task.TargetFrameworkMoniker = "Xamarin.iOS,v1.0";
 
 			compiledEntitlements = task.CompiledEntitlements.ItemSpec;
+			archivedEntitlements = Path.Combine (AppBundlePath, "archived-expanded-entitlements.xcent");
 
 			return task;
 		}
@@ -173,13 +179,16 @@ namespace Xamarin.MacDev.Tasks {
 			var customEntitlements = new TaskItem [] {
 				new TaskItem ("com.apple.security.cs.allow-jit", new Dictionary<string, string> { {  "Type", "Boolean" }, { "Value", "false" } }),
 			};
-			var task = CreateEntitlementsTask (out var compiledEntitlements);
+			var task = CreateEntitlementsTask (out var compiledEntitlements, out var archivedEntitlements);
 			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
 			var compiled = PDictionary.FromFile (compiledEntitlements);
 			Assert.IsTrue (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
 			Assert.IsFalse (compiled.Get<PBoolean> (EntitlementKeys.AllowExecutionOfJitCode).Value, "#2");
+
+			var archived = PDictionary.FromFile (archivedEntitlements);
+			Assert.IsTrue (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "archived");
 		}
 
 		[Test]
