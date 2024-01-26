@@ -49,11 +49,12 @@ $Env:DOTNET_BCL_DIR = Get-ChildItem "$Env:BUILD_SOURCESDIRECTORY\xamarin-macios\
 Write-Host "DOTNET_BCL_DIR: $Env:DOTNET_BCL_DIR"
 
 # Finally we can run the tests
+# Showing verbose logging in the terminal may cause spurious test failures: https://github.com/microsoft/vstest/issues/4852
+# # "--logger:console;verbosity=detailed"
 & $Env:BUILD_SOURCESDIRECTORY\xamarin-macios\tests\dotnet\Windows\bin\dotnet\dotnet.exe `
     test `
     "$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/tests/bgen/bgen-tests.csproj" `
     "--results-directory:$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/jenkins-results/windows/bgen-tests/" `
-    "--logger:console;verbosity=detailed" `
     "--logger:trx;LogFileName=$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/jenkins-results/windows/bgen-tests/results.trx" `
     "--logger:html;LogFileName=$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/jenkins-results/windows/bgen-tests/results.html" `
     "--settings" "$Env:BUILD_SOURCESDIRECTORY/xamarin-macios/tests/dotnet/Windows/config.runsettings" `
