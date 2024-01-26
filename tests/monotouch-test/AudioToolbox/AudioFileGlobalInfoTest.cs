@@ -40,6 +40,10 @@ namespace MonoTouchFixtures.AudioToolbox {
 				var validAudioFileTypes = Enum.GetValues (typeof (AudioFileType)).Cast<AudioFileType> ().ToList ();
 #endif
 				validAudioFileTypes.Remove (AudioFileType.SoundDesigner2); // returns null in most APIs below
+				validAudioFileTypes.Remove (AudioFileType.AAC_ADTS); // doesn't work on macOS 11
+				validAudioFileTypes.Remove (AudioFileType.AMR); // doesn't work on macOS 11
+				validAudioFileTypes.Remove (AudioFileType.MP1); // doesn't work on macOS 11
+				validAudioFileTypes.Remove (AudioFileType.MP2); // doesn't work on macOS 11
 
 				foreach (var fileType in validAudioFileTypes) {
 					Assert.NotNull (AudioFileGlobalInfo.GetFileTypeName (fileType), $"GetFileTypeName: {fileType}");
