@@ -78,7 +78,10 @@ jobs:
   timeoutInMinutes: 1000
   dependsOn: # can start as soon as the api diff is done
   - api_diff
-  condition: succeededOrFailed()
+  condition: or(
+    eq(dependencies.api_diff.result, 'Succeeded'),
+    eq(dependencies.api_diff.result, 'SucceededWithIssues')
+  )
   pool:
     vmImage: 'windows-latest'
     workspace:
