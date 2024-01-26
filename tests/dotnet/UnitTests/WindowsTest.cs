@@ -173,7 +173,7 @@ namespace Xamarin.Tests {
 			// Copy the app bundle to Windows so that we can inspect the results.
 			properties ["CopyAppBundleToWindows"] = "true";
 
-			var result = DotNet.AssertBuild (project_path, properties, quiet: false, timeout: TimeSpan.FromMinutes (15));
+			var result = DotNet.AssertBuild (project_path, properties, timeout: TimeSpan.FromMinutes (15));
 			AssertThatLinkerExecuted (result);
 
 			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers, configuration);

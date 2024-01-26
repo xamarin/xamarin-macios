@@ -62,9 +62,9 @@ namespace Xamarin.Tests {
 			return Execute ("restore", project, properties, false);
 		}
 
-		public static ExecutionResult AssertBuild (string project, Dictionary<string, string>? properties = null, TimeSpan? timeout = null, bool? quiet = null)
+		public static ExecutionResult AssertBuild (string project, Dictionary<string, string>? properties = null, TimeSpan? timeout = null)
 		{
-			return Execute ("build", project, properties, true, timeout: timeout, quiet: quiet);
+			return Execute ("build", project, properties, true, timeout: timeout);
 		}
 
 		public static ExecutionResult AssertBuildFailure (string project, Dictionary<string, string>? properties = null)
@@ -113,7 +113,7 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null, TimeSpan? timeout = null, bool? quiet = null)
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string>? properties, bool assert_success = true, string? target = null, bool? msbuildParallelism = null, TimeSpan? timeout = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -188,8 +188,7 @@ namespace Xamarin.Tests {
 
 				// Work around https://github.com/dotnet/msbuild/issues/8845
 				args.Add ("/v:diag");
-				if (quiet != false)
-					args.Add ("/consoleloggerparameters:Verbosity=Quiet");
+				args.Add ("/consoleloggerparameters:Verbosity=Quiet");
 				// vb does not have preview lang, so we force it to latest
 				if (project.EndsWith (".vbproj", StringComparison.OrdinalIgnoreCase))
 					args.Add ("/p:LangVersion=latest");
