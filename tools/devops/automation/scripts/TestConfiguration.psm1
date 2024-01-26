@@ -39,7 +39,7 @@ class TestConfiguration {
                 }
                 if ($this.enabledPlatforms.Length -gt 1) {
                     Write-Host "Multiple platform enabled"
-                    $this.enabledPlatforms = $this.enabledPlatforms += "Multiple"
+                    $this.enabledPlatforms += "Multiple"
                 }
                 foreach ($platform in $this.enabledPlatforms) {
                     Write-Host "platform: $platform"
@@ -76,7 +76,7 @@ class TestConfiguration {
                         $platformVars["TEST_PLATFORM"] = $platform
                         $platformVars["TEST_FILTER"] = "Category != MultiPlatform"
                     }
-                    $platformLabel = "$($label)_$($platform)"
+                    $platformLabel = "$($label)_$($platform.ToLower())"
                     $rv[$platformLabel] = $platformVars
                 }
             } else {
