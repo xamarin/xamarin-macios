@@ -75,7 +75,7 @@ steps:
       -TestsLabels "${{ parameters.testsLabels }}" `
       -StatusContext "${{ parameters.statusContext }}" `
       -TestPrefix "${{ parameters.testPrefix }}"
-    # compress the json to remove any newlines, because we can't set the variable below of the json has any newlines
+    # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
     Write-Host "$testMatrix"
     $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
     Write-Host "##vso[task.setvariable variable=TEST_MATRIX;isOutput=true]$testMatrix"
