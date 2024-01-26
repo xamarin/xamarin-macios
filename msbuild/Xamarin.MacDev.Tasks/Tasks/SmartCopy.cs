@@ -10,7 +10,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ()) {
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
-				taskRunner.FixReferencedItems (SourceFiles);
+				taskRunner.FixReferencedItems (this, SourceFiles);
 
 				return taskRunner.RunAsync (this).Result;
 			}

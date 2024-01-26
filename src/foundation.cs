@@ -4301,6 +4301,10 @@ namespace Foundation {
 		[MacCatalyst (14, 0)]
 		[Export ("srAbsoluteTime")]
 		double SrAbsoluteTime { get; }
+
+		[Field ("NSSystemClockDidChangeNotification")]
+		[Notification]
+		NSString SystemClockDidChangeNotification { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -5749,6 +5753,10 @@ namespace Foundation {
 
 		[Export ("localizedName:locale:")]
 		string GetLocalizedName (NSTimeZoneNameStyle style, [NullAllowed] NSLocale locale);
+
+		[Notification]
+		[Field ("NSSystemTimeZoneDidChangeNotification")]
+		NSString SystemTimeZoneDidChangeNotification { get; }
 	}
 
 	interface NSUbiquitousKeyValueStoreChangeEventArgs {
@@ -6198,7 +6206,6 @@ namespace Foundation {
 		NSString RegistrationDomain { get; }
 
 		[NoMac]
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
@@ -6211,14 +6218,12 @@ namespace Foundation {
 		NSString NoCloudAccountNotification { get; }
 
 		[NoMac]
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[NoMac]
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
@@ -10945,6 +10950,10 @@ namespace Foundation {
 		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("localizedAttributedStringForKey:value:table:")]
 		NSAttributedString GetLocalizedAttributedString (string key, [NullAllowed] string value, [NullAllowed] string tableName);
+
+		[Notification]
+		[Field ("NSBundleDidLoadNotification")]
+		NSString BundleDidLoadNotification { get; }
 	}
 
 	[NoMac]
@@ -12835,6 +12844,13 @@ namespace Foundation {
 		[Export ("qualityOfService")]
 		NSQualityOfService QualityOfService { get; set; }
 
+		[Notification]
+		[Field ("NSThreadWillExitNotification")]
+		NSString ThreadWillExitNotification { get; }
+
+		[Notification]
+		[Field ("NSWillBecomeMultiThreadedNotification")]
+		NSString WillBecomeMultiThreadedNotification { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -12875,6 +12891,10 @@ namespace Foundation {
 		[Export ("sendBeforeDate:msgid:components:from:reserved:")]
 		bool SendBeforeDate (NSDate limitDate, nuint msgID, [NullAllowed] NSMutableArray components, [NullAllowed] NSPort receivePort, nuint headerSpaceReserved);
 #pragma warning restore 618
+
+		[Notification]
+		[Field ("NSPortDidBecomeInvalidNotification")]
+		NSString PortDidBecomeInvalidNotification { get; }
 	}
 
 	interface INSPortDelegate { }
@@ -15681,6 +15701,9 @@ namespace Foundation {
 		[Export ("resumeWithSuspensionID:")]
 		void ResumeWithSuspensionID (NSAppleEventManagerSuspensionID suspensionID);
 
+		[Notification]
+		[Field ("NSAppleEventManagerWillProcessFirstEventNotification")]
+		NSString WillProcessFirstEventNotification { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch]

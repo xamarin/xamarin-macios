@@ -141,7 +141,7 @@
 		<VerifyDependencyInjectionOpenGenericServiceTrimmability Condition="'$(VerifyDependencyInjectionOpenGenericServiceTrimmability)' == '' And '$(_BundlerDebug)' != 'true'">false</VerifyDependencyInjectionOpenGenericServiceTrimmability>
 		<VerifyDependencyInjectionOpenGenericServiceTrimmability Condition="'$(VerifyDependencyInjectionOpenGenericServiceTrimmability)' == ''">true</VerifyDependencyInjectionOpenGenericServiceTrimmability>
 		<!-- This should be set by dotnet/sdk instead, once https://github.com/dotnet/sdk/issues/25392 gets resolved.  -->
-		<DynamicCodeSupport Condition="'$(DynamicCodeSupport)' == '' And '$(UseInterpreter)' != 'true' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'MacCatalyst')">false</DynamicCodeSupport>
+		<DynamicCodeSupport Condition="'$(DynamicCodeSupport)' == '' And '$(MtouchInterpreter)' != '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'MacCatalyst')">false</DynamicCodeSupport>
 
 		<!-- We don't need to generate reference assemblies for apps or app extensions -->
 		<ProduceReferenceAssembly Condition="'$(ProduceReferenceAssembly)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true')">false</ProduceReferenceAssembly>
@@ -416,7 +416,7 @@
 	<Target Name="_ComputeMonoComponents" Condition="'$(UseMonoRuntime)' == 'true' And '$(_LibMonoLinkMode)' == 'static'" BeforeTargets="_MonoSelectRuntimeComponents" DependsOnTargets="_ComputeVariables">
 		<!-- https://github.com/dotnet/runtime/blob/main/docs/design/mono/components.md -->
 		<ItemGroup>
-			<_MonoComponent Include="hot_reload" Condition="'$(MtouchInterpreter)' == 'true'" />
+			<_MonoComponent Include="hot_reload" Condition="'$(MtouchInterpreter)' != ''" />
 			<_MonoComponent Include="debugger" Condition="'$(_BundlerDebug)' == 'true'" />
 			<_MonoComponent Include="diagnostics_tracing" Condition="'$(_BundlerDebug)' == 'true'" />
 			<_MonoComponent Include="marshal-ilgen" Condition="'$(_AppleExcludeMarshalIlgenComponent)' != 'true'" />
@@ -2094,6 +2094,25 @@
 			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>
 		</PropertyGroup>
 		<Error Condition="'$(_IsValidRuntimeIdentifier)' != 'true'" Text="The RuntimeIdentifier '$(RuntimeIdentifier)' is invalid." />
+	</Target>
+
+	<!-- This target can be removed in .NET 9 (when we stop supporting the compat logic to make the invalid TPV just a warning instead of an error) -->
+	<Target Name="_XamarinValidateTargetPlatformVersion"
+		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets"
+		Condition="'$(ValidateTargetPlatformVersion)' != 'false'"
+		>
+		<ItemGroup>
+			<_XamarinApplicableTargetPlatformVersion Include="@(SdkSupportedTargetPlatformVersion)" Condition="'@(SdkSupportedTargetPlatformVersion)' != '' and '%(SdkSupportedTargetPlatformVersion.DefineConstantsOnly)' != 'true'" RemoveMetadata="DefineConstantsOnly" />
+			<_XamarinValidTargetPlatformVersion Include="@(_XamarinApplicableTargetPlatformVersion)" Condition="'@(_XamarinApplicableTargetPlatformVersion)' != '' and $([MSBuild]::VersionEquals(%(Identity), $(TargetPlatformVersion)))" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<_XamarinTargetPlatformVersionSupported Condition="'$(_XamarinTargetPlatformVersionSupported)' == '' and '@(_XamarinValidTargetPlatformVersion)' != ''" >true</_XamarinTargetPlatformVersionSupported>
+			<_XamarinValidTargetPlatformVersions Condition="'@(_XamarinApplicableTargetPlatformVersion)' != ''" >@(_XamarinApplicableTargetPlatformVersion, '%0a')</_XamarinValidTargetPlatformVersions>
+			<_XamarinValidTargetPlatformVersions Condition="'@(_XamarinApplicableTargetPlatformVersion)' == ''" >None</_XamarinValidTargetPlatformVersions>
+		</PropertyGroup>
+
+		<Warning Condition="'$(_XamarinTargetPlatformVersionSupported)' != 'true'" Text="$(TargetPlatformVersion) is not a valid TargetPlatformVersion for $(_PlatformName). This warning will become an error in future versions of the $(_PlatformName) workload. Valid versions include:%0a$(_XamarinValidTargetPlatformVersions)" />
 	</Target>
 
 	<!-- Install & Run -->

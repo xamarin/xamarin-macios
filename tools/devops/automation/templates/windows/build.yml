@@ -69,6 +69,32 @@ steps:
   displayName: 'Show .NET info'
   continueOnError: true
 
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    KeyVaultName: 'xamarin-ios-vault'
+    SecretsFilter: 'RemoteMacIdRsa'
+  displayName: 'Download id_rsa'
+
+- pwsh: |
+    $idRsaPath = "$(Get-Location)\id_rsa"
+    Write-Host "##vso[task.setvariable variable=ID_RSA_PATH]$idRsaPath"
+    Add-Content -Path "id_rsa"  -Value "$(RemoteMacIdRsa)"
+    # We need to make sure the private key is only accessible by the current user,
+    # otherwise ssh will complain and not use it.
+    icacls id_rsa /inheritance:r
+    $grant="$Env:USERNAME" + ":(R)"
+    icacls id_rsa /grant:r $grant
+  displayName: "Write and verify id_rsa"
+  continueOnError: true
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
+- pwsh: |
+    ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP pwd
+  displayName: "Verify ssh connection"
+
 # This task fixes errors such as these:
 #     error MSB4242: SDK Resolver Failure: "The SDK resolver "NuGetSdkResolver" failed while attempting to resolve the SDK "Microsoft.Build.NoTargets/3.3.0".
 #                    Exception: "NuGet.Packaging.Core.PackagingException: Unable to find fallback package folder 'D:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages'.
@@ -168,8 +194,8 @@ steps:
   timeoutInMinutes: 30
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $configFile = "$(Build.SourcesDirectory)\artifacts\build-configuration\configuration.json"
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+    $configFile = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
     $config = Import-BuildConfiguration -ConfigFile $configFile
     $config | Write-Host
   name: configuration
@@ -277,3 +303,9 @@ steps:
     $vsts.Agents.SetEnabled($pool, $agent, $True)
   displayName: 'Re-enabled macOS bot from pool'
   condition: always()
+
+- pwsh: |
+    Remove-Item "$(ID_RSA_PATH)"
+  displayName: "Remove secrets"
+  condition: always()
+  continueOnError: true
