@@ -9,6 +9,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 
 #if HAS_APPKIT
 using AppKit;
@@ -42,6 +43,19 @@ namespace Foundation {
 				SetStringValue (NSAttributedStringDocumentAttributeKey.DocumentTypeDocumentAttribute, value);
 			}
 		}
+
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'CharacterEncoding' instead.")]
+		public NSStringEncoding? StringEncoding {
+			get {
+				return CharacterEncoding;
+			}
+			set {
+				CharacterEncoding = value;
+			}
+		}
+#endif // !XAMCORE_5_0
 
 #if !XAMCORE_5_0
 		public NSDocumentType DocumentType {
