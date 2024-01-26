@@ -32,6 +32,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -437,7 +438,11 @@ namespace AudioToolbox {
 			}
 		}
 
-		unsafe T? GetProperty<T> (AudioFileStreamProperty property) where T : struct
+#if NET
+		unsafe T? GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioFileStreamProperty property) where T : unmanaged
+#else
+		unsafe T? GetProperty<T> (AudioFileStreamProperty property) where T : unmanaged
+#endif
 		{
 			int size;
 			bool writable;

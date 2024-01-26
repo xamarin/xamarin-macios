@@ -1,16 +1,18 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 using Parallel = System.Threading.Tasks.Parallel;
 using ParallelOptions = System.Threading.Tasks.ParallelOptions;
 
 using Microsoft.Build.Framework;
+using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class SymbolStripTaskBase : XamarinTask {
+	public class SymbolStrip : XamarinTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
@@ -55,11 +57,20 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			Parallel.ForEach (Executable, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 				ExecuteStrip (item);
 			});
 
 			return !Log.HasLoggedErrors;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
