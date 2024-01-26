@@ -4,12 +4,13 @@ using Microsoft.Build.Framework;
 using Xamarin.MacDev;
 using System.Linq;
 using Xamarin.MacDev.Tasks;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class WriteAssetPackManifestTaskBase : XamarinTask {
+	public abstract class WriteAssetPackManifestTaskBase : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
@@ -28,6 +29,9 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var template = PDictionary.FromFile (TemplatePath.ItemSpec);
 			var resources = template.GetArray ("resources");
 
@@ -52,6 +56,12 @@ namespace Xamarin.iOS.Tasks {
 			template.Save (OutputFile.ItemSpec, true, true);
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
