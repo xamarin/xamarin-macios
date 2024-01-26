@@ -19,7 +19,6 @@
   <ItemGroup>
     <PackageReference Include="System.IO.Abstractions" Version="6.0.27" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
-    <PackageReference Include="GitInfo" Version="2.2.0" />
     <!-- We only include build assets to get targets related to agent generation, the assemblies come from Xamarin.iOS.Tasks -->
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
   </ItemGroup>
