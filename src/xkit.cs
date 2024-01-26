@@ -4414,10 +4414,10 @@ namespace UIKit {
 	[StrongDictionary (nameof (NSAttributedStringDocumentReadingOptionKey), Suffix = "DocumentOption")]
 	interface NSAttributedStringDocumentReadingOptions {
 #if XAMCORE_5_0
-		NSAttributedStringDocumentType DocumentType { get; set; }
-#else
 		[Export ("DocumentTypeDocumentOption")]
 		NSAttributedStringDocumentType StrongDocumentType { get; set; }
+#else
+		NSAttributedStringDocumentType DocumentType { get; set; }
 #endif
 
 		// It's not documented which attributes go in this dictionary.
