@@ -1315,7 +1315,7 @@ namespace AudioToolbox {
 			return aqpt;
 		}
 
-		internal unsafe static T* AsPointer<T> (ref T value) where T: unmanaged
+		internal unsafe static T* AsPointer<T> (ref T value) where T : unmanaged
 		{
 			return (T*) Unsafe.AsPointer<T> (ref value);
 		}
@@ -1402,10 +1402,10 @@ namespace AudioToolbox {
 			flags = default (AudioQueueProcessingTapFlags);
 			unsafe {
 				return AudioQueueProcessingTapGetSourceAudio (TapHandle, numberOfFrames,
-				                                             AudioQueue.AsPointer<AudioTimeStamp> (ref timeStamp),
-				                                             AudioQueue.AsPointer<AudioQueueProcessingTapFlags> (ref flags),
-				                                             AudioQueue.AsPointer<uint> (ref parentNumberOfFrames),
-				                                             (IntPtr) data);
+															 AudioQueue.AsPointer<AudioTimeStamp> (ref timeStamp),
+															 AudioQueue.AsPointer<AudioQueueProcessingTapFlags> (ref flags),
+															 AudioQueue.AsPointer<uint> (ref parentNumberOfFrames),
+															 (IntPtr) data);
 			}
 		}
 
