@@ -171,7 +171,7 @@
     <Compile Include="bgen\Models\MemberInformation.cs" />
     <Compile Include="bgen\Models\TrampolineInfo.cs" />
     <Compile Include="bgen\Models\WrapPropMemberInformation.cs" />
-    <Compile Include="Resources.Designer.cs">
+    <Compile Include="bgen\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
@@ -183,7 +183,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources.resx">
+    <EmbeddedResource Include="bgen\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
