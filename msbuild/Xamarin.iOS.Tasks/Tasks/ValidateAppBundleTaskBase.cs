@@ -8,13 +8,14 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Localization.MSBuild;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class ValidateAppBundleTaskBase : XamarinTask {
+	public class ValidateAppBundleTask : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
@@ -287,6 +288,9 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var mainInfoPath = PlatformFrameworkHelper.GetAppManifestPath (Platform, AppBundlePath);
 			if (!File.Exists (mainInfoPath)) {
 				Log.LogError (7040, AppBundlePath, MSBStrings.E7040, AppBundlePath);
@@ -376,6 +380,12 @@ namespace Xamarin.iOS.Tasks {
 			}
 
 			return !Log.HasLoggedErrors;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

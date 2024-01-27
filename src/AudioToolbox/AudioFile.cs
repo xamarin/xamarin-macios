@@ -33,6 +33,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -1214,8 +1215,11 @@ namespace AudioToolbox {
 			Marshal.FreeHGlobal (buffer);
 			return IntPtr.Zero;
 		}
-
-		unsafe T? GetProperty<T> (AudioFileProperty property) where T : struct
+#if NET
+		unsafe T? GetProperty<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (AudioFileProperty property) where T : unmanaged
+#else
+		unsafe T? GetProperty<T> (AudioFileProperty property) where T : unmanaged
+#endif
 		{
 			int size, writable;
 
