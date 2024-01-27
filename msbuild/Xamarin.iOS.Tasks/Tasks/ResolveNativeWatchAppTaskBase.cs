@@ -7,13 +7,14 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Utils;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Localization.MSBuild;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class ResolveNativeWatchAppTaskBase : XamarinTask {
+	public class ResolveNativeWatchApp : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
@@ -39,6 +40,9 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			var currentSdk = Sdks.GetSdk (TargetFrameworkMoniker);
 			AppleSdkVersion version;
 			string sdk_path;
@@ -82,6 +86,12 @@ namespace Xamarin.iOS.Tasks {
 			Log.LogError (MSBStrings.E0070);
 
 			return false;
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

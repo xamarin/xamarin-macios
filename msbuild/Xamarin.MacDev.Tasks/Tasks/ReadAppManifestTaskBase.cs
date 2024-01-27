@@ -1,14 +1,17 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ReadAppManifestTaskBase : XamarinTask {
+	public class ReadAppManifest : XamarinTask, ITaskCallback {
 		public ITaskItem? AppManifest { get; set; }
 
 		[Output]
@@ -46,6 +49,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			PDictionary? plist = null;
 
 			if (!string.IsNullOrEmpty (AppManifest?.ItemSpec)) {
@@ -80,5 +86,11 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
