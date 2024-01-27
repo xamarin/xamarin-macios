@@ -75,6 +75,17 @@ steps:
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    KeyVaultName: 'xamarin-ios-vault'
+    SecretsFilter: 'RemoteMacIdRsaPub'
+  displayName: 'Download id_rsa.pub'
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
+  displayName: "Autorize id_rsa.pub"
+  continueOnError: true
+
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:

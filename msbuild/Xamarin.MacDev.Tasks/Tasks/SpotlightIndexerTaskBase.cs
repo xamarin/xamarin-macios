@@ -4,11 +4,13 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Messaging.Build.Client;
+
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class SpotlightIndexerTaskBase : XamarinToolTask {
+	public class SpotlightIndexer : XamarinToolTask {
 		#region Inputs
 
 		[Required]
@@ -43,6 +45,22 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
+		}
+
+		public override bool Execute ()
+		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			return base.Execute ();
+		}
+
+		public override void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+
+			base.Execute ();
 		}
 	}
 }
