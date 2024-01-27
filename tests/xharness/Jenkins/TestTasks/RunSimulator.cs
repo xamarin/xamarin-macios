@@ -47,7 +47,7 @@ namespace Xharness.Jenkins.TestTasks {
 			else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
 				testTask.AppRunnerTarget = TestTarget.Simulator_watchOS;
 			} else {
-				testTask.AppRunnerTarget = TestTarget.Simulator_iOS;
+				testTask.AppRunnerTarget = TestTarget.Simulator_iOS64;
 			}
 		}
 
