@@ -44,7 +44,17 @@ namespace Xamarin.MacDev.Tasks {
 			compiledEntitlements = task.CompiledEntitlements.ItemSpec;
 			archivedEntitlements = Path.Combine (AppBundlePath, "archived-expanded-entitlements.xcent");
 
+			DeleteDirectory (Path.Combine (MonoTouchProjectPath, "bin"));
+			DeleteDirectory (Path.Combine (MonoTouchProjectPath, "obj"));
+
 			return task;
+		}
+
+		void DeleteDirectory (string directory)
+		{
+			if (!Directory.Exists (directory))
+				return;
+			Directory.Delete (directory, true);
 		}
 
 		[Test (Description = "Xambug #46298")]
@@ -214,7 +224,7 @@ namespace Xamarin.MacDev.Tasks {
 				new TaskItem ("keychain-access-group", new Dictionary<string, string> { {  "Type", "String" }, { "Value", "$(AppIdentifierPrefix)org.xamarin" } }),
 			};
 			var task = CreateEntitlementsTask (out var compiledEntitlements, out var archivedEntitlements);
-			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
+			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
 			var compiled = PDictionary.FromFile (compiledEntitlements);
@@ -235,7 +245,7 @@ namespace Xamarin.MacDev.Tasks {
 				new TaskItem ("keychain-access-group", new Dictionary<string, string> { {  "Type", "String" }, { "Value", "$(TeamIdentifierPrefix)org.xamarin" } }),
 			};
 			var task = CreateEntitlementsTask (out var compiledEntitlements, out var archivedEntitlements);
-			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=maccatalyst";
+			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
 			task.CustomEntitlements = customEntitlements;
 			ExecuteTask (task);
 			var compiled = PDictionary.FromFile (compiledEntitlements);
