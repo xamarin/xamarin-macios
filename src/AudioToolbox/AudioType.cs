@@ -298,7 +298,7 @@ namespace AudioToolbox {
 		{
 			unsafe {
 				var size = sizeof (AudioStreamBasicDescription);
-				return AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatInfo, 0, IntPtr.Zero, &size, (AudioStreamBasicDescription *) Unsafe.AsPointer<AudioStreamBasicDescription> (ref format));
+				return AudioFormatPropertyNative.AudioFormatGetProperty (AudioFormatProperty.FormatInfo, 0, IntPtr.Zero, &size, (AudioStreamBasicDescription*) Unsafe.AsPointer<AudioStreamBasicDescription> (ref format));
 			}
 		}
 
