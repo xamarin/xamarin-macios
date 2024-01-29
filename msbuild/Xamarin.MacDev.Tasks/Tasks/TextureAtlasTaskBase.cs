@@ -6,12 +6,13 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class TextureAtlasTaskBase : XcodeToolTaskBase {
+	public class TextureAtlas : XcodeToolTaskBase, ICancelableTask {
 		readonly Dictionary<string, List<ITaskItem>> atlases = new Dictionary<string, List<ITaskItem>> ();
 
 		#region Inputs
@@ -102,6 +103,20 @@ namespace Xamarin.MacDev.Tasks {
 				yield return new TaskItem (atlas);
 
 			yield break;
+		}
+
+		public override bool Execute ()
+		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+			return base.Execute ();
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

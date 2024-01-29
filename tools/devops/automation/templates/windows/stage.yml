@@ -50,7 +50,7 @@ stages:
   - job: mac_reservation
     dependsOn:
     displayName: "Reserve bot for tests"
-    timeoutInMinutes: 1000
+    timeoutInMinutes: 120
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     workspace:
       clean: all
@@ -75,7 +75,7 @@ stages:
     dependsOn:
     - mac_reservation
     displayName: 'Dotnet tests'
-    timeoutInMinutes: 1000
+    timeoutInMinutes: 120
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     workspace:
       clean: all
@@ -86,9 +86,13 @@ stages:
       - agent.os -equals Windows_NT
 
     variables:
+      DOTNET_IOS_RUNTIME_IDENTIFIERS:  $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_IOS_RUNTIME_IDENTIFIERS'] ]
       MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]
       MAC_AGENT_POOL: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_POOL'] ]
       MAC_AGENT_IP: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_IP'] ]
+      MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY'] ]
+      MAC_AGENT_BUILD_SOURCESDIRECTORY: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_BUILD_SOURCESDIRECTORY'] ]
+      MAC_AGENT_USER: builder
 
     steps:
     - template: build.yml
