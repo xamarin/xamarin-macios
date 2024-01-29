@@ -418,7 +418,7 @@ namespace Xamarin.MacDev.Tasks {
 			return entitlements;
 		}
 
-		static PDictionary GetArchivedExpandedEntitlements (PDictionary template, PDictionary compiled)
+		PDictionary GetArchivedExpandedEntitlements (PDictionary template, PDictionary compiled)
 		{
 			var allowed = new HashSet<string> ();
 
@@ -426,6 +426,9 @@ namespace Xamarin.MacDev.Tasks {
 			allowed.Add ("com.apple.developer.icloud-container-environment");
 			foreach (var item in template)
 				allowed.Add (item.Key!);
+			// also allow any custom entitlements
+			foreach (var item in CustomEntitlements)
+				allowed.Add (item.ItemSpec);
 
 			// now we duplicate the allowed keys from the compiled xcent file
 			var archived = new PDictionary ();

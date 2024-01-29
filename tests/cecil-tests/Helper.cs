@@ -58,10 +58,41 @@ namespace Cecil.Tests {
 			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
 			if (printKnownFailures) {
 				Console.WriteLine ($"Printing all failures as known failures because they seem out of date ({newFailures.Count ()} new failures, {fixedFailures.Count ()} fixed failures):");
-				Console.WriteLine ($"\t\tstatic HashSet<string> {nameOfKnownFailureSet} = new HashSet<string> {{");
+				var lines = new List<string> ();
+				lines.Add ($"\t\tstatic HashSet<string> {nameOfKnownFailureSet} = new HashSet<string> {{");
 				foreach (var failure in currentFailures.OrderBy (v => v.Key))
-					Console.WriteLine ($"\t\t\t\"{failure.Key}\",");
-				Console.WriteLine ("\t\t};");
+					lines.Add ($"\t\t\t\"{failure.Key}\",");
+				lines.Add ("\t\t};");
+
+				if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("WRITE_KNOWN_FAILURES"))) {
+					var cecilDir = Path.Combine (Configuration.SourceRoot, "tests", "cecil-tests");
+					var writtenKnownFailures = false;
+					foreach (var file in Directory.GetFiles (cecilDir, "*.cs")) {
+						var content = File.ReadAllLines (file);
+						var startIndex = Array.IndexOf (content, lines.First ());
+						if (startIndex == -1)
+							continue;
+
+						var newLines = new List<string> ();
+						var endIndex = Array.IndexOf (content, lines.Last (), startIndex);
+
+						for (var i = 0; i < startIndex; i++)
+							newLines.Add (content [i]);
+						newLines.AddRange (lines);
+						for (var i = endIndex + 1; i < content.Length; i++)
+							newLines.Add (content [i]);
+						File.WriteAllLines (file, newLines);
+
+						Console.WriteLine ($"Updated {nameOfKnownFailureSet} in {file}.");
+						writtenKnownFailures = true;
+						break;
+					}
+					if (!writtenKnownFailures) {
+						Console.WriteLine ($"Failed to update {nameOfKnownFailureSet}: {nameOfKnownFailureSet} not found.");
+					}
+				} else {
+					Console.WriteLine (string.Join ("\n", lines));
+				}
 			}
 
 			if (newFailures.Any ()) {
