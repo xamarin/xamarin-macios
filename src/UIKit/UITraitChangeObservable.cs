@@ -7,8 +7,6 @@
 // Copyright 2023 Microsoft Corp. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -16,10 +14,6 @@ using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
-
-#if !NET
-using NativeHandle = System.IntPtr;
-#endif
 
 #nullable enable
 
@@ -48,7 +42,12 @@ namespace UIKit {
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
 		public IUITraitChangeRegistration RegisterForTraitChanges (Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
-			return RegisterForTraitChanges (ToClasses (traits), handler);
+			return _RegisterForTraitChanges (this, traits, handler);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges (IUITraitChangeObservable This, Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
+		{
+			return _RegisterForTraitChanges (This, ToClasses (traits), handler);
 		}
 
 		/// <summary>
@@ -57,10 +56,15 @@ namespace UIKit {
 		/// <param name="traits">The traits to observe.</param>
 		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		public unsafe IUITraitChangeRegistration RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
+		public IUITraitChangeRegistration RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
+		{
+			return _RegisterForTraitChanges (this, handler, traits);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges (IUITraitChangeObservable This, Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
 		{
 			// Add an override with 'params', unfortunately this means reordering the parameters.
-			return RegisterForTraitChanges (ToClasses (traits), handler);
+			return _RegisterForTraitChanges (This, ToClasses (traits), handler);
 		}
 
 		/// <summary>
@@ -69,10 +73,16 @@ namespace UIKit {
 		/// <typeparam name="T">The trait to observe.</typeparam>
 		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
+		public IUITraitChangeRegistration RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
 			where T : IUITraitDefinition
 		{
-			return RegisterForTraitChanges (ToClasses (typeof (T)), handler);
+			return _RegisterForTraitChanges<T> (this, handler);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges<T> (IUITraitChangeObservable This, Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T : IUITraitDefinition
+		{
+			return _RegisterForTraitChanges (This, ToClasses (typeof (T)), handler);
 		}
 
 		/// <summary>
@@ -82,11 +92,18 @@ namespace UIKit {
 		/// <typeparam name="T2">A trait to observe</typeparam>
 		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
+		public IUITraitChangeRegistration RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
 			where T1 : IUITraitDefinition
 			where T2 : IUITraitDefinition
 		{
-			return RegisterForTraitChanges (ToClasses (typeof (T1), typeof (T2)), handler);
+			return _RegisterForTraitChanges<T1, T2> (this, handler);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges<T1, T2> (IUITraitChangeObservable This, Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T1 : IUITraitDefinition
+			where T2 : IUITraitDefinition
+		{
+			return _RegisterForTraitChanges (This, ToClasses (typeof (T1), typeof (T2)), handler);
 		}
 
 		/// <summary>
@@ -97,12 +114,20 @@ namespace UIKit {
 		/// <typeparam name="T3">A trait to observe</typeparam>
 		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
+		public IUITraitChangeRegistration RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
 			where T1 : IUITraitDefinition
 			where T2 : IUITraitDefinition
 			where T3 : IUITraitDefinition
 		{
-			return RegisterForTraitChanges (ToClasses (typeof (T1), typeof (T2), typeof (T3)), handler);
+			return _RegisterForTraitChanges<T1, T2, T3> (this, handler);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges<T1, T2, T3> (IUITraitChangeObservable This, Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T1 : IUITraitDefinition
+			where T2 : IUITraitDefinition
+			where T3 : IUITraitDefinition
+		{
+			return _RegisterForTraitChanges (This, ToClasses (typeof (T1), typeof (T2), typeof (T3)), handler);
 		}
 
 		/// <summary>
@@ -114,13 +139,22 @@ namespace UIKit {
 		/// <typeparam name="T4">A trait to observe</typeparam>
 		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
+		public IUITraitChangeRegistration RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
 			where T1 : IUITraitDefinition
 			where T2 : IUITraitDefinition
 			where T3 : IUITraitDefinition
 			where T4 : IUITraitDefinition
 		{
-			return RegisterForTraitChanges (ToClasses (typeof (T1), typeof (T2), typeof (T3), typeof (T4)), handler);
+			return _RegisterForTraitChanges<T1, T2, T3, T3> (this, handler);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges<T1, T2, T3, T4> (IUITraitChangeObservable This, Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T1 : IUITraitDefinition
+			where T2 : IUITraitDefinition
+			where T3 : IUITraitDefinition
+			where T4 : IUITraitDefinition
+		{
+			return _RegisterForTraitChanges (This, ToClasses (typeof (T1), typeof (T2), typeof (T3), typeof (T4)), handler);
 		}
 
 		/// <summary>
@@ -132,7 +166,12 @@ namespace UIKit {
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
 		public IUITraitChangeRegistration RegisterForTraitChanges (Type [] traits, NSObject target, Selector action)
 		{
-			return RegisterForTraitChanges (ToClasses (traits), target, action);
+			return _RegisterForTraitChanges (this, traits, target, action);
+		}
+
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges (IUITraitChangeObservable This, Type [] traits, NSObject target, Selector action)
+		{
+			return _RegisterForTraitChanges (This, ToClasses (traits), target, action);
 		}
 
 		/// <summary>
@@ -143,54 +182,13 @@ namespace UIKit {
 		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
 		public IUITraitChangeRegistration RegisterForTraitChanges (Type [] traits, Selector action)
 		{
-			return RegisterForTraitChanges (ToClasses (traits), action);
+			return _RegisterForTraitChanges (this, traits, action);
 		}
 
-
-#if !NET
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, global::System.Action<IUITraitEnvironment, UITraitCollection> handler)
+		internal static IUITraitChangeRegistration _RegisterForTraitChanges (IUITraitChangeObservable This, Type [] traits, Selector action)
 		{
-			// The manual block code is somewhat annoying to implement, so at least don't do it twice (once for .NET and once for legacy Xamarin) unless we really need to.
-			throw new NotImplementedException ("This API has not been implemented for legacy Xamarin. Please upgrade to .NET");
+			return _RegisterForTraitChanges (This, ToClasses (traits), action);
 		}
-
-		/// <summary>
-		/// Registers a selector that will be called on the specified object when any of the specified traits changes.
-		/// </summary>
-		/// <param name="traits">The traits to observe.</param>
-		/// <param name="target">The object whose specified selector will be called.</param>
-		/// <param name="action">The selector to call on the specified object.</param>
-		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, NSObject target, Selector action)
-		{
-			global::UIKit.UIApplication.EnsureUIThread ();
-			if (traits is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
-			var target__handle__ = target!.GetNonNullHandle (nameof (target));
-			var action__handle__ = action!.GetNonNullHandle (nameof (action));
-			using var nsa_traits = NSArray.FromNSObjects (traits);
-			return Runtime.GetINativeObject<IUITraitChangeRegistration> (NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (this.Handle, Selector.GetHandle ("registerForTraitChanges:withTarget:action:"), nsa_traits.Handle, target__handle__, action.Handle), false)!;
-		}
-
-		/// <summary>
-		/// Registers a selector that will be called on the specified object when any of the specified traits changes.
-		/// </summary>
-		/// <param name="traits">The traits to observe.</param>
-		/// <param name="action">The selector to call on the current object.</param>
-		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public IUITraitChangeRegistration RegisterForTraitChanges (Class [] traits, Selector action)
-		{
-			global::UIKit.UIApplication.EnsureUIThread ();
-			if (traits is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
-			var action__handle__ = action!.GetNonNullHandle (nameof (action));
-			using var nsa_traits = NSArray.FromNSObjects (traits);
-			return Runtime.GetINativeObject<IUITraitChangeRegistration> (NativeHandle_objc_msgSend_NativeHandle_NativeHandle (this.Handle, Selector.GetHandle ("registerForTraitChanges:withAction:"), nsa_traits.Handle, action.Handle), false)!;
-		}
-#endif // !NET
 
 #if XAMCORE_5_0
 		private static Class [] ToClasses (IUITraitDefinition [] traits)
@@ -207,6 +205,7 @@ namespace UIKit {
 			return traitsClasses;
 		}
 
+#if !XAMCORE_5_0
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.")]
 		public IUITraitChangeRegistration RegisterForTraitChanges (IUITraitDefinition [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
@@ -227,6 +226,7 @@ namespace UIKit {
 		{
 			return RegisterForTraitChanges (ToClasses (traits), action);
 		}
+#endif // !XACMORE_5_0
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 #if XAMCORE_5_0
@@ -253,7 +253,7 @@ namespace UIKit {
 #endif
 	}
 
-#if !XAMCORE_5_0 && NET
+#if !XAMCORE_5_0
 	public partial class UIPresentationController {
 		[Obsolete ("Use the 'UITraitChangeObservable.RegisterForTraitChanges (Class[], Action<IUITraitEnvironment, UITraitCollection>)' method instead.", false)]
 		[EditorBrowsable (EditorBrowsableState.Never)]
@@ -415,5 +415,3 @@ namespace UIKit {
 	}
 #endif
 }
-
-#endif // !__WATCHOS__

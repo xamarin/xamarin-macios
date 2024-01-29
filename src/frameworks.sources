@@ -1837,6 +1837,7 @@ UIKIT_SOURCES = \
 	UIKit/UIPickerView.cs \
 	UIKit/UIPopoverController.cs \
 	UIKit/UIPopoverPresentationController.cs \
+	UIKit/UIPresentationController.cs \
 	UIKit/UIPushBehavior.cs \
 	UIKit/UIScreen.cs \
 	UIKit/UIScrollView.cs \
@@ -1860,6 +1861,7 @@ UIKIT_SOURCES = \
 	UIKit/UIViewController.cs \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
+	UIKit/UIWindowScene.cs \
 
 # UserNotifications
 

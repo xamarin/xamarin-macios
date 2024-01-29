@@ -8,26 +8,20 @@
 // Copyright 2013 Xamarin Inc. (http://xamarin.com)
 //
 
-#if !WATCH
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Foundation;
-#if HAS_IAD && !NET
-using iAd;
-#endif
 using ObjCRuntime;
 using CoreGraphics;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace UIKit {
 	public partial class UIViewController : IEnumerable {
 
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3189
-		static Stack<UIViewController> modal;
+		static Stack<UIViewController>? modal;
 
 		static void PushModal (UIViewController controller)
 		{
@@ -53,29 +47,124 @@ namespace UIKit {
 
 		public void Add (UIView view)
 		{
-			View.AddSubview (view);
+			View?.AddSubview (view);
 		}
 
 		public IEnumerator GetEnumerator ()
 		{
-			UIView [] subviews = View.Subviews;
+			var subviews = View?.Subviews;
 			if (subviews is null)
 				yield break;
 			foreach (UIView uiv in subviews)
 				yield return uiv;
 		}
 
-#if HAS_IAD && !NET
-		// This is a [Category] -> C# extension method (see adlib.cs) but it targets on static selector
-		// the resulting syntax does not look good in user code so we provide a better looking API
-		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
-		// note: we cannot reuse the same method name - as it would break compilation of existing apps
-		[Obsoleted (PlatformName.iOS, 15,0, PlatformArchitecture.None, Constants.iAdRemoved)]
-		static public void PrepareForInterstitialAds ()
+#region Inlined from the UITraitChangeObservable protocol
+		/// <summary>
+		/// Registers a callback handler that will be executed when one of the specified traits changes.
+		/// </summary>
+		/// <param name="traits">The traits to observe.</param>
+		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public IUITraitChangeRegistration RegisterForTraitChanges (Type [] traits, Action<IUITraitEnvironment, UITraitCollection> handler)
 		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, traits, handler);
 		}
-#endif
+
+		/// <summary>
+		/// Registers a callback handler that will be executed when one of the specified traits changes.
+		/// </summary>
+		/// <param name="traits">The traits to observe.</param>
+		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public unsafe IUITraitChangeRegistration RegisterForTraitChanges (Action<IUITraitEnvironment, UITraitCollection> handler, params Type [] traits)
+		{
+			// Add an override with 'params', unfortunately this means reordering the parameters.
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, handler, traits);
+		}
+
+		/// <summary>
+		/// Registers a callback handler that will be executed when the specified trait changes.
+		/// </summary>
+		/// <typeparam name="T">The trait to observe.</typeparam>
+		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T> (Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T : IUITraitDefinition
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges<T> (this, handler);
+		}
+
+		/// <summary>
+		/// Registers a callback handler that will be executed when any of the specified traits changes.
+		/// </summary>
+		/// <typeparam name="T1">A trait to observe</typeparam>
+		/// <typeparam name="T2">A trait to observe</typeparam>
+		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T1, T2> (Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T1 : IUITraitDefinition
+			where T2 : IUITraitDefinition
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges<T1, T2> (this, handler);
+		}
+
+		/// <summary>
+		/// Registers a callback handler that will be executed when any of the specified traits changes.
+		/// </summary>
+		/// <typeparam name="T1">A trait to observe</typeparam>
+		/// <typeparam name="T2">A trait to observe</typeparam>
+		/// <typeparam name="T3">A trait to observe</typeparam>
+		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T1, T2, T3> (Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T1 : IUITraitDefinition
+			where T2 : IUITraitDefinition
+			where T3 : IUITraitDefinition
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges<T1, T2, T3> (this, handler);
+		}
+
+		/// <summary>
+		/// Registers a callback handler that will be executed when any of the specified traits changes.
+		/// </summary>
+		/// <typeparam name="T1">A trait to observe</typeparam>
+		/// <typeparam name="T2">A trait to observe</typeparam>
+		/// <typeparam name="T3">A trait to observe</typeparam>
+		/// <typeparam name="T4">A trait to observe</typeparam>
+		/// <param name="handler">The callback to execute when any of the specified traits changes.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public unsafe IUITraitChangeRegistration RegisterForTraitChanges<T1, T2, T3, T4> (Action<IUITraitEnvironment, UITraitCollection> handler)
+			where T1 : IUITraitDefinition
+			where T2 : IUITraitDefinition
+			where T3 : IUITraitDefinition
+			where T4 : IUITraitDefinition
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges<T1, T2, T3, T4> (this, handler);
+		}
+
+		/// <summary>
+		/// Registers a selector that will be called on the specified object when any of the specified traits changes.
+		/// </summary>
+		/// <param name="traits">The traits to observe.</param>
+		/// <param name="target">The object whose specified selector will be called.</param>
+		/// <param name="action">The selector to call on the specified object.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public IUITraitChangeRegistration RegisterForTraitChanges (Type [] traits, NSObject target, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, traits, target, action);
+		}
+
+		/// <summary>
+		/// Registers a selector that will be called on the current object when any of the specified traits changes.
+		/// </summary>
+		/// <param name="traits">The traits to observe.</param>
+		/// <param name="action">The selector to call on the current object.</param>
+		/// <returns>A token that can be used to unregister the callback by calling <see cref="M:UnregisterForTraitChanges" />.</returns>
+		public IUITraitChangeRegistration RegisterForTraitChanges (Type [] traits, Selector action)
+		{
+			return IUITraitChangeObservable._RegisterForTraitChanges (this, traits, action);
+		}
+#endregion
 	}
 }
-
-#endif // !WATCH
