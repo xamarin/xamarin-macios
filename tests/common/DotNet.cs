@@ -113,7 +113,7 @@ namespace Xamarin.Tests {
 			return new ExecutionResult (output, output, rv.ExitCode);
 		}
 
-		public static ExecutionResult InstallWorkload (params string[] workloads)
+		public static ExecutionResult InstallWorkload (params string [] workloads)
 		{
 			var args = new List<string> ();
 			args.Add ("workload");
