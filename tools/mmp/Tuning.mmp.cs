@@ -157,6 +157,7 @@ namespace MonoMac.Tuner {
 			sub.Add (new MarkNSObjects ());
 
 			sub.Add (new CoreRemoveSecurity ());
+			sub.Add (new PreserveSmartEnumConversionsSubStep ());
 
 			return sub;
 		}

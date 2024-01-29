@@ -213,12 +213,14 @@ killall:
 NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
 test-ios-tasks: test-macdev-tests test-macdev-tasks
 
+test-macdev-tests: export MSBUILD_EXE_PATH=
 test-macdev-tests: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug /r $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/Xamarin.MacDev.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
 	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tests/bin/Debug/net472/Xamarin.MacDev.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tests.xml);format=nunit2" -labels=After $(TEST_FIXTURE)
 
+test-macdev-tasks: export MSBUILD_EXE_PATH=
 test-macdev-tasks: verify-system-vsmac-xcode-match
-	$(SYSTEM_MSBUILD) "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug /r  $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build "/bl:$@.binlog" $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/Xamarin.MacDev.Tasks.Tests.csproj /p:Configuration=Debug $(DOTNET_BUILD_VERBOSITY)
 	cd $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests && $(SYSTEM_XIBUILD) -t -- $(abspath $(TOP)/tools/nunit3-console-3.11.1) $(abspath $(TOP)/tests/msbuild/Xamarin.MacDev.Tasks.Tests/bin/Debug/net472/Xamarin.MacDev.Tasks.Tests.dll) "--result=$(abspath $(CURDIR)/TestResults_Xamarin.MacDev.Tasks.Tests.xml)" -labels=After $(TEST_FIXTURE)
 
 test-install-sources:
@@ -346,7 +348,7 @@ runner: $(XHARNESS_EXECUTABLE)
 # installed on the system.
 vsts-device-tests: $(XHARNESS_EXECUTABLE)
 	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
-	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
+	$(Q) ulimit -n 4096 && $(DOTNET) $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
 
 verify-system-vsmac-xcode-match:
 	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \

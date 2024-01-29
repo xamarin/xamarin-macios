@@ -1808,6 +1808,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CustomEntitlements="@(CustomEntitlements)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(_RequireCodeSigning)"
 			SdkIsSimulator="$(_SdkIsSimulator)"

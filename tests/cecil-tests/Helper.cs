@@ -50,7 +50,7 @@ namespace Cecil.Tests {
 			AssertFailures<string> (currentFailures, knownFailures, nameOfKnownFailureSet, message, (v) => v);
 		}
 
-		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString)
+		public static void AssertFailures<T> (Dictionary<string, T> currentFailures, HashSet<string> knownFailures, string nameOfKnownFailureSet, string message, Func<T, string> failureToString) where T : notnull, IComparable
 		{
 			var newFailures = currentFailures.Where (v => !knownFailures.Contains (v.Key)).Select (v => v.Value).ToArray ();
 			var fixedFailures = knownFailures.Except (currentFailures.Select (v => v.Key).ToHashSet ());
@@ -58,10 +58,41 @@ namespace Cecil.Tests {
 			var printKnownFailures = newFailures.Any () || fixedFailures.Any ();
 			if (printKnownFailures) {
 				Console.WriteLine ($"Printing all failures as known failures because they seem out of date ({newFailures.Count ()} new failures, {fixedFailures.Count ()} fixed failures):");
-				Console.WriteLine ($"\t\tstatic HashSet<string> {nameOfKnownFailureSet} = new HashSet<string> {{");
+				var lines = new List<string> ();
+				lines.Add ($"\t\tstatic HashSet<string> {nameOfKnownFailureSet} = new HashSet<string> {{");
 				foreach (var failure in currentFailures.OrderBy (v => v.Key))
-					Console.WriteLine ($"\t\t\t\"{failure.Key}\",");
-				Console.WriteLine ("\t\t};");
+					lines.Add ($"\t\t\t\"{failure.Key}\",");
+				lines.Add ("\t\t};");
+
+				if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("WRITE_KNOWN_FAILURES"))) {
+					var cecilDir = Path.Combine (Configuration.SourceRoot, "tests", "cecil-tests");
+					var writtenKnownFailures = false;
+					foreach (var file in Directory.GetFiles (cecilDir, "*.cs")) {
+						var content = File.ReadAllLines (file);
+						var startIndex = Array.IndexOf (content, lines.First ());
+						if (startIndex == -1)
+							continue;
+
+						var newLines = new List<string> ();
+						var endIndex = Array.IndexOf (content, lines.Last (), startIndex);
+
+						for (var i = 0; i < startIndex; i++)
+							newLines.Add (content [i]);
+						newLines.AddRange (lines);
+						for (var i = endIndex + 1; i < content.Length; i++)
+							newLines.Add (content [i]);
+						File.WriteAllLines (file, newLines);
+
+						Console.WriteLine ($"Updated {nameOfKnownFailureSet} in {file}.");
+						writtenKnownFailures = true;
+						break;
+					}
+					if (!writtenKnownFailures) {
+						Console.WriteLine ($"Failed to update {nameOfKnownFailureSet}: {nameOfKnownFailureSet} not found.");
+					}
+				} else {
+					Console.WriteLine (string.Join ("\n", lines));
+				}
 			}
 
 			if (newFailures.Any ()) {
@@ -70,12 +101,20 @@ namespace Cecil.Tests {
 					Console.WriteLine ($"    {failureToString (failure)}");
 			}
 
-			Assert.IsEmpty (newFailures, $"Failures: {message}");
+			// Rather than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
+			// nice enumerated output of all the failures.
+			Assert.Multiple (() => {
+				// fail for each of the new failures
+				foreach (var failure in newFailures) {
+					Assert.Fail (failure.ToString ());
+				}
 
-			// The list of known failures often doesn't separate based on platform, which means that we might not see all the known failures
-			// unless we're currently building for all platforms. As such, only verify the list of known failures if we're building for all platforms.
-			if (!Configuration.AnyIgnoredPlatforms ())
-				Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
+				// The list of known failures often doesn't separate based on platform, which means that we might not see all the known failures
+				// unless we're currently building for all platforms. As such, only verify the list of known failures if we're building for all platforms.
+				if (!Configuration.AnyIgnoredPlatforms ())
+					Assert.IsEmpty (fixedFailures, $"Known failures that aren't failing anymore - remove these from the list of known failures: {message}");
+			});
+
 		}
 
 		// Enumerates all the methods in the assembly, for all types (including nested types), potentially providing a custom filter function.

@@ -1,54 +1,74 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using Xamarin.Localization.MSBuild;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+using Mono.Cecil;
+
+using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
+
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class UnpackLibraryResourcesTaskBase : XamarinTask {
+	public class UnpackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 
 		#region Inputs
 
 		[Required]
-		public string Prefix { get; set; }
+		public string Prefix { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem [] NoOverwrite { get; set; }
+		public ITaskItem [] NoOverwrite { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string IntermediateOutputPath { get; set; }
+		public string IntermediateOutputPath { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem [] ReferencedLibraries { get; set; }
+		public ITaskItem [] ReferencedLibraries { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public ITaskItem [] TargetFrameworkDirectory { get; set; }
+		public ITaskItem [] TargetFrameworkDirectory { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem []? BundleResourcesWithLogicalNames { get; set; }
 
 		[Output]
-		public ITaskItem [] UnpackedResources { get; set; }
+		public ITaskItem [] UnpackedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
+				if (result && BundleResourcesWithLogicalNames is not null) {
+					// Fix LogicalName path for Windows
+					foreach (var resource in BundleResourcesWithLogicalNames) {
+						var logicalName = resource.GetMetadata ("LogicalName");
+
+						if (!string.IsNullOrEmpty (logicalName)) {
+							resource.SetMetadata ("LogicalName", logicalName.Replace ("/", "\\"));
+						}
+					}
+				}
+				return result;
+			}
+
 			// TODO: give each assembly its own intermediate output directory
 			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
 			var results = new List<ITaskItem> ();
-			HashSet<string> ignore = null;
+			HashSet<string>? ignore = null;
 
 			foreach (var asm in ReferencedLibraries) {
 				// mscorlib.dll was not coming out with ResolvedFrom == {TargetFrameworkDirectory}
@@ -168,8 +188,6 @@ namespace Xamarin.MacDev.Tasks {
 		}
 		*/
 
-		protected abstract IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName);
-
 		static string UnmangleResource (string mangled)
 		{
 			var unmangled = new StringBuilder (mangled.Length);
@@ -219,6 +237,46 @@ namespace Xamarin.MacDev.Tasks {
 			public Stream Open ()
 			{
 				return callback ();
+			}
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item)
+		{
+			if (item.IsFrameworkItem ())
+				return false;
+
+			if (NoOverwrite is not null && NoOverwrite.Contains (item))
+				return false;
+
+			return true;
+		}
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => UnpackedResources.Contains (item) == true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
+		{
+			AssemblyDefinition? assembly = null;
+			try {
+				try {
+					assembly = AssemblyDefinition.ReadAssembly (fileName);
+				} catch {
+					yield break;
+				}
+
+				foreach (var _r in assembly.MainModule.Resources.OfType<EmbeddedResource> ()) {
+					var r = _r;
+					yield return new ManifestResource (r.Name, r.GetResourceStream);
+				}
+			} finally {
+				assembly?.Dispose ();
 			}
 		}
 	}

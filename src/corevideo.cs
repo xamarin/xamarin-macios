@@ -271,6 +271,14 @@ namespace CoreVideo {
 		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Field ("kCVImageBufferAmbientViewingEnvironmentKey")]
 		NSString AmbientViewingEnvironmentKey { get; }
+
+		[Watch (10, 2), TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[Field ("kCVImageBufferLogTransferFunctionKey")]
+		NSString LogTransferFunctionKey { get; }
+
+		[Watch (10, 2), TV (17, 2), Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2)]
+		[Field ("kCVImageBufferLogTransferFunction_AppleLog")]
+		NSString LogTransferFunctionAppleLogKey { get; }
 	}
 
 	[MacCatalyst (13, 1)]

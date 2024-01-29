@@ -414,8 +414,7 @@ namespace MediaPlayer {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MPMediaPickerControllerDelegate Delegate { get; set; }
+		IMPMediaPickerControllerDelegate Delegate { get; set; }
 
 		[Export ("allowsPickingMultipleItems")]
 		bool AllowsPickingMultipleItems { get; set; }
@@ -431,6 +430,8 @@ namespace MediaPlayer {
 		[Export ("showsItemsWithProtectedAssets")]
 		bool ShowsItemsWithProtectedAssets { get; set; }
 	}
+
+	interface IMPMediaPickerControllerDelegate { }
 
 	[NoTV]
 	[NoMac]
@@ -1762,6 +1763,8 @@ namespace MediaPlayer {
 	interface IMPPlayableContentDataSource {
 	}
 
+	interface IMPPlayableContentDelegate { }
+
 	[NoMac]
 	[NoTV]
 	[NoWatch]
@@ -1814,16 +1817,14 @@ namespace MediaPlayer {
 		NSObject WeakDataSource { get; set; }
 
 		[Wrap ("WeakDataSource")]
-		[Protocolize]
-		MPPlayableContentDataSource DataSource { get; set; }
+		IMPPlayableContentDataSource DataSource { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		MPPlayableContentDelegate Delegate { get; set; }
+		IMPPlayableContentDelegate Delegate { get; set; }
 
 		[Export ("beginUpdates")]
 		void BeginUpdates ();

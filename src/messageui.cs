@@ -27,8 +27,7 @@ namespace MessageUI {
 		NSObject WeakMailComposeDelegate { get; set; }
 
 		[Wrap ("WeakMailComposeDelegate")]
-		[Protocolize]
-		MFMailComposeViewControllerDelegate MailComposeDelegate { get; set; }
+		IMFMailComposeViewControllerDelegate MailComposeDelegate { get; set; }
 
 		[Export ("setSubject:")]
 		void SetSubject (string subject);
@@ -53,6 +52,8 @@ namespace MessageUI {
 		void SetPreferredSendingEmailAddress (string emailAddress);
 	}
 
+	interface IMFMailComposeViewControllerDelegate { }
+
 #if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
 #else
@@ -76,8 +77,7 @@ namespace MessageUI {
 		NSObject WeakMessageComposeDelegate { get; set; }
 
 		[Wrap ("WeakMessageComposeDelegate")]
-		[Protocolize]
-		MFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set; }
+		IMFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set; }
 
 		[NullAllowed]
 		[Export ("recipients", ArgumentSemantic.Copy)]
@@ -146,6 +146,8 @@ namespace MessageUI {
 		[Export ("setUPIVerificationCodeSendCompletion:")]
 		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}
+
+	interface IMFMessageComposeViewControllerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

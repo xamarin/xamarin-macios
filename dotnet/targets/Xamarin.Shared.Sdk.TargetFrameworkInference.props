@@ -12,6 +12,6 @@
 
   <!-- Set the default TargetPlatformVersion if it wasn't specified in the TargetFramework variable. This must be set after importing Sdk.targets (in Xamarin.Shared.Sdk.targets) -->
   <PropertyGroup>
-    <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">$(_DefaultTargetPlatformVersion)</TargetPlatformVersion>
+    <TargetPlatformVersion Condition="'$(TargetPlatformVersion)' == ''">$(_XamarinTargetPlatformVersion)</TargetPlatformVersion>
   </PropertyGroup>
 </Project>
