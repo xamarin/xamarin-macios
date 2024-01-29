@@ -131,7 +131,6 @@ namespace TVMLKit {
 		Decoration
 	}
 
-	[TV (12, 0)]
 	[Native]
 	public enum TVPlaybackState : long {
 		Undefined,
@@ -145,7 +144,6 @@ namespace TVMLKit {
 		End,
 	}
 
-	[TV (12, 0)]
 	[Native]
 	public enum TVPlaylistRepeatMode : long {
 		None = 0,
@@ -153,7 +151,6 @@ namespace TVMLKit {
 		One,
 	}
 
-	[TV (12, 0)]
 	[Native]
 	public enum TVPlaylistEndAction : long {
 		Stop = 0,
@@ -161,7 +158,6 @@ namespace TVMLKit {
 		WaitForMoreItems,
 	}
 
-	[TV (12, 0)]
 	public enum TVMediaItemType {
 		// NS_TYPED_EXTENSIBLE_ENUM
 		[DefaultEnumValue]
@@ -173,7 +169,6 @@ namespace TVMLKit {
 		Video,
 	}
 
-	[TV (12, 0)]
 	public enum TVMediaItemContentRatingDomain {
 		// NS_TYPED_EXTENSIBLE_ENUM
 		[DefaultEnumValue]
@@ -219,7 +214,6 @@ namespace TVMLKit {
 		[Export ("appController:didStopWithOptions:")]
 		void DidStop (TVApplicationController appController, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
-		[TV (12, 0)]
 		[Export ("playerForAppController:")]
 		[return: NullAllowed]
 		TVPlayer GetPlayer (TVApplicationController appController);
@@ -859,7 +853,6 @@ namespace TVMLKit {
 		[return: NullAllowed]
 		Class GetCollectionViewCellClass (TVViewElement element);
 
-		[TV (12, 0)]
 		[Export ("playerViewControllerForPlayer:")]
 		[return: NullAllowed]
 		UIViewController GetPlayerViewController (TVPlayer player);
@@ -901,7 +894,6 @@ namespace TVMLKit {
 
 	interface ITVPlaybackEventMarshaling { }
 
-	[TV (12, 0)]
 	[Protocol]
 	interface TVPlaybackEventMarshaling {
 		[Abstract]
@@ -912,7 +904,6 @@ namespace TVMLKit {
 		void ProcessReturn (JSValue value, JSContext jsContext);
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVPlaybackCustomEventUserInfo : TVPlaybackEventMarshaling {
@@ -926,7 +917,6 @@ namespace TVMLKit {
 		NSObject ReturnValue { get; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVPlaylist {
@@ -943,7 +933,6 @@ namespace TVMLKit {
 		NSDictionary<NSString, NSObject> UserInfo { get; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVMediaItem {
@@ -996,7 +985,6 @@ namespace TVMLKit {
 		NSDictionary<NSString, NSObject> UserInfo { get; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVTimeRange {
@@ -1013,7 +1001,6 @@ namespace TVMLKit {
 		double Duration { get; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVHighlightGroup {
@@ -1024,7 +1011,6 @@ namespace TVMLKit {
 		TVHighlight [] Highlights { get; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVHighlight {
@@ -1041,7 +1027,6 @@ namespace TVMLKit {
 		NSUrl ImageUrl { get; }
 	}
 
-	[TV (12, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface TVPlayer {

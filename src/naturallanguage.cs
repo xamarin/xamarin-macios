@@ -32,7 +32,7 @@ using NativeHandle = System.IntPtr;
 
 namespace NaturalLanguage {
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // designated
 	[BaseType (typeof (NSObject))]
@@ -83,7 +83,7 @@ namespace NaturalLanguage {
 		}
 	}
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NLModelConfiguration : NSCopying, NSSecureCoding {
@@ -108,7 +108,7 @@ namespace NaturalLanguage {
 		nuint GetCurrentRevision (NLModelType type);
 	}
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -150,7 +150,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -189,7 +189,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -342,7 +342,7 @@ namespace NaturalLanguage {
 		NSRange GetTokenRange (NSRange range, NLTokenUnit unit);
 	}
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Static] // only used to compare with NSString not as input/output
 	interface NLTag {

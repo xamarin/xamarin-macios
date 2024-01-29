@@ -106,8 +106,6 @@ namespace CoreLocation {
 		AutomotiveNavigation,
 		Fitness,
 		OtherNavigation,
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Airborne,

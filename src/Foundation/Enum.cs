@@ -993,9 +993,7 @@ namespace Foundation {
 		Video,
 		Background,
 		Voice,
-		[iOS (12, 0)]
 		[Watch (5, 0)]
-		[TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		ResponsiveData = 6,
 		[Watch (6, 0), TV (13, 0), iOS (13, 0)]

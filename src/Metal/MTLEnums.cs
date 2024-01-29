@@ -121,10 +121,8 @@ namespace Metal {
 		[MacCatalyst (13, 1)]
 		kCubeArray = 6,
 		k3D = 7,
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		k2DMultisampleArray = 8,
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		kTextureBuffer = 9,
 	}
@@ -847,11 +845,11 @@ namespace Metal {
 		[NoMac, TV (14, 5), NoWatch] Rgb9E5Float = 77,
 		[MacCatalyst (13, 1)]
 
-		[iOS (12, 0), TV (12, 0)] RenderPipeline = 78,
+		RenderPipeline = 78,
 		[MacCatalyst (13, 1)]
 		[Mac (11, 0), iOS (13, 0), TV (13, 0)] ComputePipeline = 79,
 		[MacCatalyst (13, 1)]
-		[iOS (12, 0), TV (12, 0)] IndirectCommandBuffer = 80,
+		IndirectCommandBuffer = 80,
 
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long = 81,
 		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long2 = 82,
@@ -970,15 +968,15 @@ namespace Metal {
 		[NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily4_v1 = 11,
 
-		[iOS (12, 0), NoTV, NoWatch, NoMac, NoMacCatalyst]
+		[NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v5 = 12,
-		[iOS (12, 0), NoTV, NoWatch, NoMac, NoMacCatalyst]
+		[NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v5 = 13,
-		[iOS (12, 0), NoTV, NoWatch, NoMac, NoMacCatalyst]
+		[NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v4 = 14,
-		[iOS (12, 0), NoTV, NoWatch, NoMac, NoMacCatalyst]
+		[NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily4_v2 = 15,
-		[iOS (12, 0), NoTV, NoWatch, NoMac, NoMacCatalyst]
+		[NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily5_v1 = 16,
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
@@ -1039,10 +1037,10 @@ namespace Metal {
 		[NoMacCatalyst]
 		tvOS_GPUFamily2_v1 = 30003,
 
-		[NoiOS, TV (12, 0), NoWatch, NoMac]
+		[NoiOS, NoWatch, NoMac]
 		[NoMacCatalyst]
 		tvOS_GPUFamily1_v4 = 30004,
-		[NoiOS, TV (12, 0), NoWatch, NoMac]
+		[NoiOS, NoWatch, NoMac]
 		[NoMacCatalyst]
 		tvOS_GPUFamily2_v2 = 30005,
 	}
@@ -1060,7 +1058,7 @@ namespace Metal {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		v2_0 = (2 << 16),
-		[iOS (12, 0), TV (12, 0), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		v2_1 = (2 << 16) + 1,
 		[iOS (13, 0), TV (13, 0), NoWatch]
@@ -1127,7 +1125,6 @@ namespace Metal {
 	}
 
 	[TV (13, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLPrimitiveTopologyClass : ulong {
@@ -1337,7 +1334,6 @@ namespace Metal {
 		CustomSamplePositions = 1 << 0,
 	}
 
-	[iOS (12, 0), TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLDispatchType : ulong {
@@ -1345,7 +1341,7 @@ namespace Metal {
 		Concurrent,
 	}
 
-	[Flags, iOS (12, 0), TV (12, 0)]
+	[Flags]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLBarrierScope : ulong {
@@ -1356,7 +1352,7 @@ namespace Metal {
 		RenderTargets = 1 << 2,
 	}
 
-	[Flags, iOS (12, 0), TV (12, 0)]
+	[Flags]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLIndirectCommandType : ulong {
@@ -1380,7 +1376,6 @@ namespace Metal {
 		DrawMeshThreads = (1uL << 8),
 	}
 
-	[iOS (12, 0)]
 	[TV (14, 5)]
 	[MacCatalyst (13, 1)]
 	[Native]

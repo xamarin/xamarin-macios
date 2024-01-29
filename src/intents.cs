@@ -325,7 +325,7 @@ namespace Intents {
 		Success,
 		Failure,
 		DeferredToApplication,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		UserConfirmationRequired,
 	}
@@ -456,7 +456,7 @@ namespace Intents {
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPersonSuggestionType : long {
-		[iOS (12, 0), Watch (5, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		None = 0,
 		SocialProfile = 1,
@@ -496,19 +496,19 @@ namespace Intents {
 		MonoFilter = (1 << 21),
 		FadeFilter = (1 << 22),
 		ProcessFilter = (1 << 23),
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		PortraitPhoto = (1uL << 24),
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		LivePhoto = (1uL << 25),
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		LoopPhoto = (1uL << 26),
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		BouncePhoto = (1uL << 27),
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		LongExposurePhoto = (1uL << 28),
 	}
@@ -573,7 +573,7 @@ namespace Intents {
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		FailureNotEligible,
-		[iOS (11, 1), Watch (4, 1)]
+		[Watch (4, 1)]
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		FailureTermsAndConditionsAcceptanceRequired,
@@ -762,7 +762,7 @@ namespace Intents {
 		FailureNoBankAccount,
 		[MacCatalyst (13, 1)]
 		FailureNotEligible,
-		[iOS (11, 1), Watch (4, 1)]
+		[Watch (4, 1)]
 		[MacCatalyst (13, 1)]
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
@@ -1411,25 +1411,25 @@ namespace Intents {
 		MediaVideo,
 		MediaPass,
 		MediaAudio,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		PaymentSent,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		PaymentRequest,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		PaymentNote,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Animoji,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		ActivitySnippet,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		File,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Link,
 		[iOS (17, 0), MacCatalyst (17, 0), Watch (10, 0)]
@@ -1483,7 +1483,7 @@ namespace Intents {
 	public enum INRequestPaymentPayerUnsupportedReason : long {
 		CredentialsUnverified = 1,
 		NoAccount,
-		[Watch (4, 1), iOS (11, 1)]
+		[Watch (4, 1)]
 		[MacCatalyst (13, 1)]
 		NoValidHandle,
 	}
@@ -1555,7 +1555,7 @@ namespace Intents {
 		CredentialsUnverified = 1,
 		InsufficientFunds,
 		NoAccount,
-		[Watch (4, 1), iOS (11, 1)]
+		[Watch (4, 1)]
 		[MacCatalyst (13, 1)]
 		NoValidHandle,
 	}
@@ -1646,18 +1646,18 @@ namespace Intents {
 		Contact,
 		RequestPayment,
 		SendPayment,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Transit,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Bus,
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		Subway,
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INMediaItemType : long {
@@ -1696,7 +1696,7 @@ namespace Intents {
 		News,
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlayMediaIntentResponseCode : long {
@@ -1717,7 +1717,7 @@ namespace Intents {
 		FailureMaxStreamLimitReached = 11,
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INPlaybackRepeatMode : long {
@@ -1727,7 +1727,7 @@ namespace Intents {
 		One,
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INDailyRoutineSituation : long {
@@ -1751,7 +1751,7 @@ namespace Intents {
 		PhysicalActivityIncomplete,
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUpcomingMediaPredictionMode : long {
@@ -1759,7 +1759,7 @@ namespace Intents {
 		OnlyPredictSuggestedIntents = 1,
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INRelevantShortcutRole : long {
@@ -2578,17 +2578,17 @@ namespace Intents {
 		[Field ("INWorkoutNameIdentifierExercise")]
 		Exercise,
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("INWorkoutNameIdentifierHike")]
 		Hike,
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("INWorkoutNameIdentifierHighIntensityIntervalTraining")]
 		HighIntensityIntervalTraining,
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("INWorkoutNameIdentifierSwim")]
 		Swim,
@@ -4123,7 +4123,7 @@ namespace Intents {
 		[NullAllowed, Export ("intentDescription")]
 		string IntentDescription { get; }
 
-		[Watch (5, 0), Mac (11, 0), iOS (12, 0)]
+		[Watch (5, 0), Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase { get; set; }
@@ -4137,18 +4137,18 @@ namespace Intents {
 		[NullAllowed, Export ("donationMetadata", ArgumentSemantic.Copy)]
 		INIntentDonationMetadata DonationMetadata { get; set; }
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setImage:forParameterNamed:")]
 		void SetImage ([NullAllowed] INImage image, string parameterName);
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("imageForParameterNamed:")]
 		[return: NullAllowed]
 		INImage GetImage (string parameterName);
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[return: NullAllowed]
 		[Export ("keyImage")]
@@ -4206,7 +4206,7 @@ namespace Intents {
 		NSUserActivity UserActivity {
 			get;
 
-			[Watch (5, 0), iOS (12, 0)]
+			[Watch (5, 0)]
 			[MacCatalyst (13, 1)]
 			set;
 		}
@@ -4711,7 +4711,7 @@ namespace Intents {
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:relationship:")]
 		NativeHandle Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] string relationship);
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:")]
 		[DesignatedInitializer]
@@ -6156,7 +6156,7 @@ namespace Intents {
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:conversationIdentifiers:")]
 		[DesignatedInitializer]
@@ -6227,12 +6227,12 @@ namespace Intents {
 		[Export ("speakableGroupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator SpeakableGroupNamesOperator { get; }
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("conversationIdentifiers", ArgumentSemantic.Copy)]
 		string [] ConversationIdentifiers { get; }
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("conversationIdentifiersOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator ConversationIdentifiersOperator { get; }
@@ -6742,7 +6742,6 @@ namespace Intents {
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:carName:")]
 		[DesignatedInitializer]
@@ -6791,7 +6790,6 @@ namespace Intents {
 		[Export ("climateZone", ArgumentSemantic.Assign)]
 		INCarSeat ClimateZone { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
@@ -6852,7 +6850,6 @@ namespace Intents {
 		[Export ("resolveClimateZoneForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveClimateZone (INSetClimateSettingsInCarIntent intent, Action<INCarSeatResolutionResult> completion);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetClimateSettingsInCar:withCompletion:")]
 		void ResolveCarName (INSetClimateSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -6891,7 +6888,6 @@ namespace Intents {
 		[Export ("initWithEnable:defroster:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithEnable:defroster:carName:")]
 		[DesignatedInitializer]
@@ -6904,7 +6900,6 @@ namespace Intents {
 		[Export ("defroster", ArgumentSemantic.Assign)]
 		INCarDefroster Defroster { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
@@ -6938,7 +6933,6 @@ namespace Intents {
 		[Export ("resolveDefrosterForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveDefroster (INSetDefrosterSettingsInCarIntent intent, Action<INCarDefrosterResolutionResult> completion);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetDefrosterSettingsInCar:withCompletion:")]
 		void ResolveCarName (INSetDefrosterSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7040,7 +7034,6 @@ namespace Intents {
 		[Export ("initWithProfileNumber:profileName:defaultProfile:"), Internal]
 		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithProfileNumber:profileName:defaultProfile:carName:")]
 		[DesignatedInitializer]
@@ -7065,7 +7058,6 @@ namespace Intents {
 		[NullAllowed, Export ("defaultProfile", ArgumentSemantic.Copy)]
 		NSNumber DefaultProfile { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
@@ -7101,7 +7093,6 @@ namespace Intents {
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetProfileInCar:withCompletion:")]
 		void ResolveCarName (INSetProfileInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -7229,7 +7220,6 @@ namespace Intents {
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:")]
 		NativeHandle Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:carName:")]
 		[DesignatedInitializer]
@@ -7259,7 +7249,6 @@ namespace Intents {
 		[Export ("relativeLevelSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeLevelSetting { get; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("carName", ArgumentSemantic.Copy)]
 		INSpeakableString CarName { get; }
@@ -7305,7 +7294,6 @@ namespace Intents {
 		[Export ("resolveRelativeLevelSettingForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveRelativeLevelSetting (INSetSeatSettingsInCarIntent intent, Action<INRelativeSettingResolutionResult> completion);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("resolveCarNameForSetSeatSettingsInCar:withCompletion:")]
 		void ResolveCarName (INSetSeatSettingsInCarIntent intent, Action<INSpeakableStringResolutionResult> completion);
@@ -8134,13 +8122,13 @@ namespace Intents {
 		[Export ("interaction")]
 		INInteraction GetInteraction ();
 
-		[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+		[Watch (5, 0), NoTV, Mac (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("suggestedInvocationPhrase")]
 		[return: NullAllowed]
 		string GetSuggestedInvocationPhrase ();
 
-		[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+		[Watch (5, 0), NoTV, Mac (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setSuggestedInvocationPhrase:")]
 		void SetSuggestedInvocationPhrase ([NullAllowed] string suggestedInvocationPhrase);
@@ -8616,13 +8604,13 @@ namespace Intents {
 		[NullAllowed, Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; set; }
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[BindAs (typeof (bool?))]
 		[NullAllowed, Export ("charging", ArgumentSemantic.Copy)]
 		NSNumber Charging { get; set; }
 
-		[Watch (5, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[BindAs (typeof (double?))]
 		[NullAllowed, Export ("minutesToFull", ArgumentSemantic.Copy)]
@@ -10492,7 +10480,7 @@ namespace Intents {
 
 		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
-		[Watch (4, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use the constructor with 'INTemporalEventTriggerTypeOptions temporalEventTriggerTypes' instead.")]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:notebookItemIdentifier:")]
@@ -10538,7 +10526,7 @@ namespace Intents {
 		[Export ("taskPriority", ArgumentSemantic.Assign)]
 		INTaskPriority TaskPriority { get; }
 
-		[Watch (4, 2), iOS (11, 2)]
+		[Watch (4, 2)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("notebookItemIdentifier")]
 		string NotebookItemIdentifier { get; }
@@ -11449,7 +11437,7 @@ namespace Intents {
 		INVisualCodeTypeResolutionResult GetConfirmationRequired (NSObject itemToConfirm, nint reason);
 	}
 
-	[Watch (5, 0), NoMac, NoTV, iOS (12, 0)]
+	[Watch (5, 0), NoMac, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11469,7 +11457,7 @@ namespace Intents {
 		NativeHandle Constructor (string title);
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11502,7 +11490,7 @@ namespace Intents {
 		string Artist { get; }
 	}
 
-	[Watch (5, 0), NoTV, Mac (11, 0), iOS (12, 0)]
+	[Watch (5, 0), NoTV, Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11560,7 +11548,7 @@ namespace Intents {
 		void SetAlternativeSpeakableMatches ([NullAllowed] INSpeakableString [] alternativeSpeakableMatches);
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntent))]
 	[DisableDefaultCtor]
@@ -11613,7 +11601,7 @@ namespace Intents {
 		INMediaSearch MediaSearch { get; }
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INPlayMediaIntentHandling {
@@ -11656,7 +11644,7 @@ namespace Intents {
 		void ResolvePlaybackSpeed (INPlayMediaIntent intent, Action<INPlayMediaPlaybackSpeedResolutionResult> completion);
 	}
 
-	[Watch (5, 0), TV (14, 0), NoMac, iOS (12, 0)]
+	[Watch (5, 0), TV (14, 0), NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
@@ -11675,14 +11663,14 @@ namespace Intents {
 	}
 
 	[Abstract]
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INRelevanceProvider : NSCopying, NSSecureCoding {
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRelevanceProvider))]
 	[DisableDefaultCtor]
@@ -11699,7 +11687,7 @@ namespace Intents {
 		NativeHandle Constructor (NSDate startDate, [NullAllowed] NSDate endDate);
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRelevanceProvider))]
 	[DisableDefaultCtor]
@@ -11713,7 +11701,7 @@ namespace Intents {
 		NativeHandle Constructor (CLRegion region);
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (INRelevanceProvider))]
 	[DisableDefaultCtor]
@@ -11727,7 +11715,7 @@ namespace Intents {
 		NativeHandle Constructor (INDailyRoutineSituation situation);
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11754,7 +11742,7 @@ namespace Intents {
 		NativeHandle Constructor (INShortcut shortcut);
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11769,7 +11757,7 @@ namespace Intents {
 		void SetRelevantShortcuts (INRelevantShortcut [] shortcuts, [NullAllowed] Action<NSError> completionHandler);
 	}
 
-	[Watch (5, 0), NoTV, Mac (11, 0), iOS (12, 0)]
+	[Watch (5, 0), NoTV, Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11788,7 +11776,7 @@ namespace Intents {
 		NativeHandle Constructor (NSUserActivity userActivity);
 	}
 
-	[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+	[Watch (5, 0), NoTV, NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11805,7 +11793,7 @@ namespace Intents {
 		void SetPredictionMode (INUpcomingMediaPredictionMode mode, INMediaItemType type);
 	}
 
-	[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+	[Watch (5, 0), NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11823,7 +11811,7 @@ namespace Intents {
 
 	delegate void INVoiceShortcutCenterGetVoiceShortcutsHandler ([NullAllowed] INVoiceShortcut [] voiceShortcuts, NSError error);
 
-	[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+	[Watch (5, 0), NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -11846,7 +11834,7 @@ namespace Intents {
 	}
 
 	// TODO: We need to inline these into NSString once we figure out how the API is used.
-	//[Watch (5,0), iOS (12,0)]
+	//[Watch (5,0)]
 	//[Category]
 	//[BaseType (typeof (NSString))]
 	//interface NSString_Intents {

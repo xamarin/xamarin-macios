@@ -56,7 +56,6 @@ namespace Messages {
 	}
 
 	[MacCatalyst (14, 0)]
-	[iOS (12, 0)]
 	[Native]
 	public enum MSMessagesAppPresentationContext : long {
 		Messages,
@@ -123,7 +122,6 @@ namespace Messages {
 		[Export ("didTransitionToPresentationStyle:")]
 		void DidTransition (MSMessagesAppPresentationStyle presentationStyle);
 
-		[iOS (12, 0)]
 		[MacCatalyst (14, 0)]
 		[Export ("presentationContext")]
 		MSMessagesAppPresentationContext PresentationContext { get; }
