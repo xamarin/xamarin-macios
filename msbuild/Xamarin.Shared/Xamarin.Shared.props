@@ -235,10 +235,10 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_BundlerArguments Condition="'$(_PlatformName)' != 'macOS'">$(MtouchExtraArgs)</_BundlerArguments>
 
 		<!-- NoSymbolStrip -->
-		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped -> true -->
+		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped, except when using NativeAOT -> true -->
 		<!-- default to 'false' -->
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</NoSymbolStrip>
-		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">true</NoSymbolStrip>
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(_UseNativeAot)' != 'true'">true</NoSymbolStrip>
 		<!-- Disable stripping for simulator builds by default -->
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And '$(ComputedPlatform)' != 'iPhone'">true</NoSymbolStrip>
 		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == ''">false</NoSymbolStrip>

@@ -8,27 +8,16 @@ using System.IO.Compression;
 namespace Xamarin.Tests {
 	[Category ("Windows")]
 	public class WindowsTest : TestBaseClass {
-		[Test]
-		public void OnlyOnWindows ()
-		{
-			Assert.True (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows), "On Windows");
-		}
-
-		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64")]
-		public void ConfigurationTestWhileDebugging (ApplePlatform platform, string runtimeIdentifiers)
-		{
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-		}
 
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void BundleStructureWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.IgnoreIfNotOnWindows ();
+
 			var project = "BundleStructure";
 			var configuration = "Debug";
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-
-			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path))!;
