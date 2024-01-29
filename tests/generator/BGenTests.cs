@@ -1081,13 +1081,13 @@ namespace GeneratorTests {
 			var expectedAttributes = new string [] {
 @"[BindingImpl(3)]
 [Export(""someMethod1:"")]
-[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""ios13.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
 @"[BindingImpl(3)]
 [Export(""someMethod2:"")]
-[SupportedOSPlatform(""ios12.0"")]
+[SupportedOSPlatform(""ios13.0"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
