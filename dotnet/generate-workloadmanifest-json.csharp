@@ -37,6 +37,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net7\",");
 	if (hasWindows) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
+		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\",");
 	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{tfm}\",");
 	foreach (var rid in runtimeIdentifiers) {
