@@ -22,6 +22,9 @@
     <PackageReference Include="GitInfo" Version="2.2.0" />
     <!-- We only include build assets to get targets related to agent generation, the assemblies come from Xamarin.iOS.Tasks -->
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
+    <!-- GitInfo is pulled in because of Xamarin.Messaging.Core, but we don't want it, so just exclude all assets from it -->
+    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
+    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
