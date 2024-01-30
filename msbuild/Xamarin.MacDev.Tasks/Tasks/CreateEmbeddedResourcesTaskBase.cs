@@ -6,19 +6,18 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
 	public class CreateEmbeddedResources : XamarinTask {
 		[Required]
-		public ITaskItem [] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string Prefix { get; set; }
+		public string Prefix { get; set; } = string.Empty;
 
 		[Output]
-		public ITaskItem [] EmbeddedResources { get; set; }
+		public ITaskItem [] EmbeddedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		static string EscapeMangledResource (string name)
 		{
