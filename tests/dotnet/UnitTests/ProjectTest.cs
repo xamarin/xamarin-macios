@@ -788,6 +788,234 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS)]
+		public void LibraryWithResourcesOnWindows (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			LibraryWithResources (platform, anyLibraryResources: false);
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS)]
+		public void LibraryWithResourcesOnRemoteWindows (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			LibraryWithResources (platform);
+		}
+
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void LibraryWithResources (ApplePlatform platform, bool anyLibraryResources = true)
+		{
+			var project = "LibraryWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			// https://github.com/xamarin/xamarin-macios/issues/15031
+			Assert.That (allTargets, Does.Contain ("_CompileAppManifest"), "Did execute '_CompileAppManifest'");
+			Assert.That (allTargets, Does.Contain ("_DetectSdkLocations"), "Did execute '_DetectSdkLocations'");
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (System.Runtime.InteropServices.OSPlatform.Windows))
+				Assert.That (allTargets, Does.Contain ("_SayHello"), "Did execute '_SayHello'");
+
+			var lines = BinLog.PrintToLines (rv.BinLogPath);
+			// Find the resulting binding assembly from the build log
+			var assemblies = FilterToAssembly (lines, project);
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			using var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			var actualResources = ad.MainModule.Resources.Select (v => v.Name).OrderBy (v => v).ToArray ();
+
+			string [] expectedResources;
+
+			if (anyLibraryResources) {
+				var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
+				var expectedList = new List<string> ();
+				expectedList.Add ($"__{platformPrefix}_content_A.ttc");
+				expectedList.Add ($"__{platformPrefix}_content_Archer__Attack.atlasc_sArcher__Attack.plist");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_sscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_stexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_Assets.car");
+				expectedList.Add ($"__{platformPrefix}_content_B.otf");
+				expectedList.Add ($"__{platformPrefix}_content_C.ttf");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_sscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_slinkedArt.scnassets_stexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_scene.dae");
+				switch (platform) {
+				case ApplePlatform.iOS:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-BYZ-38-t0r.nib");
+					break;
+				case ApplePlatform.TVOS:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
+					break;
+				case ApplePlatform.MacCatalyst:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_s1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sUIViewController-1.nib");
+					break;
+				case ApplePlatform.MacOSX:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sMainMenu.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sNSWindowController-B8D-0N-5wS.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_sXfG-lQ-9wD-view-m2S-Jp-Qdl.nib");
+					break;
+				}
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sanalytics_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smetadata.json");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.net");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.shape");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel.espresso.weights");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_smodel_scoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_sneural__network__optionals_scoremldata.bin");
+				expectedResources = expectedList.ToArray ();
+			} else {
+				expectedResources = new string [0];
+			}
+			CollectionAssert.AreEquivalent (expectedResources, actualResources, "Resources");
+		}
+
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		public void AppWithLibraryWithResourcesReference (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, false, false);
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void AppWithLibraryWithResourcesReferenceOnRemoteWindows (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, true, false);
+		}
+
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void AppWithLibraryWithResourcesReferenceWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, false, isUsingHotRestart: true);
+		}
+
+		void AppWithLibraryWithResourcesReferenceImpl (ApplePlatform platform, string runtimeIdentifiers, bool remoteWindows, bool isUsingHotRestart)
+		{
+			var project = "AppWithLibraryWithResourcesReference";
+			var config = "Debug";
+
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var library_project = GetProjectPath ("LibraryWithResources", platform: platform);
+			Clean (library_project);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: config);
+			Clean (project_path);
+
+			Dictionary<string, string>? extraProperties = null;
+			string? tmpdir;
+			string? hotRestartOutputDir = null;
+			string? hotRestartAppBundlePath = null;
+			if (isUsingHotRestart) {
+				tmpdir = Cache.CreateTemporaryDirectory ();
+				extraProperties = GetHotRestartProperties (tmpdir, out hotRestartOutputDir, out hotRestartAppBundlePath);
+			}
+
+			var properties = GetDefaultProperties (runtimeIdentifiers, extraProperties);
+			properties ["Configuration"] = config;
+			if (remoteWindows) {
+				// Copy the app bundle to Windows so that we can inspect the results.
+				properties ["CopyAppBundleToWindows"] = "true";
+			}
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			var appBundleInfo = new AppBundleInfo (platform, appPath, project_path, remoteWindows, runtimeIdentifiers, config, isUsingHotRestart, hotRestartOutputDir, hotRestartAppBundlePath);
+			var appBundleContents = appBundleInfo.GetAppBundleFiles (true).ToHashSet ();
+
+			appBundleInfo.DumpAppBundleContents ();
+
+			Assert.Multiple (() => {
+				var resourcesDirectory = GetResourcesDirectory (platform, "");
+
+				var fontDirectory = resourcesDirectory;
+				var fontAFile = Path.Combine (fontDirectory, "A.ttc");
+				var fontBFile = Path.Combine (fontDirectory, "B.otf");
+				var fontCFile = Path.Combine (fontDirectory, "C.ttf");
+
+				Assert.That (appBundleContents, Does.Contain (fontAFile), "A.ttc existence");
+				Assert.That (appBundleContents, Does.Contain (fontBFile), "B.otf existence");
+				Assert.That (appBundleContents, Does.Contain (fontCFile), "C.ttf existence");
+
+				var atlasTexture = Path.Combine (resourcesDirectory, "Archer_Attack.atlasc", "Archer_Attack.plist");
+				AssertExistsOrUsingHotRestart (atlasTexture, "AtlasTexture - Archer_Attack");
+
+				var scnAssetsDir = Path.Combine (resourcesDirectory, "art.scnassets");
+				AssertExistsOrUsingHotRestart (Path.Combine (scnAssetsDir, "scene.scn"), "scene.scn");
+				AssertExistsOrUsingHotRestart (Path.Combine (scnAssetsDir, "texture.png"), "texture.png");
+
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "Assets.car"), "Assets.car");
+
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "scene.scn"), "DirWithResources/linkedArt.scnassets/scene.scn");
+				AssertExistsOrUsingHotRestart (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "texture.png"), "DirWithResources/linkedArt.scnassets/texture.png");
+
+				var mainStoryboard = Path.Combine (resourcesDirectory, "Main.storyboardc");
+				AssertExistsOrUsingHotRestart (mainStoryboard, "Main.storyboardc");
+				AssertExistsOrUsingHotRestart (Path.Combine (mainStoryboard, "Info.plist"), "Main.storyboardc/Info.plist");
+
+				var colladaScene = Path.Combine (resourcesDirectory, "scene.dae");
+				AssertExistsOrUsingHotRestart (colladaScene, "Collada - scene.dae");
+
+				var mlModel = Path.Combine (resourcesDirectory, "SqueezeNet.mlmodelc");
+				AssertExistsOrUsingHotRestart (mlModel, "CoreMLModel");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "analytics"), "CoreMLModel/analytics");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "analytics", "coremldata.bin"), "CoreMLModel/analytics/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "coremldata.bin"), "CoreMLModel/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "metadata.json"), "CoreMLModel/metadata.json");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model"), "CoreMLModel/model");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.net"), "CoreMLModel/model.espresso.net");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.shape"), "CoreMLModel/model.espresso.shape");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model.espresso.weights"), "CoreMLModel/model.espresso.weights");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "model", "coremldata.bin"), "CoreMLModel/model/coremldata.bin");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "neural_network_optionals"), "CoreMLModel/neural_network_optionals");
+				AssertExistsOrUsingHotRestart (Path.Combine (mlModel, "neural_network_optionals", "coremldata.bin"), "CoreMLModel/neural_network_optionals/coremldata.bin");
+			});
+
+			void AssertExistsOrUsingHotRestart (string path, string message)
+			{
+				var exists = appBundleContents.Contains (path);
+				if (exists ^ isUsingHotRestart)
+					return;
+				Assert.Fail ($"Expected either hot restart to be enabled ({isUsingHotRestart}) or the file '{path}' to be in the app bundle ({exists}): {message}");
+			}
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
@@ -998,13 +1226,13 @@ namespace Xamarin.Tests {
 				Where (v => {
 					if (v.Length < 10)
 						return false;
-					if (v [0] != '/')
+					if (v [0] != '/' && !(char.IsAsciiLetter (v [0]) && v [1] == ':'))
 						return false;
 					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+					if (!(v.Contains ("/bin/", StringComparison.Ordinal) || v.Contains ("\\bin\\", StringComparison.Ordinal)))
 						return false;
-					if (v.Contains ("/ref/", StringComparison.Ordinal))
+					if (v.Contains ("/ref/", StringComparison.Ordinal) || v.Contains ("\\ref\\", StringComparison.Ordinal))
 						return false; // Skip reference assemblies
 					return true;
 				});
