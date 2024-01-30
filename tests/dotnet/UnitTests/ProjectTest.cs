@@ -780,6 +780,258 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (runtimeIdentifiers.Split (';').Any (v => v.EndsWith ("-x64")), File.Exists (x64txt), "x64.txt");
 		}
 
+		[Category ("Windows")]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		public void LibraryWithResourcesOnWindows (ApplePlatform platform, bool? bundleOriginalResources)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			// This should all execute locally on Windows when BundleOriginalResources=true
+			LibraryWithResources (platform, bundleOriginalResources);
+		}
+
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.iOS, null)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.TVOS, false)]
+		[TestCase (ApplePlatform.TVOS, null)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		[TestCase (ApplePlatform.MacCatalyst, false)]
+		[TestCase (ApplePlatform.MacCatalyst, null)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.MacOSX, null)]
+		public void LibraryWithResources (ApplePlatform platform, bool? bundleOriginalResources)
+		{
+			var project = "LibraryWithResources";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var actualBundleOriginalResources = bundleOriginalResources ?? Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major >= 9;
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties ();
+			if (bundleOriginalResources.HasValue)
+				properties ["BundleOriginalResources"] = bundleOriginalResources.Value ? "true" : "false";
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var allTargets = BinLog.GetAllTargets (rv.BinLogPath).Where (v => !v.Skipped).Select (v => v.TargetName);
+			// https://github.com/xamarin/xamarin-macios/issues/15031
+			if (actualBundleOriginalResources) {
+				Assert.That (allTargets, Does.Not.Contain ("_CompileAppManifest"), "Didn't execute '_CompileAppManifest'");
+				Assert.That (allTargets, Does.Not.Contain ("_DetectSdkLocations"), "Didn't execute '_DetectSdkLocations'");
+			} else {
+				Assert.That (allTargets, Does.Contain ("_CompileAppManifest"), "Did execute '_CompileAppManifest'");
+				Assert.That (allTargets, Does.Contain ("_DetectSdkLocations"), "Did execute '_DetectSdkLocations'");
+			}
+
+			var lines = BinLog.PrintToLines (rv.BinLogPath);
+			// Find the resulting binding assembly from the build log
+			var assemblies = FilterToAssembly (lines, project);
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
+
+			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			var actualResources = ad.MainModule.Resources.Select (v => v.Name).OrderBy (v => v).ToArray ();
+
+			string[] expectedResources;
+
+			var platformPrefix = (platform == ApplePlatform.MacOSX) ? "xammac" : "monotouch";
+			if (actualBundleOriginalResources) {
+				expectedResources = new string [] {
+					$"__{platformPrefix}_content_A.ttc",
+					$"__{platformPrefix}_content_B.otf",
+					$"__{platformPrefix}_content_C.ttf",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0001.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0002.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0003.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0004.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0005.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0006.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0007.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0008.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0009.png",
+					$"__{platformPrefix}_item_AtlasTexture_Archer__Attack.atlas_farcher__attack__0010.png",
+					$"__{platformPrefix}_item_BundleResource_A.ttc",
+					$"__{platformPrefix}_item_BundleResource_B.otf",
+					$"__{platformPrefix}_item_BundleResource_C.ttf",
+					$"__{platformPrefix}_item_Collada_scene.dae",
+					$"__{platformPrefix}_item_CoreMLModel_SqueezeNet.mlmodel",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fContents.json",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fContents.json",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fIcon16.png",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fIcon32.png",
+					$"__{platformPrefix}_item_ImageAsset_Images.xcassets_fImage.imageset_fIcon64.png",
+					$"__{platformPrefix}_item_InterfaceDefinition_Main.storyboard",
+					$"__{platformPrefix}_item_PartialAppManifest_shared.plist",
+					$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_fscene.scn",
+					$"__{platformPrefix}_item_SceneKitAsset_art.scnassets_ftexture.png",
+					$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_flinkedArt.scnassets_fscene.scn",
+					$"__{platformPrefix}_item_SceneKitAsset_DirWithResources_flinkedArt.scnassets_ftexture.png",
+				};
+			} else {
+				var expectedList = new List<string> ();
+				expectedList.Add ($"__{platformPrefix}_content_A.ttc");
+				expectedList.Add ($"__{platformPrefix}_content_Archer__Attack.atlasc_fArcher__Attack.plist");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_fscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_art.scnassets_ftexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_Assets.car");
+				expectedList.Add ($"__{platformPrefix}_content_B.otf");
+				expectedList.Add ($"__{platformPrefix}_content_C.ttf");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_flinkedArt.scnassets_fscene.scn");
+				expectedList.Add ($"__{platformPrefix}_content_DirWithResources_flinkedArt.scnassets_ftexture.png");
+				expectedList.Add ($"__{platformPrefix}_content_scene.dae");
+				switch (platform) {
+				case ApplePlatform.iOS:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fBYZ-38-t0r-view-8bC-Xf-vdC.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fUIViewController-BYZ-38-t0r.nib");
+					break;
+				case ApplePlatform.TVOS:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_f1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fUIViewController-1.nib");
+					break;
+				case ApplePlatform.MacCatalyst:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_f1-view-2.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fUIViewController-1.nib");
+					break;
+				case ApplePlatform.MacOSX:
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fInfo.plist");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fMainMenu.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fNSWindowController-B8D-0N-5wS.nib");
+					expectedList.Add ($"__{platformPrefix}_content_Main.storyboardc_fXfG-lQ-9wD-view-m2S-Jp-Qdl.nib");
+					break;
+				}
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fanalytics_fcoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fcoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmetadata.json");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel.espresso.net");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel.espresso.shape");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel.espresso.weights");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fmodel_fcoremldata.bin");
+				expectedList.Add ($"__{platformPrefix}_content_SqueezeNet.mlmodelc_fneural__network__optionals_fcoremldata.bin");
+				expectedResources = expectedList.ToArray ();
+			}
+			CollectionAssert.AreEquivalent (expectedResources, actualResources, "Resources");
+		}
+
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", true)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", true)]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", false)]
+		public void AppWithLibraryWithResourcesReference (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources)
+		{
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, bundleOriginalResources, false);
+		}
+
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		public void AppWithLibraryWithResourcesReferenceOnWindows (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources)
+		{
+			Configuration.IgnoreIfNotOnWindows ();
+
+			AppWithLibraryWithResourcesReferenceImpl (platform, runtimeIdentifiers, bundleOriginalResources, false);
+		}
+
+		void AppWithLibraryWithResourcesReferenceImpl (ApplePlatform platform, string runtimeIdentifiers, bool bundleOriginalResources, bool remoteWindows)
+		{
+			var project = "AppWithLibraryWithResourcesReference";
+			var config = bundleOriginalResources ? "DebugOriginal" : "DebugCompiled";
+
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var library_project = GetProjectPath ("LibraryWithResources", platform: platform);
+			Clean (library_project);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: config);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = config;
+			properties ["BundleOriginalResources"] = bundleOriginalResources ? "true" : "false";
+			if (remoteWindows) {
+				// Copy the app bundle to Windows so that we can inspect the results.
+				properties ["CopyAppBundleToWindows"] = "true";
+			}
+
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			var appBundleInfo = new AppBundleInfo (platform, appPath, remoteWindows, runtimeIdentifiers, config);
+			var appBundleContents = appBundleInfo.GetAppBundleFiles ().ToHashSet ();
+
+			Assert.Multiple (() =>
+			{
+				var resourcesDirectory = GetResourcesDirectory (platform, "");
+
+				var fontDirectory = resourcesDirectory;
+				var fontAFile = Path.Combine (fontDirectory, "A.ttc");
+				var fontBFile = Path.Combine (fontDirectory, "B.otf");
+				var fontCFile = Path.Combine (fontDirectory, "C.ttf");
+
+				Assert.That (appBundleContents, Does.Contain (fontAFile), "A.ttc existence");
+				Assert.That (appBundleContents, Does.Contain (fontBFile), "B.otf existence");
+				Assert.That (appBundleContents, Does.Contain (fontCFile), "C.ttf existence");
+
+				var atlasTexture = Path.Combine (resourcesDirectory, "Archer_Attack.atlasc", "Archer_Attack.plist");
+				Assert.That (appBundleContents, Does.Contain (atlasTexture), "AtlasTexture - Archer_Attack");
+
+				var scnAssetsDir = Path.Combine (resourcesDirectory, "art.scnassets");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (scnAssetsDir, "scene.scn")), "scene.scn");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (scnAssetsDir, "texture.png")), "texture.png");
+
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (resourcesDirectory, "Assets.car")), "Assets.car");
+
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "scene.scn")), "DirWithResources/linkedArt.scnassets/scene.scn");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (resourcesDirectory, "DirWithResources", "linkedArt.scnassets", "texture.png")), "DirWithResources/linkedArt.scnassets/texture.png");
+
+				var mainStoryboard = Path.Combine (resourcesDirectory, "Main.storyboardc");
+				Assert.That (appBundleContents, Does.Contain (mainStoryboard), "Main.storyboardc");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mainStoryboard, "Info.plist")), "Main.storyboardc/Info.plist");
+
+				var colladaScene = Path.Combine (resourcesDirectory, "scene.dae");
+				Assert.That (appBundleContents, Does.Contain (colladaScene), "Collada - scene.dae");
+
+				var mlModel = Path.Combine (resourcesDirectory, "SqueezeNet.mlmodelc");
+				Assert.That (appBundleContents, Does.Contain (mlModel), "CoreMLModel");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "analytics")), "CoreMLModel/analytics");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "analytics", "coremldata.bin")), "CoreMLModel/analytics/coremldata.bin");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "coremldata.bin")), "CoreMLModel/coremldata.bin");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "metadata.json")), "CoreMLModel/metadata.json");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "model")), "CoreMLModel/model");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "model.espresso.net")), "CoreMLModel/model.espresso.net");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "model.espresso.shape")), "CoreMLModel/model.espresso.shape");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "model.espresso.weights")), "CoreMLModel/model.espresso.weights");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "model", "coremldata.bin")), "CoreMLModel/model/coremldata.bin");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "neural_network_optionals")), "CoreMLModel/neural_network_optionals");
+				Assert.That (appBundleContents, Does.Contain (Path.Combine (mlModel, "neural_network_optionals", "coremldata.bin")), "CoreMLModel/neural_network_optionals/coremldata.bin");
+
+				if (bundleOriginalResources) {
+					var infoPlist = appBundleInfo.GetFile (GetInfoPListPath (platform, ""));
+					var appManifest = PDictionary.FromByteArray (infoPlist, out var _)!;
+					Assert.AreEqual ("Here I am", appManifest.GetString ("LibraryWithResources").Value, "Partial plist entry");
+				}
+			});
+		}
+
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]

@@ -62,12 +62,12 @@ namespace Xamarin.Tests {
 			return GetBinOrObjDir ("bin", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			return GetBinOrObjDir ("obj", projectPath, platform, runtimeIdentifiers, configuration);
 		}
 
-		protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		internal static protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
