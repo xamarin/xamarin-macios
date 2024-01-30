@@ -241,7 +241,7 @@ namespace Xamarin.MacDev.Tasks {
 			return result;
 		}
 
-		void AddCustomEntitlements (PDictionary dict)
+		void AddCustomEntitlements (PDictionary dict, MobileProvision? profile)
 		{
 			if (CustomEntitlements is null)
 				return;
@@ -280,7 +280,7 @@ namespace Xamarin.MacDev.Tasks {
 					dict [entitlement] = new PBoolean (booleanValue);
 					break;
 				case "string":
-					dict [entitlement] = new PString (value ?? string.Empty);
+					dict [entitlement] = MergeEntitlementString (new PString (value), profile, entitlement == ApplicationIdentifierKey);
 					break;
 				case "stringarray":
 					var arraySeparator = item.GetMetadata ("ArraySeparator");
@@ -289,7 +289,7 @@ namespace Xamarin.MacDev.Tasks {
 					var arrayContent = value.Split (new string [] { arraySeparator }, StringSplitOptions.None);
 					var parray = new PArray ();
 					foreach (var element in arrayContent)
-						parray.Add (new PString (element));
+						parray.Add (MergeEntitlementString (new PString (element), profile, entitlement == ApplicationIdentifierKey));
 					dict [entitlement] = parray;
 					break;
 				default:
@@ -407,7 +407,7 @@ namespace Xamarin.MacDev.Tasks {
 				break;
 			}
 
-			AddCustomEntitlements (entitlements);
+			AddCustomEntitlements (entitlements, profile);
 
 			return entitlements;
 		}
