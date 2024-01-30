@@ -6,12 +6,11 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
-using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class PackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+	public class PackLibraryResources : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -44,34 +43,8 @@ namespace Xamarin.MacDev.Tasks {
 			return mangled.ToString ();
 		}
 
-		bool ExecuteRemotely ()
-		{
-			var runner = new TaskRunner (SessionId, BuildEngine4);
-
-			try {
-				var result = runner.RunAsync (this).Result;
-
-				if (result && EmbeddedResources is not null) {
-					// We must get the "real" file that will be embedded in the
-					// compiled assembly in Windows
-					foreach (var embeddedResource in EmbeddedResources.Where (x => runner.ShouldCopyItemAsync (task: this, item: x).Result)) {
-						runner.GetFileAsync (this, embeddedResource.ItemSpec).Wait ();
-					}
-				}
-
-				return result;
-			} catch (Exception ex) {
-				Log.LogErrorFromException (ex);
-
-				return false;
-			}
-		}
-
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return ExecuteRemotely ();
-
 			var results = new List<ITaskItem> ();
 
 			if (BundleResourcesWithLogicalNames is not null) {
@@ -95,17 +68,5 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
-
-		public void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
-
-		public bool ShouldCreateOutputFile (ITaskItem item) => false;
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
