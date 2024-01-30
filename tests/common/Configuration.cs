@@ -651,6 +651,15 @@ namespace Xamarin.Tests {
 			get => !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("MAC_AGENT_IP"));
 		}
 
+		public static void IgnoreIfBuildingRemotelyAndPlatformDoesNotSupportRemoteBuilds (ApplePlatform platform)
+		{
+			if (!IsBuildingRemotely)
+				return;
+			if (platform == ApplePlatform.iOS)
+				return;
+			Assert.Ignore ("This platform does not support building remotely");
+		}
+
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
 		{
 			string dir;
