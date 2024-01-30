@@ -14,7 +14,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class UnpackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+	public class UnpackLibraryResources : XamarinTask {
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 
 		#region Inputs
@@ -48,11 +48,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ()) {
-				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
-				return result;
-			}
-
 			// TODO: give each assembly its own intermediate output directory
 			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
 			var results = new List<ITaskItem> ();
@@ -207,27 +202,6 @@ namespace Xamarin.MacDev.Tasks {
 				return callback ();
 			}
 		}
-
-		public void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item)
-		{
-			if (item.IsFrameworkItem ())
-				return false;
-
-			if (NoOverwrite is not null && NoOverwrite.Contains (item))
-				return false;
-
-			return true;
-		}
-
-		public bool ShouldCreateOutputFile (ITaskItem item) => UnpackedResources.Contains (item) == true;
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 
 		MetadataLoadContext? universe;
 		IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)

@@ -1895,11 +1895,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_DetectBuildType;_CollectBundleResources;_PrepareUnpackLibraryResources"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'" Directories="$(_StampDirectory)" />
-		<!-- This task may be executed locally on Windows (for Hot Restart) -->
+		<MakeDir Directories="$(_StampDirectory)" />
 		<UnpackLibraryResources
-			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
-			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -1908,8 +1905,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
 		<Touch
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
 			AlwaysCreate="True"
 		>
