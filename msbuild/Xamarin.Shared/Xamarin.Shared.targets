@@ -1932,6 +1932,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
+			ReferenceAssemblies="@(ReferencePath);@(ReferenceDependencyPaths)"
 			ReferencedLibraries="@(_UnpackLibraryResourceItems)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
