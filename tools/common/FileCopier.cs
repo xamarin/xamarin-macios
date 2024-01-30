@@ -187,7 +187,7 @@ namespace Xamarin.Bundler {
 			if (IsUptodate (source, target)) {
 				Log (3, "Target '{0}' is up-to-date", target);
 			} else {
-				Directory.CreateDirectory (Path.GetDirectoryName (target));
+				Directory.CreateDirectory (Path.GetDirectoryName (target)!);
 				File.Copy (source, target, true);
 				Log (1, "Copied {0} to {1}", source, target);
 			}
