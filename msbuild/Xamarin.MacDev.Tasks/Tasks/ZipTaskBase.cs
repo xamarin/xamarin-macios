@@ -1,16 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ZipTaskBase : XamarinToolTask {
+	public class Zip : XamarinToolTask, ITaskCallback {
 		#region Inputs
 
 		[Output]
@@ -74,5 +77,35 @@ namespace Xamarin.MacDev.Tasks {
 			// TODO: do proper parsing of error messages and such
 			Log.LogMessage (messageImportance, "{0}", singleLine);
 		}
+
+		public override bool Execute ()
+		{
+			if (ShouldExecuteRemotely ()) {
+				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+				var rv = taskRunner.RunAsync (this).Result;
+
+				// Copy the zipped file back to Windows.
+				if (rv)
+					taskRunner.GetFileAsync (this, OutputFile.ItemSpec).Wait ();
+
+				return rv;
+			}
+
+			return base.Execute ();
+		}
+
+		public override void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+
+			base.Cancel ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

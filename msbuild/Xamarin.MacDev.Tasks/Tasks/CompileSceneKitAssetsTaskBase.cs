@@ -36,7 +36,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string ResourcePrefix { get; set; }
 
 		[Required]
-		public ITaskItem [] SceneKitAssets { get; set; }
+		public ITaskItem [] SceneKitAssets { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
 		public string SdkDevPath { get; set; }
@@ -123,7 +123,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ()) {
 				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
-				taskRunner.FixReferencedItems (SceneKitAssets);
+				taskRunner.FixReferencedItems (this, SceneKitAssets);
 
 				FixUpRootedPaths (SceneKitAssets);
 

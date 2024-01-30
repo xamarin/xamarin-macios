@@ -13,6 +13,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <!-- GitInfo is pulled in because of Xamarin.Messaging from above, but we don't want it, so just exclude all assets from it -->
+    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
+    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
