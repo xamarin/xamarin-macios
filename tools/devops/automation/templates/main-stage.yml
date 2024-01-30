@@ -115,10 +115,10 @@ parameters:
   type: object
   default: [
     # Disabled by default #
-    #{
-    #  label: bcl,
-    #  splitByPlatforms: false,
-    #},
+    # {
+    #   label: bcl,
+    #   splitByPlatforms: false,
+    # },
     {
       label: cecil,
       splitByPlatforms: false,
