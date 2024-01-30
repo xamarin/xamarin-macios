@@ -50,17 +50,6 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			if (ShouldExecuteRemotely ()) {
 				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
-
-				if (result && BundleResourcesWithLogicalNames is not null) {
-					// Fix LogicalName path for Windows
-					foreach (var resource in BundleResourcesWithLogicalNames) {
-						var logicalName = resource.GetMetadata ("LogicalName");
-
-						if (!string.IsNullOrEmpty (logicalName)) {
-							resource.SetMetadata ("LogicalName", logicalName.Replace ("/", "\\"));
-						}
-					}
-				}
 				return result;
 			}
 
@@ -182,8 +171,8 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (escaped) {
 					switch (c) {
-					case 'b': c = '\\'; break;
-					case 'f': c = '/'; break;
+					case 'b':
+					case 'f': c = Path.DirectorySeparatorChar; break;
 					case '_': c = '_'; break;
 					default: throw new FormatException ("Invalid resource name: " + mangled);
 					}
