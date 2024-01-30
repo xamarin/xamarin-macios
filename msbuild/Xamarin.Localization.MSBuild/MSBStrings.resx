@@ -765,8 +765,7 @@
     </data>
     
     <data name="E0161" xml:space="preserve">
-        <value>Items must have logical names computed.
-        </value>
+        <value>The item {0} does not have a LogicalName.</value>
     </data>
     
     <data name="M0162" xml:space="preserve">

@@ -52,7 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 					var logicalName = item.GetMetadata ("LogicalName");
 
 					if (string.IsNullOrEmpty (logicalName)) {
-						Log.LogError (MSBStrings.E0161);
+						Log.LogError (MSBStrings.E0161 /* The item {0} does not have a LogicalName. */, item.ItemSpec);
 						return false;
 					}
 
