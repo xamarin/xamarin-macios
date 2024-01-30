@@ -8,24 +8,23 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
 	public class PackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		[Required]
-		public string Prefix { get; set; }
+		public string Prefix { get; set; } = string.Empty;
 
-		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] EmbeddedResources { get; set; }
+		public ITaskItem [] EmbeddedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
