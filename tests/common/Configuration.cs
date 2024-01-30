@@ -1050,6 +1050,19 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		public static bool IsBuildingRemotely {
+			get => !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("MAC_AGENT_IP"));
+		}
+
+		public static void IgnoreIfBuildingRemotelyAndPlatformDoesNotSupportRemoteBuilds (ApplePlatform platform)
+		{
+			if (!IsBuildingRemotely)
+				return;
+			if (platform == ApplePlatform.iOS)
+				return;
+			Assert.Ignore ("This platform does not support building remotely");
+		}
+
 		// Calls Assert.Ignore if the given platform isn't included in the current build.
 		public static void IgnoreIfIgnoredPlatform (ApplePlatform platform)
 		{
