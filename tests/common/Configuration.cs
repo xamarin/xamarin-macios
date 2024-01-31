@@ -338,11 +338,32 @@ namespace Xamarin.Tests {
 			get {
 				var dir = TestAssemblyDirectory;
 				var path = Path.Combine (dir, ".git");
-				while (!Directory.Exists (path) && path.Length > 3) {
-					dir = Path.GetDirectoryName (dir);
-					if (dir is null)
-						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-					path = Path.Combine (dir, ".git");
+				var found = false;
+				while (!found && path.Length > 3) {
+					if (File.Exists(path)) {
+						// Read the .git file to get the path of the worktree repository
+						string gitFileContent = File.ReadAllText(path);
+						if (gitFileContent.StartsWith("gitdir: "))
+						{
+							// Return the absolute path of the worktree repository
+							string worktreeRepo = gitFileContent.Substring(7).Trim();
+							if (Directory.Exists(Path.GetFullPath(worktreeRepo))) 
+								found = true;
+						}
+						else
+						{
+							throw new FormatException(".git worktree file is not valid");
+						}
+					}
+					if (Directory.Exists (path)) 
+						found = true;
+					
+					if (!found) {
+						dir = Path.GetDirectoryName (dir);
+						if (dir is null)
+							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+						path = Path.Combine (dir, ".git");
+					}
 				}
 				path = Path.GetDirectoryName (path);
 				if (!Directory.Exists (path))
