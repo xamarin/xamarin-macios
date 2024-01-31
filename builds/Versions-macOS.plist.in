@@ -26,6 +26,30 @@
 			<string>14.2</string>
 		</array>
 	</dict>
+	<key>SupportedTargetPlatformVersions</key>
+	<dict>
+		<key>macOS</key>
+		<array>
+			<!-- When an entry is added to KnownVersions, an entry must be added here too -->
+			<!-- However, versions are never removed from this array -->
+			<!-- The values here are used to generate the MACOSX_Y_OR_GREATER conditional compilation symbols, and those must be generated even for old OS versions -->
+			<string>10.14</string>
+			<string>10.15</string>
+			<string>10.16</string>
+			<string>11.0</string>
+			<string>11.1</string>
+			<string>11.2</string>
+			<string>11.3</string>
+			<string>12.0</string>
+			<string>12.1</string>
+			<string>12.3</string>
+			<string>13.0</string>
+			<string>13.1</string>
+			<string>13.3</string>
+			<string>14.0</string>
+			<string>14.2</string>
+		</array>
+	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>
 	<key>MinExtensionVersion</key>
