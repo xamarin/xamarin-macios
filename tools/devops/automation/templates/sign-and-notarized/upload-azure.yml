@@ -176,8 +176,6 @@ steps:
     $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg
     Write-Host "iOS PKG is $iOSPkg"
 
-    $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
-    Write-Host "mac PKG is $macPkg"
 
     if ($Env:BUILD_REASON -eq "PullRequest") {
       $notarizedShouldExist = $false;
@@ -186,39 +184,60 @@ steps:
     }
 
     # create an array with objects so that we can set each of the statuses:
-    $statusInfo = @(
-      @{
-        Path = "$pkgsPath\\$iOSPkg";
-        Context = "PKG-Xamarin.iOS";
-        Description = $iOSPkg;
-        TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
-        Error = "xamarin.ios pkg not found";
-        ShouldExist = $true;
-      },
-      @{
-        Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
-        Context = "PKG-Xamarin.iOS-notarized"
-        Description = "$iOSPkg (Notarized)" ;
-        TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
-        Error = "Notarized xamarin.ios pkg not found" ;
-        ShouldExist = $notarizedShouldExist;
-      },
-      @{
-        Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
-        Context = "PKG-Xamarin.Mac" ;
-        Description = "$macPkg" ;
-        TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
-        Error = "xamarin.mac pkg not found." ;
-        ShouldExist = $true;
-      },
-      @{
-        Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
-        Context = "PKG-Xamarin.Mac-notarized" ;
-        Description = "$macPkg (Notarized)" ;
-        TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
-        Error = "Notarized xamarin.mac pkg not found." ;
-        ShouldExist = $notarizedShouldExist;
-      },
+    if (![string]::IsNullOrEmpty($Env:INCLUDE_LEGACY_IOS)) {
+      $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg
+      Write-Host "iOS PKG is $iOSPkg"
+
+      $statusInfo += @(
+        @{
+          Path = "$pkgsPath\\$iOSPkg";
+          Context = "PKG-Xamarin.iOS";
+          Description = $iOSPkg;
+          TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
+          Error = "xamarin.ios pkg not found";
+          ShouldExist = $true;
+        },
+        @{
+          Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
+          Context = "PKG-Xamarin.iOS-notarized"
+          Description = "$iOSPkg (Notarized)" ;
+          TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
+          Error = "Notarized xamarin.ios pkg not found" ;
+          ShouldExist = $notarizedShouldExist;
+        }
+      )
+    } else {
+      Write-Host "Legacy iOS build is disabled"
+    }
+
+    if (![string]::IsNullOrEmpty($Env:INCLUDE_LEGACY_MAC)) {
+      $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
+      Write-Host "mac PKG is $macPkg"
+
+      $statusInfo += @(
+        @{
+          Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
+          Context = "PKG-Xamarin.Mac" ;
+          Description = "$macPkg" ;
+          TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
+          Error = "xamarin.mac pkg not found." ;
+          ShouldExist = $true;
+        },
+        @{
+          Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
+          Context = "PKG-Xamarin.Mac-notarized" ;
+          Description = "$macPkg (Notarized)" ;
+          TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
+          Error = "Notarized xamarin.mac pkg not found." ;
+          ShouldExist = $notarizedShouldExist;
+        }
+      )
+    } else {
+      Write-Host "Legacy macOS build is disabled"
+    }
+
+    # bundle.zip and msbuild.zip should always exist
+    $statusInfo += @(
       @{
         Path = "$pkgsPath\\bundle.zip" ;
         Context = "bundle.zip" ;
