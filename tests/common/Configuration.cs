@@ -340,24 +340,21 @@ namespace Xamarin.Tests {
 				var path = Path.Combine (dir, ".git");
 				var found = false;
 				while (!found && path.Length > 3) {
-					if (File.Exists(path)) {
+					if (File.Exists (path)) {
 						// Read the .git file to get the path of the worktree repository
-						string gitFileContent = File.ReadAllText(path);
-						if (gitFileContent.StartsWith("gitdir: "))
-						{
+						string gitFileContent = File.ReadAllText (path);
+						if (gitFileContent.StartsWith ("gitdir: ")) {
 							// Return the absolute path of the worktree repository
-							string worktreeRepo = gitFileContent.Substring(7).Trim();
-							if (Directory.Exists(Path.GetFullPath(worktreeRepo))) 
+							string worktreeRepo = gitFileContent.Substring (7).Trim ();
+							if (Directory.Exists (Path.GetFullPath (worktreeRepo)))
 								found = true;
-						}
-						else
-						{
-							throw new FormatException(".git worktree file is not valid");
+						} else {
+							throw new FormatException (".git worktree file is not valid");
 						}
 					}
-					if (Directory.Exists (path)) 
+					if (Directory.Exists (path))
 						found = true;
-					
+
 					if (!found) {
 						dir = Path.GetDirectoryName (dir);
 						if (dir is null)
