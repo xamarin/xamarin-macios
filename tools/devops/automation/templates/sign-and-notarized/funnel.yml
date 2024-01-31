@@ -151,6 +151,8 @@ jobs:
   variables:
     Parameters.outputStorageUri: ''
     SKIP_NUGETS: $[ stageDependencies.configure_build.configuree.outputs['labels.skip_nugets'] ]
+    INCLUDE_LEGACY_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_MAC: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
 
   pool:
     name: azurepipelines-EO
