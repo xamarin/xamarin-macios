@@ -47,7 +47,7 @@ dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
 dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
 
 # Modifier preferences
-dotnet_style_require_accessibility_modifiers = omit_if_default:suggestion
+dotnet_style_require_accessibility_modifiers = omit_if_default:warning
 
 # Expression-level preferences
 dotnet_style_coalesce_expression = true:suggestion
@@ -75,7 +75,7 @@ dotnet_code_quality_unused_parameters = all:suggestion
 # var preferences
 csharp_style_var_elsewhere = false:none
 csharp_style_var_for_built_in_types = false:none
-csharp_style_var_when_type_is_apparent = false:suggestion
+csharp_style_var_when_type_is_apparent = true:warning
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true:none

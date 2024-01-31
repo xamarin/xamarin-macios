@@ -1215,5 +1215,23 @@ namespace Xamarin.Tests {
 
 		[DllImport ("libc")]
 		static extern int sysctlbyname (string name, ref int value, ref IntPtr size, IntPtr zero, IntPtr zeroAgain);
+
+		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		{
+			var arguments = new List<string> (new [] { "-gUjA", file });
+			if (!string.IsNullOrEmpty (arch)) {
+				arguments.Add ("-arch");
+				arguments.Add (arch);
+			}
+			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
+			return symbols.Where ((v) => {
+				return !v.EndsWith (": no symbols", StringComparison.Ordinal);
+			}).Select ((v) => {
+				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
+				if (idx <= 0)
+					return v;
+				return v.Substring (idx + 2);
+			});
+		}
 	}
 }
