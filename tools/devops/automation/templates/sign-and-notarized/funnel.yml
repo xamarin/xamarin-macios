@@ -150,7 +150,7 @@ jobs:
 
   variables:
     Parameters.outputStorageUri: ''
-    SKIP_NUGETS: $[ stageDependencies.configure_build.configuree.outputs['labels.skip_nugets'] ]
+    SKIP_NUGETS: $[ stageDependencies.configure_build.configure.outputs['labels.skip_nugets'] ]
 
   pool:
     name: azurepipelines-EO
