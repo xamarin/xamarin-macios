@@ -216,6 +216,12 @@ parameters:
       containsLegacyTests: true,
     },
     {
+      label: xcframework,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
       label: xtro,
       splitByPlatforms: false,
       containsDotNetTests: true,
