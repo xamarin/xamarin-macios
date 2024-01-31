@@ -37,32 +37,15 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
+  - configure_build
   condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_WINDOWS_TESTS'], 'true'))
 
   jobs:
-  - job: configure
-    displayName: 'Configure build'
-    pool:
-      vmImage: windows-latest
-
-    variables:
-      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-
-    steps:
-    - template: ../common/configure.yml
-      parameters:
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-        uploadArtifacts: false
-
   - job: mac_reservation
     dependsOn:
-    - configure
     displayName: "Reserve bot for tests"
     timeoutInMinutes: 1000
-    condition: ne(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     workspace:
       clean: all
     pool:
@@ -81,10 +64,9 @@ stages:
   - job: run_tests
     dependsOn:
     - mac_reservation
-    - configure
     displayName: 'Dotnet tests'
     timeoutInMinutes: 1000
-    condition: ne(dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
+    condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
     workspace:
       clean: all
 

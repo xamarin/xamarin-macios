@@ -47,48 +47,8 @@ parameters:
   type: string
 
 jobs:
-#- job: configure
-#  displayName: 'Configure build'
-#  pool:
-#    vmImage: windows-latest
-#
-#  variables:
-#    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-#    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-#    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-#
-#  steps:
-#  - template: ../common/configure.yml
-#    parameters: 
-#      repositoryAlias: ${{ parameters.repositoryAlias }}
-#      commit: ${{ parameters.commit }}
-#      uploadArtifacts: true
-
-- ${{ if eq(parameters.pool, 'automatic') }}:
-  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
-      vmImage: ubuntu-latest
-    steps:
-    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-
-    # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-    - template: azure-devops-pools/agent-pool-selector.yml@yaml-templates
-      parameters:
-        agentPoolPR: $(PRBuildPool)
-        agentPoolPRUrl: $(PRBuildPoolUrl)
-        agentPoolCI: $(CIBuildPool)
-        agentPoolCIUrl: $(CIBuildPoolUrl)
-
 # This job performs the build of the nuget pkgs and the framework pkgs. There are two interesting dependencies in this job:
-#
-# - configure: Get the labels from gihub and populate the output.
-# - AgentPoolSelector: If the build was not manually triggered to use a specific pool, this job is used to decide if the build is using a 
-#                      private pool or a public one.
 - job: build
-  dependsOn:
-  - ${{ if eq(parameters.pool, 'automatic') }}:
-    - AgentPoolSelector
-  #- configure
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
@@ -104,7 +64,7 @@ jobs:
     INCLUDE_LEGACY_WATCH: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
     INCLUDE_XAMARIN_LEGACY: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
-      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      AgentPoolComputed: $[ stageDependencies.configure_build.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
       AgentPoolComputed: $(CIBuildPool)
     ${{ if eq(parameters.pool, 'pr') }}:
