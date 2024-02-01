@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CoreGraphics;
 using CoreLocation;
@@ -369,21 +370,19 @@ namespace MapKit {
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectContainsPoint")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
+		static extern byte MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
 
 		public bool Contains (MKMapPoint point)
 		{
-			return MKMapRectContainsPoint (this, point);
+			return MKMapRectContainsPoint (this, point) != 0;
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectContainsRect")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MKMapRectContainsRect (MKMapRect rect1, MKMapRect rect2);
+		static extern byte MKMapRectContainsRect (MKMapRect rect1, MKMapRect rect2);
 
 		public bool Contains (MKMapRect rect)
 		{
-			return MKMapRectContainsRect (this, rect);
+			return MKMapRectContainsRect (this, rect) != 0;
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectUnion")]
@@ -392,9 +391,13 @@ namespace MapKit {
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectIntersection")]
 		static public extern MKMapRect Intersection (MKMapRect rect1, MKMapRect rect2);
 
-		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectIntersectsRect")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static public extern bool Intersects (MKMapRect rect1, MKMapRect rect2);
+		[DllImport (Constants.MapKitLibrary)]
+		static extern byte MKMapRectIntersectsRect (MKMapRect rect1, MKMapRect rect2);
+
+		public bool Intersects (MKMapRect rect1, MKMapRect rect2)
+		{
+			return MKMapRectIntersectsRect (rect1, rect2) != 0;
+		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectInset")]
 		static extern MKMapRect MKMapRectInset (MKMapRect rect, double dx, double dy);
@@ -413,21 +416,25 @@ namespace MapKit {
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectDivide")]
-		static extern void MKMapRectDivide (MKMapRect rect, out MKMapRect slice, out MKMapRect remainder, double amount, CGRectEdge edge);
+		unsafe static extern void MKMapRectDivide (MKMapRect rect, MKMapRect* slice, MKMapRect* remainder, double amount, CGRectEdge edge);
 
+#if !COREBUILD
 		public MKMapRect Divide (double amount, CGRectEdge edge, out MKMapRect remainder)
 		{
 			MKMapRect slice;
-			MKMapRectDivide (this, out slice, out remainder, amount, edge);
+			remainder = default;
+			unsafe {
+				MKMapRectDivide (this, &slice, (MKMapRect *) Unsafe.AsPointer<MKMapRect> (ref remainder), amount, edge);
+			}
 			return slice;
 		}
+#endif
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectSpans180thMeridian")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MKMapRectSpans180thMeridian (MKMapRect rect);
+		static extern byte MKMapRectSpans180thMeridian (MKMapRect rect);
 
 		public bool Spans180thMeridian {
-			get { return MKMapRectSpans180thMeridian (this); }
+			get { return MKMapRectSpans180thMeridian (this) != 0; }
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint = "MKMapRectRemainder")]
