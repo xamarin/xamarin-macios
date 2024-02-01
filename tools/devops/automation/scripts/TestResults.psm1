@@ -95,7 +95,7 @@ class TestResult {
     }
 
     [string] GetLabelSuffix() {
-        if ($this.Title.EndsWith("_Multiple")) {
+        if ($this.Title.ToLowerInvariant().EndsWith("_multiple")) {
             return " (Multiple platforms)"
         } elseif ($this.Platform -eq "") {
             return ""
