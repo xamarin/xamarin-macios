@@ -245,8 +245,8 @@ namespace Accelerate {
 		public static vImageError ConvolvePlanar8 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, short* kernel, uint kernel_height, uint kernel_width, int divisor, Pixel8 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolve_Planar8 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, divisor, backgroundColor, flags);
 		}
 
@@ -255,8 +255,8 @@ namespace Accelerate {
 		public static vImageError ConvolvePlanarF (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, float* kernel, uint kernel_height, uint kernel_width, PixelF backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolve_PlanarF (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -265,8 +265,8 @@ namespace Accelerate {
 		public static vImageError ConvolveARGB8888 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, short* kernel, uint kernel_height, uint kernel_width, int divisor, Pixel8888* backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolve_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, divisor, backgroundColor, flags);
 		}
 
@@ -275,8 +275,8 @@ namespace Accelerate {
 		public static vImageError ConvolveARGBFFFF (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, float* kernel, uint kernel_height, uint kernel_width, PixelFFFF backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolve_ARGBFFFF (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -285,8 +285,8 @@ namespace Accelerate {
 		public static vImageError ConvolveWithBiasPlanar8 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, short* kernel, uint kernel_height, uint kernel_width, int divisor, int bias, Pixel8 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolveWithBias_Planar8 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_width, kernel_height, divisor, bias, backgroundColor, flags);
 		}
 
@@ -295,8 +295,8 @@ namespace Accelerate {
 		public static vImageError ConvolveWithBiasPlanarF (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, float* kernel, uint kernel_height, uint kernel_width, float bias, PixelF backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolveWithBias_PlanarF (
-			(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-			(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+			(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+			(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 			tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, bias, backgroundColor, flags);
 		}
 
@@ -305,8 +305,8 @@ namespace Accelerate {
 		public static vImageError ConvolveWithBiasARGB8888 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, short* kernel, uint kernel_height, uint kernel_width, int divisor, int bias, Pixel8888 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolveWithBias_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, divisor, bias, backgroundColor, flags);
 		}
 
@@ -315,8 +315,8 @@ namespace Accelerate {
 		public static vImageError ConvolveWithBiasARGBFFFF (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, float* kernel, uint kernel_height, uint kernel_width, float bias, PixelFFFF backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageConvolveWithBias_ARGBFFFF (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel_height, kernel_width, bias, backgroundColor, flags);
 		}
 
@@ -370,8 +370,8 @@ namespace Accelerate {
 								ptrs [2] = f3;
 								ptrs [3] = f4;
 								return (vImageError) (long) vImageConvolveMultiKernel_ARGB8888 (
-									(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-									(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+									(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+									(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 									tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, ptrs, kernel_height, kernel_width, divisors, biases, backgroundColor, flags);
 							}
 						}
@@ -425,8 +425,8 @@ namespace Accelerate {
 								ptrs [2] = f3;
 								ptrs [3] = f4;
 								return (vImageError) (long) vImageConvolveMultiKernel_ARGBFFFF (
-									(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-									(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+									(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+									(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 									tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, ptrs, kernel_height, kernel_width, biases, backgroundColor, flags);
 							}
 						}
@@ -441,8 +441,8 @@ namespace Accelerate {
 		public static vImageError RichardsonLucyDeConvolvePlanar8 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, short* kernel, short* kernel2, uint kernel_height, uint kernel_width, uint kernel_height2, uint kernel_width2, int divisor, int divisor2, Pixel8 backgroundColor, uint iterationCount, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageRichardsonLucyDeConvolve_Planar8 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel2, kernel_height, kernel_width, kernel_height2, kernel_width2, divisor, divisor2, backgroundColor, iterationCount, flags);
 		}
 
@@ -451,8 +451,8 @@ namespace Accelerate {
 		public static vImageError RichardsonLucyDeConvolvePlanarF (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, float* kernel, float* kernel2, uint kernel_height, uint kernel_width, uint kernel_height2, uint kernel_width2, PixelF backgroundColor, uint iterationCount, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageRichardsonLucyDeConvolve_PlanarF (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel2, kernel_height, kernel_width, kernel_height2, kernel_width2, backgroundColor, iterationCount, flags);
 		}
 
@@ -461,8 +461,8 @@ namespace Accelerate {
 		public static vImageError RichardsonLucyDeConvolveARGB8888 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, short* kernel, short* kernel2, uint kernel_height, uint kernel_width, uint kernel_height2, uint kernel_width2, int divisor, int divisor2, Pixel8888 backgroundColor, uint iterationCount, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageRichardsonLucyDeConvolve_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel2, kernel_height, kernel_width, kernel_height2, kernel_width2, divisor, divisor2, backgroundColor, iterationCount, flags);
 		}
 
@@ -471,8 +471,8 @@ namespace Accelerate {
 		public static vImageError RichardsonLucyDeConvolveARGBFFFF (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, float* kernel, float* kernel2, uint kernel_height, uint kernel_width, uint kernel_height2, uint kernel_width2, PixelFFFF backgroundColor, uint iterationCount, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageRichardsonLucyDeConvolve_ARGBFFFF (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel, kernel2, kernel_height, kernel_width, kernel_height2, kernel_width2, backgroundColor, iterationCount, flags);
 		}
 
@@ -481,8 +481,8 @@ namespace Accelerate {
 		public static vImageError BoxConvolvePlanar8 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, uint kernel_height, uint kernel_width, Pixel8 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageBoxConvolve_Planar8 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -491,8 +491,8 @@ namespace Accelerate {
 		public static vImageError BoxConvolveARGB8888 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, uint kernel_height, uint kernel_width, Pixel8888 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageBoxConvolve_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -501,8 +501,8 @@ namespace Accelerate {
 		public static vImageError BoxConvolveARGB8888 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, uint kernel_height, uint kernel_width, Pixel8888* backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageBoxConvolve_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -511,8 +511,8 @@ namespace Accelerate {
 		public static vImageError TentConvolvePlanar8 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, uint kernel_height, uint kernel_width, Pixel8 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageTentConvolve_Planar8 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -521,8 +521,8 @@ namespace Accelerate {
 		public static vImageError TentConvolveARGB8888 (ref vImageBuffer src, ref vImageBuffer dest, IntPtr tempBuffer, vImagePixelCount srcOffsetToROI_X, vImagePixelCount srcOffsetToROI_Y, uint kernel_height, uint kernel_width, Pixel8888 backgroundColor, vImageFlags flags)
 		{
 			return (vImageError) (long) vImageTentConvolve_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				tempBuffer, srcOffsetToROI_X, srcOffsetToROI_Y, kernel_height, kernel_width, backgroundColor, flags);
 		}
 
@@ -530,7 +530,7 @@ namespace Accelerate {
 
 		#region Transform
 		[DllImport (Constants.AccelerateImageLibrary)]
-		extern static nint vImageMatrixMultiply_ARGB8888 (vImageBuffer * src,
+		extern static nint vImageMatrixMultiply_ARGB8888 (vImageBuffer* src,
 									vImageBuffer* dest,
 									short [] matrix, // matrix is [4*4],
 									int divisor,
@@ -553,8 +553,8 @@ namespace Accelerate {
 			if (post_bias is not null && post_bias.Length != 4)
 				throw new ArgumentException ("Must have four elements", nameof (post_bias));
 			return (vImageError) (long) vImageMatrixMultiply_ARGB8888 (
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref src),
-				(vImageBuffer *) Unsafe.AsPointer<vImageBuffer> (ref dest),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref src),
+				(vImageBuffer*) Unsafe.AsPointer<vImageBuffer> (ref dest),
 				matrix, divisor, pre_bias, post_bias, flags);
 		}
 
