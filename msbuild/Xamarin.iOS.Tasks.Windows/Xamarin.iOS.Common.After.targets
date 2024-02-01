@@ -201,7 +201,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_ResolveUniversalTypeIdentifiers" BeforeTargets="_CompileImageAssets" Condition="'$(IsMacEnabled)' == 'true'"
+	<Target Name="_ResolveUniversalTypeIdentifiers" BeforeTargets="_CompileImageAssets" Condition="'$(IsMacEnabled)' == 'true' And '$(_BundleOriginalResources)' != 'true'"
 					Inputs="@(ImageAsset);" Outputs="@(ImageAsset -> '$(DeviceSpecificIntermediateOutputPath)%(FileName)%(Extension).ResolveUTIs.stamp')">
 
 		<ItemGroup>
