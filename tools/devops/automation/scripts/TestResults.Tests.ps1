@@ -403,11 +403,11 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixcecil-2" -Name "TestSummary.md" -Value "# :tada: All 2 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_iOS-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvOS-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "# :tada: All 5 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_ios-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvos-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_maccatalyst-1" -Name "TestSummary.md" -Value "# :tada: All 5 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macos-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
 
             $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
@@ -458,11 +458,11 @@ Describe "TestResults tests" {
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_iOS-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvOS-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "<summary>5 tests failed, 6 tests passed.</summary>" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_ios-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvos-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_maccatalyst-1" -Name "TestSummary.md" -Value "<summary>5 tests failed, 6 tests passed.</summary>" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macos-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
             $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -Dependencies "$dependencies" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
