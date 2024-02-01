@@ -337,7 +337,6 @@ namespace Cecil.Tests {
 			"System.Boolean CoreGraphics.NativeDrawingMethods::CGPointMakeWithDictionaryRepresentation(System.IntPtr,CoreGraphics.CGPoint&)",
 			"System.Boolean CoreGraphics.NativeDrawingMethods::CGRectMakeWithDictionaryRepresentation(System.IntPtr,CoreGraphics.CGRect&)",
 			"System.Boolean CoreGraphics.NativeDrawingMethods::CGSizeMakeWithDictionaryRepresentation(System.IntPtr,CoreGraphics.CGSize&)",
-			"System.Boolean CoreLocation.CLLocationCoordinate2D::CLLocationCoordinate2DIsValid(CoreLocation.CLLocationCoordinate2D)",
 			"System.Boolean CoreMedia.CMBlockBuffer::CMBlockBufferIsEmpty(System.IntPtr)",
 			"System.Boolean CoreMedia.CMBlockBuffer::CMBlockBufferIsRangeContiguous(System.IntPtr,System.UIntPtr,System.UIntPtr)",
 			"System.Boolean CoreMedia.CMClock::CMClockMightDrift(System.IntPtr,System.IntPtr)",
