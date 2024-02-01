@@ -285,6 +285,7 @@ stages:
     }}
   : - template: ./release/vs-insertion-prep.yml
       parameters:
+        buildStage: build_packages
         dependsOn: [ build_packages, configure_build ]
         stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
         isPR: ${{ parameters.isPR }}
