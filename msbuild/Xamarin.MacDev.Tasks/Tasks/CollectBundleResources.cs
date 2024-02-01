@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -30,6 +32,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
+
+		public ITaskItem [] UnpackedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -92,6 +96,8 @@ namespace Xamarin.MacDev.Tasks {
 
 				bundleResources.Add (bundleResource);
 			}
+
+			bundleResources.AddRange (UnpackedResources);
 
 			BundleResourcesWithLogicalNames = bundleResources.ToArray ();
 

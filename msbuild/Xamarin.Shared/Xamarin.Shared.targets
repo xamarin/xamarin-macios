@@ -45,6 +45,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectITunesArtwork" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectITunesSourceFiles" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectPackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileITunesMetadata" AssemblyFile="$(_TaskAssemblyName)" />
@@ -431,6 +432,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CollectBundleResourcesDependsOn>
 		<CollectBundleResourcesDependsOn Condition="'$(IsBindingProject)' != 'true'">
 			$(CollectBundleResourcesDependsOn);
+			_UnpackLibraryResources;
 			_CompileImageAssets;
 			_CompileInterfaceDefinitions;
 			_CompileSceneKitAssets;
@@ -465,6 +467,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(_ResourcePrefix)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+			UnpackedResources="@(_UnpackedBundleResourceWithLogicalName)"
 			>
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</CollectBundleResources>
@@ -482,6 +485,24 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<ResolvedFileToPublish Include="@(BundleResource)" Condition="'%(BundleResource.PublishFolderType)' != ''" />
 			<ResolvedFileToPublish Include="@(Content)" Condition="'%(Content.PublishFolderType)' != ''" />
 		</ItemGroup>
+	</Target>
+
+	<Target Name="_CollectPackLibraryResources" Condition="'$(_BundleOriginalResources)' == 'true'">
+		<CollectPackLibraryResources
+			AtlasTextures="@(AtlasTexture)"
+			BundleResources="@(BundleResource)"
+			ColladaAssets="@(Collada)"
+			CoreMLModels="@(CoreMLModel)"
+			ImageAssets="@(ImageAsset)"
+			InterfaceDefinitions="@(InterfaceDefinition)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
+			SceneKitAssets="@(SceneKitAsset)"
+			>
+
+			<Output TaskParameter="ItemsWithLogicalNames" ItemName="_BundleOriginalResourceWithLogicalName" />
+
+		</CollectPackLibraryResources>
 	</Target>
 
 	<!--
@@ -529,6 +550,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<!-- This target has no inputs, because it must still be run if there are no input app manifests, to set default values -->
 	<Target Name="_CompileAppManifest"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
 		DependsOnTargets="$(_CompileAppManifestDependsOn)"
 		Outputs="$(_TemporaryAppManifest)"
 		>
@@ -584,7 +606,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ReadAppManifest" DependsOnTargets="$(_ReadAppManifestDependsOn)">
 		<ReadAppManifest
-			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
+			Condition="('$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true') And '$(_BundleOriginalResources)' != 'true'"
 			SessionId="$(BuildSessionId)"
 			AppManifest="$(_TemporaryAppManifest)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -711,7 +733,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CompileInterfaceDefinitionsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="$(_CompileInterfaceDefinitionsDependsOn)" />
+	<Target Name="_CompileInterfaceDefinitions"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
+		DependsOnTargets="$(_CompileInterfaceDefinitionsDependsOn)"
+		/>
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -819,7 +844,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CompileImageAssetsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="$(_CompileImageAssetsDependsOn)" />
+	<Target Name="_CompileImageAssets"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
+		DependsOnTargets="$(_CompileImageAssetsDependsOn)"
+		/>
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -941,7 +969,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CompileSceneKitAssetsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileSceneKitAssets" DependsOnTargets="$(_CompileSceneKitAssetsDependsOn)" />
+	<Target Name="_CompileSceneKitAssets"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
+		DependsOnTargets="$(_CompileSceneKitAssetsDependsOn)"
+		/>
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -1024,7 +1055,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
+	<Target Name="_CompileColladaAssets"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
+		DependsOnTargets="$(CompileColladaAssetsDependsOn)"
+		/>
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -1164,7 +1198,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<!-- TODO: check for duplicate items -->
-	<Target Name="_ComputeBundleResourceOutputPaths" DependsOnTargets="_CollectBundleResources;_GenerateBundleName;_DetectSigningIdentity;_ReadAppManifest">
+	<Target Name="_ComputeBundleResourceOutputPaths"
+		Condition="'$(_CanOutputAppBundle)' == 'true'"
+		DependsOnTargets="_CollectBundleResources;_GenerateBundleName;_DetectSigningIdentity;_ReadAppManifest">
 		<ComputeBundleResourceOutputPaths
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1180,6 +1216,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	</Target>
 
 	<Target Name="_CopyResourcesToBundle" DependsOnTargets="_ComputeBundleResourceOutputPaths"
+		Condition="'$(_CanOutputAppBundle)' == 'true'"
 		Inputs = "@(_BundleResourceWithOutputPath)"
 		Outputs = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')" >
 		<SmartCopy
@@ -1216,7 +1253,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CompileTextureAtlasesDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="$(_CompileTextureAtlasesDependsOn)" />
+	<Target Name="_CompileTextureAtlases"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
+		DependsOnTargets="$(_CompileTextureAtlasesDependsOn)"
+		/>
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -1299,7 +1339,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_CompileCoreMLModelsDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CompileCoreMLModels" DependsOnTargets="$(_CompileCoreMLModelsDependsOn)" />
+	<Target Name="_CompileCoreMLModels"
+		Condition="'$(_BundleOriginalResources)' != 'true'"
+		DependsOnTargets="$(_CompileCoreMLModelsDependsOn)"
+		/>
 
 	<!-- For multi-RID builds, we first build once for each RuntimeIdentifier, then build again to create a universal app bundle.
 	     In the case of resources, it's wasteful to build them multiple times, so we hoist it out to the outer build, and store the
@@ -1889,12 +1932,25 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</EmbedProvisionProfile>
 	</Target>
 
-	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="_CollectBundleResources">
+	<PropertyGroup>
+		<_PackLibraryResourcesDependsOn Condition="'$(_BundleOriginalResources)' != 'true'">
+			$(_PackLibraryResourcesDependsOn);
+			_CollectBundleResources;
+		</_PackLibraryResourcesDependsOn>
+		<_PackLibraryResourcesDependsOn Condition="'$(_BundleOriginalResources)' == 'true'">
+			$(_PackLibraryResourcesDependsOn);
+			_CollectPackLibraryResources;
+		</_PackLibraryResourcesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="$(_PackLibraryResourcesDependsOn)">
 		<PackLibraryResources
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
-			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)">
+			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)"
+			BundleOriginalResourcesWithLogicalNames="@(_BundleOriginalResourceWithLogicalName)"
+			>
 			<Output TaskParameter="EmbeddedResources" ItemName="EmbeddedResource" />
 		</PackLibraryResources>
 	</Target>
@@ -1960,7 +2016,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_UnpackLibraryResourcesDependsOn)"
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(_IsMultiRidBuild)' != 'true'" DependsOnTargets="$(_UnpackLibraryResourcesDependsOn)"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'%(StampFile)')">
 
@@ -1983,6 +2039,13 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_UnpackedBundleResourceWithLogicalName" />
 
 			<Output TaskParameter="ItemsFiles" ItemName="FileWrites" />
+
+			<Output TaskParameter="AtlasTextures" ItemName="AtlasTexture" />
+			<Output TaskParameter="ImageAssets" ItemName="ImageAsset" />
+			<Output TaskParameter="InterfaceDefinitions" ItemName="InterfaceDefinition" />
+			<Output TaskParameter="ColladaAssets" ItemName="Collada" />
+			<Output TaskParameter="CoreMLModels" ItemName="CoreMLModel" />
+			<Output TaskParameter="SceneKitAssets" ItemName="SceneKitAsset" />
 		</UnpackLibraryResources>
 
 		<Touch
