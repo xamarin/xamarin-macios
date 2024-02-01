@@ -130,6 +130,7 @@ parameters:
       splitByPlatforms: true,
       containsDotNetTests: true,
       containsLegacyTests: false,
+      needsMultiplePlatforms: true,
     },
     {
       label: fsharp,
@@ -193,9 +194,10 @@ parameters:
     },
     {
       label: monotouch,
-      splitByPlatforms: false,
+      splitByPlatforms: true,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      needsMultiplePlatforms: false,
     },
     {
       label: msbuild,
