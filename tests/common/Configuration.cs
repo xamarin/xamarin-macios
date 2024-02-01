@@ -343,7 +343,7 @@ namespace Xamarin.Tests {
 					if (File.Exists (path)) {
 						// Read the .git file to get the path of the worktree repository
 						string gitFileContent = File.ReadAllText (path);
-						if (gitFileContent.StartsWith ("gitdir: ")) {
+						if (gitFileContent.StartsWith ("gitdir: ", StringComparison.Ordinal)) {
 							// Return the absolute path of the worktree repository
 							string worktreeRepo = gitFileContent.Substring (7).Trim ();
 							if (Directory.Exists (Path.GetFullPath (worktreeRepo)))
