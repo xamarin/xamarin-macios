@@ -71,8 +71,8 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
-- name: simTestsConfigurations
-  displayName: Simulator test configurations to run
+- name: testConfigurations
+  displayName: Test configurations to run
   type: object
   default: []
 
@@ -247,8 +247,8 @@ stages:
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: ${{ parameters.forceInsertion }}
     skipESRP: ${{ parameters.skipESRP }}
-    ${{ if ne(length(parameters.simTestsConfigurations), 0)}}:
-      simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    ${{ if ne(length(parameters.testConfigurations), 0)}}:
+      testConfigurations: ${{ parameters.testConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
     azureStorage: ${{ variables['azureStorage'] }}
