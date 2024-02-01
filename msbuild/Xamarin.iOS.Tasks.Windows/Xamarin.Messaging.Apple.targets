@@ -21,6 +21,7 @@
 		<PropertyGroup>
 			<IsRemoteBuild>True</IsRemoteBuild>
 			<IsRemoteBuild Condition="'$(IsHotRestartBuild)' == 'True'">False</IsRemoteBuild>
+			<IsRemoteBuild Condition="'$(BundleOriginalResources)' == 'true' And '$(OutputType)' != 'Exe'">False</IsRemoteBuild>
 		</PropertyGroup>
 	</Target>
 

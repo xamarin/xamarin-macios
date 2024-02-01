@@ -233,6 +233,7 @@
 		<!-- outer build for multi-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' != ''">
 			_ErrorRuntimeIdentifiersClash;
+			BuildOnlySettings;
 			_CollectBundleResources;
 			_RunRidSpecificBuild;
 			_DetectAppManifest;

@@ -32,6 +32,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
 
+		public ITaskItem [] UnpackedResources { get; set; } = Array.Empty<ITaskItem> ();
+
 		#endregion
 
 		static bool CanOptimize (string path)
@@ -92,6 +94,8 @@ namespace Xamarin.MacDev.Tasks {
 
 				bundleResources.Add (bundleResource);
 			}
+
+			bundleResources.AddRange (UnpackedResources);
 
 			BundleResourcesWithLogicalNames = bundleResources.ToArray ();
 
