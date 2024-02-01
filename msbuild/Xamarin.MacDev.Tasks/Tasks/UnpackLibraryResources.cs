@@ -24,9 +24,6 @@ namespace Xamarin.MacDev.Tasks {
 		public string Prefix { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem [] NoOverwrite { get; set; } = Array.Empty<ITaskItem> ();
-
-		[Required]
 		public string IntermediateOutputPath { get; set; } = string.Empty;
 
 		[Required]
@@ -44,6 +41,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Output]
 		public ITaskItem []? BundleResourcesWithLogicalNames { get; set; }
+
+		// This is required to copy the .items file back to Windows for remote builds.
+		[Output]
+		public ITaskItem [] ItemsFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
 		public ITaskItem [] UnpackedResources { get; set; } = Array.Empty<ITaskItem> ();
@@ -77,10 +78,7 @@ namespace Xamarin.MacDev.Tasks {
 				return result;
 			}
 
-			// TODO: give each assembly its own intermediate output directory
-			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
 			var results = new List<ITaskItem> ();
-			HashSet<string>? ignore = null;
 
 			foreach (var asm in ReferencedLibraries) {
 				// mscorlib.dll was not coming out with ResolvedFrom == {TargetFrameworkDirectory}
@@ -88,29 +86,14 @@ namespace Xamarin.MacDev.Tasks {
 				if (IsFrameworkAssembly (asm)) {
 					Log.LogMessage (MessageImportance.Low, MSBStrings.M0168, asm.ItemSpec);
 				} else {
-					var extracted = ExtractContentAssembly (asm.ItemSpec, IntermediateOutputPath);
+					var perAssemblyOutputPath = Path.Combine (IntermediateOutputPath, "unpack", asm.GetMetadata ("Filename"));
+					var extracted = ExtractContentAssembly (asm.ItemSpec, perAssemblyOutputPath).ToArray ();
 
-					foreach (var bundleResource in extracted) {
-						string logicalName;
+					results.AddRange (extracted);
 
-						if (ignore is null) {
-							// Create a hashset of the bundle resources that should not be overwritten by extracted resources
-							// from the referenced assemblies.
-							//
-							// See https://bugzilla.xamarin.com/show_bug.cgi?id=8409 for details.
-							ignore = new HashSet<string> ();
-
-							foreach (var item in NoOverwrite) {
-								logicalName = item.GetMetadata ("LogicalName");
-								if (string.IsNullOrEmpty (logicalName))
-									ignore.Add (logicalName);
-							}
-						}
-
-						logicalName = bundleResource.GetMetadata ("LogicalName");
-						if (!ignore.Contains (logicalName))
-							results.Add (bundleResource);
-					}
+					var itemsFile = asm.GetMetadata ("ItemsFile");
+					itemsFile = itemsFile.Replace ('\\', Path.DirectorySeparatorChar);
+					WriteItemsToFile.Write (this, itemsFile, extracted, "_BundleResourceWithLogicalName", true, true);
 				}
 			}
 
@@ -132,14 +115,18 @@ namespace Xamarin.MacDev.Tasks {
 
 		IEnumerable<ITaskItem> ExtractContentAssembly (string assembly, string intermediatePath)
 		{
-			Log.LogMessage (MessageImportance.Low, "  Inspecting assembly: {0}", assembly);
-
-			if (!File.Exists (assembly))
+			if (!File.Exists (assembly)) {
+				Log.LogMessage (MessageImportance.Low, $"Not inspecting assembly because it doesn't exist: {assembly}");
 				yield break;
+			}
 
 			var asmWriteTime = File.GetLastWriteTimeUtc (assembly);
+			var manifestResources = GetAssemblyManifestResources (assembly).ToArray ();
+			if (!manifestResources.Any ())
+				yield break;
 
-			foreach (var embedded in GetAssemblyManifestResources (assembly)) {
+			Log.LogMessage (MessageImportance.Low, $"Inspecting assembly with {manifestResources.Length} resources: {assembly}");
+			foreach (var embedded in manifestResources) {
 				string rpath;
 
 				if (embedded.Name.StartsWith ("__" + Prefix + "_content_", StringComparison.Ordinal)) {
@@ -243,15 +230,12 @@ namespace Xamarin.MacDev.Tasks {
 			if (item.IsFrameworkItem ())
 				return false;
 
-			if (NoOverwrite is not null && NoOverwrite.Contains (item))
-				return false;
-
 			return true;
 		}
 
 		public bool ShouldCreateOutputFile (ITaskItem item) => UnpackedResources.Contains (item) == true;
 
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => ItemsFiles;
 
 		IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
 		{
