@@ -32,6 +32,9 @@ INCLUDE_WATCH=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MAC
 INCLUDE_MAC=$(cat "$FILE")
 
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MACCATALYST
+INCLUDE_MACCATALYST=$(cat "$FILE")
+
 # print it out, so turn off echoing since that confuses Azure DevOps
 set +x
 
@@ -88,6 +91,13 @@ else
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_WATCH;isOutput=true]"
 	echo "##vso[task.setvariable variable=INCLUDE_LEGACY_MAC;isOutput=true]"
 fi
+
+echo "##vso[task.setvariable variable=INCLUDE_IOS;isOutput=true]$INCLUDE_IOS"
+echo "##vso[task.setvariable variable=INCLUDE_TVOS;isOutput=true]$INCLUDE_TVOS"
+echo "##vso[task.setvariable variable=INCLUDE_WATCH;isOutput=true]$INCLUDE_WATCH"
+echo "##vso[task.setvariable variable=INCLUDE_MAC;isOutput=true]$INCLUDE_MAC"
+echo "##vso[task.setvariable variable=INCLUDE_MACCATALYST;isOutput=true]$INCLUDE_MACCATALYST"
+
 set -x
 
 rm -f "$FILE"
