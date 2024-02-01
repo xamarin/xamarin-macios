@@ -11,6 +11,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("AllPlatforms")]
 		public void BindingOldStyle (ApplePlatform platform)
 		{
 			var project = "BindingOldStyle";
@@ -42,6 +43,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.MacOSX, false)]
+		[Category ("AllPlatforms")]
 		public void BindingFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-framework-test";
@@ -66,6 +68,9 @@ namespace Xamarin.Tests {
 			var archive = ZipFile.OpenRead (nupkg);
 			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
 			var hasSymlinks = noBindingEmbedding && (platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX);
+			Console.WriteLine ($"Got {files.Count ()} files in nupkg:");
+			foreach (var file in files)
+				Console.WriteLine ($"    {file}");
 			if (noBindingEmbedding) {
 				Assert.That (archive.Entries.Count, Is.EqualTo (hasSymlinks ? 6 : 10), $"nupkg file count - {nupkg}");
 			} else {
@@ -99,6 +104,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.MacOSX, false)]
+		[Category ("AllPlatforms")]
 		public void BindingXcFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-xcframework-test";
@@ -130,6 +136,9 @@ namespace Xamarin.Tests {
 
 			var archive = ZipFile.OpenRead (nupkg);
 			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
+			Console.WriteLine ($"Got {files.Count ()} files in nupkg:");
+			foreach (var file in files)
+				Console.WriteLine ($"    {file}");
 			Assert.That (archive.Entries.Count, Is.EqualTo (noBindingEmbedding ? 6 : 5), $"nupkg file count - {nupkg}");
 			Assert.That (files, Does.Contain (assemblyName + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");
@@ -146,6 +155,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("AllPlatforms")]
 		public void LibraryProject (ApplePlatform platform)
 		{
 			var project = "MyClassLibrary";
@@ -163,6 +173,9 @@ namespace Xamarin.Tests {
 
 			var archive = ZipFile.OpenRead (nupkg);
 			var files = archive.Entries.Select (v => v.FullName).ToHashSet ();
+			Console.WriteLine ($"Got {files.Count ()} files in nupkg:");
+			foreach (var file in files)
+				Console.WriteLine ($"    {file}");
 			Assert.That (archive.Entries.Count, Is.EqualTo (5), "nupkg file count");
 			Assert.That (files, Does.Contain (project + ".nuspec"), "nuspec");
 			Assert.That (files, Does.Contain ("_rels/.rels"), ".rels");

@@ -99,6 +99,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
+		[Category ("AllPlatforms")]
 		public void BuildMyClassLibrary (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -112,6 +113,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
+		[Category ("AllPlatforms")]
 		public void BuildEmbeddedResourcesTest (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -144,6 +146,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
+		[Category ("AllPlatforms")]
 		public void BuildFSharpLibraryTest (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -155,10 +158,10 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
-			var assemblies = FilterToAssembly (lines, assemblyName);
+			var assemblies = FilterToAssembly (lines, assemblyName).Distinct ();
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
-			Assert.That (assemblies.Distinct ().Count (), Is.EqualTo (1), "Unique assemblies");
+			Assert.That (assemblies.Count (), Is.EqualTo (1), $"Unique assemblies:\n\t{string.Join ("\n\t", assemblies)}");
 			var asm = assemblies.First ();
 			Assert.That (asm, Does.Exist, "Assembly existence");
 			// Verify that there's no resources in the assembly
@@ -170,6 +173,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
 		[TestCase (ApplePlatform.MacCatalyst)]
+		[Category ("AllPlatforms")]
 		public void BuildBindingsTest (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -201,6 +205,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
 		[TestCase (ApplePlatform.MacCatalyst)]
+		[Category ("AllPlatforms")]
 		public void BuildBindingsTest2 (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -231,6 +236,7 @@ namespace Xamarin.Tests {
 		[TestCase ("tvOS", "monotouch")]
 		[TestCase ("macOS", "xammac")]
 		[TestCase ("MacCatalyst", "monotouch")]
+		// [Category ("AllPlatforms")]
 		public void BuildBundledResources (string platform, string prefix)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -252,18 +258,21 @@ namespace Xamarin.Tests {
 
 			// Verify that there's one resource in the binding assembly, and its name
 			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (3), "3 resources");
 			// Sort the resources before we assert, since we don't care about the order, and sorted order makes the asserts simpler.
-			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).ToArray ();
-			Assert.That (resources [0].Name, Is.EqualTo ($"__{prefix}_content_basn3p08__with__loc.png"), $"__{prefix}_content_basn3p08__with__loc.png");
-			Assert.That (resources [1].Name, Is.EqualTo ($"__{prefix}_content_basn3p08.png"), $"__{prefix}_content_basn3p08.png");
-			Assert.That (resources [2].Name, Is.EqualTo ($"__{prefix}_content_xamvideotest.mp4"), $"__{prefix}_content_xamvideotest.mp4");
+			var resources = ad.MainModule.Resources.OrderBy (v => v.Name).Select (v => v.Name).ToArray ();
+			var expectedResources = new string [] {
+				$"__{prefix}_content_basn3p08__with__loc.png",
+				$"__{prefix}_content_basn3p08.png",
+				$"__{prefix}_content_xamvideotest.mp4",
+			};
+			Assert.That (resources, Is.EqualTo (expectedResources), "Resources");
 		}
 
 		[TestCase ("iOS")]
 		[TestCase ("tvOS")]
 		[TestCase ("macOS")]
 		[TestCase ("MacCatalyst")]
+		// [Category ("AllPlatforms")] // builds a complete app, not just the binding projects, so can only be built on macOS
 		public void BuildInterdependentBindingProjects (string platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -276,21 +285,7 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
-			var assemblies = lines.
-				Select (v => v.Trim ()).
-				Where (v => {
-					if (v.Length < 10)
-						return false;
-					if (v [0] != '/')
-						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
-						return false;
-					if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
-						return false;
-					return true;
-				});
+			var assemblies = FilterToAssembly (lines, assemblyName, true);
 			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
 			// Make sure there's no other assembly confusing our logic
 			assemblies = assemblies.Distinct ();
@@ -395,6 +390,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm64", true, null, "Release")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false)]
+		[Category ("AllPlatforms")]
 		public void IsNotMacBuild (ApplePlatform platform, string runtimeIdentifiers, bool isDeviceBuild, string? extraProperties = null, string configuration = "Debug")
 		{
 			var project = "MySimpleApp";
@@ -807,6 +803,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("AllPlatforms")]
 		public void LibraryReferencingBindingLibrary (ApplePlatform platform)
 		{
 			var project = "LibraryReferencingBindingLibrary";
@@ -838,6 +835,7 @@ namespace Xamarin.Tests {
 				break;
 			}
 
+			DumpFiles (bindir);
 			foreach (var brp in bindingResourcePackages) {
 				var file = Path.Combine (bindir, brp);
 				Assert.That (file, Does.Exist, "Existence");
@@ -853,6 +851,14 @@ namespace Xamarin.Tests {
 			var hasDirectoryResources = Directory.Exists (Path.Combine (bindir, "BindingWithDefaultCompileInclude.resources"));
 			if (!hasDirectoryResources && !hasCompressedResources)
 				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
+		}
+
+		void DumpFiles (string dir)
+		{
+			var files = Directory.GetFileSystemEntries (dir, "*", SearchOption.AllDirectories).ToArray ();
+			Console.WriteLine ($"DumpFiles ({dir}): {files.Length} files:");
+			foreach (var file in files)
+				Console.WriteLine ($"    {file}");
 		}
 
 		void AssertAppContents (ApplePlatform platform, string app_directory)
@@ -881,21 +887,66 @@ namespace Xamarin.Tests {
 			Assert.That (libxamarin, Has.Length.LessThanOrEqualTo (1), $"No more than one libxamarin should be present, but found {libxamarin.Length}:\n\t{string.Join ("\n\t", libxamarin)}");
 		}
 
-		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName)
+		IEnumerable<string> FilterToAssembly (IEnumerable<string> lines, string assemblyName, bool doAppCheckInsteadOfRefCheck = false)
+		{
+			var rv = FilterToAssembly2 (lines, assemblyName, false, doAppCheckInsteadOfRefCheck);
+			if (!rv.Any ()) {
+				Console.WriteLine ($"Could not find any matching lines of {lines.Count ()} lines matching {assemblyName}");
+				rv = FilterToAssembly2 (lines, assemblyName, true, doAppCheckInsteadOfRefCheck);
+			}
+			return rv;
+		}
+
+		IEnumerable<string> FilterToAssembly2 (IEnumerable<string> lines, string assemblyName, bool log, bool doAppCheckInsteadOfRefCheck = false)
 		{
 			return lines.
 				Select (v => v.Trim ()).
 				Where (v => {
-					if (v.Length < 10)
+					if (v.Length < 10) {
+						if (log)
+							Console.WriteLine ($"    1: {v}");
 						return false;
-					if (v [0] != '/')
+					}
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
+						if (v [1] != ':') {
+							if (log)
+								Console.WriteLine ($"    2a: {v}");
+							return false;
+						}
+					} else {
+						if (v [0] != '/') {
+							if (log)
+								Console.WriteLine ($"    2b: {v}");
+							return false;
+						}
+					}
+					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    3: {v}");
 						return false;
-					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+					}
+					if (!v.Contains (Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    4: {v}");
 						return false;
-					if (!v.Contains ("/bin/", StringComparison.Ordinal))
-						return false;
-					if (v.Contains ("/ref/", StringComparison.Ordinal))
+					}
+					if (!doAppCheckInsteadOfRefCheck && v.Contains (Path.DirectorySeparatorChar + "ref" + Path.DirectorySeparatorChar, StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    5a: {v}");
 						return false; // Skip reference assemblies
+					}
+					if (doAppCheckInsteadOfRefCheck && !v.Contains ($"{assemblyName}.app", StringComparison.Ordinal)) {
+						if (log)
+							Console.WriteLine ($"    5b: {v}");
+						return false;
+					}
+					if (!File.Exists (v)) {
+						if (log)
+							Console.WriteLine ($"    6: {v}");
+						return false;
+					}
+
+					Console.WriteLine ($"    YAY 7: {v}");
 					return true;
 				});
 		}

@@ -1540,4 +1540,8 @@
             {0}: the path to an assembly
         </comment>
     </data>
+
+    <data name="E7120" xml:space="preserve">
+        <value>Can't process the native reference '{0}' on this platform because it is or contains a symlink.</value>
+    </data>
 </root>

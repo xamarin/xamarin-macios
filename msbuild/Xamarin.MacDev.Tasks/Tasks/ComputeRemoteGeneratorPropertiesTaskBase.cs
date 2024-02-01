@@ -2,19 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 
 using Xamarin.Localization.MSBuild;
-using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class ComputeRemoteGeneratorProperties : XamarinTask, ITaskCallback, ICancelableTask {
+	public abstract class ComputeRemoteGeneratorPropertiesTaskBase : XamarinTask {
 		// Inputs
 		[Required]
 		public string IntermediateOutputPath { get; set; } = string.Empty;
@@ -39,9 +37,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
-
 			ComputeProperties ();
 
 			return !Log.HasLoggedErrors;
@@ -151,20 +146,5 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 		}
-
-		public void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item)
-		{
-			return false;
-		}
-
-		public bool ShouldCreateOutputFile (ITaskItem item) => false;
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }
