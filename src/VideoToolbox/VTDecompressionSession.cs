@@ -276,7 +276,7 @@ namespace VideoToolbox {
 
 			infoFlags = default;
 			unsafe {
-				return VTDecompressionSessionDecodeFrame (GetCheckedHandle (), sampleBuffer.Handle, decodeFlags, sourceFrame, (VTDecodeInfoFlags *) Unsafe.AsPointer<VTDecodeInfoFlags> (ref infoFlags));
+				return VTDecompressionSessionDecodeFrame (GetCheckedHandle (), sampleBuffer.Handle, decodeFlags, sourceFrame, (VTDecodeInfoFlags*) Unsafe.AsPointer<VTDecodeInfoFlags> (ref infoFlags));
 			}
 		}
 #if false // Disabling for now until we have some tests on this

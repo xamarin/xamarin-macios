@@ -112,7 +112,7 @@ namespace VideoToolbox {
 		{
 			progress = default;
 			unsafe {
-				return VTFrameSiloGetProgressOfCurrentPass (Handle, (float *) Unsafe.AsPointer<float> (ref progress));
+				return VTFrameSiloGetProgressOfCurrentPass (Handle, (float*) Unsafe.AsPointer<float> (ref progress));
 			}
 		}
 
