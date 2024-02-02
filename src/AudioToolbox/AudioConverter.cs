@@ -649,17 +649,19 @@ namespace AudioToolbox {
 		unsafe static AudioFormatType []? GetFormats (AudioFormatProperty prop)
 		{
 			int size;
-			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, 0, IntPtr.Zero, out size) != 0)
+			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, 0, null, &size) != 0)
 				return null;
 
 			var elementSize = sizeof (AudioFormatType);
-			var data = new AudioFormatType [size / elementSize];
+			var elementCount = size / elementSize;
+			var data = new AudioFormatType [elementCount];
 			fixed (AudioFormatType* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, 0, IntPtr.Zero, ref size, (IntPtr) ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, 0, null, &size, (IntPtr) ptr);
 				if (res != 0)
 					return null;
 
-				Array.Resize (ref data, elementSize);
+				elementCount = size / elementSize;
+				Array.Resize (ref data, elementCount);
 				return data;
 			}
 		}
