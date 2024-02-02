@@ -54,12 +54,12 @@ namespace VideoToolbox {
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static /* OSStatus */ VTStatus VTMultiPassStorageCreate (
+		unsafe extern static /* OSStatus */ VTStatus VTMultiPassStorageCreate (
 			/* CFAllocatorRef */IntPtr allocator, /* can be null */
 			/* CFURLRef */ IntPtr fileUrl, /* can be null */
 			/* CMTimeRange */ CMTimeRange timeRange, /* can be kCMTimeRangeInvalid */
 			/* CFDictionaryRef */ IntPtr options, /* can be null */
-			/* VTMultiPassStorageRef */ out IntPtr multiPassStorageOut);
+			/* VTMultiPassStorageRef */ IntPtr* multiPassStorageOut);
 
 		// Convenience method taking a strong dictionary
 		public static VTMultiPassStorage? Create (
@@ -75,12 +75,16 @@ namespace VideoToolbox {
 			CMTimeRange? timeRange = null,
 			NSDictionary? options = null)
 		{
-			var status = VTMultiPassStorageCreate (
+			VTStatus status;
+			IntPtr ret;
+			unsafe {
+				status = VTMultiPassStorageCreate (
 				IntPtr.Zero,
 				fileUrl.GetHandle (),
 				timeRange ?? CMTimeRange.InvalidRange,
 				options.GetHandle (),
-				out var ret);
+				&ret);
+			}
 
 			if (status != VTStatus.Ok)
 				return null;
