@@ -26,15 +26,17 @@ namespace VideoToolbox {
 	public class VTVideoEncoder {
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		static extern /* OSStatus */ VTStatus VTCopyVideoEncoderList (
+		unsafe static extern /* OSStatus */ VTStatus VTCopyVideoEncoderList (
 			/* CFDictionaryRef */ IntPtr options,   // documented to accept NULL (no other thing)
-			/* CFArrayRef* */ out IntPtr listOfVideoEncodersOut);
+			/* CFArrayRef* */ IntPtr* listOfVideoEncodersOut);
 
 		static public VTVideoEncoder []? GetEncoderList ()
 		{
 			IntPtr array;
-			if (VTCopyVideoEncoderList (IntPtr.Zero, out array) != VTStatus.Ok)
-				return null;
+			unsafe {
+				if (VTCopyVideoEncoderList (IntPtr.Zero, &array) != VTStatus.Ok)
+					return null;
+			}
 
 			var dicts = NSArray.ArrayFromHandle<NSDictionary> (array);
 			var ret = new VTVideoEncoder [dicts.Length];
@@ -220,13 +222,13 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
-		static extern /* OSStatus */ VTStatus VTCopySupportedPropertyDictionaryForEncoder (
+		unsafe static extern /* OSStatus */ VTStatus VTCopySupportedPropertyDictionaryForEncoder (
 			/* int32_t */ int width,
 			/* int32_t */ int height,
 			/* CMVideoCodecType */ CMVideoCodecType codecType,
 			/* CFDictionaryRef */ IntPtr encoderSpecification,
-			/* CFStringRef */ out IntPtr outEncoderId,
-			/* CFDictionaryRef */ out IntPtr outSupportedProperties
+			/* CFStringRef */ IntPtr* outEncoderId,
+			/* CFDictionaryRef */ IntPtr* outSupportedProperties
 		);
 
 #if NET
@@ -239,7 +241,10 @@ namespace VideoToolbox {
 		{
 			IntPtr encoderIdPtr = IntPtr.Zero;
 			IntPtr supportedPropertiesPtr = IntPtr.Zero;
-			var result = VTCopySupportedPropertyDictionaryForEncoder (width, height, codecType, encoderSpecification.GetHandle (), out encoderIdPtr, out supportedPropertiesPtr);
+			VTStatus result;
+			unsafe {
+				result = VTCopySupportedPropertyDictionaryForEncoder (width, height, codecType, encoderSpecification.GetHandle (), &encoderIdPtr, &supportedPropertiesPtr);
+			}
 
 			if (result != VTStatus.Ok) {
 				if (encoderIdPtr != IntPtr.Zero)
