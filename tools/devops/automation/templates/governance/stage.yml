@@ -42,13 +42,7 @@ stages:
         INCLUDE_DOTNET_${{ upper(p.key) }}_VERSION: 17.0
 
     strategy:
-      matrix:
-        ${{ each p in parameters.platforms }}:
-          ${{ upper(p.key) }}:
-            INCLUDE: $(INCLUDE_DOTNET_${{ upper(p.key) }})
-            PLATFORM: ${{ p.key }}
-            SECRET: $(p.value)
-            VERSION: $(INCLUDE_DOTNET_${{ upper(p.key) }}_VERSION)
+      matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
 
     steps:
     - template: ./apiscan.yml

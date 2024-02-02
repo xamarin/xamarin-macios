@@ -24,11 +24,5 @@ steps:
     commit: ${{ parameters.commit }}
 
 - pwsh: |
-    Write-Output "APIScan was skipped on $(PLATFORM) because it was not included in the build. INCLUDE == $(INCLUDE)"
-  displayName: "Skipped"
-  condition: ne(variables.INCLUDE, '1')
-
-- pwsh: |
-    Write-Output "APIScan on $Env:PLATFORM."
+    Write-Output "Performing APISCan for $(PLATFORM) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
   displayName: "APISCan"
-  condition: eq(variables.INCLUDE, '1')
