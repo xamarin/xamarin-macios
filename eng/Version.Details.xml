@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.102-servicing.24062.9">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.102-servicing.24073.3">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>0bf95ed6be8aaecc3d22d63e9b3db5efa00e2b2b</Sha>
+      <Sha>afd16eda2596624d8611e944923cec4cf883ce63</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="8.0.0-rtm.23524.7">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -31,21 +31,21 @@
       <Sha>45dd3a73dd5b64b010c4251303b3664bb30df029</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7130">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7133">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6f773a62fe289e8dada5e7bfe651b7d88aadcd7c</Sha>
+      <Sha>89b5748139337af347c722f9378204e31ccec01e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7130">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7133">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6f773a62fe289e8dada5e7bfe651b7d88aadcd7c</Sha>
+      <Sha>89b5748139337af347c722f9378204e31ccec01e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7130">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7133">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6f773a62fe289e8dada5e7bfe651b7d88aadcd7c</Sha>
+      <Sha>89b5748139337af347c722f9378204e31ccec01e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7130">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7133">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>6f773a62fe289e8dada5e7bfe651b7d88aadcd7c</Sha>
+      <Sha>89b5748139337af347c722f9378204e31ccec01e</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -61,9 +61,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.23620.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24077.1">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>b645a7369491a5d0f5307faf62c3c8b15633c8f6</Sha>
+      <Sha>f49b5c0db06528a9580686a5b63b0e5b4aba566b</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

@@ -73,28 +73,160 @@ parameters:
 - name: macOSName
   type: string
 
-- name: simTestsConfigurations
+# Ideally we should read/get the list of platforms from somewhere else, instead of hardcoding them here.
+# Note that this is _all_ the platforms we support (not just the enabled ones).
+- name: supportedPlatforms
   type: object
   default: [
-    # disabled by default # 'bcl',
-    'cecil',
-    'dotnettests',
-    'fsharp',
-    'framework',
-    'generator',
-    'interdependent-binding-projects',
-    'install-source',
-    'introspection',
-    'linker',
-    'mac-binding-project',
-    'mmp',
-    'mononative',
-    'monotouch',
-    'msbuild',
-    'mtouch',
-    'xammac',
-    'xcframework',
-    'xtro'
+    {
+      platform: iOS,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: macOS,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: tvOS,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    },
+    {
+      platform: watchOS,
+      isDotNetPlatform: false,
+      isLegacyPlatform: true
+    },
+    {
+      platform: MacCatalyst,
+      isDotNetPlatform: true,
+      isLegacyPlatform: false
+    },
+    {
+      # when running platform-specific test runs, we also need a special test run that executes tests that only runs when multiple platforms are enabled
+      platform: Multiple,
+      isDotNetPlatform: true,
+      isLegacyPlatform: true
+    }
+  ]
+
+- name: testConfigurations
+  type: object
+  default: [
+    # Disabled by default #
+    # {
+    #   label: bcl,
+    #   splitByPlatforms: false,
+    # },
+    {
+      label: cecil,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: false,
+    },
+    {
+      label: dotnettests,
+      splitByPlatforms: true,
+      containsDotNetTests: true,
+      containsLegacyTests: false,
+    },
+    {
+      label: fsharp,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: framework,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: generator,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: interdependent-binding-projects,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: install-source,
+      splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
+    },
+    {
+      label: introspection,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: linker,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: mac-binding-project,
+      splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
+    },
+    {
+      label: mmp,
+      splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
+    },
+    {
+      label: mononative,
+      splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
+    },
+    {
+      label: monotouch,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: msbuild,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: mtouch,
+      splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
+    },
+    {
+      label: xammac,
+      splitByPlatforms: false,
+      containsDotNetTests: false,
+      containsLegacyTests: true,
+    },
+    {
+      label: xcframework,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
+    {
+      label: xtro,
+      splitByPlatforms: false,
+      containsDotNetTests: true,
+      containsLegacyTests: true,
+    },
   ]
 
 - name: deviceTestsConfigurations
@@ -201,6 +333,11 @@ stages:
       parameters: 
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
+        testConfigurations: ${{ parameters.testConfigurations }}
+        supportedPlatforms: ${{ parameters.supportedPlatforms }}
+        testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
+        testPrefix: 'simulator_'
+        statusContext: 'VSTS: simulator tests' 
         uploadArtifacts: true
         
 - stage: build_packages
@@ -329,13 +466,13 @@ stages:
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    testConfigurations: ${{ parameters.testConfigurations }}
+    supportedPlatforms: ${{ parameters.supportedPlatforms }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
     testPool: '' # use the default
     useXamarinStorage: false
-    testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
     statusContext: 'VSTS: simulator tests'
     makeTarget: 'jenkins'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
@@ -345,30 +482,31 @@ stages:
     condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
-- ${{ if eq(parameters.runDeviceTests, true) }}:
-  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
-    - ${{ each config in parameters.deviceTestsConfigurations }}:
-      - template: ./tests/stage.yml
-        parameters:
-          xcodeChannel: ${{ parameters.xcodeChannel }}
-          isPR: ${{ parameters.isPR }}
-          repositoryAlias: ${{ parameters.repositoryAlias }}
-          commit: ${{ parameters.commit }}
-          testPrefix: ${{ config.testPrefix }} 
-          stageName: ${{ config.stageName }} 
-          displayName: '${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
-          testPool: ${{ config.testPool }} 
-          useXamarinStorage: ${{ config.useXamarinStorage }} 
-          testsLabels: ${{ config.testsLabels }} 
-          statusContext: ${{ config.statusContext }} 
-          extraBotDemands: ${{ config.extraBotDemands }} 
-          makeTarget: ${{ config.makeTarget }} 
-          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-          keyringPass: $(pass-XamarinQA-bot-login) 
-          gitHubToken: $(Github.Token)
-          xqaCertPass: $(xqa--certificates--password)
-          condition: ${{ parameters.runDeviceTests }}
-          parseLabels: false
+# Disabled since they are broken after the device lab moved from BOS to SEA
+# - ${{ if eq(parameters.runDeviceTests, true) }}:
+#   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+#     - ${{ each config in parameters.deviceTestsConfigurations }}:
+#       - template: ./tests/stage.yml
+#         parameters:
+#           xcodeChannel: ${{ parameters.xcodeChannel }}
+#           isPR: ${{ parameters.isPR }}
+#           repositoryAlias: ${{ parameters.repositoryAlias }}
+#           commit: ${{ parameters.commit }}
+#           testPrefix: ${{ config.testPrefix }} 
+#           stageName: ${{ config.stageName }} 
+#           displayName: '${{ parameters.stageDisplayNamePrefix }}${{ config.displayName }}'
+#           testPool: ${{ config.testPool }} 
+#           useXamarinStorage: ${{ config.useXamarinStorage }} 
+#           testsLabels: ${{ config.testsLabels }} 
+#           statusContext: ${{ config.statusContext }} 
+#           extraBotDemands: ${{ config.extraBotDemands }} 
+#           makeTarget: ${{ config.makeTarget }} 
+#           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+#           keyringPass: $(pass-XamarinQA-bot-login) 
+#           gitHubToken: $(Github.Token)
+#           xqaCertPass: $(xqa--certificates--password)
+#           condition: ${{ parameters.runDeviceTests }}
+#           parseLabels: false
 
 - ${{ if eq(parameters.runOldMacOSTests, true) }}:
   - ${{ each config in parameters.macTestsConfigurations }}:

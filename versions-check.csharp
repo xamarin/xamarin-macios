@@ -44,6 +44,7 @@ try {
 			// Skip this (iOS/tvOS/watchOS versions for macOS, or vice versa)
 			return;
 		}
+		var versionsHashSet = new HashSet<string> (versions.Cast<XmlNode> ().Select (v => v.InnerText));
 		foreach (XmlNode node in versions) {
 			// Console.WriteLine ($"{product}: checking: {node.InnerText}");
 			var v = node.InnerText;
@@ -66,6 +67,20 @@ try {
 		}
 		if (!foundMin) {
 			Console.Error.WriteLine ($"Could not find the min {product} version {min} in {Path.GetFileName (plistPath)}.");
+			failed = true;
+		}
+
+		var supportedTPVNodes = doc.SelectNodes ($"/plist/dict/key[text()='SupportedTargetPlatformVersions']/following-sibling::dict[1]/key[text()='{product}']/following-sibling::array[1]/string").Cast<XmlNode> ().ToArray ();
+		var supportedTPVs = supportedTPVNodes.Select (v => v.InnerText).ToArray ();
+		if (supportedTPVs?.Any () == true) {
+			var supportedTPVSet = new HashSet<string> (supportedTPVs);
+			var missingTPVs = versionsHashSet.Except (supportedTPVSet);
+			if (missingTPVs.Any ()) {
+				Console.Error.WriteLine ($"The array SupportedTargetPlatformVersions are missing the following entries (they're in the KnownVersions array): {string.Join (", ", missingTPVs)}");
+				failed = true;
+			}
+		} else if (plistPath.Contains ("/builds/")) {
+			Console.Error.WriteLine ($"No SupportedTargetPlatformVersions array found in the plist: {plistPath}");
 			failed = true;
 		}
 	});

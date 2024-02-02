@@ -71,7 +71,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus CopyNameFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFStringRef */ ref IntPtr outName);
+		unsafe extern static OSStatus CopyNameFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFStringRef */ IntPtr* outName);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -84,13 +84,12 @@ namespace AudioToolbox {
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			string? result = null;
 			IntPtr name = IntPtr.Zero;
-			var error = CopyNameFromSoundBank (url.Handle, ref name);
-			if (name != IntPtr.Zero) {
-				using (NSString s = new NSString (name))
-					result = s.ToString ();
+			OSStatus error;
+			unsafe {
+				error = CopyNameFromSoundBank (url.Handle, &name);
 			}
+			var result = CFString.FromHandle (name);
 			return (error != 0) ? null : result;
 		}
 
@@ -101,7 +100,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("tvos")]
 #endif
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus CopyInstrumentInfoFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFSArrayRef */ ref IntPtr outInstrumentInfo);
+		unsafe extern static OSStatus CopyInstrumentInfoFromSoundBank (/* CFURLRef */ IntPtr inURL, /* CFSArrayRef */ IntPtr* outInstrumentInfo);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -116,7 +115,10 @@ namespace AudioToolbox {
 
 			InstrumentInfo []? result = null;
 			IntPtr array = IntPtr.Zero;
-			var error = CopyInstrumentInfoFromSoundBank (url.Handle, ref array);
+			OSStatus error;
+			unsafe {
+				error = CopyInstrumentInfoFromSoundBank (url.Handle, &array);
+			}
 			if (array != IntPtr.Zero) {
 				var dicts = NSArray.ArrayFromHandle<NSDictionary> (array);
 				result = new InstrumentInfo [dicts.Length];
