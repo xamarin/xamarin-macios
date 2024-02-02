@@ -424,7 +424,7 @@ namespace MapKit {
 			MKMapRect slice;
 			remainder = default;
 			unsafe {
-				MKMapRectDivide (this, &slice, (MKMapRect *) Unsafe.AsPointer<MKMapRect> (ref remainder), amount, edge);
+				MKMapRectDivide (this, &slice, (MKMapRect*) Unsafe.AsPointer<MKMapRect> (ref remainder), amount, edge);
 			}
 			return slice;
 		}
