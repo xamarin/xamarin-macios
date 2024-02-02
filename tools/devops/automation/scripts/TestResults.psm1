@@ -491,7 +491,7 @@ function New-ParallelTestsResults {
     Write-Host "Test suites:"
     Write-Host $suites.Keys
 
-    $outputs = $dep.tests.outputs
+    $outputs = $dep.simulator_tests.tests.outputs
     $tests = [System.Collections.SortedList]::new()
     foreach ($name in $outputs.Keys) {
         if ($name.EndsWith(".TESTS_LABEL")) {
