@@ -483,6 +483,20 @@ stages:
     xqaCertPass: $(xqa--certificates--password)
     condition: ${{ parameters.runTests }}
 
+- template: ./tests/publish-results.yml
+  parameters:
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Publish Test Results'
+    stageName: 'publish_test_results'
+    statusContext: 'VSTS: test results'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    testPrefix: 'test_results_'
+    condition: ${{ parameters.runTests }}
+    testConfigurations: ${{ parameters.testConfigurations }}
+    supportedPlatforms: ${{ parameters.supportedPlatforms }}
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
 # devices are optional and will only be ran when we set them OR in CI
 # Disabled since they are broken after the device lab moved from BOS to SEA
 # - ${{ if eq(parameters.runDeviceTests, true) }}:
