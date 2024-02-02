@@ -10,7 +10,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable disable
 
 namespace Xamarin.iOS.Tasks {
-	public abstract class WriteAssetPackManifestTaskBase : XamarinTask, ICancelableTask {
+	public class WriteAssetPackManifest : XamarinTask, ICancelableTask {
 		#region Inputs
 
 		[Required]
