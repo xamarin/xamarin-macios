@@ -394,7 +394,7 @@ namespace MapKit {
 		[DllImport (Constants.MapKitLibrary)]
 		static extern byte MKMapRectIntersectsRect (MKMapRect rect1, MKMapRect rect2);
 
-		public bool Intersects (MKMapRect rect1, MKMapRect rect2)
+		public static bool Intersects (MKMapRect rect1, MKMapRect rect2)
 		{
 			return MKMapRectIntersectsRect (rect1, rect2) != 0;
 		}
