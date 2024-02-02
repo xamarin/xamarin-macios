@@ -584,8 +584,6 @@ namespace Cecil.Tests {
 			"System.IntPtr MediaAccessibility.MACaptionAppearance::MACaptionAppearanceCopyWindowColor(System.IntPtr,System.IntPtr&)",
 			"System.IntPtr MediaAccessibility.MACaptionAppearance::MACaptionAppearanceGetTextEdgeStyle(System.IntPtr,System.IntPtr&)",
 			"System.IntPtr MediaAccessibility.MAImageCaptioning::MAImageCaptioningCopyCaption(System.IntPtr,System.IntPtr&)",
-			"System.IntPtr Metal.MTLDevice::MTLCopyAllDevicesWithObserver(System.IntPtr&,ObjCRuntime.BlockLiteral*)",
-			"System.IntPtr Metal.MTLVertexDescriptor::MTKMetalVertexDescriptorFromModelIOWithError(System.IntPtr,System.IntPtr&)",
 			"System.IntPtr ModelIO.MDLVertexDescriptor::MTKModelIOVertexDescriptorFromMetalWithError(System.IntPtr,System.IntPtr&)",
 			"System.IntPtr ObjCRuntime.Selector::GetHandle(System.String)",
 			"System.IntPtr SearchKit.SKIndex::SKIndexOpenWithURL(System.IntPtr,System.IntPtr,System.Boolean)",
