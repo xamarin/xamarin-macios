@@ -75,6 +75,7 @@ NestedModules = @(
                'RemoteMac.psm1', 
                'StaticPages.psm1', 
                'System.psm1', 
+               'TestConfiguration.psm1',
                'TestResults.psm1',
                'VSTS.psm1')
 
