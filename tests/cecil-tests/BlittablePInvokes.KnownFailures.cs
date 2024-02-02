@@ -17,9 +17,6 @@ using Xamarin.Utils;
 namespace Cecil.Tests {
 	public partial class BlittablePInvokes {
 		static HashSet<string> knownFailuresPInvokes = new HashSet<string> {
-			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileOpenURL(System.IntPtr,System.Byte,AudioToolbox.AudioFileType,System.IntPtr&)",
-			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileSetProperty(System.IntPtr,AudioToolbox.AudioFileProperty,System.Int32,AudioToolbox.AudioFilePacketTableInfo&)",
-			"AudioToolbox.AudioFileError AudioToolbox.AudioFile::AudioFileWritePackets(System.IntPtr,System.Boolean,System.Int32,AudioToolbox.AudioStreamPacketDescription[],System.Int64,System.Int32&,System.IntPtr)",
 			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSend_stret(System.IntPtr,System.IntPtr)",
 			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSend(System.IntPtr,System.IntPtr)",
 			"AudioUnit.AudioComponentDescription ObjCRuntime.Messaging::AudioComponentDescription_objc_msgSendSuper_stret(System.IntPtr,System.IntPtr)",
@@ -452,15 +449,6 @@ namespace Cecil.Tests {
 			"System.Byte Security.SecProtocolMetadata::sec_protocol_metadata_access_supported_signature_algorithms(System.IntPtr,ObjCRuntime.BlockLiteral*)",
 			"System.Byte* Network.NWEndpoint::nw_endpoint_get_signature(System.IntPtr,System.UIntPtr&)",
 			"System.Char CoreFoundation.CFString::CFStringGetCharacterAtIndex(System.IntPtr,System.IntPtr)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileCountUserData(System.IntPtr,System.UInt32,System.Int32&)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileCreateWithURL(System.IntPtr,AudioToolbox.AudioFileType,AudioToolbox.AudioStreamBasicDescription&,AudioToolbox.AudioFileFlags,System.IntPtr&)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileGetProperty(System.IntPtr,AudioToolbox.AudioFileProperty,System.Int32&,System.IntPtr)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileGetPropertyInfo(System.IntPtr,AudioToolbox.AudioFileProperty,System.Int32&,System.Int32&)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileGetUserData(System.IntPtr,System.Int32,System.Int32,System.Int32&,System.IntPtr)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileGetUserDataSize(System.IntPtr,System.UInt32,System.Int32,System.Int32&)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileReadBytes(System.IntPtr,System.Boolean,System.Int64,System.Int32&,System.IntPtr)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileReadPacketData(System.IntPtr,System.Boolean,System.Int32&,AudioToolbox.AudioStreamPacketDescription*,System.Int64,System.Int32&,System.IntPtr)",
-			"System.Int32 AudioToolbox.AudioFile::AudioFileWriteBytes(System.IntPtr,System.Boolean,System.Int64,System.Int32&,System.IntPtr)",
 			"System.Int32 AudioUnit.AudioComponent::AudioComponentCopyConfigurationInfo(System.IntPtr,System.IntPtr&)",
 			"System.Int32 AudioUnit.AudioComponent::AudioComponentCopyName(System.IntPtr,System.IntPtr&)",
 			"System.Int32 AudioUnit.AudioComponent::AudioComponentGetDescription(System.IntPtr,AudioUnit.AudioComponentDescription&)",
