@@ -6,36 +6,34 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
-using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class PackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+	public class PackLibraryResources : XamarinTask {
 		#region Inputs
 
 		[Required]
-		public string Prefix { get; set; }
+		public string Prefix { get; set; } = string.Empty;
 
-		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] EmbeddedResources { get; set; }
+		public ITaskItem [] EmbeddedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
-		static string EscapeMangledResource (string name)
+		public static string EscapeMangledResource (string name)
 		{
 			var mangled = new StringBuilder ();
 
 			for (int i = 0; i < name.Length; i++) {
 				switch (name [i]) {
-				case '\\': mangled.Append ("_b"); break;
+				case '\\':
 				case '/': mangled.Append ("_f"); break;
 				case '_': mangled.Append ("__"); break;
 				default: mangled.Append (name [i]); break;
@@ -45,45 +43,8 @@ namespace Xamarin.MacDev.Tasks {
 			return mangled.ToString ();
 		}
 
-		bool ExecuteRemotely ()
-		{
-			// Fix LogicalName path for the Mac
-			if (BundleResourcesWithLogicalNames is not null) {
-				foreach (var resource in BundleResourcesWithLogicalNames) {
-					var logicalName = resource.GetMetadata ("LogicalName");
-
-					if (!string.IsNullOrEmpty (logicalName)) {
-						resource.SetMetadata ("LogicalName", logicalName.Replace ("\\", "/"));
-					}
-				}
-			}
-
-			var runner = new TaskRunner (SessionId, BuildEngine4);
-
-			try {
-				var result = runner.RunAsync (this).Result;
-
-				if (result && EmbeddedResources is not null) {
-					// We must get the "real" file that will be embedded in the
-					// compiled assembly in Windows
-					foreach (var embeddedResource in EmbeddedResources.Where (x => runner.ShouldCopyItemAsync (task: this, item: x).Result)) {
-						runner.GetFileAsync (this, embeddedResource.ItemSpec).Wait ();
-					}
-				}
-
-				return result;
-			} catch (Exception ex) {
-				Log.LogErrorFromException (ex);
-
-				return false;
-			}
-		}
-
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return ExecuteRemotely ();
-
 			var results = new List<ITaskItem> ();
 
 			if (BundleResourcesWithLogicalNames is not null) {
@@ -91,7 +52,7 @@ namespace Xamarin.MacDev.Tasks {
 					var logicalName = item.GetMetadata ("LogicalName");
 
 					if (string.IsNullOrEmpty (logicalName)) {
-						Log.LogError (MSBStrings.E0161);
+						Log.LogError (MSBStrings.E0161 /* The item {0} does not have a LogicalName. */, item.ItemSpec);
 						return false;
 					}
 
@@ -107,17 +68,5 @@ namespace Xamarin.MacDev.Tasks {
 
 			return !Log.HasLoggedErrors;
 		}
-
-		public void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
-
-		public bool ShouldCreateOutputFile (ITaskItem item) => false;
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
 	}
 }

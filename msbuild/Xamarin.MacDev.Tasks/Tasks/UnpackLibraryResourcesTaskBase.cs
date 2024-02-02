@@ -1,13 +1,12 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
-using Mono.Cecil;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
@@ -15,7 +14,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class UnpackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+	public class UnpackLibraryResources : XamarinTask {
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 
 		#region Inputs
@@ -49,22 +48,6 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ()) {
-				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
-
-				if (result && BundleResourcesWithLogicalNames is not null) {
-					// Fix LogicalName path for Windows
-					foreach (var resource in BundleResourcesWithLogicalNames) {
-						var logicalName = resource.GetMetadata ("LogicalName");
-
-						if (!string.IsNullOrEmpty (logicalName)) {
-							resource.SetMetadata ("LogicalName", logicalName.Replace ("/", "\\"));
-						}
-					}
-				}
-				return result;
-			}
-
 			// TODO: give each assembly its own intermediate output directory
 			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
 			var results = new List<ITaskItem> ();
@@ -168,26 +151,6 @@ namespace Xamarin.MacDev.Tasks {
 			yield break;
 		}
 
-		// FIXME: Using cecil for now, due to not having IKVM available in the mtbserver build.
-		//  Eventually, we will want to prefer IKVM over cecil if we can work out the build in a sane way.
-		/*
-		static IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
-		{
-			using (var universe = new IKVM.Reflection.Universe ()) {
-				IKVM.Reflection.Assembly assembly;
-				try {
-					assembly = universe.LoadFile (fileName);
-				} catch {
-					yield break;
-				}
-				foreach (var _r in assembly.GetManifestResourceNames ()) {
-					var r = _r;
-					yield return new ManifestResource (r, () => assembly.GetManifestResourceStream (r));
-				}
-			}
-		}
-		*/
-
 		static string UnmangleResource (string mangled)
 		{
 			var unmangled = new StringBuilder (mangled.Length);
@@ -203,8 +166,8 @@ namespace Xamarin.MacDev.Tasks {
 
 				if (escaped) {
 					switch (c) {
-					case 'b': c = '\\'; break;
-					case 'f': c = '/'; break;
+					case 'b':
+					case 'f': c = Path.DirectorySeparatorChar; break;
 					case '_': c = '_'; break;
 					default: throw new FormatException ("Invalid resource name: " + mangled);
 					}
@@ -240,43 +203,25 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		public void Cancel ()
-		{
-			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (BuildEngine4).Wait ();
-		}
-
-		public bool ShouldCopyToBuildServer (ITaskItem item)
-		{
-			if (item.IsFrameworkItem ())
-				return false;
-
-			if (NoOverwrite is not null && NoOverwrite.Contains (item))
-				return false;
-
-			return true;
-		}
-
-		public bool ShouldCreateOutputFile (ITaskItem item) => UnpackedResources.Contains (item) == true;
-
-		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
-
+		MetadataLoadContext? universe;
 		IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
 		{
-			AssemblyDefinition? assembly = null;
-			try {
-				try {
-					assembly = AssemblyDefinition.ReadAssembly (fileName);
-				} catch {
-					yield break;
-				}
+			if (universe is null)
+				universe = new MetadataLoadContext (new PathAssemblyResolver (ReferencedLibraries.Select (v => v.ItemSpec)));
 
-				foreach (var _r in assembly.MainModule.Resources.OfType<EmbeddedResource> ()) {
-					var r = _r;
-					yield return new ManifestResource (r.Name, r.GetResourceStream);
-				}
-			} finally {
-				assembly?.Dispose ();
+			Assembly assembly;
+			try {
+				assembly = universe.LoadFromAssemblyPath (fileName);
+			} catch (Exception e) {
+				Log.LogMessage (MessageImportance.Low, $"Unable to load the assembly '{fileName}: {e}");
+				yield break;
+			}
+
+			foreach (var resourceName in assembly.GetManifestResourceNames ()) {
+				var info = assembly.GetManifestResourceInfo (resourceName);
+				if (info.ResourceLocation != ResourceLocation.Embedded)
+					continue;
+				yield return new ManifestResource (resourceName, () => assembly.GetManifestResourceStream (resourceName));
 			}
 		}
 	}

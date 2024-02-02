@@ -20,7 +20,16 @@ namespace Xamarin.Tests {
 			var rv = new Dictionary<string, string> (verbosity);
 			if (!string.IsNullOrEmpty (runtimeIdentifiers))
 				SetRuntimeIdentifiers (rv, runtimeIdentifiers);
+			if (Configuration.IsBuildingRemotely)
+				AddRemoteProperties (rv);
 			return rv;
+		}
+
+		protected void AddRemoteProperties (Dictionary<string, string> properties)
+		{
+			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
+			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
+			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
 		}
 
 		protected void SetRuntimeIdentifiers (Dictionary<string, string> properties, string runtimeIdentifiers)

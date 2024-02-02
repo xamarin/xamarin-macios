@@ -11,10 +11,12 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("RemoteWindows")]
 		public void BindingOldStyle (ApplePlatform platform)
 		{
 			var project = "BindingOldStyle";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.IgnoreIfBuildingRemotelyAndPlatformDoesNotSupportRemoteBuilds (platform);
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
@@ -42,10 +44,12 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.MacOSX, false)]
+		[Category ("RemoteWindows")]
 		public void BindingFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-framework-test";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.IgnoreIfBuildingRemotelyAndPlatformDoesNotSupportRemoteBuilds (platform);
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
@@ -99,6 +103,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, false)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.MacOSX, false)]
+		[Category ("RemoteWindows")]
 		public void BindingXcFrameworksProject (ApplePlatform platform, bool noBindingEmbedding)
 		{
 			var project = "bindings-xcframework-test";
@@ -111,6 +116,7 @@ namespace Xamarin.Tests {
 			// parts of the .xcframework will be zipped differently (due to symlinks
 			// in the xcframework).
 			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+			Configuration.IgnoreIfBuildingRemotelyAndPlatformDoesNotSupportRemoteBuilds (platform);
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
@@ -146,11 +152,13 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
+		[Category ("RemoteWindows")]
 		public void LibraryProject (ApplePlatform platform)
 		{
 			var project = "MyClassLibrary";
 			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.IgnoreIfBuildingRemotelyAndPlatformDoesNotSupportRemoteBuilds (platform);
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: string.Empty, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
