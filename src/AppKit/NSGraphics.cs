@@ -83,12 +83,11 @@ namespace AppKit {
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool NSPlanarFromDepth (NSWindowDepth depth);
+		extern static byte NSPlanarFromDepth (NSWindowDepth depth);
 
 		public static bool PlanarFromDepth (NSWindowDepth depth)
 		{
-			return NSPlanarFromDepth (depth);
+			return NSPlanarFromDepth (depth) != 0;
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
