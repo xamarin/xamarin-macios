@@ -81,7 +81,8 @@ namespace Xamarin.MacDev.Tasks {
 			var bundleResources = new List<ITaskItem> ();
 			foreach (var asset in ColladaAssets) {
 				var inputScene = asset.ItemSpec;
-				var outputScene = Path.Combine (DeviceSpecificIntermediateOutputPath, asset.GetMetadata ("LogicalName"));
+				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId));
+				var outputScene = Path.Combine (DeviceSpecificIntermediateOutputPath, logicalName);
 				var args = GenerateCommandLineCommands (inputScene, outputScene);
 				listOfArguments.Add (new (args, asset));
 
@@ -90,7 +91,7 @@ namespace Xamarin.MacDev.Tasks {
 				var bundleResource = new TaskItem (outputScene);
 				asset.CopyMetadataTo (bundleResource);
 				bundleResource.SetMetadata ("Optimize", "false");
-				bundleResource.SetMetadata ("LogicalName", BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId)));
+				bundleResource.SetMetadata ("LogicalName", logicalName);
 				bundleResources.Add (bundleResource);
 			}
 
