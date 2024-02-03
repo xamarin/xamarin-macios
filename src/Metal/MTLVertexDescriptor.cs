@@ -40,7 +40,7 @@ namespace Metal {
 		[SupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.MetalKitLibrary)]
-		static extern /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIOWithError (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor, out IntPtr error);
+		unsafe static extern /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIOWithError (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor, IntPtr* error);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -53,7 +53,10 @@ namespace Metal {
 			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			IntPtr err;
-			var vd = Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIOWithError (descriptor.Handle, out err));
+			MTLVertexDescriptor? vd;
+			unsafe {
+				vd = Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIOWithError (descriptor.Handle, &err));
+			}
 			error = Runtime.GetNSObject<NSError> (err);
 			return vd;
 		}
