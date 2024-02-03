@@ -8,13 +8,15 @@ using Microsoft.Build.Framework;
 using System.Globalization;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.iOS.Tasks;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ArchiveTaskBase : XamarinTask {
+	public class Archive : XamarinTask, ICancelableTask {
 		protected readonly DateTime Now = DateTime.Now;
 
 		#region Inputs
@@ -105,6 +107,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				if (AppExtensionReferences is not null)
+					TaskItemFixer.ReplaceItemSpecsWithBuildServerPath (AppExtensionReferences, SessionId);
+
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			}
+
 			var archiveDir = CreateArchiveDirectory ();
 			try {
 				var plist = PDictionary.FromFile (PlatformFrameworkHelper.GetAppManifestPath (Platform, AppBundleDir.ItemSpec));
@@ -407,6 +416,12 @@ namespace Xamarin.MacDev.Tasks {
 				if (addDefault || File.Exists (Path.Combine (productsDir, path + ".png")))
 					icons.Add (new PString (path + ".png"));
 			}
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
