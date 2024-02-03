@@ -564,8 +564,11 @@ Versions.g.cs: Makefile $(TOP)/Make.config.inc
 	$(Q) printf "\\tpublic const string XamarinMacVersion = \"$(MAC_PACKAGE_VERSION)\";\\n" >> $@.tmp
 	$(Q) printf "\\tpublic const string XamarinIOSVersion = \"$(IOS_PACKAGE_VERSION)\";\\n" >> $@.tmp
 	$(Q) echo $(foreach platform,$(ALL_DOTNET_PLATFORMS),"\\tpublic const string Microsoft_$(platform)_Version = \"$($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)\";\\n") >> $@.tmp
+	$(Q) echo $(foreach platform,$(ALL_DOTNET_PLATFORMS),"\\tpublic const string Microsoft_$(platform)_Standard_Version = \"$($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_MAJOR).$($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_MINOR).0.$($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_PATCH)\";\\n") >> $@.tmp
 	$(Q) printf "\\tpublic const string NuGetPrereleaseIdentifier = \"$(NUGET_PRERELEASE_IDENTIFIER)\";\\n" >> $@.tmp
 	$(Q) printf "\\tpublic const string NuGetBuildMetadata = \"$(NUGET_BUILD_METADATA)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string Branch = \"$(CURRENT_BRANCH)\";\\n" >> $@.tmp
+	$(Q) printf "\\tpublic const string Commit = \"$(CURRENT_HASH)\";\\n" >> $@.tmp
 	$(Q) printf "}\\n" >> $@.tmp
 	$(Q) mv $@.tmp $@
 

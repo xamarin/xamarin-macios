@@ -37,25 +37,33 @@ namespace MonoTouchFixtures.Foundation {
 			defaults.SetString ("coucou", keyName);
 			defaults.Synchronize ();
 			Assert.That (defaults.StringForKey (keyName), Is.EqualTo ("coucou"), "StringForKey-2");
+			// Clean up after ourselves.
+			defaults.RemoveObject (keyName);
+			defaults.Synchronize ();
+			Assert.IsNull (defaults.StringForKey (keyName), "StringForKey-3");
 		}
 
 		[Test]
 		public void Ctor_UserName ()
 		{
 			var userName = $"username-{Process.GetCurrentProcess ().Id}";
+			var keyName = $"key-{Process.GetCurrentProcess ().Id}";
 			// initWithUser:
 			using (var ud = new NSUserDefaults (userName)) {
 				Assert.That (ud.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
-				ud.SetString ("value", "key");
+				ud.SetString ("value", keyName);
 				ud.Synchronize ();
 			}
 
 			using (var ud = new NSUserDefaults (userName, NSUserDefaultsType.UserName)) {
 				Assert.That (ud.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
-				Assert.That (ud ["key"].ToString (), Is.EqualTo ("value"), "[key]-1");
-				ud.RemoveObject ("key");
+				var keyValue = ud [keyName];
+				if (keyValue is null)
+					Assert.Fail ($"The key '{keyName}' was not preserved:\n{ud.ToDictionary ()}");
+				Assert.That (keyValue.ToString (), Is.EqualTo ("value"), "[key]-1");
+				ud.RemoveObject (keyName);
 				ud.Synchronize ();
-				Assert.Null (ud ["key"], "[key]-2");
+				Assert.Null (ud [keyName], "[key]-2");
 			}
 		}
 

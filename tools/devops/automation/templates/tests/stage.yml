@@ -14,11 +14,6 @@ parameters:
   type: string
   default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
 
-# string that contains the extra labels to pass to xharness to select the tests to execute.
-- name: testsLabels
-  type: string
-  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
-
 # name of the pool that contains the iOS devices
 - name: testPool
   type: string
@@ -66,7 +61,10 @@ parameters:
   type: boolean
   default: true
 
-- name: simTestsConfigurations
+- name: testConfigurations
+  type: object
+
+- name: supportedPlatforms
   type: object
 
 - name: isPR
@@ -97,9 +95,8 @@ stages:
 
   jobs:
   - job: "tests"
-    ${{ if eq(parameters.parseLabels, true) }}:
-      condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
-    displayName: 'Running tests:' 
+    condition: ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
+    displayName: 'T:' 
     timeoutInMinutes: 1000
     variables:
       # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
@@ -107,11 +104,11 @@ stages:
       # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
       BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
       XHARNESS_LABELS: $[ stageDependencies.configure_build.configure.outputs['labels.xharness_labels'] ]
+      DOTNET_PLATFORMS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
       ${{ if eq(parameters.testPool, '') }}:
         AgentPoolComputed: $(PRBuildPool)
       ${{ else }}:
         AgentPoolComputed: ${{ parameters.testPool }}
-
     pool:
       name: $(AgentPoolComputed)
       demands:
@@ -123,22 +120,23 @@ stages:
       workspace:
         clean: all
     strategy:
-      matrix:
-        ${{ each label in parameters.simTestsConfigurations }}:
-          ${{ replace(label, '-', '_') }}:
-            LABEL: ${{ label }}
-            TESTS_LABELS: '${{ parameters.testsLabels }},run-${{ label }}-tests'
-            STATUS_CONTEXT: '${{ parameters.statusContext }} - ${{ label }}'
-            TEST_PREFIX: "${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
+      matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
     steps:
+    - bash: |
+        env | sort
+        env
+      displayName: 'Dump env'
+      name: DumpEnv
     - template: build.yml
       parameters:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
         label: $(LABEL)
+        labelWithPlatform: $(LABEL_WITH_PLATFORM)
         testsLabels: $(TESTS_LABELS)
         statusContext: $(STATUS_CONTEXT)
+        testPlatform:  $(TEST_PLATFORM)
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         keyringPass: ${{ parameters.keyringPass }}
@@ -147,22 +145,37 @@ stages:
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
 
+  - job: postDebugOutput
+    dependsOn:
+    - tests
+    displayName: 'Post Debug output'
+    timeoutInMinutes: 10
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+      VAR_DEPENDENCIES: $[ convertToJson(dependencies) ]
+      VAR_STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
+    condition: always()
+    steps:
+    - checkout: none
+    - bash: |
+        env -0 | sort -z | tr '\0' '\n' || true
+        env
+      displayName: 'Dump env'
+      name: DumpEnv
+      env:
+        ENV_DEPENDENCIES: $[ convertToJson(dependencies) ]
+
   - job: publish_test_results
-    ${{ if eq(parameters.parseLabels, true) }}:
-      condition: and(ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
-    ${{ else }}:
-      condition: succeededOrFailed()
+    condition: and(ne(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True'),  succeededOrFailed())
     displayName: 'GitHub comment - Publish results'
     timeoutInMinutes: 1000
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - tests
     variables:
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
-      ${{ each label in parameters.simTestsConfigurations }}:
-        # Define the variable FOO from the previous job
-        # Note the use of single quotes!
-        TESTS_BOT_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests.outputs['${{ replace(label, '-', '_')}}.runTests.TESTS_BOT'] ]
-        TESTS_JOBSTATUS_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests.outputs['${{ replace(label, '-', '_')}}.runTests.TESTS_JOBSTATUS'] ]
+      DEPENDENCIES: $[ convertToJson(dependencies) ]
+      STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     pool:
       vmImage: 'windows-latest'
       workspace:
@@ -173,16 +186,13 @@ stages:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
-        simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+        testConfigurations: ${{ parameters.testConfigurations }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}
 
   - job: publish_skipped_tests
-    ${{ if eq(parameters.parseLabels, true) }}:
-      condition: eq(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
-    ${{ else }}:
-      condition: false
+    condition: eq(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
     displayName: 'GitHub comment - Skipped tests'
     timeoutInMinutes: 1000
 
