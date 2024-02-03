@@ -10,14 +10,17 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Tasks;
 
+using Xamarin.iOS.Tasks;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging;
+using Xamarin.Messaging.Build.Client;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class BTouchTaskBase : XamarinToolTask {
+	public class BTouch : XamarinToolTask, ITaskCallback {
 
 		public string OutputPath { get; set; }
 
@@ -251,6 +254,28 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				try {
+					BTouchToolPath = PlatformPath.GetPathForCurrentPlatform (BTouchToolPath);
+					BaseLibDll = PlatformPath.GetPathForCurrentPlatform (BaseLibDll);
+
+					TaskItemFixer.FixFrameworkItemSpecs (Log, item => OutputPath, TargetFramework.Identifier, References.Where (x => x.IsFrameworkItem ()).ToArray ());
+					TaskItemFixer.FixItemSpecs (Log, item => OutputPath, References.Where (x => !x.IsFrameworkItem ()).ToArray ());
+
+					var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+					var success = taskRunner.RunAsync (this).Result;
+
+					if (success)
+						GetGeneratedSourcesAsync (taskRunner).Wait ();
+
+					return success;
+				} catch (Exception ex) {
+					Log.LogErrorFromException (ex);
+
+					return false;
+				}
+			}
+
 			AttributeAssembly = PathUtils.ConvertToMacPath (AttributeAssembly);
 			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
 			BTouchToolExe = PathUtils.ConvertToMacPath (BTouchToolExe);
@@ -279,6 +304,62 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			return base.Execute ();
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => !item.IsFrameworkItem ();
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (ObjectiveCLibraries is null)
+				return new ITaskItem [0];
+
+			return ObjectiveCLibraries.Select (item => {
+				var linkWithFileName = String.Concat (Path.GetFileNameWithoutExtension (item.ItemSpec), ".linkwith.cs");
+				return new TaskItem (linkWithFileName);
+			}).ToArray ();
+		}
+
+		public override void Cancel ()
+		{
+			base.Cancel ();
+
+			if (!string.IsNullOrEmpty (SessionId))
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+		}
+
+		async System.Threading.Tasks.Task GetGeneratedSourcesAsync (TaskRunner taskRunner)
+		{
+			await taskRunner.GetFileAsync (this, GeneratedSourcesFileList).ConfigureAwait (continueOnCapturedContext: false);
+
+			var localGeneratedSourcesFileNames = new List<string> ();
+			var generatedSourcesFileNames = File.ReadAllLines (GeneratedSourcesFileList);
+
+			foreach (var generatedSourcesFileName in generatedSourcesFileNames) {
+				var localRelativePath = GetLocalRelativePath (generatedSourcesFileName);
+
+				await taskRunner.GetFileAsync (this, localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+
+				var localGeneratedSourcesFileName = PlatformPath.GetPathForCurrentPlatform (localRelativePath);
+
+				localGeneratedSourcesFileNames.Add (localGeneratedSourcesFileName);
+			}
+
+			File.WriteAllLines (GeneratedSourcesFileList, localGeneratedSourcesFileNames);
+		}
+
+		string GetLocalRelativePath (string path)
+		{
+			// convert mac full path in windows relative path
+			// must remove \users\{user}\Library\Caches\Xamarin\mtbs\builds\{appname}\{sessionid}\
+			if (path.Contains (SessionId)) {
+				var start = path.IndexOf (SessionId) + SessionId.Length + 1;
+
+				return path.Substring (start);
+			} else {
+				return path;
+			}
 		}
 	}
 }

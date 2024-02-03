@@ -8,6 +8,10 @@ if ($IsMacOS -or $IsLinux) {
     Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
 }
 
+gci env: | format-table -autosize
+
+gci env: | format-table -autosize | Out-String -Width 8192
+
 gci env: | format-table -autosize -wrap
 
 if ($IsMacOS) {
