@@ -41,12 +41,15 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (projectPath, csproj);
 
 			var dotnetPath = this.GetDotNetPath ();
-			var environment = default (Dictionary<string, string>);
+			var environment = new Dictionary<string, string> ();
 			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
 			if (!string.IsNullOrEmpty (customHome)) {
-				environment = new Dictionary<string, string> { { "HOME", customHome } };
+				environment ["HOME"] = customHome;
 			}
+			// Disable a few things that we don't care about
+			environment ["DOTNET_NOLOGO"] = "1";
+			environment ["DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE"] = "1";
 
 			try {
 				ExecuteRestoreAsync (dotnetPath, projectPath, targetName, environment).Wait ();

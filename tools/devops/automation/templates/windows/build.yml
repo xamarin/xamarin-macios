@@ -193,6 +193,20 @@ steps:
   displayName: 'Run .NET tests'
   timeoutInMinutes: 30
 
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\run-remote-windows-tests.ps1
+  displayName: 'Run .NET tests remotely'
+  timeoutInMinutes: 120
+  env:
+    XMA_PASSWORD: $(XMA.Password)
+
+- pwsh: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\fetch-remote-binlogs.ps1
+  displayName: 'Fetch remote binlogs'
+  timeoutInMinutes: 5
+  condition: always()
+  continueOnError: true
+  env:
+    XMA_PASSWORD: $(XMA.Password)
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $configFile = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}build-configuration\\configuration.json"
@@ -233,6 +247,8 @@ steps:
     Write-Host "Mac agent pool: $Env:MAC_AGENT_POOL"
     Write-Host "Mac agent name: $Env:MAC_AGENT_NAME"
     Write-Host "Mac agent IP: $Env:MAC_AGENT_IP"
+    Write-Host "Mac agent SYSTEM_DEFAULTWORKINGDIRECTORY: $Env:MAC_AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY"
+    Write-Host "Mac agent BUILD_SOURCESDIRECTORY: $Env:MAC_AGENT_BUILD_SOURCESDIRECTORY"
   displayName: Run tests
 
 # Upload all the binlogs
