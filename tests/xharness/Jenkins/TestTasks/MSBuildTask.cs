@@ -90,5 +90,9 @@ namespace Xharness.Jenkins.TestTasks {
 			environment ["TargetFrameworkFallbackSearchPaths"] = null;
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = null;
 		}
+
+		public override bool SupportsParallelExecution {
+			get => false;
+		}
 	}
 }
