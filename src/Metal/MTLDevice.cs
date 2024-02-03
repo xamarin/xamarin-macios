@@ -95,7 +95,7 @@ namespace Metal {
 		[UnsupportedOSPlatform ("maccatalyst")]
 #endif
 		[DllImport (Constants.MetalLibrary)]
-		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, BlockLiteral* handler);
+		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (IntPtr* observer, BlockLiteral* handler);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
@@ -118,7 +118,7 @@ namespace Metal {
 				block.SetupBlockUnsafe (static_notificationHandler, handler);
 #endif
 
-				rv = MTLCopyAllDevicesWithObserver (out observer_handle, &block);
+				rv = MTLCopyAllDevicesWithObserver (&observer_handle, &block);
 			}
 
 			var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
