@@ -14,12 +14,11 @@ namespace MetalPerformanceShaders {
 
 #if !COREBUILD
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool MPSSupportsMTLDevice (/* __nullable id <MTLDevice> */ IntPtr device);
+		extern static byte MPSSupportsMTLDevice (/* __nullable id <MTLDevice> */ IntPtr device);
 
 		public static bool Supports (IMTLDevice device)
 		{
-			return MPSSupportsMTLDevice (device.GetHandle ());
+			return MPSSupportsMTLDevice (device.GetHandle ()) != 0;
 		}
 
 #if NET

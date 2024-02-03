@@ -5,13 +5,15 @@ using System.Linq;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class DetectSdkLocationsCoreTaskBase : XamarinTask {
+	public class DetectSdkLocations : XamarinTask, ICancelableTask {
+		const string SdkVersionDefaultValue = "default";
 		#region Inputs
 
 		public string TargetArchitectures {
@@ -183,6 +185,15 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ()) {
+				// The new targets do not support the "default" value for the MtouchSdkVersion
+				// So we fix it to not break existing projects that has this value defined in the .csproj
+				if (!string.IsNullOrEmpty (SdkVersion) && SdkVersionDefaultValue.Equals (SdkVersion, StringComparison.OrdinalIgnoreCase))
+					SdkVersion = string.Empty;
+
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			}
+
 			AppleSdkSettings.Init ();
 
 			SetIsSimulator ();
@@ -257,6 +268,12 @@ namespace Xamarin.MacDev.Tasks {
 			} catch {
 				return null;
 			}
+		}
+
+		public void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
