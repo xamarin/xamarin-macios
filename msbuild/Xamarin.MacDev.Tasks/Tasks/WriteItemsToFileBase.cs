@@ -12,7 +12,7 @@ using System.Xml.Linq;
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class WriteItemsToFileBase : XamarinTask {
+	public class WriteItemsToFile : XamarinTask {
 		static readonly XNamespace XmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
 
 		static readonly XName ProjectElementName = XmlNs + "Project";
