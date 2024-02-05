@@ -349,7 +349,6 @@ namespace Cecil.Tests {
 			"System.Boolean GameController.GCGamepadSnapshot::GCGamepadSnapShotDataV100FromNSData(GameController.GCGamepadSnapShotDataV100&,System.IntPtr)",
 			"System.Boolean GameController.GCMicroGamepadSnapshot::GCMicroGamepadSnapshotDataFromNSData(GameController.GCMicroGamepadSnapshotData&,System.IntPtr)",
 			"System.Boolean GameController.GCMicroGamepadSnapshot::GCMicroGamepadSnapShotDataV100FromNSData(GameController.GCMicroGamepadSnapShotDataV100&,System.IntPtr)",
-			"System.Boolean HealthKit.HKAppleWalkingSteadiness::HKAppleWalkingSteadinessClassificationForQuantity(System.IntPtr,System.IntPtr&,System.IntPtr&)",
 			"System.Boolean MapKit.MKMapRect::Intersects(MapKit.MKMapRect,MapKit.MKMapRect)",
 			"System.Boolean MapKit.MKMapRect::MKMapRectContainsPoint(MapKit.MKMapRect,MapKit.MKMapPoint)",
 			"System.Boolean MapKit.MKMapRect::MKMapRectContainsRect(MapKit.MKMapRect,MapKit.MKMapRect)",
