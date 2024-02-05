@@ -470,7 +470,6 @@ stages:
     commit: ${{ parameters.commit }}
     testConfigurations: ${{ parameters.testConfigurations }}
     supportedPlatforms: ${{ parameters.supportedPlatforms }}
-    testPrefix: 'simulator_'
     stageName: 'simulator_tests'
     displayName: '${{ parameters.stageDisplayNamePrefix }}Simulator tests'
     testPool: '' # use the default
@@ -489,7 +488,6 @@ stages:
     stageName: 'publish_test_results'
     statusContext: 'VSTS: test results'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    testPrefix: 'test_results_'
     condition: ${{ parameters.runTests }}
     testConfigurations: ${{ parameters.testConfigurations }}
     supportedPlatforms: ${{ parameters.supportedPlatforms }}

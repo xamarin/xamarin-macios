@@ -21,7 +21,7 @@ Describe "TestResults tests" {
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_iOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - iOS",
-        "TEST_PREFIX": "simulator_dotnettests_ios",
+        "TEST_simulator_tests": "simulator_dotnettests_ios",
         "TEST_PLATFORM": "iOS",
         "TEST_FILTER": "Category != MultiPlatform"
       },
@@ -30,7 +30,7 @@ Describe "TestResults tests" {
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_tvOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - tvOS",
-        "TEST_PREFIX": "simulator_dotnettests_tvos",
+        "TEST_simulator_tests": "simulator_dotnettests_tvos",
         "TEST_PLATFORM": "tvOS",
         "TEST_FILTER": "Category != MultiPlatform"
       },
@@ -39,7 +39,7 @@ Describe "TestResults tests" {
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_MacCatalyst",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - MacCatalyst",
-        "TEST_PREFIX": "simulator_dotnettests_maccatalyst",
+        "TEST_simulator_tests": "simulator_dotnettests_maccatalyst",
         "TEST_PLATFORM": "MacCatalyst",
         "TEST_FILTER": "Category != MultiPlatform"
       },
@@ -48,7 +48,7 @@ Describe "TestResults tests" {
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_macOS",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - macOS",
-        "TEST_PREFIX": "simulator_dotnettests_macos",
+        "TEST_simulator_tests": "simulator_dotnettests_macos",
         "TEST_PLATFORM": "macOS",
         "TEST_FILTER": "Category != MultiPlatform"
       },
@@ -57,7 +57,7 @@ Describe "TestResults tests" {
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-dotnettests-tests",
         "LABEL_WITH_PLATFORM": "dotnettests_Multiple",
         "STATUS_CONTEXT": "VSTS: simulator tests - dotnettests - Multiple",
-        "TEST_PREFIX": "simulator_dotnettests_multiple",
+        "TEST_simulator_tests": "simulator_dotnettests_multiple",
         "TEST_PLATFORM": "",
         "TEST_FILTER": "Category = MultiPlatform"
       },
@@ -67,7 +67,7 @@ Describe "TestResults tests" {
         "TESTS_LABELS": "--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests,run-cecil-tests",
         "LABEL_WITH_PLATFORM": "cecil",
         "STATUS_CONTEXT": "VSTS: simulator tests - cecil",
-        "TEST_PREFIX": "simulator_cecil",
+        "TEST_simulator_tests": "simulator_cecil",
         "TEST_PLATFORM": ""
     }
 }
@@ -317,15 +317,15 @@ Describe "TestResults tests" {
         It "finds the right stuff" {
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "SummaryA" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixcecil-2" -Name "TestSummary.md" -Value "SummaryB" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_iOS-1" -Name "TestSummary.md" -Value "SummaryC" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvOS-1" -Name "TestSummary.md" -Value "SummaryD" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "SummaryE" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macOS-1" -Name "TestSummary.md" -Value "SummaryF" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "SummaryF" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testscecil-1" -Name "TestSummary.md" -Value "SummaryA" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testscecil-2" -Name "TestSummary.md" -Value "SummaryB" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_iOS-1" -Name "TestSummary.md" -Value "SummaryC" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_tvOS-1" -Name "TestSummary.md" -Value "SummaryD" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_MacCatalyst-1" -Name "TestSummary.md" -Value "SummaryE" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_macOS-1" -Name "TestSummary.md" -Value "SummaryF" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_Multiple-1" -Name "TestSummary.md" -Value "SummaryF" -Force
 
-            $testResults = New-TestSummaryResults -Path "$testDirectory" -TestPrefix "prefix" -StageDependencies "$stageDependencies"
+            $testResults = New-TestSummaryResults -Path "$testDirectory" -Testsimulator_tests "simulator_tests" -StageDependencies "$stageDependencies"
 
             # Remove-Item -Path $testDirectory -Recurse
 
@@ -335,17 +335,17 @@ Describe "TestResults tests" {
 
             $testResults[0].Label | Should -Be "linker"
             $testResults[0].Context | Should -Be " - linker"
-            $testResults[0].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-prefixlinker-200/TestSummary.md"
+            $testResults[0].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-simulator_testslinker-200/TestSummary.md"
             $testResults[0].TestsJobStatus | Should -Be "yay"
 
             $testResults[1].Label | Should -Be "introspection"
             $testResults[1].Context | Should -Be " - introspection"
-            $testResults[1].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-prefixintrospection-2/TestSummary.md"
+            $testResults[1].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-simulator_testsintrospection-2/TestSummary.md"
             $testResults[1].TestsJobStatus | Should -Be "nay"
 
             $testResults[2].Label | Should -Be "monotouch_test"
             $testResults[2].Context | Should -Be " - monotouch_test"
-            $testResults[2].ResultsPath | Should -Be "./subdir/TestSummary-prefixmonotouch_test-1/TestSummary.md"
+            $testResults[2].ResultsPath | Should -Be "./subdir/TestSummary-simulator_testsmonotouch_test-1/TestSummary.md"
             $testResults[2].TestsJobStatus | Should -Be ""
         }
 
@@ -356,10 +356,10 @@ Describe "TestResults tests" {
 
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testscecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_Multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -StageDependencies "$stageDependenciesWithMissingResults" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -Testsimulator_tests "simulator_tests" -StageDependencies "$stageDependenciesWithMissingResults" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -386,15 +386,15 @@ Describe "TestResults tests" {
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testscecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testscecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_macOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_iOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_Multiple-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
@@ -408,16 +408,16 @@ Describe "TestResults tests" {
 
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixcecil-2" -Name "TestSummary.md" -Value "# :tada: All 2 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_ios-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvos-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_maccatalyst-1" -Name "TestSummary.md" -Value "# :tada: All 5 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macos-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testscecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testscecil-2" -Name "TestSummary.md" -Value "# :tada: All 2 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_ios-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_tvos-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_maccatalyst-1" -Name "TestSummary.md" -Value "# :tada: All 5 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_macos-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
 
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -444,15 +444,15 @@ Describe "TestResults tests" {
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testscecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testscecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_iOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_macOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_Multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
@@ -464,14 +464,14 @@ Describe "TestResults tests" {
 
             $testDirectory = Join-Path "." "subdir"
             New-Item -Path "$testDirectory" -ItemType "directory" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixcecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_ios-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_tvos-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_maccatalyst-1" -Name "TestSummary.md" -Value "<summary>5 tests failed, 6 tests passed.</summary>" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_macos-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
-            New-Item -Path "$testDirectory/TestSummary-prefixdotnettests_multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testscecil-1" -Name "TestSummary.md" -Value "# :tada: All 1 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_ios-1" -Name "TestSummary.md" -Value "# :tada: All 3 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_tvos-1" -Name "TestSummary.md" -Value "# :tada: All 4 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_maccatalyst-1" -Name "TestSummary.md" -Value "<summary>5 tests failed, 6 tests passed.</summary>" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_macos-1" -Name "TestSummary.md" -Value "# :tada: All 6 tests passed :tada:" -Force
+            New-Item -Path "$testDirectory/TestSummary-simulator_testsdotnettests_multiple-1" -Name "TestSummary.md" -Value "# :tada: All 7 tests passed :tada:" -Force
 
-            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -TestPrefix "prefix" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
+            $parallelResults = New-ParallelTestsResults -Path "$testDirectory" -StageDependencies "$stageDependencies" -Context "context" -VSDropsIndex "vsdropsIndex"
 
             $parallelResults.IsSuccess() | Should -Be $false
 
@@ -498,15 +498,15 @@ Describe "TestResults tests" {
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_MacCatalyst-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_MacCatalyst-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixcecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixcecil-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_iOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_macOS-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_Multiple-1&api-version=6.0&`$format=zip)
-:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/prefixdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixdotnettests_tvOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: cecil: All 1 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testscecil-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testscecil-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (iOS): All 3 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_iOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_iOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (macOS): All 6 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_macOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_macOS-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (Multiple platforms): All 7 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_Multiple-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_Multiple-1&api-version=6.0&`$format=zip)
+:white_check_mark: dotnettests (tvOS): All 4 tests passed. [Html Report (VSDrops)](vsdropsIndex/simulator_testsdotnettests_tvOS-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-simulator_testsdotnettests_tvOS-1&api-version=6.0&`$format=zip)
 
 [comment]: <> (This is a test result report added by Azure DevOps)
 "
