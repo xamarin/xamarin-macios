@@ -446,9 +446,6 @@ function New-ParallelTestsResults {
         $TestPrefix,
         [Parameter(Mandatory)]
         [string]
-        $Dependencies,
-        [Parameter(Mandatory)]
-        [string]
         $StageDependencies,        
         [string]
         $UploadPrefix="",
@@ -458,11 +455,10 @@ function New-ParallelTestsResults {
         $VSDropsIndex
     )
 
-    Write-Host "Dependencies:`n$($Dependencies)"
+    Write-Host "Stage dependencies:`n$($StageDependencies)"
     Write-Host "Test Summaries:"
     Get-ChildItem $Path -Recurse *.md | Select-Object -Property FullName | Format-Table | Out-String | Write-Host
 
-    $dep = $Dependencies | ConvertFrom-Json -AsHashtable
     $stageDep = $StageDependencies | ConvertFrom-Json -AsHashtable
 
     $matrix = $stageDep.configure_build.configure.outputs["test_matrix.TEST_MATRIX"] | ConvertFrom-Json -AsHashtable
@@ -491,7 +487,12 @@ function New-ParallelTestsResults {
     Write-Host "Test suites:"
     Write-Host $suites.Keys
 
-    $outputs = $dep.simulator_tests.tests.outputs
+    Write-Host "stageDep:"
+    Write-Host $stageDep
+
+    $outputs = $stageDep.simulator_tests.tests.outputs
+    Write-Host "Outputs:"
+    Write-Host $outputs
     $tests = [System.Collections.SortedList]::new()
     foreach ($name in $outputs.Keys) {
         if ($name.EndsWith(".TESTS_LABEL")) {

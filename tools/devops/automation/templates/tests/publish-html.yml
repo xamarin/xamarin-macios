@@ -67,6 +67,9 @@ steps:
       commentToHide: '[comment]: <> (This is a test result report added by Azure DevOps)'
       checkoutCode: false # we already execute the 'clean.yml' template elsewhere in this job, and running 'checkout' again is useless (it also leads to duplicate step names which Azure DevOps doesn't like).
 
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator
 - pwsh: |
@@ -80,7 +83,6 @@ steps:
         $parallelResults = New-ParallelTestsResults `
           -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
           -TestPrefix "${{ parameters.testPrefix }}" `
-          -Dependencies "$Env:DEPENDENCIES" `
           -StageDependencies "$Env:STAGE_DEPENDENCIES" `
           -UploadPrefix "${{  parameters.uploadPrefix }}" `
           -Context "$Env:CONTEXT" `
