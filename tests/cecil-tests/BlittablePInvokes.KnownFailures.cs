@@ -355,7 +355,6 @@ namespace Cecil.Tests {
 			"System.Boolean MapKit.MKMapRect::MKMapRectSpans180thMeridian(MapKit.MKMapRect)",
 			"System.Boolean MediaAccessibility.MACaptionAppearance::MACaptionAppearanceAddSelectedLanguage(System.IntPtr,System.IntPtr)",
 			"System.Boolean MediaAccessibility.MAImageCaptioning::MAImageCaptioningSetCaption(System.IntPtr,System.IntPtr,System.IntPtr&)",
-			"System.Boolean MediaPlayer.MPVolumeSettings::AlertIsVisible()",
 			"System.Boolean MobileCoreServices.UTType::UTTypeConformsTo(System.IntPtr,System.IntPtr)",
 			"System.Boolean MobileCoreServices.UTType::UTTypeEqual(System.IntPtr,System.IntPtr)",
 			"System.Boolean MobileCoreServices.UTType::UTTypeIsDeclared(System.IntPtr)",
