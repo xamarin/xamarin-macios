@@ -16,14 +16,6 @@ parameters:
   type: string
   default: ''
 
-- name: platforms
-  type: object
-  default: {
-    'iOS': 'ApiScanSecretiOS',
-    'tvOS': 'ApiScanSecretiOS',
-    'macCatalyst': 'ApiScanSecretiOS',
-    'macOS': 'ApiScanSecretmacOS'
-  }
 
 stages:
 - stage: governance_checks
@@ -36,10 +28,6 @@ stages:
     pool:
       vmImage: windows-latest
 
-    variables:
-      ${{ each p in parameters.platforms }}:
-        INCLUDE_DOTNET_${{ upper(p.key) }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_${{ upper(p.key)}}'] ]
-        INCLUDE_DOTNET_${{ upper(p.key) }}_VERSION: 17.0
 
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
