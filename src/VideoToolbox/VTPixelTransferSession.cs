@@ -65,13 +65,17 @@ namespace VideoToolbox {
 		[DllImport (Constants.VideoToolboxLibrary)]
 		unsafe extern static VTStatus VTPixelTransferSessionCreate (
 			/* CFAllocatorRef */ IntPtr allocator, /* can be null */
-			/* VTPixelTransferSessionRef* */ out IntPtr pixelTransferSessionOut);
+			/* VTPixelTransferSessionRef* */ IntPtr* pixelTransferSessionOut);
 
 		public static VTPixelTransferSession? Create () => Create (null);
 
 		public static VTPixelTransferSession? Create (CFAllocator? allocator)
 		{
-			var result = VTPixelTransferSessionCreate (allocator.GetHandle (), out var ret);
+			VTStatus result;
+			IntPtr ret;
+			unsafe {
+				result = VTPixelTransferSessionCreate (allocator.GetHandle (), &ret);
+			}
 
 			if (result == VTStatus.Ok && ret != IntPtr.Zero)
 				return new VTPixelTransferSession (ret, true);
