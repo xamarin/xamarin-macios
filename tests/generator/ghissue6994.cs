@@ -2,6 +2,7 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using CoreMedia;
+using Network;
 
 namespace GHIssue6994 {
 
@@ -30,8 +31,13 @@ namespace GHIssue6994 {
 		[Export ("addProxies:")]
 		void AddProxies (IntPtr [] proxies);
 
+		[return: BindAs (typeof (int[]))]
 		[Export ("getProxies")]
-		IntPtr [] GetProxies ();
+		NSArray<NSNumber> GetProxies ();
+
+		[return: BindAs (typeof (NWProxyConfig[]))]
+		[Export ("getConfigs")]
+		NSArray<NWProxyConfig> GetConfigs ();
 
 		[Export ("initWithRegion:")]
 		IntPtr Constructor (MTLRegion [] regions);

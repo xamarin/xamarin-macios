@@ -63,6 +63,7 @@ public class TypeCache {
 	public Type CGVector { get; }
 	public Type DispatchQueue { get; }
 	public Type DispatchData { get; }
+	public Type NSArray { get; }
 	public Type NSNumber { get; }
 	public Type NSRange { get; }
 	public Type NSString { get; }
@@ -219,6 +220,7 @@ public class TypeCache {
 		CGVector = Lookup (platformAssembly, "CoreGraphics", "CGVector");
 		DispatchQueue = Lookup (platformAssembly, "CoreFoundation", "DispatchQueue");
 		DispatchData = Lookup (platformAssembly, "CoreFoundation", "DispatchData");
+		NSArray = Lookup (bindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSArray");
 		NSNumber = Lookup (bindThirdPartyLibrary ? platformAssembly : apiAssembly, "Foundation", "NSNumber");
 		NSRange = Lookup (platformAssembly, "Foundation", "NSRange");
 		NSString = Lookup (platformAssembly, "Foundation", "NSString");

@@ -520,8 +520,47 @@ public partial class Generator : IMemberGatherer {
 				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)!) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
 			} else
 				throw new BindingException (1048, true, arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
-		} else
+		} else if (originalReturnType.BaseType == TypeCache.NSArray) {
+			if (originalReturnType.GenericTypeArguments.Length > 0) {
+				var arrType = originalReturnType.GenericTypeArguments [0];
+				append = GenerateNSArrayElementConverterText (retType, arrType, minfo, out suffix);
+			}
+			else
+				throw new BindingException (1048, true, retType.Name);
+		}
+		else
 			throw new BindingException (1048, true, retType.Name);
+		return append;
+	}
+
+	public string GenerateNSArrayElementConverterText (Type retType, Type arrType, MemberInformation minfo, out string suffix)
+	{
+		string append = "";
+		suffix = string.Empty;
+		var nullableElementType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ());
+		var arrIsNullable = nullableElementType is not null;
+		var arrRetType = arrIsNullable ? nullableElementType : retType.GetElementType ();
+		string valueFetcher = "";
+
+		if (arrType == TypeCache.NSNumber && !arrIsNullable) {
+			if (TypeManager.NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum) {
+				var getterStr = string.Format ("{0}{1}", arrIsNullable ? "?" : string.Empty, arrRetType.IsEnum ? ".Int32Value" : valueFetcher);
+				append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)!) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", getterStr, TypeManager.FormatType (arrRetType.DeclaringType, arrRetType));
+			} else
+				throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
+		} else if (arrType == TypeCache.NSValue && !arrIsNullable) {
+			if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+				valueFetcher = $"{(arrIsNullable ? "?" : string.Empty)}.{arrRetType.Name}Value";
+			else if (!TypeManager.NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
+				throw GetBindAsException ("unbox", retType.Name, arrType.Name, "array", minfo.mi);
+			append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)!) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
+		} else if (arrType == TypeCache.NSString && !arrIsNullable) {
+				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)!) {{\n\t\treturn {TypeManager.FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
+		} else if (arrType.IsClass) {
+			append = string.Format ("createObject => new {0} (createObject, owns: false)", arrType);
+		} else
+			throw new BindingException (1048, true, arrIsNullable ? arrRetType.Name + "?[]" : retType.Name);
+
 		return append;
 	}
 
@@ -2872,6 +2911,22 @@ public partial class Generator : IMemberGatherer {
 					} else {
 						cast_a = $"{wrapper}Runtime.GetNSObject<{formattedReturnType}> (";
 						cast_b = $")!{suffix}";
+					}
+				} else if (mi.ReturnType.BaseType == TypeCache.NSArray) {
+					if (minfo is not null && minfo.is_bindAs) {
+						var bindAttrType = GetBindAsAttribute (minfo.mi).Type;
+						if (!bindAttrType.IsArray) {
+							throw new BindingException (1071, true, minfo.mi.DeclaringType.FullName, minfo.mi.Name);
+						}
+
+						var bindAsT = bindAttrType.GetElementType ();
+						print ("{0} retvalarrtmp;", NativeHandleType);
+						cast_a = "((retvalarrtmp = ";
+						cast_b = ") == IntPtr.Zero ? null! : (";
+						cast_b +=
+							$"NSArray.ArrayFromHandleFunc <{TypeManager.FormatType (bindAsT.DeclaringType, bindAsT)}> (retvalarrtmp, {GetFromBindAsWrapper (minfo, out suffix)})" +
+							suffix;
+						cast_b += "))";
 					}
 				} else {
 					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({formattedBindAsType}) " : string.Empty;
