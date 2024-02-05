@@ -20,10 +20,6 @@ parameters:
 - name: vsdropsPrefix
   type: string
 
-- name: testPrefix
-  type: string 
-  default: 'ios' # default context, since we started dealing with iOS devices. 
-
 - name: testConfigurations
   type: object
 
@@ -82,7 +78,6 @@ steps:
 
         $parallelResults = New-ParallelTestsResults `
           -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
-          -TestPrefix "${{ parameters.testPrefix }}" `
           -StageDependencies "$Env:STAGE_DEPENDENCIES" `
           -UploadPrefix "${{  parameters.uploadPrefix }}" `
           -Context "$Env:CONTEXT" `
@@ -105,7 +100,6 @@ steps:
     DEPENDENCIES: ${{ parameters.dependenciesJson }}
     STAGE_DEPENDENCIES: ${{ parameters.stageDependenciesJson }}
     CONTEXT: ${{ parameters.statusContext }}
-    DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
