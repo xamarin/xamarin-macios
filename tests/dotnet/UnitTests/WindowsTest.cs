@@ -134,7 +134,12 @@ namespace Xamarin.Tests {
 			// Assert that no files were copied to the signed directory after the app was signed.
 			// https://github.com/xamarin/xamarin-macios/issues/19278
 			var signedAppBundleFilesWithInfo = hotRestartAppBundleFiles.Select (v => new { Name = v, Info = new FileInfo (v) });
-			var codesignInfo = signedAppBundleFilesWithInfo.Single (v => v.Name.EndsWith ("\\_CodeSignature\\CodeResources"));
+			Console.WriteLine ($"{signedAppBundleFilesWithInfo.Count ()} files in app bundle:");
+			foreach (var fileWithInfo2 in signedAppBundleFilesWithInfo) {
+				Console.WriteLine ($"    {fileWithInfo2.Info.LastWriteTimeUtc.ToString ("O")} {fileWithInfo2.Name}");
+			}
+
+			var codesignInfo = signedAppBundleFilesWithInfo.Single (v => v.Name.EndsWith ("_CodeSignature\\CodeResources"));
 			var modifiedAfterSignature = signedAppBundleFilesWithInfo.Where (v => v.Info.LastWriteTimeUtc > codesignInfo.Info.LastWriteTimeUtc);
 			if (modifiedAfterSignature.Any ()) {
 				Console.WriteLine ($"{modifiedAfterSignature.Count ()} files were modified after the app was signed. Full list:");
