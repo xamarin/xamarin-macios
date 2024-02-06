@@ -33,6 +33,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Diagnostics.CodeAnalysis;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -438,7 +439,7 @@ namespace CoreText {
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerRegisterGraphicsFont (IntPtr cgfont, out IntPtr error);
 
-		public static bool RegisterGraphicsFont (CGFont font, out NSError? error)
+		public static bool RegisterGraphicsFont (CGFont font, [NotNullWhen(true)] out NSError? error)
 		{
 			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
