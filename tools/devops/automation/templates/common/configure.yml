@@ -68,10 +68,12 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     gci env: | sort | format-table -autosize -wrap
     $jsonPath = Join-Path -Path "$(Build.ArtifactStagingDirectory)" -ChildPath "configuration.json"
+    $xamarinLegacyEnabled = $Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS -ne "" ? "true" : "false"
     $testMatrix = Get-TestConfiguration `
       -TestConfigurations "$Env:TEST_CONFIGURATIONS" `
       -SupportedPlatforms "$Env:SUPPORTED_PLATFORMS" `
       -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS" `
+      -XamarinLegacyEnabled $xamarinLegacyEnabled `
       -TestsLabels "${{ parameters.testsLabels }}" `
       -StatusContext "${{ parameters.statusContext }}" `
       -TestPrefix "${{ parameters.testPrefix }}"

@@ -2,6 +2,7 @@ class TestConfiguration {
     [object] $testConfigurations
     [object] $supportedPlatforms
     [string[]] $enabledPlatforms
+    [string] $xamarinLegacyEnabled
     [string] $testsLabels
     [string] $statusContext
     [string] $testPrefix
@@ -10,12 +11,14 @@ class TestConfiguration {
         [object] $testConfigurations,
         [object] $supportedPlatforms,
         [string[]] $enabledPlatforms,
+        [string] $xamarinLegacyEnabled,
         [string] $testsLabels,
         [string] $statusContext,
         [string] $testPrefix) {
         $this.testConfigurations = $testConfigurations
         $this.supportedPlatforms = $supportedPlatforms
         $this.enabledPlatforms = $enabledPlatforms
+        $this.xamarinLegacyEnabled = $xamarinLegacyEnabled
         $this.testsLabels = $testsLabels
         $this.statusContext = $statusContext
         $this.testPrefix = $testPrefix
@@ -41,6 +44,12 @@ class TestConfiguration {
                     Write-Host "Multiple platform enabled"
                     $this.enabledPlatforms += "Multiple"
                 }
+                if ($this.xamarinLegacyEnabled -eq "true") {
+                    Write-Host "Xamarin Legacy enabled"
+                } else {
+                    Write-Host "Xamarin Legacy not enabled"
+                }
+
                 foreach ($platform in $this.enabledPlatforms) {
                     Write-Host "platform: $platform"
                     $platformConfig = $this.supportedPlatforms | Where-Object { $_.platform -eq $platform }
@@ -53,9 +62,11 @@ class TestConfiguration {
                     $isLegacyPlatform = $($platformConfig.isLegacyPlatform) -eq "true"
                     if ($containsDotNetTests -and $isDotNetPlatform) {
                         $runThisPlatform = $true
-                    } elseif ($containsLegacyTests -and $isLegacyPlatform) {
+                    } elseif ($containsLegacyTests -and $isLegacyPlatform -and $this.xamarinLegacyEnabled -eq "true") {
                         $runThisPlatform = $true
                     }
+                    Write-Host "runThisPlatform: $runThisPlatform"
+
                     if (!$runThisPlatform) {
                         continue
                     }
@@ -80,6 +91,20 @@ class TestConfiguration {
                     $rv[$platformLabel] = $platformVars
                 }
             } else {
+                $runThisPlatform = $false
+                $containsDotNetTests = $($config.containsDotNetTests) -eq "true"
+                $containsLegacyTests = $($config.containsLegacyTests) -eq "true"
+                if ($containsDotNetTests) {
+                    $runThisPlatform = $true
+                } elseif ($containsLegacyTests -and $this.xamarinLegacyEnabled -eq "true") {
+                    $runThisPlatform = $true
+                }
+                Write-Host "runThisPlatform: $runThisPlatform"
+
+                if (!$runThisPlatform) {
+                    continue
+                }
+
                 # set non-platform specific variables
                 $vars["LABEL_WITH_PLATFORM"] = "$label"
                 $vars["STATUS_CONTEXT"] = "$($this.statusContext) - $($label)"
@@ -111,6 +136,11 @@ function Get-TestConfiguration {
         [AllowEmptyString()]
         $EnabledPlatforms,
 
+        [Parameter(Mandatory)]
+        [string]
+        [AllowEmptyString()]
+        $XamarinLegacyEnabled,
+
         $TestsLabels,
 
         [string]
@@ -123,7 +153,7 @@ function Get-TestConfiguration {
     $objTestConfigurations = ConvertFrom-Json -InputObject $TestConfigurations
     $objSupportedPlatforms = ConvertFrom-Json -InputObject $SupportedPlatforms
     $arrEnabledPlatforms = -split $EnabledPlatforms
-    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $TestsLabels, $StatusContext, $TestPrefix)
+    $config = [TestConfiguration]::new($objTestConfigurations, $objSupportedPlatforms, $arrEnabledPlatforms, $XamarinLegacyEnabled, $TestsLabels, $StatusContext, $TestPrefix)
     return $config.Create()
 }
 
