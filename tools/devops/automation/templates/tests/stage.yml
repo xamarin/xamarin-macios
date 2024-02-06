@@ -35,9 +35,6 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: testPrefix
-  type: string
-
 - name: gitHubToken
   type: string
 
