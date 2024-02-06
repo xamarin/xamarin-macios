@@ -38,7 +38,7 @@ stages:
   dependsOn:
   - build_packages
   - configure_build
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_WINDOWS_TESTS'], 'true'))
+  condition: and(succeeded(), eq(dependencies.configure_build.outputs['configure.decisions.RUN_WINDOWS_TESTS'], 'true'))
 
   jobs:
   - job: mac_reservation
