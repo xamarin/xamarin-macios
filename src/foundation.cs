@@ -5961,7 +5961,7 @@ namespace Foundation {
 
 		// From NSUserActivity (CIBarcodeDescriptor)
 
-		[TV (11, 3), iOS (11, 3), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("detectedBarcodeDescriptor", ArgumentSemantic.Copy)]
 		CIBarcodeDescriptor DetectedBarcodeDescriptor { get; }
@@ -5969,18 +5969,18 @@ namespace Foundation {
 		// From NSUserActivity (CLSDeepLinks)
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
+		[NoWatch, NoTV, Mac (11, 0)]
 		[Export ("isClassKitDeepLink")]
 		bool IsClassKitDeepLink { get; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch, NoTV, Mac (11, 0), iOS (11, 4)]
+		[NoWatch, NoTV, Mac (11, 0)]
 		[NullAllowed, Export ("contextIdentifierPath", ArgumentSemantic.Strong)]
 		string [] ContextIdentifierPath { get; }
 
 		// From NSUserActivity (IntentsAdditions)
 
-		[Watch (5, 0), NoTV, Mac (12, 0), iOS (12, 0)]
+		[Watch (5, 0), NoTV, Mac (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("suggestedInvocationPhrase")]
 		string SuggestedInvocationPhrase {
@@ -5994,24 +5994,24 @@ namespace Foundation {
 			set;
 		}
 
-		[Watch (5, 0), NoTV, NoMac, iOS (12, 0)]
+		[Watch (5, 0), NoTV, NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("eligibleForPrediction")]
 		bool EligibleForPrediction { [Bind ("isEligibleForPrediction")] get; set; }
 
-		[Watch (5, 0), NoTV, iOS (12, 0)]
+		[Watch (5, 0), NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("persistentIdentifier")]
 		string PersistentIdentifier { get; set; }
 
-		[Watch (5, 0), NoTV, iOS (12, 0)]
+		[Watch (5, 0), NoTV]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Async]
 		[Export ("deleteSavedUserActivitiesWithPersistentIdentifiers:completionHandler:")]
 		void DeleteSavedUserActivities (string [] persistentIdentifiers, Action handler);
 
-		[Watch (5, 0), NoTV, iOS (12, 0)]
+		[Watch (5, 0), NoTV]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Async]
@@ -12269,13 +12269,13 @@ namespace Foundation {
 		[Field ("NSKeyedUnarchiveFromDataTransformerName")]
 		NSString KeyedUnarchiveFromDataTransformerName { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("NSSecureUnarchiveFromDataTransformerName")]
 		NSString SecureUnarchiveFromDataTransformerName { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSValueTransformer))]
 	interface NSSecureUnarchiveFromDataTransformer {

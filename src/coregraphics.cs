@@ -270,8 +270,6 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceExtendedDisplayP3")]
 		NSString ExtendedDisplayP3 { get; }
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 15, 4, message: "Use 'Itur_2100_PQ' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 4, message: "Use 'Itur_2100_PQ' instead.")]

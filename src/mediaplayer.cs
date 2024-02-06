@@ -1665,7 +1665,6 @@ namespace MediaPlayer {
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 
-		[iOS (11, 1), TV (11, 1)]
 		[MacCatalyst (13, 1)]
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]

@@ -109,7 +109,7 @@ namespace CloudKit {
 		[Export ("rootRecordID", ArgumentSemantic.Copy)]
 		CKRecordID RootRecordID { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("participantRole", ArgumentSemantic.Assign)]
 		CKShareParticipantRole ParticipantRole { get; }
@@ -199,7 +199,7 @@ namespace CloudKit {
 		[Export ("userIdentity", ArgumentSemantic.Strong)]
 		CKUserIdentity UserIdentity { get; }
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("role", ArgumentSemantic.Assign)]
 		CKShareParticipantRole Role { get; set; }
@@ -663,7 +663,7 @@ namespace CloudKit {
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		NativeHandle Constructor (CKRecordZoneID [] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
-		[iOS (12, 0), Watch (5, 0), TV (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithRecordZoneIDs:configurationsByRecordZoneID:")]
 		NativeHandle Constructor (CKRecordZoneID [] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> configurationsByRecordZoneID);
@@ -680,7 +680,7 @@ namespace CloudKit {
 		[NullAllowed, Export ("optionsByRecordZoneID", ArgumentSemantic.Copy)]
 		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> OptionsByRecordZoneID { get; set; }
 
-		[iOS (12, 0), Watch (5, 0), TV (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("configurationsByRecordZoneID", ArgumentSemantic.Copy)]
 		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesConfiguration> ConfigurationsByRecordZoneID { get; set; }
@@ -732,7 +732,7 @@ namespace CloudKit {
 		string [] DesiredKeys { get; set; }
 	}
 
-	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CKFetchRecordZoneChangesConfiguration : NSSecureCoding, NSCopying {

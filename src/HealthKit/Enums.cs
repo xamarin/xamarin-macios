@@ -359,7 +359,6 @@ namespace HealthKit {
 		Light,
 		Medium,
 		Heavy,
-		[iOS (12, 0)]
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		None,
@@ -517,7 +516,7 @@ namespace HealthKit {
 		PredictionNonExercise,
 	}
 
-	[NoWatch, iOS (12, 0), Mac (13, 0)]
+	[NoWatch, Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKFhirResourceType {
 		[Field ("HKFHIRResourceTypeAllergyIntolerance")]
@@ -552,7 +551,7 @@ namespace HealthKit {
 		DocumentReference,
 	}
 
-	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
+	[Watch (5, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	public enum HKClinicalTypeIdentifier {
 
@@ -580,7 +579,7 @@ namespace HealthKit {
 		ClinicalNoteRecord,
 	}
 
-	[Watch (5, 0), iOS (12, 0), Mac (13, 0)]
+	[Watch (5, 0), Mac (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum HKAuthorizationRequestStatus : long {

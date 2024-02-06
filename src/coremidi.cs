@@ -301,7 +301,7 @@ namespace CoreMidi {
 
 	}
 
-	[NoWatch, NoTV, iOS (12, 0)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfile")]
 	[DisableDefaultCtor]
@@ -321,7 +321,7 @@ namespace CoreMidi {
 		NativeHandle Constructor (NSData data);
 	}
 
-	[NoWatch, NoTV, iOS (12, 0)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICIProfileState")]
 	[DisableDefaultCtor]
@@ -355,7 +355,7 @@ namespace CoreMidi {
 	delegate void MidiCIProfileSpecificDataHandler (MidiCISession session, byte channel, MidiCIProfile profile, NSData data);
 	delegate void MidiCISessionDisconnectHandler (MidiCISession session, NSError error);
 
-	[NoWatch, NoTV, iOS (12, 0)]
+	[NoWatch, NoTV]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject), Name = "MIDICISession")]
 	[DisableDefaultCtor]

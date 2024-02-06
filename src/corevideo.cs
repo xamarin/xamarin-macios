@@ -316,8 +316,6 @@ namespace CoreVideo {
 		[Field ("kCVImageBufferTransferFunction_ITU_R_2100_HLG")]
 		ItuR2100Hlg,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCVImageBufferTransferFunction_Linear")]

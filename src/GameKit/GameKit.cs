@@ -328,10 +328,8 @@ namespace GameKit {
 	}
 
 #if !NET
-	[iOS (11, 3)]
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Do not use; this API was removed.")]
 	[Deprecated (PlatformName.MacOSX, 11, 0, message: "Do not use; this API was removed.")]
-	[TV (11, 3)]
 	[Deprecated (PlatformName.TvOS, 14, 0, message: "Do not use; this API was removed.")]
 	[Native]
 	public enum GKAuthenticationType : ulong {

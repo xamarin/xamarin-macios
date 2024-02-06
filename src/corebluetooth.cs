@@ -190,8 +190,6 @@ namespace CoreBluetooth {
 		NSString OptionNotifyOnNotificationKey { get; }
 #endif
 
-		[iOS (11, 2)]
-		[TV (11, 2)]
 		[Watch (4, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("CBConnectPeripheralOptionStartDelayKey")]
