@@ -1,3 +1,4 @@
+using System.Linq;
 using Xamarin.Messaging.Build.Client;
 
 namespace Microsoft.Build.Tasks {
@@ -9,7 +10,9 @@ namespace Microsoft.Build.Tasks {
 
 			var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
-			taskRunner.FixReferencedItems (SourceFiles);
+			if (SourceFiles?.Any () == true) {
+				taskRunner.FixReferencedItems (SourceFiles);
+			}
 
 			return taskRunner.RunAsync (this).Result;
 		}
