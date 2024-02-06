@@ -64,12 +64,11 @@ namespace CoreLocation {
 		}
 
 		[DllImport (Constants.CoreLocationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern /* BOOL */ bool CLLocationCoordinate2DIsValid (CLLocationCoordinate2D cord);
+		static extern /* BOOL */ byte CLLocationCoordinate2DIsValid (CLLocationCoordinate2D cord);
 
 		public bool IsValid ()
 		{
-			return CLLocationCoordinate2DIsValid (this);
+			return CLLocationCoordinate2DIsValid (this) != 0;
 		}
 
 		public override string ToString ()

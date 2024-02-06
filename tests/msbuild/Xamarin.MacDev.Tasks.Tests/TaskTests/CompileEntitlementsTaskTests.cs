@@ -44,7 +44,17 @@ namespace Xamarin.MacDev.Tasks {
 			compiledEntitlements = task.CompiledEntitlements.ItemSpec;
 			archivedEntitlements = Path.Combine (AppBundlePath, "archived-expanded-entitlements.xcent");
 
+			DeleteDirectory (Path.Combine (MonoTouchProjectPath, "bin"));
+			DeleteDirectory (Path.Combine (MonoTouchProjectPath, "obj"));
+
 			return task;
+		}
+
+		void DeleteDirectory (string directory)
+		{
+			if (!Directory.Exists (directory))
+				return;
+			Directory.Delete (directory, true);
 		}
 
 		[Test (Description = "Xambug #46298")]
@@ -207,5 +217,46 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
 		}
 
+		[Test]
+		public void AppIdentifierPrefix ()
+		{
+			var customEntitlements = new TaskItem [] {
+				new TaskItem ("keychain-access-group", new Dictionary<string, string> { {  "Type", "String" }, { "Value", "$(AppIdentifierPrefix)org.xamarin" } }),
+			};
+			var task = CreateEntitlementsTask (out var compiledEntitlements, out var archivedEntitlements);
+			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
+			task.CustomEntitlements = customEntitlements;
+			ExecuteTask (task);
+			var compiled = PDictionary.FromFile (compiledEntitlements);
+			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
+			var kag = ((PString) compiled ["keychain-access-group"]).Value;
+			Assert.That (kag, Is.EqualTo ("32UV7A8CDE.org.xamarin"), "value 1");
+
+			var archived = PDictionary.FromFile (archivedEntitlements);
+			Assert.IsTrue (archived.ContainsKey ("keychain-access-group"), "archived");
+			var archivedKag = ((PString) archived ["keychain-access-group"]).Value;
+			Assert.That (archivedKag, Is.EqualTo ("32UV7A8CDE.org.xamarin"), "archived value 1");
+		}
+
+		[Test]
+		public void TeamIdentifierPrefix ()
+		{
+			var customEntitlements = new TaskItem [] {
+				new TaskItem ("keychain-access-group", new Dictionary<string, string> { {  "Type", "String" }, { "Value", "$(TeamIdentifierPrefix)org.xamarin" } }),
+			};
+			var task = CreateEntitlementsTask (out var compiledEntitlements, out var archivedEntitlements);
+			task.TargetFrameworkMoniker = ".NETCoreApp,Version=v6.0,Profile=ios";
+			task.CustomEntitlements = customEntitlements;
+			ExecuteTask (task);
+			var compiled = PDictionary.FromFile (compiledEntitlements);
+			Assert.IsFalse (compiled.ContainsKey (EntitlementKeys.AllowExecutionOfJitCode), "#1");
+			var kag = ((PString) compiled ["keychain-access-group"]).Value;
+			Assert.That (kag, Is.EqualTo ("Z8CSQKJE7R.org.xamarin"), "value 1");
+
+			var archived = PDictionary.FromFile (archivedEntitlements);
+			Assert.IsTrue (archived.ContainsKey ("keychain-access-group"), "archived");
+			var archivedKag = ((PString) archived ["keychain-access-group"]).Value;
+			Assert.That (archivedKag, Is.EqualTo ("Z8CSQKJE7R.org.xamarin"), "archived value 1");
+		}
 	}
 }
