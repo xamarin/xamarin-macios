@@ -1,7 +1,18 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<MessagingVersion>1.13.8</MessagingVersion>
-		<HotRestartVersion>1.1.7</HotRestartVersion>
+		<!--
+
+			Some feeds have testing versions of the Messaging and HotRestart
+			packages with versions 99.*. This means that we'll want the exact
+			version of the packages below, not the specified version or any
+			other later version, because if the requested version doesn't
+			exist, we'll get the testing version and things break in
+			interesting ways. So in order to get the exact version, they're
+			enclosed in brackets.
+
+		-->
+		<MessagingVersion>[1.13.8]</MessagingVersion>
+		<HotRestartVersion>[1.1.7]</HotRestartVersion>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
 </Project>
