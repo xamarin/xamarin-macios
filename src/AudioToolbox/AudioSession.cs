@@ -345,39 +345,39 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioSessionSetActive ([MarshalAs (UnmanagedType.I1)] bool active);
+		extern static OSStatus AudioSessionSetActive (byte active);
 
 		public static void SetActive (bool active)
 		{
-			int k = AudioSessionSetActive (active);
+			int k = AudioSessionSetActive (active ? (byte) 1 : (byte) 0);
 			if (k != 0)
 				throw new AudioSessionException (k);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static AudioSessionErrors AudioSessionSetActiveWithFlags ([MarshalAs (UnmanagedType.I1)] bool active, AudioSessionActiveFlags inFlags);
+		extern static AudioSessionErrors AudioSessionSetActiveWithFlags (byte active, AudioSessionActiveFlags inFlags);
 
 		public static AudioSessionErrors SetActive (bool active, AudioSessionActiveFlags flags)
 		{
-			return AudioSessionSetActiveWithFlags (active, flags);
+			return AudioSessionSetActiveWithFlags (active ? (byte) 1 : (byte) 0, flags);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static OSStatus AudioSessionGetProperty (AudioSessionProperty id, ref int size, IntPtr data);
+		unsafe extern static OSStatus AudioSessionGetProperty (AudioSessionProperty id, int* size, IntPtr data);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static OSStatus AudioSessionSetProperty (AudioSessionProperty id, int size, IntPtr data);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		// deprecated in iOS7 but not exposed / used anywhere
-		extern static OSStatus AudioSessionGetPropertySize (AudioSessionProperty id, out int size);
+		unsafe extern static OSStatus AudioSessionGetPropertySize (AudioSessionProperty id, int* size);
 
 		static double GetDouble (AudioSessionProperty property)
 		{
 			unsafe {
 				double val = 0;
 				int size = 8;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 
@@ -390,7 +390,7 @@ namespace AudioToolbox {
 			unsafe {
 				float val = 0;
 				int size = 4;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 				return val;
@@ -402,7 +402,7 @@ namespace AudioToolbox {
 			unsafe {
 				int val = 0;
 				int size = 4;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 
@@ -415,7 +415,7 @@ namespace AudioToolbox {
 			unsafe {
 				IntPtr val;
 				int size = IntPtr.Size;
-				int k = AudioSessionGetProperty (property, ref size, (IntPtr) (&val));
+				int k = AudioSessionGetProperty (property, &size, (IntPtr) (&val));
 				if (k != 0)
 					throw new AudioSessionException (k);
 

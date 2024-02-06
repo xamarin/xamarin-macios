@@ -15,6 +15,34 @@ using Xamarin.Tests;
 namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiAvailabilityTest {
+
+		public record ObsoletedFailure : IComparable {
+
+			public string Key { get; }
+			public ICustomAttributeProvider Api { get; }
+			public OSPlatformAttributes [] Obsoleted { get; }
+			public OSPlatformAttributes [] Supported { get; }
+
+			public ObsoletedFailure (string key, ICustomAttributeProvider api, OSPlatformAttributes [] obsoleted, OSPlatformAttributes [] supported)
+			{
+				Key = key;
+				Api = api;
+				Obsoleted = obsoleted;
+				Supported = supported;
+			}
+
+			public override string ToString ()
+				=> $"{Key}: {Api} is obsoleted on {string.Join (", ", Obsoleted.Select (v => v.Platform))} but not on {string.Join (", ", Supported.Select (v => v.Platform))}";
+
+			public int CompareTo (object? obj)
+			{
+				if (obj is not ObsoletedFailure other)
+					return -1;
+				return Key.CompareTo (other.Key);
+			}
+
+		}
+
 		// This test will flag any API that's only obsoleted on some platforms.
 		[Test]
 		public void FindMissingObsoleteAttributes ()
@@ -23,7 +51,7 @@ namespace Cecil.Tests {
 
 			var harvestedInfo = Helper.MappedNetApi;
 
-			var failures = new Dictionary<string, (string Key, ICustomAttributeProvider Api, OSPlatformAttributes [] Obsoleted, OSPlatformAttributes [] Supported)> ();
+			var failures = new Dictionary<string, ObsoletedFailure> ();
 			var mismatchedObsoleteMessages = new List<string> ();
 			foreach (var kvp in harvestedInfo) {
 				var attributes = kvp.Value.Select (v => v.Api.GetAvailabilityAttributes (v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform) ?? new OSPlatformAttributes (v.Api, v.Platform)).ToArray ();
@@ -42,7 +70,7 @@ namespace Cecil.Tests {
 				if (!notObsoletedNorUnsupported.Any ())
 					continue;
 
-				var failure = (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
+				var failure = new ObsoletedFailure (kvp.Key, kvp.Value.First ().Api, obsoleted, notObsoletedNorUnsupported);
 				failures [failure.Key] = failure;
 
 				var obsoleteMessages = obsoleted.Select (v => v.Obsoleted?.Message).Distinct ().ToArray ();
@@ -157,7 +185,6 @@ namespace Cecil.Tests {
 			"Intents.INStartCallIntent..ctor(Intents.INCallAudioRoute, Intents.INCallDestinationType, Intents.INPerson[], Intents.INCallRecordType, Intents.INCallCapability)",
 			"MapKit.MKOverlayView",
 			"MediaPlayer.MPVolumeSettings.AlertHide()",
-			"MediaPlayer.MPVolumeSettings.AlertIsVisible()",
 			"MediaPlayer.MPVolumeSettings.AlertShow()",
 			"MetalPerformanceShaders.MPSCnnConvolutionDescriptor.GetConvolutionDescriptor(System.UIntPtr, System.UIntPtr, System.UIntPtr, System.UIntPtr, MetalPerformanceShaders.MPSCnnNeuron)",
 			"MetalPerformanceShaders.MPSCnnFullyConnected..ctor(Metal.IMTLDevice, MetalPerformanceShaders.MPSCnnConvolutionDescriptor, System.Single[], System.Single[], MetalPerformanceShaders.MPSCnnConvolutionFlags)",
@@ -243,13 +270,15 @@ namespace Cecil.Tests {
 			"UIKit.UIStringDrawing.StringSize(System.String, UIKit.UIFont, System.Runtime.InteropServices.NFloat, UIKit.UILineBreakMode)",
 		};
 
+		HashSet<string> knownConsistencyIssues = new HashSet<string> { };
+
 		// This test verifies that the SupportedOSPlatform and UnavailableOSPlatform/ObsoletedOSplatform attributes are consistent.
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
 		public void AttributeConsistency (AssemblyInfo info)
 		{
 			var assembly = info.Assembly;
 			var platform = info.Platform;
-			var failures = new List<string> ();
+			var failures = new HashSet<string> ();
 
 			foreach (var api in assembly.EnumerateAttributeProviders ()) {
 				var availability = api.GetAvailabilityAttributes (platform);
@@ -347,19 +376,15 @@ namespace Cecil.Tests {
 
 					// Check that the member must be marked unsupported if the type is
 					if (apiUnsupportedAttribute is not null && memberSupportedAttribute is not null && memberUnsupportedAttribute is null)
-						failures.Add ($"[FAIL] {member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
+						failures.Add ($"{member.AsFullName ()} is marked available in {memberSupportedVersion} with '{memberSupportedAttribute.AsOSPlatformAttributeString ()}', but the declaring type {type.FullName} is marked unavailable in {apiUnsupportedVersion} with '{apiUnsupportedAttribute.AsOSPlatformAttributeString ()}'");
 
 					// Check that the member isn't supported before the type.
 					if (apiSupportedVersion is not null && memberSupportedVersion is not null && memberSupportedVersion < apiSupportedVersion)
-						failures.Add ($"[FAIL] in {member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
+						failures.Add ($"{member.AsFullName ()} is marked available with '{memberSupportedVersion}', but the declaring type {type.FullName} is only available in '{apiSupportedVersion}'");
 				}
 			}
 
-			if (failures.Count == 0)
-				return;
-			var msg = $"{failures.Count} API with inconsistent availability attributes:" + "\n\t" + string.Join ("\n\t", failures);
-			Console.WriteLine (msg);
-			Assert.Fail (msg);
+			Helper.AssertFailures (failures, knownConsistencyIssues, nameof (AttributeConsistency), "API with inconsistent availability attributes");
 		}
 
 		static bool IsEnumField (ICustomAttributeProvider api)

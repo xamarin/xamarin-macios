@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=17.1.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=9.1.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=17.3.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=9.3.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -65,25 +65,81 @@ MAC_PACKAGE_VERSION=9.1.0.$(MAC_COMMIT_DISTANCE)
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 
-IOS_NUGET_OS_VERSION=17.0
-TVOS_NUGET_OS_VERSION=17.0
-WATCHOS_NUGET_OS_VERSION=10.0
-MACOS_NUGET_OS_VERSION=14.0
-MACCATALYST_NUGET_OS_VERSION=17.0
+IOS_NUGET_OS_VERSION=17.2
+TVOS_NUGET_OS_VERSION=17.2
+WATCHOS_NUGET_OS_VERSION=10.2
+MACOS_NUGET_OS_VERSION=14.2
+MACCATALYST_NUGET_OS_VERSION=17.2
 
 
-# Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
+# In theory we should define the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
 # * We release support for iOS 14.5 with .NET 6
 # * Apple releases iOS 15.0, we're still using .NET 6. This default continues to be iOS 14.5
 # * .NET 7 is shipped, and at this point we bump the default to iOS 15.0
 # Basically: this should be the last OS version of the platform in question when the current major .NET version is first released to stable.
 # Ref: https://github.com/dotnet/designs/blob/8e6394406d44f75f30ea2259a425cb9e38d75b69/accepted/2020/net5/net5.md#os-versions
 
-DEFAULT_TARGET_PLATFORM_VERSION_IOS=17.0
-DEFAULT_TARGET_PLATFORM_VERSION_TVOS=17.0
-DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=10.0
-DEFAULT_TARGET_PLATFORM_VERSION_MACOS=14.0
-DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=17.0
+# However, this doesn't work well for Apple platforms: Whenever Apple releases
+# new Xcode versions, our existing workloads might not be compatible with the
+# new Xcode. We'll of course ship updateds workload with support for the new
+# Xcode, but defaulting to an older target platform version would mean that
+# developers wouldn't get the new workload, they'd get the old one. This is
+# exacerbated by the fact that Apple aggressively auto-updates Xcode on
+# developers' machines: they might wake up one day to a broken build - the
+# obvious fix ("dotnet workload update") doesn't fix anything - even if we've
+# shipped updated workloads - because the default is to use the old one.
+# They'd have to manually specify the target platform version in the target
+# platform to get the updated workload ("net8.0-ios17.2" to use the iOS 17.2
+# workload instead of "net8.0-ios", which would use the default
+# (old/initial/17.0) .NET 8 workload) - and then update _again_ when the next
+# Xcode comes around. At this point the point of having a sane default value
+# is totally out the window, because everybody would have to specify (and
+# continuously update) a platform version in their project files to keep their
+# projects building.
 
-# .NET 7 versions are bumped using maestro.
+# So we've made the decision that the default target platform version is
+# always the latest target platform version.
 
+
+#
+# Here we list all the releases we support for each platform.
+#
+# Format: space-separated list of TargetFramework-OSVersion
+#
+# Example:
+#
+#    SUPPORTED_API_VERSIONS_IOS=net8.0-17.0 net8.0-17.2
+#
+# This means the iOS workload shipped from the current branch supports projects with:
+#    <TargetFramework>net8.0-17.0</TargetFramework>
+# and
+#    <TargetFramework>net8.0-17.2</TargetFramework>
+# and even:
+#    <TargetFrameworks>net8.0-17.0;net8.0-17.2</TargetFrameworks>
+#
+# When shipping support for a preview Xcode, we might add entries here for a preview release into a stable release.
+#
+# Example:
+#
+#     SUPPORTED_API_VERSIONS_IOS=net9.0-18.0
+#
+# If the current branch is stable .NET 8 using Xcode 15.0 (aka iOS 17.0), this
+# would add support for trying the preview release by doing:
+#
+#     <TargetFramework>net9.0-18.0</TargetFramework>
+#     <EnablePreviewFeatures>true</EnablePreviewFeatures>
+#
+# Note that any SUPPORTED_API_VERSIONS entry below for older OS versions need a corresponding entry in
+# the eng/Version.Details.xml and eng/Versions.props files.
+#
+
+# First add the versions for the current branch. DO NOT TOUCH THIS. Add older branches below.
+
+SUPPORTED_API_VERSIONS_IOS=$(DOTNET_TFM)-$(IOS_NUGET_OS_VERSION)
+SUPPORTED_API_VERSIONS_TVOS=$(DOTNET_TFM)-$(TVOS_NUGET_OS_VERSION)
+SUPPORTED_API_VERSIONS_MACOS=$(DOTNET_TFM)-$(MACOS_NUGET_OS_VERSION)
+SUPPORTED_API_VERSIONS_MACCATALYST=$(DOTNET_TFM)-$(MACCATALYST_NUGET_OS_VERSION)
+
+# Add older versions here!
+
+# (work on adding older versions is in progress)

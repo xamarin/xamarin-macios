@@ -72,8 +72,10 @@ NestedModules = @(
                'Artifacts.psm1', 
                'GitHub.psm1', 
                'MLaunch.psm1', 
+               'RemoteMac.psm1', 
                'StaticPages.psm1', 
                'System.psm1', 
+               'TestConfiguration.psm1',
                'TestResults.psm1',
                'VSTS.psm1')
 

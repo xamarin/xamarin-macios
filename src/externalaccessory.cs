@@ -56,8 +56,7 @@ namespace ExternalAccessory {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		EAAccessoryDelegate Delegate { get; set; }
+		IEAAccessoryDelegate Delegate { get; set; }
 
 		[Deprecated (PlatformName.iOS, 13, 0)]
 		[Deprecated (PlatformName.TvOS, 13, 0)]
@@ -67,6 +66,8 @@ namespace ExternalAccessory {
 		[Export ("dockType")]
 		string DockType { get; }
 	}
+
+	interface IEAAccessoryDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
@@ -210,8 +211,7 @@ namespace ExternalAccessory {
 		[MacCatalyst (13, 1)]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		EAWiFiUnconfiguredAccessoryBrowserDelegate Delegate { get; set; }
+		IEAWiFiUnconfiguredAccessoryBrowserDelegate Delegate { get; set; }
 
 		[Export ("unconfiguredAccessories", ArgumentSemantic.Copy)]
 		NSSet UnconfiguredAccessories { get; }

@@ -4,13 +4,14 @@ using System.IO;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
+using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class ScnToolTaskBase : XamarinToolTask {
+	public class ScnTool : XamarinToolTask {
 		string sdkDevPath;
 
 		#region Inputs
@@ -127,9 +128,20 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			if (ShouldExecuteRemotely ())
+				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputScene));
 
 			return base.Execute ();
+		}
+
+		public override void Cancel ()
+		{
+			if (ShouldExecuteRemotely ())
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
+
+			base.Execute ();
 		}
 	}
 }

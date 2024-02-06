@@ -9,6 +9,7 @@ DOTNET_TEMPLATE_PACKS_PATH=$(DOTNET_DIR)/template-packs
 TMP_PKG_DIR=_pkg
 
 DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
+DOTNET_PLATFORMS_LOWERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr A-Z a-z)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
@@ -112,7 +113,7 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@PLATFORM@/$(1)/g" \
 		-e "s/@NUGET_VERSION_NO_METADATA@/$$($(2)_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@NUGET_VERSION_FULL@/$$($(2)_NUGET_VERSION_FULL)/g" \
-		-e "s/@DEFAULT_TARGET_PLATFORM_VERSION@/$$(DEFAULT_TARGET_PLATFORM_VERSION_$(2))/g" \
+		-e "s/@TARGET_PLATFORM_VERSION@/$$($(2)_NUGET_OS_VERSION)/g" \
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
@@ -160,12 +161,12 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call ImplicitNamespaceImports,$(platform),$(foreach using,$(DOTNET_$(platform)_GLOBAL_USINGS),\n\t\t<Using Include=\"$(using)\" Platform=\"$(platform)\" \/>))))
 
 define SupportedTargetPlatforms
-Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/Versions-ios.plist.in $(TOP)/Versions-mac.plist.in Makefile ./generate-target-platforms.csharp Makefile
+Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/builds/Versions-$(1).plist.in Makefile ./generate-target-platforms.csharp Makefile
 	$(Q) rm -f $$@.tmp
-	$(Q) ./generate-target-platforms.csharp $(1) $$@.tmp
+	$(Q) ./generate-target-platforms.csharp $(1) "$(DOTNET_TFM)" "$$(SUPPORTED_API_VERSIONS_$(2))" $$@.tmp
 	$(Q) mv $$@.tmp $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call SupportedTargetPlatforms,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 define WorkloadTargets
 Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-json.csharp | Workloads/Microsoft.NET.Sdk.$(1)
@@ -173,7 +174,7 @@ Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: Makefile $(TOP)/Make.con
 	$$(Q_GEN) ./generate-workloadmanifest-json.csharp "$(1)" "$(3)" "$(5)" "$$(DOTNET_$(4)_RUNTIME_IDENTIFIERS)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)"
 	$$(Q) mv $$@.tmp $$@
 
-Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(TOP)/.git/HEAD $(TOP)/.git/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
+Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.targets: Makefile $(TOP)/Make.config.inc $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index Makefile generate-workloadmanifest-targets.csharp | Workloads/Microsoft.NET.Sdk.$(1)
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) ./generate-workloadmanifest-targets.csharp "$(1)" "$$@.tmp" "$$(DOTNET_WINDOWS_PLATFORMS)" "$(DOTNET_TFM)" "net7.0"
 	$$(Q) mv $$@.tmp $$@
@@ -387,11 +388,9 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARG
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
 
 install-system-$(3): $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
-	$(Q) echo "Installing $$<..."
-	$(Q) sudo installer -pkg "$$<" -target / $$(INSTALLER_VERBOSITY)
-	$(Q) echo "Installed $$<"
-	$(Q) echo "Execute this in the project directory to be built for NuGet to find the runtime packs:"
-	$(Q) echo "    nuget sources add -Name local-macios-packages -ConfigFile NuGet.config -Source file://$(abspath $(DOTNET_NUPKG_DIR))"
+	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
+	$(Q) cd $(HOME) && sudo dotnet workload remove $(3)
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(3) -v diag
 
 INSTALL_SYSTEM_PACKAGE_TARGETS += install-system-$(3)
 endef
@@ -498,10 +497,9 @@ clean-templates:
 	$(Q) rm -f -- $(TEMPLATE_PACKS)
 
 install-system:
-	@# We don't want to execute these in parallel
-	@for target in $(INSTALL_SYSTEM_PACKAGE_TARGETS); do \
-		$(MAKE) $$target; \
-	done
+	$(Q) $(TOP)/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
+	$(Q) cd $(HOME) && sudo dotnet workload remove $(DOTNET_PLATFORMS_LOWERCASE)
+	$(Q) cd $(HOME) && sudo dotnet workload install --from-rollback-file $(abspath $(TOP)/../WorkloadRollback.json) --source $(abspath $(TOP)/_build/nupkgs) --source https://api.nuget.org/v3/index.json $(DOTNET_PLATFORMS_LOWERCASE) -v diag
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)

@@ -20,7 +20,7 @@ jobs:
           COMMIT_MESSAGE: "${{ github.event.head_commit.message }}"
 
       - name: 'Update remote repository'
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.SERVICEACCOUNT_PAT }}
           event-type: 'sdk_insertion' 

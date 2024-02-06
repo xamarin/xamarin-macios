@@ -110,6 +110,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string CodesignRequireProvisioningProfile { get; set; }
 
+		public ITaskItem [] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
+
 		public string Keychain { get; set; }
 
 		public string SigningKey { get; set; }
@@ -177,10 +179,13 @@ namespace Xamarin.MacDev.Tasks {
 		}
 
 		bool? hasEntitlements;
-		bool HasEntitlements {
+		public bool HasEntitlements {
 			get {
 				if (!hasEntitlements.HasValue) {
-					if (string.IsNullOrEmpty (CodesignEntitlements?.ItemSpec)) {
+					if (CustomEntitlements.Any ()) {
+						// If we have custom entitlements, then we have entitlements.
+						hasEntitlements = true;
+					} else if (string.IsNullOrEmpty (CodesignEntitlements?.ItemSpec)) {
 						// If no CodesignEntitlements was specified, we don't have any entitlements
 						hasEntitlements = false;
 					} else {

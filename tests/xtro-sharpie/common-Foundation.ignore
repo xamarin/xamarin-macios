@@ -183,6 +183,9 @@
 # this is a better named version of `date` which we already bound as `Now` in C#
 !missing-selector! +NSDate::now not bound
 
+# Apple says this is not implemented
+!missing-field! NSDidBecomeSingleThreadedNotification not bound
+
 ## unsorted
 
 !extra-designated-initializer! NSSortDescriptor::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
@@ -192,7 +195,6 @@
 !missing-enum! NSSearchPathDomainMask not bound
 !missing-enum! NSStringEncodingConversionOptions not bound
 !missing-field! NSAverageKeyValueOperator not bound
-!missing-field! NSBundleDidLoadNotification not bound
 !missing-field! NSCalendarIdentifierIslamic not bound
 !missing-field! NSCharacterConversionException not bound
 !missing-field! NSCountKeyValueOperator not bound
@@ -201,7 +203,6 @@
 !missing-field! NSDecimalNumberOverflowException not bound
 !missing-field! NSDecimalNumberUnderflowException not bound
 !missing-field! NSDestinationInvalidException not bound
-!missing-field! NSDidBecomeSingleThreadedNotification not bound
 !missing-field! NSDistinctUnionOfArraysKeyValueOperator not bound
 !missing-field! NSDistinctUnionOfObjectsKeyValueOperator not bound
 !missing-field! NSDistinctUnionOfSetsKeyValueOperator not bound
@@ -224,15 +225,11 @@
 !missing-field! NSObjectNotAvailableException not bound
 !missing-field! NSOldStyleException not bound
 !missing-field! NSParseErrorException not bound
-!missing-field! NSPortDidBecomeInvalidNotification not bound
 !missing-field! NSPortReceiveException not bound
 !missing-field! NSPortSendException not bound
 !missing-field! NSPortTimeoutException not bound
 !missing-field! NSRangeException not bound
 !missing-field! NSSumKeyValueOperator not bound
-!missing-field! NSSystemClockDidChangeNotification not bound
-!missing-field! NSSystemTimeZoneDidChangeNotification not bound
-!missing-field! NSThreadWillExitNotification not bound
 !missing-field! NSUndefinedKeyException not bound
 !missing-field! NSUnionOfArraysKeyValueOperator not bound
 !missing-field! NSUnionOfObjectsKeyValueOperator not bound
@@ -244,7 +241,6 @@
 !missing-field! NSURLErrorFailingURLStringErrorKey not bound
 !missing-field! NSURLErrorNetworkUnavailableReasonKey not bound
 !missing-field! NSURLFileScheme not bound
-!missing-field! NSWillBecomeMultiThreadedNotification not bound
 !missing-field! NSXMLParserErrorDomain not bound
 !missing-pinvoke! NSAllocateMemoryPages is not bound
 !missing-pinvoke! NSAllocateObject is not bound

@@ -338,11 +338,29 @@ namespace Xamarin.Tests {
 			get {
 				var dir = TestAssemblyDirectory;
 				var path = Path.Combine (dir, ".git");
-				while (!Directory.Exists (path) && path.Length > 3) {
-					dir = Path.GetDirectoryName (dir);
-					if (dir is null)
-						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-					path = Path.Combine (dir, ".git");
+				var found = false;
+				while (!found && path.Length > 3) {
+					if (File.Exists (path)) {
+						// Read the .git file to get the path of the worktree repository
+						string gitFileContent = File.ReadAllText (path);
+						if (gitFileContent.StartsWith ("gitdir: ", StringComparison.Ordinal)) {
+							// Return the absolute path of the worktree repository
+							string worktreeRepo = gitFileContent.Substring (7).Trim ();
+							if (Directory.Exists (Path.GetFullPath (worktreeRepo)))
+								found = true;
+						} else {
+							throw new FormatException (".git worktree file is not valid");
+						}
+					}
+					if (Directory.Exists (path))
+						found = true;
+
+					if (!found) {
+						dir = Path.GetDirectoryName (dir);
+						if (dir is null)
+							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+						path = Path.Combine (dir, ".git");
+					}
 				}
 				path = Path.GetDirectoryName (path);
 				if (!Directory.Exists (path))
@@ -1122,6 +1140,23 @@ namespace Xamarin.Tests {
 				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}
 
+		public static void IgnoreIfNotOnMacOS ()
+		{
+			IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform.OSX);
+		}
+
+		public static void IgnoreIfNotOnWindows ()
+		{
+			IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform.Windows);
+		}
+
+		public static void IgnoreIfNotOn (System.Runtime.InteropServices.OSPlatform platform)
+		{
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform (platform))
+				return;
+			Assert.Ignore ($"This test is only applicable on {platform}");
+		}
+
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)
 		{
 			string dir;
@@ -1198,5 +1233,23 @@ namespace Xamarin.Tests {
 
 		[DllImport ("libc")]
 		static extern int sysctlbyname (string name, ref int value, ref IntPtr size, IntPtr zero, IntPtr zeroAgain);
+
+		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
+		{
+			var arguments = new List<string> (new [] { "-gUjA", file });
+			if (!string.IsNullOrEmpty (arch)) {
+				arguments.Add ("-arch");
+				arguments.Add (arch);
+			}
+			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
+			return symbols.Where ((v) => {
+				return !v.EndsWith (": no symbols", StringComparison.Ordinal);
+			}).Select ((v) => {
+				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
+				if (idx <= 0)
+					return v;
+				return v.Substring (idx + 2);
+			});
+		}
 	}
 }

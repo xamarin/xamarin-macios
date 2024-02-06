@@ -16,14 +16,7 @@ var windowsPlatforms = new List<string> ();
 var tfm = string.Empty;
 var outputPath = string.Empty;
 
-var args = new Queue<string> (Environment.GetCommandLineArgs ());
-
-// Skip first three arguments:
-string discard; // store the return value from Dequeue somewhere, otherwise it ends up being printed to stdout.
-discard = args.Dequeue (); // <executable>
-discard = args.Dequeue (); // -s
-discard = args.Dequeue (); // <script>
-GC.KeepAlive (discard); // avoid compiler warning
+var args = new Queue<string> (Args);
 
 while (args.Any ()) {
 	var arg = args.Dequeue ();

@@ -130,6 +130,8 @@ using NSImage = Foundation.NSObject;
 #endif
 
 #if IOS || WATCH || TVOS
+using NSAppearance = UIKit.UIAppearance;
+using NSColor = UIKit.UIColor;
 using NSNotificationSuspensionBehavior = Foundation.NSObject;
 using NSNotificationFlags = Foundation.NSObject;
 using NSTextBlock = Foundation.NSObject;
@@ -979,8 +981,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSCacheDelegate Delegate { get; set; }
+		INSCacheDelegate Delegate { get; set; }
 
 		[Export ("totalCostLimit")]
 		nuint TotalCostLimit { get; set; }
@@ -991,6 +992,8 @@ namespace Foundation {
 		[Export ("evictsObjectsWithDiscardedContent")]
 		bool EvictsObjectsWithDiscardedContent { get; set; }
 	}
+
+	interface INSCacheDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2764,6 +2767,8 @@ namespace Foundation {
 
 	interface INSMutableCopying { }
 
+	interface INSKeyedArchiverDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2783,6 +2788,8 @@ namespace Foundation {
 		[Export ("archiver:willReplaceObject:withObject:"), EventArgs ("NSArchiveReplace")]
 		void ReplacingObject (NSKeyedArchiver archiver, NSObject oldObject, NSObject newObject);
 	}
+
+	interface INSKeyedUnarchiverDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -2872,8 +2879,7 @@ namespace Foundation {
 		NSPropertyListFormat PropertyListFormat { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSKeyedArchiverDelegate Delegate { get; set; }
+		INSKeyedArchiverDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -2980,8 +2986,7 @@ namespace Foundation {
 		void FinishDecoding ();
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSKeyedUnarchiverDelegate Delegate { get; set; }
+		INSKeyedUnarchiverDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -3082,8 +3087,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSMetadataQueryDelegate Delegate { get; set; }
+		INSMetadataQueryDelegate Delegate { get; set; }
 
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		[NullAllowed] // by default this property is null
@@ -3906,6 +3910,8 @@ namespace Foundation {
 		NSString QueryUpdateRemovedItemsKey { get; }
 	}
 
+	interface INSMetadataQueryDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -4295,6 +4301,10 @@ namespace Foundation {
 		[MacCatalyst (14, 0)]
 		[Export ("srAbsoluteTime")]
 		double SrAbsoluteTime { get; }
+
+		[Field ("NSSystemClockDidChangeNotification")]
+		[Notification]
+		NSString SystemClockDidChangeNotification { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -5743,6 +5753,10 @@ namespace Foundation {
 
 		[Export ("localizedName:locale:")]
 		string GetLocalizedName (NSTimeZoneNameStyle style, [NullAllowed] NSLocale locale);
+
+		[Notification]
+		[Field ("NSSystemTimeZoneDidChangeNotification")]
+		NSString SystemTimeZoneDidChangeNotification { get; }
 	}
 
 	interface NSUbiquitousKeyValueStoreChangeEventArgs {
@@ -5893,8 +5907,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSUserActivityDelegate Delegate { get; set; }
+		INSUserActivityDelegate Delegate { get; set; }
 
 		[Export ("addUserInfoEntriesFromDictionary:")]
 		void AddUserInfoEntries (NSDictionary otherDictionary);
@@ -6030,6 +6043,8 @@ namespace Foundation {
 		[Field ("NSUserActivityTypeBrowsingWeb")]
 		NSString BrowsingWeb { get; }
 	}
+
+	interface INSUserActivityDelegate { }
 
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
@@ -6191,7 +6206,6 @@ namespace Foundation {
 		NSString RegistrationDomain { get; }
 
 		[NoMac]
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
@@ -6204,14 +6218,12 @@ namespace Foundation {
 		NSString NoCloudAccountNotification { get; }
 
 		[NoMac]
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsDidChangeAccountsNotification")]
 		NSString DidChangeAccountsNotification { get; }
 
 		[NoMac]
-		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Notification]
 		[Field ("NSUbiquitousUserDefaultsCompletedInitialSyncNotification")]
@@ -7390,21 +7402,21 @@ namespace Foundation {
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSUrlSession' instead.")]
 		[Export ("connectionWithRequest:delegate:")]
 		[Static]
-		NSUrlConnection FromRequest (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NSUrlConnection FromRequest (NSUrlRequest request, [NullAllowed] INSUrlConnectionDelegate connectionDelegate);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		NativeHandle Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed] INSUrlConnectionDelegate connectionDelegate);
 
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:startImmediately:")]
-		NativeHandle Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed] INSUrlConnectionDelegate connectionDelegate, bool startImmediately);
 
 		[Export ("start")]
 		void Start ();
@@ -7459,6 +7471,8 @@ namespace Foundation {
 		[Async (ResultTypeName = "NSUrlAsyncResult", MethodName = "SendRequestAsync")]
 		void SendAsynchronousRequest (NSUrlRequest request, NSOperationQueue queue, NSUrlConnectionDataResponse completionHandler);
 	}
+
+	interface INSUrlConnectionDelegate { }
 
 	[BaseType (typeof (NSObject), Name = "NSURLConnectionDelegate")]
 	[Model]
@@ -7708,8 +7722,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSUrlSessionDelegate Delegate { get; }
+		INSUrlSessionDelegate Delegate { get; }
 
 		[Export ("configuration", ArgumentSemantic.Copy)]
 		NSUrlSessionConfiguration Configuration { get; }
@@ -8942,8 +8955,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSStreamDelegate Delegate { get; set; }
+		INSStreamDelegate Delegate { get; set; }
 
 #if NET
 		[Abstract]
@@ -9068,6 +9080,8 @@ namespace Foundation {
 		[Static, Export ("getStreamsToHostWithName:port:inputStream:outputStream:")]
 		void GetStreamsToHost (string hostname, nint port, out NSInputStream inputStream, out NSOutputStream outputStream);
 	}
+
+	interface INSStreamDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -10936,6 +10950,10 @@ namespace Foundation {
 		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("localizedAttributedStringForKey:value:table:")]
 		NSAttributedString GetLocalizedAttributedString (string key, [NullAllowed] string value, [NullAllowed] string tableName);
+
+		[Notification]
+		[Field ("NSBundleDidLoadNotification")]
+		NSString BundleDidLoadNotification { get; }
 	}
 
 	[NoMac]
@@ -11543,8 +11561,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSNetServiceDelegate Delegate { get; set; }
+		INSNetServiceDelegate Delegate { get; set; }
 
 #if NET
 		[Export ("scheduleInRunLoop:forMode:")]
@@ -11636,6 +11653,8 @@ namespace Foundation {
 		bool IncludesPeerToPeer { get; set; }
 	}
 
+	interface INSNetServiceDelegate { }
+
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Model, BaseType (typeof (NSObject))]
@@ -11683,8 +11702,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSNetServiceBrowserDelegate Delegate { get; set; }
+		INSNetServiceBrowserDelegate Delegate { get; set; }
 
 #if NET
 		[Export ("scheduleInRunLoop:forMode:")]
@@ -11724,6 +11742,8 @@ namespace Foundation {
 		[Export ("includesPeerToPeer")]
 		bool IncludesPeerToPeer { get; set; }
 	}
+
+	interface INSNetServiceBrowserDelegate { }
 
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -12824,6 +12844,13 @@ namespace Foundation {
 		[Export ("qualityOfService")]
 		NSQualityOfService QualityOfService { get; set; }
 
+		[Notification]
+		[Field ("NSThreadWillExitNotification")]
+		NSString ThreadWillExitNotification { get; }
+
+		[Notification]
+		[Field ("NSWillBecomeMultiThreadedNotification")]
+		NSString WillBecomeMultiThreadedNotification { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -12842,8 +12869,7 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate"), NullAllowed]
-		[Protocolize]
-		NSPortDelegate Delegate { get; set; }
+		INSPortDelegate Delegate { get; set; }
 
 		[Export ("scheduleInRunLoop:forMode:")]
 		void ScheduleInRunLoop (NSRunLoop runLoop, NSString runLoopMode);
@@ -12865,7 +12891,13 @@ namespace Foundation {
 		[Export ("sendBeforeDate:msgid:components:from:reserved:")]
 		bool SendBeforeDate (NSDate limitDate, nuint msgID, [NullAllowed] NSMutableArray components, [NullAllowed] NSPort receivePort, nuint headerSpaceReserved);
 #pragma warning restore 618
+
+		[Notification]
+		[Field ("NSPortDidBecomeInvalidNotification")]
+		NSString PortDidBecomeInvalidNotification { get; }
 	}
+
+	interface INSPortDelegate { }
 
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
@@ -12965,9 +12997,10 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate"), NullAllowed]
-		[Protocolize]
-		NSMachPortDelegate Delegate { get; set; }
+		INSMachPortDelegate Delegate { get; set; }
 	}
+
+	interface INSMachPortDelegate { }
 
 	[Model, BaseType (typeof (NSPortDelegate))]
 	[Protocol]
@@ -13423,17 +13456,16 @@ namespace Foundation {
 	interface NSFileCoordinator {
 		[Static, Export ("addFilePresenter:")]
 		[PostGet ("FilePresenters")]
-		void AddFilePresenter ([Protocolize] NSFilePresenter filePresenter);
+		void AddFilePresenter (INSFilePresenter filePresenter);
 
 		[Static]
 		[Export ("removeFilePresenter:")]
 		[PostGet ("FilePresenters")]
-		void RemoveFilePresenter ([Protocolize] NSFilePresenter filePresenter);
+		void RemoveFilePresenter (INSFilePresenter filePresenter);
 
 		[Static]
 		[Export ("filePresenters", ArgumentSemantic.Copy)]
-		[Protocolize]
-		NSFilePresenter [] FilePresenters { get; }
+		INSFilePresenter [] FilePresenters { get; }
 
 		[DesignatedInitializer]
 		[Export ("initWithFilePresenter:")]
@@ -13631,9 +13663,8 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
 		[NullAllowed]
-		NSFileManagerDelegate Delegate { get; set; }
+		INSFileManagerDelegate Delegate { get; set; }
 
 		[Export ("setAttributes:ofItemAtPath:error:")]
 		bool SetAttributes (NSDictionary attributes, string path, out NSError error);
@@ -13826,6 +13857,8 @@ namespace Foundation {
 		[Async, Export ("getFileProviderServicesForItemAtURL:completionHandler:")]
 		void GetFileProviderServices (NSUrl url, Action<NSDictionary<NSString, NSFileProviderService>, NSError> completionHandler);
 	}
+
+	interface INSFileManagerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -15337,9 +15370,10 @@ namespace Foundation {
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		NSConnectionDelegate Delegate { get; set; }
+		INSConnectionDelegate Delegate { get; set; }
 	}
+
+	interface INSConnectionDelegate { }
 
 	[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSXpcConnection' instead.")]
 	[NoMacCatalyst]
@@ -15667,6 +15701,9 @@ namespace Foundation {
 		[Export ("resumeWithSuspensionID:")]
 		void ResumeWithSuspensionID (NSAppleEventManagerSuspensionID suspensionID);
 
+		[Notification]
+		[Field ("NSAppleEventManagerWillProcessFirstEventNotification")]
+		NSString WillProcessFirstEventNotification { get; }
 	}
 
 	[NoiOS, NoTV, NoWatch]
@@ -15906,8 +15943,7 @@ namespace Foundation {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		NSUserNotificationCenterDelegate Delegate { get; set; }
+		INSUserNotificationCenterDelegate Delegate { get; set; }
 
 		[Export ("scheduledNotifications", ArgumentSemantic.Copy)]
 		NSUserNotification [] ScheduledNotifications { get; set; }
@@ -15935,6 +15971,8 @@ namespace Foundation {
 		[PostGet ("DeliveredNotifications")]
 		void RemoveAllDeliveredNotifications ();
 	}
+
+	interface INSUserNotificationCenterDelegate { }
 
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
@@ -18254,4 +18292,132 @@ namespace Foundation {
 		[NullAllowed, Export ("dependentMorphology", ArgumentSemantic.Copy)]
 		NSMorphology DependentMorphology { get; }
 	}
+
+	[StrongDictionary (nameof (NSAttributedStringDocumentAttributeKey), Suffix = "DocumentAttribute")]
+	interface NSAttributedStringDocumentAttributes {
+		// Wait with this one until XAMCORE_5_0, using the strong dictionary logic would be an API break.
+#if XAMCORE_5_0
+		NSAttributedStringDocumentType DocumentType { get; set; }
+#endif
+
+		NSStringEncoding CharacterEncoding { get; set; }
+
+		NSAttributedStringDocumentAttributes DefaultAttributes { get; set; }
+
+		CGSize PaperSize { get; set; }
+
+		[NoMac]
+		UIEdgeInsets PaperMargin { get; set; }
+
+		CGSize ViewSize { get; set; }
+
+		float ViewZoom { get; set; }
+
+		NSDocumentViewMode ViewMode { get; set; }
+
+		// The definition for this boolean is very specific in the header file:
+		// "NSNumber containing integer; if missing, or 0 or negative, not readonly; 1 or more, readonly"
+		// So keep the manual code, the generic strong dictionary logic is slightly different.
+		// #if XAMCORE_5_0
+		// bool? ReadOnly { get; set; }
+		// #else
+		// bool ReadOnly { get; set; }
+		// #endif
+
+		NSColor BackgroundColor { get; set; }
+
+		float HyphenationFactor {
+			get;
+			[PreSnippet ("if (value < 0 || value > 1.0f) throw new ArgumentOutOfRangeException (nameof (value), value, \"Value must be between 0 and 1\");")]
+			set;
+		}
+
+		float DefaultTabInterval {
+			get;
+			[PreSnippet ("if (value < 0 || value > 1.0f) throw new ArgumentOutOfRangeException (nameof (value), value, \"Value must be between 0 and 1\");")]
+			set;
+		}
+
+		// This would need a custom binding, it's an array of another strong dictionary.
+		// [Export ("TextLayoutSectionsAttribute")]
+		// NSTextLayoutSection[] TextLayout { get; set; }
+
+		[iOS (13, 0)]
+		[Mac (10, 15)]
+		NSTextScalingType TextScaling { get; set; }
+
+		[iOS (13, 0)]
+		[Mac (10, 15)]
+		NSTextScalingType SourceTextScaling { get; set; }
+
+		[iOS (13, 0)]
+		float CocoaVersion { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		int Converted { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string FileType { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Title { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Company { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Copyright { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Subject { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Author { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string [] Keywords { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Comment { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Editor { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		NSDate CreationTime { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		NSDate ModificationTime { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Manager { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string Category { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		NSAppearance Appearance { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		float LeftMargin { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		float RightMargin { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		float TopMargin { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		float BottomMargin { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string [] ExcludedElements { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		string TextEncodingName { get; set; }
+
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		int PrefixSpaces { get; set; }
+	}
+
 }

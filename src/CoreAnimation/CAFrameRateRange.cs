@@ -29,14 +29,13 @@ namespace CoreAnimation {
 		public float Preferred;
 
 		[DllImport (Constants.QuartzLibrary, EntryPoint = "CAFrameRateRangeIsEqualToRange")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool IsEqualTo (CAFrameRateRange range, CAFrameRateRange other);
+		static extern byte IsEqualTo (CAFrameRateRange range, CAFrameRateRange other);
 
 		[DllImport (Constants.QuartzLibrary, EntryPoint = "CAFrameRateRangeMake")]
 		public static extern CAFrameRateRange Create (float minimum, float maximum, float preferred);
 
 		public bool IsEqualTo (CAFrameRateRange other)
-			=> IsEqualTo (this, other);
+			=> IsEqualTo (this, other) != 0;
 
 #if !COREBUILD
 		[Field ("CAFrameRateRangeDefault", "CoreAnimation")]
