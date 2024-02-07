@@ -94,11 +94,11 @@ namespace Xamarin.Tests {
 					}
 					return true;
 				});
-			hotRestartAppBundleFiles = hotRestartAppBundleFiles
+			var hotRestartAppBundleFilesWithoutPrebuiltFiles = hotRestartAppBundleFiles
 				.Except (excludedPrebuiltAppEntries)
 				.ToList ();
 
-			var merged = hotRestartAppBundleFiles
+			var merged = hotRestartAppBundleFilesWithoutPrebuiltFiles
 				.Union (payloadFiles)
 				.Union (contentFiles)
 				.Where (v => {
@@ -130,6 +130,24 @@ namespace Xamarin.Tests {
 
 			var rids = runtimeIdentifiers.Split (';');
 			BundleStructureTest.CheckAppBundleContents (platform, merged, rids, BundleStructureTest.CodeSignature.None, configuration == "Release");
+
+			// Assert that no files were copied to the signed directory after the app was signed.
+			// https://github.com/xamarin/xamarin-macios/issues/19278
+			var signedAppBundleFilesWithInfo = hotRestartAppBundleFiles.Select (v => new { Name = v, Info = new FileInfo (v) });
+			Console.WriteLine ($"{signedAppBundleFilesWithInfo.Count ()} files in app bundle:");
+			foreach (var fileWithInfo2 in signedAppBundleFilesWithInfo) {
+				Console.WriteLine ($"    {fileWithInfo2.Info.LastWriteTimeUtc.ToString ("O")} {fileWithInfo2.Name}");
+			}
+
+			var codesignInfo = signedAppBundleFilesWithInfo.Single (v => v.Name.EndsWith ("_CodeSignature\\CodeResources"));
+			var modifiedAfterSignature = signedAppBundleFilesWithInfo.Where (v => v.Info.LastWriteTimeUtc > codesignInfo.Info.LastWriteTimeUtc);
+			if (modifiedAfterSignature.Any ()) {
+				Console.WriteLine ($"{modifiedAfterSignature.Count ()} files were modified after the app was signed. Full list:");
+				foreach (var fileWithInfo in signedAppBundleFilesWithInfo) {
+					Console.WriteLine ($"    {fileWithInfo.Info.LastWriteTimeUtc.ToString ("O")} {(fileWithInfo.Info.LastWriteTimeUtc > codesignInfo.Info.LastWriteTimeUtc ? "MODIFIED " : "unchanged")} {fileWithInfo.Name}");
+				}
+				Assert.That (modifiedAfterSignature, Is.Empty, "Files modified after the app was signed");
+			}
 		}
 
 		static void AddOrAssert (IList<string> list, string item)
