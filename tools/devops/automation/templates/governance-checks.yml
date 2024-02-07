@@ -17,7 +17,7 @@ parameters:
 
 steps:
 
-- template: ../common/checkout.yml
+- template: ./common/checkout.yml
   parameters:
     isPR: ${{ parameters.isPR }}
     repositoryAlias: ${{ parameters.repositoryAlias }}
@@ -30,6 +30,7 @@ steps:
     Dir $(Build.SourcesDirectory)
     Dir $(System.DefaultWorkingDirectory)
   displayName: Show directories
+
 
 - powershell: |
     Get-ChildItem -Recurse -Path $(Build.SourcesDirectory)/maccore
