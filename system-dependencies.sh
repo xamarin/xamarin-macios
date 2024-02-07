@@ -904,7 +904,7 @@ IFS='
 		ok "Found Homebrew ($HOMEBREW_VERSION)"
 	elif ! test -z $PROVISION_HOMEBREW; then
 		log "Installing Homebrew..."
-		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"	
 		HOMEBREW_VERSION=($(brew --version 2>/dev/null))
 		log "Installed Homebrew ($HOMEBREW_VERSION)"
 	else

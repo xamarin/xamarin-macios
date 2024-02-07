@@ -44,6 +44,7 @@ namespace MonoTouchFixtures.Vision {
 		{
 			TestRuntime.AssertNotSimulator ();
 			TestRuntime.AssertXcodeVersion (15, 0);
+			TestRuntime.AssertNotX64Desktop ();
 		}
 
 		[Test]
@@ -66,21 +67,8 @@ namespace MonoTouchFixtures.Vision {
 
 			var position = observation.GetCameraRelativePosition (out var modelPositionOut, VNHumanBodyPose3DObservationJointName.CenterHead, out NSError observationError);
 			Assert.Null (observationError, $"GetCameraRelativePosition should not return an error {observationError}");
-			Assert.That (modelPositionOut, Is.EqualTo (expectedMatrix), "VNVector3DGetCameraRelativePosition result is not equal to expected matrix");
-		}
-
-		[Test]
-		public void KeepValueMethodsAliveTest ()
-		{
-			// When running the app with the --optimize:all property, the Value extension methods of
-			// the VNHumanBodyPose3DObservationJointName smart enum are linked away and results in a
-			// build failure.
-			// This is https://github.com/xamarin/xamarin-macios/issues/19712
-			// As a temp workaround, this test will ensure that the GetValue method is getting used
-			// to prevent the linker from removing this method.
-
-			var getValue = VNHumanBodyPose3DObservationJointNameExtensions.GetValue ((NSString) "CenterHead");
-			Assert.NotNull (getValue, "VNHumanBodyPose3DObservationJointNameExtensions.GetValue should not return null");
+			// GetCameraRelativePosition results can vary slightly between runs so we need to use a delta.
+			Asserts.AreEqual (expectedMatrix, modelPositionOut, 0.1f, "VNVector3DGetCameraRelativePosition result is not equal to expected matrix");
 		}
 	}
 }

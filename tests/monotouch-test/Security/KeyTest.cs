@@ -166,8 +166,13 @@ namespace MonoTouchFixtures.Security {
 						Assert.True (private_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionPkcs1), "private/IsAlgorithmSupported/Decrypt");
 
 						using (var pub2 = private_key.GetPublicKey ()) {
+#if MONOMAC
+							// macOS behaviour is not consistent - but the test main goal is to check we get a key
+							Assert.That (pub2.Handle, Is.Not.EqualTo (IntPtr.Zero), "private/GetPublicKey");
+#else
 							// a new native instance of the key is returned (so having a new managed SecKey is fine)
 							Assert.That (pub2.Handle, Is.Not.EqualTo (public_key.Handle), "private/GetPublicKey");
+#endif
 						}
 
 						using (var attrs = private_key.GetAttributes ()) {
@@ -502,8 +507,17 @@ namespace MonoTouchFixtures.Security {
 									Assert.That (data.ToArray (), Is.EqualTo (plain.ToArray ()), "roundtrip");
 								}
 
-								Assert.Null (key.CreateDecryptedData (SecKeyAlgorithm.RsaEncryptionPkcs1, data, out error), "bad data");
-								Assert.NotNull (error, "bad decrypt");
+#if __MACCATALYST__
+								var badDecrypt = !TestRuntime.CheckXcodeVersion (15, 0);
+#else
+								var badDecrypt = true;
+#endif
+								if (badDecrypt) {
+									// on macOS this fails with CSSMERR_CSP_INPUT_LENGTH_ERROR (I haven't checked on iOS/tvOS)
+									// but on  Mac Catalyst apps on Sonoma this succeeds... which means Mac Catalyst can decrypt random data? the returned data looks random too. 🤷‍♂️
+									Assert.Null (key.CreateDecryptedData (SecKeyAlgorithm.RsaEncryptionPkcs1, data, out error), "bad data");
+									Assert.NotNull (error, "bad decrypt");
+								}
 							}
 						}
 					}

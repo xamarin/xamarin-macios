@@ -41,6 +41,10 @@ using CoreMedia;
 #endif // !WATCH
 #endif
 
+#if HAS_UIKIT
+using UIKit;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -336,6 +340,23 @@ namespace Foundation {
 			return value;
 		}
 #endif // !WATCH
+
+#if HAS_UIKIT
+		protected UIEdgeInsets? GetUIEdgeInsets (NSString key)
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+
+			if (!Dictionary.TryGetValue (key, out var value))
+				return null;
+
+			if (value is NSValue size)
+				return size.UIEdgeInsetsValue;
+
+			return null;
+		}
+#endif
+
 		bool NullCheckAndRemoveKey ([NotNullWhen (true)] NSString key, bool removeEntry)
 		{
 			if (key is null)
@@ -491,6 +512,13 @@ namespace Foundation {
 				Dictionary [key] = value!.Value.ToDictionary ();
 		}
 #endif //!WATCH
+
+#if HAS_UIKIT
+		protected void SetUIEdgeInsets (NSString key, UIEdgeInsets? value)
+		{
+			SetNativeValue (key, value is null ? null : NSValue.FromUIEdgeInsets (value.Value));
+		}
+#endif
 		#endregion
 #endif
 	}
