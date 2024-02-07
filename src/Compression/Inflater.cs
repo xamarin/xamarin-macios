@@ -122,7 +122,11 @@ namespace Compression {
 				if (_inputBufferHandle.IsAllocated)
 					DeallocateInputBufferHandle ();
 
-				CompressionStreamStruct.compression_stream_destroy (ref _compression_struct);
+				unsafe {
+					fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+						CompressionStreamStruct.compression_stream_destroy (_compression_struct);
+					}
+				}
 				_isDisposed = true;
 			}
 		}
@@ -145,7 +149,12 @@ namespace Compression {
 		{
 			_compression_struct = new CompressionStreamStruct ();
 
-			var status = CompressionStreamStruct.compression_stream_init (ref _compression_struct, StreamOperation.Decode, algorithm);
+			CompressionStatus status;
+			unsafe {
+				fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+					status = CompressionStreamStruct.compression_stream_init (_compression_struct, StreamOperation.Decode, algorithm);
+				}
+			}
 			if (status != CompressionStatus.Ok)
 				throw new InvalidOperationException (status.ToString ());
 			_compression_struct.Source = IntPtr.Zero;
@@ -161,7 +170,12 @@ namespace Compression {
 				_compression_struct.Destination = (IntPtr) bufPtr;
 				_compression_struct.DestinationSize = length;
 				// source is set in SetInput, nothing to be done
-				var readStatus = CompressionStreamStruct.compression_stream_process (ref _compression_struct, (_shouldFinalize) ? StreamFlag.Finalize : StreamFlag.Continue);
+				CompressionStatus readStatus;
+				unsafe {
+					fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+						readStatus = CompressionStreamStruct.compression_stream_process (_compression_struct, (_shouldFinalize) ? StreamFlag.Finalize : StreamFlag.Continue);
+					}
+				}
 				switch (readStatus) {
 				case CompressionStatus.Ok:
 				case CompressionStatus.End:

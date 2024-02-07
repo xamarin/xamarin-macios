@@ -97,29 +97,27 @@ namespace CoreAnimation {
 		}
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DIsIdentity (CATransform3D t);
+		extern static byte CATransform3DIsIdentity (CATransform3D t);
 
 		public bool IsIdentity {
 			get {
-				return CATransform3DIsIdentity (this);
+				return CATransform3DIsIdentity (this) != 0;
 			}
 		}
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
+		extern static byte CATransform3DEqualToTransform (CATransform3D a, CATransform3D b);
 
 		public bool Equals (CATransform3D other)
 		{
-			return CATransform3DEqualToTransform (this, other);
+			return CATransform3DEqualToTransform (this, other) != 0;
 		}
 
 		public override bool Equals (object? other)
 		{
 			if (!(other is CATransform3D))
 				return false;
-			return CATransform3DEqualToTransform (this, (CATransform3D) other);
+			return CATransform3DEqualToTransform (this, (CATransform3D) other) != 0;
 		}
 
 		public override int GetHashCode ()
@@ -242,12 +240,11 @@ namespace CoreAnimation {
 
 
 		[DllImport (Constants.QuartzLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CATransform3DIsAffine (CATransform3D t);
+		extern static byte CATransform3DIsAffine (CATransform3D t);
 
 		public bool IsAffine {
 			get {
-				return CATransform3DIsAffine (this);
+				return CATransform3DIsAffine (this) != 0;
 			}
 		}
 

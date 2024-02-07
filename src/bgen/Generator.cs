@@ -1862,6 +1862,9 @@ public partial class Generator : IMemberGatherer {
 						} else if (isNativeEnum && fetchType == TypeCache.System_UInt64) {
 							getter = "{1} (ulong?) GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
+						} else if (fetchType == TypeCache.UIEdgeInsets) {
+							getter = "{1} GetUIEdgeInsets ({0})";
+							setter = "SetUIEdgeInsets ({0}, {1}value)";
 						} else {
 							throw new BindingException (1033, true, pi.PropertyType, dictType, pi.Name);
 						}
@@ -1934,6 +1937,7 @@ public partial class Generator : IMemberGatherer {
 					if (pi.CanRead) {
 						indent++;
 						print ("get {"); indent++;
+						Inject<PreSnippetAttribute> (pi.GetGetMethod ());
 						print ("return {0};", getter);
 						indent--; print ("}");
 						indent--;
@@ -1943,6 +1947,7 @@ public partial class Generator : IMemberGatherer {
 							throw new BindingException (1032, true, pi.PropertyType, dictType, pi.Name);
 						indent++;
 						print ("set {"); indent++;
+						Inject<PreSnippetAttribute> (pi.GetSetMethod ());
 						print ("{0};", setter);
 						indent--; print ("}");
 						indent--;

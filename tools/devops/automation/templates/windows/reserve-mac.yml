@@ -38,6 +38,8 @@ steps:
     echo "##vso[task.setvariable variable=AGENT_NAME;isOutput=true]$(Agent.Name)"
     echo "##vso[task.setvariable variable=AGENT_POOL;isOutput=true]${{ parameters.macPool }}"
     echo "##vso[task.setvariable variable=AGENT_IP;isOutput=true]$macip"
+    echo "##vso[task.setvariable variable=AGENT_SYSTEM_DEFAULTWORKINGDIRECTORY;isOutput=true]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY"
+    echo "##vso[task.setvariable variable=AGENT_BUILD_SOURCESDIRECTORY;isOutput=true]$Env:BUILD_SOURCESDIRECTORY"
   name: macInfo
   displayName: Set agent information
 
@@ -75,6 +77,17 @@ steps:
     github_token: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
 
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Xamarin - R&D - XamarinSecurity'
+    KeyVaultName: 'xamarin-ios-vault'
+    SecretsFilter: 'RemoteMacIdRsaPub'
+  displayName: 'Download id_rsa.pub'
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/authorize-id-rsa-pub.sh "$(RemoteMacIdRsaPub)"
+  displayName: "Autorize id_rsa.pub"
+  continueOnError: true
+
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
@@ -87,3 +100,7 @@ steps:
   timeoutInMinutes: 45
   env:
     MACIOS_UPLOAD_PREFIX: ${{ parameters.uploadPrefix }}
+
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/prepare-for-remote-tests.sh
+  displayName: 'Prepare for remote tests'
+  continueOnError: true
