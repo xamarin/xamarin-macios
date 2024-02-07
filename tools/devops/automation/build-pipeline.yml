@@ -112,11 +112,11 @@ parameters:
   type: object
   default: [
     {
-      stageName: 'mac_11_5_m1',
-      displayName: 'M1 - Mac Big Sur (11.5)',
+      stageName: 'mac_11_m1',
+      displayName: 'M1 - Mac Big Sur (11)',
       macPool: 'VSEng-VSMac-Xamarin-Shared',
       useImage: false,
-      statusContext: 'M1 - Mac Big Sur (11.5)',
+      statusContext: 'M1 - Mac Big Sur (11)',
       demands: [
         "Agent.OS -equals Darwin",
         "macOS.Name -equals BigSur",
@@ -126,15 +126,43 @@ parameters:
       ]
     },
     {
-      stageName: 'mac_13_0_m1',
-      displayName: 'M1 - Mac Ventura (13.0)',
+      stageName: 'mac_12_m1',
+      displayName: 'M1 - Mac Ventura (12)',
       macPool: 'VSEng-VSMac-Xamarin-Shared',
       useImage: false,
-      statusContext: 'M1 - Mac Ventura (13.0)',
+      statusContext: 'M1 - Mac Monterey (12)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Monterey",
+        "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    },
+    {
+      stageName: 'mac_13_m1',
+      displayName: 'M1 - Mac Ventura (13)',
+      macPool: 'VSEng-VSMac-Xamarin-Shared',
+      useImage: false,
+      statusContext: 'M1 - Mac Ventura (13)',
       demands: [
         "Agent.OS -equals Darwin",
         "macOS.Name -equals Ventura",
         "macOS.Architecture -equals arm64",
+        "Agent.HasDevices -equals False",
+        "Agent.IsPaired -equals False"
+      ]
+    },
+    {
+      stageName: 'mac_14_x64',
+      displayName: 'X64 - Mac Sonoma (14)',
+      macPool: 'VSEng-Xamarin-RedmondMacBuildPool-iOS-Untrusted',
+      useImage: false,
+      statusContext: 'X64 - Mac Sonoma (14)',
+      demands: [
+        "Agent.OS -equals Darwin",
+        "macOS.Name -equals Sonoma",
+        "macOS.Architecture -equals x64",
         "Agent.HasDevices -equals False",
         "Agent.IsPaired -equals False"
       ]
