@@ -4295,7 +4295,7 @@ public partial class KeyboardViewController : UIKit.UIInputViewController
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.monotouch-test</string>
 	<key>MinimumOSVersion</key>
-	<string>12.0</string>
+	<string>12.2</string>
 </dict>
 </plist>
 ";

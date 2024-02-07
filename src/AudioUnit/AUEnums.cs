@@ -67,7 +67,7 @@ namespace AudioUnit {
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		MidiOutputBufferFull = -66753,
-		[iOS (11, 3), TV (11, 3), NoWatch]
+		[NoWatch]
 		[MacCatalyst (13, 1)]
 		InvalidParameterValue = -66743,
 		[NoWatch]

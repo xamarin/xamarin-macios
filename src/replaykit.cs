@@ -358,12 +358,11 @@ namespace ReplayKit {
 	[BaseType (typeof (RPBroadcastHandler))]
 	interface RPBroadcastSampleHandler {
 
-		[iOS (11, 1), TV (11, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("RPVideoSampleOrientationKey")]
 		NSString VideoSampleOrientationKey { get; }
 
-		[NoTV, iOS (11, 2)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Field ("RPApplicationInfoBundleIdentifierKey")]
 		NSString ApplicationInfoBundleIdentifierKey { get; }
@@ -380,7 +379,7 @@ namespace ReplayKit {
 		[Export ("broadcastFinished")]
 		void BroadcastFinished ();
 
-		[NoTV, iOS (11, 2)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("broadcastAnnotatedWithApplicationInfo:")]
 		void BroadcastAnnotated (NSDictionary applicationInfo);
@@ -393,7 +392,7 @@ namespace ReplayKit {
 		void FinishBroadcast (NSError error);
 	}
 
-	[NoTV, iOS (12, 0)]
+	[NoTV]
 	[NoMac]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIView))]

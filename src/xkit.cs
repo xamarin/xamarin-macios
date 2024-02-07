@@ -1421,7 +1421,6 @@ namespace UIKit {
 		[Export ("showAttachmentCell:inRect:characterIndex:")]
 		void ShowAttachmentCell (NSCell cell, CGRect rect, nuint characterIndex);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("limitsLayoutForSuspiciousContents")]
 		bool LimitsLayoutForSuspiciousContents { get; set; }

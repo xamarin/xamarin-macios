@@ -316,7 +316,6 @@ namespace VideoSubscriberAccount {
 		[Export ("tierIdentifiers", ArgumentSemantic.Copy)]
 		string [] TierIdentifiers { get; set; }
 
-		[TV (11, 3), iOS (11, 3)]
 		[NullAllowed, Export ("billingIdentifier")]
 		string BillingIdentifier { get; set; }
 	}

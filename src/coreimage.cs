@@ -534,21 +534,18 @@ namespace CoreImage {
 	[BaseType (typeof (CIContext))]
 	interface CIContext_CIDepthBlurEffect {
 		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("depthBlurEffectFilterForImageURL:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (NSUrl url, [NullAllowed] NSDictionary options);
 
 		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("depthBlurEffectFilterForImageData:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (NSData data, [NullAllowed] NSDictionary options);
 
 		// as per the docs: The 'options' parameter is a key value/pair reserved for future use.
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:orientation:options:")]
 		[return: NullAllowed]
@@ -1266,12 +1263,10 @@ namespace CoreImage {
 		[Field ("kCIInputDisparityImageKey", "+CoreImage")]
 		NSString DisparityImage { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCIInputMatteImageKey", "+CoreImage")]
 		NSString MatteImage { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCIInputAmountKey", "+CoreImage")]
 		NSString Amount { get; }
@@ -1620,7 +1615,6 @@ namespace CoreImage {
 		[MacCatalyst (13, 1)]
 		bool AuxiliaryDisparity { get; set; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		bool AuxiliaryPortraitEffectsMatte { get; set; }
 
@@ -1677,7 +1671,6 @@ namespace CoreImage {
 		[Field ("kCIImageAuxiliaryDisparity")]
 		NSString AuxiliaryDisparityKey { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCIImageAuxiliaryPortraitEffectsMatte")]
 		NSString AuxiliaryPortraitEffectsMatteKey { get; }
@@ -2339,41 +2332,34 @@ namespace CoreImage {
 		[Export ("imageTransformForCGOrientation:")]
 		CGAffineTransform GetImageTransform (CGImagePropertyOrientation orientation);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("imageByInsertingIntermediate")]
 		CIImage CreateByInsertingIntermediate ();
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("imageByInsertingIntermediate:")]
 		CIImage CreateByInsertingIntermediate (bool cache);
 
 		// CIImage_AVPortraitEffectsMatte category
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("portraitEffectsMatte")]
 		AVPortraitEffectsMatte PortraitEffectsMatte { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
 		NativeHandle Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
 		NativeHandle Constructor (AVPortraitEffectsMatte matte);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("imageWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
 		[return: NullAllowed]
 		CIImage FromPortraitEffectsMatte (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("imageWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
@@ -6120,12 +6106,10 @@ namespace CoreImage {
 		[Field ("kCIImageRepresentationDisparityImage")]
 		NSString DisparityImageKey { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCIImageRepresentationAVPortraitEffectsMatte")]
 		NSString AVPortraitEffectsMatteKey { get; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCIImageRepresentationPortraitEffectsMatteImage")]
 		NSString PortraitEffectsMatteImageKey { get; }
@@ -6191,11 +6175,9 @@ namespace CoreImage {
 
 		CIImage DisparityImage { get; set; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		CIImage PortraitEffectsMatteImage { get; set; }
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		AVPortraitEffectsMatte AVPortraitEffectsMatte { get; set; }
 
@@ -6229,8 +6211,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIReductionFilter))]
 	interface CIAreaMinMax : CIAreaReductionFilterProtocol {
@@ -6245,16 +6225,12 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIDither : CIDitherProtocol {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIGuidedFilter {
@@ -6273,24 +6249,18 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMeshGenerator : CIMeshGeneratorProtocol {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CIMix : CIMixProtocol {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CISampleNearest {
@@ -6300,8 +6270,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CICameraCalibrationLensCorrection {
@@ -6317,8 +6285,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CICoreMLModelFilter {
@@ -6337,8 +6303,6 @@ namespace CoreImage {
 	}
 
 	[CoreImageFilter]
-	[iOS (12, 0)]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (CIFilter))]
 	interface CISaliencyMapFilter : CISaliencyMapProtocol {

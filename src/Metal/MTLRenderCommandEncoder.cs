@@ -19,10 +19,9 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos14.5")]
 #else
-		[iOS (12, 0)]
 		[TV (14, 5)]
 		[NoWatch]
 #endif
@@ -37,10 +36,9 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos14.5")]
 #else
-		[iOS (12, 0)]
 		[TV (14, 5)]
 		[NoWatch]
 #endif

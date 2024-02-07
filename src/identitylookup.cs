@@ -53,7 +53,6 @@ namespace IdentityLookup {
 		RedundantNetworkDeferral = 5,
 	}
 
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -170,7 +169,6 @@ namespace IdentityLookup {
 		NSData Data { get; }
 	}
 
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -183,7 +181,6 @@ namespace IdentityLookup {
 		ILCallCommunication [] CallCommunications { get; }
 	}
 
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -197,7 +194,6 @@ namespace IdentityLookup {
 	}
 
 	[Abstract]
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -208,7 +204,6 @@ namespace IdentityLookup {
 
 	}
 
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -220,7 +215,6 @@ namespace IdentityLookup {
 		[Export ("action", ArgumentSemantic.Assign)]
 		ILClassificationAction Action { get; }
 
-		[iOS (12, 1)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("userString")]
 		string UserString { get; set; }
@@ -235,7 +229,6 @@ namespace IdentityLookup {
 	}
 
 	[Abstract]
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -254,7 +247,6 @@ namespace IdentityLookup {
 		bool IsEqualTo (ILCommunication communication);
 	}
 
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]
@@ -267,7 +259,6 @@ namespace IdentityLookup {
 		ILMessageCommunication [] MessageCommunications { get; }
 	}
 
-	[iOS (12, 0)]
 	[NoMac]
 	[NoWatch]
 	[NoTV]

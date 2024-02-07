@@ -340,7 +340,6 @@ namespace AVFoundation {
 		Both, TopOnly, BottomOnly, Deinterlace
 	}
 
-	[TV (12, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
@@ -524,7 +523,6 @@ namespace AVFoundation {
 		Auto = 7,
 	}
 
-	[TV (12, 0)]
 	[Watch (7, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -657,7 +655,6 @@ namespace AVFoundation {
 		AudioDeviceInUseByAnotherClient = 2,
 		VideoDeviceInUseByAnotherClient = 3,
 		VideoDeviceNotAvailableWithMultipleForegroundApps = 4,
-		[iOS (11, 1)]
 		[MacCatalyst (14, 0)]
 		VideoDeviceNotAvailableDueToSystemPressure = 5,
 	}
@@ -1127,7 +1124,6 @@ namespace AVFoundation {
 	[NoWatch]
 	[NoTV]
 	[NoMac]
-	[iOS (11, 1)]
 	[Flags]
 	[Native]
 	public enum AVCaptureSystemPressureFactors : ulong {
@@ -1137,10 +1133,8 @@ namespace AVFoundation {
 		DepthModuleTemperature = (1 << 2)
 	}
 
-	[TV (11, 2)]
 	[NoWatch]
 	[NoMac]
-	[iOS (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -1151,8 +1145,6 @@ namespace AVFoundation {
 	}
 
 	[Watch (5, 0)]
-	[TV (12, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]

@@ -291,7 +291,7 @@ namespace AVKit {
 		[Export ("customInfoViewController", ArgumentSemantic.Assign)]
 		UIViewController CustomInfoViewController { get; set; }
 
-		[NoiOS, TV (11, 2), NoMac, NoWatch]
+		[NoiOS, NoMac, NoWatch]
 		[NoMacCatalyst]
 		[Export ("appliesPreferredDisplayCriteriaAutomatically")]
 		bool AppliesPreferredDisplayCriteriaAutomatically { get; set; }
@@ -901,25 +901,22 @@ namespace AVKit {
 		void DidEndPresentingRoutes (AVRoutePickerView routePickerView);
 	}
 
-	[TV (11, 2), NoiOS, NoMac, NoWatch]
+	[NoiOS, NoMac, NoWatch]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVDisplayManager {
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Field ("AVDisplayManagerModeSwitchStartNotification")]
 		[Notification]
 		NSString ModeSwitchStartNotification { get; }
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Field ("AVDisplayManagerModeSwitchEndNotification")]
 		[Notification]
 		NSString ModeSwitchEndNotification { get; }
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Field ("AVDisplayManagerModeSwitchSettingsChangedNotification")]
 		[Notification]
@@ -931,13 +928,12 @@ namespace AVKit {
 		[Export ("displayModeSwitchInProgress")]
 		bool DisplayModeSwitchInProgress { [Bind ("isDisplayModeSwitchInProgress")] get; }
 
-		[TV (11, 3)]
 		[NoMacCatalyst]
 		[Export ("displayCriteriaMatchingEnabled")]
 		bool DisplayCriteriaMatchingEnabled { [Bind ("isDisplayCriteriaMatchingEnabled")] get; }
 	}
 
-	[TV (11, 2), NoiOS, NoMac, NoWatch]
+	[NoiOS, NoMac, NoWatch]
 	[NoMacCatalyst]
 	[Category]
 	[BaseType (typeof (UIWindow))]

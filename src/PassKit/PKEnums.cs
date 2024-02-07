@@ -173,21 +173,16 @@ namespace PassKit {
 		[MacCatalyst (13, 1)]
 		Donate,
 #if NET
-		[iOS (12,0)]
 		[MacCatalyst (13, 1)]
 		Checkout,
-		[iOS (12,0)]
 		[MacCatalyst (13, 1)]
 		Book,
 #else
-		[iOS (12, 0)]
 		[Obsolete ("Use 'Book2'.")]
 		Book,
-		[iOS (12, 0)]
 		[Obsolete ("Use 'Checkout2'.")]
 		Checkout,
 #endif // !NET
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		Subscribe,
 		[iOS (14, 0)]
@@ -219,9 +214,7 @@ namespace PassKit {
 		Continue = 16,
 #if !NET
 #pragma warning disable 0618 // warning CS0618: 'PKPaymentButtonType.[field]' is obsolete: 'Use '[replacement]'.'
-		[iOS (12, 0)]
 		Book2 = Checkout,
-		[iOS (12, 0)]
 		Checkout2 = Book,
 #pragma warning restore
 #endif // !NET
@@ -301,7 +294,6 @@ namespace PassKit {
 		CouponCodeExpired,
 	}
 
-	[iOS (12, 0)]
 	[Mac (11, 0)]
 	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
 	[MacCatalyst (13, 1)]

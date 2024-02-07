@@ -98,7 +98,7 @@ namespace StoreKit {
 		Hide,
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
+	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
@@ -108,7 +108,7 @@ namespace StoreKit {
 		Year,
 	}
 
-	[Watch (6, 2), iOS (11, 2), TV (11, 2)]
+	[Watch (6, 2)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {

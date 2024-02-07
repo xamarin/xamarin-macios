@@ -28,7 +28,7 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTaggerOptions : ulong {
 		OmitWords = 1uL << 0,
@@ -40,7 +40,7 @@ namespace NaturalLanguage {
 	}
 
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLModelType : long {
 		Classifier,
@@ -48,7 +48,7 @@ namespace NaturalLanguage {
 	}
 
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTokenUnit : long {
 		Word,
@@ -60,7 +60,7 @@ namespace NaturalLanguage {
 
 	[Flags]
 	[Native]
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTokenizerAttributes : ulong {
 		Numeric = 1uL << 0,
@@ -68,7 +68,7 @@ namespace NaturalLanguage {
 		Emoji = 1uL << 2,
 	}
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLLanguage {
 		[DefaultEnumValue]
@@ -194,7 +194,7 @@ namespace NaturalLanguage {
 		Kazakh,
 	}
 
-	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
+	[Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	public enum NLTagScheme {
 		[Field ("NLTagSchemeTokenType")]

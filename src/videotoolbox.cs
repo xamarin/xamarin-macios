@@ -42,7 +42,6 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_AllowFrameReordering")]
 		NSString AllowFrameReordering { get; }
 
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kVTCompressionPropertyKey_AllowOpenGOP")]
 		NSString AllowOpenGop { get; }
@@ -98,7 +97,6 @@ namespace VideoToolbox {
 		NSString RealTime { get; }
 
 		[Field ("kVTCompressionPropertyKey_MaximizePowerEfficiency")]
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		NSString MaximizePowerEfficiency { get; }
 
@@ -302,7 +300,6 @@ namespace VideoToolbox {
 		[Export ("AllowFrameReordering")]
 		bool AllowFrameReordering { get; set; }
 
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("AllowOpenGop")]
 		bool AllowOpenGop { get; set; }
@@ -336,7 +333,6 @@ namespace VideoToolbox {
 		[Export ("RealTime")]
 		bool RealTime { get; set; }
 
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("MaximizePowerEfficiency")]
 		bool MaximizePowerEfficiency { get; set; }
@@ -797,7 +793,6 @@ namespace VideoToolbox {
 		NSString RealTime { get; }
 
 		[Field ("kVTDecompressionPropertyKey_MaximizePowerEfficiency")]
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		NSString MaximizePowerEfficiency { get; }
 
@@ -922,7 +917,6 @@ namespace VideoToolbox {
 		[Export ("RealTime")]
 		bool RealTime { get; set; }
 
-		[iOS (12, 0), TV (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("MaximizePowerEfficiency")]
 		bool MaximizePowerEfficiency { get; set; }

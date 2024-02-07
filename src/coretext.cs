@@ -97,7 +97,7 @@ namespace CoreText {
 		NSString ForceEmbeddingLevel { get; }
 #endif
 
-		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCTTypesetterOptionAllowUnboundedLayout")]
 		NSString AllowUnboundedLayout { get; }

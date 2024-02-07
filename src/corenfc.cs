@@ -711,7 +711,6 @@ namespace CoreNFC {
 		double RetryInterval { get; set; }
 	}
 
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
