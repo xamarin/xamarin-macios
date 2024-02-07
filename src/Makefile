@@ -1216,8 +1216,9 @@ $($(2)_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml: $(TOP)/src/ILLink.LinkAttrib
 $($(2)_DOTNET_BUILD_DIR)/SourceLink.json: $($(2)_DOTNET_BUILD_DIR)
 	$$(Q) $(TOP)/src/generate-sourcelink-json.csharp "$(PACKAGE_HEAD_REV)" "$(abspath $(TOP)/src)" "$$@" >/dev/null 2>&1
 
-$($(2)_DOTNET_BUILD_DIR)/embed-files.rsp: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources
-	$$(Q) $(TOP)/src/generate-embed-files.sh $($(2)_DOTNET_BUILD_DIR) $(3) > $$@
+$($(2)_DOTNET_BUILD_DIR)/embed-files.rsp: $($(2)_DOTNET_BUILD_DIR)/$(3)-generated-sources $(TOP)/src/generate-embed-files.sh
+	$$(Q) $(TOP)/src/generate-embed-files.sh $($(2)_DOTNET_BUILD_DIR) $(3) > $$@.tmp
+	$$(Q) mv $$@.tmp $$@
 
 $($(2)_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml: $(TOP)/src/ILLink.Substitutions.$(1).xml | $($(2)_DOTNET_BUILD_DIR)
 	$(Q) $(CP) $$< $$@

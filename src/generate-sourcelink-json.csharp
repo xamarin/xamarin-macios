@@ -9,7 +9,7 @@ var latestCommit = args [2];
 var src = args [3];
 var outputPath = args [4];
 
-var json    = new StringBuilder ();
+var json = new StringBuilder ();
 json.AppendLine ("{");
 json.AppendLine ("  \"documents\": {");
 
@@ -17,9 +17,5 @@ json.AppendLine ($"    \"{src}*\": \"https://raw.githubusercontent.com/xamarin/x
 json.AppendLine ("  }");
 json.AppendLine ("}");
 
-string outputData = json.ToString ();
-using (StreamWriter writer = new StreamWriter(outputPath))
-{
-    writer.Write(outputData);
-}
+File.WriteAllText (outputPath, json.ToString ());
 
