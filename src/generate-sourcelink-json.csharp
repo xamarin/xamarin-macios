@@ -1,0 +1,25 @@
+#!/usr/bin/env /Library/Frameworks/Mono.framework/Commands/csharp
+
+using System.IO;
+using System.Text;
+
+var args = Environment.GetCommandLineArgs ();
+
+var latestCommit = args [2];
+var src = args [3];
+var outputPath = args [4];
+
+var json    = new StringBuilder ();
+json.AppendLine ("{");
+json.AppendLine ("  \"documents\": {");
+
+json.AppendLine ($"    \"{src}*\": \"https://raw.githubusercontent.com/xamarin/xamarin-macios/{latestCommit}/src/*\"");
+json.AppendLine ("  }");
+json.AppendLine ("}");
+
+string outputData = json.ToString ();
+using (StreamWriter writer = new StreamWriter(outputPath))
+{
+    writer.Write(outputData);
+}
+
