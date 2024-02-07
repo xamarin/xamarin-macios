@@ -277,12 +277,23 @@ parameters:
 stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
-  - template: ./governance/stage.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-      stageDisplayNamePrefix: ${{ parameters.stageDisplayNamePrefix }}
+  - stage: governance_checks
+    displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
+    dependsOn: build_packages
+    ${{ if and(ne(parameters.dependsOn, ''), ne(parameters.dependsOnResult, '')) }}:
+      condition: eq(dependencies.${{ parameters.dependsOn }}.result, '${{ parameters.dependsOnResult }}')
+    jobs:
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: governance-checks.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          repositoryAlias: ${{ parameters.repositoryAlias }}
+          commit: ${{ parameters.commit }}
+
 
 - ${{ if parameters.isPR }}:
   - stage: clean
