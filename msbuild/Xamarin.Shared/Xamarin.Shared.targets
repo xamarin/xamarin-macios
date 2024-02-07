@@ -1281,7 +1281,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
 		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(TextureAtlas)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="TextureAtlas" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
+		<WriteItemsToFile Items="@(AtlasTexture)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="AtlasTexture" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
 			<FileWrites Include="$(_ProcessedTextureAtlasesPath)" />
@@ -1910,7 +1910,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_DetectBuildType;_CollectBundleResources;_PrepareUnpackLibraryResources"
+	<PropertyGroup>
+		<_UnpackLibraryResourcesDependsOn>
+			BuildOnlySettings;
+			ResolveReferences;
+			_DetectBuildType;
+			_CollectBundleResources;
+			_PrepareUnpackLibraryResources;
+		</_UnpackLibraryResourcesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_UnpackLibraryResourcesDependsOn)"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'" Directories="$(_StampDirectory)" />
