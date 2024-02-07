@@ -100,5 +100,46 @@ MACCATALYST_NUGET_OS_VERSION=17.2
 # So we've made the decision that the default target platform version is
 # always the latest target platform version.
 
-# .NET 7 versions are bumped using maestro.
 
+#
+# Here we list all the releases we support for each platform.
+#
+# Format: space-separated list of TargetFramework-OSVersion
+#
+# Example:
+#
+#    SUPPORTED_API_VERSIONS_IOS=net8.0-17.0 net8.0-17.2
+#
+# This means the iOS workload shipped from the current branch supports projects with:
+#    <TargetFramework>net8.0-17.0</TargetFramework>
+# and
+#    <TargetFramework>net8.0-17.2</TargetFramework>
+# and even:
+#    <TargetFrameworks>net8.0-17.0;net8.0-17.2</TargetFrameworks>
+#
+# When shipping support for a preview Xcode, we might add entries here for a preview release into a stable release.
+#
+# Example:
+#
+#     SUPPORTED_API_VERSIONS_IOS=net9.0-18.0
+#
+# If the current branch is stable .NET 8 using Xcode 15.0 (aka iOS 17.0), this
+# would add support for trying the preview release by doing:
+#
+#     <TargetFramework>net9.0-18.0</TargetFramework>
+#     <EnablePreviewFeatures>true</EnablePreviewFeatures>
+#
+# Note that any SUPPORTED_API_VERSIONS entry below for older OS versions need a corresponding entry in
+# the eng/Version.Details.xml and eng/Versions.props files.
+#
+
+# First add the versions for the current branch. DO NOT TOUCH THIS. Add older branches below.
+
+SUPPORTED_API_VERSIONS_IOS=$(DOTNET_TFM)-$(IOS_NUGET_OS_VERSION)
+SUPPORTED_API_VERSIONS_TVOS=$(DOTNET_TFM)-$(TVOS_NUGET_OS_VERSION)
+SUPPORTED_API_VERSIONS_MACOS=$(DOTNET_TFM)-$(MACOS_NUGET_OS_VERSION)
+SUPPORTED_API_VERSIONS_MACCATALYST=$(DOTNET_TFM)-$(MACCATALYST_NUGET_OS_VERSION)
+
+# Add older versions here!
+
+# (work on adding older versions is in progress)

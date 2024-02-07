@@ -24,7 +24,12 @@ using NativeHandle = System.IntPtr;
 
 namespace UIKit {
 	public partial interface IUITraitChangeObservable {
+#if XAMCORE_5_0
 		private static Class [] ToClasses (params Type [] traits)
+#else
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static Class [] ToClasses (params Type [] traits)
+#endif
 		{
 			if (traits is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
@@ -206,7 +211,12 @@ namespace UIKit {
 			return Runtime.GetINativeObject<IUITraitChangeRegistration> (NativeHandle_objc_msgSend_NativeHandle_NativeHandle (this.Handle, Selector.GetHandle ("registerForTraitChanges:withAction:"), nsa_traits.Handle, action.Handle), false)!;
 		}
 
+#if XAMCORE_5_0
 		private static Class [] ToClasses (IUITraitDefinition [] traits)
+#else
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public static Class [] ToClasses (IUITraitDefinition [] traits)
+#endif
 		{
 			if (traits is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (traits));
@@ -238,13 +248,28 @@ namespace UIKit {
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+#if XAMCORE_5_0
 		private extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2);
+#else
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2);
+#endif
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+#if XAMCORE_5_0
 		private extern unsafe static NativeHandle NativeHandle_objc_msgSend_NativeHandle_BlockLiteral (IntPtr receiver, IntPtr selector, NativeHandle arg1, BlockLiteral* arg2);
+#else
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public extern unsafe static NativeHandle NativeHandle_objc_msgSend_NativeHandle_BlockLiteral (IntPtr receiver, IntPtr selector, NativeHandle arg1, BlockLiteral* arg2);
+#endif
 
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+#if XAMCORE_5_0
 		private extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2, NativeHandle arg3);
+#else
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public extern static NativeHandle NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (IntPtr receiver, IntPtr selector, NativeHandle arg1, NativeHandle arg2, NativeHandle arg3);
+#endif
 #endif // !XAMCORE_5_0
 	}
 }

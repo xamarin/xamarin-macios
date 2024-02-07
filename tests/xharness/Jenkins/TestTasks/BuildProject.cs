@@ -47,7 +47,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public bool SupportsParallelExecution {
 			get {
-				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
+				return false;
 			}
 		}
 

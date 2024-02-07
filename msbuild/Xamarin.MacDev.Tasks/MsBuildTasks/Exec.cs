@@ -1,3 +1,4 @@
+extern alias Microsoft_Build_Tasks_Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ using System.Reactive.Linq;
 #nullable disable
 
 namespace Microsoft.Build.Tasks {
-	public class Exec : ExecBase, ITaskCallback {
+	public class Exec : Microsoft_Build_Tasks_Core::Microsoft.Build.Tasks.Exec, ITaskCallback {
+		public string SessionId { get; set; }
 		public string ServerPassword { get; set; }
 
 		public override bool Execute ()
