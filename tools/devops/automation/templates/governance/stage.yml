@@ -1,0 +1,69 @@
+# contains the stage used to run all governance related jobs
+
+parameters:
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: stageDisplayNamePrefix
+  type: string
+  default: ''
+
+
+stages:
+- stage: governance_checks
+  displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
+  dependsOn: [ configure_build ]
+
+  jobs:
+  - job: apiscan
+    displayName: 'APIScan:' 
+    pool:
+      vmImage: windows-latest
+
+
+    strategy:
+      matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
+
+    steps:
+    - template: ./apiscan.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+  - job: general_governance
+    displayName: 'Governance Checks'
+    pool:
+      vmImage: windows-latest
+
+    steps:
+    - template: ./general.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
+
+  - job: tsa_upload 
+    displayName: 'TSA Upload'
+    dependsOn: [ general_governance, apiscan ]
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      ${{ each p in parameters.platforms }}:
+        INCLUDE_DOTNET_${{ upper(p.key) }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_${{ upper(p.key)}}'] ]
+
+    steps:
+    - template: ./tsa-upload.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        repositoryAlias: ${{ parameters.repositoryAlias }}
+        commit: ${{ parameters.commit }}
