@@ -27,10 +27,10 @@ namespace VideoToolbox {
 #endif
 	public static class VTUtilities {
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCreateCGImageFromCVPixelBuffer (
+		unsafe extern static VTStatus VTCreateCGImageFromCVPixelBuffer (
 			/* CM_NONNULL CVPixelBufferRef */ IntPtr pixelBuffer,
 			/* CM_NULLABLE CFDictionaryRef */ IntPtr options,
-			/* CM_RETURNS_RETAINED_PARAMETER CM_NULLABLE CGImageRef * CM_NONNULL */ out IntPtr imageOut);
+			/* CM_RETURNS_RETAINED_PARAMETER CM_NULLABLE CGImageRef * CM_NONNULL */ IntPtr* imageOut);
 
 		// intentionally not exposing the (NSDictionary options) argument
 		// since header docs indicate that there are no options available
@@ -40,9 +40,13 @@ namespace VideoToolbox {
 			if (pixelBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelBuffer));
 
-			var ret = VTCreateCGImageFromCVPixelBuffer (pixelBuffer.GetCheckedHandle (),
+			VTStatus ret;
+			IntPtr imagePtr;
+			unsafe {
+				ret = VTCreateCGImageFromCVPixelBuffer (pixelBuffer.GetCheckedHandle (),
 				IntPtr.Zero, // no options as of 9.0/10.11 - always pass NULL
-				out var imagePtr);
+				&imagePtr);
+			}
 
 			image = Runtime.GetINativeObject<CGImage> (imagePtr, true); // This is already retained CM_RETURNS_RETAINED_PARAMETER
 
