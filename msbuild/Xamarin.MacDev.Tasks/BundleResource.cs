@@ -24,8 +24,13 @@ namespace Xamarin.MacDev {
 			"_CodeSignature",
 		}, StringComparer.OrdinalIgnoreCase);
 
-		public static bool IsIllegalName (string name, [NotNullWhen (true)] out string? illegal)
+		public static bool IsIllegalName (string? name, [NotNullWhen (true)] out string? illegal)
 		{
+			if (name is null) {
+				illegal = null;
+				return false;
+			}
+
 			if (illegalFileNames.Contains (name)) {
 				illegal = name;
 				return true;
