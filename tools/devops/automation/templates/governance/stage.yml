@@ -57,10 +57,6 @@ stages:
     pool:
       vmImage: windows-latest
 
-    variables:
-      ${{ each p in parameters.platforms }}:
-        INCLUDE_DOTNET_${{ upper(p.key) }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_DOTNET_${{ upper(p.key)}}'] ]
-
     steps:
     - template: ./tsa-upload.yml
       parameters:
