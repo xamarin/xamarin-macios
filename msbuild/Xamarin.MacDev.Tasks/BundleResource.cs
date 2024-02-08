@@ -28,7 +28,7 @@ namespace Xamarin.MacDev {
 		{
 			if (name is null) {
 				illegal = null;
-				return false;
+				return true;
 			}
 
 			if (illegalFileNames.Contains (name)) {
