@@ -167,6 +167,12 @@
     <Compile Include="bgen\Models\MemberInformation.cs" />
     <Compile Include="bgen\Models\TrampolineInfo.cs" />
     <Compile Include="bgen\Models\WrapPropMemberInformation.cs" />
+    <Compile Include="bgen\CodeBlocks\ICodeBlock.cs" />
+    <Compile Include="bgen\CodeBlocks\CodeBlock.cs" />
+    <Compile Include="bgen\CodeBlocks\MethodBlock.cs" />
+    <Compile Include="bgen\CodeBlocks\IfBlock.cs" />
+    <Compile Include="bgen\CodeBlocks\LineBlock.cs" />
+    <Compile Include="bgen\CodeBlocks\BlockContainer.cs" />
     <Compile Include="Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
