@@ -160,9 +160,7 @@ namespace Xamarin.MacDev.Tasks {
 				ITaskItem output;
 
 				if (!string.IsNullOrEmpty (relative)) {
-					string illegal;
-
-					if (BundleResource.IsIllegalName (relative, out illegal)) {
+					if (BundleResource.IsIllegalName (relative, out var illegal)) {
 						Log.LogError (null, null, null, input.ItemSpec, 0, 0, 0, 0, MSBStrings.E0102, illegal);
 						continue;
 					}
