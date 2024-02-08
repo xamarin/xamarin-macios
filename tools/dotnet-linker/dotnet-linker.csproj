@@ -183,6 +183,9 @@
     <Compile Include="..\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs">
       <Link>external\tools\linker\MonoTouch.Tuner\PreserveSmartEnumConversions.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
+      <Link>external\tools\linker\MonoTouch.Tuner\ProcessExportedFields.cs</Link>
+    </Compile>
     <Compile Include="..\linker\MobileExtensions.cs">
       <Link>external\tools\linker\MobileExtensions.cs</Link>
     </Compile>
