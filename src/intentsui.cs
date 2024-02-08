@@ -41,7 +41,7 @@ namespace IntentsUI {
 		GenericAction,
 	}
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
+	[NoWatch, NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIAddVoiceShortcutButtonStyle : ulong {
@@ -110,7 +110,6 @@ namespace IntentsUI {
 	}
 
 	[Mac (12, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
@@ -135,7 +134,6 @@ namespace IntentsUI {
 	interface IINUIAddVoiceShortcutViewControllerDelegate { }
 
 	[Mac (12, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
@@ -155,7 +153,6 @@ namespace IntentsUI {
 	}
 
 	[Mac (12, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSViewController))]
@@ -180,7 +177,6 @@ namespace IntentsUI {
 	interface IINUIEditVoiceShortcutViewControllerDelegate { }
 
 	[Mac (12, 0)]
-	[iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]
@@ -203,7 +199,7 @@ namespace IntentsUI {
 		void DidCancel (INUIEditVoiceShortcutViewController controller);
 	}
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
+	[NoWatch, NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSButton))]
@@ -231,7 +227,6 @@ namespace IntentsUI {
 		[NullAllowed, Export ("shortcut", ArgumentSemantic.Strong)]
 		INShortcut Shortcut { get; set; }
 
-		[iOS (12, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("cornerRadius", ArgumentSemantic.Assign)]
 		nfloat CornerRadius { get; set; }
@@ -244,7 +239,7 @@ namespace IntentsUI {
 
 	interface IINUIAddVoiceShortcutButtonDelegate { }
 
-	[NoWatch, NoTV, Mac (12, 0), iOS (12, 0)]
+	[NoWatch, NoTV, Mac (12, 0)]
 	[MacCatalyst (13, 1)]
 #if NET
 	[Protocol, Model]

@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Xml;
 
 using Mono.Cecil;
 
@@ -854,20 +855,6 @@ namespace Xamarin.Tests {
 				Assert.Fail ($"Could not find either BindingWithDefaultCompileInclude.resources.zip or BindingWithDefaultCompileInclude.resources in {bindir}");
 		}
 
-		void AssertThatLinkerExecuted (ExecutionResult result)
-		{
-			var output = BinLog.PrintToString (result.BinLogPath);
-			Assert.That (output, Does.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
-		}
-
-		void AssertThatLinkerDidNotExecute (ExecutionResult result)
-		{
-			var output = BinLog.PrintToString (result.BinLogPath);
-			Assert.That (output, Does.Not.Contain ("Building target \"_RunILLink\" completely."), "Linker did not executed as expected.");
-			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
-		}
-
 		void AssertAppContents (ApplePlatform platform, string app_directory)
 		{
 			var info_plist_path = GetInfoPListPath (platform, app_directory);
@@ -1027,6 +1014,7 @@ namespace Xamarin.Tests {
 			DotNet.AssertBuild (project_path, properties);
 		}
 
+		[Category ("Multiplatform")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
@@ -1561,15 +1549,13 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void InvalidTargetPlatformVersion (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			// Pick a target platform version we don't support (such as iOS 6.66).
 			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + "6.66";
-			var supportedApiVersion = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
-			var validTargetPlatformVersions = supportedApiVersion.Where (v => v.StartsWith (Configuration.DotNetTfm + "-", StringComparison.Ordinal)).Select (v => v.Substring (Configuration.DotNetTfm.Length + 1));
+			var supportedApiVersions = GetSupportedApiVersions (platform);
 
 			var project = "MultiTargetingLibrary";
 			var project_path = GetProjectPath (project, platform: platform);
@@ -1578,8 +1564,71 @@ namespace Xamarin.Tests {
 			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
 			var rv = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
-			Assert.AreEqual (1, errors.Length, "Error count");
-			Assert.AreEqual ($"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', validTargetPlatformVersions)}", errors [0].Message, "Error message");
+			AssertErrorMessages (errors, $"6.66 is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', supportedApiVersions)}");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void UnsupportedTargetPlatformVersion (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// Pick a target platform version that we don't really support,
+			// but don't show an error in .NET 8 because of backwards compat.
+			// The earliest target OS version should do.
+			var minSupportedOSVersion = GetSupportedTargetPlatformVersions (platform).First ();
+			var targetFrameworks = Configuration.DotNetTfm + "-" + platform.AsString ().ToLowerInvariant () + minSupportedOSVersion;
+			var supportedApiVersions = GetSupportedApiVersions (platform, isCompat: false);
+
+			var project = "MultiTargetingLibrary";
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			properties ["cmdline:AllTheTargetFrameworks"] = targetFrameworks;
+
+			if (IsTargetPlatformVersionCompatEnabled) {
+				var rv = DotNet.AssertBuild (project_path, properties);
+				var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+				AssertWarningMessages (warnings, $"{minSupportedOSVersion} is not a valid TargetPlatformVersion for {platform.AsString ()}. This warning will become an error in future versions of the {platform.AsString ()} workload. Valid versions include:\n{string.Join ('\n', supportedApiVersions)}");
+			} else {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+				AssertErrorMessages (errors, $"{minSupportedOSVersion} is not a valid TargetPlatformVersion for {platform.AsString ()}. Valid versions include:\n{string.Join ('\n', supportedApiVersions)}");
+			}
+		}
+
+		bool IsTargetPlatformVersionCompatEnabled {
+			get => Version.Parse (Configuration.DotNetTfm.Replace ("net", "")).Major < 9;
+		}
+
+		string [] GetSupportedApiVersions (ApplePlatform platform, bool? isCompat = null)
+		{
+			if (isCompat is null)
+				isCompat = IsTargetPlatformVersionCompatEnabled;
+			if (isCompat.Value)
+				return GetSupportedTargetPlatformVersions (platform);
+
+			var supportedApiVersions = Configuration.GetVariableArray ($"SUPPORTED_API_VERSIONS_{platform.AsString ().ToUpperInvariant ()}");
+			return supportedApiVersions
+				.Where (v => v.StartsWith (Configuration.DotNetTfm + "-", StringComparison.Ordinal))
+				.Select (v => v.Substring (Configuration.DotNetTfm.Length + 1))
+				.ToArray ();
+		}
+
+		string [] GetSupportedTargetPlatformVersions (ApplePlatform platform)
+		{
+			var plistPath = Path.Combine (Configuration.SourceRoot, "builds", $"Versions-{platform.AsString ()}.plist.in");
+			var doc = new XmlDocument ();
+			doc.Load (plistPath);
+			var query = $"/plist/dict/key[text()='SupportedTargetPlatformVersions']/following-sibling::dict[1]/key[text()='{platform.AsString ()}']/following-sibling::array[1]/string";
+			return doc
+				.SelectNodes (query)!
+				.Cast<XmlNode> ()
+				.Select (v => v.InnerText)
+				.ToArray ();
 		}
 
 		[Test]
@@ -1606,5 +1655,32 @@ namespace Xamarin.Tests {
 			AssertErrorCount (errors, 1, "Error count");
 			AssertErrorMessages (errors, $"The property '{property}' is deprecated, please remove it from the project file. Use 'RuntimeIdentifier' or 'RuntimeIdentifiers' instead to specify the target architecture.");
 		}
+
+		[Test]
+		// The trailing semi-colon for single-arch platforms is significant:
+		// it means we'll use "RuntimeIdentifiers" (plural) instead of "RuntimeIdentifier" (singular)
+		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
+		public void StrippedRuntimeIdentifiers (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["NoSymbolStrip"] = "false";
+			DotNet.AssertBuild (project_path, properties);
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+
+			var symbols = Configuration.GetNativeSymbols (appExecutable);
+			Assert.That (symbols, Does.Contain ("_xamarin_release_managed_ref"), "_xamarin_release_managed_ref");
+		}
+
 	}
 }

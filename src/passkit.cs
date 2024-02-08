@@ -749,7 +749,6 @@ namespace PassKit {
 		[Export ("initWithIssuerData:signature:error:")]
 		NativeHandle Constructor (NSData issuerData, NSData signature, [NullAllowed] out NSError error);
 
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("canAddPasses")]
@@ -836,7 +835,6 @@ namespace PassKit {
 		[Export ("requiresFelicaSecureElement")]
 		bool RequiresFelicaSecureElement { get; set; }
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("style", ArgumentSemantic.Assign)]
 		PKAddPaymentPassStyle Style { get; set; }
@@ -1049,7 +1047,6 @@ namespace PassKit {
 		[Field ("PKPaymentNetworkCarteBancaires")]
 		NSString CarteBancaires { get; }
 
-		[iOS (11, 2)]
 		[Watch (4, 2)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkCartesBancaires")]
@@ -1097,34 +1094,32 @@ namespace PassKit {
 		[Field ("PKPaymentNetworkIDCredit")]
 		NSString IDCredit { get; }
 
-		[iOS (12, 0), Watch (5, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkElectron")]
 		NSString Electron { get; }
 
-		[iOS (12, 0), Watch (5, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkMaestro")]
 		NSString Maestro { get; }
 
-		[iOS (12, 0), Watch (5, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkVPay")]
 		NSString VPay { get; }
 
-		[iOS (12, 0), Watch (5, 0)]
+		[Watch (5, 0)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkEftpos")]
 		NSString Eftpos { get; }
 
 		[Watch (5, 1, 2)]
-		[iOS (12, 1, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkElo")]
 		NSString Elo { get; }
 
 		[Watch (5, 1, 2)]
-		[iOS (12, 1, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPaymentNetworkMada")]
 		NSString Mada { get; }
@@ -1194,7 +1189,6 @@ namespace PassKit {
 		[DesignatedInitializer]
 		NativeHandle Constructor (PKPaymentButtonType type, PKPaymentButtonStyle style);
 
-		[iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("cornerRadius")]
 		nfloat CornerRadius { get; set; }
@@ -1390,7 +1384,7 @@ namespace PassKit {
 	}
 
 	[Mac (11, 0)]
-	[Watch (4, 3), iOS (11, 3)]
+	[Watch (4, 3)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (PKStoredValuePassProperties))]
 	[DisableDefaultCtor]
@@ -1460,12 +1454,12 @@ namespace PassKit {
 		[Export ("inShinkansenStation")]
 		bool InShinkansenStation { [Bind ("isInShinkansenStation")] get; }
 
-		[Watch (4, 3), iOS (11, 3)]
+		[Watch (4, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("balanceAllowedForCommute")]
 		bool BalanceAllowedForCommute { [Bind ("isBalanceAllowedForCommute")] get; }
 
-		[Watch (4, 3), iOS (11, 3)]
+		[Watch (4, 3)]
 		[MacCatalyst (13, 1)]
 		[Export ("lowBalanceGateNotificationEnabled")]
 		bool LowBalanceGateNotificationEnabled { [Bind ("isLowBalanceGateNotificationEnabled")] get; }
@@ -1610,7 +1604,6 @@ namespace PassKit {
 #if !XAMCORE_5_0
 	[NoMac] // only used in non-macOS API
 	[NoWatch]
-	[iOS (12, 2)]
 	[MacCatalyst (13, 1)]
 	[Obsoleted (PlatformName.iOS, 17, 0, message: "No longer used.")]
 	[Obsoleted (PlatformName.MacCatalyst, 17, 0, message: "No longer used.")]
@@ -1622,7 +1615,6 @@ namespace PassKit {
 #endif
 
 	[NoWatch]
-	[iOS (12, 2)]
 	[NoMac] // all members are decorated as such, but not the type itself
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]

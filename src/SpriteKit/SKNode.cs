@@ -61,14 +61,12 @@ namespace SpriteKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5, 0)]
-		[TV (12, 0)]
-		[iOS (12, 0)]
 #endif
 		public static SKNode? Create (string filename, Type [] types, out NSError error)
 		{
@@ -88,14 +86,12 @@ namespace SpriteKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5, 0)]
-		[TV (12, 0)]
-		[iOS (12, 0)]
 #endif
 		public static SKNode? Create (string filename, NSSet<Class> classes, out NSError error)
 		{

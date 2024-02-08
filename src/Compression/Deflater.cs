@@ -51,7 +51,11 @@ namespace Compression {
 		private void Dispose (bool disposing)
 		{
 			if (!_isDisposed) {
-				CompressionStreamStruct.compression_stream_destroy (ref _compression_struct);
+				unsafe {
+					fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+						CompressionStreamStruct.compression_stream_destroy (_compression_struct);
+					}
+				}
 				DeallocateInputBufferHandle ();
 				_isDisposed = true;
 			}
@@ -127,7 +131,12 @@ namespace Compression {
 					_compression_struct.Destination = (IntPtr) bufPtr;
 					_compression_struct.DestinationSize = outputBuffer.Length;
 
-					var readStatus = CompressionStreamStruct.compression_stream_process (ref _compression_struct, flushCode);
+					CompressionStatus readStatus;
+					unsafe {
+						fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+							readStatus = CompressionStreamStruct.compression_stream_process (_compression_struct, flushCode);
+						}
+					}
 					switch (readStatus) {
 					case CompressionStatus.Ok:
 					case CompressionStatus.End:
@@ -192,7 +201,12 @@ namespace Compression {
 			_finished = false;
 			_compression_struct = new CompressionStreamStruct ();
 
-			var status = CompressionStreamStruct.compression_stream_init (ref _compression_struct, StreamOperation.Encode, algorithm);
+			CompressionStatus status;
+			unsafe {
+				fixed (CompressionStreamStruct* _compression_struct = &this._compression_struct) {
+					status = CompressionStreamStruct.compression_stream_init (_compression_struct, StreamOperation.Encode, algorithm);
+				}
+			}
 			if (status != CompressionStatus.Ok)
 				throw new InvalidOperationException (status.ToString ());
 		}

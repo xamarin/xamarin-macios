@@ -26,6 +26,7 @@ using NSFont = UIKit.UIFont;
 
 // dummy types to simplify build
 #if !MONOMAC
+using NSAppearance = UIKit.UIAppearance;
 using NSCell = System.Object;
 using NSGlyphGenerator = System.Object;
 using NSGlyphStorageOptions = System.Object;
@@ -52,6 +53,7 @@ using UITraitCollection = Foundation.NSObject;
 #else
 using UICollectionLayoutListConfiguration=System.Object;
 using UIContentInsetsReference=System.Object;
+using UIEdgeInsets=System.Object;
 using UITraitCollection=System.Object;
 #endif // !MONOMAC
 
@@ -1419,7 +1421,6 @@ namespace UIKit {
 		[Export ("showAttachmentCell:inRect:characterIndex:")]
 		void ShowAttachmentCell (NSCell cell, CGRect rect, nuint characterIndex);
 
-		[TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("limitsLayoutForSuspiciousContents")]
 		bool LimitsLayoutForSuspiciousContents { get; set; }
@@ -4261,133 +4262,133 @@ namespace UIKit {
 	[Internal]
 	interface NSAttributedStringDocumentAttributeKey {
 		[Field ("NSDocumentTypeDocumentAttribute")]
-		NSString NSDocumentTypeDocumentAttribute { get; }
+		NSString DocumentTypeDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSConvertedDocumentAttribute")]
-		NSString NSConvertedDocumentAttribute { get; }
+		NSString ConvertedDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSFileTypeDocumentAttribute")]
-		NSString NSFileTypeDocumentAttribute { get; }
+		NSString FileTypeDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSTitleDocumentAttribute")]
-		NSString NSTitleDocumentAttribute { get; }
+		NSString TitleDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSCompanyDocumentAttribute")]
-		NSString NSCompanyDocumentAttribute { get; }
+		NSString CompanyDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSCopyrightDocumentAttribute")]
-		NSString NSCopyrightDocumentAttribute { get; }
+		NSString CopyrightDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSSubjectDocumentAttribute")]
-		NSString NSSubjectDocumentAttribute { get; }
+		NSString SubjectDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSAuthorDocumentAttribute")]
-		NSString NSAuthorDocumentAttribute { get; }
+		NSString AuthorDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSKeywordsDocumentAttribute")]
-		NSString NSKeywordsDocumentAttribute { get; }
+		NSString KeywordsDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSCommentDocumentAttribute")]
-		NSString NSCommentDocumentAttribute { get; }
+		NSString CommentDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSEditorDocumentAttribute")]
-		NSString NSEditorDocumentAttribute { get; }
+		NSString EditorDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSCreationTimeDocumentAttribute")]
-		NSString NSCreationTimeDocumentAttribute { get; }
+		NSString CreationTimeDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSModificationTimeDocumentAttribute")]
-		NSString NSModificationTimeDocumentAttribute { get; }
+		NSString ModificationTimeDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSManagerDocumentAttribute")]
-		NSString NSManagerDocumentAttribute { get; }
+		NSString ManagerDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSCategoryDocumentAttribute")]
-		NSString NSCategoryDocumentAttribute { get; }
+		NSString CategoryDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSAppearanceDocumentAttribute")]
-		NSString NSAppearanceDocumentAttribute { get; }
+		NSString AppearanceDocumentAttribute { get; }
 
 		[Field ("NSCharacterEncodingDocumentAttribute")]
-		NSString NSCharacterEncodingDocumentAttribute { get; }
+		NSString CharacterEncodingDocumentAttribute { get; }
 
 		[Field ("NSDefaultAttributesDocumentAttribute")]
-		NSString NSDefaultAttributesDocumentAttribute { get; }
+		NSString DefaultAttributesDocumentAttribute { get; }
 
 		[Field ("NSPaperSizeDocumentAttribute")]
-		NSString NSPaperSizeDocumentAttribute { get; }
+		NSString PaperSizeDocumentAttribute { get; }
 
 		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Field ("NSPaperMarginDocumentAttribute")]
-		NSString NSPaperMarginDocumentAttribute { get; }
+		NSString PaperMarginDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSLeftMarginDocumentAttribute")]
-		NSString NSLeftMarginDocumentAttribute { get; }
+		NSString LeftMarginDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSRightMarginDocumentAttribute")]
-		NSString NSRightMarginDocumentAttribute { get; }
+		NSString RightMarginDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSTopMarginDocumentAttribute")]
-		NSString NSTopMarginDocumentAttribute { get; }
+		NSString TopMarginDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSBottomMarginDocumentAttribute")]
-		NSString NSBottomMarginDocumentAttribute { get; }
+		NSString BottomMarginDocumentAttribute { get; }
 
 		[Field ("NSViewSizeDocumentAttribute")]
-		NSString NSViewSizeDocumentAttribute { get; }
+		NSString ViewSizeDocumentAttribute { get; }
 
 		[Field ("NSViewZoomDocumentAttribute")]
-		NSString NSViewZoomDocumentAttribute { get; }
+		NSString ViewZoomDocumentAttribute { get; }
 
 		[Field ("NSViewModeDocumentAttribute")]
-		NSString NSViewModeDocumentAttribute { get; }
+		NSString ViewModeDocumentAttribute { get; }
 
 		[Field ("NSReadOnlyDocumentAttribute")]
-		NSString NSReadOnlyDocumentAttribute { get; }
+		NSString ReadOnlyDocumentAttribute { get; }
 
 		[Field ("NSBackgroundColorDocumentAttribute")]
-		NSString NSBackgroundColorDocumentAttribute { get; }
+		NSString BackgroundColorDocumentAttribute { get; }
 
 		[Field ("NSHyphenationFactorDocumentAttribute")]
-		NSString NSHyphenationFactorDocumentAttribute { get; }
+		NSString HyphenationFactorDocumentAttribute { get; }
 
 		[Field ("NSDefaultTabIntervalDocumentAttribute")]
-		NSString NSDefaultTabIntervalDocumentAttribute { get; }
+		NSString DefaultTabIntervalDocumentAttribute { get; }
 
 		[Field ("NSTextLayoutSectionsAttribute")]
 		NSString TextLayoutSectionsAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSExcludedElementsDocumentAttribute")]
-		NSString NSExcludedElementsDocumentAttribute { get; }
+		NSString ExcludedElementsDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSTextEncodingNameDocumentAttribute")]
-		NSString NSTextEncodingNameDocumentAttribute { get; }
+		NSString TextEncodingNameDocumentAttribute { get; }
 
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		[Field ("NSPrefixSpacesDocumentAttribute")]
-		NSString NSPrefixSpacesDocumentAttribute { get; }
+		NSString PrefixSpacesDocumentAttribute { get; }
 
 		[Field ("NSTextScalingDocumentAttribute")]
 		[iOS (13, 0), TV (13, 0), Watch (6, 0)]
@@ -4411,7 +4412,12 @@ namespace UIKit {
 
 	[StrongDictionary (nameof (NSAttributedStringDocumentReadingOptionKey), Suffix = "DocumentOption")]
 	interface NSAttributedStringDocumentReadingOptions {
+#if XAMCORE_5_0
+		[Export ("DocumentTypeDocumentOption")]
+		NSAttributedStringDocumentType StrongDocumentType { get; set; }
+#else
 		NSAttributedStringDocumentType DocumentType { get; set; }
+#endif
 
 		// It's not documented which attributes go in this dictionary.
 		NSDictionary DefaultAttributes { get; set; }

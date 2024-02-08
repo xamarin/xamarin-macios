@@ -389,12 +389,10 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
@@ -402,12 +400,10 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
 		public nuint GetPrimaryImageIndex ()

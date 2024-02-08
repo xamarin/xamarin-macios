@@ -47,8 +47,7 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool /* Boolean */ UTTypeIsDynamic (IntPtr /* CFStringRef */ handle);
+		extern static byte /* Boolean */ UTTypeIsDynamic (IntPtr /* CFStringRef */ handle);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -60,8 +59,7 @@ namespace MobileCoreServices {
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #endif
 		[DllImport (Constants.CoreServicesLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool /* Boolean */ UTTypeIsDeclared (IntPtr /* CFStringRef */ handle);
+		extern static byte /* Boolean */ UTTypeIsDeclared (IntPtr /* CFStringRef */ handle);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -80,7 +78,7 @@ namespace MobileCoreServices {
 			var ptr = CFString.CreateNative (utType);
 			var result = UTTypeIsDynamic (ptr);
 			CFString.ReleaseNative (ptr);
-			return result;
+			return result != 0;
 		}
 
 #if NET
@@ -100,7 +98,7 @@ namespace MobileCoreServices {
 			var ptr = CFString.CreateNative (utType);
 			var result = UTTypeIsDeclared (ptr);
 			CFString.ReleaseNative (ptr);
-			return result;
+			return result != 0;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -175,8 +173,7 @@ namespace MobileCoreServices {
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool /* Boolean */ UTTypeConformsTo (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ conformsToUtiStr);
+		extern static byte /* Boolean */ UTTypeConformsTo (IntPtr /* CFStringRef */ utiStr, IntPtr /* CFStringRef */ conformsToUtiStr);
 
 		public static bool ConformsTo (string uti, string conformsToUti)
 		{
@@ -190,7 +187,7 @@ namespace MobileCoreServices {
 			var ret = UTTypeConformsTo (a, b);
 			CFString.ReleaseNative (a);
 			CFString.ReleaseNative (b);
-			return ret;
+			return ret != 0;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -258,20 +255,17 @@ namespace MobileCoreServices {
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern unsafe bool /* Boolean */ UTTypeEqual (/* CFStringRef */ IntPtr inUTI1, /* CFStringRef */ IntPtr inUTI2);
+		static extern unsafe byte /* Boolean */ UTTypeEqual (/* CFStringRef */ IntPtr inUTI1, /* CFStringRef */ IntPtr inUTI2);
 
 #if NET
-		[SupportedOSPlatform ("ios12.0")]
-		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[ObsoletedOSPlatform ("tvos14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("macos11.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 		[ObsoletedOSPlatform ("ios14.0", "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 #else
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
 		public static bool Equals (NSString uti1, NSString uti2)
@@ -280,7 +274,7 @@ namespace MobileCoreServices {
 				return uti2 is null;
 			else if (uti2 is null)
 				return false;
-			return UTTypeEqual (uti1.Handle, uti2.Handle);
+			return UTTypeEqual (uti1.Handle, uti2.Handle) != 0;
 		}
 	}
 }

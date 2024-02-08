@@ -23,8 +23,8 @@ namespace Xamarin {
 
 #if NET
 		public const string MinOSX = "10.15";
-		public const string MiniOS = "11.0";
-		public const string MinTVOS = "11.0";
+		public const string MiniOS = "12.2";
+		public const string MinTVOS = "12.2";
 		public const string MinMacCatalyst = "13.1";
 #else
 		public const string MinOSX = "10.15";
@@ -35,8 +35,8 @@ namespace Xamarin {
 #endif
 
 		public const string DotNetMinOSX = "10.15";
-		public const string DotNetMiniOS = "11.0";
-		public const string DotNetMinTVOS = "11.0";
+		public const string DotNetMiniOS = "12.2";
+		public const string DotNetMinTVOS = "12.2";
 		public const string DotNetMinMacCatalyst = "13.1";
 		public const string LegacyMinOSX = "10.15";
 		public const string LegacyMiniOS = "11.0";

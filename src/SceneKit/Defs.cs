@@ -377,7 +377,6 @@ namespace SceneKit {
 	}
 
 	[NoWatch]
-	[TV (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum SCNTessellationSmoothingMode : long {

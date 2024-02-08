@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>MonoNativeTest</string>
 	<key>MinimumOSVersion</key>
-	<string>11.0</string>
+	<string>12.2</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

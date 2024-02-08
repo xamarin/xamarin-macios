@@ -722,8 +722,6 @@ namespace CoreAnimation {
 		bool AllowsNextDrawableTimeout { get; set; }
 
 		[NoWatch] // headers not updated
-		[TV (11, 2)]
-		[iOS (11, 2)]
 		[MacCatalyst (13, 1)]
 		[Export ("maximumDrawableCount")]
 		nuint MaximumDrawableCount { get; set; }
@@ -1548,15 +1546,11 @@ namespace CoreAnimation {
 		[Field ("kCAGradientLayerAxial")]
 		Axial,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kCAGradientLayerRadial")]
 		Radial,
 
-		[iOS (12, 0)]
-		[TV (12, 0)]
 		[NoWatch]
 		[MacCatalyst (13, 1)]
 		[Field ("kCAGradientLayerConic")]

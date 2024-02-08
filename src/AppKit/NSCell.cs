@@ -41,7 +41,7 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary)]
 		extern static void NSDrawThreePartImage (CGRect rect,
 			IntPtr /* NSImage* */ startCap, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ endCap,
-			[MarshalAs (UnmanagedType.I1)] bool vertial, nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
+			byte vertial, nint op, nfloat alphaFraction, byte flipped);
 
 		public void DrawThreePartImage (CGRect frame,
 			NSImage startCap, NSImage centerFill, NSImage endCap,
@@ -51,7 +51,10 @@ namespace AppKit {
 				frame, startCap.GetHandle (),
 				centerFill.GetHandle (),
 				endCap.GetHandle (),
-				vertical, (nint) (long) op, alphaFraction, flipped);
+				vertical ? (byte) 1 : (byte) 0,
+				(nint) (long) op,
+				alphaFraction,
+				flipped ? (byte) 1 : (byte) 0);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -59,7 +62,7 @@ namespace AppKit {
 			IntPtr /* NSImage* */ topLeftCorner, IntPtr /* NSImage* */ topEdgeFill, IntPtr /* NSImage* */ topRightCorner,
 			IntPtr /* NSImage* */ leftEdgeFill, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ rightEdgeFill,
 			IntPtr /* NSImage* */ bottomLeftCorner, IntPtr /* NSImage* */ bottomEdgeFill, IntPtr /* NSImage* */ bottomRightCnint,
-			nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
+			nint op, nfloat alphaFraction, byte flipped);
 
 		public void DrawNinePartImage (CGRect frame,
 			NSImage topLeftCorner, NSImage topEdgeFill, NSImage topRightCorner,
@@ -77,7 +80,7 @@ namespace AppKit {
 				bottomLeftCorner.GetHandle (),
 				bottomEdgeFill.GetHandle (),
 				bottomRightCorner.GetHandle (),
-				(nint) (long) op, alphaFraction, flipped);
+				(nint) (long) op, alphaFraction, flipped ? (byte) 1 : (byte) 0);
 		}
 	}
 }

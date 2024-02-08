@@ -6,9 +6,10 @@ using System.IO.Compression;
 #nullable enable
 
 namespace Xamarin.Tests {
-	[Category ("Windows")]
+	[TestFixture]
 	public class WindowsTest : TestBaseClass {
 
+		[Category ("Windows")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void BundleStructureWithHotRestart (ApplePlatform platform, string runtimeIdentifiers)
 		{
@@ -93,11 +94,11 @@ namespace Xamarin.Tests {
 					}
 					return true;
 				});
-			hotRestartAppBundleFiles = hotRestartAppBundleFiles
+			var hotRestartAppBundleFilesWithoutPrebuiltFiles = hotRestartAppBundleFiles
 				.Except (excludedPrebuiltAppEntries)
 				.ToList ();
 
-			var merged = hotRestartAppBundleFiles
+			var merged = hotRestartAppBundleFilesWithoutPrebuiltFiles
 				.Union (payloadFiles)
 				.Union (contentFiles)
 				.Where (v => {
@@ -129,6 +130,24 @@ namespace Xamarin.Tests {
 
 			var rids = runtimeIdentifiers.Split (';');
 			BundleStructureTest.CheckAppBundleContents (platform, merged, rids, BundleStructureTest.CodeSignature.None, configuration == "Release");
+
+			// Assert that no files were copied to the signed directory after the app was signed.
+			// https://github.com/xamarin/xamarin-macios/issues/19278
+			var signedAppBundleFilesWithInfo = hotRestartAppBundleFiles.Select (v => new { Name = v, Info = new FileInfo (v) });
+			Console.WriteLine ($"{signedAppBundleFilesWithInfo.Count ()} files in app bundle:");
+			foreach (var fileWithInfo2 in signedAppBundleFilesWithInfo) {
+				Console.WriteLine ($"    {fileWithInfo2.Info.LastWriteTimeUtc.ToString ("O")} {fileWithInfo2.Name}");
+			}
+
+			var codesignInfo = signedAppBundleFilesWithInfo.Single (v => v.Name.EndsWith ("_CodeSignature\\CodeResources"));
+			var modifiedAfterSignature = signedAppBundleFilesWithInfo.Where (v => v.Info.LastWriteTimeUtc > codesignInfo.Info.LastWriteTimeUtc);
+			if (modifiedAfterSignature.Any ()) {
+				Console.WriteLine ($"{modifiedAfterSignature.Count ()} files were modified after the app was signed. Full list:");
+				foreach (var fileWithInfo in signedAppBundleFilesWithInfo) {
+					Console.WriteLine ($"    {fileWithInfo.Info.LastWriteTimeUtc.ToString ("O")} {(fileWithInfo.Info.LastWriteTimeUtc > codesignInfo.Info.LastWriteTimeUtc ? "MODIFIED " : "unchanged")} {fileWithInfo.Name}");
+				}
+				Assert.That (modifiedAfterSignature, Is.Empty, "Files modified after the app was signed");
+			}
 		}
 
 		static void AddOrAssert (IList<string> list, string item)
@@ -149,6 +168,72 @@ namespace Xamarin.Tests {
 			foreach (var entry in files.OrderBy (v => v))
 				Console.WriteLine ($"    {entry}");
 #endif
+		}
+
+		[Category ("RemoteWindows")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void RemoteTest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			var configuration = "Debug";
+
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.AssertRuntimeIdentifiersAvailable (platform, runtimeIdentifiers);
+			Configuration.IgnoreIfNotOnWindows ();
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var project_dir = Path.GetDirectoryName (project_path)!;
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			AddRemoteProperties (properties);
+
+			// Copy the app bundle to Windows so that we can inspect the results.
+			properties ["CopyAppBundleToWindows"] = "true";
+
+			var result = DotNet.AssertBuild (project_path, properties, timeout: TimeSpan.FromMinutes (15));
+			AssertThatLinkerExecuted (result);
+
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers, configuration);
+			var zippedAppBundlePath = Path.Combine (objDir, "AppBundle.zip");
+			Assert.That (zippedAppBundlePath, Does.Exist, "AppBundle.zip");
+
+			// Open the zipped app bundle and get the Info.plist
+			using var zip = ZipFile.OpenRead (zippedAppBundlePath);
+			DumpZipFile (zip, zippedAppBundlePath);
+			var infoPlistEntry = zip.Entries.SingleOrDefault (v => v.Name == "Info.plist")!;
+			Assert.NotNull (infoPlistEntry, "Info.plist");
+
+			// Parse the Info.plist
+			// PDictionary.FromStream requires a seekable stream, but the zip stream isn't seekable, so copy to a
+			// MemoryStream and use that. Info.plist files aren't big, so this shouldn't become a memory consumption problem.
+			using var memoryStream = new MemoryStream ((int) infoPlistEntry.Length);
+			using var plistStream = infoPlistEntry.Open ();
+			plistStream.CopyTo (memoryStream);
+
+			var infoPlist = (PDictionary) PDictionary.FromStream (memoryStream)!;
+			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("3.14", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+		}
+
+		void DumpZipFile (ZipArchive zip, string path)
+		{
+#if TRACE
+			var entries = zip.Entries;
+			Console.WriteLine ($"Viewing zip archive {path} with {entries.Count} entries:");
+			foreach (var entry in entries) {
+				Console.WriteLine ($"    FullName: {entry.FullName} Name: {entry.Name} Length: {entry.Length} CompressedLength: {entry.CompressedLength} ExternalAttributes: 0x{entry.ExternalAttributes:X}");
+			}
+#endif
+		}
+
+		protected void AddRemoteProperties (Dictionary<string, string> properties)
+		{
+			properties ["ServerAddress"] = Environment.GetEnvironmentVariable ("MAC_AGENT_IP") ?? string.Empty;
+			properties ["ServerUser"] = Environment.GetEnvironmentVariable ("MAC_AGENT_USER") ?? string.Empty;
+			properties ["ServerPassword"] = Environment.GetEnvironmentVariable ("XMA_PASSWORD") ?? string.Empty;
 		}
 	}
 }

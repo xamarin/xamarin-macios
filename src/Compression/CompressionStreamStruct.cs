@@ -23,12 +23,12 @@ namespace Compression {
 
 
 		[DllImport (Constants.libcompressionLibrary)]
-		public static extern CompressionStatus compression_stream_init (ref CompressionStreamStruct stream, StreamOperation operation, CompressionAlgorithm algorithm);
+		public unsafe static extern CompressionStatus compression_stream_init (CompressionStreamStruct* stream, StreamOperation operation, CompressionAlgorithm algorithm);
 
 		[DllImport (Constants.libcompressionLibrary)]
-		public static extern CompressionStatus compression_stream_process (ref CompressionStreamStruct stream, StreamFlag flags);
+		public unsafe static extern CompressionStatus compression_stream_process (CompressionStreamStruct* stream, StreamFlag flags);
 
 		[DllImport (Constants.libcompressionLibrary)]
-		public static extern CompressionStatus compression_stream_destroy (ref CompressionStreamStruct stream);
+		public unsafe static extern CompressionStatus compression_stream_destroy (CompressionStreamStruct* stream);
 	}
 }
