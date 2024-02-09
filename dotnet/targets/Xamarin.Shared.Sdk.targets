@@ -155,6 +155,11 @@
 		<_OriginalAggressiveAttributeTrimming>$(_AggressiveAttributeTrimming)</_OriginalAggressiveAttributeTrimming>
 		<_AggressiveAttributeTrimming Condition="'$(_UseNativeAot)' == 'true'">false</_AggressiveAttributeTrimming>
 		<_AggressiveAttributeTrimming Condition="'$(_AggressiveAttributeTrimming)' == ''">true</_AggressiveAttributeTrimming>
+
+		<!-- This property is also defined in Xamarin.Shared.props, but that file is imported too late for us to use the definition, and we can't remove it from Xamarin.Shared.props quite yet, because that would break legacy
+			 (in other words: once we drop support for legacy Xamarin, we can remove the other definition) -->
+		<_CanOutputAppBundle Condition="'$(_CanOutputAppBundle)' == '' And ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true' Or '$(IsWatchApp)' == 'true')">true</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(_CanOutputAppBundle)' == ''">false</_CanOutputAppBundle>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -180,7 +185,15 @@
 	</PropertyGroup>
 
 	<!-- Inject our custom logic into *DependsOn variables -->
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(_CanOutputAppBundle)' != 'true'">
+		<BuildDependsOn>
+			BuildOnlySettings;
+			_CollectBundleResources;
+			_PackLibraryResources;
+			$(BuildDependsOn);
+		</BuildDependsOn>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(_CanOutputAppBundle)' == 'true'">
 		<!-- single-rid build -->
 		<BuildDependsOn Condition="'$(RuntimeIdentifiers)' == '' And '$(_IsMultiRidBuild)' != 'true'">
 			_WarnRuntimeIdentifiersClash;
@@ -315,7 +328,18 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_RunRidSpecificBuild" Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == ''" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
+	<PropertyGroup>
+		<!-- The dependencies on BuildOnlySettings and ResolveReferences are so that we build any project references before running the RID-specific builds -->
+		<_RunRidSpecificBuildDependsOn>
+			$(_RunRidSpecificBuildDependsOn);
+			BuildOnlySettings;
+			ResolveReferences;
+			_DetectSdkLocations;
+			_GenerateBundleName;
+		</_RunRidSpecificBuildDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_RunRidSpecificBuild" Condition="'$(RuntimeIdentifiers)' != '' And '$(RuntimeIdentifier)' == ''" DependsOnTargets="$(_RunRidSpecificBuildDependsOn)">
 		<ItemGroup>
 			<!-- Convert RuntimeIdentifiers (a property) to an item group -->
 			<_RuntimeIdentifiersAsItems Include="$(RuntimeIdentifiers)" Condition=" '$(RuntimeIdentifiers)' != '' " />
@@ -343,7 +367,9 @@
 		<Error Condition="@(_RuntimeIdentifierDistinctPlatforms->Count()) > 1" Text="Building for all the runtime identifiers '$(RuntimeIdentifiers)' at the same time isn't possible, because they represent different platform variations." />
 
 		<PropertyGroup>
+			<!-- We disable building project references (BuildProjectReferences=false), because project references aren't RID-specific, so we build them (once) before running _RunRidSpecificBuild target, so that we don't have to build them once per RID -->
 			<_RidSpecificProperties>
+				BuildProjectReferences=false;
 				_IsMultiRidBuild=true;
 				RuntimeIdentifiers=;
 				_ProcessedBundleResourcesPath=$(_ProcessedBundleResourcesPath);
