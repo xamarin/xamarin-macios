@@ -53,6 +53,9 @@ namespace Introspection {
 			case "MetalPerformanceShaders.MPSCommandBuffer":
 				// The reflectable type metadata contains no selectors.
 				return true;
+			case "PassKit.PKDisbursementRequest":
+			case "PassKit.PKDisbursementAuthorizationController":
+				return true;
 			}
 
 			return SkipDueToAttribute (type);

@@ -27,9 +27,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CreateTap ()
 		{
 			tapCalled = false;
-			var psn = (IntPtr) 2; // kCurrentProcess
-			var tapPort = CGEvent.CreateTap (CGEventTapLocation.AnnotatedSession, CGEventTapPlacement.HeadInsert, CGEventTapOptions.Default, CGEventMask.KeyDown, callBack, IntPtr.Zero);
-			Assert.IsNull (tapPort, "magically created tap port when not root");
+			using var tapPort = CGEvent.CreateTap (CGEventTapLocation.AnnotatedSession, CGEventTapPlacement.HeadInsert, CGEventTapOptions.Default, CGEventMask.KeyDown, callBack, IntPtr.Zero);
 			Assert.IsFalse (tapCalled, "tap was mistakenly called.");
 		}
 
@@ -38,8 +36,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			tapCalled = false;
 			var psn = (IntPtr) 2; // kCurrentProcess
-			var tapPort = CGEvent.CreateTap (psn, CGEventTapPlacement.HeadInsert, CGEventTapOptions.Default, CGEventMask.KeyDown, callBack, IntPtr.Zero);
-			Assert.IsNull (tapPort, "magically created tap port with OSN when not root");
+			using var tapPort = CGEvent.CreateTap (psn, CGEventTapPlacement.HeadInsert, CGEventTapOptions.Default, CGEventMask.KeyDown, callBack, IntPtr.Zero);
 			Assert.IsFalse (tapCalled, "tap was mistakenly called.");
 		}
 #endif

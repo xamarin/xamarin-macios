@@ -138,6 +138,8 @@ namespace Introspection {
 			case "PKIdentityButton":
 				return true;
 #endif
+			case "CKShareMetadata":
+				return true;
 			}
 
 #if !NET

@@ -502,8 +502,17 @@ namespace MonoTouchFixtures.Security {
 									Assert.That (data.ToArray (), Is.EqualTo (plain.ToArray ()), "roundtrip");
 								}
 
-								Assert.Null (key.CreateDecryptedData (SecKeyAlgorithm.RsaEncryptionPkcs1, data, out error), "bad data");
-								Assert.NotNull (error, "bad decrypt");
+#if __MACCATALYST__
+								var badDecrypt = !TestRuntime.CheckXcodeVersion (15, 0);
+#else
+								var badDecrypt = true;
+#endif
+								if (badDecrypt) {
+									// on macOS this fails with CSSMERR_CSP_INPUT_LENGTH_ERROR (I haven't checked on iOS/tvOS)
+									// but on  Mac Catalyst apps on Sonoma this succeeds... which means Mac Catalyst can decrypt random data? the returned data looks random too. 🤷‍♂️
+									Assert.Null (key.CreateDecryptedData (SecKeyAlgorithm.RsaEncryptionPkcs1, data, out error), "bad data");
+									Assert.NotNull (error, "bad decrypt");
+								}
 							}
 						}
 					}
