@@ -124,7 +124,7 @@ stages:
           command: push
           packagesToPush: '$(Build.SourcesDirectory)/package/*.nupkg'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet8
+          publishFeedCredentials: dnceng-dotnetfeeds
 
       - task: DownloadPipelineArtifact@2
         inputs:
@@ -139,7 +139,7 @@ stages:
           command: push
           packagesToPush: '$(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}vs-msi-nugets/*.nupkg'
           nuGetFeedType: external
-          publishFeedCredentials: dnceng-dotnet8
+          publishFeedCredentials: dnceng-dotnetfeeds
 
       - pwsh: |
           mkdir $(Build.SourcesDirectory)/nugets-blob
