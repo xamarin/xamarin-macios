@@ -9,18 +9,15 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class ArTool : XamarinToolTask, ITaskCallback {
 		#region Inputs
 
 		[Required]
-		public ITaskItem Archive { get; set; }
+		public ITaskItem? Archive { get; set; }
 
 		[Required]
-		public ITaskItem [] Items { get; set; }
+		public ITaskItem [] Items { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -43,7 +40,7 @@ namespace Xamarin.MacDev.Tasks {
 			var args = new CommandLineArgumentBuilder ();
 
 			args.Add ("-r");
-			args.AddQuoted (Archive.ItemSpec);
+			args.AddQuoted (Archive!.ItemSpec);
 
 			foreach (var item in Items)
 				args.AddQuoted (item.ItemSpec);
@@ -62,7 +59,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			var dir = Path.GetDirectoryName (Archive.ItemSpec);
+			var dir = Path.GetDirectoryName (Archive!.ItemSpec)!;
 
 			if (!Directory.Exists (dir))
 				Directory.CreateDirectory (dir);

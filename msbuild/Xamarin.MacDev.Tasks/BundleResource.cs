@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -6,9 +7,6 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 
 using Xamarin.Utils;
-
-// Disable until we get around to enable + fix any issues.
-#nullable disable
 
 namespace Xamarin.MacDev {
 	public static class BundleResource {
@@ -26,7 +24,7 @@ namespace Xamarin.MacDev {
 			"_CodeSignature",
 		}, StringComparer.OrdinalIgnoreCase);
 
-		public static bool IsIllegalName (string name, out string illegal)
+		public static bool IsIllegalName (string name, [NotNullWhen (true)] out string? illegal)
 		{
 			if (illegalFileNames.Contains (name)) {
 				illegal = name;
