@@ -8,24 +8,21 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class PackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
 		#region Inputs
 
 		[Required]
-		public string Prefix { get; set; }
+		public string Prefix { get; set; } = string.Empty;
 
-		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] EmbeddedResources { get; set; }
+		public ITaskItem [] EmbeddedResources { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
@@ -48,13 +45,11 @@ namespace Xamarin.MacDev.Tasks {
 		bool ExecuteRemotely ()
 		{
 			// Fix LogicalName path for the Mac
-			if (BundleResourcesWithLogicalNames is not null) {
-				foreach (var resource in BundleResourcesWithLogicalNames) {
-					var logicalName = resource.GetMetadata ("LogicalName");
+			foreach (var resource in BundleResourcesWithLogicalNames) {
+				var logicalName = resource.GetMetadata ("LogicalName");
 
-					if (!string.IsNullOrEmpty (logicalName)) {
-						resource.SetMetadata ("LogicalName", logicalName.Replace ("\\", "/"));
-					}
+				if (!string.IsNullOrEmpty (logicalName)) {
+					resource.SetMetadata ("LogicalName", logicalName.Replace ("\\", "/"));
 				}
 			}
 
@@ -86,21 +81,19 @@ namespace Xamarin.MacDev.Tasks {
 
 			var results = new List<ITaskItem> ();
 
-			if (BundleResourcesWithLogicalNames is not null) {
-				foreach (var item in BundleResourcesWithLogicalNames) {
-					var logicalName = item.GetMetadata ("LogicalName");
+			foreach (var item in BundleResourcesWithLogicalNames) {
+				var logicalName = item.GetMetadata ("LogicalName");
 
-					if (string.IsNullOrEmpty (logicalName)) {
-						Log.LogError (MSBStrings.E0161);
-						return false;
-					}
-
-					var embedded = new TaskItem (item);
-
-					embedded.SetMetadata ("LogicalName", "__" + Prefix + "_content_" + EscapeMangledResource (logicalName));
-
-					results.Add (embedded);
+				if (string.IsNullOrEmpty (logicalName)) {
+					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0161);
+					continue;
 				}
+
+				var embedded = new TaskItem (item);
+
+				embedded.SetMetadata ("LogicalName", "__" + Prefix + "_content_" + EscapeMangledResource (logicalName));
+
+				results.Add (embedded);
 			}
 
 			EmbeddedResources = results.ToArray ();
