@@ -72,6 +72,18 @@ namespace Introspection {
 				return false;
 			case "CIConvertLabToRGB":
 			case "CIConvertRGBtoLab":
+			case "CICannyEdgeDetector":
+			case "CIRoundedRectangleStrokeGenerator":
+			case "CISobelGradients":
+			case "CIBlurredRectangleGenerator":
+			case "CIPhotoEffectChrome":
+			case "CIPhotoEffectFade":
+			case "CIPhotoEffectInstant":
+			case "CIPhotoEffectMono":
+			case "CIPhotoEffectNoir":
+			case "CIPhotoEffectProcess":
+			case "CIPhotoEffectTonal":
+			case "CIPhotoEffectTransfer":
 				return true;
 			}
 		}
