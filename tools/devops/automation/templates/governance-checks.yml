@@ -64,8 +64,3 @@ steps:
   inputs:
     CredScan: true
     PoliCheck: true
-
-- task: WhiteSource Bolt@20
-  displayName: "WhiteSource Bolt analysis"
-  inputs:
-    cwd: $(System.DefaultWorkingDirectory)
