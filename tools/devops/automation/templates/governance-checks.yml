@@ -90,8 +90,3 @@ steps:
     PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
     ArtifactName: Guardian Suppressions
   condition: failed()
-
-- task: WhiteSource Bolt@20
-  displayName: "WhiteSource Bolt analysis"
-  inputs:
-    cwd: $(System.DefaultWorkingDirectory)
