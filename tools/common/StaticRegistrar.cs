@@ -2896,6 +2896,14 @@ namespace Registrar {
 						exceptions.Add (ErrorHelper.CreateWarning (4189, $"The class '{@class.Type.FullName}' will not be registered it has been removed from the {App.Platform} SDK."));
 						continue;
 					}
+
+					if (Driver.XcodeVersion.Minor >= 3 || Driver.XcodeVersion.Major >= 16) {
+						// Xcode 15.3+ will remove AssetsLibrary
+						if (IsTypeCore (@class, "AssetsLibrary")) {
+							exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the AssetsLibrary framework has been removed from the {App.Platform} SDK."));
+							continue;
+						}
+					}
 				}
 
 				if (@class.IsFakeProtocol)
