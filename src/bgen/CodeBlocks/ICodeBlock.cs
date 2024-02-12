@@ -2,7 +2,7 @@ using System;
 
 public interface ICodeBlock
 {
-	public string Output();
+	public string Print();
 	public void SetIndent(int indent);
 }
 

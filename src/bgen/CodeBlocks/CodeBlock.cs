@@ -2,64 +2,62 @@ using System.Collections.Generic;
 
 public class CodeBlock : ICodeBlock
 {
-	public int currentIndent;
-	public int indent = 4;
-
-	public string headerText = string.Empty;
-
-	public List<ICodeBlock> blocks = new();
-	public string startBrace = "{"; // Default value for lines
-	public string endBrace = "}"; // Default value for lines
+	protected int CurrentIndent;
+	protected int Indent = 4;
+	protected string HeaderText = string.Empty;
+	protected List<ICodeBlock> Blocks = new();
+	readonly string startBrace = "{";
+	readonly string endBrace = "}";
+	public readonly string newLine = "\n";
 
 	public CodeBlock(int currentIndent)
 	{
-		this.currentIndent = currentIndent;
+		this.CurrentIndent = currentIndent;
 	}
 
-	public CodeBlock(int currentIndent, string text) // TODO
+	public CodeBlock(int currentIndent, string text)
 	{
-		this.currentIndent = currentIndent;
-		headerText = text;
+		this.CurrentIndent = currentIndent;
+		HeaderText = text;
 	}
 
 	public void AddBlock(ICodeBlock block)
 	{
-		block.SetIndent(currentIndent + indent);
-		blocks.Add(block);
+		block.SetIndent(CurrentIndent + Indent);
+		Blocks.Add(block);
 	}
 
 	public void AddLine(string text)
 	{
-		LineBlock line = new LineBlock(currentIndent + indent, text);
-		blocks.Add(line);
+		LineBlock line = new LineBlock(CurrentIndent + Indent, text);
+		Blocks.Add(line);
 	}
 
 	protected void DecrementIndent()
 	{
-		currentIndent -= indent;
+		CurrentIndent -= Indent;
 	}
 
-	public virtual string Output()
+	public virtual string Print()
 	{
-		// TODO logic for not using braces if line is just 1
 		string s = string.Empty;
-		if (headerText != string.Empty)
-			s = new string(' ', currentIndent) + headerText + "\n";
+		if (HeaderText != string.Empty)
+			s = new string(' ', CurrentIndent) + HeaderText + newLine;
 
-		s += new string(' ', currentIndent) + startBrace + "\n";
-		SetIndent(currentIndent + indent);
-		foreach (ICodeBlock block in blocks)
+		s += new string(' ', CurrentIndent) + startBrace + newLine;
+		SetIndent(CurrentIndent + Indent);
+		foreach (ICodeBlock block in Blocks)
 		{
-			block.SetIndent(currentIndent);
-			s += block.Output();
+			block.SetIndent(CurrentIndent);
+			s += block.Print();
 		}
-		SetIndent(currentIndent - indent);
-		s += new string(' ', currentIndent) + endBrace + "\n";
+		SetIndent(CurrentIndent - Indent);
+		s += new string(' ', CurrentIndent) + endBrace + newLine;
 		return s;
 	}
 
 	public void SetIndent(int indent)
 	{
-		currentIndent = indent;
+		CurrentIndent = indent;
 	}
 }

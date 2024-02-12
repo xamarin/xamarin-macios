@@ -2,23 +2,23 @@ public class BlockContainer : CodeBlock
 {
 	public BlockContainer(int currentIndent) : base(currentIndent)
 	{
-		indent = 0;
+		Indent = 0;
 	}
 
-	public override string Output()
+	public override string Print()
 	{
 		string s = string.Empty;
 
-		foreach (ICodeBlock block in blocks)
+		foreach (ICodeBlock block in Blocks)
 		{
-			block.SetIndent(currentIndent);
-			s += block.Output();
+			block.SetIndent(CurrentIndent);
+			s += block.Print();
 		}
 		return s;
 	}
 
 	public void SetIndent(int indent)
 	{
-		currentIndent = indent;
+		CurrentIndent = indent;
 	}
 }

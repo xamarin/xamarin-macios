@@ -1,7 +1,8 @@
 class LineBlock : ICodeBlock
 {
-	string line = string.Empty;
+	readonly string line;
 	int currentIndent = 0;
+	readonly string newLine = "\n";
 
 	public LineBlock(int currentIndent, string line)
 	{
@@ -14,8 +15,8 @@ class LineBlock : ICodeBlock
 		currentIndent = indent;
 	}
 
-	public string Output()
+	public string Print()
 	{
-		return new string(' ', currentIndent) + line + "\n";
+		return new string(' ', currentIndent) + line + newLine;
 	}
 }

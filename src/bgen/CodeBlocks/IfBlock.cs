@@ -4,11 +4,11 @@ public class IfBlock : CodeBlock
 {
 	public IfBlock(string condition, int currentIndent) : base(currentIndent)
 	{
-		headerText = "if (" + condition + ")";
+		HeaderText = "if (" + condition + ")";
 	}
 	public IfBlock(string condition, int currentIndent, List<ICodeBlock> blocks) : base(currentIndent)
 	{
-		headerText = "if (" + condition + ")";
-		this.blocks = blocks;
+		HeaderText = "if (" + condition + ")";
+		this.Blocks = blocks;
 	}
 }
