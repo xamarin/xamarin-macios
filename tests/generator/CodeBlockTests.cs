@@ -12,7 +12,7 @@ namespace bgen_tests {
 			string inputText1 = "using System;";
 			string inputText2 = "using Network;";
 			string outputText = "{\n    using System;\n    using Network;\n}\n";
-			CodeBlock c = new(indent);
+			CodeBlock c = new (indent);
 			c.AddLine (inputText1);
 			c.AddLine (inputText2);
 			Assert.AreEqual (outputText, c.Print ());
@@ -25,7 +25,7 @@ namespace bgen_tests {
 			string headerText = "public class FooClass";
 			string variableText = "public string FooText {get;set;}";
 			string outputText = "public class FooClass\n{\n    public string FooText {get;set;}\n}\n";
-			CodeBlock c = new(indent, headerText);
+			CodeBlock c = new (indent, headerText);
 			c.AddLine (variableText);
 			Assert.AreEqual (outputText, c.Print ());
 		}
