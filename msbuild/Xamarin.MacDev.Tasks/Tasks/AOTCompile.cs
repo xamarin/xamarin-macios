@@ -77,7 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 			// all the files in the SCC are marked as up-to-date or none.
 
 			int index = 0;
-			var stack = new Stack<AssemblyInfo>();
+			var stack = new Stack<AssemblyInfo> ();
 			bool success = true;
 
 			foreach (ITaskItem assembly in items) {
@@ -117,7 +117,7 @@ namespace Xamarin.MacDev.Tasks {
 					success = false;
 					continue;
 				}
-				
+
 				var referencedItem = referencedItems [0];
 				var key = GetAssemblyName (referencedItem);
 				if (!assemblyInfos.TryGetValue (key, out var referenceInfo)) {
@@ -152,7 +152,7 @@ namespace Xamarin.MacDev.Tasks {
 				// Remove the SCC from the stack and update IsUpToDate for each item.
 				AssemblyInfo popped;
 				do {
-					popped = stack.Pop();
+					popped = stack.Pop ();
 					popped.OnStack = false;
 
 					if (!sccIsUpToDate) {
