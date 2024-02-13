@@ -43,9 +43,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>7982ebb61721a188b62fe11dee8a6c8f12c784b4</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="17.2.8035">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="17.2.8036">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7982ebb61721a188b62fe11dee8a6c8f12c784b4</Sha>
+      <Sha>5c3e267a2103a44c4878b69f1460daa1eb766124</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
