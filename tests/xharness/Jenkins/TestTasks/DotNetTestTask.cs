@@ -28,6 +28,16 @@ namespace Xharness.Jenkins.TestTasks {
 					"--logger:html;LogFileName=" + Path.GetFileName (html.FullPath)
 				};
 
+				var envTestFilter = global::System.Environment.GetEnvironmentVariable ("TEST_FILTER");
+				if (!string.IsNullOrEmpty (envTestFilter)) {
+					if (!string.IsNullOrEmpty (Filter)) {
+						Filter = $"({envTestFilter}) & ({Filter})";
+					} else {
+						Filter = $"{envTestFilter}";
+					}
+					Jenkins.MainLog.WriteLine ($"Using test filter '{envTestFilter}' for '{TestName}'. Final filter: '{Filter}'");
+				}
+
 				if (!string.IsNullOrEmpty (Filter)) {
 					args.Add ("--filter");
 					args.Add (Filter);

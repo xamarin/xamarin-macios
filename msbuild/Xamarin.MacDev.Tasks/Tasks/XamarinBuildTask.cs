@@ -41,12 +41,15 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (projectPath, csproj);
 
 			var dotnetPath = this.GetDotNetPath ();
-			var environment = default (Dictionary<string, string>);
+			var environment = new Dictionary<string, string> ();
 			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
 			if (!string.IsNullOrEmpty (customHome)) {
-				environment = new Dictionary<string, string> { { "HOME", customHome } };
+				environment ["HOME"] = customHome;
 			}
+			// Disable a few things that we don't care about
+			environment ["DOTNET_NOLOGO"] = "1";
+			environment ["DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE"] = "1";
 
 			try {
 				ExecuteRestoreAsync (dotnetPath, projectPath, targetName, environment).Wait ();
@@ -65,6 +68,15 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
+		void AddRestoreConfigFile (List<string> arguments, string dotnetPath)
+		{
+			var dotnetDir = Path.GetDirectoryName (dotnetPath);
+			var configFile = Path.Combine (dotnetDir, "NuGet.config");
+
+			if (File.Exists (configFile))
+				arguments.Add ("/p:RestoreConfigFile=" + configFile);
+		}
+
 		async Threading.Task ExecuteRestoreAsync (string dotnetPath, string projectPath, string targetName, Dictionary<string, string> environment)
 		{
 			var projectDirectory = Path.GetDirectoryName (projectPath);
@@ -72,13 +84,7 @@ namespace Xamarin.MacDev.Tasks {
 			var arguments = new List<string> ();
 
 			arguments.Add ("restore");
-
-			var dotnetDir = Path.GetDirectoryName (dotnetPath);
-			var configFile = Path.Combine (dotnetDir, "NuGet.config");
-
-			if (File.Exists (configFile)) {
-				arguments.Add ("/p:RestoreConfigFile=" + configFile);
-			}
+			AddRestoreConfigFile (arguments, dotnetPath);
 
 			arguments.Add ("/bl:" + binlog);
 			arguments.Add (projectPath);
@@ -102,6 +108,7 @@ namespace Xamarin.MacDev.Tasks {
 			var arguments = new List<string> ();
 
 			arguments.Add ("build");
+			AddRestoreConfigFile (arguments, dotnetPath);
 			arguments.Add ("/p:OutputFilePath=" + outputFile);
 			arguments.Add ("/p:RuntimeIdentifier=" + RuntimeIdentifier);
 			arguments.Add ($"/t:{targetName}");

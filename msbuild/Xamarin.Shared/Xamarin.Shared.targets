@@ -1021,9 +1021,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<CompileColladaAssetsDependsOn>
+			$(CompileColladaAssetsDependsOn);
 			_RemoveProcessedColladaAssets;
-			_CollectColladaAssets;
-			_CoreCompileColladaAssets
+			_BeforeCoreCompileColladaAssets;
+			_ReadCoreCompileColladaAssets;
+			_CoreCompileColladaAssets;
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
@@ -1042,46 +1044,57 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CollectColladaAssets">
-		<CollectBundleResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			BundleResources="@(Collada)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
-		</CollectBundleResources>
+	<Target Name="_BeforeCoreCompileColladaAssets"
+		Inputs="@(Collada)"
+		Outputs="$(_ColladaCache)">
+
+		<!-- If any Collada asset is newer than the generated items list, we delete them so that the _CoreCompileCollada
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_ColladaCache)" />
+	</Target>
+
+	<Target Name="_ReadCoreCompileColladaAssets"
+		DependsOnTargets="_BeforeCoreCompileColladaAssets">
+
+		<!-- If _BeforeCoreCompileColladaAssets did not delete the generated items lists from _CoreCompileColladaAssets, then we read them
+		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
+		<ReadItemsFromFile File="$(_ColladaCache)" Condition="Exists('$(_ColladaCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
-		Inputs="@(_ColladaAssetWithLogicalName)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
+		DependsOnTargets="_BeforeCoreCompileColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
+		Inputs="@(Collada)"
+		Outputs="$(_ColladaCache)"
 		>
 
 		<ScnTool
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			DeviceSpecificIntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			IsWatchApp="$(IsWatchApp)"
-			ToolExe="$(ScnToolExe)"
-			ToolPath="$(ScnToolPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
-			OutputScene="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
+			ColladaAssets="@(Collada)"
+			>
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="BundleResources" ItemName="_Collada_BundleResources" />
 		</ScnTool>
 
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName);Optimize='False'">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-
+		<WriteItemsToFile Items="@(_Collada_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ColladaCache)" Overwrite="true" IncludeMetadata="true" />
 		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(_ColladaAssetWithLogicalName)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="_ColladaAssetWithLogicalName" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
+		<WriteItemsToFile Items="@(Collada)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="Collada" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
+			<FileWrites Include="$(_ColladaCache)" />
 			<FileWrites Include="$(_ProcessedColladaAssetsPath)" />
 		</ItemGroup>
 	</Target>
@@ -1136,6 +1149,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			<!-- TextureAtlas output caches -->
 			<_TextureAtlasCache>$(DeviceSpecificIntermediateOutputPath)atlas\_BundleResourceWithLogicalName.items</_TextureAtlasCache>
+
+			<!-- Collada output caches -->
+			<_ColladaCache>$(DeviceSpecificIntermediateOutputPath)collada\_BundleResourceWithLogicalName.items</_ColladaCache>
 
 			<!-- processed items -->
 			<_ProcessedBundleResourcesPath Condition="'$(_ProcessedBundleResourcesPath)' == ''">$(DeviceSpecificIntermediateOutputPath)\_ProcessedBundleResourcesPath.items</_ProcessedBundleResourcesPath>
@@ -1265,7 +1281,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
 		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(TextureAtlas)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="TextureAtlas" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
+		<WriteItemsToFile Items="@(AtlasTexture)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="AtlasTexture" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
 			<FileWrites Include="$(_ProcessedTextureAtlasesPath)" />
@@ -1894,7 +1910,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_DetectBuildType;_CollectBundleResources;_PrepareUnpackLibraryResources"
+	<PropertyGroup>
+		<_UnpackLibraryResourcesDependsOn>
+			BuildOnlySettings;
+			ResolveReferences;
+			_DetectBuildType;
+			_CollectBundleResources;
+			_PrepareUnpackLibraryResources;
+		</_UnpackLibraryResourcesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_UnpackLibraryResourcesDependsOn)"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'" Directories="$(_StampDirectory)" />

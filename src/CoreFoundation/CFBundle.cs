@@ -136,37 +136,40 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFBundleIsExecutableLoaded (IntPtr bundle);
+		extern static byte CFBundleIsExecutableLoaded (IntPtr bundle);
 
 		public bool HasLoadedExecutable {
-			get { return CFBundleIsExecutableLoaded (Handle); }
+			get { return CFBundleIsExecutableLoaded (Handle) != 0; }
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFBundlePreflightExecutable (IntPtr bundle, out IntPtr error);
+		unsafe extern static byte CFBundlePreflightExecutable (IntPtr bundle, IntPtr* error);
 
 		public bool PreflightExecutable (out NSError? error)
 		{
 			IntPtr errorPtr = IntPtr.Zero;
 			// follow the create rule, no need to retain
-			var loaded = CFBundlePreflightExecutable (Handle, out errorPtr);
+			byte loaded;
+			unsafe {
+				loaded = CFBundlePreflightExecutable (Handle, &errorPtr);
+			}
 			error = Runtime.GetNSObject<NSError> (errorPtr);
-			return loaded;
+			return loaded != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFBundleLoadExecutableAndReturnError (IntPtr bundle, out IntPtr error);
+		unsafe extern static byte CFBundleLoadExecutableAndReturnError (IntPtr bundle, IntPtr* error);
 
 		public bool LoadExecutable (out NSError? error)
 		{
 			IntPtr errorPtr = IntPtr.Zero;
 			// follows the create rule, no need to retain
-			var loaded = CFBundleLoadExecutableAndReturnError (Handle, out errorPtr);
+			byte loaded;
+			unsafe {
+				loaded = CFBundleLoadExecutableAndReturnError (Handle, &errorPtr);
+			}
 			error = Runtime.GetNSObject<NSError> (errorPtr);
-			return loaded;
+			return loaded != 0;
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -549,14 +552,16 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static void CFBundleGetPackageInfo (IntPtr bundle, out uint packageType, out uint packageCreator);
+		unsafe extern static void CFBundleGetPackageInfo (IntPtr bundle, uint* packageType, uint* packageCreator);
 
 		public PackageInfo Info {
 			get {
 				uint type = 0;
 				uint creator = 0;
 
-				CFBundleGetPackageInfo (Handle, out type, out creator);
+				unsafe {
+					CFBundleGetPackageInfo (Handle, &type, &creator);
+				}
 				var creatorStr = Runtime.ToFourCCString (creator);
 				switch (type) {
 				case 1095782476: // ""APPL
@@ -578,7 +583,12 @@ namespace CoreFoundation {
 				var rv = CFBundleCopyExecutableArchitectures (Handle);
 				return CFArray.ArrayFromHandleFunc (rv,
 					(handle) => {
-						if (CFDictionary.CFNumberGetValue (handle, /* kCFNumberSInt32Type */ 3, out int value))
+						byte rv;
+						int value;
+						unsafe {
+							rv = CFDictionary.CFNumberGetValue (handle, /* kCFNumberSInt32Type */ 3, &value);
+						}
+						if (rv != 0)
 							return (CFBundle.Architecture) value;
 						return default (CFBundle.Architecture);
 					}, true);
@@ -594,8 +604,7 @@ namespace CoreFoundation {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFBundleIsExecutableLoadable (IntPtr bundle);
+		extern static byte CFBundleIsExecutableLoadable (IntPtr bundle);
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
@@ -609,7 +618,7 @@ namespace CoreFoundation {
 			if (bundle is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundle));
 
-			return CFBundleIsExecutableLoadable (bundle.GetCheckedHandle ());
+			return CFBundleIsExecutableLoadable (bundle.GetCheckedHandle ()) != 0;
 		}
 
 #if NET
@@ -620,8 +629,7 @@ namespace CoreFoundation {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFBundleIsExecutableLoadableForURL (IntPtr bundle);
+		extern static byte CFBundleIsExecutableLoadableForURL (IntPtr bundle);
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
@@ -635,7 +643,7 @@ namespace CoreFoundation {
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
-			return CFBundleIsExecutableLoadableForURL (url.Handle);
+			return CFBundleIsExecutableLoadableForURL (url.Handle) != 0;
 		}
 
 #if NET
@@ -646,8 +654,7 @@ namespace CoreFoundation {
 		[NoMacCatalyst]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
+		extern static byte CFBundleIsArchitectureLoadable (/*cpu_type_t => integer_t => int*/ Architecture architecture);
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
@@ -656,7 +663,7 @@ namespace CoreFoundation {
 		[Introduced (PlatformName.MacOSX, 11, 0)]
 		[NoMacCatalyst]
 #endif
-		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture);
+		public static bool IsArchitectureLoadable (Architecture architecture) => CFBundleIsArchitectureLoadable (architecture) != 0;
 
 #endif
 	}
