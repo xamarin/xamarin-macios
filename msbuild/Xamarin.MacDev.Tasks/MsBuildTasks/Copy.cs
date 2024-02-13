@@ -20,7 +20,7 @@ namespace Microsoft.Build.Tasks {
 				}
 
 				return taskRunner.RunAsync (this).Result;
-			} catch (Exception e) {
+			} catch (Exception ex) {
 				Log.LogError ($"Copy failed due to exception: {ex.Message}");
 				Log.LogError ($"Stack trace:\n{ex.StackTrace}");
 				Log.LogErrorFromException (ex);
