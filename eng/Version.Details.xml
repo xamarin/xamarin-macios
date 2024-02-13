@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.103-servicing.24107.12">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.103-servicing.24108.7">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>3b81b4672358d3a5375cff3bed3db0ea5b8bc803</Sha>
+      <Sha>34ceb5eeb4c8cf1cb42ed943798fd92c643ab7c4</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="8.0.0-rtm.23524.7">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -61,9 +61,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24105.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24112.1">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>18d9997c993b22deea92407e990bbd769701de6a</Sha>
+      <Sha>2f3f51a1adec18475563c8a49fd9b668ae9f2f31</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>
