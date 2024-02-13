@@ -1,5 +1,6 @@
 extern alias Microsoft_Build_Tasks_Core;
 
+using System;
 using System.Linq;
 using Xamarin.Messaging.Build.Client;
 
