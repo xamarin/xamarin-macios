@@ -61,6 +61,7 @@ namespace Xamarin.Tests {
 
 				switch (fn) {
 				case "libclrgc.dylib":
+				case "libclrgcexp.dylib":
 				case "libclrjit.dylib":
 				case "libcoreclr.dylib":
 				case "libdbgshim.dylib":
