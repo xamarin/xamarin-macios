@@ -189,6 +189,9 @@ namespace Xamarin.Tests {
 				properties ["Configuration"] = configuration;
 			AddRemoteProperties (properties);
 
+			// Copy the app bundle to Windows so that we can inspect the results.
+			properties ["CopyAppBundleToWindows"] = "true";
+
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			var warningMessages = BundleStructureTest.FilterWarnings (warnings);
@@ -238,7 +241,11 @@ namespace Xamarin.Tests {
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
-			BundleStructureTest.CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
+			var objDir = GetObjDir (project_path, platform, runtimeIdentifiers, configuration);
+			var zippedAppBundlePath = Path.Combine (objDir, "AppBundle.zip");
+			Assert.That (zippedAppBundlePath, Does.Exist, "AppBundle.zip");
+
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -250,7 +257,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = BundleStructureTest.FilterWarnings (warnings);
 
-			BundleStructureTest.CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 1");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -262,7 +269,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = BundleStructureTest.FilterWarnings (warnings);
 
-			BundleStructureTest.CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 2");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -271,7 +278,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = BundleStructureTest.FilterWarnings (warnings);
 
-			BundleStructureTest.CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
+			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 3");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}

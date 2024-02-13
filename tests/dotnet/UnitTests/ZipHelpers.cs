@@ -7,6 +7,13 @@ using System.IO.Compression;
 
 namespace Xamarin.Tests {
 	public static class ZipHelpers {
+		public static List<string> List (string file)
+		{
+			using var zip = ZipFile.OpenRead (file);
+			DumpZipFile (zip, file);
+			return zip.Entries.Select (entry => entry.FullName.TrimEnd ('/').Replace ('/', Path.DirectorySeparatorChar)).ToList ();
+		}
+
 		public static void DumpZipFile (ZipArchive zip, string path)
 		{
 #if TRACE
