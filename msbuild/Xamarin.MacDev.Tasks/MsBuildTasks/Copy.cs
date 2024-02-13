@@ -8,16 +8,23 @@ namespace Microsoft.Build.Tasks {
 		public string SessionId { get; set; } = string.Empty;
 		public override bool Execute ()
 		{
-			if (!this.ShouldExecuteRemotely (SessionId))
-				return base.Execute ();
+			try {
+				if (!this.ShouldExecuteRemotely (SessionId))
+					return base.Execute ();
 
-			var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+				var taskRunner = new TaskRunner (SessionId, BuildEngine4);
 
-			if (SourceFiles?.Any () == true) {
-				taskRunner.FixReferencedItems (this, SourceFiles);
+				if (SourceFiles?.Any () == true) {
+					taskRunner.FixReferencedItems (this, SourceFiles);
+				}
+
+				return taskRunner.RunAsync (this).Result;
+			} catch (Exception e) {
+				Log.LogError ($"Copy failed due to exception: {ex.Message}");
+				Log.LogError ($"Stack trace:\n{ex.StackTrace}");
+				Log.LogErrorFromException (ex);
+				return false;
 			}
-
-			return taskRunner.RunAsync (this).Result;
 		}
 	}
 }
