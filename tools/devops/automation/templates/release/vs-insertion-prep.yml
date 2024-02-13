@@ -94,7 +94,7 @@ stages:
       variables:
         skipNugetSecurityAnalysis: true
       pool:
-        vmImage: windows-latest
+        type: windows
       steps:
       - task: DownloadPipelineArtifact@2
         inputs:

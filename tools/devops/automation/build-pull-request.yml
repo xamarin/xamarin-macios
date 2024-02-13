@@ -213,30 +213,33 @@ pr:
     - tools/mtouch/README.md
     - msbuild/Xamarin.Localization.MSBuild/README.md
 
-stages:
-- template: templates/main-stage.yml
+extends:
+  template: v2/OneBranch.Official.CrossPlat.yml@1es-templates
   parameters:
-    xcodeChannel: Stable
-    macOSName: ${{ parameters.macOSName }}
-    isPR: true
-    provisionatorChannel: ${{ parameters.provisionatorChannel }}
-    pool: ${{ parameters.pool }}
-    runTests: ${{ parameters.runTests }}
-    runDeviceTests: false
-    runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
-    runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
-    runGovernanceTests: ${{ parameters.runGovernanceTests }}
-    runSamples: ${{ parameters.runSamples }}
-    enableAPIDiff: ${{ parameters.enableAPIDiff }}
-    forceInsertion: false
-    skipESRP: true
-    ${{ if ne(length(parameters.testConfigurations), 0)}}:
-      testConfigurations: ${{ parameters.testConfigurations }}
-    deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
-    macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-    azureStorage: ${{ variables['azureStorage'] }}
-    azureContainer: ${{ variables['azureContainer'] }}
-    signingSetupSteps:
-    - template: ./templates/sign-and-notarized/setup.yml
+    stages:
+    - template: templates/main-stage.yml
       parameters:
+        xcodeChannel: Stable
+        macOSName: ${{ parameters.macOSName }}
         isPR: true
+        provisionatorChannel: ${{ parameters.provisionatorChannel }}
+        pool: ${{ parameters.pool }}
+        runTests: ${{ parameters.runTests }}
+        runDeviceTests: false
+        runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
+        runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
+        runGovernanceTests: ${{ parameters.runGovernanceTests }}
+        runSamples: ${{ parameters.runSamples }}
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
+        forceInsertion: false
+        skipESRP: true
+        ${{ if ne(length(parameters.testConfigurations), 0)}}:
+          testConfigurations: ${{ parameters.testConfigurations }}
+        deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
+        macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+        azureStorage: ${{ variables['azureStorage'] }}
+        azureContainer: ${{ variables['azureContainer'] }}
+        signingSetupSteps:
+        - template: ./templates/sign-and-notarized/setup.yml
+          parameters:
+            isPR: true
