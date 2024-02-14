@@ -22,8 +22,8 @@ namespace AssetsLibrary {
 
 	public delegate void ALAssetsEnumerator (ALAsset result, IntPtr index, ref bool stop);
 	public delegate void ALAssetsLibraryGroupsEnumerationResultsDelegate (ALAssetsGroup group, ref bool stop);
-    
-    [EditorBrowsable (EditorBrowsableState.Never)]
+
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete (Constants.AssetsLibraryRemoved)]
 	public enum ALAssetsError : int {
 		UnknownError = -1,
@@ -142,7 +142,7 @@ namespace AssetsLibrary {
 		{
 			throw new InvalidOperationException (Constants.AssetsLibraryRemoved);
 		}
-		
+
 		public virtual NSObject ValueForProperty (NSString property)
 		{
 			throw new InvalidOperationException (Constants.AssetsLibraryRemoved);
@@ -258,7 +258,7 @@ namespace AssetsLibrary {
 			}
 		}
 
-        public ALAssetType AssetType {
+		public ALAssetType AssetType {
 			get {
 				throw new InvalidOperationException (Constants.AssetsLibraryRemoved);
 			}
@@ -707,7 +707,7 @@ namespace AssetsLibrary {
 	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete (Constants.AssetsLibraryRemoved)]
 	public partial class ALAssetLibraryChangedEventArgs : NSNotificationEventArgs {
-		public ALAssetLibraryChangedEventArgs (NSNotification notification) : base (notification) 
+		public ALAssetLibraryChangedEventArgs (NSNotification notification) : base (notification)
 		{
 		}
 
