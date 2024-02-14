@@ -14,7 +14,7 @@ class APIScanConfiguration {
             # each platform has its version in an environment variable, we need to get it, this
             # could have been inlined when assigning the dictionary but we want to be cleaner.
             $platformVersionEnvVar = "$($platform.toUpper())_NUGET_OS_VERSION"
-            $platformVersion = $val = (Get-Item -Path env:\$platformVersionEnvVar).Value
+            $platformVersion = (Get-Item -Path env:$platformVersionEnvVar).Value
             # dictionary with the secrets needed by each matrix
             $platformVars = [ordered]@{
                 CLIENT_ID = $Env:API_SCAN_CLIENT_ID;
