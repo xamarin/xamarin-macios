@@ -71,7 +71,6 @@ namespace Xamarin.MacDev.Tasks {
 				var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
 				// We need a physical path here, ignore the Link element
 				var path = item.GetMetadata ("FullPath");
-				string illegal;
 
 				if (!File.Exists (path)) {
 					Log.LogError (MSBStrings.E0099, logicalName, path);
@@ -88,7 +87,7 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				}
 
-				if (BundleResource.IsIllegalName (logicalName, out illegal)) {
+				if (BundleResource.IsIllegalName (logicalName, out var illegal)) {
 					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, MSBStrings.E0102, illegal);
 					continue;
 				}
