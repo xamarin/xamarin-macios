@@ -343,7 +343,6 @@ public class Frameworks : Dictionary<string, Framework> {
 #endif
 				{ "QuickLook", "QuickLook", 4 },
 				{ "ImageIO", "ImageIO", 4 },
-				{ "AssetsLibrary", "AssetsLibrary", 4 },
 				{ "CoreText", "CoreText", 4 },
 				{ "CoreMidi", "CoreMIDI", 4 },
 
