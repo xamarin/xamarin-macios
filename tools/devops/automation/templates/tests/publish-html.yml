@@ -42,14 +42,6 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
-- name: dependenciesJson
-  type: string
-  default: ''
-
-- name: stageDependenciesJson
-  type: string
-  default: ''
-
 
 steps:
 
@@ -100,8 +92,6 @@ steps:
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
       }
   env:
-    DEPENDENCIES: ${{ parameters.dependenciesJson }}
-    STAGE_DEPENDENCIES: ${{ parameters.stageDependenciesJson }}
     CONTEXT: ${{ parameters.statusContext }}
     DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)
