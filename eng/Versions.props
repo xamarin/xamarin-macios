@@ -19,6 +19,6 @@
     <MicrosoftMacCatalystSdkPackageVersion>17.2.8036</MicrosoftMacCatalystSdkPackageVersion>
     <MicrosoftmacOSSdkPackageVersion>14.2.8036</MicrosoftmacOSSdkPackageVersion>
     <MicrosoftiOSSdkPackageVersion>17.2.8037</MicrosoftiOSSdkPackageVersion>
-    <MicrosofttvOSSdkPackageVersion>17.2.8036</MicrosofttvOSSdkPackageVersion>
+    <MicrosofttvOSSdkPackageVersion>17.2.8037</MicrosofttvOSSdkPackageVersion>
   </PropertyGroup>
 </Project>
