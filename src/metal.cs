@@ -2170,6 +2170,7 @@ namespace Metal {
 		[Abstract]
 #endif
 		[Export ("newArgumentEncoderWithBufferBinding:")]
+		[return: Release]
 		IMTLArgumentEncoder CreateArgumentEncoder (IMTLBufferBinding bufferBinding);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
@@ -2178,6 +2179,7 @@ namespace Metal {
 #endif
 		[Export ("newRenderPipelineStateWithMeshDescriptor:options:reflection:error:")]
 		[return: NullAllowed]
+		[return: Release]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLMeshRenderPipelineDescriptor descriptor, MTLPipelineOption options, [NullAllowed] out MTLRenderPipelineReflection reflection, [NullAllowed] out NSError error);
 
 		[Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0), TV (16, 0)]
