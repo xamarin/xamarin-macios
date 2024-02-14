@@ -488,7 +488,7 @@ stages:
     stageName: 'publish_test_results'
     statusContext: 'VSTS: test results'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-    condition: ${{ parameters.runTests }}
+    condition: succeededOrFailed()
     testConfigurations: ${{ parameters.testConfigurations }}
     supportedPlatforms: ${{ parameters.supportedPlatforms }}
     isPR: ${{ parameters.isPR }}
