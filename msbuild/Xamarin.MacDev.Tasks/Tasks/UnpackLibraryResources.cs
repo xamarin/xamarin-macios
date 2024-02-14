@@ -1,13 +1,12 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-
-using Mono.Cecil;
 
 using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
@@ -16,6 +15,7 @@ using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
 	public class UnpackLibraryResources : XamarinTask, ITaskCallback, ICancelableTask {
+		MetadataLoadContext? universe;
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
 
 		#region Inputs
@@ -28,6 +28,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string IntermediateOutputPath { get; set; } = string.Empty;
+
+		[Required]
+		public ITaskItem [] ReferenceAssemblies { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
 		public ITaskItem [] ReferencedLibraries { get; set; } = Array.Empty<ITaskItem> ();
@@ -48,6 +51,15 @@ namespace Xamarin.MacDev.Tasks {
 		#endregion
 
 		public override bool Execute ()
+		{
+			try {
+				return ExecuteImpl ();
+			} finally {
+				universe?.Dispose ();
+			}
+		}
+
+		bool ExecuteImpl ()
 		{
 			if (ShouldExecuteRemotely ()) {
 				var result = new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
@@ -168,26 +180,6 @@ namespace Xamarin.MacDev.Tasks {
 			yield break;
 		}
 
-		// FIXME: Using cecil for now, due to not having IKVM available in the mtbserver build.
-		//  Eventually, we will want to prefer IKVM over cecil if we can work out the build in a sane way.
-		/*
-		static IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
-		{
-			using (var universe = new IKVM.Reflection.Universe ()) {
-				IKVM.Reflection.Assembly assembly;
-				try {
-					assembly = universe.LoadFile (fileName);
-				} catch {
-					yield break;
-				}
-				foreach (var _r in assembly.GetManifestResourceNames ()) {
-					var r = _r;
-					yield return new ManifestResource (r, () => assembly.GetManifestResourceStream (r));
-				}
-			}
-		}
-		*/
-
 		static string UnmangleResource (string mangled)
 		{
 			var unmangled = new StringBuilder (mangled.Length);
@@ -263,20 +255,22 @@ namespace Xamarin.MacDev.Tasks {
 
 		IEnumerable<ManifestResource> GetAssemblyManifestResources (string fileName)
 		{
-			AssemblyDefinition? assembly = null;
-			try {
-				try {
-					assembly = AssemblyDefinition.ReadAssembly (fileName);
-				} catch {
-					yield break;
-				}
+			if (universe is null)
+				universe = new MetadataLoadContext (new PathAssemblyResolver (ReferenceAssemblies.Select (v => v.ItemSpec)));
 
-				foreach (var _r in assembly.MainModule.Resources.OfType<EmbeddedResource> ()) {
-					var r = _r;
-					yield return new ManifestResource (r.Name, r.GetResourceStream);
-				}
-			} finally {
-				assembly?.Dispose ();
+			Assembly assembly;
+			try {
+				assembly = universe.LoadFromAssemblyPath (fileName);
+			} catch (Exception e) {
+				Log.LogMessage (MessageImportance.Low, $"Unable to load the assembly '{fileName}: {e}");
+				yield break;
+			}
+
+			foreach (var resourceName in assembly.GetManifestResourceNames ()) {
+				var info = assembly.GetManifestResourceInfo (resourceName);
+				if (!info.ResourceLocation.HasFlag (ResourceLocation.Embedded))
+					continue;
+				yield return new ManifestResource (resourceName, () => assembly.GetManifestResourceStream (resourceName));
 			}
 		}
 	}
