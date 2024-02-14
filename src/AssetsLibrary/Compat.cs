@@ -20,7 +20,8 @@ using NativeHandle = System.IntPtr;
 
 namespace AssetsLibrary {
 
-	public delegate void ALAssetsEnumerator (ALAsset result, IntPtr index, ref bool stop);
+	public delegate void ALAssetsEnumerator (ALAsset result, nint index, ref bool stop);
+
 	public delegate void ALAssetsLibraryGroupsEnumerationResultsDelegate (ALAssetsGroup group, ref bool stop);
 
 	[EditorBrowsable (EditorBrowsableState.Never)]
