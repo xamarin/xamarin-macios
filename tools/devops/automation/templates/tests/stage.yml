@@ -190,7 +190,7 @@ stages:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}
-        stageDependenciesJson: $[ convertToJson(stageDependencies) ]
+        stageDependenciesJson: $(STAGE_DEPENDENCIES)
 
   - job: publish_skipped_tests
     condition: eq(stageDependencies.configure_build.configure.outputs['labels.skip_all_tests'], 'True')
