@@ -44,7 +44,7 @@ stages:
   - build_packages
   - configure_build
   - simulator_tests
-  condition: and(succeeded(), ${{ parameters.condition }})
+  condition: and(succeededOrFailed(), ${{ parameters.condition }})
 
   jobs:
   - job: postDebugOutput
