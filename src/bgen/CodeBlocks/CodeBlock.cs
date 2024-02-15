@@ -39,25 +39,7 @@ public class CodeBlock : ICodeBlock
 		CurrentIndent -= Indent;
 	}
 
-	public virtual string Print()
-	{
-		string s = string.Empty;
-		if (HeaderText != string.Empty)
-			s = new string(' ', CurrentIndent) + HeaderText + newLine;
-
-		s += new string(' ', CurrentIndent) + startBrace + newLine;
-		SetIndent(CurrentIndent + Indent);
-		foreach (ICodeBlock block in Blocks)
-		{
-			block.SetIndent(CurrentIndent);
-			s += block.Print();
-		}
-		SetIndent(CurrentIndent - Indent);
-		s += new string(' ', CurrentIndent) + endBrace + newLine;
-		return s;
-	}
-
-	public void Print (StreamWriter writer)
+	public virtual void Print (StreamWriter writer)
 	{
 		if (HeaderText != string.Empty)
 			writer.Write(new string(' ', CurrentIndent) + HeaderText + newLine);
