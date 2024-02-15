@@ -77,6 +77,7 @@ namespace ObjCRuntime {
 			return true;
 		}
 
+#if __WATCHOS__ || BGENERATOR
 		public static bool ArmNeedStret (Type returnType, Generator generator)
 		{
 			bool has32bitArm;
@@ -150,7 +151,9 @@ namespace ObjCRuntime {
 
 			return true;
 		}
+#endif // __WATCHOS__ || BGENERATOR
 
+#if __WATCHOS__ || BGENERATOR
 		public static bool X86NeedStret (Type returnType, Generator generator)
 		{
 			Type t = returnType;
@@ -169,6 +172,7 @@ namespace ObjCRuntime {
 
 			return false;
 		}
+#endif // __WATCHOS__ || BGENERATOR
 
 		public static bool X86_64NeedStret (Type returnType, Generator generator)
 		{
@@ -345,6 +349,7 @@ namespace ObjCRuntime {
 			}
 		}
 
+#if BGENERATOR
 		public static bool NeedStret (Type returnType, Generator generator)
 		{
 			if (X86NeedStret (returnType, generator))
@@ -358,5 +363,6 @@ namespace ObjCRuntime {
 
 			return false;
 		}
+#endif // BGENERATOR
 	}
 }
