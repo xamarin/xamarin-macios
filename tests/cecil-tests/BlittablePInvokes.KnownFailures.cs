@@ -194,7 +194,6 @@ namespace Cecil.Tests {
 			"Security.SslStatus Security.SslContext::SSLRead(System.IntPtr,System.Byte*,System.IntPtr,System.IntPtr&)",
 			"Security.SslStatus Security.SslContext::SSLSetSessionOption(System.IntPtr,Security.SslSessionOption,System.Boolean)",
 			"Security.SslStatus Security.SslContext::SSLWrite(System.IntPtr,System.Byte*,System.IntPtr,System.IntPtr&)",
-			"System.Boolean Accessibility.AXHearingUtilities::SupportsBidirectionalStreaming()",
 			"System.Boolean AddressBook.ABAddressBook::ABAddressBookAddRecord(System.IntPtr,System.IntPtr,System.IntPtr&)",
 			"System.Boolean AddressBook.ABAddressBook::ABAddressBookHasUnsavedChanges(System.IntPtr)",
 			"System.Boolean AddressBook.ABAddressBook::ABAddressBookRemoveRecord(System.IntPtr,System.IntPtr,System.IntPtr&)",
