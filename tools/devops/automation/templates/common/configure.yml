@@ -46,7 +46,7 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
 
@@ -60,9 +60,12 @@ steps:
   name: labels
   displayName: 'Configure build'
 
-- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
   name: decisions
   displayName: 'Make decisions'
+
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
