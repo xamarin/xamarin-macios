@@ -310,17 +310,6 @@ steps:
       COMMENT_HASH: $(Build.SourceVersion)
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
-
-    # get the pool and the agent objects and disable the bot
-    $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")
-    $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME)
-    $vsts.Agents.SetEnabled($pool, $agent, $True)
-  displayName: 'Re-enabled macOS bot from pool'
-  condition: always()
-
-- pwsh: |
     Remove-Item "$(ID_RSA_PATH)"
   displayName: "Remove secrets"
   condition: always()
