@@ -112,7 +112,7 @@ echo "##vso[task.setvariable variable=INCLUDE_MACCATALYST;isOutput=true]$INCLUDE
 
 echo "##vso[task.setvariable variable=IOS_NUGET_OS_VERSION;isOutput=true]$IOS_NUGET_OS_VERSION"
 echo "##vso[task.setvariable variable=TVOS_NUGET_OS_VERSION;isOutput=true]$TVOS_NUGET_OS_VERSION"
-echo "##vso[task.setvariable variable=MAC_NUGET_OS_VERSION;isOutput=true]$MACOS_NUGET_OS_VERSION"
+echo "##vso[task.setvariable variable=MACOS_NUGET_OS_VERSION;isOutput=true]$MACOS_NUGET_OS_VERSION"
 echo "##vso[task.setvariable variable=MACCATALYST_NUGET_OS_VERSION;isOutput=true]$MACCATALYST_NUGET_OS_VERSION"
 
 
