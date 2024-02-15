@@ -232,6 +232,7 @@ steps:
 
 - template: ./run-tests.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     label: ${{ parameters.label }}
     labelWithPlatform: ${{ parameters.labelWithPlatform }}
     statusContext: ${{ parameters.statusContext }}
