@@ -425,8 +425,11 @@ namespace CoreServices
 					var fileIdHandle = CFDictionary.GetValue (
 						eventDataHandle,
 						kFSEventStreamEventExtendedFileIDKey.Handle);
-					if (fileIdHandle != IntPtr.Zero)
-						CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, out fileId);
+					if (fileIdHandle != IntPtr.Zero) {
+						unsafe {
+							CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, &fileId);
+						}
+					}
 				}
 
 				events[i] = new FSEvent
