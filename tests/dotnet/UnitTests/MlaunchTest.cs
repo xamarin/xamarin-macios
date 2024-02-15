@@ -49,10 +49,17 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (expectedScriptContents, scriptContents, "Script contents");
 		}
 
+		public static object[] GetMlaunchRunArgumentsTestCases ()
+		{
+			return new object[] {
+				new object [] {ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", $":v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-{SdkVersions.iOS.Replace('.', '-')},devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro" },
+				new object [] {ApplePlatform.iOS, "ios-arm64", "" },
+				new object [] {ApplePlatform.TVOS, "tvossimulator-arm64", $":v2:runtime=com.apple.CoreSimulator.SimRuntime.tvOS-{SdkVersions.TVOS.Replace('.', '-')},devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-3rd-generation-1080p" },
+			};
+		}
+
 		[Test]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.iOS-17-2,devicetype=com.apple.CoreSimulator.SimDeviceType.iPhone-15-Pro")]
-		[TestCase (ApplePlatform.iOS, "ios-arm64", "")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", ":v2:runtime=com.apple.CoreSimulator.SimRuntime.tvOS-17-2,devicetype=com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-3rd-generation-1080p")]
+		[TestCaseSource (nameof (GetMlaunchRunArgumentsTestCases))]
 		public void GetMlaunchRunArguments (ApplePlatform platform, string runtimeIdentifiers, string device)
 		{
 			var project = "MySimpleApp";
