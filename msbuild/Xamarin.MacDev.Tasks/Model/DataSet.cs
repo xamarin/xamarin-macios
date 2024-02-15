@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class DataSet {
 		[JsonProperty ("data")]
 		public IEnumerable<DataItem> DataItems { get; set; }
