@@ -713,6 +713,22 @@
 
 		public int MaxEntryPointLength;
 		public int MaxCReturnTypeLength;
+
+		public IEnumerable<XDelegate> OnlyDynamic {
+			get {
+				foreach (var d in this)
+					if (d.OnlyDynamicUsage)
+						yield return d;
+			}
+		}
+
+		public IEnumerable<XDelegate> NotOnlyDynamic {
+			get {
+				foreach (var d in this)
+					if (!d.OnlyDynamicUsage)
+						yield return d;
+			}
+		}
 	}
 
 	class XDelegate
