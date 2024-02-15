@@ -29,5 +29,24 @@ namespace bgen_tests {
 			c.AddLine (variableText);
 			Assert.AreEqual (outputText, c.Print ());
 		}
+
+		[Test]
+		public void PrintStreamTest ()
+		{
+			MemoryStream memoryStream = new();
+			StreamWriter writer = new StreamWriter (memoryStream);
+			int indent = 0;
+			string headerText = "public class FooClass";
+			string variableText = "public string FooText {get;set;}";
+			string outputText = "public class FooClass\n{\n    public string FooText {get;set;}\n}\n";
+			CodeBlock codeBlock = new(indent, headerText);
+			codeBlock.AddLine (variableText);
+			codeBlock.Print (writer);
+			writer.Flush ();
+			memoryStream.Position = 0;
+			using StreamReader reader = new StreamReader (memoryStream);
+			string output = reader.ReadToEnd ();
+			Assert.AreEqual (outputText, output);
+		}
 	}
 }
