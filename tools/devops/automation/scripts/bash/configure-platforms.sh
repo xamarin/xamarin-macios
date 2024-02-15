@@ -42,7 +42,7 @@ make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-val
 TVOS_NUGET_OS_VERSION=$(cat "$FILE")
 
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MAC_NUGET_OS_VERSION
-MAC_NUGET_OS_VERSION=$(cat "$FILE")
+MACOS_NUGET_OS_VERSION=$(cat "$FILE")
 
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MACCATALYST_NUGET_OS_VERSION
 MACCATALYST_NUGET_OS_VERSION=$(cat "$FILE")
@@ -112,7 +112,7 @@ echo "##vso[task.setvariable variable=INCLUDE_MACCATALYST;isOutput=true]$INCLUDE
 
 echo "##vso[task.setvariable variable=IOS_NUGET_OS_VERSION;isOutput=true]$IOS_NUGET_OS_VERSION"
 echo "##vso[task.setvariable variable=TVOS_NUGET_OS_VERSION;isOutput=true]$TVOS_NUGET_OS_VERSION"
-echo "##vso[task.setvariable variable=MAC_NUGET_OS_VERSION;isOutput=true]$MAC_NUGET_OS_VERSION"
+echo "##vso[task.setvariable variable=MAC_NUGET_OS_VERSION;isOutput=true]$MACOS_NUGET_OS_VERSION"
 echo "##vso[task.setvariable variable=MACCATALYST_NUGET_OS_VERSION;isOutput=true]$MACCATALYST_NUGET_OS_VERSION"
 
 
