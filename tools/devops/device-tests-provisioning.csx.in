@@ -13,7 +13,7 @@ Item ("@MONO_PACKAGE@");
 
 // provisionator knows how to deal with this items
 if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
-	if (!string.IsNullOrEmpty ("@INCLUDE_IOS@"))
+	if (!string.IsNullOrEmpty ("@INCLUDE_IOS@@INCLUDE_TVOS@@INCLUDE_WATCH@"))
 		Item ("@XI_PACKAGE@");
 }
 Item ("@MIN_SHARPIE_URL@");
