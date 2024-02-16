@@ -178,6 +178,7 @@
 		) {
 			WrappedManagedFunction = "GetGenericMethodFromToken",
 			OnlyDynamicUsage = false,
+			SkipManagedStaticRegistrar = true,
 		},
 
 		new XDelegate ("GCHandle->MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
@@ -741,6 +742,7 @@
 		// Detemines whether the function is only used by the dynamic registrar (in which case we might be able to link the function away if the static registrar is being used)
 		public bool OnlyDynamicUsage;
 		public bool OnlyCoreCLR;
+		public bool SkipManagedStaticRegistrar;
 
 		public string DelegateName {
 			get {
