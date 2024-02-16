@@ -47,7 +47,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		class AssemblyInfo {
 			public ITaskItem TaskItem;
-			public bool? IsUpToDate;
+			public bool IsUpToDate;
+
+			// Tarjan's SCC algoritm
+			public bool OnStack;
+			public int Index;
+			public int LowLink;
 
 			public AssemblyInfo (ITaskItem item)
 			{
@@ -62,26 +67,114 @@ namespace Xamarin.MacDev.Tasks {
 			return Path.GetFileNameWithoutExtension (item.ItemSpec);
 		}
 
-		bool IsUpToDate (ITaskItem assembly)
+		bool ComputeUpToDate (IEnumerable<ITaskItem> items)
 		{
-			var assemblyPath = assembly.ItemSpec;
-			var key = GetAssemblyName (assembly);
-			if (assemblyInfos.TryGetValue (key, out var info)) {
-				if (!info.IsUpToDate.HasValue) {
-					Log.LogError (MSBStrings.E7119 /* Encountered an assembly reference cycle related to the assembly {0}. */, assemblyPath);
-					info.IsUpToDate = false;
-					return false;
+			// Implements Tarjan's algorithm for finding strongly connected components.
+			// https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
+			//
+			// We recursively compute up-to-date state for each assembly and its references.
+			// When we encounter a strongly connected component (cycle) we ensure that either
+			// all the files in the SCC are marked as up-to-date or none.
+
+			int index = 0;
+			var stack = new Stack<AssemblyInfo> ();
+			bool success = true;
+
+			foreach (ITaskItem assembly in items) {
+				var key = GetAssemblyName (assembly);
+				if (!assemblyInfos.ContainsKey (key)) {
+					var info = new AssemblyInfo (assembly);
+					assemblyInfos [key] = info;
+					success &= ComputeUpToDate (info, stack, ref index);
 				}
-				return info.IsUpToDate.Value;
 			}
 
-			info = new AssemblyInfo (assembly);
-			assemblyInfos [key] = info;
+			return success;
+		}
 
+		bool ComputeUpToDate (AssemblyInfo info, Stack<AssemblyInfo> stack, ref int index)
+		{
+			bool success = true;
+
+			info.Index = index;
+			info.LowLink = index;
+			index++;
+			stack.Push (info);
+			info.OnStack = true;
+
+			info.IsUpToDate = ComputeUpToDate (info.TaskItem);
+
+			// Walk all referenced assemblies
+			var assemblyPath = info.TaskItem.ItemSpec;
+			using var ad = AssemblyDefinition.ReadAssembly (assemblyPath, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			foreach (var ar in ad.MainModule.AssemblyReferences) {
+				var referencedItems = Assemblies.Where (v => string.Equals (GetAssemblyName (v), ar.Name, StringComparison.OrdinalIgnoreCase)).ToArray ();
+				if (referencedItems.Length == 0) {
+					Log.LogMessage (MessageImportance.Low, $"Ignoring unresolved assembly {ar.Name} (referenced from {assemblyPath}).");
+					continue;
+				} else if (referencedItems.Length > 1) {
+					Log.LogError (MSBStrings.E7117 /* The assembly {0} was passed multiple times as an input assembly (referenced from {1}). */, ar.Name, assemblyPath);
+					success = false;
+					continue;
+				}
+
+				var referencedItem = referencedItems [0];
+				var key = GetAssemblyName (referencedItem);
+				if (!assemblyInfos.TryGetValue (key, out var referenceInfo)) {
+					// Referenced assembly has not yet been visited; recurse on it
+					referenceInfo = new AssemblyInfo (referencedItem);
+					assemblyInfos [key] = referenceInfo;
+					success &= ComputeUpToDate (referenceInfo, stack, ref index);
+					if (info.IsUpToDate && !referenceInfo.IsUpToDate) {
+						Log.LogMessage (MessageImportance.Low, $"The assembly {assemblyPath} is not up-to-date with regards to the reference {referenceInfo.TaskItem.ItemSpec}.");
+						info.IsUpToDate = false;
+					}
+					info.LowLink = Math.Min (info.LowLink, referenceInfo.LowLink);
+				} else if (referenceInfo.OnStack) {
+					// Referenced assembly is in stack and hence in the current SCC
+					info.LowLink = Math.Min (info.LowLink, referenceInfo.Index);
+				}
+			}
+
+			// If this is a root node of SCC, pop the stack
+			if (info.Index == info.LowLink) {
+				bool sccIsUpToDate = true;
+
+				// Walk the SCC on the stack and determine whether the whole
+				// component is up-to-date or not.
+				foreach (var itemOnStack in stack) {
+					if (itemOnStack == info) {
+						break;
+					}
+					sccIsUpToDate &= itemOnStack.IsUpToDate;
+				}
+
+				// Remove the SCC from the stack and update IsUpToDate for each item.
+				AssemblyInfo popped;
+				do {
+					popped = stack.Pop ();
+					popped.OnStack = false;
+
+					if (!sccIsUpToDate) {
+						// If any assembly in the SCC is not up-to-date then the whole SCC is not
+						// up to date.
+						popped.IsUpToDate = false;
+						Log.LogMessage (MessageImportance.Low, $"The assembly {popped.TaskItem.ItemSpec} in a cycle is not up-to-date.");
+					} else {
+						Log.LogMessage (MessageImportance.Low, $"The AOT-compiled code for {popped.TaskItem.ItemSpec} is up-to-date.");
+					}
+				} while (popped != info);
+			}
+
+			return success;
+		}
+
+		bool ComputeUpToDate (ITaskItem assembly)
+		{
+			var assemblyPath = assembly.ItemSpec;
 			var finfo = new FileInfo (assemblyPath);
 			if (!finfo.Exists) {
 				Log.LogError (MSBStrings.E0158 /* The file {0} does not exist. */, assemblyPath);
-				info.IsUpToDate = false;
 				return false;
 			}
 
@@ -89,13 +182,11 @@ namespace Xamarin.MacDev.Tasks {
 			var objectFile = assembly.GetMetadata ("ObjectFile");
 			if (string.IsNullOrEmpty (objectFile)) {
 				Log.LogError (MSBStrings.E7116 /* The assembly {0} does not provide an 'ObjectFile' metadata. */, assembly.ItemSpec);
-				info.IsUpToDate = false;
 				return false;
 			}
 			var objectFileInfo = new FileInfo (objectFile);
 			if (!IsUpToDate (finfo, objectFileInfo)) {
 				Log.LogMessage (MessageImportance.Low, "The assembly {0} is not up-to-date with regards to the object file {1}", assemblyPath, objectFile);
-				info.IsUpToDate = false;
 				return false;
 			}
 
@@ -105,35 +196,22 @@ namespace Xamarin.MacDev.Tasks {
 				var llvmFileInfo = new FileInfo (llvmFile);
 				if (!IsUpToDate (finfo, llvmFileInfo)) {
 					Log.LogMessage (MessageImportance.Low, "The assembly {0} is not up-to-date with regards to the llvm file {1}", assemblyPath, llvmFile);
-					info.IsUpToDate = false;
 					return false;
 				}
 			}
 
-			// We know now the assembly itself is up-to-date, but what about every referenced assembly?
-			// This assembly must be AOT-compiled again if any referenced assembly has changed as well.
-			using var ad = AssemblyDefinition.ReadAssembly (assembly.ItemSpec, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-			foreach (var ar in ad.MainModule.AssemblyReferences) {
-				var referencedItems = Assemblies.Where (v => string.Equals (GetAssemblyName (v), ar.Name, StringComparison.OrdinalIgnoreCase)).ToArray ();
-				if (referencedItems.Length == 0) {
-					Log.LogMessage (MessageImportance.Low, $"Ignoring unresolved assembly {ar.Name} (referenced from {assemblyPath}).");
-					continue;
-				} else if (referencedItems.Length > 1) {
-					Log.LogError (MSBStrings.E7117 /* The assembly {0} was passed multiple times as an input assembly (referenced from {1}). */, ar.Name, assemblyPath);
-					info.IsUpToDate = false;
-					return false;
-				}
-				var referencedItem = referencedItems [0];
-				if (!IsUpToDate (referencedItem)) {
-					info.IsUpToDate = false;
-					Log.LogMessage (MessageImportance.Low, "The assembly {0} is not up-to-date with regards to the reference {1}", assemblyPath, ar.Name);
-					return false;
-				}
-			}
-
-			Log.LogMessage (MessageImportance.Low, $"The AOT-compiled code for {assemblyPath} is up-to-date.");
-			info.IsUpToDate = true;
 			return true;
+		}
+
+		bool IsUpToDate (ITaskItem assembly)
+		{
+			var assemblyPath = assembly.ItemSpec;
+			var key = GetAssemblyName (assembly);
+			if (assemblyInfos.TryGetValue (key, out var info)) {
+				return info.IsUpToDate;
+			}
+
+			return false;
 		}
 
 		bool IsUpToDate (FileInfo input, FileInfo output)
@@ -171,6 +249,9 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			// Figure out which assemblies need to be aot'ed, and which are up-to-date.
+			if (!ComputeUpToDate (Assemblies)) {
+				return false;
+			}
 			var assembliesToAOT = Assemblies.Where (asm => !IsUpToDate (asm)).ToList ();
 			if (assembliesToAOT.Count == 0) {
 				Log.LogMessage (MessageImportance.Low, $"All the AOT-compiled code is up-to-date.");

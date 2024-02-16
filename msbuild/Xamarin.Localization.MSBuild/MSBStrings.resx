@@ -1533,11 +1533,4 @@
             {1}: the exit code of a process
         </comment>
     </data>
-
-    <data name="E7119" xml:space="preserve">
-        <value>Encountered an assembly reference cycle related to the assembly {0}.</value>
-        <comment>
-            {0}: the path to an assembly
-        </comment>
-    </data>
 </root>
