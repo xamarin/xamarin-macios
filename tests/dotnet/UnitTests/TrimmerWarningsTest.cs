@@ -8,7 +8,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
 		public void TrimmerWarningsManagedStaticRegistrar (ApplePlatform platform, string runtimeIdentifiers)
 		{
-			ExpectedBuildMessage[] expectedWarnings;
+			ExpectedBuildMessage [] expectedWarnings;
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
