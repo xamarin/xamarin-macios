@@ -23,6 +23,14 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/artifacts
+
 - pwsh: |
+    $downloadPath = Join-Path -Path "$(Build.SourcesDirectory)" -ChildPath "artifacts"
+    Get-ChildItem -Path $downloadPath -Recurse -Force
     Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
   displayName: "APISCan"
