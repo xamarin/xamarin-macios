@@ -26,11 +26,29 @@ steps:
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
+    artifactName: not-signed-package
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.SourcesDirectory)/not-signed-package
 
 - pwsh: |
-    $downloadPath = Join-Path -Path "$(Build.SourcesDirectory)" -ChildPath "artifacts"
-    Get-ChildItem -Path $downloadPath -Recurse -Force
+    $downloadPath = Join-Path -Path "$(Build.SourcesDirectory)" -ChildPath "not-signed-package"
+    $destinationPath = Join-Path -Path "$(Build.SourcesDirectory)" -ChildPath "APIScan"
+    # remove all the files that do not match the platform
+    $files = Get-ChildItem -Path $downloadPath -Recurse
+    $filter = "*$($Env:PLATFORM)*nupkg"
+    Write-Host "Filter to use is $filter"
+
+    foreach ($f in $files) {
+      if (-not ($f.Name -like $filter)) {
+        Write-Host "Removing file $($f.Name) from $downloadPath"
+        Remove-Item -Path $f.FullName
+      } else {
+        Write-Host "Expanding file $($f.Name)"
+        Expand-Archive -Path $f.FullName -DestinationPath $destinationPath 
+      }
+    }
+    Get-ChildItem -Path $destinationPath -Recurse
     Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
   displayName: "APISCan"
+  env:
+    PLATFORM: $(PLATFORM)
