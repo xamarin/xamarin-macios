@@ -57,13 +57,13 @@ namespace Xamarin.Tests {
 			// Rather than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
 			// nice enumerated output of all the failures.
 			Assert.Multiple (() => {
-					// fail for each of the new warnings
-					foreach (var evt in newWarnings)
-						Assert.Fail ($"Unexpected warning: {evt.File}:{evt.LineNumber} {evt.Message}");
+				// fail for each of the new warnings
+				foreach (var evt in newWarnings)
+					Assert.Fail ($"Unexpected warning: {evt.File}:{evt.LineNumber} {evt.Message}");
 
-					// fail for each of the missing warnings
-					foreach (var evt in missingWarnings)
-						Assert.Fail ($"Missing warning: {evt.File}: {evt.Message}");
+				// fail for each of the missing warnings
+				foreach (var evt in missingWarnings)
+					Assert.Fail ($"Missing warning: {evt.File}: {evt.Message}");
 			});
 		}
 	}
