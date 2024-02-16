@@ -173,8 +173,13 @@ namespace ObjCRuntime {
 
 		static Assembly? ResolvingEventHandler (AssemblyLoadContext sender, AssemblyName assemblyName)
 		{
-			if (xamarin_locate_assembly_resource (assemblyName.Name!, assemblyName.CultureName, assemblyName.Name + ".dll", out var path))
-				return sender.LoadFromAssemblyPath (path);
+			if (xamarin_locate_assembly_resource (assemblyName.Name!, assemblyName.CultureName, assemblyName.Name + ".dll", out var path)) {
+				if (DynamicRegistrationSupported) {
+					return sender.LoadFromAssemblyPath (path);
+				}
+
+				log_coreclr ($"    Resolved the assembly {assemblyName} to {path}, but dynamic registration is not enabled, so won't load the assembly.");
+			}
 			return null;
 		}
 
@@ -271,12 +276,16 @@ namespace ObjCRuntime {
 				}
 			}
 
-			log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies. Will try to load it.");
+			if (DynamicRegistrationSupported) {
+				log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies. Will try to load it.");
 
-			var loadedAssembly = Assembly.LoadFrom (path);
-			if (loadedAssembly is not null) {
-				log_coreclr ($"    Loaded {loadedAssembly.GetName ().Name}");
-				return GetMonoObject (loadedAssembly);
+				var loadedAssembly = Assembly.LoadFrom (path);
+				if (loadedAssembly is not null) {
+					log_coreclr ($"    Loaded {loadedAssembly.GetName ().Name}");
+					return GetMonoObject (loadedAssembly);
+				}
+			} else {
+				log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies, and dynamic registration is disabled.");
 			}
 
 			log_coreclr ($"    Found no assembly named {name}");
