@@ -24,5 +24,5 @@ steps:
     commit: ${{ parameters.commit }}
 
 - pwsh: |
-    Write-Output "Performing APISCan for $(PLATFORM) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
+    Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
   displayName: "APISCan"
