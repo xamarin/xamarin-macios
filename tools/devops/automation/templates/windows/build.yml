@@ -106,7 +106,7 @@ steps:
 
     $macBuildId = (Get-Content -Path BuildId.txt).Trim()
     Remove-Item -Path BuildId.txt # clean up after ourselves
-    if ([string]::IsNullOrEmpty($macBuildId) {
+    if ([string]::IsNullOrEmpty($macBuildId)) {
       throw "The mac we're trying to connect to ($($Env:MAC_AGENT_IP)) is not reserved for us anymore. If you're reran this job, please rerun all jobs instead."
     }
     $windowsBuildId = $Env:BUILD_BUILDID
