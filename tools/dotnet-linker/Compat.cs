@@ -44,26 +44,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public void SelectRegistrar ()
-		{
-			if (Registrar == RegistrarMode.Default) {
-				if (IsDeviceBuild) {
-					// mobile device builds use the static registrar by default
-					Registrar = RegistrarMode.Static;
-				} else if (Platform == ApplePlatform.MacOSX && !EnableDebug) {
-					// release macOS builds use the static registrar by default
-					Registrar = RegistrarMode.Static;
-				} else if (!AreAnyAssembliesTrimmed && IsDefaultMarshalManagedExceptionMode) {
-					// Otherwise use the partial static registrar if we can
-					Registrar = RegistrarMode.PartialStatic;
-				} else {
-					// Last option is the dynamic registrar
-					Registrar = RegistrarMode.Dynamic;
-				}
-			}
-			Driver.Log (1, $"Registrar mode: {Registrar}");
-		}
-
 		public void Initialize ()
 		{
 			// mSYM support is not implemented in the runtime on .NET 6 afaik
