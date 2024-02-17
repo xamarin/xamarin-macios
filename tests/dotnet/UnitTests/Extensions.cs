@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 #nullable enable
 
@@ -17,11 +18,16 @@ namespace Xamarin.Tests {
 
 		public static void AssertWarnings (this IEnumerable<BuildLogEvent> actualWarnings, IEnumerable<ExpectedBuildMessage> expectedWarnings)
 		{
-			// Source paths may be full (and local) paths. So make full paths relative to the root of the repository.
+			// Source paths may be full (and local) paths. So make full paths relative to the root folder of xamarin-macios.
+			// We have noticed that in certain bots the SourceRoot property is different to the one we expect, so instead we 
+			// use the fact that we know we are in the xamarin-macios folder and we can use that to calculate the relative path.
 			actualWarnings = actualWarnings.Select (w => {
-				if (w.File?.StartsWith (Configuration.SourceRoot) == true) {
+				var path = w.File ?? string.Empty;
+				if (!string.IsNullOrEmpty (path) && Path.IsPathRooted (path)) {
 					var rv = w.Clone ();
-					rv.File = w.File [(Configuration.SourceRoot.Length + 1)..];
+					// use the last index of the xamarin-macios since some paths might contain it more than once
+					var localPath = path.Substring (path.LastIndexOf ("/xamarin-macios/") + "/xamarin-macios/".Length);
+					rv.File = localPath;
 					return rv;
 				}
 				return w;
@@ -57,7 +63,6 @@ namespace Xamarin.Tests {
 			// Rather than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
 			// nice enumerated output of all the failures.
 			Assert.Multiple (() => {
-				Assert.Fail ($"Root path is {Configuration.SourceRoot}");
 				// fail for each of the new warnings
 				foreach (var evt in newWarnings)
 					Assert.Fail ($"Unexpected warning: {evt.File}:{evt.LineNumber} {evt.Message}");
