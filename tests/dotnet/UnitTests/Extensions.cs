@@ -57,6 +57,7 @@ namespace Xamarin.Tests {
 			// Rather than doing an Assert.IsEmpty, which produces a horrendous error message, we'll do an Assert.Multiple which generates a 
 			// nice enumerated output of all the failures.
 			Assert.Multiple (() => {
+					Assert.Fail ($"Root path is {Configuration.SourceRoot}");
 					// fail for each of the new warnings
 					foreach (var evt in newWarnings)
 						Assert.Fail ($"Unexpected warning: {evt.File}:{evt.LineNumber} {evt.Message}");
