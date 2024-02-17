@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="9.0.100-preview.2.24115.35">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="9.0.100-preview.2.24116.21">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>6d1abb74140d80b81d4f482a49332d55f89468d7</Sha>
+      <Sha>e6b3ff2dff85b43bd3a323e7c0bac4f1f58ccd62</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink" Version="9.0.0-alpha.1.23556.4">
       <Uri>https://github.com/dotnet/runtime</Uri>
