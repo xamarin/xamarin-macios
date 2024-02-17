@@ -48,8 +48,18 @@ steps:
         Expand-Archive -Path $f.FullName -DestinationPath $destinationPath -Force
       }
     }
-    Get-ChildItem -Path $destinationPath -Recurse
     Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
-  displayName: "APISCan"
+  displayName: "Expand nugets"
   env:
     PLATFORM: $(PLATFORM)
+
+- task: APIScan@2
+  displayName: Run APIScan
+  inputs:
+    softwareFolder: $(Build.SourcesDirectory)/APIScan
+    softwareName: "Microsoft.$(PLATFORM)"
+    softwareVersionNum: $(VERSION)
+    isLargeApp: false
+    toolVersion: 'Latest'
+  env:
+    AzureServicesAuthConnectionString: runAs=App;AppId=$(CLIENT_ID);TenantId=$(TENANT);AppKey=$(SECRET)
