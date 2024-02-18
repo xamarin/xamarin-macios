@@ -25,6 +25,7 @@ stages:
   jobs:
   - job: apiscan
     displayName: 'APIScan:' 
+    timeoutInMinutes: 1000
     pool:
       vmImage: windows-latest
 
