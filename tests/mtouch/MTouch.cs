@@ -2635,7 +2635,7 @@ public class TestApp {
 		[TestCase (Target.Dev, null, "ARMv7k", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "arm64_32+llvm", "ARM64_32", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Dev, "armv7k+llvm,arm64_32+llvm", "ARMv7k,ARM64_32", MTouchBitcode.Full)]
-		[TestCase (Target.Sim, null, "i386", MTouchBitcode.Unspecified)]
+		[TestCase (Target.Sim, null, "x86_64", MTouchBitcode.Unspecified)]
 		[TestCase (Target.Sim, "x86_64", "x86_64", MTouchBitcode.Unspecified)]
 		public void Architectures_WatchOS (Target target, string abi, string expected_abi, MTouchBitcode bitcode)
 		{
