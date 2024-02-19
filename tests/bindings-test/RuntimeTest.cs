@@ -13,6 +13,12 @@ namespace Xamarin.Tests {
 	[Preserve (AllMembers = true)]
 	public class RuntimeTest {
 		[Test]
+		public void GlobalStringTest ()
+		{
+			Assert.AreEqual ("There's nothing cruvus here!", (string) Globals.GlobalString, "Global string");
+		}
+
+		[Test]
 		public void WrapperTypeLookupTest ()
 		{
 			using (var assigner = new MyProtocolAssigner ()) {
