@@ -11,6 +11,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
     <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->
@@ -19,6 +20,9 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="compile" Aliases="Microsoft_Build_Tasks_Core" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="compile" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <!-- GitInfo is pulled in because of Xamarin.Messaging from above, but we don't want it, so just exclude all assets from it -->
+    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
+    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />

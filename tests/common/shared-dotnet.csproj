@@ -75,4 +75,38 @@
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" Condition="'$(ExcludeNUnitLiteReference)' != 'true'" />
 
 	<Import Project="$(GeneratedProjectFile)" Condition="'$(GeneratedProjectFile)' != ''" />
+
+	<!--
+		This is a helper target for our tests to zip up the app bundle.
+		This is useful when building remotely, and we want to inspect the results on Windows:
+		we build on the Mac, zip up the resulting app bundle, transfer the zip file to Windows where the test is executing, and inspect the zip file there
+	-->
+	<Target Name="CompressAppBundle" AfterTargets="Codesign" Condition="'$(IsMacEnabled)' == 'true' And '$(CopyAppBundleToWindows)' == 'true'">
+		<PropertyGroup>
+			<DirectoryToCompress Condition="'$(DirectoryToCompress)' == ''">$(_AppBundlePath)</DirectoryToCompress>
+			<CompressedName Condition="'$(CompressedName)' == ''">AppBundle.zip</CompressedName>
+			<CompressedPath Condition="'$(CompressedPath)' == ''">$(DeviceSpecificIntermediateOutputPath)$(CompressedName)</CompressedPath>
+		</PropertyGroup>
+
+		<MakeDir SessionId="$(BuildSessionId)" Directories="$([System.IO.Path]::GetDirectoryName('$(CompressedPath)'))" />
+		<Delete SessionId="$(BuildSessionId)" Files="$(CompressedPath)" />
+
+		<Zip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(ZipExe)"
+			ToolPath="$(ZipPath)"
+			Recursive="true"
+			Symlinks="true"
+			Sources="$(DirectoryToCompress)"
+			OutputFile="$(CompressedPath)"
+			WorkingDirectory="$(DirectoryToCompress)"
+			>
+			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
+		</Zip>
+	</Target>
+
+	<Target Name="VerifyRemoteConnection" AfterTargets="SayHello" Condition="'$(EnsureRemoteConnection)' == 'true'">
+		<Error Condition="'$(IsMacEnabled)' != 'true'" Text="Unable to connect to the remote Mac. Please examine the output of the SayHello target to figure out what happened." />
+	</Target>
 </Project>

@@ -11,26 +11,23 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class ACTool : XcodeCompilerToolTask, ICancelableTask {
-		ITaskItem partialAppManifest;
-		string outputSpecs;
+		ITaskItem? partialAppManifest;
+		string? outputSpecs;
 
 		#region Inputs
 
-		public string AccentColor { get; set; }
+		public string AccentColor { get; set; } = string.Empty;
 
-		public string DeviceModel { get; set; }
+		public string DeviceModel { get; set; } = string.Empty;
 
-		public string DeviceOSVersion { get; set; }
+		public string DeviceOSVersion { get; set; } = string.Empty;
 
 		public bool EnableOnDemandResources { get; set; }
 
 		[Required]
-		public ITaskItem [] ImageAssets { get; set; }
+		public ITaskItem [] ImageAssets { get; set; } = Array.Empty<ITaskItem> ();
 
 		public bool IsWatchApp { get; set; }
 
@@ -38,14 +35,14 @@ namespace Xamarin.MacDev.Tasks {
 		public bool OptimizePNGs { get; set; }
 
 		[Required]
-		public string OutputPath { get; set; }
+		public string OutputPath { get; set; } = string.Empty;
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem PartialAppManifest { get; set; }
+		public ITaskItem? PartialAppManifest { get; set; }
 
 		#endregion
 
@@ -63,22 +60,22 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string?> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
 		{
 			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
 
 			if (!string.IsNullOrEmpty (XSAppIconAssets)) {
 				int index = XSAppIconAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
-				string assetDir = null;
+				string? assetDir = null;
 				var rpath = XSAppIconAssets;
 
 				if (index != -1)
 					assetDir = rpath.Substring (0, index + ".xcassets".Length);
 
-				if (assetDirs is not null && assetDirs.Contains (assetDir)) {
+				if (assetDirs is not null && assetDir is not null && assetDirs.Contains (assetDir)) {
 					var assetName = Path.GetFileNameWithoutExtension (rpath);
 
-					if (PartialAppManifest is null) {
+					if (PartialAppManifest is null && partialAppManifest is not null) {
 						args.Add ("--output-partial-info-plist");
 						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
 
@@ -99,16 +96,16 @@ namespace Xamarin.MacDev.Tasks {
 
 			if (!string.IsNullOrEmpty (XSLaunchImageAssets)) {
 				int index = XSLaunchImageAssets.IndexOf (".xcassets" + Path.DirectorySeparatorChar, StringComparison.Ordinal);
-				string assetDir = null;
+				string? assetDir = null;
 				var rpath = XSLaunchImageAssets;
 
 				if (index != -1)
 					assetDir = rpath.Substring (0, index + ".xcassets".Length);
 
-				if (assetDirs is not null && assetDirs.Contains (assetDir)) {
+				if (assetDirs is not null && assetDir is not null && assetDirs.Contains (assetDir)) {
 					var assetName = Path.GetFileNameWithoutExtension (rpath);
 
-					if (PartialAppManifest is null) {
+					if (PartialAppManifest is null && partialAppManifest is not null) {
 						args.Add ("--output-partial-info-plist");
 						args.AddQuoted (partialAppManifest.GetMetadata ("FullPath"));
 
@@ -161,10 +158,8 @@ namespace Xamarin.MacDev.Tasks {
 		IEnumerable<ITaskItem> GetCompiledBundleResources (PDictionary output, string intermediateBundleDir)
 		{
 			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
-			PDictionary dict;
-			PArray array;
 
-			if (output.TryGetValue (string.Format ("com.apple.{0}.compilation-results", ToolName), out dict) && dict.TryGetValue ("output-files", out array)) {
+			if (output.TryGetValue (string.Format ("com.apple.{0}.compilation-results", ToolName), out PDictionary? dict) && dict.TryGetValue ("output-files", out PArray? array)) {
 				foreach (var path in array.OfType<PString> ().Select (x => x.Value)) {
 					// don't include the generated plist files as BundleResources
 					if (path.EndsWith ("partial-info.plist", StringComparison.Ordinal))
@@ -412,7 +407,7 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogError (MSBStrings.E0093, PartialAppManifest.GetMetadata ("FullPath"));
 
 			try {
-				var manifestOutput = PDictionary.FromFile (manifest.ItemSpec);
+				var manifestOutput = PDictionary.FromFile (manifest.ItemSpec)!;
 
 				LogWarningsAndErrors (manifestOutput, catalogs [0]);
 

@@ -27,6 +27,10 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: retryCount
+  type: number
+  default: 3
+
 steps:
 
 - template: ../common/checkout.yml
@@ -171,6 +175,8 @@ steps:
     -StatusContext "${{ parameters.statusContext }}"
   displayName: 'Run tests'
   timeoutInMinutes: 60
+  ${{ if not(parameters.isPR) }}:
+    retryCountOnTaskFailure: ${{ parameters.retryCount }}
   env:
     CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
