@@ -118,6 +118,8 @@ stages:
       name: ${{ parameters.windowsPool }}
       demands:
       - agent.os -equals Windows_NT
+    variables:
+      MAC_AGENT_USER: builder
 
     steps:
     - template: reenable-mac.yml
