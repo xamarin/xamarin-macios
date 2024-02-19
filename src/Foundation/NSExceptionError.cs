@@ -10,7 +10,7 @@ namespace Foundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class NSExceptionError : NSError {
+	public sealed class NSExceptionError : NSError {
 		Exception exception;
 
 		public Exception Exception { get => exception; }
@@ -19,6 +19,7 @@ namespace Foundation {
 			: base ((NSString) exception.GetType ().FullName, exception.HResult, GetDictionary (exception))
 		{
 			this.exception = exception;
+			IsDirectBinding = false;
 		}
 
 		static NSDictionary GetDictionary (Exception e)

@@ -622,6 +622,11 @@ namespace Introspection {
 
 		protected virtual bool SkipCheckShouldReExposeBaseCtor (Type type)
 		{
+			switch (type.FullName) {
+			case "Foundation.NSExceptionError":
+				return true;
+			}
+
 			return SkipDueToAttribute (type);
 		}
 
