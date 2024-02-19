@@ -15,7 +15,7 @@ parameters:
   type: string
   default: HEAD
 
-- name: uploadPrefixgg c
+- name: uploadPrefix
   type: string
   default: '$(MaciosUploadPrefix)'
 
