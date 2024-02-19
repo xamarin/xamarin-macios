@@ -263,7 +263,7 @@ namespace AudioUnit {
 		{
 			var handle = cmp.GetHandle ();
 			unsafe {
-				handle = AudioComponentFindNext (handle, (AudioComponentDescription *) Unsafe.AsPointer<AudioComponentDescription> (ref cd));
+				handle = AudioComponentFindNext (handle, (AudioComponentDescription*) Unsafe.AsPointer<AudioComponentDescription> (ref cd));
 			}
 			return (handle != IntPtr.Zero) ? new AudioComponent (handle, false) : null;
 		}
