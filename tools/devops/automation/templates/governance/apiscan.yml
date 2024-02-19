@@ -30,26 +30,12 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/not-signed-package
 
-- pwsh: |
-    $downloadPath = Join-Path -Path "$(Build.SourcesDirectory)" -ChildPath "not-signed-package"
-    $destinationPath = Join-Path -Path "$(Build.SourcesDirectory)" -ChildPath "APIScan"
-    New-Item -ItemType Directory -Force -Path $destinationPath
-    # remove all the files that do not match the platform
-    $files = Get-ChildItem -Path $downloadPath -Recurse
-    $filter = "*$($Env:PLATFORM)*nupkg"
-    Write-Host "Filter to use is $filter"
-
-    foreach ($f in $files) {
-      if (-not ($f.Name -like $filter)) {
-        Write-Host "Removing file $($f.Name) from $downloadPath"
-        Remove-Item -Path $f.FullName
-      } else {
-        Write-Host "Expanding file $($f.Name) to $destinationPath"
-        Expand-Archive -Path $f.FullName -DestinationPath $destinationPath -Force
-      }
-    }
-    Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
+- pwsh: >-
+    ./prepare_workload_apiscan.ps1
+    -SourcesDirectory "$(Build.SourcesDirectory)"
+    -AndroidHash $Env:PLATFORM
   displayName: "Expand nugets"
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts
   env:
     PLATFORM: $(PLATFORM)
 
@@ -63,3 +49,29 @@ steps:
     toolVersion: 'Latest'
   env:
     AzureServicesAuthConnectionString: runAs=App;AppId=$(CLIENT_ID);TenantId=$(TENANT);AppKey=$(SECRET)
+
+- task: TSAUpload@2
+  inputs:
+    GdnPublishTsaOnboard: true
+    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
+    GdnPublishTsaExportedResultsPublishable: true
+  displayName: Create bugs for compliance tools results
+  condition: succeededOrFailed()
+  env:
+    WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
+  displayName: Break on compliance issues
+  inputs:
+    GdnBreakAllTools: false # do not breaj for APIScan until we have fixe the issues
+    GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\maccore\tools\devops\falsepositives.gdnsuppress
+    GdnBreakSuppressionSets: falsepositives
+    GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
+    GdnBreakOutputSuppressionSet: falsepositives
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact for Guardian Supressions
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+    ArtifactName: Guardian Suppressions
+  condition: failed()
