@@ -10,6 +10,9 @@ parameters:
 - name: label
   type: string
 
+- name: isPR
+  type: boolean
+
 - name: labelWithPlatform
   type: string
 
@@ -35,6 +38,10 @@ parameters:
 - name: uploadPrefix
   type: string
   default: '$(MaciosUploadPrefix)'
+
+- name: retryCount
+  type: number
+  default: 3
 
 steps:
 - bash: |
@@ -169,6 +176,8 @@ steps:
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 840
+  ${{ if not(parameters.isPR) }}:
+    retryCountOnTaskFailure: ${{ parameters.retryCount }}
 
 # Collect simulator diagnostic logs
 - bash: |
