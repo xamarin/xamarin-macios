@@ -73,5 +73,5 @@ steps:
   displayName: Publish Artifact for Guardian Supressions
   inputs:
     PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
-    ArtifactName: Guardian Suppressions
+    ArtifactName: Guardian Suppressions APIScan $(PLATFORM) $(VERSION)
   condition: failed()
