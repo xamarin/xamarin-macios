@@ -124,6 +124,7 @@ parameters:
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: false,
+      testPrefix: 'simulator_tests',
     },
     {
       label: dotnettests,
@@ -131,66 +132,77 @@ parameters:
       containsDotNetTests: true,
       containsLegacyTests: false,
       needsMultiplePlatforms: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: fsharp,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: framework,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: generator,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: interdependent-binding-projects,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: install-source,
       splitByPlatforms: false,
       containsDotNetTests: false,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: introspection,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: linker,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: mac-binding-project,
       splitByPlatforms: false,
       containsDotNetTests: false,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: mmp,
       splitByPlatforms: false,
       containsDotNetTests: false,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: mononative,
       splitByPlatforms: false,
       containsDotNetTests: false,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: monotouch,
@@ -198,36 +210,42 @@ parameters:
       containsDotNetTests: true,
       containsLegacyTests: true,
       needsMultiplePlatforms: false,
+      testPrefix: 'simulator_tests',
     },
     {
       label: msbuild,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: mtouch,
       splitByPlatforms: false,
       containsDotNetTests: false,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: xammac,
       splitByPlatforms: false,
       containsDotNetTests: false,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: xcframework,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
     {
       label: xtro,
       splitByPlatforms: false,
       containsDotNetTests: true,
       containsLegacyTests: true,
+      testPrefix: 'simulator_tests',
     },
   ]
 
@@ -338,7 +356,6 @@ stages:
         testConfigurations: ${{ parameters.testConfigurations }}
         supportedPlatforms: ${{ parameters.supportedPlatforms }}
         testsLabels: '--label=skip-all-tests,run-ios-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-dotnet-tests,run-system-permission-tests,run-legacy-xamarin-tests'
-        testPrefix: 'simulator_'
         statusContext: 'VSTS: simulator tests' 
         uploadArtifacts: true
         
