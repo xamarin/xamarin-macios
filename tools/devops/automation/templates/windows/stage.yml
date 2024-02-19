@@ -118,8 +118,6 @@ stages:
       name: ${{ parameters.windowsPool }}
       demands:
       - agent.os -equals Windows_NT
-    variables:
-      MAC_AGENT_USER: builder
 
     steps:
     - template: reenable-mac.yml
@@ -132,3 +130,4 @@ stages:
       MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]
       MAC_AGENT_POOL: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_POOL'] ]
       MAC_AGENT_IP: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_IP'] ]
+      MAC_AGENT_USER: builder
