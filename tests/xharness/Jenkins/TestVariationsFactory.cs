@@ -305,8 +305,8 @@ namespace Xharness.Jenkins {
 						if (!string.IsNullOrEmpty (registrar))
 							clone.Xml.SetProperty ("Registrar", registrar);
 						if (publishaot) {
-							clone.Xml.SetProperty ("PublishAot", "true");
-							clone.Xml.SetProperty ("_IsPublishing", "true"); // quack like "dotnet publish", otherwise PublishAot=true has no effect.
+							clone.Xml.SetProperty ("PublishAot", "true", last: false);
+							clone.Xml.SetProperty ("_IsPublishing", "true", last: false); // quack like "dotnet publish", otherwise PublishAot=true has no effect.
 						}
 						clone.Xml.Save (clone.Path);
 					});
