@@ -13,7 +13,7 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.MobileILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
 	<!-- Project types and how do we distinguish between them
 
@@ -902,13 +902,13 @@
 				<OutputPath>$([System.String]::Copy('%(OutputPath)').Replace('\', '/'))</OutputPath>
 			</_AssembliesToBeStripped>
 		</ItemGroup>
-		<Xamarin.MacDev.Tasks.ILStrip
+		<MobileILStrip
 			Assemblies="@(_AssembliesToBeStripped)"
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			>
 			<Output TaskParameter="StrippedAssemblies" ItemName="_StrippedAssemblies" />
-		</Xamarin.MacDev.Tasks.ILStrip>
+		</MobileILStrip>
 		<ItemGroup>
 			<ResolvedFileToPublish Remove="@(_AssembliesToBeStripped)" />
 			<ResolvedFileToPublish Include="@(_StrippedAssemblies)" />
