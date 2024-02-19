@@ -11,12 +11,17 @@ class APIScanConfiguration {
         Write-Host "enabledPlatforms: $($this.enabledPlatforms)"
 
         foreach ($platform in $this.enabledPlatforms) {
+            # each platform has its version in an environment variable, we need to get it, this
+            # could have been inlined when assigning the dictionary but we want to be cleaner.
+            $platformVersionEnvVar = "CONFIGURE_PLATFORMS_$($platform.toUpper())_NUGET_OS_VERSION"
+            $platformVersion = (Get-Item -Path env:$platformVersionEnvVar).Value
             # dictionary with the secrets needed by each matrix
             $platformVars = [ordered]@{
                 CLIENT_ID = $Env:API_SCAN_CLIENT_ID;
                 TENANT = $Env:API_SCAN_TENANT;
                 SECRET = "`$(API_SCAN_SECRET_$($platform.ToUpper()))";
                 PLATFORM = $platform.ToUpper();
+                VERSION = $platformVersion;
             }
             $vars[$platform] = $platformVars
         }
