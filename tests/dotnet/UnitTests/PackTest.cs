@@ -176,7 +176,6 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
 		[TestCase (ApplePlatform.MacOSX)]
-		[Ignore ("Multi-targeting support has been temporarily reverted/postponed")]
 		public void MultiTargetLibraryProject (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
