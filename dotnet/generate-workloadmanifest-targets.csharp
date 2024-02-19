@@ -39,6 +39,7 @@ using (var writer = new StreamWriter (outputPath)) {
 		var sep = tfv.IndexOfAny (new char [] { '-', '_' });
 		if (sep >= 0)
 			tfv = tfv.Substring (0, sep);
+		supportedTFVs.Add (tfv);
 		var workloadVersion = tfm;
 		if (tfv [0] == '7')
 			workloadVersion = tfm.Replace (".0", "");
