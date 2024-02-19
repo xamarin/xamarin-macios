@@ -33,7 +33,7 @@ steps:
 - pwsh: >-
     ./prepare_workload_apiscan.ps1
     -SourcesDirectory "$(Build.SourcesDirectory)"
-    -AndroidHash $Env:PLATFORM
+    -Platform $Env:PLATFORM
   displayName: "Expand nugets"
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts
   env:
