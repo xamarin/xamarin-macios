@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 
 var args = Args;
-var expectedArgumentCount = 5;
+var expectedArgumentCount = 6;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
 	Environment.Exit (1);
@@ -20,6 +20,7 @@ var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, String
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
 var currentApiVersion = args [argumentIndex++];
 var olderApiVersions = args [argumentIndex++];
+var defaultApiVersion = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
 var tfm = currentApiVersion;
@@ -27,19 +28,31 @@ var tfm = currentApiVersion;
 var supportedTFMs = new List<string> ();
 supportedTFMs.Add (currentApiVersion);
 supportedTFMs.AddRange (olderApiVersions.Split (' '));
-supportedTFMs = supportedTFMs.Select (v => v.Replace ("net", "")).ToList ();
 
 using (var writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
 	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' \">");
-	foreach (var tfv in supportedTFMs) {
-		var major = Version.Parse (tfv).Major.ToString ();
-		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.net{major}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\" />");
+	foreach (var tfm in supportedTFMs) {
+		var tfv = tfm.Replace ("net", "");
+		var sep = tfv.IndexOfAny (new char [] { '-', '_' });
+		if (sep >= 0)
+			tfv = tfv.Substring (0, sep);
+		var workloadVersion = tfm;
+		if (tfv [0] == '7')
+			workloadVersion = tfm.Replace (".0", "");
+		writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Sdk.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}'))\" />");
 	}
 	if (hasWindows) {
-		foreach (var tfv in supportedTFMs) {
-			var major = Version.Parse (tfv).Major.ToString ();
-			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.net{major}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
+		writer.WriteLine ();
+		foreach (var tfm in supportedTFMs) {
+			var tfv = tfm.Replace ("net", "");
+			var sep = tfv.IndexOfAny (new char [] { '-', '_' });
+			if (sep >= 0)
+				tfv = tfv.Substring (0, tfv.IndexOfAny (new char [] { '-', '_' }));
+			var workloadVersion = tfm;
+			if (tfv [0] == '7')
+				workloadVersion = tfm.Replace (".0", "");
+			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
 	}
 	writer.WriteLine ($"	</ImportGroup>");
