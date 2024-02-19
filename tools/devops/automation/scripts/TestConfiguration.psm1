@@ -24,6 +24,7 @@ class TestConfiguration {
     [string] Create() {
         $rv = [ordered]@{}
         foreach ($config in $this.testConfigurations) {
+            $enabledPlatformsForConfig = $this.enabledPlatforms
             $label = $config.label
             $underscoredLabel = $label.Replace('-','_')
             $splitByPlatforms = $config.splitByPlatforms
@@ -33,15 +34,38 @@ class TestConfiguration {
             $vars["LABEL"] = $label
             $vars["TESTS_LABELS"] = "$($this.testsLabels),run-$($label)-tests"
             if ($splitByPlatforms -eq "True") {
-                if ($this.enabledPlatforms.Length -eq 0) {
+                # watchOS is not supported for .NET so it's an outlier.
+                # we're soon removing legacy Xamarin support though, so hard-coding it here is a quick solution
+                # until this code will be removed anyways.
+                if ($config.containsLegacyTests -eq "true") {
+                    Write-Host "Test $label has legacy tests"
+                    $watchConfig = "$($Env:CONFIGURE_PLATFORMS_INCLUDE_WATCH)$($Env:CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY)"
+                    if ("$watchConfig" -eq "11") {
+                        Write-Host "Enabling watchOS for $label because watchOS is enabled."
+                        $enabledPlatformsForConfig += "watchOS"
+                    } else {
+                        Write-Host "Not enabling watchOS for $label because watchOS is not enabled ($watchConfig)"
+                        Write-Host "CONFIGURE_PLATFORMS_INCLUDE_WATCH = $($Env:CONFIGURE_PLATFORMS_INCLUDE_WATCH)"
+                        Write-Host "CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY = $($Env:CONFIGURE_PLATFORMS_INCLUDE_XAMARIN_LEGACY)"
+                    }
+                } else {
+                    Write-Host "Test $label does not have legacy tests"
+                }
+
+                if ($enabledPlatformsForConfig.Length -eq 0) {
                     Write-Host "No enabled platforms, skipping $label"
                     continue
                 }
-                if ($this.enabledPlatforms.Length -gt 1) {
-                    Write-Host "Multiple platform enabled"
-                    $this.enabledPlatforms += "Multiple"
+
+                if ($enabledPlatformsForConfig.Length -gt 1) {
+                    if ($config.needsMultiplePlatforms -eq "true") {
+                        Write-Host "Multiple platform enabled"
+                        $enabledPlatformsForConfig += "Multiple"
+                    } else {
+                        Write-Host "Test $label has multiple platforms, but does not need a specific multiple test run (needsMultiplePlatforms=$($config.needsMultiplePlatforms))."
+                    }
                 }
-                foreach ($platform in $this.enabledPlatforms) {
+                foreach ($platform in $enabledPlatformsForConfig) {
                     Write-Host "platform: $platform"
                     $platformConfig = $this.supportedPlatforms | Where-Object { $_.platform -eq $platform }
                     $platform = $platformConfig.platform

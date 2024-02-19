@@ -9,6 +9,8 @@ device-tests-provisioning.csx: device-tests-provisioning.csx.in Makefile $(TOP)/
 		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
 		-e 's#@INCLUDE_MAC@#$(INCLUDE_MAC)#g' \
 		-e 's#@INCLUDE_IOS@#$(INCLUDE_IOS)#g' \
+		-e 's#@INCLUDE_TVOS@#$(INCLUDE_TVOS)#g' \
+		-e 's#@INCLUDE_WATCH@#$(INCLUDE_WATCH)#g' \
 		-e 's#@INCLUDE_XAMARIN_LEGACY@#$(INCLUDE_XAMARIN_LEGACY)#g' \
 		$< > $@;
 		@echo "Generated $@:"
