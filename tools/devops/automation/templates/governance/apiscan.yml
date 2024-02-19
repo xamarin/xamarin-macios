@@ -63,7 +63,7 @@ steps:
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
   displayName: Break on compliance issues
   inputs:
-    GdnBreakAllTools: false # do not break for APIScan until we have fixe the issues
+    GdnBreakAllTools: false # do not break for APIScan until we have fixed the issues
     GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\maccore\tools\devops\falsepositives.gdnsuppress
     GdnBreakSuppressionSets: falsepositives
     GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
