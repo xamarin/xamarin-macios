@@ -135,6 +135,8 @@
 		<UseSystemResourceKeys Condition="'$(UseSystemResourceKeys)' == '' And '$(_BundlerDebug)' == 'true'">false</UseSystemResourceKeys>
 		<UseNativeHttpHandler Condition="'$(_PlatformName)' != 'macOS' And '$(UseNativeHttpHandler)' == ''">true</UseNativeHttpHandler>
 		<!-- AutoreleasePoolSupport needs to be set earlier, so that illink doesn't override it - https://github.com/dotnet/runtime/pull/86753 - so it's set in Xamarin.Shared.Sdk.props -->
+		<EnableCppCLIHostActivation Condition="'$(EnableCppCLIHostActivation)' == ''">false</EnableCppCLIHostActivation>
+		<_EnableConsumingManagedCodeFromNativeHosting Condition="'$(_EnableConsumingManagedCodeFromNativeHosting)' == ''">false</_EnableConsumingManagedCodeFromNativeHosting>
 		<NullabilityInfoContextSupport Condition="'$(NullabilityInfoContextSupport)' == ''">false</NullabilityInfoContextSupport>
 		<BuiltInComInteropSupport Condition="'$(BuiltInComInteropSupport)' == ''">false</BuiltInComInteropSupport>
 		<!-- Verify DI trimmability at development-time, but turn the validation off for production/trimmed builds. -->
@@ -983,7 +985,7 @@
 			<_PackageIdInfix Condition="'$(_XamarinRuntime)' == 'NativeAOT'">NativeAOT.</_PackageIdInfix>
 
 			<_MonoNugetPackageId>Microsoft.NETCore.App.Runtime.$(_PackageIdInfix)$(RuntimeIdentifier)</_MonoNugetPackageId>
-			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier)</_XamarinNugetPackageId>
+			<_XamarinNugetPackageId>Microsoft.$(_PlatformName).Runtime.$(RuntimeIdentifier).$(_XamarinPackSuffix)</_XamarinNugetPackageId>
 		</PropertyGroup>
 		<ItemGroup>
 			<!-- Look in the ResolvedFrameworkReference for our Microsoft.* package. This should only find a single package. -->
