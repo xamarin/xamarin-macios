@@ -43,6 +43,10 @@ steps:
   name: macInfo
   displayName: Set agent information
 
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/clean-for-remote-tests.sh
+  displayName: 'Clean for remote tests'
+  continueOnError: true
+
 - bash: ./install-qa-provisioning-profiles.sh -v
   displayName: 'Add build provisioning profiles'
   timeoutInMinutes: 30
