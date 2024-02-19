@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 
 var args = Args;
-var expectedArgumentCount = 6;
+var expectedArgumentCount = 7;
 if (args.Length != expectedArgumentCount) {
 	Console.WriteLine ($"Need {expectedArgumentCount} arguments, got {args.Length}");
 	Environment.Exit (1);
@@ -21,9 +21,11 @@ var runtimeIdentifiers = args [argumentIndex++].Split (new char [] { ' ' }, Stri
 var outputPath = args [argumentIndex++];
 var windowsPlatforms = args [argumentIndex++].Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 var hasWindows = Array.IndexOf (windowsPlatforms, platform) >= 0;
+var currentApiVersion = args [argumentIndex++];
 
 var platformLowerCase = platform.ToLowerInvariant ();
 
+var tfm = currentApiVersion;
 using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"{{");
 	writer.WriteLine ($"	\"version\": \"{version}\",");
@@ -31,15 +33,15 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		\"{platformLowerCase}\": {{");
 	writer.WriteLine ($"			\"description\": \".NET SDK Workload for building {platform} applications.\",");
 	writer.WriteLine ($"			\"packs\": [");
-	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net9\",");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.{tfm}\",");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Sdk.net8\",");
 	if (hasWindows) {
-		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net9\",");
+		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\",");
 	}
-	writer.WriteLine ($"				\"Microsoft.{platform}.Ref\",");
+	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.{tfm}\",");
 	foreach (var rid in runtimeIdentifiers) {
-		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}\",");
+		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.{tfm}\",");
 	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net9\"");
 	writer.WriteLine ($"			],");
@@ -55,12 +57,9 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"	}},");
 	writer.WriteLine ($"	\"packs\": {{");
-	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net9\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.{tfm}\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
 	writer.WriteLine ($"			\"version\": \"{version}\",");
-	writer.WriteLine ($"			\"alias-to\": {{");
-	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Sdk\"");
-	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}},");
 	writer.WriteLine ($"		\"Microsoft.{platform}.Sdk.net8\": {{");
 	writer.WriteLine ($"			\"kind\": \"sdk\",");
@@ -70,13 +69,13 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}},");
 	if (hasWindows) {
-		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net9\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.{tfm}\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
 		writer.WriteLine ($"			\"version\": \"{version}\",");
 		writer.WriteLine ($"			\"alias-to\": {{");
-		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk\",");
-		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk\",");
-		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk\",");
+		writer.WriteLine ($"				\"win-x64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"win-x86\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
+		writer.WriteLine ($"				\"win-arm64\": \"Microsoft.{platform}.Windows.Sdk.{tfm}\",");
 		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
 		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net8\": {{");
@@ -89,12 +88,12 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
 	}
-	writer.WriteLine ($"		\"Microsoft.{platform}.Ref\": {{");
+	writer.WriteLine ($"		\"Microsoft.{platform}.Ref.{tfm}\": {{");
 	writer.WriteLine ($"			\"kind\": \"framework\",");
 	writer.WriteLine ($"			\"version\": \"{version}\"");
 	writer.WriteLine ($"		}},");
 	foreach (var rid in runtimeIdentifiers) {
-		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.{tfm}\": {{");
 		writer.WriteLine ($"			\"kind\": \"framework\",");
 		writer.WriteLine ($"			\"version\": \"{version}\"");
 		writer.WriteLine ($"		}},");

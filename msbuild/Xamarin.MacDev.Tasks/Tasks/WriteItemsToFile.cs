@@ -8,9 +8,6 @@ using Microsoft.Build.Utilities;
 using Microsoft.Build.Tasks;
 using System.Xml.Linq;
 
-// Disable until we get around to enable + fix any issues.
-#nullable disable
-
 namespace Xamarin.MacDev.Tasks {
 	public class WriteItemsToFile : XamarinTask {
 		static readonly XNamespace XmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
@@ -21,13 +18,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		#region Inputs
 
-		public ITaskItem [] Items { get; set; }
+		public ITaskItem [] Items { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string ItemName { get; set; }
+		public string ItemName { get; set; } = string.Empty;
 
 		[Output]
 		[Required]
-		public ITaskItem File { get; set; }
+		public ITaskItem? File { get; set; }
 
 		public bool Overwrite { get; set; }
 
@@ -46,13 +43,14 @@ namespace Xamarin.MacDev.Tasks {
 					new XElement (ItemGroupElementName,
 						items.Select (item => this.CreateElementFromItem (item)))));
 
-			if (this.Overwrite && System.IO.File.Exists (this.File.ItemSpec))
-				System.IO.File.Delete (this.File.ItemSpec);
+			var file = this.File?.ItemSpec;
+			if (this.Overwrite && System.IO.File.Exists (file))
+				System.IO.File.Delete (file);
 
-			if (!Directory.Exists (Path.GetDirectoryName (this.File.ItemSpec)))
-				Directory.CreateDirectory (Path.GetDirectoryName (this.File.ItemSpec));
+			if (!Directory.Exists (Path.GetDirectoryName (file)))
+				Directory.CreateDirectory (Path.GetDirectoryName (file));
 
-			document.Save (this.File.ItemSpec);
+			document.Save (file);
 
 			return true;
 		}
