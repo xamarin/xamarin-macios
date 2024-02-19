@@ -98,6 +98,8 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP pwd
+    ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP ls -la
+    ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP ls -la "/Users/$Env:MAC_AGENT_USER/remote_build_testing"
     Invoke-SshDownload `
       -RemoteHost "$Env:MAC_AGENT_IP" `
       -RemoteUserName "$Env:MAC_AGENT_USER" `
