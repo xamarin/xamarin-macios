@@ -322,6 +322,11 @@ namespace Introspection {
 				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
 					continue;
 
+				// we only care about wrapper types (types with a native counterpart), and they all have a Register attribute.
+				var typeRegisterAttribute = t.GetCustomAttribute<RegisterAttribute> (false);
+				if (typeRegisterAttribute is null)
+					continue;
+
 				int designated = 0;
 				foreach (var ctor in t.GetConstructors ()) {
 					if (ctor.GetCustomAttribute<DesignatedInitializerAttribute> () is null)
@@ -622,11 +627,6 @@ namespace Introspection {
 
 		protected virtual bool SkipCheckShouldReExposeBaseCtor (Type type)
 		{
-			switch (type.FullName) {
-			case "Foundation.NSExceptionError":
-				return true;
-			}
-
 			return SkipDueToAttribute (type);
 		}
 
