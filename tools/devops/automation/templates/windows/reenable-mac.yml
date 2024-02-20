@@ -42,7 +42,6 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP -- ls -la "/Users/$($Env:MAC_AGENT_USER)/remote_build_testing"
     ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP -- rm -f "/Users/$($Env:MAC_AGENT_USER)/remote_build_testing/BuildId.txt"
   displayName: 'Remove BuildId from macOS bot'
   condition: always()
@@ -52,7 +51,7 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $vsts = New-VSTS -Org "devdiv" -Project "DevDiv" -Token $(MacPoolAccessToken)
 
-    # get the pool and the agent objects and disable the bot
+    # get the pool and the agent objects and enable the bot
     $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")
     $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME)
     $vsts.Agents.SetEnabled($pool, $agent, $True)
