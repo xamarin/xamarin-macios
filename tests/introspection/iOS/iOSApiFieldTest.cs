@@ -72,6 +72,9 @@ namespace Introspection {
 			case "NewsstandKit":
 				// largely removed in xcode 15
 				return true;
+			case "AssetsLibrary":
+				// removed in Xcode 15.3
+				return true;
 			}
 
 			switch (p.Name) {

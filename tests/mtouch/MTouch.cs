@@ -2256,6 +2256,7 @@ public class TestApp {
 				Asserts.DoesNotContain ("SafariServices", load_commands, "SafariServices");
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+				Asserts.DoesNotContain ("AssetsLibrary", load_commands, "AssetsLibrary");
 
 				// Try again with the static registrar
 				mtouch.Registrar = MTouchRegistrar.Static;
@@ -2266,6 +2267,7 @@ public class TestApp {
 				Asserts.DoesNotContain ("GameController", load_commands, "GameController");
 				Asserts.DoesNotContain ("QuickLook", load_commands, "QuickLook");
 				Asserts.DoesNotContain ("NewsstandKit", load_commands, "NewsstandKit");
+				Asserts.DoesNotContain ("AssetsLibrary", load_commands, "AssetsLibrary");
 			}
 		}
 
