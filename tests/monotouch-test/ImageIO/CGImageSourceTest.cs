@@ -90,20 +90,30 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			using (var imgsrc = CGImageSource.FromUrl (fileUrl)) {
 				using (var img = imgsrc.CreateThumbnail (0, null)) {
+					if (TestRuntime.CheckXcodeVersion (15, 3)) {
+						Assert.NotNull (img, "#a1");
+						Assert.AreNotEqual (IntPtr.Zero, img.Handle, "#a2");
+					} else {
 #if NET
-					Assert.Null (img, "#a1");
+						Assert.Null (img, "#a1");
 #else
-					Assert.NotNull (img, "#a1");
-					Assert.AreEqual (IntPtr.Zero, img.Handle, "#a2");
+						Assert.NotNull (img, "#a1");
+						Assert.AreEqual (IntPtr.Zero, img.Handle, "#a2");
 #endif
+					}
 				}
 				using (var img = imgsrc.CreateThumbnail (0, new CGImageThumbnailOptions ())) {
+					if (TestRuntime.CheckXcodeVersion (15, 3)) {
+						Assert.NotNull (img, "#b1");
+						Assert.AreNotEqual (IntPtr.Zero, img.Handle, "#b2");
+					} else {
 #if NET
-					Assert.Null (img, "#b1");
+						Assert.Null (img, "#b1");
 #else
-					Assert.NotNull (img, "#b1");
-					Assert.AreEqual (IntPtr.Zero, img.Handle, "#b2");
+						Assert.NotNull (img, "#b1");
+						Assert.AreEqual (IntPtr.Zero, img.Handle, "#b2");
 #endif
+					}
 				}
 			}
 		}
