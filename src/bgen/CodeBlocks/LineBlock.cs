@@ -1,6 +1,6 @@
 using System.IO;
 
-class LineBlock : ICodeBlock
+public class LineBlock : ICodeBlock
 {
 	readonly string line;
 	int currentIndent = 0;

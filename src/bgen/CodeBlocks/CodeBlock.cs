@@ -22,6 +22,19 @@ public class CodeBlock : ICodeBlock
 		HeaderText = text;
 	}
 
+	public CodeBlock(int currentIndent, string text, List<ICodeBlock> blocks)
+	{
+		this.CurrentIndent = currentIndent;
+		this.Blocks = blocks;
+		HeaderText = text;
+	}
+
+	public CodeBlock(int currentIndent, List<ICodeBlock> blocks)
+	{
+		this.CurrentIndent = currentIndent;
+		this.Blocks = blocks;
+	}
+
 	public void AddBlock(ICodeBlock block)
 	{
 		block.SetIndent(CurrentIndent + Indent);
