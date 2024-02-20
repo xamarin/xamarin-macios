@@ -361,7 +361,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</ItemGroup>
 		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
-		<Xamarin.iOS.Tasks.ILLink 
+		<Xamarin.MacDev.Tasks.ILLink
 				SessionId="$(BuildSessionId)"
 				AssemblyPaths="@(ManagedAssemblyToLink)"
 				ReferenceAssemblyPaths="@(ReferencePath)"
@@ -401,7 +401,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<Output TaskParameter="ExitCode" PropertyName="_ILLinkExitCode" />
 			<Output TaskParameter="LinkedItems" ItemName="_XamarinLinkedItems" />
 			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
-		</Xamarin.iOS.Tasks.ILLink>
+		</Xamarin.MacDev.Tasks.ILLink>
 
 		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
 
