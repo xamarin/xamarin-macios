@@ -16,6 +16,10 @@ parameters:
   type: string
   default: ''
 
+- name: windowsPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
 
 stages:
 - stage: governance_checks
@@ -27,8 +31,9 @@ stages:
     displayName: 'APIScan:' 
     timeoutInMinutes: 1000
     pool:
-      vmImage: windows-latest
-
+      name: ${{ parameters.windowsPool }}
+      demands:
+      - agent.os -equals Windows_NT
 
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
