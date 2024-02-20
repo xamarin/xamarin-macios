@@ -60,8 +60,8 @@ namespace CoreGraphics {
 		internal unsafe delegate* unmanaged<IntPtr, IntPtr, void> draw;
 		internal unsafe delegate* unmanaged<IntPtr, void> release;
 #else
-		internal DrawPatternCallback draw;
-		internal ReleaseInfoCallback release;
+		internal IntPtr draw;
+		internal IntPtr release;
 #endif
 	}
 
@@ -95,9 +95,9 @@ namespace CoreGraphics {
 		public delegate void DrawPattern (CGContext ctx);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGPatternCreate (/* void* */ IntPtr info, CGRect bounds, CGAffineTransform matrix,
-			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, [MarshalAs (UnmanagedType.I1)] bool isColored,
-			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
+		unsafe extern static IntPtr CGPatternCreate (/* void* */ IntPtr info, CGRect bounds, CGAffineTransform matrix,
+			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, byte isColored,
+			/* const CGPatternCallbacks* */ CGPatternCallbacks* callbacks);
 
 #if NET
 		static CGPatternCallbacks callbacks;
@@ -112,10 +112,12 @@ namespace CoreGraphics {
 			}
 		}
 #else
+		static DrawPatternCallback drawCallbackDelegate = DrawCallback;
+		static ReleaseInfoCallback releaseCallbackDelegate = ReleaseCallback;
 		static CGPatternCallbacks callbacks = new CGPatternCallbacks () {
 			version = 0,
-			draw = DrawCallback,
-			release = ReleaseCallback,
+			draw = Marshal.GetFunctionPointerForDelegate (drawCallbackDelegate),
+			release = Marshal.GetFunctionPointerForDelegate (releaseCallbackDelegate),
 		};
 #endif
 		GCHandle gch;
@@ -126,7 +128,10 @@ namespace CoreGraphics {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (drawPattern));
 
 			gch = GCHandle.Alloc (drawPattern);
-			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
+			unsafe {
+				fixed (CGPatternCallbacks* callbacksptr = &callbacks)
+					Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored.AsByte (), callbacksptr);
+			}
 		}
 
 #if NET

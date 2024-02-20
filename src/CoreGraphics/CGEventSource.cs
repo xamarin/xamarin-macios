@@ -96,13 +96,17 @@ namespace CoreGraphics {
 			}
 		}
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSourceButtonState")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public extern static bool GetButtonState (CGEventSourceStateID stateID, CGMouseButton button);
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static byte CGEventSourceButtonState (CGEventSourceStateID stateID, CGMouseButton button);
 
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSourceKeyState")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public extern static bool GetKeyState (CGEventSourceStateID stateID, ushort keycode);
+		public static bool GetButtonState (CGEventSourceStateID stateID, CGMouseButton button)
+			=> CGEventSourceButtonState (stateID, button) != 0;
+
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		extern static byte CGEventSourceKeyState (CGEventSourceStateID stateID, ushort keycode);
+
+		public static bool GetKeyState (CGEventSourceStateID stateID, ushort keycode)
+			=> CGEventSourceKeyState (stateID, keycode) != 0;
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGEventSourceFlagsState")]
 		public extern static  CGEventFlags GetFlagsState (CGEventSourceStateID stateID);
