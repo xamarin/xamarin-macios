@@ -1,29 +1,28 @@
 using System.IO;
 
-public class LineBlock : ICodeBlock
-{
+public class LineBlock : ICodeBlock {
 	readonly string line;
 	int currentIndent = 0;
 	readonly string newLine = "\n";
 
-	public LineBlock(int currentIndent, string line)
+	public LineBlock (int currentIndent, string line)
 	{
 		this.line = line;
 		this.currentIndent = currentIndent;
 	}
 
-	public void SetIndent(int indent)
+	public void SetIndent (int indent)
 	{
 		currentIndent = indent;
 	}
 
-	public string Print()
+	public string Print ()
 	{
-		return new string(' ', currentIndent) + line + newLine;
+		return new string (' ', currentIndent) + line + newLine;
 	}
 
-	public void Print(StreamWriter writer)
+	public void Print (StreamWriter writer)
 	{
-		writer.Write(new string(' ', currentIndent) + line + newLine);
+		writer.Write (new string (' ', currentIndent) + line + newLine);
 	}
 }
