@@ -499,7 +499,6 @@ namespace Cecil.Tests {
 			"System.IntPtr GameController.GCGamepadSnapShotDataV100::NSDataFromGCGamepadSnapShotDataV100(GameController.GCGamepadSnapShotDataV100&)",
 			"System.IntPtr GameController.GCMicroGamepadSnapshotData::NSDataFromGCMicroGamepadSnapshotData(GameController.GCMicroGamepadSnapshotData&)",
 			"System.IntPtr GameController.GCMicroGamepadSnapShotDataV100::NSDataFromGCMicroGamepadSnapShotDataV100(GameController.GCMicroGamepadSnapShotDataV100&)",
-			"System.IntPtr ModelIO.MDLVertexDescriptor::MTKModelIOVertexDescriptorFromMetalWithError(System.IntPtr,System.IntPtr&)",
 			"System.IntPtr ObjCRuntime.Selector::GetHandle(System.String)",
 			"System.IntPtr SearchKit.SKIndex::SKIndexOpenWithURL(System.IntPtr,System.IntPtr,System.Boolean)",
 			"System.IntPtr Security.SecAccessControl::SecAccessControlCreateWithFlags(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr&)",
