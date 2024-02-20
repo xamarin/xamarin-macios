@@ -16,8 +16,8 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 
