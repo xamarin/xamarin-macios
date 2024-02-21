@@ -4,5 +4,6 @@
     <_PlatformName>MacCatalyst</_PlatformName>
   </PropertyGroup>
 
-  <Import Project="Xamarin.Shared.Sdk.props" />
+  <Import Project="Xamarin.Shared.Sdk.props" Condition="'$(_IsWorkloadEol)' != 'true'" />
+  <Import Project="Microsoft.Sdk.Eol.targets" Condition="'$(_IsWorkloadEol)' == 'true'" />
 </Project>

@@ -1,0 +1,28 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+
+- template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+
+- pwsh: |
+    Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
+  displayName: "APISCan"
