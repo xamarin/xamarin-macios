@@ -9,12 +9,12 @@ var latestCommit = args [idx++];
 var src = args [idx++];
 var outputPath = args [idx++];
 
-var json = new StringBuilder ();
-json.AppendLine ("{");
-json.AppendLine ("  \"documents\": {");
-json.AppendLine ($"    \"{src}*\": \"https://raw.githubusercontent.com/xamarin/xamarin-macios/{latestCommit}/src*\"");
-json.AppendLine ("  }");
-json.AppendLine ("}");
+using (var writer = new StreamWriter (outputPath)) {
+    writer.WriteLine ("{");
+    writer.WriteLine ("  \"documents\": {");
+    writer.WriteLine ($"    \"{src}*\": \"https://raw.githubusercontent.com/xamarin/xamarin-macios/{latestCommit}/src*\"");
+    writer.WriteLine ("  }");
+    writer.WriteLine ("}");
+}
 
-File.WriteAllText (outputPath, json.ToString ());
-
+Environment.Exit(0)
