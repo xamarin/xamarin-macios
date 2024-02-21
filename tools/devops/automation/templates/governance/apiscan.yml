@@ -52,6 +52,15 @@ steps:
   env:
     AzureServicesAuthConnectionString: runAs=App;AppId=$(CLIENT_ID);TenantId=$(TENANT);AppKey=$(SECRET)
 
+- task: PublishSecurityAnalysisLogs@3
+  displayName: Publish Security Analysis Logs
+  condition: succeededOrFailed()
+  inputs:
+    ArtifactName: 'CodeAnalysisLogs - APIScan $(PLATFORM) $(VERSION)'
+    ArtifactType: 'Container'
+    AllTools: true
+    ToolLogsNotFoundAction: 'Standard'
+
 - task: SdtReport@2
   displayName: Create Security Analysis Report
   inputs:
@@ -70,15 +79,6 @@ steps:
 #      GdnExportGdnToolSDLNativeRulesSeverity: 'error'
 #      GdnExportGdnToolSemmle: true # CodeQL (aka Semmle) results
 #      GdnExportGdnToolSemmleSeverity: 'Error' # CodeQL (aka Semmle) results
-
-- task: PublishSecurityAnalysisLogs@3
-  displayName: Publish Security Analysis Logs
-  inputs:
-    ArtifactName: 'CodeAnalysisLogs - APIScan $(PLATFORM) $(VERSION)'
-    ArtifactType: 'Container'
-    AllTools: true
-    ToolLogsNotFoundAction: 'Standard'
-
 
 - task: TSAUpload@2
   inputs:
