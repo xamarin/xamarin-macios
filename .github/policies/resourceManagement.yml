@@ -78,27 +78,48 @@ configuration:
       - addReply:
           reply: This issue is being closed due to inactivity. If this issue is still affecting you, please follow the steps above to use the VS Feedback Tool to report the issue.
       - closeIssue
+
     eventResponderTasks:
+
     - if:
       - payloadType: Issues
       - labelAdded:
           label: need-info
       then:
-      - addReply:
-          reply: Hi @${issueAuthor}. We have added the "need-info" label to this issue, which indicates that we have an open question for you before we can take further action. This issue will be closed automatically in 7 days if we do not hear back from you by then - please feel free to re-open it if you come back to this issue after that time.
-      description: 
+      - if:
+          - not:
+              hasLabel: no-auto-reply
+          then:
+            - addReply:
+                reply: Hi @${issueAuthor}. We have added the "need-info" label to this issue, which indicates that we have an open question for you before we can take further action. This issue will be closed automatically in 7 days if we do not hear back from you by then - please feel free to re-open it if you come back to this issue after that time.
+      - if:
+          - hasLabel: no-auto-reply
+        then:
+          removeLabel:
+            label: no-auto-reply
+      description: "Add comment asking for info when the 'need-info' label is added to an issue."
+
     - if:
       - payloadType: Issues
       - labelAdded:
           label: need-repro
       then:
-      - addReply:
-          reply: >-
-            Hi @${issueAuthor}. We have added the "need-repro" label to this issue, which indicates that we require steps and sample code to reproduce the issue before we can take further action. Please try to create a minimal sample project/solution or code samples which reproduce the issue, ideally as a GitHub repo that we can clone. See more details about creating repros here: https://github.com/xamarin/xamarin-macios/blob/main/docs/bug-repro.md
+      - if:
+          - not:
+              hasLabel: no-auto-reply
+        then:
+          - addReply:
+              reply: >-
+                Hi @${issueAuthor}. We have added the "need-repro" label to this issue, which indicates that we require steps and sample code to reproduce the issue before we can take further action. Please try to create a minimal sample project/solution or code samples which reproduce the issue, ideally as a GitHub repo that we can clone. See more details about creating repros here: https://github.com/xamarin/xamarin-macios/blob/main/docs/bug-repro.md
 
+                This issue will be closed automatically in 7 days if we do not hear back from you by then - please feel free to re-open it if you come back to this issue after that time.
+      - if:
+          - hasLabel: no-auto-reply
+        then:
+          removeLabel:
+            label: no-auto-reply
+      description: "Add comment asking for info when the 'need-repro' label is added to an issue."
 
-            This issue will be closed automatically in 7 days if we do not hear back from you by then - please feel free to re-open it if you come back to this issue after that time.
-      description: 
     - if:
       - payloadType: Issue_Comment
       - isAction:
