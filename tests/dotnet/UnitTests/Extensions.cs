@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 
 #nullable enable
@@ -14,6 +15,21 @@ namespace Xamarin.Tests {
 				return;
 
 			Assert.Fail ($"No warnings expected, but got:\n\t{string.Join ("\n\t", warnings.Select (v => v.ToString ()))}");
+		}
+
+		public static void StartWithArgs (this Process process, string args)
+		{
+			process.StartInfo = new ProcessStartInfo {
+				FileName = DotNet.Executable,
+				Arguments = args,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				UseShellExecute = false,
+			};
+
+			process.Start ();
+			if (!process.WaitForExit (TimeSpan.FromSeconds (60)))
+				throw new TimeoutException ($"Process '{args}' timed out");
 		}
 
 		public static void AssertWarnings (this IEnumerable<BuildLogEvent> actualWarnings, IEnumerable<ExpectedBuildMessage> expectedWarnings)

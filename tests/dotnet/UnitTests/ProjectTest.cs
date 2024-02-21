@@ -1666,5 +1666,32 @@ namespace Xamarin.Tests {
 			Assert.That (symbols, Does.Contain ("_xamarin_release_managed_ref"), "_xamarin_release_managed_ref");
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
+		public void SourcelinkTest (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var rv = DotNet.AssertBuild (project_path, properties);
+
+			var pdbFile = Directory
+				.GetFiles (Path.GetDirectoryName (project_path)!, "*.pdb", SearchOption.AllDirectories)
+				.FirstOrDefault ();
+			Assert.NotNull (pdbFile, "No PDB file found");
+
+			using Process install = new();
+			install.StartWithArgs ("tool install sourcelink");
+
+			using Process test = new ();
+			test.StartWithArgs ($"sourcelink test {pdbFile}");
+
+			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ReadToEnd ());
+		}
 	}
 }
