@@ -16,11 +16,6 @@ public class LineBlock : ICodeBlock {
 		currentIndent = indent;
 	}
 
-	public string Print ()
-	{
-		return new string (' ', currentIndent) + line + newLine;
-	}
-
 	public void Print (StreamWriter writer)
 	{
 		writer.Write (new string (' ', currentIndent) + line + newLine);
