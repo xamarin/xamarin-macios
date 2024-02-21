@@ -49,19 +49,6 @@ namespace Xamarin.Linker.Steps {
 					break;
 				}
 				break;
-			case Namespaces.ObjCRuntime:
-				switch (attr_type.Name) {
-				case "AdoptsAttribute":
-					store = remove = LinkContext.App.Optimizations.RegisterProtocols == true;
-					break;
-				case "NativeAttribute":
-					store = remove = LinkContext.App.Optimizations.RemoveDynamicRegistrar == true;
-					break;
-				case "NativeNameAttribute":
-					store = remove = true;
-					break;
-				}
-				break;
 			case Namespaces.Foundation:
 				switch (attr_type.Name) {
 				case "ModelAttribute":
@@ -76,6 +63,19 @@ namespace Xamarin.Linker.Steps {
 					break;
 				case "ProtocolMemberAttribute":
 					store = remove = LinkContext.App.Optimizations.RegisterProtocols == true;
+					break;
+				}
+				break;
+			case Namespaces.ObjCRuntime:
+				switch (attr_type.Name) {
+				case "AdoptsAttribute":
+					store = remove = LinkContext.App.Optimizations.RegisterProtocols == true;
+					break;
+				case "NativeAttribute":
+					store = remove = LinkContext.App.Optimizations.RemoveDynamicRegistrar == true;
+					break;
+				case "NativeNameAttribute":
+					store = remove = true;
 					break;
 				}
 				break;
