@@ -26,9 +26,7 @@ stages:
   - job: apiscan
     displayName: 'APIScan:' 
     timeoutInMinutes: 1000
-    pool:
-      vmImage: windows-latest
-
+    pool: AzurePipelines-EO
 
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
