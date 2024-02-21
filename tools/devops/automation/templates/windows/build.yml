@@ -96,7 +96,23 @@ steps:
   displayName: 'Show Environment'
 
 - pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     ssh -v -i "$(ID_RSA_PATH)" -o IdentitiesOnly=yes -o StrictHostKeyChecking=no builder@$Env:MAC_AGENT_IP pwd
+    Invoke-SshDownload `
+      -RemoteHost "$Env:MAC_AGENT_IP" `
+      -RemoteUserName "$Env:MAC_AGENT_USER" `
+      -Source "/Users/$Env:MAC_AGENT_USER/remote_build_testing/BuildId.txt" `
+      -Target "BuildId.txt"
+
+    $macBuildId = (Get-Content -Path BuildId.txt).Trim()
+    Remove-Item -Path BuildId.txt # clean up after ourselves
+    if ([string]::IsNullOrEmpty($macBuildId)) {
+      throw "The mac we're trying to connect to ($($Env:MAC_AGENT_IP)) is not reserved for us anymore. If you're reran this job, please rerun all jobs instead."
+    }
+    $windowsBuildId = $Env:BUILD_BUILDID
+    if ($macBuildId -ne $windowsBuildId) {
+      throw "The mac we're trying to connect to ($($Env:MAC_AGENT_IP)) is reserved for a different build (with build id $($macBuildId)). If you're reran this job, please rerun all jobs instead."
+    }
   displayName: "Verify ssh connection"
 
 # This task fixes errors such as these:
