@@ -840,7 +840,7 @@ namespace CoreFoundation {
 					factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 #endif
 					{
-						return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, (CFStreamClientContext *) Unsafe.AsPointer<CFStreamClientContext> (ref context));
+						return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, (CFStreamClientContext*) Unsafe.AsPointer<CFStreamClientContext> (ref context));
 					};
 				}
 				return ExecutePacCFRunLoopSourceBlocking (factory, out outError);
@@ -865,7 +865,7 @@ namespace CoreFoundation {
 					factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 #endif
 					{
-						return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, (CFStreamClientContext *) Unsafe.AsPointer<CFStreamClientContext> (ref context));
+						return CFNetworkExecuteProxyAutoConfigurationScript (pacScript.Handle, url.Handle, cb, (CFStreamClientContext*) Unsafe.AsPointer<CFStreamClientContext> (ref context));
 					};
 				}
 				// use the helper task with a factory for this method
@@ -908,7 +908,7 @@ namespace CoreFoundation {
 					factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 #endif
 					{
-						return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, (CFStreamClientContext *) Unsafe.AsPointer<CFStreamClientContext> (ref context));
+						return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, (CFStreamClientContext*) Unsafe.AsPointer<CFStreamClientContext> (ref context));
 					};
 				}
 				return ExecutePacCFRunLoopSourceBlocking (factory, out outError);
@@ -934,7 +934,7 @@ namespace CoreFoundation {
 					factory = delegate (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context)
 #endif
 					{
-						return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, (CFStreamClientContext *) Unsafe.AsPointer<CFStreamClientContext> (ref context));
+						return CFNetworkExecuteProxyAutoConfigurationURL (pacUrl.Handle, url.Handle, cb, (CFStreamClientContext*) Unsafe.AsPointer<CFStreamClientContext> (ref context));
 					};
 				}
 				// use the helper task with a factory for this method
