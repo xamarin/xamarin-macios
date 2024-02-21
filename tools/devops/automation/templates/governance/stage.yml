@@ -26,7 +26,10 @@ stages:
   - job: apiscan
     displayName: 'APIScan:' 
     timeoutInMinutes: 1000
-    pool: AzurePipelines-EO
+    pool:
+      name: AzurePipelines-EO
+      demands:
+      - ImageOverride -equals AzurePipelinesWindows2022compliant
 
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
