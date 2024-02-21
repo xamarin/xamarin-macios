@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Mac Catalyst View",
-  "description": "A MacCatalyst View",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Представление Mac Catalyst",
+  "description": "Представление MacCatalyst",
+  "symbols/namespace/description": "пространство имен для созданного кода"
 }

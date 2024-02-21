@@ -33,9 +33,9 @@ namespace Xamarin.Bundler {
 		string name;
 		public string Name {
 			get {
-				if (name != null)
+				if (name is not null)
 					return name;
-				if (ObjectiveCName != null)
+				if (ObjectiveCName is not null)
 					return ObjectiveCPrefix + ObjectiveCName;
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"symbol without a name (type: {Type})");
 			}
@@ -93,7 +93,7 @@ namespace Xamarin.Bundler {
 				ObjectiveCName = class_name,
 			};
 			var existing = Find (symbol.Name);
-			if (existing != null)
+			if (existing is not null)
 				return existing;
 			Add (symbol);
 			return symbol;
@@ -102,7 +102,7 @@ namespace Xamarin.Bundler {
 		public Symbol AddField (string name)
 		{
 			Symbol rv = Find (name);
-			if (rv == null) {
+			if (rv is null) {
 				rv = new Symbol { Name = name, Type = SymbolType.Field };
 				Add (rv);
 			}
@@ -112,7 +112,7 @@ namespace Xamarin.Bundler {
 		public Symbol AddFunction (string name)
 		{
 			Symbol rv = Find (name);
-			if (rv == null) {
+			if (rv is null) {
 				rv = new Symbol { Name = name, Type = SymbolType.Function };
 				Add (rv);
 			}
@@ -160,7 +160,7 @@ namespace Xamarin.Bundler {
 			using (var reader = new StreamReader (filename)) {
 				string line;
 				Symbol current = null;
-				while ((line = reader.ReadLine ()) != null) {
+				while ((line = reader.ReadLine ()) is not null) {
 					if (line.Length == 0)
 						continue;
 					if (line [0] == '\t') {

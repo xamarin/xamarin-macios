@@ -29,8 +29,10 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -50,42 +52,32 @@ namespace AudioToolbox {
 		public static AudioFileType []? ReadableTypes {
 			get {
 				uint size;
-				if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.ReadableTypes, 0, IntPtr.Zero, out size) != 0)
+				if (!TryGetGlobalInfoSize (AudioFileGlobalProperty.ReadableTypes, out size))
 					return null;
 
-				var data = new AudioFileType [size / sizeof (AudioFileType)];
-				fixed (AudioFileType* ptr = data) {
-					var res = AudioFileGetGlobalInfo (AudioFileGlobalProperty.ReadableTypes, 0, IntPtr.Zero, ref size, ptr);
-					if (res != 0)
-						return null;
+				if (!TryGetGlobalInfo (AudioFileGlobalProperty.ReadableTypes, size, out var data))
+					return null;
 
-					return data;
-				}
+				return data;
 			}
 		}
 
 		public static AudioFileType []? WritableTypes {
 			get {
 				uint size;
-				if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.WritableTypes, 0, IntPtr.Zero, out size) != 0)
+				if (!TryGetGlobalInfoSize (AudioFileGlobalProperty.WritableTypes, out size))
 					return null;
 
-				var data = new AudioFileType [size / sizeof (AudioFileType)];
-				fixed (AudioFileType* ptr = data) {
-					var res = AudioFileGetGlobalInfo (AudioFileGlobalProperty.WritableTypes, 0, IntPtr.Zero, ref size, ptr);
-					if (res != 0)
-						return null;
+				if (!TryGetGlobalInfo (AudioFileGlobalProperty.WritableTypes, size, out var data))
+					return null;
 
-					return data;
-				}
+				return data;
 			}
 		}
 
 		public static string? GetFileTypeName (AudioFileType fileType)
 		{
-			IntPtr ptr;
-			var size = (uint) sizeof (IntPtr);
-			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.FileTypeName, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
+			if (!TryGetGlobalInfo (AudioFileGlobalProperty.FileTypeName, fileType, out var ptr))
 				return null;
 
 			return CFString.FromHandle (ptr);
@@ -93,18 +85,13 @@ namespace AudioToolbox {
 
 		public static AudioFormatType []? GetAvailableFormats (AudioFileType fileType)
 		{
-			uint size;
-			if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.AvailableFormatIDs, sizeof (AudioFileType), ref fileType, out size) != 0)
+			if (!TryGetGlobalInfoSize (AudioFileGlobalProperty.AvailableFormatIDs, fileType, out var size))
 				return null;
 
-			var data = new AudioFormatType [size / sizeof (AudioFormatType)];
-			fixed (AudioFormatType* ptr = data) {
-				var res = AudioFileGetGlobalInfo (AudioFileGlobalProperty.AvailableFormatIDs, sizeof (AudioFormatType), ref fileType, ref size, ptr);
-				if (res != 0)
-					return null;
+			if (!TryGetGlobalInfo (AudioFileGlobalProperty.AvailableFormatIDs, fileType, size, out var data))
+				return null;
 
-				return data;
-			}
+			return data;
 		}
 
 		public static AudioStreamBasicDescription []? GetAvailableStreamDescriptions (AudioFileType fileType, AudioFormatType formatType)
@@ -113,25 +100,18 @@ namespace AudioToolbox {
 			input.FileType = fileType;
 			input.FormatType = formatType;
 
-			uint size;
-			if (AudioFileGetGlobalInfoSize (AudioFileGlobalProperty.AvailableStreamDescriptionsForFormat, (uint) sizeof (AudioFileTypeAndFormatID), ref input, out size) != 0)
+			if (!TryGetGlobalInfoSize (AudioFileGlobalProperty.AvailableStreamDescriptionsForFormat, input, out var size))
 				return null;
 
-			var data = new AudioStreamBasicDescription [size / sizeof (AudioStreamBasicDescription)];
-			fixed (AudioStreamBasicDescription* ptr = data) {
-				var res = AudioFileGetGlobalInfo (AudioFileGlobalProperty.AvailableStreamDescriptionsForFormat, (uint) sizeof (AudioFileTypeAndFormatID), ref input, ref size, ptr);
-				if (res != 0)
-					return null;
+			if (!TryGetGlobalInfo (AudioFileGlobalProperty.AvailableStreamDescriptionsForFormat, input, size, out var data))
+				return null;
 
-				return data;
-			}
+			return data;
 		}
 
 		public static string? []? AllExtensions {
 			get {
-				IntPtr ptr;
-				var size = (uint) sizeof (IntPtr);
-				if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.AllExtensions, 0, IntPtr.Zero, ref size, out ptr) != 0)
+				if (!TryGetGlobalInfo (AudioFileGlobalProperty.AllExtensions, out var ptr))
 					return null;
 
 				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
@@ -140,9 +120,7 @@ namespace AudioToolbox {
 
 		public static string? []? AllUTIs {
 			get {
-				IntPtr ptr;
-				var size = (uint) sizeof (IntPtr);
-				if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.AllUTIs, 0, IntPtr.Zero, ref size, out ptr) != 0)
+				if (!TryGetGlobalInfo (AudioFileGlobalProperty.AllUTIs, out var ptr))
 					return null;
 
 				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
@@ -151,9 +129,7 @@ namespace AudioToolbox {
 
 		public static string? []? AllMIMETypes {
 			get {
-				IntPtr ptr;
-				var size = (uint) sizeof (IntPtr);
-				if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.AllMIMETypes, 0, IntPtr.Zero, ref size, out ptr) != 0)
+				if (!TryGetGlobalInfo (AudioFileGlobalProperty.AllMIMETypes, out var ptr))
 					return null;
 
 				return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
@@ -182,9 +158,7 @@ namespace AudioToolbox {
 
 		public static string? []? GetExtensions (AudioFileType fileType)
 		{
-			IntPtr ptr;
-			var size = (uint) sizeof (IntPtr);
-			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.ExtensionsForType, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
+			if (!TryGetGlobalInfo (AudioFileGlobalProperty.ExtensionsForType, fileType, out var ptr))
 				return null;
 
 			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
@@ -192,9 +166,7 @@ namespace AudioToolbox {
 
 		public static string? []? GetUTIs (AudioFileType fileType)
 		{
-			IntPtr ptr;
-			var size = (uint) sizeof (IntPtr);
-			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.UTIsForType, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
+			if (!TryGetGlobalInfo (AudioFileGlobalProperty.UTIsForType, fileType, out var ptr))
 				return null;
 
 			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
@@ -202,9 +174,7 @@ namespace AudioToolbox {
 
 		public static string? []? GetMIMETypes (AudioFileType fileType)
 		{
-			IntPtr ptr;
-			var size = (uint) sizeof (IntPtr);
-			if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.MIMETypesForType, sizeof (AudioFileType), ref fileType, ref size, out ptr) != 0)
+			if (!TryGetGlobalInfo (AudioFileGlobalProperty.MIMETypesForType, fileType, out var ptr))
 				return null;
 
 			return NSArray.ArrayFromHandleFunc (ptr, l => CFString.FromHandle (l));
@@ -217,39 +187,96 @@ namespace AudioToolbox {
 					using (var cfs = new CFString (extension)) {
 						uint value;
 						uint size = sizeof (AudioFileType);
-						if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.TypesForExtension, (uint) Marshal.SizeOf (typeof (IntPtr)), cfs.Handle, ref size, out value) != 0)
+						if (AudioFileGetGlobalInfo (AudioFileGlobalProperty.TypesForExtension, (uint) IntPtr.Size, cfs.Handle, ref size, out value) != 0)
 							return null;
 
 						return (AudioFileType) value;
 					}
 				}
 		*/
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfoSize (AudioFileGlobalProperty propertyID, uint size, IntPtr inSpecifier, out uint outDataSize);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfoSize (AudioFileGlobalProperty propertyID, uint size, ref AudioFileType inSpecifier, out uint outDataSize);
+		extern static int AudioFileGetGlobalInfoSize (AudioFileGlobalProperty propertyId, uint size, void* inSpecifier, uint* outDataSize);
+
+		static bool TryGetGlobalInfoSize (AudioFileGlobalProperty propertyId, out uint size)
+		{
+			size = 0;
+			var rv = AudioFileGetGlobalInfoSize (propertyId, 0, null, (uint*) Unsafe.AsPointer<uint> (ref size));
+			return rv == 0;
+		}
+
+		static bool TryGetGlobalInfoSize (AudioFileGlobalProperty propertyId, AudioFileType fileType, out uint size)
+		{
+			size = 0;
+			var rv = AudioFileGetGlobalInfoSize (propertyId, sizeof (AudioFileType), (void*) &fileType, (uint*) Unsafe.AsPointer<uint> (ref size));
+			return rv == 0;
+		}
+
+		static bool TryGetGlobalInfoSize (AudioFileGlobalProperty propertyId, AudioFileTypeAndFormatID audioFileTypeAndFormatId, out uint size)
+		{
+			size = 0;
+			var rv = AudioFileGetGlobalInfoSize (propertyId, (uint) sizeof (AudioFileTypeAndFormatID), (void*) &audioFileTypeAndFormatId, (uint*) Unsafe.AsPointer<uint> (ref size));
+			return rv == 0;
+		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfoSize (AudioFileGlobalProperty propertyID, uint size, ref AudioFileTypeAndFormatID inSpecifier, out uint outDataSize);
+		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyId, uint size, void* inSpecifier, uint* ioDataSize, void* outPropertyData);
 
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, IntPtr inSpecifier, ref uint ioDataSize, AudioFileType* outPropertyData);
+		static bool TryGetGlobalInfo (AudioFileGlobalProperty propertyId, uint size, [NotNullWhen (true)] out AudioFileType []? outPropertyData)
+		{
+			int res;
+			var data = new AudioFileType [size / sizeof (AudioFileType)];
+			outPropertyData = default;
+			fixed (AudioFileType* ptr = data) {
+				res = AudioFileGetGlobalInfo (propertyId, 0, null, &size, ptr);
+			}
+			if (res == 0)
+				outPropertyData = data;
+			return res == 0;
+		}
 
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, ref AudioFileType inSpecifier, ref uint ioDataSize, AudioFormatType* outPropertyData);
+		static bool TryGetGlobalInfo (AudioFileGlobalProperty propertyId, AudioFileType fileType, uint size, [NotNullWhen (true)] out AudioFormatType []? outPropertyData)
+		{
+			int res;
+			var data = new AudioFormatType [size / sizeof (AudioFormatType)];
+			outPropertyData = default;
+			fixed (AudioFormatType* ptr = data) {
+				res = AudioFileGetGlobalInfo (propertyId, sizeof (AudioFormatType), &fileType, &size, ptr);
+			}
+			if (res == 0)
+				outPropertyData = data;
+			return res == 0;
+		}
 
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, ref AudioFileTypeAndFormatID inSpecifier, ref uint ioDataSize, AudioStreamBasicDescription* outPropertyData);
+		static bool TryGetGlobalInfo (AudioFileGlobalProperty propertyId, AudioFileTypeAndFormatID audioFileTypeAndFormatId, uint size, [NotNullWhen (true)] out AudioStreamBasicDescription []? outPropertyData)
+		{
+			int res;
+			var data = new AudioStreamBasicDescription [size / sizeof (AudioStreamBasicDescription)];
+			outPropertyData = default;
+			fixed (AudioStreamBasicDescription* ptr = data) {
+				res = AudioFileGetGlobalInfo (propertyId, (uint) sizeof (AudioFileTypeAndFormatID), &audioFileTypeAndFormatId, &size, ptr);
+			}
+			if (res == 0)
+				outPropertyData = data;
+			return res == 0;
+		}
 
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, ref AudioFileType inSpecifier, ref uint ioDataSize, out IntPtr outPropertyData);
+		static bool TryGetGlobalInfo (AudioFileGlobalProperty propertyId, AudioFileType fileType, out IntPtr outPropertyData)
+		{
+			var size = (uint) sizeof (IntPtr);
+			outPropertyData = default;
+			var rv = AudioFileGetGlobalInfo (propertyId, sizeof (AudioFileType), &fileType, &size, (IntPtr*) Unsafe.AsPointer<IntPtr> (ref outPropertyData));
+			return rv == 0;
 
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, IntPtr inSpecifier, ref uint ioDataSize, out IntPtr outPropertyData);
+		}
 
-		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static int AudioFileGetGlobalInfo (AudioFileGlobalProperty propertyID, uint size, IntPtr inSpecifier, ref uint ioDataSize, out uint outPropertyData);
+		static bool TryGetGlobalInfo (AudioFileGlobalProperty propertyId, out IntPtr outPropertyData)
+		{
+			var size = (uint) sizeof (IntPtr);
+			outPropertyData = default;
+			var rv = AudioFileGetGlobalInfo (propertyId, 0, null, &size, (IntPtr*) Unsafe.AsPointer<IntPtr> (ref outPropertyData));
+			return rv == 0;
+		}
 	}
 
 	[StructLayout (LayoutKind.Sequential)]

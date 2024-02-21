@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.Network {
 		public void Dispose ()
 		{
 			connection?.Dispose ();
-			if (interfaces != null) {
+			if (interfaces is not null) {
 				foreach (var i in interfaces)
 					i.Dispose ();
 			}
@@ -391,9 +391,9 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
+		[Ignore ("Crashes everywhere. Feedback filed: https://github.com/xamarin/maccore/issues/2675")]
 		public void SetPrivacyContextTest ()
 		{
-			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (13, 0);
 			using (var privacy = NWPrivacyContext.Default)
 			using (var parameters = new NWParameters ()) {

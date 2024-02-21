@@ -1,140 +1,119 @@
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Foundation;
+
+#nullable enable
 
 public class TypeManager {
-	BindingTouch BindingTouch;
-	Frameworks Frameworks { get { return BindingTouch.Frameworks; } }
+	public BindingTouch BindingTouch;
+	Frameworks Frameworks { get; }
+	AttributeManager AttributeManager { get { return BindingTouch.AttributeManager; } }
+	NamespaceCache NamespaceCache { get { return BindingTouch.NamespaceCache; } }
+	TypeCache TypeCache { get { return BindingTouch.TypeCache; } }
 
-	public Type System_Attribute;
-	public Type System_Boolean;
-	public Type System_Byte;
-	public Type System_Char;
-	public Type System_Delegate;
-	public Type System_Double;
-	public Type System_Float;
-	public Type System_Int16;
-	public Type System_Int32;
-	public Type System_Int64;
-	public Type System_IntPtr;
-	public Type System_Object;
-	public Type System_SByte;
-	public Type System_String;
-	public Type System_String_Array;
-	public Type System_UInt16;
-	public Type System_UInt32;
-	public Type System_UInt64;
-	public Type System_UIntPtr;
-	public Type System_Void;
+	Dictionary<Type, string>? nsnumberReturnMap;
+	HashSet<string> typesThatMustAlwaysBeGloballyNamed = new ();
 
-	public Type System_nint;
-	public Type System_nuint;
-	public Type System_nfloat;
-
-	/* fundamental */
-	public Type NSObject;
-	public Type INativeObject;
-
-	/* objcruntime */
-	public Type BlockLiteral;
-	public Type Class;
-	public Type Protocol;
-	public Type Selector;
-
-	public Type Constants;
-
-	/* Different binding types */
-
-	public Type DictionaryContainerType;
-
-	public Type ABAddressBook;
-	public Type ABPerson;
-	public Type ABRecord;
-	public Type AudioBuffers;
-	public Type AudioComponent;
-	public Type AudioUnit;
-	public Type AURenderEventEnumerator;
-	public Type AVCaptureWhiteBalanceGains;
-	public Type CATransform3D;
-	public Type CFRunLoop;
-	public Type CGAffineTransform;
-	public Type CGColor;
-	public Type CGColorSpace;
-	public Type CGContext;
-	public Type CGPDFDocument;
-	public Type CGPDFPage;
-	public Type CGGradient;
-	public Type CGImage;
-	public Type CGImageSource;
-	public Type CGLayer;
-	public Type CGLContext;
-	public Type CGLPixelFormat;
-	public Type CGPath;
-	public Type CGVector;
-	public Type CLLocationCoordinate2D;
-	public Type CMAudioFormatDescription;
-	public Type CMClock;
-	public Type CMFormatDescription;
-	public Type CMSampleBuffer;
-	public Type CMTime;
-	public Type CMTimebase;
-	public Type CMTimeMapping;
-	public Type CMTimeRange;
-	public Type CMVideoFormatDescription;
-	public Type CMVideoDimensions;
-	public Type CVImageBuffer;
-	public Type CVPixelBuffer;
-	public Type CVPixelBufferPool;
-	public Type DispatchQueue;
-	public Type DispatchData;
-	public Type MidiEndpoint;
-	public Type MKCoordinateSpan;
-	public Type MTAudioProcessingTap;
-	public Type MusicSequence;
-	public Type NSNumber;
-	public Type NSRange;
-	public Type NSString;
-	public Type NSValue;
-	public Type NSZone;
-	public Type SCNMatrix4;
-	public Type SCNVector3;
-	public Type SCNVector4;
-	public Type SecAccessControl;
-	public Type SecIdentity;
-	public Type SecTrust;
-	public Type SecProtocolMetadata;
-	public Type SecProtocolOptions;
-	public Type SecTrust2;
-	public Type SecIdentity2;
-	public Type UIEdgeInsets;
-	public Type UIOffset;
-	public Type NSDirectionalEdgeInsets;
-
-	public Type CoreGraphics_CGPoint;
-	public Type CoreGraphics_CGRect;
-	public Type CoreGraphics_CGSize;
-
-	Assembly api_assembly;
-	Assembly corlib_assembly;
-	Assembly platform_assembly;
-
-	Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
+	public void SetTypesThatMustAlwaysBeGloballyNamed (Type [] types)
 	{
-		string fullname;
-
-		if (string.IsNullOrEmpty (@namespace)) {
-			fullname = @typename;
-		} else {
-			fullname = @namespace + "." + @typename;
+		foreach (var t in types) {
+			// The generator will create special *Appearance types (these are
+			// nested classes). If we've bound a type with the same
+			// *Appearance name, we can end up in a situation where the csc
+			// compiler uses the the type we don't want due to C#'s resolution
+			// rules - this happens if the bound *Appearance type is
+			// referenced from the containing type of the special *Appearance
+			// type. So always reference the bound *Appearance types using
+			// global:: syntax.
+			if (t.Name.EndsWith ("Appearance", StringComparison.Ordinal))
+				typesThatMustAlwaysBeGloballyNamed.Add (t.Name);
 		}
-
-		var rv = assembly.GetType (fullname);
-		if (rv == null && !inexistentOK)
-			throw new BindingException (1052, true, fullname, assembly);
-		return rv;
+	}
+	public Dictionary<Type, string> NSNumberReturnMap {
+		get {
+			if (nsnumberReturnMap is not null)
+				return nsnumberReturnMap;
+			Tuple<Type?, string> [] typeMap = {
+				new (TypeCache.System_Boolean, ".BoolValue"),
+				new (TypeCache.System_Byte, ".ByteValue"),
+				new (TypeCache.System_Double, ".DoubleValue"),
+				new (TypeCache.System_Float, ".FloatValue"),
+				new (TypeCache.System_Int16, ".Int16Value"),
+				new (TypeCache.System_Int32, ".Int32Value"),
+				new (TypeCache.System_Int64, ".Int64Value"),
+				new (TypeCache.System_SByte, ".SByteValue"),
+				new (TypeCache.System_UInt16, ".UInt16Value"),
+				new (TypeCache.System_UInt32, ".UInt32Value"),
+				new (TypeCache.System_UInt64, ".UInt64Value"),
+				new (TypeCache.System_nfloat, ".NFloatValue"),
+				new (TypeCache.System_nint, ".NIntValue"),
+				new (TypeCache.System_nuint, ".NUIntValue"),
+			};
+			nsnumberReturnMap = new ();
+			foreach (var tuple in typeMap) {
+				if (tuple.Item1 is not null)
+					nsnumberReturnMap [tuple.Item1] = tuple.Item2;
+			}
+			return nsnumberReturnMap;
+		}
 	}
 
-	public Type GetUnderlyingNullableType (Type type)
+	Dictionary<Type, string>? nsvalueReturnMap;
+	public Dictionary<Type, string> NSValueReturnMap {
+		get {
+			if (nsvalueReturnMap is not null)
+				return nsvalueReturnMap;
+			Tuple<Type?, string> [] general = {
+				new (TypeCache.CGAffineTransform, ".CGAffineTransformValue" ),
+				new (TypeCache.NSRange, ".RangeValue" ),
+				new (TypeCache.CGVector, ".CGVectorValue" ),
+				new (TypeCache.SCNMatrix4, ".SCNMatrix4Value" ),
+				new (TypeCache.CLLocationCoordinate2D, ".CoordinateValue" ),
+				new (TypeCache.SCNVector3, ".Vector3Value" ),
+				new (TypeCache.SCNVector4, ".Vector4Value" ),
+				new (TypeCache.CoreGraphics_CGPoint, ".CGPointValue"),
+				new (TypeCache.CoreGraphics_CGRect, ".CGRectValue"),
+				new (TypeCache.CoreGraphics_CGSize, ".CGSizeValue"),
+				new (TypeCache.MKCoordinateSpan, ".CoordinateSpanValue"),
+			};
+
+			Tuple<Type?, string> [] uiKitMap = Array.Empty<Tuple<Type?, string>> ();
+			if (Frameworks.HaveUIKit)
+				uiKitMap = new Tuple<Type?, string> [] {
+					new (TypeCache.UIEdgeInsets, ".UIEdgeInsetsValue"),
+					new (TypeCache.UIOffset, ".UIOffsetValue"),
+					new (TypeCache.NSDirectionalEdgeInsets, ".DirectionalEdgeInsetsValue"),
+				};
+
+			Tuple<Type?, string> [] coreMedia = Array.Empty<Tuple<Type?, string>> ();
+			if (Frameworks.HaveCoreMedia)
+				coreMedia = new Tuple<Type?, string> [] {
+					new (TypeCache.CMTimeRange, ".CMTimeRangeValue"),
+					new (TypeCache.CMTime, ".CMTimeValue"),
+					new (TypeCache.CMTimeMapping, ".CMTimeMappingValue"),
+					new (TypeCache.CMVideoDimensions, ".CMVideoDimensionsValue"),
+				};
+
+			Tuple<Type?, string> [] animation = Array.Empty<Tuple<Type?, string>> ();
+			if (Frameworks.HaveCoreAnimation)
+				animation = new Tuple<Type?, string> [] {
+					new (TypeCache.CATransform3D, ".CATransform3DValue"),
+				};
+
+			nsvalueReturnMap = new ();
+			foreach (var typeMap in new [] { general, uiKitMap, coreMedia, animation }) {
+				foreach (var tuple in typeMap) {
+					if (tuple.Item1 is not null)
+						nsvalueReturnMap [tuple.Item1] = tuple.Item2;
+				}
+			}
+			return nsvalueReturnMap;
+		}
+	}
+
+	public Type? GetUnderlyingNullableType (Type type)
 	{
 		if (!type.IsConstructedGenericType)
 			return null;
@@ -152,149 +131,254 @@ public class TypeManager {
 		return type.GenericTypeArguments [0];
 	}
 
-	public void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform)
+	public TypeManager (BindingTouch bindingTouch)
 	{
-		BindingTouch = binding_touch;
+		if (bindingTouch.Frameworks is null)
+			throw ErrorHelper.CreateError (3, bindingTouch.CurrentPlatform);
 
-		api_assembly = api;
-		corlib_assembly = corlib;
-		platform_assembly = platform;
+		BindingTouch = bindingTouch;
+		Frameworks = bindingTouch.Frameworks;
+	}
 
-		/* corlib */
-		System_Attribute = Lookup (corlib_assembly, "System", "Attribute");
-		System_Boolean = Lookup (corlib_assembly, "System", "Boolean");
-		System_Byte = Lookup (corlib_assembly, "System", "Byte");
-		System_Char = Lookup (corlib_assembly, "System", "Char");
-		System_Delegate = Lookup (corlib_assembly, "System", "Delegate");
-		System_Double = Lookup (corlib_assembly, "System", "Double");
-		System_Float = Lookup (corlib_assembly, "System", "Single");
-		System_Int16 = Lookup (corlib_assembly, "System", "Int16");
-		System_Int32 = Lookup (corlib_assembly, "System", "Int32");
-		System_Int64 = Lookup (corlib_assembly, "System", "Int64");
-		System_IntPtr = Lookup (corlib_assembly, "System", "IntPtr");
-		System_Object = Lookup (corlib_assembly, "System", "Object");
-		System_SByte = Lookup (corlib_assembly, "System", "SByte");
-		System_String = Lookup (corlib_assembly, "System", "String");
-		System_String_Array = Lookup (corlib_assembly, "System", "String").MakeArrayType ();
-		System_UInt16 = Lookup (corlib_assembly, "System", "UInt16");
-		System_UInt32 = Lookup (corlib_assembly, "System", "UInt32");
-		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
-		System_UIntPtr = Lookup (corlib_assembly, "System", "UIntPtr");
-		System_Void = Lookup (corlib_assembly, "System", "Void");
+	public string PrimitiveType (Type t, bool formatted = false)
+	{
+		if (t == TypeCache.System_Void)
+			return "void";
+		if (t == TypeCache.System_Int32)
+			return "int";
+		if (t == TypeCache.System_Int16)
+			return "short";
+		if (t == TypeCache.System_Byte)
+			return "byte";
+		if (t == TypeCache.System_Float)
+			return "float";
+		if (t == TypeCache.System_Boolean)
+			return "bool";
+		if (t == TypeCache.System_Char)
+			return "char";
+		if (t == TypeCache.System_nfloat)
+			return "nfloat";
 
-#if NET
-		System_nint = Lookup (corlib_assembly, "System", "IntPtr");
-		System_nuint = Lookup (corlib_assembly, "System", "UIntPtr");
-		var interop_assembly = binding_touch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
-		System_nfloat = Lookup (interop_assembly, "System.Runtime.InteropServices", "NFloat");
-#else
-		System_nint = Lookup (platform_assembly, "System", "nint");
-		System_nuint = Lookup (platform_assembly, "System", "nuint");
-		System_nfloat = Lookup (platform_assembly, "System", "nfloat");
-#endif
+		return formatted ? FormatType (null, t) : t.Name;
+	}
 
-		/* fundamental */
-		NSObject = Lookup (platform_assembly, "Foundation", "NSObject");
-		INativeObject = Lookup (platform_assembly, "ObjCRuntime", "INativeObject");
+	public string FormatType (Type? usedIn, Type type)
+	{
+		return FormatTypeUsedIn (usedIn?.Namespace, type);
+	}
 
-		/* objcruntime */
-		BlockLiteral = Lookup (platform_assembly, "ObjCRuntime", "BlockLiteral");
-		Class = Lookup (platform_assembly, "ObjCRuntime", "Class");
-		Protocol = Lookup (platform_assembly, "ObjCRuntime", "Protocol");
-		Selector = Lookup (platform_assembly, "ObjCRuntime", "Selector");
+	public string FormatType (Type? usedIn, string @namespace, string name)
+	{
+		string tname;
+		if ((usedIn is not null && @namespace == usedIn.Namespace) || BindingTouch.NamespaceCache.StandardNamespaces.Contains (@namespace))
+			tname = name;
+		else
+			tname = "global::" + @namespace + "." + name;
 
-		Constants = Lookup (platform_assembly, "ObjCRuntime", "Constants");
+		return tname;
+	}
 
-		/* Different binding types */
+	public string FormatTypeUsedIn (string? usedInNamespace, Type? type)
+	{
+		if (type is null)
+			throw new BindingException (1065, true);
+		if (type == TypeCache.System_Void)
+			return "void";
+		if (type == TypeCache.System_SByte)
+			return "sbyte";
+		if (type == TypeCache.System_Int32)
+			return "int";
+		if (type == TypeCache.System_Int16)
+			return "short";
+		if (type == TypeCache.System_Int64)
+			return "long";
+		if (type == TypeCache.System_Byte)
+			return "byte";
+		if (type == TypeCache.System_UInt16)
+			return "ushort";
+		if (type == TypeCache.System_UInt32)
+			return "uint";
+		if (type == TypeCache.System_UInt64)
+			return "ulong";
+		if (type == TypeCache.System_Byte)
+			return "byte";
+		if (type == TypeCache.System_Float)
+			return "float";
+		if (type == TypeCache.System_Double)
+			return "double";
+		if (type == TypeCache.System_Boolean)
+			return "bool";
+		if (type == TypeCache.System_String)
+			return "string";
+		if (type == TypeCache.System_nfloat)
+			return "nfloat";
+		if (type == TypeCache.System_nint)
+			return "nint";
+		if (type == TypeCache.System_nuint)
+			return "nuint";
+		if (type == TypeCache.System_Char)
+			return "char";
+		if (type == TypeCache.System_nfloat)
+			return "nfloat";
 
-		DictionaryContainerType = Lookup (platform_assembly, "Foundation", "DictionaryContainer");
-
-		if (Frameworks.HaveAddressBook) {
-			ABAddressBook = Lookup (platform_assembly, "AddressBook", "ABAddressBook");
-			ABPerson = Lookup (platform_assembly, "AddressBook", "ABPerson");
-			ABRecord = Lookup (platform_assembly, "AddressBook", "ABRecord");
-		}
-		// misplaced API, it's really in CoreAudio (now available everywhere)
-		AudioBuffers = Lookup (platform_assembly, "AudioToolbox", "AudioBuffers");
-		if (Frameworks.HaveAudioToolbox) {
-			MusicSequence = Lookup (platform_assembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
-		}
-		if (Frameworks.HaveAudioUnit) {
-			AudioComponent = Lookup (platform_assembly, "AudioUnit", "AudioComponent");
-			AudioUnit = Lookup (platform_assembly, "AudioUnit", "AudioUnit");
-			AURenderEventEnumerator = Lookup (platform_assembly, "AudioUnit", "AURenderEventEnumerator");
-		}
-		AVCaptureWhiteBalanceGains = Lookup (platform_assembly, "AVFoundation", "AVCaptureWhiteBalanceGains");
-		if (Frameworks.HaveCoreAnimation)
-			CATransform3D = Lookup (platform_assembly, "CoreAnimation", "CATransform3D");
-
-		CFRunLoop = Lookup (platform_assembly, "CoreFoundation", "CFRunLoop");
-		CGAffineTransform = Lookup (platform_assembly, "CoreGraphics", "CGAffineTransform");
-		CGColor = Lookup (platform_assembly, "CoreGraphics", "CGColor");
-		CGColorSpace = Lookup (platform_assembly, "CoreGraphics", "CGColorSpace");
-		CGContext = Lookup (platform_assembly, "CoreGraphics", "CGContext");
-		CGPDFDocument = Lookup (platform_assembly, "CoreGraphics", "CGPDFDocument");
-		CGPDFPage = Lookup (platform_assembly, "CoreGraphics", "CGPDFPage");
-		CGGradient = Lookup (platform_assembly, "CoreGraphics", "CGGradient");
-		CGImage = Lookup (platform_assembly, "CoreGraphics", "CGImage");
-		CGImageSource = Lookup (platform_assembly, "ImageIO", "CGImageSource");
-		CGLayer = Lookup (platform_assembly, "CoreGraphics", "CGLayer");
-		if (Frameworks.HaveOpenGL) {
-			CGLContext = Lookup (platform_assembly, "OpenGL", "CGLContext");
-			CGLPixelFormat = Lookup (platform_assembly, "OpenGL", "CGLPixelFormat");
-		}
-		CGPath = Lookup (platform_assembly, "CoreGraphics", "CGPath");
-		CGVector = Lookup (platform_assembly, "CoreGraphics", "CGVector");
-		if (Frameworks.HaveCoreLocation)
-			CLLocationCoordinate2D = Lookup (platform_assembly, "CoreLocation", "CLLocationCoordinate2D");
-		if (Frameworks.HaveCoreMedia) {
-			CMAudioFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMAudioFormatDescription");
-			CMClock = Lookup (platform_assembly, "CoreMedia", "CMClock");
-			CMFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMFormatDescription");
-			CMSampleBuffer = Lookup (platform_assembly, "CoreMedia", "CMSampleBuffer");
-			CMTime = Lookup (platform_assembly, "CoreMedia", "CMTime");
-			CMTimebase = Lookup (platform_assembly, "CoreMedia", "CMTimebase");
-			CMTimeMapping = Lookup (platform_assembly, "CoreMedia", "CMTimeMapping");
-			CMTimeRange = Lookup (platform_assembly, "CoreMedia", "CMTimeRange");
-			CMVideoFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMVideoFormatDescription");
-			CMVideoDimensions = Lookup (platform_assembly, "CoreMedia", "CMVideoDimensions");
-		}
-		if (Frameworks.HaveCoreVideo) {
-			CVImageBuffer = Lookup (platform_assembly, "CoreVideo", "CVImageBuffer");
-			CVPixelBuffer = Lookup (platform_assembly, "CoreVideo", "CVPixelBuffer");
-			CVPixelBufferPool = Lookup (platform_assembly, "CoreVideo", "CVPixelBufferPool");
-		}
-		DispatchQueue = Lookup (platform_assembly, "CoreFoundation", "DispatchQueue");
-		DispatchData = Lookup (platform_assembly, "CoreFoundation", "DispatchData");
-		if (Frameworks.HaveCoreMidi)
-			MidiEndpoint = Lookup (platform_assembly, "CoreMidi", "MidiEndpoint");
-		if (Frameworks.HaveMapKit)
-			MKCoordinateSpan = Lookup (platform_assembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
-		if (Frameworks.HaveMediaToolbox)
-			MTAudioProcessingTap = Lookup (platform_assembly, "MediaToolbox", "MTAudioProcessingTap");
-		NSNumber = Lookup (binding_touch.BindThirdPartyLibrary ? platform_assembly : api_assembly, "Foundation", "NSNumber");
-		NSRange = Lookup (platform_assembly, "Foundation", "NSRange");
-		NSString = Lookup (platform_assembly, "Foundation", "NSString");
-		NSValue = Lookup (binding_touch.BindThirdPartyLibrary ? platform_assembly : api_assembly, "Foundation", "NSValue");
-		NSZone = Lookup (platform_assembly, "Foundation", "NSZone");
-		SCNVector3 = Lookup (platform_assembly, "SceneKit", "SCNVector3");
-		SCNVector4 = Lookup (platform_assembly, "SceneKit", "SCNVector4");
-		SCNMatrix4 = Lookup (platform_assembly, "SceneKit", "SCNMatrix4");
-		SecAccessControl = Lookup (platform_assembly, "Security", "SecAccessControl");
-		SecIdentity = Lookup (platform_assembly, "Security", "SecIdentity");
-		SecTrust = Lookup (platform_assembly, "Security", "SecTrust");
-		SecProtocolOptions = Lookup (platform_assembly, "Security", "SecProtocolOptions");
-		SecProtocolMetadata = Lookup (platform_assembly, "Security", "SecProtocolMetadata");
-		SecTrust2 = Lookup (platform_assembly, "Security", "SecTrust2");
-		SecIdentity2 = Lookup (platform_assembly, "Security", "SecIdentity2");
-		if (Frameworks.HaveUIKit) {
-			UIOffset = Lookup (platform_assembly, "UIKit", "UIOffset");
-			UIEdgeInsets = Lookup (platform_assembly, "UIKit", "UIEdgeInsets");
-			NSDirectionalEdgeInsets = Lookup (platform_assembly, "UIKit", "NSDirectionalEdgeInsets");
+		if (type.IsArray) {
+			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
 		}
 
-		CoreGraphics_CGRect = Lookup (platform_assembly, "CoreGraphics", "CGRect");
-		CoreGraphics_CGPoint = Lookup (platform_assembly, "CoreGraphics", "CGPoint");
-		CoreGraphics_CGSize = Lookup (platform_assembly, "CoreGraphics", "CGSize");
+
+		string tname;
+		// we are adding the usage of ReflectedType just for those cases in which we have nested enums/classes, this soluction does not
+		// work with nested/nested/nested classes. But we are not writing a general solution because:
+		// 1. We have only encountered nested classes.
+		// 2. We are not going to complicate the code more than needed if we have never ever faced a situation with a super complicated nested hierarchy, 
+		//    so we only solve the problem we have, no more.
+		var parentClass = (type.ReflectedType is null) ? String.Empty : type.ReflectedType.Name + ".";
+		if (typesThatMustAlwaysBeGloballyNamed.Contains (type.Name))
+			tname = $"global::{type.Namespace}.{parentClass}{type.Name}";
+		else if ((usedInNamespace is not null && type.Namespace == usedInNamespace) ||
+				 BindingTouch.NamespaceCache.StandardNamespaces.Contains (type.Namespace ?? String.Empty) ||
+				 string.IsNullOrEmpty (type.FullName))
+			tname = type.Name;
+		else
+			tname = $"global::{type.Namespace}.{parentClass}{type.Name}";
+
+		var targs = type.GetGenericArguments ();
+		if (targs.Length > 0) {
+			var isNullable = GetUnderlyingNullableType (type) is not null;
+			if (isNullable)
+				return FormatTypeUsedIn (usedInNamespace, targs [0]) + "?";
+
+			return tname.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (usedInNamespace, l)).ToArray ()) + ">";
+		}
+
+		return tname;
+	}
+
+	public string? RenderType (Type t, ICustomAttributeProvider? provider = null)
+	{
+		if (!t.IsEnum) {
+			switch (Type.GetTypeCode (t)) {
+			case TypeCode.Char:
+				return "char";
+			case TypeCode.String:
+				return "string";
+			case TypeCode.Int32:
+				return "int";
+			case TypeCode.UInt32:
+				return "uint";
+			case TypeCode.Int64:
+				return "long";
+			case TypeCode.UInt64:
+				return "ulong";
+			case TypeCode.Single:
+				return "float";
+			case TypeCode.Double:
+				return "double";
+			case TypeCode.Decimal:
+				return "decimal";
+			case TypeCode.SByte:
+				return "sbyte";
+			case TypeCode.Byte:
+				return "byte";
+			case TypeCode.Boolean:
+				return "bool";
+			}
+		}
+
+		if (t == TypeCache.System_Void)
+			return "void";
+
+		if (t == TypeCache.System_IntPtr) {
+			return AttributeManager.HasNativeAttribute (provider) ? "nint" : "IntPtr";
+		} else if (t == TypeCache.System_UIntPtr) {
+			return AttributeManager.HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+		}
+
+		if (t.Namespace is not null) {
+			string ns = t.Namespace;
+			if (NamespaceCache.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
+				var targs = t.GetGenericArguments ();
+				if (targs.Length == 0)
+					return t.Name;
+				return $"global::{t.Namespace}." + t.Name.RemoveArity () + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+			}
+			if (NamespaceCache.NamespacesThatConflictWithTypes.Contains (ns))
+				return "global::" + t.FullName;
+			if (t.Name == t.Namespace)
+				return "global::" + t.FullName;
+			else
+				return t.FullName;
+		}
+
+		return t.FullName;
+	}
+
+	// TODO: If we ever have an API with nested properties of the same name more than
+	// 2 deep, we'll need to have this return a list of PropertyInfo and comb through them all.
+	public PropertyInfo? GetParentTypeWithSameNamedProperty (BaseTypeAttribute bta, string propertyName)
+	{
+		if (bta is null)
+			return null;
+
+		Type? currentType = bta.BaseType;
+		while (currentType is not null && currentType != TypeCache.NSObject) {
+			PropertyInfo? prop = currentType.GetProperty (propertyName, BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+			if (prop is not null)
+				return prop;
+			currentType = currentType.BaseType;
+		}
+		return null;
+	}
+
+	public bool IsNativeType (Type pt)
+	{
+		return (pt == TypeCache.System_Int32 || pt == TypeCache.System_Int64 || pt == TypeCache.System_Byte || pt == TypeCache.System_Int16);
+	}
+
+	// Is this a wrapped type of NSObject from the MonoTouch/MonoMac binding world?
+	public bool IsWrappedType (Type? t)
+	{
+		if (t is null)
+			return false;
+		if (t.IsInterface)
+			return true;
+		if (TypeCache.NSObject is not null)
+			return t.IsSubclassOf (TypeCache.NSObject) || t == TypeCache.NSObject;
+		return false;
+	}
+
+	public bool IsArrayOfWrappedType (Type t)
+	{
+		return t.IsArray && IsWrappedType (t.GetElementType ());
+	}
+
+	// Is this type something that derives from DictionaryContainerType (or an interface marked up with StrongDictionary)
+	public bool IsDictionaryContainerType (Type t)
+	{
+		return t.IsSubclassOf (TypeCache.DictionaryContainerType) || (t.IsInterface && AttributeManager.HasAttribute<StrongDictionaryAttribute> (t));
+	}
+
+	public Api ParseApi (Assembly api, bool processEnums)
+	{
+		var types = new List<Type> ();
+		var strongDictionaries = new List<Type> ();
+
+		foreach (var t in api.GetTypes ()) {
+			if ((processEnums && t.IsEnum) ||
+				AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
+				AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
+				AttributeManager.HasAttribute<StaticAttribute> (t) ||
+				AttributeManager.HasAttribute<PartialAttribute> (t))
+				// skip those types that are not available
+				types.Add (t);
+			if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
+				strongDictionaries.Add (t);
+		}
+
+		// we should sort the types based on the full name
+		var typesArray = types.ToArray ();
+		Array.Sort (typesArray, (a, b) => string.CompareOrdinal (a.FullName, b.FullName));
+
+		return new (typesArray, strongDictionaries.ToArray (), api);
 	}
 }

@@ -8,6 +8,7 @@
     <AssemblyName>MySpacedApp</AssemblyName>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

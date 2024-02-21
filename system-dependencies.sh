@@ -307,10 +307,10 @@ function install_mono () {
 
 function download_xcode_platforms ()
 {
+	if test -n "$IGNORE_SIMULATORS"; then return; fi
+
 	local XCODE_VERSION
 	local XCODE_DEVELOPER_ROOT="$1"
-	local TVOS_VERSION="$2"
-	local WATCHOS_VERSION="$3"
 
 	XCODE_VERSION=$(grep ^XCODE_VERSION= Make.config | sed 's/.*=//')
 
@@ -320,29 +320,45 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	TVOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/AppleTVSimulator.platform/version.plist)
-	WATCHOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/WatchSimulator.platform/version.plist)
-
-	if test -d "/Library/Developer/CoreSimulator/Volumes/tvOS_$TVOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS $TVOS_VERSION.simruntime"; then
-		if test -d "/Library/Developer/CoreSimulator/Volumes/watchOS_$WATCHOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS $WATCHOS_VERSION.simruntime"; then
-			log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
-			return
-		fi
-	fi
-
-	if ! test -z "$PROVISION_XCODE"; then
-		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-xcode' to execute those tasks."
+	if test -z "$PROVISION_SIMULATORS"; then
+		warn "    Xcode may have additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-simulators' to install those platforms (or alternatively ${COLOR_MAGENTA}export IGNORE_SIMULATORS=1${COLOR_RESET} to skip this check)"
 		return
 	fi
 
+	log "Xcode has additional platforms that must be downloaded ($MUST_INSTALL_RUNTIMES), so installing those."
+
 	log "Executing '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
-	if ! "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
+	if ! $SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms; then
 		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
 		# Don't exit here, just hope for the best instead.
 		set +x
 		echo "##vso[task.logissue type=warning;sourcepath=system-dependencies.sh]Failed to download all simulator platforms, this may result in problems executing tests in the simulator."
 		set -x
+	else
+		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" runtime list -v
+		"$XCODE_DEVELOPER_ROOT/usr/bin/simctl" list -v
 	fi
+	
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
+
+	log "Executing '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -runFirstLaunch
+	log "Executed '$SUDO $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -runFirstLaunch'"
+
+	# This is a workaround for a bug in Xcode 15 where we need to open the platforms panel for it to register the simulators.
+	log "Executing 'open xcpref://Xcode.PreferencePane.Platforms'"
+	log "Killing Xcode"
+	pkill -9 "Xcode" || log "Xcode was not running."
+	log "Opening Xcode preferences panel"
+	open xcpref://Xcode.PreferencePane.Platforms
+	log "waiting 10 secs for Xcode to open the preferences panel"
+	sleep 10
+	log "Killing Xcode"
+	pkill -9 "Xcode" || log "Xcode was not running."
+	log "Executed 'open xcpref://Xcode.PreferencePane.Platforms'"
+
 	log "Executed '$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -downloadAllPlatforms'"
 }
 
@@ -888,7 +904,7 @@ IFS='
 		ok "Found Homebrew ($HOMEBREW_VERSION)"
 	elif ! test -z $PROVISION_HOMEBREW; then
 		log "Installing Homebrew..."
-		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"	
 		HOMEBREW_VERSION=($(brew --version 2>/dev/null))
 		log "Installed Homebrew ($HOMEBREW_VERSION)"
 	else

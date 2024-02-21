@@ -20,6 +20,9 @@
 using System;
 using System.Text;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 	[Flags]
 	public enum PlatformArchitecture : byte {
@@ -91,7 +94,7 @@ namespace ObjCRuntime {
 			var builder = new StringBuilder ();
 			builder.AppendFormat ("[{0} ({1}.{2}", AvailabilityKind, nameof (PlatformName), Platform);
 
-			if (Version != null) {
+			if (Version is not null) {
 				builder.AppendFormat (", {0},{1}", Version.Major, Version.Minor);
 				if (Version.Build >= 0)
 					builder.AppendFormat (",{0}", Version.Build);
@@ -100,7 +103,7 @@ namespace ObjCRuntime {
 			if (Architecture != PlatformArchitecture.None)
 				builder.Append (", ObjCRuntime.PlatformArchitecture.").Append (Architecture);
 
-			if (Message != null)
+			if (Message is not null)
 				builder.AppendFormat (", message: \"{0}\"", Message.Replace ("\"", "\"\""));
 
 			builder.Append (")]");

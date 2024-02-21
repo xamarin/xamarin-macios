@@ -49,7 +49,7 @@ namespace Xamarin.MMP.Tests {
 		string build_output;
 		public string BuildOutput {
 			get {
-				if (build_output == null)
+				if (build_output is null)
 					build_output = string.Join ("\n", BuildOutputLines);
 				return build_output;
 			}
@@ -58,7 +58,7 @@ namespace Xamarin.MMP.Tests {
 		string [] build_output_lines;
 		public IList<string> BuildOutputLines {
 			get {
-				if (build_output_lines == null)
+				if (build_output_lines is null)
 					build_output_lines = BinLog.PrintToLines (BinLogPath).ToArray ();
 				return build_output_lines;
 			}
@@ -82,7 +82,7 @@ namespace Xamarin.MMP.Tests {
 		MessageTool messages;
 		internal MessageTool Messages {
 			get {
-				if (messages == null) {
+				if (messages is null) {
 					messages = new MessageTool ();
 					messages.ParseBinLog (BinLogPath);
 				}
@@ -183,7 +183,7 @@ namespace Xamarin.MMP.Tests {
 				Console.WriteLine ($"{exe} {StringUtils.FormatArguments (args)}");
 				Console.WriteLine (output);
 			}
-			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo () : "";
+			Func<string> getInfo = () => getAdditionalFailInfo is not null ? getAdditionalFailInfo () : "";
 			bool passed = shouldFail ? compileResult != 0 : compileResult == 0;
 			if (!passed)
 				Assert.Fail ($@"{stepName} {(shouldFail ? "passed" : "failed")} unexpectedly. Exit code: {compileResult}.");
@@ -240,7 +240,7 @@ namespace Xamarin.MMP.Tests {
 					   .Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName))
 					   .Replace ("%ITEMGROUP%", config.ItemGroup)
 					   .Replace ("%TARGET_FRAMEWORK_VERSION%", config.TargetFrameworkVersion);
-			if (config.CustomProjectReplacement != null)
+			if (config.CustomProjectReplacement is not null)
 				text = text.Replace (config.CustomProjectReplacement.Item1, config.CustomProjectReplacement.Item2);
 			return text;
 		}
@@ -301,7 +301,7 @@ namespace Xamarin.MMP.Tests {
 			CopyFileWithSubstitutions (Path.Combine (sourceDir, "StructsAndEnums.cs"), Path.Combine (config.TmpDir, "StructsAndEnums.cs"), text => text.Replace ("REPLACE_CODE_REPLACE", config.StructsAndEnumsConfig));
 
 			string linkWithName = null;
-			if (config.LinkWithName != null) {
+			if (config.LinkWithName is not null) {
 				string fileName = Path.GetFileNameWithoutExtension (config.LinkWithName);
 				linkWithName = $"{fileName}.linkwith.cs";
 				File.WriteAllText (Path.Combine (config.TmpDir, linkWithName), $@"using ObjCRuntime;
@@ -311,7 +311,7 @@ namespace Xamarin.MMP.Tests {
 			}
 
 			return CopyFileWithSubstitutions (Path.Combine (sourceDir, config.ProjectName), Path.Combine (config.TmpDir, config.ProjectName), text => {
-				if (linkWithName != null)
+				if (linkWithName is not null)
 					text = text.Replace ("%ITEMGROUP%", $@"<ItemGroup><Compile Include=""{linkWithName}"" /></ItemGroup>%ITEMGROUP%");
 				return ProjectTextReplacement (config, text);
 			});

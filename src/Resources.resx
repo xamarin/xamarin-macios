@@ -143,6 +143,10 @@
 		<value>Frameworks were not loaded for platform {0}.</value>
 	</data>
 
+	<data name="BI0004" xml:space="preserve">
+		<value>Universe was not loaded for platform {0}.</value>
+	</data>
+
 	<data name="BI0026" xml:space="preserve">
 		<value>Could not parse the command line argument '--warnaserror': {0}</value>
 	</data>
@@ -326,9 +330,7 @@
 		</comment>
 	</data>
 		
-	<data name="BI1034" xml:space="preserve">
-		<value>The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol.</value>
-	</data>
+	<!-- BI1034 (no longer used): The [Protocolize] attribute is set on the member {0}.{1}, but the member's type ({2}) is not a protocol. -->
 
 	<data name="BI1035" xml:space="preserve">
 		<value>The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.</value>
@@ -517,10 +519,30 @@
 		<value>Unsupported type 'ref/out {0}' decorated with [BindAs]</value>
 	</data>
 	
-    <data name="BI1081" xml:space="preserve">
-        <value>Unable to find the assembly '{0}'. Add it as a reference using its full path.</value>
-    </data>
-	
+	<data name="BI1081" xml:space="preserve">
+		<value>Unable to find the assembly '{0}'. Add it as a reference using its full path.</value>
+	</data>
+
+	<data name="BI1082" xml:space="preserve">
+		<value>Selector name missing in [CoreImageFilterProperty] attribute on {0} property {1}</value>
+	</data>
+
+	<data name="BI1083" xml:space="preserve">
+		<value>Found {0} {1} attributes on the method {2}'s parameter #{3} ({4}). At most one was expected.</value>
+	</data>
+
+	<data name="BI1084" xml:space="preserve">
+		<value>Found {0} {1} attributes on the type {2}. At most one was expected.</value>
+	</data>
+
+	<data name="BI1085" xml:space="preserve">
+		<value>Found {0} {1} attributes on the assembly {2}. At most one was expected.</value>
+	</data>
+
+	<data name="BI1086" xml:space="preserve">
+		<value>Found {0} {1} attributes on the module {2}. At most one was expected.</value>
+	</data>
+
 	<data name="BI1101" xml:space="preserve">
 		<value>Trying to use a string as a [Target]</value>
 	</data>
@@ -549,9 +571,7 @@
 		<value>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>
 	</data>
 
-	<data name="BI1108" xml:space="preserve">
-		<value>The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.</value>
-	</data>
+	<!-- BI1108 (no longer used): The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute. -->
 
 	<data name="BI1109" xml:space="preserve">
 		<value>The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).</value>

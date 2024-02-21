@@ -9,6 +9,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 using Foundation;
 #if MONOMAC
@@ -26,8 +27,10 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlSessionTest {
-		void AssertTrueOrIgnoreInCI (bool value, ref Exception ex, string message)
+		void AssertTrueOrIgnoreInCI (Task task, string message)
 		{
+			var value = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), task, out var ex);
+
 			if (value) {
 				TestRuntime.IgnoreInCIIfBadNetwork (ex);
 				Assert.IsNull (ex, message + " Exception");
@@ -35,11 +38,10 @@ namespace MonoTouchFixtures.Foundation {
 			}
 
 			TestRuntime.IgnoreInCI ($"This test times out randomly in CI due to bad network: {message}");
+			Assert.IsNull (ex, $"Exception - {message}");
 			Assert.Fail (message);
 		}
 
-		//TODO: TestRuntime.RunAsync is not on mac currently
-#if !MONOMAC
 		// FIXME all test cases are failing on bots with Xcode 8 / watchOS 3
 #if !__WATCHOS__
 		[Test]
@@ -49,90 +51,26 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (5, 0);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
-			var url = new NSUrl ("https://www.microsoft.com");
+			var url = new NSUrl (NetworkResources.Httpbin.PostUrl);
 			var tmpfile = Path.GetTempFileName ();
 			File.WriteAllText (tmpfile, "TMPFILE");
 			var file_url = NSUrl.FromFilename (tmpfile);
 			var file_data = NSData.FromFile (tmpfile);
 			var request = new NSUrlRequest (url);
-
-			var completed = false;
-			var timeout = 30;
-			Exception ex = null;
+			var uploadRequest = new NSMutableUrlRequest (url);
+			uploadRequest.HttpMethod = "POST";
 
 			/* CreateDataTask */
-			completed = false;
-			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				try {
-					await session.CreateDataTaskAsync (request);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed), ref ex, "CreateDataTask a");
-
-			completed = false;
-			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				try {
-					await session.CreateDataTaskAsync (url);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed), ref ex, "CreateDataTask b");
+			AssertTrueOrIgnoreInCI (session.CreateDataTaskAsync (request), "CreateDataTask a");
+			AssertTrueOrIgnoreInCI (session.CreateDataTaskAsync (url), "CreateDataTask b");
 
 			/* CreateDownloadTask */
-			completed = false;
-			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				try {
-					await session.CreateDownloadTaskAsync (request);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed), ref ex, "CreateDownloadTask a");
-
-
-			completed = false;
-			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				try {
-					await session.CreateDownloadTaskAsync (url);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed), ref ex, "CreateDownloadTask b");
+			AssertTrueOrIgnoreInCI (session.CreateDownloadTaskAsync (request), "CreateDownloadTask a");
+			AssertTrueOrIgnoreInCI (session.CreateDownloadTaskAsync (url), "CreateDownloadTask b");
 
 			/* CreateUploadTask */
-			completed = false;
-			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				try {
-					var uploadRequest = new NSMutableUrlRequest (url);
-					uploadRequest.HttpMethod = "POST";
-					await session.CreateUploadTaskAsync (uploadRequest, file_url);
-				} catch /* (Exception ex) */ {
-					//					Console.WriteLine ("Ex: {0}", ex);
-				} finally {
-					completed = true;
-				}
-			}, () => completed), ref ex, "CreateUploadTask a");
-
-			completed = false;
-			AssertTrueOrIgnoreInCI (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
-				try {
-					var uploadRequest = new NSMutableUrlRequest (url);
-					uploadRequest.HttpMethod = "POST";
-					await session.CreateUploadTaskAsync (uploadRequest, file_data);
-				} catch /* (Exception ex) */ {
-					//					Console.WriteLine ("Ex: {0}", ex);
-				} finally {
-					completed = true;
-				}
-			}, () => completed), ref ex, "CreateUploadTask b");
+			AssertTrueOrIgnoreInCI (session.CreateUploadTaskAsync (uploadRequest, file_url), "CreateUploadTask a");
+			AssertTrueOrIgnoreInCI (session.CreateUploadTaskAsync (uploadRequest, file_data), "CreateUploadTask b");
 		}
 
 		[Test]
@@ -140,38 +78,29 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
 
-			bool completed = false;
 			int failed_iteration = -1;
-			Exception ex = null;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-					for (int i = 0; i < 5; i++) {
-						// Use the default configuration so we can make use of the shared cookie storage.
-						var session = NSUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration);
+			var rv = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				for (int i = 0; i < 5; i++) {
+					// Use the default configuration so we can make use of the shared cookie storage.
+					var session = NSUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration);
 
-						var downloadUri = NetworkResources.MicrosoftUri;
-						var downloadResponse = await session.CreateDownloadTaskAsync (downloadUri);
+					var downloadUri = NetworkResources.MicrosoftUri;
+					var downloadResponse = await session.CreateDownloadTaskAsync (downloadUri);
 
-						var tempLocation = downloadResponse.Location;
-						if (!File.Exists (tempLocation.Path)) {
-							Console.WriteLine ("#{1} {0} does not exists", tempLocation, i);
-							failed_iteration = i;
-							break;
-						}
+					var tempLocation = downloadResponse.Location;
+					if (!File.Exists (tempLocation.Path)) {
+						Console.WriteLine ("#{1} {0} does not exists", tempLocation, i);
+						failed_iteration = i;
+						break;
 					}
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
 				}
-			}, () => completed);
+			}, out var ex);
 
 			TestRuntime.IgnoreInCIIfBadNetwork (ex);
 			Assert.IsNull (ex, "Exception");
 			Assert.AreEqual (-1, failed_iteration, "Failed");
 		}
-#endif
 
 		[Test]
 		public void SharedSession ()

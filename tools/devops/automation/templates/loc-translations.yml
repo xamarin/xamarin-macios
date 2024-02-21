@@ -11,6 +11,10 @@ parameters:
   type: string
   default: HEAD
 
+- name: createLocPR
+  type: boolean
+  default: false
+
 steps:
 
 - template: sdk-unified/steps/checkout/v1.yml@yaml-templates
@@ -79,18 +83,18 @@ steps:
   inputs:
     locProj: '$(Build.SourcesDirectory)\\Localize\\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+    ${{ if eq(parameters.createLocPR, true) }}:
       isCreatePrSelected: true
     ${{ else }}:
       isCreatePrSelected: false
     packageSourceAuth: patAuth
     patVariable: '$(OneLocBuild--PAT)'
     isAutoCompletePrSelected: false
-    isUseLfLineEndingsSelected: true
     prSourceBranchPrefix: 'locfiles'
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
     isDeletePrSourceBranchSelected: false
+    xLocCustomPowerShellScript: '$(Build.SourcesDirectory)\\tools\\devops\\automation\\scripts\\localizationBomRemoval.ps1'
 
 - task: PublishBuildArtifacts@1
   continueOnError: true

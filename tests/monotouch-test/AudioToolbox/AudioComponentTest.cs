@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				componentInfo.Version = 1;
 				componentInfo.ResourceUsage = resources;
 				var component = AudioComponent.FindComponent (t);
-				if (component == null)
+				if (component is null)
 					continue;
 				var l = component.ComponentList;
 				Assert.IsNull (l, "List is not null.");
@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				componentInfo.Version = 1;
 				componentInfo.ResourceUsage = resources;
 				var component = AudioComponent.FindComponent (t);
-				if (component == null)
+				if (component is null)
 					continue;
 				//monotouchtests does not have permissions to deal with the hwd.
 				Assert.Throws<ArgumentNullException> (() => component.ComponentList = null);

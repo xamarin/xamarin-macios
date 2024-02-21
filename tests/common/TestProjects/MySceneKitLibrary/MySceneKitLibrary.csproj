@@ -9,6 +9,7 @@
     <RootNamespace>MySceneKitLibrary</RootNamespace>
     <AssemblyName>MySceneKitLibrary</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

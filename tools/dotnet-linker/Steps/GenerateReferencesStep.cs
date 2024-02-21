@@ -7,6 +7,8 @@ using Mono.Cecil;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 
+#nullable enable
+
 namespace Xamarin {
 
 	public class GenerateReferencesStep : ConfigurationAwareStep {
@@ -25,17 +27,17 @@ namespace Xamarin {
 			case SymbolMode.Ignore:
 				break;
 			case SymbolMode.Code:
-				string reference_m = Path.Combine (Configuration.CacheDirectory, "reference.m");
+				var reference_m = Path.Combine (Configuration.CacheDirectory, "reference.m");
 				reference_m = Configuration.Target.GenerateReferencingSource (reference_m, required_symbols);
 				if (!string.IsNullOrEmpty (reference_m)) {
-					var item = new MSBuildItem { Include = reference_m };
+					var item = new MSBuildItem (reference_m);
 					items.Add (item);
 				}
 				Configuration.WriteOutputForMSBuild ("_ReferencesFile", items);
 				break;
 			case SymbolMode.Linker:
 				foreach (var symbol in required_symbols) {
-					var item = new MSBuildItem { Include = "-u" + symbol.Prefix + symbol.Name };
+					var item = new MSBuildItem ("-u" + symbol.Prefix + symbol.Name);
 					items.Add (item);
 				}
 				Configuration.WriteOutputForMSBuild ("_ReferencesLinkerFlags", items);

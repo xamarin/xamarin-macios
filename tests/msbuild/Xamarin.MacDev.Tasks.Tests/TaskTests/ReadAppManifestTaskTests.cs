@@ -18,13 +18,12 @@ namespace Xamarin.MacDev.Tasks {
 
 			var plistPath = Path.Combine (tmpdir, "TemporaryAppManifest.plist");
 			var plist = new PDictionary ();
-			if (createDictionary != null)
+			if (createDictionary is not null)
 				createDictionary (plist);
 			plist.Save (plistPath);
 
 			var task = CreateTask<ReadAppManifest> ();
 			task.AppManifest = new TaskItem (plistPath);
-			task.SdkVersion = Sdks.GetAppleSdk (platform).GetInstalledSdkVersions (false).First ().ToString ();
 			task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, true).ToString ();
 
 			return task;

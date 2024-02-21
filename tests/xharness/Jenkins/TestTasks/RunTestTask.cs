@@ -52,7 +52,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public override IEnumerable<ILog> AggregatedLogs {
 			get {
 				var rv = base.AggregatedLogs;
-				if (runTest.BuildAggregatedLogs != null)
+				if (runTest.BuildAggregatedLogs is not null)
 					rv = rv.Union (runTest.BuildAggregatedLogs);
 				return rv;
 			}
@@ -100,7 +100,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected Task ExecuteProcessAsync (ILog log, string filename, List<string> arguments)
 		{
-			if (log == null)
+			if (log is null)
 				log = Logs.Create ($"execute-{Timestamp}.txt", LogType.ExecutionLog.ToString ());
 
 			return runTest.ExecuteProcessAsync (log, filename, arguments);

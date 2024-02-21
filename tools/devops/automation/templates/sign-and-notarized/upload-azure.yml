@@ -1,8 +1,4 @@
 parameters:
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: sbomFilter
   type: string
   default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
@@ -24,6 +20,12 @@ parameters:
 - name: uploadPrefix
   type: string
   default: '$(MaciosUploadPrefix)'
+
+- name: packages
+  type: object
+  default: [
+    "package",
+  ]
 
 steps:
 # Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
@@ -49,17 +51,22 @@ steps:
   condition: always()
 
 # Download the Html Report that was added by the tests job.
-- task: DownloadPipelineArtifact@2
-  displayName: Download packages
-  inputs:
-    patterns: '!(*binlogs*|*DropMetadata*/**|*HtmlReport*/**|*TestSummary*/**|*agent-logs*/**|mac-test-package/**|crash-reports*/**)' # downlod all except some data we re not interested in 
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+- ${{ each pkg in parameters.packages }}:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download packages
+    inputs:
+      artifactName: ${{ parameters.uploadPrefix }}${{ pkg }}
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}${{ pkg }}
+
+- pwsh: |
+    Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts"
+  displayName: "Show downloaded artifacts"
 
 - pwsh: |
     $packagePrefix = "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/package"
-    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\${{ parameters.uploadPrefix }}package" -File -Force -Name
-    $manifestFile = "$(Build.SourcesDirectory)\artifacts\${{ parameters.uploadPrefix }}package\manifest"
+    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package" -File -Force -Name
+    $manifestFile = "$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package\\manifest"
     foreach ($f in $files) {
       Add-Content -Path "$manifestFile" -Value "$packagePrefix/$f"
     }
@@ -135,7 +142,20 @@ steps:
     Write-Host "$Env:VIRTUAL_PATH"
     Write-Host "Artifacts url $Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
 
-    Invoke-Expression "$execPath artifacts -s `"$maciosPath`" -a $Env:AZURE_STORAGE -c $Env:STORAGE_PASS -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`" -d `"$(Build.SourcesDirectory)\artifacts\${{ parameters.uploadPrefix }}package`" -o `"$(Build.SourcesDirectory)\artifacts\${{ parameters.uploadPrefix }}package`""
+    $execExpression = (
+                    "$execPath artifacts" +
+                    " -s `"$maciosPath`"" +
+                    " -a $Env:AZURE_STORAGE" +
+                    " -c $Env:STORAGE_PASS" +
+                    " -u `"$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package`"" +
+                    " -d `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`"" +
+                    " -o `"$(Build.SourcesDirectory)\\artifacts\${{ parameters.uploadPrefix }}package`""
+                    )
+
+    Write-Host "Expression is:"
+    Write-Host $execExpression
+
+    Invoke-Expression $execExpression
   env:
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
     GITHUB_AUTH_TOKEN: $(GitHub.Token)
@@ -153,8 +173,11 @@ steps:
     artifactName: '${{ parameters.uploadPrefix }}pkg-info'
   continueOnError: true
 
+- pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+  displayName: 'Show Environment'
+
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
     $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     Dir "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
@@ -164,13 +187,11 @@ steps:
     $pkgsVirtualUrl =  "https://dl.internalx.com/$Env:AZURE_CONTAINER/$Env:VIRTUAL_PATH/${{ parameters.uploadPrefix }}package"
     Write-Host "Urls is $pkgsVirtualUrl"
 
-    $pkgsPath = "$(Build.SourcesDirectory)\artifacts\${{ parameters.uploadPrefix }}package"
+    $pkgsPath = "$(Build.SourcesDirectory)\\artifacts\\${{ parameters.uploadPrefix }}package"
 
     $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg
     Write-Host "iOS PKG is $iOSPkg"
 
-    $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
-    Write-Host "mac PKG is $macPkg"
 
     if ($Env:BUILD_REASON -eq "PullRequest") {
       $notarizedShouldExist = $false;
@@ -179,39 +200,60 @@ steps:
     }
 
     # create an array with objects so that we can set each of the statuses:
-    $statusInfo = @(
-      @{
-        Path = "$pkgsPath\\$iOSPkg";
-        Context = "PKG-Xamarin.iOS";
-        Description = $iOSPkg;
-        TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
-        Error = "xamarin.ios pkg not found";
-        ShouldExist = $true;
-      },
-      @{
-        Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
-        Context = "PKG-Xamarin.iOS-notarized"
-        Description = "$iOSPkg (Notarized)" ;
-        TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
-        Error = "Notarized xamarin.ios pkg not found" ;
-        ShouldExist = $notarizedShouldExist;
-      },
-      @{
-        Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
-        Context = "PKG-Xamarin.Mac" ;
-        Description = "$macPkg" ;
-        TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
-        Error = "xamarin.mac pkg not found." ;
-        ShouldExist = $true;
-      },
-      @{
-        Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
-        Context = "PKG-Xamarin.Mac-notarized" ;
-        Description = "$macPkg (Notarized)" ;
-        TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
-        Error = "Notarized xamarin.mac pkg not found." ;
-        ShouldExist = $notarizedShouldExist;
-      },
+    if (![string]::IsNullOrEmpty($Env:INCLUDE_LEGACY_IOS)) {
+      $iOSPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.ios-*.pkg
+      Write-Host "iOS PKG is $iOSPkg"
+
+      $statusInfo += @(
+        @{
+          Path = "$pkgsPath\\$iOSPkg";
+          Context = "PKG-Xamarin.iOS";
+          Description = $iOSPkg;
+          TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
+          Error = "xamarin.ios pkg not found";
+          ShouldExist = $true;
+        },
+        @{
+          Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
+          Context = "PKG-Xamarin.iOS-notarized"
+          Description = "$iOSPkg (Notarized)" ;
+          TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
+          Error = "Notarized xamarin.ios pkg not found" ;
+          ShouldExist = $notarizedShouldExist;
+        }
+      )
+    } else {
+      Write-Host "Legacy iOS build is disabled"
+    }
+
+    if (![string]::IsNullOrEmpty($Env:INCLUDE_LEGACY_MAC)) {
+      $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
+      Write-Host "mac PKG is $macPkg"
+
+      $statusInfo += @(
+        @{
+          Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
+          Context = "PKG-Xamarin.Mac" ;
+          Description = "$macPkg" ;
+          TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
+          Error = "xamarin.mac pkg not found." ;
+          ShouldExist = $true;
+        },
+        @{
+          Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
+          Context = "PKG-Xamarin.Mac-notarized" ;
+          Description = "$macPkg (Notarized)" ;
+          TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
+          Error = "Notarized xamarin.mac pkg not found." ;
+          ShouldExist = $notarizedShouldExist;
+        }
+      )
+    } else {
+      Write-Host "Legacy macOS build is disabled"
+    }
+
+    # bundle.zip and msbuild.zip should always exist
+    $statusInfo += @(
       @{
         Path = "$pkgsPath\\bundle.zip" ;
         Context = "bundle.zip" ;
@@ -237,27 +279,6 @@ steps:
           $statuses.SetStatus("error", $info.Error, $info.Context)
       }
     }
-    if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
-      $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
-      Write-Host $nugets
-      Write-Host "nuget count is $($nugets.Count)"
-
-      if ($nugets.Count -gt 0) {
-        Write-Host "Setting status to success."
-        $statuses.SetStatus("success", "Nugets built.", "$(Build.DefinitionName) (Nugets built)", "$pkgsVirtualUrl/$n")
-        Write-Host "Publishing result is $Env:NUGETS_PUBLISHED"
-        if ($Env:NUGETS_PUBLISHED -ne "Failed") {
-          $statuses.SetStatus("success", "Nugets published.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
-        } else {
-          $statuses.SetStatus("error", "Error when publishing nugets.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
-        }
-      } else {
-        Write-Host "Setting nuget status to failure."
-        $statuses.SetStatus("error", "No nugets were built.", "$(Build.DefinitionName) (Nugets built)", "$pkgsVirtualUrl/$n")
-        $statuses.SetStatus("error", "No nugets were published.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
-      }
-    }
-
 
     $msi = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
 
@@ -272,8 +293,6 @@ steps:
     ACCESSTOKEN: $(System.AccessToken)
     AZURE_CONTAINER: ${{ parameters.azureContainer }}
     VIRTUAL_PATH: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
 
 # Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator

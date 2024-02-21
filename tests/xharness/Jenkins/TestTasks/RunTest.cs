@@ -69,7 +69,7 @@ namespace Xharness.Jenkins.TestTasks {
 				testTask.FailureMessage = BuildTask.FailureMessage;
 				if (BuildTask.KnownFailure is not null)
 					testTask.KnownFailure = BuildTask.KnownFailure;
-				if (generateXmlFailures && BuildTask.BuildLog != null && File.Exists (BuildTask.BuildLog.FullPath)) {
+				if (generateXmlFailures && BuildTask.BuildLog is not null && File.Exists (BuildTask.BuildLog.FullPath)) {
 					try {
 						var logReader = BuildTask.BuildLog.GetReader ();
 						ResultParser.GenerateFailure (
@@ -117,7 +117,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public async Task ExecuteProcessAsync (ILog log, string filename, List<string> arguments)
 		{
-			if (log == null)
+			if (log is null)
 				throw new ArgumentNullException (nameof (log));
 
 			using var proc = new Process ();

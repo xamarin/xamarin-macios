@@ -1,6 +1,1 @@
-# The API is marked as unfinished in the header comments so let's not bind it for now
-!missing-selector! SRApplicationUsage::supplementalCategories not bound
-!missing-selector! SRKeyboardMetrics::longWordTouchUpDown not bound
-!missing-selector! SRKeyboardMetrics::touchUpDown not bound
-!missing-selector! SRSupplementalCategory::identifier not bound
-!missing-type! SRSupplementalCategory not bound
+## xcode 15, present in docs yet xtro not recognizing

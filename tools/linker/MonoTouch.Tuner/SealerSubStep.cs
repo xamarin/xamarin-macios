@@ -80,7 +80,7 @@ namespace Xamarin.Linker.Steps {
 
 				var overrides = Annotations.GetOverrides (method);
 				// we cannot de-virtualize nor seal methods if something overrides them
-				if (overrides != null) {
+				if (overrides is not null) {
 					// sanity (disable IsSealed == true above)
 					//if (type.IsSealed)
 					//	Console.WriteLine ();
@@ -112,7 +112,7 @@ namespace Xamarin.Linker.Steps {
 
 		bool AreMarked (List<OverrideInformation> list)
 		{
-			if (list == null)
+			if (list is null)
 				return false;
 			foreach (var m in list) {
 				if (Annotations.IsMarked (m.Override))
@@ -123,7 +123,7 @@ namespace Xamarin.Linker.Steps {
 
 		bool AreMarked (List<MethodDefinition> list)
 		{
-			if (list == null)
+			if (list is null)
 				return false;
 			foreach (var m in list) {
 				if (Annotations.IsMarked (m))

@@ -8,7 +8,6 @@ using System.Threading;
 using CoreGraphics;
 using Foundation;
 using UIKit;
-using CoreGraphics;
 using ObjCRuntime;
 using NUnit.Framework;
 

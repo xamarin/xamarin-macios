@@ -635,33 +635,36 @@ namespace AddressBook {
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABPersonSetImageData (IntPtr person, IntPtr imageData, out IntPtr error);
+		unsafe extern static byte ABPersonSetImageData (IntPtr person, IntPtr imageData, IntPtr* error);
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageData (IntPtr person);
 
 		public NSData? Image {
 			get { return Runtime.GetNSObject<NSData> (ABPersonCopyImageData (Handle)); }
 			set {
-				if (!ABPersonSetImageData (Handle, value.GetHandle (), out var error))
-					throw CFException.FromCFError (error);
+				IntPtr error;
+				unsafe {
+					if (ABPersonSetImageData (Handle, value.GetHandle (), &error) == 0)
+						throw CFException.FromCFError (error);
+				}
 			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABPersonHasImageData (IntPtr person);
+		extern static byte ABPersonHasImageData (IntPtr person);
 		public bool HasImage {
-			get { return ABPersonHasImageData (Handle); }
+			get { return ABPersonHasImageData (Handle) != 0; }
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool ABPersonRemoveImageData (IntPtr person, out IntPtr error);
+		unsafe extern static byte ABPersonRemoveImageData (IntPtr person, IntPtr* error);
 		public void RemoveImage ()
 		{
-			if (!ABPersonRemoveImageData (Handle, out var error))
-				throw CFException.FromCFError (error);
+			IntPtr error;
+			unsafe {
+				if (ABPersonRemoveImageData (Handle, &error) == 0)
+					throw CFException.FromCFError (error);
+			}
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -908,7 +911,7 @@ namespace AddressBook {
 			SetValue (ABPersonPropertyId.Phone, value.GetHandle ());
 		}
 
-		[Advice ("Use GetInstantMessageServices")]
+		[Advice ("Use GetInstantMessageServices.")]
 		ABMultiValue<NSDictionary>? GetInstantMessages ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.InstantMessage));
@@ -930,7 +933,7 @@ namespace AddressBook {
 			SetValue (ABPersonPropertyId.InstantMessage, services.GetHandle ());
 		}
 
-		[Advice ("Use GetSocialProfiles")]
+		[Advice ("Use GetSocialProfiles.")]
 		ABMultiValue<NSDictionary>? GetSocialProfile ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.SocialProfile));

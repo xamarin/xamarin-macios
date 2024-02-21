@@ -47,6 +47,10 @@ namespace Introspection {
 			case "MTKModelIOVertexDescriptorFromMetal":
 			case "MTKModelIOVertexFormatFromMetal":
 			case "MTKMetalVertexFormatFromModelIO":
+			case "MTLIOCompressionContextAppendData":
+			case "MTLIOCreateCompressionContext":
+			case "MTLIOFlushAndDestroyCompressionContext":
+			case "MTLIOCompressionContextDefaultChunkSize":
 			case "MPSImageBatchIncrementReadCount":
 			case "MPSImageBatchSynchronize":
 			case "MPSImageBatchResourceSize":
@@ -95,7 +99,7 @@ namespace Introspection {
 			var nativeDelegates = from type in Assembly.GetTypes ()
 								  where !Skip (type)
 								  let attr = type.GetCustomAttribute<MonoNativeFunctionWrapperAttribute> ()
-								  where attr != null
+								  where attr is not null
 								  select type;
 
 			Errors = 0;
@@ -127,7 +131,7 @@ namespace Introspection {
 					if (Skip (mi))
 						continue;
 					var attr = mi.GetCustomAttribute<MonoPInvokeCallbackAttribute> ();
-					if (attr == null)
+					if (attr is null)
 						continue;
 
 					if (LogProgress)

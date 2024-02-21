@@ -242,22 +242,7 @@ namespace Cecil.Tests {
 				}
 			}
 
-			var newFailures = failures.Where (v => !IgnoreElementsThatDoNotExistInThatAssembly.Contains (v.Key)).OrderBy (v => v.Key).ToList ();
-			var fixedFailures = IgnoreElementsThatDoNotExistInThatAssembly.Where (v => !failures.ContainsKey (v)).OrderBy (v => v).ToList ();
-
-#if DEBUG
-			if (newFailures.Any ()) {
-				Console.Error.WriteLine ("New failures:");
-				newFailures.ForEach ((v) => Console.Error.WriteLine ($"{v.Key}:{v.Value}"));
-			}
-			if (fixedFailures.Any ()) {
-				Console.Error.WriteLine ("Fixed failures:");
-				fixedFailures.ForEach (Console.Error.WriteLine);
-			}
-#endif
-
-			Assert.That (newFailures, Is.Empty, $"{newFailures.Count} new issues found");
-			Assert.That (fixedFailures, Is.Empty, $"{fixedFailures.Count} known failures not found (remove these from the {nameof (IgnoreElementsThatDoNotExistInThatAssembly)} hashset)");
+			Helper.AssertFailures (failures, IgnoreElementsThatDoNotExistInThatAssembly, nameof (IgnoreElementsThatDoNotExistInThatAssembly), "Supported inconsistencies");
 		}
 
 		static HashSet<string> IgnoreElementsThatDoNotExistInThatAssembly {
@@ -330,7 +315,6 @@ namespace Cecil.Tests {
 					"MediaPlayer.MPMediaEntity.GetObject (Foundation.NSObject)",
 					"MediaPlayer.MPMediaEntity.PropertyPersistentID",
 					"MediaPlayer.MPMediaItem.DateAdded",
-					"MediaPlayer.MPMediaItem.EncodeTo (Foundation.NSCoder)",
 					"MediaPlayer.MPMediaItem.get_PropertyPersistentID ()",
 					"MediaPlayer.MPMediaItem.GetObject (Foundation.NSObject)",
 					"MediaPlayer.MPMediaItem.HasProtectedAsset",
@@ -599,5 +583,56 @@ namespace Cecil.Tests {
 
 		bool IsAvailabilityAttribute (CustomAttribute attribute) => IsSupportedAttribute (attribute) || attribute.AttributeType.Name == "UnsupportedOSPlatformAttribute";
 		bool IsSupportedAttribute (CustomAttribute attribute) => attribute.AttributeType.Name == "SupportedOSPlatformAttribute";
+
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblyDefinitions))]
+		public void ModelMustBeProtocol (AssemblyInfo info)
+		{
+			// Verify that all types with a [Model] attribute must also have a [Protocol] attribute.
+			// Exception: If the type in question has a [Register] attribute with IsWrapper = false, then that's OK.
+			var failures = new HashSet<string> ();
+			var typesWithModelAttribute = 0;
+			var typesWithProtocolAttribute = 0;
+			var assembly = info.Assembly;
+
+			foreach (var type in assembly.EnumerateTypes ()) {
+				if (!type.HasCustomAttributes)
+					continue;
+
+				var attributes = type.CustomAttributes;
+
+				if (!attributes.Any (v => v.AttributeType.Is ("Foundation", "ModelAttribute")))
+					continue;
+				typesWithModelAttribute++;
+
+				if (attributes.Any (v => v.AttributeType.Is ("Foundation", "ProtocolAttribute"))) {
+					typesWithProtocolAttribute++;
+					continue;
+				}
+
+				var registerAttribute = attributes.SingleOrDefault (v => v.AttributeType.Is ("Foundation", "RegisterAttribute"));
+				if (registerAttribute is not null && !GetIsWrapper (registerAttribute))
+					continue;
+
+				failures.Add ($"The type {type.FullName} has a [Model] attribute, but no [Protocol] attribute.");
+			}
+
+			Assert.That (failures, Is.Empty, "Failures");
+			Assert.That (typesWithModelAttribute, Is.GreaterThan (0), "No types with the [Model] attribute?");
+			Assert.That (typesWithProtocolAttribute, Is.GreaterThan (0), "No types with the [Protocol] attribute?");
+
+			static bool GetIsWrapper (CustomAttribute attrib)
+			{
+				// .ctor (string name, bool isWrapper)
+				if (attrib.ConstructorArguments.Count == 2)
+					return (bool) attrib.ConstructorArguments [1].Value;
+
+				// public bool IsWrapper { get; set; }
+				foreach (var field in attrib.Fields) {
+					if (field.Name == "IsWrapper")
+						return (bool) field.Argument.Value;
+				}
+				return false;
+			}
+		}
 	}
 }

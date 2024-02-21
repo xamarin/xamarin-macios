@@ -30,19 +30,22 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSCoder {
 		public void Encode (byte [] buffer, string key)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				throw new ArgumentNullException ("buffer");
 
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException ("key");
 
 			unsafe {
-				fixed (byte* p = &buffer [0]) {
+				fixed (byte* p = buffer) {
 					EncodeBlock ((IntPtr) p, buffer.Length, key);
 				}
 			}
@@ -50,10 +53,10 @@ namespace Foundation {
 
 		public void Encode (byte [] buffer, int offset, int count, string key)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				throw new ArgumentNullException ("buffer");
 
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException ("key");
 
 			if (offset < 0)
@@ -65,7 +68,7 @@ namespace Foundation {
 				throw new ArgumentException ("Reading would overrun buffer");
 
 			unsafe {
-				fixed (byte* p = &buffer [0]) {
+				fixed (byte* p = buffer) {
 					EncodeBlock ((IntPtr) p, buffer.Length, key);
 				}
 			}
@@ -178,34 +181,28 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public NSObject DecodeTopLevelObject (Type type, string key, out NSError error)
 		{
-			if (type == null)
+			if (type is null)
 				throw new ArgumentNullException ("type");
 			return DecodeTopLevelObject (new Class (type), key, out error);
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public NSObject DecodeTopLevelObject (Type [] types, string key, out NSError error)
 		{
 			NSSet<Class> typeSet = null;
-			if (types != null) {
+			if (types is not null) {
 				var classes = new Class [types.Length];
 				for (int i = 0; i < types.Length; i++)
 					classes [i] = new Class (types [i]);

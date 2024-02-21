@@ -2,6 +2,11 @@
 
 | Date | Version | Package | Release Notes |
 |------|---------|---------|---------------|
+|2023/11/14|16.4.0.23|[xamarin.ios-16.4.0.23.pkg](https://download.visualstudio.microsoft.com/download/pr/ceb0ea3f-4db8-46b4-8dc3-8049d27c0107/3960868aa9b1946a6c77668c3f3334ee/xamarin.ios-16.4.0.23.pkg)||
+|2023/10/10|16.4.0.18|[xamarin.ios-16.4.0.18.pkg](https://download.visualstudio.microsoft.com/download/pr/8cbf56b1-ef0d-466f-8cfe-fae4ba8c5080/1174a6a7f61a32d94e267e3bc8c1942f/xamarin.ios-16.4.0.18.pkg)||
+|2023/05/17|16.4.0.6|[xamarin.ios-16.4.0.6.pkg](https://download.visualstudio.microsoft.com/download/pr/b4928191-de3d-42cb-a24f-709e5d71626c/ac849f1f644aee58ed4e7a79cb35a14e/xamarin.ios-16.4.0.6.pkg)||
+|2023/02/21|16.2.0.5|[xamarin.ios-16.2.0.5.pkg](https://download.visualstudio.microsoft.com/download/pr/5f9ea8f6-0afe-46b3-b8e8-5dee4c2dd14c/b357a2b833ba86598aaff58fc013f06c/xamarin.ios-16.2.0.5.pkg)||
+|2023/02/14|16.2.0.2|[xamarin.ios-16.2.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/91371293-2fe3-4392-b5ca-d4f73b07ce0a/d9eab6784e5e3e8557d2b509645e2b7e/xamarin.ios-16.2.0.2.pkg)||
 |2022/12/15|16.1.1.27|[xamarin.ios-16.1.1.27.pkg](https://download.visualstudio.microsoft.com/download/pr/c8bc547f-869e-4d64-a271-f8b3a29ee545/3d8cfa414fa3e4005dd5b9b9d3817aa4/xamarin.ios-16.1.1.27.pkg)||
 |2022/10/11|16.0.0.72|[xamarin.ios-16.0.0.72.pkg](https://download.visualstudio.microsoft.com/download/pr/81c41aaa-a3d7-4875-8416-d04b472379b7/21d9f6c5ad3a6bc2479b2ec4b0685b6c/xamarin.ios-16.0.0.72.pkg)||
 |2022/08/09|15.12.0.2|[xamarin.ios-15.12.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/e81e04d3-768a-4310-9c9b-f32e8ba00eaa/0e27caf0877adb5c6fe6d634d26da40a/xamarin.ios-15.12.0.2.pkg)||
@@ -170,6 +175,11 @@
 
 | Date | Version | Package | Release Notes |
 |------|---------|---------|---------------|
+|2023/11/14|9.3.0.23|[xamarin.mac-9.3.0.23.pkg](https://download.visualstudio.microsoft.com/download/pr/ceb0ea3f-4db8-46b4-8dc3-8049d27c0107/7b04843d469aae253519989fcb8e750f/xamarin.mac-9.3.0.23.pkg)||
+|2023/10/10|9.3.0.18|[xamarin.mac-9.3.0.18.pkg](https://download.visualstudio.microsoft.com/download/pr/8cbf56b1-ef0d-466f-8cfe-fae4ba8c5080/afd720a8aaa6ec1d4d27ddf0c653a9c1/xamarin.mac-9.3.0.18.pkg)||
+|2023/05/17|9.3.0.6|[xamarin.mac-9.3.0.6.pkg](https://download.visualstudio.microsoft.com/download/pr/b4928191-de3d-42cb-a24f-709e5d71626c/586143733de41c62d8b6179d7eeaf3e5/xamarin.mac-9.3.0.6.pkg)||
+|2023/02/21|9.1.0.5|[xamarin.mac-9.1.0.5.pkg](https://download.visualstudio.microsoft.com/download/pr/5f9ea8f6-0afe-46b3-b8e8-5dee4c2dd14c/c5c4f99a992a8cc51b2bad3d31ef6b96/xamarin.mac-9.1.0.5.pkg)||
+|2023/02/14|9.1.0.2|[xamarin.mac-9.1.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/91371293-2fe3-4392-b5ca-d4f73b07ce0a/dbf22c9b27f23d1a8b408ae7d93d4b76/xamarin.mac-9.1.0.2.pkg)||
 |2022/12/15|9.0.0.27|[xamarin.mac-9.0.0.27.pkg](https://download.visualstudio.microsoft.com/download/pr/c8bc547f-869e-4d64-a271-f8b3a29ee545/4fbfc55453fe36fe5bf4128d6d495911/xamarin.mac-9.0.0.27.pkg)||
 |2022/08/09|8.12.0.2|[xamarin.mac-8.12.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/e81e04d3-768a-4310-9c9b-f32e8ba00eaa/bcff5cca8701bc5871b8892fd32fb3e6/xamarin.mac-8.12.0.2.pkg)||
 |2022/06/14|8.10.0.5|[xamarin.mac-8.10.0.5.pkg](https://download.visualstudio.microsoft.com/download/pr/09e9572f-1c2a-4d79-a1e8-5469de9410e8/f4ee484851ac275ccd51fcee70451fb0/xamarin.mac-8.10.0.5.pkg)||

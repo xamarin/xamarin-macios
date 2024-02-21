@@ -23,8 +23,6 @@ using Foundation;
 namespace CoreGraphics {
 
 #if !NET
-	[TV (9, 2)]
-	[iOS (9, 3)]
 	[Obsoleted (PlatformName.TvOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTriple'.")]
 	[Obsoleted (PlatformName.iOS, 10, 0, message: "Replaced by 'CGColorConversionInfoTriple'.")]
 	[StructLayout (LayoutKind.Sequential)]
@@ -37,8 +35,6 @@ namespace CoreGraphics {
 
 	// CGColorConverter.h
 #if !NET
-	[TV (9, 2)]
-	[iOS (9, 3)]
 	[Obsoleted (PlatformName.TvOS, 10, 0, message: "Replaced by 'CGColorConversionInfo'.")]
 	[Obsoleted (PlatformName.iOS, 10, 0, message: "Replaced by 'CGColorConversionInfo'.")]
 	public class CGColorConverter : NativeObject {

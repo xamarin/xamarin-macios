@@ -17,13 +17,10 @@ namespace SpriteKit {
 	public partial class SKShapeNode : SKNode {
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromPoints (CGPoint [] points)
 		{
@@ -34,13 +31,10 @@ namespace SpriteKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromPoints (CGPoint [] points, int offset, int length)
 		{
@@ -53,13 +47,10 @@ namespace SpriteKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromSplinePoints (CGPoint [] points)
 		{
@@ -70,13 +61,10 @@ namespace SpriteKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		public static SKShapeNode FromSplinePoints (CGPoint [] points, int offset, int length)
 		{

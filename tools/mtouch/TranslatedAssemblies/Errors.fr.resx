@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>Impossible de décompresser le fichier '{0}'. Veuillez consulter le journal de compilation pour plus d'informations sur la commande native 'unzip'.</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Impossible d'extraire le framework natif « {0} » de l'assembly « {1} », car il ne contient pas la ressource « {2} ».</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Impossible d'extraire la bibliothèque native « {0} » de l'assembly « {1} », car elle ne contient pas la ressource « {2} ».</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>L'assembly 'Xamarin.Mac.dll' nécessaire est manquant dans les références
 		</value>
@@ -954,6 +960,9 @@
 		<value>HttpMessageHandler '{0}' non valide pour watchOS. La seule valeur valide est NSUrlSessionHandler.
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Il n’est pas possible de conserver le bureau d’enregistrement dynamique (en passant ’--optimize=-remove-dynamic-registrar’), car le bureau d’enregistrement dynamique n’est pas pris en charge lors de l’utilisation de NativeAOT. La prise en charge de l’inscription dynamique sera toujours supprimée.</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>Impossible de traiter la description XML : {0}
 		</value>
@@ -1034,13 +1043,24 @@
 		<value>Impossible d'optimiser l'appel à BlockLiteral.{2} dans {0}, car le type de la valeur passée en tant que premier argument (trampoline) est {1}, ce qui rend impossible le calcul de la signature de bloc.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>Impossible d'optimiser l'appel à BlockLiteral.SetupBlock dans {0} à l'offset {1}, car aucun attribut [UserDelegateType] n'a été localisé sur {2}.
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>Impossible d'optimiser l'appel à BlockLiteral.SetupBlock dans {0} à l'offset {1} : {2}.
 		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral.{2} dans {0} au décalage {1}, car plusieurs méthodes nommées « {3} » ont été trouvées dans le type « {4} ».</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car la méthode « {3} » doit avoir au moins un paramètre.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car le premier paramètre de la méthode « {3} » n’est pas « System.IntPtr », « void* » ou « ObjCRuntime.BlockLiteral* » (il s’agit de « {4} »)</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car la méthode « {3} » n’a pas d’attribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Impossible d’optimiser l’appel à BlockLiteral : {2} dans {0} au décalage {1}, car la méthode « {3} » n’a pas d’attribut [UnmanagedCallersOnly].</value>
 	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>La suppression du registrar dynamique est une action risquée, car {0} référence '{1}.{2} ({3})'.
@@ -1087,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>Impossible de {0} l'assembly '{1}'
 		</value>
@@ -1507,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>La classe '{0}' ne sera pas enregistrée, car le framework WatchKit a été supprimé du kit iOS SDK.
+		<value>La classe '{0}' ne sera pas enregistrée car le framework {1} a été supprimé du {2} SDK.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1524,6 +1553,15 @@
 	</data>
   <data name="MT4186" xml:space="preserve">
 		<value>Le bureau d’enregistrement a trouvé un type «{0}» non optimal : le type n’a pas de constructeur qui accepte deux arguments (ObjCRuntime.NativeHandle, bool). Toutefois, un constructeur qui accepte deux arguments (System.IntPtr, bool) a été trouvé (et sera utilisé à la place). Il est vivement recommandé de remplacer la signature du constructeur (System.IntPtr, bool) par (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Attribut [UserDelegateType] introuvable sur le type '{0}'.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Impossible de calculer la signature de bloc pour le type '{0}' : {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>La classe « {0} » ne sera pas enregistrée car elle a été supprimée du SDK {1}.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Compilateur '{0}' manquant. Installez le composant 'Command-Line Tools' (Outils en ligne de commande) de Xcode
@@ -1762,5 +1800,41 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>L’assembly {0} a été modifié depuis la création de l’application, invalidant ainsi le code du bureau d’enregistrement statique généré. Le MVID de l’assembly chargé est {1}, tandis que le MVID pour l’assembly auquel correspond le code de bureau d’enregistrement statique généré est {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Impossible d'appeler release sur une instance du type {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Impossible de trouver la méthode « {0} » dans le type « {1} »</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>La méthode de trampoline {0} ne correspond pas au pointeur de fonction 0x{1} pour l’argument trampolineMethod (ils ne font pas référence à la même méthode).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>La méthode du trampoline {0} doit avoir au moins un paramètre.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>Le premier paramètre de la méthode du trampoline {0} doit être « System.IntPtr » », void* » ou « ObjCRuntime.BlockLiteral* ».</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>La méthode BlockLiteral.GetBlockSignature n’est pas prise en charge lorsque le registrar dynamique a été lié.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>La méthode du trampoline {0} doit avoir un attribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>La signature doit être une chaîne non vide.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Impossible de résoudre le module dans le {0} de l’assembly.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Impossible de résoudre les jetons de métadonnées pour les méthodes lors de l’utilisation du bureau d’enregistrement statique managé (jeton : 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>Impossible de trouver le type 'ObjCRuntime.__Registrar__' dans l’assembly '{0}'.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Échec du marshalage de l'objet Objective-C 0x{0} (type : {1}). Impossible de trouver une instance gérée existante pour cet objet, et il n'a pas non plus été possible de créer une nouvelle instance gérée de type générique {2}.</value>
 	</data>
 </root>

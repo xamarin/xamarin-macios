@@ -12,9 +12,12 @@ parameters:
 
 - name: testsLabels
   type: string
-  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+  default: '--label=run-ios-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
 - name: label
+  type: string
+
+- name: labelWithPlatform
   type: string
 
 - name: disableProvisionatorCache
@@ -65,6 +68,14 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+- name: testPlatform
+  type: string
+  default: ''
+
+- name: conditionVariable
+  type: string
+  default: ''
+
 steps:
 
 - template: ../common/checkout.yml
@@ -107,8 +118,14 @@ steps:
     set -x
     set -e
     cd xamarin-macios
-    ./configure --enable-xamarin
-  displayName: 'Enable Xamarin'
+    TEST_PLATFORM=$(echo "${{ parameters.testPlatform }}" | tr '[:upper:]' '[:lower:]')
+    ARGS=(--enable-xamarin)
+    if test -n "$TEST_PLATFORM"; then
+      ARGS+=("--disable-all-platforms")
+      ARGS+=("--enable-$TEST_PLATFORM")
+    fi
+    ./configure "${ARGS[@]}"
+  displayName: 'Enable Xamarin and configure platforms'
   timeoutInMinutes: 1
 
 # Add the required provisioning profiles to be able to execute the tests.
@@ -164,7 +181,7 @@ steps:
 - bash: rm -rf "$TOOLS_DIR/provisionator"
   env:
     TOOLS_DIR: $(Agent.ToolsDirectory)
-  displayName: 'Nuke Provisionator Tool Cache'
+  displayName: 'Remove Provisionator Tool Cache'
   condition: ${{ parameters.clearProvisionatorCache }}
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
@@ -204,10 +221,20 @@ steps:
     set -e
     $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
+  timeoutInMinutes: 250
+
+# clean sims incase we were left in a strange state
+- bash: |
+    sudo xcrun simctl shutdown all
+    sudo xcrun simctl erase all
+  displayName: 'Clean simulators'
+  timeoutInMinutes: 20
 
 - template: ./run-tests.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     label: ${{ parameters.label }}
+    labelWithPlatform: ${{ parameters.labelWithPlatform }}
     statusContext: ${{ parameters.statusContext }}
     testsLabels: ${{ parameters.testsLabels }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

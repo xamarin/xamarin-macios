@@ -226,8 +226,9 @@ namespace Xharness.Jenkins {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
+				Filter = "Category!=Windows",
 				Timeout = TimeSpan.FromMinutes (360),
-				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
+				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest) || !TestSelection.IsEnabled (PlatformLabel.Dotnet),
 			};
 			Tasks.Add (runDotNetTests);
 
@@ -470,37 +471,37 @@ namespace Xharness.Jenkins {
 
 					foreach (var task in Tasks) {
 						var aggregated = task as AggregatedRunSimulatorTask;
-						if (aggregated != null) {
+						if (aggregated is not null) {
 							allSimulatorTasks.AddRange (aggregated.Tasks);
 							continue;
 						}
 
 						var execute = task as MacExecuteTask;
-						if (execute != null) {
+						if (execute is not null) {
 							allExecuteTasks.Add (execute);
 							continue;
 						}
 
 						var nunit = task as NUnitExecuteTask;
-						if (nunit != null) {
+						if (nunit is not null) {
 							allNUnitTasks.Add (nunit);
 							continue;
 						}
 
 						var make = task as MakeTask;
-						if (make != null) {
+						if (make is not null) {
 							allMakeTasks.Add (make);
 							continue;
 						}
 
 						var run_device = task as RunDeviceTask;
-						if (run_device != null) {
+						if (run_device is not null) {
 							allDeviceTasks.Add (run_device);
 							continue;
 						}
 
 						var simulator = task as RunSimulatorTask;
-						if (simulator != null) {
+						if (simulator is not null) {
 							allSimulatorTasks.Add (simulator);
 							continue;
 						}
@@ -530,7 +531,7 @@ namespace Xharness.Jenkins {
 					}
 
 					// write the vsdrops report only if needed
-					if (vsdropsHtmlReportWriter != null) {
+					if (vsdropsHtmlReportWriter is not null) {
 						using (var stream = new FileStream (tmpVsdropsReport, FileMode.Create, FileAccess.ReadWrite))
 						using (var writer = new StreamWriter (stream)) {
 							vsdropsHtmlReportWriter.Write (allTasks, writer);
@@ -548,7 +549,7 @@ namespace Xharness.Jenkins {
 						File.Delete (report);
 					File.Move (tmpreport, report);
 
-					if (vsdropsHtmlReportWriter != null) {
+					if (vsdropsHtmlReportWriter is not null) {
 						if (File.Exists (vsdropsReport))
 							File.Delete (vsdropsReport);
 						File.Move (tmpVsdropsReport, vsdropsReport);

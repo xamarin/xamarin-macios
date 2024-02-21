@@ -266,12 +266,10 @@ namespace MediaPlayer {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.2")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 2)]
 #endif
 		public bool HasProtectedAsset {
 			get {
@@ -280,12 +278,10 @@ namespace MediaPlayer {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public bool IsExplicitItem {
 			get {
@@ -294,12 +290,10 @@ namespace MediaPlayer {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
 #endif
 		public NSDate? DateAdded {
 			get {
@@ -308,12 +302,10 @@ namespace MediaPlayer {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 3)]
 #endif
 		public NSString? PlaybackStoreID {
 			get {

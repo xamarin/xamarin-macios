@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} a un format incorrect ou inconnu et ne peut pas être traité.
-        </value>
+        <value>Le xcframework {0} a un format incorrect ou inconnu et ne peut pas être traité.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>Aucune infrastructure correspondante n’a été trouvée dans' {0} '.
-        </value>
+        <value>Framework correspondant introuvable dans '{0}'. SupportedPlatform : '{0}', SupportedPlatformVariant : '{1}', SupportedArchitectures : '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>Les options « {0} » et « {1} » sont en conflit. « {1} » sera ignoré.
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>Impossible d’analyser le ou les arguments de l’éditeur de liens personnalisés « -{0} » : {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>L'élément NativeResource « {0} » n'existe pas.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>Impossible de résoudre les adresses IP des hôtes pour les paramètres du débogueur Wi-Fi.
@@ -1170,11 +1177,64 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>Extension inattendue '{0}' pour la référence native '{1}' dans le manifeste '{2}'.</value>
+        <value>Extension inattendue «{0}» pour la référence native «{1}» dans le package de ressources de liaison «{2}».</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>Fichier nommé «{1}» attendu dans le fichier zip {0}.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>Le fichier zip «{0}» n’existe pas.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>Le fichier « {0} » n'existe pas.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>Impossible de traiter l’élément «{0}» en tant que référence native : type inconnu.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>Impossible de charger Info.plist '{0}' à partir du xcframework '{1}'.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>Le répertoire « {0} » n'existe pas.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>Impossible de trouver le fichier ou le répertoire '{0}' dans le fichier zip '{1}'.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>Impossible de traiter le fichier zip '{0}' sur cette plateforme : le fichier '{1}' est un lien symbolique.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>La tâche « {0} » n’a pas reçu de valeur pour le paramètre « {1} », ce qui est requis lors de la génération sur cette plateforme.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>L’assembly illink n’existe pas : '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>L’assemblée {0} ne fournit pas de métadonnées 'ObjectFile'.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>L’assemblée {0} a été passé plusieurs fois en tant qu’assemblée d'entrée (référencé à partir de {1}).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>Échec de la compilation AOT {0}, le compilateur AOT s'est arrêté avec le code {1}.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
         </comment>
     </data>
 </root>

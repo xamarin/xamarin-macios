@@ -82,6 +82,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase (false, false, false)]
 		public void ShouldStripUserFramework (bool? strip, bool debugStrips, bool releaseStrips)
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 				TI.UnifiedTestConfig test = CreateStripTestConfig (strip, tmpDir, $"--native-reference={frameworkPath}");
@@ -117,7 +118,7 @@ namespace Xamarin.MMP.Tests {
 				} else {
 					Assert.AreEqual (2, architectures.Count, "libTest.dylib should contain 2+ architectures");
 					Assert.That (architectures, Is.EquivalentTo (new Abi [] { Abi.i386, Abi.x86_64 }), "libTest.dylib should be x86_64 + i386");
-					testResult.Messages.AssertWarningCount (1); // dylib ([...]/xamarin-macios/tests/mmptest/bin/Debug/tmp-test-dir/Xamarin.MMP.Tests.MMPTests.RunMMPTest47/bin/Release/UnifiedExample.app/Contents/MonoBundle/libTest.dylib) was built for newer macOS version (10.11) than being linked (10.9)
+					testResult.Messages.AssertWarningCount (0);
 				}
 			});
 		}
@@ -138,6 +139,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase (true)]
 		public void ThirdPartyLibrary_WithIncorrectBitness_ShouldWarnOnRelease (bool sixtyFourBits)
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateFatFramework (tmpDir);
 
@@ -160,6 +162,7 @@ namespace Xamarin.MMP.Tests {
 		[TestCase]
 		public void ThirdPartyLibrary_WithCorrectBitness_ShouldNotStripOrWarn ()
 		{
+			Configuration.AssertDotNetAvailable (); // not really a .NET test, but the logic that builds our native test frameworks is (unintentionally, but untrivially unravelable) .NET-only
 			MMPTests.RunMMPTest (tmpDir => {
 				var frameworkPath = FrameworkBuilder.CreateThinFramework (tmpDir);
 

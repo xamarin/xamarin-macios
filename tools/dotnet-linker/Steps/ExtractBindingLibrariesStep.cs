@@ -4,6 +4,8 @@ using System.IO;
 
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 
 	public class ExtractBindingLibrariesStep : ConfigurationAwareStep {
@@ -22,13 +24,13 @@ namespace Xamarin.Linker {
 			var linkWith = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
 				foreach (var arg in asm.LinkWith) {
-					var item = new MSBuildItem {
-						Include = arg,
-						Metadata = new Dictionary<string, string> {
+					var item = new MSBuildItem (
+						arg,
+						new Dictionary<string, string> {
 							{ "ForceLoad", asm.ForceLoad ? "true" : "false" },
 							{ "Assembly", asm.Identity },
-						},
-					};
+						}
+					);
 					linkWith.Add (item);
 				}
 			}
@@ -38,22 +40,22 @@ namespace Xamarin.Linker {
 			var frameworks = new List<MSBuildItem> ();
 			foreach (var asm in Configuration.Target.Assemblies) {
 				foreach (var fw in asm.Frameworks) {
-					var item = new MSBuildItem {
-						Include = fw,
-						Metadata = new Dictionary<string, string> {
+					var item = new MSBuildItem (
+						fw,
+						new Dictionary<string, string> {
 							{ "Assembly", asm.Identity },
-						},
-					};
+						}
+					);
 					frameworks.Add (item);
 				}
 				foreach (var fw in asm.WeakFrameworks) {
-					var item = new MSBuildItem {
-						Include = fw,
-						Metadata = new Dictionary<string, string> {
+					var item = new MSBuildItem (
+						fw,
+						new Dictionary<string, string> {
 							{ "IsWeak", "true " },
 							{ "Assembly", asm.Identity },
-						},
-					};
+						}
+					);
 					frameworks.Add (item);
 				}
 			}
@@ -79,9 +81,7 @@ namespace Xamarin.Linker {
 
 					var executable = Path.Combine (fwkDirectory, Path.GetFileNameWithoutExtension (fwkDirectory));
 
-					var item = new MSBuildItem {
-						Include = executable,
-					};
+					var item = new MSBuildItem (executable);
 					frameworksToPublish.Add (item);
 				}
 			}
@@ -93,12 +93,12 @@ namespace Xamarin.Linker {
 					if (!arg.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
 						continue;
 
-					var item = new MSBuildItem {
-						Include = arg,
-						Metadata = new Dictionary<string, string> {
+					var item = new MSBuildItem (
+						arg,
+						new Dictionary<string, string> {
 							{ "RelativePath", Path.Combine (Configuration.RelativeAppBundlePath, Configuration.Application.RelativeDylibPublishPath, Path.GetFileName (arg)) },
-						},
-					};
+						}
+					);
 					dynamicLibraryToPublish.Add (item);
 				}
 			}

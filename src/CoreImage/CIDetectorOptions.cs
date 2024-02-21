@@ -20,13 +20,10 @@ namespace CoreImage {
 		public float? MinFeatureSize { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public int? MaxFeatureCount { get; set; }
 

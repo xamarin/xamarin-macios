@@ -15,28 +15,23 @@ namespace LinkAllTests {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class LinkAllTest {
-
+#if !NET // this test is in a file shared with all platforms for .NET
 		static void Check (string calendarName, bool present)
 		{
 			var type = Type.GetType ("System.Globalization." + calendarName);
-			bool success = present == (type != null);
-			Assert.AreEqual (present, type != null, calendarName);
+			bool success = present == (type is not null);
+			Assert.AreEqual (present, type is not null, calendarName);
 		}
 
 		[Test]
 		public void Calendars ()
 		{
 			Check ("GregorianCalendar", true);
-#if NET && __MACOS__ // I'm not sure if this is the expected behavior for macOS, or if it's a bug somewhere.
-			Check ("UmAlQuraCalendar", true);
-			Check ("HijriCalendar", true);
-			Check ("ThaiBuddhistCalendar", true);
-#else
 			Check ("UmAlQuraCalendar", false);
 			Check ("HijriCalendar", false);
 			Check ("ThaiBuddhistCalendar", false);
-#endif
 		}
+#endif // !NET
 
 		[Test]
 		public void EnsureUIThreadException ()

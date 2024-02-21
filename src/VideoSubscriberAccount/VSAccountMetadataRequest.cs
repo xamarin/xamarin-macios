@@ -10,13 +10,10 @@ namespace VideoSubscriberAccount {
 	public partial class VSAccountMetadataRequest {
 
 #if NET
-		[SupportedOSPlatform ("tvos10.1")]
-		[SupportedOSPlatform ("ios10.2")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[TV (10, 1)]
-		[iOS (10, 2)]
 #endif
 		public VSAccountProviderAuthenticationScheme [] SupportedAuthenticationSchemes {
 			get {

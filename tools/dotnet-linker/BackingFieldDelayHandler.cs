@@ -6,6 +6,8 @@ using Mono.Linker;
 using Mono.Linker.Steps;
 using Xamarin.Tuner;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 
 	// Problems:

@@ -10,6 +10,9 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSNumber : NSValue
 #if COREBUILD
@@ -169,7 +172,7 @@ namespace Foundation {
 		{
 			// value must not be `nil` to call the `compare:` selector
 			// that match well with the not same type of .NET check
-			if (other == null)
+			if (other is null)
 				throw new ArgumentException ("other");
 			return (int) Compare (other);
 		}
@@ -183,7 +186,7 @@ namespace Foundation {
 		// IEquatable<NSNumber>
 		public bool Equals (NSNumber other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return IsEqualToNumber (other);
 		}

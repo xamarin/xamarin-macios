@@ -49,6 +49,7 @@
 // permanent connection variables
 static long monodevelop_port = -1;
 static int sdb_fd = -1;
+static long sdb_timeout_time = -1;
 static int heapshot_fd = -1; // this is the socket to write 'heapshot' to to requests heapshots from the profiler
 static long heapshot_port = -1;
 static char *profiler_description = NULL;
@@ -593,6 +594,15 @@ void monotouch_configure_debugging ()
 		unsetenv ("__XAMARIN_DEBUG_HOSTS__");
 	}
 
+	evar = getenv ("__XAMARIN_DEBUG_CONNECT_TIMEOUT__");
+	if (evar && *evar) {
+		if (sdb_timeout_time == -1) {
+			sdb_timeout_time = strtol (evar, NULL, 10);
+			LOG (PRODUCT ": Found connect timeout %i in environment variables\n", sdb_timeout_time);
+		}
+		unsetenv ("__XAMARIN_DEBUG_CONNECT_TIMEOUT__");
+	}
+
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	// Try to read shared memory as well
 	key_t shmkey;
@@ -681,6 +691,8 @@ void monotouch_configure_debugging ()
 #endif
 				} else if (!strncmp ("Port: ", line, 6) && monodevelop_port == -1) {
 					monodevelop_port = strtol (line + 6, NULL, 10);
+				} else  if (!strncmp ("Connect Timeout: ", line, 17) && sdb_timeout_time == -1) {
+					sdb_timeout_time = strtol (line + 17, NULL, 10);
 				}
 			}
 		}
@@ -703,7 +715,7 @@ void monotouch_configure_debugging ()
 		if (monodevelop_port <= 0) {
 			LOG (PRODUCT ": Invalid IDE Port: %i\n", monodevelop_port);
 		} else {
-			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, debugging_mode == DebuggingModeHttp ? "HTTP" : (debugging_mode == DebuggingModeUsb ? "USB" : "WiFi"));
+			LOG (PRODUCT ": IDE Port: %i Transport: %s Connect Timeout: %i\n", monodevelop_port, debugging_mode == DebuggingModeHttp ? "HTTP" : (debugging_mode == DebuggingModeUsb ? "USB" : "WiFi"), sdb_timeout_time);
 			if (debugging_mode == DebuggingModeUsb) {
 				monotouch_connect_usb ();
 			} else if (debugging_mode == DebuggingModeWifi) {
@@ -1251,8 +1263,15 @@ monotouch_load_debugger ()
 		transport.recv = sdb_recv;
 
 		mono_debugger_agent_register_transport (&transport);
-	
-		mono_debugger_agent_parse_options ("transport=custom_transport,address=dummy,embedding=1");
+
+		char *options;
+		if (sdb_timeout_time != -1) {
+			options = xamarin_strdup_printf ("transport=custom_transport,address=dummy,embedding=1,timeout=%d", sdb_timeout_time);
+		} else {
+			options = xamarin_strdup_printf ("transport=custom_transport,address=dummy,embedding=1");
+		}
+		mono_debugger_agent_parse_options (options);
+		// Can't free the 'options' variable, because mono_debugger_agent_parse_option stores the pointer instead of creating a copy :/
 
 		LOG (PRODUCT ": Debugger loaded with custom transport (fd: %i)\n", sdb_fd);
 #else

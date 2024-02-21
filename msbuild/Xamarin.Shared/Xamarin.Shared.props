@@ -193,10 +193,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- The default architecture for Xamarin.Mac is x86_64 -->
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' == 'macOS'">x86_64</TargetArchitectures>
 		<!-- There should always be an MtouchArch value in newer projects, but for older projects default to old values -->
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhoneSimulator'">i386</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhoneSimulator'">x86_64</TargetArchitectures>
 		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">ARMv7k</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">ARM64</TargetArchitectures>
-		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARMv7</TargetArchitectures>
+		<TargetArchitectures Condition="'$(TargetArchitectures)' == '' And '$(_PlatformName)' != 'macOS' And '$(ComputedPlatform)' == 'iPhone'">ARM64</TargetArchitectures>
 	</PropertyGroup>
 
 	<PropertyGroup>

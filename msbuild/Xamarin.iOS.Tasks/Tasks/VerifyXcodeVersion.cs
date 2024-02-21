@@ -2,15 +2,13 @@ using System;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
+using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
 using Threading = System.Threading.Tasks;
 
 namespace Xamarin.iOS.Tasks {
-	public class VerifyXcodeVersion : Task {
-		[Required]
-		public string SessionId { get; set; }
-
+	public class VerifyXcodeVersion : XamarinTask {
 		public override bool Execute () => ExecuteAsync ().Result;
 
 		async Threading.Task<bool> ExecuteAsync ()
@@ -19,7 +17,7 @@ namespace Xamarin.iOS.Tasks {
 				var connection = await BuildConnection.GetAsync (BuildEngine4).ConfigureAwait (continueOnCapturedContext: false);
 				var buildClient = connection.GetClient (SessionId) as BuildClient;
 
-				if (!connection.IsConnected || buildClient == null) {
+				if (!connection.IsConnected || buildClient is null) {
 					Log.LogWarning (MSBStrings.E0179, nameof (VerifyXcodeVersion));
 
 					return true;

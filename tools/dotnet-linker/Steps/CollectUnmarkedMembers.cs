@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker.Steps;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	// The static registrar may need access to information that has been linked away,
 	// in particular types and interfaces, so we need to store those somewhere

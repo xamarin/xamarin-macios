@@ -28,6 +28,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	[Register]
@@ -52,7 +55,7 @@ namespace Foundation {
 
 		protected override void Dispose (bool disposing)
 		{
-			if (disposing && notificationCenter != null) {
+			if (disposing && notificationCenter is not null) {
 				notificationCenter.RemoveObserver (this);
 				notificationCenter = null;
 			}
@@ -74,7 +77,7 @@ namespace Foundation {
 
 		public NSObject AddObserver (NSString aName, Action<NSNotification> notify, NSObject fromObject)
 		{
-			if (notify == null)
+			if (notify is null)
 				throw new ArgumentNullException ("notify");
 
 			var proxy = new InternalNSNotificationHandler (this, notify);
@@ -91,7 +94,7 @@ namespace Foundation {
 
 		public void RemoveObservers (IEnumerable<NSObject> keys)
 		{
-			if (keys == null)
+			if (keys is null)
 				return;
 			foreach (var k in keys)
 				RemoveObserver (k);
@@ -113,10 +116,10 @@ namespace Foundation {
 					if (observer != od.Observer)
 						continue;
 
-					if (aName != null && aName != od.Name)
+					if (aName is not null && aName != od.Name)
 						continue;
 
-					if (anObject != null && anObject != od.Object)
+					if (anObject is not null && anObject != od.Object)
 						continue;
 
 					__mt_ObserverList_var.RemoveAt (i);

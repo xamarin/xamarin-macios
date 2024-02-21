@@ -382,7 +382,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		{
 			// all the data is provided by the filter, if we have no filter, return an empty string so that the project does not have any
 			// includes.
-			if (ProjectFilter == null)
+			if (ProjectFilter is null)
 				return string.Empty;
 			var contentFiles = new StringBuilder ();
 			foreach (var path in ProjectFilter.GetIgnoreFiles (projectName, info.Assemblies, platform)) {
@@ -395,7 +395,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			return contentFiles.ToString ();
 		}
 
-		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			// generate the template c# code before we create the diff projects
 			GenerateSource (TemplatesPath);
@@ -445,7 +445,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				WriteReferenceFailure (sb, info.FailureMessage);
 			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
-					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.WatchOS, assemblyInfo.assembly))
+					if (ProjectFilter is null || !ProjectFilter.ExcludeDll (Platform.WatchOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
@@ -464,7 +464,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 		}
 
 		// internal implementations that generate each of the diff projects
-		GeneratedProjects GenerateWatchOSTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects)
+		GeneratedProjects GenerateWatchOSTestProjects (IEnumerable<(string Name, string [] Assemblies, double TimeoutMultiplier)> projects)
 		{
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
@@ -473,8 +473,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 				// 2. The container
 				// 3. The extensions
 				// TODO: The following is very similar to what is done in the iOS generation. Must be grouped
-				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
-				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
+				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies);
+				if (ProjectFilter is not null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
 				if (!projectDefinition.Validate ())
@@ -485,7 +485,6 @@ namespace Xharness.TestImporter.Templates.Managed {
 				gp.Name = projectDefinition.Name;
 				gp.Path = GetProjectPath (projectDefinition.Name, Platform.WatchOS);
 				gp.XUnit = projectDefinition.IsXUnit;
-				gp.ExtraArgs = projectDefinition.ExtraArgs;
 				gp.TimeoutMultiplier = def.TimeoutMultiplier;
 				var task = Task.Run (async () => {
 					try {
@@ -573,7 +572,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				WriteReferenceFailure (sb, info.FailureMessage);
 			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
-					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (Platform.iOS, assemblyInfo.assembly))
+					if (ProjectFilter is null || !ProjectFilter.ExcludeDll (Platform.iOS, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
@@ -592,7 +591,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 			return result;
 		}
 
-		GeneratedProjects GenerateiOSTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		GeneratedProjects GenerateiOSTestProjects (IEnumerable<(string Name, string [] Assemblies, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			if (platform == Platform.WatchOS)
 				throw new ArgumentException (nameof (platform));
@@ -602,8 +601,8 @@ namespace Xharness.TestImporter.Templates.Managed {
 			foreach (var def in projects) {
 				if (def.Assemblies.Length == 0)
 					continue;
-				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
-				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
+				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies);
+				if (ProjectFilter is not null && ProjectFilter.ExludeProject (projectDefinition, Platform.WatchOS)) // if it is ignored, continue
 					continue;
 
 				if (!projectDefinition.Validate ())
@@ -617,7 +616,6 @@ namespace Xharness.TestImporter.Templates.Managed {
 				gp.Name = projectDefinition.Name;
 				gp.Path = projectPath;
 				gp.XUnit = projectDefinition.IsXUnit;
-				gp.ExtraArgs = projectDefinition.ExtraArgs;
 				gp.TimeoutMultiplier = def.TimeoutMultiplier;
 				gp.GenerationCompleted = Task.Run (async () => {
 					try {
@@ -663,7 +661,7 @@ namespace Xharness.TestImporter.Templates.Managed {
 				WriteReferenceFailure (sb, info.FailureMessage);
 			} else {
 				foreach (var assemblyInfo in info.Assemblies) {
-					if (ProjectFilter == null || !ProjectFilter.ExcludeDll (platform, assemblyInfo.assembly))
+					if (ProjectFilter is null || !ProjectFilter.ExcludeDll (platform, assemblyInfo.assembly))
 						sb.AppendLine (GetReferenceNode (assemblyInfo.assembly, assemblyInfo.hintPath));
 				}
 			}
@@ -696,14 +694,14 @@ namespace Xharness.TestImporter.Templates.Managed {
 			return result;
 		}
 
-		GeneratedProjects GenerateMacTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
+		GeneratedProjects GenerateMacTestProjects (IEnumerable<(string Name, string [] Assemblies, double TimeoutMultiplier)> projects, Platform platform)
 		{
 			var projectPaths = new GeneratedProjects ();
 			foreach (var def in projects) {
 				if (!def.Assemblies.Any ())
 					continue;
-				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies, def.ExtraArgs);
-				if (ProjectFilter != null && ProjectFilter.ExludeProject (projectDefinition, platform))
+				var projectDefinition = new ProjectDefinition (def.Name, AssemblyLocator, AssemblyDefinitionFactory, def.Assemblies);
+				if (ProjectFilter is not null && ProjectFilter.ExludeProject (projectDefinition, platform))
 					continue;
 
 				if (!projectDefinition.Validate ())
@@ -717,7 +715,6 @@ namespace Xharness.TestImporter.Templates.Managed {
 				gp.Name = projectDefinition.Name;
 				gp.Path = projectPath;
 				gp.XUnit = projectDefinition.IsXUnit;
-				gp.ExtraArgs = projectDefinition.ExtraArgs;
 				gp.TimeoutMultiplier = def.TimeoutMultiplier;
 				gp.GenerationCompleted = Task.Run (async () => {
 					try {

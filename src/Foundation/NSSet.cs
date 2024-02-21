@@ -35,6 +35,9 @@ using System.Collections.Generic;
 
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 
 	public partial class NSSet : IEnumerable<NSObject> {
@@ -68,7 +71,7 @@ namespace Foundation {
 			var enumerator = _GetEnumerator ();
 			NSObject obj;
 
-			while ((obj = enumerator.NextObject ()) != null)
+			while ((obj = enumerator.NextObject ()) is not null)
 				yield return obj as NSObject;
 		}
 		#endregion
@@ -82,18 +85,18 @@ namespace Foundation {
 
 		public static NSSet operator + (NSSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSSet (second);
-			if (second == null)
+			if (second is null)
 				return new NSSet (first);
 			return first.SetByAddingObjectsFromSet (second);
 		}
 
 		public static NSSet operator + (NSSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return new NSSet (second.AsSet ());
-			if (second == null)
+			if (second is null)
 				return new NSSet (first);
 			var copy = new NSMutableSet (first);
 			copy.UnionSet (second.AsSet ());
@@ -102,9 +105,9 @@ namespace Foundation {
 
 		public static NSSet operator - (NSSet first, NSSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSSet (first);
 			var copy = new NSMutableSet (first);
 			copy.MinusSet (second);
@@ -113,9 +116,9 @@ namespace Foundation {
 
 		public static NSSet operator - (NSSet first, NSOrderedSet second)
 		{
-			if (first == null)
+			if (first is null)
 				return null;
-			if (second == null)
+			if (second is null)
 				return new NSSet (first);
 			var copy = new NSMutableSet (first);
 			copy.MinusSet (second.AsSet ());

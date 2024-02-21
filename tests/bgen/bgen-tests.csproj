@@ -5,15 +5,16 @@
     <RootNamespace>bgen_tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
     <PackageReference Include="Moq" Version="4.18.4" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.758" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,8 +30,14 @@
     <Compile Include="..\generator\BGenTool.cs">
       <Link>BGenTool.cs</Link>
     </Compile>
+    <Compile Include="..\generator\AttributeFactoryTests.cs">
+      <Link>AttributeFactoryTests.cs</Link>
+    </Compile>
     <Compile Include="..\generator\CollectionsExtensionsTests.cs">
       <Link>CollectionsExtensionsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\generator\ConstructorArgumentsTests.cs">
+      <Link>ConstructorArgumentsTests.cs</Link>
     </Compile>
     <Compile Include="..\generator\ErrorTests.cs">
       <Link>ErrorTests.cs</Link>
@@ -73,6 +80,9 @@
     </Compile>
     <Compile Include="..\common\BinLog.cs">
       <Link>BinLog.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

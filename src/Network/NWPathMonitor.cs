@@ -31,7 +31,6 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -85,10 +84,14 @@ namespace Network {
 			nw_path_monitor_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
+#if !NET
 		delegate void nw_path_monitor_update_handler_t (IntPtr block, IntPtr path);
 		static nw_path_monitor_update_handler_t static_UpdateSnapshot = TrampolineUpdatedSnapshot;
 
 		[MonoPInvokeCallback (typeof (nw_path_monitor_update_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineUpdatedSnapshot (IntPtr block, IntPtr path)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
@@ -110,8 +113,13 @@ namespace Network {
 					return;
 				}
 
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineUpdatedSnapshot;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWPathMonitor), nameof (TrampolineUpdatedSnapshot));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_UpdateSnapshot, callback);
+#endif
 				nw_path_monitor_set_update_handler (GetCheckedHandle (), &block);
 			}
 		}

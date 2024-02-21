@@ -28,7 +28,7 @@ namespace BCLTests {
 		{
 			var ignoredMethods = new List<string> ();
 			string line;
-			while ((line = await textReader.ReadLineAsync ()) != null) {
+			while ((line = await textReader.ReadLineAsync ()) is not null) {
 				// we have to make sure of several things, first, lets
 				// remove any char after the first # which would mean
 				// we have comments:
@@ -76,7 +76,7 @@ namespace BCLTests {
 			var ignoreFile = Path.Combine (contentDir, isXUnit ? "xunit-excludes.txt" : "nunit-excludes.txt");
 			using (var reader = new StreamReader (ignoreFile)) {
 				string line;
-				while ((line = await reader.ReadLineAsync ()) != null) {
+				while ((line = await reader.ReadLineAsync ()) is not null) {
 					if (string.IsNullOrEmpty (line))
 						continue;
 					ignoredTraits.Add (line);
@@ -91,7 +91,7 @@ namespace BCLTests {
 			var ignoreFile = Path.Combine (contentDir, isXUnit ? "xunit-excludes.txt" : "nunit-excludes.txt");
 			using (var reader = new StreamReader (ignoreFile)) {
 				string line;
-				while ((line = reader.ReadLine ()) != null) {
+				while ((line = reader.ReadLine ()) is not null) {
 					if (string.IsNullOrEmpty (line))
 						continue;
 					ignoredTraits.Add (line);
@@ -106,7 +106,7 @@ namespace BCLTests {
 			foreach (var f in Directory.GetFiles (contentDir, "*.ignore")) {
 				using (var reader = new StreamReader (f)) {
 					string line;
-					while ((line = reader.ReadLine ()) != null) {
+					while ((line = reader.ReadLine ()) is not null) {
 
 						line = ParseLine (line);
 						if (string.IsNullOrEmpty (line))

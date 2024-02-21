@@ -15,7 +15,7 @@ namespace GameController {
 	// GCMicroGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 #if NET
-	[SupportedOSPlatform ("ios10.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
@@ -23,8 +23,6 @@ namespace GameController {
 	[ObsoletedOSPlatform ("tvos12.2", "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[ObsoletedOSPlatform ("ios12.2", "Use 'GCController.GetMicroGamepadController()' instead.")]
 #else
-	[iOS (10, 0)]
-	[Mac (10, 12)]
 	[Deprecated (PlatformName.iOS, 12, 2, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 	[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -46,7 +44,7 @@ namespace GameController {
 		public float /* float_t = float */ ButtonX;
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -102,7 +100,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -110,7 +108,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.GetMicroGamepadController()' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
@@ -119,7 +116,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -127,7 +124,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.GetMicroGamepadController()' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		public NSData? ToNSData ()
@@ -142,7 +138,7 @@ namespace GameController {
 		// GCGamepadSnapshot.h
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -159,7 +155,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.14.4", "Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.")]
@@ -177,7 +173,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.GetMicroGamepadController()' instead.")]
@@ -188,7 +184,6 @@ namespace GameController {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		[DllImport (Constants.GameControllerLibrary)]
@@ -197,7 +192,7 @@ namespace GameController {
 
 #if NET
 		[SupportedOSPlatform ("tvos12.2")]
-		[SupportedOSPlatform ("macos10.14.4")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("macos10.15", "Use 'GCController.Capture()' instead.")]
@@ -205,7 +200,6 @@ namespace GameController {
 		[ObsoletedOSPlatform ("ios13.0", "Use 'GCController.Capture()' instead.")]
 #else
 		[TV (12, 2)]
-		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
 		public static bool TryGetSnapshotData (NSData? data, out GCMicroGamepadSnapshotData snapshotData)

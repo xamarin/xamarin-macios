@@ -22,7 +22,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace ObjCRuntime {
-	public static class Messaging {
+	static class Messaging {
 		internal const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 
 		public struct objc_super {

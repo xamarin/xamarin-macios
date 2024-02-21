@@ -47,7 +47,7 @@ namespace Foundation {
 
 	// The following constants where taken from MonoDevelop Carbon.cs MacInterop file
 	[NoiOS, NoTV, NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum AEEventID : uint {
 		OpenApplication = 1868656752, // 'oapp'
 		ReopenApplication = 1918988400, //'rapp'
@@ -61,7 +61,7 @@ namespace Foundation {
 	}
 
 	[NoiOS, NoTV, NoWatch]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	public enum AEEventClass : uint {
 		Mouse = 1836021107, // 'mous'
 		Keyboard = 1801812322, // 'keyb'
@@ -96,7 +96,6 @@ namespace Foundation {
 		AdditionalActionClicked = 4
 	}
 
-	[Mac (10, 11)]
 	[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 	[Native]
 	[Flags]

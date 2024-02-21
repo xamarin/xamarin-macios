@@ -935,9 +935,6 @@ namespace Foundation {
 
 				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight is not null) {
-					// set the stream as finished
-					inflight.Stream.TrySetReceivedAllData ();
-
 					// send the error or send the response back
 					if (error is not null || serverError is not null) {
 						// got an error, cancel the stream operatios before we do anything
@@ -948,6 +945,9 @@ namespace Foundation {
 						inflight.CompletionSource.TrySetException (exc);
 						inflight.Stream.TrySetException (exc);
 					} else {
+						// set the stream as finished
+						inflight.Stream.TrySetReceivedAllData ();
+
 						inflight.Completed = true;
 						SetResponse (inflight);
 					}
@@ -1334,8 +1334,10 @@ namespace Foundation {
 
 				while (current is null) {
 					lock (dataLock) {
-						if (data.Count == 0 && receivedAllData && position == length)
+						if (data.Count == 0 && receivedAllData && position == length) {
+							ThrowIfNeeded (cancellationToken);
 							return 0;
+						}
 
 						if (data.Count > 0 && current is null) {
 							current = data.Peek ();
@@ -1426,51 +1428,72 @@ namespace Foundation {
 			CFRunLoopSource source;
 			readonly Stream stream;
 			bool notifying;
+			NSError? error;
 
 			public WrappedNSInputStream (Stream inputStream)
 			{
 				status = NSStreamStatus.NotOpen;
 				stream = inputStream;
 				source = new CFRunLoopSource (Handle, false);
+				IsDirectBinding = false;
 			}
 
+			[Preserve (Conditional = true)]
 			public override NSStreamStatus Status => status;
 
+			[Preserve (Conditional = true)]
 			public override void Open ()
 			{
 				status = NSStreamStatus.Open;
 				Notify (CFStreamEventType.OpenCompleted);
 			}
 
+			[Preserve (Conditional = true)]
 			public override void Close ()
 			{
 				status = NSStreamStatus.Closed;
 			}
 
+			[Preserve (Conditional = true)]
 			public override nint Read (IntPtr buffer, nuint len)
 			{
-				var sourceBytes = new byte [len];
-				var read = stream.Read (sourceBytes, 0, (int) len);
-				Marshal.Copy (sourceBytes, 0, buffer, (int) len);
+				try {
+					var sourceBytes = new byte [len];
+					var read = stream.Read (sourceBytes, 0, (int) len);
+					Marshal.Copy (sourceBytes, 0, buffer, (int) len);
 
-				if (notifying)
+					if (notifying)
+						return read;
+
+					notifying = true;
+					if (stream.CanSeek && stream.Position == stream.Length) {
+						Notify (CFStreamEventType.EndEncountered);
+						status = NSStreamStatus.AtEnd;
+					}
+					notifying = false;
+
 					return read;
-
-				notifying = true;
-				if (stream.CanSeek && stream.Position == stream.Length) {
-					Notify (CFStreamEventType.EndEncountered);
-					status = NSStreamStatus.AtEnd;
+				} catch (Exception e) {
+					// -1 means that the operation failed; more information about the error can be obtained with streamError.
+					error = new NSExceptionError (e);
+					return -1;
 				}
-				notifying = false;
-
-				return read;
 			}
 
+			[Preserve (Conditional = true)]
+			public override NSError Error {
+				get {
+					return error ?? base.Error;
+				}
+			}
+
+			[Preserve (Conditional = true)]
 			public override bool HasBytesAvailable ()
 			{
 				return true;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool GetBuffer (out IntPtr buffer, out nuint len)
 			{
 				// Just call the base implemention (which will return false)
@@ -1478,22 +1501,26 @@ namespace Foundation {
 			}
 
 			// NSInvalidArgumentException Reason: *** -propertyForKey: only defined for abstract class.  Define -[System_Net_Http_NSUrlSessionHandler_WrappedNSInputStream propertyForKey:]!
+			[Preserve (Conditional = true)]
 			protected override NSObject? GetProperty (NSString key)
 			{
 				return null;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool SetProperty (NSObject? property, NSString key)
 			{
 				return false;
 			}
 
+			[Preserve (Conditional = true)]
 			protected override bool SetCFClientFlags (CFStreamEventType inFlags, IntPtr inCallback, IntPtr inContextPtr)
 			{
 				// Just call the base implementation, which knows how to handle everything.
 				return base.SetCFClientFlags (inFlags, inCallback, inContextPtr);
 			}
 
+			[Preserve (Conditional = true)]
 #if NET
 			public override void Schedule (NSRunLoop aRunLoop, NSString nsMode)
 #else
@@ -1515,6 +1542,7 @@ namespace Foundation {
 				notifying = false;
 			}
 
+			[Preserve (Conditional = true)]
 #if NET
 			public override void Unschedule (NSRunLoop aRunLoop, NSString nsMode)
 #else

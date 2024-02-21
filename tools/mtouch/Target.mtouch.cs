@@ -55,7 +55,7 @@ namespace Xamarin.Bundler {
 		List<Abi> all_architectures;
 		public List<Abi> AllArchitectures {
 			get {
-				if (all_architectures == null) {
+				if (all_architectures is null) {
 					all_architectures = new List<Abi> ();
 					var mask = Is32Build ? Abi.Arch32Mask : Abi.Arch64Mask;
 					foreach (var abi in App.AllArchitectures) {
@@ -85,7 +85,7 @@ namespace Xamarin.Bundler {
 		{
 			BundleFileInfo info;
 
-			if (bundle_path == null)
+			if (bundle_path is null)
 				bundle_path = Path.GetFileName (source);
 
 			if (!BundleFiles.TryGetValue (bundle_path, out info))
@@ -160,7 +160,7 @@ namespace Xamarin.Bundler {
 				if (!App.RequiresPInvokeWrappers)
 					return null;
 
-				if (pinvoke_state == null) {
+				if (pinvoke_state is null) {
 					pinvoke_state = new PInvokeWrapperGenerator () {
 						App = App,
 						SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
@@ -176,7 +176,7 @@ namespace Xamarin.Bundler {
 		Dictionary<Abi, string> executables;
 		public IDictionary<Abi, string> Executables {
 			get {
-				if (executables == null) {
+				if (executables is null) {
 					executables = new Dictionary<Abi, string> ();
 					if (App.IsSimulatorBuild && App.ArchSpecificExecutable) {
 						// When using simlauncher, we copy the executable directly to the target directory.
@@ -202,13 +202,13 @@ namespace Xamarin.Bundler {
 
 			var corlib_path = Path.Combine (Resolver.FrameworkDirectory, "mscorlib.dll");
 			var corlib = ManifestResolver.Load (corlib_path);
-			if (corlib == null)
+			if (corlib is null)
 				throw new ProductException (2006, true, Errors.MT2006, corlib_path);
 
 			var roots = new List<AssemblyDefinition> ();
 			foreach (var root_assembly in App.RootAssemblies) {
 				var root = ManifestResolver.Load (root_assembly);
-				if (root == null) {
+				if (root is null) {
 					// We check elsewhere that the path exists, so I'm not sure how we can get into this.
 					throw ErrorHelper.CreateError (2019, Errors.MT2019, root_assembly);
 				}
@@ -217,11 +217,11 @@ namespace Xamarin.Bundler {
 
 			foreach (var reference in App.References) {
 				var ad = ManifestResolver.Load (reference);
-				if (ad == null)
+				if (ad is null)
 					throw new ProductException (2002, true, Errors.MT2002, reference);
 
 				var root_assembly = roots.FirstOrDefault ((v) => v.MainModule.FileName == ad.MainModule.FileName);
-				if (root_assembly != null) {
+				if (root_assembly is not null) {
 					// If we asked the manifest resolver for assembly X and got back a root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
 					throw ErrorHelper.CreateError (23, Errors.MT0023, root_assembly.MainModule.FileName, reference);
 				}
@@ -288,7 +288,7 @@ namespace Xamarin.Bundler {
 				return ManifestResolver.GetAssemblies ();
 
 			List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
-			if (LinkContext == null) {
+			if (LinkContext is null) {
 				// use data from cache
 				foreach (var assembly in Assemblies)
 					assemblies.Add (assembly.AssemblyDefinition);
@@ -353,7 +353,7 @@ namespace Xamarin.Bundler {
 
 		void ComputeListOfAssemblies (HashSet<string> assemblies, AssemblyDefinition assembly, List<Exception> exceptions)
 		{
-			if (assembly == null)
+			if (assembly is null)
 				return;
 
 			var fqname = assembly.MainModule.FileName;
@@ -385,7 +385,7 @@ namespace Xamarin.Bundler {
 				}
 
 				var reference_assembly = ManifestResolver.Resolve (reference);
-				if (reference_assembly == null) {
+				if (reference_assembly is null) {
 					ErrorHelper.Warning (136, Errors.MT0136, reference.FullName, main.FileName);
 					continue;
 				}
@@ -432,10 +432,10 @@ namespace Xamarin.Bundler {
 			if (!arg.Type.Is ("System", "Type"))
 				return;
 			var ar = (arg.Value as TypeReference)?.Scope as AssemblyNameReference;
-			if (ar == null)
+			if (ar is null)
 				return;
 			var reference_assembly = ManifestResolver.Resolve (ar);
-			if (reference_assembly == null) {
+			if (reference_assembly is null) {
 				ErrorHelper.Warning (137, Errors.MT0137, ar.FullName, main.Name, ca.AttributeType.FullName);
 				return;
 			}
@@ -570,7 +570,7 @@ namespace Xamarin.Bundler {
 					using (var reader = new StreamReader (cache_path)) {
 						string line = null;
 
-						while ((line = reader.ReadLine ()) != null) {
+						while ((line = reader.ReadLine ()) is not null) {
 							var colon = line.IndexOf (':');
 							if (colon == -1)
 								continue;
@@ -703,7 +703,7 @@ namespace Xamarin.Bundler {
 						collectedNames.Add (next);
 
 						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
-						if (ad == null)
+						if (ad is null)
 							throw ErrorHelper.CreateError (99, Errors.MX0099, $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
@@ -974,10 +974,10 @@ namespace Xamarin.Bundler {
 					var link_dependencies = new List<CompileTask> ();
 					var infos = assemblies.Where ((asm) => asm.AotInfos.ContainsKey (abi)).Select ((asm) => asm.AotInfos [abi]).ToList ();
 					var aottasks = infos.Select ((info) => info.Task);
-					if (aottasks == null)
+					if (aottasks is null)
 						continue;
 
-					var existingLinkTask = infos.Where ((v) => v.LinkTask != null).Select ((v) => v.LinkTask).ToList ();
+					var existingLinkTask = infos.Where ((v) => v.LinkTask is not null).Select ((v) => v.LinkTask).ToList ();
 					if (existingLinkTask.Count > 0) {
 						if (existingLinkTask.Count != infos.Count)
 							throw ErrorHelper.CreateError (99, Errors.MX0099, $"Not all assemblies for {name} have link tasks");
@@ -1014,7 +1014,7 @@ namespace Xamarin.Bundler {
 								InputFile = assembly,
 								OutputFile = Path.ChangeExtension (assembly, ".o"),
 								Abi = abi,
-								Language = bitcode_task != null ? null : "assembler",
+								Language = bitcode_task is not null ? null : "assembler",
 							};
 							compile_task.AddDependency (bitcode_task);
 							compile_task.AddDependency (aottasks);
@@ -1104,7 +1104,7 @@ namespace Xamarin.Bundler {
 					if (App.EnableLLVMOnlyBitCode) {
 						// The AOT compiler doesn't optimize the bitcode so clang will do it
 						compiler_flags.AddOtherFlag ("-fexceptions");
-						var optimizations = assemblies.Select ((a) => App.GetLLVMOptimizations (a)).Where ((opt) => opt != null).Distinct ().ToList ();
+						var optimizations = assemblies.Select ((a) => App.GetLLVMOptimizations (a)).Where ((opt) => opt is not null).Distinct ().ToList ();
 						if (optimizations.Count == 0) {
 							compiler_flags.AddOtherFlag ("-O2");
 						} else if (optimizations.Count == 1) {
@@ -1484,7 +1484,7 @@ namespace Xamarin.Bundler {
 				} else {
 					mainlib = "libapp.a";
 				}
-				if (mainlib != null) {
+				if (mainlib is not null) {
 					var libmain = Path.Combine (Driver.GetProductSdkLibDirectory (App), mainlib);
 					linker_flags.AddLinkWith (libmain, true);
 				}
@@ -1551,7 +1551,7 @@ namespace Xamarin.Bundler {
 			{
 				using (var reader = new StreamReader (filename)) {
 					string line;
-					while ((line = reader.ReadLine ()) != null) {
+					while ((line = reader.ReadLine ()) is not null) {
 						if (line.Length == 0)
 							continue;
 						var eq = line.IndexOf ('=');
@@ -1581,7 +1581,7 @@ namespace Xamarin.Bundler {
 
 		public MonoNativeInfo MonoNative {
 			get {
-				if (mono_native_info != null)
+				if (mono_native_info is not null)
 					return mono_native_info;
 
 				mono_native_info = new MonoNativeInfo ();

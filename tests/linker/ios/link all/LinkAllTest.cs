@@ -163,6 +163,24 @@ namespace LinkAll {
 			Assert.True (default_value, "DefaultValue");
 		}
 
+#if NET
+		static void Check (string calendarName, bool present)
+		{
+			var type = Type.GetType ("System.Globalization." + calendarName);
+			bool success = present == (type is not null);
+			Assert.AreEqual (present, type is not null, calendarName);
+		}
+
+		[Test]
+		public void Calendars ()
+		{
+			Check ("GregorianCalendar", true);
+			Check ("UmAlQuraCalendar", true);
+			Check ("HijriCalendar", true);
+			Check ("ThaiBuddhistCalendar", true);
+		}
+#endif // NET
+
 		public enum CertificateProblem : long {
 			CertEXPIRED = 0x800B0101,
 			CertVALIDITYPERIODNESTING = 0x800B0102,
@@ -208,7 +226,7 @@ namespace LinkAll {
 				var problemMessage = "";
 				CertificateProblem problemList = new CertificateProblem ();
 				var problemCodeName = Enum.GetName (problemList.GetType (), problem);
-				problemMessage = problemCodeName != null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
+				problemMessage = problemCodeName is not null ? problemMessage + "-Certificateproblem:" + problemCodeName : "Unknown Certificate Problem";
 				return problemMessage;
 			}
 		}
@@ -275,8 +293,9 @@ namespace LinkAll {
 		[ThreadSafe]
 		public void RemovedAttributes ()
 		{
-			const string prefix = NamespacePrefix;
-			const string suffix = ", " + AssemblyName;
+			// Don't use constants here, because the linker can see what we're trying to do and keeps what we're verifying has been removed.
+			string prefix = NamespacePrefix;
+			string suffix = AssemblyName;
 
 			// since we're linking the attributes will NOT be available - even if they are used
 #if !XAMCORE_3_0
@@ -544,7 +563,7 @@ namespace LinkAll {
 			var type = o.GetType ();
 			var f1 = type.GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
 			var f2 = type.GetField (s + "i__Field", BindingFlags.Instance | BindingFlags.NonPublic);
-			if (f1 == null && f2 == null)
+			if (f1 is null && f2 is null)
 				return s;
 
 			//Console.WriteLine (f.GetValue (o));
@@ -554,10 +573,10 @@ namespace LinkAll {
 		string FromPattern (string pattern, object o)
 		{
 			var s = GetField (o, "<action>");
-			if (s != null)
+			if (s is not null)
 				return s;
 			s = GetField (o, "<id>");
-			if (s != null)
+			if (s is not null)
 				return s;
 			return GetField (o, "<contentType>");
 		}

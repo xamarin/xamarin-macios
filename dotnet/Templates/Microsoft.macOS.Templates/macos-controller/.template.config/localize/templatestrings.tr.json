@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "macOS Controller",
-  "description": "A macOS View Controller with UI implemented in code",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "macOS Denetleyicisi",
+  "description": "Kodda kullanıcı arabirimi uygulanan bir macOS Görünüm Denetleyicisi",
+  "symbols/namespace/description": "oluşturulan kod için ad alanı"
 }

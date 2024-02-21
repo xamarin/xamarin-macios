@@ -65,7 +65,7 @@ namespace Xharness.Jenkins.TestTasks {
 				}
 
 				var devices = executingTasks.FirstOrDefault ()?.Simulators;
-				if (devices == null || !devices.Any ()) {
+				if (devices is null || !devices.Any ()) {
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}

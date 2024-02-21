@@ -11,10 +11,6 @@ rm -f "$OUTPUT_FILE" "$OUTPUT"
 LANG=C
 export LANG
 
-# Support for hardcoding a commit distance start offset.
-NUGET_VERSION_COMMIT_DISTANCE_START=0
-NUGET_VERSION_STABLE_COMMIT_DISTANCE_START=0
-
 # Compute commit distances
 printf "IOS_COMMIT_DISTANCE:=$(git log $(git blame -- ./Make.versions HEAD | grep IOS_PACKAGE_VERSION= | sed 's/ .*//' )..HEAD --oneline | wc -l | sed 's/ //g')\n" >> "$OUTPUT_FILE"
 printf "MAC_COMMIT_DISTANCE:=$(git log $(git blame -- ./Make.versions HEAD | grep MAC_PACKAGE_VERSION= | sed 's/ .*//' )..HEAD --oneline | wc -l | sed 's/ //g')\n" >> "$OUTPUT_FILE"

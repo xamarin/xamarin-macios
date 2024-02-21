@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.Network {
 				Assert.IsNull (exception, "Exception");
 				stack = parameters.ProtocolStack;
 				using (var ipOptions = stack.InternetProtocol) {
-					if (ipOptions != null) {
+					if (ipOptions is not null) {
 #if NET
 						ipOptions.SetVersion (NWIPVersion.Version4);
 #else
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.Network {
 		{
 			connection?.Dispose ();
 			stack?.Dispose ();
-			if (options != null) {
+			if (options is not null) {
 				foreach (var o in options)
 					o.Dispose ();
 			}
@@ -137,7 +137,7 @@ namespace MonoTouchFixtures.Network {
 		{
 			using (var o = stack.InternetProtocol)
 			{
-				if (o != null)
+				if (o is not null)
 					o.IPSetUseMinimumMtu (true); // should not crash
 				Assert.Inconclusive ("stack does not have an IP protocol.");
 			}

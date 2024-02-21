@@ -39,8 +39,7 @@ namespace AddressBookUI {
 		IntPtr _ParentGroup { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		ABNewPersonViewControllerDelegate Delegate { get; set; }
+		IABNewPersonViewControllerDelegate Delegate { get; set; }
 
 		[Export ("newPersonViewDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -56,6 +55,8 @@ namespace AddressBookUI {
 		[Abstract]
 		void DidCompleteWithNewPerson (ABNewPersonViewController controller, [NullAllowed] ABPerson person);
 	}
+
+	interface IABNewPersonViewControllerDelegate { }
 
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UINavigationController))]
@@ -76,24 +77,20 @@ namespace AddressBookUI {
 		IntPtr _AddressBook { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		ABPeoplePickerNavigationControllerDelegate Delegate { get; set; }
+		IABPeoplePickerNavigationControllerDelegate Delegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("peoplePickerDelegate", ArgumentSemantic.Assign)]
 		NSObject WeakDelegate { get; set; }
 
-		[iOS (8, 0)]
 		[Export ("predicateForEnablingPerson", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPredicate PredicateForEnablingPerson { get; set; }
 
-		[iOS (8, 0)]
 		[Export ("predicateForSelectionOfPerson", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPredicate PredicateForSelectionOfPerson { get; set; }
 
-		[iOS (8, 0)]
 		[Export ("predicateForSelectionOfProperty", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPredicate PredicateForSelectionOfProperty { get; set; }
@@ -126,6 +123,8 @@ namespace AddressBookUI {
 		void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson, int /* ABPropertyId = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
 
+	interface IABPeoplePickerNavigationControllerDelegate { }
+
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface ABPersonViewController : UIViewControllerRestoration {
@@ -153,8 +152,7 @@ namespace AddressBookUI {
 		bool ShouldShowLinkedPeople { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		ABPersonViewControllerDelegate Delegate { get; set; }
+		IABPersonViewControllerDelegate Delegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("personViewDelegate", ArgumentSemantic.Assign)]
@@ -168,7 +166,7 @@ namespace AddressBookUI {
 	}
 
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
-	[Static, iOS (8, 0)]
+	[Static]
 	interface ABPersonPredicateKey {
 		[Field ("ABPersonBirthdayProperty")]
 		NSString Birthday { get; }
@@ -251,6 +249,8 @@ namespace AddressBookUI {
 		bool ShouldPerformDefaultActionForPerson (ABPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
 
+	interface IABPersonViewControllerDelegate { }
+
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[BaseType (typeof (UIViewController))]
 	interface ABUnknownPersonViewController {
@@ -279,8 +279,7 @@ namespace AddressBookUI {
 		bool AllowsAddingToAddressBook { get; set; }
 
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		ABUnknownPersonViewControllerDelegate Delegate { get; set; }
+		IABUnknownPersonViewControllerDelegate Delegate { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("unknownPersonViewDelegate", ArgumentSemantic.Assign)]
@@ -299,4 +298,5 @@ namespace AddressBookUI {
 		[Export ("unknownPersonViewController:shouldPerformDefaultActionForPerson:property:identifier:")]
 		bool ShouldPerformDefaultActionForPerson (ABUnknownPersonViewController personViewController, ABPerson person, int /* ABPropertyID = int32 */ propertyId, int /* ABMultiValueIdentifier = int32 */ identifier);
 	}
+	interface IABUnknownPersonViewControllerDelegate { }
 }

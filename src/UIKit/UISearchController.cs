@@ -28,7 +28,7 @@ namespace UIKit {
 
 		public void SetSearchResultsUpdater (Action<UISearchController> updateSearchResults)
 		{
-			if (updateSearchResults == null) {
+			if (updateSearchResults is null) {
 				WeakSearchResultsUpdater = null;
 				return;
 			}

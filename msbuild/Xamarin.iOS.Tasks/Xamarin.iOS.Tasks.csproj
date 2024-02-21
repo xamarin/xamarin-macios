@@ -11,6 +11,7 @@
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
     <NoWarn>$(NoWarn);MSB3277</NoWarn> <!-- warning MSB3277: Found conflicts between different versions of "System.Reflection.Metadata" that could not be resolved. -->
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Import Project="..\..\eng\Versions.props" />
@@ -26,8 +27,11 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="$(IncludeMSBuildAssets)" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
-    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETILStripTasksPackageVersion)" GeneratePathProperty="true"/>
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETRuntimeMonoTargetsSdkPackageVersion)" GeneratePathProperty="true"/>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
+    <!-- GitInfo is pulled in because of Xamarin.Messaging from above, but we don't want it, so just exclude all assets from it -->
+    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
+    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,16 +41,14 @@
     </Reference>
     <Reference Include="ILStrip">
       <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
-      <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\ILStrip.dll</HintPath>
+      <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\MonoTargetsTasks.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Contracts\" />
-    <Compile Include="../Versions.ios.g.cs" />
-
-    <None Include="NoCode.cs">
+    <None Include="../Xamarin.Shared/NoCode.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="*.props">
@@ -66,14 +68,13 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\NullableAttributes.cs">
+      <Link>NullableAttributes.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 
-  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.ios.g.cs" BeforeTargets="BeforeBuild">
-    <Exec Command="make -C .. Versions.ios.g.cs" />
-  </Target>
-  
   <!-- Replaces the ProtectedData assembly by the runtime implementation -->
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>

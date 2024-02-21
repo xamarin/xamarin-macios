@@ -259,6 +259,29 @@ class BuildConfiguration {
             $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
             $variableValue = $config.$variableName
             Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+            $variableValue = $config.$variableName
+            Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+
+            $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            foreach ($rid in $rids) {
+                $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+                $variableValue = $config.$variableName
+                Write-Host "##vso[task.setvariable variable=$variableName;isOutput=true]$variableValue"
+            }
         }
 
         return $config
@@ -281,6 +304,29 @@ class BuildConfiguration {
             $variableName = "INCLUDE_DOTNET_$($platform.ToUpper())"
             $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
             $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_VERSION_NO_METADATA"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_SDK_NAME"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "$($platform.ToUpper())_NUGET_REF_NAME"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $variableName = "DOTNET_$($platform.ToUpper())_RUNTIME_IDENTIFIERS"
+            $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+            $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+
+            $rids = $variableValue.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+            foreach ($rid in $rids) {
+                $variableName = "$($rid)_NUGET_RUNTIME_NAME"
+                $variableValue = [Environment]::GetEnvironmentVariable("CONFIGURE_PLATFORMS_$variableName")
+                $configuration | Add-Member -NotePropertyName $variableName -NotePropertyValue $variableValue
+            }
         }
 
         # calculate the commit to later share it with the cascade pipelines
@@ -336,6 +382,8 @@ class BuildConfiguration {
             "skip-packaged-macos-tests",
             "run-packaged-macos-tests",
             "skip-api-comparison",
+            "run-windows-tests",
+            "skip-windows-tests",
             "skip-all-tests"
           )
 
@@ -584,6 +632,51 @@ function Set-BuildTags {
     }
 }
 
+function Get-YamlPreview {
+    param (
+        [String]
+        $Org,
+
+        [String]
+        $Project,
+
+        [String]
+        $AccessToken,
+
+        [String]
+        $PipelineId,
+
+        [String]
+        $Branch,
+
+        [String]
+        $OutputFile
+    )
+
+    $headers = Get-AuthHeader -AccessToken  $AccessToken
+
+    # create the payload, this payload will point to the correct branch of the repo we want to work with, the repository is always 'self'
+    $payload=@{
+        "previewRun"=$true
+        "resources"=@{
+            "repositories"=@{
+                "self"=@{
+                    "refName"="refs/heads/$Branch"
+                }
+            }
+        }
+    }
+    $body = ConvertTo-Json $payload -Depth 100
+
+    $url="https://dev.azure.com/$Org/$Project/_apis/pipelines/$PipelineId/preview?api-version=7.1-preview.1"
+    try {
+        $response=Invoke-RestMethod -Uri $url -Headers $headers -Method "POST"  -ContentType 'application/json' -Body $body
+    } catch {
+        Write-Host $_
+    }
+    Set-Content -Path $OutputFile -Value $response.finalYaml  
+}
+
 function New-BuildConfiguration {
     param
     (
@@ -615,3 +708,4 @@ Export-ModuleMember -Function Set-BuildTags
 Export-ModuleMember -Function New-VSTS
 Export-ModuleMember -Function New-BuildConfiguration
 Export-ModuleMember -Function Import-BuildConfiguration
+Export-ModuleMember -Function Get-YamlPreview

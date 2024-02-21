@@ -332,14 +332,12 @@ namespace Xamarin.BindingTests {
 					Messaging.void_objc_msgSend_IntPtr_bool_bool (Class.GetHandle (typeof (ObjCBlockTester)), Selector.GetHandle ("setProtocolWithBlockProperties:required:instance:"), pb.Handle, required, instance);
 					Assert.Fail ("Expected an MT8028 error");
 				} catch (RuntimeException re) {
-#if __MACOS__
-					Assert.AreEqual (8009, re.Code, "Code");
-					Console.WriteLine (re.Message);
-					Assert.That (re.Message, Does.StartWith ("Unable to locate the block to delegate conversion method for the method Xamarin.BindingTests.RegistrarBindingTest+FakePropertyBlock.set_"), re.Message, "Message");
-#else
-					Assert.AreEqual (8028, re.Code, "Code");
-					Assert.AreEqual ("The runtime function get_block_wrapper_creator has been linked away.", re.Message, "Message");
-#endif
+					Assert.That (re.Code, Is.EqualTo (8009).Or.EqualTo (8028), "Code");
+					if (re.Code == 8009) {
+						Assert.That (re.Message, Does.StartWith ("Unable to locate the block to delegate conversion method for the method Xamarin.BindingTests.RegistrarBindingTest+FakePropertyBlock.set_"), re.Message, "Message");
+					} else {
+						Assert.AreEqual ("The runtime function get_block_wrapper_creator has been linked away.", re.Message, "Message");
+					}
 				}
 			}
 		}

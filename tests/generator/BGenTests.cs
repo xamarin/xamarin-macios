@@ -8,7 +8,9 @@ using NUnit.Framework;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Xamarin;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace GeneratorTests {
 	[TestFixture ()]
@@ -145,6 +147,9 @@ namespace GeneratorTests {
 		}
 
 		[Test]
+#if !NET
+		[Ignore ("This only works in .NET")]
+#endif
 		public void Bug27430 ()
 		{
 			BuildFile (Profile.iOS, "bug27430.cs");
@@ -283,7 +288,7 @@ namespace GeneratorTests {
 			foreach (var ca in attributes)
 				lines.Add (RenderSupportedOSPlatformAttribute (ca));
 			lines.Sort ();
-			return string.Join ("\n", lines);
+			return string.Join ("\n", lines).Replace ("\r", string.Empty);
 		}
 
 		static string RenderSupportedOSPlatformAttribute (CustomAttribute ca)
@@ -311,7 +316,7 @@ namespace GeneratorTests {
 			var preserves = allSupportedAttributes.Count ();
 			var renderedAttributes = "\t" + string.Join ("\n\t", renderedSupportedAttributes.OrderBy (v => v)) + "\n";
 #if NET
-			const string expectedAttributes =
+			string expectedAttributes =
 @"	Bug35176.IFooInterface: [SupportedOSPlatform(""ios14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""maccatalyst14.3"")]
 	Bug35176.IFooInterface: [SupportedOSPlatform(""macos11.2"")]
@@ -332,7 +337,7 @@ namespace GeneratorTests {
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [SupportedOSPlatform(""macos11.2"")]
 ";
 #else
-			const string expectedAttributes =
+			string expectedAttributes =
 @"	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.iOS, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 3, ObjCRuntime.PlatformArchitecture.None, null)]
 	Bug35176.IFooInterface: [Introduced(ObjCRuntime.PlatformName.MacOSX, 11, 2, ObjCRuntime.PlatformArchitecture.None, null)]
@@ -351,6 +356,9 @@ namespace GeneratorTests {
 	UIKit.UIView Bug35176.FooInterface_Extensions::GetBarView(Bug35176.IFooInterface): [Introduced(ObjCRuntime.PlatformName.MacCatalyst, 14, 4, ObjCRuntime.PlatformArchitecture.None, null)]
 ";
 #endif
+
+			expectedAttributes = expectedAttributes.Replace ("\r", string.Empty);
+			renderedAttributes = renderedAttributes.Replace ("\r", string.Empty);
 
 			if (renderedAttributes != expectedAttributes) {
 				Console.WriteLine ($"Expected:");
@@ -379,6 +387,21 @@ namespace GeneratorTests {
 			bgen.CreateTemporaryBinding ();
 			bgen.AssertExecute ("build");
 			bgen.AssertWarning (1103, "'FooType`1' does not live under a namespace; namespaces are a highly recommended .NET best practice");
+		}
+
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		[TestCase (Profile.iOS)]
+		public void Bug18035 (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("bug18025.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+			bgen.AssertWarning (1103, "'FooType' does not live under a namespace; namespaces are a highly recommended .NET best practice");
 		}
 
 		[Test]
@@ -456,14 +479,14 @@ namespace GeneratorTests {
 			Assert.AreEqual (10, methodCount, "Async method count");
 		}
 
-#if !NET
-		// error BI1055: bgen: Internal error: failed to convert type 'System.Runtime.Versioning.SupportedOSPlatformAttribute, System.Runtime, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.
 		[Test]
+#if !NET
+		[Ignore ("This only works in .NET")]
+#endif
 		public void StackOverflow20696157 ()
 		{
 			BuildFile (Profile.iOS, "sof20696157.cs");
 		}
-#endif
 
 		[Test]
 		public void HyphenInName ()
@@ -766,6 +789,9 @@ namespace GeneratorTests {
 		public void GHIssue7304 () => BuildFile (Profile.macOSMobile, "ghissue7304.cs");
 
 		[Test]
+#if !NET
+		[Ignore ("This only works in .NET")]
+#endif
 		public void RefOutParameters ()
 		{
 			BuildFile (Profile.macOSMobile, true, "tests/ref-out-parameters.cs");
@@ -808,6 +834,9 @@ namespace GeneratorTests {
 
 		[Test]
 		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
+
+		[Test]
+		public void GHIssue18645_DuplicatedFiled () => BuildFile (Profile.iOS, nowarnings: true, "ghissue18645.cs");
 
 		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
 		bool IsOptimizable (MethodDefinition method)
@@ -1064,13 +1093,13 @@ namespace GeneratorTests {
 
 @"[BindingImpl(3)]
 [Export(""someMethod3:"")]
-[SupportedOSPlatform(""ios11.0"")]
+[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 
 @"[BindingImpl(3)]
 [Export(""someMethod4:"")]
-[SupportedOSPlatform(""ios11.0"")]
+[SupportedOSPlatform(""ios"")]
 [SupportedOSPlatform(""maccatalyst"")]
 [UnsupportedOSPlatform(""tvos"")]",
 			};
@@ -1082,6 +1111,9 @@ namespace GeneratorTests {
 			for (var i = 0; i < someMethodCount; i++) {
 				someMethod [i] = type.Methods.Single (v => v.Name == "SomeMethod" + (i + 1).ToString ());
 				renderedSomeMethod [i] = string.Join ("\n", someMethod [i].CustomAttributes.Select (ca => RenderSupportedOSPlatformAttribute (ca)).OrderBy (v => v));
+
+				expectedAttributes [i] = expectedAttributes [i].Replace ("\r", string.Empty);
+				renderedSomeMethod [i] = renderedSomeMethod [i].Replace ("\r", string.Empty);
 
 				if (expectedAttributes [i] == renderedSomeMethod [i])
 					continue;
@@ -1159,9 +1191,11 @@ namespace GeneratorTests {
 			var getter = messaging.Methods.First (v => v.Name == "get_IsLoadedInProcess");
 			var expectedPropertyAttributes =
 @"[SupportedOSPlatform(""maccatalyst"")]
-[SupportedOSPlatform(""macos10.15"")]
+[SupportedOSPlatform(""macos"")]
 [UnsupportedOSPlatform(""ios"")]
 [UnsupportedOSPlatform(""tvos"")]";
+			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);
+
 			Assert.AreEqual (expectedPropertyAttributes, RenderSupportedOSPlatformAttributes (property), "Property attributes");
 			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
 		}
@@ -1189,6 +1223,9 @@ namespace GeneratorTests {
 [SupportedOSPlatform(""maccatalyst"")]
 [SupportedOSPlatform(""macos11.0"")]
 [UnsupportedOSPlatform(""tvos"")]";
+
+			expectedPropertyAttributes = expectedPropertyAttributes.Replace ("\r", string.Empty);
+			expectedSetterAttributes = expectedSetterAttributes.Replace ("\r", string.Empty);
 
 			Assert.AreEqual (expectedPropertyAttributes, RenderSupportedOSPlatformAttributes (property), "Property attributes");
 			Assert.AreEqual (string.Empty, RenderSupportedOSPlatformAttributes (getter), "Getter Attributes");
@@ -1335,7 +1372,8 @@ namespace GeneratorTests {
 					var member = type.Methods.SingleOrDefault (v => v.Name == expectedMember.Method);
 					Assert.IsNotNull (member, $"Method not found: {expectedMember.Method} in {type.FullName}");
 					var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
-					if (renderedAttributes != expectedMember.Attributes) {
+					var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
+					if (renderedAttributes != expectedAttributes) {
 						var msg =
 							$"Property: {type.FullName}::{member.Name}\n" +
 							$"\tExpected attributes:\n" +
@@ -1358,7 +1396,8 @@ namespace GeneratorTests {
 					var member = type.Properties.SingleOrDefault (v => v.Name == expectedMember.Property);
 					Assert.IsNotNull (member, $"Property not found: {expectedMember.Property} in {type.FullName}");
 					var renderedAttributes = RenderSupportedOSPlatformAttributes (member);
-					if (renderedAttributes != expectedMember.Attributes) {
+					var expectedAttributes = expectedMember.Attributes.Replace ("\r", string.Empty);
+					if (renderedAttributes != expectedAttributes) {
 						var msg =
 							$"Property: {type.FullName}::{member.Name}\n" +
 							$"\tExpected attributes:\n" +
@@ -1373,6 +1412,66 @@ namespace GeneratorTests {
 
 			Assert.That (failures, Is.Empty, "Failures");
 		}
+
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		[Test]
+		[TestCase (Profile.iOS)]
+		public void ObsoletedOSPlatform (Profile profile)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.AddTestApiDefinition ("tests/obsoletedosplatform.cs");
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+		}
+
+		[Test]
+		public void InternalDelegate ()
+		{
+			BuildFile (Profile.iOS, "tests/internal-delegate.cs");
+		}
+
+#if NET
+		[Test]
+		public void Issue19612 ()
+		{
+			var profile = Profile.iOS;
+			var filename = Path.Combine (Configuration.SourceRoot, "tests", "generator", "issue19612.cs");
+
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
+
+			// Compile the temporary assembly and pass the compiled assembly to the generator instead
+			// of relying on the generator to compile.
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var tmpassembly = Path.Combine (tmpdir, "temporaryAssembly.dll");
+			var cscArguments = new List<string> ();
+			if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var cscCommand, out var ex))
+				throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
+			cscArguments.AddRange (cscCommand);
+			var cscExecutable = cscArguments [0];
+			cscArguments.RemoveAt (0);
+			cscArguments.Add (filename);
+			cscArguments.Add ($"/out:{tmpassembly}");
+			cscArguments.Add ("/target:library");
+			cscArguments.Add ($"/r:{Path.Combine (Configuration.DotNetBclDir, "System.Runtime.dll")}");
+			var tf = TargetFramework.Parse (BGenTool.GetTargetFramework (profile));
+			cscArguments.Add ($"/r:{Configuration.GetBindingAttributePath (tf)}");
+			cscArguments.Add ($"/r:{Configuration.GetBaseLibrary (tf)}");
+			var rv = ExecutionHelper.Execute (cscExecutable, cscArguments);
+			Assert.AreEqual (0, rv, "CSC exit code");
+
+			var bgen = new BGenTool ();
+			bgen.Profile = profile;
+			bgen.CompiledApiDefinitionAssembly = tmpassembly;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.CreateTemporaryBinding (filename);
+			bgen.AssertExecute ("build");
+			bgen.AssertNoWarnings ();
+		}
+#endif
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{

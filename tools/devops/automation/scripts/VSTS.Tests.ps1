@@ -192,6 +192,11 @@ Describe 'New-BuildConfiguration' {
                 "BUILD_SOURCEVERSION" = "BUILD_SOURCEVERSION"
                 "CONFIGURE_PLATFORMS_DOTNET_PLATFORMS" = "iOS tvOS"
                 "CONFIGURE_PLATFORMS_INCLUDE_DOTNET_TVOS" = "true"
+                "CONFIGURE_PLATFORMS_DOTNET_IOS_RUNTIME_IDENTIFIERS" = "ios-arm64";
+                "CONFIGURE_PLATFORMS_DOTNET_TVOS_RUNTIME_IDENTIFIERS" = "tvos-arm64";
+                "CONFIGURE_PLATFORMS_IOS_NUGET_SDK_NAME" = "iOSNuGetSdkName";
+                "CONFIGURE_PLATFORMS_TVOS_NUGET_REF_NAME" = "tvOSNuGetRefName";
+                "CONFIGURE_PLATFORMS_ios-arm64_NUGET_RUNTIME_NAME" = "iOSNuGetRuntimeName";
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
                 "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
             }
@@ -212,7 +217,17 @@ Describe 'New-BuildConfiguration' {
   ""BuildId"": ""BUILD_BUILDID"",
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
   ""INCLUDE_DOTNET_IOS"": null,
+  ""IOS_NUGET_VERSION_NO_METADATA"": null,
+  ""IOS_NUGET_SDK_NAME"": ""iOSNuGetSdkName"",
+  ""IOS_NUGET_REF_NAME"": null,
+  ""DOTNET_IOS_RUNTIME_IDENTIFIERS"": ""ios-arm64"",
+  ""ios-arm64_NUGET_RUNTIME_NAME"": ""iOSNuGetRuntimeName"",
   ""INCLUDE_DOTNET_TVOS"": ""true"",
+  ""TVOS_NUGET_VERSION_NO_METADATA"": null,
+  ""TVOS_NUGET_SDK_NAME"": null,
+  ""TVOS_NUGET_REF_NAME"": ""tvOSNuGetRefName"",
+  ""DOTNET_TVOS_RUNTIME_IDENTIFIERS"": ""tvos-arm64"",
+  ""tvos-arm64_NUGET_RUNTIME_NAME"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild"",
@@ -238,7 +253,17 @@ Describe 'New-BuildConfiguration' {
   ""BuildId"": ""BUILD_BUILDID"",
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
   ""INCLUDE_DOTNET_IOS"": null,
+  ""IOS_NUGET_VERSION_NO_METADATA"": null,
+  ""IOS_NUGET_SDK_NAME"": ""iOSNuGetSdkName"",
+  ""IOS_NUGET_REF_NAME"": null,
+  ""DOTNET_IOS_RUNTIME_IDENTIFIERS"": ""ios-arm64"",
+  ""ios-arm64_NUGET_RUNTIME_NAME"": ""iOSNuGetRuntimeName"",
   ""INCLUDE_DOTNET_TVOS"": ""true"",
+  ""TVOS_NUGET_VERSION_NO_METADATA"": null,
+  ""TVOS_NUGET_SDK_NAME"": null,
+  ""TVOS_NUGET_REF_NAME"": ""tvOSNuGetRefName"",
+  ""DOTNET_TVOS_RUNTIME_IDENTIFIERS"": ""tvos-arm64"",
+  ""tvos-arm64_NUGET_RUNTIME_NAME"": null,
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild"",
@@ -261,6 +286,11 @@ Describe 'Import-BuildConfiguration' {
   ""DOTNET_PLATFORMS"": ""iOS tvOS"",
   ""INCLUDE_DOTNET_IOS"": null,
   ""INCLUDE_DOTNET_TVOS"": ""true"",
+  ""DOTNET_IOS_RUNTIME_IDENTIFIERS"": ""ios-arm64"",
+  ""DOTNET_TVOS_RUNTIME_IDENTIFIERS"": ""tvos-arm64"",
+  ""IOS_NUGET_SDK_NAME"": ""iOSNuGetSdkName"",
+  ""TVOS_NUGET_REF_NAME"": ""tvOSNuGetRefName"",
+  ""ios-arm64_NUGET_RUNTIME_NAME"": ""iOSNuGetRuntimeName"",
   ""Commit"": ""BUILD_SOURCEVERSION"",
   ""Tags"": [
     ""ciBuild"",

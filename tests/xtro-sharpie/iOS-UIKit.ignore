@@ -35,12 +35,83 @@
 ## the category name is clear enough: UIPrintPaper_Deprecated_Nonfunctional
 !missing-selector! UIPrintPaper::printRect not bound
 
-## unsorted
+# Added in UIAccessibility, this is later inlined in UIView, else we will
+# add all of the properties to all objects whihc is not correct.
 
 !missing-selector! NSObject::accessibilityDragSourceDescriptors not bound
 !missing-selector! NSObject::accessibilityDropPointDescriptors not bound
 !missing-selector! NSObject::setAccessibilityDragSourceDescriptors: not bound
 !missing-selector! NSObject::setAccessibilityDropPointDescriptors: not bound
+!missing-selector! NSObject::accessibilityActivateBlock not bound
+!missing-selector! NSObject::accessibilityActivationPointBlock not bound
+!missing-selector! NSObject::accessibilityAttributedHintBlock not bound
+!missing-selector! NSObject::accessibilityAttributedLabelBlock not bound
+!missing-selector! NSObject::accessibilityAttributedUserInputLabelsBlock not bound
+!missing-selector! NSObject::accessibilityAttributedValueBlock not bound
+!missing-selector! NSObject::accessibilityContainerTypeBlock not bound
+!missing-selector! NSObject::accessibilityCustomActionsBlock not bound
+!missing-selector! NSObject::accessibilityCustomRotorsBlock not bound
+!missing-selector! NSObject::accessibilityDecrementBlock not bound
+!missing-selector! NSObject::accessibilityDirectTouchOptions not bound
+!missing-selector! NSObject::accessibilityElementsBlock not bound
+!missing-selector! NSObject::accessibilityElementsHiddenBlock not bound
+!missing-selector! NSObject::accessibilityFrameBlock not bound
+!missing-selector! NSObject::accessibilityHeaderElementsBlock not bound
+!missing-selector! NSObject::accessibilityHintBlock not bound
+!missing-selector! NSObject::accessibilityIdentifierBlock not bound
+!missing-selector! NSObject::accessibilityIncrementBlock not bound
+!missing-selector! NSObject::accessibilityLabelBlock not bound
+!missing-selector! NSObject::accessibilityLanguageBlock not bound
+!missing-selector! NSObject::accessibilityMagicTapBlock not bound
+!missing-selector! NSObject::accessibilityNavigationStyleBlock not bound
+!missing-selector! NSObject::accessibilityPathBlock not bound
+!missing-selector! NSObject::accessibilityPerformEscapeBlock not bound
+!missing-selector! NSObject::accessibilityRespondsToUserInteractionBlock not bound
+!missing-selector! NSObject::accessibilityShouldGroupAccessibilityChildrenBlock not bound
+!missing-selector! NSObject::accessibilityTextualContextBlock not bound
+!missing-selector! NSObject::accessibilityTraitsBlock not bound
+!missing-selector! NSObject::accessibilityUserInputLabelsBlock not bound
+!missing-selector! NSObject::accessibilityValueBlock not bound
+!missing-selector! NSObject::accessibilityViewIsModalBlock not bound
+!missing-selector! NSObject::accessibilityZoomInAtPoint: not bound
+!missing-selector! NSObject::accessibilityZoomOutAtPoint: not bound
+!missing-selector! NSObject::automationElements not bound
+!missing-selector! NSObject::automationElementsBlock not bound
+!missing-selector! NSObject::isAccessibilityElementBlock not bound
+!missing-selector! NSObject::setAccessibilityActivateBlock: not bound
+!missing-selector! NSObject::setAccessibilityActivationPointBlock: not bound
+!missing-selector! NSObject::setAccessibilityAttributedHintBlock: not bound
+!missing-selector! NSObject::setAccessibilityAttributedLabelBlock: not bound
+!missing-selector! NSObject::setAccessibilityAttributedUserInputLabelsBlock: not bound
+!missing-selector! NSObject::setAccessibilityAttributedValueBlock: not bound
+!missing-selector! NSObject::setAccessibilityContainerTypeBlock: not bound
+!missing-selector! NSObject::setAccessibilityCustomActionsBlock: not bound
+!missing-selector! NSObject::setAccessibilityCustomRotorsBlock: not bound
+!missing-selector! NSObject::setAccessibilityDecrementBlock: not bound
+!missing-selector! NSObject::setAccessibilityDirectTouchOptions: not bound
+!missing-selector! NSObject::setAccessibilityElementsBlock: not bound
+!missing-selector! NSObject::setAccessibilityElementsHiddenBlock: not bound
+!missing-selector! NSObject::setAccessibilityFrameBlock: not bound
+!missing-selector! NSObject::setAccessibilityHeaderElementsBlock: not bound
+!missing-selector! NSObject::setAccessibilityHintBlock: not bound
+!missing-selector! NSObject::setAccessibilityIdentifierBlock: not bound
+!missing-selector! NSObject::setAccessibilityIncrementBlock: not bound
+!missing-selector! NSObject::setAccessibilityLabelBlock: not bound
+!missing-selector! NSObject::setAccessibilityLanguageBlock: not bound
+!missing-selector! NSObject::setAccessibilityMagicTapBlock: not bound
+!missing-selector! NSObject::setAccessibilityNavigationStyleBlock: not bound
+!missing-selector! NSObject::setAccessibilityPathBlock: not bound
+!missing-selector! NSObject::setAccessibilityPerformEscapeBlock: not bound
+!missing-selector! NSObject::setAccessibilityRespondsToUserInteractionBlock: not bound
+!missing-selector! NSObject::setAccessibilityShouldGroupAccessibilityChildrenBlock: not bound
+!missing-selector! NSObject::setAccessibilityTextualContextBlock: not bound
+!missing-selector! NSObject::setAccessibilityTraitsBlock: not bound
+!missing-selector! NSObject::setAccessibilityUserInputLabelsBlock: not bound
+!missing-selector! NSObject::setAccessibilityValueBlock: not bound
+!missing-selector! NSObject::setAccessibilityViewIsModalBlock: not bound
+!missing-selector! NSObject::setAutomationElements: not bound
+!missing-selector! NSObject::setAutomationElementsBlock: not bound
+!missing-selector! NSObject::setIsAccessibilityElementBlock: not bound
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'UIStateRestoring' is restored.
 !missing-protocol-conformance! UIViewController should conform to UIStateRestoring (defined in 'UIStateRestoration' category)
@@ -170,7 +241,6 @@
 !missing-null-allowed! 'System.Boolean UIKit.UIScrollView::TouchesShouldBegin(Foundation.NSSet,UIKit.UIEvent,UIKit.UIView)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Boolean UIKit.UISplitViewControllerDelegate::EventShowDetailViewController(UIKit.UISplitViewController,UIKit.UIViewController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
 !missing-null-allowed! 'System.Boolean UIKit.UISplitViewControllerDelegate::EventShowViewController(UIKit.UISplitViewController,UIKit.UIViewController,Foundation.NSObject)' is missing an [NullAllowed] on parameter #2
-!missing-null-allowed! 'System.Boolean UIKit.UITraitCollection::Contains(UIKit.UITraitCollection)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Double UIKit.UIViewControllerAnimatedTransitioning::TransitionDuration(UIKit.IUIViewControllerContextTransitioning)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.nint UIKit.UIApplication::BeginBackgroundTask(System.String,System.Action)' is missing an [NullAllowed] on parameter #1
@@ -258,7 +328,6 @@
 !missing-null-allowed! 'System.Void UIKit.UITextView::set_AttributedText(Foundation.NSAttributedString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITextView::set_WeakLinkTextAttributes(Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UIViewController::set_TabBarItem(UIKit.UITabBarItem)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void UIKit.UIViewController::SetOverrideTraitCollection(UIKit.UITraitCollection,UIKit.UIViewController)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'UIKit.IUIStateRestoring UIKit.UIStateRestoring::get_RestorationParent()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.IUIViewControllerAnimatedTransitioning UIKit.UINavigationControllerDelegate::GetAnimationControllerForOperation(UIKit.UINavigationController,UIKit.UINavigationControllerOperation,UIKit.UIViewController,UIKit.UIViewController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.IUIViewControllerAnimatedTransitioning UIKit.UITabBarControllerDelegate::GetAnimationControllerForTransition(UIKit.UITabBarController,UIKit.UIViewController,UIKit.UIViewController)' is missing an [NullAllowed] on return type
@@ -347,7 +416,6 @@
 !missing-null-allowed! 'UIKit.UITextInputMode UIKit.UIResponder::get_TextInputMode()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextPosition UIKit.UITextInputTokenizer::GetPosition(UIKit.UITextPosition,UIKit.UITextGranularity,UIKit.UITextDirection)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextRange UIKit.UITextInputTokenizer::GetRangeEnclosingPosition(UIKit.UITextPosition,UIKit.UITextGranularity,UIKit.UITextDirection)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITraitCollection UIKit.UIViewController::GetOverrideTraitCollectionForChildViewController(UIKit.UIViewController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIDocumentInteractionControllerDelegate::ViewForPreview(UIKit.UIDocumentInteractionController)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIDynamicAnimator::get_ReferenceView()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIGestureRecognizer::get_View()' is missing an [NullAllowed] on return type
@@ -361,7 +429,6 @@
 !missing-null-allowed! 'UIKit.UIView UIKit.UITableViewDelegate::GetViewForHeader(UIKit.UITableView,System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UITouch::get_View()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIView::get_Superview()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UIView UIKit.UIView::HitTest(CoreGraphics.CGPoint,UIKit.UIEvent)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIView::SnapshotView(System.Boolean)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIView::ViewWithTag(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIView UIKit.UIViewControllerContextTransitioning::GetViewFor(Foundation.NSString)' is missing an [NullAllowed] on return type
@@ -390,8 +457,6 @@
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UIView::get_Window()' is missing an [NullAllowed] on return type
 
 ## These are inlined by protocol adoption so you can't really add such decoration
-!missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
-!missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
 
 ## Grouped nint constants
 !unknown-native-enum! UIFocusGroupPriority bound
@@ -577,3 +642,18 @@
 # no bound due to issues with foundation https://github.com/xamarin/xamarin-macios/issues/15577
 !missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
 !missing-selector! NSDiffableDataSourceTransaction::difference not bound
+
+# cannot be made abstract until xamcore 5
+!incorrect-protocol-member! UIPopoverPresentationControllerSourceItem::frameInView: is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMenuLeaf::selectedImage is REQUIRED and should be abstract
+!incorrect-protocol-member! UIMenuLeaf::setSelectedImage: is REQUIRED and should be abstract
+
+# not really needed, seems that xtro is confused
+!missing-requires-super! UIControl::contextMenuInteraction:willDisplayMenuForConfiguration:animator: is missing an [RequiresSuper] attribute
+!missing-requires-super! UIControl::contextMenuInteraction:willEndForConfiguration:animator: is missing an [RequiresSuper] attribute
+
+# these were bound with an incorrect signature, and made optional so that customers wouldn't have to implement methods with broken signatures.
+# this is fixed in XAMCORE_5_0
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withAction: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! UITraitChangeObservable::registerForTraitChanges:withTarget:action: is REQUIRED and should be abstract

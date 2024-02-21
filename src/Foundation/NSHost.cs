@@ -85,14 +85,14 @@ namespace Foundation
 			if (hostEntry.AddressList is not null) {
 				foreach (var addr in hostEntry.AddressList) {
 					var host = FromAddress (addr);
-					if (host != null)
+					if (host is not null)
 						return host;
 				}
 			}
 
 			if (hostEntry.HostName is not null) {
 				var host = FromName (hostEntry.HostName);
-				if (host != null)
+				if (host is not null)
 					return host;
 			}
 

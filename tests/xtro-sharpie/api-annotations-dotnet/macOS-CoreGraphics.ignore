@@ -69,17 +69,6 @@
 !missing-pinvoke! CGDisplaySerialNumber is not bound
 !missing-pinvoke! CGDisplaySetDisplayMode is not bound
 !missing-pinvoke! CGDisplaySetStereoOperation is not bound
-!missing-pinvoke! CGDisplayStreamCreate is not bound
-!missing-pinvoke! CGDisplayStreamCreateWithDispatchQueue is not bound
-!missing-pinvoke! CGDisplayStreamGetRunLoopSource is not bound
-!missing-pinvoke! CGDisplayStreamGetTypeID is not bound
-!missing-pinvoke! CGDisplayStreamStart is not bound
-!missing-pinvoke! CGDisplayStreamStop is not bound
-!missing-pinvoke! CGDisplayStreamUpdateCreateMergedUpdate is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetDropCount is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetMovedRectsDelta is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetRects is not bound
-!missing-pinvoke! CGDisplayStreamUpdateGetTypeID is not bound
 !missing-pinvoke! CGDisplayUnitNumber is not bound
 !missing-pinvoke! CGDisplayUsesOpenGLAcceleration is not bound
 !missing-pinvoke! CGDisplayVendorNumber is not bound
@@ -113,7 +102,6 @@
 !missing-pinvoke! CGWindowListCopyWindowInfo is not bound
 !missing-pinvoke! CGWindowListCreate is not bound
 !missing-pinvoke! CGWindowListCreateDescriptionFromArray is not bound
-!missing-pinvoke! CGWindowListCreateImageFromArray is not bound
 !missing-pinvoke! CGWindowServerCreateServerPort is not bound
 !missing-pinvoke! CGPreflightScreenCaptureAccess is not bound
 !missing-pinvoke! CGRequestScreenCaptureAccess is not bound

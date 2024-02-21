@@ -19,10 +19,6 @@ parameters:
 - name: xqaCertPass
   type: string
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: uploadBinlogs
   type: boolean
   default: true
@@ -61,7 +57,6 @@ steps:
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
-    enableDotnet: ${{ parameters.enableDotnet }}
     buildSteps:
     # build not signed .pkgs for the SDK
     - bash: |
@@ -76,8 +71,7 @@ steps:
       timeoutInMinutes: 180
 
     # build nugets
-    - ${{ if eq(parameters.enableDotnet, true) }}:
-      - template: build-nugets.yml
+    - template: build-nugets.yml
 
     - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
       name: workload_file
@@ -126,59 +120,11 @@ steps:
         artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       continueOnError: true
 
-    # funny enough we need these profiles to build the mac tests
-    - bash: '"$BUILD_SOURCESDIRECTORY"/maccore/tools/install-qa-provisioning-profiles.sh -v'
-      displayName: 'Add tests provisioning profiles'
-      timeoutInMinutes: 30
-      continueOnError: true # should not stop the build will result in test failures but we do want the pkg
-      env:
-        AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
-        AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
-        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
-
     - bash: |
         set -x
         set -e
 
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
-
-        if test -f "$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"; then
-          set +x
-          echo "##vso[artifact.upload containerfolder=CrashReports;artifactname=${{ parameters.uploadPrefix }}mac-test-package]$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"
-          set -x
-        fi
-
-      name: macTestPkg
-      displayName: 'Package macOS tests'
-      condition: and(succeeded(), contains(variables['RUN_MAC_TESTS'], 'true'))
-      continueOnError: true # not a terrible blocking issue
-      timeoutInMinutes: 60
-
-    - bash: |
-        set -x
-        set -e
-
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch package-introspection-dependencies.zip || RC=$?
-        exit $RC
-      displayName: 'Package introspection dependencies'
-      continueOnError: true # not a terrible blocking issue
-      timeoutInMinutes: 60
-
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish introspection dependencies'
-      inputs:
-        targetPath: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch/package-introspection-dependencies.zip
-        artifactName: '${{ parameters.uploadPrefix }}package-introspection-dependencies'
-      continueOnError: true
-
-    - bash: |
-        set -x
-        set -e
-
-        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip 
+        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip
       name: introPkg
       displayName: 'Package test libraries dependencies'
       continueOnError: true # not a terrible blocking issue
@@ -189,6 +135,13 @@ steps:
       inputs:
         targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip 
         artifactName: '${{ parameters.uploadPrefix }}package-test-libraries'
+      continueOnError: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Build.props'
+      inputs:
+        targetPath: $(Build.SourcesDirectory)/xamarin-macios/Build.props
+        artifactName: '${{ parameters.uploadPrefix }}Build.props'
       continueOnError: true
 
     - ${{ if eq(parameters.uploadBinlogs, true) }}:

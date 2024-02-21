@@ -12,6 +12,7 @@
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
@@ -24,7 +25,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>i386, x86_64</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -38,11 +39,11 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>True</MtouchDebug>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <MtouchArch>ARM64</MtouchArch>
     <MtouchI18n>cjk,mideast,other,rare,west</MtouchI18n>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
     <PackageReference Include="System.Buffers" Version="4.5.0" />
     <PackageReference Include="System.Memory" Version="4.5.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" />

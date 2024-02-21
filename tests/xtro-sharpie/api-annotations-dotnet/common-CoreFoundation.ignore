@@ -1,6 +1,10 @@
 ## we already expose the NSURLFileProtection* constants
 !missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
 
+## variable argument and string manipulation more easily done in C#
+!missing-pinvoke! CFStringCreateStringWithValidatedFormat is not bound
+!missing-pinvoke! CFStringCreateStringWithValidatedFormatAndArguments is not bound
+
 ## unsorted
 
 !missing-enum! __CFByteOrder not bound
@@ -612,8 +616,6 @@
 !missing-pinvoke! CFRunLoopAddTimer is not bound
 !missing-pinvoke! CFRunLoopContainsObserver is not bound
 !missing-pinvoke! CFRunLoopContainsTimer is not bound
-!missing-pinvoke! CFRunLoopCopyAllModes is not bound
-!missing-pinvoke! CFRunLoopCopyCurrentMode is not bound
 !missing-pinvoke! CFRunLoopGetNextTimerFireDate is not bound
 !missing-pinvoke! CFRunLoopGetTypeID is not bound
 !missing-pinvoke! CFRunLoopObserverCreate is not bound
@@ -945,3 +947,8 @@
 !missing-field! kCFStreamSocketSecurityLevelTLSv1 not bound
 !missing-field! kCFStreamSocketSOCKSVersion4 not bound
 !missing-field! kCFStreamSocketSOCKSVersion5 not bound
+!missing-field! kCFURLFileIdentifierKey not bound
+!missing-field! kCFURLVolumeMountFromLocationKey not bound
+!missing-field! kCFURLVolumeSubtypeKey not bound
+!missing-field! kCFURLVolumeTypeNameKey not bound
+!missing-field! kCFURLDirectoryEntryCountKey not bound

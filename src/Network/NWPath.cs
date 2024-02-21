@@ -30,7 +30,6 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -114,10 +113,14 @@ namespace Network {
 		}
 
 		// Returning 'byte' since 'bool' isn't blittable
+#if !NET
 		delegate byte nw_path_enumerate_interfaces_block_t (IntPtr block, IntPtr iface);
 		static nw_path_enumerate_interfaces_block_t static_Enumerator = TrampolineEnumerator;
 
 		[MonoPInvokeCallback (typeof (nw_path_enumerate_interfaces_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static byte TrampolineEnumerator (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterface, bool>> (block);
@@ -153,20 +156,24 @@ namespace Network {
 				return;
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineEnumerator;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWPath), nameof (TrampolineEnumerator));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_Enumerator, callback);
+#endif
 				nw_path_enumerate_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -175,34 +182,36 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public bool IsConstrained => nw_path_is_constrained (GetCheckedHandle ());
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_path_enumerate_gateways (IntPtr path, BlockLiteral* enumerate_block);
 
 		// Returning 'byte' since 'bool' isn't blittable
+#if !NET
 		delegate byte nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
 		static nw_path_enumerate_gateways_t static_EnumerateGatewaysHandler = TrampolineGatewaysHandler;
 
 		[MonoPInvokeCallback (typeof (nw_path_enumerate_gateways_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static byte TrampolineGatewaysHandler (IntPtr block, IntPtr endpoint)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWEndpoint, bool>> (block);
@@ -216,12 +225,11 @@ namespace Network {
 #if !XAMCORE_5_0
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[Obsolete ("Use the overload that takes a 'Func<NWEndpoint, bool>' instead.")]
@@ -238,12 +246,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -253,8 +260,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineGatewaysHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWPath), nameof (TrampolineGatewaysHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_EnumerateGatewaysHandler, callback);
+#endif
 				nw_path_enumerate_gateways (GetCheckedHandle (), &block);
 			}
 		}

@@ -42,6 +42,9 @@ using CoreServices;
 #endif
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public enum NSStreamSocketSecurityLevel {
 		None, SslV2, SslV3, TlsV1, NegotiatedSsl, Unknown
@@ -78,7 +81,7 @@ namespace Foundation {
 		public NSStreamSocksOptions SocksOptions {
 			get {
 				var d = this [SocksProxyConfigurationKey] as NSDictionary;
-				if (d == null)
+				if (d is null)
 					return null;
 				var ret = new NSStreamSocksOptions ();
 				var host = d [SocksProxyHostKey] as NSString;
@@ -86,25 +89,25 @@ namespace Foundation {
 				var version = d [SocksProxyVersionKey] as NSString;
 				var user = d [SocksProxyUserKey] as NSString;
 				var pass = d [SocksProxyPasswordKey] as NSString;
-				if (host != null)
+				if (host is not null)
 					ret.HostName = (string) host;
-				if (port != null)
+				if (port is not null)
 					ret.HostPort = port.Int32Value;
-				if (version != null)
+				if (version is not null)
 					ret.Version = (version == SocksProxyVersion4) ? 4 : (version == SocksProxyVersion5 ? 5 : -1);
-				if (user != null)
+				if (user is not null)
 					ret.Username = (string) user;
-				if (pass != null)
+				if (pass is not null)
 					ret.Password = (string) pass;
 				return ret;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					this [SocksProxyConfigurationKey] = null;
 					return;
 				}
 				var d = new NSMutableDictionary ();
-				if (value.HostName != null)
+				if (value.HostName is not null)
 					d [SocksProxyHostKey] = new NSString (value.HostName);
 				if (value.HostPort != 0)
 					d [SocksProxyPortKey] = new NSNumber (value.HostPort);
@@ -112,9 +115,9 @@ namespace Foundation {
 					d [SocksProxyVersionKey] = SocksProxyVersion4;
 				if (value.Version == 5)
 					d [SocksProxyVersionKey] = SocksProxyVersion5;
-				if (value.Username != null)
+				if (value.Username is not null)
 					d [SocksProxyUserKey] = new NSString (value.Username);
-				if (value.Password != null)
+				if (value.Password is not null)
 					d [SocksProxyPasswordKey] = new NSString (value.Password);
 				this [SocksProxyConfigurationKey] = d;
 			}
@@ -154,7 +157,7 @@ namespace Foundation {
 					v = SocketSecurityLevelNegotiatedSsl;
 					break;
 				}
-				if (v != null)
+				if (v is not null)
 					this [SocketSecurityLevelKey] = v;
 			}
 		}
@@ -217,7 +220,7 @@ namespace Foundation {
 							 out NSInputStream readStream,
 												 out NSOutputStream writeStream)
 		{
-			if (socket == null)
+			if (socket is null)
 				throw new ArgumentNullException ("socket");
 
 			IntPtr read, write;

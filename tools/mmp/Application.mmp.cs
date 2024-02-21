@@ -12,7 +12,7 @@ namespace Xamarin.Bundler {
 
 		internal void Initialize ()
 		{
-			if (DeploymentTarget == null)
+			if (DeploymentTarget is null)
 				DeploymentTarget = SdkVersions.MinOSXVersion;
 		}
 

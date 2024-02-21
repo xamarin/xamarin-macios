@@ -24,8 +24,6 @@ namespace MediaAccessibility {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 9)]
 #endif
 	public static partial class MACaptionAppearance {
 
@@ -52,15 +50,14 @@ namespace MediaAccessibility {
 #endif
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool MACaptionAppearanceAddSelectedLanguage (nint domain,
+		static extern byte MACaptionAppearanceAddSelectedLanguage (nint domain,
 			/* CFStringRef __nonnull */ IntPtr language);
 
 		public static bool AddSelectedLanguage (MACaptionAppearanceDomain domain, string language)
 		{
 			// this will throw an ANE if language is null
 			using (var lang = new CFString (language)) {
-				return MACaptionAppearanceAddSelectedLanguage ((int) domain, lang.Handle);
+				return MACaptionAppearanceAddSelectedLanguage ((int) domain, lang.Handle) != 0;
 			}
 		}
 
@@ -109,132 +106,165 @@ namespace MediaAccessibility {
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyForegroundColor (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyForegroundColor (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static CGColor GetForegroundColor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = new CGColor (MACaptionAppearanceCopyForegroundColor ((int) domain, ref b), owns: true);
+			IntPtr handle;
+			unsafe {
+				handle = MACaptionAppearanceCopyForegroundColor ((int) domain, &b);
+			}
+			var rv = new CGColor (handle, owns: true);
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyBackgroundColor (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyBackgroundColor (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static CGColor GetBackgroundColor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = new CGColor (MACaptionAppearanceCopyBackgroundColor ((int) domain, ref b), owns: true);
+			IntPtr handle;
+			unsafe {
+				handle = MACaptionAppearanceCopyBackgroundColor ((int) domain, &b);
+			}
+			var rv = new CGColor (handle, owns: true);
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyWindowColor (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern /* CGColorRef __nonnull */ IntPtr MACaptionAppearanceCopyWindowColor (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static CGColor GetWindowColor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = new CGColor (MACaptionAppearanceCopyWindowColor ((int) domain, ref b), owns: true);
+			IntPtr handle;
+			unsafe {
+				handle = MACaptionAppearanceCopyWindowColor ((int) domain, &b);
+			}
+			var rv = new CGColor (handle, owns: true);
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern nfloat MACaptionAppearanceGetForegroundOpacity (nint domain, ref nint behavior);
+		unsafe static extern nfloat MACaptionAppearanceGetForegroundOpacity (nint domain, nint* behavior);
 
 		public static nfloat GetForegroundOpacity (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = MACaptionAppearanceGetForegroundOpacity ((int) domain, ref b);
+			nfloat rv;
+			unsafe {
+				rv = MACaptionAppearanceGetForegroundOpacity ((int) domain, &b);
+			}
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern nfloat MACaptionAppearanceGetBackgroundOpacity (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern nfloat MACaptionAppearanceGetBackgroundOpacity (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static nfloat GetBackgroundOpacity (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = MACaptionAppearanceGetBackgroundOpacity ((int) domain, ref b);
+			nfloat rv;
+			unsafe {
+				rv = MACaptionAppearanceGetBackgroundOpacity ((int) domain, &b);
+			}
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern nfloat MACaptionAppearanceGetWindowOpacity (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern nfloat MACaptionAppearanceGetWindowOpacity (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static nfloat GetWindowOpacity (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = MACaptionAppearanceGetWindowOpacity ((int) domain, ref b);
+			nfloat rv;
+			unsafe {
+				rv = MACaptionAppearanceGetWindowOpacity ((int) domain, &b);
+			}
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern nfloat MACaptionAppearanceGetWindowRoundedCornerRadius (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern nfloat MACaptionAppearanceGetWindowRoundedCornerRadius (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static nfloat GetWindowRoundedCornerRadius (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = MACaptionAppearanceGetWindowRoundedCornerRadius ((int) domain, ref b);
+			nfloat rv;
+			unsafe {
+				rv = MACaptionAppearanceGetWindowRoundedCornerRadius ((int) domain, &b);
+			}
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern /* CTFontDescriptorRef __nonnull */ IntPtr MACaptionAppearanceCopyFontDescriptorForStyle (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior, nint fontStyle);
+		unsafe static extern /* CTFontDescriptorRef __nonnull */ IntPtr MACaptionAppearanceCopyFontDescriptorForStyle (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior, nint fontStyle);
 
 		public static CTFontDescriptor GetFontDescriptor (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior, MACaptionAppearanceFontStyle fontStyle)
 		{
 			nint b = (int) behavior;
-			var rv = new CTFontDescriptor (MACaptionAppearanceCopyFontDescriptorForStyle ((int) domain, ref b, (int) fontStyle), owns: true);
+			IntPtr handle;
+			unsafe {
+				handle = MACaptionAppearanceCopyFontDescriptorForStyle ((int) domain, &b, (int) fontStyle);
+			}
+			var rv = new CTFontDescriptor (handle, owns: true);
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern nfloat MACaptionAppearanceGetRelativeCharacterSize (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern nfloat MACaptionAppearanceGetRelativeCharacterSize (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static nfloat GetRelativeCharacterSize (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = MACaptionAppearanceGetRelativeCharacterSize ((int) domain, ref b);
+			nfloat rv;
+			unsafe {
+				rv = MACaptionAppearanceGetRelativeCharacterSize ((int) domain, &b);
+			}
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return rv;
 		}
 
 		[DllImport (Constants.MediaAccessibilityLibrary)]
-		static extern nint MACaptionAppearanceGetTextEdgeStyle (nint domain,
-			/* MACaptionAppearanceBehavior * __nullable */ ref nint behavior);
+		unsafe static extern nint MACaptionAppearanceGetTextEdgeStyle (nint domain,
+			/* MACaptionAppearanceBehavior * __nullable */ nint* behavior);
 
 		public static MACaptionAppearanceTextEdgeStyle GetTextEdgeStyle (MACaptionAppearanceDomain domain, ref MACaptionAppearanceBehavior behavior)
 		{
 			nint b = (int) behavior;
-			var rv = MACaptionAppearanceGetTextEdgeStyle ((int) domain, ref b);
+			nint rv;
+			unsafe {
+				rv = MACaptionAppearanceGetTextEdgeStyle ((int) domain, &b);
+			}
 			behavior = (MACaptionAppearanceBehavior) (int) b;
 			return (MACaptionAppearanceTextEdgeStyle) (int) rv;
 		}
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
@@ -242,12 +272,11 @@ namespace MediaAccessibility {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public static void DidDisplayCaptions (string [] strings)
@@ -262,12 +291,11 @@ namespace MediaAccessibility {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public static void DidDisplayCaptions (NSAttributedString [] strings)
@@ -291,13 +319,10 @@ namespace MediaAccessibility {
 #endif
 	static partial class MAAudibleMedia {
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern unsafe IntPtr /* CFArrayRef __nonnull */ MAAudibleMediaCopyPreferredCharacteristics ();
@@ -313,5 +338,34 @@ namespace MediaAccessibility {
 			CFObject.CFRelease (handle); // *Copy* API
 			return result;
 		}
+	}
+
+#if NET
+	[SupportedOSPlatform ("ios16.4")]
+	[SupportedOSPlatform ("maccatalyst16.4")]
+	[SupportedOSPlatform ("macos13.3")]
+	[SupportedOSPlatform ("tvos16.4")]
+#endif
+	public static partial class MAVideoAccommodations {
+#if NET
+		[SupportedOSPlatform ("ios16.4")]
+		[SupportedOSPlatform ("maccatalyst16.4")]
+		[SupportedOSPlatform ("macos13.3")]
+		[SupportedOSPlatform ("tvos16.4")]
+#else
+		[Mac (13, 3), TV (16, 4), iOS (16, 4)]
+#endif
+		[DllImport (Constants.MediaAccessibilityLibrary)]
+		static extern byte MADimFlashingLightsEnabled ();
+
+#if NET
+		[SupportedOSPlatform ("ios16.4")]
+		[SupportedOSPlatform ("maccatalyst16.4")]
+		[SupportedOSPlatform ("macos13.3")]
+		[SupportedOSPlatform ("tvos16.4")]
+#else
+		[Mac (13, 3), TV (16, 4), iOS (16, 4)]
+#endif
+		public static bool IsDimFlashingLightsEnabled () => MADimFlashingLightsEnabled () != 0;
 	}
 }

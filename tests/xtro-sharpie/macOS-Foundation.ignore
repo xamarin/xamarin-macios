@@ -28,7 +28,6 @@
 !missing-enum! NSXMLDTDNodeKind not bound
 !missing-enum! NSXMLNodeKind not bound
 !missing-enum! NSXMLNodeOptions not bound
-!missing-field! NSAppleEventManagerWillProcessFirstEventNotification not bound
 !missing-field! NSAppleEventTimeOutDefault not bound
 !missing-field! NSAppleEventTimeOutNone not bound
 !missing-field! NSAppleScriptErrorAppName not bound
@@ -160,7 +159,6 @@
 !missing-selector! NSDeleteCommand::keySpecifier not bound
 !missing-selector! NSDeleteCommand::setReceiversSpecifier: not bound
 !missing-selector! NSDirectoryEnumerator::level not bound
-!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
 !missing-selector! NSIndexSpecifier::index not bound
 !missing-selector! NSIndexSpecifier::initWithContainerClassDescription:containerSpecifier:key:index: not bound
 !missing-selector! NSIndexSpecifier::setIndex: not bound
@@ -576,3 +574,6 @@
 !missing-selector! NSXMLDTDNode::init not bound
 !missing-selector! NSXMLNode::detach not bound
 !missing-selector! NSXMLNode::init not bound
+!missing-enum! NSNetServicesError not bound
+
+!unknown-native-enum! NSBundleExecutableArchitecture bound

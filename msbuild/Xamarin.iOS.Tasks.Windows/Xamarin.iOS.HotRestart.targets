@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">	
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.Codesign" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CollectDynamicFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileAppManifest" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CodesignHotRestartApp" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.CompileHotRestartAppManifest" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.ComputeHotRestartBundleContents" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
+	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.DetectHotRestartSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.PrepareAppBundle" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
-	<UsingTask TaskName="Xamarin.iOS.HotRestart.Tasks.UnpackFrameworks" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	
 	<Import Project="Xamarin.iOS.HotRestart.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Build.targets') And '$(MessagingBuildTargetsImported)' != 'true'" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Messaging.Apple.targets') And '$(MessagingAppleTargetsImported)' != 'true'" />
 	
+	<Target Name="_GenerateHotRestartBuildSessionId">
+		<GenerateBuildSessionId MessagingVersion="$(MessagingVersion)" 
+			TargetFramework="$(TargetFramework)" 
+			ProjectFullPath="$(MSBuildProjectFullPath)" 
+			ProjectName="$(MSBuildProjectName)"
+			VisualStudioProcessId="$(VisualStudioProcessId)">
+			<Output TaskParameter="BuildSessionId" PropertyName="HotRestartBuildSessionId" />
+			<Output TaskParameter="BuildAppName" PropertyName="BuildAppName" />
+		</GenerateBuildSessionId>
+	</Target>
+
 	<Target Name="AddHotRestartDefineConstants" BeforeTargets="AddImplicitDefineConstants">
 		<PropertyGroup>
 			<_IsHotRestartDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)HOTRESTART($|;)'))</_IsHotRestartDefined>
@@ -21,117 +30,49 @@
 		</PropertyGroup>
 	</Target>
 	
-	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_DetectAppManifest" 
+	<Target Name="_DetectHotRestartSigningIdentity" AfterTargets="_ReadAppManifest" 
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(IsHotRestartEnvironmentReady)' == 'true'" >
 		
-		<HotRestart.Tasks.DetectSigningIdentity 
-			GenerateApplicationManifest="$(GenerateApplicationManifest)"
-			ApplicationId="$(ApplicationId)"
-			ApplicationTitle="$(ApplicationTitle)"
-			AppManifest="$(AppBundleManifest)"
+		<DetectHotRestartSigningIdentity
+			Condition="'$(EnableCodeSigning)' != 'false'"
+			BundleIdentifier="$(_BundleIdentifier)"
 			ProvisioningProfile="$(CodesignProvision)"
 			SigningKey="$(CodesignKey)">
 
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
 			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
-			<Output TaskParameter="DetectedAppDisplayName" PropertyName="_AppDisplayName" />
 			<Output TaskParameter="DetectedCodeSigningPath" PropertyName="_CodeSigningPath" />
 			<Output TaskParameter="DetectedProvisioningProfileId" PropertyName="_ProvisioningProfileId" />
 			<Output TaskParameter="DetectedProvisioningProfilePath" PropertyName="_ProvisioningProfilePath" />
-		</HotRestart.Tasks.DetectSigningIdentity>
+		</DetectHotRestartSigningIdentity>
+
 	</Target>
 
-	<Target Name="_CollectHotRestartBundleResources" Condition="'$(IsHotRestartBuild)' == 'true'">
-		<CollectBundleResources
-			OptimizePropertyLists="$(OptimizePropertyLists)"
-			OptimizePNGs="$(OptimizePNGs)"
-			BundleResources="@(Content);@(BundleResource);@(MauiAsset)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(IPhoneResourcePrefix)">
-
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_HotRestartBundleResourceWithLogicalName"/>
-		</CollectBundleResources>
+	<Target Name="_CollectHotRestartBundleContent" DependsOnTargets="_GenerateBundleName;_ParseBundlerArguments;_ComputeTargetArchitectures;_ComputeVariables;_CollectDecompressedPlugIns;_CollectDecompressedXpcServices">
+		<!-- Collect everything to put in the app bundle, except static frameworks -->
+		<FilterStaticFrameworks
+			OnlyFilterFrameworks="true"
+			FrameworkToPublish="@(ResolvedFileToPublish);@(_FileNativeReference);@(_FrameworkNativeReference);@(_DecompressedPlugIns);@(_PlugIns);@(_DecompressedXpcServices);@(_XpcServices)"
+		>
+			<Output TaskParameter="FrameworkToPublish" ItemName="_CollectedHotRestartBundleContent" />
+		</FilterStaticFrameworks>
 	</Target>
 
-	<Target Name="_UnpackHotRestartLibraryResources" DependsOnTargets="_CollectHotRestartBundleResources"
-		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'" >
-
-		<UnpackLibraryResources
-			Prefix="monotouch"
-			NoOverwrite="@(_HotRestartBundleResourceWithLogicalName)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
-			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths);@(_ReferencesFromNuGetPackages)">
-
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_HotRestartBundleResourceWithLogicalName" />
-		</UnpackLibraryResources>
-	</Target>
-
-	<!-- Gets the list of assemblies that may contain frameworks -->
-	<Target Name="_CollectHotRestartFrameworkAssemblies" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'">
-		<ItemGroup>
-			<AssembliesWithFrameworks Condition="'%(Extension)' == '.dll'" Include="@(ReferenceCopyLocalPaths)" Exclude="@(ReferenceSatellitePaths)"/>
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_UnpackHotRestartFrameworkAssemblies" 
-		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true' And '$(UnpackHotRestartFrameworks)' == 'true'"
-		Inputs="@(AssembliesWithFrameworks)"
-		Outputs="@(AssembliesWithFrameworks -> '$(DeviceSpecificIntermediateOutputPath)UnpackedFrameworks\%(Filename)%(Extension).stamp')" >
-
-		<UnpackFrameworks
-			ReferencedAssemblies="@(AssembliesWithFrameworks)"
-			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)">
-
-			<Output TaskParameter="Frameworks" ItemName="_UnpackedFramework" />
-		</UnpackFrameworks>
-
-		<MakeDir Directories="$(DeviceSpecificIntermediateOutputPath)UnpackedFrameworks"/>
-		
-		<Touch AlwaysCreate="true" Files="@(AssembliesWithFrameworks -> '$(DeviceSpecificIntermediateOutputPath)UnpackedFrameworks\%(Filename)%(Extension).stamp')" >
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
-	</Target>
-
-	<Target Name="_CollectHotRestartFrameworks" >
-		<ItemGroup>
-			<_HotRestartFrameworks Include="@(None -> '%(RootDir)%(Directory)')" Condition="$([System.String]::new('%(Directory)').EndsWith('.framework\'))" KeepDuplicates="false" />
-			<_HotRestartFrameworks Include="@(_UnpackedFramework);@(NativeReference)" KeepDuplicates="false" />
-			<_HotRestartFrameworkExecutables Include="@(_HotRestartFrameworks -> '%(FullPath)\%(Filename)')" 
-																	Outputs="$(DeviceSpecificIntermediateOutputPath)DynamicFrameworks\%(Filename)%(Extension).stamp" KeepDuplicates="false" />
-		</ItemGroup>
-	</Target>
-
-	<PropertyGroup>
-		<_CollectHotRestartDynamicFrameworksDependsOn>
-			_CollectHotRestartFrameworkAssemblies;
-			_UnpackHotRestartFrameworkAssemblies;
-			_CollectHotRestartFrameworks;
-		</_CollectHotRestartDynamicFrameworksDependsOn>
-	</PropertyGroup>
-	
-	<Target Name="_CollectHotRestartDynamicFrameworks" DependsOnTargets="$(_CollectHotRestartDynamicFrameworksDependsOn)"
-		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'"
-		Inputs="@(_HotRestartFrameworkExecutables)"
-		Outputs="@(_HotRestartFrameworkExecutables -> '%(Outputs)')" >
-
-		<CollectDynamicFrameworks
-			Frameworks="@(_HotRestartFrameworks)" >
-
-			<Output TaskParameter="DynamicFrameworks" ItemName="_DynamicFrameworks" />
-		</CollectDynamicFrameworks>
-
-		<MakeDir Directories="$(DeviceSpecificIntermediateOutputPath)DynamicFrameworks"/>
-		
-		<Touch AlwaysCreate="true" Files="@(_HotRestartFrameworks -> '$(DeviceSpecificIntermediateOutputPath)DynamicFrameworks\%(Filename)%(Extension).stamp')" >
-			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
-		</Touch>
-
-		<ItemGroup>
-			<_HotRestartFrameworkFiles Include="%(_DynamicFrameworks.FullPath)\**\*.*" Condition="'%(_DynamicFrameworks.FullPath)' != ''" KeepDuplicates="false" >
-				<FrameworkDir>%(FrameworkDir)</FrameworkDir>
-			</_HotRestartFrameworkFiles>
-		</ItemGroup>
+	<!-- Collect everything that goes in the app bundle, and figure out where to put it all -->
+	<Target Name="_ComputeHotRestartBundleContents" DependsOnTargets="_CollectHotRestartBundleContent">
+		<ComputeHotRestartBundleContents
+			HotRestartAppContentDir="$(HotRestartAppContentDir)"
+			HotRestartContentDir="$(HotRestartContentDir)"
+			HotRestartContentStampDir="$(HotRestartContentStampDir)"
+			HotRestartAppBundlePath="$(HotRestartAppBundlePath)"
+			RelativeAppBundlePath="$(_RelativeAppBundlePath)"
+			ResolvedFileToPublish="@(_CollectedHotRestartBundleContent)"
+			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
+		>
+			<Output TaskParameter="HotRestartAppContentDirContents" ItemName="_HotRestartAppContentDirContents" />
+			<Output TaskParameter="HotRestartContentDirContents" ItemName="_HotRestartContentDirContents" />
+			<Output TaskParameter="HotRestartAppBundleContents" ItemName="_HotRestartAppBundleDirContents" />
+		</ComputeHotRestartBundleContents>
 	</Target>
 
 	<PropertyGroup>
@@ -144,52 +85,61 @@
 
 	<Target Name="_CreateHotRestartCachedBundle" DependsOnTargets="$(_CreateHotRestartCachedBundleDependsOn)" />
 	
-	<!-- Creates HotRestart app bundle and collects files to copy -->
-	<Target Name="_PrepareHotRestartAppBundle" DependsOnTargets="_GenerateBuildSessionId" 
-					Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'">
+	<Target Name="_ComputeHotRestartAppBundlePath"
+		DependsOnTargets="_GenerateHotRestartBuildSessionId"
+		Condition="'$(IsHotRestartBuild)' == 'true' And '$(HotRestartAppBundlePath)' == ''"
+		>
+
+		<PrepareAppBundle
+			Condition="'$(IsHotRestartBuild)' == 'true'"
+			AppBundleName="$(_AppBundleName)"
+			SessionId="$(HotRestartBuildSessionId)"
+			ShouldExtract="false"
+			>
+
+			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
+		</PrepareAppBundle>
+	</Target>
+
+	<!-- Creates HotRestart app bundle -->
+	<Target Name="_PrepareHotRestartAppBundle"
+			DependsOnTargets="_GenerateHotRestartBuildSessionId;_ComputeHotRestartAppBundlePath"
+			Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
+			Inputs="$(HotRestartPreBuiltZipPath)"
+			Outputs="$(HotRestartAppBundlePath)\Extracted"
+			>
 
 		<!--Create app bundle dir and get its path-->
 		<PrepareAppBundle 
 			AppBundleName="$(_AppBundleName)"
-			SessionId="$(BuildSessionId)" 
-			ShouldExtract="true">
+			AppBundlePath="$(HotRestartAppBundlePath)"
+			PreBuiltAppBundlePath="$(HotRestartPreBuiltZipPath)"
+			SessionId="$(HotRestartBuildSessionId)" 
+			ShouldExtract="true" />
 
-			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
-		</PrepareAppBundle>
+		<Touch AlwaysCreate="true" Files="$(HotRestartAppBundlePath)\Extracted" />
 
 		<!-- Delete the build signature to force XMA do a full build next time -->
 		<Delete Files="$(BuildSignatureFile)" Condition="Exists('$(BuildSignatureFile)')"	/>
-
-		<ItemGroup>
-			<_FilesToHotRestartBundle Include="$(HotRestartAppBundlePath)\Extracted" />
-			
-			<_FilesToHotRestartContent Include="@(MainAssembly);" >
-				<DestinationSubDirectory></DestinationSubDirectory>
-			</_FilesToHotRestartContent>
-
-			<_FilesToHotRestartContent Include="@(_FilesToHotRestartContent -> '%(RootDir)%(Directory)%(Filename).pdb')"
-													 Condition="Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
-
-			<_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())" 
-				Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false' And '%(Extension)' != '.a' And '%(Extension)' != '.dylib' And '%(Extension)' != '.dat'"/>
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_CompileHotRestartAppManifest"
+		DependsOnTargets="_WriteAppManifest"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'"
-		Inputs="$(AppBundleManifest);$(HotRestartAppBundlePath)\Extracted"
-		Outputs="$(HotRestartSignedAppDir)$([System.IO.Path]::GetFileName('$(AppBundleManifest)'));$(HotRestartSignedAppDir)Extracted">
+		Inputs="$(_AppBundleManifestPath);$(HotRestartAppBundlePath)\Info.plist"
+		Outputs="$(HotRestartSignedAppDir)Info.plist">
 
-		<HotRestart.Tasks.CompileAppManifest
-			AppBundlePath="$(HotRestartAppBundlePath)"
-			AppManifestPath="$(AppBundleManifest)" 
-			ApplicationTitle="$(ApplicationTitle)"/>
+		<CompileHotRestartAppManifest
+			PrebuiltAppManifestPath="$(HotRestartAppBundlePath)\Info.plist"
+			CompiledAppManifestPath="$(_AppBundleManifestPath)"
+			OutputAppManifestPath="$(HotRestartSignedAppDir)Info.plist"
+			/>
 	</Target>
 
 	<Target Name="_CompileHotRestartEntitlements"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsHotRestartBuild)' == 'true'"
 		Inputs="$(CodesignEntitlements);$(_ProvisioningProfilePath);$(HotRestartAppBundlePath)\Extracted"
-		Outputs="$(HotRestartSignedAppDir)archived-expanded-entitlements.xcent;$(HotRestartSignedAppDir)Extracted">
+		Outputs="$(HotRestartSignedAppDir)archived-expanded-entitlements.xcent;$(HotRestartAppBundlePath)\Entitlements.plist">
 
 		<PropertyGroup>
 			<_HotRestartEntitlementsFile>$(CodesignEntitlements)</_HotRestartEntitlementsFile>
@@ -198,115 +148,120 @@
 
 		<CompileEntitlements
 			AppBundleDir="$(HotRestartAppBundlePath)"
-			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			Entitlements="$(_HotRestartEntitlementsFile)"
 			CompiledEntitlements="$(HotRestartAppBundlePath)\Entitlements.plist"
-			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
-			SdkIsSimulator="False"
+			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="iPhoneOS"
 			SdkVersion="12.2"
-			SdkDevPath=" "
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)" />
 	</Target>
 
-	<Target Name="_CopyFilesToHotRestartBundle"
+	<!-- Copy Bundle resources -->
+	<Target Name="_CopyHotRestartBundleResources"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
-		DependsOnTargets="_CreateHotRestartCachedBundle;_UnpackHotRestartLibraryResources"
-		Inputs="@(_HotRestartBundleResourceWithLogicalName);@(_FilesToHotRestartBundle)"
-		Outputs="@(_HotRestartBundleResourceWithLogicalName -> '$(HotRestartSignedAppDir)%(LogicalName)');
-			@(_FilesToHotRestartBundle -> '$(HotRestartSignedAppDir)%(Filename)%(Extension)')">
+		DependsOnTargets="_CreateHotRestartCachedBundle;_UnpackLibraryResources"
+		Inputs="@(_BundleResourceWithLogicalName)"
+		Outputs="@(_BundleResourceWithLogicalName -> '$(HotRestartAppBundlePath)\%(LogicalName)')">
 
-		<!-- Copy Bundle resources -->
-		<Copy SourceFiles="@(_HotRestartBundleResourceWithLogicalName)"
-        DestinationFiles="@(_HotRestartBundleResourceWithLogicalName -> '$(HotRestartSignedAppDir)\%(LogicalName)')"
-        SkipUnchangedFiles="true"
-        Condition="'@(_HotRestartBundleResourceWithLogicalName)' != ''">
-
+		<Copy
+			SourceFiles="@(_BundleResourceWithLogicalName)"
+			DestinationFiles="@(_BundleResourceWithLogicalName -> '$(HotRestartAppBundlePath)\%(LogicalName)')"
+			SkipUnchangedFiles="true"
+		>
 			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 		</Copy>
-
-		<Copy SourceFiles="@(_FilesToHotRestartBundle)"
-        DestinationFiles="@(_FilesToHotRestartBundle -> '$(HotRestartSignedAppDir)\%(Filename)%(Extension)')"
-        SkipUnchangedFiles="true"
-        Condition="'@(_FilesToHotRestartBundle)' != ''">
-
-			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-		</Copy>
-
-		<MakeDir Directories="$(HotRestartContentStampDir)"/>
-		<Touch AlwaysCreate="true" Files="$(HotRestartContentStampDir)$(_AppBundleName).stamp" />
 	</Target>
 
-	<Target Name="_CopyFilesToHotRestartContent"
+	<!-- Copy the items in _HotRestartAppBundleDirContents to their destination directory -->
+	<Target Name="_CopyFilesToHotRestartSignedAppDirContents"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
-		DependsOnTargets="_CreateHotRestartCachedBundle"
-		Inputs="@(_FilesToHotRestartContent)"
-		Outputs="@(_FilesToHotRestartContent -> '$(HotRestartContentDir)%(DestinationSubDirectory)%(FileName)%(Extension)');
-			@(_FilesToHotRestartContent -> '$(HotRestartAppContentDir)%(DestinationSubDirectory)%(FileName)%(Extension)')">
+		DependsOnTargets="_CreateHotRestartCachedBundle;_ComputeHotRestartBundleContents"
+		Inputs="@(_HotRestartAppBundleDirContents)"
+		Outputs="@(_HotRestartAppBundleDirContents -> '%(DestinationFile)')">
 
-		<MakeDir Directories="$(HotRestartContentDir)"/>
-		<MakeDir Directories="$(HotRestartAppContentDir)"/>
-
-		<!-- Copy assemblies and debug symbols into incremental Content folder -->
-		<Copy SourceFiles="@(_FilesToHotRestartContent)"
-        DestinationFiles="@(_FilesToHotRestartContent -> '$(HotRestartContentDir)%(DestinationSubDirectory)%(FileName)%(Extension)')"
-        SkipUnchangedFiles="true"
-        Condition="'@(_FilesToHotRestartContent)' != ''">
-
+		<Copy
+			SourceFiles="@(_HotRestartAppBundleDirContents)"
+			DestinationFiles="@(_HotRestartAppBundleDirContents -> '%(DestinationFile)')"
+			SkipUnchangedFiles="true"
+		>
 			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 		</Copy>
-
-		<!-- Copy assemblies and debug symbols into app bundle's content folder -->
-		<Copy SourceFiles="@(_FilesToHotRestartContent)"
-      DestinationFiles="@(_FilesToHotRestartContent -> '$(HotRestartAppContentDir)%(DestinationSubDirectory)%(FileName)%(Extension)')"
-      SkipUnchangedFiles="true"
-      Condition="'@(_FilesToHotRestartContent)' != ''">
-
-			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
-		</Copy>
-
-		<MakeDir Directories="$(HotRestartContentStampDir)"/>
-		<MakeDir Directories="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)')"/>
-		
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)%(FileName)%(Extension).stamp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartContentDir)$(AssemblyName).hotrestartapp')" />
-		<Touch AlwaysCreate="true" Files="@(_FilesToHotRestartContent -> '$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp')" />
 	</Target>
 
-	<Target Name="_CopyFrameworksToHotRestartBundle"
+	<!-- Copy the items in _HotRestartContentDirContents to their destination directory -->
+	<Target Name="_CopyFilesToHotRestartContentDir"
 		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
-		DependsOnTargets="_CreateHotRestartCachedBundle;_CollectHotRestartDynamicFrameworks"
-		Inputs="@(_HotRestartFrameworkFiles)"
-		Outputs="@(_HotRestartFrameworkFiles -> '$(HotRestartSignedAppDir)Frameworks\%(FrameworkDir)%(RecursiveDir)%(Filename)%(Extension)')">
+		DependsOnTargets="_CreateHotRestartCachedBundle;_ComputeHotRestartBundleContents"
+		Inputs="@(_HotRestartContentDirContents)"
+		Outputs="@(_HotRestartContentDirContents -> '%(DestinationFile)')">
 
-		<!-- Copy frameworks -->
-		<Copy SourceFiles="@(_HotRestartFrameworkFiles)"
-				DestinationFiles="@(_HotRestartFrameworkFiles -> '$(HotRestartAppBundlePath)\Frameworks\%(FrameworkDir)%(RecursiveDir)%(Filename)%(Extension)')"
-				SkipUnchangedFiles="true"
-				Condition="'@(_HotRestartFrameworkFiles)' != ''">
+		<Copy
+			SourceFiles="@(_HotRestartContentDirContents)"
+			DestinationFiles="@(_HotRestartContentDirContents -> '%(DestinationFile)')"
+			SkipUnchangedFiles="true"
+			>
 
 			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
 		</Copy>
+	</Target>
+
+	<!-- Copy the items in _HotRestartAppContentDirContents to their destination directory -->
+	<Target Name="_CopyFilesToHotRestartAppContentDir"
+		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
+		DependsOnTargets="_CreateHotRestartCachedBundle;_ComputeHotRestartBundleContents"
+		Inputs="@(_HotRestartAppContentDirContents)"
+		Outputs="@(_HotRestartAppContentDirContents -> '%(DestinationFile)')">
+
+		<Copy
+			SourceFiles="@(_HotRestartAppContentDirContents)"
+			DestinationFiles="@(_HotRestartAppContentDirContents -> '%(DestinationFile)')"
+			SkipUnchangedFiles="true"
+			>
+
+			<Output TaskParameter="DestinationFiles" ItemName="FileWrites"/>
+		</Copy>
+	</Target>
+
+	<Target Name="_CreateHotRestartAppMarkers">
+		<MakeDir Directories="$(HotRestartContentStampDir)"/>
+		<MakeDir Directories="@(_HotRestartContentDirContents -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)')"/>
+
+		<!-- We need to create a .stamp file for every file in the .content folder to know what to copy in incremental deployments -->
+		<!-- The idea of incremental deployments in Hot Restart is that we will copy only the content files that changed, without the need of re-installing the application -->
+		<!-- We use the .stamp files to compare inputs/outputs and determine which files have changed so we can upload them to the .content folder -->
+		<!-- We only re-install the app when a file that requires the app to be re-signed is changed -->
+		<Touch AlwaysCreate="true" Files="@(_HotRestartContentDirContents -> '$(HotRestartContentStampDir)%(DestinationSubDirectory)%(FileName)%(Extension).stamp')" />
+		<!-- The Hot Restart pre-built app doesn't know anything about the real app, it just knows that inside the bundle there should be a .content folder with a bunch of files belonging to the real app -->
+		<!-- The .hotrestartapp file is the marker that we use to identify the main entry point of the app to dynamically load when the Hot Restart pre-built app initializes -->
+		<!-- In build time, we name that file the same as the main $(AssemblyName), so if the app is Maui1.dll o Forms1.exe, we name the marker Maui1.hotrestartapp or Forms1.hotrestartapp -->
+		<!-- When the pre-built app initializes, it searches for the marker in the .content dir and then it loads the file that has the same name -->
+		<Touch AlwaysCreate="true" Files="$(HotRestartContentStampDir)$(AssemblyName).hotrestartapp.stamp" />
+		<Touch AlwaysCreate="true" Files="$(HotRestartAppContentDir)$(AssemblyName).hotrestartapp" />
 	</Target>
 
 	<Target Name="_CollectCodeSignHotRestartInputs">
 		<ItemGroup>
-			<_CodeSignHotRestartInputs Include="$(AppBundleManifest)" Outputs="$(HotRestartSignedAppDir)$([System.IO.Path]::GetFileName('$(AppBundleManifest)'))" />
+			<_CodeSignHotRestartInputs Include="$(_AppBundleManifestPath)" Outputs="$(HotRestartSignedAppDir)Info.plist" />
 			<_CodeSignHotRestartInputs Include="$(CodesignEntitlements)" Outputs="$(HotRestartSignedAppDir)$(CodesignEntitlements)" />
 			<_CodeSignHotRestartInputs Include="$(_ProvisioningProfilePath)" Outputs="$(HotRestartSignedAppDir)embedded.mobileprovision" />
-			<_CodeSignHotRestartInputs Include="@(_HotRestartFrameworkFiles)" Outputs="$(HotRestartAppBundlePath)\Frameworks\%(_HotRestartFrameworkFiles.FrameworkDir)%(RecursiveDir)%(Filename)%(Extension)" />
+			<_CodeSignHotRestartInputs Include="@(_HotRestartAppBundleDirContents)" Outputs="%(_HotRestartAppBundleDirContents.DestinationFile)" />
 			<_CodeSignHotRestartInputs Include="$(HotRestartAppBundlePath)\Extracted" Outputs="$(HotRestartSignedAppDir)Extracted" />
 		</ItemGroup>
 	</Target>
 
 	<PropertyGroup>
 		<_CreateHotRestartOutputBundleDependsOn>
+			_CreateHotRestartCachedBundle;
+			_UnpackLibraryResources;
+			_ComputeHotRestartBundleContents;
+			_CopyHotRestartBundleResources;
+			_CopyFilesToHotRestartSignedAppDirContents;
 			_CodesignHotRestartAppBundle;
-			_CopyFilesToHotRestartBundle;
-			_CopyFilesToHotRestartContent;
+			_CopyFilesToHotRestartContentDir;
+			_CopyFilesToHotRestartAppContentDir;
+			_CreateHotRestartAppMarkers;
 		</_CreateHotRestartOutputBundleDependsOn>
 	</PropertyGroup>
 
@@ -314,12 +269,12 @@
 					AfterTargets="_CodesignAppBundle" />
 	
 	<Target Name="_CodesignHotRestartAppBundle"
-		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true'"
-		DependsOnTargets="_CreateHotRestartCachedBundle;_CopyFrameworksToHotRestartBundle;_CollectCodeSignHotRestartInputs"
+		Condition="'$(_CanOutputAppBundle)' == 'true' And '$(IsAppExtension)' == 'false' And '$(IsHotRestartBuild)' == 'true' And '$(EnableCodeSigning)' != 'false'"
+		DependsOnTargets="_CreateHotRestartCachedBundle;_CollectCodeSignHotRestartInputs"
 		Inputs="@(_CodeSignHotRestartInputs)"
 		Outputs="@(_CodeSignHotRestartInputs -> '%(Outputs)')">
 		
-		<HotRestart.Tasks.Codesign
+		<CodesignHotRestartApp
 			AppBundlePath="$(HotRestartAppBundlePath)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			CodeSigningPath="$(_CodeSigningPath)"
@@ -333,17 +288,7 @@
 		</CleanDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CleanHotRestartBundle" DependsOnTargets="_GenerateBuildSessionId" >
-		<!-- Gets the bundle path -->
-		<PrepareAppBundle 
-			Condition="'$(IsHotRestartBuild)' == 'true'"
-			AppBundleName="$(_AppBundleName)"
-			SessionId="$(BuildSessionId)" 
-			ShouldExtract="false">
-
-			<Output TaskParameter="AppBundlePath" PropertyName="HotRestartAppBundlePath" />
-		</PrepareAppBundle>
-		
+	<Target Name="_CleanHotRestartBundle" DependsOnTargets="_GenerateHotRestartBuildSessionId;_ComputeHotRestartAppBundlePath" >
 		<RemoveDir Directories="$(HotRestartAppBundlePath)" />
 		<RemoveDir Directories="$(HotRestartSignedAppOutputDir)" />
 		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)UnpackedFrameworks" />

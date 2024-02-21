@@ -111,7 +111,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 #else
 			var executableRelativePath = Path.Combine (ExpectedAppName, "monotouchtest");
 #endif
-			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (executableRelativePath));
+			var alternativeRelativePath = executableRelativePath.Replace (ExpectedAppName, "PublicStaging.app");
+			Assert.That (main.ExecutableUrl.ToString (), Does.Contain (executableRelativePath).Or.Contain (alternativeRelativePath));
 		}
 
 		[Test]
@@ -125,7 +126,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestResourcesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That (main.ResourcesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.ResourcesDirectoryUrl.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
@@ -146,7 +147,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestSupportFilesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That (main.SupportFilesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.SupportFilesDirectoryUrl.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]
@@ -160,7 +161,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That (main.Url.ToString (), Contains.Substring (ExpectedAppName + "/"));
+			Assert.That (main.Url.ToString (), Does.Contain (ExpectedAppName + "/").Or.Contain ("PublicStaging.app/"));
 		}
 
 		[Test]

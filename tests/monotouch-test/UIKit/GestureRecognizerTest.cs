@@ -82,7 +82,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 			pool.Dispose ();
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (1), () => { GC.Collect (); }, () => finalizedAnyCtor && finalizedAnyAddTarget1 && finalizedAnyAddTarget2);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (1), () => { GC.Collect (); }, () => finalizedAnyCtor && finalizedAnyAddTarget1 && finalizedAnyAddTarget2);
 			Assert.IsTrue (finalizedAnyCtor, "Any finalized");
 			Assert.IsTrue (finalizedAnyAddTarget1, "AddTarget1 finalized");
 			Assert.IsTrue (finalizedAnyAddTarget2, "AddTarget2 finalized");
@@ -105,7 +105,7 @@ namespace MonoTouchFixtures.UIKit {
 			// add gesture recognizer to UI view
 			using UIView view = new UIView ();
 			view.AddGestureRecognizer (recognizer);
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (30), () => {
 				// change state of gesture recognizer to execute callback
 				recognizer.State = UIGestureRecognizerState.Changed;
 				recognizer.State = UIGestureRecognizerState.Ended;
@@ -124,7 +124,7 @@ namespace MonoTouchFixtures.UIKit {
 			}
 			~FinalizerNotifier ()
 			{
-				if (Action != null)
+				if (Action is not null)
 					Action ();
 			}
 		}

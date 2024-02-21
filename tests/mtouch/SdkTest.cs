@@ -210,7 +210,7 @@ namespace Xamarin.Linker {
 			if (!arg.Type.Is ("System", "Type"))
 				return;
 			var ar = (arg.Value as TypeReference)?.Scope as AssemblyNameReference;
-			if (ar == null)
+			if (ar is null)
 				return;
 			references.Add (ar);
 		}
@@ -357,7 +357,7 @@ namespace Xamarin.Linker {
 			if (known_llvm_failures.TryGetValue (asm, out var known_failures)) {
 				expected_exit_code = known_failures.Item1;
 				Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
-				if (known_failures.Item2 != null) {
+				if (known_failures.Item2 is not null) {
 					// Check if there are known failures for failures we've fixed
 					var known_inexistent_failures = known_failures.Item2.Where ((v) => !llvm_failed.Contains (v));
 					Assert.IsEmpty (string.Join ("\n", known_inexistent_failures), $"Redundant known failures: should be removed from dictionary for {asm}");

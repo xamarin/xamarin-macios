@@ -1,5 +1,13 @@
-!missing-selector! NSFileProviderService::getFileProviderConnectionWithCompletionHandler: not bound
-
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 !missing-selector! NSXPCInterface::interfaceForSelector:argumentIndex:ofReply: not bound
 !missing-selector! NSXPCInterface::setInterface:forSelector:argumentIndex:ofReply: not bound
+!missing-enum! NSNetServicesError not bound
+
+# Apple started refusing applications that use those selectors (desk #63237)
+# The situation is a bit confusing since NSPortMessage.h is not part of iOS SDK - 
+# but the type is used (from NSPort[Delegate]) but not _itself_ documented
+# The selectors Apple *currently* dislike are removed from the iOS build
+!unknown-type! NSPortMessage bound
+
+# We will not remove it for classic, was removed for dotnet
+!unknown-native-enum! NSBundleExecutableArchitecture bound

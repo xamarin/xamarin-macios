@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "macOS View Controller",
-  "description": "A macOS View Controller with UI implemented in Xcode's Interface Builder (XIB file)",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "macOS-Ansichtscontroller",
+  "description": "Ein macOS-Ansichtscontroller mit in Xcode-Interface Builder (XIB-Datei) implementierter Benutzeroberfläche",
+  "symbols/namespace/description": "Namespace für den generierten Code"
 }

@@ -8,13 +8,10 @@ using ObjCRuntime;
 
 namespace Compression {
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	struct CompressionStreamStruct {
@@ -26,12 +23,12 @@ namespace Compression {
 
 
 		[DllImport (Constants.libcompressionLibrary)]
-		public static extern CompressionStatus compression_stream_init (ref CompressionStreamStruct stream, StreamOperation operation, CompressionAlgorithm algorithm);
+		public unsafe static extern CompressionStatus compression_stream_init (CompressionStreamStruct* stream, StreamOperation operation, CompressionAlgorithm algorithm);
 
 		[DllImport (Constants.libcompressionLibrary)]
-		public static extern CompressionStatus compression_stream_process (ref CompressionStreamStruct stream, StreamFlag flags);
+		public unsafe static extern CompressionStatus compression_stream_process (CompressionStreamStruct* stream, StreamFlag flags);
 
 		[DllImport (Constants.libcompressionLibrary)]
-		public static extern CompressionStatus compression_stream_destroy (ref CompressionStreamStruct stream);
+		public unsafe static extern CompressionStatus compression_stream_destroy (CompressionStreamStruct* stream);
 	}
 }

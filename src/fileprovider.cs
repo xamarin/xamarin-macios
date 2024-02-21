@@ -33,7 +33,6 @@ namespace FileProvider {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (8, 0)]
 	[NoMac]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
@@ -83,65 +82,53 @@ namespace FileProvider {
 		[Export ("stopProvidingItemAtURL:")]
 		void StopProvidingItemAtUrl (NSUrl url);
 
-		[iOS (11, 0)]
 		[Export ("itemForIdentifier:error:")]
 		[return: NullAllowed]
 		INSFileProviderItem GetItem (NSString identifier, out NSError error);
 
 		// Inlining NSFileProviderExtension (NSFileProviderActions) so we get asyncs
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("importDocumentAtURL:toParentItemIdentifier:completionHandler:")]
 		void ImportDocument (NSUrl fileUrl, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("createDirectoryWithName:inParentItemIdentifier:completionHandler:")]
 		void CreateDirectory (string directoryName, string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("renameItemWithIdentifier:toName:completionHandler:")]
 		void RenameItem (string itemIdentifier, string itemName, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("reparentItemWithIdentifier:toParentItemWithIdentifier:newName:completionHandler:")]
 		void ReparentItem (string itemIdentifier, string parentItemIdentifier, [NullAllowed] string newName, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("trashItemWithIdentifier:completionHandler:")]
 		void TrashItem (string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:")]
 		void UntrashItem (string itemIdentifier, [NullAllowed] string parentItemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("deleteItemWithIdentifier:completionHandler:")]
 		void DeleteItem (string itemIdentifier, Action<NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("setLastUsedDate:forItemIdentifier:completionHandler:")]
 		void SetLastUsedDate ([NullAllowed] NSDate lastUsedDate, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("setTagData:forItemIdentifier:completionHandler:")]
 		void SetTagData ([NullAllowed] NSData tagData, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
-		[iOS (11, 0)]
 		[Async]
 		[Export ("setFavoriteRank:forItemIdentifier:completionHandler:")]
 		void SetFavoriteRank ([NullAllowed] NSNumber favoriteRank, string itemIdentifier, Action<INSFileProviderItem, NSError> completionHandler);
 
 		#region NSFileProviderEnumeration (NSFileProviderExtension)
-		[iOS (11, 0)]
 		[Export ("enumeratorForContainerItemIdentifier:error:")]
 		[return: NullAllowed]
 		INSFileProviderEnumerator GetEnumerator (string containerItemIdentifier, out NSError error);
@@ -149,21 +136,18 @@ namespace FileProvider {
 
 		// From NSFileProviderExtension (NSFileProviderThumbnailing)
 
-		[iOS (11, 0)]
 		[Export ("fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:")]
 		[Async]
 		NSProgress FetchThumbnails (NSString [] itemIdentifiers, CGSize size, NSFileProviderExtensionFetchThumbnailsHandler perThumbnailCompletionHandler, Action<NSError> completionHandler);
 
 		// From NSFileProviderExtension (NSFileProviderService)
 
-		[iOS (11, 0)]
 		[Export ("supportedServiceSourcesForItemIdentifier:error:")]
 		[return: NullAllowed]
 		INSFileProviderServiceSource [] GetSupportedServiceSources (string itemIdentifier, out NSError error);
 
 		// From NSFileProviderExtension (NSFileProviderDomain)
 
-		[iOS (11, 0)]
 		[NullAllowed, Export ("domain")]
 		NSFileProviderDomain Domain { get; }
 	}
@@ -171,7 +155,6 @@ namespace FileProvider {
 
 namespace FileProvider {
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
@@ -210,7 +193,6 @@ namespace FileProvider {
 		PreserveDownloadedUserData = 2,
 	}
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
@@ -231,7 +213,6 @@ namespace FileProvider {
 		NSString ItemKey { get; }
 	}
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
@@ -242,7 +223,6 @@ namespace FileProvider {
 		ulong Unranked { get; }
 	}
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[NoMacCatalyst]
 	[Static]
@@ -259,8 +239,6 @@ namespace FileProvider {
 		NSString TrashContainer { get; }
 	}
 
-	[iOS (11, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	[Flags]
@@ -317,7 +295,6 @@ namespace FileProvider {
 		DownloadEagerlyAndKeepDownloaded,
 	}
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[NoMacCatalyst]
 	[Static]
@@ -340,7 +317,6 @@ namespace FileProvider {
 		NSData InitialPageSortedByDate { get; }
 	}
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
@@ -399,12 +375,14 @@ namespace FileProvider {
 		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (13, 0)]
 		[Export ("supportsSyncingTrash")]
 		bool SupportsSyncingTrash { get; set; }
+
+		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 3), iOS (16, 4)]
+		[NullAllowed, Export ("volumeUUID")]
+		NSUuid VolumeUuid { get; }
 	}
 
 	interface INSFileProviderEnumerationObserver { }
 
-	[iOS (11, 0)]
-	[Mac (10, 15)]
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerationObserver {
@@ -429,8 +407,6 @@ namespace FileProvider {
 
 	interface INSFileProviderChangeObserver { }
 
-	[iOS (11, 0)]
-	[Mac (10, 15)]
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderChangeObserver {
@@ -459,8 +435,6 @@ namespace FileProvider {
 
 	interface INSFileProviderEnumerator { }
 
-	[iOS (11, 0)]
-	[Mac (10, 15)]
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderEnumerator {
@@ -482,8 +456,6 @@ namespace FileProvider {
 
 	interface INSFileProviderItem { }
 
-	[iOS (11, 0)]
-	[Mac (10, 15)]
 	[NoMacCatalyst]
 	[Protocol]
 	interface NSFileProviderItem {
@@ -626,7 +598,6 @@ namespace FileProvider {
 		NSFileProviderContentPolicy ContentPolicy { get; }
 	}
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]
@@ -849,7 +820,6 @@ namespace FileProvider {
 
 	interface INSFileProviderServiceSource { }
 
-	[iOS (11, 0)]
 	[Mac (11, 0)]
 	[Unavailable (PlatformName.MacCatalyst)]
 	[Advice ("This API is not available when using Catalyst on macOS.")]

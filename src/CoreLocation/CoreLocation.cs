@@ -64,12 +64,11 @@ namespace CoreLocation {
 		}
 
 		[DllImport (Constants.CoreLocationLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern /* BOOL */ bool CLLocationCoordinate2DIsValid (CLLocationCoordinate2D cord);
+		static extern /* BOOL */ byte CLLocationCoordinate2DIsValid (CLLocationCoordinate2D cord);
 
 		public bool IsValid ()
 		{
-			return CLLocationCoordinate2DIsValid (this);
+			return CLLocationCoordinate2DIsValid (this) != 0;
 		}
 
 		public override string ToString ()
@@ -81,12 +80,11 @@ namespace CoreLocation {
 #if IOS && !COREBUILD // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
 	public partial class CLPlacemark {
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (10, 0)]
 		[Mac (11,0)]
 #endif
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)

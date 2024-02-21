@@ -36,6 +36,28 @@ namespace BackgroundAssets {
 		Periodic,
 	}
 
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[ErrorDomain ("BAErrorDomain")]
+	[Native]
+	public enum BAErrorCode : long {
+		DownloadInvalid = 0,
+		CallFromExtensionNotAllowed = 50,
+		CallFromInactiveProcessNotAllowed = 51,
+		CallerConnectionNotAccepted = 55,
+		CallerConnectionInvalid = 56,
+		DownloadAlreadyScheduled = 100,
+		DownloadNotScheduled = 101,
+		DownloadFailedToStart = 102,
+		DownloadAlreadyFailed = 103,
+		DownloadEssentialDownloadNotPermitted = 109,
+		DownloadBackgroundActivityProhibited = 111,
+		DownloadWouldExceedAllowance = 112,
+		SessionDownloadDisallowedByDomain = 202,
+		SessionDownloadDisallowedByAllowance = 203,
+		SessionDownloadAllowanceExceeded = 204,
+		SessionDownloadNotPermittedBeforeAppLaunch = 206,
+	}
+
 	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -52,6 +74,14 @@ namespace BackgroundAssets {
 		[Export ("priority")]
 		nint Priority { get; }
 
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("isEssential")]
+		bool IsEssential { get; }
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[return: Release]
+		[Export ("copyAsNonEssential")]
+		BADownload CopyAsNonEssential ();
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
@@ -63,12 +93,20 @@ namespace BackgroundAssets {
 		[NullAllowed]
 		[Export ("restrictedDownloadSizeRemaining", ArgumentSemantic.Strong)]
 		NSNumber RestrictedDownloadSizeRemaining { get; }
+
+		[NoWatch, NoTV, Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[NullAllowed]
+		[Export ("restrictedEssentialDownloadSizeRemaining", ArgumentSemantic.Strong)]
+		NSNumber RestrictedEssentialDownloadSizeRemaining { get; }
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16, 0)]
 	[Protocol]
 	interface BADownloaderExtension {
 
+		[Deprecated (PlatformName.iOS, 16, 4, message: "'WillTerminate' will not be called in all applicable scenarios, do not rely on it.")]
+		[Deprecated (PlatformName.MacOSX, 13, 3, message: "'WillTerminate' will not be invoked in all applicable scenarios, do not rely on it.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "'WillTerminate' will not be invoked in all applicable scenarios, do not rely on it.")]
 		[Export ("extensionWillTerminate")]
 		void WillTerminate ();
 
@@ -130,6 +168,11 @@ namespace BackgroundAssets {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("fetchCurrentDownloads:")]
+		[return: NullAllowed]
+		BADownload [] FetchCurrentDownloads ([NullAllowed] out NSError error);
+
 		[Async]
 		[Export ("fetchCurrentDownloadsWithCompletionHandler:")]
 		void FetchCurrentDownloads (Action<NSArray<BADownload>, NSError> completionHandler);
@@ -165,12 +208,26 @@ namespace BackgroundAssets {
 		[Field ("BADownloaderPriorityMax")]
 		nint MaxPriority { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 4)]
+		[Deprecated (PlatformName.MacOSX, 13, 3)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4)]
 		[Export ("initWithIdentifier:request:applicationGroupIdentifier:")]
 		NativeHandle Constructor (string identifier, NSUrlRequest request, string applicationGroupIdentifier);
 
+		[Deprecated (PlatformName.iOS, 16, 4)]
+		[Deprecated (PlatformName.MacOSX, 13, 3)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 4)]
 		[Export ("initWithIdentifier:request:applicationGroupIdentifier:priority:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, NSUrlRequest request, string applicationGroupIdentifier, nint priority);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("initWithIdentifier:request:fileSize:applicationGroupIdentifier:")]
+		NativeHandle Constructor (string identifier, NSUrlRequest request, nuint fileSize, string applicationGroupIdentifier);
+
+		[Mac (13, 3), iOS (16, 4), MacCatalyst (16, 4)]
+		[Export ("initWithIdentifier:request:essential:fileSize:applicationGroupIdentifier:priority:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string identifier, NSUrlRequest request, bool essential, nuint fileSize, string applicationGroupIdentifier, nint priority);
 	}
 
 }

@@ -19,7 +19,7 @@ namespace Xharness.Jenkins {
 
 		public JenkinsDeviceLoader (ISimulatorLoader simulators, IHardwareDeviceLoader devices, ILogs logs)
 		{
-			if (logs == null)
+			if (logs is null)
 				throw new ArgumentNullException (nameof (logs));
 
 			this.simulators = simulators ?? throw new ArgumentNullException (nameof (simulators));

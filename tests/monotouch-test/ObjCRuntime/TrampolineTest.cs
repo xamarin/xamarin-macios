@@ -461,7 +461,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Export ("Test_StringArray:")]
 		int Test_StringArray (string [] arr)
 		{
-			if (arr == null)
+			if (arr is null)
 				return -1;
 			if (arr.Length == 0)
 				return 0;

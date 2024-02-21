@@ -24,7 +24,7 @@ namespace UIKit {
 
 		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 		{
-			using (var dict = attributes == null ? null : attributes.Dictionary)
+			using (var dict = attributes is null ? null : attributes.Dictionary)
 				_SetTitleTextAttributes (dict, state);
 		}
 
@@ -38,7 +38,7 @@ namespace UIKit {
 		public partial class UIBarItemAppearance {
 			public virtual void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 			{
-				if (attributes == null)
+				if (attributes is null)
 					throw new ArgumentNullException ("attributes");
 				using (var dict = attributes.Dictionary) {
 					_SetTitleTextAttributes (dict, state);

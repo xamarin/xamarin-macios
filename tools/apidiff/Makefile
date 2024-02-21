@@ -32,8 +32,8 @@ endif
 endif
 endif
 
-MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/net6.0/mono-api-info.dll
-MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/net6.0/mono-api-html.dll
+MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/$(DOTNET_TFM)/mono-api-info.dll
+MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/$(DOTNET_TFM)/mono-api-html.dll
 MONO_BUILD = $(SYSTEM_MONO)
 
 MONO_API_INFO_EXEC = $(DOTNET) --roll-forward Major $(MONO_API_INFO) --ignore-inherited-interfaces
@@ -45,8 +45,8 @@ export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking chang
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
 ifeq ($(DOTNET_TFM_REFERENCE),)
-# Change the below to net8.0 once we have reference assemblies from net8.0 (i.e. once net8.0 goes stable).
-DOTNET_TFM_REFERENCE=net7.0
+# Change the below to net9.0 once we have reference assemblies from net9.0 (i.e. once net8.0 goes stable).
+DOTNET_TFM_REFERENCE=net8.0
 endif
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
@@ -118,9 +118,13 @@ $(APIDIFF_DIR)/temp/dotnet/legacy-diff/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
-$(APIDIFF_DIR)/temp/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
+define DotNetApiInfo
+$(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll $(MONO_API_INFO)
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(QF_GEN) $(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$@)
+endef
+
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetApiInfo,$(platform))))
 
 # create diff from api info and reference info
 # note that we create an empty file (the 'touch' command)
@@ -444,7 +448,10 @@ $$(BUNDLE_ZIP_$(1)):
 		$$(CP) ~/Library/Caches/xamarin-macios/$$(notdir $$@) $$@.tmp; \
 	else \
 		$(MAKE) check-token || exit 1; \
-		$(CURL_RETRY) -H "Authorization: token $(AUTH_TOKEN_GITHUB_COM)" "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; \
+		if ! $(CURL_RETRY) -H "Authorization: token $(AUTH_TOKEN_GITHUB_COM)" "$$(BUNDLE_ZIP_$(1)_URL)" --output $$@.tmp; then \
+			echo "Failed to download $$(BUNDLE_ZIP_$(1)_URL)"; \
+			exit 1; \
+		fi; \
 		if [[ "x$$$$MACIOS_CACHE_DOWNLOADS" != "x" ]]; then \
 			mkdir -p ~/Library/Caches/xamarin-macios/; \
 			$$(CP) $$@.tmp ~/Library/Caches/xamarin-macios/"$$(notdir $$@)"; \
@@ -525,9 +532,13 @@ $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE)/
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetGenerateReferenceXml,$(platform))))
 
-$(APIDIFF_DIR)/updated-references/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/$*)
-	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/dotnet/$*.xml)
+define UpdatedReferences
+$(APIDIFF_DIR)/updated-references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml: $(DOTNET_DESTDIR)/$($(1)_NUGET_REF_NAME)/ref/$(DOTNET_TFM)/Microsoft.$(1).dll $(MONO_API_INFO)
+	$$(Q) mkdir -p $$(dir $$@) $$(dir $$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).Ref)
+	$$(QF_GEN) $$(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml)
+endef
+
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call UpdatedReferences,$(platform))))
 
 update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)

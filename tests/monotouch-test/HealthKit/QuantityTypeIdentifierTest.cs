@@ -38,7 +38,11 @@ namespace MonoTouchFixtures.HealthKit {
 
 			var failures = new List<string> ();
 
+#if NET
+			foreach (var value in Enum.GetValues<HKQuantityTypeIdentifier> ()) {
+#else
 			foreach (HKQuantityTypeIdentifier value in Enum.GetValues (typeof (HKQuantityTypeIdentifier))) {
+#endif
 
 				// we need to have version checks for anything added after iOS 8.0
 				switch (value) {
@@ -109,6 +113,16 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.WaterTemperature:
 					// These are all available in iOS 16.0, but lets bump to 14.1 to test only on macOS 13
 					if (!TestRuntime.CheckXcodeVersion (14, 1))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.CyclingCadence:
+				case HKQuantityTypeIdentifier.CyclingFunctionalThresholdPower:
+				case HKQuantityTypeIdentifier.CyclingPower:
+				case HKQuantityTypeIdentifier.CyclingSpeed:
+				case HKQuantityTypeIdentifier.EnvironmentalSoundReduction:
+				case HKQuantityTypeIdentifier.PhysicalEffort:
+				case HKQuantityTypeIdentifier.TimeInDaylight:
+					if (!TestRuntime.CheckXcodeVersion (15, 0))
 						continue;
 					break;
 				}

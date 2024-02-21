@@ -1,0 +1,92 @@
+parameters:
+- name: vsdropsPrefix
+  type: string
+
+- name: keyringPass
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: uploadBinlogs
+  type: boolean
+  default: true
+
+- name: isPR
+  type: boolean
+
+- name: repositoryAlias
+  type: string
+  default: self
+
+- name: commit
+  type: string
+  default: HEAD
+
+- name: uploadPrefix
+  type: string
+  default: '$(MaciosUploadPrefix)'
+
+steps:
+- template: build.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+    repositoryAlias: ${{ parameters.repositoryAlias }}
+    commit: ${{ parameters.commit }}
+    vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+    keyringPass: ${{ parameters.keyringPass }}
+    gitHubToken: ${{ parameters.gitHubToken }}
+    xqaCertPass: ${{ parameters.xqaCertPass }}
+    buildSteps:
+
+    # funny enough we need these profiles to build the mac tests
+    - bash: '"$BUILD_SOURCESDIRECTORY"/maccore/tools/install-qa-provisioning-profiles.sh -v'
+      displayName: 'Add tests provisioning profiles'
+      timeoutInMinutes: 30
+      continueOnError: true # should not stop the build will result in test failures but we do want the pkg
+      env:
+        AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+        AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+        AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+        AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+        AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+
+    - bash: |
+        set -x
+        set -e
+
+        make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
+
+        if test -f "$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"; then
+          set +x
+          echo "##vso[artifact.upload containerfolder=mac-test-package;artifactname=${{ parameters.uploadPrefix }}mac-test-package]$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"
+          set -x
+        fi
+
+      name: macTestPkg
+      displayName: 'Package macOS tests'
+      condition: and(succeeded(), contains(variables['RUN_MAC_TESTS'], 'true'))
+      timeoutInMinutes: 60
+
+    - ${{ if eq(parameters.uploadBinlogs, true) }}:
+      # Copy all the binlogs to a separate directory, keeping directory structure.
+      - script: |
+          set -x
+          mkdir -p $(Build.ArtifactStagingDirectory)/mactests-binlogs
+          rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/mactests-binlogs
+        displayName: Copy all binlogs
+        continueOnError: true
+        condition: succeededOrFailed()
+
+      # Publish all the binlogs we collected in the previous step
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish Artifact: All binlogs'
+        inputs:
+          targetPath: $(Build.ArtifactStagingDirectory)/mactests-binlogs
+          artifactName: '${{ parameters.uploadPrefix }}mactests-binlogs-$(Build.BuildId)-$(System.JobAttempt)'
+        continueOnError: true
+        condition: succeededOrFailed()

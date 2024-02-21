@@ -33,6 +33,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Diagnostics.CodeAnalysis;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -221,21 +222,24 @@ namespace CoreText {
 
 #if NET
 		// [SupportedOSPlatform ("tvos13.0")] - Not valid on delegate declaration
-		// [SupportedOSPlatform ("macos10.15")]
+		// [SupportedOSPlatform ("macos")]
 		// [SupportedOSPlatform ("ios13.0")]
 		// [SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public delegate bool CTFontRegistrationHandler (NSError [] errors, bool done);
 
+#if !NET
 		internal delegate byte InnerRegistrationHandler (IntPtr block, IntPtr errors, byte done);
 		static readonly InnerRegistrationHandler callback = TrampolineRegistrationHandler;
 
 		[MonoPInvokeCallback (typeof (InnerRegistrationHandler))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static unsafe byte TrampolineRegistrationHandler (IntPtr block, /* NSArray */ IntPtr errors, byte done)
 		{
 			var del = BlockLiteral.GetTarget<CTFontRegistrationHandler> (block);
@@ -248,13 +252,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -262,13 +265,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -281,8 +283,13 @@ namespace CoreText {
 					}
 				} else {
 					unsafe {
+#if NET
+						delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+						using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 						using var block = new BlockLiteral ();
 						block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, &block);
 					}
 				}
@@ -355,13 +362,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -369,13 +375,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -385,8 +390,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerUnregisterFontURLs (arr.Handle, scope, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerUnregisterFontURLs (arr.Handle, scope, &block);
 				}
 			}
@@ -429,7 +439,7 @@ namespace CoreText {
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool CTFontManagerRegisterGraphicsFont (IntPtr cgfont, out IntPtr error);
 
-		public static bool RegisterGraphicsFont (CGFont font, out NSError? error)
+		public static bool RegisterGraphicsFont (CGFont font, [NotNullWhen (true)] out NSError? error)
 		{
 			if (font is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
@@ -518,13 +528,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -532,13 +541,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -548,8 +556,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerRegisterFontDescriptors (arr.Handle, scope, enabled, &block);
 				}
 			}
@@ -557,13 +570,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -571,13 +583,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -587,8 +598,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerUnregisterFontDescriptors (arr.Handle, scope, &block);
 				}
 			}
@@ -642,13 +658,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -656,13 +671,12 @@ namespace CoreText {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6, 0)]
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public static CTFontDescriptor []? CreateFontDescriptors (NSData data)
@@ -709,8 +723,13 @@ namespace CoreText {
 				if (registrationHandler is null) {
 					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, null);
 				} else {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandler;
+					using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandler));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (callback, registrationHandler);
+#endif
 					CTFontManagerRegisterFontsWithAssetNames (arr.Handle, bundle.GetHandle (), scope, enabled, &block);
 				}
 			}
@@ -743,10 +762,16 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern unsafe void CTFontManagerRequestFonts (/* CFArrayRef */ IntPtr fontDescriptors, BlockLiteral* completionHandler);
 
+#if !NET
 		internal delegate void InnerRequestFontsHandler (IntPtr block, IntPtr fontDescriptors);
 		static readonly InnerRequestFontsHandler requestCallback = TrampolineRequestFonts;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (InnerRequestFontsHandler))]
+#endif
 		static unsafe void TrampolineRequestFonts (IntPtr block, /* CFArray */ IntPtr fontDescriptors)
 		{
 			var del = BlockLiteral.GetTarget<CTFontManagerRequestFontsHandler> (block);
@@ -773,8 +798,13 @@ namespace CoreText {
 
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
 				unsafe {
+#if NET
+					delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineRequestFonts;
+					using var block = new BlockLiteral (trampoline, completionHandler, typeof (CTFontManager), nameof (TrampolineRequestFonts));
+#else
 					using var block = new BlockLiteral ();
 					block.SetupBlockUnsafe (requestCallback, completionHandler);
+#endif
 					CTFontManagerRequestFonts (arr.Handle, &block);
 				}
 			}

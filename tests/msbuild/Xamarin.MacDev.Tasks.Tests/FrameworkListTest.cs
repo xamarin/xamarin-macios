@@ -42,7 +42,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 			var isMac = frameworkName == "Xamarin.Mac";
 			var isFull = fameworkListFileParts [1] == "Full";
-			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile, isMac);
+			var frameworkListAssemblies = ScanFrameworkListXml (frameworkListFile);
 			var installedAssemblies = ScanAssemblyDirectory (frameworkName, isMac, isFull);
 
 			foreach (var assembly in frameworkListAssemblies) {
@@ -85,10 +85,10 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		List<AssemblyInfo> ScanFrameworkListXml (string frameworkListFile, bool isMac)
+		List<AssemblyInfo> ScanFrameworkListXml (string frameworkListFile)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks", frameworkListFile));
+			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", "Xamarin.Shared", frameworkListFile));
 			using (var reader = XmlReader.Create (path)) {
 				while (reader.Read ()) {
 					if (reader.IsStartElement ()) {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} 的格式不正确或未知，无法处理。
-        </value>
+        <value>xcframework“{0}”的格式不正确或未知，无法处理。</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>在“{0}”中找不到匹配的框架。
-        </value>
+        <value>在“{0}”中找不到匹配的框架。SupportedPlatform: “{0}”，SupportedPlatformVariant: “{1}”，SupportedArchitectures: “{2}”。</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>“{0}”和“{1}”选项冲突。将忽略“{1}”。
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>无法分析自定义链接器参数 "-{0}": {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 项“{0}”不存在。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>无法解析 WiFi 调试程序设置的主机 IP。
@@ -1170,11 +1177,64 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>清单“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
+        <value>绑定的资源包“{2}”中本机引用“{1}”的意外扩展“{0}”。</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip 文件“{0}”中应有名为“{1}”的文件。</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip 文件“{0}”不存在。</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>文件“{0}”不存在。</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>无法以本机引用处理项“{0}”: 未知类型。</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>无法从 xcframework“{1}”加载 Info.plist“{0}”。</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>目录“{0}”不存在。</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>在 zip 文件“{1}”中找不到文件或目录“{0}”。</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>无法处理此平台上的 zip 文件“{0}”: 文件“{1}”为符号链接。</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}"任务未给参数 "{1}" 提供值，在此平台上生成时需要该值。</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>illink 程序集不存在:“{0}”。</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>程序集 {0} 未提供 "ObjectFile" 元数据。</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>多次将程序集 {0} 作为(从 {1} 引用的)输入程序集传递。</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT 编译 {0} 失败，AOT 编译器已退出，代码为 {1}。</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
         </comment>
     </data>
 </root>

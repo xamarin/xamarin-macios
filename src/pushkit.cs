@@ -9,8 +9,6 @@ using NativeHandle = System.IntPtr;
 
 namespace PushKit {
 	[Watch (6, 0)]
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -23,8 +21,6 @@ namespace PushKit {
 	}
 
 	[Watch (6, 0)]
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -37,15 +33,12 @@ namespace PushKit {
 	}
 
 	[Watch (6, 0)]
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PKPushRegistry {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		PKPushRegistryDelegate Delegate { get; set; }
+		IPKPushRegistryDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -64,7 +57,6 @@ namespace PushKit {
 		NativeHandle Constructor ([NullAllowed] DispatchQueue queue);
 	}
 
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[Static]
 	interface PKPushType {
@@ -75,7 +67,6 @@ namespace PushKit {
 		[Field ("PKPushTypeVoIP")]
 		NSString Voip { get; }
 
-		[iOS (9, 0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use directly from watchOS instead.")]
 		[Watch (6, 0)]
 		[NoMac]
@@ -84,17 +75,15 @@ namespace PushKit {
 		[Field ("PKPushTypeComplication")]
 		NSString Complication { get; }
 
-		[iOS (11, 0)]
 		[NoWatch]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Field ("PKPushTypeFileProvider")]
 		NSString FileProvider { get; }
 	}
 
-	[iOS (8, 0)]
+	interface IPKPushRegistryDelegate { }
+
 	[Watch (6, 0)]
-	[Mac (10, 15)]
 	[MacCatalyst (13, 1)]
 	[Model]
 	[Protocol]
@@ -115,8 +104,7 @@ namespace PushKit {
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:"), EventArgs ("PKPushRegistryRecieved"), EventName ("IncomingPushReceived")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type);
 
-		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:")]
 		void DidReceiveIncomingPush (PKPushRegistry registry, PKPushPayload payload, string type, Action completion);
 

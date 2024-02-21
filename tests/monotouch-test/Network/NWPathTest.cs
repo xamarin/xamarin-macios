@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
+
 using CoreFoundation;
 using Foundation;
 using Network;
@@ -167,27 +169,26 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void EnumerateGatewayTest ()
 		{
-			var e1 = new ManualResetEvent (false);
-			var e2 = new ManualResetEvent (false);
+			var e1 = new TaskCompletionSource<bool> ();
+			var e2 = new TaskCompletionSource<bool> ();
 			var monitor = new NWPathMonitor ();
 			try {
 				monitor.SetQueue (DispatchQueue.DefaultGlobalQueue);
 				monitor.Start ();
 				monitor.SnapshotHandler += path => {
 					path.EnumerateGateways (gateway => {
-						e1.Set ();
+						e1.TrySetResult (true);
 						return true;
 					});
 
 					path.EnumerateInterfaces (@interface => {
-						e2.Set ();
+						e2.TrySetResult (true);
 						return true;
 					});
 				};
-				TestRuntime.RunAsync (TimeSpan.FromSeconds (5),
-						() => { },
-						() => WaitHandle.WaitAll (new WaitHandle [] { e1, e2 }, 0));
-				var rv = WaitHandle.WaitAll (new WaitHandle [] { e1, e2 }, 10000);
+				var rv = TestRuntime.RunAsync (TimeSpan.FromSeconds (5),
+						Task.CompletedTask,
+						Task.WhenAll (e1.Task, e2.Task));
 				if (!rv)
 					TestRuntime.IgnoreInCI ("This test doesn't seem to be working on the bots, uncommon network setup?");
 				Assert.IsTrue (rv, "Called back");

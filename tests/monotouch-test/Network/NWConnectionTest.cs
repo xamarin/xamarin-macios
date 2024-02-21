@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[TearDown]
-		public void TearDown () => connection.Dispose ();
+		public void TearDown () => connection?.Dispose ();
 
 		[Test]
 		public void TestEndpointProperty () => Assert.IsNotNull (connection.Endpoint);

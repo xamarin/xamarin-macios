@@ -231,6 +231,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CIFilterGenerator":
+				switch (selectorName) {
+				case "filterGenerator":
+				case "filterGeneratorWithContentsOfURL:":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 			}
 			// This ctors needs to be manually bound
 			switch (type.Name) {
@@ -967,6 +976,19 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CAEdrMetadata":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return !TestRuntime.CheckXcodeVersion (14, 3);
+				}
+				break;
+			case "GCKeyboard":
+				switch (selectorName) {
+				case "encodeWithCoder:": // removed comformance
+					return TestRuntime.CheckXcodeVersion (14, 3);
+				}
+				break;
 			}
 
 			// old binding mistake
@@ -986,10 +1008,10 @@ namespace Introspection {
 			// it's possible that the selector was inlined for an OPTIONAL protocol member
 			// we do not want those reported (too many false positives) and we have other tests to find such mistakes
 			foreach (var intf in actualType.GetInterfaces ()) {
-				if (intf.GetCustomAttributes<ProtocolAttribute> () == null)
+				if (intf.GetCustomAttributes<ProtocolAttribute> () is null)
 					continue;
 				var ext = Type.GetType (intf.Namespace + "." + intf.Name.Remove (0, 1) + "_Extensions, " + intf.Assembly.FullName);
-				if (ext == null)
+				if (ext is null)
 					continue;
 				foreach (var m in ext.GetMethods ()) {
 					if (mname != m.Name)
@@ -1045,7 +1067,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				ExportAttribute export = (ca as ExportAttribute);
-				if (export == null)
+				if (export is null)
 					continue;
 
 				string name = export.Selector;
@@ -1060,7 +1082,7 @@ namespace Introspection {
 		protected virtual IntPtr GetClassForType (Type type)
 		{
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-			if (fi == null)
+			if (fi is null)
 				return IntPtr.Zero; // e.g. *Delegate
 #if NET
 			return (NativeHandle) fi.GetValue (null);
@@ -1106,7 +1128,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				ExportAttribute export = (ca as ExportAttribute);
-				if (export == null)
+				if (export is null)
 					continue;
 
 				string name = export.Selector;
@@ -1209,13 +1231,17 @@ namespace Introspection {
 			case "initWithDisplay:includingApplications:exceptingWindows:":
 			case "initWithDisplay:includingWindows:":
 				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
+				return mi is not null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
 			// NSAppleEventDescriptor
 			case "initListDescriptor":
 			case "initRecordDescriptor":
 			// SharedWithYouCore
 			case "initWithLocalIdentifier:":
 			case "initWithCollaborationIdentifier:":
+				return true;
+			// CloudKit
+			case "initWithExcludedZoneIDs:":
+			case "initWithZoneIDs:":
 				return true;
 			default:
 				return false;
@@ -1254,7 +1280,7 @@ namespace Introspection {
 					continue;
 
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				if (fi == null)
+				if (fi is null)
 					continue; // e.g. *Delegate
 				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 

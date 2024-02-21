@@ -208,23 +208,26 @@ namespace CoreText {
 		}
 
 		public delegate void CaretEdgeEnumerator (double offset, nint charIndex, bool leadingEdge, ref bool stop);
+#if !NET
 		unsafe delegate void CaretEdgeEnumeratorProxy (IntPtr block, double offset, nint charIndex, byte leadingEdge, byte* stop);
+#endif
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		unsafe static extern void CTLineEnumerateCaretOffsets (IntPtr line, BlockLiteral* blockEnumerator);
 
+#if !NET
 		static unsafe readonly CaretEdgeEnumeratorProxy static_enumerate = TrampolineEnumerate;
 
 		[MonoPInvokeCallback (typeof (CaretEdgeEnumeratorProxy))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		unsafe static void TrampolineEnumerate (IntPtr blockPtr, double offset, nint charIndex, byte leadingEdge, byte* stopPointer)
 		{
 			var del = BlockLiteral.GetTarget<CaretEdgeEnumerator> (blockPtr);
@@ -236,13 +239,10 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateCaretOffsets (CaretEdgeEnumerator enumerator)
@@ -251,8 +251,13 @@ namespace CoreText {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (enumerator));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, double, nint, byte, byte*, void> trampoline = &TrampolineEnumerate;
+				using var block = new BlockLiteral (trampoline, enumerator, typeof (CTLine), nameof (TrampolineEnumerate));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_enumerate, enumerator);
+#endif
 				CTLineEnumerateCaretOffsets (Handle, &block);
 			}
 		}

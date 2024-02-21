@@ -32,7 +32,7 @@ using NativeHandle = System.IntPtr;
 
 namespace NaturalLanguage {
 
-	[iOS (12, 0), Mac (10, 14), TV (12, 0), Watch (5, 0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor] // designated
 	[BaseType (typeof (NSObject))]
@@ -83,7 +83,7 @@ namespace NaturalLanguage {
 		}
 	}
 
-	[iOS (12, 0), Mac (10, 14), TV (12, 0), Watch (5, 0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface NLModelConfiguration : NSCopying, NSSecureCoding {
@@ -94,7 +94,7 @@ namespace NaturalLanguage {
 		[NullAllowed, Export ("language")]
 		NSString _Language { get; }
 
-		NLLanguage Language { [Wrap ("(_Language != null)? NLLanguageExtensions.GetValue (_Language) : NLLanguage.Undetermined")] get; }
+		NLLanguage Language { [Wrap ("(_Language is not null)? NLLanguageExtensions.GetValue (_Language) : NLLanguage.Undetermined")] get; }
 
 		[Export ("revision")]
 		nuint Revision { get; }
@@ -108,7 +108,7 @@ namespace NaturalLanguage {
 		nuint GetCurrentRevision (NLModelType type);
 	}
 
-	[iOS (12, 0), Mac (10, 14), TV (12, 0), Watch (5, 0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -150,7 +150,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTokenizerEnumerateContinuationHandler (NSRange tokenRange, NLTokenizerAttributes flags, out bool stop);
 
-	[iOS (12, 0), Mac (10, 14), TV (12, 0), Watch (5, 0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -189,7 +189,7 @@ namespace NaturalLanguage {
 
 	delegate void NLTaggerEnumerateTagsContinuationHandler (NSString tag, NSRange tokenRange, out bool stop);
 
-	[iOS (12, 0), Mac (10, 14), TV (12, 0), Watch (5, 0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -278,29 +278,29 @@ namespace NaturalLanguage {
 		[Wrap ("GetModels (tagScheme.GetConstant ()!)")]
 		NLModel [] GetModels (NLTagScheme tagScheme);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("setGazetteers:forTagScheme:")]
 		void SetGazetteers (NLGazetteer [] gazetteers, NSString tagScheme);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Wrap ("SetGazetteers (gazetteers, tagScheme.GetConstant ()!)")]
 		void SetGazetteers (NLGazetteer [] gazetteers, NLTagScheme tagScheme);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("gazetteersForTagScheme:")]
 		NLGazetteer [] GetGazetteers (NSString tagScheme);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Wrap ("GetGazetteers (tagScheme.GetConstant ()!)")]
 		NLGazetteer [] GetGazetteers (NLTagScheme tagScheme);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
@@ -308,7 +308,7 @@ namespace NaturalLanguage {
 		[Export ("requestAssetsForLanguage:tagScheme:completionHandler:")]
 		void RequestAssets (NSString language, NSString tagScheme, Action<NLTaggerAssetsResult, NSError> completionHandler);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Async]
@@ -342,7 +342,7 @@ namespace NaturalLanguage {
 		NSRange GetTokenRange (NSRange range, NLTokenUnit unit);
 	}
 
-	[iOS (12, 0), Mac (10, 14), TV (12, 0), Watch (5, 0)]
+	[iOS (12, 0), TV (12, 0), Watch (5, 0)]
 	[MacCatalyst (13, 1)]
 	[Static] // only used to compare with NSString not as input/output
 	interface NLTag {
@@ -410,14 +410,14 @@ namespace NaturalLanguage {
 		NSString OrganizationName { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	enum NLDistanceType : long {
 		Cosine,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	enum NLTaggerAssetsResult : long {
@@ -426,11 +426,11 @@ namespace NaturalLanguage {
 		Error,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	delegate void NLEnumerateNeighborsHandler (string neighbor, /* NLDistance */ double distance, ref bool stop);
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -602,7 +602,7 @@ namespace NaturalLanguage {
 		NSIndexSet GetSupportedSentenceEmbeddingRevisions (NLLanguage language);
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -650,5 +650,88 @@ namespace NaturalLanguage {
 		[Static]
 		[Wrap ("Write (dictionary.GetDictionary ()!, language.HasValue ? language.Value.GetConstant () : null, url, out error)")]
 		bool Write (NLStrongDictionary dictionary, NLLanguage? language, NSUrl url, [NullAllowed] out NSError error);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NLContextualEmbedding {
+		[Static]
+		[Export ("contextualEmbeddingWithModelIdentifier:")]
+		[return: NullAllowed]
+		NLContextualEmbedding CreateWithModelIdentifier (string modelIdentifier);
+
+		[Static]
+		[Export ("contextualEmbeddingsForValues:")]
+		NLContextualEmbedding [] Create (NSDictionary<NSString, NSObject> values);
+
+		[Static]
+		[Export ("contextualEmbeddingWithLanguage:")]
+		[return: NullAllowed]
+		NLContextualEmbedding CreateWithLanguage (string language);
+
+		[Static]
+		[Export ("contextualEmbeddingWithScript:")]
+		[return: NullAllowed]
+		NLContextualEmbedding CreateWithScript (string script);
+
+		[Export ("modelIdentifier")]
+		string ModelIdentifier { get; }
+
+		[Export ("languages", ArgumentSemantic.Copy)]
+		string [] Languages { get; }
+
+		[Export ("scripts", ArgumentSemantic.Copy)]
+		string [] Scripts { get; }
+
+		[Export ("revision")]
+		nuint Revision { get; }
+
+		[Export ("dimension")]
+		nuint Dimension { get; }
+
+		[Export ("maximumSequenceLength")]
+		nuint MaximumSequenceLength { get; }
+
+		[Export ("loadWithError:")]
+		bool Load ([NullAllowed] out NSError error);
+
+		[Export ("unload")]
+		void Unload ();
+
+		[Export ("embeddingResultForString:language:error:")]
+		[return: NullAllowed]
+		NLContextualEmbeddingResult GetEmbeddingResult (string @string, [NullAllowed] string language, [NullAllowed] out NSError error);
+
+		[Export ("hasAvailableAssets")]
+		bool HasAvailableAssets { get; }
+
+		[Export ("requestEmbeddingAssetsWithCompletionHandler:")]
+		[Async]
+		void RequestAssets (Action<NLContextualEmbeddingAssetsResult, NSError> completionHandler);
+	}
+
+	delegate void TokenVectorEnumeratorHandler (NSArray<NSNumber> tokenVector, NSRange tokenRange, out bool stop);
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NLContextualEmbeddingResult {
+		[Export ("string")]
+		string String { get; }
+
+		[Export ("language")]
+		string Language { get; }
+
+		[Export ("sequenceLength")]
+		nuint SequenceLength { get; }
+
+		[Export ("enumerateTokenVectorsInRange:usingBlock:")]
+		void EnumerateTokenVectors (NSRange range, TokenVectorEnumeratorHandler enumerationHandler);
+
+		[return: BindAs (typeof (nuint []))]
+		[Export ("tokenVectorAtIndex:tokenRange:")]
+		[return: NullAllowed]
+		NSNumber [] GetVector (nuint characterIndex, ref NSRange tokenRange);
 	}
 }

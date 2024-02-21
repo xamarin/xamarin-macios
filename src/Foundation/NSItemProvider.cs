@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using CloudKit;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSItemProvider {
 #if !NET && MONOMAC
@@ -27,65 +30,50 @@ namespace Foundation {
 #endif
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		public NSProgress LoadObject<T> (Action<T, NSError> completionHandler) where T : NSObject, INSItemProviderReading
 		{
 			return LoadObject (new Class (typeof (T)), (rv, err) => {
 				var obj = rv as T;
-				if (obj == null && rv != null)
+				if (obj is null && rv is not null)
 					obj = Runtime.ConstructNSObject<T> (rv.Handle);
 				completionHandler (obj, err);
 			});
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		public Task<T> LoadObjectAsync<T> () where T : NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)));
 			return rv.ContinueWith ((v) => {
 				var obj = v.Result as T;
-				if (obj == null && v.Result != null)
+				if (obj is null && v.Result is not null)
 					obj = Runtime.ConstructNSObject<T> (v.Result.Handle);
 				return obj;
 			});
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		public Task<T> LoadObjectAsync<T> (out NSProgress result) where T : NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)), out result);
 			return rv.ContinueWith ((v) => {
 				var obj = v.Result as T;
-				if (obj == null && v.Result != null)
+				if (obj is null && v.Result is not null)
 					obj = Runtime.ConstructNSObject<T> (v.Result.Handle);
 				return obj;
 			});

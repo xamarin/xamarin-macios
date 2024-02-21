@@ -19,13 +19,10 @@ using ObjCRuntime;
 
 namespace Compression {
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 #endif
 	public partial class CompressionStream : Stream {
 		private const int DefaultBufferSize = 8192;
@@ -133,7 +130,7 @@ namespace Compression {
 
 		private void EnsureBufferInitialized ()
 		{
-			if (_buffer == null) {
+			if (_buffer is null) {
 				InitializeBuffer ();
 			}
 		}

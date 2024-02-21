@@ -1,14 +1,69 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+
 using Xamarin.Messaging.Build.Client;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
-	public class GetFileSystemEntries : GetFileSystemEntriesTaskBase, ICancelableTask {
+	public class GetFileSystemEntries : XamarinTask, ICancelableTask, ITaskCallback {
+		#region Inputs
+
+		[Required]
+		public ITaskItem [] DirectoryPath { get; set; } = Array.Empty<ITaskItem> ();
+
+		[Required]
+		public string Pattern { get; set; } = string.Empty;
+
+		[Required]
+		public bool Recursive { get; set; }
+
+		[Required]
+		public bool IncludeDirectories { get; set; }
+
+		// If the input directory should be copied from Windows to the Mac in
+		// a remote build.
+		public bool CopyFromWindows { get; set; }
+		#endregion
+
+		#region Outputs
+
+		[Output]
+		public ITaskItem [] Entries { get; set; } = Array.Empty<ITaskItem> ();
+
+		#endregion
+
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
 				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
 
-			return base.Execute ();
+			var searchOption = Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+			var entries = new List<ITaskItem> ();
+			foreach (var item in DirectoryPath) {
+				var path = item.ItemSpec.TrimEnd ('\\', '/');
+				var entriesFullPath = IncludeDirectories ?
+					Directory.GetFileSystemEntries (path, Pattern, searchOption) :
+					Directory.GetFiles (path, Pattern, searchOption);
+
+				foreach (var entry in entriesFullPath) {
+					var recursiveDir = entry.Substring (path.Length + 1);
+					var newItem = new TaskItem (entry);
+					item.CopyMetadataTo (newItem);
+					newItem.SetMetadata ("RecursiveDir", recursiveDir);
+					newItem.SetMetadata ("OriginalItemSpec", item.ItemSpec);
+					entries.Add (newItem);
+				}
+			}
+
+			Entries = entries.ToArray ();
+
+			return !Log.HasLoggedErrors;
 		}
 
 		public void Cancel ()
@@ -16,6 +71,37 @@ namespace Xamarin.MacDev.Tasks {
 			if (ShouldExecuteRemotely ())
 				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
+		{
+			if (!CopyFromWindows)
+				return Enumerable.Empty<ITaskItem> ();
+
+			// TaskRunner doesn't know how to copy directories to Mac, so list each file.
+			var rv = new List<string> ();
+			foreach (var path in DirectoryPath) {
+				var spec = path.ItemSpec;
+				if (!Directory.Exists (spec))
+					continue;
+
+				var files = Directory.GetFiles (spec, "*", SearchOption.AllDirectories);
+				foreach (var file in files) {
+					// Only copy non-empty files, so that we don't end up
+					// copying an empty file that happens to be an output file
+					// from a previous target (and thus overwriting that file
+					// on Windows).
+					var finfo = new FileInfo (file);
+					if (!finfo.Exists || finfo.Length == 0)
+						continue;
+					rv.Add (file);
+				}
+			}
+
+			return rv.Select (f => new TaskItem (f));
+		}
+
+		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
+
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
 	}
 }
-

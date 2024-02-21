@@ -30,7 +30,7 @@ namespace MyCoreMLApp {
 		public CVPixelBuffer Image {
 			get { return image; }
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 
 				image = value;
@@ -53,7 +53,7 @@ namespace MyCoreMLApp {
 
 		public SqueezeNetInput (CVPixelBuffer image)
 		{
-			if (image == null)
+			if (image is null)
 				throw new ArgumentNullException (nameof (image));
 
 			Image = image;
@@ -78,7 +78,7 @@ namespace MyCoreMLApp {
 		public NSDictionary<NSObject, NSNumber> ClassLabelProbs {
 			get { return classLabelProbs; }
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 
 				classLabelProbs = value;
@@ -92,7 +92,7 @@ namespace MyCoreMLApp {
 		public string ClassLabel {
 			get { return classLabel; }
 			set {
-				if (value == null)
+				if (value is null)
 					throw new ArgumentNullException (nameof (value));
 
 				classLabel = value;
@@ -111,7 +111,7 @@ namespace MyCoreMLApp {
 			switch (featureName) {
 			case "classLabelProbs":
 				value = MLFeatureValue.Create (ClassLabelProbs, out err);
-				if (err != null)
+				if (err is not null)
 					err.Dispose ();
 				return value;
 			case "classLabel":
@@ -123,10 +123,10 @@ namespace MyCoreMLApp {
 
 		public SqueezeNetOutput (NSDictionary<NSObject, NSNumber> classLabelProbs, string classLabel)
 		{
-			if (classLabelProbs == null)
+			if (classLabelProbs is null)
 				throw new ArgumentNullException (nameof (classLabelProbs));
 
-			if (classLabel == null)
+			if (classLabel is null)
 				throw new ArgumentNullException (nameof (classLabel));
 
 			ClassLabelProbs = classLabelProbs;
@@ -155,12 +155,12 @@ namespace MyCoreMLApp {
 
 		public static SqueezeNet FromUrl (NSUrl url, out NSError error)
 		{
-			if (url == null)
+			if (url is null)
 				throw new ArgumentNullException (nameof (url));
 
 			var model = MLModel.Create (url, out error);
 
-			if (model == null)
+			if (model is null)
 				return null;
 
 			return new SqueezeNet (model);
@@ -175,7 +175,7 @@ namespace MyCoreMLApp {
 		{
 			var prediction = model.GetPrediction (input, out error);
 
-			if (prediction == null)
+			if (prediction is null)
 				return null;
 
 			var classLabelProbs = prediction.GetFeatureValue ("classLabelProbs").DictionaryValue;

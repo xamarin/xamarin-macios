@@ -65,7 +65,7 @@ namespace Xharness.Targets {
 
 		public const string FSharpGuid = "{F2A71F9B-5D33-465A-A702-920D77279786}";
 		public const string CSharpGuid = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
-		public const string DotNetTfm = "net7.0";
+		public string DotNetTfm => Harness.DOTNET_TFM;
 
 		public string LanguageGuid { get { return IsFSharp ? FSharpGuid : CSharpGuid; } }
 
@@ -129,18 +129,13 @@ namespace Xharness.Targets {
 			inputProject.FixProjectReferences (Path.Combine (ProjectsDir, GetTargetSpecificDir ()), Suffix, FixProjectReference);
 			inputProject.SetNode ("TargetFramework", TargetFramework);
 			var fixedAssetTargetFallback = inputProject.GetAssetTargetFallback ()?.Replace ("xamarinios10", TargetFrameworkForNuGet);
-			if (fixedAssetTargetFallback != null)
+			if (fixedAssetTargetFallback is not null)
 				inputProject.SetAssetTargetFallback (fixedAssetTargetFallback);
 			inputProject.ResolveAllPaths (TemplateProjectPath);
 		}
 
 		protected virtual void ProcessProject ()
 		{
-			if (!IsMultiArchitecture && IsExe) {
-				inputProject.DeleteConfiguration ("iPhone", "Debug32");
-				inputProject.DeleteConfiguration ("iPhone", "Debug64");
-			}
-
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + Suffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + Suffix);
 
@@ -157,7 +152,7 @@ namespace Xharness.Targets {
 				inputProject.SetTopLevelPropertyGroupValue (k, newProperties [k]);
 
 			var removedProperties = PropertiesToRemove;
-			if (removedProperties != null) {
+			if (removedProperties is not null) {
 				foreach (var p in removedProperties)
 					inputProject.RemoveNode (p, false);
 			}
@@ -241,7 +236,7 @@ namespace Xharness.Targets {
 				templateName = Path.GetFileNameWithoutExtension (templateName);
 			templateName = Path.GetFileNameWithoutExtension (templateName);
 
-			if (templateName.Equals ("mono-native-mac"))
+			if (templateName.Equals ("mono-native-mac", StringComparison.Ordinal))
 				templateName = "mono-native";
 
 			if (!ShouldSkipProjectGeneration) {

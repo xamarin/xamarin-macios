@@ -2,6 +2,9 @@
 using System;
 using System.IO;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSUrlSessionDownloadTaskRequest : IDisposable {
 		string tmpfile;
@@ -43,7 +46,7 @@ namespace Foundation {
 
 		protected void Dispose (bool disposing)
 		{
-			if (tmpfile != null) {
+			if (tmpfile is not null) {
 				try {
 					File.Delete (tmpfile);
 				} catch {

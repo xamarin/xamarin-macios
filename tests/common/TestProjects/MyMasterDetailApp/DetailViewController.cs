@@ -23,14 +23,14 @@ namespace MyMasterDetailApp {
 				ConfigureView ();
 			}
 
-			if (masterPopoverController != null)
+			if (masterPopoverController is not null)
 				masterPopoverController.Dismiss (true);
 		}
 
 		void ConfigureView ()
 		{
 			// Update the user interface for the detail item
-			if (IsViewLoaded && detailItem != null)
+			if (IsViewLoaded && detailItem is not null)
 				detailDescriptionLabel.Text = detailItem.ToString ();
 		}
 

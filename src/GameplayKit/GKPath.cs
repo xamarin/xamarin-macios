@@ -59,14 +59,10 @@ namespace GameplayKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
@@ -85,14 +81,10 @@ namespace GameplayKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (10, 0)]
-		[TV (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{
@@ -114,12 +106,12 @@ namespace GameplayKit {
 		{
 			var type = typeof (T);
 			// Vector3 is 12 bytes but vector_float3 is 16
-			var size = type == typeof (Vector3) ? 16 : Marshal.SizeOf (type);
+			var size = type == typeof (Vector3) ? 16 : Marshal.SizeOf<T> ();
 			var length = points.Length * size;
 			buffer = Marshal.AllocHGlobal (length);
 
 			for (int i = 0; i < points.Length; i++)
-				Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
+				Marshal.StructureToPtr<T> (points [i], IntPtr.Add (buffer, i * size), false);
 		}
 	}
 }

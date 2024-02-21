@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Utils;
+using PathUtils = Xamarin.Utils.PathUtils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
@@ -34,7 +35,7 @@ namespace Xamarin.Tests {
 			ExecutionResult rv;
 
 			var props = new Dictionary<string, string> (Properties);
-			if (properties != null) {
+			if (properties is not null) {
 				foreach (var kvp in properties)
 					props [kvp.Key] = kvp.Value;
 			}
@@ -74,7 +75,7 @@ namespace Xamarin.Tests {
 
 		public MSBuildItem [] GetItems (ProjectPaths project, string name)
 		{
-			if (executionResult == null)
+			if (executionResult is null)
 				throw new InvalidOperationException ($"Must build something first");
 
 			var build = BinaryLog.ReadBuild (executionResult.BinLogPath);
@@ -130,7 +131,7 @@ namespace Xamarin.Tests {
 
 		public string GetPropertyValue (string name)
 		{
-			if (executionResult == null)
+			if (executionResult is null)
 				throw new InvalidOperationException ($"Must build something first");
 
 			var build = BinaryLog.ReadBuild (executionResult.BinLogPath);
@@ -144,14 +145,7 @@ namespace Xamarin.Tests {
 			WarningsEvents.Clear ();
 			MessageEvents.Clear ();
 
-			var reader = new BinLogReader ();
-			foreach (var record in reader.ReadRecords (log)) {
-				if (record == null)
-					continue;
-				var args = record.Args;
-				if (args == null)
-					continue;
-
+			foreach (var args in BinLog.ReadBuildEvents (log)) {
 				bool verbose = false;
 				if (args is TaskStartedEventArgs tsea) {
 					if (verbose)
@@ -248,7 +242,7 @@ namespace Xamarin.Tests {
 			args.Add ("--");
 			args.Add ($"/t:{target}");
 			args.Add (project);
-			if (properties != null) {
+			if (properties is not null) {
 				foreach (var prop in properties)
 					args.Add ($"/p:{prop.Key}={prop.Value}");
 			}

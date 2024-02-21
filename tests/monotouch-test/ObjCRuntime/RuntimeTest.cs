@@ -5,6 +5,7 @@ using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 using CoreGraphics;
 using Foundation;
@@ -271,7 +272,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 			[Export ("release")]
-			new void Release ()
+			void Release ()
 			{
 				if (enabled)
 					deallocated ();
@@ -326,21 +327,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				while (broken == 0 && watch.ElapsedMilliseconds < 10000) {
 					// try getting using Systen.String key
 					string hello = getter1 ("Hello");
-					if (hello == null)
+					if (hello is null)
 						broken = 1;
 
 					string bye = getter1 ("Bye");
-					if (bye == null)
+					if (bye is null)
 						broken = 2;
 
 					// try getting using NSString key
 					string nHello = getter2 (new NSString (@"Hello"));
 					string nBye = getter2 (new NSString (@"Bye"));
 
-					if (nHello == null)
+					if (nHello is null)
 						broken = 3;
 
-					if (nBye == null)
+					if (nBye is null)
 						broken = 4;
 
 					count++;
@@ -630,7 +631,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Messaging.void_objc_msgSend_IntPtr (Class.GetHandle (typeof (Dummy)), Selector.GetHandle ("doSomethingElse:"), handle);
 					Assert.Fail ("Expected an MX8029 exception (A)");
 				} catch (RuntimeException mex) {
-					Assert.AreEqual (8029, mex.Code, "Exception code (A)");
+					Assert.That (mex.Code, Is.EqualTo (8029).Or.EqualTo (8027), "Exception code (A)");
 					var failure = mex.ToString ();
 					Assert.That (failure, Does.Contain ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
 					Assert.That (failure, Does.Contain ("Additional information:"), "Additional information: (A)");
@@ -798,14 +799,14 @@ Additional information:
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();
 				for (var i = 0; i < counter; i++) {
-					if (handles [i].Target == null)
+					if (handles [i].Target is null)
 						return true;
 				}
 				return false;
 			});
 
 			// Iterate over the runloop in case something has to happen on the main thread for the objects to be collected.
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, checkForCollectedManagedObjects);
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), checkForCollectedManagedObjects);
 
 			Assert.IsTrue (checkForCollectedManagedObjects (), "Any collected objects");
 
@@ -843,7 +844,7 @@ Additional information:
 			t.Start ();
 			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
 
-			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () => {
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => {
 				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
 				GC.Collect ();
 				GC.WaitForPendingFinalizers ();

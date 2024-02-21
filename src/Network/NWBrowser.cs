@@ -33,12 +33,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -131,10 +130,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_browser_set_browse_results_changed_handler (OS_nw_browser browser, BlockLiteral* handler);
 
+#if !NET
 		delegate void nw_browser_browse_results_changed_handler_t (IntPtr block, IntPtr oldResult, IntPtr newResult, byte completed);
 		static nw_browser_browse_results_changed_handler_t static_ChangesHandler = TrampolineChangesHandler;
 
 		[MonoPInvokeCallback (typeof (nw_browser_browse_results_changed_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult, byte completed)
 		{
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
@@ -199,8 +202,13 @@ namespace Network {
 					return;
 				}
 
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, byte, void> trampoline = &TrampolineChangesHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWBrowser), nameof (TrampolineChangesHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ChangesHandler, handler);
+#endif
 				nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), &block);
 			}
 		}
@@ -214,10 +222,14 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern void nw_browser_set_state_changed_handler (OS_nw_browser browser, BlockLiteral* state_changed_handler);
 
+#if !NET
 		delegate void nw_browser_set_state_changed_handler_t (IntPtr block, NWBrowserState state, IntPtr error);
 		static nw_browser_set_state_changed_handler_t static_StateChangesHandler = TrampolineStateChangesHandler;
 
 		[MonoPInvokeCallback (typeof (nw_browser_set_state_changed_handler_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineStateChangesHandler (IntPtr block, NWBrowserState state, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError?>> (block);
@@ -235,8 +247,13 @@ namespace Network {
 					nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
+#if NET
+				delegate* unmanaged<IntPtr, NWBrowserState, IntPtr, void> trampoline = &TrampolineStateChangesHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWBrowser), nameof (TrampolineStateChangesHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_StateChangesHandler, handler);
+#endif
 				nw_browser_set_state_changed_handler (GetCheckedHandle (), &block);
 			}
 		}

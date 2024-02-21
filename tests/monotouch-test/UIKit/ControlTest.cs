@@ -56,7 +56,7 @@ namespace MonoTouchFixtures.UIKit {
 			// of object -> event handlers doesn't keep strong references.
 			var any_collected = false;
 			for (int i = 0; i < items; i++) {
-				if (handles [i].Target == null)
+				if (handles [i].Target is null)
 					any_collected = true;
 				handles [i].Free ();
 			}

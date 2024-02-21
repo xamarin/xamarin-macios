@@ -179,7 +179,7 @@ namespace Samples {
 				var repo = CloneRepo ();
 				file_to_build = Path.Combine (repo, file_to_build);
 
-				if (data.RemoveProjects != null) {
+				if (data.RemoveProjects is not null) {
 					if (String.IsNullOrEmpty (data.Solution))
 						Assert.Fail ("'RemoveProjects' used without a 'Solution' path!");
 					var sln_path = Path.Combine (repo, data.Solution);
@@ -229,7 +229,7 @@ namespace Samples {
 			var defaultDebugConfigurations = new string [] { "Debug" };
 			var defaultReleaseConfigurations = new string [] { "Release" };
 
-			if (samples == null) {
+			if (samples is null) {
 				samples = new Dictionary<string, SampleTest> ();
 			} else {
 				samples = new Dictionary<string, SampleTest> (samples);
@@ -245,7 +245,7 @@ namespace Samples {
 				}
 			}
 			foreach (var proj in executable_projects) {
-				if (proj.Title == null) {
+				if (proj.Title is null) {
 					proj.Title = Path.GetFileNameWithoutExtension (proj.RelativePath);
 				}
 			}
@@ -273,7 +273,7 @@ namespace Samples {
 					samples [proj.RelativePath] = sample = new SampleTest ();
 				sample.Project = proj;
 				IEnumerable<string> platforms = sample.Platforms;
-				if (platforms == null) {
+				if (platforms is null) {
 					switch (proj.Platform) {
 					case TestPlatform.iOS:
 					case TestPlatform.tvOS:

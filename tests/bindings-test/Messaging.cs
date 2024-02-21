@@ -2,9 +2,10 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
-	public static class Messaging {
+	static class Messaging {
 		internal const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 
+		[StructLayout (LayoutKind.Sequential)]
 		public struct objc_super {
 			public IntPtr Handle;
 			public IntPtr SuperHandle;

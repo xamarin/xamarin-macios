@@ -24,7 +24,7 @@ namespace MonoTouchFixtures.Metal {
 		[TearDown]
 		public void TearDown ()
 		{
-			if (ptrType != null)
+			if (ptrType is not null)
 				ptrType.Dispose ();
 			ptrType = null;
 		}

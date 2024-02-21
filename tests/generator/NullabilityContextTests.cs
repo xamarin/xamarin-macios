@@ -171,7 +171,7 @@ namespace GeneratorTests {
 		public void IndexersTests (Type indexersTypes, Type resultType, bool isNullable, Type indexParameter, bool isIndexParameterNull)
 		{
 			var propertyInfo = GetIndexer (testType, indexersTypes);
-			Assert.NotNull (propertyInfo, "propertyInto != null");
+			Assert.NotNull (propertyInfo, "propertyInto is not null");
 			var info = context.Create (propertyInfo.GetMethod!.ReturnParameter!);
 			Assert.AreEqual (isNullable, info.IsNullable (), "info.IsNullable");
 			Assert.AreEqual (resultType, info.Type, "info.Type");

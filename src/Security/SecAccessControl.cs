@@ -38,25 +38,19 @@ namespace Security {
 		UserPresence = 1 << 0,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		[Advice ("'BiometryAny' is preferred over 'TouchIDAny' since Xcode 9.3. Touch ID and Face ID together are biometric authentication mechanisms.")]
 		TouchIDAny = BiometryAny,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		[Advice ("'BiometryCurrentSet' is preferred over 'TouchIDCurrentSet' since Xcode 9.3. Touch ID and Face ID together are biometric authentication mechanisms.")]
 		TouchIDCurrentSet = BiometryCurrentSet,
@@ -64,47 +58,37 @@ namespace Security {
 		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
 		// of 'TouchIDAny' which iOS 9 / macOS 10.12.1 will accept.
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		BiometryAny = 1 << 1,
 
 		// Added in iOS 11.3 and macOS 10.13.4 but keeping initial availability attribute because it's using the value
 		// of 'TouchIDCurrentSet' which iOS 9 / macOS 10.12.1 will accept.
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		BiometryCurrentSet = 1 << 3,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		DevicePasscode = 1 << 4,
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[Mac (10, 15)]
 		[NoiOS]
 		[NoTV]
 		[NoWatch]
@@ -112,46 +96,34 @@ namespace Security {
 		Watch = 1 << 5,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		Or = 1 << 14,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		And = 1 << 15,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 		PrivateKeyUsage = 1 << 30,
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 12, 1)]
 #endif
 #if NET
 		ApplicationPassword = 1UL << 31,
@@ -162,12 +134,9 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[Mac (10, 10)]
-	[iOS (8, 0)]
 #endif
 	public partial class SecAccessControl : NativeObject {
 #if !COREBUILD

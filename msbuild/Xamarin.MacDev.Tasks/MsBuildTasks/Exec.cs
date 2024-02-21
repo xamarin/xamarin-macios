@@ -1,3 +1,4 @@
+extern alias Microsoft_Build_Tasks_Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,12 @@ using Xamarin.Messaging.Build.Client;
 using System.Security;
 using System.Reactive.Linq;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Microsoft.Build.Tasks {
-	public class Exec : ExecBase, ITaskCallback {
+	public class Exec : Microsoft_Build_Tasks_Core::Microsoft.Build.Tasks.Exec, ITaskCallback {
+		public string SessionId { get; set; }
 		public string ServerPassword { get; set; }
 
 		public override bool Execute ()

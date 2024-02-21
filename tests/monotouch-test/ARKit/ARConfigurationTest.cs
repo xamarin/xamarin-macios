@@ -46,20 +46,6 @@ namespace MonoTouchFixtures.ARKit {
 			Assert.NotNull (ARImageTrackingConfiguration.GetSupportedVideoFormats (), "ARImageTrackingConfiguration");
 			Assert.NotNull (ARObjectScanningConfiguration.GetSupportedVideoFormats (), "ARObjectScanningConfiguration");
 		}
-
-		[Test]
-		public void Subclasses ()
-		{
-			// note: this can be run on any xcode / OS version since it's reflection only
-			// all subclasses of ARConfiguration must (re)export 'GetSupportedVideoFormats'
-			var c = typeof (ARConfiguration);
-			foreach (var sc in c.Assembly.GetTypes ()) {
-				if (!sc.IsSubclassOf (c))
-					continue;
-				var m = sc.GetMethod ("GetSupportedVideoFormats", BindingFlags.Static | BindingFlags.Public);
-				Assert.NotNull (m, sc.FullName);
-			}
-		}
 	}
 }
 

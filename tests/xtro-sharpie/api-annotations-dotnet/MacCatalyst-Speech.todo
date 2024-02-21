@@ -1,2 +1,0 @@
-!missing-selector! SFSpeechRecognitionRequest::addsPunctuation not bound
-!missing-selector! SFSpeechRecognitionRequest::setAddsPunctuation: not bound

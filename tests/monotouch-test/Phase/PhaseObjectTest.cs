@@ -38,11 +38,15 @@ namespace MonoTouchFixtures.Phase {
 		}
 
 		[Test]
-		public void RigthTest ()
+		public void RightTest ()
 		{
 			var right = PhaseObject.Right;
 			Assert.NotNull (right, "not null");
+#if NET
+			Assert.AreEqual (1, right.Length (), "length");
+#else
 			Assert.AreEqual (1, right.Length, "length");
+#endif
 		}
 
 		[Test]
@@ -50,7 +54,11 @@ namespace MonoTouchFixtures.Phase {
 		{
 			var up = PhaseObject.Up;
 			Assert.NotNull (up, "not null");
+#if NET
+			Assert.AreEqual (1, up.Length (), "length");
+#else
 			Assert.AreEqual (1, up.Length, "length");
+#endif
 		}
 
 		[Test]
@@ -58,7 +66,11 @@ namespace MonoTouchFixtures.Phase {
 		{
 			var fwd = PhaseObject.Forward;
 			Assert.NotNull (fwd, "not null");
+#if NET
+			Assert.AreEqual (1, fwd.Length (), "length");
+#else
 			Assert.AreEqual (1, fwd.Length, "length");
+#endif
 		}
 
 		[Test]

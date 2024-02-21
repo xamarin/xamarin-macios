@@ -1,2 +1,0 @@
-!missing-pinvoke! CFStringCreateStringWithValidatedFormat is not bound
-!missing-pinvoke! CFStringCreateStringWithValidatedFormatAndArguments is not bound

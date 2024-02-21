@@ -18,13 +18,10 @@ namespace MetalKit {
 #if !COREBUILD
 
 #if NET
-	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (9, 0)]
-	[Mac (10, 11)]
 #endif
 	public partial class MTKTextureLoaderOptions : DictionaryContainer {
 
@@ -59,13 +56,10 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public MTLStorageMode? TextureStorageMode {
 			get {
@@ -83,13 +77,10 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public MTKTextureLoaderCubeLayout? CubeLayout {
 			get {
@@ -107,13 +98,10 @@ namespace MetalKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (10, 0)]
-		[Mac (10, 12)]
 #endif
 		public MTKTextureLoaderOrigin? Origin {
 			get {

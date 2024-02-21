@@ -19,7 +19,7 @@ namespace Xamarin.Mac.Tests {
 
 				const int expectedNumberOfConstraints = 2;
 
-				Assert.That (constraints != null,
+				Assert.That (constraints is not null,
 					"'NSLayoutConstraint.FromVisualFormat' method returned no constraints");
 
 				Assert.That (constraints.Length == expectedNumberOfConstraints,

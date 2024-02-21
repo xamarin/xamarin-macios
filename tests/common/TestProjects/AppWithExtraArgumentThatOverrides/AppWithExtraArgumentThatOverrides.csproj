@@ -9,6 +9,7 @@
     <RootNamespace>AppWithExtraArgumentThatOverrides</RootNamespace>
     <AssemblyName>AppWithExtraArgumentThatOverrides</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>

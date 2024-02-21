@@ -35,7 +35,7 @@ namespace apitest {
 		public void TestCreate ()
 		{
 			var idx = SKIndex.CreateWithUrl (new NSUrl ("file://" + path), "myIndex", SKIndexType.InvertedVector, null);
-			if (idx == null)
+			if (idx is null)
 				throw new Exception ();
 
 

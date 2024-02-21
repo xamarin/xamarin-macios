@@ -53,7 +53,7 @@ namespace Xamarin.Mac.Tests {
 			}
 			await runner.Run (testAssemblies).ConfigureAwait (false);
 
-			if (options.LogFile != null) {
+			if (options.LogFile is not null) {
 				using (var writer = new StreamWriter (options.LogFile)) {
 					runner.WriteResultsToFile (writer, TestRunner.Jargon.NUnitV3);
 				}

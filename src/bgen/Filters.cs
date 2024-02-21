@@ -64,7 +64,7 @@ public partial class Generator {
 			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
 			if (BindingTouch.IsDotNet) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
-			} else if (XamcoreVersion >= 3) {
+			} else if (CurrentPlatform.GetXamcoreVersion () >= 3) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
 			} else {
 				intptrctor_visibility = MethodAttributes.Public;
@@ -211,7 +211,10 @@ public partial class Generator {
 				if (export is null)
 					throw new BindingException (1074, true, type.Name, p.Name);
 
-				var sel = export.Selector;
+				if (export.Selector is null)
+					throw new BindingException (1082, true, type.Name, p.Name);
+
+				var sel = export.Selector!;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
 					name = sel;
 				else
@@ -237,9 +240,9 @@ public partial class Generator {
 		if (export is null)
 			return;
 
-		var selector = export.Selector;
+		var selector = export.Selector!;
 		if (setter)
-			selector = "set" + selector.Capitalize () + ":";
+			selector = "set" + selector!.Capitalize () + ":";
 
 		if (export.ArgumentSemantic != ArgumentSemantic.None && !p.PropertyType.IsPrimitive)
 			print ($"[Export (\"{selector}\", ArgumentSemantic.{export.ArgumentSemantic})]");
@@ -259,7 +262,7 @@ public partial class Generator {
 		case "CGAffineTransform":
 			print ("var val = ValueForKey (\"{0}\");", propertyName);
 			print ("var nsv = (val as NSValue);");
-			print ("if (nsv != null)");
+			print ("if (nsv is not null)");
 			indent++;
 			print ("return nsv.CGAffineTransformValue;");
 			indent--;

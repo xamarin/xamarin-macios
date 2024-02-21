@@ -52,7 +52,7 @@ namespace Xamarin.Tests {
 
 		protected string GetTestDirectory (bool forceClone = false)
 		{
-			if (testDirectory == null || forceClone)
+			if (testDirectory is null || forceClone)
 				testDirectory = CloneTestDirectory (Mode);
 			return testDirectory;
 		}
@@ -137,7 +137,7 @@ namespace Xamarin.Tests {
 		//   in this case the project's name is assumed from the name of the project directory
 		public ProjectPaths SetupProjectPaths (string project, bool? includePlatform = null)
 		{
-			if (project == null)
+			if (project is null)
 				throw new ArgumentNullException (nameof (project));
 
 			string projectPath;
@@ -159,7 +159,7 @@ namespace Xamarin.Tests {
 			string binPath;
 			string objPath;
 
-			if (includePlatform == false || (includePlatform == null && string.IsNullOrEmpty (Platform))) {
+			if (includePlatform == false || (includePlatform is null && string.IsNullOrEmpty (Platform))) {
 				binPath = Path.Combine (projectPath, "bin", Config);
 				objPath = Path.Combine (projectPath, "obj", Config);
 			} else {

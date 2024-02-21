@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-ios</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <CustomBeforeMicrosoftCommonTargets>$(CustomBeforeMicrosoftCommonTargets);$(MSBuildThisFileDirectory)../../../tests/common/SupportedOSPlatformVersions.targets</CustomBeforeMicrosoftCommonTargets>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <ProvisioningType>automatic</ProvisioningType>
@@ -16,6 +18,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.5" />
+    <!-- GitInfo is pulled in because of Xamarin.iOS.HotRestart.Application, but we don't want it, so just exclude all assets from it -->
+    <!-- This can be removed once our package references have been updated to not expose GitInfo -->
+    <PackageReference Include="GitInfo" Version="2.2.0" ExcludeAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\appiconfg.png" />

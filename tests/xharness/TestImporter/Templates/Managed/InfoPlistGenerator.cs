@@ -12,9 +12,9 @@ namespace Xharness.TestImporter.Templates.Managed {
 
 		public static string GenerateCode (Platform platform, string template, string projectName)
 		{
-			if (template == null)
+			if (template is null)
 				throw new ArgumentNullException (nameof (template));
-			if (projectName == null)
+			if (projectName is null)
 				throw new ArgumentNullException (nameof (projectName));
 			// got the lines we want to add, read the template and substitute
 			var result = template;

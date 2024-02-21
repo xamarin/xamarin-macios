@@ -25,8 +25,7 @@ using NativeHandle = System.IntPtr;
 namespace IntentsUI {
 
 	[NoMac]
-	[iOS (10, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Native]
 	public enum INUIHostedViewContext : ulong {
 		SiriSnippet,
@@ -34,8 +33,6 @@ namespace IntentsUI {
 	}
 
 	[NoMac]
-	[iOS (11, 0)]
-	[MacCatalyst (13, 0)]
 	[Native]
 	public enum INUIInteractiveBehavior : ulong {
 		None,
@@ -61,13 +58,11 @@ namespace IntentsUI {
 	}
 
 	[NoMac]
-	[iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	delegate void INUIHostedViewControllingConfigureViewHandler (bool success, NSSet<INParameter> configuredParameters, CGSize desiredSize);
 
 	[NoMac]
-	[iOS (10, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INUIHostedViewControlling {
 
@@ -77,15 +72,13 @@ namespace IntentsUI {
 		[Export ("configureWithInteraction:context:completion:")]
 		void Configure (INInteraction interaction, INUIHostedViewContext context, Action<CGSize> completion);
 
-		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("configureViewForParameters:ofInteraction:interactiveBehavior:context:completion:")]
 		void ConfigureView (NSSet<INParameter> parameters, INInteraction interaction, INUIInteractiveBehavior interactiveBehavior, INUIHostedViewContext context, INUIHostedViewControllingConfigureViewHandler completionHandler);
 	}
 
 	[NoMac]
-	[iOS (10, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_INUIHostedViewControlling {
@@ -96,15 +89,13 @@ namespace IntentsUI {
 		[Export ("hostedViewMaximumAllowedSize")]
 		CGSize GetHostedViewMaximumAllowedSize ();
 
-		[iOS (11, 0)]
-		[MacCatalyst (13, 0)]
+		[MacCatalyst (13, 1)]
 		[Export ("interfaceParametersDescription")]
 		string GetInterfaceParametersDescription ();
 	}
 
 	[NoMac]
-	[iOS (10, 0)]
-	[MacCatalyst (13, 0)]
+	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface INUIHostedViewSiriProviding {
 

@@ -1,3 +1,4 @@
+#if !TVOS && !WATCH
 //
 // MidiServices.cs: Implementation of the MidiObject base class and its derivates
 //
@@ -39,6 +40,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -286,12 +288,14 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIObjectGetIntegerProperty (MidiObjectRef obj, IntPtr str, out int /* SInt32 */ ret);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIObjectGetIntegerProperty (MidiObjectRef obj, IntPtr str, int* /* SInt32 */ ret);
 		internal int GetInt (IntPtr property)
 		{
 			int val, code;
 
-			code = MIDIObjectGetIntegerProperty (handle, property, out val);
+			unsafe {
+				code = MIDIObjectGetIntegerProperty (handle, property, &val);
+			}
 			if (code == 0)
 				return val;
 			throw new MidiException ((MidiError) code);
@@ -305,13 +309,15 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */  MIDIObjectGetDictionaryProperty (MidiObjectRef obj, IntPtr str, out IntPtr dict);
+		unsafe extern static int /* OSStatus = SInt32 */  MIDIObjectGetDictionaryProperty (MidiObjectRef obj, IntPtr str, IntPtr* dict);
 		internal NSDictionary? GetDictionary (IntPtr property)
 		{
 			IntPtr val;
 			int code;
 
-			code = MIDIObjectGetDictionaryProperty (handle, property, out val);
+			unsafe {
+				code = MIDIObjectGetDictionaryProperty (handle, property, &val);
+			}
 			if (code == 0) {
 				var dict = Runtime.GetNSObject (val) as NSDictionary;
 				if (val != IntPtr.Zero)
@@ -329,14 +335,16 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIObjectGetDataProperty (MidiObjectRef obj, IntPtr str, out IntPtr data);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIObjectGetDataProperty (MidiObjectRef obj, IntPtr str, IntPtr* data);
 
 		public NSData? GetData (IntPtr property)
 		{
 			IntPtr val;
 			int code;
 
-			code = MIDIObjectGetDataProperty (handle, property, out val);
+			unsafe {
+				code = MIDIObjectGetDataProperty (handle, property, &val);
+			}
 			if (code == 0) {
 				var data = Runtime.GetNSObject (val) as NSData;
 				if (val != IntPtr.Zero)
@@ -357,14 +365,16 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIObjectGetStringProperty (MidiObjectRef obj, IntPtr str, out IntPtr data);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIObjectGetStringProperty (MidiObjectRef obj, IntPtr str, IntPtr* data);
 
 		public string? GetString (IntPtr property)
 		{
 			IntPtr val;
 			int code;
 
-			code = MIDIObjectGetStringProperty (handle, property, out val);
+			unsafe {
+				code = MIDIObjectGetStringProperty (handle, property, &val);
+			}
 			if (code == 0) {
 				var ret = CFString.FromHandle (val);
 				if (val != IntPtr.Zero)
@@ -396,13 +406,15 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIObjectGetProperties (MidiObjectRef obj, out IntPtr dict, [MarshalAs (UnmanagedType.U1)] bool deep);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIObjectGetProperties (MidiObjectRef obj, IntPtr* dict, byte deep);
 
 		public NSDictionary? GetDictionaryProperties (bool deep)
 		{
 			IntPtr val;
-			if (MIDIObjectGetProperties (handle, out val, deep) != 0 || val == IntPtr.Zero)
-				return null;
+			unsafe {
+				if (MIDIObjectGetProperties (handle, &val, deep ? (byte) 1 : (byte) 0) != 0 || val == IntPtr.Zero)
+					return null;
+			}
 			var value = Runtime.GetNSObject (val) as NSDictionary;
 			CFObject.CFRelease (val);
 			return value;
@@ -445,7 +457,7 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static MidiError /* OSStatus = SInt32 */ MIDIObjectFindByUniqueID (int /* MIDIUniqueID = SInt32 */ uniqueId, out MidiObjectRef obj, out MidiObjectType objectType);
+		unsafe extern static MidiError /* OSStatus = SInt32 */ MIDIObjectFindByUniqueID (int /* MIDIUniqueID = SInt32 */ uniqueId, MidiObjectRef* obj, MidiObjectType* objectType);
 
 		static internal MidiObject? MidiObjectFromType (MidiObjectType type, MidiObjectRef handle)
 		{
@@ -477,7 +489,11 @@ namespace CoreMidi {
 		{
 			MidiObjectRef handle;
 			MidiObjectType type;
-			var code = MIDIObjectFindByUniqueID (uniqueId, out handle, out type);
+			MidiError code;
+
+			unsafe {
+				code = MIDIObjectFindByUniqueID (uniqueId, &handle, &type);
+			}
 			result = null;
 			if (code != MidiError.Ok)
 				return code;
@@ -513,9 +529,9 @@ namespace CoreMidi {
 #if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]
 #if NET
-		unsafe extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, delegate* unmanaged<IntPtr, IntPtr, void> callback, IntPtr context, out MidiObjectRef handle);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, delegate* unmanaged<IntPtr, IntPtr, void> callback, IntPtr context, MidiObjectRef* handle);
 #else
-		extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, MidiNotifyProc callback, IntPtr context, out MidiObjectRef handle);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, MidiNotifyProc callback, IntPtr context, MidiObjectRef* handle);
 #endif
 
 		[DllImport (Constants.CoreMidiLibrary)]
@@ -532,7 +548,7 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDISourceCreate (MidiObjectRef handle, IntPtr name, out MidiObjectRef endpoint);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDISourceCreate (MidiObjectRef handle, IntPtr name, MidiObjectRef* endpoint);
 
 		GCHandle gch;
 
@@ -551,14 +567,16 @@ namespace CoreMidi {
 		{
 			using (var nsstr = new NSString (name)) {
 				gch = GCHandle.Alloc (this);
-#if NET
 				int code = 0;
+				MidiObjectRef tempHandle;
 				unsafe {
-					code = MIDIClientCreate (nsstr.Handle, &ClientCallback, GCHandle.ToIntPtr (gch), out handle);
-				}
+#if NET
+					code = MIDIClientCreate (nsstr.Handle, &ClientCallback, GCHandle.ToIntPtr (gch), &tempHandle);
 #else
-				int code = MIDIClientCreate (nsstr.Handle, static_MidiNotifyProc, GCHandle.ToIntPtr (gch), out handle);
+					code = MIDIClientCreate (nsstr.Handle, static_MidiNotifyProc, GCHandle.ToIntPtr (gch), &tempHandle);
 #endif
+				}
+				handle = tempHandle;
 				if (code != 0) {
 					gch.Free ();
 					handle = MidiObject.InvalidRef;
@@ -588,7 +606,10 @@ namespace CoreMidi {
 		{
 			using (var nsstr = new NSString (name)) {
 				MidiObjectRef ret;
-				var code = MIDISourceCreate (handle, nsstr.Handle, out ret);
+				int code;
+				unsafe {
+					code = MIDISourceCreate (handle, nsstr.Handle, &ret);
+				}
 				if (code != 0) {
 					statusCode = (MidiError) code;
 					return null;
@@ -667,7 +688,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.ObjectAdded:
 				var eoa = client?.ObjectAdded;
 				if (eoa is not null) {
-					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
+					var data = Marshal.PtrToStructure<MidiObjectAddRemoveNotification> (message)!;
 					eoa (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
 				}
@@ -675,7 +696,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.ObjectRemoved:
 				var eor = client?.ObjectRemoved;
 				if (eor is not null) {
-					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
+					var data = Marshal.PtrToStructure<MidiObjectAddRemoveNotification> (message)!;
 					eor (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
 				}
@@ -683,7 +704,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.PropertyChanged:
 				var epc = client?.PropertyChanged;
 				if (epc is not null) {
-					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification))!;
+					var data = Marshal.PtrToStructure<MidiObjectPropertyChangeNotification> (message)!;
 					epc (client, new ObjectPropertyChangedEventArgs (
 							 MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
 				}
@@ -701,7 +722,7 @@ namespace CoreMidi {
 			case MidiNotificationMessageId.IOError:
 				var eio = client?.IOError;
 				if (eio is not null) {
-					var data = (MidiIOErrorNotification) Marshal.PtrToStructure (message, typeof (MidiIOErrorNotification))!;
+					var data = Marshal.PtrToStructure<MidiIOErrorNotification> (message)!;
 					eio (client, new IOErrorEventArgs (new MidiDevice (data.DeviceRef), data.ErrorCode));
 				}
 				break;
@@ -770,7 +791,7 @@ namespace CoreMidi {
 #if !COREBUILD
 		public long TimeStamp;
 		IntPtr byteptr;
-		byte [] bytes = Array.Empty<byte> ();
+		byte []? bytes;
 		int start;
 		public ushort Length;
 
@@ -826,7 +847,7 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte [] ByteArray {
+		internal byte []? ByteArray {
 			get { return bytes; }
 		}
 
@@ -834,6 +855,9 @@ namespace CoreMidi {
 			get { return byteptr; }
 		}
 
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("This property may return a pointer to a managed object, and this pointer is never safe to use. Use ByteArray or BytePointer instead.")]
 		public IntPtr Bytes {
 			get {
 				if (bytes is null || bytes.Length < 1)
@@ -845,6 +869,7 @@ namespace CoreMidi {
 				}
 			}
 		}
+#endif
 
 		internal static int GetPacketLength (int payload_length)
 		{
@@ -963,10 +988,10 @@ namespace CoreMidi {
 		extern unsafe static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiPortRef* midiPort);
 #else
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiReadProc readProc, IntPtr context, out MidiPortRef midiPort);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiReadProc readProc, IntPtr context, MidiPortRef* midiPort);
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIOutputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, out MidiPortRef midiPort);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIOutputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiPortRef* midiPort);
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIPortDispose (MidiPortRef port);
@@ -980,19 +1005,21 @@ namespace CoreMidi {
 				GCHandle gch = GCHandle.Alloc (this);
 				int code;
 
+				MidiPortRef tempHandle;
 				if (input) {
-#if NET
 					unsafe {
-						MidiPortRef tempHandle;
+#if NET
 						code = MIDIInputPortCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
-						handle = tempHandle;
-					}
 #else
-					code = MIDIInputPortCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
+						code = MIDIInputPortCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), &tempHandle);
 #endif
+					}
 				} else {
-					code = MIDIOutputPortCreate (client.handle, nsstr.Handle, out handle);
+					unsafe {
+						code = MIDIOutputPortCreate (client.handle, nsstr.Handle, &tempHandle);
+					}
 				}
+				handle = tempHandle;
 
 				if (code != 0) {
 					gch.Free ();
@@ -1175,13 +1202,15 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIEntityGetDevice (MidiEntityRef handle, out MidiDeviceRef devRef);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIEntityGetDevice (MidiEntityRef handle, MidiDeviceRef* devRef);
 
 		public MidiDevice? Device {
 			get {
 				MidiEntityRef res;
-				if (MIDIEntityGetDevice (handle, out res) == 0)
-					return new MidiDevice (res);
+				unsafe {
+					if (MIDIEntityGetDevice (handle, &res) == 0)
+						return new MidiDevice (res);
+				}
 				return null;
 			}
 		}
@@ -1557,7 +1586,7 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.MacOSX, 11, 0)]
 #endif
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, [MarshalAs (UnmanagedType.U1)] bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
+		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, byte embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
 
 		public MidiEntity? GetEntity (nint entityIndex)
 		{
@@ -1582,7 +1611,7 @@ namespace CoreMidi {
 			if (handle == MidiObject.InvalidRef)
 				throw new ObjectDisposedException ("handle");
 			using (NSString nsName = new NSString (name)) {
-				return MIDIDeviceAddEntity (handle, nsName.Handle, embedded, numSourceEndpoints, numDestinationEndpoints, newEntity.Handle);
+				return MIDIDeviceAddEntity (handle, nsName.Handle, embedded ? (byte) 1 : (byte) 0, numSourceEndpoints, numDestinationEndpoints, newEntity.Handle);
 			}
 		}
 
@@ -1664,11 +1693,10 @@ namespace CoreMidi {
 		}
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public string? NameConfigurationDictionary {
@@ -2279,12 +2307,15 @@ namespace CoreMidi {
 		}
 
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIEndpointGetEntity (MidiEndpointRef endpoint, out MidiEntityRef entity);
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIEndpointGetEntity (MidiEndpointRef endpoint, MidiEntityRef* entity);
 
 		public MidiEntity? Entity {
 			get {
 				MidiEntityRef entity;
-				var code = MIDIEndpointGetEntity (handle, out entity);
+				int code;
+				unsafe {
+					code = MIDIEndpointGetEntity (handle, &entity);
+				}
 				if (code == 0)
 					return new MidiEntity (entity);
 				return null;
@@ -2575,3 +2606,4 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 }
+#endif

@@ -42,14 +42,14 @@ namespace Foundation {
 		public NSUrlProtocol (NSUrlRequest request, NSCachedUrlResponse cachedResponse, NSUrlProtocolClient client)
 			: base (NSObjectFlag.Empty)
 		{
-			if (request == null)
+			if (request is null)
 				throw new ArgumentNullException ("request");
-			if (client == null)
+			if (client is null)
 				throw new ArgumentNullException ("client");
 			if (IsDirectBinding) {
-				InitializeHandle (IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithRequest_CachedResponse_Client_XHandle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			} else {
-				InitializeHandle (IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_Handle, request.Handle, cachedResponse == null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
+				InitializeHandle (IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithRequest_CachedResponse_Client_XHandle, request.Handle, cachedResponse is null ? IntPtr.Zero : cachedResponse.Handle, client.Handle), "initWithRequest:cachedResponse:client:");
 			}
 		}
 
@@ -57,10 +57,10 @@ namespace Foundation {
 		public virtual NSObject WeakClient {
 			get {
 				var client = Client;
-				if (client == null)
+				if (client is null)
 					return null;
 				var nsclient = client as NSObject;
-				if (nsclient != null)
+				if (nsclient is not null)
 					return nsclient;
 				return Runtime.GetNSObject (client.Handle);
 			}

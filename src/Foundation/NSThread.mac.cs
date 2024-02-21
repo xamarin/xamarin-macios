@@ -31,7 +31,7 @@ namespace Foundation
 
 		public static NSThread Start (Action action)
 		{
-			if (action == null) {
+			if (action is null) {
 				throw new ArgumentNullException ("action");
 			}
 

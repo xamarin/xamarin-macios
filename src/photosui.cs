@@ -25,8 +25,6 @@ using NativeHandle = System.IntPtr;
 
 namespace PhotosUI {
 	[NoTV]
-	[iOS (8, 0)]
-	[Mac (10, 13)]
 	[MacCatalyst (14, 0)]
 	[Protocol]
 #if !NET && !TVOS && !MONOMAC
@@ -58,9 +56,6 @@ namespace PhotosUI {
 		bool ShouldShowCancelConfirmation { get; }
 	}
 
-	[TV (10, 0)]
-	[iOS (9, 1)]
-	[Mac (10, 12)]
 	[MacCatalyst (13, 1)]
 #if MONOMAC
 	[BaseType (typeof (NSView))]
@@ -81,8 +76,7 @@ namespace PhotosUI {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		PHLivePhotoViewDelegate Delegate { get; set; }
+		IPHLivePhotoViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
@@ -127,11 +121,14 @@ namespace PhotosUI {
 		[NoMacCatalyst]
 		[NullAllowed, Export ("livePhotoBadgeView", ArgumentSemantic.Strong)]
 		NSView LivePhotoBadgeView { get; }
+
+		[TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("contentsRect", ArgumentSemantic.Assign)]
+		CGRect ContentsRect { get; set; }
 	}
 
-	[TV (10, 0)]
-	[iOS (9, 1)]
-	[Mac (10, 12)]
+	interface IPHLivePhotoViewDelegate { }
+
 	[MacCatalyst (13, 1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -146,13 +143,12 @@ namespace PhotosUI {
 		[Export ("livePhotoView:didEndPlaybackWithStyle:")]
 		void DidEndPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
 
-		[TV (10, 0), iOS (9, 1), NoMac]
+		[NoMac]
 		[MacCatalyst (13, 1)]
 		[Export ("livePhotoView:extraMinimumTouchDurationForTouch:withStyle:")]
 		double GetExtraMinimumTouchDuration (PHLivePhotoView livePhotoView, UITouch touch, PHLivePhotoViewPlaybackStyle playbackStyle);
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
@@ -163,7 +159,6 @@ namespace PhotosUI {
 		NSString Undefined { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -177,18 +172,15 @@ namespace PhotosUI {
 		[Export ("project")]
 		PHProject Project { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("showEditorForAsset:")]
 		void ShowEditor (PHAsset asset);
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("updatedProjectInfoFromProjectInfo:completion:")]
 		NSProgress UpdatedProjectInfo ([NullAllowed] PHProjectInfo existingProjectInfo, Action<PHProjectInfo> completionHandler);
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -206,7 +198,6 @@ namespace PhotosUI {
 		PHProjectTextElement TextElement { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -224,7 +215,6 @@ namespace PhotosUI {
 		PHProjectTextElementType TextElementType { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -248,7 +238,6 @@ namespace PhotosUI {
 		void FinishProject (Action completion);
 
 		[Protected]
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("typeDescriptionDataSourceForCategory:invalidator:")]
 		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (NSString category, IPHProjectTypeDescriptionInvalidator invalidator);
@@ -257,7 +246,6 @@ namespace PhotosUI {
 		IPHProjectTypeDescriptionDataSource GetTypeDescriptionDataSource (PHProjectCategory category, IPHProjectTypeDescriptionInvalidator invalidator);
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -287,36 +275,30 @@ namespace PhotosUI {
 		[Export ("initWithProjectType:title:description:image:")]
 		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image);
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("initWithProjectType:title:attributedDescription:image:subtypeDescriptions:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, PHProjectTypeDescription [] subtypeDescriptions);
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("initWithProjectType:title:attributedDescription:image:canProvideSubtypes:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] NSAttributedString localizedAttributedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("initWithProjectType:title:description:image:canProvideSubtypes:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSString projectType, string localizedTitle, [NullAllowed] string localizedDescription, [NullAllowed] UIImage image, bool canProvideSubtypes);
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("canProvideSubtypes")]
 		bool CanProvideSubtypes { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[NullAllowed, Export ("localizedAttributedDescription", ArgumentSemantic.Copy)]
 		NSAttributedString LocalizedAttributedDescription { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -333,13 +315,11 @@ namespace PhotosUI {
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("quality")]
 		double Quality { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -354,7 +334,6 @@ namespace PhotosUI {
 		CGRect Placement { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -374,18 +353,15 @@ namespace PhotosUI {
 		[Export ("regionsOfInterest")]
 		PHProjectRegionOfInterest [] RegionsOfInterest { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("horizontallyFlipped")]
 		bool HorizontallyFlipped { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("verticallyFlipped")]
 		bool VerticallyFlipped { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -402,28 +378,23 @@ namespace PhotosUI {
 		[Export ("sections")]
 		PHProjectSection [] Sections { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("brandingEnabled")]
 		bool BrandingEnabled { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[Export ("pageNumbersEnabled")]
 		bool PageNumbersEnabled { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[NullAllowed, Export ("productIdentifier")]
 		string ProductIdentifier { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[NullAllowed, Export ("themeIdentifier")]
 		string ThemeIdentifier { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -441,7 +412,6 @@ namespace PhotosUI {
 		string Title { get; }
 	}
 
-	[Mac (10, 13)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -461,13 +431,11 @@ namespace PhotosUI {
 		[Export ("cloudAssetIdentifiers")]
 		PHCloudIdentifier [] CloudAssetIdentifiers { get; }
 
-		[Mac (10, 14)]
 		[NoMacCatalyst]
 		[NullAllowed, Export ("backgroundColor")]
 		UIColor BackgroundColor { get; }
 	}
 
-	[Mac (10, 14)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -494,7 +462,6 @@ namespace PhotosUI {
 	}
 
 	interface IPHProjectTypeDescriptionDataSource { }
-	[Mac (10, 14)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -520,7 +487,6 @@ namespace PhotosUI {
 	}
 
 	interface IPHProjectTypeDescriptionInvalidator { }
-	[Mac (10, 14)]
 	[NoiOS]
 	[NoTV]
 	[NoMacCatalyst]
@@ -535,7 +501,6 @@ namespace PhotosUI {
 		void InvalidateFooterTextForSubtypes (NSString projectType);
 	}
 
-	[iOS (8, 0)]
 	[NoMac]
 	[NoTV]
 	[DisableDefaultCtor]
@@ -592,6 +557,22 @@ namespace PhotosUI {
 		[MacCatalyst (16, 0)]
 		[Export ("moveAssetWithIdentifier:afterAssetWithIdentifier:")]
 		void MoveAsset (string identifier, [NullAllowed] string afterIdentifier);
+
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("updatePickerUsingConfiguration:")]
+		void UpdatePicker (PHPickerUpdateConfiguration configuration);
+
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("scrollToInitialPosition")]
+		void ScrollToInitialPosition ();
+
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("zoomIn")]
+		void ZoomIn ();
+
+		[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("zoomOut")]
+		void ZoomOut ();
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (14, 0)]
@@ -618,6 +599,18 @@ namespace PhotosUI {
 		[iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("preselectedAssetIdentifiers", ArgumentSemantic.Copy)]
 		string [] PreselectedAssetIdentifiers { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("mode", ArgumentSemantic.Assign)]
+		PHPickerMode Mode { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("edgesWithoutContentMargins", ArgumentSemantic.Assign)]
+		NSDirectionalRectEdge EdgesWithoutContentMargins { get; set; }
+
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("disabledCapabilities", ArgumentSemantic.Assign)]
+		PHPickerCapabilities DisabledCapabilities { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (13, 0), iOS (14, 0)]
@@ -741,5 +734,19 @@ namespace PhotosUI {
 	public enum PHPickerConfigurationSelection : long {
 		Default = 0,
 		Ordered = 1,
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		Continuous = 2,
+		[Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		ContinuousAndOrdered = 3,
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface PHPickerUpdateConfiguration : NSCopying, NSSecureCoding {
+		[Export ("selectionLimit")]
+		nint SelectionLimit { get; set; }
+
+		[Export ("edgesWithoutContentMargins", ArgumentSemantic.Assign)]
+		NSDirectionalRectEdge EdgesWithoutContentMargins { get; set; }
 	}
 }

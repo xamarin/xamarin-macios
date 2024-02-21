@@ -2,6 +2,8 @@ using System;
 
 using Mono.Cecil;
 
+#nullable enable
+
 namespace Xamarin.Linker.Steps {
 	// The .NET linker comes with a way to remove attributes (by passing '--link-attributes
 	// some.xml' as a command-line argument), but this has a few problems:

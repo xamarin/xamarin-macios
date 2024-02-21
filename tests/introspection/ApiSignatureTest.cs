@@ -76,7 +76,7 @@ namespace Introspection {
 			pos = end + 3;
 
 			while (pos < encoded.Length) {
-				if (s != null)
+				if (s is not null)
 					elements.Add (s);
 				s = Next (encoded, ref pos);
 			}
@@ -215,7 +215,7 @@ namespace Introspection {
 				FieldInfo fi = null;
 				if (!static_type)
 					fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				IntPtr class_ptr = fi == null ? IntPtr.Zero : (IntPtr) (NativeHandle) fi.GetValue (null);
+				IntPtr class_ptr = fi is null ? IntPtr.Zero : (IntPtr) (NativeHandle) fi.GetValue (null);
 
 				foreach (MethodBase m in t.GetMethods (Flags))
 					CheckMemberSignature (m, t, class_ptr, ref n);
@@ -230,11 +230,11 @@ namespace Introspection {
 			var methodinfo = m as MethodInfo;
 			var constructorinfo = m as ConstructorInfo;
 
-			if (methodinfo == null && constructorinfo == null)
+			if (methodinfo is null && constructorinfo is null)
 				return;
 
 			// Don't check obsolete methods, it could be obsoleted because it was broken.
-			if (m.GetCustomAttributes<ObsoleteAttribute> () != null)
+			if (m.GetCustomAttributes<ObsoleteAttribute> () is not null)
 				return;
 
 			if (m.DeclaringType != t)
@@ -244,7 +244,7 @@ namespace Introspection {
 
 			foreach (object ca in m.GetCustomAttributes (true)) {
 				var exportAttribute = ca as ExportAttribute;
-				if (exportAttribute == null)
+				if (exportAttribute is null)
 					continue;
 				string name = exportAttribute.Selector;
 
@@ -302,7 +302,7 @@ namespace Introspection {
 		{
 			IntPtr sel = Selector.GetHandle (CurrentSelector);
 			IntPtr method;
-			if (methodinfo != null)
+			if (methodinfo is not null)
 				method = m.IsStatic ? class_getClassMethod (class_ptr, sel) : class_getInstanceMethod (class_ptr, sel);
 			else
 				method = class_getInstanceMethod (class_ptr, sel);
@@ -310,7 +310,7 @@ namespace Introspection {
 			string encoded = Marshal.PtrToStringAuto (tenc);
 
 			if (LogProgress)
-				Console.WriteLine ("{0} {1} '{2} {3}' selector: {4} == {5}", ++n, t.Name, methodinfo != null ? methodinfo.IsStatic ? "static" : "instance" : "ctor", m, CurrentSelector, encoded);
+				Console.WriteLine ("{0} {1} '{2} {3}' selector: {4} == {5}", ++n, t.Name, methodinfo is not null ? methodinfo.IsStatic ? "static" : "instance" : "ctor", m, CurrentSelector, encoded);
 
 			// NSObject has quite a bit of stuff that's not usable (except by some class that inherits from it)
 			if (String.IsNullOrEmpty (encoded))
@@ -322,7 +322,7 @@ namespace Introspection {
 				elements = Split (encoded, out encoded_size);
 			} catch {
 			}
-			if (elements == null || !elements.Any ()) {
+			if (elements is null || !elements.Any ()) {
 				if (LogProgress)
 					Console.WriteLine ("[WARNING] Could not parse encoded signature for {0} : {1}", CurrentSelector, encoded);
 				return;
@@ -331,7 +331,7 @@ namespace Introspection {
 			bool result;
 			CurrentParameter = 0;
 
-			if (methodinfo != null) {
+			if (methodinfo is not null) {
 				// check return value
 
 				if (IgnoreSimd (methodinfo.ReturnType)) {
@@ -632,7 +632,7 @@ namespace Introspection {
 				// We use BindAsAttribute to wrap NSNumber/NSValue into more accurate Nullable<T> types
 				// So we check if T of nullable is supported by bindAs
 				var nullableType = Nullable.GetUnderlyingType (type);
-				if (nullableType != null)
+				if (nullableType is not null)
 					return BindAsSupportedTypes.Contains (nullableType.Name);
 
 				return (type.IsInterface ||                             // protocol
@@ -820,7 +820,7 @@ namespace Introspection {
 					return CheckType (ga, ref n);
 			}
 			// look for [Model] types
-			if (t.GetCustomAttribute<ModelAttribute> (false) == null)
+			if (t.GetCustomAttribute<ModelAttribute> (false) is null)
 				return true;
 			n++;
 			switch (t.Name) {
@@ -834,7 +834,7 @@ namespace Introspection {
 		protected virtual void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
 			// if the method was obsoleted then it's not an issue, we assume the alternative is fine
-			if (m.GetCustomAttribute<ObsoleteAttribute> () != null)
+			if (m.GetCustomAttribute<ObsoleteAttribute> () is not null)
 				return;
 			if (m.DeclaringType != t)
 				return;
@@ -889,9 +889,9 @@ namespace Introspection {
 				if (!NSObjectType.IsAssignableFrom (t))
 					continue;
 
-				if (t.GetCustomAttribute<ProtocolAttribute> () != null)
+				if (t.GetCustomAttribute<ProtocolAttribute> () is not null)
 					continue;
-				if (t.GetCustomAttribute<ModelAttribute> () != null)
+				if (t.GetCustomAttribute<ModelAttribute> () is not null)
 					continue;
 
 				// let's not encourage the use of some API
@@ -939,7 +939,7 @@ namespace Introspection {
 
 					// did we provide a async wrapper ?
 					string ma = m.Name + "Async";
-					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () != null)
+					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () is not null)
 						continue;
 
 					var name = m.ToString ();

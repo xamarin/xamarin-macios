@@ -24,11 +24,7 @@ parameters:
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
-- name: provisioningFailed
-  type: string 
-  default: 'False'
-
-- name: simTestsConfigurations
+- name: testConfigurations
   type: object
 
 - name: isPR
@@ -46,6 +42,7 @@ parameters:
   type: string
   default: '$(MaciosUploadPrefix)'
 
+
 steps:
 
 - template: ../common/checkout.yml
@@ -55,10 +52,6 @@ steps:
     commit: ${{ parameters.commit }}
 
 - template: download-artifacts.yml
-  parameters:
-    downloadHtmlReport: false
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
-    testPrefix: ${{ parameters.testPrefix }}
 
 - ${{ if parameters.isPR }}:
   - template: ../common/clean.yml
@@ -70,15 +63,21 @@ steps:
 # as the separator
 - pwsh: |
       try {
+        gci env: | format-table -autosize | Out-String -Width 8192
+
         $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/"
         Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
         $DebugPreference = "Continue" # enable debug messages
 
-        $labels = "$Env:LABELS".Split(";")
+        $parallelResults = New-ParallelTestsResults `
+          -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" `
+          -TestPrefix "${{ parameters.testPrefix }}" `
+          -Dependencies "$Env:DEPENDENCIES" `
+          -StageDependencies "$Env:STAGE_DEPENDENCIES" `
+          -UploadPrefix "${{  parameters.uploadPrefix }}" `
+          -Context "$Env:CONTEXT" `
+          -VSDropsIndex $vsdropsIndex
 
-        $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}" -UploadPrefix "${{  parameters.uploadPrefix }}"
-
-        $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
         $success = $parallelResults.IsSuccess()
         $emoji = ":rocket:"
         if (-not $success) {
@@ -89,10 +88,12 @@ steps:
         $gihubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $Env:GITHUB_TOKEN -Hash $Env:COMMENT_HASH -Debug
         $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
       } catch {
+        Write-Host "##vso[task.complete result=Failed;]Failed to compute test summaries: $_"
         New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
       }
   env:
-    LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
+    DEPENDENCIES: $(DEPENDENCIES)
+    STAGE_DEPENDENCIES: $(STAGE_DEPENDENCIES)
     CONTEXT: ${{ parameters.statusContext }}
     DEVICE_PREFIX: ${{ parameters.testPrefix }}
     GITHUB_TOKEN: $(GitHub.Token)

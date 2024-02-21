@@ -34,7 +34,6 @@ using NativeHandle = System.IntPtr;
 
 namespace GameController {
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // The GCControllerElement class is never instantiated directly.
@@ -87,7 +86,6 @@ namespace GameController {
 
 	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -100,7 +98,6 @@ namespace GameController {
 		[Export ("value")]
 		float Value {  /* float, not CGFloat */
 			get;
-			[Mac (10, 15)]
 			[iOS (13, 0)]
 			[TV (13, 0)]
 			[MacCatalyst (13, 1)]
@@ -111,7 +108,6 @@ namespace GameController {
 	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
 	delegate void GCControllerButtonTouchedChanged (GCControllerButtonInput button, float value, bool pressed, bool touched);
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -130,7 +126,6 @@ namespace GameController {
 		[Export ("value")]
 		float Value {  /* float, not CGFloat */
 			get;
-			[Mac (10, 15)]
 			[iOS (13, 0)]
 			[TV (13, 0)]
 			[MacCatalyst (13, 1)]
@@ -141,13 +136,11 @@ namespace GameController {
 		bool IsPressed { [Bind ("isPressed")] get; }
 
 #if !NET
-		[iOS (8, 0), Mac (10, 10)]
 		[Obsolete ("Use the 'PressedChangedHandler' property.")]
 		[Wrap ("PressedChangedHandler = handler;", IsVirtual = true)]
 		void SetPressedChangedHandler (GCControllerButtonValueChanged handler);
 #endif
 
-		[iOS (8, 0), Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("pressedChangedHandler", ArgumentSemantic.Copy)]
@@ -166,7 +159,6 @@ namespace GameController {
 
 	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -194,7 +186,7 @@ namespace GameController {
 		[Export ("right")]
 		GCControllerButtonInput Right { get; }
 
-		[Mac (10, 15), iOS (13, 0)]
+		[iOS (13, 0)]
 		[TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setValueForXAxis:yAxis:")]
@@ -206,7 +198,6 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCExtendedGamepad' instead.")]
 	[BaseType (typeof (GCPhysicalInputProfile))]
@@ -248,7 +239,6 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCExtendedGamepad' instead.")]
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCExtendedGamepad' instead.")]
 	[BaseType (typeof (GCGamepad))]
@@ -267,7 +257,6 @@ namespace GameController {
 
 	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
@@ -320,27 +309,27 @@ namespace GameController {
 		[Export ("rightTrigger")]
 		GCControllerButtonInput RightTrigger { get; }
 
-		[TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
+		[TV (12, 1), iOS (12, 1)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("leftThumbstickButton")]
 		GCControllerButtonInput LeftThumbstickButton { get; }
 
-		[TV (12, 1), Mac (10, 14, 1), iOS (12, 1)]
+		[TV (12, 1), iOS (12, 1)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("rightThumbstickButton")]
 		GCControllerButtonInput RightThumbstickButton { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("buttonMenu")]
 		GCControllerButtonInput ButtonMenu { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("buttonOptions")]
 		GCControllerButtonInput ButtonOptions { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setStateFromExtendedGamepad:")]
 		void SetState (GCExtendedGamepad extendedGamepad);
@@ -351,7 +340,6 @@ namespace GameController {
 		GCControllerButtonInput ButtonHome { get; }
 	}
 
-	[Mac (10, 9)]
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
@@ -373,14 +361,13 @@ namespace GameController {
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
-		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
+		[TV (12, 2), iOS (12, 2)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCController.GetExtendedGamepadController()' instead.")]
 		[Field ("GCCurrentExtendedGamepadSnapshotDataVersion")]
 		GCExtendedGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
-	[Mac (10, 9)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface GCController : GCDevice {
@@ -420,8 +407,6 @@ namespace GameController {
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
-		[Mac (10, 12)]
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
@@ -442,40 +427,37 @@ namespace GameController {
 		[Notification, Field ("GCControllerDidDisconnectNotification")]
 		NSString DidDisconnectNotification { get; }
 
-		[iOS (8, 0), Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed]
 		[Export ("motion", ArgumentSemantic.Retain)]
 		GCMotion Motion { get; }
 
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		[Export ("handlerQueue", ArgumentSemantic.Retain)]
 		new DispatchQueue HandlerQueue { get; set; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("productCategory")]
 		new string ProductCategory { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("snapshot")]
 		bool Snapshot { [Bind ("isSnapshot")] get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("capture")]
 		GCController Capture ();
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("controllerWithMicroGamepad")]
 		GCController GetMicroGamepadController ();
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("controllerWithExtendedGamepad")]
@@ -521,7 +503,6 @@ namespace GameController {
 		bool ShouldMonitorBackgroundEvents { get; set; }
 	}
 
-	[iOS (8, 0), Mac (10, 10)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // access thru GCController.Motion - returns a nil Handle
@@ -555,7 +536,6 @@ namespace GameController {
 		Vector3d UserAcceleration { get; }
 #endif
 
-		[TV (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("attitude", ArgumentSemantic.Assign)]
 #if NET
@@ -564,7 +544,6 @@ namespace GameController {
 		Quaterniond Attitude { get; }
 #endif
 
-		[TV (11, 0), iOS (11, 0), Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		[Export ("rotationRate", ArgumentSemantic.Assign)]
 #if NET
@@ -576,35 +555,32 @@ namespace GameController {
 		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
-		[TV (11, 0)]
-		[iOS (11, 0)]
-		[Mac (10, 13)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use 'HasAttitude' and 'HasRotationRate' instead.")]
 		[Export ("hasAttitudeAndRotationRate")]
 		bool HasAttitudeAndRotationRate { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setGravity:")]
 		void SetGravity (GCAcceleration gravity);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setUserAcceleration:")]
 		void SetUserAcceleration (GCAcceleration userAcceleration);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setAttitude:")]
 		void SetAttitude (GCQuaternion attitude);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setRotationRate:")]
 		void SetRotationRate (GCRotationRate rotationRate);
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setStateFromMotion:")]
 		void SetState (GCMotion motion);
@@ -640,13 +616,9 @@ namespace GameController {
 		GCAcceleration Acceleration { get; set; }
 	}
 
-	[Mac (10, 11)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
-	[Mac (10, 11)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (GCPhysicalInputProfile))]
 	[DisableDefaultCtor]
@@ -679,12 +651,12 @@ namespace GameController {
 		[Export ("allowsRotation")]
 		bool AllowsRotation { get; set; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("buttonMenu")]
 		GCControllerButtonInput ButtonMenu { get; }
 
-		[TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setStateFromMicroGamepad:")]
 		void SetState (GCMicroGamepad microGamepad);
@@ -693,8 +665,6 @@ namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.Capture()' instead.")]
 	[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
 	[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCController.Capture()' instead.")]
-	[Mac (10, 12)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCController.Capture()' instead.")]
 	[BaseType (typeof (GCMicroGamepad))]
@@ -711,15 +681,13 @@ namespace GameController {
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GCControler.GetMicroGamepadController()' instead.")]
-		[TV (12, 2), Mac (10, 14, 4), iOS (12, 2)]
+		[TV (12, 2), iOS (12, 2)]
 		[MacCatalyst (13, 1)]
 		[Deprecated (PlatformName.MacCatalyst, 13, 1, message: "Use 'GCController.GetMicroGamepadController()' instead.")]
 		[Field ("GCCurrentMicroGamepadSnapshotDataVersion")]
 		GCMicroGamepadSnapshotDataVersion DataVersion { get; }
 	}
 
-	[Mac (10, 12)]
-	[iOS (10, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (UIViewController))]
 	interface GCEventViewController {
@@ -868,7 +836,12 @@ namespace GameController {
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[BaseType (typeof (NSObject))]
+#if !XAMCORE_5_0
 	interface GCKeyboard : GCDevice, NSSecureCoding, NSCoding {
+#else
+	interface GCKeyboard : GCDevice {
+#endif
+
 		[NullAllowed, Export ("keyboardInput", ArgumentSemantic.Strong)]
 		GCKeyboardInput KeyboardInput { get; }
 

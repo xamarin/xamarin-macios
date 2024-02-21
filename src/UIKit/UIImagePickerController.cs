@@ -17,6 +17,9 @@ using Photos;
 using System;
 using System.Drawing;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 	public partial class UIImagePickerController {
 		//
@@ -88,7 +91,7 @@ namespace UIKit {
 		public CGRect? CropRect {
 			get {
 				var nsv = ((NSValue) Info [UIImagePickerController.CropRect]);
-				if (nsv == null)
+				if (nsv is null)
 					return null;
 				return nsv.CGRectValue;
 			}
@@ -101,10 +104,8 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.1")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (9, 1)]
 #endif
 		public PHLivePhoto LivePhoto {
 			get {
@@ -125,10 +126,8 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
 #endif
 		public PHAsset PHAsset {
 			get {
@@ -137,10 +136,8 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[iOS (11, 0)]
 #endif
 		public NSUrl ImageUrl {
 			get {

@@ -1,6 +1,6 @@
-!deprecated-attribute-missing! SecKeychainAddGenericPassword missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeychainAddInternetPassword missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeychainFindGenericPassword missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeychainFindInternetPassword missing a [Deprecated] attribute
-!deprecated-attribute-missing! SecKeychainItemFreeContent missing a [Deprecated] attribute
-!missing-field! kSecCodeInfoDefaultDesignatedLightweightCodeRequirement not bound
+!missing-protocol! OS_sec_certificate not bound
+!missing-protocol! OS_sec_identity not bound
+!missing-protocol! OS_sec_object not bound
+!missing-protocol! OS_sec_protocol_metadata not bound
+!missing-protocol! OS_sec_protocol_options not bound
+!missing-protocol! OS_sec_trust not bound

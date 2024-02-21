@@ -41,12 +41,12 @@ namespace Foundation {
 
 		IntPtr InitNSThread (NSObject target, Selector selector, NSObject argument)
 		{
-			if (target == null)
+			if (target is null)
 				throw new ArgumentNullException ("target");
-			if (selector == null)
+			if (selector is null)
 				throw new ArgumentNullException ("selector");
 
-			return xamarin_init_nsthread (IsDirectBinding ? this.Handle : this.SuperHandle, IsDirectBinding, target.Handle, selector.Handle, argument == null ? IntPtr.Zero : argument.Handle);
+			return xamarin_init_nsthread (IsDirectBinding ? this.Handle : this.SuperHandle, IsDirectBinding, target.Handle, selector.Handle, argument is null ? IntPtr.Zero : argument.Handle);
 		}
 
 		[Export ("initWithTarget:selector:object:")]

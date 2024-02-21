@@ -179,7 +179,7 @@ namespace xibuild {
 			var searchPaths = projectImportSearchPaths.SelectSingleNode ($"searchPaths[@os='{SearchPathsOS}']") as XmlElement;
 
 			//NOTE: on Linux, the searchPaths XML element does not exist, so we have to create it
-			if (searchPaths == null) {
+			if (searchPaths is null) {
 				searchPaths = dstXml.CreateElement ("searchPaths");
 				searchPaths.SetAttribute ("os", SearchPathsOS);
 
@@ -221,7 +221,7 @@ namespace xibuild {
 			void CopyConfigNode (XmlDocument src, XmlNode dstNode)
 			{
 				var srcConfigNode = src.SelectSingleNode ("configuration");
-				if (srcConfigNode != null && srcConfigNode.HasChildNodes) {
+				if (srcConfigNode is not null && srcConfigNode.HasChildNodes) {
 					srcConfigNode.ChildNodes.OfType<XmlNode> ().ToList ()
 							.ForEach (node => dstNode.AppendChild (dstXml.ImportNode (node, deep: true)));
 				}
@@ -237,7 +237,7 @@ namespace xibuild {
 
 				// MSBuild property names are case insensitive
 				var valueAttribute = toolsets.SelectSingleNode ($"property[translate(@name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='{name.ToLowerInvariant ()}']/@value");
-				if (valueAttribute != null) {
+				if (valueAttribute is not null) {
 					valueAttribute.Value = value;
 				} else {
 					var property = toolsets.OwnerDocument.CreateElement ("property");

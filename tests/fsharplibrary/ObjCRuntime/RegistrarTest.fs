@@ -1,3 +1,7 @@
+// warning FS3391: This expression uses the implicit conversion 'ObjCRuntime.NativeHandle.op_Implicit(value: ObjCRuntime.NativeHandle) : nativeint' to convert type 'ObjCRuntime.NativeHandle' to type 'nativeint'.
+// Just disable for the whole file instead of for each expression, since this is just test code anyways.
+#nowarn "3391"
+
 namespace MonoTouchFixtures
 
 open System

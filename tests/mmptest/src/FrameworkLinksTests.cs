@@ -40,7 +40,7 @@ namespace Xamarin.MMP.Tests {
 			foreach (var entry in status) {
 				LinkStatus linkStatus;
 				Framework currentFramework = Frameworks.MacFrameworks.Find (entry.Key);
-				if (currentFramework == null) {
+				if (currentFramework is null) {
 					// There are a few entries not in Framesworks.cs that we know about
 					switch (entry.Key) {
 					case "Carbon":

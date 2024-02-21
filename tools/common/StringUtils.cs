@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
@@ -60,6 +61,7 @@ namespace Xamarin.Utils {
 			return QuoteForProcess (arguments.ToArray ());
 		}
 
+		[return: NotNullIfNotNull ("array")]
 		public static string []? QuoteForProcess (params string [] array)
 		{
 			if (array is null || array.Length == 0)
@@ -124,7 +126,7 @@ namespace Xamarin.Utils {
 			return builder.ToString ();
 		}
 
-		public static bool TryParseArguments (string quotedArguments, out string []? argv, out Exception? ex)
+		public static bool TryParseArguments (string quotedArguments, [NotNullWhen (true)] out string []? argv, [NotNullWhen (false)] out Exception? ex)
 		{
 			var builder = new StringBuilder ();
 			var args = new List<string> ();
@@ -134,7 +136,7 @@ namespace Xamarin.Utils {
 			while (i < quotedArguments.Length) {
 				c = quotedArguments [i];
 				if (c != ' ' && c != '\t') {
-					if (GetArgument (builder, quotedArguments, i, out j, out ex) is string argument) {
+					if (TryGetArgument (builder, quotedArguments, i, out var argument, out j, out ex)) {
 						args.Add (argument);
 						i = j;
 					} else {
@@ -152,7 +154,7 @@ namespace Xamarin.Utils {
 			return true;
 		}
 
-		static string? GetArgument (StringBuilder builder, string buf, int startIndex, out int endIndex, out Exception? ex)
+		static bool TryGetArgument (StringBuilder builder, string buf, int startIndex, [NotNullWhen (true)] out string? argument, out int endIndex, [NotNullWhen (false)] out Exception? ex)
 		{
 			bool escaped = false;
 			char qchar, c = '\0';
@@ -184,7 +186,7 @@ namespace Xamarin.Utils {
 				} else if (qchar == '\0' && (c == '\'' || c == '"')) {
 					string sofar = builder.ToString ();
 
-					if (GetArgument (builder, buf, i, out endIndex, out ex) is string embedded) {
+					if (TryGetArgument (builder, buf, i, out var embedded, out endIndex, out ex)) {
 						i = endIndex;
 						builder.Clear ();
 						builder.Append (sofar);
@@ -192,7 +194,8 @@ namespace Xamarin.Utils {
 						continue;
 					}
 
-					return null;
+					argument = null;
+					return false;
 
 				} else {
 					builder.Append (c);
@@ -204,13 +207,15 @@ namespace Xamarin.Utils {
 			if (escaped || (qchar != '\0' && c != qchar)) {
 				ex = new FormatException (escaped ? "Incomplete escape sequence." : "No matching quote found.");
 				endIndex = -1;
-				return null;
+				argument = null;
+				return false;
 			}
 
 			endIndex = i;
 			ex = null;
 
-			return builder.ToString ();
+			argument = builder.ToString ();
+			return true;
 		}
 
 		// Version.Parse requires, minimally, both major and minor parts.

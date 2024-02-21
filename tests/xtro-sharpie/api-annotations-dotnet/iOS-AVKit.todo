@@ -1,0 +1,13 @@
+!missing-enum! AVVideoFrameAnalysisType not bound
+!missing-enum-value! AVKitError native value AVKitErrorRecordingFailed = -1200 not bound
+!missing-selector! AVPlayerViewController::setVideoFrameAnalysisTypes: not bound
+!missing-selector! AVPlayerViewController::toggleLookupAction not bound
+!missing-selector! AVPlayerViewController::videoFrameAnalysisTypes not bound
+!missing-enum! AVCaptureEventPhase not bound
+!missing-selector! AVCaptureEvent::phase not bound
+!missing-selector! AVCaptureEventInteraction::initWithEventHandler: not bound
+!missing-selector! AVCaptureEventInteraction::initWithPrimaryEventHandler:secondaryEventHandler: not bound
+!missing-selector! AVCaptureEventInteraction::isEnabled not bound
+!missing-selector! AVCaptureEventInteraction::setEnabled: not bound
+!missing-type! AVCaptureEvent not bound
+!missing-type! AVCaptureEventInteraction not bound

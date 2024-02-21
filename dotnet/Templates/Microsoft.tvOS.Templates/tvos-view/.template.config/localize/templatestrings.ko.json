@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "tvOS View",
-  "description": "A tvOS View",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "tvOS 보기",
+  "description": "tvOS 보기",
+  "symbols/namespace/description": "생성된 코드의 네임스페이스"
 }

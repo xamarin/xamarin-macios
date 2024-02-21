@@ -127,7 +127,7 @@ namespace UIKit {
 
 		public Token AddTarget (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			var t = new ParameterlessDispatch (action);
@@ -137,7 +137,7 @@ namespace UIKit {
 
 		public Token AddTarget (Action<NSObject> action)
 		{
-			if (action == null)
+			if (action is null)
 				throw new ArgumentNullException ("action");
 
 			var t = new ParametrizedDispatch (action);
@@ -154,9 +154,9 @@ namespace UIKit {
 
 		public void RemoveTarget (Token token)
 		{
-			if (token == null)
+			if (token is null)
 				throw new ArgumentNullException ("token");
-			if (recognizers == null)
+			if (recognizers is null)
 				return;
 			if (recognizers.Remove (token, out var sel))
 				RemoveTarget (token, sel);

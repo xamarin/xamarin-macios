@@ -52,7 +52,7 @@ namespace Xamarin.Mac.Tests {
 		{
 			using (new NSAutoreleasePool ()) {
 				NSEvent? evnt;
-				while ((evnt = NSApplication.SharedApplication.NextEvent ((NSEventMask) NSEventMask.AnyEvent, NSDate.DistantPast, NSRunLoopMode.Default, true)) != null) {
+				while ((evnt = NSApplication.SharedApplication.NextEvent ((NSEventMask) NSEventMask.AnyEvent, NSDate.DistantPast, NSRunLoopMode.Default, true)) is not null) {
 					NSApplication.SharedApplication.SendEvent (evnt);
 				}
 			}

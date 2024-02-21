@@ -53,6 +53,7 @@ wrong, then developers can override the target location by:
     * If the `PackageDebugSymbols` is set to something else: `PublishFolderType=None`.
     * If the `PackageDebugSymbols` is not set: `PublishFolderType=None` for
       release builds, `PublishFolderType=Assembly` otherwise.
+* \*.xml: if there's an assembly with the same name (\*.exe or \*.dll), then `PublishFolderType=None`
 * A \*.resources directory or a \*.resources.zip file next to an assembly with
   the same name is treated as a third-party binding
   (`PublishFolderType=AppleBindingResourcePackage`), and we handle it as such
@@ -159,6 +160,24 @@ The item must be a zip file, which is decompressed, and then treated as
 Setting the `TargetPath` or `Link` metadata has no effect these items.
 
 If a plugin needs to be in a custom subdirectory, then put it in that
+directory in the zip file.
+
+## XpcServices
+
+The target directory is:
+
+* iOS, tvOS: the `XPCServices/` subdirectory.
+* macOS, Mac Catalyst: the `Contents/XPCServices/` subdirectory.
+
+### CompressedXpcServices
+
+The item must be a zip file, which is decompressed, and then treated as
+`XpcServices` (the contents of the zip file will be copied to the corresponding
+`XPCServices` directory).
+
+Setting the `TargetPath` or `Link` metadata has no effect these items.
+
+If an xpc service needs to be in a custom subdirectory, then put it in that
 directory in the zip file.
 
 ### DynamicLibrary

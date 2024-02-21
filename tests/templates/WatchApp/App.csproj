@@ -13,6 +13,7 @@
     <AssemblyName>App</AssemblyName>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos-app</IntermediateOutputPath>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-watchos-app</OutputPath>
@@ -22,7 +23,7 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchFastDev>true</MtouchFastDev>
     <MtouchDebug>true</MtouchDebug>
@@ -36,29 +37,7 @@
     <Optimize>true</Optimize>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchArch>ARMv7k,ARM64_32</MtouchArch>
-    <CodesignEntitlements>%WATCHAPP_PATH%Entitlements.plist</CodesignEntitlements>
-    <MtouchFloat32>true</MtouchFloat32>
-    <CodesignKey>iPhone Developer</CodesignKey>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
-    <OutputPath>bin\iPhone\$(Configuration)-watchos-app</OutputPath>
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchArch>ARMv7k</MtouchArch>
-    <CodesignEntitlements>%WATCHAPP_PATH%Entitlements.plist</CodesignEntitlements>
-    <MtouchFloat32>true</MtouchFloat32>
-    <CodesignKey>iPhone Developer</CodesignKey>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64_32|iPhone' ">
-    <OutputPath>bin\iPhone\$(Configuration)-watchos-app</OutputPath>
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchArch>ARMv7k</MtouchArch>
+    <MtouchArch>ARM64_32</MtouchArch>
     <CodesignEntitlements>%WATCHAPP_PATH%Entitlements.plist</CodesignEntitlements>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignKey>iPhone Developer</CodesignKey>
@@ -69,43 +48,11 @@
     <Optimize>true</Optimize>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <MtouchArch>i386</MtouchArch>
+    <MtouchArch>x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <OutputPath>bin\iPhone\$(Configuration)-watchos-app</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchArch>ARMv7k,ARM64_32</MtouchArch>
-    <CodesignEntitlements>%WATCHAPP_PATH%Entitlements.plist</CodesignEntitlements>
-    <MtouchFloat32>true</MtouchFloat32>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <DeviceSpecificBuild>true</DeviceSpecificBuild>
-    <MtouchDebug>true</MtouchDebug>
-    <MtouchProfiling>true</MtouchProfiling>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
-    <OutputPath>bin\iPhone\$(Configuration)-watchos-app</OutputPath>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <MtouchArch>ARMv7k</MtouchArch>
-    <CodesignEntitlements>%WATCHAPP_PATH%Entitlements.plist</CodesignEntitlements>
-    <MtouchFloat32>true</MtouchFloat32>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <DeviceSpecificBuild>true</DeviceSpecificBuild>
-    <MtouchDebug>true</MtouchDebug>
-    <MtouchProfiling>true</MtouchProfiling>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32_64|iPhone' ">
     <OutputPath>bin\iPhone\$(Configuration)-watchos-app</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>

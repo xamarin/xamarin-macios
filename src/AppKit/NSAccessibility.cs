@@ -19,40 +19,38 @@ using ObjCRuntime;
 
 #nullable enable
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AppKit {
 	public partial interface INSAccessibility { }
 
 #if NET
 	[SupportedOSPlatform ("macos")]
-#else
-	[Mac (10, 9)] // but the field/notifications are in 10.9
 #endif
 	public partial class NSAccessibility {
 #if !COREBUILD
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
-		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
+		static extern CGRect NSAccessibilityFrameInView (NativeHandle parentView, CGRect frame);
 
 		public static CGRect GetFrameInView (NSView parentView, CGRect frame)
 		{
-			return NSAccessibilityFrameInView (parentView, frame);
+			return NSAccessibilityFrameInView (parentView.GetHandle (), frame);
 		}
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
-		static extern CGPoint NSAccessibilityPointInView (NSView parentView, CGPoint point);
+		static extern CGPoint NSAccessibilityPointInView (NativeHandle parentView, CGPoint point);
 
 		public static CGPoint GetPointInView (NSView parentView, CGPoint point)
 		{
-			return NSAccessibilityPointInView (parentView, point);
+			return NSAccessibilityPointInView (parentView.GetHandle (), point);
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
@@ -175,12 +173,11 @@ namespace AppKit {
 		}
 
 		[DllImport (Constants.AppKitLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool NSAccessibilitySetMayContainProtectedContent ([MarshalAs (UnmanagedType.I1)] bool flag);
+		static extern byte NSAccessibilitySetMayContainProtectedContent (byte flag);
 
 		public static bool SetMayContainProtectedContent (bool flag)
 		{
-			return NSAccessibilitySetMayContainProtectedContent (flag);
+			return NSAccessibilitySetMayContainProtectedContent (flag ? (byte) 1 : (byte) 0) != 0;
 		}
 #endif
 	}

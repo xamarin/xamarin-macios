@@ -58,7 +58,7 @@ namespace Xharness.Targets {
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
-			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (SdkVersions.MiniOS));
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (Xamarin.SdkVersions.MiniOS));
 			info_plist.Save (target_info_plist, Harness);
 		}
 
@@ -86,10 +86,11 @@ namespace Xharness.Targets {
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
-			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, OriginalInfoPListInclude));
+			var original_info_plist_include = HarnessConfiguration.EvaluateRootTestsDirectory (OriginalInfoPListInclude);
+			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, original_info_plist_include));
 			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-today";
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".todayextension");
-			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (SdkVersions.MiniOS));
+			info_plist.SetMinimumOSVersion (GetMinimumOSVersion (Xamarin.SdkVersions.MiniOS));
 			info_plist.AddPListStringValue ("CFBundlePackageType", "XPC!");
 			info_plist.SetCFBundleDisplayName (Name);
 			info_plist.AddPListKeyValuePair ("NSExtension", "dict",
@@ -129,9 +130,9 @@ namespace Xharness.Targets {
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
-			if (MonoNativeInfo == null)
+			if (MonoNativeInfo is null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS);
 		}
 
 		public override IEnumerable<RelatedProject> GetRelatedProjects ()

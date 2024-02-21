@@ -13,13 +13,16 @@ NAMES+=MmpTestFramework
 # These plugins are used in the BundleStructure test
 PLUGINS=PlugInA CompressedPlugInB PlugInC CompressedPlugInD
 
+# These xpc services are used in the BundleStructure test
+XPCSERVICES=XpcServiceE CompressedXpcServiceF XpcServiceG CompressedXpcServiceH
+
 # a few lookup tables, because the data we have is not always in the format we need it
 
 COMMON_DYLIB_ARGS=-g -dynamiclib -gdwarf-2 -fms-extensions shared.c -Wall -framework Foundation -lz
 iphonesimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mios-simulator-version-min=8.0 -isysroot $(SIMULATOR_SDK)
 iphoneos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -miphoneos-version-min=8.0 -isysroot $(DEVICE_SDK)
 tvsimulator_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-simulator-version-min=9.0 -isysroot $(SIMULATORTV_SDK)
-tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=9.0 -fembed-bitcode -isysroot $(DEVICETV_SDK)
+tvos_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mtvos-version-min=9.0 -isysroot $(DEVICETV_SDK)
 maccatalyst_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) $(MACCATALYST_COMMON_CFLAGS)
 mac_DYLIB_FLAGS=$(COMMON_DYLIB_ARGS) -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -isysroot $(XCODE_DEVELOPER_ROOT)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(OSX_SDK_VERSION).sdk
 
@@ -197,7 +200,9 @@ ZIPPED_TARGETS += .libs/$(1).xcframework.zip
 all-local:: .libs/$(1).xcframework.stamp
 endef
 
+ifdef ENABLE_DOTNET
 $(foreach name,$(NAMES),$(eval $(call XCFrameworkTemplate,$(name))))
+endif
 
 zip: $(ZIPPED_TARGETS)
 all-local:: $(ZIPPED_TARGETS)
@@ -205,68 +210,70 @@ all-local:: $(ZIPPED_TARGETS)
 define PlugInTemplate
 
 $(1)_$(3)_PLUGIN_TARGETS += \
-	.libs/$(3)/$(1).bundle$($(2)_BINARY_INFIX)/$(1) \
-	.libs/$(3)/$(1).bundle$($(2)_INFO_PLIST_INFIX)/Info.plist \
+	.libs/$(3)/$(1).$(4)$($(2)_BINARY_INFIX)/$(1) \
+	.libs/$(3)/$(1).$(4)$($(2)_INFO_PLIST_INFIX)/Info.plist \
 	.libs/$(3)/lib$(1).dylib \
-	.libs/$(3)/$(1).bundle \
+	.libs/$(3)/$(1).$(4) \
 
 ifeq ($($(2)_SYMLINKS),1)
 $(1)_$(3)_PLUGIN_TARGETS += \
-	.libs/$(3)/$(1).bundle/$(1) \
-	.libs/$(3)/$(1).bundle/Resources \
-	.libs/$(3)/$(1).bundle/Versions/Current \
-	.libs/$(3)/$(1).bundle/Versions/A/Resources/Info.plist \
+	.libs/$(3)/$(1).$(4)/$(1) \
+	.libs/$(3)/$(1).$(4)/Resources \
+	.libs/$(3)/$(1).$(4)/Versions/Current \
+	.libs/$(3)/$(1).$(4)/Versions/A/Resources/Info.plist \
 
 endif
 
 $(3)_PLUGIN_TARGETS += \
 	$($(1)_$(3)_PLUGIN_TARGETS) \
-	.libs/$(3)/$(1).bundle.stamp \
+	.libs/$(3)/$(1).$(4).stamp \
 
 all-local:: $$($(3)_PLUGIN_TARGETS)
 
-.libs/$(3)/$(1).bundle.stamp: $$($(1)_$(3)_PLUGIN_TARGETS)
+.libs/$(3)/$(1).$(4).stamp: $$($(1)_$(3)_PLUGIN_TARGETS)
 	$$(Q) touch $$@
 
 .libs/$(3)/lib$(1).dylib: shared.c | .libs/$(3)
 	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
 
-.libs/$(3)/$(1).bundle$($(2)_BINARY_INFIX)/$(1): .libs/$(3)/lib$(1).dylib | .libs/$(3)/$(1).bundle$($(2)_BINARY_INFIX)
+.libs/$(3)/$(1).$(4)$($(2)_BINARY_INFIX)/$(1): .libs/$(3)/lib$(1).dylib | .libs/$(3)/$(1).$(4)$($(2)_BINARY_INFIX)
 	$$(Q) $(CP) $$^ $$@
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/implementme $$@
 
-.libs/$(3)/$(1).bundle$($(2)_INFO_PLIST_INFIX)/Info.plist: Info-$(2).plist | .libs/$(3)/$(1).bundle$($(2)_INFO_PLIST_INFIX)
+.libs/$(3)/$(1).$(4)$($(2)_INFO_PLIST_INFIX)/Info.plist: Info-$(2).plist | .libs/$(3)/$(1).$(4)$($(2)_INFO_PLIST_INFIX)
 	$$(Q) sed 's/%NAME%/$(1)/g' $$^ > $$@
 
 $(3)_$(1)_PLUGIN_DIRECTORIES = \
-	.libs/$(3)/$(1).bundle \
-	.libs/$(3)/$(1).bundle/Versions \
+	.libs/$(3)/$(1).$(4) \
+	.libs/$(3)/$(1).$(4)/Versions \
 
 $$($(3)_$(1)_PLUGIN_DIRECTORIES):
 	$$(Q) mkdir -p $$@
 
-.libs/$(3)/$(1).bundle.zip: $$($(3)_PLUGIN_TARGETS)
-	$$(Q_ZIP) cd $$(dir $$@) && $(ZIP) -r $$(abspath $$@) $(1).bundle
+.libs/$(3)/$(1).$(4).zip: $$($(3)_PLUGIN_TARGETS)
+	$$(Q_ZIP) cd $$(dir $$@) && $(ZIP) -r $$(abspath $$@) $(1).$(4)
 
-PLUGIN_TARGETS += .libs/$(3)/$(1).bundle.zip
+PLUGIN_TARGETS += .libs/$(3)/$(1).$(4).zip
 
 # some additional targets if the bundle has macOS-like structure (i.e. has symlinks)
 ifeq ($($(2)_SYMLINKS),1)
-.libs/$(3)/$(1).bundle$($(2)_BINARY_INFIX) .libs/$(3)/$(1).bundle$($(2)_INFO_PLIST_INFIX):
+.libs/$(3)/$(1).$(4)$($(2)_BINARY_INFIX) .libs/$(3)/$(1).$(4)$($(2)_INFO_PLIST_INFIX):
 	$$(Q) mkdir -p $$@
 
-.libs/$(3)/$(1).bundle/$(1): | .libs/$(3)/$(1).bundle
+.libs/$(3)/$(1).$(4)/$(1): | .libs/$(3)/$(1).$(4)
 	$$(Q) ln -fs Versions/A/$(1) $$@
 
-.libs/$(3)/$(1).bundle/Resources: | .libs/$(3)/$(1).bundle
+.libs/$(3)/$(1).$(4)/Resources: | .libs/$(3)/$(1).$(4)
 	$$(Q) ln -fs Versions/Current/Resources $$@
 
-.libs/$(3)/$(1).bundle/Versions/Current: | .libs/$(3)/$(1).bundle/Versions
+.libs/$(3)/$(1).$(4)/Versions/Current: | .libs/$(3)/$(1).$(4)/Versions
 	$$(Q) ln -fs A $$@
 endif
 endef
-$(foreach plugin,$(PLUGINS),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call PlugInTemplate,$(plugin),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid))))))
+$(foreach plugin,$(PLUGINS),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call PlugInTemplate,$(plugin),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),bundle)))))
+$(foreach xpcservice,$(XPCSERVICES),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call PlugInTemplate,$(xpcservice),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),xpc)))))
 
 plugins: $(PLUGIN_TARGETS)
+xpcservices: $(XPC_SERVICES)
 all-local:: $(PLUGIN_TARGETS)

@@ -18,7 +18,7 @@ namespace Intents {
 		// into bindings and making them virtual (not a breaking change)
 
 		public bool? IsOpenEnded {
-			get { return _IsOpenEnded == null ? null : (bool?) _IsOpenEnded.BoolValue; }
+			get { return _IsOpenEnded is null ? null : (bool?) _IsOpenEnded.BoolValue; }
 		}
 	}
 }

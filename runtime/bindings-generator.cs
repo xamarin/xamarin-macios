@@ -2973,13 +2973,13 @@ namespace Xamarin.BindingMethods.Generator {
 			var funcName = new StringBuilder ();
 			funcName.Append ("xamarin_");
 			funcName.Append (func.Prefix);
-			if (func.ReturnType != null) {
+			if (func.ReturnType is not null) {
 				funcName.Append (GetTypeNameForSignature (func.ReturnType.ManagedType));
 			} else {
 				funcName.Append ("void");
 			}
 			funcName.Append ("_").Append (overload);
-			if (func.Parameters != null) {
+			if (func.Parameters is not null) {
 				for (int i = 0; i < func.Parameters.Length; i++) {
 					funcName.Append ("_");
 					if (func.Parameters [i].IsRef)
@@ -2994,7 +2994,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void WriteParametersMarshal (StringWriter writer, ParameterData [] ps)
 		{
-			if (ps == null)
+			if (ps is null)
 				return;
 
 			for (int i = 0; i < ps.Length; i++) {
@@ -3009,7 +3009,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void WriteParametersInvoke (StringWriter writer, ParameterData [] ps)
 		{
-			if (ps == null)
+			if (ps is null)
 				return;
 
 			for (int i = 0; i < ps.Length; i++) {
@@ -3027,7 +3027,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void WriteParametersNativeDeclaration (StringWriter writer, ParameterData [] parameters, bool isTypedef, FunctionData func)
 		{
-			if (parameters == null)
+			if (parameters is null)
 				return;
 
 
@@ -3074,7 +3074,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void WriteMarshalParametersToManaged (StringWriter writer, FunctionData func)
 		{
-			if (func.Parameters == null)
+			if (func.Parameters is null)
 				return;
 
 			for (int i = 0; i < func.Parameters.Length; i++) {
@@ -3087,7 +3087,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void WriteMarshalReturnValue (StringWriter writer, FunctionData func, string indent, bool tmpReturnValue)
 		{
-			if (func.ReturnType != null) {
+			if (func.ReturnType is not null) {
 				if (func.ReturnType.RequireMarshal) {
 					// Marshal return value back
 					writer.WriteLine ("{0}{1} rvm;", indent, func.ReturnType.NativeWrapperType);
@@ -3101,19 +3101,19 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void Write_objc_msgSend (StringWriter writer, FunctionData func)
 		{
-			var tmpReturnValue = func.ReturnType != null && (func.ReturnType.RequireMarshal == true || func.Parameters?.Any ((v) => v.IsRef && v.TypeData.RequireMarshal) == true);
+			var tmpReturnValue = func.ReturnType is not null && (func.ReturnType.RequireMarshal == true || func.Parameters?.Any ((v) => v.IsRef && v.TypeData.RequireMarshal) == true);
 
 			// func name
 			var overload = "objc_msgSend";
 			var funcName = GetFuncName (func, overload);
 
 			// typedef
-			writer.Write ("typedef {0} (*func_{1}) (id self, SEL sel", func.ReturnType == null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
+			writer.Write ("typedef {0} (*func_{1}) (id self, SEL sel", func.ReturnType is null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
 			WriteParametersNativeDeclaration (writer, func.Parameters, true, func);
 			writer.WriteLine (");");
 
 			// declaration
-			writer.WriteLine (func.ReturnType != null ? func.ReturnType.NativeWrapperType : "void");
+			writer.WriteLine (func.ReturnType is not null ? func.ReturnType.NativeWrapperType : "void");
 			writer.Write (funcName);
 			writer.Write (" (id self, SEL sel");
 			WriteParametersNativeDeclaration (writer, func.Parameters, false, func);
@@ -3128,7 +3128,7 @@ namespace Xamarin.BindingMethods.Generator {
 			// marshal managed parameters to native format
 			WriteParametersMarshal (writer, func.Parameters);
 
-			if (func.ReturnType != null && func.ReturnType.IsAnyStret)
+			if (func.ReturnType is not null && func.ReturnType.IsAnyStret)
 				WriteMessageStretSenderCode (writer, func.ReturnType, false);
 
 			// @try
@@ -3140,14 +3140,14 @@ namespace Xamarin.BindingMethods.Generator {
 
 			// invoke
 			writer.Write (indent);
-			if (func.ReturnType != null) {
+			if (func.ReturnType is not null) {
 				if (tmpReturnValue) {
 					writer.Write ("rv = ");
 				} else {
 					writer.Write ("return ");
 				}
 			}
-			writer.Write ("((func_{0}) {1}) (self, sel", funcName, (func.ReturnType != null && func.ReturnType.IsAnyStret) ? "msgSend" : overload);
+			writer.Write ("((func_{0}) {1}) (self, sel", funcName, (func.ReturnType is not null && func.ReturnType.IsAnyStret) ? "msgSend" : overload);
 			WriteParametersInvoke (writer, func.Parameters);
 			writer.WriteLine (");");
 
@@ -3164,19 +3164,19 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void Write_objc_msgSendSuper (StringWriter writer, FunctionData func)
 		{
-			var tmpReturnValue = func.ReturnType != null && (func.ReturnType.RequireMarshal == true || func.Parameters?.Any ((v) => v.IsRef && v.TypeData.RequireMarshal) == true);
+			var tmpReturnValue = func.ReturnType is not null && (func.ReturnType.RequireMarshal == true || func.Parameters?.Any ((v) => v.IsRef && v.TypeData.RequireMarshal) == true);
 
 			// func name
 			var overload = "objc_msgSendSuper";
 			var funcName = GetFuncName (func, overload);
 
 			// typedef
-			writer.Write ("typedef {0} (*func_{1}) (struct objc_super *super, SEL sel", func.ReturnType == null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
+			writer.Write ("typedef {0} (*func_{1}) (struct objc_super *super, SEL sel", func.ReturnType is null ? "void" : func.ReturnType.NativeType, funcName.ToString ());
 			WriteParametersNativeDeclaration (writer, func.Parameters, true, func);
 			writer.WriteLine (");");
 
 			// declaration
-			writer.WriteLine (func.ReturnType != null ? func.ReturnType.NativeWrapperType : "void");
+			writer.WriteLine (func.ReturnType is not null ? func.ReturnType.NativeWrapperType : "void");
 			writer.Write (funcName);
 			writer.Write (" (struct objc_super *super, SEL sel");
 			WriteParametersNativeDeclaration (writer, func.Parameters, false, func);
@@ -3191,7 +3191,7 @@ namespace Xamarin.BindingMethods.Generator {
 			// marshal managed parameters to native format
 			WriteParametersMarshal (writer, func.Parameters);
 
-			if (func.ReturnType != null && func.ReturnType.IsAnyStret)
+			if (func.ReturnType is not null && func.ReturnType.IsAnyStret)
 				WriteMessageStretSenderCode (writer, func.ReturnType, true);
 
 			// @try
@@ -3203,14 +3203,14 @@ namespace Xamarin.BindingMethods.Generator {
 
 			// invoke
 			writer.Write (indent);
-			if (func.ReturnType != null) {
+			if (func.ReturnType is not null) {
 				if (tmpReturnValue) {
 					writer.Write ("rv = ");
 				} else {
 					writer.Write ("return ");
 				}
 			}
-			writer.Write ("((func_{0}) {1}) (super, sel", funcName, (func.ReturnType != null && func.ReturnType.IsAnyStret) ? "msgSend" : overload);
+			writer.Write ("((func_{0}) {1}) (super, sel", funcName, (func.ReturnType is not null && func.ReturnType.IsAnyStret) ? "msgSend" : overload);
 			WriteParametersInvoke (writer, func.Parameters);
 			writer.WriteLine (");");
 
@@ -3227,7 +3227,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void Write_objc_msgSend_stret (StringWriter writer, FunctionData func)
 		{
-			if (func.ReturnType == null)
+			if (func.ReturnType is null)
 				throw new Exception (string.Format ("stret functions must have a return type: {0}", func.Comment));
 
 			// func name
@@ -3291,7 +3291,7 @@ namespace Xamarin.BindingMethods.Generator {
 
 		static void Write_objc_msgSendSuper_stret (StringWriter writer, FunctionData func)
 		{
-			if (func.ReturnType == null)
+			if (func.ReturnType is null)
 				throw new Exception (string.Format ("stret functions must have a return type: {0}", func.Comment));
 
 			// func name
@@ -3821,9 +3821,9 @@ namespace Xamarin.BindingMethods.Generator {
 
 		public bool HasNativeType {
 			get {
-				if (ReturnType != null && ReturnType.IsNativeType)
+				if (ReturnType is not null && ReturnType.IsNativeType)
 					return true;
-				if (Parameters != null) {
+				if (Parameters is not null) {
 					foreach (var pd in Parameters) {
 						if (pd.TypeData.IsNativeType)
 							return true;
@@ -3839,9 +3839,9 @@ namespace Xamarin.BindingMethods.Generator {
 			rv.Comment = Comment + " cloned for " + (as32bit ? "32bit" : "64bit");
 			rv.Prefix = Prefix;
 			rv.Variants = Variants;
-			if (ReturnType != null)
+			if (ReturnType is not null)
 				rv.ReturnType = ReturnType.AsSpecificNativeType (as32bit);
-			if (Parameters != null) {
+			if (Parameters is not null) {
 				rv.Parameters = new ParameterData [Parameters.Length];
 				for (int i = 0; i < Parameters.Length; i++) {
 					rv.Parameters [i] = new ParameterData ();

@@ -48,17 +48,17 @@ namespace LinkSdk.Aot {
 		public void Aot_3285 ()
 		{
 			// called as an extension method (always worked)
-			Assert.False (GetType ().GetInterfaces (typeof (IExpectException)).Select (interf => interf != null).FirstOrDefault (), "false");
+			Assert.False (GetType ().GetInterfaces (typeof (IExpectException)).Select (interf => interf is not null).FirstOrDefault (), "false");
 
 			// workaround for #3285 - similar to previous fix for monotouch/aot
 			// called as a static method (does not change the result - but it was closer to the original test case)
-			Assert.True (AotExtension.GetInterfaces (GetType (), typeof (IAotTest)).Select (interf => interf != null).FirstOrDefault (delegate { return true; }), "delegate");
+			Assert.True (AotExtension.GetInterfaces (GetType (), typeof (IAotTest)).Select (interf => interf is not null).FirstOrDefault (delegate { return true; }), "delegate");
 
 			// actual, failing, test case (fixed by inlining code)
-			Assert.True (GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf != null).FirstOrDefault (), "FirstOrDefault/true");
+			Assert.True (GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf is not null).FirstOrDefault (), "FirstOrDefault/true");
 
 			// other similar cases (returning bool with optional predicate delegate)
-			var enumerable = GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf != null);
+			var enumerable = GetType ().GetInterfaces (typeof (IAotTest)).Select (interf => interf is not null);
 			Assert.True (enumerable.Any (), "Any");
 			Assert.True (enumerable.ElementAt (0), "ElementAt");
 			Assert.True (enumerable.ElementAtOrDefault (0), "ElementAtOrDefault");
@@ -85,7 +85,7 @@ namespace LinkSdk.Aot {
 			public void RaiseEvent ()
 			{
 				var fn = this.Event;
-				if (fn != null)
+				if (fn is not null)
 					fn (this, EventArgs.Empty);
 			}
 		}
@@ -100,7 +100,7 @@ namespace LinkSdk.Aot {
 			var so = new SomeObject ();
 
 			var e = so.GetType ().GetEvent ("Event");
-			if (e != null)
+			if (e is not null)
 				e.AddEventHandler (so, new EventHandler (OnEvent));
 		}
 
@@ -109,7 +109,7 @@ namespace LinkSdk.Aot {
 		{
 			var so = new SomeObject ();
 			var e = so.GetType ().GetEvent ("Event");
-			if (e != null) {
+			if (e is not null) {
 				var add = e.GetAddMethod ();
 				add.Invoke (so, new object [] { new EventHandler (OnEvent) });
 			}
@@ -386,7 +386,7 @@ namespace LinkSdk.Aot {
 
 			static void ForEach<T> (IEnumerable<T> collection, Action<T> action)
 			{
-				if (collection != null)
+				if (collection is not null)
 					foreach (T item in collection)
 						action (item);
 			}
@@ -424,7 +424,7 @@ namespace LinkSdk.Aot {
 		[MethodImpl (MethodImplOptions.Synchronized)]
 		public static object getInstance ()
 		{
-			if (mInstance == null)
+			if (mInstance is null)
 				mInstance = new object ();
 			return mInstance;
 		}

@@ -16,14 +16,7 @@ var windowsPlatforms = new List<string> ();
 var tfm = string.Empty;
 var outputPath = string.Empty;
 
-var args = new Queue<string> (Environment.GetCommandLineArgs ());
-
-// Skip first three arguments:
-string discard; // store the return value from Dequeue somewhere, otherwise it ends up being printed to stdout.
-discard = args.Dequeue (); // <executable>
-discard = args.Dequeue (); // -s
-discard = args.Dequeue (); // <script>
-GC.KeepAlive (discard); // avoid compiler warning
+var args = new Queue<string> (Args);
 
 while (args.Any ()) {
 	var arg = args.Dequeue ();
@@ -63,6 +56,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
 	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;
 	writer.WriteLine ($"    <ManifestBuildVersion>{manifestBuildVersion}</ManifestBuildVersion>");
+	writer.WriteLine ($"    <EnableSideBySideManifests>true</EnableSideBySideManifests>");
 	writer.WriteLine ($"  </PropertyGroup>");
 	writer.WriteLine ($"  <ItemGroup>");
 	writer.WriteLine ($"    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->");
@@ -88,12 +82,6 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		var platform = entry.Item1;
 		var version = entry.Item2;
 		writer.WriteLine ($"    <WorkloadPackages Include=\"$(NuGetPackagePath)\\Microsoft.NET.Sdk.{platform}.Manifest*.nupkg\" Version=\"{version}\" SupportsMachineArch=\"true\" />");
-	}
-	foreach (var entry in platforms) {
-		var platform = entry.Item1;
-		writer.WriteLine ($"    <MultiTargetPackNames Include=\"Microsoft.{platform}.Sdk\" />");
-		if (windowsPlatforms.Contains (platform))
-			writer.WriteLine ($"    <MultiTargetPackNames Include=\"Microsoft.{platform}.Windows.Sdk\" />");
 	}
 	writer.WriteLine ("  </ItemGroup>");
 	writer.WriteLine ("</Project>");

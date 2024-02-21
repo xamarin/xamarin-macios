@@ -26,22 +26,11 @@ steps:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
 
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
-
-    $comments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
-    $ciComment = "${{ parameters.commentToHide }}"
-
-    $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
-    $prComments = $comments.GetCommentsForPR($prId)
-
-    $botComments = [System.Collections.ArrayList]@()
-    foreach ($c in $prComments) {
-      if ($c.Author -eq "vs-mobiletools-engineering-service2") {
-        if ($c.Body.Contains($ciComment)) {
-          $botComments.Add($c)
-        }
-      }
-    }
-    $comments.MinimizeComments($botComments)
+- pwsh: >-
+    ./clean_past_comments.ps1
+    -GithubToken "$(GitHub.Token)"
+    -RepositoryUri "$(Build.Repository.Uri)"
+    -SourceBranch "$(Build.SourceBranch)"
+    -CommentToHide "${{ parameters.commentToHide }}"
   displayName: Clear past comments
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts

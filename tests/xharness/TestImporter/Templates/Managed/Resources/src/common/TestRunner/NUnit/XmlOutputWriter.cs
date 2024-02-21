@@ -203,7 +203,7 @@ namespace Xamarin.iOS.UnitTests.NUnit {
 			ITest test = result.Test;
 			TestSuite suite = test as TestSuite;
 
-			if (suite != null) {
+			if (suite is not null) {
 				xmlWriter.WriteStartElement ("test-suite");
 				xmlWriter.WriteAttributeString ("type", suite.TestType);
 				xmlWriter.WriteAttributeString ("name", suite.TestType == "Assembly"
@@ -273,7 +273,7 @@ namespace Xamarin.iOS.UnitTests.NUnit {
 			WriteCData (message);
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteStartElement ("stack-trace");
-			if (stackTrace != null)
+			if (stackTrace is not null)
 				WriteCData (stackTrace);
 			xmlWriter.WriteEndElement ();
 			xmlWriter.WriteEndElement ();

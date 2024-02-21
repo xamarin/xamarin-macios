@@ -17,7 +17,7 @@ namespace MapKit {
 	public partial class MKOverlayView {
 
 #if NET
-		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -27,8 +27,6 @@ namespace MapKit {
 		[ObsoletedOSPlatform ("maccatalyst", "Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
 #else
 		[Obsolete ("Use 'MKOverlayRenderer.MKRoadWidthAtZoomScale' instead.")]
-		[TV (9, 2)]
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.MapKitLibrary)]
 		public static extern nfloat MKRoadWidthAtZoomScale (/* MKZoomScale */ nfloat zoomScale);

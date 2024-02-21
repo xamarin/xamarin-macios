@@ -26,7 +26,7 @@ namespace MapKit {
 		{
 			var range = new NSRange (first, count);
 			var target = new CLLocationCoordinate2D [count];
-			fixed (CLLocationCoordinate2D* firstE = &target [0]) {
+			fixed (CLLocationCoordinate2D* firstE = target) {
 				GetCoords ((IntPtr) firstE, range);
 			}
 			return target;

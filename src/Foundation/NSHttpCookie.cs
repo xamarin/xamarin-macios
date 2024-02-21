@@ -23,6 +23,9 @@ using ObjCRuntime;
 using System;
 using System.Net;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSHttpCookie {
 		// same order as System.Net.Cookie
@@ -46,10 +49,10 @@ namespace Foundation {
 
 		public NSHttpCookie (Cookie cookie)
 		{
-			if (cookie == null)
+			if (cookie is null)
 				throw new ArgumentNullException ("cookie");
 
-			string commentUrl = cookie.CommentUri != null ? cookie.CommentUri.ToString () : null;
+			string commentUrl = cookie.CommentUri is not null ? cookie.CommentUri.ToString () : null;
 			bool? discard = null;
 			if (cookie.Discard)
 				discard = true;
@@ -59,9 +62,9 @@ namespace Foundation {
 		void CreateCookie (string name, string value, string path, string domain, string comment, string commentUrl, bool? discard, DateTime? expires, int? maximumAge, string ports, bool? secure, int? version)
 		{
 			// mandatory checks or defaults
-			if (name == null)
+			if (name is null)
 				throw new ArgumentNullException ("name");
-			if (value == null)
+			if (value is null)
 				throw new ArgumentNullException ("value");
 			if (String.IsNullOrEmpty (path))
 				path = "/"; // default in .net

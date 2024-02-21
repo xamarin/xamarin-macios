@@ -102,12 +102,10 @@ namespace AudioUnit {
 		System=0x73797320, // 'sys'
 #endif
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 15)]
 #endif
 		Remote = 0x72696f63, // 'rioc'
 		VoiceProcessingIO = 0x7670696f // 'vpio'
@@ -120,12 +118,10 @@ namespace AudioUnit {
 		Sampler = 0x73616d70, // 'samp'
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		MidiSynth = 0x6d73796e, // 'msyn'
 	}
@@ -184,12 +180,10 @@ namespace AudioUnit {
 		Delay = 0x64656c79, // 'dely'
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 0)]
 #endif
 		SampleDelay = 0x73646c79, // 'sdly'
 		Distortion = 0x64697374, // 'dist'
@@ -219,12 +213,11 @@ namespace AudioUnit {
 		AUiPodEQ = 0x69706571, // 'ipeq'
 #endif
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 15)]
 		[Unavailable (PlatformName.MacCatalyst)]
 #endif
 		Reverb2 = 0x72766232, // 'rvb2'

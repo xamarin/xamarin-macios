@@ -27,13 +27,10 @@ namespace Metal {
 #endif
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (8, 0)]
-	[Mac (10, 11)]
 #endif
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
@@ -96,19 +93,15 @@ namespace Metal {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
-		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, BlockLiteral* handler);
+		unsafe static extern IntPtr MTLCopyAllDevicesWithObserver (IntPtr* observer, BlockLiteral* handler);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (MTLDeviceNotificationHandler handler, out NSObject? observer)
@@ -117,10 +110,15 @@ namespace Metal {
 			IntPtr observer_handle;
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineNotificationHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (MTLDevice), nameof (TrampolineNotificationHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_notificationHandler, handler);
+#endif
 
-				rv = MTLCopyAllDevicesWithObserver (out observer_handle, &block);
+				rv = MTLCopyAllDevicesWithObserver (&observer_handle, &block);
 			}
 
 			var obj = NSArray.ArrayFromHandle<IMTLDevice> (rv);
@@ -133,7 +131,6 @@ namespace Metal {
 		}
 
 #if !NET
-		[Mac (10, 13)]
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
@@ -144,9 +141,13 @@ namespace Metal {
 		}
 #endif // !NET
 
+#if !NET
 		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
 		static readonly InnerNotification static_notificationHandler = TrampolineNotificationHandler;
 		[MonoPInvokeCallback (typeof (InnerNotification))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		public static unsafe void TrampolineNotificationHandler (IntPtr block, IntPtr device, IntPtr notifyName)
 		{
 			var descriptor = (BlockLiteral*) block;
@@ -160,8 +161,6 @@ namespace Metal {
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
@@ -172,7 +171,6 @@ namespace Metal {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 13)]
 		[NoiOS]
 		[NoWatch]
 		[NoTV]
@@ -202,7 +200,7 @@ namespace Metal {
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			try {
 				IntPtr ptr = handle.AddrOfPinnedObject ();
-				return This.CreateBuffer (ptr, (nuint) (data.Length * Marshal.SizeOf (typeof (T))), options);
+				return This.CreateBuffer (ptr, (nuint) (data.Length * Marshal.SizeOf<T> ()), options);
 			} finally {
 				handle.Free ();
 			}
@@ -217,7 +215,7 @@ namespace Metal {
 
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 			IntPtr ptr = handle.AddrOfPinnedObject ();
-			return This.CreateBufferNoCopy (ptr, (nuint) (data.Length * Marshal.SizeOf (typeof (T))), options, (pointer, length) => {
+			return This.CreateBufferNoCopy (ptr, (nuint) (data.Length * Marshal.SizeOf<T> ()), options, (pointer, length) => {
 				handle.Free ();
 				deallocator (pointer, length);
 			});
@@ -302,13 +300,13 @@ namespace Metal {
 #if !NET
 		[return: Release]
 		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
-		public static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError? error)
+		public unsafe static IMTLLibrary? CreateLibrary (this IMTLDevice This, global::CoreFoundation.DispatchData data, out NSError? error)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			var errorValue = NativeHandle.Zero;
 
-			var ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, ref errorValue), true);
+			var ret = Runtime.GetINativeObject<IMTLLibrary> (global::ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_ref_IntPtr (This.Handle, Selector.GetHandle ("newLibraryWithData:error:"), data.Handle, &errorValue), true);
 			error = Runtime.GetNSObject<NSError> (errorValue);
 			return ret;
 		}

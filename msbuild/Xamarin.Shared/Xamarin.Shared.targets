@@ -61,7 +61,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.AOTCompile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.BTouch" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.CodesignVerify" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateEmbeddedResources" AssemblyFile="$(_TaskAssemblyName)" />
@@ -85,6 +84,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.EmbedProvisionProfile" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FilterStaticFrameworks" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
@@ -111,6 +111,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteAppManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(_TaskAssemblyName)" />
@@ -124,11 +125,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</_BundleResourceWithLogicalName>
 	</ItemDefinitionGroup>
 
+	<Target Name="_DetectBuildType">
+		<PropertyGroup>
+			<IsHotRestartBuild Condition="'$(IsHotRestartBuild)' == 'True' And '$(_PlatformName)' != 'iOS'">False</IsHotRestartBuild>
+			<IsRemoteBuild Condition="'$(IsHotRestartBuild)' == 'True'">False</IsRemoteBuild>
+		</PropertyGroup>
+	</Target>
+
 	<!--
 		@(NativeReference) are not safe to use as an Input to a task, as frameworks are a directory and will appears unbuilt every time.
 		So we split it into two camps as a prebuild step
 	-->
-	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures">
+	<Target Name="_ExpandNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetArchitectures;_GenerateBundleName">
 		<ItemGroup>
 			<_XCFrameworkNativeReference Include="@(NativeReference -> '%(Identity)/.')" Condition="'%(Extension)' == '.xcframework'" />
 			<_FrameworkNativeReference Include="@(NativeReference -> '%(Identity)/%(Filename)')" Condition="'%(Extension)' == '.framework'" />
@@ -136,8 +144,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 		<ResolveNativeReferences
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(IsBindingProject)' != 'true'"
+			Condition="('$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true') And '$(IsBindingProject)' != 'true'"
 			Architectures="$(TargetArchitectures)"
+			FrameworksDirectory="$(_AppFrameworksRelativePath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			NativeReferences="@(_XCFrameworkNativeReference);@(_FrameworkNativeReference)"
 			References="@(ReferencePath)"
@@ -271,7 +280,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so nuke via RemoveDir -->
+	<!-- Cleaning via FileWrites leaves empty framework directories on disk, so remove via RemoveDir -->
 	<PropertyGroup>
 		<CleanDependsOn>
 			$(CleanDependsOn);
@@ -397,6 +406,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign-bundle.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)native-frameworks.items" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
@@ -420,6 +430,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<CollectBundleResourcesDependsOn>
 			$(CollectBundleResourcesDependsOn);
+			_DetectBuildType;
 			_ComputeTargetArchitectures;
 			_ComputeTargetFrameworkMoniker;
 		</CollectBundleResourcesDependsOn>
@@ -449,9 +460,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Content Remove="@(_ProcessedContent)" />
 		</ItemGroup>
 
+		<!-- This task may be executed locally on Windows (for Hot Restart) -->
 		<CollectBundleResources
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
 			BundleResources="@(Content);@(BundleResource)"
@@ -506,6 +518,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<_CompileAppManifestDependsOn>
 			CollectAppManifests;
 			$(_CompileAppManifestDependsOn);
+			_DetectBuildType;
 			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
@@ -531,7 +544,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			ApplicationId="$(ApplicationId)"
 			ApplicationTitle="$(ApplicationTitle)"
 			ApplicationVersion="$(ApplicationVersion)"
@@ -554,7 +567,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ResourceRules="$(_PreparedResourceRules)"
 			TargetArchitectures="$(TargetArchitectures)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkVersion="$(_SdkVersion)"
 			SupportedOSPlatformVersion="$(SupportedOSPlatformVersion)"
@@ -567,6 +579,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<PropertyGroup>
 		<_ReadAppManifestDependsOn>
 			$(_ReadAppManifestDependsOn);
+			_DetectBuildType;
 			_DetectAppManifest;
 			_DetectSdkLocations;
 			_CompileAppManifest;
@@ -576,10 +589,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ReadAppManifest" DependsOnTargets="$(_ReadAppManifestDependsOn)">
 		<ReadAppManifest
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			AppManifest="$(_TemporaryAppManifest)"
-			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="CFBundleExecutable" PropertyName="_ExecutableName" />
@@ -597,13 +609,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<!-- A bundle identifier is required when creating an app bundle. It's not when building a class library -->
 		<Error
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_BundleIdentifier)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+			Condition="('$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true') And '$(_BundleIdentifier)' == '' And '$(_CanOutputAppBundle)' == 'true'"
 			Text="A bundle identifier is required. Either add an 'ApplicationId' property in the project file, or add a 'CFBundleIdentifier' entry in the project's Info.plist file."
 		/>
 	</Target>
 
 	<PropertyGroup>
 		<_WriteAppManifestDependsOn>
+			_DetectBuildType;
 			_CompileAppManifest;
 			_CompileImageAssets;
 			_CompileCoreMLModels;
@@ -620,7 +633,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<WriteAppManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			AppBundleManifest="$(_AppBundleManifestPath)"
 			AppManifests="@(_PostCompilePartialAppManifest);$(_TemporaryAppManifest)"
 			>
@@ -654,17 +667,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
-			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			CustomEntitlements="@(CustomEntitlements)"
 			Entitlements="$(CodesignEntitlements)"
 			CompiledEntitlements="$(_CompiledEntitlementsPath)"
-			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkVersion="$(_SdkVersion)"
-			SdkDevPath="$(_SdkDevPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			Debug="$(_BundlerDebug)"
 			>
@@ -1011,9 +1021,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<CompileColladaAssetsDependsOn>
+			$(CompileColladaAssetsDependsOn);
 			_RemoveProcessedColladaAssets;
-			_CollectColladaAssets;
-			_CoreCompileColladaAssets
+			_BeforeCoreCompileColladaAssets;
+			_ReadCoreCompileColladaAssets;
+			_CoreCompileColladaAssets;
 		</CompileColladaAssetsDependsOn>
 	</PropertyGroup>
 
@@ -1032,46 +1044,57 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_CollectColladaAssets">
-		<CollectBundleResources
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			BundleResources="@(Collada)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)">
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
-		</CollectBundleResources>
+	<Target Name="_BeforeCoreCompileColladaAssets"
+		Inputs="@(Collada)"
+		Outputs="$(_ColladaCache)">
+
+		<!-- If any Collada asset is newer than the generated items list, we delete them so that the _CoreCompileCollada
+		     target runs again and updates those lists for the next run
+		-->
+		<Delete Files="$(_ColladaCache)" />
+	</Target>
+
+	<Target Name="_ReadCoreCompileColladaAssets"
+		DependsOnTargets="_BeforeCoreCompileColladaAssets">
+
+		<!-- If _BeforeCoreCompileColladaAssets did not delete the generated items lists from _CoreCompileColladaAssets, then we read them
+		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
+		<ReadItemsFromFile File="$(_ColladaCache)" Condition="Exists('$(_ColladaCache)')">
+			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<Target Name="_CoreCompileColladaAssets"
-		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
-		Inputs="@(_ColladaAssetWithLogicalName)"
-		Outputs="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
+		DependsOnTargets="_BeforeCoreCompileColladaAssets;_DetectSdkLocations;_ComputeTargetFrameworkMoniker"
+		Inputs="@(Collada)"
+		Outputs="$(_ColladaCache)"
 		>
 
 		<ScnTool
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			DeviceSpecificIntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			IsWatchApp="$(IsWatchApp)"
-			ToolExe="$(ScnToolExe)"
-			ToolPath="$(ScnToolPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(_ResourcePrefix)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkRoot="$(_SdkRoot)"
 			SdkDevPath="$(_SdkDevPath)"
 			SdkVersion="$(_SdkVersion)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
-			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
-			OutputScene="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
+			ColladaAssets="@(Collada)"
+			>
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+			<!-- Local items to be persisted to items files -->
+			<Output TaskParameter="BundleResources" ItemName="_Collada_BundleResources" />
 		</ScnTool>
 
-		<CreateItem Include="$(DeviceSpecificIntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName);Optimize='False'">
-			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
-		</CreateItem>
-
+		<WriteItemsToFile Items="@(_Collada_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_ColladaCache)" Overwrite="true" IncludeMetadata="true" />
 		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(_ColladaAssetWithLogicalName)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="_ColladaAssetWithLogicalName" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
+		<WriteItemsToFile Items="@(Collada)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="Collada" File="$(_ProcessedColladaAssetsPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
+			<FileWrites Include="$(_ColladaCache)" />
 			<FileWrites Include="$(_ProcessedColladaAssetsPath)" />
 		</ItemGroup>
 	</Target>
@@ -1126,6 +1149,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 			<!-- TextureAtlas output caches -->
 			<_TextureAtlasCache>$(DeviceSpecificIntermediateOutputPath)atlas\_BundleResourceWithLogicalName.items</_TextureAtlasCache>
+
+			<!-- Collada output caches -->
+			<_ColladaCache>$(DeviceSpecificIntermediateOutputPath)collada\_BundleResourceWithLogicalName.items</_ColladaCache>
 
 			<!-- processed items -->
 			<_ProcessedBundleResourcesPath Condition="'$(_ProcessedBundleResourcesPath)' == ''">$(DeviceSpecificIntermediateOutputPath)\_ProcessedBundleResourcesPath.items</_ProcessedBundleResourcesPath>
@@ -1255,7 +1281,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<!-- Cached the generated outputs items for incremental build support -->
 		<WriteItemsToFile Items="@(_TextureAtlas_BundleResources)" ItemName="_BundleResourceWithLogicalName" File="$(_TextureAtlasCache)" Overwrite="true" IncludeMetadata="true" />
 		<!-- Write out the list of assets we've processed, so that an inner build in a multi-rid build can skip processing them -->
-		<WriteItemsToFile Items="@(TextureAtlas)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="TextureAtlas" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
+		<WriteItemsToFile Items="@(AtlasTexture)" Condition="'$(_SaveProcessedItems)' == 'true'" ItemName="AtlasTexture" File="$(_ProcessedTextureAtlasesPath)" Overwrite="true" IncludeMetadata="false" />
 		<ItemGroup>
 			<FileWrites Include="$(_TextureAtlasCache)" />
 			<FileWrites Include="$(_ProcessedTextureAtlasesPath)" />
@@ -1601,6 +1627,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
 
+		<_GenerateBindingsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+			_CompileApiDefinitions;
+			$(_GenerateBindingsDependsOn);
+		</_GenerateBindingsDependsOn>
+
 		<_WriteGeneratorPropertiesDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
 			$(_WriteGeneratorPropertiesDependsOn);
 			_ComputeBindingVariables;
@@ -1619,6 +1650,85 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<WriteLinesToFile File="$(OutputFilePath)" Lines="@(_ComputedRemoteGeneratorProperties)" />
 	</Target>
 
+	<PropertyGroup>
+		<_ComputeCompileApiDefinitionsInputsDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+			$(_ComputeCompileApiDefinitionsInputsDependsOn);
+			_ComputeBindingVariables;
+		</_ComputeCompileApiDefinitionsInputsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_ComputeCompileApiDefinitionsInputs" DependsOnTargets="$(_ComputeCompileApiDefinitionsInputsDependsOn)">
+		<ItemGroup>
+			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<_CompiledApiDefinitionAssembly>$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions.dll</_CompiledApiDefinitionAssembly>
+			<_CompiledApiDefinitionDefines>$(DefineConstants)</_CompiledApiDefinitionDefines>
+			<_CompiledApiDefinitionDefines Condition="'$(UsingAppleNETSdk)' == 'true'">$(_CompiledApiDefinitionDefines);NET</_CompiledApiDefinitionDefines>
+
+			<_CompiledApiDefinitionLibPaths>$(AdditionalLibPaths);$([System.IO.Path]::GetDirectoryName('$(BaseLibDllPath)'))</_CompiledApiDefinitionLibPaths>
+
+			<_CompiledApiDefinitionGlobalUsingsFile Condition="'$(UsingAppleNETSdk)' == 'true' And '$(NoNFloatUsing)' != 'true'">$(DeviceSpecificIntermediateOutputPath)compiled-api-definitions-usings.cs</_CompiledApiDefinitionGlobalUsingsFile>
+		</PropertyGroup>
+
+
+		<ItemGroup>
+			<_CompiledApiDefinitionReferences Include="$(_GeneratorAttributeAssembly)" />
+			<_CompiledApiDefinitionReferences Include="@(ReferencePath)" />
+			<_CompiledApiDefinitionReferences Include="@(BTouchReferencePath)" />
+
+			<_CompiledApiDefinitionsCompile Include="@(ObjcBindingApiDefinition)" />
+			<_CompiledApiDefinitionsCompile Include="@(ObjcBindingCoreSource)" />
+		</ItemGroup>
+
+		<WriteLinesToFile
+			Condition="'$(_CompiledApiDefinitionGlobalUsingsFile)' != ''"
+			File="$(_CompiledApiDefinitionGlobalUsingsFile)"
+			Lines="global using nfloat = global::System.Runtime.InteropServices.NFloat%3B"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true" />
+
+		<ItemGroup Condition="'$(_CompiledApiDefinitionGlobalUsingsFile)' != ''">
+			<_CompiledApiDefinitionsCompile Include="$(_CompiledApiDefinitionGlobalUsingsFile)" />
+		</ItemGroup>
+
+	</Target>
+
+	<Target Name="_CompileApiDefinitions"
+		Inputs="$(MSBuildAllProjects);
+			$(_CompiledApiDefinitionLibPaths);
+			$(_CompiledApiDefinitionGlobalUsingsFile);
+			@(_CompiledApiDefinitionReferences);
+			@(_CompiledApiDefinitionsCompile);"
+		Outputs="$(_CompiledApiDefinitionAssembly)"
+		DependsOnTargets="_ComputeCompileApiDefinitionsInputs"
+		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'"
+		>
+
+		<!-- This is a mirror of the method GetCompiledApiBindingsAssembly in BindingTouch.cs where the compilation is done inside bgen -->
+		<Csc
+			AdditionalLibPaths="$(_CompiledApiDefinitionLibPaths)"
+			AllowUnsafeBlocks="true"
+			DebugType="portable"
+			DefineConstants="$(_CompiledApiDefinitionDefines)"
+			DisabledWarnings="436"
+			NoConfig="true"
+			NoStandardLib="true"
+			Deterministic="true"
+			OutputAssembly="$(_CompiledApiDefinitionAssembly)"
+			References="@(_CompiledApiDefinitionReferences)"
+			Sources="@(_CompiledApiDefinitionsCompile)"
+			TargetType="library"
+			ToolExe="$(CscToolExe)"
+			ToolPath="$(CscToolPath)"
+			UseHostCompilerIfAvailable="$(UseHostCompilerIfAvailable)"
+			UseSharedCompilation="$(UseSharedCompilation)"
+			VsSessionGuid="$(VsSessionGuid)"
+			>
+		</Csc>
+	</Target>
+
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
 		Outputs="$(_GeneratedSourcesFileList)"
@@ -1626,10 +1736,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Condition="'$(IsBindingProject)' == 'true' And '$(DesignTimeBuild)' != 'true'">
 
 		<Warning Condition="'$(IsMacEnabled)' != 'true'" Text="It's currently not supported to build a binding project from Windows unless a connection to a Mac is available." />
-
-		<ItemGroup>
-			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
-		</ItemGroup>
 
 		<PropertyGroup>
 			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
@@ -1663,8 +1769,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			AttributeAssembly="$(_GeneratorAttributeAssembly)"
 			BaseLibDll="$(BaseLibDllPath)"
 			CoreSources="@(ObjcBindingCoreSource)"
+			CompiledApiDefinitionAssembly="$(_CompiledApiDefinitionAssembly)"
 			DefineConstants="$(DefineConstants)"
-			DotNetCscCompiler="$(_DotNetCscCompiler)"
 			EmitDebugInformation="$(BTouchEmitDebugInformation)"
 			ExtraArgs="$(BTouchExtraArgs)"
 			GeneratedSourcesDir="$(GeneratedSourcesDir)"
@@ -1713,12 +1819,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_DetectSigningIdentityDependsOn)">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
-			CodesignProvision="$(CodesignProvision)"
 			CodesignEntitlements="$(CodesignEntitlements)"
 			CodesignRequireProvisioningProfile="$(CodesignRequireProvisioningProfile)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CustomEntitlements="@(CustomEntitlements)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(_RequireCodeSigning)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -1742,7 +1848,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
+	<Target Name="_DetectSdkLocations" DependsOnTargets="_DetectBuildType;_ComputeTargetArchitectures;_ComputeTargetFrameworkMoniker">
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1763,6 +1869,11 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
 			<Output TaskParameter="XcodeVersion" PropertyName="_XcodeVersion" />
 		</DetectSdkLocations>
+
+		<PropertyGroup Condition="'$(IsHotRestartBuild)' == 'true'">
+			<!-- hot restart builds are always for device -->
+			<_SdkIsSimulator>false</_SdkIsSimulator>
+		</PropertyGroup>
 	</Target>
 
 	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
@@ -1799,23 +1910,35 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</ItemGroup>
 	</Target>
 
-	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
+	<PropertyGroup>
+		<_UnpackLibraryResourcesDependsOn>
+			BuildOnlySettings;
+			ResolveReferences;
+			_DetectBuildType;
+			_CollectBundleResources;
+			_PrepareUnpackLibraryResources;
+		</_UnpackLibraryResourcesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_UnpackLibraryResourcesDependsOn)"
 		Inputs="@(_UnpackLibraryResourceItems)"
 		Outputs="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'" Directories="$(_StampDirectory)" />
+		<!-- This task may be executed locally on Windows (for Hot Restart) -->
 		<UnpackLibraryResources
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			Prefix="$(_EmbeddedResourcePrefix)"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
+			ReferenceAssemblies="@(ReferencePath);@(ReferenceDependencyPaths)"
 			ReferencedLibraries="@(_UnpackLibraryResourceItems)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' Or '$(IsHotRestartBuild)' == 'true'"
 			Files="@(_UnpackLibraryResourceItems->'$(_StampDirectory)%(StampFile)')"
 			AlwaysCreate="True"
 		>
@@ -1842,11 +1965,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="MarshalObjectiveCExceptionMode" PropertyName="_MarshalObjectiveCExceptionMode" />
 			<Output TaskParameter="NoSymbolStrip" PropertyName="NoSymbolStrip"/>
 			<Output TaskParameter="NoDSymUtil" PropertyName="NoDSymUtil"/>
+			<Output TaskParameter="NoWarn" PropertyName="_BundlerNoWarn" />
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
 			<Output TaskParameter="Registrar" PropertyName="Registrar" />
 			<Output TaskParameter="RequirePInvokeWrappers" PropertyName="_RequirePInvokeWrappers" />
+			<Output TaskParameter="SkipMarkingNSObjectsInUserAssemblies" PropertyName="_SkipMarkingNSObjectsInUserAssemblies" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
+			<Output TaskParameter="WarnAsError" PropertyName="_BundlerWarnAsError" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
 		</ParseBundlerArguments>
@@ -1881,7 +2007,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			$(CoreCodesignDependsOn);
 			$(_CodesignAppBundleDependsOn);
 			_CodesignAppBundle;
-			_CodesignVerify;
 		</CoreCodesignDependsOn>
 
 		<CodesignDependsOn>
@@ -1943,31 +2068,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Finally we give the list of _ComputedCodesignItems to the Codesign
 		task for signing.
 
-		At the very end, and only if we signed the main app bundle, we verify
-		that the signature is correct (in the _CodesignVerify target).
-
 	-->
-
-	<!--
-		_CodesignVerify: verify that the app bundle we've produced is valid and signed properly.
-		This target is only executed for app bundles (and not when only dylibs and frameworks are signed, but the app bundle itself is not).
-	-->
-	<Target
-		Name="_CodesignVerify"
-		Condition="'$(_CodesignAppBundleCondition)' == 'true' And '$(_RequireCodeSigning)' == 'true'"
-		DependsOnTargets="_CodesignAppBundle"
-		>
-		<CodesignVerify
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(_AppContainerDir)\%(_CodesignBundle.Identity)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-		>
-		</CodesignVerify>
-	</Target>
 
 	<!--
 
@@ -2007,14 +2108,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Items" ItemName="_CodesignAppExtensionBundle" />
 		</ReadItemsFromFile>
 		<ItemGroup>
-			<_CodesignBundle Include="@(_CodesignAppExtensionBundle->'$(_AppBundleName)$(AppBundleExtension)/$(_AppPlugInsRelativePath)/%(Identity)')" />
+			<_CodesignBundle Include="@(_CodesignAppExtensionBundle->'$(_AppBundleName)$(AppBundleExtension)/%(BundleRelativePath)%(Identity)')" />
 		</ItemGroup>
 		<!-- Get items to sign from app extensions -->
 		<ReadItemsFromFile File="@(_ResolvedAppExtensionReferences->'%(Identity)\..\codesign.items')" Condition="Exists('%(Identity)\..\codesign.items')">
 			<Output TaskParameter="Items" ItemName="_CodesignAppExtensionItem" />
 		</ReadItemsFromFile>
 		<ItemGroup>
-			<_CodesignItems Include="@(_CodesignAppExtensionItem->'$(_AppBundleName)$(AppBundleExtension)/$(_AppPlugInsRelativePath)/%(Identity)')" />
+			<_CodesignItems Include="@(_CodesignAppExtensionItem->'$(_AppBundleName)$(AppBundleExtension)/%(BundleRelativePath)%(Identity)')" />
 		</ItemGroup>
 
 		<!-- Get app bundles to sign from watch apps -->
@@ -2048,6 +2149,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<CodesignUseSecureTimestamp Condition="'%(_CustomCodesignBundle.CodesignUseSecureTimestamp)' == ''">$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
 				<RequireCodeSigning Condition="'%(_CustomCodesignBundle.RequireCodeSigning)' == ''">$(_RequireCodeSigning)</RequireCodeSigning>
 				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+				<BundleRelativePath Condition="'%(_CustomCodesignBundle.BundleRelativePath)' == ''">$(_AppPlugInsRelativePath)</BundleRelativePath>
 			</_CustomCodesignBundle>
 			<_CodesignBundle Include="@(_CustomCodesignBundle)" />
 		</ItemGroup>
@@ -2067,6 +2169,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<CodesignUseSecureTimestamp>$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
 				<RequireCodeSigning>$(_RequireCodeSigning)</RequireCodeSigning>
 				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+				<BundleRelativePath Condition="'$(IsAppExtension)' == 'true' and '$(IsXPCService)' != 'true'">$(_AppPlugInsRelativePath)</BundleRelativePath>
+				<BundleRelativePath Condition="'$(IsAppExtension)' == 'true' and '$(IsXPCService)' == 'true'">$(_AppXpcServicesRelativePath)</BundleRelativePath>
 			</_CodesignBundle>
 
 			<!-- Set the SourceProjectPath metadata on all items that don't have it already -->
@@ -2364,6 +2468,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(_AppResourcesPath)"
+			ConnectTimeout="$(IOSDebugConnectTimeout)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
 			DebugIPAddresses="$(_DebugIPAddresses)"
 			DebuggerPort="$(IOSDebuggerPort)"
@@ -2512,6 +2617,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_PostProcessingItem Include="$([System.IO.Path]::GetFileName('$(AppBundleDir)'))/$(_NativeExecutableRelativePath)" Condition="'$(IsWatchApp)' != 'true'">
 				<SymbolFile>$(_SymbolsListFullPath)</SymbolFile>
 				<DSymName>$(_AppBundleName)$(AppBundleExtension).dSYM</DSymName>
+				<IsXPCService>$(IsXpcService)</IsXPCService>
+				<IsAppExtension>$(IsAppExtension)</IsAppExtension>
 			</_PostProcessingItem>
 
 			<_PostProcessingItem>
@@ -2526,7 +2633,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			</_PostProcessingItem>
 
 			<!-- Add any items from app extensions -->
-			<_PostProcessingItem Include="@(_AppExtensionPostProcessingItems -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppPlugInsRelativePath)%(Identity)')" Condition="@(_AppExtensionPostProcessingItems->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
+			<_PostProcessingAppExtensions Include="@(_AppExtensionPostProcessingItems)" Condition="'%(_AppExtensionPostProcessingItems.IsAppExtension)' == 'true' And '%(_AppExtensionPostProcessingItems.IsXPCService)' != 'true'" />
+			<_PostProcessingXpcServices Include="@(_AppExtensionPostProcessingItems)" Condition="'%(_AppExtensionPostProcessingItems.IsAppExtension)' == 'true' And '%(_AppExtensionPostProcessingItems.IsXPCService)' == 'true'" />
+			<_PostProcessingItem Include="@(_PostProcessingAppExtensions -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppPlugInsRelativePath)%(Identity)')" Condition="@(_PostProcessingAppExtensions->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
+			<_PostProcessingItem Include="@(_PostProcessingXpcServices -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppXpcServicesRelativePath)%(Identity)')" Condition="@(_PostProcessingXpcServices->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
 
 			<!-- Add any items from watch app -->
 			<!-- We must update metadata with paths relative to the root of the app bundle to be relative to the root of the current app bundle -->
@@ -2750,7 +2860,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<AppBundleDir>$(_AppContainerDir)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(_AppContainerDir)' == ''">
-			 <_AppContainerDir>$([System.IO.Path]::GetDirectoryName($(AppBundleDir)))/</_AppContainerDir>
+			 <_AppContainerDir>$([MSBuild]::EnsureTrailingSlash($([System.IO.Path]::GetDirectoryName($(AppBundleDir)))))</_AppContainerDir>
 		</PropertyGroup>
 		<PropertyGroup>
 			<!-- Ensure _AppBundlePath is a relative path (relative to the project directory) and contains a trailing slash -->
@@ -2776,10 +2886,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\PlugIns\</_AppPlugInsRelativePath>
 			<_AppPlugInsRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">PlugIns\</_AppPlugInsRelativePath>
 			<_AppPlugInsPath>$(_AppBundlePath)$(_AppPlugInsRelativePath)</_AppPlugInsPath>
+
+			<_AppXpcServicesRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\XPCServices\</_AppXpcServicesRelativePath>
+			<_AppXpcServicesRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'">XPCServices\</_AppXpcServicesRelativePath>
+			<_AppXpcServicesPath>$(_AppBundlePath)$(_AppXpcServicesRelativePath)</_AppXpcServicesPath>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(IsAppExtension)' == 'true'">
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
 			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
+		</PropertyGroup>
+		<PropertyGroup>
+			<_GlobalizationDataFileAppBundleRelativePath Condition="'$(_AppContentsRelativePath)' == ''">$(_GlobalizationDataFile)</_GlobalizationDataFileAppBundleRelativePath>
+			<_GlobalizationDataFileAppBundleRelativePath Condition="'$(_AppContentsRelativePath)' != ''">$(_AppContentsRelativePath)\$(_GlobalizationDataFile)</_GlobalizationDataFileAppBundleRelativePath>
 		</PropertyGroup>
 		<ItemGroup Condition="'$(IsAppExtension)' == 'true'">
 			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
@@ -2787,6 +2905,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
 				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
 			</_AppExtensionBundlePath>
+		</ItemGroup>
+		<ItemGroup>
+			<!-- Replacing backslashes with slashes is required since MSBuild has some issue with resolving backslashes next to a property value: https://github.com/dotnet/msbuild/issues/9200 -->
+			<RuntimeHostConfigurationOption Include="ICU_DAT_FILE_PATH" Value="$(_GlobalizationDataFileAppBundleRelativePath.Replace('\','/'))" />
 		</ItemGroup>
 	</Target>
 

@@ -192,6 +192,10 @@ namespace PushToTalk {
 
 		[Export ("channelManager:failedToStopTransmittingInChannelWithUUID:error:")]
 		void FailedToStopTransmittingInChannel (PTChannelManager channelManager, NSUuid channelUuid, NSError error);
+
+		[iOS (17, 2), MacCatalyst (17, 2)]
+		[Export ("incomingServiceUpdatePushForChannelManager:channelUUID:pushPayload:isHighPriority:remainingHighPriorityBudget:withCompletionHandler:")]
+		void IncomingServiceUpdatePush (PTChannelManager channelManager, NSUuid channelUuid, NSDictionary<NSString, NSObject> pushPayload, bool isHighPriority, nint remainingHighPriorityBudget, Action completion);
 	}
 
 	interface IPTChannelRestorationDelegate { }
@@ -252,6 +256,11 @@ namespace PushToTalk {
 		[Async]
 		[Export ("setTransmissionMode:forChannelUUID:completionHandler:")]
 		void SetTransmissionMode (PTTransmissionMode transmissionMode, NSUuid channelUuid, [NullAllowed] Action<NSError> completionHandler);
+
+		[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (17, 0)]
+		[Async]
+		[Export ("setAccessoryButtonEventsEnabled:forChannelUUID:completionHandler:")]
+		void SetAccessoryButtonEvents (bool enabled, NSUuid channelUuid, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 }

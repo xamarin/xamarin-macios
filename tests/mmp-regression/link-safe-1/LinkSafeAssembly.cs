@@ -38,7 +38,7 @@ namespace Xamarin.Mac.Linker.Test {
 			int pcount = type_stla.GetProperties (BindingFlags.NonPublic | BindingFlags.Static).Length;
 			Test.Log.WriteLine ("{0}\tUnused property ({1}/0) was preserved by linker", pcount == 0 ? "[PASS]" : "[FAIL]", pcount);
 
-			bool m = type_stla.GetMethod ("UnusedMethod", BindingFlags.Public | BindingFlags.Instance) == null;
+			bool m = type_stla.GetMethod ("UnusedMethod", BindingFlags.Public | BindingFlags.Instance) is null;
 			Test.Log.WriteLine ("{0}\tUnused method was preserved by linker", m ? "[PASS]" : "[FAIL]");
 
 			Test.Terminate ();

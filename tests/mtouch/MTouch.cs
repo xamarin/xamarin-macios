@@ -76,7 +76,7 @@ namespace Xamarin {
 				symbols = GetNativeSymbols (mtouch.NativeExecutablePath);
 				Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} nm");
 
-				if (ext != null) {
+				if (ext is not null) {
 					symbols = File.ReadAllLines (ext.SymbolList);
 					Assert.That (symbols, Contains.Item (profiler_symbol), $"{profiler_symbol} - extension");
 
@@ -1382,7 +1382,7 @@ public class B : A {}
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
 				extension.CreateTemporaryCacheDirectory ();
-				if (extension_abt != null)
+				if (extension_abt is not null)
 					extension.AssemblyBuildTargets.AddRange (extension_abt);
 				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
 				using (var app = new MTouchTool ()) {
@@ -1390,10 +1390,10 @@ public class B : A {}
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
 					app.WarnAsError = new int [] { 113 };
-					if (app_abt != null)
+					if (app_abt is not null)
 						app.AssemblyBuildTargets.AddRange (app_abt);
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt == null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt == null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt is null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt is null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
 				}
 			}
 		}
@@ -1817,7 +1817,7 @@ public class TestApp {
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.Optimize = new string [] { "foo" };
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
-				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal.");
+				mtouch.AssertWarning (132, "Unknown optimization: 'foo'. Valid optimizations are: remove-uithread-checks, dead-code-elimination, inline-isdirectbinding, inline-intptr-size, inline-runtime-arch, blockliteral-setupblock, register-protocols, inline-dynamic-registration-supported, static-block-to-delegate-lookup, remove-dynamic-registrar, inline-is-arm64-calling-convention, seal-and-devirtualize, cctor-beforefieldinit, custom-attributes-removal, experimental-xforms-product-type, force-rejected-types-removal, redirect-class-handles.");
 			}
 		}
 
@@ -1964,7 +1964,6 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Profile.tvOS, MTouchBitcode.Marker)]
 		[TestCase (Profile.watchOS, MTouchBitcode.Marker)]
 		public void StripBitcodeFromFrameworks (Profile profile, MTouchBitcode bitcode)
 		{
@@ -2039,7 +2038,14 @@ public class TestApp {
 			var nunit_framework = Path.Combine (Configuration.RootPath, "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
 			if (!File.Exists (nunit_framework))
 				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
-			return new string [] { lib, nunit_framework };
+			var src_unsafe = Path.Combine (Configuration.RootPath, "packages", "system.runtime.compilerservices.unsafe", "4.3.0", "lib", "netstandard1.0", "System.Runtime.CompilerServices.Unsafe.dll");
+			if (!File.Exists (src_unsafe))
+				throw new FileNotFoundException ($"Could not find System.Runtime.CompilerServices.Unsafe.dll in {src_unsafe}. Has the version changed?");
+			return new string [] {
+				lib,
+				nunit_framework,
+				src_unsafe,
+			};
 		}
 
 		static string GetBindingsLibrary (Profile profile, out string version)
@@ -2074,16 +2080,54 @@ public class TestApp {
 			return fn;
 		}
 
-		static string GetFrameworksBindingLibrary (Profile profile)
+		static string [] CollectFrameworks (string binding_resource_package)
 		{
-			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/iOS/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+			var rv = new HashSet<string> ();
+			var document = new XmlDocument ();
+			var manifestPath = Path.Combine (binding_resource_package, "manifest");
+			LoadWithoutNetworkAccess (document, manifestPath);
+
+			foreach (XmlNode referenceNode in document.GetElementsByTagName ("NativeReference")) {
+				var attributes = new Dictionary<string, string> ();
+				foreach (XmlNode attribute in referenceNode.ChildNodes)
+					attributes [attribute.Name] = attribute.InnerText;
+
+				var kind = attributes ["Kind"];
+				if (!string.Equals (kind, "Framework", StringComparison.OrdinalIgnoreCase))
+					continue;
+
+				var fw = Path.Combine (binding_resource_package, referenceNode.Attributes ["Name"].Value);
+				rv.Add (fw);
+				rv.UnionWith (attributes ["Frameworks"].Split (' '));
+			}
+			return rv.ToArray ();
+		}
+
+		static string AddFrameworksBindingLibrary (MTouchTool tool)
+		{
+			var profile = tool.Profile;
+			var dir = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile));
+			var libName = "bindings-framework-test";
+			var fn = Path.Combine (dir, $"{libName}.dll");
 
 			if (!File.Exists (fn)) {
 				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bindings-framework-test.csproj");
 				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
+			var bindingResourcePackage = Path.Combine (dir, $"{libName}.resources");
+			if (!Directory.Exists (bindingResourcePackage))
+				throw new InvalidOperationException ($"The binding project {libName} does not have a binding resource package?");
+			var frameworks = CollectFrameworks (bindingResourcePackage);
+			Assert.AreEqual (5, frameworks.Length, "Framework count in binding resource package");
+
+			var refs = new string [] { fn };
+			if (tool.References is null) {
+				tool.References = refs;
+			} else {
+				tool.References = tool.References.Concat (refs).ToArray ();
+			}
+			tool.Frameworks.AddRange (frameworks);
 			return fn;
 		}
 
@@ -2680,13 +2724,13 @@ public class TestApp {
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release64")]
-		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "dont link", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link all", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "linker/ios", "link sdk", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "", "monotouch-test", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 1", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "mscorlib Part 2", "Release")]
+		[TestCase (Target.Dev, Profile.iOS, "bcl-test/generated/iOS", "BCL tests group 1", "Release")]
 		public void BuildTestProject (Target target, Profile profile, string subdir, string testname, string configuration)
 		{
 			if (target == Target.Dev)
@@ -3345,7 +3389,7 @@ class Test {
 				Assert.Fail ("Failed to build the watchOS app.");
 
 			foreach (var device in devices) {
-				if (device.Companion == null)
+				if (device.Companion is null)
 					continue;
 
 				if (mtouch.InstallOnDevice (device.Companion, containerPath, "ios,watch") != 0) {
@@ -3532,10 +3576,7 @@ class C {
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.Linker = MTouchLinker.DontLink; // faster
 
-				exttool.References = new string []
-				{
-					GetFrameworksBindingLibrary (exttool.Profile),
-				};
+				AddFrameworksBindingLibrary (exttool);
 				exttool.CreateTemporaryServiceExtension (code: @"using UserNotifications;
 [Foundation.Register (""NotificationService"")]
 public partial class NotificationService : UNNotificationServiceExtension
@@ -3567,7 +3608,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.iOS;
 				exttool.Linker = MTouchLinker.DontLink; // faster
-				exttool.References = new string [] { GetFrameworksBindingLibrary (exttool.Profile) };
+				AddFrameworksBindingLibrary (exttool);
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{exttool.References [0]}" });
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
@@ -3575,7 +3616,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				using (var apptool = new MTouchTool ()) {
 					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
-					apptool.References = exttool.References;
+					AddFrameworksBindingLibrary (apptool);
 					apptool.CreateTemporaryApp (extraCode: @"[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } };", extraArgs: new [] { $"-r:{apptool.References [0]}" });
 					apptool.AppExtensions.Add (exttool);
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
@@ -3592,11 +3633,10 @@ public partial class NotificationService : UNNotificationServiceExtension
 			// Verify that an error is shown if two different frameworks with the same name are included.
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			var framework_binding_library = GetFrameworksBindingLibrary (Profile.iOS);
 			using (var exttool = new MTouchTool ()) {
 				exttool.Profile = Profile.iOS;
 				exttool.Linker = MTouchLinker.DontLink; // faster
-				exttool.References = new string [] { framework_binding_library };
+				var framework_binding_library = AddFrameworksBindingLibrary (exttool);
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{exttool.References [0]}" });
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
@@ -3607,12 +3647,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 					var modified_framework_binding_library = Path.Combine (tmpdir, fx_binding_name);
 
 					Bundler.FileCopier.UpdateDirectory (Path.Combine (Path.GetDirectoryName (framework_binding_library), "."), tmpdir);
-					var extra_content = Path.Combine (tmpdir, Path.ChangeExtension (fx_binding_name, ".resources"), "XTest.framework", "XTest");
+					var binding_resource_package = Path.Combine (tmpdir, Path.ChangeExtension (fx_binding_name, ".resources"));
+					var extra_content = Path.Combine (binding_resource_package, "XTest.framework", "XTest");
 					File.AppendAllText (extra_content, "Hello world");
 
 					apptool.Profile = Profile.iOS;
 					apptool.Linker = MTouchLinker.DontLink; // faster
 					apptool.References = new string [] { modified_framework_binding_library };
+					apptool.Frameworks = CollectFrameworks (binding_resource_package).ToList ();
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.CreateTemporaryApp (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{apptool.References [0]}" });
 					apptool.AppExtensions.Add (exttool);
@@ -3632,7 +3674,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			using (var service_ext = new MTouchTool ()) {
 				service_ext.Profile = Profile.iOS;
 				service_ext.Linker = MTouchLinker.DontLink; // faster
-				service_ext.References = new string [] { GetFrameworksBindingLibrary (service_ext.Profile) };
+				AddFrameworksBindingLibrary (service_ext);
 				service_ext.CreateTemporaryCacheDirectory ();
 				service_ext.CreateTemporaryServiceExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{service_ext.References [0]}" });
 				service_ext.AssertExecute (MTouchAction.BuildSim, "build service extension");
@@ -3640,7 +3682,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				using (var today_ext = new MTouchTool ()) {
 					today_ext.Profile = Profile.iOS;
 					today_ext.Linker = MTouchLinker.DontLink; // faster
-					today_ext.References = service_ext.References;
+					AddFrameworksBindingLibrary (today_ext);
 					today_ext.CreateTemporaryCacheDirectory ();
 					today_ext.CreateTemporaryTodayExtension (extraCode: "\n\n[Foundation.Preserve] class X { public X () { System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ()); } }", extraArgs: new [] { $"-r:{today_ext.References [0]}" });
 					today_ext.AssertExecute (MTouchAction.BuildSim, "build today extension");
@@ -3729,7 +3771,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.AssertWarning (2003, "Option '--optimize=custom-attributes-removal' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=experimental-xforms-product-type' will be ignored since linking is disabled");
 				mtouch.AssertWarning (2003, "Option '--optimize=force-rejected-types-removal' will be ignored since linking is disabled");
-				mtouch.AssertWarningCount (16);
+				mtouch.AssertWarning (2003, "Option '--optimize=redirect-class-handles' will be ignored since the static registrar is not enabled");
+				mtouch.AssertWarningCount (17);
 			}
 
 			using (var mtouch = new MTouchTool ()) {
@@ -3974,16 +4017,16 @@ public class HandlerTest
 	{{
 		var client = new System.Net.Http.HttpClient ();
 		var field = client.GetType ().BaseType.GetField (""_handler"", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-		if (field == null)
+		if (field is null)
 			throw new System.Exception (""Could not find the field '_handler' in HttpClient's base type (which should be 'HttpMessageInvoker')."");
 		var fieldValue = field.GetValue (client);
-		if (fieldValue == null)
+		if (fieldValue is null)
 			throw new System.Exception (""Unexpected null value found in 'HttpMessageInvoker.handler' field."");
 		Assert.AreEqual (""{expectedHandler}"", fieldValue.GetType ().Name, ""default http client handler"");
 	}}
 }}
 ";
-			var csproj_configuration = mtouchHandler == null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
+			var csproj_configuration = mtouchHandler is null ? string.Empty : ("<MtouchHttpClientHandler>" + mtouchHandler + "</MtouchHttpClientHandler>");
 			RunUnitTest (Profile.iOS, testCode, csproj_configuration, csproj_references: new string [] { "System.Net.Http" }, clean_simulator: false);
 		}
 
@@ -4440,7 +4483,7 @@ public class Dummy {
     <Reference Include=""System.Core"" />
     <Reference Include=""Xamarin.iOS"" />
     <Reference Include=""MonoTouch.NUnitLite"" />
-" + (csproj_references == null ? string.Empty : string.Join ("\n", csproj_references.Select ((v) => "    <Reference Include=\"" + v + "\" />\n"))) + @"
+" + (csproj_references is null ? string.Empty : string.Join ("\n", csproj_references.Select ((v) => "    <Reference Include=\"" + v + "\" />\n"))) + @"
   </ItemGroup>
   <ItemGroup>
     <None Include=""Info.plist"">
@@ -4466,8 +4509,8 @@ public class Dummy {
 				environment_variables ["SKIP_SIMULATOR_SETUP"] = "1";
 			environment_variables ["USE_TCP_TUNNEL"] = null;
 
+			var executable = Path.Combine (Configuration.RootPath, "tests", "xharness", "bin", "Debug", Configuration.DotNetTfm, "xharness");
 			var args = new List<string> ();
-			args.Add (Path.Combine (Configuration.RootPath, "tests", "xharness", "xharness.exe"));
 			args.Add ("--run");
 			args.Add (csprojpath);
 			args.Add ("--target");
@@ -4478,7 +4521,7 @@ public class Dummy {
 			args.Add (Path.Combine (tmpdir, "log.txt"));
 			args.Add ("--configuration");
 			args.Add (configuration);
-			ExecutionHelper.Execute ("mono", args, environmentVariables: environment_variables);
+			ExecutionHelper.Execute (executable, args, environmentVariables: environment_variables);
 		}
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
@@ -4502,7 +4545,7 @@ public class Dummy {
 			var cs = Path.Combine (targetDirectory, $"{name}Code.cs");
 			var dll = Path.Combine (targetDirectory, $"{name}Library.dll");
 
-			if (linkWith == null) {
+			if (linkWith is null) {
 				linkWith = @"
 using System;
 using ObjCRuntime;
@@ -4524,7 +4567,7 @@ using ObjCRuntime;
 			args.Add ("--out:" + dll);
 			args.Add ("--link-with=" + o + "," + Path.GetFileName (o));
 			args.Add ("-x" + x);
-			if (references != null)
+			if (references is not null)
 				args.AddRange (references.Select ((v) => "-r:" + v));
 			ExecutionHelper.Execute (Configuration.BtouchPath, args);
 
@@ -4551,7 +4594,7 @@ using ObjCRuntime;
 			case Profile.iOS:
 				min_os_version = device ? "iphoneos-version-min=6.0" : "iphonesimulator-version-min=6.0";
 				sdk = device ? "iPhoneOS" : "iPhoneSimulator";
-				if (arch == null)
+				if (arch is null)
 					arch = device ? "armv7" : "x86_64";
 				break;
 			default:
@@ -4672,20 +4715,7 @@ public class TestApp {
 
 		public static IEnumerable<string> GetNativeSymbols (string file, string arch = null)
 		{
-			var arguments = new List<string> (new [] { "-gUjA", file });
-			if (!string.IsNullOrEmpty (arch)) {
-				arguments.Add ("-arch");
-				arguments.Add (arch);
-			}
-			var symbols = ExecutionHelper.Execute ("nm", arguments, hide_output: true).Split ('\n');
-			return symbols.Where ((v) => {
-				return !v.EndsWith (": no symbols", StringComparison.Ordinal);
-			}).Select ((v) => {
-				var idx = v.LastIndexOf (": ", StringComparison.Ordinal);
-				if (idx <= 0)
-					return v;
-				return v.Substring (idx + 2);
-			});
+			return Configuration.GetNativeSymbols (file, arch);
 		}
 
 		static bool? is_apfs;

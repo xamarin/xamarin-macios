@@ -53,13 +53,13 @@ namespace Xharness.Targets {
 
 		public override string SimulatorArchitectures {
 			get {
-				return "i386, x86_64";
+				return "x86_64";
 			}
 		}
 
 		public override string DeviceArchitectures {
 			get {
-				return "ARMv7, ARM64";
+				return "ARM64";
 			}
 		}
 
@@ -79,9 +79,9 @@ namespace Xharness.Targets {
 
 		protected override string GetMinimumOSVersion (string templateMinimumOSVersion)
 		{
-			if (MonoNativeInfo == null)
+			if (MonoNativeInfo is null)
 				return templateMinimumOSVersion;
-			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
+			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS);
 		}
 
 		protected override int [] UIDeviceFamily {

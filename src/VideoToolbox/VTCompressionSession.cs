@@ -8,6 +8,7 @@
 // Copyright 2014 Xamarin Inc.
 //
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -25,13 +26,10 @@ using NativeHandle = System.IntPtr;
 namespace VideoToolbox {
 
 #if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
-#else
-	[iOS (8, 0)]
-	[TV (10, 2)]
 #endif
 	public class VTCompressionSession : VTSession {
 		GCHandle callbackHandle;
@@ -153,10 +151,9 @@ namespace VideoToolbox {
 			/* VTCompressionOutputCallback */ CompressionOutputCallback? outputCallback,
 #endif
 			/* void* */ IntPtr outputCallbackClosure,
-			/* VTCompressionSessionRef* */ out IntPtr compressionSessionOut);
+			/* VTCompressionSessionRef* */ IntPtr* compressionSessionOut);
 
 #if false // Disabling for now until we have some tests on this
-		[Mac (10,11), iOS (9,0)]
 		public static VTCompressionSession? Create (int width, int height, CMVideoCodecType codecType,
 			VTVideoEncoderSpecification? encoderSpecification = null,
 			NSDictionary? sourceImageBufferAttributes = null)
@@ -191,13 +188,14 @@ namespace VideoToolbox {
 			if (compressionOutputCallback is not null)
 				callbackHandle = GCHandle.Alloc (compressionOutputCallback);
 
+			IntPtr ret;
 			var result = VTCompressionSessionCreate (IntPtr.Zero, width, height, codecType,
 				encoderSpecification.GetHandle (),
 				sourceImageBufferAttributes.GetHandle (),
 				IntPtr.Zero,
 				callbackHandle.IsAllocated ? (staticCback) : null,
 				GCHandle.ToIntPtr (callbackHandle),
-				out var ret);
+				&ret);
 
 			if (result == VTStatus.Ok && ret != IntPtr.Zero)
 				return new VTCompressionSession (ret, true) {
@@ -228,22 +226,18 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionPrepareToEncodeFrames (IntPtr handle);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 9)]
 #endif
 		public VTStatus PrepareToEncodeFrames ()
 		{
@@ -251,14 +245,14 @@ namespace VideoToolbox {
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCompressionSessionEncodeFrame (
+		unsafe extern static VTStatus VTCompressionSessionEncodeFrame (
 			/* VTCompressionSessionRef */ IntPtr session,
 			/* CVImageBufferRef */ IntPtr imageBuffer,
 			/* CMTime */ CMTime presentation,
 			/* CMTime */ CMTime duration, // can ve CMTime.Invalid
 			/* CFDictionaryRef */ IntPtr dict, // can be null, undocumented options
 			/* void* */ IntPtr sourceFrame,
-			/* VTEncodeInfoFlags */ out VTEncodeInfoFlags flags);
+			/* VTEncodeInfoFlags */ VTEncodeInfoFlags* flags);
 
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags)
@@ -275,13 +269,15 @@ namespace VideoToolbox {
 			if (imageBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 
-			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
-				frameProperties.GetHandle (),
-				sourceFrame, out infoFlags);
+			infoFlags = default;
+			unsafe {
+				return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
+					frameProperties.GetHandle (),
+					sourceFrame, (VTEncodeInfoFlags*) Unsafe.AsPointer<VTEncodeInfoFlags> (ref infoFlags));
+			}
 		}
 
 #if false // Disabling for now until we have some tests on this
-		[Mac (10,11), iOS (9,0)]
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionEncodeFrameWithOutputHandler (
 			/* VTCompressionSessionRef */ IntPtr session,
@@ -308,7 +304,6 @@ namespace VideoToolbox {
 				del (status, infoFlags, new CMSampleBuffer (sampleBuffer));
 		}
 
-		[Mac (10,11), iOS (9,0)]
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags,
 			VTCompressionOutputHandler outputHandler)
@@ -319,7 +314,6 @@ namespace VideoToolbox {
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags, outputHandler);
 		}
 
-		[Mac (10,11), iOS (9,0)]
 		public VTStatus EncodeFrame (CVImageBuffer imageBuffer, CMTime presentationTimestamp, CMTime duration,
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags,
 			VTCompressionOutputHandler outputHandler)
@@ -352,22 +346,18 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
 		extern static VTStatus VTCompressionSessionBeginPass (IntPtr session, VTCompressionSessionOptionFlags flags, IntPtr reserved);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
 #endif
 		public VTStatus BeginPass (VTCompressionSessionOptionFlags flags)
 		{
@@ -376,37 +366,26 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, out byte furtherPassesRequestedOut, IntPtr reserved);
+		unsafe extern static VTStatus VTCompressionSessionEndPass (IntPtr session, byte* furtherPassesRequestedOut, IntPtr reserved);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
-#endif
-		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCompressionSessionEndPass (IntPtr session, IntPtr ptrByte, IntPtr reserved);
-
-#if NET
-		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
-		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
 #endif
 		public VTStatus EndPass (out bool furtherPassesRequested)
 		{
-			var result = VTCompressionSessionEndPass (GetCheckedHandle (), out var b, IntPtr.Zero);
+			byte b;
+			VTStatus result;
+			unsafe {
+				result = VTCompressionSessionEndPass (GetCheckedHandle (), &b, IntPtr.Zero);
+			}
 			furtherPassesRequested = b != 0;
 			return result;
 		}
@@ -414,34 +393,37 @@ namespace VideoToolbox {
 		// Like EndPass, but this will be the final pass, so the encoder will skip the evaluation.
 		public VTStatus EndPassAsFinal ()
 		{
-			return VTCompressionSessionEndPass (GetCheckedHandle (), IntPtr.Zero, IntPtr.Zero);
+			unsafe {
+				return VTCompressionSessionEndPass (GetCheckedHandle (), null, IntPtr.Zero);
+			}
 		}
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.VideoToolboxLibrary)]
-		extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
+		unsafe extern static VTStatus VTCompressionSessionGetTimeRangesForNextPass (
 			/* VTCompressionSessionRef */ IntPtr session,
-			/* CMItemCount* */ out int itemCount,
-			/* const CMTimeRange** */ out IntPtr target);
+			/* CMItemCount* */ int* itemCount,
+			/* const CMTimeRange** */ IntPtr* target);
 
 #if NET
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Mac (10, 10)]
 #endif
 		public VTStatus GetTimeRangesForNextPass (out CMTimeRange []? timeRanges)
 		{
-			var v = VTCompressionSessionGetTimeRangesForNextPass (GetCheckedHandle (), out var count, out var target);
+			VTStatus v;
+			int count;
+			IntPtr target;
+			unsafe {
+				v = VTCompressionSessionGetTimeRangesForNextPass (GetCheckedHandle (), &count, &target);
+			}
 			if (v != VTStatus.Ok) {
 				timeRanges = null;
 				return v;

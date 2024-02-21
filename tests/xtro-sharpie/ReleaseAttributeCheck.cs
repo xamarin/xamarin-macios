@@ -105,7 +105,7 @@ namespace Extrospection {
 		//		return;
 
 		//	var framework = Helpers.GetFramework (decl);
-		//	if (framework == null)
+		//	if (framework is null)
 		//		return;
 
 		//	string selector = decl.GetSelector ();

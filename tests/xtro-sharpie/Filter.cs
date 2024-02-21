@@ -74,7 +74,6 @@ namespace Extrospection {
 			case "SearchKit":
 			case "SecurityFoundation": // bugzilla
 			case "SecurityHI":
-			case "ServiceManagement":
 			case "SharedFileList":
 			case "SpeechRecognition":
 			case "SpeechSynthesis":

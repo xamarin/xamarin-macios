@@ -73,11 +73,11 @@ namespace CoreServices {
 
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFHTTPMessageRef __nonnull */ IntPtr CFHTTPMessageCreateEmpty (
-			/* CFAllocatorRef __nullable */ IntPtr alloc, /* Boolean */ [MarshalAs (UnmanagedType.I1)] bool isRequest);
+			/* CFAllocatorRef __nullable */ IntPtr alloc, /* Boolean */ byte isRequest);
 
 		public static CFHTTPMessage CreateEmpty (bool request)
 		{
-			var handle = CFHTTPMessageCreateEmpty (IntPtr.Zero, request);
+			var handle = CFHTTPMessageCreateEmpty (IntPtr.Zero, request ? (byte) 1 : (byte) 0);
 			return new CFHTTPMessage (handle, true);
 		}
 
@@ -123,12 +123,11 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageIsRequest (/* CFHTTPMessageRef __nonnull */ IntPtr message);
+		extern static /* Boolean */ byte CFHTTPMessageIsRequest (/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
 		public bool IsRequest {
 			get {
-				return CFHTTPMessageIsRequest (GetCheckedHandle ());
+				return CFHTTPMessageIsRequest (GetCheckedHandle ()) != 0;
 			}
 		}
 
@@ -181,28 +180,30 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageIsHeaderComplete (
+		extern static /* Boolean */ byte CFHTTPMessageIsHeaderComplete (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message);
 
 		public bool IsHeaderComplete {
 			get {
-				return CFHTTPMessageIsHeaderComplete (GetCheckedHandle ());
+				return CFHTTPMessageIsHeaderComplete (GetCheckedHandle ()) != 0;
 			}
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageAppendBytes (
+		unsafe extern static /* Boolean */ byte CFHTTPMessageAppendBytes (
 			/* CFHTTPMessageRef __nonnull */ IntPtr message,
-			/* const UInt8* __nonnull */ byte [] newBytes, /* CFIndex */ nint numBytes);
+			/* const UInt8* __nonnull */ byte* newBytes, /* CFIndex */ nint numBytes);
 
 		public bool AppendBytes (byte [] bytes)
 		{
 			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 
-			return CFHTTPMessageAppendBytes (Handle, bytes, bytes.Length);
+			unsafe {
+				fixed (byte* byteptr = bytes) {
+					return CFHTTPMessageAppendBytes (Handle, byteptr, bytes.Length) != 0;
+				}
+			}
 		}
 
 		public bool AppendBytes (byte [] bytes, nint count)
@@ -210,7 +211,14 @@ namespace CoreServices {
 			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 
-			return CFHTTPMessageAppendBytes (Handle, bytes, count);
+			if (bytes.Length < count)
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (count), count, "Must not be longer than array length");
+
+			unsafe {
+				fixed (byte* byteptr = bytes) {
+					return CFHTTPMessageAppendBytes (Handle, byteptr, count) != 0;
+				}
+			}
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -252,10 +260,9 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageApplyCredentials (/* CFHTTPMessageRef */ IntPtr request,
+		unsafe extern static /* Boolean */ byte CFHTTPMessageApplyCredentials (/* CFHTTPMessageRef */ IntPtr request,
 			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFString */ IntPtr username, /* CFString */ IntPtr password,
-			/* CFStreamError* */ out CFStreamError error);
+			/* CFStreamError* */ CFStreamError* error);
 
 		public void ApplyCredentials (CFHTTPAuthentication? auth, NetworkCredential credential)
 		{
@@ -272,8 +279,12 @@ namespace CoreServices {
 			var username = CFString.CreateNative (credential.UserName);
 			var password = CFString.CreateNative (credential.Password);
 			try {
-				var ok = CFHTTPMessageApplyCredentials (Handle, auth.Handle, username, password, out var error);
-				if (!ok)
+				byte ok;
+				CFStreamError error;
+				unsafe {
+					ok = CFHTTPMessageApplyCredentials (Handle, auth.Handle, username, password, &error);
+				}
+				if (ok == 0)
 					throw GetException ((CFStreamErrorHTTPAuthentication) error.code);
 			} finally {
 				CFString.ReleaseNative (username);
@@ -297,7 +308,6 @@ namespace CoreServices {
 			[ObsoletedOSPlatform ("macos10.14", "Not available anymore.")]
 			[ObsoletedOSPlatform ("ios12.0", "Not available anymore.")]
 #else
-			[Mac (10, 9)]
 			[Deprecated (PlatformName.iOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.TvOS, 12, 0, message: "Not available anymore.")]
 			[Deprecated (PlatformName.MacOSX, 10, 14, message: "Not available anymore.")]
@@ -328,14 +338,13 @@ namespace CoreServices {
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageAddAuthentication (
+		extern static /* Boolean */ byte CFHTTPMessageAddAuthentication (
 			/* CFHTTPMessageRef __nonnull */ IntPtr request,
 			/* CFHTTPMessageRef __nullable */ IntPtr authenticationFailureResponse,
 			/* CFStringRef __nonnull */ IntPtr username,
 			/* CFStringRef __nonnull */ IntPtr password,
 			/* CFStringRef __nullable */ IntPtr authenticationScheme,
-			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool forProxy);
+			/* Boolean */ byte forProxy);
 
 		public bool AddAuthentication (CFHTTPMessage failureResponse, NSString username,
 									   NSString password, AuthenticationScheme scheme,
@@ -348,13 +357,12 @@ namespace CoreServices {
 
 			return CFHTTPMessageAddAuthentication (
 				Handle, failureResponse.GetHandle (), username.Handle,
-				password.Handle, GetAuthScheme (scheme), forProxy);
+				password.Handle, GetAuthScheme (scheme), forProxy ? (byte) 1 : (byte) 0) != 0;
 		}
 
 		[DllImport (Constants.CFNetworkLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static /* Boolean */ bool CFHTTPMessageApplyCredentialDictionary (/* CFHTTPMessageRef */ IntPtr request,
-			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFDictionaryRef */ IntPtr dict, /* CFStreamError* */ out CFStreamError error);
+		unsafe extern static /* Boolean */ byte CFHTTPMessageApplyCredentialDictionary (/* CFHTTPMessageRef */ IntPtr request,
+			/* CFHTTPAuthenticationRef */ IntPtr auth, /* CFDictionaryRef */ IntPtr dict, /* CFStreamError* */ CFStreamError* error);
 
 		public void ApplyCredentialDictionary (CFHTTPAuthentication auth, NetworkCredential credential)
 		{
@@ -379,9 +387,12 @@ namespace CoreServices {
 
 			try {
 				CFStreamError error;
-				var ok = CFHTTPMessageApplyCredentialDictionary (
-					Handle, auth.Handle, dict.Handle, out error);
-				if (ok)
+				byte ok;
+				unsafe {
+					ok = CFHTTPMessageApplyCredentialDictionary (
+						Handle, auth.Handle, dict.Handle, &error);
+				}
+				if (ok != 0)
 					return;
 				throw GetException ((CFStreamErrorHTTPAuthentication) error.code);
 			} finally {

@@ -19,6 +19,8 @@ namespace QuickLookUI {
 		Compact = 1
 	}
 
+	interface IQLPreviewPanelDataSource { }
+
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
 	interface QLPreviewPanelDataSource {
@@ -28,9 +30,10 @@ namespace QuickLookUI {
 
 		[Export ("previewPanel:previewItemAtIndex:")]
 		[Abstract]
-		[return: Protocolize]
-		QLPreviewItem PreviewItemAtIndex (QLPreviewPanel panel, nint index);
+		IQLPreviewItem PreviewItemAtIndex (QLPreviewPanel panel, nint index);
 	}
+
+	interface IQLPreviewPanelDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Protocol, Model]
@@ -39,10 +42,10 @@ namespace QuickLookUI {
 		bool HandleEvent (QLPreviewPanel panel, NSEvent theEvent);
 
 		[Export ("previewPanel:sourceFrameOnScreenForPreviewItem:")]
-		CGRect SourceFrameOnScreenForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item);
+		CGRect SourceFrameOnScreenForPreviewItem (QLPreviewPanel panel, IQLPreviewItem item);
 
 		[Export ("previewPanel:transitionImageForPreviewItem:contentRect:")]
-		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, [Protocolize] QLPreviewItem item, CGRect contentRect);
+		NSObject TransitionImageForPreviewItem (QLPreviewPanel panel, IQLPreviewItem item, CGRect contentRect);
 	}
 
 	interface IQLPreviewItem { }
@@ -92,15 +95,13 @@ namespace QuickLookUI {
 
 		[Wrap ("WeakDataSource")]
 		[NullAllowed]
-		[Protocolize]
-		QLPreviewPanelDataSource DataSource { get; set; }
+		IQLPreviewPanelDataSource DataSource { get; set; }
 
 		[Export ("currentPreviewItemIndex")]
 		nint CurrentPreviewItemIndex { get; set; }
 
 		[Export ("currentPreviewItem")]
-		[Protocolize]
-		QLPreviewItem CurrentPreviewItem { get; }
+		IQLPreviewItem CurrentPreviewItem { get; }
 
 		[Export ("displayState", ArgumentSemantic.Retain)]
 		NSObject DisplayState { get; set; }
@@ -111,8 +112,7 @@ namespace QuickLookUI {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		[Protocolize]
-		QLPreviewPanelDelegate Delegate { get; set; }
+		IQLPreviewPanelDelegate Delegate { get; set; }
 
 		[Export ("inFullScreenMode")]
 		bool InFullScreenMode { [Bind ("isInFullScreenMode")] get; }
@@ -169,7 +169,6 @@ namespace QuickLookUI {
 		bool Autostarts { get; set; }
 	}
 
-	[Mac (10, 13)]
 	[Protocol]
 	interface QLPreviewingController {
 #if !NET
@@ -178,7 +177,6 @@ namespace QuickLookUI {
 		[Export ("preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler:")]
 		void PreparePreviewOfSearchableItem (string identifier, string queryString, Action<NSError> ItemLoadingHandler);
 
-		[Mac (10, 15)]
 		[Export ("preparePreviewOfFileAtURL:completionHandler:")]
 		void PreparePreviewOfFile (NSUrl url, Action<NSError> completionHandler);
 

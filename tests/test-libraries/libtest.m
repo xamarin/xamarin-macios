@@ -7,6 +7,8 @@
 #include <zlib.h>
 #include "libtest.h"
 
+NSString *x_GlobalString = @"There's nothing cruvus here!";
+
 int
 theUltimateAnswer ()
 {
@@ -21,6 +23,12 @@ void useZLib ()
 void x_call_block (x_block_callback block)
 {
 	block ();
+}
+
+void *
+x_call_func_3 (void* (*fptr)(void*, void*, void*), void* p1, void* p2, void* p3)
+{
+	return fptr (p1, p2, p3);
 }
 
 typedef matrix_float2x2 (*func_x_get_matrix_float2x2_msgSend) (id self, SEL sel);

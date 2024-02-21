@@ -84,6 +84,19 @@ downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
 
+# Create a symlink with a persistent (non-version-dependent) name
+# The dependency on the stamp file is to ensure the symlink is re-created
+# when the .NET version changes.
+all-local:: downloads/dotnet
+dotnet:: downloads/dotnet
+downloads/dotnet: .stamp-dotnet-symlink-$(DOTNET_VERSION)
+	$(Q) mkdir -p downloads
+	$(Q) rm -f $@
+	$(Q) ln -s $(abspath downloads/$(DOTNET_INSTALL_NAME)) $@
+
+.stamp-dotnet-symlink-$(DOTNET_VERSION): Makefile
+	$(Q) touch $@
+
 # This is just a helpful target to print the url to the .pkg to download and install the current .NET version into the system.
 print-dotnet-pkg-urls: dotnet-install.sh
 	$(Q) rm -f $@-found-it.stamp
@@ -99,26 +112,6 @@ dotnet-install.sh: Makefile
 	$(Q) chmod +x $@.tmp
 	$(Q) mv $@.tmp $@
 
-# Fix the BCL assemblies we get for Mac Catalyst
-fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe: $(wildcard fix-maccatalyst-assembly/*.cs*) Makefile
-	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" /r fix-maccatalyst-assembly/fix-maccatalyst-assembly.csproj $(MSBUILD_VERBOSITY)
-
-define FixMacCatalystAssembly
-$(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll: .stamp-$(MONO_BUILD_MODE)
-
-downloads/fix-maccatalyst-tmpdir/$(1).dll: $(MONO_MACCATALYST_SDK_DESTDIR)/maccat-bcl/monotouch/$(1).dll Makefile fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe
-	$(Q) mkdir -p $$(dir $$@)
-	$(Q) mono fix-maccatalyst-assembly/bin/Debug/fix-maccatalyst-assembly.exe $$(abspath $$<) $$(abspath $$@).tmp
-	$(Q) mv $$(abspath $$@).tmp $$(abspath $$@)
-
-$(PREFIX)/lib/mono/Xamarin.MacCatalyst/$(1).dll: downloads/fix-maccatalyst-tmpdir/$(1).dll | $(PREFIX)/lib/mono/Xamarin.MacCatalyst
-	$(Q) $(CP) $$< $$@
-endef
-$(eval $(call FixMacCatalystAssembly,Mono.Security))
-$(eval $(call FixMacCatalystAssembly,mscorlib))
-$(eval $(call FixMacCatalystAssembly,System))
-$(eval $(call FixMacCatalystAssembly,System.Net.Http))
-
 .stamp-download-mono: $(TOP)/Make.config $(TOP)/mk/mono.mk
 	$(MAKE) download-mono
 	$(Q) touch $@
@@ -132,26 +125,17 @@ endif
 endif
 
 .stamp-install-custom-dotnet-runtime-workloads:
+ifneq ($(TRACKING_DOTNET_RUNTIME_SEPARATELY),)
 	@# mono toolchain
-	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7/
-	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.net6.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net6/
-	@# emscripten, which mono depens on
-	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7/
-	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net6.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net6/
-	$(Q) make .stamp-copy-stuff-everywhere
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(MONO_TOOLCHAIN_MANIFEST_VERSION_BAND)
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.net7.manifest-$(MONO_TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(MONO_TOOLCHAIN_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7/
+	@# emscripten, which mono depends on
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(EMSCRIPTEN_MANIFEST_VERSION_BAND)
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net7.manifest-$(EMSCRIPTEN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(EMSCRIPTEN_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7/
 	$(Q) touch $@
-
-.stamp-copy-stuff-everywhere:
-ifeq ($(CUSTOM_DOTNET_RUNTIME_INSTALL),1)
-	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2
-	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.mono.toolchain.net7
-	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net6 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.mono.toolchain.net6
-	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.emscripten.net7
-	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net6 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.emscripten.net6
 endif
-	$(Q) touch $@
 
-package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/index ./create-csproj-for-all-packagereferences.sh
+package-download/all-package-references.csproj: $(GIT_DIRECTORY)/HEAD $(GIT_DIRECTORY)/index ./create-csproj-for-all-packagereferences.sh
 	$(Q_GEN) ./create-csproj-for-all-packagereferences.sh --output "$(abspath $@.tmp)" $(if $(V),-v,)
 	$(Q) mv "$@.tmp" "$@"
 
@@ -164,8 +148,9 @@ package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/ind
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
-		/p:DotNetManifestVersionBand="$(DOTNET_MANIFEST_VERSION_BAND)" \
-		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
+		/p:MonoToolChainManifestVersionBand="$(MONO_TOOLCHAIN_MANIFEST_VERSION_BAND)" \
+		/p:EmscriptenManifestVersionBand="$(EMSCRIPTEN_MANIFEST_VERSION_BAND)" \
+		/p:TrackingDotNetRuntimeSeparately="$(TRACKING_DOTNET_RUNTIME_SEPARATELY)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
 	$(MAKE) .stamp-install-custom-dotnet-runtime-workloads
@@ -184,10 +169,8 @@ DOTNET_DOWNLOADS = \
 	.stamp-download-dotnet-packages \
 	.stamp-install-t4 \
 
-dotnet: $(DOTNET_DOWNLOADS)
-ifdef ENABLE_DOTNET
+dotnet:: $(DOTNET_DOWNLOADS)
 all-local:: $(DOTNET_DOWNLOADS)
-endif
 
 clean-local::
 	$(Q) rm -Rf downloads .stamp-download-mono
@@ -777,7 +760,7 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAME
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
 	$(Q_LN) ln -hfs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin $@
 
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
 	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
@@ -792,12 +775,6 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: $(TOP)/Make.config.inc
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: $(TOP)/Versions-mac.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
 	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_MAC_SDK_DESTDIR)/mac-mono-version.txt)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
-
-$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/Versions.plist: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools/buildinfo: $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo | $(DOTNET_DESTDIR)/$(MACOS_NUGET).Sdk/tools
-	$(Q) $(CP) $< $@
 
 $(MAC_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -879,7 +856,7 @@ IOS_COMMON_TARGETS = \
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
 
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: $(TOP)/Make.config.inc $(TOP)/.git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 	$(Q_GEN) echo "Version: $(IOS_PACKAGE_VERSION)" > $@
 	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
 	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
@@ -894,12 +871,6 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: $(TOP)/Make.config.inc
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: $(TOP)/Versions-ios.plist.in Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/versions-check.csharp .stamp-$(MONO_BUILD_MODE)
 	$(Q) $(TOP)/versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
 	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(shell cat $(MONO_IOS_SDK_DESTDIR)/ios-mono-version.txt)/g" $< > $@
-
-$(DOTNET_DESTDIR)/%.Sdk/Versions.plist: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist | $(DOTNET_DESTDIR)/%.Sdk
-	$(Q) $(CP) $< $@
-
-$(DOTNET_DESTDIR)/%.Sdk/tools/buildinfo: $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo | $(DOTNET_DESTDIR)/%.Sdk/tools
-	$(Q) $(CP) $< $@
 
 $(IOS_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -1158,12 +1129,30 @@ install-tvos: $(TVOS_TARGETS)
 
 
 DOTNET_COMMON_DIRECTORIES += \
-	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk) \
-	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools) \
 
 DOTNET_COMMON_TARGETS = \
-	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/Versions.plist) \
-	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET).Sdk/tools/buildinfo) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/Versions.plist) \
+	$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(DOTNET_DESTDIR)/$($(platform)_NUGET_SDK_NAME)/tools/buildinfo) \
+
+define VersionInfo
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/Versions.plist: $(TOP)/builds/Versions-$(1).plist.in Makefile $(TOP)/Make.config $(TOP)/versions-check.csharp | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)
+	$$(Q) $(TOP)/versions-check.csharp $$< "$(DOTNET_MIN_IOS_SDK_VERSION)" "$(MAX_IOS_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_TVOS_SDK_VERSION)" "$(MAX_TVOS_DEPLOYMENT_TARGET)" "$(MIN_WATCH_OS_VERSION)" "$(MAX_WATCH_DEPLOYMENT_TARGET)" "$(DOTNET_MIN_MACOS_SDK_VERSION)" "$(MACOS_SDK_VERSION)" "$(DOTNET_MIN_MACCATALYST_SDK_VERSION)" "$(MACCATALYST_SDK_VERSION)"
+	$$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(DOTNET_VERSION)/g" $$< > $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionInfo,$(platform))))
+
+define BuildInfo
+$(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools/buildinfo: $(TOP)/Make.config.inc $(GIT_DIRECTORY)/index | $(DOTNET_DESTDIR)/$($(1)_NUGET_SDK_NAME)/tools
+	$$(Q_GEN) echo "Version: $$($(2)_NUGET_VERSION)" > $$@.tmp
+	$$(Q) echo "Hash: $$(shell git log --oneline -1 --pretty=%h)" >> $$@.tmp
+	$$(Q) echo "Branch: $$(CURRENT_BRANCH)" >> $$@.tmp
+	$$(Q) echo "Build date: $$(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $$@.tmp
+	$$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call BuildInfo,$(platform),$(shell echo $(platform) | tr a-z A-Z))))
 
 $(DOTNET_COMMON_DIRECTORIES):
 	$(Q) mkdir -p $@

@@ -28,11 +28,11 @@ namespace MonoTouchFixtures.UIKit {
 			var uikit = Dlfcn.dlopen (Constants.UIKitLibrary, 0);
 			try {
 				var zero = Dlfcn.dlsym (uikit, "UIFloatRangeZero");
-				var Zero = (UIFloatRange) Marshal.PtrToStructure (zero, typeof (UIFloatRange));
+				var Zero = Marshal.PtrToStructure<UIFloatRange> (zero);
 				Assert.True (UIFloatRange.Zero.Equals (Zero), "Zero");
 
 				var infinite = Dlfcn.dlsym (uikit, "UIFloatRangeInfinite");
-				var Infinite = (UIFloatRange) Marshal.PtrToStructure (infinite, typeof (UIFloatRange));
+				var Infinite = Marshal.PtrToStructure<UIFloatRange> (infinite);
 				Assert.True (Infinite.IsInfinite, "IsInfinite");
 				Assert.False (UIFloatRange.Infinite.Equals (Infinite), "Infinite");
 			} finally {

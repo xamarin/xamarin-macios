@@ -17,7 +17,6 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
@@ -33,18 +32,6 @@ namespace MonoTests.System.Net.Http {
 		{
 			// Https seems broken on our macOS 10.9 bot, so skip this test.
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
-		}
-
-		void PrintHandlerToTest ()
-		{
-#if !__WATCHOS__
-			Console.WriteLine (new HttpClientHandler ());
-			Console.WriteLine (new CFNetworkHandler ());
-#if NET
-			Console.WriteLine (new SocketsHttpHandler ());
-#endif
-#endif
-			Console.WriteLine (new NSUrlSessionHandler ());
 		}
 
 		HttpMessageHandler GetHandler (Type handler_type)
@@ -79,22 +66,12 @@ namespace MonoTests.System.Net.Http {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
-			PrintHandlerToTest ();
-
-			bool done = false;
 			string response = null;
-			Exception ex = null;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-					HttpClient client = new HttpClient (GetHandler (handlerType));
-					response = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				HttpClient client = new HttpClient (GetHandler (handlerType));
+				response = await client.GetStringAsync ("http://doesnotexist.xamarin.com");
+			}, out var ex);
 
 			Assert.IsTrue (done, "Did not time out");
 			Assert.IsNull (response, $"Response is not null {response}");
@@ -108,34 +85,26 @@ namespace MonoTests.System.Net.Http {
 		{
 			var managedCookieResult = false;
 			var nativeCookieResult = false;
-			Exception ex = null;
-			var completed = false;
 			IEnumerable<string> nativeCookies = null;
 			IEnumerable<string> managedCookies = null;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			var completed = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
 				var url = NetworkResources.Httpbin.GetSetCookieUrl ("cookie", "chocolate-chip");
-				try {
-					var managedHandler = new HttpClientHandler () {
-						AllowAutoRedirect = false,
-					};
-					var managedClient = new HttpClient (managedHandler);
-					var managedResponse = await managedClient.GetAsync (url);
-					managedCookieResult = managedResponse.Headers.TryGetValues ("Set-Cookie", out managedCookies);
+				var managedHandler = new HttpClientHandler () {
+					AllowAutoRedirect = false,
+				};
+				var managedClient = new HttpClient (managedHandler);
+				var managedResponse = await managedClient.GetAsync (url);
+				managedCookieResult = managedResponse.Headers.TryGetValues ("Set-Cookie", out managedCookies);
 
-					var nativeHandler = new NSUrlSessionHandler () {
-						AllowAutoRedirect = false,
-					};
-					nativeHandler.AllowAutoRedirect = true;
-					var nativeClient = new HttpClient (nativeHandler);
-					var nativeResponse = await nativeClient.GetAsync (url);
-					nativeCookieResult = nativeResponse.Headers.TryGetValues ("Set-Cookie", out nativeCookies);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed);
+				var nativeHandler = new NSUrlSessionHandler () {
+					AllowAutoRedirect = false,
+				};
+				nativeHandler.AllowAutoRedirect = true;
+				var nativeClient = new HttpClient (nativeHandler);
+				var nativeResponse = await nativeClient.GetAsync (url);
+				nativeCookieResult = nativeResponse.Headers.TryGetValues ("Set-Cookie", out nativeCookies);
+			}, out var ex);
 
 			if (!completed || !managedCookieResult || !nativeCookieResult)
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
@@ -160,32 +129,24 @@ namespace MonoTests.System.Net.Http {
 
 			string managedCookieResult = null;
 			string nativeCookieResult = null;
-			Exception ex = null;
-			var completed = false;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-					var managedHandler = new HttpClientHandler () {
-						AllowAutoRedirect = false,
-						CookieContainer = cookieContainer,
-					};
-					var managedClient = new HttpClient (managedHandler);
-					var managedResponse = await managedClient.GetAsync (url);
-					managedCookieResult = await managedResponse.Content.ReadAsStringAsync ();
+			var completed = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var managedHandler = new HttpClientHandler () {
+					AllowAutoRedirect = false,
+					CookieContainer = cookieContainer,
+				};
+				var managedClient = new HttpClient (managedHandler);
+				var managedResponse = await managedClient.GetAsync (url);
+				managedCookieResult = await managedResponse.Content.ReadAsStringAsync ();
 
-					var nativeHandler = new NSUrlSessionHandler () {
-						AllowAutoRedirect = true,
-						CookieContainer = cookieContainer,
-					};
-					var nativeClient = new HttpClient (nativeHandler);
-					var nativeResponse = await nativeClient.GetAsync (url);
-					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed);
+				var nativeHandler = new NSUrlSessionHandler () {
+					AllowAutoRedirect = true,
+					CookieContainer = cookieContainer,
+				};
+				var nativeClient = new HttpClient (nativeHandler);
+				var nativeResponse = await nativeClient.GetAsync (url);
+				nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+			}, out var ex);
 
 			if (!completed || managedCookieResult.Contains ("502 Bad Gateway") || nativeCookieResult.Contains ("502 Bad Gateway") || managedCookieResult.Contains ("504 Gateway Time-out") || nativeCookieResult.Contains ("504 Gateway Time-out"))
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
@@ -204,25 +165,16 @@ namespace MonoTests.System.Net.Http {
 			var cookieContainer = new CookieContainer ();
 
 			string nativeCookieResult = null;
-			Exception ex = null;
-			var completed = false;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-
-					var nativeHandler = new NSUrlSessionHandler () {
-						AllowAutoRedirect = true,
-						CookieContainer = cookieContainer,
-					};
-					var nativeClient = new HttpClient (nativeHandler);
-					var nativeResponse = await nativeClient.GetAsync (url);
-					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed);
+			var completed = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var nativeHandler = new NSUrlSessionHandler () {
+					AllowAutoRedirect = true,
+					CookieContainer = cookieContainer,
+				};
+				var nativeClient = new HttpClient (nativeHandler);
+				var nativeResponse = await nativeClient.GetAsync (url);
+				nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+			}, out var ex);
 
 			if (!completed)
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
@@ -245,31 +197,20 @@ namespace MonoTests.System.Net.Http {
 			string nativeSetCookieResult = null;
 			string nativeCookieResult = null;
 
+			var completed = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var nativeHandler = new NSUrlSessionHandler () {
+					AllowAutoRedirect = true,
+					UseCookies = false,
+				};
+				var nativeClient = new HttpClient (nativeHandler);
+				var nativeResponse = await nativeClient.GetAsync (url);
+				nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
 
-			Exception ex = null;
-			var completed = false;
-
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-
-					var nativeHandler = new NSUrlSessionHandler () {
-						AllowAutoRedirect = true,
-						UseCookies = false,
-					};
-					var nativeClient = new HttpClient (nativeHandler);
-					var nativeResponse = await nativeClient.GetAsync (url);
-					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
-
-					// got the response, perofm a second queries to the cookies endpoint to get
-					// the actual cookies sent from the storage
-					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
-					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed);
+				// got the response, perofm a second queries to the cookies endpoint to get
+				// the actual cookies sent from the storage
+				nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
+				nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+			}, out var ex);
 
 			if (!completed)
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
@@ -291,31 +232,20 @@ namespace MonoTests.System.Net.Http {
 			string nativeCookieResult = null;
 			var cookieContainer = new CookieContainer ();
 
+			var completed = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var nativeHandler = new NSUrlSessionHandler () {
+					AllowAutoRedirect = true,
+					UseCookies = false,
+				};
+				var nativeClient = new HttpClient (nativeHandler);
+				var nativeResponse = await nativeClient.GetAsync (url);
+				nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
 
-			Exception ex = null;
-			var completed = false;
-
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-
-					var nativeHandler = new NSUrlSessionHandler () {
-						AllowAutoRedirect = true,
-						UseCookies = false,
-					};
-					var nativeClient = new HttpClient (nativeHandler);
-					var nativeResponse = await nativeClient.GetAsync (url);
-					nativeSetCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
-
-					// got the response, preform a second queries to the cookies endpoint to get
-					// the actual cookies sent from the storage
-					nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
-					nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					completed = true;
-				}
-			}, () => completed);
+				// got the response, preform a second queries to the cookies endpoint to get
+				// the actual cookies sent from the storage
+				nativeResponse = await nativeClient.GetAsync (NetworkResources.Httpbin.CookiesUrl);
+				nativeCookieResult = await nativeResponse.Content.ReadAsStringAsync ();
+			}, out var ex);
 
 			if (!completed)
 				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
@@ -341,6 +271,133 @@ namespace MonoTests.System.Net.Http {
 			}
 		}
 
+		[Test]
+		public void TestNSUrlSessionTimeoutExceptionWhileStreamingContent ()
+		{
+			if (!HttpListener.IsSupported) {
+				Assert.Inconclusive ("HttpListener is not supported");
+			}
+
+			// HTPP listener config
+			IPEndPoint httpListenerEndPoint = null;
+			var serverLaunchedSemaphore = new SemaphoreSlim (0, 1);
+			const int expectedHttpResponseContentLength = 10;
+
+			var serverCancellationTokenSource = new CancellationTokenSource ();
+			var serverCancellationToken = serverCancellationTokenSource.Token;
+
+
+			// NSUrlSession config
+			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
+			config.TimeoutIntervalForResource = 3;
+
+			Task.Run (async () => {
+				// Trying to bing a HttpListener to the first available port
+				// To avoid race condition, we cannot list available ports, then decide to bind to one of them
+				HttpListener httpListener = null;
+
+				// IANA suggested range for dynamic or private ports
+				const int MinPort = 49215;
+				const int MaxPort = 65535;
+
+				int listeningPort = -1;
+				for (var port = MinPort; port < MaxPort; port++) {
+					httpListener = new HttpListener ();
+					httpListener.Prefixes.Add ($"http://*:{port}/");
+					try {
+						httpListener.Start ();
+						listeningPort = port;
+						break;
+					} catch {
+						// nothing to do here -- the listener disposes itself when Start throws
+					}
+				}
+
+				if (httpListener is null) {
+					return;
+				}
+
+				httpListenerEndPoint = new IPEndPoint (IPAddress.Any, listeningPort);
+
+				serverLaunchedSemaphore.Release ();
+
+				try {
+					while (true) {
+						var contextTask = httpListener.GetContextAsync ();
+						Task.WaitAny (
+							new Task [] { contextTask },
+							serverCancellationToken);
+
+						var context = contextTask.Result;
+						var request = context.Request;
+						var response = context.Response;
+
+						// Construct a response.
+						response.ContentType = "application/octet-stream";
+						response.StatusCode = 200;
+
+						try {
+							// Dripping response blocks, with increasing interval
+							using (var output = response.OutputStream) {
+								for (var i = 0; i < expectedHttpResponseContentLength; i++) {
+									serverCancellationToken.ThrowIfCancellationRequested ();
+
+									await output.WriteAsync (new byte [] { 0x42 });
+									output.Flush ();
+
+									await Task.Delay (TimeSpan.FromSeconds (i));
+								}
+							}
+						} finally {
+							response.Close ();
+						}
+					}
+				} finally {
+					httpListener.Stop ();
+				}
+			});
+
+			var timeoutExceptionWasThrown = false;
+			var timeoutExceptionShouldHaveBeenThrown = true;
+
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				HttpClient client = new HttpClient (new NSUrlSessionHandler (config));
+
+				await serverLaunchedSemaphore.WaitAsync ();
+
+				try {
+					var responseMessage = await client.GetAsync (
+													$"http://{httpListenerEndPoint.Address}:{httpListenerEndPoint.Port}",
+													HttpCompletionOption.ResponseHeadersRead);
+
+					using (var contentStream = await responseMessage.Content.ReadAsStreamAsync ())
+					using (var outputStream = new global::System.IO.MemoryStream ()) {
+						await contentStream.CopyToAsync (outputStream);
+
+						timeoutExceptionWasThrown = false;
+						timeoutExceptionShouldHaveBeenThrown = outputStream.ToArray ().Length < expectedHttpResponseContentLength;
+					}
+				} catch (Exception e)
+					  when (e is TimeoutException || e is HttpRequestException) {
+					timeoutExceptionWasThrown = true;
+				}
+			}, out var ex);
+
+			serverCancellationTokenSource.Cancel ();
+
+			if (!done) {
+				Assert.Inconclusive ("Test run timedout.");
+			}
+
+			Assert.IsNull (ex, "Exception");
+
+			if (!timeoutExceptionShouldHaveBeenThrown) {
+				Assert.Inconclusive ("Failed to produce a timeout. The response content was streamed completely.");
+			} else {
+				Assert.IsTrue (timeoutExceptionWasThrown, "Timeout exception is thrown.");
+			}
+		}
+
 #endif
 
 		// ensure that if we have a redirect, we do not have the auth headers in the following requests
@@ -358,26 +415,18 @@ namespace MonoTests.System.Net.Http {
 			bool containsAuthorizarion = false;
 			bool containsHeaders = false;
 			string json = "";
-			bool done = false;
-			Exception ex = null;
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-					HttpClient client = new HttpClient (GetHandler (handlerType));
-					client.BaseAddress = NetworkResources.Httpbin.Uri;
-					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
-					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
-					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
-					// get the data returned from httpbin which contains the details of the requested performed.
-					json = await result.Content.ReadAsStringAsync ();
-					containsAuthorizarion = json.Contains ("Authorization");
-					containsHeaders = json.Contains ("headers");  // ensure we do have the headers in the response
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				HttpClient client = new HttpClient (GetHandler (handlerType));
+				client.BaseAddress = NetworkResources.Httpbin.Uri;
+				var byteArray = new UTF8Encoding ().GetBytes ("username:password");
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
+				var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
+				// get the data returned from httpbin which contains the details of the requested performed.
+				json = await result.Content.ReadAsStringAsync ();
+				containsAuthorizarion = json.Contains ("Authorization");
+				containsHeaders = json.Contains ("headers");  // ensure we do have the headers in the response
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
@@ -409,10 +458,7 @@ namespace MonoTests.System.Net.Http {
 #endif
 
 			bool validationCbWasExecuted = false;
-			bool customValidationCbWasExecuted = false;
 			bool invalidServicePointManagerCbWasExcuted = false;
-			bool done = false;
-			Exception ex = null;
 			Type expectedExceptionType = null;
 			HttpResponseMessage result = null;
 
@@ -457,20 +503,17 @@ namespace MonoTests.System.Net.Http {
 				Assert.Fail ($"Invalid HttpMessageHandler: '{handler.GetType ()}'.");
 			}
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					HttpClient client = new HttpClient (handler);
 					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
 					result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
-				} catch (Exception e) {
-					ex = e;
 				} finally {
-					done = true;
 					ServicePointManager.ServerCertificateValidationCallback = null;
 				}
-			}, () => done);
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
@@ -479,7 +522,7 @@ namespace MonoTests.System.Net.Http {
 				Assert.False (invalidServicePointManagerCbWasExcuted, "Invalid SPM executed");
 				Assert.True (validationCbWasExecuted, "Validation Callback called");
 				// assert the exception type
-				Assert.IsNotNull (ex, (result == null) ? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
+				Assert.IsNotNull (ex, (result is null) ? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
 				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
 				Assert.IsNotNull (ex.InnerException, "InnerException");
 				Assert.IsInstanceOf (expectedExceptionType, ex.InnerException, "InnerException type");
@@ -495,9 +538,7 @@ namespace MonoTests.System.Net.Http {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
-			bool servicePointManagerCbWasExcuted = false;
-			bool done = false;
-			Exception ex = null;
+			// bool servicePointManagerCbWasExcuted = false;
 
 			var handler = GetHandler (handlerType);
 			if (handler is NSUrlSessionHandler ns) {
@@ -506,40 +547,39 @@ namespace MonoTests.System.Net.Http {
 #else
 				ns.TrustOverride += (a, b) => {
 #endif
-					servicePointManagerCbWasExcuted = true;
+					// servicePointManagerCbWasExcuted = true;
 					return true;
 				};
 			} else {
 				ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => {
-					servicePointManagerCbWasExcuted = true;
+					// servicePointManagerCbWasExcuted = true;
 					return true;
 				};
 			}
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
 				try {
 					HttpClient client = new HttpClient (handler);
 					client.BaseAddress = NetworkResources.Httpbin.Uri;
 					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
 					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String (byteArray));
 					var result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
-				} catch (Exception e) {
-					ex = e;
 				} finally {
-					done = true;
 					ServicePointManager.ServerCertificateValidationCallback = null;
 				}
-			}, () => done);
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				// assert that we did not get an exception
-				if (ex != null && ex.InnerException != null) {
+				if (ex is not null && ex.InnerException is not null) {
 					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
 					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
 				}
 			}
+			Assert.IsNull (ex);
+			// Assert.IsTrue (servicePointManagerCbWasExcuted, "Executed");
 		}
 
 #if NET
@@ -551,8 +591,6 @@ namespace MonoTests.System.Net.Http {
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			bool callbackWasExecuted = false;
-			bool done = false;
-			Exception ex = null;
 			HttpResponseMessage result = null;
 			X509Certificate2 serverCertificate = null;
 			SslPolicyErrors sslPolicyErrors = SslPolicyErrors.None;
@@ -566,16 +604,10 @@ namespace MonoTests.System.Net.Http {
 				}
 			};
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-					var client = new HttpClient (handler);
-					result = await client.GetAsync (url);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var client = new HttpClient (handler);
+				result = await client.GetAsync (url);
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
@@ -596,8 +628,6 @@ namespace MonoTests.System.Net.Http {
 			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			bool callbackWasExecuted = false;
-			bool done = false;
-			Exception ex = null;
 			Exception ex2 = null;
 			HttpResponseMessage result = null;
 
@@ -609,6 +639,8 @@ namespace MonoTests.System.Net.Http {
 						if (errors == SslPolicyErrors.RemoteCertificateChainErrors && TestRuntime.IsInCI)
 							return false;
 						Assert.AreEqual (SslPolicyErrors.None, errors);
+					} catch (ResultStateException) {
+						throw;
 					} catch (Exception e) {
 						ex2 = e;
 					}
@@ -616,22 +648,16 @@ namespace MonoTests.System.Net.Http {
 				}
 			};
 
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-					var client = new HttpClient (handler);
-					result = await client.GetAsync (url);
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var client = new HttpClient (handler);
+				result = await client.GetAsync (url);
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
 				Assert.True (callbackWasExecuted, "Validation Callback called.");
-				Assert.IsNotNull (ex, result == null ? "Expected exception is missing and got no result." : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}.");
+				Assert.IsNotNull (ex, result is null ? "Expected exception is missing and got no result." : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}.");
 				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
 				Assert.IsNotNull (ex.InnerException, "InnerException");
 				Assert.IsInstanceOf (typeof (WebException), ex.InnerException, "InnerException type");
@@ -667,20 +693,11 @@ namespace MonoTests.System.Net.Http {
 
 			var client = new HttpClient (handler);
 
-			bool done = false;
 			HttpStatusCode httpStatus = HttpStatusCode.NotFound;
-			Exception ex = null;
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-
-					var result = await client.GetAsync ($"https://httpbin.org/basic-auth/{validUsername}/{validPassword}");
-					httpStatus = result.StatusCode;
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var result = await client.GetAsync (NetworkResources.Httpbin.GetBasicAuthUrl (validUsername, validPassword));
+				httpStatus = result.StatusCode;
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
@@ -696,7 +713,7 @@ namespace MonoTests.System.Net.Http {
 		{
 			var username = "mandel";
 			var password = "12345678";
-			var url = $"https://httpbin.org/basic-auth/{username}/{password}";
+			var url = NetworkResources.Httpbin.GetBasicAuthUrl (username, password);
 			// perform two requests, one that will get a 200 with valid creds, one that wont and assert that
 			// the second call does get a 401
 			// create a http client to use with some creds that we do know are not valid
@@ -706,20 +723,11 @@ namespace MonoTests.System.Net.Http {
 
 			var firstClient = new HttpClient (firstHandler);
 
-			bool done = false;
 			HttpStatusCode httpStatus = HttpStatusCode.NotFound;
-			Exception ex = null;
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-
-					var result = await firstClient.GetAsync (url);
-					httpStatus = result.StatusCode;
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var result = await firstClient.GetAsync (url);
+				httpStatus = result.StatusCode;
+			}, out var ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("First request timedout.");
@@ -736,20 +744,11 @@ namespace MonoTests.System.Net.Http {
 
 			var secondClient = new HttpClient (secondHandler);
 
-			done = false;
 			httpStatus = HttpStatusCode.NotFound;
-			ex = null;
-			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				try {
-
-					var result = await secondClient.GetAsync (url);
-					httpStatus = result.StatusCode;
-				} catch (Exception e) {
-					ex = e;
-				} finally {
-					done = true;
-				}
-			}, () => done);
+			done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
+				var result = await secondClient.GetAsync (url);
+				httpStatus = result.StatusCode;
+			}, out ex);
 
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Second request timedout.");

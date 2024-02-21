@@ -33,6 +33,9 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -75,10 +78,10 @@ namespace Foundation {
 
 		internal static bool ValidateKeysAndValues (TKey [] keys, TValue [] values)
 		{
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 
-			if (values == null)
+			if (values is null)
 				throw new ArgumentNullException (nameof (values));
 
 			if (values.Length != keys.Length)
@@ -106,7 +109,7 @@ namespace Foundation {
 
 		public TValue ObjectForKey (TKey key)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 
 			return Runtime.GetINativeObject<TValue> (_ObjectForKey (key.Handle), false);
@@ -121,7 +124,7 @@ namespace Foundation {
 
 		public TKey [] KeysForObject (TValue obj)
 		{
-			if (obj == null)
+			if (obj is null)
 				throw new ArgumentNullException (nameof (obj));
 
 			using (var pool = new NSAutoreleasePool ())
@@ -137,10 +140,10 @@ namespace Foundation {
 
 		public TValue [] ObjectsForKeys (TKey [] keys, TValue marker)
 		{
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 
-			if (marker == null)
+			if (marker is null)
 				throw new ArgumentNullException (nameof (marker));
 
 			if (keys.Length == 0)
@@ -157,9 +160,9 @@ namespace Foundation {
 
 		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -178,9 +181,9 @@ namespace Foundation {
 		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (TKey [] objects, TValue [] keys)
 #endif
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -192,9 +195,9 @@ namespace Foundation {
 
 		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (object [] objects, object [] keys)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -206,9 +209,9 @@ namespace Foundation {
 
 		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (NSObject [] objects, NSObject [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -222,9 +225,9 @@ namespace Foundation {
 
 		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (object [] objects, object [] keys, nint count)
 		{
-			if (objects == null)
+			if (objects is null)
 				throw new ArgumentNullException (nameof (objects));
-			if (keys == null)
+			if (keys is null)
 				throw new ArgumentNullException (nameof (keys));
 			if (objects.Length != keys.Length)
 				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
@@ -240,7 +243,7 @@ namespace Foundation {
 
 		public bool ContainsKey (TKey key)
 		{
-			if (key == null)
+			if (key is null)
 				throw new ArgumentNullException (nameof (key));
 
 			return _ObjectForKey (key.Handle) != IntPtr.Zero;
@@ -249,7 +252,7 @@ namespace Foundation {
 		public bool TryGetValue (TKey key, out TValue value)
 		{
 			// NSDictionary can not contain NULLs, if you want a NULL, it exists as an NSNull
-			return (value = ObjectForKey (key)) != null;
+			return (value = ObjectForKey (key)) is not null;
 		}
 
 		public TValue this [TKey key] {
@@ -323,7 +326,7 @@ namespace Foundation {
 
 		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo (KeyValuePair<TKey, TValue> [] array, int arrayIndex)
 		{
-			if (array == null)
+			if (array is null)
 				throw new ArgumentNullException (nameof (array));
 			if (arrayIndex < 0)
 				throw new ArgumentOutOfRangeException (nameof (arrayIndex));

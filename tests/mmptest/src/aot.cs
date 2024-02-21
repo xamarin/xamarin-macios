@@ -40,11 +40,13 @@ namespace Xamarin.MMP.Tests.Unit {
 		void Compile (AOTOptions options, TestFileEnumerator files, AOTCompilerType compilerType = AOTCompilerType.Bundled64, RunCommandDelegate onRunDelegate = null, bool isRelease = false, bool isModern = false)
 		{
 			AOTCompiler compiler = new AOTCompiler (options, GetValidAbis (compilerType), compilerType, isModern, isRelease) {
-				RunCommand = onRunDelegate != null ? onRunDelegate : OnRunCommand,
+				RunCommand = onRunDelegate is not null ? onRunDelegate : OnRunCommand,
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
 				XamarinMacPrefix = Xamarin.Tests.Configuration.SdkRootXM,
 			};
 			try {
+				Driver.SdkRoot = Xamarin.Tests.Configuration.XcodeLocation;
+				Driver.ValidateXcode (null, false, false);
 				Profile.Current = new XamarinMacProfile ();
 				compiler.Compile (files);
 			} finally {

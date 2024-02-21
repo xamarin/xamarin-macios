@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Linq;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.iOS.Tasks {
 	public class CollectMonotouchReferences : Task {
 
@@ -25,7 +28,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var result = new List<ITaskItem> ();
 
-			if (References != null) {
+			if (References is not null) {
 				foreach (var reference in References) {
 					try {
 						var oldProjectSystem = false;
@@ -36,7 +39,7 @@ namespace Xamarin.iOS.Tasks {
 
 								var projectTypeGuids = reader.ReadString ();
 
-								if (projectTypeGuids == null)
+								if (projectTypeGuids is null)
 									projectTypeGuids = string.Empty;
 
 								projectTypeGuids = projectTypeGuids.ToUpperInvariant ();

@@ -70,8 +70,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
 		public bool ShouldCacheImmediately { get; set; }
 
@@ -102,13 +100,10 @@ namespace ImageIO {
 		public bool CreateThumbnailWithTransform { get; set; }
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public int? SubsampleFactor { get; set; }
 
@@ -327,25 +322,25 @@ namespace ImageIO {
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceUpdateData (/* CGImageSourceRef __nonnull */ IntPtr isrc,
-			/* CFDataRef __nonnull */ IntPtr data, [MarshalAs (UnmanagedType.I1)] bool final);
+			/* CFDataRef __nonnull */ IntPtr data, byte final);
 
 		public void UpdateData (NSData data, bool final)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-			CGImageSourceUpdateData (Handle, data.Handle, final);
+			CGImageSourceUpdateData (Handle, data.Handle, final ? (byte) 1 : (byte) 0);
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
 		extern static void CGImageSourceUpdateDataProvider (/* CGImageSourceRef __nonnull */ IntPtr handle,
 			/* CGDataProviderRef __nonnull */ IntPtr dataProvider,
-			[MarshalAs (UnmanagedType.I1)] bool final);
+			byte final);
 
 		public void UpdateDataProvider (CGDataProvider provider, bool final)
 		{
 			if (provider is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (provider));
-			CGImageSourceUpdateDataProvider (Handle, provider.Handle, final);
+			CGImageSourceUpdateDataProvider (Handle, provider.Handle, final ? (byte) 1 : (byte) 0);
 		}
 
 		// note: CGImageSourceStatus is always an int (4 bytes) so it's ok to use in the pinvoke declaration
@@ -368,29 +363,19 @@ namespace ImageIO {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		[DllImport (Constants.ImageIOLibrary)]
 		static extern IntPtr /* CFDictionaryRef* */ CGImageSourceCopyAuxiliaryDataInfoAtIndex (IntPtr /* CGImageSourceRef* */ isrc, nuint index, IntPtr /* CFStringRef* */ auxiliaryImageDataType);
 
 #if NET
-		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (4, 0)]
-		[TV (11, 0)]
-		[Mac (10, 13)]
-		[iOS (11, 0)]
 #endif
 		public CGImageAuxiliaryDataInfo? CopyAuxiliaryDataInfo (nuint index, CGImageAuxiliaryDataType auxiliaryImageDataType)
 		{
@@ -408,7 +393,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
@@ -422,7 +406,6 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 		[TV (12, 0)]
 		[Watch (5, 0)]

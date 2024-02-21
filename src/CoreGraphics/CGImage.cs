@@ -526,26 +526,20 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern IntPtr /* CFStringRef */ CGImageGetUTType (/* __nullable CGImageRef* */ IntPtr image);
 
 		// we return an NSString, instead of a string, as all our UTType constants are NSString (see mobilecoreservices.cs)
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public NSString? UTType {
 			get {
@@ -561,7 +555,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
@@ -575,7 +568,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
@@ -588,7 +580,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif
@@ -602,7 +593,6 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12, 0)]
-		[Mac (10, 14)]
 		[TV (12, 0)]
 		[Watch (5, 0)]
 #endif

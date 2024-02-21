@@ -15,7 +15,7 @@ namespace LinkSdk {
 		void AssertAbsentType (string typeName)
 		{
 			var t = Type.GetType (typeName);
-			if (t == null)
+			if (t is null)
 				return;
 			var members = t.GetMethods (BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			var sb = new StringBuilder (t.FullName);

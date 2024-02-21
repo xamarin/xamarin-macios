@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: 'Autoformat'
-      uses: rolfbjarne/autoformat@v0.2.2
+      uses: rolfbjarne/autoformat@v0.2.99
       with:
         script: ./tools/autoformat.sh
         git_user_email: 'github-actions-autoformatter@xamarin.com'

@@ -78,7 +78,7 @@ namespace monotouchtestWatchKitExtension {
 			// var t = Path.GetFileName (typeof (ActivatorCas).Assembly.Location);
 			foreach (var name in RegisterType.TypesToRegister.Keys) {
 				var a = Assembly.Load (name);
-				if (a == null) {
+				if (a is null) {
 					Console.WriteLine ($"# WARNING: Unable to load assembly {name}.");
 					continue;
 				}
@@ -102,7 +102,7 @@ namespace monotouchtestWatchKitExtension {
 			// we generate the logs in two different ways depending if the generate xml flag was
 			// provided. If it was, we will write the xml file to the tcp writer if present, else
 			// we will write the normal console output using the LogWriter
-			var logger = (writer == null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
+			var logger = (writer is null || options.EnableXml) ? new LogWriter () : new LogWriter (writer);
 			logger.MinimumLogLevel = MinimumLogLevel.Info;
 			var testAssemblies = GetTestAssemblies ();
 			runner = RegisterType.IsXUnit ? (Xamarin.iOS.UnitTests.TestRunner) new XUnitTestRunner (logger) : new NUnitTestRunner (logger);
@@ -147,7 +147,7 @@ namespace monotouchtestWatchKitExtension {
 						var writer_finished_task = http_writer?.FinishedTask;
 						http_writer?.Close ();
 						Task.Run (async () => {
-							if (writer_finished_task != null) {
+							if (writer_finished_task is not null) {
 								await writer_finished_task;
 							}
 							TerminateWithSuccess ();
@@ -199,7 +199,7 @@ class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter {
 			return true;
 
 		var method = test as NUnit.Framework.Internal.TestMethod;
-		if (method != null)
+		if (method is not null)
 			return Match (method.Parent);
 
 		var name = !string.IsNullOrEmpty (test.Name) ? test.Name : test.FullName;

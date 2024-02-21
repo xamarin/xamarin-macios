@@ -80,6 +80,13 @@ namespace Security {
 		PartialRights = 1 << 2,
 		DestroyRights = 1 << 3,
 		PreAuthorize = 1 << 4,
+#if NET
+		[SupportedOSPlatform ("maccatalyst17.0")]
+		[SupportedOSPlatform ("macos14.0")]
+#else
+		[Mac(14, 0), MacCatalyst(17, 0)]
+#endif
+		SkipInternalAuth = 1 << 9,
 		NoData = 1 << 20,
 	}
 
@@ -155,7 +162,7 @@ namespace Security {
 #endif
 #if NET
 		[DllImport (Constants.SecurityLibrary)]
-		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, IntPtr args, IntPtr FILEPtr);
+		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, IntPtr pathToTool, AuthorizationFlags flags, IntPtr args, IntPtr FILEPtr);
 #else
 		[DllImport (Constants.SecurityLibrary)]
 		extern static int /* OSStatus = int */ AuthorizationExecuteWithPrivileges (IntPtr handle, string pathToTool, AuthorizationFlags flags, string? []? args, IntPtr FILEPtr);
@@ -192,8 +199,9 @@ namespace Security {
 				}
 			}
 #if NET
+			using var pathToToolStr = new TransientString (pathToTool);
 			var argsPtr = TransientString.AllocStringArray (arguments);
-			var retval = AuthorizationExecuteWithPrivileges (Handle, pathToTool, flags, argsPtr, IntPtr.Zero);
+			var retval = AuthorizationExecuteWithPrivileges (Handle, pathToToolStr, flags, argsPtr, IntPtr.Zero);
 			TransientString.FreeStringArray (argsPtr, args is null ? 0 : args.Length);
 			return retval;
 #else

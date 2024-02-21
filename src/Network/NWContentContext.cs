@@ -32,7 +32,6 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -166,10 +165,14 @@ namespace Network {
 			nw_content_context_set_metadata_for_protocol (GetCheckedHandle (), protocolMetadata.Handle);
 		}
 
+#if !NET
 		delegate void ProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata);
 		static ProtocolIterator static_ProtocolIterator = TrampolineProtocolIterator;
 
 		[MonoPInvokeCallback (typeof (ProtocolIterator))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition?, NWProtocolMetadata?>> (block);
@@ -188,8 +191,13 @@ namespace Network {
 		public void IterateProtocolMetadata (Action<NWProtocolDefinition?, NWProtocolMetadata?> callback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineProtocolIterator;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWContentContext), nameof (TrampolineProtocolIterator));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_ProtocolIterator, callback);
+#endif
 				nw_content_context_foreach_protocol_metadata (GetCheckedHandle (), &block);
 			}
 		}

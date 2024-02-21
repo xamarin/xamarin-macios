@@ -1,8 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 using Mono.Cecil;
+
+using ObjCRuntime;
 
 namespace Xamarin.Utils {
 	public static partial class CecilExtensions {
@@ -57,7 +60,7 @@ namespace Xamarin.Utils {
 			if (member is PropertyDefinition pd)
 				return pd.Name;
 
-			return member.ToString ();
+			return member.ToString ()!;
 		}
 
 		public static string AsFullName (this ICustomAttributeProvider member)
@@ -104,7 +107,7 @@ namespace Xamarin.Utils {
 			if (member is IMemberDefinition imd)
 				return imd.FullName;
 
-			return member.ToString ();
+			return member.ToString ()!;
 		}
 
 		public static string GetOSPlatformAttributePlatformName (this CustomAttribute ca)
@@ -117,9 +120,16 @@ namespace Xamarin.Utils {
 			if (provider?.HasCustomAttributes != true)
 				return false;
 
-			foreach (var attrib in provider.CustomAttributes)
-				if (IsObsoleteAttribute (attrib))
-					return true;
+			foreach (var attrib in provider.CustomAttributes) {
+				if (!IsObsoleteAttribute (attrib))
+					continue;
+
+				// The compiler will emit a fake Obsolete attribute for ref structs. Ignore those Obsolete attributes, because the type isn't really obsolete.
+				if (attrib.HasConstructorArguments && attrib.ConstructorArguments [0].Value is string obsoleteMessage && obsoleteMessage == "Types with embedded references are not supported in this version of your compiler.")
+					continue;
+
+				return true;
+			}
 
 			return false;
 		}
@@ -145,6 +155,129 @@ namespace Xamarin.Utils {
 
 			return false;
 		}
+
+		public static bool HasBindingImplAttribute (this ICustomAttributeProvider? provider, out BindingImplOptions options)
+		{
+			options = BindingImplOptions.None;
+			if (provider is null)
+				return false;
+
+			if (provider.HasCustomAttributes) {
+				foreach (var attr in provider.CustomAttributes) {
+					if (!attr.AttributeType.Is ("ObjCRuntime", "BindingImplAttribute"))
+						continue;
+					options = (BindingImplOptions) attr.ConstructorArguments [0].Value;
+					return true;
+				}
+			}
+
+			var property = FindProperty (provider as MethodDefinition);
+			if (property is not null)
+				return HasBindingImplAttribute (property, out options);
+
+			return false;
+		}
+
+		public static PropertyDefinition? FindProperty (this MethodDefinition? accessor)
+		{
+			if (accessor is null)
+				return null;
+
+			if (!accessor.IsSpecialName)
+				return null;
+
+			if (!accessor.DeclaringType.HasProperties)
+				return null;
+
+			if (!accessor.Name.StartsWith ("get_", StringComparison.Ordinal) && !accessor.Name.StartsWith ("set_", StringComparison.Ordinal))
+				return null;
+
+			var propertyName = accessor.Name.Substring (4);
+			var properties = accessor.DeclaringType.Properties.Where (v => v.Name == propertyName);
+			foreach (var property in properties) {
+				if (property.GetMethod == accessor || property.SetMethod == accessor)
+					return property;
+			}
+
+			return null;
+		}
+
+		public static bool IsPropertyAccessor (this MethodDefinition? accessor)
+		{
+			return FindProperty (accessor) is not null;
+		}
+
+		public static bool IsEventMethod (this MethodDefinition? method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			if (!method.DeclaringType.HasEvents)
+				return false;
+
+			foreach (var evt in method.DeclaringType.Events) {
+				if (evt.InvokeMethod == method)
+					return true;
+				if (evt.AddMethod == method)
+					return true;
+				if (evt.RemoveMethod == method)
+					return true;
+				if (!evt.HasOtherMethods)
+					continue;
+				if (evt.OtherMethods.Contains (method))
+					return true;
+			}
+
+			return false;
+		}
+
+		public static bool IsOperator (this MethodDefinition? method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsSpecialName)
+				return false;
+
+			if (!method.IsStatic)
+				return false;
+
+			return method.Name.StartsWith ("op_", StringComparison.Ordinal);
+		}
+
+		public static bool IsExtensionMethod (this MethodDefinition? method)
+		{
+			if (method is null)
+				return false;
+
+			if (!method.IsStatic)
+				return false;
+
+			if (!method.HasParameters)
+				return false;
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Is ("System.Runtime.CompilerServices", "ExtensionAttribute")) {
+					return true;
+				}
+			}
+
+			return false;
+		}
 	}
 }
 
+namespace ObjCRuntime {
+	[Flags]
+	public enum BindingImplOptions {
+		None = 0,
+		GeneratedCode = 1,
+		Optimizable = 2,
+	}
+}

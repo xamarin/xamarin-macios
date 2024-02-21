@@ -9,7 +9,7 @@ namespace Foundation {
 
 		public nint Write (byte [] buffer)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				throw new ArgumentNullException ("buffer");
 
 			return Write (buffer, (nuint) buffer.Length);

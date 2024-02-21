@@ -23,22 +23,25 @@ using System;
 using System.Reflection;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Foundation {
 	public partial class NSXpcInterface : NSObject {
 		public static NSXpcInterface Create (Type interfaceType)
 		{
-			if (interfaceType == null)
+			if (interfaceType is null)
 				throw new ArgumentNullException (nameof (interfaceType));
 			return Create (new Protocol (interfaceType));
 		}
 
 		public NSSet<Class> GetAllowedClasses (MethodInfo method, nuint argumentIndex, bool forReplyBlock)
 		{
-			if (method == null)
+			if (method is null)
 				throw new ArgumentNullException (nameof (method));
 
 			ExportAttribute attribute = method.GetCustomAttribute<ExportAttribute> ();
-			if (attribute == null)
+			if (attribute is null)
 				throw new ArgumentException ($"Method {method.Name} is not exposed to Objective-C", nameof (method));
 
 			// The runtime ensures that the Selector property is non-null and a valid selector.
@@ -48,11 +51,11 @@ namespace Foundation {
 
 		public void SetAllowedClasses (MethodInfo method, NSSet<Class> allowedClasses, nuint argumentIndex, bool forReplyBlock)
 		{
-			if (method == null)
+			if (method is null)
 				throw new ArgumentNullException (nameof (method));
 
 			ExportAttribute attribute = method.GetCustomAttribute<ExportAttribute> ();
-			if (attribute == null)
+			if (attribute is null)
 				throw new ArgumentException ($"Method {method.Name} is not exposed to Objective-C", nameof (method));
 
 			// The runtime ensures that the Selector property is non-null and a valid selector.

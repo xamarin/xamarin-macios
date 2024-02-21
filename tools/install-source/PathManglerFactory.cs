@@ -22,7 +22,7 @@ namespace InstallSources {
 
 		MonoPathMangler MonoPathMangler {
 			get {
-				if (monoMangler == null)
+				if (monoMangler is null)
 					monoMangler = new MonoPathMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
@@ -35,7 +35,7 @@ namespace InstallSources {
 
 		OpenTKSourceMangler OpenTKSourceMangler {
 			get {
-				if (openTKMangler == null)
+				if (openTKMangler is null)
 					openTKMangler = new OpenTKSourceMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,
@@ -47,7 +47,7 @@ namespace InstallSources {
 
 		XamarinSourcesPathMangler XamarinSourcesPathMangler {
 			get {
-				if (xamarinPathMangler == null)
+				if (xamarinPathMangler is null)
 					xamarinPathMangler = new XamarinSourcesPathMangler {
 						InstallDir = InstallDir,
 						DestinationDir = DestinationDir,

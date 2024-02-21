@@ -141,10 +141,10 @@ namespace LinkSdk {
 			} finally {
 				ServicePointManager.ServerCertificateValidationCallback = null;
 				ServicePointManager.SecurityProtocol = actual;
-				// caching means it will be called at least for the first run, but it might not
-				// be called again in subsequent requests (unless it expires)
-				Assert.That (sne_validation_callback, Is.GreaterThan (0), "validation done");
 			}
+			// caching means it will be called at least for the first run, but it might not
+			// be called again in subsequent requests (unless it expires)
+			Assert.That (sne_validation_callback, Is.GreaterThan (0), "validation done");
 		}
 
 		[Test]

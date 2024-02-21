@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Messaging.Build.Contracts;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace Xamarin.Messaging.Build {
 	public class VerifyXcodeVersionMessageHandler : RequestHandler<VerifyXcodeVersionMessage, VerifyXcodeVersionResult> {
 		protected override Task<VerifyXcodeVersionResult> ExecuteAsync (VerifyXcodeVersionMessage message)
@@ -28,7 +31,7 @@ namespace Xamarin.Messaging.Build {
 		{
 			var monoTouchSdk = GetMonoTouchSdk ();
 
-			return monoTouchSdk == null ? new Version (0, 0) : monoTouchSdk?.RecommendedXcodeVersion;
+			return monoTouchSdk is null ? new Version (0, 0) : monoTouchSdk?.RecommendedXcodeVersion;
 		}
 
 		MonoTouchSdk GetMonoTouchSdk ()

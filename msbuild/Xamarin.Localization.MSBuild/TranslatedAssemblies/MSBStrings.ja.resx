@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0} の形式が正しくないか、不明なため、処理できません。
-        </value>
+        <value>xcframework {0} の形式が正しくないか、不明なため、処理できません。</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>一致するフレームワークが '{0}' 内に見つかりませんでした。
-        </value>
+        <value>'{0}' 内に一致するフレームワークが見つかりません。SupportedPlatform: '{0}'、SupportedPlatformVariant: '{1}'、SupportedArchitectures: '{2}'。</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>'{0}' と '{1}' のオプションが競合しています。'{1}' は無視されます。
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>カスタム リンカー引数 '-{0}' を解析できませんでした: {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource アイテム '{0}' が存在しません。</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi デバッガー設定のホスト IP を解決できませんでした。
@@ -1170,11 +1177,64 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>マニフェスト '{2}' のネイティブ参照 '{1}' に予期しない拡張機能 '{0}'。</value>
+        <value>バインド リソース パッケージ '{2}' のネイティブ参照 '{1}' に対して、予期しない拡張機能 '{0}'。</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip ファイル {0} に '{1}' という名前のファイルが必要です。</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip ファイル '{0}' が存在しません。</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>ファイル '{0}' が存在しません。</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>項目'{0}' をネイティブ参照として処理できません: 不明な型です。</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>xcframework '{1}' から Info.plist '{0}' を読み込めませんでした。</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>ディレクトリ '{0}' は存在しません。</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>zip ファイル '{1}' にファイルまたはディレクトリ '{0}' が見つかりませんでした。</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>このプラットフォームで zip ファイル '{0}' を処理できません: ファイル '{1}' は symlink です。</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}" タスクにパラメーター "{1}" の値が指定されませんでした。これは、このプラットフォームでビルドするときに必要です。</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>illink アセンブリが存在しません: '{0}'。</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>アセンブリ {0} では 'ObjectFile' メタデータが提供されません。</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>アセンブリ {0} が入力アセンブリとして複数回渡されました ({1} から参照)。</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT コンパイル {0} に失敗しました。AOT コンパイラはコード {1} を表示して終了しました。</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
         </comment>
     </data>
 </root>

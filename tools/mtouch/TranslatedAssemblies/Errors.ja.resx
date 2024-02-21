@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>ファイル '{0}' を展開できませんでした。ビルド ログを参照して、ネイティブの 'unzip' コマンドからの詳細情報をご確認ください。</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>リソース '{2}' が含まれていないため、アセンブリ '{1}' からネイティブ フレームワーク '{0}' を抽出できませんでした。</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>リソース '{2}' が含まれていないため、アセンブリ '{1}' からネイティブ ライブラリ '{0}' を抽出できませんでした。</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>必要な 'Xamarin.Mac.dll' アセンブリが参照にありません
 		</value>
@@ -955,6 +961,9 @@
 		<value>watchOS では HttpMessageHandler `{0}` は無効です。有効な値は NSUrlSessionHandler のみです。
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>NativeAOT を使用する場合、動的レジストラーがサポートされていないため、('--optimize=-remove-dynamic-registrar' を渡すことによって) 動的レジストラーを維持することはできません。動的登録のサポートは引き続き削除されます。</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>XML の説明を処理できませんでした: {0}
 		</value>
@@ -1035,13 +1044,24 @@
 		<value>最初の引数 (トランポリン) として渡された値の型が {1} であるため、ブロック シグネチャを計算できず、{0} にある BlockLiteral.{2} の呼び出しを最適化できませんでした。
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>{2} 上で [UserDelegateType] 属性が見つからなかったため、{0} のオフセット {1} にある BlockLiteral.SetupBlock への呼び出しを最適化できませんでした。
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>{0} のオフセット {1} にある BlockLiteral.SetupBlock への呼び出しを最適化できませんでした: {2}。
 		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。'{3}' という名前のメソッドが型 '{4}' に複数見つかりました。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>メソッド '{3}' に少なくとも 1 つのパラメーターが必要なため、オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>オフセット {1} の{0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。メソッド '{3}' の最初のパラメーター ('{4}') が 'System.IntPtr'、'void*'、または 'ObjCRuntime.BlockLiteral*' ではないためです。</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>メソッド '{3}' に [UnmanagedCallersOnly] 属性がないため、オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>メソッド '{3}' に [UnmanagedCallersOnly] 属性がないため、オフセット {1} の {0} で BlockLiteral.{2} への呼び出しを最適化できませんでした。</value>
 	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>{0} は '{1}.{2} ({3})' を参照しているため、動的レジストラーを削除することは安全ではありません。
@@ -1088,6 +1108,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>アセンブリ '{1}' を {0} できませんでした
 		</value>
@@ -1508,7 +1537,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>WatchKit フレームワークが iOS SDK から削除されたため、クラス '{0}' は登録されません。
+		<value>{1} フレームワークが {2} SDK から削除されたため、クラス '{0}' は登録されません。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1525,6 +1554,15 @@
 	</data>
   <data name="MT4186" xml:space="preserve">
 		<value>レジストラーで最適でない型 '{0}' が見つかりました。この型には、2 つの (ObjCRuntime.NativeHandle, bool) 引数を受け取るコンストラクターがありません。ただし、2 つの (System.IntPtr, bool) 引数を受け取るコンストラクターが見つかりました (代わりに使用されます)。(System.IntPtr, bool) コンストラクターの署名を (ObjCRuntime.NativeHandle, bool) に変更することを強くお勧めします。</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>型 '{0}' に [UserDelegateType] 属性が見つかりませんでした。</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>型 '{0}' のブロック署名を計算できません: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>{1} SDK から削除されたため、クラス '{0}' は登録されません。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' コンパイラがありません。Xcode の 'Command-Line Tools' コンポーネントをインストールしてください
@@ -1763,5 +1801,41 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>アセンブリ {0} は、アプリのビルド後に変更されたため、生成された静的レジストラー コードを無効化します。読み込まれたアセンブリの MVID は {1} ですが、生成された静的レジストラー コードが対応するのは {2} です。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>型 {0} のインスタンスでリリースを呼び出すことができません</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>型 '{1}' にメソッド '{0}' が見つかりません</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>トランポリン メソッド {0} が、トランポリン メソッド引数の関数ポインター 0x{1} と一致しません (それらは同じメソッドを参照していません)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>トランポリン メソッド {0} には少なくとも 1 つのパラメーターが必要です。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>トランポリン メソッド {0} の最初のパラメーターは、'System.IntPtr'、'void*'、または 'ObjCRuntime.BlockLiteral*' のいずれかにする必要があります。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>動的レジストラーがリンクされている場合、BlockLiteral.GetBlockSignature はサポートされません。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>トランポリン メソッド {0} には [UnmanagedCallersOnly] 属性が必要です。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>シグネチャは、空でない文字列である必要があります。</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>アセンブリ {0} 内のモジュールを解決できませんでした。</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>マネージド静的レジストラーを使用している場合、メソッドのメタデータ トークンを解決できません (トークン: 0x{0})。</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>アセンブリ '{0}' に型 'ObjCRuntime.__Registrar__' が見つかりませんでした。</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Objective-C オブジェクト 0x{0} (型: {1}) をマーシャリングできませんでした。このオブジェクトの既存のマネージド インスタンスが見つかりませんでした。また、ジェネリック型 {2} の新しいマネージド インスタンスを作成することもできませんでした。</value>
 	</data>
 </root>

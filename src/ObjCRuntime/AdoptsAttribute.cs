@@ -48,7 +48,7 @@ namespace ObjCRuntime {
 
 		public IntPtr ProtocolHandle {
 			get {
-				if (handle == IntPtr.Zero && ProtocolType != null)
+				if (handle == IntPtr.Zero && ProtocolType is not null)
 					handle = Runtime.GetProtocol (ProtocolType);
 
 				return handle;

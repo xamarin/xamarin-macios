@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>Nepovedlo se dekomprimovat soubor {0}. Zkontrolujte prosím v protokolu o sestavení další informace z nativního příkazu unzip.</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>Nelze extrahovat nativní architekturu {0} ze sestavení {1}, protože neobsahuje prostředek {2}.</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>Nelze extrahovat nativní knihovnu {0} ze sestavení {1}, protože neobsahuje prostředek {2}.</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>V referencích chybí požadované sestavení Xamarin.Mac.dll.
 		</value>
@@ -954,6 +960,9 @@
 		<value>Neplatná hodnota {0} pro HttpMessageHandler pro watchOS. Jediná platná hodnota je NSUrlSessionHandler.
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>Zachování dynamického registrátora (předáním „--optimize=-remove-dynamic-registrar“) není možné, protože při použití NativeAOT se dynamický registrátor nepodporuje. Podpora dynamické registrace bude i nadále odebrána.</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>Nepovedlo se zpracovat popis XML: {0}
 		</value>
@@ -1034,13 +1043,24 @@
 		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0}, protože typ hodnoty předané jako první argument (metoda trampoline) je {1}, což znemožňuje vypočítat signaturu bloku.
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>Nepovedlo se optimalizovat volání BlockLiteral.SetupBlock v {0} na pozici {1}, protože v {2} nešlo najít žádný atribut [UserDelegateType].
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>Nepovedlo se optimalizovat volání BlockLiteral.SetupBlock v {0} na pozici {1}: {2}.
 		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože byla nalezena více než jedna metoda s názvem „{3}“ v typu {4}.</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože metoda „{3}“ musí mít alespoň jeden parametr.</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože první parametr v metodě „{3}“ není 'System.IntPtr', 'void*' ani 'ObjCRuntime.BlockLiteral*' (je to{4}).</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože metoda {3} nemá atribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>Nepovedlo se optimalizovat volání BlockLiteral.{2} v {0} s posunem {1}, protože metoda {3} nemá atribut [UnmanagedCallersOnly].</value>
 	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>Odebrání dynamického registrátoru není bezpečné, protože {0} odkazuje na {1}.{2} ({3}).
@@ -1087,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>Sestavení {1} se nepovedlo zpracovat kompilátorem {0}.
 		</value>
@@ -1507,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>Třída {0} nebude zaregistrována, protože rozhraní WatchKit bylo odebráno ze sady iOS SDK.
+		<value>Třída {0} nebude registrována, protože architektura {1} byla odebrána ze sady {2} SDK.
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1524,6 +1553,15 @@
 	</data>
   <data name="MT4186" xml:space="preserve">
 		<value>Registrátor našel neoptimální typ {0}: tento typ postrádá konstruktor, který přijímá dva argumenty (ObjCRuntime.NativeHandle, bool). Našel (a použil se) se však konstruktor, který přijímá dva argumenty (System.IntPtr, bool). Důrazně doporučujeme změnit podpis na konstruktoru (System.IntPtr, bool) na (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>Nelze najít atribut [UserDelegateType] u typu „{0}“.</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>Nepovedlo se vypočítat signaturu bloku pro typ „{0}“: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>Třída {0} nebude registrována, protože byla odebrána ze sady {1} SDK.</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Chybí kompilátor {0}. Nainstalujte prosím nástroje příkazového řádku Xcode.
@@ -1762,5 +1800,41 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>Sestavení {0} bylo od vytvoření aplikace změněno a byl zrušena platnost vygenerovaného kódu statického registrátora. MVID načteného sestavení je {1}, zatímco MVID pro sestavení, kterému vygenerovaný kód statického registrátora odpovídá, je {2}.</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>Nelze volat uvolnění pro instanci typu {0}</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>Nelze najít metodu „{0}“ v typu „{1}“</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>Metoda trampolíny {0} se neshoduje s ukazatelem funkce 0x{1} pro argument trampolineMethod (neodkazují na stejnou metodu).</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>Metoda trampolíny {0} musí mít alespoň jeden parametr.</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>První parametr v metodě trampolíny {0} musí být 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*'.</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature se nepodporuje, pokud je dynamický registrátor propojený pryč.</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>Metoda trampolín{0} musí mít atribut [UnmanagedCallersOnly].</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>Argument musí být neprázdný řetězec.</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>Modul v sestavení {0} nelze přeložit.</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>Nelze přeložit tokeny metadat pro metody při použití spravovaného statického registrátora (token: 0x{0}).</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>V sestavení „{0}“ nelze najít typ „ObjCRuntime.__Registrar__“.</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>Nepodařilo se zařadit objekt Objective-C 0x{0} (typ: {1}). Nepodařilo se najít existující spravovanou instanci pro tento objekt, ani nebylo možné vytvořit novou spravovanou instanci obecného typu {2}.</value>
 	</data>
 </root>

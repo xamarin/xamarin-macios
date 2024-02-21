@@ -18,7 +18,7 @@ namespace MyWebViewApp
 
 		void ReleaseDesignerOutlets ()
 		{
-			if (webView != null) {
+			if (webView is not null) {
 				webView.Dispose ();
 				webView = null;
 			}

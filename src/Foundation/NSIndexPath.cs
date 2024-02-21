@@ -19,7 +19,7 @@ namespace Foundation {
 	public partial class NSIndexPath {
 		public unsafe static NSIndexPath Create (params nint [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 			fixed (nint* ptr = indexes)
@@ -28,7 +28,7 @@ namespace Foundation {
 
 		public unsafe static NSIndexPath Create (params nuint [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 			fixed (nuint* ptr = indexes)
@@ -37,7 +37,7 @@ namespace Foundation {
 
 		public unsafe static NSIndexPath Create (params int [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 #if ARCH_32
@@ -51,7 +51,7 @@ namespace Foundation {
 
 		public unsafe static NSIndexPath Create (params uint [] indexes)
 		{
-			if (indexes == null)
+			if (indexes is null)
 				throw new ArgumentNullException ("indexes");
 
 #if ARCH_32
@@ -72,13 +72,10 @@ namespace Foundation {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
-		[Mac (10, 11)]
 #endif
 		public unsafe nuint [] GetIndexes (NSRange range)
 		{

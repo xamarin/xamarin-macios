@@ -85,23 +85,19 @@ namespace CoreGraphics {
 #if MONOTOUCH
 #if !COREBUILD
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static IntPtr NSStringFromCGVector (CGVector vector);
 		
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		public override string? ToString ()
 		{
@@ -109,23 +105,19 @@ namespace CoreGraphics {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static CGVector CGVectorFromString (IntPtr str);
 		
 #if NET
-		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
-#else
-		[iOS (8,0)]
 #endif
 		static public CGVector FromString (string s)
 		{

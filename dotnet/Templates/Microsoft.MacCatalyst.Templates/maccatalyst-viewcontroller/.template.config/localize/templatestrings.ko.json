@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Mac Catalyst View Controller",
-  "description": "A MacCatalyst View Controller class and xib",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Mac 표시기 보기 컨트롤러",
+  "description": "MacCatalyst 보기 컨트롤러 클래스 및 xib",
+  "symbols/namespace/description": "생성된 코드의 네임스페이스"
 }

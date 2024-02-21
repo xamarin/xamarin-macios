@@ -54,7 +54,7 @@ namespace MonoTouch.Tuner {
 
 			if (options.DumpDependencies) {
 				var prepareDependenciesDump = context.Annotations.GetType ().GetMethod ("PrepareDependenciesDump", new Type [1] { typeof (string) });
-				if (prepareDependenciesDump != null)
+				if (prepareDependenciesDump is not null)
 					prepareDependenciesDump.Invoke (context.Annotations, new object [1] { string.Format ("{0}{1}linker-dependencies.xml.gz", options.OutputDirectory, Path.DirectorySeparatorChar) });
 			}
 
@@ -156,7 +156,7 @@ namespace MonoTouch.Tuner {
 				// We only want to remove from methods that aren't already linked away, so we need to do this
 				// after the mark step. If we remove any incompatible code, we'll mark
 				// the NotSupportedException constructor we need, so we need to do this before the sweep step.
-				if (remove_incompatible_bitcode != null)
+				if (remove_incompatible_bitcode is not null)
 					pipeline.Append (new SubStepDispatcher { remove_incompatible_bitcode });
 
 				pipeline.Append (new MonoTouchSweepStep (options));
@@ -171,7 +171,7 @@ namespace MonoTouch.Tuner {
 				};
 				if (options.Application.Optimizations.ForceRejectedTypesRemoval == true)
 					sub.Add (new RemoveRejectedTypesStep ());
-				if (remove_incompatible_bitcode != null)
+				if (remove_incompatible_bitcode is not null)
 					sub.Add (remove_incompatible_bitcode);
 				pipeline.Append (sub);
 			}

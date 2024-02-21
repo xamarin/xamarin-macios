@@ -40,10 +40,10 @@ namespace Xamarin.Mac.Tests {
 		public void NSPathControlItemShouldSetImage ()
 		{
 			var item = new NSPathControlItem ();
-			Assert.IsTrue (item.Image == null, "NSPathControlItemShouldSetImage - Image did not start as null");
+			Assert.IsTrue (item.Image is null, "NSPathControlItemShouldSetImage - Image did not start as null");
 
 			item.Image = new NSImage ();
-			Assert.IsTrue (item.Image != null, "NSPathControlItemShouldSetImage - Failed to set Image property");
+			Assert.IsTrue (item.Image is not null, "NSPathControlItemShouldSetImage - Failed to set Image property");
 		}
 	}
 }

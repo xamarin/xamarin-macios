@@ -26,6 +26,8 @@
     <!-- The assemblies are in a very different place when building for netstandard2.0, which means we need different logic to find them too -->
     <ItemGroup Condition="$(TargetFramework.StartsWith ('netstandard'))">
       <!-- I don't like to have a hard-coded list of assemblies to merge, but I couldn't find a way to calculate it -->
+      <MergedAssemblies Include="@(ReferenceDependencyPaths)" Condition="'%(FileName)' == 'AssemblyStripper'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'MonoTargetsTasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'DotNetZip'" />
@@ -33,6 +35,8 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILStrip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Merq'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Merq.Core'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'SshNet.Security.Cryptography'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Annotations'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.ComponentModel.Composition'" />
@@ -44,8 +48,11 @@
 
       <MergedAssemblies Include="$(OutputPath)/Microsoft.Bcl.AsyncInterfaces.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Buffers.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Collections.Immutable.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Memory.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Numerics.Vectors.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Reflection.Metadata.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
+      <MergedAssemblies Include="$(OutputPath)/System.Reflection.MetadataLoadContext.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Runtime.CompilerServices.Unsafe.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Text.Json.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
       <MergedAssemblies Include="$(OutputPath)/System.Threading.Tasks.Extensions.dll" Condition="'$(MergeSystemAssemblies)' == 'true'" />
@@ -70,11 +77,15 @@
     <PropertyGroup>
       <AbsoluteAssemblyOriginatorKeyFile Condition="'$(AssemblyOriginatorKeyFile)' != ''">$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(AssemblyOriginatorKeyFile)'))))</AbsoluteAssemblyOriginatorKeyFile>
       <ILRepackArgs Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AbsoluteAssemblyOriginatorKeyFile)" /delaysign</ILRepackArgs>
+	  <ILRepackArgs>$(ILRepackArgs) /union</ILRepackArgs> <!-- This is needed to merge types with identical names into one, wich happens with IFluentInterface in Merq and Merq.Core (Xamarin.Messaging dependencies) -->
       <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:"%(Identity)."', ' ')</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) /out:"@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) "@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) @(MergedAssemblies -&gt; '"%(FullPath)"', ' ')</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) "/lib:$(NetstandardDirectory)"</ILRepackArgs> <!-- This is needed for ilrepack to find netstandard.dll, which is referenced by the System.Text.Json assembly -->
+    </PropertyGroup>
+    <PropertyGroup>
+      <SYSTEM_MONO Condition="'$(SYSTEM_MONO)' == ''">/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono</SYSTEM_MONO>
     </PropertyGroup>
     <Exec Command="$(SYSTEM_MONO) &quot;$(ILRepack)&quot; $(ILRepackArgs)" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />

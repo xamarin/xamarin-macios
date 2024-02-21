@@ -21,15 +21,15 @@ namespace MonoTouchFixtures.Metal {
 		{
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
-			if (device == null)
+			if (device is null)
 				Assert.Inconclusive ("Metal is not supported");
 
 			commandQ = device.CreateCommandQueue ();
-			if (commandQ == null)  // this happens on a simulator
+			if (commandQ is null)  // this happens on a simulator
 				Assert.Inconclusive ("Could not get the functions library for the device.");
 
 			commandBuffer = commandQ.CommandBuffer ();
-			if (commandBuffer == null) // happens on sim
+			if (commandBuffer is null) // happens on sim
 				Assert.Inconclusive ("Could not get the command buffer for the device.");
 
 			encoder = commandBuffer.ComputeCommandEncoder;

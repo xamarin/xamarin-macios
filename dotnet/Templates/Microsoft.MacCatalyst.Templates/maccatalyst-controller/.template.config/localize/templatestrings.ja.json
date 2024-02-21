@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Mac Catalyst Controller",
-  "description": "A MacCatalyst Controller class",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Mac Catalyst コントローラー",
+  "description": "MacCatalyst コントローラー クラス",
+  "symbols/namespace/description": "生成されたコードの名前空間"
 }

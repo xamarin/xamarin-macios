@@ -27,8 +27,7 @@ namespace MessageUI {
 		NSObject WeakMailComposeDelegate { get; set; }
 
 		[Wrap ("WeakMailComposeDelegate")]
-		[Protocolize]
-		MFMailComposeViewControllerDelegate MailComposeDelegate { get; set; }
+		IMFMailComposeViewControllerDelegate MailComposeDelegate { get; set; }
 
 		[Export ("setSubject:")]
 		void SetSubject (string subject);
@@ -48,11 +47,12 @@ namespace MessageUI {
 		[Export ("addAttachmentData:mimeType:fileName:")]
 		void AddAttachmentData (NSData attachment, string mimeType, string fileName);
 
-		[iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("setPreferredSendingEmailAddress:")]
 		void SetPreferredSendingEmailAddress (string emailAddress);
 	}
+
+	interface IMFMailComposeViewControllerDelegate { }
 
 #if XAMCORE_3_0
 	[BaseType (typeof (NSObject))]
@@ -77,8 +77,7 @@ namespace MessageUI {
 		NSObject WeakMessageComposeDelegate { get; set; }
 
 		[Wrap ("WeakMessageComposeDelegate")]
-		[Protocolize]
-		MFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set; }
+		IMFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set; }
 
 		[NullAllowed]
 		[Export ("recipients", ArgumentSemantic.Copy)]
@@ -112,7 +111,6 @@ namespace MessageUI {
 		[Export ("attachments")]
 		NSDictionary [] GetAttachments ();
 
-		[iOS (10, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("message", ArgumentSemantic.Copy)]
 		MSMessage Message { get; set; }
@@ -142,7 +140,14 @@ namespace MessageUI {
 
 		[Field ("MFMessageComposeViewControllerAttachmentURL")]
 		NSString AttachmentURL { get; }
+
+		[Async]
+		[iOS (17, 0), NoMacCatalyst, NoWatch, NoTV]
+		[Export ("setUPIVerificationCodeSendCompletion:")]
+		void SetUpiVerificationCodeSendCompletion (Action<bool> completion);
 	}
+
+	interface IMFMessageComposeViewControllerDelegate { }
 
 	[BaseType (typeof (NSObject))]
 	[Model]

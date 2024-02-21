@@ -67,7 +67,7 @@ namespace Xamarin.Bundler {
 
 			string s;
 			int line = 0;
-			while ((s = reader.ReadLine ()) != null) {
+			while ((s = reader.ReadLine ()) is not null) {
 				++line;
 				s = s.Trim ();
 				if (s.Length == 0)

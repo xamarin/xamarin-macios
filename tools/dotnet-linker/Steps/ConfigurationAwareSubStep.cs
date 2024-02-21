@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using Xamarin.Bundler;
 
+#nullable enable
+
 namespace Xamarin.Linker {
 	public abstract class ConfigurationAwareSubStep : ExceptionalSubStep {
 		protected override void Report (Exception exception)

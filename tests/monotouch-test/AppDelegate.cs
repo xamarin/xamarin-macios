@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
+
+using CoreFoundation;
 using Foundation;
 using UIKit;
 using MonoTouch.NUnit.UI;
@@ -43,69 +46,7 @@ public partial class AppDelegate : UIApplicationDelegate {
 			window.RootViewController = bckp;
 		}
 	}
-
-	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed, UIImage imageToShow = null)
-	{
-		var vc = new AsyncController (action, imageToShow);
-		var bckp = window.RootViewController;
-		var navigation = bckp as UINavigationController;
-
-		if (navigation != null) {
-			navigation.PushViewController (vc, false);
-		} else {
-			window.RootViewController = vc;
-		}
-
-		try {
-			do {
-				if (timeout < DateTime.Now)
-					return false;
-				NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
-			} while (!check_completed ());
-		} finally {
-			if (navigation != null) {
-				navigation.PopViewController (false);
-			} else {
-				window.RootViewController = bckp;
-			}
-		}
-
-		return true;
-	}
 }
 
-class AsyncController : UIViewController {
-	Action action;
-	UIImage imageToShow;
-	static int counter;
-
-	public AsyncController (Action action, UIImage imageToShow = null)
-	{
-		this.action = action;
-		this.imageToShow = imageToShow;
-		counter++;
-	}
-
-	public override void ViewDidLoad ()
-	{
-		base.ViewDidLoad ();
-
-		switch (counter % 2) {
-		case 0:
-			View.BackgroundColor = UIColor.Yellow;
-			break;
-		default:
-			View.BackgroundColor = UIColor.LightGray;
-			break;
-		}
-		if (imageToShow != null) {
-			var imgView = new UIImageView (View.Bounds);
-			imgView.Image = imageToShow;
-			imgView.ContentMode = UIViewContentMode.Center;
-			View.AddSubview (imgView);
-		}
-		NSTimer.CreateScheduledTimer (0.01, (v) => action ());
-	}
-}
 
 #endif // !__WATCHOS__

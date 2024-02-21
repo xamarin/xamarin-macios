@@ -5,6 +5,9 @@
 using System;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public partial class UIPopoverController {
@@ -18,7 +21,7 @@ namespace UIKit {
 				return Class.Lookup (p);
 			}
 			set {
-				PopoverBackgroundViewClass = (value == null) ? IntPtr.Zero :
+				PopoverBackgroundViewClass = (value is null) ? IntPtr.Zero :
 					Class.GetHandle (value);
 			}
 		}

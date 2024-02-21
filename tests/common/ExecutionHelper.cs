@@ -89,9 +89,9 @@ namespace Xamarin.Tests {
 
 		public static int Execute (string fileName, IList<string> arguments, out bool timed_out, string workingDirectory = null, Dictionary<string, string> environment_variables = null, Action<string> stdout_callback = null, Action<string> stderr_callback = null, TimeSpan? timeout = null)
 		{
-			if (stdout_callback == null)
+			if (stdout_callback is null)
 				stdout_callback = Console.WriteLine;
-			if (stderr_callback == null)
+			if (stderr_callback is null)
 				stderr_callback = Console.Error.WriteLine;
 
 			var rv = Execution.RunWithCallbacksAsync (fileName, arguments, workingDirectory: workingDirectory, environment: environment_variables, standardOutput: stdout_callback, standardError: stderr_callback, timeout: timeout).Result;

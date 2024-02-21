@@ -14,7 +14,7 @@ PACKAGE_VERSION=$(shell grep '<PackageVersion>' DynamicLibrariesInRuntimesNative
 .libs/DynamicLibrariesInRuntimesNativeDirectory.nupkg: DynamicLibrariesInRuntimesNativeDirectory.csproj $(wildcard *.cs) | .libs
 	$(Q) mkdir -p $(abspath $(NUGET_TEST_FEED))
 	$(Q_GEN) $(DOTNET) pack /bl $(DOTNET_PACK_VERBOSITY) $<
-	$(Q) $(CP) bin/Debug/Xamarin.Tests.DynamicLibrariesInRuntimesNativeDirectory.$(PACKAGE_VERSION).nupkg $@
+	$(Q) $(CP) bin/Release/Xamarin.Tests.DynamicLibrariesInRuntimesNativeDirectory.$(PACKAGE_VERSION).nupkg $@
 
 INSTALLED_PACKAGE=$(NUGET_TEST_FEED)/xamarin.tests.DynamicLibrariesInRuntimesNativeDirectory/$(PACKAGE_VERSION)/xamarin.tests.DynamicLibrariesInRuntimesNativeDirectory.$(PACKAGE_VERSION).nupkg
 
@@ -24,4 +24,6 @@ $(INSTALLED_PACKAGE): .libs/DynamicLibrariesInRuntimesNativeDirectory.nupkg
 	mkdir -p $(abspath $(NUGET_TEST_FEED))
 	nuget add "$<" -source $(abspath $(NUGET_TEST_FEED)) -NonInteractive
 
+ifdef ENABLE_DOTNET
 all-local:: $(INSTALLED_PACKAGE)
+endif

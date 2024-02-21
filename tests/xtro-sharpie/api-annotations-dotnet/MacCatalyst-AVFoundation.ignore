@@ -1,6 +1,3 @@
-## Unavailable
-!missing-field! AVCaptureSessionPresetiFrame960x540 not bound
-
 # not possible with the generator but added INSFastEnumeration for whenever is supported.
 !missing-protocol-conformance! AVCaptureSynchronizedDataCollection should conform to NSFastEnumeration
 

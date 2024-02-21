@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -820,6 +820,12 @@
   <data name="MX1306" xml:space="preserve">
 		<value>無法解壓縮檔案 '{0}'。請從原生的 '解壓縮' 命令，檢閱組建記錄檔以了解更多資訊。</value>
 	</data>
+  <data name="MX1307" xml:space="preserve">
+		<value>無法從組件 '{1}' 擷取原生架構 '{0}'，因為它不包含資源 '{2}'。</value>
+	</data>
+  <data name="MX1308" xml:space="preserve">
+		<value>無法從組件 '{1}' 擷取原生程式庫 '{0}'，因為它不包含資源 '{2}'。</value>
+	</data>
   <data name="MM1401" xml:space="preserve">
 		<value>參考中缺少必要的 'Xamarin.Mac.dll' 組件
 		</value>
@@ -954,6 +960,9 @@
 		<value>watchOS 的 HttpMessageHandler `{0}` 無效。唯一有效的值為 NSUrlSessionHandler。
 		</value>
 	</data>
+  <data name="MX2016" xml:space="preserve">
+		<value>無法保留動態註冊機構 (傳遞 '--optimize=-remove-dynamic-registrar')，因為使用 NativeAOT 時不支援動態註冊機構。動態註冊的支援仍然會移除。</value>
+	</data>
   <data name="MX2017" xml:space="preserve">
 		<value>無法處理 XML 描述: {0}
 		</value>
@@ -1034,13 +1043,24 @@
 		<value>因為作為第一個引數 (trampoline) 所傳遞的值類型為 {1}，無法計算區塊簽章，所以無法將 {0} 中 BlockLiteral.{2} 的呼叫最佳化。
 		</value>
 	</data>
-  <data name="MM2106_C" xml:space="preserve">
-		<value>因為在 {2} 中找不到 [UserDelegateType] 屬性，所以無法將位移 {1} 之 {0} 中 BlockLiteral.SetupBlock 的呼叫最佳化。
-		</value>
-	</data>
   <data name="MM2106_D" xml:space="preserve">
 		<value>無法將位移 {1} 之 {0} 中 BlockLiteral.SetupBlock 的呼叫最佳化: {2}。
 		</value>
+	</data>
+  <data name="MX2106_E" xml:space="preserve">
+		<value>因為在類型 '{4}' 中找到一個以上名稱為 '{3}' 的方法，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
+  <data name="MX2106_F" xml:space="preserve">
+		<value>因為方法 '{3}' 至少必須有一個參數，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
+  <data name="MX2106_G" xml:space="preserve">
+		<value>因為方法 '{3}' 中的第一個參數不是 'System.IntPtr'、'void*' 或 'ObjCRuntime.BlockLiteral*' (它是 '{4}')，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫</value>
+	</data>
+  <data name="MX2106_H" xml:space="preserve">
+		<value>因為方法 '{3}' 沒有 [UnmanagedCallersOnly] 屬性，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
+	</data>
+  <data name="MX2106_I" xml:space="preserve">
+		<value>因為方法 '{3}' 沒有 [UnmanagedCallersOnly] 屬性，所以無法最佳化在位移 {1} 的 {0} 中對 BlockLiteral.{2} 的呼叫。</value>
 	</data>
   <data name="MM2107" xml:space="preserve">
 		<value>移除動態登錄器是不安全的，原因是 {0} 參考 '{1}.{2} ({3})'。
@@ -1087,6 +1107,15 @@
   <!-- 234x: ExtractBindingLibrariesStep -->
   <!-- 235x: LoadNonSkippedAssembliesStep -->
   <!-- 236x: RegistrarStep -->
+  <!-- 237x: ComputeAOTArguments -->
+  <!-- 238x: RegistrarRemovalTrackingStep -->
+  <!-- 239x: CoreTypeMapStep -->
+  <!-- 240x: BackingFieldDelayHandler -->
+  <!-- 241x: BackingFieldReintroductionSubStep -->
+  <!-- 242x: MarkIProtocolHandler -->
+  <!-- 243x: ManagedRegistrarStep -->
+  <!-- 244x: ManagedRegistrarLookupTablesStep -->
+  <!-- 245x: ApplyPreserveAttribute -->
   <data name="MX3001" xml:space="preserve">
 		<value>無法 {0} 組件 '{1}'
 		</value>
@@ -1507,7 +1536,7 @@
 		</value>
 	</data>
   <data name="MT4178" xml:space="preserve">
-		<value>因為已從 iOS SDK 移除 WatchKit 架構，所以將不會登錄類別 '{0}'。
+		<value>因為已從 {2} SDK 移除 {1} 架構，所以將不會登錄類別 '{0}'。
 		</value>
 	</data>
   <data name="MT4179" xml:space="preserve">
@@ -1524,6 +1553,15 @@
 	</data>
   <data name="MT4186" xml:space="preserve">
 		<value>登錄器發現了非最佳類型 `{0}`: 該類型沒有接受兩個 (ObjCRuntime.NativeHandle, bool) 引數的建構函式。不過，找到了接受兩個 (System.IntPtr, bool) 引數的建構函式 (將改為使用它)。強烈建議將 (System.IntPtr, bool) 建構函式的簽章變更為 (ObjCRuntime.NativeHandle, bool)。</value>
+	</data>
+  <data name="MX4187" xml:space="preserve">
+		<value>在類型 '{0}' 上找不到 [UserDelegateType] 屬性。</value>
+	</data>
+  <data name="MX4188" xml:space="preserve">
+		<value>無法計算類型 '{0}' 的區塊簽章: {1}</value>
+	</data>
+  <data name="MX4189" xml:space="preserve">
+		<value>因為類別 '{0}' 已從 {1} SDK 移除，所以不會登錄其。</value>
 	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 '{0}' 編譯器。請安裝 Xcode [命令列工具] 元件
@@ -1762,5 +1800,41 @@
 	</data>
   <data name="MX8044" xml:space="preserve">
 		<value>自從建置應用程式後，組件 {0} 已經修改，這會使產生的靜態登錄器程式碼失效。載入之組件的 MVID 為 {1}，而產生之靜態登錄器程式碼對應之組件的 MVID 為 {2}。</value>
+	</data>
+  <data name="MX8045" xml:space="preserve">
+		<value>無法在類型 {0} 的執行個體上呼叫 release</value>
+	</data>
+  <data name="MX8046" xml:space="preserve">
+		<value>在類型 '{1}' 中找不到方法 '{0}'</value>
+	</data>
+  <data name="MX8047" xml:space="preserve">
+		<value>trampoline 方法 {0} 不符合 trampolineMethod 引數的函數指標 0x{1} (未參考相同的方法)。</value>
+	</data>
+  <data name="MX8048" xml:space="preserve">
+		<value>trampoline 方法 {0}必 須至少有一個參數。</value>
+	</data>
+  <data name="MX8049" xml:space="preserve">
+		<value>trampoline 方法 {0} 中的第一個參數必須是 'System.IntPtr'、'void*' 或 'ObjCRuntime.BlockLiteral*'。</value>
+	</data>
+  <data name="MX8050" xml:space="preserve">
+		<value>當動態登錄器已連結離開時，不支援 BlockLiteral.GetBlockSignature。</value>
+	</data>
+  <data name="MX8051" xml:space="preserve">
+		<value>trampoline 方法 {0} 必須有 [UnmanagedCallersOnly] 屬性。</value>
+	</data>
+  <data name="MX8052" xml:space="preserve">
+		<value>簽章必須是非空白字串。</value>
+	</data>
+  <data name="MX8053" xml:space="preserve">
+		<value>無法解析組件 {0} 中的模組。</value>
+	</data>
+  <data name="MX8054" xml:space="preserve">
+		<value>使用受控靜態註冊機構時，無法解析方法的中繼資料權杖 (權杖: 0x{0})。</value>
+	</data>
+  <data name="MX8055" xml:space="preserve">
+		<value>在組件 '{0}' 中找不到類型 'ObjCRuntime.__Registrar__'。</value>
+	</data>
+  <data name="MX8056" xml:space="preserve">
+		<value>無法封送 Objective-C 物件 0x{0} (類型: {1})。找不到此物件的現有受控執行個體，也無法建立泛型型別 {2} 的新受控執行個體。</value>
 	</data>
 </root>

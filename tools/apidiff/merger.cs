@@ -33,7 +33,7 @@ class Merger {
 			// skip everything before and including title (single #) from each file, we already have one
 			string? foundTitle = null;
 			foreach (var line in File.ReadAllLines (file)) {
-				if (foundTitle != null) {
+				if (foundTitle is not null) {
 					content.WriteLine (line);
 					if (line == "#### Type Changed: ObjCRuntime.Constants") {
 						lookForVersion = true;

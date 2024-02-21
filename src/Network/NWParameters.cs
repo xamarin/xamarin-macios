@@ -34,7 +34,6 @@ namespace Network {
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12, 0)]
-	[Mac (10, 14)]
 	[iOS (12, 0)]
 	[Watch (6, 0)]
 #endif
@@ -77,10 +76,14 @@ namespace Network {
 
 		static unsafe BlockLiteral* DISABLE_PROTOCOL () => (BlockLiteral*) NWParametersConstants._ProtocolDisable;
 
+#if !NET
 		delegate void nw_parameters_configure_protocol_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_configure_protocol_block_t static_ConfigureHandler = TrampolineConfigureHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_configure_protocol_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
@@ -121,8 +124,13 @@ namespace Network {
 				return DEFAULT_CONFIGURATION ();
 			}
 
+#if NET
+			delegate* unmanaged<IntPtr, IntPtr, void> trampoline = &TrampolineConfigureHandler;
+			var block = new BlockLiteral (trampoline, callback, typeof (NWParameters), nameof (TrampolineConfigureHandler));
+#else
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (static_ConfigureHandler, callback);
+#endif
 			*callbackBlock = block;
 			disposeReturnValue = true;
 			return callbackBlock;
@@ -210,7 +218,7 @@ namespace Network {
 
 #if MONOMAC
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -218,13 +226,12 @@ namespace Network {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10,15)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
 #if NET
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
@@ -232,7 +239,6 @@ namespace Network {
 		[NoWatch]
 		[NoTV]
 		[NoiOS]
-		[Mac (10,15)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
@@ -382,10 +388,14 @@ namespace Network {
 			nw_parameters_clear_prohibited_interface_types (GetCheckedHandle ());
 		}
 
+#if !NET
 		delegate byte nw_parameters_iterate_interfaces_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_iterate_interfaces_block_t static_iterateProhibitedHandler = TrampolineIterateProhibitedHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interfaces_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static byte TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterface, bool>> (block);
@@ -405,16 +415,25 @@ namespace Network {
 		public void IterateProhibitedInterfaces (Func<NWInterface, bool> iterationCallback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, byte> trampoline = &TrampolineIterateProhibitedHandler;
+				using var block = new BlockLiteral (trampoline, iterationCallback, typeof (NWParameters), nameof (TrampolineIterateProhibitedHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_iterateProhibitedHandler, iterationCallback);
+#endif
 				nw_parameters_iterate_prohibited_interfaces (GetCheckedHandle (), &block);
 			}
 		}
 
+#if !NET
 		delegate byte nw_parameters_iterate_interface_types_block_t (IntPtr block, NWInterfaceType type);
 		static nw_parameters_iterate_interface_types_block_t static_IterateProhibitedTypeHandler = TrampolineIterateProhibitedTypeHandler;
 
 		[MonoPInvokeCallback (typeof (nw_parameters_iterate_interface_types_block_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static byte TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterfaceType, bool>> (block);
@@ -430,8 +449,13 @@ namespace Network {
 		public void IterateProhibitedInterfaces (Func<NWInterfaceType, bool> callback)
 		{
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, NWInterfaceType, byte> trampoline = &TrampolineIterateProhibitedTypeHandler;
+				using var block = new BlockLiteral (trampoline, callback, typeof (NWParameters), nameof (TrampolineIterateProhibitedTypeHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_IterateProhibitedTypeHandler, callback);
+#endif
 				nw_parameters_iterate_prohibited_interface_types (GetCheckedHandle (), &block);
 			}
 		}
@@ -518,12 +542,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -532,12 +555,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -545,12 +567,11 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public bool ProhibitConstrained {

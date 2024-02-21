@@ -41,6 +41,10 @@ using CoreMedia;
 #endif // !WATCH
 #endif
 
+#if HAS_UIKIT
+using UIKit;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -234,7 +238,19 @@ namespace Foundation {
 			return value as NSDictionary<TKey, TValue>;
 		}
 
-		protected T? GetStrongDictionary<T> (NSString key) where T : DictionaryContainer
+#if NET
+		protected T? GetStrongDictionary<[DynamicallyAccessedMembers (DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T> (NSString key)
+#else
+		protected T? GetStrongDictionary<T> (NSString key)
+#endif
+			where T : DictionaryContainer
+		{
+			return GetStrongDictionary (key, dict =>
+				(T?) Activator.CreateInstance (typeof (T), new object [] { dict }));
+		}
+
+		protected T? GetStrongDictionary<T> (NSString? key, Func<NSDictionary, T?> createStrongDictionary)
+			where T : DictionaryContainer
 		{
 			if (key is null)
 				throw new ArgumentNullException (nameof (key));
@@ -242,9 +258,8 @@ namespace Foundation {
 			var dict = GetNSDictionary (key);
 			if (dict is null)
 				return null;
-			return (T?) Activator.CreateInstance (typeof (T),
-				new object [] { dict }
-			);
+
+			return createStrongDictionary (dict);
 		}
 
 		protected NSString? GetNSStringValue (NSString key)
@@ -325,6 +340,23 @@ namespace Foundation {
 			return value;
 		}
 #endif // !WATCH
+
+#if HAS_UIKIT
+		protected UIEdgeInsets? GetUIEdgeInsets (NSString key)
+		{
+			if (key is null)
+				throw new ArgumentNullException (nameof (key));
+
+			if (!Dictionary.TryGetValue (key, out var value))
+				return null;
+
+			if (value is NSValue size)
+				return size.UIEdgeInsetsValue;
+
+			return null;
+		}
+#endif
+
 		bool NullCheckAndRemoveKey ([NotNullWhen (true)] NSString key, bool removeEntry)
 		{
 			if (key is null)
@@ -480,6 +512,13 @@ namespace Foundation {
 				Dictionary [key] = value!.Value.ToDictionary ();
 		}
 #endif //!WATCH
+
+#if HAS_UIKIT
+		protected void SetUIEdgeInsets (NSString key, UIEdgeInsets? value)
+		{
+			SetNativeValue (key, value is null ? null : NSValue.FromUIEdgeInsets (value.Value));
+		}
+#endif
 		#endregion
 #endif
 	}

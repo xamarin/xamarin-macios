@@ -30,7 +30,7 @@ namespace Extrospection {
 		public override void VisitManagedMethod (MethodDefinition method)
 		{
 			var key = method.GetName ();
-			if (key == null)
+			if (key is null)
 				return;
 
 			// we still have one case to fix with duplicate selectors :|
@@ -60,11 +60,11 @@ namespace Extrospection {
 				return;
 
 			var method = GetMethod (decl);
-			if (method == null)
+			if (method is null)
 				return;
 
 			var framework = Helpers.GetFramework (decl);
-			if (framework == null)
+			if (framework is null)
 				return;
 
 			if (!decl.HasAttr<ObjCRequiresSuperAttr> ()) {

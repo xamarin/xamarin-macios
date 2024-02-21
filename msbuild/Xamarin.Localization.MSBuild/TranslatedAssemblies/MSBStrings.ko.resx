@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -672,12 +672,13 @@
         </value>
     </data>
   <data name="E0174" xml:space="preserve">
-        <value>{0}의 형식이 잘못되었거나 알 수 없으므로 처리할 수 없습니다.
-        </value>
+        <value>xcframework {0}의 형식이 잘못되었거나 알 수 없어 처리할 수 없습니다.</value>
     </data>
   <data name="E0175" xml:space="preserve">
-        <value>'{0}' 내에서 일치하는 프레임워크를 찾을 수 없습니다.
-        </value>
+        <value>내부 '{0}'에 일치하는 프레임워크가 없습니다. SupportedPlatform: '{0}', SupportedPlatformVariant: '{1}', SupportedArchitectures: '{2}'.</value>
+        <comment>
+            Do not translate: 'SupportedPlatform', 'SupportedPlatformVariant', 'SupportedArchitectures' (they're keys inside a file with key/value pairs))
+        </comment>
     </data>
   <data name="W0176" xml:space="preserve">
         <value>'{0}' 옵션과 '{1}' 옵션이 충돌합니다. '{1}'은(는) 무시됩니다.
@@ -722,6 +723,12 @@
     </data>
   <data name="E0189" xml:space="preserve">
         <value>사용자 지정 링커 인수 '-{0}'을(를) 구문 분석할 수 없습니다. {1}</value>
+    </data>
+  <data name="E0190" xml:space="preserve">
+        <value>NativeResource 항목 '{0}'이(가) 없습니다.</value>
+        <comment>
+            NativeResource: do not translate (this is the name of an item in the project file).
+        </comment>
     </data>
   <data name="E7001" xml:space="preserve">
         <value>WiFi 디버거 설정의 호스트 IP를 확인할 수 없습니다.
@@ -1170,11 +1177,64 @@
         </comment>
     </data>
   <data name="W7105" xml:space="preserve">
-        <value>매니페스트 '{2}'의 네이티브 참조 '{1}'에 대한 예기치 않은 확장 '{0}'.</value>
+        <value>바인딩 리소스 패키지 '{2}'의 기본 참조 '{1}'에 대해 예기치 않은 확장 '{0}'이(가) 발생했습니다.</value>
         <comment>
             {0}: file extension
             {1}: path to a file
             {2}: path to a file
+        </comment>
+    </data>
+  <data name="W7106" xml:space="preserve">
+        <value>zip 파일 {0}에 이름이 '{1}'인 파일이 있어야 합니다.</value>
+    </data>
+  <data name="W7107" xml:space="preserve">
+        <value>zip 파일 '{0}'이(가) 존재하지 않습니다.</value>
+    </data>
+  <data name="W7108" xml:space="preserve">
+        <value>'{0}' 파일이 없습니다.</value>
+    </data>
+  <data name="W7109" xml:space="preserve">
+        <value>항목 '{0}'을(를) 기본 참조로 처리할 수 없음: 알 수 없는 유형.</value>
+    </data>
+  <data name="E7110" xml:space="preserve">
+        <value>xcframework '{1}'에서 Info.plist '{0}'을(를) 로드할 수 없습니다.</value>
+    </data>
+  <data name="W7111" xml:space="preserve">
+        <value>'{0}' 디렉터리가 없습니다.</value>
+    </data>
+  <data name="E7112" xml:space="preserve">
+        <value>zip 파일 '{1}'에서 파일 또는 디렉터리 '{0}'을(를) 찾을 수 없습니다.</value>
+    </data>
+  <data name="E7113" xml:space="preserve">
+        <value>이 플랫폼에서 zip 파일 '{0}'을(를) 처리할 수 없습니다. 파일 '{1}'은(는) symlink입니다.</value>
+    </data>
+  <data name="E7114" xml:space="preserve">
+        <value>"{0}" 작업에 이 플랫폼에서 빌드할 때 필요한 매개 변수 "{1}" 값이 제공되지 않았습니다.</value>
+    </data>
+  <data name="E7115" xml:space="preserve">
+        <value>잘못된 어셈블리가 없습니다. '{0}'.</value>
+        <comment>
+            {0}: the path to the linker assembly
+        </comment>
+    </data>
+  <data name="E7116" xml:space="preserve">
+        <value>{0} 어셈블리는 'ObjectFile' 메타데이터를 제공하지 않습니다.</value>
+        <comment>
+            Don't translate: 'ObjectFile'.
+        </comment>
+    </data>
+  <data name="E7117" xml:space="preserve">
+        <value>{0} 어셈블리가 입력 어셈블리로 여러 번 전달되었습니다({1}에서 참조됨).</value>
+        <comment>
+            {0}: the name of an assembly
+            {1}: the path to an assembly
+        </comment>
+    </data>
+  <data name="E7118" xml:space="preserve">
+        <value>AOT 컴파일 {0}에 실패했습니다. AOT 컴파일러가 코드 {1}과(와) 함께 종료되었습니다.</value>
+        <comment>
+            {0}: the path to an assembly
+            {1}: the exit code of a process
         </comment>
     </data>
 </root>

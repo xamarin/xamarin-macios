@@ -29,6 +29,9 @@ using UIKit;
 #endif
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace ObjCRuntime {
 	// iOS versions are stored in the lower 4 bytes an Mac versions in
 	// the higher 4 bytes. Each 4 byte version has the format AAJJNNSS
@@ -227,7 +230,7 @@ namespace ObjCRuntime {
 
 		public static Platform GetHostApiPlatform ()
 		{
-			if (hostApiPlatform != null && hostApiPlatform.HasValue)
+			if (hostApiPlatform is not null && hostApiPlatform.HasValue)
 				return hostApiPlatform.Value;
 
 #if MONOMAC
@@ -251,9 +254,9 @@ namespace ObjCRuntime {
 
 		public static Platform ParseApiPlatform (string productName, string productVersion)
 		{
-			if (productName == null)
+			if (productName is null)
 				throw new ArgumentNullException ("productName");
-			if (productVersion == null)
+			if (productVersion is null)
 				throw new ArgumentNullException ("productVersion");
 
 			var product = productName.Replace (" ", String.Empty).ToLowerInvariant ();
@@ -324,10 +327,10 @@ namespace ObjCRuntime {
 
 			foreach (var attr in attrs) {
 				var aattr = attr as AvailabilityAttribute;
-				if (aattr == null)
+				if (aattr is null)
 					continue;
 
-				if (merged == null)
+				if (merged is null)
 					merged = new AvailabilityAttribute ();
 
 				merged.Introduced |= aattr.Introduced;
@@ -498,7 +501,7 @@ namespace ObjCRuntime {
 			append ("Obsoleted", obsoleted);
 			append ("Unavailable", unavailable);
 
-			if (Message != null)
+			if (Message is not null)
 				builder.AppendFormat (", Message = \"{0}\"",
 					Message.Replace ("\"", "\\\""));
 

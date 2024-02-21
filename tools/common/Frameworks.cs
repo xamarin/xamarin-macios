@@ -10,6 +10,9 @@ using Registrar;
 
 using Xamarin.Utils;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public class Framework {
 	public string Namespace;
 	public string Name; // this is the name to pass to the linker when linking. This can be an umbrella framework.
@@ -32,7 +35,7 @@ public class Framework {
 #if MTOUCH || MMP || BUNDLER
 	public bool IsFrameworkAvailableInSimulator (Application app)
 	{
-		if (VersionAvailableInSimulator == null)
+		if (VersionAvailableInSimulator is null)
 			return false;
 
 		if (VersionAvailableInSimulator > app.SdkVersion)
@@ -110,7 +113,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks mac_frameworks;
 	public static Frameworks MacFrameworks {
 		get {
-			if (mac_frameworks == null) {
+			if (mac_frameworks is null) {
 				mac_frameworks = new Frameworks () {
 					{ "Accelerate", 10, 0 },
 					{ "AppKit", 10, 0 },
@@ -149,13 +152,13 @@ public class Frameworks : Dictionary<string, Framework> {
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
-					{ "InputMethodKit", 10, 5 },
 					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
 					{ "QuartzComposer", "Quartz", 10, 5, "QuartzComposer" },
 					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
+					{ "ServiceManagement", 10, 6 },
 #if !NET
 					{ "QTKit", 10, 6 },
 #endif
@@ -277,10 +280,15 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "AVRouting", "AVRouting", 13,0},
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
+					{ "MetalFX", "MetalFX", 13, 0 },
 					{ "SharedWithYou", "SharedWithYou", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
 					{ "ThreadNetwork", "ThreadNetwork", 13,0 },
+
+					{ "Cinematic", "Cinematic", 14,0 },
+					{ "Symbols", "Symbols", 14, 0 },
+					{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 14, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -290,7 +298,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks ios_frameworks;
 	public static Frameworks GetiOSFrameworks (bool is_simulator_build)
 	{
-		if (ios_frameworks == null)
+		if (ios_frameworks is null)
 			ios_frameworks = CreateiOSFrameworks (is_simulator_build);
 		return ios_frameworks;
 	}
@@ -341,7 +349,6 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "Accounts", "Accounts", 5 },
 				{ "GLKit", "GLKit", 5 },
-				{ "NewsstandKit", "NewsstandKit", 5 },
 				{ "CoreImage", "CoreImage", 5 },
 				{ "CoreBluetooth", "CoreBluetooth", 5 },
 				{ "Twitter", "Twitter", 5 },
@@ -454,9 +461,14 @@ public class Frameworks : Dictionary<string, Framework> {
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "MetalFX", "MetalFX", new Version (16,0), NotAvailableInSimulator },
 				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
+
+				{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
+				{ "Symbols", "Symbols", 17, 0 },
+				{ "SensitiveContentAnalysis", "SensitiveContentAnalysis", 17, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -471,7 +483,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks watch_frameworks;
 	public static Frameworks GetwatchOSFrameworks (bool is_simulator_build)
 	{
-		if (watch_frameworks == null) {
+		if (watch_frameworks is null) {
 			watch_frameworks = new Frameworks {
 				{ "Accelerate", "Accelerate", 2 },
 				// The CFNetwork framework is in the SDK, but there are no headers inside the framework, so don't enable yet.
@@ -528,6 +540,7 @@ public class Frameworks : Dictionary<string, Framework> {
 #if !NET
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
+				{ "CoreMidi", "CoreMIDI", 8,0 },
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
@@ -535,6 +548,8 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
 				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
+
+				{ "Symbols", "Symbols", 10, 0 },
 			};
 		}
 		return watch_frameworks;
@@ -543,7 +558,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks tvos_frameworks;
 	public static Frameworks TVOSFrameworks {
 		get {
-			if (tvos_frameworks == null) {
+			if (tvos_frameworks is null) {
 				tvos_frameworks = new Frameworks () {
 					{ "AVFoundation", "AVFoundation", 9 },
 					{ "AVKit", "AVKit", 9 },
@@ -629,9 +644,15 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
 #endif
 					{ "OSLog", "OSLog", 15,0 },
+					{ "CoreMidi", "CoreMIDI", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 					{ "SharedWithYou", "SharedWithYou", 16,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },
+
+					{ "Cinematic", "Cinematic", new Version (17, 0), NotAvailableInSimulator },
+					{ "Symbols", "Symbols", 17, 0 },
+					{ "NetworkExtension", "NetworkExtension", 17, 0 },
+		  { "Phase", "PHASE", new Version (17,0), NotAvailableInSimulator },
 				};
 			}
 			return tvos_frameworks;
@@ -641,7 +662,7 @@ public class Frameworks : Dictionary<string, Framework> {
 	static Frameworks catalyst_frameworks;
 	public static Frameworks GetMacCatalystFrameworks ()
 	{
-		if (catalyst_frameworks == null) {
+		if (catalyst_frameworks is null) {
 			catalyst_frameworks = CreateiOSFrameworks (false);
 			// not present in iOS but present in catalyst
 			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);
@@ -684,6 +705,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
+				case "Cinematic":
 #if !NET
 				case "iAd":
 				case "CHIP":
@@ -704,6 +726,7 @@ public class Frameworks : Dictionary<string, Framework> {
 			// Add frameworks that are not in iOS
 			catalyst_frameworks.Add ("AppKit", 13, 0);
 			catalyst_frameworks.Add ("ExecutionPolicy", 16, 0);
+			catalyst_frameworks.Add ("ServiceManagement", 16, 0);
 			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
 			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
 			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
@@ -736,9 +759,16 @@ public class Frameworks : Dictionary<string, Framework> {
 		var namespaces = new HashSet<string> ();
 
 		// Collect all the namespaces.
-		foreach (ModuleDefinition md in product_assembly.Modules)
-			foreach (TypeDefinition td in md.Types)
+		foreach (ModuleDefinition md in product_assembly.Modules) {
+			foreach (TypeDefinition td in md.Types) {
+#if !XAMCORE_5_0
+				// AVCustomRoutingControllerDelegate was incorrectly placed in AVKit
+				if (td.Namespace == "AVKit" && td.Name == "AVCustomRoutingControllerDelegate")
+					namespaces.Add ("AVRouting");
+#endif
 				namespaces.Add (td.Namespace);
+			}
+		}
 
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		var all_frameworks = GetFrameworks (app.Platform, app.IsSimulatorBuild);
@@ -769,6 +799,11 @@ public class Frameworks : Dictionary<string, Framework> {
 
 	static bool FilterFrameworks (Application app, Framework framework)
 	{
+		if (framework.Name == "NewsstandKit" && Driver.XcodeVersion.Major >= 15) {
+			Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 15+.", framework.Name);
+			return false;
+		}
+
 		switch (app.Platform) {
 #if !NET
 		// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
@@ -787,6 +822,12 @@ public class Frameworks : Dictionary<string, Framework> {
 			case "GameKit":
 				if (Driver.XcodeVersion.Major >= 14 && app.Is32Build) {
 					Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+					return false;
+				}
+				break;
+			case "NewsstandKit":
+				if (Driver.XcodeVersion.Major >= 15) {
+					Driver.Log (3, "Not linking with the framework {0} because it's been removed from Xcode 15+.", framework.Name);
 					return false;
 				}
 				break;

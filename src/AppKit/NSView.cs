@@ -55,7 +55,7 @@ namespace AppKit {
 
 		public unsafe void SortSubviews (Func<NSView?, NSView?, NSComparisonResult> comparer)
 		{
-			if (comparer == null)
+			if (comparer is null)
 				throw new ArgumentNullException (nameof (comparer));
 
 #if NET
@@ -68,7 +68,7 @@ namespace AppKit {
 			var handle = GCHandle.Alloc (context);
 			try {
 				SortSubviews (func, GCHandle.ToIntPtr (handle));
-				if (context.Exception != null)
+				if (context.Exception is not null)
 					throw new Exception ($"An exception occurred during sorting.", context.Exception);
 			} finally {
 				handle.Free ();

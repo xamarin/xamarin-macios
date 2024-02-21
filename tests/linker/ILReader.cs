@@ -32,7 +32,7 @@ namespace Linker.Shared {
 		public override string ToString ()
 		{
 			var methodOperand = Operand as MethodBase;
-			if (methodOperand != null)
+			if (methodOperand is not null)
 				return $"IL_{Offset:0000} {OpCode} {methodOperand.DeclaringType.FullName}.{methodOperand.Name}";
 			return $"IL_{Offset:0000} {OpCode} {(Operand is MethodBase ? ((MethodBase) Operand).Name : Operand?.ToString ())}";
 		}
@@ -76,7 +76,7 @@ namespace Linker.Shared {
 			var position = 0;
 
 			var body = method.GetMethodBody ();
-			if (body == null)
+			if (body is null)
 				return rv;
 
 			var bytes = body.GetILAsByteArray ();

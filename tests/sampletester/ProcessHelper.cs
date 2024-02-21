@@ -20,7 +20,7 @@ public static class ProcessHelper {
 	static string log_directory;
 	static string LogDirectory {
 		get {
-			if (log_directory == null)
+			if (log_directory is null)
 				log_directory = Cache.CreateTemporaryDirectory ("execution-logs");
 			return log_directory;
 		}
@@ -42,7 +42,7 @@ public static class ProcessHelper {
 				output.Add ($"{DateTime.Now.ToString ("HH:mm:ss.fffffff")}: {v}");
 		};
 
-		if (environment_variables == null)
+		if (environment_variables is null)
 			environment_variables = new Dictionary<string, string> ();
 		environment_variables ["XCODE_DEVELOPER_DIR_PATH"] = null;
 		environment_variables ["DEVELOPER_DIR"] = Configuration.XcodeLocation;

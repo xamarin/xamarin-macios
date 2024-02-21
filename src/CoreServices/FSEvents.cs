@@ -31,14 +31,10 @@ namespace CoreServices
 		FileEvents = 0x00000010,
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10,9)]
 #endif
 		MarkSelf = 0x00000020,
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10,13)]
 #endif
 		UseExtendedData = 0x00000040,
 #if NET
@@ -77,8 +73,6 @@ namespace CoreServices
 		ItemIsLastHardlink = 0x00200000,
 #if NET
 		[SupportedOSPlatform ("macos")]
-#else
-		[Mac (10,14)]
 #endif
 		ItemCloned = 0x00400000,
 	}
@@ -114,7 +108,7 @@ namespace CoreServices
 				return Guid.Empty;
 			}
 
-			return (Guid)Marshal.PtrToStructure (uuidRef, typeof (Guid))!;
+			return Marshal.PtrToStructure<Guid> (uuidRef)!;
 		}
 
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -400,6 +394,7 @@ namespace CoreServices
 		// so we cannot use Dlfcn.GetStringConstant against CoreServices. -abock, 2022-03-04
 		static readonly NSString kFSEventStreamEventExtendedDataPathKey = new ("path");
 		static readonly NSString kFSEventStreamEventExtendedFileIDKey = new ("fileID");
+		static readonly NSString kFSEventStreamEventExtendedDocIDKey = new ("docID");
 
 #if NET
 		[UnmanagedCallersOnly]
@@ -430,8 +425,11 @@ namespace CoreServices
 					var fileIdHandle = CFDictionary.GetValue (
 						eventDataHandle,
 						kFSEventStreamEventExtendedFileIDKey.Handle);
-					if (fileIdHandle != IntPtr.Zero)
-						CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, out fileId);
+					if (fileIdHandle != IntPtr.Zero) {
+						unsafe {
+							CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, &fileId);
+						}
+					}
 				}
 
 				events[i] = new FSEvent

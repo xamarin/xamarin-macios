@@ -32,6 +32,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
@@ -161,8 +162,8 @@ namespace CoreText {
 
 		public NSDictionary Dictionary { get; private set; }
 
-		public NSUrl Url {
-			get { return (NSUrl) Dictionary [CTFontDescriptorAttributeKey.Url]; }
+		public NSUrl? Url {
+			get { return (NSUrl?) Dictionary [CTFontDescriptorAttributeKey.Url]; }
 			set { Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Url!, value); }
 		}
 
@@ -226,9 +227,9 @@ namespace CoreText {
 				if (!value.HasValue)
 					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix!, (NSObject?) null);
 				else {
-					byte [] data = new byte [sizeof (CGAffineTransform)];
+					byte [] data = new byte [Marshal.SizeOf<CGAffineTransform> ()];
 					fixed (byte* p = data) {
-						Marshal.StructureToPtr (value.Value, (IntPtr) p, false);
+						Marshal.StructureToPtr<CGAffineTransform> (value.Value, (IntPtr) p, false);
 					}
 					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix!, NSData.FromArray (data));
 				}
@@ -244,7 +245,7 @@ namespace CoreText {
 			set { Adapter.SetNativeValue (Dictionary, CTFontDescriptorAttributeKey.CascadeList!, value); }
 		}
 
-		public NSCharacterSet CharacterSet {
+		public NSCharacterSet? CharacterSet {
 			get { return (NSCharacterSet) Dictionary [CTFontDescriptorAttributeKey.CharacterSet]; }
 			set { Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.CharacterSet!, value); }
 		}
@@ -371,6 +372,23 @@ namespace CoreText {
 			}
 		}
 
+#if XAMCORE_5_0
+		public bool? Enabled {
+#else
+		public bool? WeakEnabled {
+#endif
+			get {
+				var value = (NSNumber?) Dictionary [CTFontDescriptorAttributeKey.Enabled];
+				if (value is null)
+					return null;
+				return value.Int32Value != 0;
+			}
+			set {
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, value is null ? null : new NSNumber ((value.Value ? 1 : 0)));
+			}
+		}
+
+#if !XAMCORE_5_0
 		public bool Enabled {
 			get {
 				var value = (NSNumber) Dictionary [CTFontDescriptorAttributeKey.Enabled];
@@ -382,6 +400,7 @@ namespace CoreText {
 				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, value ? new NSNumber (1) : null);
 			}
 		}
+#endif // !XAMCORE_5_0
 	}
 
 #if NET
@@ -390,7 +409,7 @@ namespace CoreText {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class CTFontDescriptor : NativeObject {
+	public partial class CTFontDescriptor : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFontDescriptor (NativeHandle handle, bool owns)
 			: base (handle, owns, true)
@@ -737,39 +756,68 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
-#if NET
 		[DllImport (Constants.CoreTextLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static unsafe extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
-			delegate* unmanaged<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
+		static unsafe extern byte CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes, BlockLiteral* progressBlock);
+
+		public delegate bool CTFontDescriptorProgressHandler (CTFontDescriptorMatchingState state, CTFontDescriptorMatchingProgress progress);
+
+#if !NET
+		delegate byte ct_font_desctiptor_progress_handler_t (IntPtr block, CTFontDescriptorMatchingState state, IntPtr progress);
+		static ct_font_desctiptor_progress_handler_t static_MatchFontDescriptorsHandler = MatchFontDescriptorsHandler;
+
+		[MonoPInvokeCallback (typeof (ct_font_desctiptor_progress_handler_t))]
 #else
-		[DllImport (Constants.CoreTextLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
-			Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
+		[UnmanagedCallersOnly]
 #endif
+		static byte MatchFontDescriptorsHandler (IntPtr block, CTFontDescriptorMatchingState state, IntPtr progress)
+		{
+			var del = BlockLiteral.GetTarget<CTFontDescriptorProgressHandler> (block);
+			if (del is not null) {
+				var progressDictionary = Runtime.GetNSObject<NSDictionary> (progress)!;
+				var strongDictionary = new CTFontDescriptorMatchingProgress (progressDictionary);
+				var rv = del (state, strongDictionary);
+				return rv ? (byte) 1 : (byte) 0;
+			}
+			return 0;
+		}
 
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[Mac (10, 9)]
 #endif
-		public static bool MatchFontDescriptors (CTFontDescriptor [] descriptors, NSSet mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool MatchFontDescriptors (CTFontDescriptor [] descriptors, NSSet? mandatoryAttributes, CTFontDescriptorProgressHandler progressHandler)
 		{
-			// FIXME: the P/Invoke used below is wrong, it expects a block, not a function pointer.
-			// throwing a NIE instead of crashing until this is implemented properly.
-			throw new NotImplementedException ();
-			//			var ma = mandatoryAttributes is null ? IntPtr.Zero : mandatoryAttributes.Handle;
-			//			// FIXME: SIGSEGV probably due to mandatoryAttributes mismatch
-			//			using (var ar = CFArray.FromNativeObjects (descriptors)) {
-			//				return CTFontDescriptorMatchFontDescriptorsWithProgressHandler (ar.Handle, ma, progressHandler);
-			//			}
+			if (descriptors is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptors));
+
+			if (progressHandler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (progressHandler));
+
+			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, CTFontDescriptorMatchingState, IntPtr, byte> trampoline = &MatchFontDescriptorsHandler;
+				using var block = new BlockLiteral (trampoline, progressHandler, typeof (CTFontDescriptor), nameof (MatchFontDescriptorsHandler));
+#else
+				using var block = new BlockLiteral ();
+				block.SetupBlockUnsafe (static_MatchFontDescriptorsHandler, progressHandler);
+#endif
+				using var descriptorsArray = NSArray.FromNSObjects (descriptors);
+				var rv = CTFontDescriptorMatchFontDescriptorsWithProgressHandler (descriptorsArray.GetHandle (), mandatoryAttributes.GetHandle (), &block);
+				return rv != 0;
+			}
 		}
+
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		[Obsolete ("Use 'MatchFontDescriptors (CTFontDescriptor[], NSSet, CTFontDescriptorProgressHandler)' instead.")]
+		public static bool MatchFontDescriptors (CTFontDescriptor [] descriptors, NSSet? mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)
+		{
+			throw new NotImplementedException ();
+		}
+#endif
 	}
 }

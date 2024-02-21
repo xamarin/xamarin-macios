@@ -52,9 +52,6 @@
     <Compile Include="Stripper.cs" />
     <Compile Include="Target.mtouch.cs" />
     <Compile Include="Tuning.mtouch.cs" />
-    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs">
-      <Link>mono-archive\Options.cs</Link>
-    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
       <Link>src\ObjCRuntime\Constants.cs</Link>
@@ -338,6 +335,15 @@
     <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
       <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\common\Rewriter.cs">
+      <Link>tools\common\Rewriter.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CSToObjCMap.cs">
+      <Link>tools\common\CSToObjCMap.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ObjCNameIndex.cs">
+      <Link>tools\common\ObjCNameIndex.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>
@@ -444,6 +450,9 @@
     <Compile Include="..\common\StringUtils.cs">
       <Link>tools\common\StringUtils.cs</Link>
     </Compile>
+    <Compile Include="..\common\NullableAttributes.cs">
+      <Link>tools\common\NullableAttributes.cs</Link>
+    </Compile>
     <Compile Include="..\common\CoreResolver.cs">
       <Link>tools\common\CoreResolver.cs</Link>
     </Compile>
@@ -502,12 +511,8 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\builds\mono-ios-sdk-destdir\ios-bcl\monotouch_tools\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Mono.Cecil" Version="$(MonoCecilPackageVersion)" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -516,7 +521,6 @@
     <None Include="..\..\docs\website\mtouch-errors.md">
       <Link>docs\website\mtouch-errors.md</Link>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Errors.resx">

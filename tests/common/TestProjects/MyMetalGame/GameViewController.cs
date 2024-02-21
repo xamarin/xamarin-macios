@@ -180,7 +180,7 @@ namespace MyMetalGame {
 
 			pipelineState = device.CreateRenderPipelineState (pipelineStateDescriptor, out error);
 
-			if (pipelineState == null)
+			if (pipelineState is null)
 				Console.WriteLine ("Failed to created pipeline state, error " + error);
 
 			var depthStateDesc = new MTLDepthStencilDescriptor {
@@ -193,7 +193,7 @@ namespace MyMetalGame {
 
 		void SetupRenderPassDescriptorForTexture (IMTLTexture texture)
 		{
-			if (renderPassDescriptor == null)
+			if (renderPassDescriptor is null)
 				renderPassDescriptor = MTLRenderPassDescriptor.CreateRenderPassDescriptor ();
 
 			renderPassDescriptor.ColorAttachments [0].Texture = texture;
@@ -201,7 +201,7 @@ namespace MyMetalGame {
 			renderPassDescriptor.ColorAttachments [0].ClearColor = new MTLClearColor (0.65f, 0.65f, 0.65f, 1.0f);
 			renderPassDescriptor.ColorAttachments [0].StoreAction = MTLStoreAction.Store;
 
-			if (depthTex == null || (depthTex.Width != texture.Width || depthTex.Height != texture.Height)) {
+			if (depthTex is null || (depthTex.Width != texture.Width || depthTex.Height != texture.Height)) {
 				//  If we need a depth texture and don't have one, or if the depth texture we have is the wrong size
 				//  Then allocate one of the proper size
 				MTLTextureDescriptor desc = MTLTextureDescriptor.CreateTexture2DDescriptor (MTLPixelFormat.Depth32Float, texture.Width, texture.Height, false);
@@ -338,9 +338,9 @@ namespace MyMetalGame {
 		{
 			ICAMetalDrawable currentDrawable = null;
 
-			while (currentDrawable == null) {
+			while (currentDrawable is null) {
 				currentDrawable = metalLayer.NextDrawable ();
-				if (currentDrawable == null)
+				if (currentDrawable is null)
 					Console.WriteLine ("CurrentDrawable is null");
 			}
 

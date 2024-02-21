@@ -140,7 +140,7 @@ namespace Introspection {
 
 			public AttachableNativeObject (INativeObject obj)
 			{
-				if (obj == null)
+				if (obj is null)
 					throw new ArgumentNullException ("obj");
 				nativeObj = obj;
 			}
@@ -253,6 +253,8 @@ namespace Introspection {
 					return true;
 #endif
 				return false;
+			case "MTLIOCompressionContext":
+				return true;
 			default:
 				return false;
 			}
@@ -261,7 +263,7 @@ namespace Introspection {
 		protected INativeObject GetINativeInstance (Type t)
 		{
 			var ctor = t.GetConstructor (Type.EmptyTypes);
-			if ((ctor != null) && !ctor.IsAbstract)
+			if ((ctor is not null) && !ctor.IsAbstract)
 				return ctor.Invoke (null) as INativeObject;
 
 			if (!NativeObjectInterfaceType.IsAssignableFrom (t))
@@ -579,7 +581,7 @@ namespace Introspection {
 				if (Skip (t))
 					continue;
 				var n = GetINativeInstance (t);
-				if (n == null)
+				if (n is null)
 					Assert.Fail ("Could not create instance of '{0}'.", t);
 				var obj = new AttachableNativeObject (n);
 				Assert.That (obj.Handle, Is.Not.EqualTo (IntPtr.Zero), t.Name + ".Handle");

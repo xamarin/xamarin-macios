@@ -18,7 +18,7 @@ namespace MapKit {
 			if (points.Length == 0)
 				return _FromPoints (IntPtr.Zero, 0);
 
-			fixed (MKMapPoint* first = &points [0]) {
+			fixed (MKMapPoint* first = points) {
 				return _FromPoints ((IntPtr) first, points.Length);
 			}
 		}
@@ -30,7 +30,7 @@ namespace MapKit {
 			if (points.Length == 0)
 				return _FromPoints (IntPtr.Zero, 0);
 
-			fixed (MKMapPoint* first = &points [0]) {
+			fixed (MKMapPoint* first = points) {
 				return _FromPoints ((IntPtr) first, points.Length, interiorPolygons);
 			}
 		}
@@ -42,7 +42,7 @@ namespace MapKit {
 			if (coords.Length == 0)
 				return _FromCoordinates (IntPtr.Zero, 0);
 
-			fixed (CLLocationCoordinate2D* first = &coords [0]) {
+			fixed (CLLocationCoordinate2D* first = coords) {
 				return _FromCoordinates ((IntPtr) first, coords.Length);
 			}
 		}
@@ -54,7 +54,7 @@ namespace MapKit {
 			if (coords.Length == 0)
 				return _FromCoordinates (IntPtr.Zero, 0);
 
-			fixed (CLLocationCoordinate2D* first = &coords [0]) {
+			fixed (CLLocationCoordinate2D* first = coords) {
 				return _FromCoordinates ((IntPtr) first, coords.Length, interiorPolygons);
 			}
 		}

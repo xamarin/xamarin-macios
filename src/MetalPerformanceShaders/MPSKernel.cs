@@ -14,22 +14,20 @@ namespace MetalPerformanceShaders {
 
 #if !COREBUILD
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool MPSSupportsMTLDevice (/* __nullable id <MTLDevice> */ IntPtr device);
+		extern static byte MPSSupportsMTLDevice (/* __nullable id <MTLDevice> */ IntPtr device);
 
 		public static bool Supports (IMTLDevice device)
 		{
-			return MPSSupportsMTLDevice (device.GetHandle ());
+			return MPSSupportsMTLDevice (device.GetHandle ()) != 0;
 		}
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
@@ -37,12 +35,11 @@ namespace MetalPerformanceShaders {
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13, 0)]
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 #endif
 		public static IMTLDevice? GetPreferredDevice (MPSDeviceOptions options)
@@ -79,7 +76,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
@@ -92,7 +88,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer.GetHandle (), sizeInBytes);
@@ -104,7 +99,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
@@ -117,7 +111,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12, 0)]
-		[Mac (10, 14)]
 		[iOS (12, 0)]
 #endif
 		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer.GetHandle (), seconds);
@@ -130,12 +123,11 @@ namespace MetalPerformanceShaders {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
 		[TV (12, 0)]
-		[Mac (10, 15)]
 #endif
 		[DllImport (Constants.MetalPerformanceShadersLibrary)]
 		static extern MPSImageType MPSGetImageType (IntPtr image);
@@ -143,12 +135,11 @@ namespace MetalPerformanceShaders {
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13, 0)]
 		[TV (12, 0)]
-		[Mac (10, 15)]
 #endif
 		public MPSImageType ImageType => MPSGetImageType (Handle);
 	}
@@ -303,8 +294,8 @@ namespace MetalPerformanceShaders {
 	public partial class MPSCnnFullyConnected {
 
 #if NET
-		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[ObsoletedOSPlatform ("tvos11.0", "Use any of the other 'DesignatedInitializer' ctors.")]
@@ -426,7 +417,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11, 3)]
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 #endif
 		public static MPSCnnBinaryConvolutionNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
@@ -447,7 +437,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11, 3)]
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 #endif
 		public MPSCnnBinaryConvolutionNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)
@@ -470,7 +459,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11, 3)]
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 #endif
 		public new static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
@@ -491,7 +479,6 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11, 3)]
-		[Mac (10, 13, 4)]
 		[iOS (11, 3)]
 #endif
 		public MPSCnnBinaryFullyConnectedNode (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags) : base (NSObjectFlag.Empty)

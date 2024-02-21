@@ -8,6 +8,9 @@ using System.Text;
 using Foundation;
 using ObjCRuntime;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 public partial class Generator {
 
 	static string GetCSharpTypeName (Type type)
@@ -45,11 +48,12 @@ public partial class Generator {
 	//	- call/emit PrintPlatformAttributes on the type
 	void GenerateEnum (Type type)
 	{
-		if (AttributeManager.HasAttribute<FlagsAttribute> (type))
+		var isFlagsEnum = AttributeManager.HasAttribute<FlagsAttribute> (type);
+		if (isFlagsEnum)
 			print ("[Flags]");
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
-		if (native != null) {
+		if (native is not null) {
 			var sb = new StringBuilder ();
 			sb.Append ("[Native");
 			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
@@ -98,11 +102,11 @@ public partial class Generator {
 			PrintObsoleteAttributes (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
-			if (fa == null)
+			if (fa is null)
 				continue;
 			if (f.IsUnavailable (this))
 				continue;
-			if (fa.SymbolName == null)
+			if (fa.SymbolName is null)
 				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);
 			else if (unique_constants.Contains (fa.SymbolName))
 				throw new BindingException (1046, true, fa.SymbolName, type.Name);
@@ -110,8 +114,8 @@ public partial class Generator {
 				fields.Add (f, fa);
 				unique_constants.Add (fa.SymbolName);
 			}
-			if (AttributeManager.GetCustomAttribute<DefaultEnumValueAttribute> (f) != null) {
-				if (default_symbol != null)
+			if (AttributeManager.GetCustomAttribute<DefaultEnumValueAttribute> (f) is not null) {
+				if (default_symbol is not null)
 					throw new BindingException (1045, true, type.Name);
 				default_symbol = new Tuple<FieldInfo, FieldAttribute> (f, fa);
 			}
@@ -122,7 +126,7 @@ public partial class Generator {
 
 		var library_name = type.Namespace;
 		var error = AttributeManager.GetCustomAttribute<ErrorDomainAttribute> (type);
-		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
+		if ((fields.Count > 0) || (error is not null) || (null_field is not null)) {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
@@ -136,7 +140,7 @@ public partial class Generator {
 			ComputeLibraryName (fieldAttr, type, field.Key?.Name, out library_name, out string library_path);
 		}
 
-		if (error != null) {
+		if (error is not null) {
 			// this attribute is important for our tests
 			print ("[Field (\"{0}\", \"{1}\")]", error.ErrorDomain, library_name);
 			print ("static NSString? _domain;");
@@ -153,7 +157,7 @@ public partial class Generator {
 			print ("}");
 		}
 
-		if ((fields.Count > 0) || (null_field != null)) {
+		if ((fields.Count > 0) || (null_field is not null)) {
 			print ("static IntPtr[] values = new IntPtr [{0}];", fields.Count);
 			print ("");
 
@@ -169,7 +173,7 @@ public partial class Generator {
 				// fa.LibraryName could contain a different framework i.e UITrackingRunLoopMode (UIKit) inside NSRunLoopMode enum (Foundation).
 				// libPath could have a custom path i.e. CoreImage which in macOS is inside Quartz
 				// library_name contains the Framework constant name the Field is inside of, used as fallback.
-				bool useFieldAttrLibName = libname != null && !string.Equals (libname, library_name, StringComparison.OrdinalIgnoreCase);
+				bool useFieldAttrLibName = libname is not null && !string.Equals (libname, library_name, StringComparison.OrdinalIgnoreCase);
 				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, useFieldAttrLibName ? libname : libPath ?? library_name);
 				print ("internal unsafe static IntPtr {0} {{", fa.SymbolName);
 				indent++;
@@ -213,7 +217,7 @@ public partial class Generator {
 
 			print ("");
 
-			var nullable = null_field != null;
+			var nullable = null_field is not null;
 			print ("public static {0} GetValue (NSString{1} constant)", type.Name, nullable ? "?" : "");
 			print ("{");
 			indent++;
@@ -232,15 +236,66 @@ public partial class Generator {
 				indent--;
 			}
 			// if there's no default then we throw on unknown constants
-			if (default_symbol == null)
+			if (default_symbol is null)
 				print ("throw new NotSupportedException ($\"{constant} has no associated enum value on this platform.\");");
 			else
 				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;
 			print ("}");
+
+			if (isFlagsEnum) {
+				print ($"public static NSString[] ToArray (this {type.Name} value)");
+				print ("{");
+				indent++;
+				print ("var rv = new global::System.Collections.Generic.List<NSString> ();");
+				foreach (var kvp in fields) {
+					print ($"if (value.HasFlag ({type.Name}.{kvp.Key.Name}) && {kvp.Value.SymbolName} != IntPtr.Zero)");
+					indent++;
+					print ($"rv.Add ((NSString) Runtime.GetNSObject ({kvp.Value.SymbolName})!);");
+					indent--;
+				}
+				print ($"// In order to be forward-compatible, any unknown values are ignored.");
+				print ("return rv.ToArray ();");
+				indent--;
+				print ("}");
+				print ("");
+
+				print ($"public static {type.Name} ToFlags (global::System.Collections.Generic.IEnumerable<NSString{(nullable ? "?" : "")}>{(nullable ? "?" : "")} constants)");
+				print ("{");
+				indent++;
+				print ($"var rv = default ({type.Name});");
+				print ($"if (constants is null)");
+				indent++;
+				print ("return rv;");
+				indent--;
+				print ($"foreach (var constant in constants) {{");
+				indent++;
+				var first = true;
+				if (nullable) {
+					print ("if (constant is null)");
+					indent++;
+					print ("continue;");
+					indent--;
+					first = false;
+				}
+				foreach (var kvp in fields) {
+					print ($"{(first ? "if" : "else if")} (constant.IsEqualTo ({kvp.Value.SymbolName}))");
+					first = false;
+					indent++;
+					print ($"rv |= {type.Name}.{kvp.Key.Name};");
+					indent--;
+				}
+				print ($"// In order to be forward-compatible, any unknown values are ignored.");
+				indent--;
+				print ("}");
+				print ("return rv;");
+				indent--;
+				print ("}");
+				print ("");
+			}
 		}
 
-		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
+		if ((fields.Count > 0) || (error is not null) || (null_field is not null)) {
 			indent--;
 			print ("}");
 		}

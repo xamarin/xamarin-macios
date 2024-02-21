@@ -13,6 +13,9 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace UIKit {
 
 	public static class UIFontWeightExtensions {
@@ -116,11 +119,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredTitle1 {
 			get {
@@ -129,11 +130,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredTitle2 {
 			get {
@@ -142,11 +141,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredTitle3 {
 			get {
@@ -155,11 +152,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static UIFont PreferredCallout {
 			get {
@@ -192,11 +187,9 @@ namespace UIKit {
 
 
 #if NET
-		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 2)]
 #endif
 		public static UIFont SystemFontOfSize (nfloat size, UIFontWeight weight)
 		{
@@ -204,11 +197,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat size, nfloat weight)
 		{
@@ -217,11 +208,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (9, 0)]
 #endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat fontSize, UIFontWeight weight)
 		{
@@ -337,11 +326,9 @@ namespace UIKit {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-#else
-		[iOS (8, 2)]
 #endif
 		public static UIFont SystemFontOfSize (nfloat size, nfloat weight)
 		{
@@ -369,9 +356,9 @@ namespace UIKit {
 
 		public static bool operator == (UIFont f1, UIFont f2)
 		{
-			if (((object) f1) == null)
-				return ((object) f2) == null;
-			else if ((object) f2 == null)
+			if (((object) f1) is null)
+				return ((object) f2) is null;
+			else if ((object) f2 is null)
 				return false;
 			return f1.Handle == f2.Handle;
 		}

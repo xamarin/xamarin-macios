@@ -40,6 +40,9 @@ using CoreServices;
 using CoreFoundation;
 #endif
 
+// Disable until we get around to enable + fix any issues.
+#nullable disable
+
 namespace System.Net.Http {
 	class BufferData {
 		public byte [] Buffer;
@@ -123,12 +126,12 @@ namespace System.Net.Http {
 		{
 			while (data_event.WaitOne ()) {
 				data_mutex.WaitOne ();
-				if (http_exception != null) {
+				if (http_exception is not null) {
 					http_exception.Throw ();
 					data_mutex.ReleaseMutex ();
 					break;
 				}
-				if (data == null || data.Length <= 0) {
+				if (data is null || data.Length <= 0) {
 					data_mutex.ReleaseMutex ();
 					data_read_event.Set ();
 					break;

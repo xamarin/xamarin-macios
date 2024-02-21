@@ -103,27 +103,34 @@ namespace CoreGraphics {
 
 #if NET
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static unsafe IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
+		extern static unsafe IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, delegate* unmanaged<IntPtr, CGEventType, IntPtr, IntPtr, IntPtr> cback, IntPtr data);
 #else
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
+		extern static IntPtr CGEventTapCreateForPSN (IntPtr processSerialNumer, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data);
 #endif
 		
+		[Obsolete ("The location parameter is not used. Consider using the overload without the location parameter.", false)]
+		[System.ComponentModel.EditorBrowsable (System.ComponentModel.EditorBrowsableState.Never)]
 		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapLocation location, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
 		{
-#if NET
-			IntPtr r;
+			return CreateTap (processSerialNumber, place, options, mask, cback, data);
+		}
+
+		public static CFMachPort? CreateTap (IntPtr processSerialNumber, CGEventTapPlacement place, CGEventTapOptions options, CGEventMask mask, CGEventTapCallback cback, IntPtr data)
+		{
 			unsafe {
+				var psnPtr = new IntPtr (&processSerialNumber);
+#if NET
 				var tapData = new TapData (cback, data);
 				var gch = GCHandle.Alloc (tapData);
-				r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
-			}
+				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, &TapCallback, GCHandle.ToIntPtr (gch));
 #else
-			var r = CGEventTapCreateForPSN (processSerialNumber, location, place, options, mask, cback, data);
+				var r = CGEventTapCreateForPSN (psnPtr, place, options, mask, cback, data);
 #endif
-			if (r == IntPtr.Zero)
-				return null;
-			return new CFMachPort (r, true);
+				if (r == IntPtr.Zero)
+					return null;
+				return new CFMachPort (r, true);
+			}
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -436,14 +443,24 @@ namespace CoreGraphics {
 			return new String (buffer, 0, (int) actual);
 		}
 
+#if NET
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		unsafe extern static void CGEventKeyboardSetUnicodeString (IntPtr handle, nuint len, IntPtr buffer);
+#else
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
 		unsafe extern static void CGEventKeyboardSetUnicodeString (IntPtr handle, nuint len,  [MarshalAs(UnmanagedType.LPWStr)] string buffer);
+#endif
 
 		public void SetUnicodeString (string value)
 		{
 			if (value is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+#if NET
+			using var valueStr = new TransientString (value, TransientString.Encoding.Unicode);
+			CGEventKeyboardSetUnicodeString (Handle, (nuint) value.Length, valueStr);
+#else
 			CGEventKeyboardSetUnicodeString (Handle, (nuint) value.Length, value);
+#endif
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
@@ -491,7 +508,7 @@ namespace CoreGraphics {
 			if (CGGetEventTapList (0, null, out count) != 0)
 				return null;
 			var result = new CGEventTapInformation [count];
-			fixed (CGEventTapInformation *p = &result [0]){
+			fixed (CGEventTapInformation *p = result){
 				if (CGGetEventTapList (count, p, out count) != 0)
 					return null;
 			}

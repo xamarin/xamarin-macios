@@ -13,7 +13,7 @@ using ObjCRuntime;
 using Foundation;
 using CloudKit;
 using CoreGraphics;
-using CoreLocation;
+using CoreFoundation;
 #if !MONOMAC
 using UIKit;
 #endif
@@ -42,7 +42,6 @@ namespace CoreLocation {
 		Outside
 	}
 
-	[Mac (10, 15)]
 	[NoTV]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
@@ -66,7 +65,29 @@ namespace CoreLocation {
 		MissingPushExtension = 1,
 		MissingPushServerEnvironment = 2,
 		MissingEntitlement = 3,
+		UnsupportedPlatform = 4,
 	}
+
+	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
+	[Native]
+	public enum CLMonitoringState : ulong {
+		Unknown,
+		Satisfied,
+		Unsatisfied,
+		[NoWatch, Mac (14, 2), iOS (17, 2), MacCatalyst (17, 2), NoTV]
+		Unmonitored,
+	}
+
+	[Watch (10, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
+	[Native]
+	public enum CLLiveUpdateConfiguration : long {
+		Default = 0,
+		AutomotiveNavigation,
+		OtherNavigation,
+		Fitness,
+		Airborne,
+	}
+
 
 	[NoTV]
 	[Watch (6, 0)]
@@ -111,23 +132,21 @@ namespace CoreLocation {
 		double VerticalAccuracy { get; }
 
 		[TV (13, 0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
-		[Watch (3, 0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[MacCatalyst (13, 1)]
 		[Export ("course")]
 		double Course { get; }
 
-		[Watch (6, 2), TV (13, 4), Mac (10, 15, 4), iOS (13, 4)]
+		[Watch (6, 2), TV (13, 4), iOS (13, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("courseAccuracy")]
 		double CourseAccuracy { get; }
 
 		[TV (13, 0)] // API_UNAVAILABLE(tvos) removed in Xcode 11 beta 1
-		[Watch (3, 0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[MacCatalyst (13, 1)]
 		[Export ("speed")]
 		double Speed { get; }
 
-		[Watch (6, 2), TV (13, 4), Mac (10, 15, 4), iOS (13, 4)]
+		[Watch (6, 2), TV (13, 4), iOS (13, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("speedAccuracy")]
 		double SpeedAccuracy { get; }
@@ -147,7 +166,7 @@ namespace CoreLocation {
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:speed:timestamp:")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double speed, NSDate timestamp);
 
-		[Watch (6, 2), TV (13, 4), Mac (10, 15, 4), iOS (13, 4)]
+		[Watch (6, 2), TV (13, 4), iOS (13, 4)]
 		[MacCatalyst (13, 1)]
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:course:courseAccuracy:speed:speedAccuracy:timestamp:")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, double course, double courseAccuracy, double speed, double speedAccuracy, NSDate timestamp);
@@ -160,7 +179,6 @@ namespace CoreLocation {
 		// nor in 7.0 - but it works on my iPad3 running iOS 7.1
 		[NoTV]
 		[NoWatch]
-		[iOS (7, 1)]
 		[MacCatalyst (13, 1)]
 		[Field ("kCLErrorUserInfoAlternateRegionKey")]
 		NSString ErrorUserInfoAlternateRegionKey { get; }
@@ -188,8 +206,6 @@ namespace CoreLocation {
 		[Field ("kCLLocationAccuracyReduced")]
 		double AccuracyReduced { get; }
 
-		[Mac (10, 15)]
-		[iOS (8, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("floor", ArgumentSemantic.Copy)]
 		CLFloor Floor { get; }
@@ -203,8 +219,6 @@ namespace CoreLocation {
 		CLLocationSourceInformation SourceInformation { get; }
 	}
 
-	[Mac (10, 15)]
-	[iOS (8, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	partial interface CLFloor : NSSecureCoding, NSCopying {
@@ -217,8 +231,7 @@ namespace CoreLocation {
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (CLLocationManagerDelegate) })]
 	partial interface CLLocationManager {
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		CLLocationManagerDelegate Delegate { get; set; }
+		ICLLocationManagerDelegate Delegate { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)]
 		[NullAllowed]
@@ -234,7 +247,6 @@ namespace CoreLocation {
 		CLLocation Location { get; }
 
 		// __WATCHOS_PROHIBITED removed in Xcode 8.0 beta 2, assuming it's valid for 3.0+
-		[Watch (3, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("startUpdatingLocation")]
@@ -360,6 +372,9 @@ namespace CoreLocation {
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'void RemoveCondition (string identifier)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'void RemoveCondition (string identifier)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'void RemoveCondition (string identifier)' instead.")]
 		[Export ("stopMonitoringForRegion:")]
 		void StopMonitoring (CLRegion region);
 
@@ -380,11 +395,14 @@ namespace CoreLocation {
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'void AddCondition (CLCondition condition, string identifier)' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'void AddCondition (CLCondition condition, string identifier)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'void AddCondition (CLCondition condition, string identifier)' instead.")]
 		[Export ("startMonitoringForRegion:")]
 		void StartMonitoring (CLRegion region);
 
 		[NoTV]
-		[Watch (4, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("activityType", ArgumentSemantic.Assign)]
 		CLActivityType ActivityType { get; set; }
@@ -416,7 +434,6 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[Mac (10, 9)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Not used anymore. It will always return 'false'.")]
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Not used anymore. It will always return 'false'.")]
 		[MacCatalyst (13, 1)]
@@ -425,14 +442,12 @@ namespace CoreLocation {
 		[Export ("deferredLocationUpdatesAvailable")]
 		bool DeferredLocationUpdatesAvailable { get; }
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("CLTimeIntervalMax")]
 		double MaxTimeInterval { get; }
 
 		[NoWatch]
 		[NoTV]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Static, Export ("isMonitoringAvailableForClass:")]
 		bool IsMonitoringAvailable (Class regionClass);
@@ -451,10 +466,12 @@ namespace CoreLocation {
 		[Export ("rangedBeaconConstraints", ArgumentSemantic.Copy)]
 		NSSet<CLBeaconIdentityConstraint> RangedBeaconConstraints { get; }
 
-		[Mac (10, 10)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
+		[Deprecated (PlatformName.iOS, 17, 0, message: "Use the class 'CLMonitor' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use the class 'CLMonitor' instead.")]
+		[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use the class 'CLMonitor' instead.")]
 		[Export ("requestStateForRegion:")]
 		void RequestState (CLRegion region);
 
@@ -494,45 +511,41 @@ namespace CoreLocation {
 		[Export ("isRangingAvailable")]
 		bool IsRangingAvailable { get; }
 
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestWhenInUseAuthorization")]
 		void RequestWhenInUseAuthorization ();
 
 		[NoTV]
-		[iOS (8, 0)]
-		[Mac (10, 15)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestAlwaysAuthorization")]
 		void RequestAlwaysAuthorization ();
 
 		[NoWatch]
 		[NoTV]
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("startMonitoringVisits")]
 		void StartMonitoringVisits ();
 
 		[NoWatch]
 		[NoTV]
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("stopMonitoringVisits")]
 		void StopMonitoringVisits ();
 
 		[NoTV]
-		[iOS (9, 0), Watch (4, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("allowsBackgroundLocationUpdates")]
 		bool AllowsBackgroundLocationUpdates { get; set; }
 
-		[NoWatch, NoTV, Mac (11, 0), iOS (11, 0)]
+		[NoWatch, NoTV, Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("showsBackgroundLocationIndicator")]
 		bool ShowsBackgroundLocationIndicator { get; set; }
 
-		[iOS (9, 0)]
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Export ("requestLocation")]
 		void RequestLocation ();
@@ -574,6 +587,8 @@ namespace CoreLocation {
 		void RequestHistoricalLocations (string purposeKey, nint sampleCount, RequestHistoricalLocationsCompletionHandler handler);
 	}
 
+	interface ICLLocationManagerDelegate { }
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -592,7 +607,6 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateHeading:"), EventArgs ("CLHeadingUpdated")]
 		void UpdatedHeading (CLLocationManager manager, CLHeading newHeading);
 
-		[Mac (10, 15)]
 		[NoTV]
 		[Watch (6, 0)]
 		[MacCatalyst (13, 1)]
@@ -628,7 +642,6 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didDetermineState:forRegion:"), EventArgs ("CLRegionStateDetermined")]
 		void DidDetermineState (CLLocationManager manager, CLRegionState state, CLRegion region);
@@ -665,7 +678,7 @@ namespace CoreLocation {
 
 		[NoWatch]
 		[NoTV]
-		[iOS (8, 0), Mac (11, 0)]
+		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManager:didVisit:"), EventArgs ("CLVisited")]
 		void DidVisit (CLLocationManager manager, CLVisit visit);
@@ -681,14 +694,12 @@ namespace CoreLocation {
 		[Export ("locationManager:didUpdateLocations:"), EventArgs ("CLLocationsUpdated")]
 		void LocationsUpdated (CLLocationManager manager, CLLocation [] locations);
 
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("locationManagerDidPauseLocationUpdates:"), EventArgs ("")]
 		void LocationUpdatesPaused (CLLocationManager manager);
 
-		[Mac (10, 15)]
 		[NoWatch]
 		[NoTV]
 		[MacCatalyst (13, 1)]
@@ -711,7 +722,6 @@ namespace CoreLocation {
 	[Static]
 	partial interface CLLocationDistance {
 
-		[Mac (10, 14)]
 		[MacCatalyst (13, 1)]
 		[Field ("CLLocationDistanceMax")]
 		double MaxDistance { get; }
@@ -759,12 +769,10 @@ namespace CoreLocation {
 		bool Contains (CLLocationCoordinate2D coordinate);
 
 		[Export ("notifyOnEntry", ArgumentSemantic.Assign)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		bool NotifyOnEntry { get; set; }
 
 		[Export ("notifyOnExit", ArgumentSemantic.Assign)]
-		[Mac (10, 10)]
 		[MacCatalyst (13, 1)]
 		bool NotifyOnExit { get; set; }
 	}
@@ -829,19 +837,21 @@ namespace CoreLocation {
 		CLRegion Region { get; }
 
 		[NullAllowed, Export ("timeZone")]
-		[iOS (9, 0), Mac (10, 11)]
 		[MacCatalyst (13, 1)]
 		NSTimeZone TimeZone { get; }
 
 		// From CLPlacemark (ContactsAdditions) category.
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("postalAddress")]
 		CNPostalAddress PostalAddress { get; }
 	}
 
-	[Mac (10, 10)]
 	[MacCatalyst (13, 1)]
+	[Obsoleted (PlatformName.MacOSX, 14, 0, message: "Use 'CLCircularGeographicCondition' instead.")]
+	[Obsoleted (PlatformName.iOS, 17, 0, message: "Use 'CLCircularGeographicCondition' instead.")]
+	[Obsoleted (PlatformName.WatchOS, 10, 0, message: "Use 'CLCircularGeographicCondition' instead.")]
+	[Obsoleted (PlatformName.TvOS, 17, 0, message: "Use 'CLCircularGeographicCondition' instead.")]
 	[BaseType (typeof (CLRegion))]
 #if MONOMAC
 	[DisableDefaultCtor]
@@ -865,6 +875,9 @@ namespace CoreLocation {
 	[Mac (11, 0)]
 	[NoTV]
 	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
+	[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
 	[BaseType (typeof (CLRegion))]
 	[DisableDefaultCtor] // nil-Handle on iOS8 if 'init' is used
 	partial interface CLBeaconRegion {
@@ -995,7 +1008,6 @@ namespace CoreLocation {
 		[Async]
 		void ReverseGeocodeLocation (CLLocation location, CLGeocodeCompletionHandler completionHandler);
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("reverseGeocodeLocation:preferredLocale:completionHandler:")]
 		[Async]
@@ -1018,7 +1030,6 @@ namespace CoreLocation {
 		[Async]
 		void GeocodeAddress (string addressString, [NullAllowed] CLRegion region, CLGeocodeCompletionHandler completionHandler);
 
-		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Async]
 		[Export ("geocodeAddressString:inRegion:preferredLocale:completionHandler:")]
@@ -1027,13 +1038,13 @@ namespace CoreLocation {
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("geocodePostalAddress:completionHandler:")]
 		[Async]
 		void GeocodePostalAddress (CNPostalAddress postalAddress, CLGeocodeCompletionHandler completionHandler);
 
-		[Watch (4, 0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[NoTV]
 		[MacCatalyst (13, 1)]
 		[Export ("geocodePostalAddress:preferredLocale:completionHandler:")]
 		[Async]
@@ -1042,7 +1053,7 @@ namespace CoreLocation {
 
 	[NoWatch]
 	[NoTV]
-	[iOS (8, 0), Mac (11, 0)]
+	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CLVisit : NSSecureCoding, NSCopying {
@@ -1062,6 +1073,9 @@ namespace CoreLocation {
 
 	[NoWatch, NoTV, Mac (11, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.MacOSX, 14, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
+	[Deprecated (PlatformName.iOS, 17, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 17, 0, message: "Use 'CLBeaconIdentityCondition' instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[CLBeaconIdentityConstraint init]: unrecognized selector sent to instance 0x600001930300
 	interface CLBeaconIdentityConstraint : NSCopying, NSSecureCoding {
@@ -1115,4 +1129,167 @@ namespace CoreLocation {
 		bool IsProducedByAccessory { get; }
 	}
 
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0), TV (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLUpdate {
+		[Export ("isStationary")]
+		bool IsStationary { get; }
+
+		[NullAllowed, Export ("location")]
+		CLLocation Location { get; }
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLMonitoringRecord : NSSecureCoding {
+		[Export ("condition", ArgumentSemantic.Strong)]
+		CLCondition Condition { get; }
+
+		[Export ("lastEvent", ArgumentSemantic.Strong)]
+		CLMonitoringEvent LastEvent { get; }
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLMonitoringEvent : NSSecureCoding {
+		[Export ("identifier", ArgumentSemantic.Strong)]
+		string Identifier { get; }
+
+		[NullAllowed, Export ("refinement", ArgumentSemantic.Strong)]
+		CLCondition Refinement { get; }
+
+		[Export ("state")]
+		CLMonitoringState State { get; }
+
+		[Export ("date", ArgumentSemantic.Strong)]
+		NSDate Date { get; }
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLMonitorConfiguration {
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("queue")]
+		DispatchQueue Queue { get; }
+
+		[Export ("eventHandler")]
+		Action<CLMonitor, CLMonitoringEvent> EventHandler { get; }
+
+		[Static]
+		[Export ("configWithMonitorName:queue:eventHandler:")]
+		CLMonitorConfiguration Create (string name, DispatchQueue queue, Action<CLMonitor, CLMonitoringEvent> eventHandler);
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLMonitor {
+		[Async]
+		[Static]
+		[Export ("requestMonitorWithConfiguration:completion:")]
+		void RequestMonitor (CLMonitorConfiguration config, Action<CLMonitor> completionHandler);
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("monitoredIdentifiers")]
+		string [] MonitoredIdentifiers { get; }
+
+		[Export ("addConditionForMonitoring:identifier:")]
+		void AddCondition (CLCondition condition, string identifier);
+
+		[Export ("addConditionForMonitoring:identifier:assumedState:")]
+		void AddCondition (CLCondition condition, string identifier, CLMonitoringState state);
+
+		[Export ("removeConditionFromMonitoringWithIdentifier:")]
+		void RemoveCondition (string identifier);
+
+		[Export ("monitoringRecordForIdentifier:")]
+		[return: NullAllowed]
+		CLMonitoringRecord GetMonitoringRecord (string identifier);
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLLocationUpdater {
+		[Static]
+		[Export ("liveUpdaterWithQueue:handler:")]
+		[return: NullAllowed]
+		CLLocationUpdater CreateLiveUpdates (DispatchQueue queue, Action<CLUpdate> handler);
+
+		[Static]
+		[Export ("liveUpdaterWithConfiguration:queue:handler:")]
+		[return: NullAllowed]
+		CLLocationUpdater CreateLiveUpdates (CLLiveUpdateConfiguration configuration, DispatchQueue queue, Action<CLUpdate> handler);
+
+		[Export ("resume")]
+		void Resume ();
+
+		[Export ("pause")]
+		void Pause ();
+
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	interface CLCondition : NSSecureCoding, NSCopying { }
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CLCondition))]
+	interface CLCircularGeographicCondition : NSSecureCoding {
+		[Export ("center")]
+		CLLocationCoordinate2D Center { get; }
+
+		[Export ("radius")]
+		double Radius { get; }
+
+		[Export ("initWithCenter:radius:")]
+		NativeHandle Constructor (CLLocationCoordinate2D center, double radius);
+	}
+
+	[NoWatch, NoTV, Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (CLCondition))]
+	[DisableDefaultCtor]
+	interface CLBeaconIdentityCondition : NSCopying, NSSecureCoding {
+		[Export ("UUID", ArgumentSemantic.Copy)]
+		NSUuid Uuid { get; }
+
+		[NullAllowed]
+		[Export ("major", ArgumentSemantic.Copy)]
+		NSNumber Major { get; }
+
+		[NullAllowed]
+		[Export ("minor", ArgumentSemantic.Copy)]
+		NSNumber Minor { get; }
+
+		[Export ("initWithUUID:")]
+		NativeHandle Constructor (NSUuid uuid);
+
+		[Export ("initWithUUID:major:")]
+		NativeHandle Constructor (NSUuid uuid, ushort major);
+
+		[Export ("initWithUUID:major:minor:")]
+		NativeHandle Constructor (NSUuid uuid, ushort major, ushort minor);
+	}
+
+	[Watch (10, 0), NoTV, NoMac, iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CLBackgroundActivitySession {
+		[Watch (10, 0), NoMac, iOS (17, 0)]
+		[Export ("invalidate")]
+		void Invalidate ();
+
+		[Watch (10, 0), NoMac, iOS (17, 0)]
+		[Static]
+		[Export ("backgroundActivitySession")]
+		CLBackgroundActivitySession Create ();
+	}
 }

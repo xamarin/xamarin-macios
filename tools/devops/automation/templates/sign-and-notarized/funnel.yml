@@ -3,10 +3,6 @@ parameters:
 - name: packages
   type: object
 
-- name: enableDotnet
-  type: boolean
-  default: true
-
 - name: isPR
   type: boolean
 
@@ -29,24 +25,7 @@ parameters:
   default: '$(MaciosUploadPrefix)'
 
 jobs:
-- job: configure
-  displayName: 'Configure build'
-  pool:
-    vmImage: windows-latest
-
-  variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
-
-  steps:
-  - template: ../common/configure.yml
-    parameters:
-      repositoryAlias: ${{ parameters.repositoryAlias }}
-      commit: ${{ parameters.commit }}
-
 - job: funnel_job
-  dependsOn:
-  - configure
   displayName: 'Collect signed artifacts'
   condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
   timeoutInMinutes: 1000
@@ -56,7 +35,7 @@ jobs:
     clean: all
   variables:
     ${{ each pkg in parameters.packages }}:
-      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
+      ${{ pkg.conditionVariable }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
   steps:
 
@@ -79,6 +58,9 @@ jobs:
   - checkout: release-scripts
     clean: true
 
+  - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1
+    displayName: 'Show Environment'
+
   - bash: |
       sudo rm -Rf $(Build.SourcesDirectory)/package
       sudo rm -Rf $(Build.SourcesDirectory)/classic-*-signed
@@ -89,13 +71,6 @@ jobs:
   - bash: |
       mkdir -p $(Build.SourcesDirectory)/package/notarized
     displayName: 'Create target directories.'
-
-  - task: DownloadPipelineArtifact@2
-    displayName: Download notarized build dotnet
-    inputs:
-      artifact: '${{ parameters.uploadPrefix}}dotnet-signed'
-      allowFailedBuilds: true
-      path: $(Build.SourcesDirectory)/package
 
   - ${{ each pkg in parameters.packages }}:
     - task: DownloadPipelineArtifact@2
@@ -137,6 +112,25 @@ jobs:
       artifactName: '${{ parameters.uploadPrefix }}package-internal'
     continueOnError: true
 
+  # download msbuild.zip and bundle.zip to the 'package' dir, so that they're uploaded into the 'package' artifact,
+  # since we later depend on these files being there later.
+  - task: DownloadPipelineArtifact@2
+    displayName: Download msbuild.zip and bundle.zip
+    inputs:
+      patterns: |
+        not-signed-package/msbuild.zip
+        not-signed-package/bundle.zip
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/not-signed-package
+
+  - bash: |
+      set -x
+      set -e
+      ls -la "$BUILD_SOURCESDIRECTORY"/not-signed-package
+      cp "$BUILD_SOURCESDIRECTORY"/not-signed-package/not-signed-package/*.zip "$BUILD_SOURCESDIRECTORY"/package
+      ls -la "$BUILD_SOURCESDIRECTORY"/package
+    displayName: Copy msbuild.zip and bundle.zip to the package artifact
+
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Build Artifacts (notarized)'
     inputs:
@@ -156,11 +150,14 @@ jobs:
 
   variables:
     Parameters.outputStorageUri: ''
-    NUGETS_PUBLISHED: $[ stageDependencies.sign_notarize_dotnet.sign_notarize_dotnet.outputs['nugetPublishing.NUGETS_PUBLISHED'] ] # not a typo, stage and job have the same name
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
+    SKIP_NUGETS: $[ stageDependencies.configure_build.configure.outputs['labels.skip_nugets'] ]
+    INCLUDE_LEGACY_IOS: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_MAC: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
 
   pool:
-    vmImage: windows-latest
+    name: azurepipelines-EO
+    demands:
+    - ImageOverride -equals AzurePipelinesWindows2022compliant
     workspace:
       clean: all
   steps:
@@ -168,7 +165,6 @@ jobs:
     parameters:
       repositoryAlias: ${{ parameters.repositoryAlias }}
       commit: ${{ parameters.commit }}
-      enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
       azureStorage: ${{ parameters.azureStorage }}
       azureContainer: ${{ parameters.azureContainer }}
@@ -178,15 +174,14 @@ jobs:
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
   dependsOn:
-  - configure
   - upload_azure_blob
   condition: succeededOrFailed()
   variables:
-    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
+    PR_ID: $[ stageDependencies.configure_build.configure.outputs['labels.pr_number'] ]
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
-    vmImage: 'windows-latest'
+    vmImage: windows-latest
     workspace:
       clean: all
   steps:

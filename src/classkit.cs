@@ -407,9 +407,9 @@ namespace ClassKit {
 		[NullAllowed, Export ("runningActivity", ArgumentSemantic.Strong)]
 		CLSActivity RunningActivity { get; }
 
-		[Wrap ("WeakDelegate"), Protocolize]
+		[Wrap ("WeakDelegate")]
 		[NullAllowed]
-		CLSDataStoreDelegate Delegate { get; set; }
+		ICLSDataStoreDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }

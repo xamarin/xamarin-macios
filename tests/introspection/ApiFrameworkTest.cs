@@ -28,7 +28,7 @@ namespace Introspection {
 
 		public bool Skip (string @namespace)
 		{
-			if (@namespace == null)
+			if (@namespace is null)
 				return true;
 			if (namespaces.Contains (@namespace))
 				return true;
@@ -82,6 +82,9 @@ namespace Introspection {
 #endif
 			// not directly bindings
 			case "System.Net.Http":
+				return true;
+			// Removed in Xcode 15
+			case "NewsstandKit":
 				return true;
 			default:
 				return false;

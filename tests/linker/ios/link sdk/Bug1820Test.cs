@@ -35,7 +35,7 @@ namespace LinkSdk.Serialization {
 
 			private static XmlSerializer Serializer {
 				get {
-					if ((serializer == null))
+					if ((serializer is null))
 						serializer = new XmlSerializer (typeof (Response));
 					return serializer;
 				}
@@ -48,7 +48,7 @@ namespace LinkSdk.Serialization {
 					stringReader = new StringReader (xml);
 					return ((Response) (Serializer.Deserialize (XmlReader.Create (stringReader))));
 				} finally {
-					if ((stringReader != null)) {
+					if ((stringReader is not null)) {
 						stringReader.Dispose ();
 					}
 				}
@@ -76,7 +76,7 @@ namespace LinkSdk.Serialization {
 
 			private static XmlSerializer Serializer {
 				get {
-					if ((serializer == null))
+					if ((serializer is null))
 						serializer = new XmlSerializer (typeof (DataUpdates));
 					return serializer;
 				}
@@ -89,7 +89,7 @@ namespace LinkSdk.Serialization {
 					stringReader = new StringReader (xml);
 					return ((DataUpdates) (Serializer.Deserialize (XmlReader.Create (stringReader))));
 				} finally {
-					if ((stringReader != null)) {
+					if ((stringReader is not null)) {
 						stringReader.Dispose ();
 					}
 				}
@@ -129,7 +129,7 @@ namespace LinkSdk.Serialization {
 
 			private static XmlSerializer Serializer {
 				get {
-					if ((serializer == null))
+					if ((serializer is null))
 						serializer = new XmlSerializer (typeof (DataUpdatesDataUpdateInfo));
 					return serializer;
 				}
@@ -142,7 +142,7 @@ namespace LinkSdk.Serialization {
 					stringReader = new StringReader (xml);
 					return ((DataUpdatesDataUpdateInfo) (Serializer.Deserialize (XmlReader.Create (stringReader))));
 				} finally {
-					if ((stringReader != null)) {
+					if ((stringReader is not null)) {
 						stringReader.Dispose ();
 					}
 				}

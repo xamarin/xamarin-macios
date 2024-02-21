@@ -44,7 +44,7 @@ namespace Foundation {
 				return informal_until;
 			}
 			set {
-				if (value != null)
+				if (value is not null)
 					Version.Parse (value); // This will throw an exception with invalid input, which is what we want.
 				informal_until = value;
 			}

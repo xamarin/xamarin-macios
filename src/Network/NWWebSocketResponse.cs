@@ -26,12 +26,11 @@ namespace Network {
 
 #if NET
 	[SupportedOSPlatform ("tvos13.0")]
-	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13, 0)]
-	[Mac (10, 15)]
 	[iOS (13, 0)]
 	[Watch (6, 0)]
 #endif
@@ -72,10 +71,14 @@ namespace Network {
 		[return: MarshalAs (UnmanagedType.I1)]
 		unsafe static extern bool nw_ws_response_enumerate_additional_headers (OS_nw_ws_response response, BlockLiteral* enumerator);
 
+#if !NET
 		delegate void nw_ws_response_enumerate_additional_headers_t (IntPtr block, IntPtr header, IntPtr value);
 		static nw_ws_response_enumerate_additional_headers_t static_EnumerateHeadersHandler = TrampolineEnumerateHeadersHandler;
 
 		[MonoPInvokeCallback (typeof (nw_ws_response_enumerate_additional_headers_t))]
+#else
+		[UnmanagedCallersOnly]
+#endif
 		static void TrampolineEnumerateHeadersHandler (IntPtr block, IntPtr headerPointer, IntPtr valuePointer)
 		{
 			var del = BlockLiteral.GetTarget<Action<string?, string?>> (block);
@@ -93,8 +96,13 @@ namespace Network {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
+#if NET
+				delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> trampoline = &TrampolineEnumerateHeadersHandler;
+				using var block = new BlockLiteral (trampoline, handler, typeof (NWWebSocketResponseStatus), nameof (TrampolineEnumerateHeadersHandler));
+#else
 				using var block = new BlockLiteral ();
 				block.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);
+#endif
 				return nw_ws_response_enumerate_additional_headers (GetCheckedHandle (), &block);
 			}
 		}

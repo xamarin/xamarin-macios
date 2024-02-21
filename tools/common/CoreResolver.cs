@@ -82,6 +82,7 @@ namespace Xamarin.Bundler {
 				}
 
 				var parameters = CreateDefaultReaderParameters (fileName);
+				var symbolLoadFailure = false;
 				try {
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
 					params_cache [assembly.Name.ToString ()] = parameters;
@@ -92,7 +93,19 @@ namespace Xamarin.Bundler {
 						if (File.Exists (pdb))
 							ErrorHelper.Show (ErrorHelper.CreateWarning (178, Errors.MX0178, fileName));
 					}
+					// Don't load native .pdb symbols, because we won't be able to write them back out again (so just drop them)
+					if (assembly.MainModule?.SymbolReader?.GetType ()?.FullName == "Mono.Cecil.Pdb.NativePdbReader") {
+						parameters.ReadSymbols = false;
+						parameters.SymbolReaderProvider = null;
+						assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
+						ErrorHelper.Show (ErrorHelper.CreateWarning (178, Errors.MX0178, fileName));
+					}
+				} catch (IOException ex) when (ex.GetType ().FullName == "Microsoft.Cci.Pdb.PdbException") { // Microsoft.Cci.Pdb.PdbException is not public, so we have to check the runtime type :/
+					symbolLoadFailure = true;
 				} catch (SymbolsNotMatchingException) {
+					symbolLoadFailure = true;
+				}
+				if (symbolLoadFailure) {
 					parameters.ReadSymbols = false;
 					parameters.SymbolReaderProvider = null;
 					assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
@@ -125,7 +138,7 @@ namespace Xamarin.Bundler {
 		static string DirectoryGetFile (string directory, string file)
 		{
 			var files = Directory.GetFiles (directory, file);
-			if (files != null && files.Length > 0) {
+			if (files is not null && files.Length > 0) {
 				if (files.Length > 1) {
 					ErrorHelper.Warning (133, Errors.MX0133, file, Environment.NewLine, string.Join ("\n", files));
 				}

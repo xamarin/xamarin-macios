@@ -32,7 +32,6 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreML {
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLFeatureType : long {
@@ -43,12 +42,11 @@ namespace CoreML {
 		Image = 4,
 		MultiArray = 5,
 		Dictionary = 6,
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		Sequence = 7,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("MLModelErrorDomain")]
 	[Native]
@@ -63,9 +61,9 @@ namespace CoreML {
 		ModelDecryptionKeyFetch = 8,
 		ModelDecryption = 9,
 		ModelCollection = 10,
+		PredictionCancelled = 11,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLMultiArrayDataType : long {
@@ -82,7 +80,7 @@ namespace CoreML {
 		Int32 = 0x20000 | 32,
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLImageSizeConstraintType : long {
@@ -91,7 +89,7 @@ namespace CoreML {
 		Range = 3,
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLMultiArrayShapeConstraintType : long {
@@ -100,7 +98,7 @@ namespace CoreML {
 		Range = 3,
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLComputeUnits : long {
@@ -110,7 +108,7 @@ namespace CoreML {
 		CPUAndNeuralEngine = 3,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MLTaskState : long {
@@ -121,7 +119,7 @@ namespace CoreML {
 		Failed = 5,
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Flags]
 	[Native]
@@ -131,7 +129,6 @@ namespace CoreML {
 		MiniBatchEnd = 1L << 2,
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLDictionaryFeatureProvider : MLFeatureProvider, NSSecureCoding {
@@ -143,7 +140,6 @@ namespace CoreML {
 		NativeHandle Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLFeatureDescription : NSCopying, NSSecureCoding {
@@ -171,7 +167,7 @@ namespace CoreML {
 		[NullAllowed, Export ("dictionaryConstraint", ArgumentSemantic.Assign)]
 		MLDictionaryConstraint DictionaryConstraint { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sequenceConstraint")]
 		MLSequenceConstraint SequenceConstraint { get; }
@@ -179,7 +175,6 @@ namespace CoreML {
 
 	interface IMLFeatureProvider { }
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLFeatureProvider {
@@ -194,7 +189,6 @@ namespace CoreML {
 		MLFeatureValue GetFeatureValue (string featureName);
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLFeatureValue : NSCopying, NSSecureCoding {
@@ -223,7 +217,7 @@ namespace CoreML {
 		[NullAllowed, Export ("imageBufferValue")]
 		CVPixelBuffer ImageBufferValue { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("sequenceValue")]
 		MLSequence SequenceValue { get; }
@@ -232,7 +226,7 @@ namespace CoreML {
 		[Export ("featureValueWithPixelBuffer:")]
 		MLFeatureValue Create (CVPixelBuffer value);
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithSequence:")]
@@ -268,112 +262,112 @@ namespace CoreML {
 
 		// From MLFeatureValue (MLImageConversion)
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithImageAtURL:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (url, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithImageAtURL:constraint:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, MLImageConstraint constraint, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (url, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithCGImage:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (image, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithCGImage:constraint:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, MLImageConstraint constraint, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (image, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithImageAtURL:orientation:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (url, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithImageAtURL:orientation:constraint:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (url, orientation, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithCGImage:orientation:pixelsWide:pixelsHigh:pixelFormatType:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (image, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("featureValueWithCGImage:orientation:constraint:options:error:")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Wrap ("Create (image, orientation, constraint, imageOptions.GetDictionary (), out error)")]
@@ -381,7 +375,7 @@ namespace CoreML {
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Internal]
 	[Static]
@@ -394,7 +388,7 @@ namespace CoreML {
 		NSString CropAndScaleKey { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("MLFeatureValueImageOptionKeys")]
 	interface MLFeatureValueImageOption {
@@ -402,7 +396,6 @@ namespace CoreML {
 		VNImageCropAndScaleOption CropAndScale { get; set; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLModel {
@@ -410,7 +403,7 @@ namespace CoreML {
 		[Export ("modelDescription")]
 		MLModelDescription ModelDescription { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("configuration")]
 		MLModelConfiguration Configuration { get; }
@@ -420,7 +413,7 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLModel Create (NSUrl url, out NSError error);
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Static]
 		[Export ("modelWithContentsOfURL:configuration:error:")]
@@ -435,19 +428,19 @@ namespace CoreML {
 		[return: NullAllowed]
 		IMLFeatureProvider GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("predictionsFromBatch:error:")]
 		[return: NullAllowed]
 		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, [NullAllowed] out NSError error);
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("predictionsFromBatch:options:error:")]
 		[return: NullAllowed]
 		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, out NSError error);
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("parameterValueForKey:error:")]
 		[return: NullAllowed]
@@ -482,9 +475,24 @@ namespace CoreML {
 		[Static]
 		[Export ("compileModelAtURL:completionHandler:")]
 		void CompileModel (NSUrl modelUrl, Action<NSUrl, NSError> handler);
+
+		[Async]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("predictionFromFeatures:completionHandler:")]
+		void GetPrediction (IMLFeatureProvider input, Action<IMLFeatureProvider, NSError> completionHandler);
+
+		[Async]
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Export ("predictionFromFeatures:options:completionHandler:")]
+		void GetPrediction (IMLFeatureProvider input, MLPredictionOptions options, Action<IMLFeatureProvider, NSError> completionHandler);
+
+		// from the category MLComputeDevice (MLModel)
+		[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+		[Static]
+		[Export ("availableComputeDevices", ArgumentSemantic.Copy)]
+		IMLComputeDeviceProtocol [] AvailableComputeDevices { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLModelDescription : NSSecureCoding {
@@ -515,25 +523,24 @@ namespace CoreML {
 
 		// From MLModelDescription (MLUpdateAdditions)
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("isUpdatable")]
 		bool IsUpdatable { get; }
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("trainingInputDescriptionsByName")]
 		NSDictionary<NSString, MLFeatureDescription> TrainingInputDescriptionsByName { get; }
 
 		// From MLModelDescription (MLParameters)
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("parameterDescriptionsByKey")]
 		NSDictionary<MLParameterKey, MLParameterDescription> ParameterDescriptionsByKey { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Internal]
 	[Static]
@@ -555,7 +562,6 @@ namespace CoreML {
 		NSString CreatorDefinedKey { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[StrongDictionary ("MLModelMetadataKeys")]
 	interface MLModelMetadata {
@@ -566,7 +572,6 @@ namespace CoreML {
 		string CreatorDefined { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -656,7 +661,6 @@ namespace CoreML {
 		void GetMutableBytes (Action<IntPtr, nint, NSArray<NSNumber>> handler);
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -666,7 +670,6 @@ namespace CoreML {
 		MLFeatureType KeyType { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -681,13 +684,12 @@ namespace CoreML {
 		[Export ("pixelFormatType")]
 		uint PixelFormatType { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("sizeConstraint")]
 		MLImageSizeConstraint SizeConstraint { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -700,13 +702,12 @@ namespace CoreML {
 		[Export ("dataType")]
 		MLMultiArrayDataType DataType { get; }
 
-		[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+		[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("shapeConstraint")]
 		MLMultiArrayShapeConstraint ShapeConstraint { get; }
 	}
 
-	[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLPredictionOptions {
@@ -725,7 +726,7 @@ namespace CoreML {
 		NSDictionary OutputBackings { get; set; }
 	}
 
-	[NoWatch, TV (11, 2), Mac (10, 13, 2), iOS (11, 2)]
+	[NoWatch, TV (11, 2), iOS (11, 2)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLCustomLayer {
@@ -752,7 +753,7 @@ namespace CoreML {
 		bool Encode (IMTLCommandBuffer commandBuffer, IMTLTexture [] inputs, IMTLTexture [] outputs, [NullAllowed] out NSError error);
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -770,7 +771,7 @@ namespace CoreML {
 
 	interface IMLBatchProvider { }
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLBatchProvider {
@@ -784,7 +785,7 @@ namespace CoreML {
 		IMLFeatureProvider GetFeatures (nint index);
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 #if NET
@@ -808,7 +809,7 @@ namespace CoreML {
 		IMLBatchProvider GetPredictions (IMLBatchProvider inputBatch, MLPredictionOptions options, out NSError error);
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -821,7 +822,7 @@ namespace CoreML {
 		nint PixelsHigh { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -840,7 +841,7 @@ namespace CoreML {
 		MLImageSize [] EnumeratedImageSizes { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -856,7 +857,7 @@ namespace CoreML {
 		NSArray<NSNumber> [] EnumeratedShapes { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -884,7 +885,7 @@ namespace CoreML {
 		NSNumber [] Int64Values { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -897,7 +898,7 @@ namespace CoreML {
 		NSRange CountRange { get; }
 	}
 
-	[Watch (5, 0), TV (12, 0), Mac (10, 14), iOS (12, 0)]
+	[Watch (5, 0), TV (12, 0), iOS (12, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface MLModelConfiguration : NSCopying, NSSecureCoding {
@@ -911,25 +912,25 @@ namespace CoreML {
 
 		// From MLModelConfiguration (MLGPUConfigurationOptions)
 
-		[NoWatch, TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[NoWatch, TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("allowLowPrecisionAccumulationOnGPU")]
 		bool AllowLowPrecisionAccumulationOnGpu { get; set; }
 
-		[NoWatch, TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[NoWatch, TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("preferredMetalDevice", ArgumentSemantic.Assign)]
 		IMTLDevice PreferredMetalDevice { get; set; }
 
 		// From MLModelConfiguration (MLModelParameterAdditions)
 
-		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+		[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 		[MacCatalyst (13, 1)]
 		[NullAllowed, Export ("parameters", ArgumentSemantic.Assign)]
 		NSDictionary<MLParameterKey, NSObject> Parameters { get; set; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -942,7 +943,7 @@ namespace CoreML {
 		string Scope { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MLKey))]
 	[DisableDefaultCtor]
@@ -961,7 +962,7 @@ namespace CoreML {
 		MLMetricKey MiniBatchIndex { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -977,7 +978,7 @@ namespace CoreML {
 		NSSet<NSNumber> EnumeratedNumbers { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -993,7 +994,7 @@ namespace CoreML {
 		MLNumericConstraint NumericConstraint { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MLKey))]
 	[DisableDefaultCtor]
@@ -1066,7 +1067,7 @@ namespace CoreML {
 
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1088,7 +1089,7 @@ namespace CoreML {
 		void Cancel ();
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1110,7 +1111,7 @@ namespace CoreML {
 		NSDictionary<MLParameterKey, NSObject> Parameters { get; }
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1120,7 +1121,7 @@ namespace CoreML {
 		NativeHandle Constructor (MLUpdateProgressEvent interestedEvents, [NullAllowed] Action<MLUpdateContext> progressHandler, Action<MLUpdateContext> completionHandler);
 	}
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[BaseType (typeof (MLTask))]
 	[DisableDefaultCtor]
@@ -1156,7 +1157,7 @@ namespace CoreML {
 
 	interface IMLWritable { }
 
-	[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
+	[Watch (6, 0), TV (13, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Protocol]
 	interface MLWritable {
@@ -1166,6 +1167,9 @@ namespace CoreML {
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
@@ -1198,6 +1202,9 @@ namespace CoreML {
 		NSString DidChangeNotification { get; }
 	}
 
+	[Deprecated (PlatformName.MacOSX, 13, 3, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
+	[Deprecated (PlatformName.iOS, 16, 4, message: "Use Background Assets or 'NSUrlSession' instead.")]
 	[Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14, 0)]
 	[NoTV]
@@ -1227,4 +1234,34 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLModelAsset Create (NSData specificationData, [NullAllowed] out NSError error);
 	}
+
+	interface IMLComputeDeviceProtocol { }
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[Protocol]
+	interface MLComputeDeviceProtocol {
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLNeuralEngineComputeDevice : MLComputeDeviceProtocol {
+		[Export ("totalCoreCount")]
+		nint TotalCoreCount { get; }
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject), Name = "MLCPUComputeDevice")]
+	[DisableDefaultCtor]
+	interface MLCpuComputeDevice : MLComputeDeviceProtocol {
+	}
+
+	[Watch (10, 0), TV (17, 0), Mac (14, 0), iOS (17, 0), MacCatalyst (17, 0)]
+	[BaseType (typeof (NSObject), Name = "MLGPUComputeDevice")]
+	[DisableDefaultCtor]
+	interface MLGpuComputeDevice : MLComputeDeviceProtocol {
+		[Export ("metalDevice", ArgumentSemantic.Strong)]
+		IMTLDevice MetalDevice { get; }
+	}
+
 }
