@@ -129,9 +129,9 @@ namespace CoreFoundation {
 		{
 			bufferPtr = default;
 			size = default;
-			var nh = dispatch_data_create_map (Handle, 
-												(IntPtr *) Unsafe.AsPointer<IntPtr> (ref bufferPtr), 
-												(nuint *) Unsafe.AsPointer<nuint> (ref size));
+			var nh = dispatch_data_create_map (Handle,
+												(IntPtr*) Unsafe.AsPointer<IntPtr> (ref bufferPtr),
+												(nuint*) Unsafe.AsPointer<nuint> (ref size));
 			return new DispatchData (nh, owns: true);
 		}
 
