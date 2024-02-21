@@ -79,6 +79,39 @@ configuration:
           reply: This issue is being closed due to inactivity. If this issue is still affecting you, please follow the steps above to use the VS Feedback Tool to report the issue.
       - closeIssue
 
+    - description: Add comment letting user know their PR is out of date.
+      frequencies:
+      - weekday:
+          day: Monday
+          time: 0:0
+      filters:
+      - isPullRequest
+      - isOpen
+      - hasLabel:
+          label: community
+      - noActivitySince:
+          days: 21
+      actions:
+      - addReply:
+          reply: Hi @{issueAuthor}. Due to inactivity, we will close this pull request in 7 days.
+
+    - description: Closing out-of-date community PRs.
+      frequencies:
+      - weekday:
+          day: Monday
+          time: 0:0
+      filters:
+      - isPullRequest
+      - isOpen
+      - hasLabel:
+          label: community
+      - noActivitySince:
+          days: 28
+      actions:
+      - closePullRequest
+      - addReply:
+          reply: Hi @{issueAuthor}. This pull request was closed due to inactivity. Please let us know if you'd like to reopen it.
+
     eventResponderTasks:
 
     - if:
