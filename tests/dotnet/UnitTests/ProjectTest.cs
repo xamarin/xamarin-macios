@@ -1673,6 +1673,13 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
 		public void SourcelinkTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
+			// Sourcelink uses the latest commit and tests to see if
+			// it is valid which will not pass until the commit has
+			// been merged in and actually exists on github.
+
+			if (!TestRuntime.IsCI || TestRuntime.IsPullRequest)
+				Assert.Ignore ("This test is disabled for local runs and Pull Requests.");
+
 			var project = "MySimpleApp";
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
@@ -1683,6 +1690,7 @@ namespace Xamarin.Tests {
 			var pdbFile = Directory
 				.GetFiles (Path.GetDirectoryName (project_path)!, "*.pdb", SearchOption.AllDirectories)
 				.FirstOrDefault ();
+
 			Assert.NotNull (pdbFile, "No PDB file found");
 
 			using Process install = new();
