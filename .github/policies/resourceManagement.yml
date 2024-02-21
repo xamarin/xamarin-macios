@@ -115,9 +115,9 @@ configuration:
               This issue will be closed automatically in 7 days if we do not hear back from you by then - please feel free to re-open it if you come back to this issue after that time.
       - if:
         - hasLabel: no-auto-reply
-      then:
-      - removeLabel:
-          label: no-auto-reply
+        then:
+        - removeLabel:
+            label: no-auto-reply
       description: "Add comment asking for info when the 'need-repro' label is added to an issue."
 
     - if:
