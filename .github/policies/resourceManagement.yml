@@ -95,7 +95,7 @@ configuration:
       - if:
         - hasLabel: no-auto-reply
       then:
-        removeLabel:
+      - removeLabel:
           label: no-auto-reply
       description: "Add comment asking for info when the 'need-info' label is added to an issue."
 
@@ -116,7 +116,7 @@ configuration:
       - if:
         - hasLabel: no-auto-reply
       then:
-        removeLabel:
+      - removeLabel:
           label: no-auto-reply
       description: "Add comment asking for info when the 'need-repro' label is added to an issue."
 
