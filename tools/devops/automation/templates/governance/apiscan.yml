@@ -47,6 +47,8 @@ steps:
     softwareVersionNum: $(VERSION)
     isLargeApp: true  # we did get a Max Unknown error (work item 1973775), it means we need to reduce the call graph
     toolVersion: 'Latest'
+    verbosityLevel: standard
+    preserveLogsFolder: true
   env:
     AzureServicesAuthConnectionString: runAs=App;AppId=$(CLIENT_ID);TenantId=$(TENANT);AppKey=$(SECRET)
 
