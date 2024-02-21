@@ -427,7 +427,6 @@ namespace Cecil.Tests {
 			"System.IntPtr CoreFoundation.CFPropertyList::CFPropertyListCreateData(System.IntPtr,System.IntPtr,System.IntPtr,System.UIntPtr,System.IntPtr&)",
 			"System.IntPtr CoreFoundation.CFPropertyList::CFPropertyListCreateWithData(System.IntPtr,System.IntPtr,System.UIntPtr,System.IntPtr&,System.IntPtr&)",
 			"System.IntPtr CoreFoundation.CFRunLoopSourceCustom::CFRunLoopSourceCreate(System.IntPtr,System.IntPtr,CoreFoundation.CFRunLoopSourceContext&)",
-			"System.IntPtr CoreFoundation.CFSocket::CFSocketCreateConnectedToSocketSignature(System.IntPtr,CoreFoundation.CFSocketSignature&,System.UIntPtr,method System.Void *(System.IntPtr,System.UIntPtr,System.IntPtr,System.IntPtr,System.IntPtr),CoreFoundation.CFSocketContext*,System.Double)",
 			"System.IntPtr CoreFoundation.CFUrl::CFURLCreateWithFileSystemPath(System.IntPtr,System.IntPtr,System.IntPtr,System.Boolean)",
 			"System.IntPtr CoreFoundation.DispatchData::dispatch_data_create_map(System.IntPtr,System.IntPtr&,System.UIntPtr&)",
 			"System.IntPtr CoreGraphics.CGEvent::CGEventCreateKeyboardEvent(System.IntPtr,System.UInt16,System.Boolean)",
