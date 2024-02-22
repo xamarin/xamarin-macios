@@ -8,7 +8,6 @@ using Microsoft.Build.Framework;
 using System.Globalization;
 
 using Xamarin.Localization.MSBuild;
-using Xamarin.iOS.Tasks;
 using Xamarin.Messaging.Build.Client;
 using Xamarin.Utils;
 

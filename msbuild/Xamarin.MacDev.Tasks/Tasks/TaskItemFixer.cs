@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public static class TaskItemFixer {
 		const string XIFrameworkRootDir = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/";
 
