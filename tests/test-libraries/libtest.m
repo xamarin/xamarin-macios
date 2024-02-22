@@ -7,6 +7,8 @@
 #include <zlib.h>
 #include "libtest.h"
 
+NSString *x_GlobalString = @"There's nothing cruvus here!";
+
 int
 theUltimateAnswer ()
 {
