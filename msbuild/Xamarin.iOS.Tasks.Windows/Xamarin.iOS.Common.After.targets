@@ -16,8 +16,8 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Unzip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.WriteItemsToFile" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CopyArchiveFiles" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILLink" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.CreateArchiveDirectory" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Windows.ResolveUniversalTypeIdentifiers" AssemblyFile="Xamarin.iOS.Tasks.Windows.dll" />
 
@@ -361,7 +361,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		</ItemGroup>
 		
 		<Delete SessionId="$(BuildSessionId)" Files="@(_LinkedResolvedFileToPublishCandidate)" />
-		<Xamarin.iOS.Tasks.ILLink 
+		<Xamarin.MacDev.Tasks.ILLink
 				SessionId="$(BuildSessionId)"
 				AssemblyPaths="@(ManagedAssemblyToLink)"
 				ReferenceAssemblyPaths="@(ReferencePath)"
@@ -401,7 +401,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<Output TaskParameter="ExitCode" PropertyName="_ILLinkExitCode" />
 			<Output TaskParameter="LinkedItems" ItemName="_XamarinLinkedItems" />
 			<Output TaskParameter="LinkerOutputItems" ItemName="_XamarinLinkerItems" />
-		</Xamarin.iOS.Tasks.ILLink>
+		</Xamarin.MacDev.Tasks.ILLink>
 
 		<Touch Files="$(_LinkSemaphore)" AlwaysCreate="true" Condition=" '$(_ILLinkExitCode)' == '0' " />
 

@@ -10,7 +10,7 @@ using Xamarin.Utils;
 
 #nullable enable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class FindWatchOS2AppBundle : XamarinTask, ICancelableTask {
 		#region Inputs
 

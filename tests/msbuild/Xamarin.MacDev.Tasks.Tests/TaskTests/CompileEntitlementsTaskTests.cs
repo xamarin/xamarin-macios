@@ -5,7 +5,6 @@ using Microsoft.Build.Utilities;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.MacDev;
 
 #nullable enable

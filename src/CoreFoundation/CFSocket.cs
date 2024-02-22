@@ -456,17 +456,17 @@ namespace CoreFoundation {
 		internal CFSocket (CFSocketSignature sig, double timeout)
 		{
 			unsafe {
+				Initialize (
+					CFRunLoop.Current,
+					(CFSocketContext* ctx) => {
+						CFSocketSignature localSig = sig;
 #if NET
-				Initialize (
-					CFRunLoop.Current,
-					(CFSocketContext* ctx) => CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, ref sig, (nuint) (ulong) defaultCallbackTypes, &OnCallback, ctx, timeout)
-				);
+						return CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, &localSig, (nuint) (ulong) defaultCallbackTypes, &OnCallback, ctx, timeout);
 #else
-				Initialize (
-					CFRunLoop.Current,
-					(CFSocketContext* ctx) => CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, ref sig, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx, timeout)
-				);
+						return CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, &localSig, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx, timeout);
 #endif
+					}
+				);
 			}
 		}
 
@@ -496,13 +496,13 @@ namespace CoreFoundation {
 
 #if NET
 		[DllImport (Constants.CoreFoundationLibrary)]
-		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, ref CFSocketSignature signature,
+		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, CFSocketSignature* signature,
 																	   nuint /*CFOptionFlags*/ callBackTypes,
 																	   delegate* unmanaged<IntPtr, nuint, IntPtr, IntPtr, IntPtr, void> callout,
 																	   CFSocketContext* context, double timeout);
 #else
 		[DllImport (Constants.CoreFoundationLibrary)]
-		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, ref CFSocketSignature signature,
+		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, CFSocketSignature* signature,
 																	   nuint /*CFOptionFlags*/ callBackTypes,
 																	   CFSocketCallBack callout,
 																	   CFSocketContext* context, double timeout);

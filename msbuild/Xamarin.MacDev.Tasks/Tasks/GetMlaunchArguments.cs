@@ -16,7 +16,7 @@ using Xamarin.Utils;
 
 #nullable enable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class GetMlaunchArguments : XamarinTask, ICancelableTask {
 
 		[Required]

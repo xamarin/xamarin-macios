@@ -5,8 +5,6 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
-
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class CollectITunesArtworkTaskTests : TestBase {

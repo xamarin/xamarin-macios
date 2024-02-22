@@ -7,7 +7,7 @@ using Xamarin.Messaging.Build.Client;
 using Xamarin.Messaging.Build.Contracts;
 using Threading = System.Threading.Tasks;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class VerifyXcodeVersion : XamarinTask {
 		public override bool Execute () => ExecuteAsync ().Result;
 
