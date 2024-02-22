@@ -6,8 +6,8 @@ using Foundation;
 namespace Bug35176 {
 
 	[Introduced (PlatformName.iOS, 14, 3)]
-	[Introduced (PlatformName.MacOSX, 11, 2)]
-	[Introduced (PlatformName.MacCatalyst, 14, 3)]
+	[Introduced (PlatformName.MacOSX, 12, 2)]
+	[Introduced (PlatformName.MacCatalyst, 15, 3)]
 	[Protocol]
 	interface FooInterface {
 
@@ -18,7 +18,7 @@ namespace Bug35176 {
 		[Export ("BarView")]
 		UIView BarView {
 			[Introduced (PlatformName.iOS, 14, 4)]
-			[Introduced (PlatformName.MacCatalyst, 14, 4)]
+			[Introduced (PlatformName.MacCatalyst, 15, 4)]
 			get;
 		}
 
