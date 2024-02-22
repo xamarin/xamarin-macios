@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 
 public class CodeBlock : ICodeBlock {
-	protected int CurrentIndent;
+	protected int CurrentIndent = 0;
 	protected int Indent = 4;
 	protected string HeaderText = string.Empty;
 	protected List<ICodeBlock> Blocks = new ();
@@ -10,27 +10,21 @@ public class CodeBlock : ICodeBlock {
 	readonly string endBrace = "}";
 	public readonly string newLine = "\n";
 
-	public CodeBlock (int currentIndent)
-	{
-		this.CurrentIndent = currentIndent;
-	}
+	public CodeBlock () { }
 
-	public CodeBlock (int currentIndent, string text)
+	public CodeBlock (string text)
 	{
-		this.CurrentIndent = currentIndent;
 		HeaderText = text;
 	}
 
-	public CodeBlock (int currentIndent, string text, List<ICodeBlock> blocks)
+	public CodeBlock (string text, List<ICodeBlock> blocks)
 	{
-		this.CurrentIndent = currentIndent;
 		this.Blocks = blocks;
 		HeaderText = text;
 	}
 
-	public CodeBlock (int currentIndent, List<ICodeBlock> blocks)
+	public CodeBlock (List<ICodeBlock> blocks)
 	{
-		this.CurrentIndent = currentIndent;
 		this.Blocks = blocks;
 	}
 
@@ -42,7 +36,8 @@ public class CodeBlock : ICodeBlock {
 
 	public void AddLine (string text)
 	{
-		LineBlock line = new LineBlock (CurrentIndent + Indent, text);
+		LineBlock line = new LineBlock (text);
+		line.SetIndent (CurrentIndent + Indent);
 		Blocks.Add (line);
 	}
 

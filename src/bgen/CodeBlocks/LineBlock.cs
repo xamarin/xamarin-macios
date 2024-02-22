@@ -5,10 +5,9 @@ public class LineBlock : ICodeBlock {
 	int currentIndent = 0;
 	readonly string newLine = "\n";
 
-	public LineBlock (int currentIndent, string line)
+	public LineBlock (string line)
 	{
 		this.line = line;
-		this.currentIndent = currentIndent;
 	}
 
 	public void SetIndent (int indent)

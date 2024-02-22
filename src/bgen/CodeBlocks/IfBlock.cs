@@ -4,12 +4,12 @@ using System.IO;
 public class IfBlock : CodeBlock {
 	List<CodeBlock> ElseIfBlocks = new ();
 	CodeBlock? ElseBlock = null;
-	public IfBlock (int currentIndent, string condition) : base (currentIndent)
+	public IfBlock (string condition) 
 	{
 		HeaderText = "if (" + condition + ")";
 	}
 
-	public IfBlock (int currentIndent, string condition, List<ICodeBlock> blocks) : base (currentIndent)
+	public IfBlock (string condition, List<ICodeBlock> blocks)
 	{
 		HeaderText = "if (" + condition + ")";
 		this.Blocks = blocks;
@@ -17,12 +17,12 @@ public class IfBlock : CodeBlock {
 
 	public void AddElseIf (string condition, List<ICodeBlock> blocks)
 	{
-		ElseIfBlocks.Add (new CodeBlock (currentIndent: 0, "else if (" + condition + ")", blocks));
+		ElseIfBlocks.Add (new CodeBlock ("else if (" + condition + ")", blocks));
 	}
 
 	public void AddElse (List<ICodeBlock> blocks)
 	{
-		ElseBlock = new CodeBlock (currentIndent: 0, "else", blocks);
+		ElseBlock = new CodeBlock ("else", blocks);
 	}
 
 	public override void Print (StreamWriter writer)

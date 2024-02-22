@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 public class MethodBlock : CodeBlock {
-	public MethodBlock (int currentIndent, string methodSignature, string [] parameters) : base (currentIndent)
+	public MethodBlock (string methodSignature, string [] parameters)
 	{
 		string allParameters = "";
 		for (int i = 0; i < parameters.Length; i++) {
@@ -12,7 +12,7 @@ public class MethodBlock : CodeBlock {
 		}
 		HeaderText = methodSignature + "(" + allParameters + ")";
 	}
-	public MethodBlock (int currentIndent, string methodSignature, string [] parameters, List<ICodeBlock> blocks) : base (currentIndent)
+	public MethodBlock (string methodSignature, string [] parameters, List<ICodeBlock> blocks)
 	{
 		string allParameters = "";
 		for (int i = 0; i < parameters.Length; i++) {
