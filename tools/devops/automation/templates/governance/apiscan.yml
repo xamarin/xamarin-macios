@@ -67,18 +67,6 @@ steps:
     GdnExportAllTools: false
     GdnExportGdnToolApiScan: true
     GdnExportGdnToolApiScanSeverity: 'error'
-#      GdnExportGdnToolBinSkim: true
-#      GdnExportGdnToolBinSkimSeverity: 'error'
-#      GdnExportGdnToolCodesignValidation: true
-#      GdnExportGdnToolCodesignValidationSeverity: 'error'
-#      GdnExportGdnToolCredScan: true
-#      GdnExportGdnToolCredScanSeverity: 'error'
-#      GdnExportGdnToolPoliCheck: true
-#      GdnExportGdnToolPoliCheckSeverity: 'error'
-#      GdnExportGdnToolSDLNativeRules: true # PREfast build results
-#      GdnExportGdnToolSDLNativeRulesSeverity: 'error'
-#      GdnExportGdnToolSemmle: true # CodeQL (aka Semmle) results
-#      GdnExportGdnToolSemmleSeverity: 'Error' # CodeQL (aka Semmle) results
 
 - task: TSAUpload@2
   inputs:
