@@ -465,5 +465,28 @@ namespace Xamarin.Tests {
 			Assert.That (output, Does.Not.Contain ("LinkerConfiguration:"), "Custom steps did not run as expected.");
 		}
 
+		static bool? is_in_ci;
+		public static bool IsInCI {
+			get {
+				if (!is_in_ci.HasValue) {
+					var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+					in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+					is_in_ci = in_ci;
+				}
+				return is_in_ci.Value;
+			}
+		}
+
+		static bool? is_pull_request;
+		public static bool IsPullRequest {
+			get {
+				if (!is_pull_request.HasValue) {
+					var pr = string.Equals(Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+					is_pull_request = pr;
+				}
+				return is_pull_request.Value;
+			}
+		}
+
 	}
 }

@@ -143,8 +143,8 @@ partial class TestRuntime {
 				var pr = string.Equals(Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
 				is_pull_request = pr;
 			}
+			return is_pull_request.Value;
 		}
-		return is_pull_request.Value;
 	}
 
 	public static void IgnoreInCI (string message)

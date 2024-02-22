@@ -1,10 +1,7 @@
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Xml;
 
 using Mono.Cecil;
-
-using Xamarin.Tests;
 
 #nullable enable
 
@@ -1677,7 +1674,7 @@ namespace Xamarin.Tests {
 			// it is valid which will not pass until the commit has
 			// been merged in and actually exists on github.
 
-			if (!TestRuntime.IsCI || TestRuntime.IsPullRequest)
+			if (!IsInCI || IsPullRequest)
 				Assert.Ignore ("This test is disabled for local runs and Pull Requests.");
 
 			var project = "MySimpleApp";
