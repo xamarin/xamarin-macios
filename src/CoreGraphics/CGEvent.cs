@@ -179,10 +179,10 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, [MarshalAs (UnmanagedType.I1)] bool keyDown);
+		extern static IntPtr CGEventCreateKeyboardEvent (IntPtr source, ushort virtualKey, byte keyDown);
 
 		public CGEvent (CGEventSource? source, ushort virtualKey, bool keyDown)
-			: base (CGEventCreateKeyboardEvent (source.GetHandle (), virtualKey, keyDown), true)
+			: base (CGEventCreateKeyboardEvent (source.GetHandle (), virtualKey, keyDown.AsByte ()), true)
 		{
 		}
 
@@ -406,41 +406,42 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		extern static void CGEventTapEnable (IntPtr machPort, [MarshalAs (UnmanagedType.I1)] bool enable);
+		extern static void CGEventTapEnable (IntPtr machPort, byte enable);
 
 		public static void TapEnable (CFMachPort machPort)
 		{
 			if (machPort is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (machPort));
-			CGEventTapEnable (machPort.Handle, true);
+			CGEventTapEnable (machPort.Handle, 1);
 		}
 
 		public static void TapDisable (CFMachPort machPort)
 		{
 			if (machPort is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (machPort));
-			CGEventTapEnable (machPort.Handle, false);
+			CGEventTapEnable (machPort.Handle, 0);
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGEventTapIsEnabled (IntPtr machPort);
+		extern static byte CGEventTapIsEnabled (IntPtr machPort);
 
 		public static bool IsTapEnabled (CFMachPort machPort)
 		{
 			if (machPort is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (machPort));
-			return CGEventTapIsEnabled (machPort.Handle);
+			return CGEventTapIsEnabled (machPort.Handle) != 0;
 		}
 
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
-		unsafe extern static void CGEventKeyboardGetUnicodeString (IntPtr handle, nuint maxLen, out nuint actualLen, char *buffer);
+		unsafe extern static void CGEventKeyboardGetUnicodeString (IntPtr handle, nuint maxLen, nuint* actualLen, ushort *buffer);
 
 		public unsafe string GetUnicodeString ()
 		{
-			char *buffer = stackalloc char [40];
-			CGEventKeyboardGetUnicodeString (Handle, 40, out var actual, buffer);
-			return new String (buffer, 0, (int) actual);
+			const int bufferLength = 40;
+			ushort *buffer = stackalloc ushort [bufferLength];
+			nuint actual = 0;
+			CGEventKeyboardGetUnicodeString (Handle, bufferLength, &actual, buffer);
+			return new String ((char *) buffer, 0, (int) actual);
 		}
 
 #if NET
@@ -500,16 +501,16 @@ namespace CoreGraphics {
 		unsafe extern static int /* CGError = int32_t */ CGGetEventTapList (
 			uint /* uint32_t */ maxNumberOfTaps,
 			CGEventTapInformation *tapList,
-			out uint /* uint32_t* */ eventTapCount);
+			uint* /* uint32_t* */ eventTapCount);
 
 		public unsafe CGEventTapInformation []? GetEventTapList ()
 		{
 			uint count;
-			if (CGGetEventTapList (0, null, out count) != 0)
+			if (CGGetEventTapList (0, null, &count) != 0)
 				return null;
 			var result = new CGEventTapInformation [count];
 			fixed (CGEventTapInformation *p = result){
-				if (CGGetEventTapList (count, p, out count) != 0)
+				if (CGGetEventTapList (count, p, &count) != 0)
 					return null;
 			}
 			return result;
@@ -521,9 +522,16 @@ namespace CoreGraphics {
 #else
 		[Mac (11,0)]
 #endif
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightListenEventAccess")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool PreflightListenEventAccess ();
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		static extern byte CGPreflightListenEventAccess ();
+
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (11,0)]
+#endif
+		public static bool PreflightListenEventAccess () => CGPreflightListenEventAccess () != 0;
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
@@ -532,8 +540,7 @@ namespace CoreGraphics {
 		[Mac (11,0)]
 #endif
 		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestListenEventAccess")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool RequestListenEventAccess ();
+		static extern byte CGRequestListenEventAccess ();
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
@@ -541,9 +548,7 @@ namespace CoreGraphics {
 #else
 		[Mac (11,0)]
 #endif
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGPreflightPostEventAccess")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool PreflightPostEventAccess ();
+		public static bool RequestListenEventAccess () => CGRequestListenEventAccess () != 0;
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
@@ -551,9 +556,33 @@ namespace CoreGraphics {
 #else
 		[Mac (11,0)]
 #endif
-		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary, EntryPoint="CGRequestPostEventAccess")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		public static extern bool RequestPostEventAccess ();
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		static extern byte CGPreflightPostEventAccess ();
+
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (11,0)]
+#endif
+		public static bool PreflightPostEventAccess () => CGPreflightPostEventAccess () != 0;
+
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (11,0)]
+#endif
+		[DllImport (Constants.ApplicationServicesCoreGraphicsLibrary)]
+		static extern byte CGRequestPostEventAccess ();
+
+#if NET
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Mac (11,0)]
+#endif
+		public static bool RequestPostEventAccess () => CGRequestPostEventAccess () != 0;
 
 	}
 
