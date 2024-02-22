@@ -49,16 +49,3 @@ stages:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}
         commit: ${{ parameters.commit }}
-
-  - job: tsa_upload 
-    displayName: 'TSA Upload'
-    dependsOn: [ general_governance, apiscan ]
-    pool:
-      vmImage: windows-latest
-
-    steps:
-    - template: ./tsa-upload.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}

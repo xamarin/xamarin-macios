@@ -1126,21 +1126,28 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net6.0");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["ExcludeNUnitLiteReference"] = "true";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			// This is to prevent this type of errors:
+			//     Unable to find package Microsoft.NETCore.App.Ref with version (= 6.0.27)
+			// which happens when we don't have a feed for the Microsoft.NETCore.App.Ref version in question
+			// (the specific package version may in fact not exist yet - which happens sometimes for maestro bumps,
+			// and if that happens, we can do nothing but wait, which may take a while).
+			// This works around the problem by just skipping the reference to the Microsoft.NETCore.App.Ref package,
+			// which we don't need for this test anyway.
+			properties ["DisableImplicitFrameworkReferences"] = "true";
 
 			var result = DotNet.AssertBuildFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToList ();
-			Assert.AreEqual (1, errors.Count, "Error Count");
-			Assert.That (errors [0].Message, Does.Contain ("To build this project, the following workloads must be installed: "), "Error message");
 
-			// With multi targeting, this happens instead:
-			// // Due to an implementation detail in .NET, the same error message is shown twice.
-			// Assert.AreEqual (2, errors.Count, "Error Count");
-			// Assert.AreEqual (errors [0].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 1");
-			// Assert.AreEqual (errors [1].Message, $"The workload 'net6.0-{platform.AsString ().ToLowerInvariant ()}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.", "Error message 2");
+			// Due to an implementation detail in .NET, the same error message is shown twice.
+			var targetFramework = $"net6.0-{platform.AsString ().ToLowerInvariant ()}";
+			AssertErrorMessages (errors,
+				$"The workload '{targetFramework}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.",
+				$"The workload '{targetFramework}' is out of support and will not receive security updates in the future. Please refer to https://aka.ms/maui-support-policy for more information about the support policy.");
 		}
 
 		[Test]
-		[Ignore ("Ignore due to issue: https://github.com/xamarin/xamarin-macios/issues/18655")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
@@ -1155,9 +1162,6 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net7.0");
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-
-			// This property is needed until https://github.com/xamarin/xamarin-macios/pull/18411 has been merged and we can use the resulting packages.
-			properties ["_RequiresILLinkPack"] = "true";
 
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerExecuted (result);
