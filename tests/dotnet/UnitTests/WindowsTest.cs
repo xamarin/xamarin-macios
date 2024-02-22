@@ -194,7 +194,7 @@ namespace Xamarin.Tests {
 
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
-			var warningMessages = BundleStructureTest.FilterWarnings (warnings);
+			var warningMessages = BundleStructureTest.FilterWarnings (warnings, canonicalizePaths: true);
 
 			var isReleaseBuild = string.Equals (configuration, "Release", StringComparison.OrdinalIgnoreCase);
 			var platformString = platform.AsString ();
@@ -236,6 +236,7 @@ namespace Xamarin.Tests {
 
 			// Sort the messages so that comparison against the expected array is faster
 			expectedWarnings = expectedWarnings
+				.Select (v => v.Replace (Path.DirectorySeparatorChar, '/')) // warnings we get are from macOS, so make sure we expect macOS-style paths.
 				.OrderBy (v => v)
 				.ToList ();
 
@@ -255,7 +256,7 @@ namespace Xamarin.Tests {
 
 			rv = DotNet.AssertBuild (project_path, properties);
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
-			warningMessages = BundleStructureTest.FilterWarnings (warnings);
+			warningMessages = BundleStructureTest.FilterWarnings (warnings, canonicalizePaths: true);
 
 			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 1");
@@ -267,7 +268,7 @@ namespace Xamarin.Tests {
 
 			rv = DotNet.AssertBuild (project_path, properties);
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
-			warningMessages = BundleStructureTest.FilterWarnings (warnings);
+			warningMessages = BundleStructureTest.FilterWarnings (warnings, canonicalizePaths: true);
 
 			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 2");
@@ -276,7 +277,7 @@ namespace Xamarin.Tests {
 			// a simple rebuild should succeed
 			rv = DotNet.AssertBuild (project_path, properties);
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
-			warningMessages = BundleStructureTest.FilterWarnings (warnings);
+			warningMessages = BundleStructureTest.FilterWarnings (warnings, canonicalizePaths: true);
 
 			BundleStructureTest.CheckZippedAppBundleContents (platform, zippedAppBundlePath, rids, signature, isReleaseBuild);
 			AssertWarningsEqual (expectedWarnings, warningMessages, "Warnings Rebuild 3");

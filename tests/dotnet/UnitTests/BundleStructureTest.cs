@@ -706,7 +706,7 @@ namespace Xamarin.Tests {
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
-		public static string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings)
+		public static string [] FilterWarnings (IEnumerable<BuildLogEvent> warnings, bool canonicalizePaths = false)
 		{
 			return warnings
 				.Select (v => v?.Message!).Where (v => !string.IsNullOrWhiteSpace (v))
@@ -720,6 +720,8 @@ namespace Xamarin.Tests {
 				.Where (v => !v.Contains (" overrides obsolete member "))
 				// Don't care about this
 				.Where (v => !v.Contains ("Supported iPhone orientations have not been set"))
+				// Canonicalize if so requested
+				.Select (v => canonicalizePaths ? v.Replace (Path.DirectorySeparatorChar, '/') : v)
 				// Sort the messages so that comparison against the expected array is faster
 				.OrderBy (v => v)
 				.ToArray ();
