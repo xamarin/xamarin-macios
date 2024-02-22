@@ -197,8 +197,8 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreatePairWithSocket (/* CFAllocatorRef */ IntPtr allocator, CFSocketNativeHandle sock,
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
+		internal unsafe extern static void CFStreamCreatePairWithSocket (/* CFAllocatorRef */ IntPtr allocator, CFSocketNativeHandle sock,
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -223,7 +223,9 @@ namespace CoreFoundation {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (socket));
 
 			IntPtr read, write;
-			CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), out read, out write);
+			unsafe {
+				CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), &read, &write);
+			}
 			readStream = new CFReadStream (read, true);
 			writeStream = new CFWriteStream (write, true);
 		}
@@ -245,9 +247,9 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreatePairWithPeerSocketSignature (/* CFAllocatorRef */ IntPtr allocator,
-			/* CFSocketSignature* */ ref CFSocketSignature sig,
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
+		internal unsafe extern static void CFStreamCreatePairWithPeerSocketSignature (/* CFAllocatorRef */ IntPtr allocator,
+			/* CFSocketSignature* */ CFSocketSignature* sig,
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -273,7 +275,9 @@ namespace CoreFoundation {
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
 				IntPtr read, write;
-				CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, ref sig, out read, out write);
+				unsafe {
+					CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, &sig, &read, &write);
+				}
 				readStream = new CFReadStream (read, true);
 				writeStream = new CFWriteStream (write, true);
 			}
@@ -298,11 +302,11 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CFNetworkLibrary)]
-		internal extern static void CFStreamCreatePairWithSocketToCFHost (
+		internal unsafe extern static void CFStreamCreatePairWithSocketToCFHost (
 			/* CFAllocatorRef __nullable */ IntPtr allocator,
 			/* CFHostRef __nonnull */ IntPtr host, /* SInt32 */ int port,
-			/* CFReadStreamRef __nullable * __nullable */ out IntPtr readStream,
-			/* CFWriteStreamRef __nullable * __nullable */ out IntPtr writeStream);
+			/* CFReadStreamRef __nullable * __nullable */ IntPtr* readStream,
+			/* CFWriteStreamRef __nullable * __nullable */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -326,7 +330,9 @@ namespace CoreFoundation {
 		{
 			using (var host = CFHost.Create (endpoint)) {
 				IntPtr read, write;
-				CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, out read, out write);
+				unsafe {
+					CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, &read, &write);
+				}
 				// API can return null streams
 				readStream = read == IntPtr.Zero ? null : new CFReadStream (read, true);
 				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
@@ -351,9 +357,9 @@ namespace CoreFoundation {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: Constants.UseNetworkInstead)]
 #endif
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreatePairWithSocketToHost (/* CFAllocatorRef */ IntPtr allocator,
+		unsafe extern static void CFStreamCreatePairWithSocketToHost (/* CFAllocatorRef */ IntPtr allocator,
 			/* CFStringRef */ IntPtr host, /* UInt32 */ int port,
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream);
 
 #if NET
 		[SupportedOSPlatform ("ios")]
@@ -377,8 +383,9 @@ namespace CoreFoundation {
 		{
 			using (var str = new CFString (host)) {
 				IntPtr read, write;
-				CFStreamCreatePairWithSocketToHost (
-					IntPtr.Zero, str.Handle, port, out read, out write);
+				unsafe {
+					CFStreamCreatePairWithSocketToHost (IntPtr.Zero, str.Handle, port, &read, &write);
+				}
 				// API not annotated (yet?) but it's safe to bet it match CFStreamCreatePairWithSocketToCFHost
 				readStream = read == IntPtr.Zero ? null : new CFReadStream (read, true);
 				writeStream = write == IntPtr.Zero ? null : new CFWriteStream (write, true);
@@ -481,14 +488,16 @@ namespace CoreFoundation {
 #endif
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		internal extern static void CFStreamCreateBoundPair (/* CFAllocatorRef */ IntPtr alloc,
-			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream,
+		unsafe internal extern static void CFStreamCreateBoundPair (/* CFAllocatorRef */ IntPtr alloc,
+			/* CFReadStreamRef* */ IntPtr* readStream, /* CFWriteStreamRef* */ IntPtr* writeStream,
 			/* CFIndex */ nint transferBufferSize);
 
 		public static void CreateBoundPair (out CFReadStream readStream, out CFWriteStream writeStream, nint bufferSize)
 		{
 			IntPtr read, write;
-			CFStreamCreateBoundPair (IntPtr.Zero, out read, out write, bufferSize);
+			unsafe {
+				CFStreamCreateBoundPair (IntPtr.Zero, &read, &write, bufferSize);
+			}
 			readStream = new CFReadStream (read, true);
 			writeStream = new CFWriteStream (write, true);
 		}
