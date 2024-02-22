@@ -140,7 +140,7 @@ partial class TestRuntime {
 	public static bool IsPullRequest {
 		get {
 			if (!is_pull_request.HasValue) {
-				var pr = string.Equals(Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
+				var pr = string.Equals (Environment.GetEnvironmentVariable ("BUILD_REASON"), "PullRequest", StringComparison.Ordinal);
 				is_pull_request = pr;
 			}
 			return is_pull_request.Value;

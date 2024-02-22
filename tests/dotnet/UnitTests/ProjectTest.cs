@@ -1690,7 +1690,7 @@ namespace Xamarin.Tests {
 
 			Assert.NotNull (pdbFile, "No PDB file found");
 
-			using Process install = new();
+			using Process install = new ();
 			install.StartWithArgs ("tool install sourcelink");
 
 			using Process test = new ();
