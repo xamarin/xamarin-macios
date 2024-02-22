@@ -89,6 +89,7 @@
 		) {
 			WrappedManagedFunction = "CreateDelegateProxy",
 			OnlyDynamicUsage = false,
+			SkipManagedStaticRegistrar = true,
 		},
 
 		new XDelegate ("void", "void", "xamarin_register_entry_assembly",
