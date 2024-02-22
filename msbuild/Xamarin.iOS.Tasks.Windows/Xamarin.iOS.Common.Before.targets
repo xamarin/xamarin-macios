@@ -14,7 +14,6 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props')" />
 
-	<UsingTask TaskName="Xamarin.iOS.Tasks.ConvertPdbToMdb" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CollectMonotouchReferences" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.Before.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.Before.targets')" />
