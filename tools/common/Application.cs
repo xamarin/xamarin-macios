@@ -825,6 +825,9 @@ namespace Xamarin.Bundler {
 		public void InitializeCommon ()
 		{
 			InitializeDeploymentTarget ();
+#if !NET
+			SelectRegistrar ();
+#endif
 			SelectMonoNative ();
 
 			RuntimeOptions = RuntimeOptions.Create (this, HttpMessageHandler, TlsProvider);
