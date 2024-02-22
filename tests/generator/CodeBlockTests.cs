@@ -51,7 +51,7 @@ namespace bgen_tests {
 			string [] methodArguments = new [] { "int count", "bool isFoo" };
 			string expectedText =
 				"public void Foobinate(int count, bool isFoo)\n{\n    int fooCount = 1;\n    string[] fooNames = new [] {\"foo\"};\n}\n";
-			List<ICodeBlock> blocks = new List<ICodeBlock> () { new LineBlock ("int fooCount = 1;"), new LineBlock ("string[] fooNames = new [] {\"foo\"};")};
+			List<ICodeBlock> blocks = new List<ICodeBlock> () { new LineBlock ("int fooCount = 1;"), new LineBlock ("string[] fooNames = new [] {\"foo\"};") };
 			MethodBlock methodBlock = new (methodName, methodArguments, blocks);
 			string output = PerformWriting (methodBlock);
 			Assert.AreEqual (expectedText, output);
