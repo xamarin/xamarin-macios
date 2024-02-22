@@ -29,6 +29,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
@@ -132,60 +133,59 @@ namespace CoreGraphics {
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static void CGPDFDocumentGetVersion (/* CGPDFDocumentRef */ IntPtr document, /* int* */ out int majorVersion, /* int* */ out int minorVersion);
+		unsafe extern static void CGPDFDocumentGetVersion (/* CGPDFDocumentRef */ IntPtr document, /* int* */ int* majorVersion, /* int* */ int* minorVersion);
 
 		public void GetVersion (out int major, out int minor)
 		{
-			CGPDFDocumentGetVersion (Handle, out major, out minor);
-		}
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFDocumentIsEncrypted (/* CGPDFDocumentRef */ IntPtr document);
-
-		public bool IsEncrypted {
-			get {
-				return CGPDFDocumentIsEncrypted (Handle);
+			major = default;
+			minor = default;
+			unsafe {
+				CGPDFDocumentGetVersion (Handle, (int *) Unsafe.AsPointer<int> (ref major), (int *) Unsafe.AsPointer<int> (ref minor));
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ IntPtr password);
+		extern static byte CGPDFDocumentIsEncrypted (/* CGPDFDocumentRef */ IntPtr document);
+
+		public bool IsEncrypted {
+			get {
+				return CGPDFDocumentIsEncrypted (Handle) != 0;
+			}
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static byte CGPDFDocumentUnlockWithPassword (/* CGPDFDocumentRef */ IntPtr document, /* const char* */ IntPtr password);
 
 		public bool Unlock (string password)
 		{
 			using var passwordPtr = new TransientString (password);
-			return CGPDFDocumentUnlockWithPassword (Handle, passwordPtr);
+			return CGPDFDocumentUnlockWithPassword (Handle, passwordPtr) != 0;
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFDocumentIsUnlocked (/* CGPDFDocumentRef */ IntPtr document);
+		extern static byte CGPDFDocumentIsUnlocked (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool IsUnlocked {
 			get {
-				return CGPDFDocumentIsUnlocked (Handle);
+				return CGPDFDocumentIsUnlocked (Handle) != 0;
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFDocumentAllowsPrinting (/* CGPDFDocumentRef */ IntPtr document);
+		extern static byte CGPDFDocumentAllowsPrinting (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool AllowsPrinting {
 			get {
-				return CGPDFDocumentAllowsPrinting (Handle);
+				return CGPDFDocumentAllowsPrinting (Handle) != 0;
 			}
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFDocumentAllowsCopying (/* CGPDFDocumentRef */ IntPtr document);
+		extern static byte CGPDFDocumentAllowsCopying (/* CGPDFDocumentRef */ IntPtr document);
 
 		public bool AllowsCopying {
 			get {
-				return CGPDFDocumentAllowsCopying (Handle);
+				return CGPDFDocumentAllowsCopying (Handle) != 0;
 			}
 		}
 
