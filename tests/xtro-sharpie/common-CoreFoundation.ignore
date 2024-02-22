@@ -857,7 +857,6 @@
 !missing-pinvoke! CFUUIDGetConstantUUIDWithBytes is not bound
 !missing-pinvoke! CFUUIDGetTypeID is not bound
 !missing-pinvoke! CFUUIDGetUUIDBytes is not bound
-!missing-pinvoke! CFWriteStreamCopyProperty is not bound
 !missing-pinvoke! CFWriteStreamCreateWithAllocatedBuffers is not bound
 !missing-pinvoke! CFWriteStreamCreateWithBuffer is not bound
 !missing-pinvoke! CFWriteStreamCreateWithFile is not bound
