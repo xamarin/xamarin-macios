@@ -305,17 +305,13 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $githubComments = New-GitHubCommentsObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token) -Hash $Env:COMMENT_HASH
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $githubComments.NewCommentFromFile("${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
     } elseif ("$($Env:AGENT_JOBSTATUS)" -ne "Succeeded") {
-      $statuses.SetStatus("error", "${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
       $message = ":x: $($Env:AGENT_JOBSTATUS) :x:"
       $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} failed", ":x:", $message)
     } else {
-      $statuses.SetStatus("success", "${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
       $message = ":white_check_mark: **All** ${{ parameters.statusContext }} passed."
       $githubComments.NewCommentFromMessage("${{ parameters.statusContext }} passed", ":computer:", $message)
     }
