@@ -27,11 +27,11 @@
     <ItemGroup Condition="$(TargetFramework.StartsWith ('netstandard'))">
       <!-- I don't like to have a hard-coded list of assemblies to merge, but I couldn't find a way to calculate it -->
       <MergedAssemblies Include="@(ReferenceDependencyPaths)" Condition="'%(FileName)' == 'AssemblyStripper'" />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'MonoTargetsTasks'" />
+      <MergedAssemblies Include="@(ReferenceDependencyPaths)" Condition="'%(FileName)' == 'MonoTargetsTasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'DotNetZip'" />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILLink.Tasks'" />
+      <MergedAssemblies Include="@(ReferenceDependencyPaths)" Condition="'%(FileName)' == 'ILLink.Tasks'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILStrip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />

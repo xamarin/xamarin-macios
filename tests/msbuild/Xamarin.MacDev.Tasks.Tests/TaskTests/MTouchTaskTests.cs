@@ -7,7 +7,6 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-using Xamarin.iOS.Tasks;
 using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks {
