@@ -29,6 +29,8 @@ var supportedTFMs = new List<string> ();
 supportedTFMs.Add (currentApiVersion);
 supportedTFMs.AddRange (olderApiVersions.Split (' '));
 
+var supportedTFVs = new List<string> ();
+
 using (var writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
 	writer.WriteLine ($"	<ImportGroup Condition=\" '$(TargetPlatformIdentifier)' == '{platform}' \">");
@@ -37,6 +39,7 @@ using (var writer = new StreamWriter (outputPath)) {
 		var sep = tfv.IndexOfAny (new char [] { '-', '_' });
 		if (sep >= 0)
 			tfv = tfv.Substring (0, sep);
+		supportedTFVs.Add (tfv);
 		var workloadVersion = tfm;
 		if (tfv [0] == '7')
 			workloadVersion = tfm.Replace (".0", "");
@@ -55,6 +58,9 @@ using (var writer = new StreamWriter (outputPath)) {
 			writer.WriteLine ($"		<Import Project=\"Sdk.props\" Sdk=\"Microsoft.{platform}.Windows.Sdk.Aliased.{workloadVersion}\" Condition=\" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '{tfv}')) And $([MSBuild]::IsOSPlatform('windows'))\" />");
 		}
 	}
+	writer.WriteLine ();
+	var earliestSupportedTFV = supportedTFVs.Select (v => Version.Parse (v)).OrderBy (v => v).First ();
+	writer.WriteLine ($"		<Import Project=\"Sdk-eol.props\" Sdk=\"Microsoft.{platform}.Sdk.{tfm}\" Condition=\" $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '{earliestSupportedTFV}'))\" />");
 	writer.WriteLine ($"	</ImportGroup>");
 	writer.WriteLine ();
 	writer.WriteLine ($"	<ItemGroup Condition=\" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) \">");
