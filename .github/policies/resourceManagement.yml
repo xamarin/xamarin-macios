@@ -108,9 +108,9 @@ configuration:
       - noActivitySince:
           days: 28
       actions:
-      - closePullRequest
       - addReply:
           reply: Hi @{issueAuthor}. This pull request was closed due to inactivity. Please let us know if you'd like to reopen it.
+      - closePullRequest
 
     eventResponderTasks:
 
