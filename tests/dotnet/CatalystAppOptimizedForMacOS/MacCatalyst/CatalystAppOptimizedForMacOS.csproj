@@ -2,7 +2,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-maccatalyst</TargetFramework>
-		<SupportedOSPlatformVersion>14.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	<Import Project="..\shared.csproj" />
 </Project>
