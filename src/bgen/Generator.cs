@@ -2717,7 +2717,7 @@ public partial class Generator : IMemberGatherer {
 					sb.Append ('?');
 			} else {
 				sb.Append (prefix);
-				sb.Append (TypeManager.FormatType (mi.DeclaringType, mi.ReturnType));
+				sb.Append (TypeManager.FormatType (minfo.type, mi.ReturnType));
 				if (!mi.ReturnType.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (mi.ReturnParameter))
 					sb.Append ('?');
 			}
@@ -2855,7 +2855,7 @@ public partial class Generator : IMemberGatherer {
 		if (GetNativeEnumToManagedExpression (mi.ReturnType, out cast_a, out cast_b, out var _, postproc)) {
 			// we're done here
 		} else if (mi.ReturnType.IsEnum) {
-			cast_a = "(" + TypeManager.FormatType (mi.DeclaringType, mi.ReturnType) + ") ";
+			cast_a = "(" + TypeManager.FormatType (minfo?.type ?? mi.DeclaringType, mi.ReturnType) + ") ";
 			cast_b = "";
 		} else if (marshalTypes.TryGetMarshalType (mai.Type, out mt)) {
 			cast_a = mt.CreateFromRet;
@@ -2863,20 +2863,20 @@ public partial class Generator : IMemberGatherer {
 		} else if (TypeManager.IsWrappedType (mi.ReturnType)) {
 			// protocol support means we can return interfaces and, as far as .NET knows, they might not be NSObject
 			if (IsProtocolInterface (mi.ReturnType)) {
-				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (mi.DeclaringType, mi.ReturnType) + "> (";
+				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (minfo?.type ?? mi.DeclaringType, mi.ReturnType) + "> (";
 				cast_b = ", false)!";
 			} else if (minfo is not null && minfo.is_forced) {
-				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (declaringType, mi.ReturnType) + "> (";
+				cast_a = " Runtime.GetINativeObject<" + TypeManager.FormatType (minfo.type, mi.ReturnType) + "> (";
 				cast_b = $", true, {minfo.is_forced_owns})!";
 			} else if (minfo is not null && minfo.is_bindAs) {
 				var bindAs = GetBindAsAttribute (minfo.mi);
 				var nullableBindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type);
 				var isNullable = nullableBindAsType is not null;
 				var bindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type) ?? bindAs.Type;
-				var formattedBindAsType = TypeManager.FormatType (declaringType, bindAs.Type);
+				var formattedBindAsType = TypeManager.FormatType (minfo.type, bindAs.Type);
 				string suffix;
 				var wrapper = GetFromBindAsWrapper (minfo, out suffix);
-				var formattedReturnType = TypeManager.FormatType (declaringType, mi.ReturnType);
+				var formattedReturnType = TypeManager.FormatType (minfo.type, mi.ReturnType);
 				if (mi.ReturnType == TypeCache.NSString) {
 					if (isNullable) {
 						print ("{0} retvaltmp;", NativeHandleType);
@@ -2893,7 +2893,7 @@ public partial class Generator : IMemberGatherer {
 					cast_b = $") == IntPtr.Zero ? default ({formattedBindAsType}) : ({enumCast}Runtime.GetNSObject<{formattedReturnType}> (retvaltmp)!{wrapper})){suffix}";
 				}
 			} else {
-				cast_a = " Runtime.GetNSObject<" + TypeManager.FormatType (declaringType, mi.ReturnType) + "> (";
+				cast_a = " Runtime.GetNSObject<" + TypeManager.FormatType (minfo?.type ?? declaringType, mi.ReturnType) + "> (";
 				cast_b = ")!";
 			}
 		} else if (mi.ReturnType.IsGenericParameter) {
@@ -3592,7 +3592,7 @@ public partial class Generator : IMemberGatherer {
 			} else {
 				var isClassType = mi.ReturnType.IsClass || mi.ReturnType.IsInterface;
 				var nullableReturn = isClassType ? "?" : string.Empty;
-				print ("{0}{1} ret;", TypeManager.FormatType (mi.DeclaringType, mi.ReturnType), nullableReturn);
+				print ("{0}{1} ret;", TypeManager.FormatType (minfo.type, mi.ReturnType), nullableReturn);
 			}
 		}
 
@@ -4019,7 +4019,7 @@ public partial class Generator : IMemberGatherer {
 			// it remains nullable only if the BindAs type can be null (i.e. a reference type)
 			nullable = !bindAsAttrib.Type.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (pi);
 		} else {
-			propertyTypeName = TypeManager.FormatType (pi.DeclaringType, pi.PropertyType);
+			propertyTypeName = TypeManager.FormatType (minfo.type, pi.PropertyType);
 		}
 
 		print ("{0} {1}{2}{3} {4} {{",
