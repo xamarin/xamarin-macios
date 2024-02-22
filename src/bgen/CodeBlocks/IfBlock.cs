@@ -4,7 +4,7 @@ using System.IO;
 public class IfBlock : CodeBlock {
 	List<CodeBlock> ElseIfBlocks = new ();
 	CodeBlock? ElseBlock = null;
-	public IfBlock (string condition) 
+	public IfBlock (string condition)
 	{
 		HeaderText = "if (" + condition + ")";
 	}

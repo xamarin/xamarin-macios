@@ -8,9 +8,4 @@ public class BlockContainer : CodeBlock {
 			block.Print (writer);
 		}
 	}
-
-	public void SetIndent (int indent)
-	{
-		CurrentIndent = indent;
-	}
 }
