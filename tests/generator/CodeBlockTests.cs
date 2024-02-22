@@ -32,7 +32,7 @@ namespace bgen_tests {
 		}
 
 		[Test]
-		public void MethodBlockTest ()
+		public void MethodBlockAddLinesTest ()
 		{
 			string inputText1 = "int fooCount = 1;";
 			string inputText2 = "string[] fooNames = new [] {\"foo\"};";
@@ -43,6 +43,19 @@ namespace bgen_tests {
 			MethodBlock methodBlock = new (methodName, methodArguments);
 			methodBlock.AddLine (inputText1);
 			methodBlock.AddLine (inputText2);
+			string output = PerformWriting (methodBlock);
+			Assert.AreEqual (expectedText, output);
+		}
+
+		[Test]
+		public void MethodBlockTest ()
+		{
+			string methodName = "public void Foobinate";
+			string [] methodArguments = new [] { "int count", "bool isFoo" };
+			string expectedText =
+				"public void Foobinate(int count, bool isFoo)\n{\n    int fooCount = 1;\n    string[] fooNames = new [] {\"foo\"};\n}\n";
+			List<ICodeBlock> blocks = new List<ICodeBlock> () { new LineBlock ("int fooCount = 1;"), new LineBlock ("string[] fooNames = new [] {\"foo\"};")};
+			MethodBlock methodBlock = new (methodName, methodArguments, blocks);
 			string output = PerformWriting (methodBlock);
 			Assert.AreEqual (expectedText, output);
 		}
