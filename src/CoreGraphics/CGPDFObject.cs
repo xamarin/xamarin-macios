@@ -31,6 +31,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
@@ -71,20 +72,16 @@ namespace CoreGraphics {
 		extern static CGPDFObjectType CGPDFObjectGetType (/* CGPDFObjectRef */ IntPtr pdfobj);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out byte value);
+		unsafe extern static byte CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ byte* value);
 
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGPDFObjectGetValue")]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFObjectGetNIntValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nint value);
+		unsafe extern static byte CGPDFObjectGetNIntValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ nint* value);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out nfloat value);
+		unsafe extern static byte CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ nfloat* value);
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
-		extern static bool CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ out IntPtr value);
+		unsafe extern static byte CGPDFObjectGetValue (/* CGPDFObjectRef */IntPtr pdfobj, CGPDFObjectType type, /* void* */ IntPtr* value);
 
 		public CGPDFObjectType Type {
 			get { return CGPDFObjectGetType (Handle); }
@@ -97,83 +94,83 @@ namespace CoreGraphics {
 		public bool TryGetValue (out bool value)
 		{
 			byte b;
-			if (CGPDFObjectGetValue (Handle, CGPDFObjectType.Boolean, out b)) {
-				value = b != 0;
-				return true;
-			} else {
-				value = false;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFObjectGetValue (Handle, CGPDFObjectType.Boolean, &b) != 0;
 			}
+			value = rv && b != 0;
+			return rv;
 		}
 
 		public bool TryGetValue (out nint value)
 		{
-			return CGPDFObjectGetNIntValue (Handle, CGPDFObjectType.Integer, out value);
+			value = default;
+			unsafe {
+				return CGPDFObjectGetNIntValue (Handle, CGPDFObjectType.Integer, (nint *) Unsafe.AsPointer<nint> (ref value)) != 0;
+			}
 		}
 
 		public bool TryGetValue (out nfloat value)
 		{
-			return CGPDFObjectGetValue (Handle, CGPDFObjectType.Real, out value);
+			value = default;
+			unsafe {
+				return CGPDFObjectGetValue (Handle, CGPDFObjectType.Real, (nfloat *) Unsafe.AsPointer<nfloat> (ref value)) != 0;
+			}
 		}
 
 		public bool TryGetValue (out string? value)
 		{
 			IntPtr ip;
-			if (CGPDFObjectGetValue (Handle, CGPDFObjectType.String, out ip)) {
-				value = CGPDFString.ToString (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFObjectGetValue (Handle, CGPDFObjectType.String, &ip) != 0;
 			}
+			value = rv ? CGPDFString.ToString (ip) : null;
+			return rv;
 		}
 
 		public bool TryGetValue (out CGPDFArray? value)
 		{
 			IntPtr ip;
-			if (CGPDFObjectGetValue (Handle, CGPDFObjectType.Array, out ip)) {
-				value = new CGPDFArray (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFObjectGetValue (Handle, CGPDFObjectType.Array, &ip) != 0;
 			}
+			value = rv ? new CGPDFArray (ip) : null;
+			return rv;
 		}
 
 		public bool TryGetValue (out CGPDFDictionary? value)
 		{
 			IntPtr ip;
-			if (CGPDFObjectGetValue (Handle, CGPDFObjectType.Dictionary, out ip)) {
-				value = new CGPDFDictionary (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFObjectGetValue (Handle, CGPDFObjectType.Dictionary, &ip) != 0;
 			}
+			value = rv ? new CGPDFDictionary (ip) : null;
+			return rv;
 		}
 
 		public bool TryGetValue (out CGPDFStream? value)
 		{
 			IntPtr ip;
-			if (CGPDFObjectGetValue (Handle, CGPDFObjectType.Stream, out ip)) {
-				value = new CGPDFStream (ip);
-				return true;
-			} else {
-				value = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFObjectGetValue (Handle, CGPDFObjectType.Stream, &ip) != 0;
 			}
+			value = rv ? new CGPDFStream (ip) : null;
+			return rv;
 		}
 
 		public bool TryGetName (out string? name)
 		{
 			IntPtr ip;
-			if (CGPDFObjectGetValue (Handle, CGPDFObjectType.Name, out ip)) {
-				name = Marshal.PtrToStringAnsi (ip);
-				return true;
-			} else {
-				name = null;
-				return false;
+			bool rv;
+			unsafe {
+				rv = CGPDFObjectGetValue (Handle, CGPDFObjectType.Name, &ip) != 0;
 			}
+			name = rv ? Marshal.PtrToStringAnsi (ip) : null;
+			return rv;
 		}
 
 		internal static object? FromHandle (IntPtr handle)
@@ -186,45 +183,62 @@ namespace CoreGraphics {
 				return null;
 
 			case CGPDFObjectType.Boolean:
-				byte b;
-				if (CGPDFObjectGetValue (handle, type, out b))
-					return b != 0;
+				unsafe {
+					byte b;
+					if (CGPDFObjectGetValue (handle, type, &b) != 0)
+						return b != 0;
+				}
 				return null;
 
 			case CGPDFObjectType.Integer:
-				if (CGPDFObjectGetNIntValue (handle, type, out var i))
-					return i;
+				unsafe {
+					nint i;
+					if (CGPDFObjectGetNIntValue (handle, type, &i) != 0)
+						return i;
+				}
 				return null;
 
 			case CGPDFObjectType.Real:
-				nfloat f;
-				if (CGPDFObjectGetValue (handle, type, out f))
-					return f;
+				unsafe {
+					nfloat f;
+					if (CGPDFObjectGetValue (handle, type, &f) != 0)
+						return f;
+				}
 				return null;
 
 			case CGPDFObjectType.Name:
-				if (CGPDFObjectGetValue (handle, type, out ip))
-					return Marshal.PtrToStringAnsi (ip);
+				unsafe {
+					if (CGPDFObjectGetValue (handle, type, &ip) != 0)
+						return Marshal.PtrToStringAnsi (ip);
+				}
 				return null;
 
 			case CGPDFObjectType.String:
-				if (CGPDFObjectGetValue (handle, type, out ip))
-					return CGPDFString.ToString (ip);
+				unsafe {
+					if (CGPDFObjectGetValue (handle, type, &ip) != 0)
+						return CGPDFString.ToString (ip);
+				}
 				return null;
 
 			case CGPDFObjectType.Array:
-				if (CGPDFObjectGetValue (handle, type, out ip))
-					return new CGPDFArray (ip);
+				unsafe {
+					if (CGPDFObjectGetValue (handle, type, &ip) != 0)
+						return new CGPDFArray (ip);
+				}
 				return null;
 
 			case CGPDFObjectType.Dictionary:
-				if (CGPDFObjectGetValue (handle, type, out ip))
-					return new CGPDFDictionary (ip);
+				unsafe {
+					if (CGPDFObjectGetValue (handle, type, &ip) != 0)
+						return new CGPDFDictionary (ip);
+				}
 				return null;
 
 			case CGPDFObjectType.Stream:
-				if (CGPDFObjectGetValue (handle, type, out ip))
-					return new CGPDFStream (ip);
+				unsafe {
+					if (CGPDFObjectGetValue (handle, type, &ip) != 0)
+						return new CGPDFStream (ip);
+				}
 				return null;
 			}
 			return null;
