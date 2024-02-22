@@ -5651,7 +5651,7 @@ namespace MetalPerformanceShaders {
 		[return: Release]
 		IMPSCnnConvolutionDataSource Copy ([NullAllowed] NSZone zone, [NullAllowed] IMTLDevice device);
 
-		[TV (14, 0), MacCatalyst (14, 0), Mac (11, 0), iOS (14, 0)]
+		[TV (14, 0), MacCatalyst (14, 0), iOS (14, 0)]
 		[Export ("kernelWeightsDataType")]
 		MPSDataType KernelWeightsDataType { get; }
 	}

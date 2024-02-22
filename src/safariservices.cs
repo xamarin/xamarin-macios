@@ -507,7 +507,7 @@ namespace SafariServices {
 	}
 
 	[Static]
-	[iOS (15, 0), Mac (11, 0), MacCatalyst (15, 0), NoTV, NoWatch]
+	[iOS (15, 0), MacCatalyst (15, 0), NoTV, NoWatch]
 	[DisableDefaultCtor]
 	interface SFExtension {
 		[Field ("SFExtensionMessageKey")]

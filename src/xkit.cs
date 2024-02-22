@@ -257,12 +257,12 @@ namespace UIKit {
 	[Flags]
 	[Native]
 	public enum NSLineBreakStrategy : ulong {
-		[Mac (11, 0), iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
+		[iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
 		None = 0x0,
 		PushOut = 1uL << 0,
-		[Mac (11, 0), iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
+		[iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
 		HangulWordPriority = 1uL << 1,
-		[Mac (11, 0), iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
+		[iOS (14, 0), TV (14, 0), Watch (7, 0), MacCatalyst (14, 0)]
 		Standard = 0xffff,
 	}
 
@@ -1581,15 +1581,15 @@ namespace UIKit {
 		[Export ("sectionIdentifiers")]
 		SectionIdentifierType [] SectionIdentifiers { get; }
 
-		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("reloadedSectionIdentifiers")]
 		SectionIdentifierType [] ReloadedSectionIdentifiers { get; }
 
-		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("reloadedItemIdentifiers")]
 		ItemIdentifierType [] ReloadedItemIdentifiers { get; }
 
-		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("reconfiguredItemIdentifiers")]
 		ItemIdentifierType [] ReconfiguredItemIdentifiers { get; }
 
@@ -1708,7 +1708,7 @@ namespace UIKit {
 		[Export ("hyphenationFactor")]
 		float HyphenationFactor { get; [NotImplemented] set; } // Returns a float, not nfloat.
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("usesDefaultHyphenation")]
 		bool UsesDefaultHyphenation { get; }
 
@@ -1829,7 +1829,7 @@ namespace UIKit {
 		[Override]
 		float HyphenationFactor { get; set; } // Returns a float, not nfloat.
 
-		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("usesDefaultHyphenation")]
 		bool UsesDefaultHyphenation { get; set; }
 
@@ -2257,17 +2257,14 @@ namespace UIKit {
 		NSLayoutDimension CreateAnchorWithOffset (NSLayoutXAxisAnchor otherAnchor);
 #endif
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("constraintEqualToSystemSpacingAfterAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("constraintGreaterThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("constraintLessThanOrEqualToSystemSpacingAfterAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingAfterAnchor (NSLayoutXAxisAnchor anchor, nfloat multiplier);
@@ -2286,17 +2283,14 @@ namespace UIKit {
 		NSLayoutDimension CreateAnchorWithOffset (NSLayoutYAxisAnchor otherAnchor);
 #endif
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("constraintEqualToSystemSpacingBelowAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("constraintGreaterThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintGreaterThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		[Export ("constraintLessThanOrEqualToSystemSpacingBelowAnchor:multiplier:")]
 		NSLayoutConstraint ConstraintLessThanOrEqualToSystemSpacingBelowAnchor (NSLayoutYAxisAnchor anchor, nfloat multiplier);
@@ -2531,31 +2525,31 @@ namespace UIKit {
 		[Export ("textAttachmentWithImage:")]
 		NSTextAttachment Create (Image image);
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("lineLayoutPadding")]
 		nfloat LineLayoutPadding { get; set; }
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Static]
 		[Export ("textAttachmentViewProviderClassForFileType:")]
 		[return: NullAllowed]
 		Class GetTextAttachmentViewProviderClass (string fileType);
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Static]
 		[Export ("registerTextAttachmentViewProviderClass:forFileType:")]
 		void RegisterViewProviderClass (Class textAttachmentViewProviderClass, string fileType);
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("allowsTextAttachmentView")]
 		bool AllowsTextAttachmentView { get; set; }
 
-		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 		[Export ("usesTextAttachmentView")]
 		bool UsesTextAttachmentView { get; }
 	}
 
-	[TV (15, 0), Watch (9, 0), Mac (12, 0), iOS (15, 0)]
+	[TV (15, 0), Watch (9, 0), iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 	[Protocol]
 	interface NSTextAttachmentLayout {
@@ -2672,7 +2666,7 @@ namespace UIKit {
 #endif
 		NSString DidProcessEditingNotification { get; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed]
 		[Export ("textStorageObserver", ArgumentSemantic.Weak)]
 		INSTextStorageObserving TextStorageObserver { get; set; }
@@ -3164,7 +3158,7 @@ namespace UIKit {
 		[Export ("containerSize")]
 		CGSize ContainerSize { get; set; }
 
-		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+		[TV (15, 0), iOS (15, 0), MacCatalyst (15, 0)]
 		[NullAllowed, Export ("textLayoutManager", ArgumentSemantic.Weak)]
 		NSTextLayoutManager TextLayoutManager { get; }
 	}
@@ -3189,7 +3183,7 @@ namespace UIKit {
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -3208,7 +3202,7 @@ namespace UIKit {
 		NSDictionary<NSString, NSObject> GetRenderingAttributes (NSTextLayoutManager textLayoutManager, NSObject link, INSTextLocation location, NSDictionary<NSString, NSObject> renderingAttributes);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextLayoutManagerSegmentType : long {
 		Standard = 0,
@@ -3216,7 +3210,7 @@ namespace UIKit {
 		Highlight = 2,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum NSTextLayoutManagerSegmentOptions : ulong {
@@ -3228,7 +3222,7 @@ namespace UIKit {
 		UpstreamAffinity = (1uL << 4),
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum NSTextLayoutFragmentEnumerationOptions : ulong {
@@ -3241,13 +3235,13 @@ namespace UIKit {
 
 	interface INSTextLayoutManagerDelegate { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	delegate bool NSTextLayoutManagerEnumerateRenderingAttributesDelegate (NSTextLayoutManager textLayoutManager, NSDictionary<NSString, NSObject> attributes, NSTextRange textRange);
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	delegate bool NSTextLayoutManagerEnumerateTextSegmentsDelegate (NSTextRange textSegmentRange, CGRect textSegmentFrame, nfloat baselinePosition, NSTextContainer textContainer);
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTextLayoutManager : NSSecureCoding, NSTextSelectionDataSource {
@@ -3347,7 +3341,7 @@ namespace UIKit {
 		void ReplaceContents (NSTextRange range, NSAttributedString attributedString);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum NSTextContentManagerEnumerationOptions : ulong {
@@ -3355,7 +3349,7 @@ namespace UIKit {
 		Reverse = (1uL << 0),
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -3371,7 +3365,7 @@ namespace UIKit {
 		bool ShouldEnumerateTextElement (NSTextContentManager textContentManager, NSTextElement textElement, NSTextContentManagerEnumerationOptions options);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
 	interface NSTextElementProvider {
 		[Abstract]
@@ -3405,7 +3399,7 @@ namespace UIKit {
 
 	interface INSTextContentManagerDelegate { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextContentManager : NSTextElementProvider, NSSecureCoding {
@@ -3462,7 +3456,7 @@ namespace UIKit {
 
 	interface INSTextLocation { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
 	interface NSTextLocation {
 		[Abstract]
@@ -3470,7 +3464,7 @@ namespace UIKit {
 		NSComparisonResult Compare (INSTextLocation location);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextElement {
 		[Export ("initWithTextContentManager:")]
@@ -3496,7 +3490,7 @@ namespace UIKit {
 		bool IsRepresentedElement { get; }
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSTextElement))]
 	interface NSTextParagraph {
 		[Export ("initWithAttributedString:")]
@@ -3517,7 +3511,7 @@ namespace UIKit {
 		NSTextRange ParagraphSeparatorRange { get; }
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextLineFragment : NSSecureCoding {
@@ -3553,7 +3547,7 @@ namespace UIKit {
 		nfloat GetFractionOfDistanceThroughGlyph (CGPoint point);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextLayoutFragmentState : ulong {
 		None = 0,
@@ -3562,7 +3556,7 @@ namespace UIKit {
 		LayoutAvailable = 3,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextAttachmentViewProvider {
@@ -3592,7 +3586,7 @@ namespace UIKit {
 		CGRect GetAttachmentBounds (NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint position);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextLayoutFragment : NSSecureCoding {
@@ -3659,7 +3653,7 @@ namespace UIKit {
 		NSTextLineFragment GetTextLineFragment (INSTextLocation textLocation, bool isUpstreamAffinity);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextRange {
@@ -3701,7 +3695,7 @@ namespace UIKit {
 
 	interface INSTextViewportLayoutControllerDelegate { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0)]
 	[MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
@@ -3725,7 +3719,7 @@ namespace UIKit {
 		void DidLayout (NSTextViewportLayoutController textViewportLayoutController);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextViewportLayoutController {
@@ -3759,7 +3753,7 @@ namespace UIKit {
 		void AdjustViewport (nfloat verticalOffset);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextSelectionGranularity : long {
 		Character,
@@ -3769,7 +3763,7 @@ namespace UIKit {
 		Sentence,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextSelectionAffinity : long {
 		Upstream = 0,
@@ -3777,7 +3771,7 @@ namespace UIKit {
 	}
 
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextSelection : NSSecureCoding {
@@ -3819,30 +3813,30 @@ namespace UIKit {
 		NSTextSelection GetTextSelection (NSTextRange [] textRanges);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSTextSelectionDataSourceEnumerateSubstringsDelegate (NSString substring, NSTextRange substringRange, NSTextRange enclodingRange, out bool stop);
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSTextSelectionDataSourceEnumerateCaretOffsetsDelegate (nfloat caretOffset, INSTextLocation location, bool leadingEdge, out bool stop);
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	delegate void NSTextSelectionDataSourceEnumerateContainerBoundariesDelegate (INSTextLocation location, out bool stop);
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextSelectionNavigationLayoutOrientation : long {
 		Horizontal = 0,
 		Vertical = 1,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextSelectionNavigationWritingDirection : long {
 		LeftToRight = 0,
 		RightToLeft = 1,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -3892,7 +3886,7 @@ namespace UIKit {
 		NSTextSelectionNavigationLayoutOrientation GetTextLayoutOrientation (INSTextLocation location);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextSelectionNavigationDirection : long {
 		Forward,
@@ -3903,7 +3897,7 @@ namespace UIKit {
 		Down,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Native]
 	public enum NSTextSelectionNavigationDestination : long {
 		Character,
@@ -3915,7 +3909,7 @@ namespace UIKit {
 		Document,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Flags]
 	[Native]
 	public enum NSTextSelectionNavigationModifier : ulong {
@@ -3926,7 +3920,7 @@ namespace UIKit {
 
 	interface INSTextSelectionDataSource { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSTextSelectionNavigation {
@@ -3972,7 +3966,7 @@ namespace UIKit {
 		NSTextRange [] GetDeletionRanges (NSTextSelection textSelection, NSTextSelectionNavigationDirection direction, NSTextSelectionNavigationDestination destination, bool allowsDecomposition);
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -3989,7 +3983,7 @@ namespace UIKit {
 
 	interface INSTextStorageObserving { }
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[Protocol]
 	interface NSTextStorageObserving {
 		[Abstract]
@@ -4088,7 +4082,7 @@ namespace UIKit {
 		PrependEnclosingMarker = 1,
 	}
 
-	[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0)]
+	[TV (15, 0), NoWatch, iOS (15, 0), MacCatalyst (15, 0)]
 	[BaseType (typeof (NSTextContentManager))]
 	interface NSTextContentStorage : NSTextStorageObserving {
 		[Wrap ("WeakDelegate")]
@@ -4442,13 +4436,11 @@ namespace UIKit {
 		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		float Timeout { get; set; }
 
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
 		NSTextScalingType TargetTextScaling { get; set; }
 
-		[Mac (10, 15)]
 		[iOS (13, 0)]
 		[TV (13, 0)]
 		[Watch (6, 0)]
@@ -4505,7 +4497,7 @@ namespace UIKit {
 		NSString SourceTextScalingDocumentOption { get; }
 
 		// comes from webkit
-		[Mac (10, 15), iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
+		[iOS (13, 0), MacCatalyst (13, 1), NoTV, NoWatch]
 		[Field ("NSReadAccessURLDocumentOption", "WebKit")]
 		NSString ReadAccessUrlDocumentOption { get; }
 

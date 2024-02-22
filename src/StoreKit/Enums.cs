@@ -88,7 +88,6 @@ namespace StoreKit {
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
-	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]

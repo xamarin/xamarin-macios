@@ -269,22 +269,17 @@ namespace Metal {
 		R16Sint = 24,
 		R16Float = 25,
 		RG8Unorm = 30,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		RG8Unorm_sRGB = 31,
 		RG8Snorm = 32,
 		RG8Uint = 33,
 		RG8Sint = 34,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		B5G6R5Unorm = 40,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		A1BGR5Unorm = 41,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		ABGR4Unorm = 42,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		BGR5A1Unorm = 43,
 		R32Uint = 53,
@@ -320,72 +315,58 @@ namespace Metal {
 		RGBA32Uint = 123,
 		RGBA32Sint = 124,
 		RGBA32Float = 125,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC1RGBA = 130,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC1_RGBA_sRGB = 131,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC2RGBA = 132,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC2_RGBA_sRGB = 133,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC3RGBA = 134,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC3_RGBA_sRGB = 135,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC4_RUnorm = 140,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC4_RSnorm = 141,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC5_RGUnorm = 142,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC5_RGSnorm = 143,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC6H_RGBFloat = 150,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC6H_RGBUFloat = 151,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
 		BC7_RGBAUnorm = 152,
-		[Mac (11, 0)]
 		[NoTV]
 		[NoiOS]
 		[NoMacCatalyst]
@@ -441,72 +422,58 @@ namespace Metal {
 		ASTC_12x12_LDR = 218,
 
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_4x4_HDR = 222,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_5x4_HDR = 223,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_5x5_HDR = 224,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_6x5_HDR = 225,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_6x6_HDR = 226,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_8x5_HDR = 228,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_8x6_HDR = 229,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_8x8_HDR = 230,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_10x5_HDR = 231,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_10x6_HDR = 232,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_10x8_HDR = 233,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_10x10_HDR = 234,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_12x10_HDR = 235,
 		[iOS (13, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		ASTC_12x12_HDR = 236,
@@ -519,7 +486,6 @@ namespace Metal {
 		Depth32Float = 252,
 		Stencil8 = 253,
 
-		[Mac (11, 0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -537,16 +503,12 @@ namespace Metal {
 		[NoMacCatalyst]
 		X24_Stencil8 = 262,
 
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		BGRA10_XR = 552,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		BGRA10_XR_sRGB = 553,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		BGR10_XR = 554,
-		[Mac (11, 0)]
 		[MacCatalyst (13, 1)]
 		BGR10_XR_sRGB = 555,
 	}
@@ -558,12 +520,10 @@ namespace Metal {
 		Kernel = 3,
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		Visible = 5,
 		[iOS (14, 0)]
 		[NoTV]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		Intersection = 6,
 		[Mac (13, 0), iOS (16, 0), TV (16, 0), MacCatalyst (16, 0)]
@@ -694,7 +654,6 @@ namespace Metal {
 
 		[MacCatalyst (13, 1)]
 		StorageModeShared = MTLStorageMode.Shared << 4,
-		[Mac (11, 0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -847,27 +806,27 @@ namespace Metal {
 
 		RenderPipeline = 78,
 		[MacCatalyst (13, 1)]
-		[Mac (11, 0), iOS (13, 0), TV (13, 0)] ComputePipeline = 79,
+		[iOS (13, 0), TV (13, 0)] ComputePipeline = 79,
 		[MacCatalyst (13, 1)]
 		IndirectCommandBuffer = 80,
 
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long = 81,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long2 = 82,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long3 = 83,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long4 = 84,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong = 85,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong2 = 86,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong3 = 87,
-		[Mac (12, 0), iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong4 = 88,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long = 81,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long2 = 82,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long3 = 83,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] Long4 = 84,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong = 85,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong2 = 86,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong3 = 87,
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch] ULong4 = 88,
 		[MacCatalyst (14, 0)]
 
-		[Mac (11, 0), iOS (14, 0), NoTV] VisibleFunctionTable = 115,
+		[iOS (14, 0), NoTV] VisibleFunctionTable = 115,
 		[MacCatalyst (14, 0)]
-		[Mac (11, 0), iOS (14, 0), NoTV] IntersectionFunctionTable = 116,
+		[iOS (14, 0), NoTV] IntersectionFunctionTable = 116,
 		[MacCatalyst (14, 0)]
-		[Mac (11, 0), iOS (14, 0), NoTV] PrimitiveAccelerationStructure = 117,
+		[iOS (14, 0), NoTV] PrimitiveAccelerationStructure = 117,
 		[MacCatalyst (14, 0)]
-		[Mac (11, 0), iOS (14, 0), NoTV] InstanceAccelerationStructure = 118,
+		[iOS (14, 0), NoTV] InstanceAccelerationStructure = 118,
 
 		[iOS (17, 0), TV (17, 0), Mac (14, 0), MacCatalyst (17, 0)]
 		BFloat = 121,
@@ -892,25 +851,21 @@ namespace Metal {
 		[NoMac, TV (14, 5), NoWatch] Imageblock = 17,
 
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (14, 0)]
 		VisibleFunctionTable = 24,
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (14, 0)]
 		PrimitiveAccelerationStructure = 25,
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (14, 0)]
 		InstanceAccelerationStructure = 26,
 		[iOS (14, 0)]
-		[Mac (11, 0)]
 		[NoTV]
 		[NoWatch]
 		[MacCatalyst (14, 0)]
@@ -936,7 +891,6 @@ namespace Metal {
 		BufferTypeInfo,
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		FailOnBinaryArchiveMiss = 4,
 	}
@@ -1064,10 +1018,10 @@ namespace Metal {
 		[iOS (13, 0), TV (13, 0), NoWatch]
 		[MacCatalyst (13, 1)]
 		v2_2 = (2 << 16) + 2,
-		[Mac (11, 0), iOS (14, 0), TV (14, 0), NoWatch]
+		[iOS (14, 0), TV (14, 0), NoWatch]
 		[MacCatalyst (14, 0)]
 		v2_3 = (2 << 16) + 3,
-		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), Mac (12, 0), NoWatch]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0), NoWatch]
 		v2_4 = (2uL << 16) + 4,
 		[iOS (16, 0), TV (16, 0), MacCatalyst (16, 0), Mac (13, 0), NoWatch]
 		v3_0 = (3uL << 16) + 0,
@@ -1098,7 +1052,6 @@ namespace Metal {
 	[Native]
 	public enum MTLStorageMode : ulong {
 		Shared = 0,
-		[Mac (11, 0)]
 		[NoiOS]
 		[NoTV]
 		[NoMacCatalyst]
@@ -1282,7 +1235,7 @@ namespace Metal {
 	public enum MTLRenderStages : ulong {
 		Vertex = (1 << 0),
 		Fragment = (1 << 1),
-		[iOS (15, 0), TV (15, 0), NoWatch, Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), NoWatch, MacCatalyst (15, 0)]
 		Tile = (1uL << 2),
 
 		[iOS (16, 0), TV (16, 0), NoWatch, Mac (13, 0), MacCatalyst (16, 0)]
@@ -1364,10 +1317,10 @@ namespace Metal {
 		[TV (14, 5)]
 		[MacCatalyst (13, 1)]
 		DrawIndexedPatches = 1 << 3,
-		[Mac (11, 0), iOS (13, 0), TV (13, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		ConcurrentDispatch = 1 << 5,
-		[Mac (11, 0), iOS (13, 0), TV (13, 0)]
+		[iOS (13, 0), TV (13, 0)]
 		[MacCatalyst (13, 1)]
 		ConcurrentDispatchThreads = 1 << 6,
 		[NoMac, iOS (17, 0), NoTV, MacCatalyst (17, 0)]
@@ -1385,7 +1338,7 @@ namespace Metal {
 	}
 
 
-	[Flags, Mac (11, 0), TV (17, 0), iOS (13, 0)]
+	[Flags, TV (17, 0), iOS (13, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum MTLSparseTextureRegionAlignmentMode : ulong {
@@ -1393,7 +1346,7 @@ namespace Metal {
 		Inward = 0x1,
 	}
 
-	[Flags, Mac (11, 0), TV (17, 0), iOS (13, 0)]
+	[Flags, TV (17, 0), iOS (13, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLSparseTextureMappingMode : ulong {
@@ -1429,10 +1382,10 @@ namespace Metal {
 		Apple3 = 1003,
 		Apple4 = 1004,
 		Apple5 = 1005,
-		[NoTV, Mac (11, 0), iOS (14, 0)]
+		[NoTV, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Apple6 = 1006,
-		[NoTV, Mac (11, 0), iOS (14, 0)]
+		[NoTV, iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Apple7 = 1007,
 		Apple8 = 1008,
@@ -1456,7 +1409,6 @@ namespace Metal {
 	public enum MTLHeapType : long {
 		Automatic = 0,
 		Placement = 1,
-		[Mac (11, 0)]
 		[NoTV]
 		[MacCatalyst (13, 1)]
 		Sparse = 2,
@@ -1548,7 +1500,7 @@ namespace Metal {
 		SetStatistic,
 	}
 
-	[Flags, Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[Flags, iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	public enum MTLAccelerationStructureInstanceOptions : uint {
 		None = 0x0,
@@ -1558,7 +1510,7 @@ namespace Metal {
 		NonOpaque = (1u << 3),
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (16, 0)]
+	[iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Flags]
 	[Native]
@@ -1566,11 +1518,11 @@ namespace Metal {
 		None = 0x0,
 		Refit = (1uL << 0),
 		PreferFastBuild = (1uL << 1),
-		[iOS (15, 0), MacCatalyst (15, 0), Mac (12, 0), NoWatch]
+		[iOS (15, 0), MacCatalyst (15, 0), NoWatch]
 		ExtendedLimits = (1uL << 2),
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[ErrorDomain ("MTLBinaryArchiveDomain")]
 	[Native]
@@ -1582,7 +1534,7 @@ namespace Metal {
 		InternalError = 4,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Flags]
 	[Native]
@@ -1591,7 +1543,7 @@ namespace Metal {
 		EncoderExecutionStatus = 1uL << 0,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLCommandEncoderErrorState : long {
@@ -1602,7 +1554,7 @@ namespace Metal {
 		Faulted = 4,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLCounterSamplingPoint : ulong {
@@ -1613,7 +1565,7 @@ namespace Metal {
 		BlitBoundary,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[ErrorDomain ("MTLDynamicLibraryDomain")]
 	[Native]
@@ -1626,14 +1578,14 @@ namespace Metal {
 		Unsupported = 5,
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLFunctionLogType : ulong {
 		Validation = 0,
 	}
 
-	[Flags, Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[Flags, iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLFunctionOptions : ulong {
@@ -1645,7 +1597,7 @@ namespace Metal {
 		StoreFunctionInMetalScript = 1uL << 1,
 	}
 
-	[Flags, Mac (11, 0), iOS (14, 0), TV (16, 0)]
+	[Flags, iOS (14, 0), TV (16, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLIntersectionFunctionSignature : ulong {
@@ -1653,11 +1605,11 @@ namespace Metal {
 		Instancing = (1uL << 0),
 		TriangleData = (1uL << 1),
 		WorldSpaceData = (1uL << 2),
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoWatch]
+		[iOS (15, 0), MacCatalyst (15, 0), NoWatch]
 		InstanceMotion = (1uL << 3),
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoWatch]
+		[iOS (15, 0), MacCatalyst (15, 0), NoWatch]
 		PrimitiveMotion = (1uL << 4),
-		[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), NoWatch]
+		[iOS (15, 0), MacCatalyst (15, 0), NoWatch]
 		ExtendedLimits = (1uL << 5),
 		[Mac (14, 0), iOS (17, 0), TV (17, 0), MacCatalyst (17, 0), NoWatch]
 		MaxLevels = (1uL << 6),
@@ -1665,7 +1617,7 @@ namespace Metal {
 		CurveData = (1uL << 7),
 	}
 
-	[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+	[iOS (14, 0), TV (14, 0)]
 	[MacCatalyst (14, 0)]
 	[Native]
 	public enum MTLLibraryType : long {
@@ -1684,13 +1636,13 @@ namespace Metal {
 		Alpha = 5,
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
+	[iOS (15, 0), MacCatalyst (15, 0), TV (17, 0), NoWatch]
 	public enum MTLMotionBorderMode : uint {
 		Clamp = 0,
 		Vanish = 1,
 	}
 
-	[Mac (12, 0), iOS (15, 0), MacCatalyst (15, 0), TV (16, 0), NoWatch]
+	[iOS (15, 0), MacCatalyst (15, 0), TV (16, 0), NoWatch]
 	[Native]
 	public enum MTLAccelerationStructureInstanceDescriptorType : ulong {
 		Default = 0,
@@ -1716,7 +1668,7 @@ namespace Metal {
 		PerPrimitiveData = (1uL << 1),
 	}
 
-	[Mac (11, 0), iOS (14, 0), MacCatalyst (14, 0), TV (14, 0)]
+	[iOS (14, 0), MacCatalyst (14, 0), TV (14, 0)]
 	[Native]
 	public enum MTLBindingType : long {
 		Buffer = 0,

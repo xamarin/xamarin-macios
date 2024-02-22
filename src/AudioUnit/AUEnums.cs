@@ -132,7 +132,7 @@ namespace AudioUnit {
 		Milliseconds = 24,
 		Ratio = 25,
 		CustomUnit = 26,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		MIDI2Controller = 27,
 	}
 
@@ -206,7 +206,7 @@ namespace AudioUnit {
 		ProcessIsMaster = 1835103092, // 'mast'
 #endif // !XAMCORE_5_0
 		[NoiOS]
-		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), NoTV, NoWatch]
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -221,7 +221,7 @@ namespace AudioUnit {
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 		[NoiOS]
-		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
 		[MacCatalyst (17, 0), Mac (14, 0), NoTV, NoWatch]
 		InputMute = 1852403056, //pmin
@@ -304,16 +304,16 @@ namespace AudioUnit {
 		ParametersForOverview = 57,
 		[MacCatalyst (13, 1)]
 		SupportsMpe = 58,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		LastRenderSampleTime = 61,
-		[iOS (14, 5), TV (14, 5), Mac (11, 3)]
+		[iOS (14, 5), TV (14, 5)]
 		[MacCatalyst (14, 5)]
 		LoadedOutOfProcess = 62,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		MIDIOutputEventListCallback = 63,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		AudioUnitMIDIProtocol = 64,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		HostMIDIProtocol = 65,
 
 #if MONOMAC
@@ -613,7 +613,7 @@ namespace AudioUnit {
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		DynamicsProcessorMasterGain = 6,
-		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 		DynamicsProcessorOverallGain = 6,
 		DynamicsProcessorCompressionAmount = 1000,
 		DynamicsProcessorInputAmplitude = 2000,
@@ -874,7 +874,6 @@ namespace AudioUnit {
 		HrtfHQ = 6,
 		[iOS (14, 0)]
 		[TV (14, 0)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 0)]
 		UseOutputType = 7,
 	}
@@ -898,7 +897,7 @@ namespace AudioUnit {
 		Release = 2,
 	}
 
-	[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+	[iOS (15, 0), TV (15, 0), MacCatalyst (15, 0)]
 	public enum AUVoiceIOSpeechActivityEvent : uint {
 		Started = 0,
 		Ended = 1,

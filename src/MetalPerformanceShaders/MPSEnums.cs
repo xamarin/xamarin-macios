@@ -61,7 +61,6 @@ namespace MetalPerformanceShaders {
 		Int32 = SignedBit | 32,
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 1)]
 		Int64 = SignedBit | 64,
 
@@ -70,7 +69,6 @@ namespace MetalPerformanceShaders {
 		UInt32 = 32,
 		[iOS (14, 1)]
 		[TV (14, 2)]
-		[Mac (11, 0)]
 		[MacCatalyst (14, 1)]
 		UInt64 = 64,
 
@@ -126,7 +124,7 @@ namespace MetalPerformanceShaders {
 	public enum MPSMatrixRandomDistribution : ulong {
 		Default = 0x1,
 		Uniform = 0x2,
-		[iOS (14, 0), TV (14, 0), Mac (11, 0)]
+		[iOS (14, 0), TV (14, 0)]
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
 		Normal = Default | Uniform,
 	}

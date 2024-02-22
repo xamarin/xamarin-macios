@@ -84,7 +84,7 @@ namespace CoreServices {
 		[Field ("kCFHTTPVersion2_0", "CFNetwork")]
 		IntPtr _HTTPVersion2_0 { get; }
 
-		[Mac (11, 0), iOS (14, 0), TV (14, 0)]
+		[iOS (14, 0), TV (14, 0)]
 		[MacCatalyst (14, 0)]
 		[Internal]
 		[Field ("kCFHTTPVersion3_0", "CFNetwork")]

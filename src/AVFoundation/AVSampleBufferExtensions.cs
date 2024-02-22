@@ -21,7 +21,7 @@ using NSErrorPtr = System.IntPtr;
 namespace AVFoundation {
     public static class AVSampleBufferExtensions {
 
-        [iOS (14, 5), Mac (11, 3), TV (14, 5), Watch (7,4)]
+        [iOS (14, 5), TV (14, 5), Watch (7,4)]
         [DllImport (Constants.AVFoundationLibrary)]
         [return: MarshalAs (UnmanagedType.I1)]
         static extern /* BOOL */ bool AVSampleBufferAttachContentKey (
@@ -29,7 +29,7 @@ namespace AVFoundation {
             /* AVContentKey */ AVContentKey contentKey,
             /* NSError * _Nullable * _Nullable */ out NSErrorPtr outError);
         
-        [iOS (14, 5), Mac (11, 3), TV (14, 5), Watch (7,4)]
+        [iOS (14, 5), TV (14, 5), Watch (7,4)]
         public static bool AttachContentKey (this CMSampleBuffer sampleBuffer, AVContentKey contentKey, out NSError error)
         {
             if (sampleBuffer is null)

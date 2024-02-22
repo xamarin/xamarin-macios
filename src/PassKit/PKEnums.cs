@@ -21,7 +21,6 @@ namespace PassKit {
 #endif
 
 	// NSInteger -> PKPass.h
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKPassKitErrorDomain")]
 	[Native]
@@ -35,7 +34,6 @@ namespace PassKit {
 	}
 
 	// NSInteger -> PKPassLibrary.h
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPassLibraryAddPassesStatus : long {
@@ -44,7 +42,6 @@ namespace PassKit {
 		DidCancelAddPasses
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPassType : ulong {
@@ -59,7 +56,6 @@ namespace PassKit {
 		Any = ulong.MaxValue,
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentAuthorizationStatus : long {
@@ -105,7 +101,6 @@ namespace PassKit {
 		Activated, RequiresActivation, Activating, Suspended, Deactivated
 	}
 
-	[Mac (11, 0)]
 	[Watch (6, 2), iOS (13, 4)]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -117,7 +112,6 @@ namespace PassKit {
 		Deactivated,
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKMerchantCapability : ulong {
@@ -146,7 +140,6 @@ namespace PassKit {
 		All = PostalAddress | Phone | Email | Name
 	}
 
-	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -159,7 +152,6 @@ namespace PassKit {
 		Automatic = 3,
 	}
 
-	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -209,7 +201,7 @@ namespace PassKit {
 		[iOS (14, 0)]
 		[MacCatalyst (14, 0)]
 		Tip = 15,
-		[Mac (12, 0), iOS (15, 0), Watch (8, 0)]
+		[iOS (15, 0), Watch (8, 0)]
 		[MacCatalyst (15, 0)]
 		Continue = 16,
 #if !NET
@@ -220,7 +212,6 @@ namespace PassKit {
 #endif // !NET
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKShippingType : ulong {
@@ -231,7 +222,6 @@ namespace PassKit {
 	}
 
 	[Watch (6, 0)]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKAddPaymentPassError : long {
@@ -240,7 +230,6 @@ namespace PassKit {
 		SystemCancelled
 	}
 
-	[Mac (11, 0)]
 	[NoWatch]
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -252,7 +241,6 @@ namespace PassKit {
 		Success
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentMethodType : ulong {
@@ -264,7 +252,6 @@ namespace PassKit {
 		EMoney,
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[Native]
 	public enum PKPaymentSummaryItemType : ulong {
@@ -281,7 +268,6 @@ namespace PassKit {
 		Outline
 	}
 
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKPaymentErrorDomain")]
 	[Native]
@@ -294,7 +280,6 @@ namespace PassKit {
 		CouponCodeExpired,
 	}
 
-	[Mac (11, 0)]
 	[NoWatch] // https://feedbackassistant.apple.com/feedback/6301809 https://github.com/xamarin/maccore/issues/1819
 	[MacCatalyst (13, 1)]
 	[Native]
@@ -304,7 +289,6 @@ namespace PassKit {
 	}
 
 	[Watch (6, 2), iOS (13, 4)]
-	[Mac (11, 0)]
 	[MacCatalyst (13, 1)]
 	[ErrorDomain ("PKAddSecureElementPassErrorDomain")]
 	[Native]

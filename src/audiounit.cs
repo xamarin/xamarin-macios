@@ -151,7 +151,7 @@ namespace AudioUnit {
 		AUScheduleParameterBlock ScheduleParameterBlock { get; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [NullAllowed]
 		// [Export ("scheduleMIDIEventListBlock")]
 		// AUMidiEventListBlock ScheduleMidiEventListBlock { get; }
@@ -170,18 +170,18 @@ namespace AudioUnit {
 		string [] MidiOutputNames { get; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [NullAllowed]
 		// [Export ("MIDIOutputEventListBlock", ArgumentSemantic.Copy)]
 		// AUMidiEventListBlock MidiOutputEventListBlock { get; set; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [Export ("AudioUnitMIDIProtocol")]
 		// MIDIProtocolID AudioUnitMidiProtocol { get; }
 
 		// TODO: https://github.com/xamarin/xamarin-macios/issues/12489
-		// [TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		// [TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		// [Export ("hostMIDIProtocol", ArgumentSemantic.Assign)]
 		// MIDIProtocolID HostMIDIProtocol { get; set; }
 

@@ -11,7 +11,7 @@ using ObjCRuntime;
 
 namespace AppTrackingTransparency {
 
-	[iOS (14, 0), TV (14, 0), Mac (11, 0), NoWatch]
+	[iOS (14, 0), TV (14, 0), NoWatch]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Native]
 	public enum ATTrackingManagerAuthorizationStatus : ulong {
@@ -21,7 +21,7 @@ namespace AppTrackingTransparency {
 		Authorized = 3,
 	}
 
-	[iOS (14, 0), TV (14, 0), Mac (11, 0), NoWatch]
+	[iOS (14, 0), TV (14, 0), NoWatch]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
