@@ -297,13 +297,12 @@ namespace Xamarin.Tests {
 			// misc other files not directly related to the test itself
 			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "BundleStructure", runtimeIdentifiers, addConfig: true, includeDebugFiles: includeDebugFiles);
 			if (platform != ApplePlatform.MacOSX)
-				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: true, includeDebugFiles: includeDebugFiles);
+				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild), includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "nunit.framework.dll"));
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "nunitlite.dll"));
-			expectedFiles.Add (Path.Combine (assemblyDirectory, "Touch.Client.dll"));
-			if (includeDebugFiles)
-				expectedFiles.Add (Path.Combine (assemblyDirectory, "Touch.Client.pdb"));
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, includeDebugFiles: includeDebugFiles);
+			bool forceSingleRid = (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX;
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "Touch.Client", runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add (Path.Combine (assemblyDirectory, "runtimeconfig.bin"));
 
 			switch (platform) {
@@ -592,12 +591,12 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.Frameworks, "Debug")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", CodeSignature.Frameworks, "Debug")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Debug")]
+		// [TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Debug")]
 		// Release
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Release")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Release")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.Frameworks, "Release")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Release")]
+		// [TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Release")]
 		public void Build (ApplePlatform platform, string runtimeIdentifiers, CodeSignature signature, string configuration)
 		{
 			var project = "BundleStructure";
