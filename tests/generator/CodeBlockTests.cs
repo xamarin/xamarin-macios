@@ -6,13 +6,9 @@ namespace GeneratorTests {
 	public class CodeBlockTests {
 		string PerformWriting (ICodeBlock codeBlock)
 		{
-			MemoryStream memoryStream = new ();
-			StreamWriter writer = new StreamWriter (memoryStream);
+			using var writer = new StringWriter ();
 			codeBlock.Print (writer);
-			writer.Flush ();
-			memoryStream.Position = 0;
-			using StreamReader reader = new StreamReader (memoryStream);
-			return reader.ReadToEnd ();
+			return writer.ToString ();
 		}
 
 		[Test]

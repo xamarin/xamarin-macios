@@ -3,7 +3,7 @@ using System.IO;
 public class LineBlock : ICodeBlock {
 	readonly string line;
 	int currentIndent = 0;
-	readonly string newLine = "\n";
+	const char newLine = '\n';
 
 	public LineBlock (string line)
 	{
@@ -15,8 +15,16 @@ public class LineBlock : ICodeBlock {
 		currentIndent = indent;
 	}
 
+	public void WriteIndent (TextWriter writer)
+	{
+		for (var i = 0; i < currentIndent; i++)
+			writer.Write (' ');
+	}
+
 	public void Print (TextWriter writer)
 	{
-		writer.Write (new string (' ', currentIndent) + line + newLine);
+		WriteIndent (writer);
+		writer.Write (line);
+		writer.Write (newLine);
 	}
 }

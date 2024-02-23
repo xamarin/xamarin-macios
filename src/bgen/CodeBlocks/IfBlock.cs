@@ -25,6 +25,13 @@ public class IfBlock : CodeBlock {
 		ElseBlock = new CodeBlock ("else", blocks);
 	}
 
+	public override void WriteHeaderText (TextWriter writer)
+	{
+		WriteIndent (writer);
+		writer.Write (HeaderText);
+		writer.Write (NewLine);
+	}
+
 	public override void Print (TextWriter writer)
 	{
 		base.Print (writer);

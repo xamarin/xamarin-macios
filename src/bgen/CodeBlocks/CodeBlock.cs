@@ -6,9 +6,9 @@ public class CodeBlock : ICodeBlock {
 	protected int Indent = 4;
 	protected string HeaderText = string.Empty;
 	protected List<ICodeBlock> Blocks = new ();
-	readonly string startBrace = "{";
-	readonly string endBrace = "}";
-	public readonly string NewLine = "\n";
+	const char startBrace = '{';
+	const char endBrace = '}';
+	public const char NewLine = '\n';
 
 	public CodeBlock () { }
 
@@ -46,19 +46,38 @@ public class CodeBlock : ICodeBlock {
 		CurrentIndent -= Indent;
 	}
 
+	public void WriteIndent (TextWriter writer)
+	{
+		for (var i = 0; i < CurrentIndent; i++)
+			writer.Write (' ');
+	}
+
+	public virtual void WriteHeaderText (TextWriter writer)
+	{
+		WriteIndent (writer);
+		writer.Write (HeaderText);
+		writer.Write (NewLine);
+	}
+
 	public virtual void Print (TextWriter writer)
 	{
 		if (HeaderText != string.Empty)
-			writer.Write (new string (' ', CurrentIndent) + HeaderText + NewLine);
+			WriteHeaderText (writer);
 
-		writer.Write (new string (' ', CurrentIndent) + startBrace + NewLine);
+		WriteIndent (writer);
+		writer.Write (startBrace);
+		writer.Write (NewLine);
+
 		SetIndent (CurrentIndent + Indent);
 		foreach (ICodeBlock block in Blocks) {
 			block.SetIndent (CurrentIndent);
 			block.Print (writer);
 		}
 		SetIndent (CurrentIndent - Indent);
-		writer.Write (new string (' ', CurrentIndent) + endBrace + NewLine);
+
+		WriteIndent (writer);
+		writer.Write (endBrace);
+		writer.Write (NewLine);
 	}
 
 	public void SetIndent (int indent)
