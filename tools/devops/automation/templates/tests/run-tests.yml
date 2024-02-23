@@ -201,7 +201,7 @@ steps:
   displayName: 'Publish Artifact: Simulator diagnostic info'
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
+    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
   condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
@@ -312,7 +312,7 @@ steps:
   displayName: 'Publish Artifact: All binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifactName: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)
+    artifactName: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
