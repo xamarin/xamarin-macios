@@ -117,7 +117,7 @@ namespace Xamarin.Tests {
 		{
 			var installed = ExecuteCommand (Executable, "tool", "list", "--tool-path", path);
 			if (!installed.StandardOutput.ToString ().Contains (tool))
-				ExecuteCommand (Executable, "tool", "install", tool, "--tool-path", path);
+				installed = ExecuteCommand (Executable, "tool", "install", tool, "--tool-path", path);
 			return installed;
 		}
 
