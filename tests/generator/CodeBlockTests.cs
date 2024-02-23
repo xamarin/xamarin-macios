@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
-namespace bgen_tests {
+namespace GeneratorTests {
 	public class CodeBlockTests {
 		string PerformWriting (ICodeBlock codeBlock)
 		{

@@ -8,7 +8,7 @@ public class CodeBlock : ICodeBlock {
 	protected List<ICodeBlock> Blocks = new ();
 	readonly string startBrace = "{";
 	readonly string endBrace = "}";
-	public readonly string newLine = "\n";
+	public readonly string NewLine = "\n";
 
 	public CodeBlock () { }
 
@@ -49,16 +49,16 @@ public class CodeBlock : ICodeBlock {
 	public virtual void Print (StreamWriter writer)
 	{
 		if (HeaderText != string.Empty)
-			writer.Write (new string (' ', CurrentIndent) + HeaderText + newLine);
+			writer.Write (new string (' ', CurrentIndent) + HeaderText + NewLine);
 
-		writer.Write (new string (' ', CurrentIndent) + startBrace + newLine);
+		writer.Write (new string (' ', CurrentIndent) + startBrace + NewLine);
 		SetIndent (CurrentIndent + Indent);
 		foreach (ICodeBlock block in Blocks) {
 			block.SetIndent (CurrentIndent);
 			block.Print (writer);
 		}
 		SetIndent (CurrentIndent - Indent);
-		writer.Write (new string (' ', CurrentIndent) + endBrace + newLine);
+		writer.Write (new string (' ', CurrentIndent) + endBrace + NewLine);
 	}
 
 	public void SetIndent (int indent)
