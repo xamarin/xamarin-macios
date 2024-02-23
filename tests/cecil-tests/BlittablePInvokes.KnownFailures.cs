@@ -395,21 +395,6 @@ namespace Cecil.Tests {
 			"System.Int32 Security.SslContext::SSLSetSessionTicketsEnabled(System.IntPtr,System.Boolean)",
 			"System.Int32 SystemConfiguration.NetworkReachability::SCNetworkReachabilityGetFlags(System.IntPtr,SystemConfiguration.NetworkReachabilityFlags&)",
 			"System.IntPtr AudioUnit.AudioComponent::AudioComponentFindNext(System.IntPtr,AudioUnit.AudioComponentDescription&)",
-<<<<<<< HEAD
-			"System.IntPtr CoreFoundation.CFNetwork::CFNetworkCopyProxiesForAutoConfigurationScript(System.IntPtr,System.IntPtr,System.IntPtr&)",
-			"System.IntPtr CoreFoundation.CFNetwork::CFNetworkExecuteProxyAutoConfigurationScript(System.IntPtr,System.IntPtr,method System.Void *(System.IntPtr,System.IntPtr,System.IntPtr),CoreFoundation.CFStreamClientContext&)",
-			"System.IntPtr CoreFoundation.CFNetwork::CFNetworkExecuteProxyAutoConfigurationURL(System.IntPtr,System.IntPtr,method System.Void *(System.IntPtr,System.IntPtr,System.IntPtr),CoreFoundation.CFStreamClientContext&)",
-<<<<<<< HEAD
-			"System.IntPtr CoreFoundation.CFSocket::CFSocketCreateConnectedToSocketSignature(System.IntPtr,CoreFoundation.CFSocketSignature&,System.UIntPtr,method System.Void *(System.IntPtr,System.UIntPtr,System.IntPtr,System.IntPtr,System.IntPtr),CoreFoundation.CFSocketContext*,System.Double)",
-=======
-=======
->>>>>>> origin/main
-			"System.IntPtr CoreFoundation.CFPropertyList::CFPropertyListCreateData(System.IntPtr,System.IntPtr,System.IntPtr,System.UIntPtr,System.IntPtr&)",
-			"System.IntPtr CoreFoundation.CFPropertyList::CFPropertyListCreateWithData(System.IntPtr,System.IntPtr,System.UIntPtr,System.IntPtr&,System.IntPtr&)",
-			"System.IntPtr CoreFoundation.CFRunLoopSourceCustom::CFRunLoopSourceCreate(System.IntPtr,System.IntPtr,CoreFoundation.CFRunLoopSourceContext&)",
-			"System.IntPtr CoreFoundation.CFUrl::CFURLCreateWithFileSystemPath(System.IntPtr,System.IntPtr,System.IntPtr,System.Boolean)",
-			"System.IntPtr CoreFoundation.DispatchData::dispatch_data_create_map(System.IntPtr,System.IntPtr&,System.UIntPtr&)",
->>>>>>> origin/main
 			"System.IntPtr CoreGraphics.CGEvent::CGEventCreateKeyboardEvent(System.IntPtr,System.UInt16,System.Boolean)",
 			"System.IntPtr CoreGraphics.CGFunction::CGFunctionCreate(System.IntPtr,System.IntPtr,System.Runtime.InteropServices.NFloat*,System.IntPtr,System.Runtime.InteropServices.NFloat*,CoreGraphics.CGFunction/CGFunctionCallbacks&)",
 			"System.IntPtr CoreGraphics.CGImage::CGImageCreate(System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,System.IntPtr,CoreGraphics.CGBitmapFlags,System.IntPtr,System.Runtime.InteropServices.NFloat*,System.Boolean,CoreGraphics.CGColorRenderingIntent)",
