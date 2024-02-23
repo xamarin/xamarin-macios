@@ -255,6 +255,7 @@ namespace ObjCRuntime {
 		}
 
 		// Returns a retained MonoObject. Caller must release.
+		[UnconditionalSuppressMessage("AssemblyLoadTrimming", "IL2026:RequiresUnreferencedCode", Justification = "This method is only called to retrieve the assembly where the entry point is, and the entry point is not trimmed away, so this is safe.")]
 		static IntPtr FindAssembly (IntPtr assembly_name)
 		{
 			if (IsNativeAOT)
@@ -276,16 +277,12 @@ namespace ObjCRuntime {
 				}
 			}
 
-			if (DynamicRegistrationSupported) {
-				log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies. Will try to load it.");
+			log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies. Will try to load it.");
 
-				var loadedAssembly = Assembly.LoadFrom (path);
-				if (loadedAssembly is not null) {
-					log_coreclr ($"    Loaded {loadedAssembly.GetName ().Name}");
-					return GetMonoObject (loadedAssembly);
-				}
-			} else {
-				log_coreclr ($"    Did not find the assembly in the app domain's loaded assemblies, and dynamic registration is disabled.");
+			var loadedAssembly = Assembly.LoadFrom (path);
+			if (loadedAssembly is not null) {
+				log_coreclr ($"    Loaded {loadedAssembly.GetName ().Name}");
+				return GetMonoObject (loadedAssembly);
 			}
 
 			log_coreclr ($"    Found no assembly named {name}");
