@@ -48,10 +48,10 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			\"extends\": [");
 	if (platform == "macOS") {
 		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling\",");
-		// writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net8\",");
+		writer.WriteLine ($"				\"microsoft-net-runtime-mono-tooling-net8\",");
 	} else {
 		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}\",");
-		// writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net8\",");
+		writer.WriteLine ($"				\"microsoft-net-runtime-{platformLowerCase}-net8\",");
 	}
 	writer.WriteLine ($"			]");
 	writer.WriteLine ($"		}},");
