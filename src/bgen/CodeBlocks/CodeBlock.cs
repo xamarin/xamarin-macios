@@ -46,7 +46,7 @@ public class CodeBlock : ICodeBlock {
 		CurrentIndent -= Indent;
 	}
 
-	public virtual void Print (StreamWriter writer)
+	public virtual void Print (TextWriter writer)
 	{
 		if (HeaderText != string.Empty)
 			writer.Write (new string (' ', CurrentIndent) + HeaderText + NewLine);

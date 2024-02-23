@@ -25,7 +25,7 @@ public class IfBlock : CodeBlock {
 		ElseBlock = new CodeBlock ("else", blocks);
 	}
 
-	public override void Print (StreamWriter writer)
+	public override void Print (TextWriter writer)
 	{
 		base.Print (writer);
 
