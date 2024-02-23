@@ -224,7 +224,9 @@ namespace Foundation {
 				throw new ArgumentNullException ("socket");
 
 			IntPtr read, write;
-			CFStream.CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), out read, out write);
+			unsafe {
+				CFStream.CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), &read, &write);
+			}
 			AssignStreams (read, write, out readStream, out writeStream);
 		}
 
@@ -236,7 +238,9 @@ namespace Foundation {
 			using (var address = new CFSocketAddress (endpoint)) {
 				var sig = new CFSocketSignature (family, type, proto, address);
 				IntPtr read, write;
-				CFStream.CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, ref sig, out read, out write);
+				unsafe {
+					CFStream.CFStreamCreatePairWithPeerSocketSignature (IntPtr.Zero, &sig, &read, &write);
+				}
 				AssignStreams (read, write, out readStream, out writeStream);
 			}
 		}
@@ -248,7 +252,9 @@ namespace Foundation {
 		{
 			using (var host = CFHost.Create (endpoint)) {
 				IntPtr read, write;
-				CFStream.CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, out read, out write);
+				unsafe {
+					CFStream.CFStreamCreatePairWithSocketToCFHost (IntPtr.Zero, host.Handle, endpoint.Port, &read, &write);
+				}
 				AssignStreams (read, write, out readStream, out writeStream);
 			}
 		}
@@ -257,7 +263,9 @@ namespace Foundation {
 		public static void CreateBoundPair (out NSInputStream readStream, out NSOutputStream writeStream, nint bufferSize)
 		{
 			IntPtr read, write;
-			CFStream.CFStreamCreateBoundPair (IntPtr.Zero, out read, out write, bufferSize);
+			unsafe {
+				CFStream.CFStreamCreateBoundPair (IntPtr.Zero, &read, &write, bufferSize);
+			}
 			AssignStreams (read, write, out readStream, out writeStream);
 		}
 	}
