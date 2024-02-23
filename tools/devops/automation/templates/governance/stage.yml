@@ -20,14 +20,13 @@ parameters:
 stages:
 - stage: governance_checks
   displayName: '${{ parameters.stageDisplayNamePrefix }}Governance Checks'
-  dependsOn: [ configure_build ]
+  dependsOn: [ configure_build, build_packages]
 
   jobs:
   - job: apiscan
     displayName: 'APIScan:' 
-    pool:
-      vmImage: windows-latest
-
+    timeoutInMinutes: 1000
+    pool: VSEngSS-MicroBuild2022-1ES
 
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['apiscan_matrix.APISCAN_MATRIX'] ]
@@ -46,19 +45,6 @@ stages:
 
     steps:
     - template: ./general.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        repositoryAlias: ${{ parameters.repositoryAlias }}
-        commit: ${{ parameters.commit }}
-
-  - job: tsa_upload 
-    displayName: 'TSA Upload'
-    dependsOn: [ general_governance, apiscan ]
-    pool:
-      vmImage: windows-latest
-
-    steps:
-    - template: ./tsa-upload.yml
       parameters:
         isPR: ${{ parameters.isPR }}
         repositoryAlias: ${{ parameters.repositoryAlias }}

@@ -12,7 +12,7 @@ using Xamarin.Messaging.Build.Client;
 #nullable enable
 
 namespace Xamarin.MacDev.Tasks {
-	public class ILStrip : global::ILStrip, ITaskCallback {
+	public class MobileILStrip : global::ILStrip, ITaskCallback {
 		public string SessionId { get; set; } = string.Empty;
 
 		[Output]

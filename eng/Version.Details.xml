@@ -31,21 +31,21 @@
       <Sha>45dd3a73dd5b64b010c4251303b3664bb30df029</Sha>
     </Dependency>
     <!-- This is a subscription of the .NET 7 versions of our packages -->
-    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7135">
+    <Dependency Name="Microsoft.MacCatalyst.Sdk" Version="16.4.7140">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>82bf12c9d734712985c90200439c67d4f3398184</Sha>
+      <Sha>ed1726f6e88aeec1e8f1e09f2d5b1ef9ad756ae2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7135">
+    <Dependency Name="Microsoft.macOS.Sdk" Version="13.3.7140">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>82bf12c9d734712985c90200439c67d4f3398184</Sha>
+      <Sha>ed1726f6e88aeec1e8f1e09f2d5b1ef9ad756ae2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7135">
+    <Dependency Name="Microsoft.iOS.Sdk" Version="16.4.7140">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>82bf12c9d734712985c90200439c67d4f3398184</Sha>
+      <Sha>ed1726f6e88aeec1e8f1e09f2d5b1ef9ad756ae2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7135">
+    <Dependency Name="Microsoft.tvOS.Sdk" Version="16.4.7140">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>82bf12c9d734712985c90200439c67d4f3398184</Sha>
+      <Sha>ed1726f6e88aeec1e8f1e09f2d5b1ef9ad756ae2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="8.0.0">
       <Uri>https://github.com/dotnet/runtime</Uri>
@@ -61,9 +61,9 @@
       <Uri>https://github.com/dotnet/templating</Uri>
       <Sha />
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24112.1">
+    <Dependency Name="Microsoft.DotNet.XHarness.iOS.Shared" Version="9.0.0-prerelease.24112.4">
       <Uri>https://github.com/dotnet/xharness</Uri>
-      <Sha>2f3f51a1adec18475563c8a49fd9b668ae9f2f31</Sha>
+      <Sha>11ae3663fe3de366ea3566d7ae9b4731adee2ca3</Sha>
     </Dependency>
   </ToolsetDependencies>
 </Dependencies>

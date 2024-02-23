@@ -18,7 +18,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.props')" />
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets" Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.iOS.Windows.After.targets')" />
 
-	<UsingTask TaskName="Xamarin.iOS.Tasks.PrepareObjCBindingNativeFrameworks" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.PrepareObjCBindingNativeFrameworks" AssemblyFile="$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll" />
 	
 	<PropertyGroup Condition="'$(DesignTimeBuild)' != 'true'">
 		<CompileDependsOn>
