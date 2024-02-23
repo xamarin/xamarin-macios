@@ -1664,11 +1664,11 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;")]
-		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64;")]
-		public void SourcelinkTest (ApplePlatform platform, string runtimeIdentifiers)
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "iOS")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macOS")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "MacCatalyst")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "tvOS")]
+		public void SourcelinkTest (ApplePlatform platform, string runtimeIdentifiers, string platformName)
 		{
 			// Sourcelink uses the latest commit and tests to see if
 			// it is valid which will not pass until the commit has
@@ -1682,21 +1682,20 @@ namespace Xamarin.Tests {
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
-			var rv = DotNet.AssertBuild (project_path, properties);
+			DotNet.AssertBuild (project_path, properties);
 
 			var pdbFile = Directory
-				.GetFiles (Path.GetDirectoryName (project_path)!, "*.pdb", SearchOption.AllDirectories)
+				.GetFiles (Path.GetDirectoryName (project_path)!, $"Microsoft.{platformName}.pdb", SearchOption.AllDirectories)
 				.FirstOrDefault ();
 
 			Assert.NotNull (pdbFile, "No PDB file found");
 
-			using Process install = new ();
-			install.StartWithArgs ("tool install sourcelink");
+			var tool = "sourcelink";
+			var toolPath = Directory.GetCurrentDirectory ();
+			DotNet.InstallTool (tool, toolPath);
+			var test = DotNet.RunTool ($"{toolPath}/{tool}", "test", $"{pdbFile}");
 
-			using Process test = new ();
-			test.StartWithArgs ($"sourcelink test {pdbFile}");
-
-			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ReadToEnd ());
+			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString());
 		}
 	}
 }
