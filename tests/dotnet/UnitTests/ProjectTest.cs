@@ -1695,7 +1695,7 @@ namespace Xamarin.Tests {
 			DotNet.InstallTool (tool, toolPath);
 			var test = DotNet.RunTool ($"{toolPath}/{tool}", "test", $"{pdbFile}");
 
-			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString());
+			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ());
 		}
 	}
 }
