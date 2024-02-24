@@ -23,6 +23,74 @@ steps:
     repositoryAlias: ${{ parameters.repositoryAlias }}
     commit: ${{ parameters.commit }}
 
-- pwsh: |
-    Write-Output "Performing APISCan for $(PLATFORM) $(VERSION) using tenant $(TENANT) client id $(CLIENT_ID) and secret $(SECRET)."
-  displayName: "APISCan"
+- task: DownloadPipelineArtifact@2
+  displayName: Download artifacts
+  inputs:
+    artifactName: not-signed-package
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/not-signed-package
+
+- pwsh: >-
+    ./prepare_workload_apiscan.ps1
+    -SourcesDirectory "$(Build.SourcesDirectory)"
+    -Platform $Env:PLATFORM
+  displayName: "Expand nugets"
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts
+  env:
+    PLATFORM: $(PLATFORM)
+
+- task: APIScan@2
+  displayName: Run APIScan
+  inputs:
+    softwareFolder: $(Build.SourcesDirectory)/APIScan
+    softwareName: "Microsoft.$(PLATFORM)"
+    softwareVersionNum: $(VERSION)
+    isLargeApp: true  # we did get a Max Unknown error (work item 1973775), it means we need to reduce the call graph
+    toolVersion: 'Latest'
+    verbosityLevel: standard
+    preserveLogsFolder: true
+  env:
+    AzureServicesAuthConnectionString: runAs=App;AppId=$(CLIENT_ID);TenantId=$(TENANT);AppKey=$(SECRET)
+
+- task: PublishSecurityAnalysisLogs@3
+  displayName: Publish Security Analysis Logs
+  condition: succeededOrFailed()
+  inputs:
+    ArtifactName: 'CodeAnalysisLogs - APIScan $(PLATFORM) $(VERSION)'
+    ArtifactType: 'Container'
+    AllTools: true
+    ToolLogsNotFoundAction: 'Standard'
+
+- task: SdtReport@2
+  displayName: Create Security Analysis Report
+  inputs:
+    GdnExportAllTools: false
+    GdnExportGdnToolApiScan: true
+    GdnExportGdnToolApiScanSeverity: 'error'
+
+- task: TSAUpload@2
+  inputs:
+    GdnPublishTsaOnboard: true
+    GdnPublishTsaConfigFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
+    GdnPublishTsaExportedResultsPublishable: true
+  displayName: Create bugs for compliance tools results
+  condition: succeededOrFailed()
+  env:
+    WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
+  displayName: Break on compliance issues
+  condition: false # do not break for APIScan until we have fixed the issues
+  inputs:
+    GdnBreakAllTools: true
+    GdnBreakSuppressionFiles: $(Build.SourcesDirectory)\maccore\tools\devops\falsepositives.gdnsuppress
+    GdnBreakSuppressionSets: falsepositives
+    GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
+    GdnBreakOutputSuppressionSet: falsepositives
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact for Guardian Supressions
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+    ArtifactName: Guardian Suppressions APIScan $(PLATFORM) $(VERSION)
+  condition: failed()

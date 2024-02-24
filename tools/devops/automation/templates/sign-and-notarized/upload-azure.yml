@@ -83,7 +83,7 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/${{ parameters.uploadPrefix }}package-internal
 
-- task: AzureFileCopy@3
+- task: AzureFileCopy@5
   displayName: 'Publish package to Azure'
   name: upload
   inputs:
@@ -93,9 +93,8 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: $(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/${{ parameters.uploadPrefix }}package  # ideally, we would use a variable for this
-    outputStorageContainerSasToken: PackageSasToken
 
-- task: AzureFileCopy@3
+- task: AzureFileCopy@5
   displayName: 'Publish manifest to Azure'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
@@ -104,9 +103,8 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/$(Build.SourceVersion)
-    outputStorageContainerSasToken: PackageSasToken
 
-- task: AzureFileCopy@3
+- task: AzureFileCopy@5
   displayName: 'Publish manifest to Azure as latest'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
@@ -115,9 +113,8 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceBranchName)/latest
-    outputStorageContainerSasToken: PackageSasToken
 
-- task: AzureFileCopy@3
+- task: AzureFileCopy@5
   displayName: 'Publish manifest to Azure per commit'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/manifest
@@ -126,7 +123,6 @@ steps:
     storage: ${{ parameters.azureStorage }}
     ContainerName: ${{ parameters.azureContainer }}
     BlobPrefix: jenkins/$(Build.SourceVersion)
-    outputStorageContainerSasToken: PackageSasToken
 
 - pwsh: |
     $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
