@@ -297,7 +297,7 @@ steps:
   displayName: 'Publish Artifact: Windows binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/windows-binlogs
-    artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.JobAttempt)
+    artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.StageAttempt)-$(System.StageAttempt)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
