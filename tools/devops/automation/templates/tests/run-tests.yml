@@ -135,18 +135,6 @@ steps:
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 
-# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
-# point we were just setting up the agent.
-- template: ../common/status.yml
-  parameters:
-    status: "pending"
-    description: "Running device tests on ${{ parameters.statusContext }}"
-    context: ${{ parameters.statusContext }}
-    githubToken: $(GitHub.Token)
-    continueOnError: true
-    condition: succeededOrFailed() # re-starting the daemon should not be an issue
-    timeoutInMinutes: 5
-
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
@@ -204,24 +192,6 @@ steps:
     artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
   condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
-
-# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the comment, this way
-# we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
-
-- pwsh: |
-    Write-Host $host.Version 
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-
-    $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    $testAttempt = [int]"$(System.JobAttempt)"
-    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}" -Attempt $testAttempt
-
-    $statuses = New-GitHubStatusesObjectFromUrl -Url "$(Build.Repository.Uri)" -Token $(GitHub.Token)
-    $statuses.SetStatus($testResult.GetStatus())
-  displayName: "Set tests status."
-  continueOnError: true
-  condition: succeededOrFailed()
-  timeoutInMinutes: 5
 
 # Upload TestSummary as an artifact.
 - task: PublishPipelineArtifact@1
