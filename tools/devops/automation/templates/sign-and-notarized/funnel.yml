@@ -31,8 +31,6 @@ jobs:
   timeoutInMinutes: 1000
   pool:
     vmImage: internal-macos-11
-  workspace:
-    clean: all
   variables:
     ${{ each pkg in parameters.packages }}:
       ${{ pkg.conditionVariable }}: $[ stageDependencies.configure_build.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
@@ -158,8 +156,6 @@ jobs:
     name: azurepipelines-EO
     demands:
     - ImageOverride -equals AzurePipelinesWindows2022compliant
-    workspace:
-      clean: all
   steps:
   - template: upload-azure.yml
     parameters:
@@ -182,8 +178,6 @@ jobs:
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
     vmImage: windows-latest
-    workspace:
-      clean: all
   steps:
   - template: artifact-github-comment.yml
     parameters:

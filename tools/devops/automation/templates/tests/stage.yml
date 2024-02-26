@@ -109,8 +109,6 @@ stages:
       - XcodeChannel -equals ${{ parameters.XcodeChannel }}
       - ${{ each demand in parameters.extraBotDemands }}:
         - demand
-      workspace:
-        clean: all
     strategy:
       matrix: $[ stageDependencies.configure_build.configure.outputs['test_matrix.TEST_MATRIX'] ]
     steps:

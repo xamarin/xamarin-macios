@@ -35,8 +35,6 @@ jobs:
     timeoutInMinutes: 1000
     pool:
       vmImage: internal-macos-11
-    workspace:
-      clean: all
 
     steps:
     - template: sign-and-notarized.yml

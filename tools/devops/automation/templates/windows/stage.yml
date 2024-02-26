@@ -52,8 +52,6 @@ stages:
     displayName: "Reserve macOS bot for tests"
     timeoutInMinutes: 120
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
-    workspace:
-      clean: all
     pool:
       name: ${{ parameters.macPool }}
       demands:
@@ -77,8 +75,6 @@ stages:
     displayName: 'Dotnet tests'
     timeoutInMinutes: 120
     condition: and(succeeded(),ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],''))
-    workspace:
-      clean: all
 
     pool:
       name: ${{ parameters.windowsPool }}
@@ -112,8 +108,6 @@ stages:
     timeoutInMinutes: 120
     # the condition must be exactly the same as for the mac_reservation job (or if no condition there, then 'always ()')
     condition: ne(stageDependencies.configure_build.configure.outputs['configure_platforms.ENABLE_DOTNET'],'')
-    workspace:
-      clean: all
     pool:
       name: ${{ parameters.windowsPool }}
       demands:

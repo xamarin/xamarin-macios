@@ -94,8 +94,6 @@ jobs:
     - Agent.OS -equals Darwin
     - macOS.Name -equals ${{ parameters.macOSName }}
     - XcodeChannel -equals ${{ parameters.xcodeChannel }}
-  workspace:
-    clean: all
 
   steps:
   - template: build-pkgs.yml

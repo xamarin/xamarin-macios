@@ -49,8 +49,6 @@ stages:
   - job: run_tests
     displayName: 'macOS tests'
     timeoutInMinutes: 1000
-    workspace:
-      clean: all
 
     pool:
       ${{ if eq(parameters.useImage, false) }}:

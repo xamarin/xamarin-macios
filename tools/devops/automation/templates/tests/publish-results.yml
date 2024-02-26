@@ -76,8 +76,6 @@ stages:
       STAGE_DEPENDENCIES: $[ convertToJson(stageDependencies) ]
     pool:
       vmImage: 'windows-latest'
-      workspace:
-        clean: all
     steps:
     - template: publish-html.yml
       parameters:
@@ -98,8 +96,6 @@ stages:
 
     pool:
       vmImage: 'windows-latest'
-      workspace:
-        clean: all
 
     steps:
 
