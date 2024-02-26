@@ -78,7 +78,9 @@ jobs:
   - api_diff
   condition: or(eq(dependencies.api_diff.result, 'Succeeded'), eq(dependencies.api_diff.result, 'SucceededWithIssues'))
   pool:
-    vmImage: 'windows-latest'
+    name: AzurePipelines-EO
+    demands:
+      - ImageOverride -equals 1ESPT-Windows2022
   variables:
     GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   steps:

@@ -177,7 +177,9 @@ jobs:
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
-    vmImage: windows-latest
+    name: AzurePipelines-EO
+    demands:
+      - ImageOverride -equals 1ESPT-Windows2022
   steps:
   - template: artifact-github-comment.yml
     parameters:

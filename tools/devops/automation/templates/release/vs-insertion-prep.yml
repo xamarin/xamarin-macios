@@ -95,7 +95,9 @@ stages:
       variables:
         skipNugetSecurityAnalysis: true
       pool:
-        vmImage: windows-latest
+        name: AzurePipelines-EO
+        demands:
+          - ImageOverride -equals 1ESPT-Windows2022
       steps:
       - task: DownloadPipelineArtifact@2
         inputs:
