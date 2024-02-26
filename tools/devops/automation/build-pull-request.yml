@@ -225,9 +225,17 @@ extends:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
         os: windows
+      tsa:
+        configFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\tsa_config.gdntsa'
       sbom:
         enabled: false  # we run our on sbom generation
+      credscan:
+        suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+        outputFormat: sarif
+        debugMode: true
+        batchSize: 16
       sourceRepositoriesToScan:
+        runInSingleJob: true # run both maccore and macios in the same job
         include:
         - repository: maccore
         exclude:
