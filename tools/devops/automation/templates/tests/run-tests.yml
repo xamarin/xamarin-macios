@@ -242,15 +242,13 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
-- task: artifactDropTask@1
+- task: 1ES.PublishArtifactsDrop@1
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: '${{ parameters.uploadPrefix }}DropMetadata-${{ parameters.testPrefix }}${{ parameters.labelWithPlatform }}-$(System.JobAttempt)'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
     sourcePath: 'xamarin-macios/jenkins-results'
-    detailedLog: true
-    usePat: true
   continueOnError: true
   condition: succeededOrFailed()
 
