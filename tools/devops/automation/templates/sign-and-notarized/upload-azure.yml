@@ -393,7 +393,7 @@ steps:
     }
   displayName: 'SBOM: Cleanup'
 
-- task: PublishBuildArtifacts@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'SBOM: Publish'
   inputs:
     artifactName: '${{ parameters.uploadPrefix }}sbom'

@@ -88,7 +88,7 @@ steps:
     GdnBreakOutputSuppressionFile: $(Build.ArtifactStagingDirectory)\GuardianSuppressions\falsepositives.gdnsuppress
     GdnBreakOutputSuppressionSet: falsepositives
 
-- task: PublishBuildArtifacts@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: Publish Artifact for Guardian Supressions
   inputs:
     PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
