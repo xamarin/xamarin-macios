@@ -237,11 +237,16 @@ trigger:
 extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
-    pool:
-      name: VSEng-Xamarin-RedmondMacBuildPool-iOS-Trusted
     sdl:
       sbom:
         enabled: false  # we run our on sbom generation
+      sourceRepositoriesToScan:
+        include:
+        - maccore
+        exclude:
+        - yaml-templates
+        - sdk-insertions
+        - release-scripts
     stages:
     - template: templates/main-stage.yml
       parameters:
