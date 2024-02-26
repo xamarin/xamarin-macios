@@ -249,7 +249,7 @@ extends:
       credscan:
         suppressionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\CredScanSuppressions.json'
         outputFormat: sarif
-        debugMode: true
+        debugMode: false
         batchSize: 16
       policheck:
         exclusionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\PoliCheckExclusions.xml'
