@@ -247,10 +247,12 @@ extends:
       sbom:
         enabled: false  # we run our on sbom generation
       credscan:
-        suppressionsFile: '$(System.DefaultWorkingDirectory)/maccore/tools/devops/CredScanSuppressions.json'
+        suppressionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\CredScanSuppressions.json'
         outputFormat: sarif
         debugMode: true
         batchSize: 16
+      policheck:
+        exclusionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true # run both maccore and macios in the same job
         include:

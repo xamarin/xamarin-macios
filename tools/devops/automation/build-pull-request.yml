@@ -234,6 +234,8 @@ extends:
         outputFormat: sarif
         debugMode: true
         batchSize: 16
+      policheck:
+        exclusionsFile: '$(System.DefaultWorkingDirectory)\\maccore\\tools\\devops\\PoliCheckExclusions.xml'
       sourceRepositoriesToScan:
         runInSingleJob: true # run both maccore and macios in the same job
         include:
