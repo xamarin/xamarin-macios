@@ -83,10 +83,10 @@ steps:
         condition: succeededOrFailed()
 
       # Publish all the binlogs we collected in the previous step
-      - task: PublishPipelineArtifact@1
+      - task: 1ES.PublishPipelineArtifact@1
         displayName: 'Publish Artifact: All binlogs'
         inputs:
-          targetPath: $(Build.ArtifactStagingDirectory)/mactests-binlogs
-          artifactName: '${{ parameters.uploadPrefix }}mactests-binlogs-$(Build.BuildId)-$(System.JobAttempt)'
+          path: $(Build.ArtifactStagingDirectory)/mactests-binlogs
+          artifact: '${{ parameters.uploadPrefix }}mactests-binlogs-$(Build.BuildId)-$(System.JobAttempt)'
         continueOnError: true
         condition: succeededOrFailed()

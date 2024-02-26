@@ -56,10 +56,10 @@ steps:
     AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
 
 # publish the resulting artifact
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish change detection artifact'
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/change-detection/change-detection.zip'
-    artifactName: ${{ parameters.uploadPrefix }}change-detection
+    path: '$(Build.ArtifactStagingDirectory)/change-detection/change-detection.zip'
+    artifact: ${{ parameters.uploadPrefix }}change-detection
   condition: succeededOrFailed() # we always want to upload the zip as an artifact
   continueOnError: true

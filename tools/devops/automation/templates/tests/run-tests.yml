@@ -197,11 +197,11 @@ steps:
   timeoutInMinutes: 30
 
 # Publish the simulator diagnostic logs
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: Simulator diagnostic info'
   inputs:
-    targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    artifactName: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
+    path: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
+    artifact: '${{ parameters.uploadPrefix }}diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.labelWithPlatform }}'
   condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
@@ -224,11 +224,11 @@ steps:
   timeoutInMinutes: 5
 
 # Upload TestSummary as an artifact.
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: TestSummary'
   inputs:
-    targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+    path: 'xamarin-macios/tests/TestSummary.md'
+    artifact: '${{ parameters.uploadPrefix }}TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -289,11 +289,11 @@ steps:
 # Create HtmlReport artifact. This serves two purposes:
 # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
 # 2. Users can download this if they want.
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: '${{ parameters.uploadPrefix }}HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)'
+    path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifact: '${{ parameters.uploadPrefix }}HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -308,11 +308,11 @@ steps:
   condition: succeededOrFailed()
 
 # Publish all the binlogs we collected in the previous step
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: All binlogs'
   inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifactName: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)
+    path: $(Build.ArtifactStagingDirectory)/all-binlogs
+    artifact: ${{ parameters.uploadPrefix }}all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 

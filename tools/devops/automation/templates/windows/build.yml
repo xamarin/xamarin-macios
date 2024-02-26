@@ -257,11 +257,11 @@ steps:
 # Create HtmlReport artifact. This serves two purposes:
 # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
 # 2. Users can download this if they want.
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: '${{ parameters.uploadPrefix }}HtmlReport-windows-integration-$(System.JobAttempt)'
+    path: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
+    artifact: '${{ parameters.uploadPrefix }}HtmlReport-windows-integration-$(System.JobAttempt)'
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -293,11 +293,11 @@ steps:
   condition: succeededOrFailed()
 
 # Publish all the binlogs we collected in the previous step
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: Windows binlogs'
   inputs:
-    targetPath: $(Build.ArtifactStagingDirectory)/windows-binlogs
-    artifactName: windows-binlogs-test-$(Build.BuildId)-$(System.JobAttempt)
+    path: $(Build.ArtifactStagingDirectory)/windows-binlogs
+    artifact: windows-binlogs-test-$(Build.BuildId)-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 

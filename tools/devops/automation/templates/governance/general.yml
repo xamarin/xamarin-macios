@@ -83,11 +83,11 @@ steps:
   env:
     WorkingDirectory: '$(Build.SourcesDirectory)/xamarin-macios' 
 
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Artifact: Policheck Results'
   inputs:
-    targetPath: '$(Build.SourcesDirectory)/PoliCheck.xml'
-    artifactName: '${{ parameters.uploadPrefix }}Policheck'
+    path: '$(Build.SourcesDirectory)/PoliCheck.xml'
+    artifact: '${{ parameters.uploadPrefix }}Policheck'
   continueOnError: true
   condition: always()
 
