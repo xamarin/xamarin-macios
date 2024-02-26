@@ -93,7 +93,7 @@ configuration:
           days: 21
       actions:
       - addReply:
-          reply: Hi @{issueAuthor}. Due to inactivity, we will close this pull request in 7 days.
+          reply: Hi @${issueAuthor}. Due to inactivity, we will close this pull request in 7 days.
 
     - description: Closing out-of-date community PRs.
       frequencies:
@@ -109,7 +109,7 @@ configuration:
           days: 28
       actions:
       - addReply:
-          reply: Hi @{issueAuthor}. This pull request was closed due to inactivity. Please let us know if you'd like to reopen it.
+          reply: Hi @${issueAuthor}. This pull request was closed due to inactivity. Please let us know if you'd like to reopen it.
       - closePullRequest
 
     eventResponderTasks:
