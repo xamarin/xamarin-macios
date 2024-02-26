@@ -1,24 +1,25 @@
 using System.Collections.Generic;
+using System.Text;
 
 public class MethodBlock : CodeBlock {
 	public MethodBlock (string methodSignature, string [] parameters)
 	{
-		string allParameters = "";
+		StringBuilder allParameters = new();
 		for (int i = 0; i < parameters.Length; i++) {
-			allParameters += parameters [i];
+			allParameters.Append (parameters [i]);
 			if (i != parameters.Length - 1) {
-				allParameters += ", ";
+				allParameters.Append (", ");
 			}
 		}
 		HeaderText = methodSignature + "(" + allParameters + ")";
 	}
 	public MethodBlock (string methodSignature, string [] parameters, List<ICodeBlock> blocks)
 	{
-		string allParameters = "";
+		StringBuilder allParameters = new();
 		for (int i = 0; i < parameters.Length; i++) {
-			allParameters += parameters [i];
+			allParameters.Append (parameters [i]);
 			if (i != parameters.Length - 1) {
-				allParameters += ", ";
+				allParameters.Append (", ");
 			}
 		}
 		HeaderText = methodSignature + "(" + allParameters + ")";
