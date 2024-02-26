@@ -108,11 +108,11 @@ steps:
     condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
   # Upload the esrp temp dir
-  - task: PublishPipelineArtifact@1
+  - task: 1ES.PublishPipelineArtifact@1
     displayName: 'Publish Artifact: ESRP temp'
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
-      artifactName: '${{ parameters.uploadPrefix }}ESRP-tmp-${{ parameters.packageName }}'
+      path: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+      artifact: '${{ parameters.uploadPrefix }}ESRP-tmp-${{ parameters.packageName }}'
     continueOnError: true
     condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
@@ -124,9 +124,9 @@ steps:
     condition: ${{ parameters.condition }}
 
 # always upload no matter what, since if we are not signing we need the artifact in the pipeline
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Notarized Classic Artifacts'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/package
-    artifactName: '${{ parameters.uploadPrefix }}classic-${{ parameters.packageName }}-signed'
+    path: $(Build.SourcesDirectory)/package
+    artifact: '${{ parameters.uploadPrefix }}classic-${{ parameters.packageName }}-signed'
   continueOnError: true

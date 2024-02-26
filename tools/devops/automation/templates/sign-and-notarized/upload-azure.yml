@@ -162,11 +162,11 @@ steps:
 
 # upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
 # get the required urls
-- task: PublishPipelineArtifact@1
+- task: 1ES.PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/artifacts.json
-    artifactName: '${{ parameters.uploadPrefix }}pkg-info'
+    path: $(Build.SourcesDirectory)/artifacts/${{ parameters.uploadPrefix }}package/artifacts.json
+    artifact: '${{ parameters.uploadPrefix }}pkg-info'
   continueOnError: true
 
 - pwsh: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/show_env.ps1

@@ -49,14 +49,14 @@ steps:
 
 # only upload when told so
 - ${{ if eq(parameters.uploadLogs, true) }}:
-  - task: PublishPipelineArtifact@1
+  - task: 1ES.PublishPipelineArtifact@1
     displayName: 'Publish Artifact: Agent logs'
     condition: always()
     inputs:
       # add or not the working dir to the upload
       ${{ if eq(parameters.workingDirectory, '') }}:
-        targetPath: ${{ parameters.outputPath }}
+        path: ${{ parameters.outputPath }}
       ${{ else }}:
-        targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
-      artifactName: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
+        path: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
+      artifact: '${{ parameters.uploadPrefix }}$(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }}'
     continueOnError: true
