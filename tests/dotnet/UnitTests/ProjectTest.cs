@@ -1,10 +1,7 @@
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Xml;
 
 using Mono.Cecil;
-
-using Xamarin.Tests;
 
 #nullable enable
 
@@ -1666,5 +1663,39 @@ namespace Xamarin.Tests {
 			Assert.That (symbols, Does.Contain ("_xamarin_release_managed_ref"), "_xamarin_release_managed_ref");
 		}
 
+		[Test]
+		[TestCase (ApplePlatform.iOS, "ios-arm64;", "iOS")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macOS")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "MacCatalyst")]
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64;", "tvOS")]
+		public void SourcelinkTest (ApplePlatform platform, string runtimeIdentifiers, string platformName)
+		{
+			// Sourcelink uses the latest commit and tests to see if
+			// it is valid which will not pass until the commit has
+			// been merged in and actually exists on github.
+
+			if (!IsInCI || IsPullRequest)
+				Assert.Ignore ("This test is disabled for local runs and Pull Requests.");
+
+			var project = "MySimpleApp";
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			DotNet.AssertBuild (project_path, properties);
+
+			var pdbFile = Directory
+				.GetFiles (Path.GetDirectoryName (project_path)!, $"Microsoft.{platformName}.pdb", SearchOption.AllDirectories)
+				.FirstOrDefault ();
+
+			Assert.NotNull (pdbFile, "No PDB file found");
+
+			var tool = "sourcelink";
+			var toolPath = Directory.GetCurrentDirectory ();
+			DotNet.InstallTool (tool, toolPath);
+			var test = DotNet.RunTool (Path.Combine (toolPath, tool), "test", pdbFile!);
+
+			Assert.AreEqual ($"sourcelink test passed: {pdbFile}", test.StandardOutput.ToString ());
+		}
 	}
 }
