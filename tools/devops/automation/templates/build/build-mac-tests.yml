@@ -87,6 +87,6 @@ steps:
         displayName: 'Publish Artifact: All binlogs'
         inputs:
           path: $(Build.ArtifactStagingDirectory)/mactests-binlogs
-          artifact: '${{ parameters.uploadPrefix }}mactests-binlogs-$(Build.BuildId)-$(System.JobAttempt)'
+          artifact: '${{ parameters.uploadPrefix }}mactests-binlogs-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)'
         continueOnError: true
         condition: succeededOrFailed()

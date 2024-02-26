@@ -54,6 +54,6 @@ steps:
   displayName: 'Publish Artifact: build-binlogs'
   inputs:
     path: $(Build.ArtifactStagingDirectory)/build-binlogs
-    artifact: ${{ parameters.uploadPrefix }}build-binlogs-$(Build.BuildId)-$(System.JobAttempt)
+    artifact: ${{ parameters.uploadPrefix }}build-binlogs-$(Build.BuildId)-$(System.StageAttempt)-$(System.JobAttempt)
   continueOnError: true
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['ENABLE_DOTNET'],''))
