@@ -238,6 +238,9 @@ extends:
   template: azure-pipelines/MicroBuild.1ES.Official.yml@CustomPipelineTemplates
   parameters:
     sdl:
+      sourceAnalysisPool:
+        name: AzurePipelines-EO
+        image: 1ESPT-Windows2022
       sbom:
         enabled: false  # we run our on sbom generation
       sourceRepositoriesToScan:
