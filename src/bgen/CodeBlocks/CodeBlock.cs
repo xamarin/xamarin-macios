@@ -28,6 +28,21 @@ public class CodeBlock : ICodeBlock {
 		this.Blocks = blocks;
 	}
 
+	public CodeBlock (string headerText, params string[] lines)
+	{
+		HeaderText = headerText;
+		foreach (string line in lines) {
+			Blocks.Add (new LineBlock(line));
+		}
+	}
+
+	public CodeBlock (params string[] lines)
+	{
+		foreach (string line in lines) {
+			Blocks.Add (new LineBlock(line));
+		}
+	}
+
 	public void AddBlock (ICodeBlock block)
 	{
 		block.SetIndent (CurrentIndent + Indent);

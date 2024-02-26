@@ -14,13 +14,14 @@ namespace GeneratorTests {
 		[Test]
 		public void LineBlockTest ()
 		{
-			string inputText1 = "using System;";
-			string inputText2 = "using Network;";
 			string expectedText = "{\n    using System;\n    using Network;\n}\n";
-			CodeBlock codeBlock = new ();
-			codeBlock.AddLine (inputText1);
-			codeBlock.AddLine (inputText2);
+			CodeBlock codeBlock = new (new string[]{"using System;", "using Network;"});
 			string output = PerformWriting (codeBlock);
+			Assert.AreEqual (expectedText, output);
+
+			expectedText = "{\n    using System;\n    using Network;\n    using NUnit;\n}\n";
+			codeBlock.AddLine ("using NUnit;");
+			output = PerformWriting (codeBlock);
 			Assert.AreEqual (expectedText, output);
 		}
 
@@ -56,11 +57,8 @@ namespace GeneratorTests {
 		[Test]
 		public void CodeBlockAsClassTest ()
 		{
-			string headerText = "public class FooClass";
-			string variableText = "public string FooText {get;set;}";
 			string expectedText = "public class FooClass\n{\n    public string FooText {get;set;}\n}\n";
-			CodeBlock codeBlock = new (headerText);
-			codeBlock.AddLine (variableText);
+			CodeBlock codeBlock = new ("public class FooClass", new string[] {"public string FooText {get;set;}"});
 			string output = PerformWriting (codeBlock);
 			Assert.AreEqual (expectedText, output);
 		}
