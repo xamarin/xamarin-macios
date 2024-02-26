@@ -224,15 +224,16 @@ extends:
       sourceAnalysisPool:
         name: AzurePipelines-EO
         image: 1ESPT-Windows2022
+        os: windows
       sbom:
         enabled: false  # we run our on sbom generation
       sourceRepositoriesToScan:
         include:
-        - maccore
+        - repository: maccore
         exclude:
-        - yaml-templates
-        - sdk-insertions
-        - release-scripts
+        - repository: yaml-templates
+        - repository: sdk-insertions
+        - repository: release-scripts
     stages:
     - template: templates/main-stage.yml
       parameters:
