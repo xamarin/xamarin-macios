@@ -48,6 +48,7 @@ stages:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@yaml-templates
     parameters:
+      use1ESTemplate: true
       signedArtifactName: '${{ parameters.uploadPrefix }}nuget-signed'
       artifactName: '${{ parameters.uploadPrefix }}not-signed-package'
       signType: Real
