@@ -35,10 +35,6 @@ parameters:
   type: string
   default: ''
 
-- name: testPrefix
-  type: string
-  default: ''
-
 steps:
 - template: checkout.yml
   parameters:
@@ -77,7 +73,6 @@ steps:
       -EnabledPlatforms "$Env:CONFIGURE_PLATFORMS_DOTNET_PLATFORMS" `
       -TestsLabels "${{ parameters.testsLabels }}" `
       -StatusContext "${{ parameters.statusContext }}" `
-      -TestPrefix "${{ parameters.testPrefix }}"
     # compress the json to remove any newlines, because we can't set the variable below if the json has any newlines
     Write-Host "$testMatrix"
     $testMatrix = $testMatrix | ConvertFrom-Json | ConvertTo-Json -Compress
