@@ -12,7 +12,7 @@ using Xamarin.Messaging.Build.Contracts;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class ResolveUniversalTypeIdentifiers : XamarinTask {
 		[Required]
 		public ITaskItem [] ImageAssets { get; set; }

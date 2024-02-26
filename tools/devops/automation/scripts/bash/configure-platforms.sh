@@ -41,7 +41,7 @@ IOS_NUGET_OS_VERSION=$(cat "$FILE")
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=TVOS_NUGET_OS_VERSION
 TVOS_NUGET_OS_VERSION=$(cat "$FILE")
 
-make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MAC_NUGET_OS_VERSION
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MACOS_NUGET_OS_VERSION
 MACOS_NUGET_OS_VERSION=$(cat "$FILE")
 
 make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=MACCATALYST_NUGET_OS_VERSION

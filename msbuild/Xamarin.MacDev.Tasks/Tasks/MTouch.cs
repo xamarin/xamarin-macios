@@ -15,7 +15,7 @@ using Xamarin.Localization.MSBuild;
 
 #nullable enable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class MTouch : BundlerToolTaskBase, ITaskCallback {
 		#region Inputs
 

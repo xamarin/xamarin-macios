@@ -11,7 +11,7 @@ using Xamarin.Messaging.Ssh;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class CopyArchiveFiles : XamarinTask, ICancelableTask {
 		[Required]
 		public string ArchivePath { get; set; }

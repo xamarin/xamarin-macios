@@ -9,7 +9,7 @@ using System.Linq;
 // Disable until we get around to enable + fix any issues.
 #nullable disable
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	public class CollectMonotouchReferences : Task {
 
 		const string MsBuildNamespace = "http://schemas.microsoft.com/developer/msbuild/2003";

@@ -17,6 +17,7 @@ Describe 'Get-TestConfiguration' {
     "splitByPlatforms": "false",
     "containsDotNetTests": "true",
     "containsLegacyTests": "true",
+    "testPrefix": "test-prefix_",
   },
   {
     "label": "dotnettests",
@@ -24,6 +25,7 @@ Describe 'Get-TestConfiguration' {
     "containsDotNetTests": "true",
     "containsLegacyTests": "false",
     "needsMultiplePlatforms": "true",
+    "testPrefix": "test-prefix_",
   },
   {
     "label": "monotouchtest",
@@ -31,6 +33,7 @@ Describe 'Get-TestConfiguration' {
     "containsDotNetTests": "true",
     "containsLegacyTests": "true",
     "needsMultiplePlatforms": "false",
+    "testPrefix": "test-prefix_",
   }
 ]
 "@
@@ -80,8 +83,7 @@ Describe 'Get-TestConfiguration' {
       -SupportedPlatforms $SupportedPlatforms `
       -EnabledPlatforms $EnabledPlatforms `
       -TestsLabels "extra-test-labels" `
-      -StatusContext "status-context" `
-      -TestPrefix "test-prefix_"
+      -StatusContext "status-context"
     Write-Host $config
     $config | Should -Be @"
 {
@@ -196,8 +198,7 @@ Describe 'Get-TestConfiguration' {
       -SupportedPlatforms $SupportedPlatforms `
       -EnabledPlatforms $EnabledPlatforms `
       -TestsLabels "extra-test-labels" `
-      -StatusContext "status-context" `
-      -TestPrefix "test-prefix_"
+      -StatusContext "status-context"
     Write-Host $config
     $config | Should -Be @"
 {
@@ -249,8 +250,7 @@ Describe 'Get-TestConfiguration' {
       -SupportedPlatforms $SupportedPlatforms `
       -EnabledPlatforms $EnabledPlatforms `
       -TestsLabels "extra-test-labels" `
-      -StatusContext "status-context" `
-      -TestPrefix "test-prefix_"
+      -StatusContext "status-context"
     Write-Host $config
     $config | Should -Be @"
 {
@@ -284,8 +284,7 @@ Describe 'Get-TestConfiguration' {
         -SupportedPlatforms $SupportedPlatforms `
         -EnabledPlatforms $EnabledPlatforms `
         -TestsLabels "extra-test-labels" `
-        -StatusContext "status-context" `
-        -TestPrefix "test-prefix_"
+        -StatusContext "status-context"
       Write-Host $config
       $config | Should -Be @"
 {
