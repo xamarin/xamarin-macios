@@ -99,6 +99,6 @@ steps:
 - task: 1ES.PublishPipelineArtifact@1
   continueOnError: true
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    path: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'localizationDrop'
     publishLocation: 'Container'

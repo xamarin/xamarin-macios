@@ -103,6 +103,6 @@ steps:
 - task: 1ES.PublishPipelineArtifact@1
   displayName: Publish Artifact for Guardian Supressions
   inputs:
-    PathtoPublish: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
-    ArtifactName: Guardian Suppressions
+    path: $(Build.ArtifactStagingDirectory)\GuardianSuppressions
+    artifact: Guardian Suppressions
   condition: failed()

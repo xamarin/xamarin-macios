@@ -396,6 +396,6 @@ steps:
 - task: 1ES.PublishPipelineArtifact@1
   displayName: 'SBOM: Publish'
   inputs:
-    artifactName: '${{ parameters.uploadPrefix }}sbom'
-    pathToPublish: $(Build.ArtifactStagingDirectory)/sbom
+    artifact: '${{ parameters.uploadPrefix }}sbom'
+    path: $(Build.ArtifactStagingDirectory)/sbom
   condition: succeeded()
