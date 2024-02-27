@@ -44,12 +44,10 @@ namespace GeneratorTests {
 		[Test]
 		public void MethodBlockTest ()
 		{
-			string methodName = "public void Foobinate";
-			string [] methodArguments = new [] { "int count", "bool isFoo" };
 			string expectedText =
 				"public void Foobinate(int count, bool isFoo)\n{\n    int fooCount = 1;\n    string[] fooNames = new [] {\"foo\"};\n}\n";
 			List<ICodeBlock> blocks = new List<ICodeBlock> () { new LineBlock ("int fooCount = 1;"), new LineBlock ("string[] fooNames = new [] {\"foo\"};") };
-			MethodBlock methodBlock = new (methodName, methodArguments, blocks);
+			MethodBlock methodBlock = new ("public void Foobinate", blocks, "int count", "bool isFoo");
 			string output = PerformWriting (methodBlock);
 			Assert.AreEqual (expectedText, output);
 		}

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 
 public class MethodBlock : CodeBlock {
-	public MethodBlock (string methodSignature, string [] parameters)
+	public MethodBlock (string methodSignature, params string [] parameters)
 	{
 		StringBuilder allParameters = new();
 		for (int i = 0; i < parameters.Length; i++) {
@@ -13,7 +13,7 @@ public class MethodBlock : CodeBlock {
 		}
 		HeaderText = methodSignature + "(" + allParameters + ")";
 	}
-	public MethodBlock (string methodSignature, string [] parameters, List<ICodeBlock> blocks)
+	public MethodBlock (string methodSignature, List<ICodeBlock> blocks, params string [] parameters)
 	{
 		StringBuilder allParameters = new();
 		for (int i = 0; i < parameters.Length; i++) {
