@@ -761,11 +761,11 @@ namespace MonoTests.System.Net.Http {
 
 		class TestDelegateHandler : DelegatingHandler {
 			public int Iterations;
-			public HttpResponseMessage[] Responses;
+			public HttpResponseMessage [] Responses;
 
 			public TestDelegateHandler (int iterations)
 			{
-				Responses = new HttpResponseMessage[iterations];
+				Responses = new HttpResponseMessage [iterations];
 				Iterations = iterations;
 			}
 
@@ -791,8 +791,7 @@ namespace MonoTests.System.Net.Http {
 			var iterations = 2;
 			var bodies = new string [iterations];
 
-			var request = new HttpRequestMessage
-			{
+			var request = new HttpRequestMessage {
 				Method = HttpMethod.Post,
 				RequestUri = new (NetworkResources.Httpbin.PostUrl),
 				Content = new StringContent (json, Encoding.UTF8, "application/json")
@@ -802,10 +801,9 @@ namespace MonoTests.System.Net.Http {
 				InnerHandler = new NSUrlSessionHandler (),
 			};
 
-			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () =>
-			{
+			var done = TestRuntime.TryRunAsync (TimeSpan.FromSeconds (30), async () => {
 				using var client = new HttpClient (delegatingHandler);
-				var _= await client.SendAsync (request);
+				var _ = await client.SendAsync (request);
 				for (var i = 0; i < iterations; i++) {
 					if (delegatingHandler.IsCompleted (i))
 						bodies [i] = await delegatingHandler.Responses [i].Content.ReadAsStringAsync ();

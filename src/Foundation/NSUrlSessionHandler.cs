@@ -494,7 +494,7 @@ namespace Foundation {
 				// Rewind the stream to the beginning in case the HttpContent implementation
 				// will be accessed again (e.g. for retry/redirect) and it keeps its stream open behind the scenes.
 				if (stream.CanSeek)
-					stream.Seek(0, SeekOrigin.Begin);
+					stream.Seek (0, SeekOrigin.Begin);
 
 				// HttpContent.TryComputeLength is `protected internal` :-( but it's indirectly called by headers
 				var length = request.Content?.Headers?.ContentLength;
