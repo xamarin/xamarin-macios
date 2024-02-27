@@ -1,0 +1,3 @@
+!missing-protocol! UIItemProviderReadingAugmentationDesignating not bound
+!missing-protocol! UIItemProviderReadingAugmentationProviding not bound
+!missing-selector! NSItemProvider::_availableTypes not bound

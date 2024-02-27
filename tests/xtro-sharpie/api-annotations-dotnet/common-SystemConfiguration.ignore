@@ -7,4 +7,3 @@
 !missing-pinvoke! SCCopyLastError is not bound
 
 ## *GetTypeID are generally not bound
-!missing-pinvoke! SCNetworkReachabilityGetTypeID is not bound

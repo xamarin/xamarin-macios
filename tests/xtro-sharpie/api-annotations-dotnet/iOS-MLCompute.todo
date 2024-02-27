@@ -52,3 +52,4 @@
 !deprecated-attribute-missing! MLCUpsampleLayer missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCYOLOLossDescriptor missing a [Deprecated] attribute
 !deprecated-attribute-missing! MLCYOLOLossLayer missing a [Deprecated] attribute
+!deprecated-attribute-missing! MLCTensorOptimizerDeviceData missing a [Deprecated] attribute

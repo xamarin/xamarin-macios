@@ -1,0 +1,3 @@
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorApplicationExtensionNotFound = -2014 not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorProviderDomainNotFound = -2013 not bound
+!missing-enum-value! NSFileProviderError native value NSFileProviderErrorProviderDomainTemporarilyUnavailable = -2012 not bound

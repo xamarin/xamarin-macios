@@ -4,4 +4,3 @@
 
 ## availability macro says iOS 8.0 but constants are under a #if !TARGET_OS_IPHONE define.
 ## introspection does not report them as missing...
-!unknown-field! kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder bound

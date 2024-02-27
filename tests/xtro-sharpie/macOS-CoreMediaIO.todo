@@ -206,3 +206,6 @@
 !missing-type! CMIOExtensionStreamCustomClockConfiguration not bound
 !missing-type! CMIOExtensionStreamFormat not bound
 !missing-type! CMIOExtensionStreamProperties not bound
+!missing-field! CMIOExtensionPropertyDeviceLatency not bound
+!missing-field! CMIOExtensionPropertyStreamLatency not bound
+!missing-selector! +CMIOExtensionProvider::stopServiceWithProvider: not bound

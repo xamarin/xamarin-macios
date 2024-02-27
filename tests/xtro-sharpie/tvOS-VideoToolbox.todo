@@ -2,3 +2,10 @@
 !missing-field! kVTDecompressionPropertyKey_GeneratePerFrameHDRDisplayMetadata not bound
 !missing-pinvoke! VTIsStereoMVHEVCDecodeSupported is not bound
 !missing-pinvoke! VTIsStereoMVHEVCEncodeSupported is not bound
+!missing-field! kVTCompressionPropertyKey_CalculateMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentKey_QualityMetrics not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_ChromaBlueMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_ChromaRedMeanSquaredError not bound
+!missing-field! kVTSampleAttachmentQualityMetricsKey_LumaMeanSquaredError not bound
+!missing-field! kVTVideoEncoderSpecification_EnableHardwareAcceleratedVideoEncoder not bound
+!missing-field! kVTVideoEncoderSpecification_RequireHardwareAcceleratedVideoEncoder not bound

@@ -1,0 +1,5 @@
+!missing-protocol-member! NSFilePresenter::accommodatePresentedItemEvictionWithCompletionHandler: not found
+!missing-selector! NSTask::launchRequirementData not bound
+!missing-selector! NSTask::setLaunchRequirementData: not bound
+!missing-selector! NSUndoManager::redoCount not bound
+!missing-selector! NSUndoManager::undoCount not bound

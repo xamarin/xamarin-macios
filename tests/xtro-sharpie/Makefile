@@ -51,6 +51,8 @@ $(XIOS_PCH): .stamp-check-sharpie
 	-exclude FactoryOTAWifiUtils \
 	-exclude FactoryOTALogger \
 	-exclude FactoryOTANetworkUtils \
+	-exclude AssetsLibrary \
+	-exclude _CoreNFC_UIKit \
 	-i ThreadNetwork/THClient.h \
 	$(CORETELEPHONY_HEADERS) \
 
@@ -62,7 +64,8 @@ XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 
 $(XWATCHOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH)
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) \
+	-exclude BrowserEngineKit \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_LIBDIR ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/
@@ -94,6 +97,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-exclude AGL \
 	-exclude AudioVideoBridging \
+	-exclude AssetsLibrary \
 	-exclude CalendarStore \
 	-exclude Carbon \
 	-exclude ClockKit \

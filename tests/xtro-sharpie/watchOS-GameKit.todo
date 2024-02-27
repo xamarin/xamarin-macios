@@ -1,2 +1,3 @@
 !unknown-native-enum! GKMatchSendDataMode bound
 !unknown-native-enum! GKVoiceChatPlayerState bound
+!missing-enum-value! GKError native value GKErrorAppUnlisted = 37 not bound

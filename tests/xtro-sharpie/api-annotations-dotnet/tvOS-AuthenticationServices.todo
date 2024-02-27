@@ -1,0 +1,10 @@
+!deprecated-attribute-missing! ASWebAuthenticationSession::initWithURL:callbackURLScheme:completionHandler: missing a [Deprecated] attribute
+!missing-enum! ASUserAgeRange not bound
+!missing-selector! +ASWebAuthenticationSessionCallback::callbackWithCustomScheme: not bound
+!missing-selector! +ASWebAuthenticationSessionCallback::callbackWithHTTPSHost:path: not bound
+!missing-selector! ASAuthorizationAppleIDCredential::userAgeRange not bound
+!missing-selector! ASWebAuthenticationSession::additionalHeaderFields not bound
+!missing-selector! ASWebAuthenticationSession::initWithURL:callback:completionHandler: not bound
+!missing-selector! ASWebAuthenticationSession::setAdditionalHeaderFields: not bound
+!missing-selector! ASWebAuthenticationSessionCallback::matchesURL: not bound
+!missing-type! ASWebAuthenticationSessionCallback not bound
